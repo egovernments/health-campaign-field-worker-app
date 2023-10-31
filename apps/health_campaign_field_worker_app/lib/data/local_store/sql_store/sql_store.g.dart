@@ -16163,6 +16163,986 @@ class $ProjectTypeTable extends ProjectType
   }
 }
 
+class ReferralData extends DataClass implements Insertable<ReferralData> {
+  final String? id;
+  final String? projectId;
+  final String? projectBeneficiaryClientReferenceId;
+  final String? referrerId;
+  final String? recipientType;
+  final String? recipientId;
+  final String? reasons;
+  final String? auditCreatedBy;
+  final bool? nonRecoverableError;
+  final int? clientCreatedTime;
+  final String? clientModifiedBy;
+  final String? clientCreatedBy;
+  final int? clientModifiedTime;
+  final int? auditCreatedTime;
+  final String? auditModifiedBy;
+  final int? auditModifiedTime;
+  final String clientReferenceId;
+  final String? tenantId;
+  final bool? isDeleted;
+  final int? rowVersion;
+  final String? additionalFields;
+  ReferralData(
+      {this.id,
+      this.projectId,
+      this.projectBeneficiaryClientReferenceId,
+      this.referrerId,
+      this.recipientType,
+      this.recipientId,
+      this.reasons,
+      this.auditCreatedBy,
+      this.nonRecoverableError,
+      this.clientCreatedTime,
+      this.clientModifiedBy,
+      this.clientCreatedBy,
+      this.clientModifiedTime,
+      this.auditCreatedTime,
+      this.auditModifiedBy,
+      this.auditModifiedTime,
+      required this.clientReferenceId,
+      this.tenantId,
+      this.isDeleted,
+      this.rowVersion,
+      this.additionalFields});
+  factory ReferralData.fromData(Map<String, dynamic> data, {String? prefix}) {
+    final effectivePrefix = prefix ?? '';
+    return ReferralData(
+      id: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}id']),
+      projectId: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}project_id']),
+      projectBeneficiaryClientReferenceId: const StringType()
+          .mapFromDatabaseResponse(data[
+              '${effectivePrefix}project_beneficiary_client_reference_id']),
+      referrerId: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}referrer_id']),
+      recipientType: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}recipient_type']),
+      recipientId: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}recipient_id']),
+      reasons: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}reasons']),
+      auditCreatedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}audit_created_by']),
+      nonRecoverableError: const BoolType().mapFromDatabaseResponse(
+          data['${effectivePrefix}non_recoverable_error']),
+      clientCreatedTime: const IntType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_created_time']),
+      clientModifiedBy: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_modified_by']),
+      clientCreatedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}client_created_by']),
+      clientModifiedTime: const IntType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_modified_time']),
+      auditCreatedTime: const IntType().mapFromDatabaseResponse(
+          data['${effectivePrefix}audit_created_time']),
+      auditModifiedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}audit_modified_by']),
+      auditModifiedTime: const IntType().mapFromDatabaseResponse(
+          data['${effectivePrefix}audit_modified_time']),
+      clientReferenceId: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_reference_id'])!,
+      tenantId: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}tenant_id']),
+      isDeleted: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}is_deleted']),
+      rowVersion: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}row_version']),
+      additionalFields: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}additional_fields']),
+    );
+  }
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (!nullToAbsent || id != null) {
+      map['id'] = Variable<String?>(id);
+    }
+    if (!nullToAbsent || projectId != null) {
+      map['project_id'] = Variable<String?>(projectId);
+    }
+    if (!nullToAbsent || projectBeneficiaryClientReferenceId != null) {
+      map['project_beneficiary_client_reference_id'] =
+          Variable<String?>(projectBeneficiaryClientReferenceId);
+    }
+    if (!nullToAbsent || referrerId != null) {
+      map['referrer_id'] = Variable<String?>(referrerId);
+    }
+    if (!nullToAbsent || recipientType != null) {
+      map['recipient_type'] = Variable<String?>(recipientType);
+    }
+    if (!nullToAbsent || recipientId != null) {
+      map['recipient_id'] = Variable<String?>(recipientId);
+    }
+    if (!nullToAbsent || reasons != null) {
+      map['reasons'] = Variable<String?>(reasons);
+    }
+    if (!nullToAbsent || auditCreatedBy != null) {
+      map['audit_created_by'] = Variable<String?>(auditCreatedBy);
+    }
+    if (!nullToAbsent || nonRecoverableError != null) {
+      map['non_recoverable_error'] = Variable<bool?>(nonRecoverableError);
+    }
+    if (!nullToAbsent || clientCreatedTime != null) {
+      map['client_created_time'] = Variable<int?>(clientCreatedTime);
+    }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy);
+    }
+    if (!nullToAbsent || clientModifiedTime != null) {
+      map['client_modified_time'] = Variable<int?>(clientModifiedTime);
+    }
+    if (!nullToAbsent || auditCreatedTime != null) {
+      map['audit_created_time'] = Variable<int?>(auditCreatedTime);
+    }
+    if (!nullToAbsent || auditModifiedBy != null) {
+      map['audit_modified_by'] = Variable<String?>(auditModifiedBy);
+    }
+    if (!nullToAbsent || auditModifiedTime != null) {
+      map['audit_modified_time'] = Variable<int?>(auditModifiedTime);
+    }
+    map['client_reference_id'] = Variable<String>(clientReferenceId);
+    if (!nullToAbsent || tenantId != null) {
+      map['tenant_id'] = Variable<String?>(tenantId);
+    }
+    if (!nullToAbsent || isDeleted != null) {
+      map['is_deleted'] = Variable<bool?>(isDeleted);
+    }
+    if (!nullToAbsent || rowVersion != null) {
+      map['row_version'] = Variable<int?>(rowVersion);
+    }
+    if (!nullToAbsent || additionalFields != null) {
+      map['additional_fields'] = Variable<String?>(additionalFields);
+    }
+    return map;
+  }
+
+  ReferralCompanion toCompanion(bool nullToAbsent) {
+    return ReferralCompanion(
+      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      projectId: projectId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(projectId),
+      projectBeneficiaryClientReferenceId:
+          projectBeneficiaryClientReferenceId == null && nullToAbsent
+              ? const Value.absent()
+              : Value(projectBeneficiaryClientReferenceId),
+      referrerId: referrerId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(referrerId),
+      recipientType: recipientType == null && nullToAbsent
+          ? const Value.absent()
+          : Value(recipientType),
+      recipientId: recipientId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(recipientId),
+      reasons: reasons == null && nullToAbsent
+          ? const Value.absent()
+          : Value(reasons),
+      auditCreatedBy: auditCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditCreatedBy),
+      nonRecoverableError: nonRecoverableError == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nonRecoverableError),
+      clientCreatedTime: clientCreatedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedTime),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
+      clientModifiedTime: clientModifiedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedTime),
+      auditCreatedTime: auditCreatedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditCreatedTime),
+      auditModifiedBy: auditModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditModifiedBy),
+      auditModifiedTime: auditModifiedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditModifiedTime),
+      clientReferenceId: Value(clientReferenceId),
+      tenantId: tenantId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(tenantId),
+      isDeleted: isDeleted == null && nullToAbsent
+          ? const Value.absent()
+          : Value(isDeleted),
+      rowVersion: rowVersion == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rowVersion),
+      additionalFields: additionalFields == null && nullToAbsent
+          ? const Value.absent()
+          : Value(additionalFields),
+    );
+  }
+
+  factory ReferralData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ReferralData(
+      id: serializer.fromJson<String?>(json['id']),
+      projectId: serializer.fromJson<String?>(json['projectId']),
+      projectBeneficiaryClientReferenceId: serializer
+          .fromJson<String?>(json['projectBeneficiaryClientReferenceId']),
+      referrerId: serializer.fromJson<String?>(json['referrerId']),
+      recipientType: serializer.fromJson<String?>(json['recipientType']),
+      recipientId: serializer.fromJson<String?>(json['recipientId']),
+      reasons: serializer.fromJson<String?>(json['reasons']),
+      auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
+      nonRecoverableError:
+          serializer.fromJson<bool?>(json['nonRecoverableError']),
+      clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
+      clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
+      auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
+      auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
+      auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
+      clientReferenceId: serializer.fromJson<String>(json['clientReferenceId']),
+      tenantId: serializer.fromJson<String?>(json['tenantId']),
+      isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
+      rowVersion: serializer.fromJson<int?>(json['rowVersion']),
+      additionalFields: serializer.fromJson<String?>(json['additionalFields']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String?>(id),
+      'projectId': serializer.toJson<String?>(projectId),
+      'projectBeneficiaryClientReferenceId':
+          serializer.toJson<String?>(projectBeneficiaryClientReferenceId),
+      'referrerId': serializer.toJson<String?>(referrerId),
+      'recipientType': serializer.toJson<String?>(recipientType),
+      'recipientId': serializer.toJson<String?>(recipientId),
+      'reasons': serializer.toJson<String?>(reasons),
+      'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
+      'nonRecoverableError': serializer.toJson<bool?>(nonRecoverableError),
+      'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
+      'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
+      'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
+      'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
+      'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
+      'clientReferenceId': serializer.toJson<String>(clientReferenceId),
+      'tenantId': serializer.toJson<String?>(tenantId),
+      'isDeleted': serializer.toJson<bool?>(isDeleted),
+      'rowVersion': serializer.toJson<int?>(rowVersion),
+      'additionalFields': serializer.toJson<String?>(additionalFields),
+    };
+  }
+
+  ReferralData copyWith(
+          {String? id,
+          String? projectId,
+          String? projectBeneficiaryClientReferenceId,
+          String? referrerId,
+          String? recipientType,
+          String? recipientId,
+          String? reasons,
+          String? auditCreatedBy,
+          bool? nonRecoverableError,
+          int? clientCreatedTime,
+          String? clientModifiedBy,
+          String? clientCreatedBy,
+          int? clientModifiedTime,
+          int? auditCreatedTime,
+          String? auditModifiedBy,
+          int? auditModifiedTime,
+          String? clientReferenceId,
+          String? tenantId,
+          bool? isDeleted,
+          int? rowVersion,
+          String? additionalFields}) =>
+      ReferralData(
+        id: id ?? this.id,
+        projectId: projectId ?? this.projectId,
+        projectBeneficiaryClientReferenceId:
+            projectBeneficiaryClientReferenceId ??
+                this.projectBeneficiaryClientReferenceId,
+        referrerId: referrerId ?? this.referrerId,
+        recipientType: recipientType ?? this.recipientType,
+        recipientId: recipientId ?? this.recipientId,
+        reasons: reasons ?? this.reasons,
+        auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
+        nonRecoverableError: nonRecoverableError ?? this.nonRecoverableError,
+        clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+        clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+        clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
+        clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
+        auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
+        auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
+        auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
+        clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+        tenantId: tenantId ?? this.tenantId,
+        isDeleted: isDeleted ?? this.isDeleted,
+        rowVersion: rowVersion ?? this.rowVersion,
+        additionalFields: additionalFields ?? this.additionalFields,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('ReferralData(')
+          ..write('id: $id, ')
+          ..write('projectId: $projectId, ')
+          ..write(
+              'projectBeneficiaryClientReferenceId: $projectBeneficiaryClientReferenceId, ')
+          ..write('referrerId: $referrerId, ')
+          ..write('recipientType: $recipientType, ')
+          ..write('recipientId: $recipientId, ')
+          ..write('reasons: $reasons, ')
+          ..write('auditCreatedBy: $auditCreatedBy, ')
+          ..write('nonRecoverableError: $nonRecoverableError, ')
+          ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
+          ..write('clientModifiedTime: $clientModifiedTime, ')
+          ..write('auditCreatedTime: $auditCreatedTime, ')
+          ..write('auditModifiedBy: $auditModifiedBy, ')
+          ..write('auditModifiedTime: $auditModifiedTime, ')
+          ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('rowVersion: $rowVersion, ')
+          ..write('additionalFields: $additionalFields')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+        id,
+        projectId,
+        projectBeneficiaryClientReferenceId,
+        referrerId,
+        recipientType,
+        recipientId,
+        reasons,
+        auditCreatedBy,
+        nonRecoverableError,
+        clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
+        clientModifiedTime,
+        auditCreatedTime,
+        auditModifiedBy,
+        auditModifiedTime,
+        clientReferenceId,
+        tenantId,
+        isDeleted,
+        rowVersion,
+        additionalFields
+      ]);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ReferralData &&
+          other.id == this.id &&
+          other.projectId == this.projectId &&
+          other.projectBeneficiaryClientReferenceId ==
+              this.projectBeneficiaryClientReferenceId &&
+          other.referrerId == this.referrerId &&
+          other.recipientType == this.recipientType &&
+          other.recipientId == this.recipientId &&
+          other.reasons == this.reasons &&
+          other.auditCreatedBy == this.auditCreatedBy &&
+          other.nonRecoverableError == this.nonRecoverableError &&
+          other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientCreatedBy == this.clientCreatedBy &&
+          other.clientModifiedTime == this.clientModifiedTime &&
+          other.auditCreatedTime == this.auditCreatedTime &&
+          other.auditModifiedBy == this.auditModifiedBy &&
+          other.auditModifiedTime == this.auditModifiedTime &&
+          other.clientReferenceId == this.clientReferenceId &&
+          other.tenantId == this.tenantId &&
+          other.isDeleted == this.isDeleted &&
+          other.rowVersion == this.rowVersion &&
+          other.additionalFields == this.additionalFields);
+}
+
+class ReferralCompanion extends UpdateCompanion<ReferralData> {
+  final Value<String?> id;
+  final Value<String?> projectId;
+  final Value<String?> projectBeneficiaryClientReferenceId;
+  final Value<String?> referrerId;
+  final Value<String?> recipientType;
+  final Value<String?> recipientId;
+  final Value<String?> reasons;
+  final Value<String?> auditCreatedBy;
+  final Value<bool?> nonRecoverableError;
+  final Value<int?> clientCreatedTime;
+  final Value<String?> clientModifiedBy;
+  final Value<String?> clientCreatedBy;
+  final Value<int?> clientModifiedTime;
+  final Value<int?> auditCreatedTime;
+  final Value<String?> auditModifiedBy;
+  final Value<int?> auditModifiedTime;
+  final Value<String> clientReferenceId;
+  final Value<String?> tenantId;
+  final Value<bool?> isDeleted;
+  final Value<int?> rowVersion;
+  final Value<String?> additionalFields;
+  const ReferralCompanion({
+    this.id = const Value.absent(),
+    this.projectId = const Value.absent(),
+    this.projectBeneficiaryClientReferenceId = const Value.absent(),
+    this.referrerId = const Value.absent(),
+    this.recipientType = const Value.absent(),
+    this.recipientId = const Value.absent(),
+    this.reasons = const Value.absent(),
+    this.auditCreatedBy = const Value.absent(),
+    this.nonRecoverableError = const Value.absent(),
+    this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
+    this.clientModifiedTime = const Value.absent(),
+    this.auditCreatedTime = const Value.absent(),
+    this.auditModifiedBy = const Value.absent(),
+    this.auditModifiedTime = const Value.absent(),
+    this.clientReferenceId = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.rowVersion = const Value.absent(),
+    this.additionalFields = const Value.absent(),
+  });
+  ReferralCompanion.insert({
+    this.id = const Value.absent(),
+    this.projectId = const Value.absent(),
+    this.projectBeneficiaryClientReferenceId = const Value.absent(),
+    this.referrerId = const Value.absent(),
+    this.recipientType = const Value.absent(),
+    this.recipientId = const Value.absent(),
+    this.reasons = const Value.absent(),
+    this.auditCreatedBy = const Value.absent(),
+    this.nonRecoverableError = const Value.absent(),
+    this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
+    this.clientModifiedTime = const Value.absent(),
+    this.auditCreatedTime = const Value.absent(),
+    this.auditModifiedBy = const Value.absent(),
+    this.auditModifiedTime = const Value.absent(),
+    required String clientReferenceId,
+    this.tenantId = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.rowVersion = const Value.absent(),
+    this.additionalFields = const Value.absent(),
+  }) : clientReferenceId = Value(clientReferenceId);
+  static Insertable<ReferralData> custom({
+    Expression<String?>? id,
+    Expression<String?>? projectId,
+    Expression<String?>? projectBeneficiaryClientReferenceId,
+    Expression<String?>? referrerId,
+    Expression<String?>? recipientType,
+    Expression<String?>? recipientId,
+    Expression<String?>? reasons,
+    Expression<String?>? auditCreatedBy,
+    Expression<bool?>? nonRecoverableError,
+    Expression<int?>? clientCreatedTime,
+    Expression<String?>? clientModifiedBy,
+    Expression<String?>? clientCreatedBy,
+    Expression<int?>? clientModifiedTime,
+    Expression<int?>? auditCreatedTime,
+    Expression<String?>? auditModifiedBy,
+    Expression<int?>? auditModifiedTime,
+    Expression<String>? clientReferenceId,
+    Expression<String?>? tenantId,
+    Expression<bool?>? isDeleted,
+    Expression<int?>? rowVersion,
+    Expression<String?>? additionalFields,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (projectId != null) 'project_id': projectId,
+      if (projectBeneficiaryClientReferenceId != null)
+        'project_beneficiary_client_reference_id':
+            projectBeneficiaryClientReferenceId,
+      if (referrerId != null) 'referrer_id': referrerId,
+      if (recipientType != null) 'recipient_type': recipientType,
+      if (recipientId != null) 'recipient_id': recipientId,
+      if (reasons != null) 'reasons': reasons,
+      if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
+      if (nonRecoverableError != null)
+        'non_recoverable_error': nonRecoverableError,
+      if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
+      if (clientModifiedTime != null)
+        'client_modified_time': clientModifiedTime,
+      if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
+      if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
+      if (auditModifiedTime != null) 'audit_modified_time': auditModifiedTime,
+      if (clientReferenceId != null) 'client_reference_id': clientReferenceId,
+      if (tenantId != null) 'tenant_id': tenantId,
+      if (isDeleted != null) 'is_deleted': isDeleted,
+      if (rowVersion != null) 'row_version': rowVersion,
+      if (additionalFields != null) 'additional_fields': additionalFields,
+    });
+  }
+
+  ReferralCompanion copyWith(
+      {Value<String?>? id,
+      Value<String?>? projectId,
+      Value<String?>? projectBeneficiaryClientReferenceId,
+      Value<String?>? referrerId,
+      Value<String?>? recipientType,
+      Value<String?>? recipientId,
+      Value<String?>? reasons,
+      Value<String?>? auditCreatedBy,
+      Value<bool?>? nonRecoverableError,
+      Value<int?>? clientCreatedTime,
+      Value<String?>? clientModifiedBy,
+      Value<String?>? clientCreatedBy,
+      Value<int?>? clientModifiedTime,
+      Value<int?>? auditCreatedTime,
+      Value<String?>? auditModifiedBy,
+      Value<int?>? auditModifiedTime,
+      Value<String>? clientReferenceId,
+      Value<String?>? tenantId,
+      Value<bool?>? isDeleted,
+      Value<int?>? rowVersion,
+      Value<String?>? additionalFields}) {
+    return ReferralCompanion(
+      id: id ?? this.id,
+      projectId: projectId ?? this.projectId,
+      projectBeneficiaryClientReferenceId:
+          projectBeneficiaryClientReferenceId ??
+              this.projectBeneficiaryClientReferenceId,
+      referrerId: referrerId ?? this.referrerId,
+      recipientType: recipientType ?? this.recipientType,
+      recipientId: recipientId ?? this.recipientId,
+      reasons: reasons ?? this.reasons,
+      auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
+      nonRecoverableError: nonRecoverableError ?? this.nonRecoverableError,
+      clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
+      clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
+      auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
+      auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
+      auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
+      clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+      tenantId: tenantId ?? this.tenantId,
+      isDeleted: isDeleted ?? this.isDeleted,
+      rowVersion: rowVersion ?? this.rowVersion,
+      additionalFields: additionalFields ?? this.additionalFields,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String?>(id.value);
+    }
+    if (projectId.present) {
+      map['project_id'] = Variable<String?>(projectId.value);
+    }
+    if (projectBeneficiaryClientReferenceId.present) {
+      map['project_beneficiary_client_reference_id'] =
+          Variable<String?>(projectBeneficiaryClientReferenceId.value);
+    }
+    if (referrerId.present) {
+      map['referrer_id'] = Variable<String?>(referrerId.value);
+    }
+    if (recipientType.present) {
+      map['recipient_type'] = Variable<String?>(recipientType.value);
+    }
+    if (recipientId.present) {
+      map['recipient_id'] = Variable<String?>(recipientId.value);
+    }
+    if (reasons.present) {
+      map['reasons'] = Variable<String?>(reasons.value);
+    }
+    if (auditCreatedBy.present) {
+      map['audit_created_by'] = Variable<String?>(auditCreatedBy.value);
+    }
+    if (nonRecoverableError.present) {
+      map['non_recoverable_error'] = Variable<bool?>(nonRecoverableError.value);
+    }
+    if (clientCreatedTime.present) {
+      map['client_created_time'] = Variable<int?>(clientCreatedTime.value);
+    }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy.value);
+    }
+    if (clientModifiedTime.present) {
+      map['client_modified_time'] = Variable<int?>(clientModifiedTime.value);
+    }
+    if (auditCreatedTime.present) {
+      map['audit_created_time'] = Variable<int?>(auditCreatedTime.value);
+    }
+    if (auditModifiedBy.present) {
+      map['audit_modified_by'] = Variable<String?>(auditModifiedBy.value);
+    }
+    if (auditModifiedTime.present) {
+      map['audit_modified_time'] = Variable<int?>(auditModifiedTime.value);
+    }
+    if (clientReferenceId.present) {
+      map['client_reference_id'] = Variable<String>(clientReferenceId.value);
+    }
+    if (tenantId.present) {
+      map['tenant_id'] = Variable<String?>(tenantId.value);
+    }
+    if (isDeleted.present) {
+      map['is_deleted'] = Variable<bool?>(isDeleted.value);
+    }
+    if (rowVersion.present) {
+      map['row_version'] = Variable<int?>(rowVersion.value);
+    }
+    if (additionalFields.present) {
+      map['additional_fields'] = Variable<String?>(additionalFields.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ReferralCompanion(')
+          ..write('id: $id, ')
+          ..write('projectId: $projectId, ')
+          ..write(
+              'projectBeneficiaryClientReferenceId: $projectBeneficiaryClientReferenceId, ')
+          ..write('referrerId: $referrerId, ')
+          ..write('recipientType: $recipientType, ')
+          ..write('recipientId: $recipientId, ')
+          ..write('reasons: $reasons, ')
+          ..write('auditCreatedBy: $auditCreatedBy, ')
+          ..write('nonRecoverableError: $nonRecoverableError, ')
+          ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
+          ..write('clientModifiedTime: $clientModifiedTime, ')
+          ..write('auditCreatedTime: $auditCreatedTime, ')
+          ..write('auditModifiedBy: $auditModifiedBy, ')
+          ..write('auditModifiedTime: $auditModifiedTime, ')
+          ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('rowVersion: $rowVersion, ')
+          ..write('additionalFields: $additionalFields')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $ReferralTable extends Referral
+    with TableInfo<$ReferralTable, ReferralData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ReferralTable(this.attachedDatabase, [this._alias]);
+  final VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
+      'id', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _projectIdMeta = const VerificationMeta('projectId');
+  @override
+  late final GeneratedColumn<String?> projectId = GeneratedColumn<String?>(
+      'project_id', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _projectBeneficiaryClientReferenceIdMeta =
+      const VerificationMeta('projectBeneficiaryClientReferenceId');
+  @override
+  late final GeneratedColumn<String?> projectBeneficiaryClientReferenceId =
+      GeneratedColumn<String?>(
+          'project_beneficiary_client_reference_id', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _referrerIdMeta = const VerificationMeta('referrerId');
+  @override
+  late final GeneratedColumn<String?> referrerId = GeneratedColumn<String?>(
+      'referrer_id', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _recipientTypeMeta =
+      const VerificationMeta('recipientType');
+  @override
+  late final GeneratedColumn<String?> recipientType = GeneratedColumn<String?>(
+      'recipient_type', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _recipientIdMeta =
+      const VerificationMeta('recipientId');
+  @override
+  late final GeneratedColumn<String?> recipientId = GeneratedColumn<String?>(
+      'recipient_id', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _reasonsMeta = const VerificationMeta('reasons');
+  @override
+  late final GeneratedColumn<String?> reasons = GeneratedColumn<String?>(
+      'reasons', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _auditCreatedByMeta =
+      const VerificationMeta('auditCreatedBy');
+  @override
+  late final GeneratedColumn<String?> auditCreatedBy = GeneratedColumn<String?>(
+      'audit_created_by', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _nonRecoverableErrorMeta =
+      const VerificationMeta('nonRecoverableError');
+  @override
+  late final GeneratedColumn<bool?> nonRecoverableError =
+      GeneratedColumn<bool?>('non_recoverable_error', aliasedName, true,
+          type: const BoolType(),
+          requiredDuringInsert: false,
+          defaultConstraints: 'CHECK (non_recoverable_error IN (0, 1))',
+          defaultValue: const Constant(false));
+  final VerificationMeta _clientCreatedTimeMeta =
+      const VerificationMeta('clientCreatedTime');
+  @override
+  late final GeneratedColumn<int?> clientCreatedTime = GeneratedColumn<int?>(
+      'client_created_time', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String?> clientModifiedBy =
+      GeneratedColumn<String?>('client_modified_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String?> clientCreatedBy =
+      GeneratedColumn<String?>('client_created_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _clientModifiedTimeMeta =
+      const VerificationMeta('clientModifiedTime');
+  @override
+  late final GeneratedColumn<int?> clientModifiedTime = GeneratedColumn<int?>(
+      'client_modified_time', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _auditCreatedTimeMeta =
+      const VerificationMeta('auditCreatedTime');
+  @override
+  late final GeneratedColumn<int?> auditCreatedTime = GeneratedColumn<int?>(
+      'audit_created_time', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _auditModifiedByMeta =
+      const VerificationMeta('auditModifiedBy');
+  @override
+  late final GeneratedColumn<String?> auditModifiedBy =
+      GeneratedColumn<String?>('audit_modified_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _auditModifiedTimeMeta =
+      const VerificationMeta('auditModifiedTime');
+  @override
+  late final GeneratedColumn<int?> auditModifiedTime = GeneratedColumn<int?>(
+      'audit_modified_time', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _clientReferenceIdMeta =
+      const VerificationMeta('clientReferenceId');
+  @override
+  late final GeneratedColumn<String?> clientReferenceId =
+      GeneratedColumn<String?>('client_reference_id', aliasedName, false,
+          type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _tenantIdMeta = const VerificationMeta('tenantId');
+  @override
+  late final GeneratedColumn<String?> tenantId = GeneratedColumn<String?>(
+      'tenant_id', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _isDeletedMeta = const VerificationMeta('isDeleted');
+  @override
+  late final GeneratedColumn<bool?> isDeleted = GeneratedColumn<bool?>(
+      'is_deleted', aliasedName, true,
+      type: const BoolType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (is_deleted IN (0, 1))',
+      defaultValue: const Constant(false));
+  final VerificationMeta _rowVersionMeta = const VerificationMeta('rowVersion');
+  @override
+  late final GeneratedColumn<int?> rowVersion = GeneratedColumn<int?>(
+      'row_version', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _additionalFieldsMeta =
+      const VerificationMeta('additionalFields');
+  @override
+  late final GeneratedColumn<String?> additionalFields =
+      GeneratedColumn<String?>('additional_fields', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        projectId,
+        projectBeneficiaryClientReferenceId,
+        referrerId,
+        recipientType,
+        recipientId,
+        reasons,
+        auditCreatedBy,
+        nonRecoverableError,
+        clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
+        clientModifiedTime,
+        auditCreatedTime,
+        auditModifiedBy,
+        auditModifiedTime,
+        clientReferenceId,
+        tenantId,
+        isDeleted,
+        rowVersion,
+        additionalFields
+      ];
+  @override
+  String get aliasedName => _alias ?? 'referral';
+  @override
+  String get actualTableName => 'referral';
+  @override
+  VerificationContext validateIntegrity(Insertable<ReferralData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('project_id')) {
+      context.handle(_projectIdMeta,
+          projectId.isAcceptableOrUnknown(data['project_id']!, _projectIdMeta));
+    }
+    if (data.containsKey('project_beneficiary_client_reference_id')) {
+      context.handle(
+          _projectBeneficiaryClientReferenceIdMeta,
+          projectBeneficiaryClientReferenceId.isAcceptableOrUnknown(
+              data['project_beneficiary_client_reference_id']!,
+              _projectBeneficiaryClientReferenceIdMeta));
+    }
+    if (data.containsKey('referrer_id')) {
+      context.handle(
+          _referrerIdMeta,
+          referrerId.isAcceptableOrUnknown(
+              data['referrer_id']!, _referrerIdMeta));
+    }
+    if (data.containsKey('recipient_type')) {
+      context.handle(
+          _recipientTypeMeta,
+          recipientType.isAcceptableOrUnknown(
+              data['recipient_type']!, _recipientTypeMeta));
+    }
+    if (data.containsKey('recipient_id')) {
+      context.handle(
+          _recipientIdMeta,
+          recipientId.isAcceptableOrUnknown(
+              data['recipient_id']!, _recipientIdMeta));
+    }
+    if (data.containsKey('reasons')) {
+      context.handle(_reasonsMeta,
+          reasons.isAcceptableOrUnknown(data['reasons']!, _reasonsMeta));
+    }
+    if (data.containsKey('audit_created_by')) {
+      context.handle(
+          _auditCreatedByMeta,
+          auditCreatedBy.isAcceptableOrUnknown(
+              data['audit_created_by']!, _auditCreatedByMeta));
+    }
+    if (data.containsKey('non_recoverable_error')) {
+      context.handle(
+          _nonRecoverableErrorMeta,
+          nonRecoverableError.isAcceptableOrUnknown(
+              data['non_recoverable_error']!, _nonRecoverableErrorMeta));
+    }
+    if (data.containsKey('client_created_time')) {
+      context.handle(
+          _clientCreatedTimeMeta,
+          clientCreatedTime.isAcceptableOrUnknown(
+              data['client_created_time']!, _clientCreatedTimeMeta));
+    }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
+    }
+    if (data.containsKey('client_modified_time')) {
+      context.handle(
+          _clientModifiedTimeMeta,
+          clientModifiedTime.isAcceptableOrUnknown(
+              data['client_modified_time']!, _clientModifiedTimeMeta));
+    }
+    if (data.containsKey('audit_created_time')) {
+      context.handle(
+          _auditCreatedTimeMeta,
+          auditCreatedTime.isAcceptableOrUnknown(
+              data['audit_created_time']!, _auditCreatedTimeMeta));
+    }
+    if (data.containsKey('audit_modified_by')) {
+      context.handle(
+          _auditModifiedByMeta,
+          auditModifiedBy.isAcceptableOrUnknown(
+              data['audit_modified_by']!, _auditModifiedByMeta));
+    }
+    if (data.containsKey('audit_modified_time')) {
+      context.handle(
+          _auditModifiedTimeMeta,
+          auditModifiedTime.isAcceptableOrUnknown(
+              data['audit_modified_time']!, _auditModifiedTimeMeta));
+    }
+    if (data.containsKey('client_reference_id')) {
+      context.handle(
+          _clientReferenceIdMeta,
+          clientReferenceId.isAcceptableOrUnknown(
+              data['client_reference_id']!, _clientReferenceIdMeta));
+    } else if (isInserting) {
+      context.missing(_clientReferenceIdMeta);
+    }
+    if (data.containsKey('tenant_id')) {
+      context.handle(_tenantIdMeta,
+          tenantId.isAcceptableOrUnknown(data['tenant_id']!, _tenantIdMeta));
+    }
+    if (data.containsKey('is_deleted')) {
+      context.handle(_isDeletedMeta,
+          isDeleted.isAcceptableOrUnknown(data['is_deleted']!, _isDeletedMeta));
+    }
+    if (data.containsKey('row_version')) {
+      context.handle(
+          _rowVersionMeta,
+          rowVersion.isAcceptableOrUnknown(
+              data['row_version']!, _rowVersionMeta));
+    }
+    if (data.containsKey('additional_fields')) {
+      context.handle(
+          _additionalFieldsMeta,
+          additionalFields.isAcceptableOrUnknown(
+              data['additional_fields']!, _additionalFieldsMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {auditCreatedBy, clientReferenceId};
+  @override
+  ReferralData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    return ReferralData.fromData(data,
+        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  }
+
+  @override
+  $ReferralTable createAlias(String alias) {
+    return $ReferralTable(attachedDatabase, alias);
+  }
+}
+
 class StockData extends DataClass implements Insertable<StockData> {
   final String? id;
   final String? tenantId;
@@ -30076,6 +31056,7 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
       $ProjectResourceTable(this);
   late final $ProjectStaffTable projectStaff = $ProjectStaffTable(this);
   late final $ProjectTypeTable projectType = $ProjectTypeTable(this);
+  late final $ReferralTable referral = $ReferralTable(this);
   late final $StockTable stock = $StockTable(this);
   late final $StockReconciliationTable stockReconciliation =
       $StockReconciliationTable(this);
@@ -30115,6 +31096,7 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
         projectResource,
         projectStaff,
         projectType,
+        referral,
         stock,
         stockReconciliation,
         target,

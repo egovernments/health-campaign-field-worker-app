@@ -22,6 +22,10 @@
       "value": "BENEFICIARY_REFUSED"
     },
     {
+      "name": "Beneficiary Referred",
+      "value": "BENEFICIARY_REFERRED"
+    },
+    {
       "name": "Administered Success",
       "value": "ADMINISTERED_SUCCESS"
     },

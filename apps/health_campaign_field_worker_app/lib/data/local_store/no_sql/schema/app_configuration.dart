@@ -71,6 +71,8 @@ class AppConfiguration {
   FirebaseConfig? firebaseConfig;
 
   late List<SymptomsTypes>? symptomsTypes;
+
+  late List<ReferralReasons>? referralReasons;
 }
 
 @embedded
@@ -181,6 +183,13 @@ class FirebaseConfig {
 
 @embedded
 class SymptomsTypes {
+  late String code;
+  late String name;
+  late bool active;
+}
+
+@embedded
+class ReferralReasons {
   late String code;
   late String name;
   late bool active;
