@@ -174,7 +174,7 @@ void onStart(ServiceInstance service) async {
               flutterLocalNotificationsPlugin.show(
                 888,
                 'Auto Sync',
-                'Speed : ${speedArray.first.toString().substring(0, 4)}Mb/ps - BatchSize : $configuredBatchSize',
+                'Speed : ${speedArray.first.toString().substring(0, speedArray.first.toString().length >= 4 ? 4 : speedArray.first.toString().length)}Mb/ps - BatchSize : $configuredBatchSize',
                 const NotificationDetails(
                   android: AndroidNotificationDetails(
                     "my_foreground",

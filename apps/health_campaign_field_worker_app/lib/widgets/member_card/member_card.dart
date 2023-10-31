@@ -224,6 +224,8 @@ class MemberCard extends StatelessWidget {
                       : !isNotEligible
                           ? DigitElevatedButton(
                               onPressed: () async {
+                                final bloc =
+                                    context.read<HouseholdOverviewBloc>();
                                 if (isBeneficiaryReferred) {
                                   final shouldSubmit =
                                       await DigitDialog.show<bool>(
@@ -319,20 +321,20 @@ class MemberCard extends StatelessWidget {
                                   );
 
                                   if (!(shouldSubmit ?? false)) {
-                                    final parent =
-                                        context.router.parent() as StackRouter;
-                                    parent
-                                      ..pop()
-                                      ..pop();
-                                    context.router.push(
-                                      AcknowledgementRoute(),
+                                    Future.delayed(
+                                      const Duration(milliseconds: 100),
+                                      () {
+                                        bloc.add(HouseholdOverviewReloadEvent(
+                                          projectId: context.projectId,
+                                          projectBeneficiaryType:
+                                              context.beneficiaryType,
+                                        ));
+                                      },
                                     );
 
                                     return;
                                   }
                                 }
-                                final bloc =
-                                    context.read<HouseholdOverviewBloc>();
 
                                 bloc.add(
                                   HouseholdOverviewEvent.selectedIndividual(

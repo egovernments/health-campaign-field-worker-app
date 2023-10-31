@@ -8,7 +8,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../blocs/project/project.dart';
 import '../../blocs/search_households/search_households.dart';
 import '../../models/data_model.dart';
-import '../../models/project_type/project_type_model.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../localized.dart';
