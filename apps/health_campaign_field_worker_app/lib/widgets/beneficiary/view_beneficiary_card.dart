@@ -57,19 +57,19 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
 
     final headerList = [
       TableHeader(
-        'Beneficiary',
+        localizations.translate(i18.beneficiaryDetails.beneficiaryHeader),
         cellKey: 'beneficiary',
       ),
       TableHeader(
-        'Delivery',
+        localizations.translate(i18.beneficiaryDetails.deliveryHeader),
         cellKey: 'delivery',
       ),
       TableHeader(
-        'Age',
+        localizations.translate(i18.individualDetails.ageLabelText),
         cellKey: 'age',
       ),
       TableHeader(
-        'Gender',
+        localizations.translate(i18.common.coreCommonGender),
         cellKey: 'gender',
       ),
     ];
@@ -78,8 +78,6 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
         ? headerList.where((element) => element.cellKey != 'delivery').toList()
         : headerList;
     final bloc = context.read<ProjectBloc>().state;
-    final validMinAge = bloc.projectType?.validMinAge;
-    final validMaxAge = bloc.projectType?.validMaxAge;
     final currentCycle = bloc.projectType?.cycles?.firstWhereOrNull(
       (e) =>
           (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
