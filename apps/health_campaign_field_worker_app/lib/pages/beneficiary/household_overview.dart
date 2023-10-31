@@ -10,6 +10,7 @@ import '../../blocs/household_overview/household_overview.dart';
 import '../../blocs/project/project.dart';
 import '../../blocs/search_households/search_households.dart';
 import '../../models/data_model.dart';
+import '../../models/project_type/project_type_model.dart';
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
@@ -322,6 +323,15 @@ class _HouseholdOverviewPageState
                                                     projectBeneficiary.first
                                                         .clientReferenceId)
                                                 .toList();
+                                            final referralData = state
+                                                .householdMemberWrapper
+                                                .referrals
+                                                ?.where((element) =>
+                                                    element
+                                                        .projectBeneficiaryClientReferenceId ==
+                                                    projectBeneficiary.first
+                                                        .clientReferenceId)
+                                                .toList();
                                             final sideEffectData = taskdata !=
                                                         null &&
                                                     taskdata.isNotEmpty
@@ -366,6 +376,11 @@ class _HouseholdOverviewPageState
                                             final isBeneficiaryRefused =
                                                 checkIfBeneficiaryRefused(
                                               taskdata,
+                                            );
+                                            final isBeneficiaryReferred =
+                                                checkIfBeneficiaryReferred(
+                                              referralData,
+                                              currentCycle ?? Cycle(),
                                             );
 
                                             return MemberCard(
@@ -519,7 +534,6 @@ class _HouseholdOverviewPageState
                                                       sideEffectData,
                                                     )
                                                   : false,
-                                              // TODO Need to handle the null check
                                               name: e.name?.givenName ?? ' - ',
                                               years: (e.dateOfBirth == null
                                                       ? null
@@ -550,6 +564,8 @@ class _HouseholdOverviewPageState
                                                         taskdata,
                                                         currentCycle,
                                                       ),
+                                              isBeneficiaryReferred:
+                                                  isBeneficiaryReferred,
                                               isDelivered: taskdata == null
                                                   ? false
                                                   : taskdata.isNotEmpty &&

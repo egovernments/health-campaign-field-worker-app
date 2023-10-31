@@ -13,7 +13,6 @@ import '../data/local_store/no_sql/schema/project_types.dart';
 import '../data/local_store/no_sql/schema/row_versions.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/local_store/sql_store/sql_store.dart';
-import '../data/repositories/local/address.dart';
 import '../data/repositories/local/boundary.dart';
 import '../data/repositories/local/facility.dart';
 import '../data/repositories/local/household.dart';
@@ -46,6 +45,7 @@ import '../data/repositories/remote/project_product_variant.dart';
 import '../data/repositories/remote/project_resource.dart';
 import '../data/repositories/remote/project_staff.dart';
 import '../data/repositories/remote/project_type.dart';
+import '../data/repositories/remote/referral.dart';
 import '../data/repositories/remote/service.dart';
 import '../data/repositories/remote/service_definition.dart';
 import '../data/repositories/remote/side_effect.dart';
@@ -217,6 +217,8 @@ class Constants {
           HouseholdMemberRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.sideEffect)
           SideEffectRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.referral)
+          ReferralRemoteRepository(dio, actionMap: actions),
       ]);
     }
 
@@ -251,6 +253,15 @@ class KeyValue {
   String label;
   dynamic key;
   KeyValue(this.label, this.key);
+}
+
+class StatusKeys {
+  bool isNotEligible;
+  bool isBeneficiaryRefused;
+  bool isBeneficiaryReferred;
+  bool isStatusReset;
+  StatusKeys(this.isNotEligible, this.isBeneficiaryRefused,
+      this.isBeneficiaryReferred, this.isStatusReset);
 }
 
 class RequestInfoData {

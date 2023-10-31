@@ -261,6 +261,50 @@ class PerformSyncDown {
               }
             }
 
+          case DataModelType.referral:
+            responseEntities = await remote.search(ReferralSearchModel(
+              clientReferenceId: entities
+                  .whereType<ReferralModel>()
+                  .map((e) => e.clientReferenceId)
+                  .whereNotNull()
+                  .toList(),
+              isDeleted: true,
+            ));
+
+            for (var element in typeGroupedEntity.value) {
+              if (element.id == null) return;
+              final entity = element.entity as ReferralModel;
+              var responseEntity =
+                  responseEntities.whereType<ReferralModel>().firstWhereOrNull(
+                        (e) => e.clientReferenceId == entity.clientReferenceId,
+                      );
+
+              final serverGeneratedId = responseEntity?.id;
+              final rowVersion = responseEntity?.rowVersion;
+              if (serverGeneratedId != null) {
+                local.opLogManager.updateServerGeneratedIds(
+                  model: UpdateServerGeneratedIdModel(
+                    clientReferenceId: entity.clientReferenceId,
+                    serverGeneratedId: serverGeneratedId,
+                    dataOperation: element.operation,
+                    rowVersion: rowVersion,
+                  ),
+                );
+              } else {
+                final bool markAsNonRecoverable = await local.opLogManager
+                    .updateSyncDownRetry(entity.clientReferenceId);
+
+                if (markAsNonRecoverable) {
+                  await local.update(
+                    entity.copyWith(
+                      nonRecoverableError: true,
+                    ),
+                    createOpLog: false,
+                  );
+                }
+              }
+            }
+
           case DataModelType.projectBeneficiary:
             responseEntities =
                 await remote.search(ProjectBeneficiarySearchModel(
