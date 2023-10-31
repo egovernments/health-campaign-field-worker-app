@@ -264,7 +264,7 @@ int getBatchSizeToBandwidth(
   double speed,
   List<AppConfiguration> appConfiguration,
 ) {
-  int batchSize = 1;
+  int batchSize = 0;
 
   final batchResult = appConfiguration.first.bandwidthBatchSize
       ?.where(
@@ -278,8 +278,8 @@ int getBatchSizeToBandwidth(
         appConfiguration.first.bandwidthBatchSize!.last.maxRange) {
       batchSize = appConfiguration.first.bandwidthBatchSize!.last.batchSize;
     } else if (speed <=
-        appConfiguration.first.bandwidthBatchSize!.first.maxRange) {
-      batchSize = appConfiguration.first.bandwidthBatchSize!.first.batchSize;
+        appConfiguration.first.bandwidthBatchSize!.first.minRange) {
+      batchSize = 0;
     }
   }
 
