@@ -484,18 +484,21 @@ class _StockReconciliationPageState
                                         decimal: false,
                                       ),
                                       validationMessages: {
-                                        "required": (object) => i18
-                                            .stockReconciliationDetails
-                                            .manualCountRequiredError,
-                                        "number": (object) => i18
-                                            .stockReconciliationDetails
-                                            .manualCountInvalidType,
+                                        "required": (object) =>
+                                            localizations.translate(i18
+                                                .stockReconciliationDetails
+                                                .manualCountRequiredError),
+                                        "number": (object) =>
+                                            localizations.translate(i18
+                                                .stockReconciliationDetails
+                                                .manualCountInvalidType),
                                         "min": (object) => i18
                                             .stockReconciliationDetails
                                             .manualCountMinError,
-                                        "max": (object) => i18
-                                            .stockReconciliationDetails
-                                            .manualCountMaxError,
+                                        "max": (object) =>
+                                            localizations.translate(i18
+                                                .stockReconciliationDetails
+                                                .manualCountMaxError),
                                       },
                                       onChanged: (control) {
                                         final manualStockCount = control.value;
