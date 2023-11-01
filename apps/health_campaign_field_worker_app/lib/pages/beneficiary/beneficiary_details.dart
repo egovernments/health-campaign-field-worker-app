@@ -289,11 +289,16 @@ class _BeneficiaryDetailsPageState
                                     i18.common.coreCommonGender,
                                   ): context.beneficiaryType !=
                                           BeneficiaryType.individual
-                                      ? householdMemberWrapper.headOfHousehold
-                                          .gender?.name.sentenceCase
-                                      : state.selectedIndividual?.gender?.name
-                                              .sentenceCase ??
-                                          '--',
+                                      ? localizations.translate(
+                                          householdMemberWrapper
+                                                  .headOfHousehold.gender?.name
+                                                  .toUpperCase() ??
+                                              '--',
+                                        )
+                                      : localizations.translate(state
+                                              .selectedIndividual?.gender?.name
+                                              .toUpperCase() ??
+                                          '--'),
                                   localizations.translate(
                                     i18.common.coreCommonMobileNumber,
                                   ): context.beneficiaryType !=

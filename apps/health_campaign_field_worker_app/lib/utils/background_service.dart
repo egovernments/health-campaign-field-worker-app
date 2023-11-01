@@ -171,19 +171,6 @@ void onStart(ServiceInstance service) async {
                 'batchSize': configuredBatchSize,
               });
 
-              flutterLocalNotificationsPlugin.show(
-                888,
-                'Auto Sync',
-                'Speed : ${speedArray.first.toString().substring(0, 4)}Mb/ps - BatchSize : $configuredBatchSize',
-                const NotificationDetails(
-                  android: AndroidNotificationDetails(
-                    "my_foreground",
-                    'AUTO SYNC',
-                    icon: 'ic_bg_service_small',
-                    ongoing: true,
-                  ),
-                ),
-              );
               final isSyncCompleted = await const NetworkManager(
                 configuration: NetworkManagerConfiguration(
                   persistenceConfig: PersistenceConfiguration.offlineFirst,
