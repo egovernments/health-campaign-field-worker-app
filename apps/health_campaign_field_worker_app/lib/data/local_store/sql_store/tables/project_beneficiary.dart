@@ -7,6 +7,7 @@ class ProjectBeneficiary extends Table {
   TextColumn get id => text().nullable()();
   TextColumn get projectId => text().nullable()();
   TextColumn get beneficiaryId => text().nullable()();
+  TextColumn get tag => text().nullable()();
   TextColumn get beneficiaryClientReferenceId => text().nullable()();
   TextColumn get auditCreatedBy => text().nullable()();
   BoolColumn get nonRecoverableError => boolean().nullable().withDefault(const Constant(false))();

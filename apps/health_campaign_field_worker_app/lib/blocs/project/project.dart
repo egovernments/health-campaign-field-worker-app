@@ -264,10 +264,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           ).toJson(),
         );
 
-        await mdmsRepository.writeToProjectTypeDB(
-          projectTypes,
-          isar,
-        );
         emit(state.copyWith(
           projectType: projectTypes.projectTypeWrapper?.projectTypes
               .where((element) => element.id == projects.first.projectTypeId)
@@ -299,11 +295,22 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     projects.removeDuplicates((element) => element.id);
 
     final selectedProject = await localSecureStore.selectedProject;
+    final getSelectedProjectType = await localSecureStore.selectedProjectType;
+    final currentRunningCycle = getSelectedProjectType?.cycles
+        ?.where(
+          (e) =>
+              (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
+              (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
+          // Return null when no matching cycle is found
+        )
+        .firstOrNull;
     emit(
       ProjectState(
         loading: false,
         projects: projects,
         selectedProject: selectedProject,
+        projectType: getSelectedProjectType,
+        selectedCycle: currentRunningCycle,
       ),
     );
   }
@@ -433,18 +440,14 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         ).toJson(),
       );
 
-      await mdmsRepository.writeToProjectTypeDB(
-        projectType,
-        isar,
-      );
-
-      final selectedProject = projectType.projectTypeWrapper?.projectTypes
+      final selectedProjectType = projectType.projectTypeWrapper?.projectTypes
           .where(
             (element) => element.id == event.model.projectTypeId,
           )
           .toList()
           .firstOrNull;
-      final currentRunningCycle = selectedProject?.cycles
+
+      final currentRunningCycle = selectedProjectType?.cycles
           ?.where(
             (e) =>
                 (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
@@ -454,15 +457,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           .firstOrNull;
 
       final cycles = List<Cycle>.from(
-        selectedProject?.cycles ?? [],
+        selectedProjectType?.cycles ?? [],
       );
       cycles.sort((a, b) => a.id.compareTo(b.id));
 
-      final reqProjectType = selectedProject?.copyWith(cycles: cycles);
-      emit(state.copyWith(
-        projectType: reqProjectType,
-        selectedCycle: currentRunningCycle,
-      ));
+      final reqProjectType = selectedProjectType?.copyWith(cycles: cycles);
 
       final rowversionList = await isar.rowVersionLists
           .filter()
@@ -488,6 +487,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         );
         await boundaryLocalRepository.bulkCreate(boundaries);
         await localSecureStore.setSelectedProject(event.model);
+        await localSecureStore.setSelectedProjectType(reqProjectType);
         await localSecureStore.setBoundaryRefetch(false);
         final List<RowVersionList> rowVersionList = [];
 
@@ -521,6 +521,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         }
         await boundaryLocalRepository.bulkCreate(boundaries);
         await localSecureStore.setSelectedProject(event.model);
+        await localSecureStore.setSelectedProjectType(reqProjectType);
       }
     } catch (_) {
       emit(state.copyWith(
@@ -530,11 +531,22 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
       return;
     }
+    final getSelectedProjectType = await localSecureStore.selectedProjectType;
+    final currentRunningCycle = getSelectedProjectType?.cycles
+        ?.where(
+          (e) =>
+              (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
+              (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
+          // Return null when no matching cycle is found
+        )
+        .firstOrNull;
 
     emit(state.copyWith(
       selectedProject: event.model,
       loading: false,
       syncError: null,
+      projectType: getSelectedProjectType,
+      selectedCycle: currentRunningCycle,
     ));
   }
 }
