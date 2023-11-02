@@ -142,6 +142,8 @@ abstract class OpLogManager<T extends EntityModel> {
           )
           .oplog);
     });
+
+    return;
   }
 
   Future<void> markSyncUp({
@@ -198,6 +200,8 @@ abstract class OpLogManager<T extends EntityModel> {
     } else {
       throw AppException('Invalid arguments');
     }
+
+    return;
   }
 
   Future<void> updateServerGeneratedIds({
@@ -231,6 +235,8 @@ abstract class OpLogManager<T extends EntityModel> {
         await isar.opLogs.put(updatedOplog);
       });
     }
+
+    return;
   }
 
   Future<List<OpLogEntry<T>>> getEntries(
