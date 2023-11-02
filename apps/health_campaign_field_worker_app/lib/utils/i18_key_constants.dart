@@ -95,6 +95,8 @@ class Common {
   String get min2CharsRequired => 'MIN_2_CHARS_REQUIRED';
 
   String get maxCharsRequired => 'MAX_CHARS_ALLOWED';
+
+  String get noResultsFound => 'NO_RESULTS_FOUND';
 }
 
 class AdverseEvents {
