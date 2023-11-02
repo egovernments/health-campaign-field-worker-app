@@ -14,7 +14,7 @@ class SideEffectSearchModel extends EntitySearchModel {
   final List<String>? symptoms;
   final List<String>? clientReferenceId;
   final String? tenantId;
-  
+
   SideEffectSearchModel({
     this.id,
     this.taskClientReferenceId,
@@ -25,7 +25,7 @@ class SideEffectSearchModel extends EntitySearchModel {
     this.tenantId,
     super.boundaryCode,
     super.isDeleted,
-  }):  super();
+  }) : super();
 
   @MappableConstructor()
   SideEffectSearchModel.ignoreDeleted({
@@ -37,12 +37,11 @@ class SideEffectSearchModel extends EntitySearchModel {
     this.clientReferenceId,
     this.tenantId,
     super.boundaryCode,
-  }):  super(isDeleted: false);
+  }) : super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true)
 class SideEffectModel extends EntityModel {
-
   static const schemaName = 'SideEffect';
 
   final String? id;
@@ -67,9 +66,10 @@ class SideEffectModel extends EntityModel {
     required this.clientReferenceId,
     this.tenantId,
     this.rowVersion,
-    super.auditDetails,super.clientAuditDetails,
+    super.auditDetails,
+    super.clientAuditDetails,
     super.isDeleted = false,
-  }): super();
+  }) : super();
 
   SideEffectCompanion get companion {
     return SideEffectCompanion(
@@ -92,7 +92,7 @@ class SideEffectModel extends EntityModel {
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),
-      );
+    );
   }
 }
 
