@@ -4,6 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../../models/auth/auth_model.dart';
 import '../../../models/data_model.dart';
+import '../../../models/project_type/project_type_model.dart';
 import '../../../models/role_actions/role_actions_model.dart';
 
 class LocalSecureStore {
@@ -17,6 +18,7 @@ class LocalSecureStore {
   static const actionsListkey = 'actionsListkey';
   static const isAppInActiveKey = 'isAppInActiveKey';
   static const manualSyncKey = 'manualSyncKey';
+  static const selectedProjectTypeKey = 'selectedProjectType';
 
   final storage = const FlutterSecureStorage();
 
@@ -65,6 +67,19 @@ class LocalSecureStore {
       final project = Mapper.fromMap<ProjectModel>(json.decode(projectString));
 
       return project;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<ProjectType?> get selectedProjectType async {
+    final projectBody = await storage.read(key: selectedProjectTypeKey);
+    if (projectBody == null) return null;
+
+    try {
+      final projectType = ProjectType.fromJson(json.decode(projectBody));
+
+      return projectType;
     } catch (_) {
       return null;
     }
@@ -123,6 +138,13 @@ class LocalSecureStore {
     await storage.write(
       key: selectedProjectKey,
       value: projectModel.toJson(),
+    );
+  }
+
+  Future<void> setSelectedProjectType(ProjectType? projectType) async {
+    await storage.write(
+      key: selectedProjectTypeKey,
+      value: json.encode(projectType),
     );
   }
 

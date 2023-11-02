@@ -178,6 +178,7 @@ class BeneficiaryRegistrationBloc
 
           await projectBeneficiaryRepository.create(
             ProjectBeneficiaryModel(
+              tag: event.tag,
               rowVersion: 1,
               tenantId: envConfig.variables.tenantId,
               clientReferenceId: IdGen.i.identifier,
@@ -263,6 +264,19 @@ class BeneficiaryRegistrationBloc
               ),
             ),
           );
+          final projectBeneficiary = await projectBeneficiaryRepository.search(
+            ProjectBeneficiarySearchModel(
+              beneficiaryClientReferenceId: [event.household.clientReferenceId],
+            ),
+          );
+
+          if (projectBeneficiary.isNotEmpty) {
+            if (projectBeneficiary.first.tag != event.tag) {
+              await projectBeneficiaryRepository
+                  .update(projectBeneficiary.first.copyWith(tag: event.tag));
+            }
+          }
+
           for (var element in value.individualModel) {
             await individualRepository.update(
               element.copyWith(
@@ -310,7 +324,19 @@ class BeneficiaryRegistrationBloc
               ),
             ],
           );
+
+          final projectBeneficiary = await projectBeneficiaryRepository.search(
+            ProjectBeneficiarySearchModel(
+              beneficiaryClientReferenceId: [event.model.clientReferenceId],
+            ),
+          );
           await individualRepository.update(individual);
+          if (projectBeneficiary.isNotEmpty) {
+            if (projectBeneficiary.first.tag != event.tag) {
+              await projectBeneficiaryRepository
+                  .update(projectBeneficiary.first.copyWith(tag: event.tag));
+            }
+          }
         } catch (error) {
           rethrow;
         } finally {
@@ -351,6 +377,7 @@ class BeneficiaryRegistrationBloc
           if (event.beneficiaryType == BeneficiaryType.individual) {
             await projectBeneficiaryRepository.create(
               ProjectBeneficiaryModel(
+                tag: event.tag,
                 rowVersion: 1,
                 tenantId: envConfig.variables.tenantId,
                 clientReferenceId: IdGen.i.identifier,
@@ -429,16 +456,19 @@ class BeneficiaryRegistrationEvent with _$BeneficiaryRegistrationEvent {
     required AddressModel addressModel,
     required String userUuid,
     required String projectId,
+    String? tag,
     required BeneficiaryType beneficiaryType,
   }) = BeneficiaryRegistrationAddMemberEvent;
 
   const factory BeneficiaryRegistrationEvent.updateHouseholdDetails({
     required HouseholdModel household,
     AddressModel? addressModel,
+    String? tag,
   }) = BeneficiaryRegistrationUpdateHouseholdDetailsEvent;
 
   const factory BeneficiaryRegistrationEvent.updateIndividualDetails({
     required IndividualModel model,
+    String? tag,
     required AddressModel addressModel,
   }) = BeneficiaryRegistrationUpdateIndividualDetailsEvent;
 
@@ -446,7 +476,12 @@ class BeneficiaryRegistrationEvent with _$BeneficiaryRegistrationEvent {
     required String userUuid,
     required String projectId,
     required BoundaryModel boundary,
+    String? tag,
   }) = BeneficiaryRegistrationCreateEvent;
+
+  const factory BeneficiaryRegistrationEvent.validate({
+    required String tag,
+  }) = BeneficiaryRegistrationTagEvent;
 }
 
 @freezed
@@ -466,6 +501,7 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
     required HouseholdModel householdModel,
     required List<IndividualModel> individualModel,
     required DateTime registrationDate,
+    ProjectBeneficiaryModel? projectBeneficiaryModel,
     @Default(false) bool loading,
   }) = BeneficiaryRegistrationEditHouseholdState;
 
@@ -473,6 +509,7 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
     required HouseholdModel householdModel,
     required IndividualModel individualModel,
     required AddressModel addressModel,
+    ProjectBeneficiaryModel? projectBeneficiaryModel,
     @Default(false) bool loading,
   }) = BeneficiaryRegistrationEditIndividualState;
 

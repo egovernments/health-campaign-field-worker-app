@@ -19,6 +19,15 @@
       "includeForQuery": true
     },
     {
+      "name":"tag",
+      "type": "String",
+      "includeForQuery":true,
+      "includeForEntity": true,
+      "nullable": true,
+      "includeForTable": true
+    },
+
+    {
       "name": "beneficiaryClientReferenceId",
       "type": "String",
       "includeForQuery": true,

@@ -161,6 +161,7 @@ class _HouseholdLocationPageState
                                 householdModel,
                                 individuals,
                                 registrationDate,
+                                projectBeneficiaryModel,
                                 loading,
                               ) {
                                 var addressModel = address.copyWith(
@@ -187,6 +188,7 @@ class _HouseholdLocationPageState
                                   locationAccuracy:
                                       form.control(_accuracyKey).value,
                                 );
+                                // TODO [Linking of Voucher for Household based project  need to be handled]
 
                                 bloc.add(
                                   BeneficiaryRegistrationSaveAddressEvent(

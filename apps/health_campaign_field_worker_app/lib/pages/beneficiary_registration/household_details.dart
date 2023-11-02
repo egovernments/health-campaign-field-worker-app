@@ -115,6 +115,7 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                           householdModel,
                           individuals,
                           registrationDate,
+                          projectBeneficiaryModel,
                           loading,
                         ) {
                           var household = householdModel.copyWith(

@@ -12,6 +12,7 @@ import 'blocs/boundary/boundary.dart';
 import 'blocs/localization/app_localization.dart';
 import 'blocs/localization/localization.dart';
 import 'blocs/project/project.dart';
+import 'blocs/scanner/scanner.dart';
 import 'blocs/user/user.dart';
 import 'data/data_repository.dart';
 import 'data/local_store/sql_store/sql_store.dart';
@@ -93,6 +94,15 @@ class MainApplicationState extends State<MainApplication>
                       tenantId: envConfig.variables.tenantId,
                     ),
                   ),
+              ),
+              BlocProvider(
+                create: (ctx) => ScannerBloc(
+                  const ScannerState(),
+                  projectBeneficiaryRepository: ctx
+                      .read<NetworkManager>()
+                      .repository<ProjectBeneficiaryModel,
+                          ProjectBeneficiarySearchModel>(ctx),
+                ),
               ),
               BlocProvider(
                 create: (ctx) => BoundaryBloc(

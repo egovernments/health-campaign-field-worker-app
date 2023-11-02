@@ -24,20 +24,23 @@ class DigitOutlineIconButton extends StatelessWidget {
     return OutlinedButton(
       onPressed: onPressed,
       style: buttonStyle,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Flexible(
-              child: Icon(
-            icon,
-            color: iconColor,
-          )),
-          const SizedBox(width: kPadding),
-          Text(
-            label,
-            style: textStyle,
-          ),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.all(kPadding / 2),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Flexible(
+                child: Icon(
+              icon,
+              color: iconColor,
+            )),
+            const SizedBox(width: kPadding),
+            Text(
+              label,
+              style: textStyle,
+            ),
+          ],
+        ),
       ),
     );
   }

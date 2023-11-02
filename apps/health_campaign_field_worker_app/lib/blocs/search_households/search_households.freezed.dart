@@ -38,6 +38,7 @@ mixin _$SearchHouseholdsEvent {
     required TResult Function(double latitude, double longititude,
             String projectId, double maxRadius)
         searchByProximity,
+    required TResult Function(String tag, String projectId) searchByTag,
     required TResult Function() clear,
   }) =>
       throw _privateConstructorUsedError;
@@ -63,6 +64,7 @@ mixin _$SearchHouseholdsEvent {
     TResult? Function(double latitude, double longititude, String projectId,
             double maxRadius)?
         searchByProximity,
+    TResult? Function(String tag, String projectId)? searchByTag,
     TResult? Function()? clear,
   }) =>
       throw _privateConstructorUsedError;
@@ -88,6 +90,7 @@ mixin _$SearchHouseholdsEvent {
     TResult Function(double latitude, double longititude, String projectId,
             double maxRadius)?
         searchByProximity,
+    TResult Function(String tag, String projectId)? searchByTag,
     TResult Function()? clear,
     required TResult orElse(),
   }) =>
@@ -102,6 +105,7 @@ mixin _$SearchHouseholdsEvent {
         searchByHouseholdHead,
     required TResult Function(SearchHouseholdsByProximityEvent value)
         searchByProximity,
+    required TResult Function(SearchHouseholdsByTagEvent value) searchByTag,
     required TResult Function(SearchHouseholdsClearEvent value) clear,
   }) =>
       throw _privateConstructorUsedError;
@@ -114,6 +118,7 @@ mixin _$SearchHouseholdsEvent {
         searchByHouseholdHead,
     TResult? Function(SearchHouseholdsByProximityEvent value)?
         searchByProximity,
+    TResult? Function(SearchHouseholdsByTagEvent value)? searchByTag,
     TResult? Function(SearchHouseholdsClearEvent value)? clear,
   }) =>
       throw _privateConstructorUsedError;
@@ -125,6 +130,7 @@ mixin _$SearchHouseholdsEvent {
     TResult Function(SearchHouseholdsSearchByHouseholdHeadEvent value)?
         searchByHouseholdHead,
     TResult Function(SearchHouseholdsByProximityEvent value)? searchByProximity,
+    TResult Function(SearchHouseholdsByTagEvent value)? searchByTag,
     TResult Function(SearchHouseholdsClearEvent value)? clear,
     required TResult orElse(),
   }) =>
@@ -213,6 +219,7 @@ class _$SearchHouseholdsInitializedEvent
     required TResult Function(double latitude, double longititude,
             String projectId, double maxRadius)
         searchByProximity,
+    required TResult Function(String tag, String projectId) searchByTag,
     required TResult Function() clear,
   }) {
     return initialize();
@@ -241,6 +248,7 @@ class _$SearchHouseholdsInitializedEvent
     TResult? Function(double latitude, double longititude, String projectId,
             double maxRadius)?
         searchByProximity,
+    TResult? Function(String tag, String projectId)? searchByTag,
     TResult? Function()? clear,
   }) {
     return initialize?.call();
@@ -269,6 +277,7 @@ class _$SearchHouseholdsInitializedEvent
     TResult Function(double latitude, double longititude, String projectId,
             double maxRadius)?
         searchByProximity,
+    TResult Function(String tag, String projectId)? searchByTag,
     TResult Function()? clear,
     required TResult orElse(),
   }) {
@@ -289,6 +298,7 @@ class _$SearchHouseholdsInitializedEvent
         searchByHouseholdHead,
     required TResult Function(SearchHouseholdsByProximityEvent value)
         searchByProximity,
+    required TResult Function(SearchHouseholdsByTagEvent value) searchByTag,
     required TResult Function(SearchHouseholdsClearEvent value) clear,
   }) {
     return initialize(this);
@@ -304,6 +314,7 @@ class _$SearchHouseholdsInitializedEvent
         searchByHouseholdHead,
     TResult? Function(SearchHouseholdsByProximityEvent value)?
         searchByProximity,
+    TResult? Function(SearchHouseholdsByTagEvent value)? searchByTag,
     TResult? Function(SearchHouseholdsClearEvent value)? clear,
   }) {
     return initialize?.call(this);
@@ -318,6 +329,7 @@ class _$SearchHouseholdsInitializedEvent
     TResult Function(SearchHouseholdsSearchByHouseholdHeadEvent value)?
         searchByHouseholdHead,
     TResult Function(SearchHouseholdsByProximityEvent value)? searchByProximity,
+    TResult Function(SearchHouseholdsByTagEvent value)? searchByTag,
     TResult Function(SearchHouseholdsClearEvent value)? clear,
     required TResult orElse(),
   }) {
@@ -483,6 +495,7 @@ class _$SearchHouseholdsByHouseholdsEvent
     required TResult Function(double latitude, double longititude,
             String projectId, double maxRadius)
         searchByProximity,
+    required TResult Function(String tag, String projectId) searchByTag,
     required TResult Function() clear,
   }) {
     return searchByHousehold(projectId, latitude, longitude, maxRadius,
@@ -512,6 +525,7 @@ class _$SearchHouseholdsByHouseholdsEvent
     TResult? Function(double latitude, double longititude, String projectId,
             double maxRadius)?
         searchByProximity,
+    TResult? Function(String tag, String projectId)? searchByTag,
     TResult? Function()? clear,
   }) {
     return searchByHousehold?.call(projectId, latitude, longitude, maxRadius,
@@ -541,6 +555,7 @@ class _$SearchHouseholdsByHouseholdsEvent
     TResult Function(double latitude, double longititude, String projectId,
             double maxRadius)?
         searchByProximity,
+    TResult Function(String tag, String projectId)? searchByTag,
     TResult Function()? clear,
     required TResult orElse(),
   }) {
@@ -562,6 +577,7 @@ class _$SearchHouseholdsByHouseholdsEvent
         searchByHouseholdHead,
     required TResult Function(SearchHouseholdsByProximityEvent value)
         searchByProximity,
+    required TResult Function(SearchHouseholdsByTagEvent value) searchByTag,
     required TResult Function(SearchHouseholdsClearEvent value) clear,
   }) {
     return searchByHousehold(this);
@@ -577,6 +593,7 @@ class _$SearchHouseholdsByHouseholdsEvent
         searchByHouseholdHead,
     TResult? Function(SearchHouseholdsByProximityEvent value)?
         searchByProximity,
+    TResult? Function(SearchHouseholdsByTagEvent value)? searchByTag,
     TResult? Function(SearchHouseholdsClearEvent value)? clear,
   }) {
     return searchByHousehold?.call(this);
@@ -591,6 +608,7 @@ class _$SearchHouseholdsByHouseholdsEvent
     TResult Function(SearchHouseholdsSearchByHouseholdHeadEvent value)?
         searchByHouseholdHead,
     TResult Function(SearchHouseholdsByProximityEvent value)? searchByProximity,
+    TResult Function(SearchHouseholdsByTagEvent value)? searchByTag,
     TResult Function(SearchHouseholdsClearEvent value)? clear,
     required TResult orElse(),
   }) {
@@ -774,6 +792,7 @@ class _$SearchHouseholdsSearchByHouseholdHeadEvent
     required TResult Function(double latitude, double longititude,
             String projectId, double maxRadius)
         searchByProximity,
+    required TResult Function(String tag, String projectId) searchByTag,
     required TResult Function() clear,
   }) {
     return searchByHouseholdHead(searchText, projectId, isProximityEnabled,
@@ -803,6 +822,7 @@ class _$SearchHouseholdsSearchByHouseholdHeadEvent
     TResult? Function(double latitude, double longititude, String projectId,
             double maxRadius)?
         searchByProximity,
+    TResult? Function(String tag, String projectId)? searchByTag,
     TResult? Function()? clear,
   }) {
     return searchByHouseholdHead?.call(searchText, projectId,
@@ -832,6 +852,7 @@ class _$SearchHouseholdsSearchByHouseholdHeadEvent
     TResult Function(double latitude, double longititude, String projectId,
             double maxRadius)?
         searchByProximity,
+    TResult Function(String tag, String projectId)? searchByTag,
     TResult Function()? clear,
     required TResult orElse(),
   }) {
@@ -853,6 +874,7 @@ class _$SearchHouseholdsSearchByHouseholdHeadEvent
         searchByHouseholdHead,
     required TResult Function(SearchHouseholdsByProximityEvent value)
         searchByProximity,
+    required TResult Function(SearchHouseholdsByTagEvent value) searchByTag,
     required TResult Function(SearchHouseholdsClearEvent value) clear,
   }) {
     return searchByHouseholdHead(this);
@@ -868,6 +890,7 @@ class _$SearchHouseholdsSearchByHouseholdHeadEvent
         searchByHouseholdHead,
     TResult? Function(SearchHouseholdsByProximityEvent value)?
         searchByProximity,
+    TResult? Function(SearchHouseholdsByTagEvent value)? searchByTag,
     TResult? Function(SearchHouseholdsClearEvent value)? clear,
   }) {
     return searchByHouseholdHead?.call(this);
@@ -882,6 +905,7 @@ class _$SearchHouseholdsSearchByHouseholdHeadEvent
     TResult Function(SearchHouseholdsSearchByHouseholdHeadEvent value)?
         searchByHouseholdHead,
     TResult Function(SearchHouseholdsByProximityEvent value)? searchByProximity,
+    TResult Function(SearchHouseholdsByTagEvent value)? searchByTag,
     TResult Function(SearchHouseholdsClearEvent value)? clear,
     required TResult orElse(),
   }) {
@@ -1041,6 +1065,7 @@ class _$SearchHouseholdsByProximityEvent
     required TResult Function(double latitude, double longititude,
             String projectId, double maxRadius)
         searchByProximity,
+    required TResult Function(String tag, String projectId) searchByTag,
     required TResult Function() clear,
   }) {
     return searchByProximity(latitude, longititude, projectId, maxRadius);
@@ -1069,6 +1094,7 @@ class _$SearchHouseholdsByProximityEvent
     TResult? Function(double latitude, double longititude, String projectId,
             double maxRadius)?
         searchByProximity,
+    TResult? Function(String tag, String projectId)? searchByTag,
     TResult? Function()? clear,
   }) {
     return searchByProximity?.call(latitude, longititude, projectId, maxRadius);
@@ -1097,6 +1123,7 @@ class _$SearchHouseholdsByProximityEvent
     TResult Function(double latitude, double longititude, String projectId,
             double maxRadius)?
         searchByProximity,
+    TResult Function(String tag, String projectId)? searchByTag,
     TResult Function()? clear,
     required TResult orElse(),
   }) {
@@ -1117,6 +1144,7 @@ class _$SearchHouseholdsByProximityEvent
         searchByHouseholdHead,
     required TResult Function(SearchHouseholdsByProximityEvent value)
         searchByProximity,
+    required TResult Function(SearchHouseholdsByTagEvent value) searchByTag,
     required TResult Function(SearchHouseholdsClearEvent value) clear,
   }) {
     return searchByProximity(this);
@@ -1132,6 +1160,7 @@ class _$SearchHouseholdsByProximityEvent
         searchByHouseholdHead,
     TResult? Function(SearchHouseholdsByProximityEvent value)?
         searchByProximity,
+    TResult? Function(SearchHouseholdsByTagEvent value)? searchByTag,
     TResult? Function(SearchHouseholdsClearEvent value)? clear,
   }) {
     return searchByProximity?.call(this);
@@ -1146,6 +1175,7 @@ class _$SearchHouseholdsByProximityEvent
     TResult Function(SearchHouseholdsSearchByHouseholdHeadEvent value)?
         searchByHouseholdHead,
     TResult Function(SearchHouseholdsByProximityEvent value)? searchByProximity,
+    TResult Function(SearchHouseholdsByTagEvent value)? searchByTag,
     TResult Function(SearchHouseholdsClearEvent value)? clear,
     required TResult orElse(),
   }) {
@@ -1171,6 +1201,237 @@ abstract class SearchHouseholdsByProximityEvent
   @JsonKey(ignore: true)
   _$$SearchHouseholdsByProximityEventCopyWith<
           _$SearchHouseholdsByProximityEvent>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$SearchHouseholdsByTagEventCopyWith<$Res> {
+  factory _$$SearchHouseholdsByTagEventCopyWith(
+          _$SearchHouseholdsByTagEvent value,
+          $Res Function(_$SearchHouseholdsByTagEvent) then) =
+      __$$SearchHouseholdsByTagEventCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String tag, String projectId});
+}
+
+/// @nodoc
+class __$$SearchHouseholdsByTagEventCopyWithImpl<$Res>
+    extends _$SearchHouseholdsEventCopyWithImpl<$Res,
+        _$SearchHouseholdsByTagEvent>
+    implements _$$SearchHouseholdsByTagEventCopyWith<$Res> {
+  __$$SearchHouseholdsByTagEventCopyWithImpl(
+      _$SearchHouseholdsByTagEvent _value,
+      $Res Function(_$SearchHouseholdsByTagEvent) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? tag = null,
+    Object? projectId = null,
+  }) {
+    return _then(_$SearchHouseholdsByTagEvent(
+      tag: null == tag
+          ? _value.tag
+          : tag // ignore: cast_nullable_to_non_nullable
+              as String,
+      projectId: null == projectId
+          ? _value.projectId
+          : projectId // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$SearchHouseholdsByTagEvent implements SearchHouseholdsByTagEvent {
+  const _$SearchHouseholdsByTagEvent(
+      {required this.tag, required this.projectId});
+
+  @override
+  final String tag;
+  @override
+  final String projectId;
+
+  @override
+  String toString() {
+    return 'SearchHouseholdsEvent.searchByTag(tag: $tag, projectId: $projectId)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$SearchHouseholdsByTagEvent &&
+            (identical(other.tag, tag) || other.tag == tag) &&
+            (identical(other.projectId, projectId) ||
+                other.projectId == projectId));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, tag, projectId);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$SearchHouseholdsByTagEventCopyWith<_$SearchHouseholdsByTagEvent>
+      get copyWith => __$$SearchHouseholdsByTagEventCopyWithImpl<
+          _$SearchHouseholdsByTagEvent>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initialize,
+    required TResult Function(
+            String projectId,
+            double? latitude,
+            double? longitude,
+            double? maxRadius,
+            bool isProximityEnabled,
+            HouseholdModel householdModel)
+        searchByHousehold,
+    required TResult Function(
+            String searchText,
+            String projectId,
+            bool isProximityEnabled,
+            double? latitude,
+            double? longitude,
+            double? maxRadius)
+        searchByHouseholdHead,
+    required TResult Function(double latitude, double longititude,
+            String projectId, double maxRadius)
+        searchByProximity,
+    required TResult Function(String tag, String projectId) searchByTag,
+    required TResult Function() clear,
+  }) {
+    return searchByTag(tag, projectId);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initialize,
+    TResult? Function(
+            String projectId,
+            double? latitude,
+            double? longitude,
+            double? maxRadius,
+            bool isProximityEnabled,
+            HouseholdModel householdModel)?
+        searchByHousehold,
+    TResult? Function(
+            String searchText,
+            String projectId,
+            bool isProximityEnabled,
+            double? latitude,
+            double? longitude,
+            double? maxRadius)?
+        searchByHouseholdHead,
+    TResult? Function(double latitude, double longititude, String projectId,
+            double maxRadius)?
+        searchByProximity,
+    TResult? Function(String tag, String projectId)? searchByTag,
+    TResult? Function()? clear,
+  }) {
+    return searchByTag?.call(tag, projectId);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initialize,
+    TResult Function(
+            String projectId,
+            double? latitude,
+            double? longitude,
+            double? maxRadius,
+            bool isProximityEnabled,
+            HouseholdModel householdModel)?
+        searchByHousehold,
+    TResult Function(
+            String searchText,
+            String projectId,
+            bool isProximityEnabled,
+            double? latitude,
+            double? longitude,
+            double? maxRadius)?
+        searchByHouseholdHead,
+    TResult Function(double latitude, double longititude, String projectId,
+            double maxRadius)?
+        searchByProximity,
+    TResult Function(String tag, String projectId)? searchByTag,
+    TResult Function()? clear,
+    required TResult orElse(),
+  }) {
+    if (searchByTag != null) {
+      return searchByTag(tag, projectId);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(SearchHouseholdsInitializedEvent value)
+        initialize,
+    required TResult Function(SearchHouseholdsByHouseholdsEvent value)
+        searchByHousehold,
+    required TResult Function(SearchHouseholdsSearchByHouseholdHeadEvent value)
+        searchByHouseholdHead,
+    required TResult Function(SearchHouseholdsByProximityEvent value)
+        searchByProximity,
+    required TResult Function(SearchHouseholdsByTagEvent value) searchByTag,
+    required TResult Function(SearchHouseholdsClearEvent value) clear,
+  }) {
+    return searchByTag(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(SearchHouseholdsInitializedEvent value)? initialize,
+    TResult? Function(SearchHouseholdsByHouseholdsEvent value)?
+        searchByHousehold,
+    TResult? Function(SearchHouseholdsSearchByHouseholdHeadEvent value)?
+        searchByHouseholdHead,
+    TResult? Function(SearchHouseholdsByProximityEvent value)?
+        searchByProximity,
+    TResult? Function(SearchHouseholdsByTagEvent value)? searchByTag,
+    TResult? Function(SearchHouseholdsClearEvent value)? clear,
+  }) {
+    return searchByTag?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(SearchHouseholdsInitializedEvent value)? initialize,
+    TResult Function(SearchHouseholdsByHouseholdsEvent value)?
+        searchByHousehold,
+    TResult Function(SearchHouseholdsSearchByHouseholdHeadEvent value)?
+        searchByHouseholdHead,
+    TResult Function(SearchHouseholdsByProximityEvent value)? searchByProximity,
+    TResult Function(SearchHouseholdsByTagEvent value)? searchByTag,
+    TResult Function(SearchHouseholdsClearEvent value)? clear,
+    required TResult orElse(),
+  }) {
+    if (searchByTag != null) {
+      return searchByTag(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class SearchHouseholdsByTagEvent implements SearchHouseholdsEvent {
+  const factory SearchHouseholdsByTagEvent(
+      {required final String tag,
+      required final String projectId}) = _$SearchHouseholdsByTagEvent;
+
+  String get tag;
+  String get projectId;
+  @JsonKey(ignore: true)
+  _$$SearchHouseholdsByTagEventCopyWith<_$SearchHouseholdsByTagEvent>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -1236,6 +1497,7 @@ class _$SearchHouseholdsClearEvent implements SearchHouseholdsClearEvent {
     required TResult Function(double latitude, double longititude,
             String projectId, double maxRadius)
         searchByProximity,
+    required TResult Function(String tag, String projectId) searchByTag,
     required TResult Function() clear,
   }) {
     return clear();
@@ -1264,6 +1526,7 @@ class _$SearchHouseholdsClearEvent implements SearchHouseholdsClearEvent {
     TResult? Function(double latitude, double longititude, String projectId,
             double maxRadius)?
         searchByProximity,
+    TResult? Function(String tag, String projectId)? searchByTag,
     TResult? Function()? clear,
   }) {
     return clear?.call();
@@ -1292,6 +1555,7 @@ class _$SearchHouseholdsClearEvent implements SearchHouseholdsClearEvent {
     TResult Function(double latitude, double longititude, String projectId,
             double maxRadius)?
         searchByProximity,
+    TResult Function(String tag, String projectId)? searchByTag,
     TResult Function()? clear,
     required TResult orElse(),
   }) {
@@ -1312,6 +1576,7 @@ class _$SearchHouseholdsClearEvent implements SearchHouseholdsClearEvent {
         searchByHouseholdHead,
     required TResult Function(SearchHouseholdsByProximityEvent value)
         searchByProximity,
+    required TResult Function(SearchHouseholdsByTagEvent value) searchByTag,
     required TResult Function(SearchHouseholdsClearEvent value) clear,
   }) {
     return clear(this);
@@ -1327,6 +1592,7 @@ class _$SearchHouseholdsClearEvent implements SearchHouseholdsClearEvent {
         searchByHouseholdHead,
     TResult? Function(SearchHouseholdsByProximityEvent value)?
         searchByProximity,
+    TResult? Function(SearchHouseholdsByTagEvent value)? searchByTag,
     TResult? Function(SearchHouseholdsClearEvent value)? clear,
   }) {
     return clear?.call(this);
@@ -1341,6 +1607,7 @@ class _$SearchHouseholdsClearEvent implements SearchHouseholdsClearEvent {
     TResult Function(SearchHouseholdsSearchByHouseholdHeadEvent value)?
         searchByHouseholdHead,
     TResult Function(SearchHouseholdsByProximityEvent value)? searchByProximity,
+    TResult Function(SearchHouseholdsByTagEvent value)? searchByTag,
     TResult Function(SearchHouseholdsClearEvent value)? clear,
     required TResult orElse(),
   }) {
@@ -1359,12 +1626,9 @@ abstract class SearchHouseholdsClearEvent implements SearchHouseholdsEvent {
 mixin _$SearchHouseholdsState {
   bool get loading => throw _privateConstructorUsedError;
   String? get searchQuery => throw _privateConstructorUsedError;
+  String? get tag => throw _privateConstructorUsedError;
   List<HouseholdMemberWrapper> get householdMembers =>
       throw _privateConstructorUsedError;
-  int get registeredHouseholds => throw _privateConstructorUsedError;
-  int get deliveredInterventions => throw _privateConstructorUsedError;
-  int get sideEffectsObserved => throw _privateConstructorUsedError;
-  int get referralsDone => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $SearchHouseholdsStateCopyWith<SearchHouseholdsState> get copyWith =>
@@ -1380,11 +1644,8 @@ abstract class $SearchHouseholdsStateCopyWith<$Res> {
   $Res call(
       {bool loading,
       String? searchQuery,
-      List<HouseholdMemberWrapper> householdMembers,
-      int registeredHouseholds,
-      int deliveredInterventions,
-      int sideEffectsObserved,
-      int referralsDone});
+      String? tag,
+      List<HouseholdMemberWrapper> householdMembers});
 }
 
 /// @nodoc
@@ -1403,11 +1664,8 @@ class _$SearchHouseholdsStateCopyWithImpl<$Res,
   $Res call({
     Object? loading = null,
     Object? searchQuery = freezed,
+    Object? tag = freezed,
     Object? householdMembers = null,
-    Object? registeredHouseholds = null,
-    Object? deliveredInterventions = null,
-    Object? sideEffectsObserved = null,
-    Object? referralsDone = null,
   }) {
     return _then(_value.copyWith(
       loading: null == loading
@@ -1418,26 +1676,14 @@ class _$SearchHouseholdsStateCopyWithImpl<$Res,
           ? _value.searchQuery
           : searchQuery // ignore: cast_nullable_to_non_nullable
               as String?,
+      tag: freezed == tag
+          ? _value.tag
+          : tag // ignore: cast_nullable_to_non_nullable
+              as String?,
       householdMembers: null == householdMembers
           ? _value.householdMembers
           : householdMembers // ignore: cast_nullable_to_non_nullable
               as List<HouseholdMemberWrapper>,
-      registeredHouseholds: null == registeredHouseholds
-          ? _value.registeredHouseholds
-          : registeredHouseholds // ignore: cast_nullable_to_non_nullable
-              as int,
-      deliveredInterventions: null == deliveredInterventions
-          ? _value.deliveredInterventions
-          : deliveredInterventions // ignore: cast_nullable_to_non_nullable
-              as int,
-      sideEffectsObserved: null == sideEffectsObserved
-          ? _value.sideEffectsObserved
-          : sideEffectsObserved // ignore: cast_nullable_to_non_nullable
-              as int,
-      referralsDone: null == referralsDone
-          ? _value.referralsDone
-          : referralsDone // ignore: cast_nullable_to_non_nullable
-              as int,
     ) as $Val);
   }
 }
@@ -1453,11 +1699,8 @@ abstract class _$$_SearchHouseholdsStateCopyWith<$Res>
   $Res call(
       {bool loading,
       String? searchQuery,
-      List<HouseholdMemberWrapper> householdMembers,
-      int registeredHouseholds,
-      int deliveredInterventions,
-      int sideEffectsObserved,
-      int referralsDone});
+      String? tag,
+      List<HouseholdMemberWrapper> householdMembers});
 }
 
 /// @nodoc
@@ -1473,11 +1716,8 @@ class __$$_SearchHouseholdsStateCopyWithImpl<$Res>
   $Res call({
     Object? loading = null,
     Object? searchQuery = freezed,
+    Object? tag = freezed,
     Object? householdMembers = null,
-    Object? registeredHouseholds = null,
-    Object? deliveredInterventions = null,
-    Object? sideEffectsObserved = null,
-    Object? referralsDone = null,
   }) {
     return _then(_$_SearchHouseholdsState(
       loading: null == loading
@@ -1488,26 +1728,14 @@ class __$$_SearchHouseholdsStateCopyWithImpl<$Res>
           ? _value.searchQuery
           : searchQuery // ignore: cast_nullable_to_non_nullable
               as String?,
+      tag: freezed == tag
+          ? _value.tag
+          : tag // ignore: cast_nullable_to_non_nullable
+              as String?,
       householdMembers: null == householdMembers
           ? _value._householdMembers
           : householdMembers // ignore: cast_nullable_to_non_nullable
               as List<HouseholdMemberWrapper>,
-      registeredHouseholds: null == registeredHouseholds
-          ? _value.registeredHouseholds
-          : registeredHouseholds // ignore: cast_nullable_to_non_nullable
-              as int,
-      deliveredInterventions: null == deliveredInterventions
-          ? _value.deliveredInterventions
-          : deliveredInterventions // ignore: cast_nullable_to_non_nullable
-              as int,
-      sideEffectsObserved: null == sideEffectsObserved
-          ? _value.sideEffectsObserved
-          : sideEffectsObserved // ignore: cast_nullable_to_non_nullable
-              as int,
-      referralsDone: null == referralsDone
-          ? _value.referralsDone
-          : referralsDone // ignore: cast_nullable_to_non_nullable
-              as int,
     ));
   }
 }
@@ -1518,11 +1746,8 @@ class _$_SearchHouseholdsState extends _SearchHouseholdsState {
   const _$_SearchHouseholdsState(
       {this.loading = false,
       this.searchQuery,
-      final List<HouseholdMemberWrapper> householdMembers = const [],
-      this.registeredHouseholds = 0,
-      this.deliveredInterventions = 0,
-      this.sideEffectsObserved = 0,
-      this.referralsDone = 0})
+      this.tag,
+      final List<HouseholdMemberWrapper> householdMembers = const []})
       : _householdMembers = householdMembers,
         super._();
 
@@ -1531,6 +1756,8 @@ class _$_SearchHouseholdsState extends _SearchHouseholdsState {
   final bool loading;
   @override
   final String? searchQuery;
+  @override
+  final String? tag;
   final List<HouseholdMemberWrapper> _householdMembers;
   @override
   @JsonKey()
@@ -1540,21 +1767,8 @@ class _$_SearchHouseholdsState extends _SearchHouseholdsState {
   }
 
   @override
-  @JsonKey()
-  final int registeredHouseholds;
-  @override
-  @JsonKey()
-  final int deliveredInterventions;
-  @override
-  @JsonKey()
-  final int sideEffectsObserved;
-  @override
-  @JsonKey()
-  final int referralsDone;
-
-  @override
   String toString() {
-    return 'SearchHouseholdsState(loading: $loading, searchQuery: $searchQuery, householdMembers: $householdMembers, registeredHouseholds: $registeredHouseholds, deliveredInterventions: $deliveredInterventions, sideEffectsObserved: $sideEffectsObserved, referralsDone: $referralsDone)';
+    return 'SearchHouseholdsState(loading: $loading, searchQuery: $searchQuery, tag: $tag, householdMembers: $householdMembers)';
   }
 
   @override
@@ -1565,28 +1779,14 @@ class _$_SearchHouseholdsState extends _SearchHouseholdsState {
             (identical(other.loading, loading) || other.loading == loading) &&
             (identical(other.searchQuery, searchQuery) ||
                 other.searchQuery == searchQuery) &&
+            (identical(other.tag, tag) || other.tag == tag) &&
             const DeepCollectionEquality()
-                .equals(other._householdMembers, _householdMembers) &&
-            (identical(other.registeredHouseholds, registeredHouseholds) ||
-                other.registeredHouseholds == registeredHouseholds) &&
-            (identical(other.deliveredInterventions, deliveredInterventions) ||
-                other.deliveredInterventions == deliveredInterventions) &&
-            (identical(other.sideEffectsObserved, sideEffectsObserved) ||
-                other.sideEffectsObserved == sideEffectsObserved) &&
-            (identical(other.referralsDone, referralsDone) ||
-                other.referralsDone == referralsDone));
+                .equals(other._householdMembers, _householdMembers));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      loading,
-      searchQuery,
-      const DeepCollectionEquality().hash(_householdMembers),
-      registeredHouseholds,
-      deliveredInterventions,
-      sideEffectsObserved,
-      referralsDone);
+  int get hashCode => Object.hash(runtimeType, loading, searchQuery, tag,
+      const DeepCollectionEquality().hash(_householdMembers));
 
   @JsonKey(ignore: true)
   @override
@@ -1598,13 +1798,11 @@ class _$_SearchHouseholdsState extends _SearchHouseholdsState {
 
 abstract class _SearchHouseholdsState extends SearchHouseholdsState {
   const factory _SearchHouseholdsState(
-      {final bool loading,
-      final String? searchQuery,
-      final List<HouseholdMemberWrapper> householdMembers,
-      final int registeredHouseholds,
-      final int deliveredInterventions,
-      final int sideEffectsObserved,
-      final int referralsDone}) = _$_SearchHouseholdsState;
+          {final bool loading,
+          final String? searchQuery,
+          final String? tag,
+          final List<HouseholdMemberWrapper> householdMembers}) =
+      _$_SearchHouseholdsState;
   const _SearchHouseholdsState._() : super._();
 
   @override
@@ -1612,15 +1810,9 @@ abstract class _SearchHouseholdsState extends SearchHouseholdsState {
   @override
   String? get searchQuery;
   @override
+  String? get tag;
+  @override
   List<HouseholdMemberWrapper> get householdMembers;
-  @override
-  int get registeredHouseholds;
-  @override
-  int get deliveredInterventions;
-  @override
-  int get sideEffectsObserved;
-  @override
-  int get referralsDone;
   @override
   @JsonKey(ignore: true)
   _$$_SearchHouseholdsStateCopyWith<_$_SearchHouseholdsState> get copyWith =>

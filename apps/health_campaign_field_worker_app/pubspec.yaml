@@ -59,6 +59,9 @@ dependencies:
   digit_firebase_services: ^0.0.1
   package_info_plus: ^4.1.0
   expandable: ^5.0.1
+  qr_code_scanner: ^1.0.1
+  audioplayers: ^5.2.0
+  gs1_barcode_parser: ^1.0.5
 
 dev_dependencies:
   flutter_test:
@@ -88,6 +91,9 @@ flutter_icons:
 flutter:
   assets:
     - ./
+    - ./assets/audio/add.wav
+    - ./assets/audio/buzzer.wav
+    
   fonts:
     - family: Roboto
       fonts:

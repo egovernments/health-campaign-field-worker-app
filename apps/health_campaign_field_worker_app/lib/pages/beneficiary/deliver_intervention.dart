@@ -118,19 +118,6 @@ class _DeliverInterventionPageState
                               0
                           : 0;
 
-                      final String? getDeliveryStrategy = (projectState
-                                      .projectType?.cycles ??
-                                  [])
-                              .isNotEmpty
-                          ? (projectState
-                              .projectType
-                              ?.cycles?[deliveryInterventionstate.cycle == 0
-                                  ? deliveryInterventionstate.cycle
-                                  : deliveryInterventionstate.cycle - 1]
-                              .deliveries?[deliveryInterventionstate.dose - 1]
-                              .deliveryStrategy)
-                          : DeliverStrategyType.direct.toValue();
-
                       final steps = generateSteps(numberOfDoses);
 
                       return BlocBuilder<ProductVariantBloc,
@@ -272,7 +259,9 @@ class _DeliverInterventionPageState
                                                                     deliveryInterventionstate
                                                                         .cycle,
                                                                 deliveryStrategy:
-                                                                    getDeliveryStrategy,
+                                                                    DeliverStrategyType
+                                                                        .direct
+                                                                        .toValue(),
                                                                 address:
                                                                     householdMemberWrapper
                                                                         .members
