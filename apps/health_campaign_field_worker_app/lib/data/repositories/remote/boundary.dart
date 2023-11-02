@@ -18,7 +18,11 @@ class BoundaryRemoteRepository
   });
 
   @override
-  FutureOr<List<BoundaryModel>> search(BoundarySearchModel query) async {
+  FutureOr<List<BoundaryModel>> search(
+    BoundarySearchModel query, {
+    int? offSet,
+    int? limit,
+  }) async {
     Response response;
 
     response = await executeFuture(

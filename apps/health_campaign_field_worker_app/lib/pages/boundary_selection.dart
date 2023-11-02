@@ -1,4 +1,3 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../blocs/boundary/boundary.dart';
+import '../blocs/search_households/project_beneficiaries_downsync.dart';
 import '../models/data_model.dart';
+import '../router/app_router.dart';
+import '../utils/utils.dart';
 
 class BoundarySelectionPage extends StatefulWidget {
   const BoundarySelectionPage({Key? key}) : super(key: key);
@@ -18,6 +20,14 @@ class BoundarySelectionPage extends StatefulWidget {
 class _BoundarySelectionPageState extends State<BoundarySelectionPage> {
   bool shouldPop = false;
   Map<String, FormControl<BoundaryModel>> formControls = {};
+
+  @override
+  void initState() {
+    super.initState();
+    initDiskSpace();
+  }
+
+  Future<void> initDiskSpace() async {}
 
   @override
   Widget build(BuildContext context) {
@@ -115,11 +125,28 @@ class _BoundarySelectionPageState extends State<BoundarySelectionPage> {
                                     context.read<BoundaryBloc>().add(
                                           const BoundarySubmitEvent(),
                                         );
+                                    bool isOnline = await getIsConnected();
 
-                                    Future.delayed(
-                                      const Duration(milliseconds: 100),
-                                      () => context.router.pop(),
-                                    );
+                                    if (context.mounted) {
+                                      if (isOnline) {
+                                        context
+                                            .read<BeneficiaryDownSyncBloc>()
+                                            .add(
+                                              DownSyncBeneficiaryEvent(
+                                                projectId: context.projectId,
+                                                boundaryCode: selectedBoundary
+                                                    .value!.code
+                                                    .toString(),
+                                                batchSize: 10,
+                                              ),
+                                            );
+                                      } else {
+                                        Future.delayed(
+                                          const Duration(milliseconds: 100),
+                                          () => context.router.pop(),
+                                        );
+                                      }
+                                    }
                                   },
                             child: const Text('Submit'),
                           ),
@@ -152,7 +179,7 @@ class _BoundarySelectionPageState extends State<BoundarySelectionPage> {
 
     for (final label in labelList) {
       formControls[label] = FormControl<BoundaryModel>(
-        validators: label == labelList.first ? [Validators.required] : [],
+        validators: [],
         value: state.selectedBoundaryMap[label],
       );
     }

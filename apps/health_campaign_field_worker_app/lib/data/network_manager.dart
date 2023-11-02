@@ -2,14 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
-import 'local_store/secure_store/secure_store.dart';
-import 'repositories/sync/sync_down.dart';
+import 'package:health_campaign_field_worker_app/data/repositories/sync/remote_type.dart';
 import 'package:provider/provider.dart';
 
 import '../models/bandwidth/bandwidth_model.dart';
 import '../models/data_model.dart';
-import '../utils/debound.dart';
 import 'data_repository.dart';
+import 'local_store/secure_store/secure_store.dart';
+import 'repositories/sync/sync_down.dart';
 import 'repositories/sync/sync_up.dart';
 
 class NetworkManager {
@@ -101,6 +101,18 @@ class NetworkManager {
     }
 
     return isSyncCompleted;
+  }
+
+  //
+  FutureOr<void> writeToEntityDB(
+    Map<String, dynamic> response,
+    List<LocalRepository> localRepositories,
+  ) async {
+    for (int i = 1; i <= response.keys.length - 1; i++)
+      final local = RepositoryType.getLocalForType(
+        DataModelType.boundary,
+        localRepositories,
+      );
   }
 
   FutureOr<int> getPendingSyncRecordsCount(

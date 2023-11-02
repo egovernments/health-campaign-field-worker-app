@@ -10,8 +10,10 @@ import 'package:location/location.dart';
 import '../blocs/boundary/boundary.dart';
 import '../blocs/household_details/household_details.dart';
 import '../blocs/localization/app_localization.dart';
+import '../blocs/search_households/project_beneficiaries_downsync.dart';
 import '../blocs/search_households/search_households.dart';
 import '../blocs/sync/sync.dart';
+import '../data/data_repository.dart';
 import '../data/local_store/no_sql/schema/oplog.dart';
 import '../data/local_store/sql_store/sql_store.dart';
 import '../data/repositories/local/address.dart';
@@ -210,6 +212,33 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                 BlocProvider(
                   create: (_) =>
                       HouseholdDetailsBloc(const HouseholdDetailsState()),
+                ),
+                BlocProvider(
+                  create: (ctx) => BeneficiaryDownSyncBloc(
+                    // householdLocalRepository: ctx.read<
+                    //     LocalRepository<HouseholdModel,
+                    //         HouseholdSearchModel>>(),
+                    // householdMemberLocalRepository: ctx.read<
+                    //     LocalRepository<HouseholdMemberModel,
+                    //         HouseholdMemberSearchModel>>(),
+                    // individualLocalRepository: ctx.read<
+                    //     LocalRepository<IndividualModel,
+                    //         IndividualSearchModel>>(),
+                    // projectBeneficiaryLocalRepository: ctx.read<
+                    //     LocalRepository<ProjectBeneficiaryModel,
+                    //         ProjectBeneficiarySearchModel>>(),
+                    // taskLocalRepository:
+                    //     ctx.read<LocalRepository<TaskModel, TaskSearchModel>>(),
+                    // sideEffectLocalRepository: ctx.read<
+                    //     LocalRepository<SideEffectModel,
+                    //         SideEffectSearchModel>>(),
+                    // referralLocalRepository: ctx.read<
+                    //     LocalRepository<ReferralModel, ReferralSearchModel>>(),
+                    downSyncRemoteRepository: ctx.read<
+                        RemoteRepository<DownsyncModel, DownsyncSearchModel>>(),
+                    downSyncLocalRepository: ctx.read<
+                        LocalRepository<DownsyncModel, DownsyncSearchModel>>(),
+                  ),
                 ),
               ],
               child: AutoRouter(

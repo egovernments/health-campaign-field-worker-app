@@ -1,6 +1,7 @@
 library app_utils;
 
 import 'dart:async';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:collection/collection.dart';
@@ -498,4 +499,17 @@ DoseCriteriaModel? fetchProductVariant(
   }
 
   return null;
+}
+
+Future<bool> getIsConnected() async {
+  try {
+    final result = await InternetAddress.lookup('example.com');
+    if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+      return true;
+    }
+
+    return false;
+  } on SocketException catch (_) {
+    return false;
+  }
 }
