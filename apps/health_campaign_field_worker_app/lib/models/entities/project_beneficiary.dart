@@ -10,6 +10,7 @@ class ProjectBeneficiarySearchModel extends EntitySearchModel {
   final String? id;
   final String? projectId;
   final String? beneficiaryId;
+  final String? tag;
   final List<String>? beneficiaryClientReferenceId;
   final DateTime? beneficiaryRegistrationDateLte;
   final DateTime? beneficiaryRegistrationDateGte;
@@ -21,6 +22,7 @@ class ProjectBeneficiarySearchModel extends EntitySearchModel {
     this.id,
     this.projectId,
     this.beneficiaryId,
+    this.tag,
     this.beneficiaryClientReferenceId,
     this.beneficiaryRegistrationDateLte,
     this.beneficiaryRegistrationDateGte,
@@ -39,6 +41,7 @@ class ProjectBeneficiarySearchModel extends EntitySearchModel {
     this.id,
     this.projectId,
     this.beneficiaryId,
+    this.tag,
     this.beneficiaryClientReferenceId,
     this.beneficiaryRegistrationDateLte,
     this.beneficiaryRegistrationDateGte,
@@ -63,6 +66,7 @@ class ProjectBeneficiaryModel extends EntityModel {
   final String? id;
   final String? projectId;
   final String? beneficiaryId;
+  final String? tag;
   final String? beneficiaryClientReferenceId;
   final bool? nonRecoverableError;
   final String clientReferenceId;
@@ -76,6 +80,7 @@ class ProjectBeneficiaryModel extends EntityModel {
     this.id,
     this.projectId,
     this.beneficiaryId,
+    this.tag,
     this.beneficiaryClientReferenceId,
     this.nonRecoverableError = false,
     required this.clientReferenceId,
@@ -105,6 +110,7 @@ class ProjectBeneficiaryModel extends EntityModel {
       id: Value(id),
       projectId: Value(projectId),
       beneficiaryId: Value(beneficiaryId),
+      tag: Value(tag),
       beneficiaryClientReferenceId: Value(beneficiaryClientReferenceId),
       nonRecoverableError: Value(nonRecoverableError),
       clientReferenceId: Value(clientReferenceId),

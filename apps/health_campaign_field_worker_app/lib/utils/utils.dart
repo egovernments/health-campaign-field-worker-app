@@ -342,6 +342,24 @@ bool checkIfBeneficiaryRefused(
   return isBeneficiaryRefused;
 }
 
+bool checkIfBeneficiaryReferred(
+  List<ReferralModel>? referrals,
+  Cycle currentCycle,
+) {
+  if (currentCycle.startDate != null && currentCycle.endDate != null) {
+    final isBeneficiaryReferred = (referrals != null &&
+        (referrals ?? []).isNotEmpty &&
+        referrals.last.clientAuditDetails!.createdTime >=
+            currentCycle.startDate! &&
+        referrals.last.clientAuditDetails!.createdTime <=
+            currentCycle.endDate!);
+
+    return isBeneficiaryReferred;
+  } else {
+    return false;
+  }
+}
+
 bool checkStatus(
   List<TaskModel>? tasks,
   Cycle? currentCycle,

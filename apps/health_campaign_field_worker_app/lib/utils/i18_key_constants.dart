@@ -45,6 +45,7 @@ const complaintTypeShowcase = ComplaintTypeShowcase();
 const complaintsDetailsShowcase = ComplaintsDetailsShowcase();
 const complaintsDetailsViewShowcase = ComplaintsDetailsViewShowcase();
 const complaintsInboxShowcase = ComplaintsInboxShowcase();
+const referBeneficiary = ReferBeneficiary();
 
 class Common {
   const Common();
@@ -459,6 +460,8 @@ class StockDetailsIssuedShowcase {
   String get comments {
     return 'STOCK_DETAILS_ISSUED_SHOWCASE_COMMENTS';
   }
+
+  String get facilitySearchHeaderLabel => 'FACILITY_SEARCH_HEADER_LABEL';
 }
 
 class AdverseEvents {
@@ -871,6 +874,35 @@ class BeneficiaryDetails {
   String get beneficiaryCycle => 'BENEFICIARY_DETAILS_CYCLE';
   String get currentCycleLabel => 'BENEFICIARY_DETAILS_CURRENT_CYCLE_LABEL';
   String get fromCurrentLocation => 'FROM_CURRENT_LOCATION';
+  String get unableToScan => 'UNABLE_TO_SCAN';
+
+  String get scanValidResource => 'SCAN_VALID_RESOURCE';
+
+  String get scannedResourceCountMisMatch => 'SCANNED_RESOURCE_COUNT_MISMATCH';
+
+  String get resourceAlreadyScanned => 'RESOURCE_ALREADY_SCANNED';
+
+  String get scannerLabel => 'SCANNER_LABEL';
+
+  String get noOfResourceScanned => 'NO_OF_RESOURCE_SCANNED';
+
+  String get resourcesScanned => 'RESOURCES_SCANNED';
+
+  String get saveScannedResource => 'SAVE_SCANNED_RESOURCE';
+
+  String get flashOn => 'FLASH_ON';
+
+  String get flashOff => 'FLASH_OFF';
+
+  String get scannerDialogTitle => 'SCANNER_DIALOG_TITLE';
+
+  String get scannerDialogContent => 'SCANNER_DIALOG_CONTENT';
+
+  String get scannerDialogPrimaryAction => 'SCANNER_DIALOG_PRIMARY_ACTION';
+
+  String get scannerDialogSecondaryAction => 'SCANNER_DIALOG_SECONDARY_ACTION';
+  String get beneficiaryHeader => 'BENEFICIARY_HEADER';
+  String get deliveryHeader => 'DELIVERY_TABLE_HEADER';
 }
 
 class IndividualDetails {
@@ -915,6 +947,8 @@ class IndividualDetails {
   String get monthsErrorText => 'ERR_MONTHS';
 
   String get yearsAndMonthsErrorText => 'ERR_YEARS_AND_MONTHS';
+
+  String get linkVoucherToIndividual => 'LINK_VOUCHER_TO_INDIVIDUAL';
 }
 
 class HouseholdLocation {
@@ -998,6 +1032,9 @@ class HouseholdOverView {
   String get householdOverViewNotEligibleIconLabel =>
       'HOUSEHOLD_OVER_VIEW_NOT_ELIGIBLE_ICON_LABEL';
 
+  String get householdOverViewBeneficiaryReferredLabel =>
+      'HOUSEHOLD_OVER_VIEW_BENEFICIARY_REFERRED_LABEL';
+
   String get householdOverViewHouseholdHeadLabel =>
       'HOUSEHOLD_OVER_VIEW_HOUSEHOLD_HEAD_LABEL';
 
@@ -1043,6 +1080,7 @@ class MemberCard {
 
   String get recordAdverseEventsLabel =>
       'MEMBER_CARD_RECORD_ADVERSE_EVENTS_LABEL';
+  String get referBeneficiaryLabel => 'MEMBER_CARD_REFER_BENEFICIARY_LABEL';
 }
 
 class DeliverIntervention {
@@ -1111,6 +1149,44 @@ class DeliverIntervention {
   String get resourceCannotBeZero => 'RESOURCE_QUANTITY_CANNOT_BE_ZERO';
 
   String get resourceDeliveredValidation => 'RESOURCE_DELIVERED_VALIDATION';
+
+  String get unableToScan => 'UNABLE_TO_SCAN';
+
+  String get scanValidResource => 'SCAN_VALID_RESOURCE';
+
+  String get scannedResourceCountMisMatch => 'SCANNED_RESOURCE_COUNT_MISMATCH';
+
+  String get resourceAlreadyScanned => 'RESOURCE_ALREADY_SCANNED';
+
+  String get scannerLabel => 'SCANNER_LABEL';
+
+  String get noOfResourceScanned => 'NO_OF_RESOURCE_SCANNED';
+
+  String get resourcesScanned => 'RESOURCES_SCANNED';
+
+  String get saveScannedResource => 'SAVE_SCANNED_RESOURCE';
+
+  String get flashOn => 'FLASH_ON';
+
+  String get flashOff => 'FLASH_OFF';
+
+  String get scannerDialogTitle => 'SCANNER_DIALOG_TITLE';
+
+  String get scannerDialogContent => 'SCANNER_DIALOG_CONTENT';
+
+  String get scannerDialogPrimaryAction => 'SCANNER_DIALOG_PRIMARY_ACTION';
+
+  String get scannerDialogSecondaryAction => 'SCANNER_DIALOG_SECONDARY_ACTION';
+
+  String get manualScan => 'MANUAL_SCAN';
+
+  String get manualEnterCode => 'ENTER_MANUAL_CODE';
+
+  String get manualCodeDescription => 'MANUAL_CODE_DESCRIPTION';
+
+  String get resourceCode => 'RESOURCE_CODE';
+
+  String get voucherCode => 'VOUCHER_CODE';
 }
 
 class ProjectSelection {
@@ -1602,4 +1678,17 @@ class SyncDialog {
   String get closeButtonLabel => 'SYNC_DIALOG_CLOSE_BUTTON_LABEL';
 
   String get retryButtonLabel => 'SYNC_DIALOG_RETRY_BUTTON_LABEL';
+}
+
+class ReferBeneficiary {
+  const ReferBeneficiary();
+
+  String get dateOfReferralLabel => 'REFER_BENEFICIARY_DATE_OF_REFERRAL_LABEL';
+  String get administrationUnitFormLabel => 'ADMINISTRATION_UNIT_FORM_LABEL';
+  String get referredByLabel => 'REFERRED_BY_FORM_LABEL';
+  String get referredToLabel => 'REFERRED_TO_FORM_LABEL';
+  String get reasonForReferral => 'REASON_FOR_REFERRAL';
+  String get referralComments => 'REFERRAL_COMMENTS';
+  String get referralDetails => 'REFERRAL_DETAILS_HEADER';
+  String get facilityValidationMessage => 'PLEASE_ENTER_VALID_FACILITY';
 }

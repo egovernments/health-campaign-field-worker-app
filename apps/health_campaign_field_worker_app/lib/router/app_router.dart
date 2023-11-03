@@ -15,6 +15,7 @@ import '../pages/beneficiary/deliver_intervention.dart';
 import '../pages/beneficiary/dose_administered.dart';
 import '../pages/beneficiary/household_overview.dart';
 import '../pages/beneficiary/record_past_delivery_details.dart';
+import '../pages/beneficiary/refer_beneficiary.dart';
 import '../pages/beneficiary/side_effects.dart';
 import '../pages/beneficiary/widgets/household_acknowledgement.dart';
 import '../pages/beneficiary/widgets/splash_acknowledgement.dart';
@@ -52,10 +53,11 @@ import '../pages/language_selection.dart';
 import '../pages/login.dart';
 import '../pages/profile.dart';
 import '../pages/project_selection.dart';
+import '../pages/qr_scanner.dart';
 import '../pages/reason_for_deletion.dart';
 import '../pages/search_beneficiary.dart';
 import '../pages/unauthenticated.dart';
-import '../pages/profile.dart';
+
 export 'package:auto_route/auto_route.dart';
 
 part 'app_router.gr.dart';
@@ -83,6 +85,7 @@ part 'app_router.gr.dart';
         AutoRoute(page: ProfilePage, path: 'profile'),
 
         AutoRoute(page: SearchBeneficiaryPage, path: 'search-beneficiary'),
+        AutoRoute(page: QRScannerPage, path: 'scanner'),
 
         /// Beneficiary Registration
         AutoRoute(
@@ -118,6 +121,10 @@ part 'app_router.gr.dart';
             AutoRoute<List<TaskModel>>(
               page: SideEffectsPage,
               path: 'side-effects',
+            ),
+            AutoRoute(
+              page: ReferBeneficiaryPage,
+              path: 'refer-beneficiary',
             ),
             AutoRoute(
               page: DoseAdministeredPage,

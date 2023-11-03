@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import '../../../models/data_model.mapper.g.dart';
+
 import 'package:digit_components/digit_components.dart';
 import 'package:dio/dio.dart';
 import 'package:isar/isar.dart';
@@ -281,6 +281,16 @@ class MdmsRepository {
       return symptomTypes;
     }).toList();
 
+    appConfiguration.referralReasons =
+        result.referralReasons?.referralReasonList?.map((e) {
+      final reasonTypes = ReferralReasons()
+        ..name = e.name
+        ..code = e.code
+        ..active = e.active;
+
+      return reasonTypes;
+    }).toList();
+
     await isar.writeTxn(() async {
       await isar.appConfigurations.put(appConfiguration);
       await isar.rowVersionLists.putAll(rowVersionList);
@@ -313,69 +323,5 @@ class MdmsRepository {
     } catch (_) {
       rethrow;
     }
-  }
-
-  FutureOr<void> writeToProjectTypeDB(
-    ProjectTypePrimaryWrapper result,
-    Isar isar,
-  ) async {
-    final List<ProjectTypeListCycle> newProjectTypeList = [];
-    final data = result.projectTypeWrapper?.projectTypes;
-    if (data != null && data.isNotEmpty) {
-      await isar.writeTxn(() async => await isar.serviceRegistrys.clear());
-    }
-    for (final element in data ?? <ProjectType>[]) {
-      final newprojectType = ProjectTypeListCycle();
-
-      newprojectType.projectTypeId = element.id;
-      newprojectType.code = element.code;
-      newprojectType.group = element.group;
-      newprojectType.name = element.name;
-      newprojectType.beneficiaryType = element.beneficiaryType;
-      newprojectType.observationStrategy = element.observationStrategy;
-      newprojectType.resources = element.resources?.map((e) {
-        final productVariants = ProductVariants()
-          ..productVariantId = e.productVariantId
-          ..quantity = e.quantity.toString();
-
-        return productVariants;
-      }).toList();
-      newprojectType.cycles = element.cycles?.map((e) {
-        final newcycle = Cycles()
-          ..id = e.id
-          ..startDate = e.startDate
-          ..endDate = e.endDate
-          ..mandatoryWaitSinceLastCycleInDays =
-              e.mandatoryWaitSinceLastCycleInDays
-          ..deliveries = e.deliveries?.map((ele) {
-            final newDeliveries = Deliveries();
-            newDeliveries.deliveryStrategy = ele.deliveryStrategy;
-            newDeliveries.mandatoryWaitSinceLastDeliveryInDays =
-                ele.mandatoryWaitSinceLastDeliveryInDays;
-            newDeliveries.doseCriteriaModel = ele.doseCriteria?.map((e) {
-              final doseCriterias = DoseCriteria()
-                ..condition = e.condition
-                ..productVariants = e.productVariants?.map((p) {
-                  final productVariants = ProductVariants()
-                    ..quantity = p.quantity.toString()
-                    ..productVariantId = p.productVariantId.toString();
-
-                  return productVariants;
-                }).toList();
-
-              return doseCriterias;
-            }).toList();
-
-            return newDeliveries;
-          }).toList();
-
-        return newcycle;
-      }).toList();
-      newProjectTypeList.add(newprojectType);
-    }
-
-    await isar.writeTxn(() async {
-      await isar.projectTypeListCycles.putAll(newProjectTypeList);
-    });
   }
 }
