@@ -6,6 +6,7 @@ import '../../blocs/auth/auth.dart';
 import '../../blocs/localization/app_localization.dart';
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
+import '../showcase/showcase_button.dart';
 
 class BackNavigationHelpHeaderWidget extends StatelessWidget {
   final bool showHelp;
@@ -13,6 +14,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
   final bool showLogoutCTA;
   final VoidCallback? helpClicked;
   final VoidCallback? handleback;
+  final ShowcaseButton? showcaseButton;
 
   const BackNavigationHelpHeaderWidget({
     super.key,
@@ -21,6 +23,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
     this.showLogoutCTA = false,
     this.helpClicked,
     this.handleback,
+    this.showcaseButton,
   });
 
   @override
@@ -101,6 +104,8 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
                 ],
               ),
             ),
+          SizedBox(width: showcaseButton != null ? 16 : 0),
+          if (showcaseButton != null) showcaseButton!,
         ],
       ),
     );

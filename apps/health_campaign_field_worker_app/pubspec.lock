@@ -399,6 +399,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  digit_showcase:
+    dependency: "direct main"
+    description:
+      path: "../../packages/digit_showcase"
+      relative: true
+    source: path
+    version: "0.0.1"
   dio:
     dependency: "direct main"
     description:
