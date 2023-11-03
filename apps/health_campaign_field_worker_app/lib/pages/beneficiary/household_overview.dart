@@ -380,10 +380,15 @@ class _HouseholdOverviewPageState
                                                 checkIfBeneficiaryRefused(
                                               taskdata,
                                             );
+
+                                            final isBeneficiaryIneligible =
+                                                checkIfBeneficiaryIneligible(
+                                              taskdata,
+                                            );
+
                                             final isBeneficiaryReferred =
                                                 checkIfBeneficiaryReferred(
-                                              referralData,
-                                              currentCycle ?? Cycle(),
+                                              taskdata,
                                             );
 
                                             return MemberCard(
@@ -565,6 +570,12 @@ class _HouseholdOverviewPageState
                                               gender: e.gender?.name,
                                               isBeneficiaryRefused:
                                                   isBeneficiaryRefused &&
+                                                      !checkStatus(
+                                                        taskdata,
+                                                        currentCycle,
+                                                      ),
+                                              isBeneficiaryIneligible:
+                                                  isBeneficiaryIneligible &&
                                                       !checkStatus(
                                                         taskdata,
                                                         currentCycle,

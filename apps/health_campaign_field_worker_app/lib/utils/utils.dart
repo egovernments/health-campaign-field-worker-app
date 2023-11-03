@@ -329,22 +329,24 @@ bool checkIfBeneficiaryRefused(
   return isBeneficiaryRefused;
 }
 
-bool checkIfBeneficiaryReferred(
-  List<ReferralModel>? referrals,
-  Cycle currentCycle,
+bool checkIfBeneficiaryIneligible(
+  List<TaskModel>? tasks,
 ) {
-  if (currentCycle.startDate != null && currentCycle.endDate != null) {
-    final isBeneficiaryReferred = (referrals != null &&
-        (referrals ?? []).isNotEmpty &&
-        referrals.last.clientAuditDetails!.createdTime >=
-            currentCycle.startDate! &&
-        referrals.last.clientAuditDetails!.createdTime <=
-            currentCycle.endDate!);
+  final isBeneficiaryIneligible = (tasks != null &&
+      (tasks ?? []).isNotEmpty &&
+      tasks.last.status == Status.beneficiaryIneligible.toValue());
 
-    return isBeneficiaryReferred;
-  } else {
-    return false;
-  }
+  return isBeneficiaryIneligible;
+}
+
+bool checkIfBeneficiaryReferred(
+  List<TaskModel>? tasks,
+) {
+  final isBeneficiaryReferred = (tasks != null &&
+      (tasks ?? []).isNotEmpty &&
+      tasks.last.status == Status.beneficiaryReferred.toValue());
+
+  return isBeneficiaryReferred;
 }
 
 bool checkStatus(

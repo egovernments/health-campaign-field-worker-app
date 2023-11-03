@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
+import '../ineligibility_reasons/ineligibility_reasons_model.dart';
 import '../referral_reasons/referral_reasons_model.dart';
 import '../symptoms_types/symptoms_types_model.dart';
 
@@ -57,6 +58,9 @@ class AppConfigPrimaryWrapperModel with _$AppConfigPrimaryWrapperModel {
     final SymptomsTypesSecondaryWrapperModel? symptomsTypes,
     @JsonKey(name: 'HCM-REFERRAL-REASONS')
     final ReferralReasonsWrapperModel? referralReasons,
+    final ReferralReasonsWrapperModel? referralReasons,
+    @JsonKey(name: 'HCM-INELIGIBILITY-REASONS')
+    final IneligibilityReasonsWrapperModel? ineligibilityReasons,
   }) = _AppConfigPrimaryWrapperModel;
 
   factory AppConfigPrimaryWrapperModel.fromJson(
@@ -124,6 +128,7 @@ class AppConfig with _$AppConfig {
     @JsonKey(name: 'TRANSPORT_TYPES')
     required List<TransportTypes> transportTypes,
     @JsonKey(name: 'FIREBASE_CONFIG') required FirebaseConfig firebaseConfig,
+    required List<TransportTypes> transportTypes,
   }) = _AppConfig;
 
   factory AppConfig.fromJson(Map<String, dynamic> json) =>

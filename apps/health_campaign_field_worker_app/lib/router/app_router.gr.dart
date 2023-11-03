@@ -321,6 +321,20 @@ class _$AppRouter extends RootStackRouter {
           appLocalizations: args.appLocalizations,
           isEditing: args.isEditing,
           projectBeneficiaryClientRefId: args.projectBeneficiaryClientRefId,
+          individual: args.individual,
+        ),
+      );
+    },
+    IneligibilityReasonsRoute.name: (routeData) {
+      final args = routeData.argsAs<IneligibilityReasonsRouteArgs>();
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: IneligibilityReasonsPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          isEditing: args.isEditing,
+          projectBeneficiaryClientRefId: args.projectBeneficiaryClientRefId,
+          individual: args.individual,
         ),
       );
     },
@@ -648,6 +662,11 @@ class _$AppRouter extends RootStackRouter {
                 RouteConfig(
                   ReferBeneficiaryRoute.name,
                   path: 'refer-beneficiary',
+                  parent: BeneficiaryWrapperRoute.name,
+                ),
+                RouteConfig(
+                  IneligibilityReasonsRoute.name,
+                  path: 'ineligibility-reasons',
                   parent: BeneficiaryWrapperRoute.name,
                 ),
                 RouteConfig(
@@ -1791,6 +1810,7 @@ class ReferBeneficiaryRoute extends PageRouteInfo<ReferBeneficiaryRouteArgs> {
     AppLocalizations? appLocalizations,
     bool isEditing = false,
     required String projectBeneficiaryClientRefId,
+    required IndividualModel individual,
   }) : super(
           ReferBeneficiaryRoute.name,
           path: 'refer-beneficiary',
@@ -1799,6 +1819,7 @@ class ReferBeneficiaryRoute extends PageRouteInfo<ReferBeneficiaryRouteArgs> {
             appLocalizations: appLocalizations,
             isEditing: isEditing,
             projectBeneficiaryClientRefId: projectBeneficiaryClientRefId,
+            individual: individual,
           ),
         );
 
@@ -1811,6 +1832,7 @@ class ReferBeneficiaryRouteArgs {
     this.appLocalizations,
     this.isEditing = false,
     required this.projectBeneficiaryClientRefId,
+    required this.individual,
   });
 
   final Key? key;
@@ -1821,9 +1843,61 @@ class ReferBeneficiaryRouteArgs {
 
   final String projectBeneficiaryClientRefId;
 
+  final IndividualModel individual;
+
   @override
   String toString() {
-    return 'ReferBeneficiaryRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing, projectBeneficiaryClientRefId: $projectBeneficiaryClientRefId}';
+    return 'ReferBeneficiaryRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing, projectBeneficiaryClientRefId: $projectBeneficiaryClientRefId, individual: $individual}';
+  }
+}
+
+/// generated route for
+/// [IneligibilityReasonsPage]
+class IneligibilityReasonsRoute
+    extends PageRouteInfo<IneligibilityReasonsRouteArgs> {
+  IneligibilityReasonsRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    bool isEditing = false,
+    required String projectBeneficiaryClientRefId,
+    required IndividualModel individual,
+  }) : super(
+          IneligibilityReasonsRoute.name,
+          path: 'ineligibility-reasons',
+          args: IneligibilityReasonsRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            isEditing: isEditing,
+            projectBeneficiaryClientRefId: projectBeneficiaryClientRefId,
+            individual: individual,
+          ),
+        );
+
+  static const String name = 'IneligibilityReasonsRoute';
+}
+
+class IneligibilityReasonsRouteArgs {
+  const IneligibilityReasonsRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.isEditing = false,
+    required this.projectBeneficiaryClientRefId,
+    required this.individual,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final bool isEditing;
+
+  final String projectBeneficiaryClientRefId;
+
+  final IndividualModel individual;
+
+  @override
+  String toString() {
+    return 'IneligibilityReasonsRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing, projectBeneficiaryClientRefId: $projectBeneficiaryClientRefId, individual: $individual}';
   }
 }
 

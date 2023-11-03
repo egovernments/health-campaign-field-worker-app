@@ -26,6 +26,7 @@ const inventoryReportSelection = InventoryReportSelection();
 const inventoryReportDetails = InventoryReportDetails();
 const syncDialog = SyncDialog();
 const referBeneficiary = ReferBeneficiary();
+const ineligibilityReasons = IneligibilityReasons();
 
 class Common {
   const Common();
@@ -465,6 +466,7 @@ class MemberCard {
   String get recordAdverseEventsLabel =>
       'MEMBER_CARD_RECORD_ADVERSE_EVENTS_LABEL';
   String get referBeneficiaryLabel => 'MEMBER_CARD_REFER_BENEFICIARY_LABEL';
+  String get markIneligibleLabel => 'MEMBER_CARD_MARK_INELIGIBLE_LABEL';
 }
 
 class DeliverIntervention {
@@ -1073,4 +1075,17 @@ class ReferBeneficiary {
   String get referralComments => 'REFERRAL_COMMENTS';
   String get referralDetails => 'REFERRAL_DETAILS_HEADER';
   String get facilityValidationMessage => 'PLEASE_ENTER_VALID_FACILITY';
+  String get dialogTitle => 'REFERRAL_CONFIRMATION_DIALOG_TITLE';
+  String get dialogContent => 'REFERRAL_CONFIRMATION_DIALOG_CONTENT';
+  String get dialogSuccess => 'REFERRAL_CONFIRMATION_SUCCESS_LABEL';
+  String get dialogCancel => 'REFERRAL_CONFIRMATION_CANCEL_LABEL';
+}
+
+class IneligibilityReasons {
+  const IneligibilityReasons();
+
+  String get dialogTitle => 'INELIGIBILITY_REASONS_DIALOG_TITLE';
+  String get dialogContent => 'INELIGIBILITY_REASONS_DIALOG_CONTENT';
+  String get ineligibilityReasonsLabel => 'INELIGIBILITY_REASONS_LABEL';
+  String get selectReasonsLabel => 'INELIGIBILITY_REASONS_SELECT_LABEL';
 }
