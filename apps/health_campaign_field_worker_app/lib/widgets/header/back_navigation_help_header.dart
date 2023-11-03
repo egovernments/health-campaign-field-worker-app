@@ -15,7 +15,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
 
   const BackNavigationHelpHeaderWidget({
     super.key,
-    this.showHelp = true,
+    this.showHelp = false, //hiding help
     this.showBackNavigation = true,
     this.showLogoutCTA = false,
     this.helpClicked,

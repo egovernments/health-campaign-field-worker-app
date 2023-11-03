@@ -171,19 +171,6 @@ void onStart(ServiceInstance service) async {
                 'batchSize': configuredBatchSize,
               });
 
-              flutterLocalNotificationsPlugin.show(
-                888,
-                'Auto Sync',
-                'Speed : ${speedArray.first.toString().substring(0, speedArray.first.toString().length >= 4 ? 4 : speedArray.first.toString().length)}Mb/ps - BatchSize : $configuredBatchSize',
-                const NotificationDetails(
-                  android: AndroidNotificationDetails(
-                    "my_foreground",
-                    'AUTO SYNC',
-                    icon: 'ic_bg_service_small',
-                    ongoing: true,
-                  ),
-                ),
-              );
               final isSyncCompleted = await const NetworkManager(
                 configuration: NetworkManagerConfiguration(
                   persistenceConfig: PersistenceConfiguration.offlineFirst,
@@ -264,7 +251,7 @@ int getBatchSizeToBandwidth(
   double speed,
   List<AppConfiguration> appConfiguration,
 ) {
-  int batchSize = 1;
+  int batchSize = 0;
 
   final batchResult = appConfiguration.first.bandwidthBatchSize
       ?.where(
@@ -278,8 +265,8 @@ int getBatchSizeToBandwidth(
         appConfiguration.first.bandwidthBatchSize!.last.maxRange) {
       batchSize = appConfiguration.first.bandwidthBatchSize!.last.batchSize;
     } else if (speed <=
-        appConfiguration.first.bandwidthBatchSize!.first.maxRange) {
-      batchSize = appConfiguration.first.bandwidthBatchSize!.first.batchSize;
+        appConfiguration.first.bandwidthBatchSize!.first.minRange) {
+      batchSize = 0;
     }
   }
 

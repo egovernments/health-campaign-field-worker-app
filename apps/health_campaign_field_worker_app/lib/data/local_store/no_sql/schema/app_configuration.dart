@@ -68,7 +68,7 @@ class AppConfiguration {
   late String? tenantId;
 
   @Name('FIREBASE_CONFIG')
-  FirebaseConfig? firebaseConfig;
+  late FirebaseConfig? firebaseConfig;
 
   late List<SymptomsTypes>? symptomsTypes;
 
@@ -179,8 +179,11 @@ class CallSupportList {
 
 @embedded
 class FirebaseConfig {
-  bool? enableCrashlytics;
-  bool? enableAnalytics;
+  @Name("enableCrashlytics")
+  late bool? enableCrashlytics;
+
+  @Name("enableAnalytics")
+  late bool? enableAnalytics;
 }
 
 @embedded

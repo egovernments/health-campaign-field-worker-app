@@ -104,7 +104,7 @@ class HouseholdMemberLocalRepository
   @override
   FutureOr<void> update(
     HouseholdMemberModel entity, {
-    bool createOpLog = true,
+    bool createOpLog = false,
   }) async {
     final householdMemberCompanion = entity.companion;
 

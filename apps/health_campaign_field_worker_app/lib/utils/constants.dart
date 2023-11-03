@@ -1,4 +1,7 @@
 import 'package:collection/collection.dart';
+import 'package:digit_components/utils/app_logger.dart';
+import 'package:digit_firebase_services/digit_firebase_services.dart'
+    as firebase_services;
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
@@ -53,6 +56,7 @@ import '../data/repositories/remote/side_effect.dart';
 import '../data/repositories/remote/stock.dart';
 import '../data/repositories/remote/stock_reconciliation.dart';
 import '../data/repositories/remote/task.dart';
+import '../firebase_options.dart';
 import '../models/data_model.dart';
 
 class Constants {
@@ -164,6 +168,14 @@ class Constants {
 
     final enableCrashlytics =
         config?.firebaseConfig?.enableCrashlytics ?? false;
+    if (enableCrashlytics) {
+      firebase_services.initialize(
+        options: DefaultFirebaseOptions.currentPlatform,
+        onErrorMessage: (value) {
+          AppLogger.instance.error(title: 'CRASHLYTICS', message: value);
+        },
+      );
+    }
 
     _version = version;
   }
