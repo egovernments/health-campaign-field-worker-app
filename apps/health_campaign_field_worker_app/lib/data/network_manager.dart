@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import '../models/bandwidth/bandwidth_model.dart';
 import '../models/data_model.dart';
+import '../utils/constants.dart';
 import 'data_repository.dart';
 import 'local_store/secure_store/secure_store.dart';
 import 'repositories/sync/sync_down.dart';
@@ -108,11 +109,25 @@ class NetworkManager {
     Map<String, dynamic> response,
     List<LocalRepository> localRepositories,
   ) async {
-    for (int i = 1; i <= response.keys.length - 1; i++)
+    for (int i = 1; i <= response.keys.length - 1; i++) {
       final local = RepositoryType.getLocalForType(
-        DataModelType.boundary,
+        DataModels.getDataModelForEntityName(response.keys.elementAt(i)),
         localRepositories,
       );
+      final List<dynamic> entityResponse = response[response.keys.elementAt(i)];
+
+      final entityList =
+          entityResponse.whereType<Map<String, dynamic>>().toList();
+      // final entityList = entityResponse.whereType<Map<String, dynamic>>();
+      print('ENTITY RESPONSE');
+      print(entityResponse);
+      print(entityList.first);
+
+      final entity =
+          entityList.map((e) => Mapper.fromMap<EntityModel>(e)).toList();
+      print(entity);
+      await local.bulkCreate(entity);
+    }
   }
 
   FutureOr<int> getPendingSyncRecordsCount(

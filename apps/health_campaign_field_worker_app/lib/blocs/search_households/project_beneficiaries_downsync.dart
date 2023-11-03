@@ -6,8 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../data/data_repository.dart';
+import '../../data/network_manager.dart';
 import '../../models/data_model.dart';
-import '../../models/entities/downsync.dart';
 import '../../utils/environment_config.dart';
 
 part 'project_beneficiaries_downsync.freezed.dart';
@@ -20,29 +20,31 @@ class BeneficiaryDownSyncBloc
       downSyncRemoteRepository;
   final LocalRepository<DownsyncModel, DownsyncSearchModel>
       downSyncLocalRepository;
-  // final LocalRepository<HouseholdModel, HouseholdSearchModel>
-  //     householdLocalRepository;
-  // final LocalRepository<HouseholdMemberModel, HouseholdMemberSearchModel>
-  //     householdMemberLocalRepository;
-  // final LocalRepository<IndividualModel, IndividualSearchModel>
-  //     individualLocalRepository;
-  // final LocalRepository<ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>
-  //     projectBeneficiaryLocalRepository;
-  // final LocalRepository<TaskModel, TaskSearchModel> taskLocalRepository;
-  // final LocalRepository<SideEffectModel, SideEffectSearchModel>
-  //     sideEffectLocalRepository;
-  // final LocalRepository<ReferralModel, ReferralSearchModel>
-  //     referralLocalRepository;
+  final LocalRepository<HouseholdModel, HouseholdSearchModel>
+      householdLocalRepository;
+  final LocalRepository<HouseholdMemberModel, HouseholdMemberSearchModel>
+      householdMemberLocalRepository;
+  final LocalRepository<IndividualModel, IndividualSearchModel>
+      individualLocalRepository;
+  final LocalRepository<ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>
+      projectBeneficiaryLocalRepository;
+  final LocalRepository<TaskModel, TaskSearchModel> taskLocalRepository;
+  final LocalRepository<SideEffectModel, SideEffectSearchModel>
+      sideEffectLocalRepository;
+  final LocalRepository<ReferralModel, ReferralSearchModel>
+      referralLocalRepository;
+  final NetworkManager networkManager;
   BeneficiaryDownSyncBloc({
     required this.downSyncRemoteRepository,
     required this.downSyncLocalRepository,
-    // required this.householdLocalRepository,
-    // required this.householdMemberLocalRepository,
-    // required this.individualLocalRepository,
-    // required this.projectBeneficiaryLocalRepository,
-    // required this.taskLocalRepository,
-    // required this.sideEffectLocalRepository,
-    // required this.referralLocalRepository,
+    required this.householdLocalRepository,
+    required this.householdMemberLocalRepository,
+    required this.individualLocalRepository,
+    required this.projectBeneficiaryLocalRepository,
+    required this.taskLocalRepository,
+    required this.sideEffectLocalRepository,
+    required this.referralLocalRepository,
+    required this.networkManager,
   }) : super(const BeneficiaryDownSyncState._()) {
     on(_handleDownSyncOfBeneficiaries);
   }
@@ -78,6 +80,16 @@ class BeneficiaryDownSyncBloc
       limit: 10,
     ));
     print(downSyncResults.keys.toList());
+
+    await networkManager.writeToEntityDB(downSyncResults, [
+      householdLocalRepository,
+      householdMemberLocalRepository,
+      individualLocalRepository,
+      projectBeneficiaryLocalRepository,
+      taskLocalRepository,
+      sideEffectLocalRepository,
+      referralLocalRepository,
+    ]);
     // if ((diskSpace ?? 0) * 1000 <
     //     (downSyncResults.first.downSyncCriteria?.totalCount ?? 0) *
     //         100 *
