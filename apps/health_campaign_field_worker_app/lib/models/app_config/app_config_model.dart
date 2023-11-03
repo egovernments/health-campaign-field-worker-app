@@ -58,7 +58,6 @@ class AppConfigPrimaryWrapperModel with _$AppConfigPrimaryWrapperModel {
     final SymptomsTypesSecondaryWrapperModel? symptomsTypes,
     @JsonKey(name: 'HCM-REFERRAL-REASONS')
     final ReferralReasonsWrapperModel? referralReasons,
-    final ReferralReasonsWrapperModel? referralReasons,
     @JsonKey(name: 'HCM-INELIGIBILITY-REASONS')
     final IneligibilityReasonsWrapperModel? ineligibilityReasons,
   }) = _AppConfigPrimaryWrapperModel;
@@ -128,7 +127,6 @@ class AppConfig with _$AppConfig {
     @JsonKey(name: 'TRANSPORT_TYPES')
     required List<TransportTypes> transportTypes,
     @JsonKey(name: 'FIREBASE_CONFIG') required FirebaseConfig firebaseConfig,
-    required List<TransportTypes> transportTypes,
   }) = _AppConfig;
 
   factory AppConfig.fromJson(Map<String, dynamic> json) =>
