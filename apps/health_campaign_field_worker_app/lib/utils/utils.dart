@@ -128,8 +128,15 @@ performBackgroundService({
   var isRunning = await service.isRunning();
 
   if (!stopService) {
-    if (!isRunning && isOnline) {
-      service.startService();
+    if (isOnline & !isRunning) {
+      final isStarted = await service.startService();
+      if (!isStarted) {
+        await service.startService();
+      }
+    }
+  } else {
+    if (isRunning) {
+      service.invoke('stopService');
     }
   }
 }
@@ -180,19 +187,6 @@ double? calculateDistance(Coordinate? start, Coordinate? end) {
   }
 
   return null;
-}
-
-Timer makePeriodicTimer(
-  Duration duration,
-  void Function(Timer timer) callback, {
-  bool fireNow = false,
-}) {
-  var timer = Timer.periodic(duration, callback);
-  if (fireNow) {
-    callback(timer);
-  }
-
-  return timer;
 }
 
 final requestData = {

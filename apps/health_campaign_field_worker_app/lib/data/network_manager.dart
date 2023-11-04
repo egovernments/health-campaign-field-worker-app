@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 
 import '../models/bandwidth/bandwidth_model.dart';
 import '../models/data_model.dart';
-import '../utils/debound.dart';
 import 'data_repository.dart';
 import 'repositories/sync/sync_up.dart';
 
@@ -56,7 +55,6 @@ class NetworkManager {
       );
     } catch (e) {
       syncError = SyncDownError(e);
-      service?.stopSelf();
     }
 
 // Perform the sync up Operation
@@ -69,7 +67,6 @@ class NetworkManager {
       );
     } catch (e) {
       syncError ??= SyncUpError(e);
-      service?.stopSelf();
     }
 
     if (syncError != null) throw syncError;

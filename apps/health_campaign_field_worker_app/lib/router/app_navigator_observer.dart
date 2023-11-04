@@ -5,7 +5,7 @@ class AppRouterObserver extends NavigatorObserver {
   static const _base = 'appRouter';
 
   @override
-  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
+  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) async {
     AppLogger.instance.info(
       '${route.settings.name} -> ${previousRoute?.settings.name}',
       title: '$_base.didPop',

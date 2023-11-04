@@ -122,7 +122,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
 
                     final isar = context.read<Isar>();
                     final bloc = SyncBloc(
-                      isar: isar,
+                      isarState: Constants().isar,
                       networkManager: context.read(),
                     );
 

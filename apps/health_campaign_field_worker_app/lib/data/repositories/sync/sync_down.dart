@@ -225,7 +225,7 @@ class PerformSyncDown {
               isDeleted: true,
             ));
 
-            for (var element in typeGroupedEntity.value) {
+            for (var element in operationGroupedEntity.value) {
               if (element.id == null) return;
               final entity = element.entity as SideEffectModel;
               var responseEntity = responseEntities
@@ -270,7 +270,7 @@ class PerformSyncDown {
               isDeleted: true,
             ));
 
-            for (var element in typeGroupedEntity.value) {
+            for (var element in operationGroupedEntity.value) {
               if (element.id == null) return;
               final entity = element.entity as ReferralModel;
               var responseEntity =
@@ -383,7 +383,7 @@ class PerformSyncDown {
                           if (id == null) return null;
 
                           return AdditionalId(
-                            idType: taskResourceIdKey,
+                            idType: e.clientReferenceId + taskResourceIdKey,
                             id: id,
                           );
                         })

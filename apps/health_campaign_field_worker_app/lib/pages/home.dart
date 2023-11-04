@@ -11,7 +11,6 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 import 'package:overlay_builder/overlay_builder.dart';
-import 'package:path/path.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../data/local_store/no_sql/schema/app_configuration.dart'
@@ -55,14 +54,16 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     subscription = Connectivity()
         .onConnectivityChanged
-        .listen((ConnectivityResult result) {
-      performBackgroundService(
-        isBackground: false,
-        stopService: false,
-        context: null,
-      );
+        .listen((ConnectivityResult resSyncBlocult) async {
+      var connectivityResult = await (Connectivity().checkConnectivity());
 
-      // Got a new connectivity status!
+      if (connectivityResult != ConnectivityResult.none) {
+        if (context.mounted) {
+          context
+              .read<SyncBloc>()
+              .add(SyncRefreshEvent(context.loggedInUserUuid));
+        }
+      }
     });
   }
 
@@ -267,7 +268,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                             if (context.mounted) {
                               performBackgroundService(
                                 isBackground: false,
-                                stopService: true,
+                                stopService: false,
                                 context: context,
                               );
                             }
@@ -406,45 +407,6 @@ class _HomePageState extends LocalizedState<HomePage> {
           );
         },
       ),
-      i18.home.callbackLabel: HomeItemCard(
-        icon: Icons.call,
-        label: i18.home.callbackLabel,
-        onPressed: () => DigitActionDialog.show(
-          context,
-          widget: BlocBuilder<AppInitializationBloc, AppInitializationState>(
-            builder: (context, state) {
-              if (state is! AppInitialized) {
-                return const Offstage();
-              }
-
-              final supportList = state.appConfiguration.callSupportOptions ??
-                  <app_config.CallSupportList>[];
-
-              return ActionCard(
-                items: supportList
-                    .map(
-                      (e) => ActionCardModel(
-                        action: () async {
-                          if (!await launchUrl(
-                            Uri(
-                              scheme: 'tel',
-                              path: e.code,
-                            ),
-                            mode: LaunchMode.externalApplication,
-                          )) {
-                            throw Exception('Could not launch $url');
-                          }
-                        },
-                        icon: Icons.call,
-                        label: e.name,
-                      ),
-                    )
-                    .toList(),
-              );
-            },
-          ),
-        ),
-      ),
       'DB': HomeItemCard(
         icon: Icons.table_chart,
         label: 'DB',
@@ -458,20 +420,6 @@ class _HomePageState extends LocalizedState<HomePage> {
           );
         },
       ),
-      'Delete all': HomeItemCard(
-        icon: Icons.delete_forever,
-        label: 'Delete all',
-        onPressed: () async {
-          final sql = context.read<LocalSqlDataStore>();
-          final isar = context.read<Isar>();
-
-          for (var element in sql.allTables) {
-            sql.delete(element).where((_) => const Constant(true));
-          }
-
-          await isar.writeTxn(() async => await isar.opLogs.clear());
-        },
-      ),
     };
 
     final homeItemsLabel = <String>[
@@ -483,9 +431,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.fileComplaint,
       i18.home.syncDataLabel,
       i18.home.viewReportsLabel,
-      i18.home.callbackLabel,
       'DB',
-      'Delete all',
     ];
 
     final List<String> filteredLabels = homeItemsLabel
