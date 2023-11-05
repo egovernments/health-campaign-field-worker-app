@@ -31,13 +31,6 @@ class FacilityBloc extends Bloc<FacilityEvent, FacilityState> {
 
     List<FacilityModel> allFacilities = [
       FacilityModel(
-        id: 'N/A',
-        additionalFields: FacilityAdditionalFields(
-          version: 1,
-          fields: [const AdditionalField('type', 'NA')],
-        ),
-      ),
-      FacilityModel(
         id: 'Delivery Team',
         additionalFields: FacilityAdditionalFields(
           version: 1,
@@ -46,7 +39,15 @@ class FacilityBloc extends Bloc<FacilityEvent, FacilityState> {
       ),
     ];
 
-    List<FacilityModel> facilities = [];
+    List<FacilityModel> facilities = [
+      FacilityModel(
+        id: 'Delivery Team',
+        additionalFields: FacilityAdditionalFields(
+          version: 1,
+          fields: [const AdditionalField('type', 'DeliveryTeam')],
+        ),
+      ),
+    ];
 
     if (event.loadAllProjects) {
       allFacilities.addAll(await facilityDataRepository.search(

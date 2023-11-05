@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -10,6 +11,7 @@ import '../../../blocs/facility/facility.dart';
 import '../../../blocs/product_variant/product_variant.dart';
 import '../../../blocs/record_stock/record_stock.dart';
 import '../../../data/local_store/no_sql/schema/app_configuration.dart';
+import '../../../models/auth/auth_model.dart';
 import '../../../models/data_model.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
@@ -30,7 +32,7 @@ class StockDetailsPage extends LocalizedStatefulWidget {
 
 class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
   static const _productVariantKey = 'productVariant';
-  static const _transactingPartyKey = 'transactingParty';
+  static const _secondaryPartyKey = 'secondaryParty';
   static const _transactionQuantityKey = 'quantity';
   static const _transactionReasonKey = 'transactionReason';
   static const _waybillNumberKey = 'waybillNumber';
@@ -38,13 +40,15 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
   static const _vehicleNumberKey = 'vehicleNumber';
   static const _typeOfTransportKey = 'typeOfTransport';
   static const _commentsKey = 'comments';
+  static const _deliveryTeamKey = 'deliveryTeam';
+  bool deliveryTeamSelected = false;
 
-  FormGroup _form() {
+  FormGroup _form(StockRecordEntryType stockType) {
     return fb.group({
       _productVariantKey: FormControl<ProductVariantModel>(
         validators: [Validators.required],
       ),
-      _transactingPartyKey: FormControl<FacilityModel>(
+      _secondaryPartyKey: FormControl<FacilityModel>(
         validators: [Validators.required],
       ),
       _transactionQuantityKey: FormControl<int>(validators: [
@@ -62,12 +66,18 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
       _vehicleNumberKey: FormControl<String>(),
       _typeOfTransportKey: FormControl<String>(),
       _commentsKey: FormControl<String>(),
+      _deliveryTeamKey: FormControl<String>(),
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
+    bool isWareHouseMgr = context.loggedInUserRoles
+        .where((role) => role.code == Roles.warehouseManager.name)
+        .toList()
+        .isNotEmpty;
 
     return Scaffold(
       body: BlocBuilder<LocationBloc, LocationState>(
@@ -83,43 +93,41 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
             },
             builder: (context, stockState) {
               StockRecordEntryType entryType = stockState.entryType;
+
               const module = i18.stockDetails;
 
               String pageTitle;
-              String transactionPartyLabel;
               String quantityCountLabel;
               String? transactionReasonLabel;
-              TransactionType transactionType;
               TransactionReason? transactionReason;
+              TransactionType transactionType;
 
               List<TransactionReason>? reasons;
 
               switch (entryType) {
                 case StockRecordEntryType.receipt:
                   pageTitle = module.receivedPageTitle;
-                  transactionPartyLabel = module.selectTransactingPartyReceived;
                   quantityCountLabel = module.quantityReceivedLabel;
                   transactionType = TransactionType.received;
+
                   break;
                 case StockRecordEntryType.dispatch:
                   pageTitle = module.issuedPageTitle;
-                  transactionPartyLabel = module.selectTransactingPartyIssued;
                   quantityCountLabel = module.quantitySentLabel;
                   transactionType = TransactionType.dispatched;
+
                   break;
                 case StockRecordEntryType.returned:
                   pageTitle = module.returnedPageTitle;
-                  transactionPartyLabel = module.selectTransactingPartyReturned;
                   quantityCountLabel = module.quantityReturnedLabel;
                   transactionType = TransactionType.received;
                   break;
                 case StockRecordEntryType.loss:
                   pageTitle = module.lostPageTitle;
-                  transactionPartyLabel =
-                      module.selectTransactingPartyReceivedFromLost;
                   quantityCountLabel = module.quantityLostLabel;
-                  transactionType = TransactionType.dispatched;
                   transactionReasonLabel = module.transactionReasonLost;
+                  transactionType = TransactionType.dispatched;
+
                   reasons = [
                     TransactionReason.lostInStorage,
                     TransactionReason.lostInTransit,
@@ -127,11 +135,10 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                   break;
                 case StockRecordEntryType.damaged:
                   pageTitle = module.damagedPageTitle;
-                  transactionPartyLabel =
-                      module.selectTransactingPartyReceivedFromDamaged;
                   quantityCountLabel = module.quantityDamagedLabel;
-                  transactionType = TransactionType.dispatched;
                   transactionReasonLabel = module.transactionReasonDamaged;
+                  transactionType = TransactionType.dispatched;
+
                   reasons = [
                     TransactionReason.damagedInStorage,
                     TransactionReason.damagedInTransit,
@@ -140,10 +147,9 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
               }
 
               transactionReasonLabel ??= '';
-              debugPrint(transactionPartyLabel);
 
               return ReactiveFormBuilder(
-                form: _form,
+                form: () => _form(entryType),
                 builder: (context, form, child) {
                   return ScrollableContent(
                     header: const Column(children: [
@@ -164,186 +170,234 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                     if (!form.valid) {
                                       return;
                                     }
-                                    FocusManager.instance.primaryFocus
-                                        ?.unfocus();
 
-                                    final bloc =
-                                        context.read<RecordStockBloc>();
-
-                                    final productVariant = form
-                                        .control(_productVariantKey)
-                                        .value as ProductVariantModel;
-
-                                    switch (entryType) {
-                                      case StockRecordEntryType.receipt:
-                                        transactionReason =
-                                            TransactionReason.received;
-                                        break;
-                                      case StockRecordEntryType.dispatch:
-                                        transactionReason = null;
-                                        break;
-                                      case StockRecordEntryType.returned:
-                                        transactionReason =
-                                            TransactionReason.returned;
-                                        break;
-                                      default:
-                                        transactionReason = form
-                                            .control(_transactionReasonKey)
-                                            .value as TransactionReason?;
-                                        break;
-                                    }
-
-                                    final transactingParty = form
-                                        .control(_transactingPartyKey)
-                                        .value as FacilityModel;
-
-                                    final quantity = form
-                                        .control(_transactionQuantityKey)
-                                        .value;
-
-                                    final waybillNumber = form
-                                        .control(_waybillNumberKey)
-                                        .value as String?;
-
-                                    final waybillQuantity = form
-                                        .control(_waybillQuantityKey)
-                                        .value as String?;
-
-                                    final vehicleNumber = form
-                                        .control(_vehicleNumberKey)
-                                        .value as String?;
-
-                                    final lat = locationState.latitude;
-                                    final lng = locationState.longitude;
-
-                                    final hasLocationData =
-                                        lat != null && lng != null;
-
-                                    final comments = form
-                                        .control(_commentsKey)
-                                        .value as String?;
-
-                                    String? transactingPartyType;
-
-                                    final fields = transactingParty
-                                        .additionalFields?.fields;
-
-                                    if (fields != null && fields.isNotEmpty) {
-                                      final type = fields.firstWhereOrNull(
-                                        (element) => element.key == 'type',
-                                      );
-                                      final value = type?.value;
-                                      if (value != null &&
-                                          value is String &&
-                                          value.isNotEmpty) {
-                                        transactingPartyType = value;
-                                      }
-                                    }
-
-                                    transactingPartyType ??= 'WAREHOUSE';
-
-                                    final stockModel = StockModel(
-                                      clientReferenceId: IdGen.i.identifier,
-                                      productVariantId: productVariant.id,
-                                      transactingPartyId: transactingParty.id,
-                                      transactingPartyType:
-                                          transactingPartyType,
-                                      transactionType: transactionType,
-                                      transactionReason: transactionReason,
-                                      referenceId: stockState.projectId,
-                                      referenceIdType: 'PROJECT',
-                                      quantity: quantity.toString(),
-                                      waybillNumber: waybillNumber,
-                                      auditDetails: AuditDetails(
-                                        createdBy: context.loggedInUserUuid,
-                                        createdTime:
-                                            context.millisecondsSinceEpoch(),
-                                      ),
-                                      clientAuditDetails: ClientAuditDetails(
-                                        createdBy: context.loggedInUserUuid,
-                                        createdTime:
-                                            context.millisecondsSinceEpoch(),
-                                        lastModifiedBy:
-                                            context.loggedInUserUuid,
-                                        lastModifiedTime:
-                                            context.millisecondsSinceEpoch(),
-                                      ),
-                                      additionalFields: [
-                                                waybillQuantity,
-                                                vehicleNumber,
-                                                comments,
-                                              ].any((element) =>
-                                                  element != null) ||
-                                              hasLocationData
-                                          ? StockAdditionalFields(
-                                              version: 1,
-                                              fields: [
-                                                if (waybillQuantity != null)
-                                                  AdditionalField(
-                                                    'waybill_quantity',
-                                                    waybillQuantity,
-                                                  ),
-                                                if (vehicleNumber != null)
-                                                  AdditionalField(
-                                                    'vehicle_number',
-                                                    vehicleNumber,
-                                                  ),
-                                                if (comments != null)
-                                                  AdditionalField(
-                                                    'comments',
-                                                    comments,
-                                                  ),
-                                                if (hasLocationData) ...[
-                                                  AdditionalField('lat', lat),
-                                                  AdditionalField('lng', lng),
-                                                ],
-                                              ],
-                                            )
-                                          : null,
-                                    );
-
-                                    bloc.add(
-                                      RecordStockSaveStockDetailsEvent(
-                                        stockModel: stockModel,
-                                      ),
-                                    );
-
-                                    final submit = await DigitDialog.show<bool>(
-                                      context,
-                                      options: DigitDialogOptions(
-                                        titleText: localizations.translate(
-                                          i18.stockDetails.dialogTitle,
-                                        ),
-                                        contentText: localizations.translate(
-                                          i18.stockDetails.dialogContent,
-                                        ),
-                                        primaryAction: DigitDialogActions(
-                                          label: localizations.translate(
-                                            i18.common.coreCommonSubmit,
+                                    if (deliveryTeamSelected &&
+                                        (form.control(_deliveryTeamKey).value ==
+                                                null ||
+                                            form
+                                                .control(_deliveryTeamKey)
+                                                .value
+                                                .toString()
+                                                .isEmpty)) {
+                                      DigitToast.show(
+                                        context,
+                                        options: DigitToastOptions(
+                                          localizations.translate(
+                                            i18.stockDetails.teamCodeRequired,
                                           ),
-                                          action: (context) {
-                                            Navigator.of(
+                                          true,
+                                          theme,
+                                        ),
+                                      );
+                                    } else {
+                                      FocusManager.instance.primaryFocus
+                                          ?.unfocus();
+
+                                      final bloc =
+                                          context.read<RecordStockBloc>();
+
+                                      final productVariant = form
+                                          .control(_productVariantKey)
+                                          .value as ProductVariantModel;
+
+                                      switch (entryType) {
+                                        case StockRecordEntryType.receipt:
+                                          transactionReason =
+                                              TransactionReason.received;
+                                          break;
+                                        case StockRecordEntryType.dispatch:
+                                          transactionReason = null;
+                                          break;
+                                        case StockRecordEntryType.returned:
+                                          transactionReason =
+                                              TransactionReason.returned;
+                                          break;
+                                        default:
+                                          transactionReason = form
+                                              .control(_transactionReasonKey)
+                                              .value as TransactionReason?;
+                                          break;
+                                      }
+
+                                      final secondaryParty = form
+                                          .control(_secondaryPartyKey)
+                                          .value as FacilityModel;
+
+                                      final quantity = form
+                                          .control(_transactionQuantityKey)
+                                          .value;
+
+                                      final waybillNumber = form
+                                          .control(_waybillNumberKey)
+                                          .value as String?;
+
+                                      final waybillQuantity = form
+                                          .control(_waybillQuantityKey)
+                                          .value as String?;
+
+                                      final vehicleNumber = form
+                                          .control(_vehicleNumberKey)
+                                          .value as String?;
+
+                                      final lat = locationState.latitude;
+                                      final lng = locationState.longitude;
+
+                                      final hasLocationData =
+                                          lat != null && lng != null;
+
+                                      final comments = form
+                                          .control(_commentsKey)
+                                          .value as String?;
+
+                                      final deliveryTeamName = form
+                                          .control(_deliveryTeamKey)
+                                          .value as String?;
+
+                                      String? senderId;
+                                      String? senderType;
+                                      String? receiverId;
+                                      String? receiverType;
+
+                                      final primaryType =
+                                          BlocProvider.of<RecordStockBloc>(
+                                        context,
+                                      ).state.primaryType;
+
+                                      final primaryId =
+                                          BlocProvider.of<RecordStockBloc>(
+                                        context,
+                                      ).state.primaryId;
+
+                                      switch (entryType) {
+                                        case StockRecordEntryType.receipt:
+                                        case StockRecordEntryType.loss:
+                                        case StockRecordEntryType.damaged:
+                                          if (deliveryTeamSelected) {
+                                            senderId = deliveryTeamName;
+                                            senderType = "STAFF";
+                                          } else {
+                                            senderId = secondaryParty.id;
+                                            senderType = "WAREHOUSE";
+                                          }
+                                          receiverId = primaryId;
+                                          receiverType = primaryType;
+
+                                          break;
+                                        case StockRecordEntryType.dispatch:
+                                        case StockRecordEntryType.returned:
+                                          if (deliveryTeamSelected) {
+                                            receiverId = deliveryTeamName;
+                                            receiverType = "STAFF";
+                                          } else {
+                                            receiverId = secondaryParty.id;
+                                            receiverType = "WAREHOUSE";
+                                          }
+                                          senderId = primaryId;
+                                          senderType = primaryType;
+                                          break;
+                                      }
+
+                                      final stockModel = StockModel(
+                                        clientReferenceId: IdGen.i.identifier,
+                                        productVariantId: productVariant.id,
+                                        transactionReason: transactionReason,
+                                        transactionType: transactionType,
+                                        referenceId: stockState.projectId,
+                                        referenceIdType: 'PROJECT',
+                                        quantity: quantity.toString(),
+                                        waybillNumber: waybillNumber,
+                                        receiverId: receiverId,
+                                        receiverType: receiverType,
+                                        senderId: senderId,
+                                        senderType: senderType,
+                                        auditDetails: AuditDetails(
+                                          createdBy: context.loggedInUserUuid,
+                                          createdTime:
+                                              context.millisecondsSinceEpoch(),
+                                        ),
+                                        additionalFields: [
+                                                  waybillQuantity,
+                                                  vehicleNumber,
+                                                  comments,
+                                                ].any((element) =>
+                                                    element != null) ||
+                                                hasLocationData
+                                            ? StockAdditionalFields(
+                                                version: 1,
+                                                fields: [
+                                                  if (waybillQuantity != null)
+                                                    AdditionalField(
+                                                      'waybill_quantity',
+                                                      waybillQuantity,
+                                                    ),
+                                                  if (vehicleNumber != null)
+                                                    AdditionalField(
+                                                      'vehicle_number',
+                                                      vehicleNumber,
+                                                    ),
+                                                  if (comments != null)
+                                                    AdditionalField(
+                                                      'comments',
+                                                      comments,
+                                                    ),
+                                                  if (deliveryTeamName != null)
+                                                    AdditionalField(
+                                                      'deliveryTeam',
+                                                      deliveryTeamName,
+                                                    ),
+                                                  if (hasLocationData) ...[
+                                                    AdditionalField('lat', lat),
+                                                    AdditionalField('lng', lng),
+                                                  ],
+                                                ],
+                                              )
+                                            : null,
+                                      );
+
+                                      bloc.add(
+                                        RecordStockSaveStockDetailsEvent(
+                                          stockModel: stockModel,
+                                        ),
+                                      );
+
+                                      final submit =
+                                          await DigitDialog.show<bool>(
+                                        context,
+                                        options: DigitDialogOptions(
+                                          titleText: localizations.translate(
+                                            i18.stockDetails.dialogTitle,
+                                          ),
+                                          contentText: localizations.translate(
+                                            i18.stockDetails.dialogContent,
+                                          ),
+                                          primaryAction: DigitDialogActions(
+                                            label: localizations.translate(
+                                              i18.common.coreCommonSubmit,
+                                            ),
+                                            action: (context) {
+                                              Navigator.of(
+                                                context,
+                                                rootNavigator: true,
+                                              ).pop(true);
+                                            },
+                                          ),
+                                          secondaryAction: DigitDialogActions(
+                                            label: localizations.translate(
+                                              i18.common.coreCommonCancel,
+                                            ),
+                                            action: (context) => Navigator.of(
                                               context,
                                               rootNavigator: true,
-                                            ).pop(true);
-                                          },
-                                        ),
-                                        secondaryAction: DigitDialogActions(
-                                          label: localizations.translate(
-                                            i18.common.coreCommonCancel,
+                                            ).pop(false),
                                           ),
-                                          action: (context) => Navigator.of(
-                                            context,
-                                            rootNavigator: true,
-                                          ).pop(false),
                                         ),
-                                      ),
-                                    );
-
-                                    if (submit ?? false) {
-                                      bloc.add(
-                                        const RecordStockCreateStockEntryEvent(),
                                       );
+
+                                      if (submit ?? false) {
+                                        bloc.add(
+                                          const RecordStockCreateStockEntryEvent(),
+                                        );
+                                      }
                                     }
                                   },
                             child: Center(
@@ -410,7 +464,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                             BlocBuilder<FacilityBloc, FacilityState>(
                               builder: (context, state) {
                                 final facilities = state.whenOrNull(
-                                      fetched: (_, facilities) => facilities,
+                                      fetched: (facilities, _) => facilities,
                                     ) ??
                                     [];
 
@@ -426,7 +480,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                     padding: EdgeInsets.all(8.0),
                                     child: Icon(Icons.search),
                                   ),
-                                  formControlName: _transactingPartyKey,
+                                  formControlName: _secondaryPartyKey,
                                   readOnly: true,
                                   onTap: () async {
                                     final parent =
@@ -439,11 +493,31 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                     );
 
                                     if (facility == null) return;
-                                    form.control(_transactingPartyKey).value =
+                                    form.control(_secondaryPartyKey).value =
                                         facility;
+                                    if (facility.id == 'Delivery Team') {
+                                      setState(() {
+                                        deliveryTeamSelected = true;
+                                      });
+                                    } else {
+                                      setState(() {
+                                        deliveryTeamSelected = false;
+                                      });
+                                    }
                                   },
                                 );
                               },
+                            ),
+                            Visibility(
+                              visible: deliveryTeamSelected,
+                              child: DigitTextFormField(
+                                label: localizations.translate(
+                                  i18.stockReconciliationDetails.teamCodeLabel,
+                                ),
+                                isRequired: deliveryTeamSelected,
+                                maxLines: 3,
+                                formControlName: _deliveryTeamKey,
+                              ),
                             ),
                             DigitTextFormField(
                               formControlName: _transactionQuantityKey,
@@ -467,62 +541,67 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                 quantityCountLabel,
                               ),
                             ),
-                            DigitTextFormField(
-                              label: localizations.translate(
-                                i18.stockDetails.waybillNumberLabel,
+                            if (isWareHouseMgr)
+                              DigitTextFormField(
+                                label: localizations.translate(
+                                  i18.stockDetails.waybillNumberLabel,
+                                ),
+                                formControlName: _waybillNumberKey,
                               ),
-                              formControlName: _waybillNumberKey,
-                            ),
-                            DigitTextFormField(
-                              label: localizations.translate(
-                                i18.stockDetails
-                                    .quantityOfProductIndicatedOnWaybillLabel,
-                              ),
-                              formControlName: _waybillQuantityKey,
-                              validationMessages: {
-                                "number": (object) => localizations.translate(
-                                      '${i18.stockDetails.quantityOfProductIndicatedOnWaybillLabel}_ERROR',
-                                    ),
-                              },
-                            ),
-                            BlocBuilder<AppInitializationBloc,
-                                AppInitializationState>(
-                              builder: (context, state) => state.maybeWhen(
-                                orElse: () => const Offstage(),
-                                initialized: (appConfiguration, _) {
-                                  final transportTypeOptions =
-                                      appConfiguration.transportTypes ??
-                                          <TransportTypes>[];
-
-                                  return DigitReactiveDropdown<String>(
-                                    isRequired: false,
-                                    label: localizations.translate(
-                                      i18.stockDetails.transportTypeLabel,
-                                    ),
-                                    valueMapper: (e) => e,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        form.control(_typeOfTransportKey);
-                                      });
-                                    },
-                                    initialValue:
-                                        transportTypeOptions.firstOrNull?.name,
-                                    menuItems: transportTypeOptions.map(
-                                      (e) {
-                                        return localizations.translate(e.name);
-                                      },
-                                    ).toList(),
-                                    formControlName: _typeOfTransportKey,
-                                  );
+                            if (isWareHouseMgr)
+                              DigitTextFormField(
+                                label: localizations.translate(
+                                  i18.stockDetails
+                                      .quantityOfProductIndicatedOnWaybillLabel,
+                                ),
+                                formControlName: _waybillQuantityKey,
+                                validationMessages: {
+                                  "number": (object) => localizations.translate(
+                                        '${i18.stockDetails.quantityOfProductIndicatedOnWaybillLabel}_ERROR',
+                                      ),
                                 },
                               ),
-                            ),
-                            DigitTextFormField(
-                              label: localizations.translate(
-                                i18.stockDetails.vehicleNumberLabel,
+                            if (isWareHouseMgr)
+                              BlocBuilder<AppInitializationBloc,
+                                  AppInitializationState>(
+                                builder: (context, state) => state.maybeWhen(
+                                  orElse: () => const Offstage(),
+                                  initialized: (appConfiguration, _) {
+                                    final transportTypeOptions =
+                                        appConfiguration.transportTypes ??
+                                            <TransportTypes>[];
+
+                                    return DigitReactiveDropdown<String>(
+                                      isRequired: false,
+                                      label: localizations.translate(
+                                        i18.stockDetails.transportTypeLabel,
+                                      ),
+                                      valueMapper: (e) => e,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          form.control(_typeOfTransportKey);
+                                        });
+                                      },
+                                      initialValue: transportTypeOptions
+                                          .firstOrNull?.name,
+                                      menuItems: transportTypeOptions.map(
+                                        (e) {
+                                          return localizations
+                                              .translate(e.name);
+                                        },
+                                      ).toList(),
+                                      formControlName: _typeOfTransportKey,
+                                    );
+                                  },
+                                ),
                               ),
-                              formControlName: _vehicleNumberKey,
-                            ),
+                            if (isWareHouseMgr)
+                              DigitTextFormField(
+                                label: localizations.translate(
+                                  i18.stockDetails.vehicleNumberLabel,
+                                ),
+                                formControlName: _vehicleNumberKey,
+                              ),
                             DigitTextFormField(
                               label: localizations.translate(
                                 i18.stockDetails.commentsLabel,

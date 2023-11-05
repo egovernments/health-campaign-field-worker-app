@@ -85,6 +85,21 @@ extension ContextUtilityExtensions on BuildContext {
     }
   }
 
+  List<UserRoleModel> get loggedInUserRoles {
+    final authBloc = _get<AuthBloc>();
+    final userRequestObject = authBloc.state.whenOrNull(
+      authenticated: (accessToken, refreshToken, userModel, actionsWrapper) {
+        return userModel.roles;
+      },
+    );
+
+    if (userRequestObject == null) {
+      throw AppException('User not authenticated');
+    }
+
+    return userRequestObject;
+  }
+
   String get loggedInUserUuid => loggedInUser.uuid;
 
   UserRequestModel get loggedInUser {
