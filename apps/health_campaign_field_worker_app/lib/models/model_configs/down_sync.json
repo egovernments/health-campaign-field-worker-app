@@ -8,7 +8,8 @@
     {
       "name": "locality",
       "type": "String",
-      "includeForQuery": true
+      "includeForQuery": true,
+      "isPk": true
     },
     {
       "name": "projectId",

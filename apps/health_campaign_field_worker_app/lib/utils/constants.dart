@@ -325,10 +325,4 @@ class DataModels {
         return DataModelType.householdMember;
     }
   }
-
-  static List<T> getEntityFromEntityName<T extends EntityModel>(
-    Iterable<Map<String, dynamic>> entityList,
-  ) {
-    return entityList.map((e) => Mapper.fromMap<T>(e)).toList();
-  }
 }

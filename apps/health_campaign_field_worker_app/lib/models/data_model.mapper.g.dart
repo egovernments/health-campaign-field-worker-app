@@ -5028,6 +5028,7 @@ class AddressTypeMapper extends EnumMapper<AddressType> {
       case "PERMANENT": return AddressType.permanent;
       case "CORRESPONDENCE": return AddressType.correspondence;
       case "OTHER": return AddressType.other;
+      case "string": return AddressType.string;
       default: throw MapperException.unknownEnumValue(value);
     }
   }
@@ -5037,6 +5038,7 @@ class AddressTypeMapper extends EnumMapper<AddressType> {
       case AddressType.permanent: return "PERMANENT";
       case AddressType.correspondence: return "CORRESPONDENCE";
       case AddressType.other: return "OTHER";
+      case AddressType.string: return "string";
     }
   }
 }

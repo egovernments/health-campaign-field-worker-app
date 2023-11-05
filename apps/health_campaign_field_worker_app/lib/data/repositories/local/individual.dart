@@ -267,6 +267,21 @@ class IndividualLocalRepository
   }
 
   @override
+  FutureOr<void> bulkCreate(
+    List<IndividualModel> entities,
+  ) async {
+    final individualCompanions = entities.map((e) => e.companion).toList();
+
+    await sql.batch((batch) async {
+      batch.insertAll(
+        sql.individual,
+        individualCompanions,
+        mode: InsertMode.insertOrReplace,
+      );
+    });
+  }
+
+  @override
   FutureOr<void> update(
     IndividualModel entity, {
     bool createOpLog = true,

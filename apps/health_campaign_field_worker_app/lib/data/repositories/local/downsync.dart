@@ -17,11 +17,6 @@ class DownsyncLocalRepository
     DataOperation dataOperation = DataOperation.create,
   }) async {
     final downSyncCompanion = entity.companion;
-
-    // final offset = entity.offset;
-    // final limit = entity.limit;
-    // final localityCode = entity.locality;
-    // final totalCount = entity.totalCount;
     await sql.batch((batch) {
       batch.insert(
         sql.downsync,
@@ -29,8 +24,26 @@ class DownsyncLocalRepository
         mode: InsertMode.insertOrReplace,
       );
     });
+  }
 
-    await super.create(entity, createOpLog: createOpLog);
+  @override
+  FutureOr<void> update(
+    DownsyncModel entity, {
+    bool createOpLog = false,
+  }) async {
+    final downSyncCompanion = entity.companion;
+
+    await sql.batch((batch) async {
+      batch.update(
+        sql.downsync,
+        downSyncCompanion,
+        where: (table) => table.locality.equals(
+          entity.locality,
+        ),
+      );
+    });
+
+    await super.update(entity, createOpLog: false);
   }
 
   @override

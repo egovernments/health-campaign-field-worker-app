@@ -31856,7 +31856,7 @@ class $DownsyncTable extends Downsync
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {auditCreatedBy};
+  Set<GeneratedColumn> get $primaryKey => {locality, auditCreatedBy};
   @override
   DownsyncData map(Map<String, dynamic> data, {String? tablePrefix}) {
     return DownsyncData.fromData(data,

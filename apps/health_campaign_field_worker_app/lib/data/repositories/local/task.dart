@@ -298,6 +298,21 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
   }
 
   @override
+  FutureOr<void> bulkCreate(
+    List<TaskModel> entities,
+  ) async {
+    final taskCompanions = entities.map((e) => e.companion).toList();
+
+    await sql.batch((batch) async {
+      batch.insertAll(
+        sql.task,
+        taskCompanions,
+        mode: InsertMode.insertOrReplace,
+      );
+    });
+  }
+
+  @override
   FutureOr<void> update(
     TaskModel entity, {
     bool createOpLog = true,

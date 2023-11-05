@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
@@ -118,13 +119,10 @@ class NetworkManager {
 
       final entityList =
           entityResponse.whereType<Map<String, dynamic>>().toList();
-      // final entityList = entityResponse.whereType<Map<String, dynamic>>();
-      print('ENTITY RESPONSE');
-      print(entityResponse);
-      print(entityList.first);
 
-      final entity =
-          entityList.map((e) => Mapper.fromMap<EntityModel>(e)).toList();
+      final entity = entityList
+          .map((e) => Mapper.fromJson<EntityModel>(jsonEncode(e)))
+          .toList();
       print(entity);
       await local.bulkCreate(entity);
     }

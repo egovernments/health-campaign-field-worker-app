@@ -26,5 +26,5 @@ class Downsync extends Table {
   TextColumn get additionalFields => text().nullable()();
 
   @override
-  Set<Column> get primaryKey => { auditCreatedBy,  };
+  Set<Column> get primaryKey => { locality, auditCreatedBy,  };
 }

@@ -1,7 +1,8 @@
 import 'dart:async';
-import 'dart:math';
 import 'dart:math' as math;
+
 import 'package:drift/drift.dart';
+
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
@@ -172,7 +173,22 @@ class HouseholdLocalRepository
       }
     });
 
-    await super.create(entity);
+    await super.create(entity, createOpLog: createOpLog);
+  }
+
+  @override
+  FutureOr<void> bulkCreate(
+    List<HouseholdModel> entities,
+  ) async {
+    final householdCompanions = entities.map((e) => e.companion).toList();
+
+    await sql.batch((batch) async {
+      batch.insertAll(
+        sql.household,
+        householdCompanions,
+        mode: InsertMode.insertOrReplace,
+      );
+    });
   }
 
   @override

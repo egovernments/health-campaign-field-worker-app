@@ -54,108 +54,114 @@ class BeneficiaryDownSyncBloc
     BeneficiaryDownSyncEmitter emit,
   ) async {
     double? diskSpace = 0;
-    diskSpace = await DiskSpace.getFreeDiskSpace;
-    int totalCount = 1000;
-    print('EVENT CALLED');
-    // const localRepo = LocalRepository<HouseholdModel, HouseholdSearchModel>;
-    // final existingDownSyncData =
-    //     await downSyncLocalRepository.search(DownsyncSearchModel(
-    //   locality: event.boundaryCode,
-    // ));
-    // int? lastSyncedTime = existingDownSyncData.first.lastSyncedTime;
-    // int offSet = existingDownSyncData.first.offset ?? 0;
-    // int limit = event.batchSize;
-    final downSyncResults = await downSyncRemoteRepository.downSync(
+    diskSpace = await DiskSpace
+        .getFreeDiskSpace; // Returns the device available space in MB
+    final existingDownSyncData =
+        await downSyncLocalRepository.search(DownsyncSearchModel(
+      locality: event.boundaryCode,
+    ));
+    int? lastSyncedTime = existingDownSyncData.isEmpty
+        ? null
+        : existingDownSyncData.first.lastSyncedTime;
+
+    //To get the server totalCount,
+    final initialResults = await downSyncRemoteRepository.downSync(
       DownsyncSearchModel(
         locality: event.boundaryCode,
         offset: 0,
-        limit: 1,
+        limit: 5,
+        lastSyncedTime: lastSyncedTime,
         tenantId: envConfig.variables.tenantId,
         projectId: event.projectId,
-        lastSyncedTime: null,
       ),
     );
-    await downSyncLocalRepository.create(DownsyncModel(
-      offset: 5,
-      limit: 10,
-    ));
-    print(downSyncResults.keys.toList());
 
-    await networkManager.writeToEntityDB(downSyncResults, [
-      householdLocalRepository,
-      householdMemberLocalRepository,
-      individualLocalRepository,
-      projectBeneficiaryLocalRepository,
-      taskLocalRepository,
-      sideEffectLocalRepository,
-      referralLocalRepository,
-    ]);
-    // if ((diskSpace ?? 0) * 1000 <
-    //     (downSyncResults.first.downSyncCriteria?.totalCount ?? 0) *
-    //         100 *
-    //         7 *
-    //         2) {
-    //   emit(const BeneficiaryDownSyncState.insufficientStorage());
-    // } else {}
-    // _fetchResults(emit, event);
+    // Current response from server is String, Expecting it to be int
+    int serverTotalCount = initialResults["DownsyncCriteria"]["totalCount"];
+    // emit(BeneficiaryDownSyncState.inProgress(0, serverTotalCount));
+    if (serverTotalCount == 0) {
+      emit(const BeneficiaryDownSyncState.success());
+    }
+    // diskSpace in MB * 1000 comparison with serverTotalCount * 100KB * Number of entities * 2
+    else if ((diskSpace ?? 0) * 1000 < (serverTotalCount * 100 * 7 * 2)) {
+      emit(const BeneficiaryDownSyncState.insufficientStorage());
+    } else {
+      _fetchResults(emit, event);
+    }
   }
 
-  // FutureOr<void> _fetchResults(
-  //   BeneficiaryDownSyncEmitter emit,
-  //   DownSyncBeneficiaryEvent event,
-  // ) async {
-  //   final existingDownSyncData =
-  //       await downSyncLocalRepository.search(DownsyncSearchModel(
-  //     locality: event.boundaryCode,
-  //   ));
-  //   int offSet = existingDownSyncData.first.offset ?? 0;
-  //   int limit = event.batchSize;
-  //   int? lastSyncedTime = existingDownSyncData.first.lastSyncedTime;
-  //   final downSyncResults = await downSyncRemoteRepository.search(
-  //     DownsyncSearchModel(
-  //       locality: event.boundaryCode,
-  //       projectId: event.projectId,
-  //       offset: offSet,
-  //       limit: limit,
-  //       tenantId: envConfig.variables.tenantId,
-  //       lastSyncedTime: lastSyncedTime,
-  //     ),
-  //   );
-  //   // if (downSyncResults.first.households != null &&
-  //   //     (downSyncResults.first.households ?? []).isNotEmpty) {
-  //   await householdLocalRepository
-  //       .bulkCreate(downSyncResults.first.households!);
-  //   // }
-  //   // if (downSyncResults.first.householdMembers != null &&
-  //   //     (downSyncResults.first.householdMembers ?? []).isNotEmpty) {
-  //   //   await householdMemberLocalRepository
-  //   //       .bulkCreate(downSyncResults.first.householdMembers!);
-  //   // }
-  //   // if (downSyncResults.first.individuals != null &&
-  //   //     (downSyncResults.first.individuals ?? []).isNotEmpty) {
-  //   //   await individualLocalRepository
-  //   //       .bulkCreate(downSyncResults.first.individuals!);
-  //   // }
-  //   // if (downSyncResults.first.projectBeneficiaries != null &&
-  //   //     (downSyncResults.first.projectBeneficiaries ?? []).isNotEmpty) {
-  //   //   await projectBeneficiaryLocalRepository
-  //   //       .bulkCreate(downSyncResults.first.projectBeneficiaries!);
-  //   // }
-  //   // if (downSyncResults.first.tasks != null &&
-  //   //     (downSyncResults.first.tasks ?? []).isNotEmpty) {
-  //   //   await taskLocalRepository.bulkCreate(downSyncResults.first.tasks!);
-  //   // }
-  //   // if (downSyncResults.first.referrals != null &&
-  //   //     (downSyncResults.first.referrals ?? []).isNotEmpty) {
-  //   //   await referralLocalRepository
-  //   //       .bulkCreate(downSyncResults.first.referrals!);
-  //   // }
-  //   // if (downSyncResults.first.sideEffects != null &&
-  //   //     (downSyncResults.first.sideEffects ?? []).isNotEmpty) {
-  //   //   await sideEffectLocalRepository
-  //   //       .bulkCreate(downSyncResults.first.sideEffects!);
-  //   // }
-  // }
+  FutureOr<void> _fetchResults(
+    BeneficiaryDownSyncEmitter emit,
+    DownSyncBeneficiaryEvent event,
+  ) async {
+    int limit = event.batchSize;
+
+    while (true) {
+      // Check each time, till the loop runs the offset, limit, totalCount, lastSyncTime from Local DB of DownSync Model
+      final existingDownSyncData =
+          await downSyncLocalRepository.search(DownsyncSearchModel(
+        locality: event.boundaryCode,
+      ));
+
+      int offset = existingDownSyncData.isEmpty
+          ? 0
+          : existingDownSyncData.first.offset ?? 0;
+      int totalCount = existingDownSyncData.isEmpty
+          ? 0
+          : existingDownSyncData.first.totalCount ?? 0;
+      int? lastSyncedTime = existingDownSyncData.isEmpty
+          ? null
+          : existingDownSyncData.first.lastSyncedTime;
+
+      if (offset >= totalCount) {
+        emit(BeneficiaryDownSyncState.inProgress(0, totalCount));
+        //Make the batch API call
+        final downSyncResults = await downSyncRemoteRepository.downSync(
+          DownsyncSearchModel(
+            locality: event.boundaryCode,
+            offset: offset,
+            limit: limit,
+            totalCount: totalCount,
+            tenantId: envConfig.variables.tenantId,
+            projectId: event.projectId,
+            lastSyncedTime: lastSyncedTime,
+          ),
+        );
+        // check if the API response is there or it failed
+        if (downSyncResults.isNotEmpty) {
+          await networkManager.writeToEntityDB(downSyncResults, [
+            householdLocalRepository,
+            householdMemberLocalRepository,
+            individualLocalRepository,
+            projectBeneficiaryLocalRepository,
+            taskLocalRepository,
+            sideEffectLocalRepository,
+            referralLocalRepository,
+          ]);
+          // Update the local downSync data for the boundary with the new values
+          offset += limit;
+          totalCount = downSyncResults["DownsyncCriteria"]["totalCount"];
+          lastSyncedTime =
+              downSyncResults["DownsyncCriteria"]["lastSyncedTime"];
+
+          await downSyncLocalRepository.update(DownsyncModel(
+            offset: offset,
+            limit: limit,
+            lastSyncedTime: lastSyncedTime,
+            totalCount: totalCount,
+            locality: event.boundaryCode,
+          ));
+        }
+        // When API response failed
+        else {
+          emit(const BeneficiaryDownSyncState.failed());
+        }
+      } else {
+        emit(const BeneficiaryDownSyncState.success());
+        break; // If offset is greater than or equal to totalCount, exit the loop
+      }
+    }
+  }
 }
 
 @freezed
