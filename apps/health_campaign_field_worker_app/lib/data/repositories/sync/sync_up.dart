@@ -83,14 +83,21 @@ class PerformSyncUp {
               }
 
               if (updatedEntity is TaskModel) {
-                final resourceId = e.additionalIds
-                    .firstWhereOrNull(
-                      (element) => element.idType == taskResourceIdKey,
-                    )
-                    ?.id;
+                final addressId = e.additionalIds.firstWhereOrNull(
+                  (element) {
+                    return element.idType == householdAddressIdKey;
+                  },
+                )?.id;
+
+                final resourceIdMap = {
+                  for (AdditionalId additionalId in e.additionalIds)
+                    additionalId.idType: additionalId.id,
+                };
 
                 updatedEntity = updatedEntity.copyWith(
                   resources: updatedEntity.resources?.map((e) {
+                    final resourceId =
+                        resourceIdMap[e.clientReferenceId + taskResourceIdKey];
                     if (resourceId != null) {
                       return e.copyWith(
                         taskId: serverGeneratedId,
@@ -100,6 +107,9 @@ class PerformSyncUp {
 
                     return e.copyWith(taskId: serverGeneratedId);
                   }).toList(),
+                  address: updatedEntity.address?.copyWith(
+                    id: updatedEntity.address?.id ?? addressId,
+                  ),
                 );
               }
 
@@ -129,7 +139,7 @@ class PerformSyncUp {
         .indexOf(a.key)
         .compareTo(DataModelType.values.indexOf(b.key)));
 
-    for (final typeGroupedEntity in groupedEntries.entries) {
+    for (final typeGroupedEntity in entries) {
       final groupedOperations = typeGroupedEntity.value.groupListsBy(
         (element) => element.operation,
       );

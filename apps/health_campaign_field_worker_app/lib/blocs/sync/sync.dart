@@ -16,11 +16,11 @@ part 'sync.freezed.dart';
 typedef SyncEmitter = Emitter<SyncState>;
 
 class SyncBloc extends Bloc<SyncEvent, SyncState> {
-  final Isar isar;
+  final Future<Isar> isarState;
   final NetworkManager networkManager;
 
   SyncBloc({
-    required this.isar,
+    required this.isarState,
     required this.networkManager,
   }) : super(const SyncPendingState()) {
     on(_handleRefresh);
@@ -39,6 +39,8 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
     int? length = event.count;
     emit(const SyncState.loading());
     try {
+      final isar = await isarState;
+
       length ??= (await isar.opLogs
                   .filter()
                   .createdByEqualTo(event.createdBy)
