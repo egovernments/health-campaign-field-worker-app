@@ -35,6 +35,12 @@ class DeliverInterventionBloc
     try {
       if (event.isEditing) {
         // Update an existing task
+        final TaskModel? existingTaskModel =
+            (await taskRepository.search(TaskSearchModel(
+          clientReferenceId: [event.task.clientReferenceId],
+        )))
+                .firstOrNull;
+
         await taskRepository.update(event.task.copyWith(
           clientAuditDetails: (event.task.clientAuditDetails?.createdBy !=
                       null &&
@@ -46,6 +52,9 @@ class DeliverInterventionBloc
                   lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
                 )
               : null,
+          id: existingTaskModel?.id,
+          rowVersion: existingTaskModel?.rowVersion ?? 1,
+          nonRecoverableError: existingTaskModel?.nonRecoverableError ?? false,
         ));
       } else {
         // Create a new task
