@@ -60,7 +60,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
 
                     return GestureDetector(
                       onTap: () {
-                        ctx.router.navigate(const BoundarySelectionRoute());
+                        ctx.router.navigate(BoundarySelectionRoute());
                       },
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -71,8 +71,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                               padding: EdgeInsets.zero,
                             ),
                             onPressed: () {
-                              ctx.router
-                                  .navigate(const BoundarySelectionRoute());
+                              ctx.router.navigate(BoundarySelectionRoute());
                             },
                             child: Text(boundaryName),
                             // child: Text(boundaryName),

@@ -123,7 +123,6 @@ class NetworkManager {
       final entity = entityList
           .map((e) => Mapper.fromJson<EntityModel>(jsonEncode(e)))
           .toList();
-      print(entity);
       await local.bulkCreate(entity);
     }
   }

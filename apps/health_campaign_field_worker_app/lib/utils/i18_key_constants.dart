@@ -96,6 +96,8 @@ class Common {
   String get min2CharsRequired => 'MIN_2_CHARS_REQUIRED';
 
   String get facilitySearchHeaderLabel => 'FACILITY_SEARCH_HEADER_LABEL';
+
+  String get coreCommonDownload => 'CORE_COMMON_DOWNLOAD';
 }
 
 class AdverseEvents {
@@ -296,6 +298,8 @@ class BeneficiaryDetails {
   String get scannerDialogSecondaryAction => 'SCANNER_DIALOG_SECONDARY_ACTION';
   String get beneficiaryHeader => 'BENEFICIARY_HEADER';
   String get deliveryHeader => 'DELIVERY_TABLE_HEADER';
+
+  String get proceedWithoutDownloading => 'PROCEED_WITHOUT_DOWNLOADING';
 }
 
 class IndividualDetails {

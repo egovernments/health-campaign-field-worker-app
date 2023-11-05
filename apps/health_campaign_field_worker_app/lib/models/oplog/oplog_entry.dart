@@ -113,7 +113,6 @@ enum DataOperation {
   update,
   delete,
   singleCreate,
-  downSync,
 }
 
 @MappableEnum(caseStyle: CaseStyle.snakeCase)

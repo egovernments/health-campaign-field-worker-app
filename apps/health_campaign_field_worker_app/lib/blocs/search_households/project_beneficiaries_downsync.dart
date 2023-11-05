@@ -47,15 +47,13 @@ class BeneficiaryDownSyncBloc
     required this.networkManager,
   }) : super(const BeneficiaryDownSyncState._()) {
     on(_handleDownSyncOfBeneficiaries);
+    on(_handleCheckTotalCount);
   }
 
-  FutureOr<void> _handleDownSyncOfBeneficiaries(
-    DownSyncBeneficiaryEvent event,
+  FutureOr<void> _handleCheckTotalCount(
+    DownSyncCheckTotalCountEvent event,
     BeneficiaryDownSyncEmitter emit,
   ) async {
-    double? diskSpace = 0;
-    diskSpace = await DiskSpace
-        .getFreeDiskSpace; // Returns the device available space in MB
     final existingDownSyncData =
         await downSyncLocalRepository.search(DownsyncSearchModel(
       locality: event.boundaryCode,
@@ -75,15 +73,28 @@ class BeneficiaryDownSyncBloc
         projectId: event.projectId,
       ),
     );
+    if (initialResults.isNotEmpty) {
+      // Current response from server is String, Expecting it to be int
+      int serverTotalCount = initialResults["DownsyncCriteria"]["totalCount"];
 
-    // Current response from server is String, Expecting it to be int
-    int serverTotalCount = initialResults["DownsyncCriteria"]["totalCount"];
-    // emit(BeneficiaryDownSyncState.inProgress(0, serverTotalCount));
-    if (serverTotalCount == 0) {
-      emit(const BeneficiaryDownSyncState.success());
+      if (serverTotalCount > 0) {
+        emit(BeneficiaryDownSyncState.dataFound(serverTotalCount));
+      }
+    } else {
+      emit(const BeneficiaryDownSyncState.failed());
     }
+  }
+
+  FutureOr<void> _handleDownSyncOfBeneficiaries(
+    DownSyncBeneficiaryEvent event,
+    BeneficiaryDownSyncEmitter emit,
+  ) async {
+    double? diskSpace = 0;
+    diskSpace = await DiskSpace
+        .getFreeDiskSpace; // Returns the device available space in MB
+    // emit(BeneficiaryDownSyncState.inProgress(0, serverTotalCount));
     // diskSpace in MB * 1000 comparison with serverTotalCount * 100KB * Number of entities * 2
-    else if ((diskSpace ?? 0) * 1000 < (serverTotalCount * 100 * 7 * 2)) {
+    if ((diskSpace ?? 0) * 1000 < (event.initialServerCount * 100 * 7 * 2)) {
       emit(const BeneficiaryDownSyncState.insufficientStorage());
     } else {
       _fetchResults(emit, event);
@@ -170,7 +181,13 @@ class BeneficiaryDownSyncEvent with _$BeneficiaryDownSyncEvent {
     required String projectId,
     required String boundaryCode,
     required int batchSize,
+    required int initialServerCount,
   }) = DownSyncBeneficiaryEvent;
+
+  const factory BeneficiaryDownSyncEvent.checkForData({
+    required String projectId,
+    required String boundaryCode,
+  }) = DownSyncCheckTotalCountEvent;
 }
 
 @freezed
@@ -184,5 +201,7 @@ class BeneficiaryDownSyncState with _$BeneficiaryDownSyncState {
   const factory BeneficiaryDownSyncState.success() = _DownSyncSuccessState;
   const factory BeneficiaryDownSyncState.insufficientStorage() =
       _DownSyncInsufficientStorageState;
+  const factory BeneficiaryDownSyncState.dataFound(int initialServerCount) =
+      _DownSyncDataFoundState;
   const factory BeneficiaryDownSyncState.failed() = _DownSyncFailureState;
 }

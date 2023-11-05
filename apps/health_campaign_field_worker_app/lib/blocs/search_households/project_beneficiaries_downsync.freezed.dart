@@ -18,40 +18,48 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$BeneficiaryDownSyncEvent {
   String get projectId => throw _privateConstructorUsedError;
   String get boundaryCode => throw _privateConstructorUsedError;
-  int get batchSize => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(
-            String projectId, String boundaryCode, int batchSize)
+    required TResult Function(String projectId, String boundaryCode,
+            int batchSize, int initialServerCount)
         downSync,
+    required TResult Function(String projectId, String boundaryCode)
+        checkForData,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String projectId, String boundaryCode, int batchSize)?
+    TResult? Function(String projectId, String boundaryCode, int batchSize,
+            int initialServerCount)?
         downSync,
+    TResult? Function(String projectId, String boundaryCode)? checkForData,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String projectId, String boundaryCode, int batchSize)?
+    TResult Function(String projectId, String boundaryCode, int batchSize,
+            int initialServerCount)?
         downSync,
+    TResult Function(String projectId, String boundaryCode)? checkForData,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(DownSyncBeneficiaryEvent value) downSync,
+    required TResult Function(DownSyncCheckTotalCountEvent value) checkForData,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(DownSyncBeneficiaryEvent value)? downSync,
+    TResult? Function(DownSyncCheckTotalCountEvent value)? checkForData,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(DownSyncBeneficiaryEvent value)? downSync,
+    TResult Function(DownSyncCheckTotalCountEvent value)? checkForData,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -67,7 +75,7 @@ abstract class $BeneficiaryDownSyncEventCopyWith<$Res> {
           $Res Function(BeneficiaryDownSyncEvent) then) =
       _$BeneficiaryDownSyncEventCopyWithImpl<$Res, BeneficiaryDownSyncEvent>;
   @useResult
-  $Res call({String projectId, String boundaryCode, int batchSize});
+  $Res call({String projectId, String boundaryCode});
 }
 
 /// @nodoc
@@ -86,7 +94,6 @@ class _$BeneficiaryDownSyncEventCopyWithImpl<$Res,
   $Res call({
     Object? projectId = null,
     Object? boundaryCode = null,
-    Object? batchSize = null,
   }) {
     return _then(_value.copyWith(
       projectId: null == projectId
@@ -97,10 +104,6 @@ class _$BeneficiaryDownSyncEventCopyWithImpl<$Res,
           ? _value.boundaryCode
           : boundaryCode // ignore: cast_nullable_to_non_nullable
               as String,
-      batchSize: null == batchSize
-          ? _value.batchSize
-          : batchSize // ignore: cast_nullable_to_non_nullable
-              as int,
     ) as $Val);
   }
 }
@@ -113,7 +116,11 @@ abstract class _$$DownSyncBeneficiaryEventCopyWith<$Res>
       __$$DownSyncBeneficiaryEventCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String projectId, String boundaryCode, int batchSize});
+  $Res call(
+      {String projectId,
+      String boundaryCode,
+      int batchSize,
+      int initialServerCount});
 }
 
 /// @nodoc
@@ -131,6 +138,7 @@ class __$$DownSyncBeneficiaryEventCopyWithImpl<$Res>
     Object? projectId = null,
     Object? boundaryCode = null,
     Object? batchSize = null,
+    Object? initialServerCount = null,
   }) {
     return _then(_$DownSyncBeneficiaryEvent(
       projectId: null == projectId
@@ -145,6 +153,10 @@ class __$$DownSyncBeneficiaryEventCopyWithImpl<$Res>
           ? _value.batchSize
           : batchSize // ignore: cast_nullable_to_non_nullable
               as int,
+      initialServerCount: null == initialServerCount
+          ? _value.initialServerCount
+          : initialServerCount // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -155,7 +167,8 @@ class _$DownSyncBeneficiaryEvent implements DownSyncBeneficiaryEvent {
   const _$DownSyncBeneficiaryEvent(
       {required this.projectId,
       required this.boundaryCode,
-      required this.batchSize});
+      required this.batchSize,
+      required this.initialServerCount});
 
   @override
   final String projectId;
@@ -163,10 +176,12 @@ class _$DownSyncBeneficiaryEvent implements DownSyncBeneficiaryEvent {
   final String boundaryCode;
   @override
   final int batchSize;
+  @override
+  final int initialServerCount;
 
   @override
   String toString() {
-    return 'BeneficiaryDownSyncEvent.downSync(projectId: $projectId, boundaryCode: $boundaryCode, batchSize: $batchSize)';
+    return 'BeneficiaryDownSyncEvent.downSync(projectId: $projectId, boundaryCode: $boundaryCode, batchSize: $batchSize, initialServerCount: $initialServerCount)';
   }
 
   @override
@@ -179,12 +194,14 @@ class _$DownSyncBeneficiaryEvent implements DownSyncBeneficiaryEvent {
             (identical(other.boundaryCode, boundaryCode) ||
                 other.boundaryCode == boundaryCode) &&
             (identical(other.batchSize, batchSize) ||
-                other.batchSize == batchSize));
+                other.batchSize == batchSize) &&
+            (identical(other.initialServerCount, initialServerCount) ||
+                other.initialServerCount == initialServerCount));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, projectId, boundaryCode, batchSize);
+  int get hashCode => Object.hash(
+      runtimeType, projectId, boundaryCode, batchSize, initialServerCount);
 
   @JsonKey(ignore: true)
   @override
@@ -197,31 +214,38 @@ class _$DownSyncBeneficiaryEvent implements DownSyncBeneficiaryEvent {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(
-            String projectId, String boundaryCode, int batchSize)
+    required TResult Function(String projectId, String boundaryCode,
+            int batchSize, int initialServerCount)
         downSync,
+    required TResult Function(String projectId, String boundaryCode)
+        checkForData,
   }) {
-    return downSync(projectId, boundaryCode, batchSize);
+    return downSync(projectId, boundaryCode, batchSize, initialServerCount);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String projectId, String boundaryCode, int batchSize)?
+    TResult? Function(String projectId, String boundaryCode, int batchSize,
+            int initialServerCount)?
         downSync,
+    TResult? Function(String projectId, String boundaryCode)? checkForData,
   }) {
-    return downSync?.call(projectId, boundaryCode, batchSize);
+    return downSync?.call(
+        projectId, boundaryCode, batchSize, initialServerCount);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String projectId, String boundaryCode, int batchSize)?
+    TResult Function(String projectId, String boundaryCode, int batchSize,
+            int initialServerCount)?
         downSync,
+    TResult Function(String projectId, String boundaryCode)? checkForData,
     required TResult orElse(),
   }) {
     if (downSync != null) {
-      return downSync(projectId, boundaryCode, batchSize);
+      return downSync(projectId, boundaryCode, batchSize, initialServerCount);
     }
     return orElse();
   }
@@ -230,6 +254,7 @@ class _$DownSyncBeneficiaryEvent implements DownSyncBeneficiaryEvent {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(DownSyncBeneficiaryEvent value) downSync,
+    required TResult Function(DownSyncCheckTotalCountEvent value) checkForData,
   }) {
     return downSync(this);
   }
@@ -238,6 +263,7 @@ class _$DownSyncBeneficiaryEvent implements DownSyncBeneficiaryEvent {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(DownSyncBeneficiaryEvent value)? downSync,
+    TResult? Function(DownSyncCheckTotalCountEvent value)? checkForData,
   }) {
     return downSync?.call(this);
   }
@@ -246,6 +272,7 @@ class _$DownSyncBeneficiaryEvent implements DownSyncBeneficiaryEvent {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(DownSyncBeneficiaryEvent value)? downSync,
+    TResult Function(DownSyncCheckTotalCountEvent value)? checkForData,
     required TResult orElse(),
   }) {
     if (downSync != null) {
@@ -259,17 +286,182 @@ abstract class DownSyncBeneficiaryEvent implements BeneficiaryDownSyncEvent {
   const factory DownSyncBeneficiaryEvent(
       {required final String projectId,
       required final String boundaryCode,
-      required final int batchSize}) = _$DownSyncBeneficiaryEvent;
+      required final int batchSize,
+      required final int initialServerCount}) = _$DownSyncBeneficiaryEvent;
+
+  @override
+  String get projectId;
+  @override
+  String get boundaryCode;
+  int get batchSize;
+  int get initialServerCount;
+  @override
+  @JsonKey(ignore: true)
+  _$$DownSyncBeneficiaryEventCopyWith<_$DownSyncBeneficiaryEvent>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$DownSyncCheckTotalCountEventCopyWith<$Res>
+    implements $BeneficiaryDownSyncEventCopyWith<$Res> {
+  factory _$$DownSyncCheckTotalCountEventCopyWith(
+          _$DownSyncCheckTotalCountEvent value,
+          $Res Function(_$DownSyncCheckTotalCountEvent) then) =
+      __$$DownSyncCheckTotalCountEventCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String projectId, String boundaryCode});
+}
+
+/// @nodoc
+class __$$DownSyncCheckTotalCountEventCopyWithImpl<$Res>
+    extends _$BeneficiaryDownSyncEventCopyWithImpl<$Res,
+        _$DownSyncCheckTotalCountEvent>
+    implements _$$DownSyncCheckTotalCountEventCopyWith<$Res> {
+  __$$DownSyncCheckTotalCountEventCopyWithImpl(
+      _$DownSyncCheckTotalCountEvent _value,
+      $Res Function(_$DownSyncCheckTotalCountEvent) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? projectId = null,
+    Object? boundaryCode = null,
+  }) {
+    return _then(_$DownSyncCheckTotalCountEvent(
+      projectId: null == projectId
+          ? _value.projectId
+          : projectId // ignore: cast_nullable_to_non_nullable
+              as String,
+      boundaryCode: null == boundaryCode
+          ? _value.boundaryCode
+          : boundaryCode // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$DownSyncCheckTotalCountEvent implements DownSyncCheckTotalCountEvent {
+  const _$DownSyncCheckTotalCountEvent(
+      {required this.projectId, required this.boundaryCode});
+
+  @override
+  final String projectId;
+  @override
+  final String boundaryCode;
+
+  @override
+  String toString() {
+    return 'BeneficiaryDownSyncEvent.checkForData(projectId: $projectId, boundaryCode: $boundaryCode)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$DownSyncCheckTotalCountEvent &&
+            (identical(other.projectId, projectId) ||
+                other.projectId == projectId) &&
+            (identical(other.boundaryCode, boundaryCode) ||
+                other.boundaryCode == boundaryCode));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, projectId, boundaryCode);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$DownSyncCheckTotalCountEventCopyWith<_$DownSyncCheckTotalCountEvent>
+      get copyWith => __$$DownSyncCheckTotalCountEventCopyWithImpl<
+          _$DownSyncCheckTotalCountEvent>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String projectId, String boundaryCode,
+            int batchSize, int initialServerCount)
+        downSync,
+    required TResult Function(String projectId, String boundaryCode)
+        checkForData,
+  }) {
+    return checkForData(projectId, boundaryCode);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String projectId, String boundaryCode, int batchSize,
+            int initialServerCount)?
+        downSync,
+    TResult? Function(String projectId, String boundaryCode)? checkForData,
+  }) {
+    return checkForData?.call(projectId, boundaryCode);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String projectId, String boundaryCode, int batchSize,
+            int initialServerCount)?
+        downSync,
+    TResult Function(String projectId, String boundaryCode)? checkForData,
+    required TResult orElse(),
+  }) {
+    if (checkForData != null) {
+      return checkForData(projectId, boundaryCode);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(DownSyncBeneficiaryEvent value) downSync,
+    required TResult Function(DownSyncCheckTotalCountEvent value) checkForData,
+  }) {
+    return checkForData(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(DownSyncBeneficiaryEvent value)? downSync,
+    TResult? Function(DownSyncCheckTotalCountEvent value)? checkForData,
+  }) {
+    return checkForData?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(DownSyncBeneficiaryEvent value)? downSync,
+    TResult Function(DownSyncCheckTotalCountEvent value)? checkForData,
+    required TResult orElse(),
+  }) {
+    if (checkForData != null) {
+      return checkForData(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class DownSyncCheckTotalCountEvent
+    implements BeneficiaryDownSyncEvent {
+  const factory DownSyncCheckTotalCountEvent(
+      {required final String projectId,
+      required final String boundaryCode}) = _$DownSyncCheckTotalCountEvent;
 
   @override
   String get projectId;
   @override
   String get boundaryCode;
   @override
-  int get batchSize;
-  @override
   @JsonKey(ignore: true)
-  _$$DownSyncBeneficiaryEventCopyWith<_$DownSyncBeneficiaryEvent>
+  _$$DownSyncCheckTotalCountEventCopyWith<_$DownSyncCheckTotalCountEvent>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -280,6 +472,7 @@ mixin _$BeneficiaryDownSyncState {
     required TResult Function(int syncedCount, int totalCount) inProgress,
     required TResult Function() success,
     required TResult Function() insufficientStorage,
+    required TResult Function(int initialServerCount) dataFound,
     required TResult Function() failed,
   }) =>
       throw _privateConstructorUsedError;
@@ -288,6 +481,7 @@ mixin _$BeneficiaryDownSyncState {
     TResult? Function(int syncedCount, int totalCount)? inProgress,
     TResult? Function()? success,
     TResult? Function()? insufficientStorage,
+    TResult? Function(int initialServerCount)? dataFound,
     TResult? Function()? failed,
   }) =>
       throw _privateConstructorUsedError;
@@ -296,6 +490,7 @@ mixin _$BeneficiaryDownSyncState {
     TResult Function(int syncedCount, int totalCount)? inProgress,
     TResult Function()? success,
     TResult Function()? insufficientStorage,
+    TResult Function(int initialServerCount)? dataFound,
     TResult Function()? failed,
     required TResult orElse(),
   }) =>
@@ -306,6 +501,7 @@ mixin _$BeneficiaryDownSyncState {
     required TResult Function(_DownSyncSuccessState value) success,
     required TResult Function(_DownSyncInsufficientStorageState value)
         insufficientStorage,
+    required TResult Function(_DownSyncDataFoundState value) dataFound,
     required TResult Function(_DownSyncFailureState value) failed,
   }) =>
       throw _privateConstructorUsedError;
@@ -315,6 +511,7 @@ mixin _$BeneficiaryDownSyncState {
     TResult? Function(_DownSyncSuccessState value)? success,
     TResult? Function(_DownSyncInsufficientStorageState value)?
         insufficientStorage,
+    TResult? Function(_DownSyncDataFoundState value)? dataFound,
     TResult? Function(_DownSyncFailureState value)? failed,
   }) =>
       throw _privateConstructorUsedError;
@@ -324,6 +521,7 @@ mixin _$BeneficiaryDownSyncState {
     TResult Function(_DownSyncSuccessState value)? success,
     TResult Function(_DownSyncInsufficientStorageState value)?
         insufficientStorage,
+    TResult Function(_DownSyncDataFoundState value)? dataFound,
     TResult Function(_DownSyncFailureState value)? failed,
     required TResult orElse(),
   }) =>
@@ -430,6 +628,7 @@ class _$_DownSyncInProgressState extends _DownSyncInProgressState {
     required TResult Function(int syncedCount, int totalCount) inProgress,
     required TResult Function() success,
     required TResult Function() insufficientStorage,
+    required TResult Function(int initialServerCount) dataFound,
     required TResult Function() failed,
   }) {
     return inProgress(syncedCount, totalCount);
@@ -441,6 +640,7 @@ class _$_DownSyncInProgressState extends _DownSyncInProgressState {
     TResult? Function(int syncedCount, int totalCount)? inProgress,
     TResult? Function()? success,
     TResult? Function()? insufficientStorage,
+    TResult? Function(int initialServerCount)? dataFound,
     TResult? Function()? failed,
   }) {
     return inProgress?.call(syncedCount, totalCount);
@@ -452,6 +652,7 @@ class _$_DownSyncInProgressState extends _DownSyncInProgressState {
     TResult Function(int syncedCount, int totalCount)? inProgress,
     TResult Function()? success,
     TResult Function()? insufficientStorage,
+    TResult Function(int initialServerCount)? dataFound,
     TResult Function()? failed,
     required TResult orElse(),
   }) {
@@ -468,6 +669,7 @@ class _$_DownSyncInProgressState extends _DownSyncInProgressState {
     required TResult Function(_DownSyncSuccessState value) success,
     required TResult Function(_DownSyncInsufficientStorageState value)
         insufficientStorage,
+    required TResult Function(_DownSyncDataFoundState value) dataFound,
     required TResult Function(_DownSyncFailureState value) failed,
   }) {
     return inProgress(this);
@@ -480,6 +682,7 @@ class _$_DownSyncInProgressState extends _DownSyncInProgressState {
     TResult? Function(_DownSyncSuccessState value)? success,
     TResult? Function(_DownSyncInsufficientStorageState value)?
         insufficientStorage,
+    TResult? Function(_DownSyncDataFoundState value)? dataFound,
     TResult? Function(_DownSyncFailureState value)? failed,
   }) {
     return inProgress?.call(this);
@@ -492,6 +695,7 @@ class _$_DownSyncInProgressState extends _DownSyncInProgressState {
     TResult Function(_DownSyncSuccessState value)? success,
     TResult Function(_DownSyncInsufficientStorageState value)?
         insufficientStorage,
+    TResult Function(_DownSyncDataFoundState value)? dataFound,
     TResult Function(_DownSyncFailureState value)? failed,
     required TResult orElse(),
   }) {
@@ -556,6 +760,7 @@ class _$_DownSyncSuccessState extends _DownSyncSuccessState {
     required TResult Function(int syncedCount, int totalCount) inProgress,
     required TResult Function() success,
     required TResult Function() insufficientStorage,
+    required TResult Function(int initialServerCount) dataFound,
     required TResult Function() failed,
   }) {
     return success();
@@ -567,6 +772,7 @@ class _$_DownSyncSuccessState extends _DownSyncSuccessState {
     TResult? Function(int syncedCount, int totalCount)? inProgress,
     TResult? Function()? success,
     TResult? Function()? insufficientStorage,
+    TResult? Function(int initialServerCount)? dataFound,
     TResult? Function()? failed,
   }) {
     return success?.call();
@@ -578,6 +784,7 @@ class _$_DownSyncSuccessState extends _DownSyncSuccessState {
     TResult Function(int syncedCount, int totalCount)? inProgress,
     TResult Function()? success,
     TResult Function()? insufficientStorage,
+    TResult Function(int initialServerCount)? dataFound,
     TResult Function()? failed,
     required TResult orElse(),
   }) {
@@ -594,6 +801,7 @@ class _$_DownSyncSuccessState extends _DownSyncSuccessState {
     required TResult Function(_DownSyncSuccessState value) success,
     required TResult Function(_DownSyncInsufficientStorageState value)
         insufficientStorage,
+    required TResult Function(_DownSyncDataFoundState value) dataFound,
     required TResult Function(_DownSyncFailureState value) failed,
   }) {
     return success(this);
@@ -606,6 +814,7 @@ class _$_DownSyncSuccessState extends _DownSyncSuccessState {
     TResult? Function(_DownSyncSuccessState value)? success,
     TResult? Function(_DownSyncInsufficientStorageState value)?
         insufficientStorage,
+    TResult? Function(_DownSyncDataFoundState value)? dataFound,
     TResult? Function(_DownSyncFailureState value)? failed,
   }) {
     return success?.call(this);
@@ -618,6 +827,7 @@ class _$_DownSyncSuccessState extends _DownSyncSuccessState {
     TResult Function(_DownSyncSuccessState value)? success,
     TResult Function(_DownSyncInsufficientStorageState value)?
         insufficientStorage,
+    TResult Function(_DownSyncDataFoundState value)? dataFound,
     TResult Function(_DownSyncFailureState value)? failed,
     required TResult orElse(),
   }) {
@@ -679,6 +889,7 @@ class _$_DownSyncInsufficientStorageState
     required TResult Function(int syncedCount, int totalCount) inProgress,
     required TResult Function() success,
     required TResult Function() insufficientStorage,
+    required TResult Function(int initialServerCount) dataFound,
     required TResult Function() failed,
   }) {
     return insufficientStorage();
@@ -690,6 +901,7 @@ class _$_DownSyncInsufficientStorageState
     TResult? Function(int syncedCount, int totalCount)? inProgress,
     TResult? Function()? success,
     TResult? Function()? insufficientStorage,
+    TResult? Function(int initialServerCount)? dataFound,
     TResult? Function()? failed,
   }) {
     return insufficientStorage?.call();
@@ -701,6 +913,7 @@ class _$_DownSyncInsufficientStorageState
     TResult Function(int syncedCount, int totalCount)? inProgress,
     TResult Function()? success,
     TResult Function()? insufficientStorage,
+    TResult Function(int initialServerCount)? dataFound,
     TResult Function()? failed,
     required TResult orElse(),
   }) {
@@ -717,6 +930,7 @@ class _$_DownSyncInsufficientStorageState
     required TResult Function(_DownSyncSuccessState value) success,
     required TResult Function(_DownSyncInsufficientStorageState value)
         insufficientStorage,
+    required TResult Function(_DownSyncDataFoundState value) dataFound,
     required TResult Function(_DownSyncFailureState value) failed,
   }) {
     return insufficientStorage(this);
@@ -729,6 +943,7 @@ class _$_DownSyncInsufficientStorageState
     TResult? Function(_DownSyncSuccessState value)? success,
     TResult? Function(_DownSyncInsufficientStorageState value)?
         insufficientStorage,
+    TResult? Function(_DownSyncDataFoundState value)? dataFound,
     TResult? Function(_DownSyncFailureState value)? failed,
   }) {
     return insufficientStorage?.call(this);
@@ -741,6 +956,7 @@ class _$_DownSyncInsufficientStorageState
     TResult Function(_DownSyncSuccessState value)? success,
     TResult Function(_DownSyncInsufficientStorageState value)?
         insufficientStorage,
+    TResult Function(_DownSyncDataFoundState value)? dataFound,
     TResult Function(_DownSyncFailureState value)? failed,
     required TResult orElse(),
   }) {
@@ -756,6 +972,165 @@ abstract class _DownSyncInsufficientStorageState
   const factory _DownSyncInsufficientStorageState() =
       _$_DownSyncInsufficientStorageState;
   const _DownSyncInsufficientStorageState._() : super._();
+}
+
+/// @nodoc
+abstract class _$$_DownSyncDataFoundStateCopyWith<$Res> {
+  factory _$$_DownSyncDataFoundStateCopyWith(_$_DownSyncDataFoundState value,
+          $Res Function(_$_DownSyncDataFoundState) then) =
+      __$$_DownSyncDataFoundStateCopyWithImpl<$Res>;
+  @useResult
+  $Res call({int initialServerCount});
+}
+
+/// @nodoc
+class __$$_DownSyncDataFoundStateCopyWithImpl<$Res>
+    extends _$BeneficiaryDownSyncStateCopyWithImpl<$Res,
+        _$_DownSyncDataFoundState>
+    implements _$$_DownSyncDataFoundStateCopyWith<$Res> {
+  __$$_DownSyncDataFoundStateCopyWithImpl(_$_DownSyncDataFoundState _value,
+      $Res Function(_$_DownSyncDataFoundState) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? initialServerCount = null,
+  }) {
+    return _then(_$_DownSyncDataFoundState(
+      null == initialServerCount
+          ? _value.initialServerCount
+          : initialServerCount // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$_DownSyncDataFoundState extends _DownSyncDataFoundState {
+  const _$_DownSyncDataFoundState(this.initialServerCount) : super._();
+
+  @override
+  final int initialServerCount;
+
+  @override
+  String toString() {
+    return 'BeneficiaryDownSyncState.dataFound(initialServerCount: $initialServerCount)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_DownSyncDataFoundState &&
+            (identical(other.initialServerCount, initialServerCount) ||
+                other.initialServerCount == initialServerCount));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, initialServerCount);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_DownSyncDataFoundStateCopyWith<_$_DownSyncDataFoundState> get copyWith =>
+      __$$_DownSyncDataFoundStateCopyWithImpl<_$_DownSyncDataFoundState>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(int syncedCount, int totalCount) inProgress,
+    required TResult Function() success,
+    required TResult Function() insufficientStorage,
+    required TResult Function(int initialServerCount) dataFound,
+    required TResult Function() failed,
+  }) {
+    return dataFound(initialServerCount);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(int syncedCount, int totalCount)? inProgress,
+    TResult? Function()? success,
+    TResult? Function()? insufficientStorage,
+    TResult? Function(int initialServerCount)? dataFound,
+    TResult? Function()? failed,
+  }) {
+    return dataFound?.call(initialServerCount);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(int syncedCount, int totalCount)? inProgress,
+    TResult Function()? success,
+    TResult Function()? insufficientStorage,
+    TResult Function(int initialServerCount)? dataFound,
+    TResult Function()? failed,
+    required TResult orElse(),
+  }) {
+    if (dataFound != null) {
+      return dataFound(initialServerCount);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_DownSyncInProgressState value) inProgress,
+    required TResult Function(_DownSyncSuccessState value) success,
+    required TResult Function(_DownSyncInsufficientStorageState value)
+        insufficientStorage,
+    required TResult Function(_DownSyncDataFoundState value) dataFound,
+    required TResult Function(_DownSyncFailureState value) failed,
+  }) {
+    return dataFound(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_DownSyncInProgressState value)? inProgress,
+    TResult? Function(_DownSyncSuccessState value)? success,
+    TResult? Function(_DownSyncInsufficientStorageState value)?
+        insufficientStorage,
+    TResult? Function(_DownSyncDataFoundState value)? dataFound,
+    TResult? Function(_DownSyncFailureState value)? failed,
+  }) {
+    return dataFound?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_DownSyncInProgressState value)? inProgress,
+    TResult Function(_DownSyncSuccessState value)? success,
+    TResult Function(_DownSyncInsufficientStorageState value)?
+        insufficientStorage,
+    TResult Function(_DownSyncDataFoundState value)? dataFound,
+    TResult Function(_DownSyncFailureState value)? failed,
+    required TResult orElse(),
+  }) {
+    if (dataFound != null) {
+      return dataFound(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _DownSyncDataFoundState extends BeneficiaryDownSyncState {
+  const factory _DownSyncDataFoundState(final int initialServerCount) =
+      _$_DownSyncDataFoundState;
+  const _DownSyncDataFoundState._() : super._();
+
+  int get initialServerCount;
+  @JsonKey(ignore: true)
+  _$$_DownSyncDataFoundStateCopyWith<_$_DownSyncDataFoundState> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -800,6 +1175,7 @@ class _$_DownSyncFailureState extends _DownSyncFailureState {
     required TResult Function(int syncedCount, int totalCount) inProgress,
     required TResult Function() success,
     required TResult Function() insufficientStorage,
+    required TResult Function(int initialServerCount) dataFound,
     required TResult Function() failed,
   }) {
     return failed();
@@ -811,6 +1187,7 @@ class _$_DownSyncFailureState extends _DownSyncFailureState {
     TResult? Function(int syncedCount, int totalCount)? inProgress,
     TResult? Function()? success,
     TResult? Function()? insufficientStorage,
+    TResult? Function(int initialServerCount)? dataFound,
     TResult? Function()? failed,
   }) {
     return failed?.call();
@@ -822,6 +1199,7 @@ class _$_DownSyncFailureState extends _DownSyncFailureState {
     TResult Function(int syncedCount, int totalCount)? inProgress,
     TResult Function()? success,
     TResult Function()? insufficientStorage,
+    TResult Function(int initialServerCount)? dataFound,
     TResult Function()? failed,
     required TResult orElse(),
   }) {
@@ -838,6 +1216,7 @@ class _$_DownSyncFailureState extends _DownSyncFailureState {
     required TResult Function(_DownSyncSuccessState value) success,
     required TResult Function(_DownSyncInsufficientStorageState value)
         insufficientStorage,
+    required TResult Function(_DownSyncDataFoundState value) dataFound,
     required TResult Function(_DownSyncFailureState value) failed,
   }) {
     return failed(this);
@@ -850,6 +1229,7 @@ class _$_DownSyncFailureState extends _DownSyncFailureState {
     TResult? Function(_DownSyncSuccessState value)? success,
     TResult? Function(_DownSyncInsufficientStorageState value)?
         insufficientStorage,
+    TResult? Function(_DownSyncDataFoundState value)? dataFound,
     TResult? Function(_DownSyncFailureState value)? failed,
   }) {
     return failed?.call(this);
@@ -862,6 +1242,7 @@ class _$_DownSyncFailureState extends _DownSyncFailureState {
     TResult Function(_DownSyncSuccessState value)? success,
     TResult Function(_DownSyncInsufficientStorageState value)?
         insufficientStorage,
+    TResult Function(_DownSyncDataFoundState value)? dataFound,
     TResult Function(_DownSyncFailureState value)? failed,
     required TResult orElse(),
   }) {

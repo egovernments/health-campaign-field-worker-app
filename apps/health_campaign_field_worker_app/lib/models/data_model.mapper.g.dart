@@ -5256,7 +5256,6 @@ class DataOperationMapper extends EnumMapper<DataOperation> {
       case 'update': return DataOperation.update;
       case 'delete': return DataOperation.delete;
       case 'singleCreate': return DataOperation.singleCreate;
-      case 'downSync': return DataOperation.downSync;
       default: throw MapperException.unknownEnumValue(value);
     }
   }
@@ -5268,7 +5267,6 @@ class DataOperationMapper extends EnumMapper<DataOperation> {
       case DataOperation.update: return 'update';
       case DataOperation.delete: return 'delete';
       case DataOperation.singleCreate: return 'singleCreate';
-      case DataOperation.downSync: return 'downSync';
     }
   }
 }

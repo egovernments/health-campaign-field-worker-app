@@ -122,11 +122,36 @@ class _BoundarySelectionPageState
                         listener: (context, downSyncState) {
                           downSyncState.maybeWhen(
                             orElse: () => false,
+                            dataFound: (initialServerCount) => DigitDialog.show(
+                              context,
+                              options: DigitDialogOptions(
+                                titleText: 'Data Found!',
+                                contentText:
+                                    'There are records found for the selected boundary. If you wish to download, Kindly, ensure stable internet connection and while the downloading is in progress, please donot minimize or close the app',
+                                primaryAction: DigitDialogActions(
+                                  label: localizations.translate(
+                                    i18.common.coreCommonDownload,
+                                  ),
+                                  action: (ctx) {
+                                    Navigator.pop(ctx);
+                                    context.read<BeneficiaryDownSyncBloc>().add(
+                                          DownSyncBeneficiaryEvent(
+                                            projectId: context.projectId,
+                                            boundaryCode: selectedBoundary!
+                                                .value!.code
+                                                .toString(),
+                                            // Batch Size need to be defined based on Internet speed.
+                                            batchSize: 10,
+                                            initialServerCount:
+                                                initialServerCount,
+                                          ),
+                                        );
+                                  },
+                                ),
+                              ),
+                            ),
                             inProgress: (syncCount, totalCount) {
-                              if (syncCount != 0) {
-                                Navigator.of(context, rootNavigator: true)
-                                    .pop();
-                              }
+                              Navigator.of(context, rootNavigator: true).pop();
                               DigitDialog.show(
                                 context,
                                 options: DigitDialogOptions(
@@ -161,7 +186,6 @@ class _BoundarySelectionPageState
                             },
                             failed: () {
                               Navigator.of(context, rootNavigator: true).pop();
-
                               DigitSyncDialog.show(
                                 context,
                                 type: DigitSyncDialogType.failed,
@@ -173,22 +197,24 @@ class _BoundarySelectionPageState
                                   action: (ctx) {
                                     Navigator.pop(ctx);
                                     context.read<BeneficiaryDownSyncBloc>().add(
-                                          DownSyncBeneficiaryEvent(
+                                          DownSyncCheckTotalCountEvent(
                                             projectId: context.projectId,
                                             boundaryCode: selectedBoundary!
                                                 .value!.code
                                                 .toString(),
-                                            // Batch Size need to be defined based on Internet speed.
-                                            batchSize: 10,
                                           ),
                                         );
                                   },
                                 ),
                                 secondaryAction: DigitDialogActions(
                                   label: localizations.translate(
-                                    i18.syncDialog.closeButtonLabel,
+                                    i18.beneficiaryDetails
+                                        .proceedWithoutDownloading,
                                   ),
-                                  action: (ctx) => Navigator.pop(ctx),
+                                  action: (ctx) {
+                                    Navigator.pop(ctx);
+                                    context.router.pop();
+                                  },
                                 ),
                               );
                             },
@@ -200,7 +226,10 @@ class _BoundarySelectionPageState
                                 label: localizations.translate(
                                   i18.syncDialog.closeButtonLabel,
                                 ),
-                                action: (ctx) => Navigator.pop(ctx),
+                                action: (ctx) {
+                                  Navigator.pop(ctx);
+                                  context.router.pop();
+                                },
                               ),
                             ),
                           );
@@ -227,13 +256,11 @@ class _BoundarySelectionPageState
                                           context
                                               .read<BeneficiaryDownSyncBloc>()
                                               .add(
-                                                DownSyncBeneficiaryEvent(
+                                                DownSyncCheckTotalCountEvent(
                                                   projectId: context.projectId,
                                                   boundaryCode: selectedBoundary
                                                       .value!.code
                                                       .toString(),
-                                                  // Batch Size need to be defined based on Internet speed.
-                                                  batchSize: 10,
                                                 ),
                                               );
                                         } else {
