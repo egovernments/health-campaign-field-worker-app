@@ -22,6 +22,7 @@ mixin _$AuthEvent {
         login,
     required TResult Function(String tenantId) autoLogin,
     required TResult Function() logout,
+    required TResult Function() logoutWithoutAuthToken,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -29,6 +30,7 @@ mixin _$AuthEvent {
     TResult? Function(String userId, String password, String tenantId)? login,
     TResult? Function(String tenantId)? autoLogin,
     TResult? Function()? logout,
+    TResult? Function()? logoutWithoutAuthToken,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -36,6 +38,7 @@ mixin _$AuthEvent {
     TResult Function(String userId, String password, String tenantId)? login,
     TResult Function(String tenantId)? autoLogin,
     TResult Function()? logout,
+    TResult Function()? logoutWithoutAuthToken,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -44,6 +47,8 @@ mixin _$AuthEvent {
     required TResult Function(AuthLoginEvent value) login,
     required TResult Function(AuthAutoLoginEvent value) autoLogin,
     required TResult Function(AuthLogoutEvent value) logout,
+    required TResult Function(AuthLogoutWithoutTokenEvent value)
+        logoutWithoutAuthToken,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -51,6 +56,8 @@ mixin _$AuthEvent {
     TResult? Function(AuthLoginEvent value)? login,
     TResult? Function(AuthAutoLoginEvent value)? autoLogin,
     TResult? Function(AuthLogoutEvent value)? logout,
+    TResult? Function(AuthLogoutWithoutTokenEvent value)?
+        logoutWithoutAuthToken,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -58,6 +65,7 @@ mixin _$AuthEvent {
     TResult Function(AuthLoginEvent value)? login,
     TResult Function(AuthAutoLoginEvent value)? autoLogin,
     TResult Function(AuthLogoutEvent value)? logout,
+    TResult Function(AuthLogoutWithoutTokenEvent value)? logoutWithoutAuthToken,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -167,6 +175,7 @@ class _$AuthLoginEvent implements AuthLoginEvent {
         login,
     required TResult Function(String tenantId) autoLogin,
     required TResult Function() logout,
+    required TResult Function() logoutWithoutAuthToken,
   }) {
     return login(userId, password, tenantId);
   }
@@ -177,6 +186,7 @@ class _$AuthLoginEvent implements AuthLoginEvent {
     TResult? Function(String userId, String password, String tenantId)? login,
     TResult? Function(String tenantId)? autoLogin,
     TResult? Function()? logout,
+    TResult? Function()? logoutWithoutAuthToken,
   }) {
     return login?.call(userId, password, tenantId);
   }
@@ -187,6 +197,7 @@ class _$AuthLoginEvent implements AuthLoginEvent {
     TResult Function(String userId, String password, String tenantId)? login,
     TResult Function(String tenantId)? autoLogin,
     TResult Function()? logout,
+    TResult Function()? logoutWithoutAuthToken,
     required TResult orElse(),
   }) {
     if (login != null) {
@@ -201,6 +212,8 @@ class _$AuthLoginEvent implements AuthLoginEvent {
     required TResult Function(AuthLoginEvent value) login,
     required TResult Function(AuthAutoLoginEvent value) autoLogin,
     required TResult Function(AuthLogoutEvent value) logout,
+    required TResult Function(AuthLogoutWithoutTokenEvent value)
+        logoutWithoutAuthToken,
   }) {
     return login(this);
   }
@@ -211,6 +224,8 @@ class _$AuthLoginEvent implements AuthLoginEvent {
     TResult? Function(AuthLoginEvent value)? login,
     TResult? Function(AuthAutoLoginEvent value)? autoLogin,
     TResult? Function(AuthLogoutEvent value)? logout,
+    TResult? Function(AuthLogoutWithoutTokenEvent value)?
+        logoutWithoutAuthToken,
   }) {
     return login?.call(this);
   }
@@ -221,6 +236,7 @@ class _$AuthLoginEvent implements AuthLoginEvent {
     TResult Function(AuthLoginEvent value)? login,
     TResult Function(AuthAutoLoginEvent value)? autoLogin,
     TResult Function(AuthLogoutEvent value)? logout,
+    TResult Function(AuthLogoutWithoutTokenEvent value)? logoutWithoutAuthToken,
     required TResult orElse(),
   }) {
     if (login != null) {
@@ -314,6 +330,7 @@ class _$AuthAutoLoginEvent implements AuthAutoLoginEvent {
         login,
     required TResult Function(String tenantId) autoLogin,
     required TResult Function() logout,
+    required TResult Function() logoutWithoutAuthToken,
   }) {
     return autoLogin(tenantId);
   }
@@ -324,6 +341,7 @@ class _$AuthAutoLoginEvent implements AuthAutoLoginEvent {
     TResult? Function(String userId, String password, String tenantId)? login,
     TResult? Function(String tenantId)? autoLogin,
     TResult? Function()? logout,
+    TResult? Function()? logoutWithoutAuthToken,
   }) {
     return autoLogin?.call(tenantId);
   }
@@ -334,6 +352,7 @@ class _$AuthAutoLoginEvent implements AuthAutoLoginEvent {
     TResult Function(String userId, String password, String tenantId)? login,
     TResult Function(String tenantId)? autoLogin,
     TResult Function()? logout,
+    TResult Function()? logoutWithoutAuthToken,
     required TResult orElse(),
   }) {
     if (autoLogin != null) {
@@ -348,6 +367,8 @@ class _$AuthAutoLoginEvent implements AuthAutoLoginEvent {
     required TResult Function(AuthLoginEvent value) login,
     required TResult Function(AuthAutoLoginEvent value) autoLogin,
     required TResult Function(AuthLogoutEvent value) logout,
+    required TResult Function(AuthLogoutWithoutTokenEvent value)
+        logoutWithoutAuthToken,
   }) {
     return autoLogin(this);
   }
@@ -358,6 +379,8 @@ class _$AuthAutoLoginEvent implements AuthAutoLoginEvent {
     TResult? Function(AuthLoginEvent value)? login,
     TResult? Function(AuthAutoLoginEvent value)? autoLogin,
     TResult? Function(AuthLogoutEvent value)? logout,
+    TResult? Function(AuthLogoutWithoutTokenEvent value)?
+        logoutWithoutAuthToken,
   }) {
     return autoLogin?.call(this);
   }
@@ -368,6 +391,7 @@ class _$AuthAutoLoginEvent implements AuthAutoLoginEvent {
     TResult Function(AuthLoginEvent value)? login,
     TResult Function(AuthAutoLoginEvent value)? autoLogin,
     TResult Function(AuthLogoutEvent value)? logout,
+    TResult Function(AuthLogoutWithoutTokenEvent value)? logoutWithoutAuthToken,
     required TResult orElse(),
   }) {
     if (autoLogin != null) {
@@ -429,6 +453,7 @@ class _$AuthLogoutEvent implements AuthLogoutEvent {
         login,
     required TResult Function(String tenantId) autoLogin,
     required TResult Function() logout,
+    required TResult Function() logoutWithoutAuthToken,
   }) {
     return logout();
   }
@@ -439,6 +464,7 @@ class _$AuthLogoutEvent implements AuthLogoutEvent {
     TResult? Function(String userId, String password, String tenantId)? login,
     TResult? Function(String tenantId)? autoLogin,
     TResult? Function()? logout,
+    TResult? Function()? logoutWithoutAuthToken,
   }) {
     return logout?.call();
   }
@@ -449,6 +475,7 @@ class _$AuthLogoutEvent implements AuthLogoutEvent {
     TResult Function(String userId, String password, String tenantId)? login,
     TResult Function(String tenantId)? autoLogin,
     TResult Function()? logout,
+    TResult Function()? logoutWithoutAuthToken,
     required TResult orElse(),
   }) {
     if (logout != null) {
@@ -463,6 +490,8 @@ class _$AuthLogoutEvent implements AuthLogoutEvent {
     required TResult Function(AuthLoginEvent value) login,
     required TResult Function(AuthAutoLoginEvent value) autoLogin,
     required TResult Function(AuthLogoutEvent value) logout,
+    required TResult Function(AuthLogoutWithoutTokenEvent value)
+        logoutWithoutAuthToken,
   }) {
     return logout(this);
   }
@@ -473,6 +502,8 @@ class _$AuthLogoutEvent implements AuthLogoutEvent {
     TResult? Function(AuthLoginEvent value)? login,
     TResult? Function(AuthAutoLoginEvent value)? autoLogin,
     TResult? Function(AuthLogoutEvent value)? logout,
+    TResult? Function(AuthLogoutWithoutTokenEvent value)?
+        logoutWithoutAuthToken,
   }) {
     return logout?.call(this);
   }
@@ -483,6 +514,7 @@ class _$AuthLogoutEvent implements AuthLogoutEvent {
     TResult Function(AuthLoginEvent value)? login,
     TResult Function(AuthAutoLoginEvent value)? autoLogin,
     TResult Function(AuthLogoutEvent value)? logout,
+    TResult Function(AuthLogoutWithoutTokenEvent value)? logoutWithoutAuthToken,
     required TResult orElse(),
   }) {
     if (logout != null) {
@@ -494,6 +526,126 @@ class _$AuthLogoutEvent implements AuthLogoutEvent {
 
 abstract class AuthLogoutEvent implements AuthEvent {
   const factory AuthLogoutEvent() = _$AuthLogoutEvent;
+}
+
+/// @nodoc
+abstract class _$$AuthLogoutWithoutTokenEventCopyWith<$Res> {
+  factory _$$AuthLogoutWithoutTokenEventCopyWith(
+          _$AuthLogoutWithoutTokenEvent value,
+          $Res Function(_$AuthLogoutWithoutTokenEvent) then) =
+      __$$AuthLogoutWithoutTokenEventCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$AuthLogoutWithoutTokenEventCopyWithImpl<$Res>
+    extends _$AuthEventCopyWithImpl<$Res, _$AuthLogoutWithoutTokenEvent>
+    implements _$$AuthLogoutWithoutTokenEventCopyWith<$Res> {
+  __$$AuthLogoutWithoutTokenEventCopyWithImpl(
+      _$AuthLogoutWithoutTokenEvent _value,
+      $Res Function(_$AuthLogoutWithoutTokenEvent) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$AuthLogoutWithoutTokenEvent implements AuthLogoutWithoutTokenEvent {
+  const _$AuthLogoutWithoutTokenEvent();
+
+  @override
+  String toString() {
+    return 'AuthEvent.logoutWithoutAuthToken()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$AuthLogoutWithoutTokenEvent);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String userId, String password, String tenantId)
+        login,
+    required TResult Function(String tenantId) autoLogin,
+    required TResult Function() logout,
+    required TResult Function() logoutWithoutAuthToken,
+  }) {
+    return logoutWithoutAuthToken();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String userId, String password, String tenantId)? login,
+    TResult? Function(String tenantId)? autoLogin,
+    TResult? Function()? logout,
+    TResult? Function()? logoutWithoutAuthToken,
+  }) {
+    return logoutWithoutAuthToken?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String userId, String password, String tenantId)? login,
+    TResult Function(String tenantId)? autoLogin,
+    TResult Function()? logout,
+    TResult Function()? logoutWithoutAuthToken,
+    required TResult orElse(),
+  }) {
+    if (logoutWithoutAuthToken != null) {
+      return logoutWithoutAuthToken();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(AuthLoginEvent value) login,
+    required TResult Function(AuthAutoLoginEvent value) autoLogin,
+    required TResult Function(AuthLogoutEvent value) logout,
+    required TResult Function(AuthLogoutWithoutTokenEvent value)
+        logoutWithoutAuthToken,
+  }) {
+    return logoutWithoutAuthToken(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(AuthLoginEvent value)? login,
+    TResult? Function(AuthAutoLoginEvent value)? autoLogin,
+    TResult? Function(AuthLogoutEvent value)? logout,
+    TResult? Function(AuthLogoutWithoutTokenEvent value)?
+        logoutWithoutAuthToken,
+  }) {
+    return logoutWithoutAuthToken?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(AuthLoginEvent value)? login,
+    TResult Function(AuthAutoLoginEvent value)? autoLogin,
+    TResult Function(AuthLogoutEvent value)? logout,
+    TResult Function(AuthLogoutWithoutTokenEvent value)? logoutWithoutAuthToken,
+    required TResult orElse(),
+  }) {
+    if (logoutWithoutAuthToken != null) {
+      return logoutWithoutAuthToken(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class AuthLogoutWithoutTokenEvent implements AuthEvent {
+  const factory AuthLogoutWithoutTokenEvent() = _$AuthLogoutWithoutTokenEvent;
 }
 
 /// @nodoc

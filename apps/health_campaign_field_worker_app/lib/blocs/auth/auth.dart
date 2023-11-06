@@ -8,6 +8,7 @@ import '../../data/repositories/remote/auth.dart';
 import '../../data/repositories/remote/mdms.dart';
 import '../../models/auth/auth_model.dart';
 import '../../models/role_actions/role_actions_model.dart';
+import '../../utils/background_service.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/utils.dart';
 
@@ -116,11 +117,33 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   //_onLogout event logs out the user and deletes the saved user details from local storage
   FutureOr<void> _onLogout(AuthLogoutEvent event, AuthEmitter emit) async {
     try {
-      emit(const AuthLoadingState());
-      await localSecureStore.deleteAll();
+      final isConnected = await getIsConnected();
+      if (isConnected) {
+        final accessToken = await localSecureStore.accessToken;
+        final user = await localSecureStore.userRequestModel;
+        final tenantId = user?.tenantId;
+        await authRepository.logOutUser(
+          logoutPath: Constants.logoutUserPath,
+          queryParameters: {
+            'tenantId': tenantId.toString(),
+          },
+          body: {'access_token': accessToken},
+        );
+        await localSecureStore.deleteAll();
+
+        emit(const AuthUnauthenticatedState());
+      }
     } catch (error) {
-      rethrow;
+      await localSecureStore.deleteAll();
+      emit(const AuthUnauthenticatedState());
     }
+  }
+
+  FutureOr<void> _onAuthLogoutWithoutToken(
+    AuthLogoutWithoutTokenEvent event,
+    AuthEmitter emit,
+  ) async {
+    await localSecureStore.deleteAll();
     emit(const AuthUnauthenticatedState());
   }
 }
@@ -138,6 +161,9 @@ class AuthEvent with _$AuthEvent {
   }) = AuthAutoLoginEvent;
 
   const factory AuthEvent.logout() = AuthLogoutEvent;
+
+  const factory AuthEvent.logoutWithoutAuthToken() =
+      AuthLogoutWithoutTokenEvent;
 }
 
 @freezed

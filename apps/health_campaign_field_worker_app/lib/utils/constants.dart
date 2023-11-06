@@ -105,6 +105,8 @@ class Constants {
 
   static const String localizationApiPath = 'localization/messages/v1/_search';
   static const String projectSearchApiPath = '/project/v1/_search';
+  static const String logoutUserPath = '/user/_logout';
+  static const String invalidAccessTokenKey = 'InvalidAccessTokenException';
 
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,

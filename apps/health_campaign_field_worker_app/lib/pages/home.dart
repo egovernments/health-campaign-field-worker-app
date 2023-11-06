@@ -361,6 +361,11 @@ class _HomePageState extends LocalizedState<HomePage> {
         label: i18.home.warehouseManagerCheckList,
         onPressed: () => context.router.push(ChecklistWrapperRoute()),
       ),
+      i18.home.healthFacilitySupervisorCheckList: HomeItemCard(
+        icon: Icons.menu_book,
+        label: i18.home.healthFacilitySupervisorCheckList,
+        onPressed: () => context.router.push(ChecklistWrapperRoute()),
+      ),
       i18.home.myCheckList: HomeItemCard(
         icon: Icons.menu_book,
         label: i18.home.myCheckList,
@@ -426,6 +431,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.beneficiaryLabel,
       i18.home.manageStockLabel,
       i18.home.stockReconciliationLabel,
+      i18.home.healthFacilitySupervisorCheckList,
       i18.home.warehouseManagerCheckList,
       i18.home.myCheckList,
       i18.home.fileComplaint,

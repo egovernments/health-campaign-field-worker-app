@@ -100,6 +100,8 @@ class Common {
   String get min3CharsRequired => 'MIN_REQUIRED_3';
 
   String get facilitySearchHeaderLabel => 'FACILITY_SEARCH_HEADER_LABEL';
+
+  String get coreCommonWarning => 'CORE_COMMON_WARNING';
 }
 
 class AdverseEvents {
@@ -134,6 +136,10 @@ class Login {
   String get actionLabel => 'LOGIN_ACTION_LABEL';
 
   String get loginError => 'LOGIN_ERROR';
+
+  String get logOutWarningMsg => 'LOG_OUT_WARNING_MESSAGE';
+
+  String get noInternetError => 'ERR_NOT_CONNECTED_TO_INTERNET';
 }
 
 class Checklist {
@@ -218,6 +224,9 @@ class Home {
   String get myCheckList => 'MY_CHECK_LIST_LABEL';
 
   String get warehouseManagerCheckList => 'WAREHOUSE_MANAGER_CHECK_LIST_LABEL';
+
+  String get healthFacilitySupervisorCheckList =>
+      'HF_SUPERVISOR_CHECK_LIST_LABEL';
 }
 
 class SearchBeneficiary {
