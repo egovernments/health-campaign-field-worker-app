@@ -441,12 +441,12 @@ class _HomePageState extends LocalizedState<HomePage> {
       'DB',
     ];
 
-    final List<String> filteredLabels = homeItemsLabel
-        .where((element) => state.actionsWrapper.actions
-            .map((e) => e.displayName)
-            .toList()
-            .contains(element))
-        .toList();
+    final List<String> filteredLabels = homeItemsLabel;
+    // .where((element) => state.actionsWrapper.actions
+    //     .map((e) => e.displayName)
+    //     .toList()
+    //     .contains(element))
+    // .toList();
 
     final showcaseKeys =
         filteredLabels.map((label) => homeItemsShowcaseMap[label]!).toList();

@@ -315,6 +315,11 @@ class _SearchBeneficiaryPageState
                       height: kPadding,
                     ),
                     DigitOutlineIconButton(
+                      textStyle: const TextStyle(
+                        fontFamily: "Roboto",
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
                       onPressed: () {
                         context.router.push(QRScannerRoute(
                           quantity: 1,

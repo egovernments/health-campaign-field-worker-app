@@ -35,6 +35,7 @@ class DigitIntegerFormPicker extends StatelessWidget {
 
     return LabeledField(
         label: label,
+        labelStyle: Theme.of(context).textTheme.bodyLarge,
         child: IntrinsicHeight(
           child: Row(
             children: [

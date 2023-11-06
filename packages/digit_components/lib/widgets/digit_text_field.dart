@@ -56,6 +56,7 @@ class DigitTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LabeledField(
+      labelStyle: Theme.of(context).textTheme.bodyLarge,
       label: isRequired ? "$label *" : label,
       textStyle: textStyle,
       child: TextFormField(

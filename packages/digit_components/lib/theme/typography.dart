@@ -33,6 +33,7 @@ abstract class DigitTypography {
   TextStyle get headingL => textTheme.headlineLarge!;
   TextStyle get headingM => textTheme.headlineMedium!;
   TextStyle get headingS => textTheme.headlineSmall!;
+  //[TODO] heading xs is missing
 
   /// Caption styles
   TextStyle get captionXL => textTheme.labelLarge!;
@@ -47,6 +48,8 @@ abstract class DigitTypography {
   /// Miscellaneous styles
   TextStyle get label => textTheme.bodyLarge!;
   TextStyle get link => textTheme.bodyLarge!;
+
+  //[todo] link need to be added refer with figma
 }
 
 class DigitMobileTypography extends DigitTypography {
@@ -75,7 +78,7 @@ class DigitMobileTypography extends DigitTypography {
         fontWeight: FontWeight.w700,
       ),
       headlineMedium: _normal.copyWith(
-        fontSize: 18,
+        fontSize: 20,
         fontWeight: FontWeight.w700,
       ),
       headlineSmall: _normal.copyWith(
@@ -99,18 +102,21 @@ class DigitMobileTypography extends DigitTypography {
         fontFamily: 'Roboto',
       ),
       labelLarge: _normal.copyWith(
-        fontSize: 19,
+        fontSize: 24,
         fontWeight: FontWeight.w500,
+        //[todo] font style italic
       ),
       labelMedium: _light.copyWith(
-        fontSize: 18,
+        fontSize: 20,
         fontWeight: FontWeight.w400,
         fontFamily: 'Roboto',
+        //[todo] font style italic
       ),
       labelSmall: _normal.copyWith(
         fontSize: 16,
         fontWeight: FontWeight.w400,
         fontFamily: 'Roboto',
+        //[todo] font style italic
       ),
     );
   }
