@@ -189,6 +189,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                                   case DataModelType.complaints:
                                   case DataModelType.sideEffect:
                                   case DataModelType.referral:
+                                  case DataModelType.householdMember:
                                     return true;
                                   default:
                                     return false;
