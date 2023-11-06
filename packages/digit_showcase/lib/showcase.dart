@@ -312,7 +312,7 @@ class Showcase extends StatefulWidget {
       borderRadius: BorderRadius.all(Radius.circular(8)),
     ),
     this.overlayColor = Colors.black45,
-    this.overlayOpacity = 0.75,
+    this.overlayOpacity = 0.65,
     this.titleTextStyle,
     this.descTextStyle,
     this.tooltipBackgroundColor = Colors.white,
@@ -368,7 +368,7 @@ class Showcase extends StatefulWidget {
     ),
     this.overlayColor = Colors.black45,
     this.targetBorderRadius,
-    this.overlayOpacity = 0.75,
+    this.overlayOpacity = 0.65,
     this.scrollLoadingWidget = const CircularProgressIndicator(
         valueColor: AlwaysStoppedAnimation(Colors.white)),
     this.onTargetClick,

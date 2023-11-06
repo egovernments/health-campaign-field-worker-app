@@ -254,6 +254,14 @@ class HouseholdLocationShowcase {
   String get landmark {
     return 'HOUSEHOLD_LOCATION_SHOWCASE_LANDMARK';
   }
+
+  String get address {
+    return 'HOUSEHOLD_LOCATION_SHOWCASE_ADDRESS';
+  }
+
+  String get postalCode {
+    return 'HOUSEHOLD_LOCATION_SHOWCASE_POSTAL_CODE';
+  }
 }
 
 class HouseholdDetailsShowcase {
@@ -297,6 +305,10 @@ class IndividualDetailsShowcase {
 
   String get mobile {
     return 'INDIVIDUAL_DETAILS_SHOWCASE_MOBILE';
+  }
+
+  String get idType {
+    return 'INDIVIDUAL_DETAILS_SHOWCASE_ID_TYPE';
   }
 }
 

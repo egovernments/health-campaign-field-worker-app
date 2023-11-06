@@ -45,7 +45,7 @@ class _ShowcaseButtonState extends LocalizedState<ShowcaseButton> {
             padding: const EdgeInsets.fromLTRB(
               kPadding,
               kPadding,
-              kPadding / 1,
+              kPadding / 2,
               kPadding,
             ),
             child: Text(
