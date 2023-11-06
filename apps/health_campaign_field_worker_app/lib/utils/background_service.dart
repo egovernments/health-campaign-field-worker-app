@@ -139,6 +139,9 @@ void onStart(ServiceInstance service) async {
                       ).pingBandwidthCheck(bandWidthCheckModel: null);
                       speedArray.add(speed);
                     } catch (e) {
+                      service.invoke('serviceRunning', {
+                        "enablesManualSync": true,
+                      });
                       service.stopSelf();
                       break;
                     }
