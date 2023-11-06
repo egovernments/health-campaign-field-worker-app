@@ -1,5 +1,5 @@
-name: fw-app
-repository: https://github.com/egovernments/health-campaign-field-worker-app
+name: smc-app
+repository: https://github.com/HCM-MOZ-IMPEL/health-campaign-field-worker-app-impel
 
 packages:
   - packages/*

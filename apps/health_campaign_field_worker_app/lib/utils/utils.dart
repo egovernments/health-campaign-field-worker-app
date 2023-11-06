@@ -64,6 +64,16 @@ class CustomValidator {
         : {'required': true};
   }
 
+  static Map<String, dynamic>? requiredMin3(
+    AbstractControl<dynamic> control,
+  ) {
+    return control.value == null ||
+            control.value.toString().trim().length >= 3 ||
+            control.value.toString().trim().isEmpty
+        ? null
+        : {'min3': true};
+  }
+
   static Map<String, dynamic>? validMobileNumber(
     AbstractControl<dynamic> control,
   ) {
@@ -71,11 +81,13 @@ class CustomValidator {
       return null;
     }
 
-    const pattern = r'^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$';
+    const pattern = r'[0-9]';
+
+    if (control.value.toString().length != 9) {
+      return {'mobileNumber': true};
+    }
 
     if (RegExp(pattern).hasMatch(control.value.toString())) return null;
-
-    if (control.value.toString().length < 10) return {'mobileNumber': true};
 
     return {'mobileNumber': true};
   }
@@ -90,7 +102,7 @@ class CustomValidator {
     var parsed = int.tryParse(control.value) ?? 0;
     if (parsed < 0) {
       return {'min': true};
-    } else if (parsed > 10000) {
+    } else if (parsed > 1000000) {
       return {'max': true};
     }
 
@@ -115,34 +127,16 @@ performBackgroundService({
   final service = FlutterBackgroundService();
   var isRunning = await service.isRunning();
 
-  if (stopService) {
-    if (isRunning) {
-      if (!isBackground && context != null) {
-        if (context.mounted) {
-          DigitToast.show(
-            context,
-            options: DigitToastOptions(
-              'Background Service Stopped',
-              true,
-              DigitTheme.instance.mobileTheme,
-            ),
-          );
-        }
+  if (!stopService) {
+    if (isOnline & !isRunning) {
+      final isStarted = await service.startService();
+      if (!isStarted) {
+        await service.startService();
       }
     }
   } else {
-    if (!isRunning && isOnline) {
-      service.startService();
-      if (context != null) {
-        DigitToast.show(
-          context!,
-          options: DigitToastOptions(
-            'Background Service stated',
-            false,
-            DigitTheme.instance.mobileTheme,
-          ),
-        );
-      }
+    if (isRunning) {
+      service.invoke('stopService');
     }
   }
 }
@@ -193,19 +187,6 @@ double? calculateDistance(Coordinate? start, Coordinate? end) {
   }
 
   return null;
-}
-
-Timer makePeriodicTimer(
-  Duration duration,
-  void Function(Timer timer) callback, {
-  bool fireNow = false,
-}) {
-  var timer = Timer.periodic(duration, callback);
-  if (fireNow) {
-    callback(timer);
-  }
-
-  return timer;
 }
 
 final requestData = {
@@ -340,6 +321,26 @@ bool checkIfBeneficiaryRefused(
       tasks.last.status == Status.beneficiaryRefused.toValue());
 
   return isBeneficiaryRefused;
+}
+
+bool checkIfBeneficiaryIneligible(
+  List<TaskModel>? tasks,
+) {
+  final isBeneficiaryIneligible = (tasks != null &&
+      (tasks ?? []).isNotEmpty &&
+      tasks.last.status == Status.beneficiaryIneligible.toValue());
+
+  return isBeneficiaryIneligible;
+}
+
+bool checkIfBeneficiaryReferred(
+  List<TaskModel>? tasks,
+) {
+  final isBeneficiaryReferred = (tasks != null &&
+      (tasks ?? []).isNotEmpty &&
+      tasks.last.status == Status.beneficiaryReferred.toValue());
+
+  return isBeneficiaryReferred;
 }
 
 bool checkStatus(

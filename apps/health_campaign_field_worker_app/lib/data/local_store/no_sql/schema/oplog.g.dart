@@ -7,7 +7,7 @@ part of 'oplog.dart';
 // **************************************************************************
 
 // coverage:ignore-file
-// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
 extension GetOpLogCollection on Isar {
   IsarCollection<OpLog> get opLogs => this.collection();
@@ -107,7 +107,7 @@ const OpLogSchema = CollectionSchema(
   getId: _opLogGetId,
   getLinks: _opLogGetLinks,
   attach: _opLogAttach,
-  version: '3.0.5',
+  version: '3.1.0',
 );
 
 int _opLogEstimateSize(
@@ -277,6 +277,7 @@ const _OpLogentityTypeEnumValueMap = {
   r'stockReconciliation': r'stockReconciliation',
   r'task': r'task',
   r'sideEffect': r'sideEffect',
+  r'referral': r'referral',
   r'serviceDefinition': r'serviceDefinition',
   r'service': r'service',
   r'complaints': r'complaints',
@@ -305,6 +306,7 @@ const _OpLogentityTypeValueEnumMap = {
   r'stockReconciliation': DataModelType.stockReconciliation,
   r'task': DataModelType.task,
   r'sideEffect': DataModelType.sideEffect,
+  r'referral': DataModelType.referral,
   r'serviceDefinition': DataModelType.serviceDefinition,
   r'service': DataModelType.service,
   r'complaints': DataModelType.complaints,
@@ -2261,7 +2263,7 @@ extension OpLogQueryProperty on QueryBuilder<OpLog, OpLog, QQueryProperty> {
 // **************************************************************************
 
 // coverage:ignore-file
-// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
 const AdditionalIdSchema = Schema(
   name: r'AdditionalId',

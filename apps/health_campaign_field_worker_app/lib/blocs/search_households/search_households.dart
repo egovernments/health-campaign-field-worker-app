@@ -31,6 +31,7 @@ class SearchHouseholdsBloc
   final ProjectBeneficiaryDataRepository projectBeneficiary;
   final TaskDataRepository taskDataRepository;
   final SideEffectDataRepository sideEffectDataRepository;
+  final ReferralDataRepository referralDataRepository;
 
   SearchHouseholdsBloc({
     required this.userUid,
@@ -43,6 +44,7 @@ class SearchHouseholdsBloc
     required this.beneficiaryType,
     required this.sideEffectDataRepository,
     required this.addressRepository,
+    required this.referralDataRepository,
   }) : super(const SearchHouseholdsState()) {
     on(
       _handleSearchByHouseholdHead,
@@ -86,6 +88,10 @@ class SearchHouseholdsBloc
     final sideEffects = await sideEffectDataRepository.search(
       SideEffectSearchModel(projectId: projectId),
     );
+
+    final referrals = await referralDataRepository.search(
+      ReferralSearchModel(projectId: projectId),
+    );
     final interventionDelivered = tasks
         .where((element) => element.projectId == projectId)
         .whereNotNull()
@@ -106,12 +112,15 @@ class SearchHouseholdsBloc
 
     final observedSideEffects = sideEffects.length;
 
+    final referralsDone = referrals.length;
+
     emit(state.copyWith(
       registeredHouseholds: beneficiaries.where((element) {
         return element.auditDetails?.createdBy == userUid;
       }).length,
       deliveredInterventions: interventionDelivered,
       sideEffectsObserved: observedSideEffects,
+      referralsDone: referralsDone,
     ));
   }
 
@@ -349,6 +358,11 @@ class SearchHouseholdsBloc
         taskClientReferenceId: tasks.map((e) => e.clientReferenceId).toList(),
       ));
 
+      final referrals = await referralDataRepository.search(ReferralSearchModel(
+        projectBeneficiaryClientReferenceId:
+            projectBeneficiaries.map((e) => e.clientReferenceId).toList(),
+      ));
+
       // Create a container for household members and associated data.
       containers.add(
         HouseholdMemberWrapper(
@@ -358,6 +372,7 @@ class SearchHouseholdsBloc
           projectBeneficiaries: projectBeneficiaries,
           tasks: tasks.isEmpty ? null : tasks,
           sideEffects: sideEffects.isEmpty ? null : sideEffects,
+          referrals: referrals.isEmpty ? null : referrals,
         ),
       );
     }
@@ -413,20 +428,81 @@ class SearchHouseholdsBloc
         .map((e) => e.clientReferenceId)
         .toList();
 
-    // Search for individual results using the extracted IDs and search text.
-    final List<IndividualModel> indResults = await individual.search(
+    // Search for individual results using the extracted IDs and search text in first name.
+    final firstNameClientRefResults = await individual.search(
       IndividualSearchModel(
         clientReferenceId: indIds,
-        name: NameSearchModel(givenName: event.searchText.trim()),
+        name: NameSearchModel(
+          givenName: event.searchText.trim(),
+        ),
       ),
     );
 
-    // Search for individual results based on the search text only.
-    final List<IndividualModel> results = await individual.search(
+    // Search for individual results using the extracted IDs and search text in last name.
+    final lastNameClientRefResults = await individual.search(
       IndividualSearchModel(
-        name: NameSearchModel(givenName: event.searchText.trim()),
+        clientReferenceId: indIds,
+        name: NameSearchModel(
+          familyName: event.searchText.trim(),
+        ),
       ),
     );
+
+    Set<String> uniqueClientRefIds = {};
+
+    for (final obj in firstNameClientRefResults) {
+      uniqueClientRefIds.add(obj.clientReferenceId);
+    }
+
+    for (final obj in lastNameClientRefResults) {
+      uniqueClientRefIds.add(obj.clientReferenceId);
+    }
+
+    // filter unique results
+    final List<IndividualModel> indResults = [
+      ...firstNameClientRefResults,
+      ...lastNameClientRefResults,
+    ]
+        .where((obj) =>
+            uniqueClientRefIds.contains(obj.clientReferenceId) &&
+            obj.auditDetails?.createdBy == userUid)
+        .toList();
+
+    // Search for individual results based on the search text only.
+    final firstNameResults = await individual.search(
+      IndividualSearchModel(
+        name: NameSearchModel(
+          givenName: event.searchText.trim(),
+        ),
+      ),
+    );
+
+    final lastNameResults = await individual.search(
+      IndividualSearchModel(
+        name: NameSearchModel(
+          familyName: event.searchText.trim(),
+        ),
+      ),
+    );
+
+    Set<String> uniqueIds = {};
+
+    for (final obj in firstNameResults) {
+      uniqueIds.add(obj.clientReferenceId);
+    }
+
+    for (final obj in lastNameResults) {
+      uniqueIds.add(obj.clientReferenceId);
+    }
+
+    List<IndividualModel> results = [
+      ...firstNameResults,
+      ...lastNameResults,
+    ]
+        .where((obj) =>
+            uniqueIds.contains(obj.clientReferenceId) &&
+            obj.auditDetails?.createdBy == userUid)
+        .toList();
 
     // Initialize a list to store household members.
     final householdMembers = <HouseholdMemberModel>[];
@@ -574,6 +650,10 @@ class SearchHouseholdsBloc
           await sideEffectDataRepository.search(SideEffectSearchModel(
         taskClientReferenceId: tasks.map((e) => e.clientReferenceId).toList(),
       ));
+      final referrals = await referralDataRepository.search(ReferralSearchModel(
+        projectBeneficiaryClientReferenceId:
+            projectBeneficiaries.map((e) => e.clientReferenceId).toList(),
+      ));
 
       // Create a container for household members and associated data.
       containers.add(
@@ -584,6 +664,7 @@ class SearchHouseholdsBloc
           projectBeneficiaries: projectBeneficiaries,
           tasks: tasks.isEmpty ? null : tasks,
           sideEffects: sideEffects.isEmpty ? null : sideEffects,
+          referrals: referrals.isEmpty ? null : referrals,
         ),
       );
     }
@@ -650,6 +731,7 @@ class SearchHouseholdsState with _$SearchHouseholdsState {
     @Default(0) int registeredHouseholds,
     @Default(0) int deliveredInterventions,
     @Default(0) int sideEffectsObserved,
+    @Default(0) int referralsDone,
   }) = _SearchHouseholdsState;
 
   bool get resultsNotFound {
@@ -670,5 +752,6 @@ class HouseholdMemberWrapper with _$HouseholdMemberWrapper {
     double? distance,
     List<TaskModel>? tasks,
     List<SideEffectModel>? sideEffects,
+    List<ReferralModel>? referrals,
   }) = _HouseholdMemberWrapper;
 }

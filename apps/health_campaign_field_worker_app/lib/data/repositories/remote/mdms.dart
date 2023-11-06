@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import '../../../models/data_model.mapper.g.dart';
+
 import 'package:digit_components/digit_components.dart';
 import 'package:dio/dio.dart';
 import 'package:isar/isar.dart';
@@ -134,6 +134,10 @@ class MdmsRepository {
             element.backgroundServiceConfig?.batteryPercentCutOff
         ..serviceInterval = element.backgroundServiceConfig?.serviceInterval;
 
+      final firebaseConfig = FirebaseConfig()
+        ..enableCrashlytics = element.firebaseConfig.enableCrashlytics
+        ..enableAnalytics = element.firebaseConfig.enableAnalytics;
+
       appConfiguration
         ..networkDetection = element.networkDetection
         ..persistenceMode = element.persistenceMode
@@ -141,7 +145,8 @@ class MdmsRepository {
         ..syncTrigger = element.syncTrigger
         ..tenantId = element.tenantId
         ..maxRadius = element.maxRadius
-        ..backgroundServiceConfig = backgroundServiceConfig;
+        ..backgroundServiceConfig = backgroundServiceConfig
+        ..firebaseConfig = firebaseConfig;
 
       final List<Languages> languageList = element.languages.map((element) {
         final languages = Languages()
@@ -234,6 +239,15 @@ class MdmsRepository {
         return deliveryCommentOption;
       }).toList();
 
+      final List<DeliveryCommentOptions> deliveryCommentOptionsSmc =
+          element.deliveryCommentOptionsSmc.map((element) {
+        final deliveryCommentOption = DeliveryCommentOptions()
+          ..name = element.name
+          ..code = element.code;
+
+        return deliveryCommentOption;
+      }).toList();
+
       final List<Interfaces> interfaceList =
           element.backendInterface.interface.map((e) {
         final config = Config()..localStoreTTL = e.config.localStoreTTL;
@@ -259,6 +273,7 @@ class MdmsRepository {
       appConfiguration.genderOptions = genderOptions;
       appConfiguration.idTypeOptions = idTypeOptions;
       appConfiguration.deliveryCommentOptions = deliveryCommentOptions;
+      appConfiguration.deliveryCommentOptionsSmc = deliveryCommentOptionsSmc;
       appConfiguration.householdDeletionReasonOptions =
           householdDeletionReasonOptions;
       appConfiguration.householdMemberDeletionReasonOptions =
@@ -279,6 +294,26 @@ class MdmsRepository {
         ..active = e.active;
 
       return symptomTypes;
+    }).toList();
+
+    appConfiguration.referralReasons =
+        result.referralReasons?.referralReasonList?.map((e) {
+      final reasonTypes = ReferralReasons()
+        ..name = e.name
+        ..code = e.code
+        ..active = e.active;
+
+      return reasonTypes;
+    }).toList();
+
+    appConfiguration.ineligibilityReasons =
+        result.ineligibilityReasons?.ineligibilityReasonsList?.map((e) {
+      final reasonTypes = IneligibilityReasons()
+        ..name = e.name
+        ..code = e.code
+        ..active = e.active;
+
+      return reasonTypes;
     }).toList();
 
     await isar.writeTxn(() async {
@@ -322,7 +357,7 @@ class MdmsRepository {
     final List<ProjectTypeListCycle> newProjectTypeList = [];
     final data = result.projectTypeWrapper?.projectTypes;
     if (data != null && data.isNotEmpty) {
-      await isar.writeTxn(() async => await isar.serviceRegistrys.clear());
+      await isar.writeTxn(() async => await isar.projectTypeListCycles.clear());
     }
     for (final element in data ?? <ProjectType>[]) {
       final newprojectType = ProjectTypeListCycle();

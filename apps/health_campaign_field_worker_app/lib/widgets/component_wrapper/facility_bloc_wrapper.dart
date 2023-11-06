@@ -24,13 +24,18 @@ class FacilityBlocWrapper extends StatelessWidget {
         final projectFacilityRepository = context
             .repository<ProjectFacilityModel, ProjectFacilitySearchModel>();
 
+        final stockRepository =
+            context.repository<StockModel, StockSearchModel>();
+
         return BlocProvider(
           create: (_) => FacilityBloc(
             facilityDataRepository: facilityRepository,
             projectFacilityDataRepository: projectFacilityRepository,
+            stockRepository: stockRepository,
           )..add(
               FacilityLoadForProjectEvent(
                 projectId: selectedProject.id,
+                userId: context.loggedInUserUuid,
               ),
             ),
           child: child,

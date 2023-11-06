@@ -96,7 +96,7 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
                         },
                       );
 
-                      router.push(ComplaintsLocationRoute());
+                      router.push(ComplaintsDetailsRoute());
                     },
                     child: Center(
                       child: Text(

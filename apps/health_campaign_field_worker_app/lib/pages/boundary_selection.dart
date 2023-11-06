@@ -6,7 +6,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../blocs/boundary/boundary.dart';
+import '../blocs/localization/app_localization.dart';
 import '../models/data_model.dart';
+import '../utils/i18_key_constants.dart' as i18;
 
 class BoundarySelectionPage extends StatefulWidget {
   const BoundarySelectionPage({Key? key}) : super(key: key);
@@ -78,6 +80,7 @@ class _BoundarySelectionPageState extends State<BoundarySelectionPage> {
                                 initialValue: formControls[label]?.value,
                                 label: label,
                                 menuItems: filteredItems,
+                                isRequired: labelIndex == 0,
                                 onChanged: (value) {
                                   if (value == null) return;
 
@@ -95,6 +98,13 @@ class _BoundarySelectionPageState extends State<BoundarySelectionPage> {
                                   return value.name ?? value.code ?? 'No Value';
                                 },
                                 formControlName: label,
+                                validationMessages: {
+                                  'required': (object) => AppLocalizations.of(
+                                        context,
+                                      ).translate(
+                                        i18.common.corecommonRequired,
+                                      ),
+                                },
                               ),
                             );
                           },

@@ -29,6 +29,8 @@ class MemberCard extends StatelessWidget {
   final List<SideEffectModel>? sideEffects;
   final bool isNotEligible;
   final bool isBeneficiaryRefused;
+  final bool isBeneficiaryIneligible;
+  final bool isBeneficiaryReferred;
   final String? projectBeneficiaryClientReferenceId;
 
   const MemberCard({
@@ -48,6 +50,8 @@ class MemberCard extends StatelessWidget {
     this.isNotEligible = false,
     this.projectBeneficiaryClientReferenceId,
     this.isBeneficiaryRefused = false,
+    this.isBeneficiaryIneligible = false,
+    this.isBeneficiaryReferred = false,
     this.sideEffects,
   });
 
@@ -160,21 +164,26 @@ class MemberCard extends StatelessWidget {
             padding: const EdgeInsets.only(left: 4.0, bottom: 4.0),
             child: Offstage(
               offstage: beneficiaryType != BeneficiaryType.individual,
-              child: !isDelivered || isNotEligible || isBeneficiaryRefused
+              child: !isDelivered ||
+                      isNotEligible ||
+                      isBeneficiaryRefused ||
+                      isBeneficiaryIneligible ||
+                      isBeneficiaryReferred
                   ? Align(
                       alignment: Alignment.centerLeft,
                       child: DigitIconButton(
                         icon: Icons.info_rounded,
                         iconSize: 20,
                         iconText: localizations.translate(
-                          isNotEligible
+                          (isNotEligible || isBeneficiaryIneligible)
                               ? i18.householdOverView
                                   .householdOverViewNotEligibleIconLabel
-                              : isBeneficiaryRefused
-                                  ? Status.beneficiaryRefused.toValue()
-                                  // [TODO Need to update the localization]
-                                  : i18.householdOverView
-                                      .householdOverViewNotDeliveredIconLabel,
+                              : isBeneficiaryReferred
+                                  ? i18.householdOverView
+                                      .householdOverViewBeneficiaryReferredLabel
+                                  : isBeneficiaryRefused
+                                      ? Status.beneficiaryRefused.toValue()
+                                      : Status.notVisited.toValue(),
                         ),
                         iconTextColor: theme.colorScheme.error,
                         iconColor: theme.colorScheme.error,
@@ -203,13 +212,129 @@ class MemberCard extends StatelessWidget {
               padding: const EdgeInsets.all(4.0),
               child: Column(
                 children: [
-                  isNotEligible || isBeneficiaryRefused
+                  isNotEligible ||
+                          isBeneficiaryIneligible ||
+                          isBeneficiaryRefused ||
+                          (isBeneficiaryReferred &&
+                              !checkStatus(
+                                tasks,
+                                context.selectedCycle,
+                              ))
                       ? const Offstage()
                       : !isNotEligible
                           ? DigitElevatedButton(
-                              onPressed: () {
+                              onPressed: () async {
                                 final bloc =
                                     context.read<HouseholdOverviewBloc>();
+                                if (isBeneficiaryReferred) {
+                                  final shouldSubmit =
+                                      await DigitDialog.show<bool>(
+                                    context,
+                                    options: DigitDialogOptions(
+                                      titleText: localizations.translate(
+                                        i18.referBeneficiary.dialogTitle,
+                                      ),
+                                      contentText: localizations.translate(
+                                        i18.referBeneficiary.dialogContent,
+                                      ),
+                                      secondaryAction: DigitDialogActions(
+                                        label: localizations.translate(
+                                          i18.referBeneficiary.dialogCancel,
+                                        ),
+                                        action: (ctx) {
+                                          final clientReferenceId =
+                                              IdGen.i.identifier;
+                                          context
+                                              .read<DeliverInterventionBloc>()
+                                              .add(
+                                                DeliverInterventionSubmitEvent(
+                                                  TaskModel(
+                                                    projectBeneficiaryClientReferenceId:
+                                                        projectBeneficiaryClientReferenceId,
+                                                    clientReferenceId:
+                                                        clientReferenceId,
+                                                    tenantId: envConfig
+                                                        .variables.tenantId,
+                                                    rowVersion: 1,
+                                                    auditDetails: AuditDetails(
+                                                      createdBy: context
+                                                          .loggedInUserUuid,
+                                                      createdTime: context
+                                                          .millisecondsSinceEpoch(),
+                                                    ),
+                                                    projectId:
+                                                        context.projectId,
+                                                    status: Status
+                                                        .beneficiaryReferred
+                                                        .toValue(),
+                                                    clientAuditDetails:
+                                                        ClientAuditDetails(
+                                                      createdBy: context
+                                                          .loggedInUserUuid,
+                                                      createdTime: context
+                                                          .millisecondsSinceEpoch(),
+                                                      lastModifiedBy: context
+                                                          .loggedInUserUuid,
+                                                      lastModifiedTime: context
+                                                          .millisecondsSinceEpoch(),
+                                                    ),
+                                                    additionalFields:
+                                                        TaskAdditionalFields(
+                                                      version: 1,
+                                                      fields: [
+                                                        AdditionalField(
+                                                          'taskStatus',
+                                                          Status
+                                                              .beneficiaryReferred
+                                                              .toValue(),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    address: individual
+                                                        .address?.first
+                                                        .copyWith(
+                                                      relatedClientReferenceId:
+                                                          clientReferenceId,
+                                                      id: null,
+                                                    ),
+                                                  ),
+                                                  false,
+                                                  context.boundary,
+                                                ),
+                                              );
+                                          Navigator.of(
+                                            context,
+                                            rootNavigator: true,
+                                          ).pop(false);
+                                        },
+                                      ),
+                                      primaryAction: DigitDialogActions(
+                                        label: localizations.translate(
+                                          i18.referBeneficiary.dialogSuccess,
+                                        ),
+                                        action: (context) => Navigator.of(
+                                          context,
+                                          rootNavigator: true,
+                                        ).pop(true),
+                                      ),
+                                    ),
+                                  );
+
+                                  if (!(shouldSubmit ?? false)) {
+                                    Future.delayed(
+                                      const Duration(milliseconds: 100),
+                                      () {
+                                        bloc.add(HouseholdOverviewReloadEvent(
+                                          projectId: context.projectId,
+                                          projectBeneficiaryType:
+                                              context.beneficiaryType,
+                                        ));
+                                      },
+                                    );
+
+                                    return;
+                                  }
+                                }
 
                                 bloc.add(
                                   HouseholdOverviewEvent.selectedIndividual(
@@ -268,6 +393,12 @@ class MemberCard extends StatelessWidget {
                   ),
                   (isNotEligible ||
                           isBeneficiaryRefused ||
+                          isBeneficiaryIneligible ||
+                          (isBeneficiaryReferred &&
+                              !checkStatus(
+                                tasks,
+                                context.selectedCycle,
+                              )) ||
                           (allDosesDelivered(
                                 tasks,
                                 context.selectedCycle,
@@ -315,6 +446,8 @@ class MemberCard extends StatelessWidget {
                                     onPressed: () {
                                       Navigator.of(context, rootNavigator: true)
                                           .pop();
+                                      final clientReferenceId =
+                                          IdGen.i.identifier;
                                       context
                                           .read<DeliverInterventionBloc>()
                                           .add(
@@ -323,7 +456,7 @@ class MemberCard extends StatelessWidget {
                                                 projectBeneficiaryClientReferenceId:
                                                     projectBeneficiaryClientReferenceId,
                                                 clientReferenceId:
-                                                    IdGen.i.identifier,
+                                                    clientReferenceId,
                                                 tenantId: envConfig
                                                     .variables.tenantId,
                                                 rowVersion: 1,
@@ -359,8 +492,13 @@ class MemberCard extends StatelessWidget {
                                                     ),
                                                   ],
                                                 ),
-                                                address:
-                                                    individual.address?.first,
+                                                address: individual
+                                                    .address?.first
+                                                    .copyWith(
+                                                  relatedClientReferenceId:
+                                                      clientReferenceId,
+                                                  id: null,
+                                                ),
                                               ),
                                               false,
                                               context.boundary,
@@ -373,6 +511,40 @@ class MemberCard extends StatelessWidget {
                                         ..pop();
                                       context.router.push(
                                         AcknowledgementRoute(),
+                                      );
+                                    },
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  DigitOutLineButton(
+                                    label: localizations.translate(
+                                      i18.memberCard.referBeneficiaryLabel,
+                                    ),
+                                    buttonStyle: OutlinedButton.styleFrom(
+                                      backgroundColor: Colors.white,
+                                      side: BorderSide(
+                                        width: 1.0,
+                                        color: theme.colorScheme.secondary,
+                                      ),
+                                      minimumSize: Size(
+                                        MediaQuery.of(context).size.width /
+                                            1.25,
+                                        50,
+                                      ),
+                                    ),
+                                    onPressed: () async {
+                                      Navigator.of(
+                                        context,
+                                        rootNavigator: true,
+                                      ).pop();
+                                      await context.router.push(
+                                        ReferBeneficiaryRoute(
+                                          projectBeneficiaryClientRefId:
+                                              projectBeneficiaryClientReferenceId ??
+                                                  '',
+                                          individual: individual,
+                                        ),
                                       );
                                     },
                                   ),
@@ -412,6 +584,40 @@ class MemberCard extends StatelessWidget {
                                             );
                                           }
                                         : null,
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  DigitOutLineButton(
+                                    label: localizations.translate(
+                                      i18.memberCard.markIneligibleLabel,
+                                    ),
+                                    buttonStyle: OutlinedButton.styleFrom(
+                                      backgroundColor: Colors.white,
+                                      side: BorderSide(
+                                        width: 1.0,
+                                        color: theme.colorScheme.secondary,
+                                      ),
+                                      minimumSize: Size(
+                                        MediaQuery.of(context).size.width /
+                                            1.25,
+                                        50,
+                                      ),
+                                    ),
+                                    onPressed: () async {
+                                      Navigator.of(
+                                        context,
+                                        rootNavigator: true,
+                                      ).pop();
+                                      await context.router.push(
+                                        IneligibilityReasonsRoute(
+                                          projectBeneficiaryClientRefId:
+                                              projectBeneficiaryClientReferenceId ??
+                                                  '',
+                                          individual: individual,
+                                        ),
+                                      );
+                                    },
                                   ),
                                 ],
                               ),

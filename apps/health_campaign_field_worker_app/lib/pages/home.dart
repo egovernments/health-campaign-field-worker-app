@@ -2,14 +2,15 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:drift/drift.dart' hide Column;
 import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 import 'package:overlay_builder/overlay_builder.dart';
-import 'package:path/path.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../data/local_store/no_sql/schema/app_configuration.dart'
@@ -21,6 +22,7 @@ import '../blocs/sync/sync.dart';
 import '../data/data_repository.dart';
 import '../data/local_store/no_sql/schema/oplog.dart';
 
+import '../data/local_store/secure_store/secure_store.dart';
 import '../data/local_store/sql_store/sql_store.dart';
 import '../models/data_model.dart';
 import '../router/app_router.dart';
@@ -52,14 +54,16 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     subscription = Connectivity()
         .onConnectivityChanged
-        .listen((ConnectivityResult result) {
-      performBackgroundService(
-        isBackground: false,
-        stopService: false,
-        context: null,
-      );
+        .listen((ConnectivityResult resSyncBlocult) async {
+      var connectivityResult = await (Connectivity().checkConnectivity());
 
-      // Got a new connectivity status!
+      if (connectivityResult != ConnectivityResult.none) {
+        if (context.mounted) {
+          context
+              .read<SyncBloc>()
+              .add(SyncRefreshEvent(context.loggedInUserUuid));
+        }
+      }
     });
   }
 
@@ -73,6 +77,7 @@ class _HomePageState extends LocalizedState<HomePage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final localSecureStore = LocalSecureStore.instance;
 
     List<GlobalKey<OverlayWidgetState>> overlayWidgetStateList = [];
     List<GlobalKey<DigitWalkthroughState>> walkthroughWidgetStateList = [];
@@ -116,9 +121,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                           overlayWrapperkey.currentState?.onSelectedTap(),
                         },
                         key: walkthroughWidgetStateList[index + 1],
-                        description: localizations.translate(
-                          '${_getItems(context).elementAt(index).label}_HELP',
-                        ),
+                        description:
+                            'help needs to be configured', // TODO implement showcase
                         overlayWidget: overlayWidgetStateList[index + 1],
                         titleAlignment: TextAlign.center,
                         skipLabel:
@@ -184,56 +188,72 @@ class _HomePageState extends LocalizedState<HomePage> {
                   listener: (context, state) {
                     state.maybeWhen(
                       orElse: () => null,
-                      syncInProgress: () => DigitSyncDialog.show(
-                        context,
-                        type: DigitSyncDialogType.inProgress,
-                        label: localizations.translate(
-                          i18.syncDialog.syncInProgressTitle,
-                        ),
-                        barrierDismissible: false,
-                      ),
-                      completedSync: () {
-                        Navigator.of(context, rootNavigator: true).pop();
-
-                        DigitSyncDialog.show(
-                          context,
-                          type: DigitSyncDialogType.complete,
-                          label: localizations.translate(
-                            i18.syncDialog.dataSyncedTitle,
-                          ),
-                          primaryAction: DigitDialogActions(
+                      syncInProgress: () async {
+                        await localSecureStore.setManualSyncTrigger(true);
+                        if (context.mounted) {
+                          DigitSyncDialog.show(
+                            context,
+                            type: DigitSyncDialogType.inProgress,
                             label: localizations.translate(
-                              i18.syncDialog.closeButtonLabel,
+                              i18.syncDialog.syncInProgressTitle,
                             ),
-                            action: (ctx) {
-                              Navigator.pop(ctx);
-                            },
-                          ),
-                        );
+                            barrierDismissible: false,
+                          );
+                        }
                       },
-                      failedSync: () {
-                        _showSyncFailedDialog(
-                          context,
-                          message: localizations.translate(
-                            i18.syncDialog.syncFailedTitle,
-                          ),
-                        );
+                      completedSync: () async {
+                        Navigator.of(context, rootNavigator: true).pop();
+                        await localSecureStore.setManualSyncTrigger(false);
+                        if (context.mounted) {
+                          DigitSyncDialog.show(
+                            context,
+                            type: DigitSyncDialogType.complete,
+                            label: localizations.translate(
+                              i18.syncDialog.dataSyncedTitle,
+                            ),
+                            primaryAction: DigitDialogActions(
+                              label: localizations.translate(
+                                i18.syncDialog.closeButtonLabel,
+                              ),
+                              action: (ctx) {
+                                Navigator.pop(ctx);
+                              },
+                            ),
+                          );
+                        }
                       },
-                      failedDownSync: () {
-                        _showSyncFailedDialog(
-                          context,
-                          message: localizations.translate(
-                            i18.syncDialog.downSyncFailedTitle,
-                          ),
-                        );
+                      failedSync: () async {
+                        await localSecureStore.setManualSyncTrigger(false);
+                        if (context.mounted) {
+                          _showSyncFailedDialog(
+                            context,
+                            message: localizations.translate(
+                              i18.syncDialog.syncFailedTitle,
+                            ),
+                          );
+                        }
                       },
-                      failedUpSync: () {
-                        _showSyncFailedDialog(
-                          context,
-                          message: localizations.translate(
-                            i18.syncDialog.upSyncFailedTitle,
-                          ),
-                        );
+                      failedDownSync: () async {
+                        await localSecureStore.setManualSyncTrigger(false);
+                        if (context.mounted) {
+                          _showSyncFailedDialog(
+                            context,
+                            message: localizations.translate(
+                              i18.syncDialog.downSyncFailedTitle,
+                            ),
+                          );
+                        }
+                      },
+                      failedUpSync: () async {
+                        await localSecureStore.setManualSyncTrigger(false);
+                        if (context.mounted) {
+                          _showSyncFailedDialog(
+                            context,
+                            message: localizations.translate(
+                              i18.syncDialog.upSyncFailedTitle,
+                            ),
+                          );
+                        }
                       },
                     );
                   },
@@ -244,18 +264,14 @@ class _HomePageState extends LocalizedState<HomePage> {
                         final debouncer = Debouncer(seconds: 5);
 
                         debouncer.run(() async {
-                          if (count == 0) {
-                            performBackgroundService(
-                              isBackground: false,
-                              stopService: true,
-                              context: context,
-                            );
-                          } else {
-                            performBackgroundService(
-                              isBackground: false,
-                              stopService: false,
-                              context: context,
-                            );
+                          if (count != 0) {
+                            if (context.mounted) {
+                              performBackgroundService(
+                                isBackground: false,
+                                stopService: false,
+                                context: context,
+                              );
+                            }
                           }
                         });
 
@@ -312,19 +328,14 @@ class _HomePageState extends LocalizedState<HomePage> {
     );
   }
 
-  List<HomeItemCard> _getItems(BuildContext context) {
+  List<Widget> _getItems(BuildContext context) {
     final state = context.read<AuthBloc>().state;
     if (state is! AuthAuthenticatedState) {
       return [];
     }
 
-    final homeItems = <HomeItemCard>[
-      HomeItemCard(
-        icon: Icons.menu_book,
-        label: i18.home.myCheckList,
-        onPressed: () => context.router.push(ChecklistWrapperRoute()),
-      ),
-      HomeItemCard(
+    final Map<String, Widget> homeItemsMap = {
+      i18.home.beneficiaryLabel: HomeItemCard(
         icon: Icons.all_inbox,
         label: i18.home.beneficiaryLabel,
         onPressed: () async {
@@ -335,67 +346,68 @@ class _HomePageState extends LocalizedState<HomePage> {
           searchBloc.add(const SearchHouseholdsClearEvent());
         },
       ),
-      HomeItemCard(
+      i18.home.manageStockLabel: HomeItemCard(
+        icon: Icons.store_mall_directory,
+        label: i18.home.manageStockLabel,
+        onPressed: () => context.router.push(ManageStocksRoute()),
+      ),
+      i18.home.stockReconciliationLabel: HomeItemCard(
+        icon: Icons.menu_book,
+        label: i18.home.stockReconciliationLabel,
+        onPressed: () => context.router.push(StockReconciliationRoute()),
+      ),
+      i18.home.warehouseManagerCheckList: HomeItemCard(
+        icon: Icons.menu_book,
+        label: i18.home.warehouseManagerCheckList,
+        onPressed: () => context.router.push(ChecklistWrapperRoute()),
+      ),
+      i18.home.myCheckList: HomeItemCard(
+        icon: Icons.menu_book,
+        label: i18.home.myCheckList,
+        onPressed: () => context.router.push(ChecklistWrapperRoute()),
+      ),
+      i18.home.fileComplaint: HomeItemCard(
         icon: Icons.announcement,
         label: i18.home.fileComplaint,
         onPressed: () =>
             context.router.push(const ComplaintsInboxWrapperRoute()),
       ),
-      HomeItemCard(
-        icon: Icons.menu_book,
-        label: i18.home.stockReconciliationLabel,
-        onPressed: () => context.router.push(StockReconciliationRoute()),
-      ),
-      HomeItemCard(
-        icon: Icons.store_mall_directory,
-        label: i18.home.manageStockLabel,
-        onPressed: () => context.router.push(ManageStocksRoute()),
-      ),
-      HomeItemCard(
-        icon: Icons.sync_alt,
-        label: i18.home.syncDataLabel,
-        onPressed: () => _attemptSyncUp(context),
-      ),
-      HomeItemCard(
-        icon: Icons.call,
-        label: i18.home.callbackLabel,
-        onPressed: () => DigitActionDialog.show(
-          context,
-          widget: BlocBuilder<AppInitializationBloc, AppInitializationState>(
-            builder: (context, state) {
-              if (state is! AppInitialized) {
-                return const Offstage();
+      i18.home.syncDataLabel: StreamBuilder<Map<String, dynamic>?>(
+        stream: FlutterBackgroundService().on('serviceRunning'),
+        builder: (context, snapshot) {
+          return HomeItemCard(
+            icon: Icons.sync_alt,
+            label: i18.home.syncDataLabel,
+            onPressed: () async {
+              if (snapshot.data?['enablesManualSync'] == true) {
+                if (context.mounted) _attemptSyncUp(context);
+              } else {
+                if (context.mounted) {
+                  DigitToast.show(
+                    context,
+                    options: DigitToastOptions(
+                      localizations
+                          .translate(i18.common.coreCommonSyncInProgress),
+                      false,
+                      Theme.of(context),
+                    ),
+                  );
+                }
               }
-
-              final supportList = state.appConfiguration.callSupportOptions ??
-                  <app_config.CallSupportList>[];
-
-              return ActionCard(
-                items: supportList
-                    .map(
-                      (e) => ActionCardModel(
-                        action: () async {
-                          if (!await launchUrl(
-                            Uri(
-                              scheme: 'tel',
-                              path: e.code,
-                            ),
-                            mode: LaunchMode.externalApplication,
-                          )) {
-                            throw Exception('Could not launch $url');
-                          }
-                        },
-                        icon: Icons.call,
-                        label: e.name,
-                      ),
-                    )
-                    .toList(),
-              );
             },
-          ),
-        ),
+          );
+        },
       ),
-      HomeItemCard(
+      i18.home.viewReportsLabel: HomeItemCard(
+        icon: Icons.announcement,
+        label: i18.home.viewReportsLabel,
+        onPressed: () {
+          context.router.push(
+            InventoryReportSelectionRoute(),
+          );
+        },
+      ),
+      'DB': HomeItemCard(
         icon: Icons.table_chart,
         label: 'DB',
         onPressed: () {
@@ -408,30 +420,31 @@ class _HomePageState extends LocalizedState<HomePage> {
           );
         },
       ),
-      HomeItemCard(
-        icon: Icons.delete_forever,
-        label: 'Delete all',
-        onPressed: () async {
-          final sql = context.read<LocalSqlDataStore>();
-          final isar = context.read<Isar>();
+    };
 
-          for (var element in sql.allTables) {
-            sql.delete(element).where((_) => const Constant(true));
-          }
-
-          await isar.writeTxn(() async => await isar.opLogs.clear());
-        },
-      ),
+    final homeItemsLabel = <String>[
+      i18.home.beneficiaryLabel,
+      i18.home.manageStockLabel,
+      i18.home.stockReconciliationLabel,
+      i18.home.warehouseManagerCheckList,
+      i18.home.myCheckList,
+      i18.home.fileComplaint,
+      i18.home.syncDataLabel,
+      i18.home.viewReportsLabel,
+      'DB',
     ];
 
-    homeItems
+    final List<String> filteredLabels = homeItemsLabel
         .where((element) => state.actionsWrapper.actions
             .map((e) => e.displayName)
             .toList()
-            .contains(element.label))
+            .contains(element))
         .toList();
 
-    return homeItems;
+    final List<Widget> widgetList =
+        filteredLabels.map((label) => homeItemsMap[label]!).toList();
+
+    return widgetList;
   }
 
   void _attemptSyncUp(BuildContext context) {
@@ -450,6 +463,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                   LocalRepository<HouseholdMemberModel,
                       HouseholdMemberSearchModel>>(),
               context.read<LocalRepository<TaskModel, TaskSearchModel>>(),
+              context
+                  .read<LocalRepository<ReferralModel, ReferralSearchModel>>(),
               context.read<
                   LocalRepository<SideEffectModel, SideEffectSearchModel>>(),
               context.read<LocalRepository<StockModel, StockSearchModel>>(),
@@ -472,6 +487,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                   RemoteRepository<HouseholdMemberModel,
                       HouseholdMemberSearchModel>>(),
               context.read<RemoteRepository<TaskModel, TaskSearchModel>>(),
+              context
+                  .read<RemoteRepository<ReferralModel, ReferralSearchModel>>(),
               context.read<
                   RemoteRepository<SideEffectModel, SideEffectSearchModel>>(),
               context.read<RemoteRepository<StockModel, StockSearchModel>>(),

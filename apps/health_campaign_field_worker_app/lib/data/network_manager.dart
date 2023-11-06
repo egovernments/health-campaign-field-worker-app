@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 
 import '../models/bandwidth/bandwidth_model.dart';
 import '../models/data_model.dart';
-import '../utils/debound.dart';
 import 'data_repository.dart';
 import 'repositories/sync/sync_up.dart';
 
@@ -43,19 +42,6 @@ class NetworkManager {
       throw Exception('Sync up is not valid for online only configuration');
     }
     bool isSyncCompleted = false;
-
-    final futuresSyncDown = await Future.wait(
-      localRepositories
-          .map((e) => e.getItemsToBeSyncedDown(bandwidthModel.userId)),
-    );
-    final pendingSyncDownEntries = futuresSyncDown.expand((e) => e).toList();
-
-    final futuresSyncUp = await Future.wait(
-      localRepositories
-          .map((e) => e.getItemsToBeSyncedUp(bandwidthModel.userId)),
-    );
-    final pendingSyncUpEntries = futuresSyncUp.expand((e) => e).toList();
-
     SyncError? syncError;
 
 // Perform the sync Down Operation
@@ -69,7 +55,6 @@ class NetworkManager {
       );
     } catch (e) {
       syncError = SyncDownError(e);
-      service?.stopSelf();
     }
 
 // Perform the sync up Operation
@@ -82,10 +67,21 @@ class NetworkManager {
       );
     } catch (e) {
       syncError ??= SyncUpError(e);
-      service?.stopSelf();
     }
 
     if (syncError != null) throw syncError;
+
+    final futuresSyncDown = await Future.wait(
+      localRepositories
+          .map((e) => e.getItemsToBeSyncedDown(bandwidthModel.userId)),
+    );
+    final pendingSyncDownEntries = futuresSyncDown.expand((e) => e).toList();
+
+    final futuresSyncUp = await Future.wait(
+      localRepositories
+          .map((e) => e.getItemsToBeSyncedUp(bandwidthModel.userId)),
+    );
+    final pendingSyncUpEntries = futuresSyncUp.expand((e) => e).toList();
 
     // Recursive function which will call the Perfom Sync
 

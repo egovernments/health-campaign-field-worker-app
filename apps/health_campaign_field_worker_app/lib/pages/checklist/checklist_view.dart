@@ -112,10 +112,9 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                               if (e.dataType == 'String' &&
                                   !(e.code ?? '').contains('.')) ...[
                                 DigitTextField(
-                                  onChange: (value) {
-                                    checklistFormKey.currentState?.validate();
-                                  },
-                                  isRequired: false,
+                                  autoValidation:
+                                      AutovalidateMode.onUserInteraction,
+                                  isRequired: true,
                                   controller: controller[index],
                                   inputFormatter: [
                                     FilteringTextInputFormatter.allow(RegExp(
@@ -125,8 +124,9 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                   validator: (value) {
                                     if (((value == null || value == '') &&
                                         e.required == true)) {
-                                      return localizations
-                                          .translate("${e.code}_REQUIRED");
+                                      return localizations.translate(
+                                        i18.common.corecommonRequired,
+                                      );
                                     }
                                     if (e.regex != null) {
                                       return (RegExp(e.regex!).hasMatch(value!))
@@ -144,9 +144,8 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                               ] else if (e.dataType == 'Number' &&
                                   !(e.code ?? '').contains('.')) ...[
                                 DigitTextField(
-                                  onChange: (value) {
-                                    checklistFormKey.currentState?.validate();
-                                  },
+                                  autoValidation:
+                                      AutovalidateMode.onUserInteraction,
                                   textStyle: theme.textTheme.headlineMedium,
                                   textInputType: TextInputType.number,
                                   inputFormatter: [
@@ -546,7 +545,6 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                           ),
                           child: DigitTextField(
                             maxLength: 1000,
-                            isRequired: true,
                             controller: additionalController[index],
                             label: '${localizations.translate(
                               '${selectedServiceDefinition?.code}.${item.code}.ADDITIONAL_FIELD',
@@ -602,10 +600,8 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
       );
     } else if (item.dataType == 'String') {
       return DigitTextField(
-        onChange: (value) {
-          checklistFormKey.currentState?.validate();
-        },
-        isRequired: false,
+        autoValidation: AutovalidateMode.onUserInteraction,
+        isRequired: true,
         controller: controller[index],
         inputFormatter: [
           FilteringTextInputFormatter.allow(RegExp(
@@ -630,9 +626,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
       );
     } else if (item.dataType == 'Number') {
       return DigitTextField(
-        onChange: (value) {
-          checklistFormKey.currentState?.validate();
-        },
+        autoValidation: AutovalidateMode.onUserInteraction,
         textStyle: theme.textTheme.headlineMedium,
         textInputType: TextInputType.number,
         inputFormatter: [

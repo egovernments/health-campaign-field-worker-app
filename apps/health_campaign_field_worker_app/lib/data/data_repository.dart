@@ -75,7 +75,7 @@ abstract class RemoteRepository<D extends EntityModel,
             searchPath,
             queryParameters: {
               'offset': 0,
-              'limit': 100,
+              'limit': 1000,
               'tenantId': envConfig.variables.tenantId,
               if (query.isDeleted ?? false) 'includeDeleted': query.isDeleted,
             },
@@ -407,7 +407,7 @@ abstract class LocalRepository<D extends EntityModel,
     int? id,
     bool? nonRecoverableError,
   }) async {
-    return opLogManager.markSyncUp(
+    await opLogManager.markSyncUp(
       entry: entry,
       clientReferenceId: clientReferenceId,
       id: id,

@@ -1,5 +1,6 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -67,63 +68,25 @@ class _ResourceBeneficiaryCardState
               );
             },
           ),
-          DigitIntegerFormPicker(
-            incrementer: true,
+          DigitTextFormField(
             formControlName: 'quantityDistributed.${widget.cardIndex}',
-            form: widget.form,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            inputFormatters: [
+              LengthLimitingTextInputFormatter(1),
+              FilteringTextInputFormatter.allow(
+                RegExp(r'^[1-2]+$'),
+              ),
+            ],
             label: localizations.translate(
               i18.deliverIntervention.quantityDistributedLabel,
             ),
-            minimum: 1,
-          ),
-          SizedBox(
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: (widget.cardIndex == widget.totalItems - 1 &&
-                      widget.totalItems > 1)
-                  ? DigitIconButton(
-                      onPressed: () async {
-                        final submit = await DigitDialog.show<bool>(
-                          context,
-                          options: DigitDialogOptions(
-                            titleText: localizations.translate(
-                              i18.deliverIntervention
-                                  .resourceDeleteBeneficiaryDialogTitle,
-                            ),
-                            primaryAction: DigitDialogActions(
-                              label: localizations.translate(
-                                i18.deliverIntervention
-                                    .resourceDeleteBeneficiaryPrimaryActionLabel,
-                              ),
-                              action: (context) {
-                                Navigator.of(
-                                  context,
-                                  rootNavigator: true,
-                                ).pop(true);
-                              },
-                            ),
-                            secondaryAction: DigitDialogActions(
-                              label: localizations.translate(
-                                i18.common.coreCommonCancel,
-                              ),
-                              action: (context) => Navigator.of(
-                                context,
-                                rootNavigator: true,
-                              ).pop(false),
-                            ),
-                          ),
-                        );
-                        if (submit == true) {
-                          widget.onDelete(widget.cardIndex);
-                        }
-                      },
-                      iconText: localizations.translate(
-                        i18.deliverIntervention.resourceDeleteBeneficiary,
-                      ),
-                      icon: Icons.delete,
-                    )
-                  : const Offstage(),
-            ),
+            validationMessages: {
+              "required": (control) {
+                return localizations.translate(
+                  i18.common.corecommonRequired,
+                );
+              },
+            },
           ),
         ],
       ),

@@ -1,5 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../data/local_store/no_sql/schema/app_configuration.dart';
+import '../ineligibility_reasons/ineligibility_reasons_model.dart';
+import '../referral_reasons/referral_reasons_model.dart';
 import '../symptoms_types/symptoms_types_model.dart';
 
 part 'app_config_model.freezed.dart';
@@ -53,6 +56,10 @@ class AppConfigPrimaryWrapperModel with _$AppConfigPrimaryWrapperModel {
     @JsonKey(name: 'module-version') final RowVersionWrapperModel? rowVersions,
     @JsonKey(name: 'HCM-SYMPTOMS-TYPES')
     final SymptomsTypesSecondaryWrapperModel? symptomsTypes,
+    @JsonKey(name: 'HCM-REFERRAL-REASONS')
+    final ReferralReasonsWrapperModel? referralReasons,
+    @JsonKey(name: 'HCM-INELIGIBILITY-REASONS')
+    final IneligibilityReasonsWrapperModel? ineligibilityReasons,
   }) = _AppConfigPrimaryWrapperModel;
 
   factory AppConfigPrimaryWrapperModel.fromJson(
@@ -111,12 +118,15 @@ class AppConfig with _$AppConfig {
     required List<IdTypeOptions> idTypeOptions,
     @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
     required List<DeliveryCommentOptions> deliveryCommentOptions,
+    @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR')
+    required List<DeliveryCommentOptions> deliveryCommentOptionsSmc,
     @JsonKey(name: 'BACKEND_INTERFACE')
     required BackendInterface backendInterface,
     @JsonKey(name: 'CALL_SUPPORT')
     required List<CallSupportList>? callSupportOptions,
     @JsonKey(name: 'TRANSPORT_TYPES')
     required List<TransportTypes> transportTypes,
+    @JsonKey(name: 'FIREBASE_CONFIG') required FirebaseConfig firebaseConfig,
   }) = _AppConfig;
 
   factory AppConfig.fromJson(Map<String, dynamic> json) =>
@@ -284,4 +294,15 @@ class RowVersions with _$RowVersions {
   }) = _RowVersions;
   factory RowVersions.fromJson(Map<String, dynamic> json) =>
       _$RowVersionsFromJson(json);
+}
+
+@freezed
+class FirebaseConfig with _$FirebaseConfig {
+  factory FirebaseConfig({
+    required bool enableCrashlytics,
+    required bool enableAnalytics,
+  }) = _FirebaseConfig;
+
+  factory FirebaseConfig.fromJson(Map<String, dynamic> json) =>
+      _$FirebaseConfigFromJson(json);
 }

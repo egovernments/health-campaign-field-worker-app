@@ -37,6 +37,7 @@ class _StockReconciliationPageState
     extends LocalizedState<StockReconciliationPage> {
   static const _facilityKey = 'facility';
   static const _productVariantKey = 'productVariant';
+  static const _dateOfReconciliationKey = 'dateOfReconciliation';
   static const _manualCountKey = 'manualCountKey';
   static const _reconciliationCommentsKey = 'reconciliationCommentsKey';
 
@@ -45,18 +46,22 @@ class _StockReconciliationPageState
       _facilityKey: FormControl<FacilityModel>(
         validators: [Validators.required],
       ),
+      _dateOfReconciliationKey: FormControl<DateTime>(value: DateTime.now()),
       _productVariantKey: FormControl<ProductVariantModel>(
         validators: [Validators.required],
       ),
       _manualCountKey: FormControl<String>(
-        value: '0',
         validators: [
           Validators.number,
           Validators.required,
           CustomValidator.validStockCount,
         ],
       ),
-      _reconciliationCommentsKey: FormControl<String>(),
+      _reconciliationCommentsKey: FormControl<String>(
+        validators: [
+          CustomValidator.requiredMin3,
+        ],
+      ),
     });
   }
 
@@ -145,6 +150,12 @@ class _StockReconciliationPageState
                                                 .control(_facilityKey)
                                                 .value as FacilityModel;
 
+                                            final dateOfReconciliation = form
+                                                .control(
+                                                  _dateOfReconciliationKey,
+                                                )
+                                                .value as DateTime;
+
                                             final productVariant = form
                                                 .control(_productVariantKey)
                                                 .value as ProductVariantModel;
@@ -163,9 +174,9 @@ class _StockReconciliationPageState
                                                 StockReconciliationModel(
                                               clientReferenceId:
                                                   IdGen.i.identifier,
-                                              dateOfReconciliation: stockState
-                                                  .dateOfReconciliation
-                                                  .millisecondsSinceEpoch,
+                                              dateOfReconciliation:
+                                                  dateOfReconciliation
+                                                      .millisecondsSinceEpoch,
                                               facilityId: facilityId.id,
                                               productVariantId:
                                                   productVariant.id,
@@ -267,7 +278,7 @@ class _StockReconciliationPageState
                                     Text(
                                       localizations.translate(
                                         i18.stockReconciliationDetails
-                                            .reconciliationPageTitle,
+                                            .spaqReconciliation,
                                       ),
                                       style: Theme.of(context)
                                           .textTheme
@@ -283,7 +294,7 @@ class _StockReconciliationPageState
                                       ),
                                       builder: (context, state) {
                                         final facilities = state.whenOrNull(
-                                              fetched: (facilities, _) =>
+                                              fetched: (facilities, _, __) =>
                                                   facilities,
                                             ) ??
                                             [];
@@ -372,16 +383,29 @@ class _StockReconciliationPageState
                                         );
                                       },
                                     ),
-                                    DigitTableCard(
-                                      fraction: 2.5,
-                                      gap: kPadding,
-                                      element: {
-                                        localizations.translate(i18
-                                                .stockReconciliationDetails
-                                                .dateOfReconciliation):
-                                            DateFormat('dd MMMM yyyy').format(
-                                          stockState.dateOfReconciliation,
-                                        ),
+                                    DigitDateFormPicker(
+                                      isEnabled: true,
+                                      lastDate: DateTime.now(),
+                                      formControlName: _dateOfReconciliationKey,
+                                      label: localizations.translate(i18
+                                          .stockReconciliationDetails
+                                          .dateOfReconciliation),
+                                      isRequired: false,
+                                      confirmText: localizations.translate(
+                                        i18.common.coreCommonOk,
+                                      ),
+                                      cancelText: localizations.translate(
+                                        i18.common.coreCommonCancel,
+                                      ),
+                                      onChanged: (control) {
+                                        final stockReconciliationBloc = context
+                                            .read<StockReconciliationBloc>();
+
+                                        stockReconciliationBloc.add(
+                                          StockReconciliationSelectDateOfReconciliationEvent(
+                                            control,
+                                          ),
+                                        );
                                       },
                                     ),
                                     const DigitDivider(),
@@ -391,7 +415,7 @@ class _StockReconciliationPageState
                                       element: {
                                         localizations.translate(
                                           i18.stockReconciliationDetails
-                                              .stockReceived,
+                                              .spaqReceived,
                                         ): stockState.stockReceived
                                             .toStringAsFixed(0),
                                       },
@@ -403,7 +427,7 @@ class _StockReconciliationPageState
                                       element: {
                                         localizations.translate(
                                           i18.stockReconciliationDetails
-                                              .stockIssued,
+                                              .spaqIssued,
                                         ): stockState.stockIssued
                                             .toStringAsFixed(0),
                                       },
@@ -415,7 +439,7 @@ class _StockReconciliationPageState
                                       element: {
                                         localizations.translate(
                                           i18.stockReconciliationDetails
-                                              .stockReturned,
+                                              .spaqReturned,
                                         ): stockState.stockReturned
                                             .toStringAsFixed(0),
                                       },
@@ -427,31 +451,7 @@ class _StockReconciliationPageState
                                       element: {
                                         localizations.translate(
                                           i18.stockReconciliationDetails
-                                              .stockLost,
-                                        ): stockState.stockLost
-                                            .toStringAsFixed(0),
-                                      },
-                                    ),
-                                    const DigitDivider(),
-                                    DigitTableCard(
-                                      fraction: 2.5,
-                                      gap: kPadding,
-                                      element: {
-                                        localizations.translate(
-                                          i18.stockReconciliationDetails
-                                              .stockDamaged,
-                                        ): stockState.stockDamaged
-                                            .toStringAsFixed(0),
-                                      },
-                                    ),
-                                    const DigitDivider(),
-                                    DigitTableCard(
-                                      fraction: 2.5,
-                                      gap: kPadding,
-                                      element: {
-                                        localizations.translate(
-                                          i18.stockReconciliationDetails
-                                              .stockOnHand,
+                                              .spaqOnHand,
                                         ): stockState.stockInHand
                                             .toStringAsFixed(0),
                                       },
@@ -476,7 +476,7 @@ class _StockReconciliationPageState
                                       isRequired: true,
                                       label: localizations.translate(
                                         i18.stockReconciliationDetails
-                                            .manualCountLabel,
+                                            .manualSpaqCount,
                                       ),
                                       formControlName: _manualCountKey,
                                       keyboardType:
@@ -484,18 +484,64 @@ class _StockReconciliationPageState
                                         decimal: false,
                                       ),
                                       validationMessages: {
-                                        "required": (object) => i18
-                                            .stockReconciliationDetails
-                                            .manualCountRequiredError,
-                                        "number": (object) => i18
-                                            .stockReconciliationDetails
-                                            .manualCountInvalidType,
+                                        "required": (object) =>
+                                            localizations.translate(i18
+                                                .stockReconciliationDetails
+                                                .manualCountRequiredError),
+                                        "number": (object) =>
+                                            localizations.translate(i18
+                                                .stockReconciliationDetails
+                                                .manualCountInvalidType),
                                         "min": (object) => i18
                                             .stockReconciliationDetails
                                             .manualCountMinError,
-                                        "max": (object) => i18
-                                            .stockReconciliationDetails
-                                            .manualCountMaxError,
+                                        "max": (object) =>
+                                            localizations.translate(i18
+                                                .stockReconciliationDetails
+                                                .manualCountMaxError),
+                                      },
+                                      onChanged: (control) {
+                                        final manualStockCount = control.value;
+
+                                        final stockCount =
+                                            stockState.stockInHand.toInt();
+
+                                        if (manualStockCount !=
+                                            stockCount.toString()) {
+                                          setState(() {
+                                            form
+                                                .control(
+                                              _reconciliationCommentsKey,
+                                            )
+                                                .setValidators(
+                                              [
+                                                Validators.required,
+                                                CustomValidator.requiredMin3,
+                                              ],
+                                              updateParent: true,
+                                              autoValidate: true,
+                                            );
+                                            form
+                                                .control(
+                                                  _reconciliationCommentsKey,
+                                                )
+                                                .touched;
+                                          });
+                                        } else {
+                                          setState(() {
+                                            form
+                                                .control(
+                                              _reconciliationCommentsKey,
+                                            )
+                                                .setValidators(
+                                              [
+                                                CustomValidator.requiredMin3,
+                                              ],
+                                              updateParent: true,
+                                              autoValidate: true,
+                                            );
+                                          });
+                                        }
                                       },
                                     ),
                                     DigitTextFormField(
@@ -505,6 +551,16 @@ class _StockReconciliationPageState
                                       ),
                                       formControlName:
                                           _reconciliationCommentsKey,
+                                      validationMessages: {
+                                        "required": (object) =>
+                                            localizations.translate(i18
+                                                .stockReconciliationDetails
+                                                .reconciliationCommentRequiredError),
+                                        "min3": (object) =>
+                                            localizations.translate(
+                                              i18.common.min3CharsRequired,
+                                            ),
+                                      },
                                     ),
                                   ],
                                 ),

@@ -54,6 +54,7 @@ class DigitDobPicker extends StatelessWidget {
             // Date picker component to select the date of birth
             DigitDateFormPicker(
               label: datePickerLabel,
+              isRequired: true,
               formControlName: datePickerFormControl,
               cancelText: cancelText,
               confirmText: confirmText,
@@ -79,6 +80,7 @@ class DigitDobPicker extends StatelessWidget {
                           DobValueAccessorYearsString(DobValueAccessor()),
                       formControlName: datePickerFormControl,
                       label: ageFieldLabel,
+                      isRequired: true,
                       keyboardType: TextInputType.number,
                       suffix: Padding(
                         padding: const EdgeInsets.all(8.0),

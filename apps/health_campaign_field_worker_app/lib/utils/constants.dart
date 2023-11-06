@@ -1,4 +1,7 @@
 import 'package:collection/collection.dart';
+import 'package:digit_components/utils/app_logger.dart';
+import 'package:digit_firebase_services/digit_firebase_services.dart'
+    as firebase_services;
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
@@ -13,7 +16,6 @@ import '../data/local_store/no_sql/schema/project_types.dart';
 import '../data/local_store/no_sql/schema/row_versions.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/local_store/sql_store/sql_store.dart';
-import '../data/repositories/local/address.dart';
 import '../data/repositories/local/boundary.dart';
 import '../data/repositories/local/facility.dart';
 import '../data/repositories/local/household.dart';
@@ -26,6 +28,7 @@ import '../data/repositories/local/project_beneficiary.dart';
 import '../data/repositories/local/project_facility.dart';
 import '../data/repositories/local/project_resource.dart';
 import '../data/repositories/local/project_staff.dart';
+import '../data/repositories/local/referral.dart';
 import '../data/repositories/local/service.dart';
 import '../data/repositories/local/service_definition.dart';
 import '../data/repositories/local/side_effect.dart';
@@ -46,12 +49,14 @@ import '../data/repositories/remote/project_product_variant.dart';
 import '../data/repositories/remote/project_resource.dart';
 import '../data/repositories/remote/project_staff.dart';
 import '../data/repositories/remote/project_type.dart';
+import '../data/repositories/remote/referral.dart';
 import '../data/repositories/remote/service.dart';
 import '../data/repositories/remote/service_definition.dart';
 import '../data/repositories/remote/side_effect.dart';
 import '../data/repositories/remote/stock.dart';
 import '../data/repositories/remote/stock_reconciliation.dart';
 import '../data/repositories/remote/task.dart';
+import '../firebase_options.dart';
 import '../models/data_model.dart';
 
 class Constants {
@@ -121,6 +126,7 @@ class Constants {
       ProjectStaffLocalRepository(sql, ProjectStaffOpLogManager(isar)),
       StockLocalRepository(sql, StockOpLogManager(isar)),
       TaskLocalRepository(sql, TaskOpLogManager(isar)),
+      ReferralLocalRepository(sql, ReferralOpLogManager(isar)),
       SideEffectLocalRepository(sql, SideEffectOpLogManager(isar)),
       StockReconciliationLocalRepository(
         sql,
@@ -162,6 +168,14 @@ class Constants {
 
     final enableCrashlytics =
         config?.firebaseConfig?.enableCrashlytics ?? false;
+    if (enableCrashlytics) {
+      firebase_services.initialize(
+        options: DefaultFirebaseOptions.currentPlatform,
+        onErrorMessage: (value) {
+          AppLogger.instance.error(title: 'CRASHLYTICS', message: value);
+        },
+      );
+    }
 
     _version = version;
   }
@@ -217,6 +231,8 @@ class Constants {
           HouseholdMemberRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.sideEffect)
           SideEffectRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.referral)
+          ReferralRemoteRepository(dio, actionMap: actions),
       ]);
     }
 
@@ -251,6 +267,15 @@ class KeyValue {
   String label;
   dynamic key;
   KeyValue(this.label, this.key);
+}
+
+class StatusKeys {
+  bool isNotEligible;
+  bool isBeneficiaryRefused;
+  bool isBeneficiaryReferred;
+  bool isStatusReset;
+  StatusKeys(this.isNotEligible, this.isBeneficiaryRefused,
+      this.isBeneficiaryReferred, this.isStatusReset);
 }
 
 class RequestInfoData {

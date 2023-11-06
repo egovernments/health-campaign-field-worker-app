@@ -94,6 +94,18 @@ class AppInitializationBloc
                     MdmsMasterDetailModel('symptomsTypes'),
                   ],
                 ),
+                const MdmsModuleDetailModel(
+                  moduleName: 'HCM-REFERRAL-REASONS',
+                  masterDetails: [
+                    MdmsMasterDetailModel('referralReasons'),
+                  ],
+                ),
+                const MdmsModuleDetailModel(
+                  moduleName: 'HCM-INELIGIBILITY-REASONS',
+                  masterDetails: [
+                    MdmsMasterDetailModel('ineligibilityReasons'),
+                  ],
+                ),
               ],
             ),
           ).toJson(),

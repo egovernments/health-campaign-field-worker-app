@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -105,7 +108,7 @@ class MainApplicationState extends State<MainApplication>
             ],
             child: BlocBuilder<AppInitializationBloc, AppInitializationState>(
               builder: (context, appConfigState) {
-                const defaultLocale = Locale('en', 'IN');
+                const defaultLocale = Locale('pt', 'MZ');
 
                 return BlocBuilder<AuthBloc, AuthState>(
                   builder: (context, authState) {
@@ -221,19 +224,56 @@ class MainApplicationState extends State<MainApplication>
                           return MaterialApp.router(
                             debugShowCheckedModeBanner: false,
                             builder: (context, child) {
+                              if (child == null) {
+                                return const SizedBox.shrink();
+                              }
+
                               final env = envConfig.variables.envType;
                               if (env == EnvType.prod) {
-                                return child ?? const SizedBox.shrink();
+                                return child;
+                              }
+
+                              if (env == EnvType.training) {
+                                return Scaffold(
+                                  body: Stack(
+                                    children: [
+                                      Positioned.fill(child: child),
+                                      Positioned.fill(
+                                        child: IgnorePointer(
+                                          child: Transform.rotate(
+                                            angle: -pi / 4,
+                                            child: Container(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Center(
+                                                child: AutoSizeText(
+                                                  'Formação'.toUpperCase(),
+                                                  maxLines: 1,
+                                                  style: TextStyle(
+                                                    fontSize: 50,
+                                                    color: Colors.black
+                                                        .withAlpha(25),
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
                               }
 
                               return Banner(
                                 message: envConfig.variables.envType.name,
-                                location: BannerLocation.topEnd,
+                                location: BannerLocation.topStart,
                                 color: () {
                                   switch (envConfig.variables.envType) {
-                                    case EnvType.uat:
+                                    case EnvType.training:
                                       return Colors.green;
-                                    case EnvType.qa:
+                                    case EnvType.uat:
                                       return Colors.pink;
                                     default:
                                       return Colors.red;
@@ -244,11 +284,7 @@ class MainApplicationState extends State<MainApplication>
                             },
                             supportedLocales: languages != null
                                 ? languages.map((e) {
-                                    final results = e.value.split('_');
-
-                                    return results.isNotEmpty
-                                        ? Locale(results.first, results.last)
-                                        : defaultLocale;
+                                    return defaultLocale;
                                   })
                                 : [defaultLocale],
                             localizationsDelegates: [

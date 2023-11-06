@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../blocs/auth/auth.dart';
+import '../utils/constants.dart';
 import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/localized.dart';
@@ -55,7 +56,10 @@ class _LoginPageState extends LocalizedState<LoginPage> {
               DigitToast.show(
                 context,
                 options: DigitToastOptions(
-                  message ?? localizations.translate('UNABLE_TO_LOGIN'),
+                  message ??
+                      localizations.translate(
+                        i18.login.loginError,
+                      ),
                   true,
                   theme,
                 ),
@@ -64,6 +68,9 @@ class _LoginPageState extends LocalizedState<LoginPage> {
           );
         },
         child: ScrollableContent(
+          footer: PoweredByDigit(
+            version: Constants().version,
+          ),
           children: [
             ReactiveFormBuilder(
               form: buildForm,
@@ -146,34 +153,6 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                           );
                         },
                       ),
-                      TextButton(
-                        onPressed: () => DigitDialog.show(
-                          context,
-                          options: DigitDialogOptions(
-                            titleText: localizations.translate(
-                              i18.forgotPassword.labelText,
-                            ),
-                            contentText: localizations.translate(
-                              i18.forgotPassword.contentText,
-                            ),
-                            primaryAction: DigitDialogActions(
-                              label: localizations.translate(
-                                i18.forgotPassword.primaryActionLabel,
-                              ),
-                              action: (ctx) =>
-                                  Navigator.of(context, rootNavigator: true)
-                                      .pop(),
-                            ),
-                          ),
-                        ),
-                        child: Center(
-                          child: Text(
-                            localizations.translate(
-                              i18.forgotPassword.actionLabel,
-                            ),
-                          ),
-                        ),
-                      ),
                     ],
                   ),
                 );
@@ -187,12 +166,12 @@ class _LoginPageState extends LocalizedState<LoginPage> {
 
   FormGroup buildForm() => fb.group(<String, Object>{
         _userId: FormControl<String>(
-          value: 'dsmr1',
+          // value: 'COM-DIS',
           validators: [Validators.required],
         ),
         _password: FormControl<String>(
           validators: [Validators.required],
-          value: 'eGov@1234',
+          // value: 'eGov@4321',
         ),
       });
 }

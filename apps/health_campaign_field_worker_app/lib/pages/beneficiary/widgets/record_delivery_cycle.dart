@@ -185,10 +185,7 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  isCurrentCycle
-                      ? localizations
-                          .translate(i18.beneficiaryDetails.currentCycleLabel)
-                      : '${localizations.translate(i18.beneficiaryDetails.beneficiaryCycle)} ${e.id}',
+                  '${localizations.translate(i18.beneficiaryDetails.beneficiaryCycle)} ${e.id}',
                   style: theme.textTheme.headlineMedium,
                   textAlign: TextAlign.left,
                 ),
@@ -223,7 +220,7 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
 
                   return TableDataRow([
                     TableData(
-                      'Dose ${e.deliveries!.indexOf(item) + 1}',
+                      '${localizations.translate(i18.beneficiaryDetails.beneficiaryDeliveryText)} ${e.deliveries!.indexOf(item) + 1}',
                       cellKey: 'dose',
                     ),
                     TableData(
@@ -246,8 +243,9 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                       ),
                     ),
                     TableData(
-                      tasks?.status == Status.administeredFailed.toValue() ||
-                              (tasks?.additionalFields?.fields
+                      tasks?.status == Status.administeredFailed.toValue()
+                          ? '--'
+                          : (tasks?.additionalFields?.fields
                                       .where((e) =>
                                           e.key ==
                                           AdditionalFieldsType.deliveryStrategy
@@ -255,10 +253,22 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                                       .firstOrNull
                                       ?.value ==
                                   DeliverStrategyType.indirect.toValue())
-                          ? ' -- '
-                          : tasks?.clientAuditDetails?.createdTime.toDateTime
-                                  .getFormattedDate() ??
-                              ' -- ',
+                              ? (int.parse(tasks?.additionalFields?.fields
+                                              .where((e) =>
+                                                  e.key ==
+                                                  AdditionalFieldsType
+                                                      .dateOfAdministration
+                                                      .toValue())
+                                              .firstOrNull
+                                              ?.value) +
+                                          (item.id - 1) * 24 * 60 * 60 * 1000)
+                                      .toDateTime
+                                      .getFormattedDate() ??
+                                  '--'
+                              : tasks?.clientAuditDetails?.createdTime
+                                      .toDateTime
+                                      .getFormattedDate() ??
+                                  ' -- ',
                       cellKey: 'completedOn',
                     ),
                   ]);

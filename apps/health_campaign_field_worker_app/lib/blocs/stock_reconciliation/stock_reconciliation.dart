@@ -24,6 +24,7 @@ class StockReconciliationBloc
   }) {
     on(_handleSelectFacility);
     on(_handleSelectProduct);
+    on(_handleSelectDateOfReconciliation);
     on(_handleCalculate);
     on(_handleCreate);
   }
@@ -44,6 +45,14 @@ class StockReconciliationBloc
     add(const StockReconciliationCalculateEvent());
   }
 
+  FutureOr<void> _handleSelectDateOfReconciliation(
+    StockReconciliationSelectDateOfReconciliationEvent event,
+    StockReconciliationEmitter emit,
+  ) async {
+    emit(state.copyWith(dateOfReconciliation: event.dateOfReconciliation!));
+    add(const StockReconciliationCalculateEvent());
+  }
+
   FutureOr<void> _handleCalculate(
     StockReconciliationCalculateEvent event,
     StockReconciliationEmitter emit,
@@ -52,6 +61,7 @@ class StockReconciliationBloc
 
     final productVariantId = state.productVariantId;
     final facilityId = state.facilityModel?.id;
+    final dateOfReconciliation = state.dateOfReconciliation;
 
     if (productVariantId == null || facilityId == null) return;
 
@@ -62,7 +72,19 @@ class StockReconciliationBloc
       ),
     );
 
-    emit(state.copyWith(loading: false, stockModels: stocks));
+    final dateFilteredStocks = stocks
+        .where(
+          (e) =>
+              e.dateOfEntryTime!.year < dateOfReconciliation.year ||
+              e.dateOfEntryTime!.year == dateOfReconciliation.year &&
+                  e.dateOfEntryTime!.month < dateOfReconciliation.month ||
+              e.dateOfEntryTime!.year == dateOfReconciliation.year &&
+                  e.dateOfEntryTime!.month == dateOfReconciliation.month &&
+                  e.dateOfEntryTime!.day <= dateOfReconciliation.day,
+        )
+        .toList();
+
+    emit(state.copyWith(loading: false, stockModels: dateFilteredStocks));
   }
 
   FutureOr<void> _handleCreate(
@@ -107,6 +129,10 @@ class StockReconciliationEvent with _$StockReconciliationEvent {
   const factory StockReconciliationEvent.selectProduct(
     String? productVariantId,
   ) = StockReconciliationSelectProductEvent;
+
+  const factory StockReconciliationEvent.selectDateOfReconciliation(
+    DateTime? dateOfReconciliation,
+  ) = StockReconciliationSelectDateOfReconciliationEvent;
 
   const factory StockReconciliationEvent.calculate() =
       StockReconciliationCalculateEvent;

@@ -25,11 +25,15 @@ const reasonForDeletion = ReasonForDeletion();
 const inventoryReportSelection = InventoryReportSelection();
 const inventoryReportDetails = InventoryReportDetails();
 const syncDialog = SyncDialog();
+const referBeneficiary = ReferBeneficiary();
+const ineligibilityReasons = IneligibilityReasons();
 
 class Common {
   const Common();
 
   String get coreCommonContinue => 'CORE_COMMON_CONTINUE';
+
+  String get coreCommonSyncInProgress => 'CORE_COMMON_SYNC_IN_PROGRESS';
 
   String get coreCommonAge => 'CORE_COMMON_AGE';
 
@@ -93,6 +97,9 @@ class Common {
   String get coreCommonRequiredItems => 'CORE_COMMON_REQUIRED_ITEMS';
 
   String get min2CharsRequired => 'MIN_2_CHARS_REQUIRED';
+  String get min3CharsRequired => 'MIN_REQUIRED_3';
+
+  String get facilitySearchHeaderLabel => 'FACILITY_SEARCH_HEADER_LABEL';
 }
 
 class AdverseEvents {
@@ -125,6 +132,8 @@ class Login {
   String get passwordPlaceholder => 'PASSWORD_PLACEHOLDER';
 
   String get actionLabel => 'LOGIN_ACTION_LABEL';
+
+  String get loginError => 'LOGIN_ERROR';
 }
 
 class Checklist {
@@ -207,6 +216,8 @@ class Home {
   String get dataSyncInfoContent => 'DATA_SYNC_INFO_CONTENT';
 
   String get myCheckList => 'MY_CHECK_LIST_LABEL';
+
+  String get warehouseManagerCheckList => 'WAREHOUSE_MANAGER_CHECK_LIST_LABEL';
 }
 
 class SearchBeneficiary {
@@ -219,7 +230,7 @@ class SearchBeneficiary {
 
   String get noOfHouseholdsRegistered => 'NO_OF_HOUSEHOLDS_REGISTERED';
 
-  String get noOfResourcesDelivered => 'NO_OF_RESOURCES_DELIVERED';
+  String get noOfResourcesDelivered => 'NO_OF_RESOURCES_DELIVERED_SPAQ';
 
   String get beneficiarySearchHintText => 'BENEFICIARY_SEARCH_HINT_TEXT';
 
@@ -255,6 +266,7 @@ class BeneficiaryDetails {
   String get ctaProceed => 'PROCEED';
   String get beneficiaryDoseNo => 'BENEFICIARY_DETAILS_DOSE_NO';
   String get beneficiaryDose => 'BENEFICIARY_DETAILS_DOSE';
+  String get beneficiaryDeliveryText => 'DELIVERY';
   String get beneficiaryStatus => 'BENEFICIARY_DETAILS_STATUS';
   String get beneficiaryResources => 'BENEFICIARY_DETAILS_RESOURCES';
   String get beneficiaryQuantity => 'BENEFICIARY_DETAILS_QUANTITY';
@@ -264,6 +276,7 @@ class BeneficiaryDetails {
   String get beneficiaryCycle => 'BENEFICIARY_DETAILS_CYCLE';
   String get currentCycleLabel => 'BENEFICIARY_DETAILS_CURRENT_CYCLE_LABEL';
   String get fromCurrentLocation => 'FROM_CURRENT_LOCATION';
+  String get beneficiary => 'BENEFICIARY';
 }
 
 class IndividualDetails {
@@ -272,6 +285,10 @@ class IndividualDetails {
   String get individualsDetailsLabelText => 'INDIVIDUAL_LABEL_TEXT';
 
   String get nameLabelText => 'INDIVIDUAL_NAME_LABEL_TEXT';
+
+  String get firstNameLabelText => 'INDIVIDUAL_FIRST_NAME_LABEL_TEXT';
+
+  String get lastNameLabelText => 'INDIVIDUAL_LAST_NAME_LABEL_TEXT';
 
   String get checkboxLabelText => 'HEAD_OF_HOUSEHOLD_LABEL_TEXT';
 
@@ -308,6 +325,14 @@ class IndividualDetails {
   String get monthsErrorText => 'ERR_MONTHS';
 
   String get yearsAndMonthsErrorText => 'ERR_YEARS_AND_MONTHS';
+
+  String get firstNameIsRequiredError => 'FIRST_NAME_REQUIRED_ERROR_MESSAGE';
+
+  String get firstNameLengthError => 'FIRST_NAME_LENGTH_ERROR_MESSAGE';
+
+  String get lastNameLengthError => 'LAST_NAME_LENGTH_ERROR_MESSAGE';
+
+  String get lastNameIsRequiredError => 'LAST_NAME_REQUIRED_ERROR_MESSAGE';
 }
 
 class HouseholdLocation {
@@ -391,13 +416,17 @@ class HouseholdOverView {
   String get householdOverViewNotEligibleIconLabel =>
       'HOUSEHOLD_OVER_VIEW_NOT_ELIGIBLE_ICON_LABEL';
 
+  String get householdOverViewBeneficiaryReferredLabel =>
+      'HOUSEHOLD_OVER_VIEW_BENEFICIARY_REFERRED_LABEL';
+
   String get householdOverViewHouseholdHeadLabel =>
       'HOUSEHOLD_OVER_VIEW_HOUSEHOLD_HEAD_LABEL';
 
   String get householdOverViewHouseholdHeadNameLabel =>
       'HOUSEHOLD_OVER_VIEW_HOUSEHOLD_HEAD_NAME_LABEL';
 
-  String get householdOverViewActionText => 'HOUSEHOLD_OVER_VIEW_ACTION_TEXT';
+  String get householdOverViewActionText =>
+      'HOUSEHOLD_OVER_VIEW_ACTION_TEXT_SPAQ';
 
   String get viewDeliveryLabel => 'VIEW_DELIVERY_DETAILS_LABEL';
 
@@ -436,6 +465,8 @@ class MemberCard {
 
   String get recordAdverseEventsLabel =>
       'MEMBER_CARD_RECORD_ADVERSE_EVENTS_LABEL';
+  String get referBeneficiaryLabel => 'MEMBER_CARD_REFER_BENEFICIARY_LABEL';
+  String get markIneligibleLabel => 'MEMBER_CARD_MARK_INELIGIBLE_LABEL';
 }
 
 class DeliverIntervention {
@@ -450,13 +481,13 @@ class DeliverIntervention {
       'DELIVER_INTERVENTION_DATE_OF_REGISTRATION_LABEL';
 
   String get resourceDeliveredLabel =>
-      'DELIVER_INTERVENTION_RESOURCE_DELIVERED_LABEL';
+      'DELIVER_INTERVENTION_RESOURCE_DELIVERED_LABEL_SPAQ';
 
   String get resourceDeliveredError =>
       'DELIVER_INTERVENTION_RESOURCE_DELIVERED_ERROR';
 
   String get quantityDistributedLabel =>
-      'DELIVER_INTERVENTION_QUANTITY_DISTRIBUTED_LABEL';
+      'DELIVER_INTERVENTION_QUANTITY_DISTRIBUTED_LABEL_SPAQ';
 
   String get deliveryCommentLabel =>
       'DELIVER_INTERVENTION_DELIVERY_COMMENT_LABEL';
@@ -468,7 +499,7 @@ class DeliverIntervention {
   String get memberCountText => 'DELIVER_INTERVENTION_MEMBER_COUNT_TEXT';
 
   String get noOfResourcesForDelivery =>
-      'DELIVER_INTERVENTION_NO_OF_RESOURCES_FOR_DELIVERY';
+      'DELIVER_INTERVENTION_NO_OF_RESOURCES_FOR_DELIVERY_SPAQ';
 
   String get dialogTitle => 'DELIVER_INTERVENTION_DIALOG_TITLE';
 
@@ -494,6 +525,7 @@ class DeliverIntervention {
   String get viewPastCycles => 'DELIVER_INTERVENTION_VIEW_PAST_CYCLES';
   String get currentCycle => 'DELIVER_INTERVENTION_CURRENT_CYCLE';
   String get cycle => 'DELIVERY_CYCLE';
+  String get recordCycle => 'RECORD_CYCLE';
   String get recordPastDeliveryDeatils =>
       'DELIVER_INTERVENTION_PAST_DELIVERY_DETAILS';
   String get wasDosePastDeliveryDetails =>
@@ -504,6 +536,8 @@ class DeliverIntervention {
   String get resourceCannotBeZero => 'RESOURCE_QUANTITY_CANNOT_BE_ZERO';
 
   String get resourceDeliveredValidation => 'RESOURCE_DELIVERED_VALIDATION';
+
+  String get deliveryCommentRequired => 'DELIVERY_COMMENT_REQUIRED';
 }
 
 class ProjectSelection {
@@ -535,11 +569,15 @@ class WarehouseDetails {
 
   String get warehouseDetailsLabel => 'WAREHOUSE_DETAILS_LABEL';
 
+  String get usDetails => 'US_DETAILS';
+
   String get dateOfReceipt => 'WAREHOUSE_DETAILS_DATE_OF_RECEIPT';
 
   String get administrativeUnit => 'WAREHOUSE_DETAILS_ADMINISTRATIVE_UNIT';
 
   String get warehouseNameId => 'WAREHOSUE_DETAILS_WAREHOUSE_NAME_ID';
+
+  String get usNameCommunitySupervisor => 'US_NAME_COMMUNITY_SUPERVISOR';
 }
 
 class StockDetails {
@@ -575,11 +613,11 @@ class StockDetails {
   }
 
   /// Quantity sent/received/lost/damaged label
-  String get quantityReceivedLabel => 'STOCK_DETAILS_QUANTITY_RECEIVED';
+  String get quantityReceivedLabel => 'STOCK_DETAILS_QUANTITY_RECEIVED_SPAQ';
 
-  String get quantitySentLabel => 'STOCK_DETAILS_QUANTITY_SENT';
+  String get quantitySentLabel => 'STOCK_DETAILS_QUANTITY_SENT_SPAQ';
 
-  String get quantityReturnedLabel => 'STOCK_DETAILS_QUANTITY_RETURNED';
+  String get quantityReturnedLabel => 'STOCK_DETAILS_QUANTITY_RETURNED_SPAQ';
 
   String get quantityLostLabel => 'STOCK_DETAILS_QUANTITY_LOST';
 
@@ -590,7 +628,7 @@ class StockDetails {
 
   /// Number of product indicated on waybill title
   String get quantityOfProductIndicatedOnWaybillLabel {
-    return 'STOCK_DETAILS_WAYBILL_QUANTITY';
+    return 'STOCK_DETAILS_WAYBILL_QUANTITY_SPAQ';
   }
 
   /// Lost/Damaged during label
@@ -607,6 +645,13 @@ class StockDetails {
   String get dialogContent => 'STOCK_DETAILS_DIALOG_CONTENT';
 
   String get transportTypeLabel => 'STOCK_DETAILS_TRANSPORT_TYPE';
+
+  String get receivedSpaqDetails => 'RECEIVED_SPAQ_DETAILS';
+  String get selectSpaqVariant => 'SELECT_SPAQ_VARIANT';
+  String get issuedSpaqDetails => 'ISSUED_SPAQ_DETAILS';
+  String get returnedSpaqDetails => 'RETURNED_SPAQ_DETAILS';
+  String get damagedSpaqDetails => 'DAMAGED_SPAQ_DETAILS';
+  String get quantityDamagedCountLabel => 'STOCK_DAMAGED_QUANTITY_LABEL';
 }
 
 class StockReconciliationDetails {
@@ -641,7 +686,7 @@ class StockReconciliationDetails {
 
   String get infoCardTitle => 'STOCK_RECONCILIATION_INFO_CARD_TITLE';
 
-  String get infoCardContent => 'STOCK_RECONCILIATION_INFO_CARD_CONTENT';
+  String get infoCardContent => 'STOCK_RECONCILIATION_INFO_CARD_CONTENT_SPAQ';
 
   String get dialogTitle => 'STOCK_RECONCILIATION_DIALOG_TITLE';
 
@@ -660,6 +705,19 @@ class StockReconciliationDetails {
   String get noProjectSelected => 'NO_PROJECT_SELECTED';
 
   String get fieldRequired => 'STOCK_RECONCILIATION_FILED_REQUIRED';
+
+  String get facilityNameCommunitySupervisor =>
+      'FACILITY_NAME_COMMUNITY_SUPERVISOR';
+
+  String get spaqReconciliation => 'SPAQ_RECONCILIATION';
+  String get spaqReceived => 'SPAQ_RECEIVED';
+  String get spaqIssued => 'SPAQ_ISSUED';
+  String get spaqReturned => 'SPAQ_RETURNED';
+  String get spaqDamaged => 'SPAQ_DAMAGED';
+  String get spaqOnHand => 'SPAQ_ON_HAND';
+  String get manualSpaqCount => 'MANUAL_SPAQ_COUNT';
+  String get reconciliationCommentRequiredError =>
+      'SPAQ_RECONCILIATION_COMMENT_IS_REQUIRED';
 }
 
 class ManageStock {
@@ -694,6 +752,15 @@ class ManageStock {
 
   String get recordStockLossDescription =>
       'MANAGE_STOCK_RECORDSTOCK_LOSS_DESCRIPTION';
+
+  String get recordSpaqReceipt => 'RECORD_SPAQ_RECEIPT';
+  String get recordSpaqReceivedAtFacility => 'RECORD_SPAQ_RECEIVED_AT_FACILITY';
+  String get recordSpaqIssued => 'RECORD_SPAQ_ISSUED';
+  String get spaqSentFromFacility => 'SPAQ_SENT_FROM_FACILITY';
+  String get recordSpaqReturned => 'RECORD_SPAQ_RETURNED';
+  String get recordSpaqReturnedToFacility => 'RECORD_SPAQ_RETURNED_TO_FACILITY';
+  String get recordSpaqDamaged => 'RECORD_SPAQ_DAMAGED';
+  String get recordListOfSpaqDamaged => 'RECORD_LIST_OF_SPAQ_DAMAGED';
 }
 
 class Complaints {
@@ -995,4 +1062,30 @@ class SyncDialog {
   String get closeButtonLabel => 'SYNC_DIALOG_CLOSE_BUTTON_LABEL';
 
   String get retryButtonLabel => 'SYNC_DIALOG_RETRY_BUTTON_LABEL';
+}
+
+class ReferBeneficiary {
+  const ReferBeneficiary();
+
+  String get dateOfReferralLabel => 'REFER_BENEFICIARY_DATE_OF_REFERRAL_LABEL';
+  String get administrationUnitFormLabel => 'ADMINISTRATION_UNIT_FORM_LABEL';
+  String get referredByLabel => 'REFERRED_BY_FORM_LABEL';
+  String get referredToLabel => 'REFERRED_TO_FORM_LABEL';
+  String get reasonForReferral => 'REASON_FOR_REFERRAL';
+  String get referralComments => 'REFERRAL_COMMENTS';
+  String get referralDetails => 'REFERRAL_DETAILS_HEADER';
+  String get facilityValidationMessage => 'PLEASE_ENTER_VALID_FACILITY';
+  String get dialogTitle => 'REFERRAL_CONFIRMATION_DIALOG_TITLE';
+  String get dialogContent => 'REFERRAL_CONFIRMATION_DIALOG_CONTENT';
+  String get dialogSuccess => 'REFERRAL_CONFIRMATION_SUCCESS_LABEL';
+  String get dialogCancel => 'REFERRAL_CONFIRMATION_CANCEL_LABEL';
+}
+
+class IneligibilityReasons {
+  const IneligibilityReasons();
+
+  String get dialogTitle => 'INELIGIBILITY_REASONS_DIALOG_TITLE';
+  String get dialogContent => 'INELIGIBILITY_REASONS_DIALOG_CONTENT';
+  String get ineligibilityReasonsLabel => 'INELIGIBILITY_REASONS_LABEL';
+  String get selectReasonsLabel => 'INELIGIBILITY_REASONS_SELECT_LABEL';
 }

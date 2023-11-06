@@ -8,7 +8,6 @@ import '../../../models/data_model.dart';
 import '../../data_repository.dart';
 import '../../network_manager.dart';
 import '../oplog/oplog.dart';
-
 import '../remote/pgr_service.dart';
 
 class PerformSyncDown {
@@ -226,7 +225,7 @@ class PerformSyncDown {
               isDeleted: true,
             ));
 
-            for (var element in typeGroupedEntity.value) {
+            for (var element in operationGroupedEntity.value) {
               if (element.id == null) return;
               final entity = element.entity as SideEffectModel;
               var responseEntity = responseEntities
@@ -234,6 +233,50 @@ class PerformSyncDown {
                   .firstWhereOrNull(
                     (e) => e.clientReferenceId == entity.clientReferenceId,
                   );
+
+              final serverGeneratedId = responseEntity?.id;
+              final rowVersion = responseEntity?.rowVersion;
+              if (serverGeneratedId != null) {
+                local.opLogManager.updateServerGeneratedIds(
+                  model: UpdateServerGeneratedIdModel(
+                    clientReferenceId: entity.clientReferenceId,
+                    serverGeneratedId: serverGeneratedId,
+                    dataOperation: element.operation,
+                    rowVersion: rowVersion,
+                  ),
+                );
+              } else {
+                final bool markAsNonRecoverable = await local.opLogManager
+                    .updateSyncDownRetry(entity.clientReferenceId);
+
+                if (markAsNonRecoverable) {
+                  await local.update(
+                    entity.copyWith(
+                      nonRecoverableError: true,
+                    ),
+                    createOpLog: false,
+                  );
+                }
+              }
+            }
+
+          case DataModelType.referral:
+            responseEntities = await remote.search(ReferralSearchModel(
+              clientReferenceId: entities
+                  .whereType<ReferralModel>()
+                  .map((e) => e.clientReferenceId)
+                  .whereNotNull()
+                  .toList(),
+              isDeleted: true,
+            ));
+
+            for (var element in operationGroupedEntity.value) {
+              if (element.id == null) return;
+              final entity = element.entity as ReferralModel;
+              var responseEntity =
+                  responseEntities.whereType<ReferralModel>().firstWhereOrNull(
+                        (e) => e.clientReferenceId == entity.clientReferenceId,
+                      );
 
               final serverGeneratedId = responseEntity?.id;
               final rowVersion = responseEntity?.rowVersion;
@@ -340,7 +383,7 @@ class PerformSyncDown {
                           if (id == null) return null;
 
                           return AdditionalId(
-                            idType: taskResourceIdKey,
+                            idType: e.clientReferenceId + taskResourceIdKey,
                             id: id,
                           );
                         })

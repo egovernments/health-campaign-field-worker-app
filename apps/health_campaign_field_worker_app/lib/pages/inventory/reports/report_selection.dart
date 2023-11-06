@@ -93,37 +93,6 @@ class _InventoryReportSelectionPageState
                 ),
                 DigitListView(
                   title: localizations.translate(
-                    i18.inventoryReportSelection.inventoryReportDamagedLabel,
-                  ),
-                  description: localizations.translate(
-                    i18.inventoryReportSelection
-                        .inventoryReportDamagedDescription,
-                  ),
-                  prefixIcon: Icons.store,
-                  sufixIcon: Icons.arrow_circle_right,
-                  onPressed: () => context.router.push(
-                    InventoryReportDetailsRoute(
-                      reportType: InventoryReportType.damage,
-                    ),
-                  ),
-                ),
-                DigitListView(
-                  title: localizations.translate(
-                    i18.inventoryReportSelection.inventoryReportLossLabel,
-                  ),
-                  description: localizations.translate(
-                    i18.inventoryReportSelection.inventoryReportLossDescription,
-                  ),
-                  prefixIcon: Icons.store,
-                  sufixIcon: Icons.arrow_circle_right,
-                  onPressed: () => context.router.push(
-                    InventoryReportDetailsRoute(
-                      reportType: InventoryReportType.loss,
-                    ),
-                  ),
-                ),
-                DigitListView(
-                  title: localizations.translate(
                     i18.inventoryReportSelection
                         .inventoryReportReconciliationLabel,
                   ),

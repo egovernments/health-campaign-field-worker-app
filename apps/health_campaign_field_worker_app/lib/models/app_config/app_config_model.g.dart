@@ -75,6 +75,14 @@ _$_AppConfigPrimaryWrapperModel _$$_AppConfigPrimaryWrapperModelFromJson(
           ? null
           : SymptomsTypesSecondaryWrapperModel.fromJson(
               json['HCM-SYMPTOMS-TYPES'] as Map<String, dynamic>),
+      referralReasons: json['HCM-REFERRAL-REASONS'] == null
+          ? null
+          : ReferralReasonsWrapperModel.fromJson(
+              json['HCM-REFERRAL-REASONS'] as Map<String, dynamic>),
+      ineligibilityReasons: json['HCM-INELIGIBILITY-REASONS'] == null
+          ? null
+          : IneligibilityReasonsWrapperModel.fromJson(
+              json['HCM-INELIGIBILITY-REASONS'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$_AppConfigPrimaryWrapperModelToJson(
@@ -83,6 +91,8 @@ Map<String, dynamic> _$$_AppConfigPrimaryWrapperModelToJson(
       'HCM-FIELD-APP-CONFIG': instance.appConfig,
       'module-version': instance.rowVersions,
       'HCM-SYMPTOMS-TYPES': instance.symptomsTypes,
+      'HCM-REFERRAL-REASONS': instance.referralReasons,
+      'HCM-INELIGIBILITY-REASONS': instance.ineligibilityReasons,
     };
 
 _$_AppConfigSecondaryWrapperModel _$$_AppConfigSecondaryWrapperModelFromJson(
@@ -152,6 +162,11 @@ _$_AppConfig _$$_AppConfigFromJson(Map<String, dynamic> json) => _$_AppConfig(
           .map(
               (e) => DeliveryCommentOptions.fromJson(e as Map<String, dynamic>))
           .toList(),
+      deliveryCommentOptionsSmc: (json['DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR']
+              as List<dynamic>)
+          .map(
+              (e) => DeliveryCommentOptions.fromJson(e as Map<String, dynamic>))
+          .toList(),
       backendInterface: BackendInterface.fromJson(
           json['BACKEND_INTERFACE'] as Map<String, dynamic>),
       callSupportOptions: (json['CALL_SUPPORT'] as List<dynamic>?)
@@ -160,6 +175,8 @@ _$_AppConfig _$$_AppConfigFromJson(Map<String, dynamic> json) => _$_AppConfig(
       transportTypes: (json['TRANSPORT_TYPES'] as List<dynamic>)
           .map((e) => TransportTypes.fromJson(e as Map<String, dynamic>))
           .toList(),
+      firebaseConfig: FirebaseConfig.fromJson(
+          json['FIREBASE_CONFIG'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$_AppConfigToJson(_$_AppConfig instance) =>
@@ -181,9 +198,12 @@ Map<String, dynamic> _$$_AppConfigToJson(_$_AppConfig instance) =>
       'CHECKLIST_TYPES': instance.checklistTypes,
       'ID_TYPE_OPTIONS_POPULATOR': instance.idTypeOptions,
       'DELIVERY_COMMENT_OPTIONS_POPULATOR': instance.deliveryCommentOptions,
+      'DELIVERY_COMMENT_OPTIONS_SMC_POPULATOR':
+          instance.deliveryCommentOptionsSmc,
       'BACKEND_INTERFACE': instance.backendInterface,
       'CALL_SUPPORT': instance.callSupportOptions,
       'TRANSPORT_TYPES': instance.transportTypes,
+      'FIREBASE_CONFIG': instance.firebaseConfig,
     };
 
 _$_IdTypeOptions _$$_IdTypeOptionsFromJson(Map<String, dynamic> json) =>
@@ -376,4 +396,16 @@ Map<String, dynamic> _$$_RowVersionsToJson(_$_RowVersions instance) =>
     <String, dynamic>{
       'module': instance.module,
       'version': instance.version,
+    };
+
+_$_FirebaseConfig _$$_FirebaseConfigFromJson(Map<String, dynamic> json) =>
+    _$_FirebaseConfig(
+      enableCrashlytics: json['enableCrashlytics'] as bool,
+      enableAnalytics: json['enableAnalytics'] as bool,
+    );
+
+Map<String, dynamic> _$$_FirebaseConfigToJson(_$_FirebaseConfig instance) =>
+    <String, dynamic>{
+      'enableCrashlytics': instance.enableCrashlytics,
+      'enableAnalytics': instance.enableAnalytics,
     };
