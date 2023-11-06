@@ -121,9 +121,7 @@ abstract class OpLogManager<T extends EntityModel> {
     oplogs = oplogs
         .sortedBy((element) => element.createdAt)
         .where(
-          (element) =>
-              element.entityType != DataModelType.householdMember &&
-              element.entityType != DataModelType.service,
+          (element) => element.entityType != DataModelType.service,
           // Added Memeber and service so that we don't get the respose from the server
         )
         .toList();
