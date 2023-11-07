@@ -96,7 +96,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       });
       await localSecureStore.setBoundaryRefetch(true);
 
-      await localSecureStore.setRoleActions(actionsWrapper);
       emit(
         AuthAuthenticatedState(
           accessToken: result.accessToken,
