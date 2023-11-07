@@ -88,6 +88,26 @@ class _ResourceBeneficiaryCardState
                 );
               },
             },
+          ),          
+          DigitTextFormField(
+            formControlName: 'quantityWasted.${widget.cardIndex}',
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            inputFormatters: [
+              LengthLimitingTextInputFormatter(3),
+              FilteringTextInputFormatter.allow(
+                RegExp(r'^(1000|[1-9][0-9]{0,2}|0)$'),
+              ),
+            ],
+            label: localizations.translate(
+              i18.deliverIntervention.quantityWastedLabel,
+            ),
+            validationMessages: {
+              "required": (control) {
+                return localizations.translate(
+                  i18.common.coreQuantityWasted,
+                );
+              },
+            },
           ),
         ],
       ),

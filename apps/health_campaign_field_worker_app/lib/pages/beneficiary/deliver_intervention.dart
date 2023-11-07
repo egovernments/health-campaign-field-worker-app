@@ -42,6 +42,7 @@ class _DeliverInterventionPageState
   // Constants for form control keys
   static const _resourceDeliveredKey = 'resourceDelivered';
   static const _quantityDistributedKey = 'quantityDistributed';
+  static const _quantityWastedKey = 'quantityWasted';
   static const _deliveryCommentKey = 'deliveryComment';
   static const _doseAdministrationKey = 'doseAdministered';
   static const _dateOfAdministrationKey = 'dateOfAdministration';
@@ -200,6 +201,22 @@ class _DeliverInterventionPageState
                                                     ),
                                                   );
                                                 } else if ((((form.control(
+                                                          _quantityWastedKey,
+                                                        ) as FormArray)
+                                                            .value) ??
+                                                        [])
+                                                    .any((e) => e == null)) {
+                                                  await DigitToast.show(
+                                                    context,
+                                                    options: DigitToastOptions(
+                                                      localizations.translate(i18
+                                                          .deliverIntervention
+                                                          .resourceCannotBeZero),
+                                                      true,
+                                                      theme,
+                                                    ),
+                                                  );
+                                                } else if ((((form.control(
                                                               _quantityDistributedKey,
                                                             ) as FormArray)
                                                                 .value) ??
@@ -225,7 +242,33 @@ class _DeliverInterventionPageState
                                                       theme,
                                                     ),
                                                   );
-                                                } else {
+                                                } else if ((((form.control(
+                                                              _quantityWastedKey,
+                                                            ) as FormArray)
+                                                                .value) ??
+                                                            [])
+                                                        .any((e) =>
+                                                            e != null &&
+                                                            int.parse(e
+                                                                    .toString()) >
+                                                                1) &&
+                                                    form
+                                                            .control(
+                                                              _deliveryCommentKey,
+                                                            )
+                                                            .value ==
+                                                        null) {
+                                                  await DigitToast.show(
+                                                    context,
+                                                    options: DigitToastOptions(
+                                                      localizations.translate(i18
+                                                          .deliverIntervention
+                                                          .deliveryCommentRequired),
+                                                      true,
+                                                      theme,
+                                                    ),
+                                                  );
+                                                }else {
                                                   final shouldSubmit =
                                                       await DigitDialog.show<
                                                           bool>(
@@ -457,6 +500,12 @@ class _DeliverInterventionPageState
                                                                 .removeAt(
                                                               index,
                                                             );
+                                                            (form.control(
+                                                              _quantityWastedKey,
+                                                            ) as FormArray)
+                                                                .removeAt(
+                                                              index,
+                                                            );
                                                             _controllers
                                                                 .removeAt(
                                                               index,
@@ -547,6 +596,8 @@ class _DeliverInterventionPageState
     (form.control(_resourceDeliveredKey) as FormArray)
         .add(FormControl<ProductVariantModel>());
     (form.control(_quantityDistributedKey) as FormArray)
+        .add(FormControl<String>(validators: [Validators.required]));
+    (form.control(_quantityWastedKey) as FormArray)
         .add(FormControl<String>(validators: [Validators.required]));
   }
 
@@ -642,6 +693,11 @@ class _DeliverInterventionPageState
             AdditionalFieldsType.deliveryStrategy.toValue(),
             deliveryStrategy,
           ),
+          AdditionalField(
+            _quantityWastedKey,
+            form.control(_quantityWastedKey)
+                    .toString(),
+          ),
         ],
       ),
     );
@@ -692,6 +748,11 @@ class _DeliverInterventionPageState
         ],
       ),
       _quantityDistributedKey: FormArray<String>([
+        ..._controllers.map(
+          (e) => FormControl<String>(validators: [Validators.required]),
+        ),
+      ]),
+      _quantityWastedKey: FormArray<String>([
         ..._controllers.map(
           (e) => FormControl<String>(validators: [Validators.required]),
         ),

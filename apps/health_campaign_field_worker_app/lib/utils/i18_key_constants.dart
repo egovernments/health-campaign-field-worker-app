@@ -102,6 +102,8 @@ class Common {
   String get facilitySearchHeaderLabel => 'FACILITY_SEARCH_HEADER_LABEL';
 
   String get coreCommonWarning => 'CORE_COMMON_WARNING';
+  
+  String get coreQuantityWasted => 'CORE_QUANTITY_WASTED';
 }
 
 class AdverseEvents {
@@ -501,6 +503,9 @@ class DeliverIntervention {
 
   String get quantityDistributedLabel =>
       'DELIVER_INTERVENTION_QUANTITY_DISTRIBUTED_LABEL_SPAQ';
+
+    String get quantityWastedLabel =>
+      'DELIVER_INTERVENTION_QUANTITY_WASTED_LABEL_SPAQ';
 
   String get deliveryCommentLabel =>
       'DELIVER_INTERVENTION_DELIVERY_COMMENT_LABEL';
