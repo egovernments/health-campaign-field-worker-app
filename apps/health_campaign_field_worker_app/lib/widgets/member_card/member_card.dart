@@ -214,7 +214,6 @@ class MemberCard extends StatelessWidget {
                 children: [
                   isNotEligible ||
                           isBeneficiaryIneligible ||
-                          isBeneficiaryRefused ||
                           (isBeneficiaryReferred &&
                               !checkStatus(
                                 tasks,
@@ -392,7 +391,6 @@ class MemberCard extends StatelessWidget {
                     height: 10,
                   ),
                   (isNotEligible ||
-                          isBeneficiaryRefused ||
                           isBeneficiaryIneligible ||
                           (isBeneficiaryReferred &&
                               !checkStatus(

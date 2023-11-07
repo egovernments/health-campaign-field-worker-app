@@ -9,6 +9,7 @@ class DigitReactiveDropdown<T> extends StatelessWidget {
   final String formControlName;
   final bool isRequired;
   final bool isDisabled;
+  final bool readOnly;
   final ValueChanged<T>? onChanged;
   final String Function(T value) valueMapper;
   final Map<String, String Function(Object object)>? validationMessages;
@@ -22,6 +23,7 @@ class DigitReactiveDropdown<T> extends StatelessWidget {
     required this.formControlName,
     this.isRequired = false,
     this.isDisabled = false,
+    this.readOnly = false,
     required this.valueMapper,
     this.initialValue,
     this.onChanged,
@@ -50,6 +52,7 @@ class DigitReactiveDropdown<T> extends StatelessWidget {
               menuMaxHeight: menuMaxHeight,
               icon: const Icon(Icons.arrow_drop_down),
               isExpanded: true,
+              readOnly: readOnly,
               onChanged: (control) {
                 final value = control.value;
                 if (value == null) return;

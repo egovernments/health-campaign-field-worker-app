@@ -56,6 +56,7 @@ class _ResourceBeneficiaryCardState
                     label: '${localizations.translate(
                       i18.deliverIntervention.resourceDeliveredLabel,
                     )}*',
+                    readOnly: true,
                     menuItems: productVariants,
                     formControlName: 'resourceDelivered.${widget.cardIndex}',
                     valueMapper: (value) {
