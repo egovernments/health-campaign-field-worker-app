@@ -34,6 +34,14 @@ class _BoundarySelectionPageState
     initDiskSpace();
   }
 
+  @override
+  void deactivate() {
+    context.read<BeneficiaryDownSyncBloc>().add(
+          const DownSyncResetStateEvent(),
+        );
+    super.deactivate();
+  }
+
   Future<void> initDiskSpace() async {}
 
   @override
@@ -124,6 +132,7 @@ class _BoundarySelectionPageState
                             orElse: () => false,
                             dataFound: (initialServerCount) => DigitDialog.show(
                               context,
+                              //[TODO: Localizations need to be added
                               options: DigitDialogOptions(
                                 titleText: 'Data Found!',
                                 contentText:
@@ -148,25 +157,36 @@ class _BoundarySelectionPageState
                                         );
                                   },
                                 ),
+                                secondaryAction: DigitDialogActions(
+                                  label: localizations.translate(
+                                    i18.beneficiaryDetails
+                                        .proceedWithoutDownloading,
+                                  ),
+                                  action: (ctx) {
+                                    Navigator.pop(ctx);
+                                    context.router.pop();
+                                  },
+                                ),
                               ),
+                              // TODO: Secondary action button need to be added to route to Home screen
                             ),
                             inProgress: (syncCount, totalCount) {
-                              Navigator.of(context, rootNavigator: true).pop();
+                              // TODO: Need to emit the Progress bar in the dialog
+                              // Navigator.of(context, rootNavigator: true).pop();
                               DigitDialog.show(
                                 context,
                                 options: DigitDialogOptions(
-                                  titleText: 'Sync in Progress',
                                   content: Column(
                                     children: [
                                       Text('Sync count : $syncCount'),
-                                      Text('Total count : $totalCount'),
+                                      const Text('Data is being downloaded'),
                                     ],
                                   ),
                                 ),
                               );
                             },
                             success: () {
-                              Navigator.of(context, rootNavigator: true).pop();
+                              // Navigator.of(context, rootNavigator: true).pop();
 
                               DigitSyncDialog.show(
                                 context,
@@ -185,7 +205,7 @@ class _BoundarySelectionPageState
                               );
                             },
                             failed: () {
-                              Navigator.of(context, rootNavigator: true).pop();
+                              // Navigator.of(context, rootNavigator: true).pop();
                               DigitSyncDialog.show(
                                 context,
                                 type: DigitSyncDialogType.failed,
@@ -225,6 +245,16 @@ class _BoundarySelectionPageState
                               primaryAction: DigitDialogActions(
                                 label: localizations.translate(
                                   i18.syncDialog.closeButtonLabel,
+                                ),
+                                action: (ctx) {
+                                  Navigator.pop(ctx);
+                                  context.router.pop();
+                                },
+                              ),
+                              secondaryAction: DigitDialogActions(
+                                label: localizations.translate(
+                                  i18.beneficiaryDetails
+                                      .proceedWithoutDownloading,
                                 ),
                                 action: (ctx) {
                                   Navigator.pop(ctx);

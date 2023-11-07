@@ -179,7 +179,7 @@ abstract class RemoteRepository<D extends EntityModel,
       return {};
     }
 
-    final responseMap = jsonDecode(response.data);
+    final responseMap = response.data;
 
     if (!responseMap.containsKey(
       entityName,

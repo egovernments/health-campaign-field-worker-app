@@ -48,6 +48,14 @@ class BeneficiaryDownSyncBloc
   }) : super(const BeneficiaryDownSyncState._()) {
     on(_handleDownSyncOfBeneficiaries);
     on(_handleCheckTotalCount);
+    on(_handleDownSyncResetState);
+  }
+
+  FutureOr<void> _handleDownSyncResetState(
+    DownSyncResetStateEvent event,
+    BeneficiaryDownSyncEmitter emit,
+  ) async {
+    emit(const BeneficiaryDownSyncState.resetState());
   }
 
   FutureOr<void> _handleCheckTotalCount(
@@ -58,6 +66,7 @@ class BeneficiaryDownSyncBloc
         await downSyncLocalRepository.search(DownsyncSearchModel(
       locality: event.boundaryCode,
     ));
+
     int? lastSyncedTime = existingDownSyncData.isEmpty
         ? null
         : existingDownSyncData.first.lastSyncedTime;
@@ -66,8 +75,8 @@ class BeneficiaryDownSyncBloc
     final initialResults = await downSyncRemoteRepository.downSync(
       DownsyncSearchModel(
         locality: event.boundaryCode,
-        offset: 0,
-        limit: 5,
+        offset: existingDownSyncData.firstOrNull?.offset ?? 0,
+        limit: 1,
         lastSyncedTime: lastSyncedTime,
         tenantId: envConfig.variables.tenantId,
         projectId: event.projectId,
@@ -75,6 +84,7 @@ class BeneficiaryDownSyncBloc
     );
     if (initialResults.isNotEmpty) {
       // Current response from server is String, Expecting it to be int
+      //[TODO: Need to move the dynamic keys to constants
       int serverTotalCount = initialResults["DownsyncCriteria"]["totalCount"];
 
       if (serverTotalCount > 0) {
@@ -90,18 +100,88 @@ class BeneficiaryDownSyncBloc
     BeneficiaryDownSyncEmitter emit,
   ) async {
     double? diskSpace = 0;
+    // [TODO: Move the function DiskSpace.getFreeDiskSpace to utils
     diskSpace = await DiskSpace
         .getFreeDiskSpace; // Returns the device available space in MB
     // emit(BeneficiaryDownSyncState.inProgress(0, serverTotalCount));
     // diskSpace in MB * 1000 comparison with serverTotalCount * 100KB * Number of entities * 2
-    if ((diskSpace ?? 0) * 1000 < (event.initialServerCount * 100 * 7 * 2)) {
+    if ((diskSpace ?? 0) * 1000 < (event.initialServerCount * 200 * 2)) {
       emit(const BeneficiaryDownSyncState.insufficientStorage());
     } else {
-      _fetchResults(emit, event);
+      try {
+        while (true) {
+          // Check each time, till the loop runs the offset, limit, totalCount, lastSyncTime from Local DB of DownSync Model
+          final existingDownSyncData =
+              await downSyncLocalRepository.search(DownsyncSearchModel(
+            locality: event.boundaryCode,
+          ));
+
+          int offset = existingDownSyncData.isEmpty
+              ? 0
+              : existingDownSyncData.first.offset ?? 0;
+          int totalCount = event.initialServerCount;
+          int? lastSyncedTime = existingDownSyncData.isEmpty
+              ? null
+              : existingDownSyncData.first.lastSyncedTime;
+
+          if (offset <= totalCount) {
+            //[TODO: Need to emit the sync count instead of zero
+            // emit(BeneficiaryDownSyncState.inProgress(offset, totalCount));
+            //Make the batch API call
+            final downSyncResults = await downSyncRemoteRepository.downSync(
+              DownsyncSearchModel(
+                locality: event.boundaryCode,
+                offset: offset,
+                limit: event.batchSize,
+                totalCount: totalCount,
+                tenantId: envConfig.variables.tenantId,
+                projectId: event.projectId,
+                lastSyncedTime: lastSyncedTime,
+              ),
+            );
+            // check if the API response is there or it failed
+            if (downSyncResults.isNotEmpty) {
+              await networkManager.writeToEntityDB(downSyncResults, [
+                householdLocalRepository,
+                householdMemberLocalRepository,
+                individualLocalRepository,
+                projectBeneficiaryLocalRepository,
+                taskLocalRepository,
+                sideEffectLocalRepository,
+                referralLocalRepository,
+              ]);
+              // Update the local downSync data for the boundary with the new values
+              offset += event.batchSize;
+              totalCount = downSyncResults["DownsyncCriteria"]["totalCount"];
+              lastSyncedTime =
+                  downSyncResults["DownsyncCriteria"]["lastSyncedTime"];
+
+              await downSyncLocalRepository.update(DownsyncModel(
+                offset: offset,
+                limit: event.batchSize,
+                lastSyncedTime: lastSyncedTime,
+                totalCount: totalCount,
+                locality: event.boundaryCode,
+              ));
+              emit(BeneficiaryDownSyncState.inProgress(offset, totalCount));
+            }
+            // When API response failed
+            else {
+              emit(const BeneficiaryDownSyncState.failed());
+              break;
+            }
+          } else {
+            emit(const BeneficiaryDownSyncState.success());
+            break; // If offset is greater than or equal to totalCount, exit the loop
+          }
+        }
+      } catch (e) {
+        emit(const BeneficiaryDownSyncState.failed());
+      }
     }
   }
 
-  FutureOr<void> _fetchResults(
+  void _fetchResults(
     BeneficiaryDownSyncEmitter emit,
     DownSyncBeneficiaryEvent event,
   ) async {
@@ -117,15 +197,15 @@ class BeneficiaryDownSyncBloc
       int offset = existingDownSyncData.isEmpty
           ? 0
           : existingDownSyncData.first.offset ?? 0;
-      int totalCount = existingDownSyncData.isEmpty
-          ? 0
-          : existingDownSyncData.first.totalCount ?? 0;
+      int totalCount = event.initialServerCount;
       int? lastSyncedTime = existingDownSyncData.isEmpty
           ? null
           : existingDownSyncData.first.lastSyncedTime;
 
       if (offset >= totalCount) {
-        emit(BeneficiaryDownSyncState.inProgress(0, totalCount));
+        emit(BeneficiaryDownSyncState.inProgress(offset, totalCount));
+        //[TODO: Need to emit the sync count instead of zero
+        // emit(BeneficiaryDownSyncState.inProgress(offset, totalCount));
         //Make the batch API call
         final downSyncResults = await downSyncRemoteRepository.downSync(
           DownsyncSearchModel(
@@ -166,6 +246,7 @@ class BeneficiaryDownSyncBloc
         // When API response failed
         else {
           emit(const BeneficiaryDownSyncState.failed());
+          break;
         }
       } else {
         emit(const BeneficiaryDownSyncState.success());
@@ -188,6 +269,8 @@ class BeneficiaryDownSyncEvent with _$BeneficiaryDownSyncEvent {
     required String projectId,
     required String boundaryCode,
   }) = DownSyncCheckTotalCountEvent;
+
+  const factory BeneficiaryDownSyncEvent.resetState() = DownSyncResetStateEvent;
 }
 
 @freezed
@@ -203,5 +286,6 @@ class BeneficiaryDownSyncState with _$BeneficiaryDownSyncState {
       _DownSyncInsufficientStorageState;
   const factory BeneficiaryDownSyncState.dataFound(int initialServerCount) =
       _DownSyncDataFoundState;
+  const factory BeneficiaryDownSyncState.resetState() = _DownSyncResetState;
   const factory BeneficiaryDownSyncState.failed() = _DownSyncFailureState;
 }

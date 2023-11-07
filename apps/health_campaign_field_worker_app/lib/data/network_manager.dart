@@ -110,20 +110,69 @@ class NetworkManager {
     Map<String, dynamic> response,
     List<LocalRepository> localRepositories,
   ) async {
-    for (int i = 1; i <= response.keys.length - 1; i++) {
-      final local = RepositoryType.getLocalForType(
-        DataModels.getDataModelForEntityName(response.keys.elementAt(i)),
-        localRepositories,
-      );
-      final List<dynamic> entityResponse = response[response.keys.elementAt(i)];
+    try {
+      for (int i = 0; i <= response.keys.length - 1; i++) {
+        if (response.keys.elementAt(i) != 'DownsyncCriteria' &&
+            response.keys.elementAt(i) != 'HouseholdMembers') {
+          final local = RepositoryType.getLocalForType(
+            DataModels.getDataModelForEntityName(response.keys.elementAt(i)),
+            localRepositories,
+          );
+          final List<dynamic> entityResponse =
+              response[response.keys.elementAt(i)] ?? [];
 
-      final entityList =
-          entityResponse.whereType<Map<String, dynamic>>().toList();
+          final entityList =
+              entityResponse.whereType<Map<String, dynamic>>().toList();
 
-      final entity = entityList
-          .map((e) => Mapper.fromJson<EntityModel>(jsonEncode(e)))
-          .toList();
-      await local.bulkCreate(entity);
+          switch (response.keys.elementAt(i)) {
+            case "Households":
+              final entity = entityList
+                  .map((e) => Mapper.fromJson<HouseholdModel>(jsonEncode(e)))
+                  .toList();
+              await local.bulkCreate(entity);
+            case "HouseholdMembers":
+              final entity = entityList
+                  .map(
+                    (e) => Mapper.fromJson<HouseholdMemberModel>(jsonEncode(e)),
+                  )
+                  .toList();
+              await local.bulkCreate(entity);
+            case "Individuals":
+              final entity = entityList
+                  .map((e) => Mapper.fromJson<IndividualModel>(jsonEncode(e)))
+                  .toList();
+              await local.bulkCreate(entity);
+            case "ProjectBeneficiaries":
+              final entity = entityList
+                  .map((e) =>
+                      Mapper.fromJson<ProjectBeneficiaryModel>(jsonEncode(e)))
+                  .toList();
+              await local.bulkCreate(entity);
+            case "Tasks":
+              final entity = entityList
+                  .map((e) => Mapper.fromJson<TaskModel>(jsonEncode(e)))
+                  .toList();
+              await local.bulkCreate(entity);
+            case "SideEffects":
+              final entity = entityList
+                  .map((e) => Mapper.fromJson<SideEffectModel>(jsonEncode(e)))
+                  .toList();
+              await local.bulkCreate(entity);
+            case "Referrals":
+              final entity = entityList
+                  .map((e) => Mapper.fromJson<ReferralModel>(jsonEncode(e)))
+                  .toList();
+              await local.bulkCreate(entity);
+            default:
+              final entity = entityList
+                  .map((e) => Mapper.fromJson<EntityModel>(jsonEncode(e)))
+                  .toList();
+              await local.bulkCreate(entity);
+          }
+        }
+      }
+    } catch (e) {
+      rethrow;
     }
   }
 
