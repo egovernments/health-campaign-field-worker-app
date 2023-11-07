@@ -34,6 +34,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
   static const _transactionQuantityKey = 'quantity';
   static const _transactionDamagedQuantityKey = 'quantityDamaged';
   static const _commentsKey = 'comments';
+  List<ValidatorFunction> damagedQuantityValidator = [];
 
   FormGroup _form() {
     return fb.group({
@@ -49,7 +50,8 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
         Validators.min(0),
         Validators.max(10000),
       ]),
-      _transactionDamagedQuantityKey: FormControl<int>(),
+      _transactionDamagedQuantityKey:
+          FormControl<int>(validators: damagedQuantityValidator),
       _commentsKey: FormControl<String>(),
     });
   }
@@ -101,6 +103,12 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                   transactionPartyLabel = module.selectTransactingPartyReturned;
                   quantityCountLabel = module.quantityReturnedLabel;
                   transactionType = TransactionType.received;
+                  damagedQuantityValidator = [
+                    Validators.number,
+                    Validators.required,
+                    Validators.min(0),
+                    Validators.max(10000),
+                  ];
                   break;
                 case StockRecordEntryType.loss:
                   pageTitle = module.lostPageTitle;
@@ -174,20 +182,6 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                       case StockRecordEntryType.returned:
                                         transactionReason =
                                             TransactionReason.returned;
-                                        form
-                                            .control(
-                                          _transactionDamagedQuantityKey,
-                                        )
-                                            .setValidators(
-                                          [
-                                            Validators.number,
-                                            Validators.required,
-                                            Validators.min(0),
-                                            Validators.max(10000),
-                                          ],
-                                          updateParent: true,
-                                          autoValidate: true,
-                                        );
                                         break;
                                       default:
                                         transactionReason = null;
@@ -262,6 +256,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                       ),
                                       additionalFields: [
                                                 comments,
+                                                damagedQuantity,
                                               ].any((element) =>
                                                   element != null) ||
                                               hasLocationData
@@ -440,6 +435,31 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                 quantityCountLabel,
                               ),
                             ),
+                            if ([
+                              StockRecordEntryType.returned,
+                            ].contains(entryType))
+                              DigitTextFormField(
+                                formControlName: _transactionDamagedQuantityKey,
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                  decimal: true,
+                                ),
+                                isRequired: true,
+                                validationMessages: {
+                                  "number": (object) => localizations.translate(
+                                        '${quantityCountLabel}_VALIDATION',
+                                      ),
+                                  "max": (object) => localizations.translate(
+                                        '${quantityCountLabel}_MAX_ERROR',
+                                      ),
+                                  "min": (object) => localizations.translate(
+                                        '${quantityCountLabel}_MIN_ERROR',
+                                      ),
+                                },
+                                label: localizations.translate(
+                                  i18.stockDetails.quantityDamagedCountLabel,
+                                ),
+                              ),
                             DigitTextFormField(
                               label: localizations.translate(
                                 i18.stockDetails.commentsLabel,
