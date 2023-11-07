@@ -407,8 +407,8 @@ class HouseholdOverView {
   String get householdOverViewEditLabel =>
       'HOUSEHOLD_OVER_VIEW_EDIT_ICON_LABEL';
 
-  String get householdOverviewHouseholdHeadLabel =>
-      'HOUSEHOLD_OVER_VIEW_HOUSEHOLD_HEAD_LABEL';
+  String get householdOverViewHouseholderHeadLabel =>
+      'HOUSEHOLD_OVER_VIEW_HOUSEHOLDER_HEAD_LABEL';
 
   String get householdOverViewDeleteLabel =>
       'HOUSEHOLD_OVER_VIEW_DELETE_ICON_LABEL';
@@ -438,7 +438,7 @@ class HouseholdOverView {
       'HOUSEHOLD_OVER_VIEW_BENEFICIARY_REFERRED_LABEL';
 
   String get householdOverViewHouseholdHeadLabel =>
-      'HOUSEHOLD_OVER_VIEW_HOUSEHOLDER_HEAD_LABEL';
+      'HOUSEHOLD_OVER_VIEW_HOUSEHOLD_HEAD_LABEL';
 
   String get householdOverViewHouseholdHeadNameLabel =>
       'HOUSEHOLD_OVER_VIEW_HOUSEHOLD_HEAD_NAME_LABEL';
