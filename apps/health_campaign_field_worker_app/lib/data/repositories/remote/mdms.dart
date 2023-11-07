@@ -14,6 +14,7 @@ import '../../local_store/no_sql/schema/app_configuration.dart';
 import '../../local_store/no_sql/schema/project_types.dart';
 import '../../local_store/no_sql/schema/row_versions.dart';
 import '../../local_store/no_sql/schema/service_registry.dart';
+import '../../local_store/secure_store/secure_store.dart';
 
 class MdmsRepository {
   final Dio _client;
@@ -339,10 +340,12 @@ class MdmsRepository {
 
   Future<RoleActionsWrapperModel> searchRoleActions(
     String apiEndPoint,
+    LocalSecureStore localSecureStore,
     Map<String, dynamic> body,
   ) async {
     try {
       final Response response = await _client.post(apiEndPoint, data: body);
+      await localSecureStore.setRoleActions(response.toString());
 
       return RoleActionsWrapperModel.fromJson(json.decode(response.toString()));
     } catch (_) {
