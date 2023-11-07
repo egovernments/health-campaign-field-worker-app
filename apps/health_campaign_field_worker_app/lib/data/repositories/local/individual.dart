@@ -2,17 +2,12 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
-
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
-import '../../data_repository.dart';
+import 'base/individual_base.dart';
 
-class IndividualLocalRepository
-    extends LocalRepository<IndividualModel, IndividualSearchModel> {
+class IndividualLocalRepository extends IndividualLocalBaseRepository {
   const IndividualLocalRepository(super.sql, super.opLogManager);
-
-  @override
-  DataModelType get type => DataModelType.individual;
 
   @override
   FutureOr<List<IndividualModel>> search(

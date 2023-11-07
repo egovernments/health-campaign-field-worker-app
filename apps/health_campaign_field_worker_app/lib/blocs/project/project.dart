@@ -4,6 +4,7 @@ import 'dart:core';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
@@ -145,13 +146,24 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       projectStaffList = await projectStaffRemoteRepository.search(
         ProjectStaffSearchModel(staffId: uuid),
       );
-    } catch (error) {
-      emit(
-        state.copyWith(
-          loading: false,
-          syncError: ProjectSyncErrorType.projectStaff,
-        ),
-      );
+    } on DioError catch (error) {
+      if (error.response!.data['Errors'][0]['message']
+          .toString()
+          .contains(Constants.invalidAccessTokenKey)) {
+        emit(
+          state.copyWith(
+            loading: false,
+            syncError: ProjectSyncErrorType.sessionExpired,
+          ),
+        );
+      } else {
+        emit(
+          state.copyWith(
+            loading: false,
+            syncError: ProjectSyncErrorType.projectStaff,
+          ),
+        );
+      }
 
       return;
     }
@@ -513,6 +525,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             code: event.model.address?.boundary,
           ),
         );
+        await boundaryLocalRepository.deleteAll();
         await boundaryLocalRepository.bulkCreate(boundaries);
         await localSecureStore.setSelectedProject(event.model);
         await localSecureStore.setSelectedProjectType(reqProjectType);
@@ -546,8 +559,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               code: event.model.address?.boundary,
             ),
           );
+          await boundaryLocalRepository.deleteAll();
+          await boundaryLocalRepository.bulkCreate(boundaries);
         }
-        await boundaryLocalRepository.bulkCreate(boundaries);
         await localSecureStore.setSelectedProject(event.model);
         await localSecureStore.setSelectedProjectType(reqProjectType);
       }
@@ -613,5 +627,6 @@ enum ProjectSyncErrorType {
   projectFacilities,
   productVariants,
   serviceDefinitions,
-  boundary
+  boundary,
+  sessionExpired,
 }

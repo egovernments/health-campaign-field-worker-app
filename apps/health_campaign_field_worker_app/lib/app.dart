@@ -90,6 +90,8 @@ class MainApplicationState extends State<MainApplication>
               BlocProvider(
                 create: (ctx) => AuthBloc(
                   authRepository: ctx.read(),
+                  boundaryLocalRepository: ctx.read<
+                      LocalRepository<BoundaryModel, BoundarySearchModel>>(),
                   mdmsRepository: MdmsRepository(widget.client),
                 )..add(
                     AuthAutoLoginEvent(

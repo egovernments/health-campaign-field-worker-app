@@ -1,22 +1,23 @@
 import 'dart:async';
 
 import 'package:drift/drift.dart';
-
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
-import '../../data_repository.dart';
+import 'base/project_beneficiary_base.dart';
 
-class ProjectBeneficiaryLocalRepository extends LocalRepository<
-    ProjectBeneficiaryModel, ProjectBeneficiarySearchModel> {
+class ProjectBeneficiaryLocalRepository
+    extends ProjectBeneficiaryLocalBaseRepository {
   ProjectBeneficiaryLocalRepository(super.sql, super.opLogManager);
 
   void listenToChanges({
     required ProjectBeneficiarySearchModel query,
     required void Function(List<ProjectBeneficiaryModel> data) listener,
-  }) {
+    String? userId,
+  }) async {
     final select = sql.select(sql.projectBeneficiary)
       ..where(
         (tbl) => buildOr([
+          if (userId != null) tbl.auditCreatedBy.equals(userId),
           if (query.projectId != null) tbl.projectId.equals(query.projectId),
           if (query.beneficiaryRegistrationDateGte != null)
             tbl.dateOfRegistration.isBiggerOrEqualValue(
@@ -41,6 +42,12 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
           rowVersion: e.rowVersion,
           isDeleted: e.isDeleted,
           beneficiaryId: e.beneficiaryId,
+          auditDetails: (e.auditCreatedBy != null && e.auditCreatedTime != null)
+              ? AuditDetails(
+                  createdBy: e.auditCreatedBy!,
+                  createdTime: e.auditCreatedTime!,
+                )
+              : null,
         );
       }).toList();
 
@@ -190,7 +197,4 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
 
     return super.delete(updated);
   }
-
-  @override
-  DataModelType get type => DataModelType.projectBeneficiary;
 }

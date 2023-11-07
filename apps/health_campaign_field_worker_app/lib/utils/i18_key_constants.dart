@@ -140,6 +140,10 @@ class Login {
   String get logOutWarningMsg => 'LOG_OUT_WARNING_MESSAGE';
 
   String get noInternetError => 'ERR_NOT_CONNECTED_TO_INTERNET';
+
+  String get sessionExpired => 'CORE_SESSION_EXPIRED';
+
+  String get pleaseLogout => 'PLEASE_LOGOUT_USER';
 }
 
 class Checklist {

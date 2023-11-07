@@ -2,10 +2,10 @@ import 'dart:async';
 
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
-import '../../data_repository.dart';
+import 'base/stock_reconciliation_base.dart';
 
-class StockReconciliationLocalRepository extends LocalRepository<
-    StockReconciliationModel, StockReconciliationSearchModel> {
+class StockReconciliationLocalRepository
+    extends StockReconciliationLocalBaseRepository {
   StockReconciliationLocalRepository(super.sql, super.opLogManager);
 
   @override
@@ -102,7 +102,4 @@ class StockReconciliationLocalRepository extends LocalRepository<
 
     return super.update(entity, createOpLog: createOpLog);
   }
-
-  @override
-  DataModelType get type => DataModelType.stockReconciliation;
 }

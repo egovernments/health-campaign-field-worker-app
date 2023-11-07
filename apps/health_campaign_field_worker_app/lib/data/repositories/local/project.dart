@@ -5,10 +5,9 @@ import 'package:drift/drift.dart';
 
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
-import '../../data_repository.dart';
+import 'base/project_base.dart';
 
-class ProjectLocalRepository
-    extends LocalRepository<ProjectModel, ProjectSearchModel> {
+class ProjectLocalRepository extends ProjectLocalBaseRepository {
   ProjectLocalRepository(super.sql, super.opLogManager);
 
   @override
@@ -50,9 +49,6 @@ class ProjectLocalRepository
 
     await super.create(entity, createOpLog: createOpLog);
   }
-
-  @override
-  DataModelType get type => DataModelType.project;
 
   @override
   FutureOr<List<ProjectModel>> search(

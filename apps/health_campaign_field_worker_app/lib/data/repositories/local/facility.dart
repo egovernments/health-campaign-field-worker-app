@@ -4,10 +4,9 @@ import 'package:drift/drift.dart';
 
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
-import '../../data_repository.dart';
+import 'base/facility_base.dart';
 
-class FacilityLocalRepository
-    extends LocalRepository<FacilityModel, FacilitySearchModel> {
+class FacilityLocalRepository extends FacilityLocalBaseRepository {
   FacilityLocalRepository(super.sql, super.opLogManager);
 
   @override
@@ -47,13 +46,18 @@ class FacilityLocalRepository
 
       return FacilityModel(
         id: facility.id,
-        name: facility.name,
         rowVersion: facility.rowVersion,
         tenantId: facility.tenantId,
         isDeleted: facility.isDeleted,
         isPermanent: facility.isPermanent,
         storageCapacity: facility.storageCapacity,
         usage: facility.usage,
+        name: facility.name,
+        additionalFields: facility.additionalFields == null
+            ? null
+            : Mapper.fromJson<FacilityAdditionalFields>(
+                facility.additionalFields!,
+              ),
         address: address == null
             ? null
             : AddressModel(
@@ -72,6 +76,15 @@ class FacilityLocalRepository
                 type: address.type,
                 rowVersion: address.rowVersion,
               ),
+        auditDetails: (facility.auditCreatedBy != null &&
+                facility.auditCreatedTime != null)
+            ? AuditDetails(
+                createdBy: facility.auditCreatedBy!,
+                createdTime: facility.auditCreatedTime!,
+                lastModifiedBy: facility.auditModifiedBy,
+                lastModifiedTime: facility.auditModifiedTime,
+              )
+            : null,
       );
     }).toList();
   }
@@ -134,7 +147,4 @@ class FacilityLocalRepository
       });
     }
   }
-
-  @override
-  DataModelType get type => DataModelType.facility;
 }

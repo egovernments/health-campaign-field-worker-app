@@ -166,4 +166,8 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
       },
     );
   }
+  
+  Future<void> deleteFromTable(TableInfo table) async {
+    await delete(table).go();
+  }
 }

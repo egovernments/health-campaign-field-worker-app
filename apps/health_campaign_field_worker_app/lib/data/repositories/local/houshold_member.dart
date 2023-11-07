@@ -2,10 +2,10 @@ import 'dart:async';
 
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
-import '../../data_repository.dart';
+import 'base/household_member_base.dart';
 
 class HouseholdMemberLocalRepository
-    extends LocalRepository<HouseholdMemberModel, HouseholdMemberSearchModel> {
+    extends HouseholdMemberLocalBaseRepository {
   HouseholdMemberLocalRepository(super.sql, super.opLogManager);
 
   @override
@@ -151,7 +151,4 @@ class HouseholdMemberLocalRepository
 
     return super.delete(updated, createOpLog: createOpLog);
   }
-
-  @override
-  DataModelType get type => DataModelType.householdMember;
 }

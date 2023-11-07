@@ -4,10 +4,9 @@ import 'package:collection/collection.dart';
 
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
-import '../../data_repository.dart';
+import 'base/referral_base.dart';
 
-class ReferralLocalRepository
-    extends LocalRepository<ReferralModel, ReferralSearchModel> {
+class ReferralLocalRepository extends ReferralLocalBaseRepository {
   ReferralLocalRepository(super.sql, super.opLogManager);
 
   void listenToChanges({
@@ -139,7 +138,4 @@ class ReferralLocalRepository
 
     await super.update(entity, createOpLog: createOpLog);
   }
-
-  @override
-  DataModelType get type => DataModelType.referral;
 }

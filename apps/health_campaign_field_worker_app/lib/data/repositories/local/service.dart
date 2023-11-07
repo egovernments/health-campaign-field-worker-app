@@ -2,14 +2,12 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
-import 'package:path/path.dart';
 
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
-import '../../data_repository.dart';
+import 'base/service_base.dart';
 
-class ServiceLocalRepository
-    extends LocalRepository<ServiceModel, ServiceSearchModel> {
+class ServiceLocalRepository extends ServiceLocalBaseRepository {
   ServiceLocalRepository(super.sql, super.opLogManager);
 
   @override
@@ -147,7 +145,4 @@ class ServiceLocalRepository
 
     return serviceList;
   }
-
-  @override
-  DataModelType get type => DataModelType.service;
 }

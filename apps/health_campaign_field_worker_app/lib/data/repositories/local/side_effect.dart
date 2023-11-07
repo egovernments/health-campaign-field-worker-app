@@ -4,10 +4,9 @@ import 'package:collection/collection.dart';
 
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
-import '../../data_repository.dart';
+import 'base/side_effect_base.dart';
 
-class SideEffectLocalRepository
-    extends LocalRepository<SideEffectModel, SideEffectSearchModel> {
+class SideEffectLocalRepository extends SideEffectLocalBaseRepository {
   SideEffectLocalRepository(super.sql, super.opLogManager);
 
   void listenToChanges({
@@ -138,7 +137,4 @@ class SideEffectLocalRepository
 
     await super.update(entity, createOpLog: createOpLog);
   }
-
-  @override
-  DataModelType get type => DataModelType.sideEffect;
 }

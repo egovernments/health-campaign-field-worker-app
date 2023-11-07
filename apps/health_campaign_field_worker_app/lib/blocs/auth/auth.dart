@@ -3,10 +3,12 @@ import 'package:digit_components/digit_components.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import '../../data/data_repository.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/repositories/remote/auth.dart';
 import '../../data/repositories/remote/mdms.dart';
 import '../../models/auth/auth_model.dart';
+import '../../models/entities/boundary.dart';
 import '../../models/role_actions/role_actions_model.dart';
 import '../../utils/background_service.dart';
 import '../../utils/environment_config.dart';
@@ -22,9 +24,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final LocalSecureStore localSecureStore;
   final AuthRepository authRepository;
   final MdmsRepository mdmsRepository;
+  final LocalRepository<BoundaryModel, BoundarySearchModel>
+      boundaryLocalRepository;
 
   AuthBloc({
     required this.authRepository,
+    required this.boundaryLocalRepository,
     required this.mdmsRepository,
     LocalSecureStore? localSecureStore,
   })  : localSecureStore = LocalSecureStore.instance,
@@ -32,6 +37,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on(_onLogin);
     on(_onLogout);
     on(_onAutoLogin);
+    on(_onAuthLogoutWithoutToken);
   }
 
   //_onAutoLogin event handles auto-login of the user when the user is already logged in and token is not expired, AuthenticatedWrapper is returned in UI
@@ -104,7 +110,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(const AuthUnauthenticatedState());
 
       AppLogger.instance.error(
-        title: 'Login error',
+        title: 'Erro de início de sessão',
         message: error.response?.data.toString(),
       );
     } catch (_) {
