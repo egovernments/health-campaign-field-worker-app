@@ -673,6 +673,7 @@ class StockReconciliationDetails {
   String get reconciliationPageTitle => 'STOCK_RECONCILIATION_PAGE_TITLE';
 
   String get facilityLabel => 'STOCK_RECONCILIATION_FACILITY_LABEL';
+  String get facilityName => 'STOCK_RECONCILIATION_FACILITY_NAME';
 
   String get stockLabel => 'STOCK_LABEL';
 
@@ -700,6 +701,7 @@ class StockReconciliationDetails {
   String get infoCardTitle => 'STOCK_RECONCILIATION_INFO_CARD_TITLE';
 
   String get infoCardContent => 'STOCK_RECONCILIATION_INFO_CARD_CONTENT_SPAQ';
+  String get infoCardDescription => 'STOCK_RECONCILIATION_INFO_CARD_DESCRIPTION_SPAQ';
 
   String get dialogTitle => 'STOCK_RECONCILIATION_DIALOG_TITLE';
 
@@ -729,8 +731,11 @@ class StockReconciliationDetails {
   String get spaqDamaged => 'SPAQ_DAMAGED';
   String get spaqOnHand => 'SPAQ_ON_HAND';
   String get manualSpaqCount => 'MANUAL_SPAQ_COUNT';
+  String get physicalSpaqCount => 'PHYSICAL_SPAQ_COUNT';
   String get reconciliationCommentRequiredError =>
       'SPAQ_RECONCILIATION_COMMENT_IS_REQUIRED';
+  String get spaqSent => 'SPAQ_SENT';
+  String get spaqTheoretical => 'SPAQ_THEORETICAL';
 }
 
 class ManageStock {
