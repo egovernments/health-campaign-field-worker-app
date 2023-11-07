@@ -278,6 +278,11 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
               ),
               Flexible(
                 child: DigitOutLineButton(
+                  buttonStyle: OutlinedButton.styleFrom(
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.zero,
+                    ),
+                  ),
                   label:
                       localizations.translate(i18.searchBeneficiary.iconLabel),
                   onPressed: widget.onOpenPressed,

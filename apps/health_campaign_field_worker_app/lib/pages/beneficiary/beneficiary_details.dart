@@ -138,8 +138,6 @@ class _BeneficiaryDetailsPageState
                                       height: 90,
                                       child: DigitCard(
                                         margin: const EdgeInsets.only(
-                                          left: 0,
-                                          right: 0,
                                           top: 10,
                                         ),
                                         child: DigitElevatedButton(

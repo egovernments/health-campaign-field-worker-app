@@ -35,6 +35,9 @@ class DigitOutLineButton extends StatelessWidget {
         child: Text(
           label,
           style: TextStyle(
+            fontSize: 19,
+            fontWeight: FontWeight.w700,
+            fontStyle: FontStyle.normal,
             color: onPressed != null
                 ? theme.colorScheme.secondary
                 : theme.colorScheme.outline,

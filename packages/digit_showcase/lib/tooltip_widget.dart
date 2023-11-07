@@ -461,9 +461,11 @@ class _ToolTipWidgetState extends State<ToolTipWidget>
                                       ),
                                       ElevatedButton(
                                         style: ElevatedButton.styleFrom(
-                                          tapTargetSize:
-                                              MaterialTapTargetSize.shrinkWrap,
-                                        ),
+                                            tapTargetSize: MaterialTapTargetSize
+                                                .shrinkWrap,
+                                            textStyle: const TextStyle(
+                                              fontStyle: FontStyle.normal,
+                                            )),
                                         onPressed: widget.onNext,
                                         child: const Text('Next'),
                                       ),

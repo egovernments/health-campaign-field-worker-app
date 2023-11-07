@@ -67,177 +67,169 @@ class _HouseholdOverviewPageState
                           child: SingleChildScrollView(
                             child: DigitCard(
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Flexible(
-                                        child: Text(
-                                          localizations.translate(
-                                            i18.householdOverView
-                                                .householdOverViewLabel,
-                                          ),
-                                          style: theme.textTheme.displayMedium,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                      BlocBuilder<ProjectBloc, ProjectState>(
-                                        builder: (context, projectState) {
-                                          return DigitIconButton(
-                                            onPressed: () =>
-                                                DigitActionDialog.show(
-                                              context,
-                                              widget: ActionCard(
-                                                items: [
-                                                  ActionCardModel(
-                                                    icon: Icons.edit,
-                                                    label:
-                                                        localizations.translate(
-                                                      i18.householdOverView
-                                                          .householdOverViewEditLabel,
-                                                    ),
-                                                    action: () async {
-                                                      final projectId =
-                                                          context.projectId;
-
-                                                      final bloc = context.read<
-                                                          HouseholdOverviewBloc>();
-                                                      Navigator.of(
-                                                        context,
-                                                        rootNavigator: true,
-                                                      ).pop();
-
-                                                      HouseholdMemberWrapper
-                                                          wrapper = state
-                                                              .householdMemberWrapper;
-
-                                                      final timestamp = wrapper
-                                                          .projectBeneficiaries
-                                                          .first
-                                                          .dateOfRegistration;
-                                                      // [TODO ]
-                                                      final date = DateTime
-                                                          .fromMillisecondsSinceEpoch(
-                                                        timestamp,
-                                                      );
-
-                                                      final address = wrapper
-                                                          .household.address;
-
-                                                      if (address == null)
-                                                        return;
-
-                                                      final projectBeneficiary = state
-                                                          .householdMemberWrapper
-                                                          .projectBeneficiaries
-                                                          .firstWhereOrNull(
-                                                        (element) =>
-                                                            element
-                                                                .beneficiaryClientReferenceId ==
-                                                            wrapper.household
-                                                                .clientReferenceId,
-                                                      );
-
-                                                      await context.router.root
-                                                          .push(
-                                                        BeneficiaryRegistrationWrapperRoute(
-                                                          initialState:
-                                                              BeneficiaryRegistrationEditHouseholdState(
-                                                            addressModel:
-                                                                address,
-                                                            individualModel:
-                                                                wrapper.members,
-                                                            householdModel:
-                                                                wrapper
-                                                                    .household,
-                                                            registrationDate:
-                                                                date,
-                                                            projectBeneficiaryModel:
-                                                                projectBeneficiary,
-                                                          ),
-                                                          children: [
-                                                            HouseholdLocationRoute(),
-                                                          ],
-                                                        ),
-                                                      );
-
-                                                      bloc.add(
-                                                        HouseholdOverviewReloadEvent(
-                                                          projectId: projectId,
-                                                          projectBeneficiaryType:
-                                                              beneficiaryType,
-                                                        ),
-                                                      );
-                                                    },
+                                  BlocBuilder<ProjectBloc, ProjectState>(
+                                    builder: (context, projectState) {
+                                      return Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: DigitIconButton(
+                                          onPressed: () =>
+                                              DigitActionDialog.show(
+                                            context,
+                                            widget: ActionCard(
+                                              items: [
+                                                ActionCardModel(
+                                                  icon: Icons.edit,
+                                                  label:
+                                                      localizations.translate(
+                                                    i18.householdOverView
+                                                        .householdOverViewEditLabel,
                                                   ),
-                                                  ActionCardModel(
-                                                    icon: Icons.delete,
-                                                    label: localizations
-                                                        .translate(i18
-                                                            .householdOverView
-                                                            .householdOverViewDeleteLabel),
-                                                    action: () =>
-                                                        DigitDialog.show(
+                                                  action: () async {
+                                                    final projectId =
+                                                        context.projectId;
+
+                                                    final bloc = context.read<
+                                                        HouseholdOverviewBloc>();
+                                                    Navigator.of(
                                                       context,
-                                                      options:
-                                                          DigitDialogOptions(
-                                                        titleText: localizations
+                                                      rootNavigator: true,
+                                                    ).pop();
+
+                                                    HouseholdMemberWrapper
+                                                        wrapper = state
+                                                            .householdMemberWrapper;
+
+                                                    final timestamp = wrapper
+                                                        .projectBeneficiaries
+                                                        .first
+                                                        .dateOfRegistration;
+                                                    // [TODO ]
+                                                    final date = DateTime
+                                                        .fromMillisecondsSinceEpoch(
+                                                      timestamp,
+                                                    );
+
+                                                    final address = wrapper
+                                                        .household.address;
+
+                                                    if (address == null) return;
+
+                                                    final projectBeneficiary = state
+                                                        .householdMemberWrapper
+                                                        .projectBeneficiaries
+                                                        .firstWhereOrNull(
+                                                      (element) =>
+                                                          element
+                                                              .beneficiaryClientReferenceId ==
+                                                          wrapper.household
+                                                              .clientReferenceId,
+                                                    );
+
+                                                    await context.router.root
+                                                        .push(
+                                                      BeneficiaryRegistrationWrapperRoute(
+                                                        initialState:
+                                                            BeneficiaryRegistrationEditHouseholdState(
+                                                          addressModel: address,
+                                                          individualModel:
+                                                              wrapper.members,
+                                                          householdModel:
+                                                              wrapper.household,
+                                                          registrationDate:
+                                                              date,
+                                                          projectBeneficiaryModel:
+                                                              projectBeneficiary,
+                                                        ),
+                                                        children: [
+                                                          HouseholdLocationRoute(),
+                                                        ],
+                                                      ),
+                                                    );
+
+                                                    bloc.add(
+                                                      HouseholdOverviewReloadEvent(
+                                                        projectId: projectId,
+                                                        projectBeneficiaryType:
+                                                            beneficiaryType,
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                                ActionCardModel(
+                                                  icon: Icons.delete,
+                                                  label: localizations.translate(i18
+                                                      .householdOverView
+                                                      .householdOverViewDeleteLabel),
+                                                  action: () =>
+                                                      DigitDialog.show(
+                                                    context,
+                                                    options: DigitDialogOptions(
+                                                      titleText: localizations
+                                                          .translate(i18
+                                                              .householdOverView
+                                                              .householdOverViewActionCardTitle),
+                                                      primaryAction:
+                                                          DigitDialogActions(
+                                                        label: localizations
                                                             .translate(i18
                                                                 .householdOverView
-                                                                .householdOverViewActionCardTitle),
-                                                        primaryAction:
-                                                            DigitDialogActions(
-                                                          label: localizations
-                                                              .translate(i18
-                                                                  .householdOverView
-                                                                  .householdOverViewPrimaryActionLabel),
-                                                          action: (ctx) {
-                                                            Navigator.of(
-                                                              ctx,
-                                                              rootNavigator:
+                                                                .householdOverViewPrimaryActionLabel),
+                                                        action: (ctx) {
+                                                          Navigator.of(
+                                                            ctx,
+                                                            rootNavigator: true,
+                                                          )
+                                                            ..pop()
+                                                            ..pop();
+                                                          context.router.push(
+                                                            ReasonForDeletionRoute(
+                                                              isHousholdDelete:
                                                                   true,
-                                                            )
-                                                              ..pop()
-                                                              ..pop();
-                                                            context.router.push(
-                                                              ReasonForDeletionRoute(
-                                                                isHousholdDelete:
-                                                                    true,
-                                                              ),
-                                                            );
-                                                          },
-                                                        ),
-                                                        secondaryAction:
-                                                            DigitDialogActions(
-                                                          label: localizations
-                                                              .translate(i18
-                                                                  .householdOverView
-                                                                  .householdOverViewSecondaryActionLabel),
-                                                          action: (context) {
-                                                            Navigator.of(
-                                                              context,
-                                                              rootNavigator:
-                                                                  true,
-                                                            ).pop();
-                                                          },
-                                                        ),
+                                                            ),
+                                                          );
+                                                        },
+                                                      ),
+                                                      secondaryAction:
+                                                          DigitDialogActions(
+                                                        label: localizations
+                                                            .translate(i18
+                                                                .householdOverView
+                                                                .householdOverViewSecondaryActionLabel),
+                                                        action: (context) {
+                                                          Navigator.of(
+                                                            context,
+                                                            rootNavigator: true,
+                                                          ).pop();
+                                                        },
                                                       ),
                                                     ),
                                                   ),
-                                                ],
-                                              ),
+                                                ),
+                                              ],
                                             ),
-                                            iconText: localizations.translate(
-                                              i18.householdOverView
-                                                  .householdOverViewEditIconText,
-                                            ),
-                                            icon: Icons.edit,
-                                          );
-                                        },
+                                          ),
+                                          iconText: localizations.translate(
+                                            i18.householdOverView
+                                                .householdOverViewEditIconText,
+                                          ),
+                                          icon: Icons.edit,
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      localizations.translate(
+                                        i18.householdOverView
+                                            .householdOverViewLabel,
                                       ),
-                                    ],
+                                      style: theme.textTheme.displayMedium,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
                                   ),
                                   BlocBuilder<DeliverInterventionBloc,
                                       DeliverInterventionState>(

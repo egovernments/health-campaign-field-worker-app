@@ -88,9 +88,8 @@ class _IndividualDetailsPageState
                 ),
               ]),
               footer: SizedBox(
-                height: 100,
                 child: DigitCard(
-                  margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
+                  margin: const EdgeInsets.only(top: 10),
                   child: DigitElevatedButton(
                     onPressed: () async {
                       if (form.control(_dobKey).value == null) {
@@ -352,8 +351,7 @@ class _IndividualDetailsPageState
                                       .replaceAll('{}', maxLength.toString()),
                                 },
                                 padding: const EdgeInsets.only(
-                                  bottom: 0,
-                                  top: 24,
+                                  top: 16,
                                 ),
                               ),
                             ),
@@ -364,8 +362,7 @@ class _IndividualDetailsPageState
                                   .buildWith(
                                 child: DigitCheckbox(
                                   padding: const EdgeInsets.only(
-                                    bottom: kPadding,
-                                    top: 0,
+                                    bottom: 16,
                                   ),
                                   label: localizations.translate(
                                     i18.individualDetails.checkboxLabelText,
@@ -417,9 +414,10 @@ class _IndividualDetailsPageState
                                         },
                                       ).toList(),
                                       formControlName: _idTypeKey,
-                                      padding: const EdgeInsets.only(
-                                        bottom: 0,
-                                        top: 0,
+                                      padding: EdgeInsets.only(
+                                        top: widget.isHeadOfHousehold ? 16 : 0,
+                                        bottom:
+                                            !widget.isHeadOfHousehold ? 0 : 16,
                                       ),
                                     ),
                                   );
@@ -451,10 +449,12 @@ class _IndividualDetailsPageState
                                                 '${i18.individualDetails.idNumberLabelText}_IS_REQUIRED',
                                               ),
                                         },
+                                        padding: const EdgeInsets.only(
+                                          top: 16,
+                                        ),
                                       );
                                     },
                                   ),
-                                  const SizedBox(height: 8),
                                 ],
                               ),
                             individualDetailsShowcaseData.dateOfBirth.buildWith(
@@ -508,7 +508,7 @@ class _IndividualDetailsPageState
 
                                   return individualDetailsShowcaseData.gender
                                       .buildWith(
-                                    child: DigitDropdown<String>(
+                                    child: DigitReactiveDropdown<String>(
                                       label: localizations.translate(
                                         i18.individualDetails.genderLabelText,
                                       ),
@@ -522,6 +522,9 @@ class _IndividualDetailsPageState
                                           )
                                           .toList(),
                                       formControlName: _genderKey,
+                                      padding: const EdgeInsets.only(
+                                        top: 16,
+                                      ),
                                     ),
                                   );
                                 },
@@ -530,8 +533,7 @@ class _IndividualDetailsPageState
                             individualDetailsShowcaseData.mobile.buildWith(
                               child: DigitTextFormField(
                                 padding: const EdgeInsets.only(
-                                  bottom: 0,
-                                  top: 24,
+                                  top: 16,
                                 ),
                                 keyboardType: TextInputType.number,
                                 formControlName: _mobileNumberKey,
@@ -549,7 +551,6 @@ class _IndividualDetailsPageState
                             ),
                           ],
                         ),
-                        const SizedBox(height: 10),
                         BlocBuilder<ScannerBloc, ScannerState>(
                           builder: (context, state) => state.qrcodes.isNotEmpty
                               ? Row(
@@ -592,6 +593,11 @@ class _IndividualDetailsPageState
                                   // ignore: no-empty-block
                                 )
                               : DigitOutlineIconButton(
+                                  buttonStyle: OutlinedButton.styleFrom(
+                                    shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.zero,
+                                    ),
+                                  ),
                                   onPressed: () {
                                     context.router.push(QRScannerRoute(
                                       quantity: 1,

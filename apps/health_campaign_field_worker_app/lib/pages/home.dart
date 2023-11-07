@@ -337,14 +337,14 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.warehouseManagerCheckList:
           homeShowcaseData.wareHouseManagerChecklist.buildWith(
         child: HomeItemCard(
-          icon: Icons.menu_book,
+          icon: Icons.checklist,
           label: i18.home.warehouseManagerCheckList,
           onPressed: () => context.router.push(ChecklistWrapperRoute()),
         ),
       ),
       i18.home.myCheckList: homeShowcaseData.supervisorMyChecklist.buildWith(
         child: HomeItemCard(
-          icon: Icons.menu_book,
+          icon: Icons.checklist,
           label: i18.home.myCheckList,
           onPressed: () => context.router.push(ChecklistWrapperRoute()),
         ),

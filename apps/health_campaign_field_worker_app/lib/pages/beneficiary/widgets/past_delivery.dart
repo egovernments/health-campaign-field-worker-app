@@ -50,13 +50,6 @@ Widget buildTableContent(
   const paddingHeight = kPadding / 2;
   final containerHeight = (numRows + 1) * rowHeight + paddingHeight;
 
-  //Calculate the width of the container based on the number of items in the table
-
-  // const cellWidth = 5.0;
-  // final numColumns = numRows; // Number of items in a row
-
-  // final containerWidth = numColumns * cellWidth;
-
   return Container(
     padding: const EdgeInsets.only(
       left: kPadding,

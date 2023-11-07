@@ -48,7 +48,7 @@ class SideBar extends StatelessWidget {
                     // ),
                     Text(
                       value.userModel.mobileNumber.toString(),
-                      style: theme.textTheme.labelSmall,
+                      style: theme.textTheme.bodyMedium,
                     ),
                   ],
                 ),

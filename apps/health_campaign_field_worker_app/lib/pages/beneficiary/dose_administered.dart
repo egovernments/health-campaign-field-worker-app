@@ -340,12 +340,15 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
 
                               return Column(
                                 children: [
-                                  Text(
-                                    localizations.translate(
-                                      i18.beneficiaryDetails
-                                          .resourcesTobeProvided,
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      localizations.translate(
+                                        i18.beneficiaryDetails
+                                            .resourcesTobeProvided,
+                                      ),
+                                      style: theme.textTheme.displayMedium,
                                     ),
-                                    style: theme.textTheme.displayMedium,
                                   ),
                                   DigitTableCard(
                                     padding: const EdgeInsets.only(bottom: 4.0),
