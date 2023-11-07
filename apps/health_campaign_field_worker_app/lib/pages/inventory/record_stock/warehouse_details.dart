@@ -41,7 +41,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
         _warehouseKey: FormControl<FacilityModel>(
           validators: context.loggedInUserRoles
                   .where(
-                    (role) => role.code == Roles.warehouseManager.name,
+                    (role) => role.code == Roles.warehouseManager.toValue(),
                   )
                   .toList()
                   .isNotEmpty
@@ -60,15 +60,14 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
   Widget build(BuildContext context) {
     bool isWareHouseMgr = context.loggedInUserRoles
         .where(
-          (role) => role.code == Roles.warehouseManager.name,
+          (role) => role.code == Roles.warehouseManager.toValue(),
         )
         .toList()
         .isNotEmpty;
-    print(Roles.distributor.name);
 
     bool isDistributor = context.loggedInUserRoles
         .where(
-          (role) => role.code == Roles.distributor.name,
+          (role) => role.code == Roles.distributor.toValue(),
         )
         .toList()
         .isNotEmpty;
@@ -217,43 +216,46 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                   ),
                                 ),
                               ]),
-                              DigitTextFormField(
-                                valueAccessor: FacilityValueAccessor(
-                                  facilities,
-                                ),
-                                isRequired: isWareHouseMgr,
-                                label: localizations.translate(
-                                  i18.stockReconciliationDetails.facilityLabel,
-                                ),
-                                suffix: const Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Icon(Icons.search),
-                                ),
-                                formControlName: _warehouseKey,
-                                readOnly: true,
-                                onTap: () async {
-                                  final parent =
-                                      context.router.parent() as StackRouter;
-                                  final facility =
-                                      await parent.push<FacilityModel>(
-                                    FacilitySelectionRoute(
-                                      facilities: facilities,
-                                    ),
-                                  );
+                              if (isWareHouseMgr)
+                                DigitTextFormField(
+                                  valueAccessor: FacilityValueAccessor(
+                                    facilities,
+                                  ),
+                                  isRequired: isWareHouseMgr,
+                                  label: localizations.translate(
+                                    i18.stockReconciliationDetails
+                                        .facilityLabel,
+                                  ),
+                                  suffix: const Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Icon(Icons.search),
+                                  ),
+                                  formControlName: _warehouseKey,
+                                  readOnly: true,
+                                  onTap: () async {
+                                    final parent =
+                                        context.router.parent() as StackRouter;
+                                    final facility =
+                                        await parent.push<FacilityModel>(
+                                      FacilitySelectionRoute(
+                                        facilities: facilities,
+                                      ),
+                                    );
 
-                                  if (facility == null) return;
-                                  form.control(_warehouseKey).value = facility;
-                                  if (facility.id == 'Delivery Team') {
-                                    setState(() {
-                                      deliveryTeamSelected = true;
-                                    });
-                                  } else {
-                                    setState(() {
-                                      deliveryTeamSelected = false;
-                                    });
-                                  }
-                                },
-                              ),
+                                    if (facility == null) return;
+                                    form.control(_warehouseKey).value =
+                                        facility;
+                                    if (facility.id == 'Delivery Team') {
+                                      setState(() {
+                                        deliveryTeamSelected = true;
+                                      });
+                                    } else {
+                                      setState(() {
+                                        deliveryTeamSelected = false;
+                                      });
+                                    }
+                                  },
+                                ),
                               if (isDistributor ||
                                   (isWareHouseMgr && deliveryTeamSelected))
                                 DigitTextFormField(

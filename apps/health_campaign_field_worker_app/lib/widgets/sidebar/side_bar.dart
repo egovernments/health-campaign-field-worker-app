@@ -3,6 +3,7 @@ import 'package:digit_components/models/digit_row_card/digit_row_card_model.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import '../../../blocs/localization/app_localization.dart';
 import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/auth/auth.dart';
@@ -12,6 +13,7 @@ import '../../blocs/user/user.dart';
 import '../../router/app_router.dart';
 import '../../utils/constants.dart';
 import '../../utils/i18_key_constants.dart' as i18;
+import '../../utils/utils.dart';
 
 class SideBar extends StatelessWidget {
   const SideBar({super.key});
@@ -27,7 +29,7 @@ class SideBar extends StatelessWidget {
             color: theme.colorScheme.secondary.withOpacity(0.12),
             child: SizedBox(
               width: MediaQuery.of(context).size.width,
-              height: 200,
+              height: 280,
               child: state.maybeMap(
                 authenticated: (value) => Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -36,13 +38,14 @@ class SideBar extends StatelessWidget {
                       value.userModel.name.toString(),
                       style: theme.textTheme.displayMedium,
                     ),
-
-                    // const SizedBox(
-                    //   height: 8,
-                    // ),
                     Text(
                       value.userModel.mobileNumber.toString(),
                       style: theme.textTheme.labelSmall,
+                    ),
+                    QrImageView(
+                      data: context.loggedInUserUuid,
+                      version: QrVersions.auto,
+                      size: 150.0,
                     ),
                   ],
                 ),
