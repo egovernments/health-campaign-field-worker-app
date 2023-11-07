@@ -172,13 +172,6 @@ class LocalSecureStore {
     );
   }
 
-  Future<void> setRoleActions(RoleActionsWrapperModel actions) async {
-    await storage.write(
-      key: actionsListkey,
-      value: actions.toString(),
-    );
-  }
-
   Future<void> setBackgroundService(bool isRunning) async {
     await storage.write(key: backgroundServiceKey, value: isRunning.toString());
   }

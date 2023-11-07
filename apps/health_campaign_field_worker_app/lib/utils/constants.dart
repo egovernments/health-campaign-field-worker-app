@@ -94,7 +94,6 @@ class Constants {
           ProjectTypeListCycleSchema,
           RowVersionListSchema,
         ],
-        name: 'HCM',
         inspector: true,
         directory: directory.path,
       );

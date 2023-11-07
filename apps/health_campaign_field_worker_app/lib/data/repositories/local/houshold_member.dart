@@ -52,6 +52,7 @@ class HouseholdMemberLocalRepository
           final householdMember = e.readTable(sql.householdMember);
 
           return HouseholdMemberModel(
+            id: householdMember.id,
             householdId: householdMember.householdId,
             householdClientReferenceId:
                 householdMember.householdClientReferenceId,
