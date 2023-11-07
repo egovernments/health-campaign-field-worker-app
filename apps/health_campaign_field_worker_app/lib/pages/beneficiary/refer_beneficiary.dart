@@ -67,15 +67,8 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                 final projectFacilities = facilities
                     .where((e) => e.id != 'NA' && e.id != 'DT')
                     .toList();
-                final healthFacilities = [
-                  FacilityModel(
-                    id: 'Community Health Worker',
-                    name: 'Community Health Worker',
-                  ),
-                ];
-                healthFacilities.addAll(projectFacilities);
 
-                return healthFacilities;
+                return projectFacilities;
               },
             ) ??
             [];
