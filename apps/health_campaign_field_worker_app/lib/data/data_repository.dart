@@ -94,9 +94,10 @@ abstract class RemoteRepository<D extends EntityModel,
         },
       );
     } on DioError catch (error) {
-      if (error.response!.data['Errors'][0]['message']
-          .toString()
-          .contains(Constants.invalidAccessTokenKey)) {
+      if (error.response == null ||
+          error.response!.data['Errors'][0]['message']
+              .toString()
+              .contains(Constants.invalidAccessTokenKey)) {
         rethrow;
       } else {
         return [];
