@@ -46,7 +46,8 @@ class _DeliverInterventionPageState
   static const _deliveryCommentKey = 'deliveryComment';
   static const _doseAdministrationKey = 'doseAdministered';
   static const _dateOfAdministrationKey = 'dateOfAdministration';
-
+  static const _defaultQuantity = 1;
+  static const _administeredQuantity = 2;
   // Variable to track dose administration status
   bool doseAdministered = false;
 
@@ -184,7 +185,7 @@ class _DeliverInterventionPageState
                                                       theme,
                                                     ),
                                                   );
-                                                } else if ((((form.control(
+} else if ((((form.control(
                                                           _quantityDistributedKey,
                                                         ) as FormArray)
                                                             .value) ??
@@ -216,7 +217,7 @@ class _DeliverInterventionPageState
                                                       theme,
                                                     ),
                                                   );
-                                                } else if ((((form.control(
+} else if ((((form.control(
                                                               _quantityDistributedKey,
                                                             ) as FormArray)
                                                                 .value) ??
@@ -461,6 +462,7 @@ class _DeliverInterventionPageState
                                                           totalItems:
                                                               _controllers
                                                                   .length,
+                                                          isAdministered:doseAdministered ,
                                                           onDelete: (index) {
                                                             (form.control(
                                                               _resourceDeliveredKey,
@@ -468,7 +470,7 @@ class _DeliverInterventionPageState
                                                                 .removeAt(
                                                               index,
                                                             );
-                                                            (form.control(
+(form.control(
                                                               _quantityDistributedKey,
                                                             ) as FormArray)
                                                                 .removeAt(
@@ -569,7 +571,7 @@ class _DeliverInterventionPageState
   addController(FormGroup form) {
     (form.control(_resourceDeliveredKey) as FormArray)
         .add(FormControl<ProductVariantModel>());
-    (form.control(_quantityDistributedKey) as FormArray)
+(form.control(_quantityDistributedKey) as FormArray)
         .add(FormControl<String>(validators: [Validators.required]));
     (form.control(_quantityWastedKey) as FormArray)
         .add(FormControl<String>(validators: [Validators.required]));
@@ -622,9 +624,7 @@ class _DeliverInterventionPageState
                 taskId: task?.id,
                 tenantId: envConfig.variables.tenantId,
                 rowVersion: oldTask?.rowVersion ?? 1,
-                quantity: (((form.control(_quantityDistributedKey) as FormArray)
-                        .value)?[productvariantList.indexOf(e)])
-                    .toString(),
+                quantity: doseAdministered ?_administeredQuantity.toString() :_defaultQuantity.toString(),
                 clientAuditDetails: ClientAuditDetails(
                   createdBy: context.loggedInUserUuid,
                   createdTime: context.millisecondsSinceEpoch(),
@@ -721,7 +721,7 @@ class _DeliverInterventionPageState
               )),
         ],
       ),
-      _quantityDistributedKey: FormArray<String>([
+_quantityDistributedKey: FormArray<String>([
         ..._controllers.map(
           (e) => FormControl<String>(validators: [Validators.required]),
         ),

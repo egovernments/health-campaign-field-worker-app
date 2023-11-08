@@ -72,14 +72,11 @@ class _ResourceBeneficiaryCardState
                 },
               );
             },
-          ),Offstage(
-              offstage: !widget.isAdministered,
-                child: DigitCheckbox(
+          ),DigitCheckbox(
                    label: localizations.translate(
-                    i18.deliverIntervention.deliverInteventionQuantityDeliveredLabel,
+                    i18.deliverIntervention.deliverInteventionAdministeredDeliveredLabel,
                           ),
                       value: widget.isAdministered,
-            ),
           ),        
           DigitTextFormField(
             formControlName: 'quantityWasted.${widget.cardIndex}',
