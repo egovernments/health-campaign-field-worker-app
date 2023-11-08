@@ -89,11 +89,11 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
               appBar: AppBar(),
               body: state.maybeWhen(
                 orElse: () => const Center(
-                  child: Text('Unable to initialize the application'),
+                  child: Text('Não é possível inicializar o aplicativo'),
                 ),
                 /*Returns Loading state while app initialization is in progress*/
                 loading: () => const Center(
-                  child: Text('Loading'),
+                  child: Text('Carregando'),
                 ),
                 /*Returns No Internet Connection warning if its failed to initialize after all retries
                   and shows a button to close the app*/
@@ -104,13 +104,14 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
                     child: DigitElevatedButton(
                       onPressed: () => exit(0),
                       child: const Center(
-                        child: Text('Close'),
+                        child: Text('Fechar'),
                       ),
                     ),
                   ),
                   children: const [
                     Center(
-                      child: Text('Internet not available. Try later.'),
+                      child:
+                          Text('Internet não disponível. Tentar mais tarde.'),
                     ),
                   ],
                 ),
