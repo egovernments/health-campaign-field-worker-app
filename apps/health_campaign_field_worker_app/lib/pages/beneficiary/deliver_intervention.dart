@@ -54,6 +54,13 @@ class _DeliverInterventionPageState
   // List of controllers for form elements
   final List _controllers = [];
 
+  // toggle doseAdministered
+   void checkDoseAdministration(bool newValue) {
+    setState(() {
+      doseAdministered = newValue;
+    });
+  }
+
 // Initialize the currentStep variable to keep track of the current step in a process.
   int currentStep = 0;
 
@@ -462,7 +469,8 @@ class _DeliverInterventionPageState
                                                           totalItems:
                                                               _controllers
                                                                   .length,
-                                                          isAdministered:doseAdministered ,
+                                                          isAdministered:doseAdministered,
+                                                          checkDoseAdministration: checkDoseAdministration,
                                                           onDelete: (index) {
                                                             (form.control(
                                                               _resourceDeliveredKey,

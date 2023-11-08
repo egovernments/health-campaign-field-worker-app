@@ -15,6 +15,7 @@ class ResourceBeneficiaryCard extends LocalizedStatefulWidget {
   final FormGroup form;
   final int totalItems;
   final bool isAdministered;
+  final void Function(bool) checkDoseAdministration;
 
   const ResourceBeneficiaryCard({
     Key? key,
@@ -24,6 +25,7 @@ class ResourceBeneficiaryCard extends LocalizedStatefulWidget {
     required this.form,
     required this.totalItems,
     this.isAdministered = false,
+    required this.checkDoseAdministration,
   }) : super(key: key);
 
   @override
@@ -82,6 +84,7 @@ class _ResourceBeneficiaryCardState
                   onChanged: (value) {
                     setState(() {
                       doseAdministered = value!;
+                      widget.checkDoseAdministration(value);
                     });
                   },
                 ),
