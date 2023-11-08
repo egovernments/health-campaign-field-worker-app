@@ -470,7 +470,7 @@ class _DeliverInterventionPageState
                                                                 .removeAt(
                                                               index,
                                                             );
-(form.control(
+                                                            (form.control(
                                                               _quantityDistributedKey,
                                                             ) as FormArray)
                                                                 .removeAt(
