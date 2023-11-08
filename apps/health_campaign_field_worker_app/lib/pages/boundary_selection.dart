@@ -193,7 +193,7 @@ class _BoundarySelectionPageState
                             success: () {
                               Navigator.of(context, rootNavigator: true).pop();
                               context.router.popAndPush((AcknowledgementRoute(
-                                  isDataRecordSuccess: true,
+                                isDataRecordSuccess: true,
                               )));
                             },
                             failed: () {
