@@ -305,7 +305,9 @@ class BeneficiaryDetails {
   String get proceedWithoutDownloading => 'PROCEED_WITHOUT_DOWNLOADING';
   String get unableToCheckDataInServer => 'FAILED_TO_CHECK_DATA_IN_SERVER';
   String get dataFound => 'DATA_FOUND';
+  String get noDataFound => 'NO_DATA_FOUND';
   String get dataFoundContent => 'DATA_FOUND_CONTENT';
+  String get noDataFoundContent => 'NO_DATA_FOUND_CONTENT';
   String get dataDownloadInProgress => 'DATA_DOWNLOAD_IN_PROGRESS';
   String get insufficientStorage => 'INSUFFICIENT_STORAGE_WARNING';
 }
@@ -1086,6 +1088,8 @@ class SyncDialog {
   String get closeButtonLabel => 'SYNC_DIALOG_CLOSE_BUTTON_LABEL';
 
   String get retryButtonLabel => 'SYNC_DIALOG_RETRY_BUTTON_LABEL';
+  String get pendingSyncLabel => 'PENDING_SYNC_LABEL';
+  String get pendingSyncContent => 'PENDING_SYNC_CONTENT';
 }
 
 class ReferBeneficiary {

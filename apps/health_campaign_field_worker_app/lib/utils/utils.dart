@@ -536,7 +536,6 @@ void showDownloadDialog(
     case DigitProgressDialogType.failed:
     case DigitProgressDialogType.checkFailed:
     case DigitProgressDialogType.insufficientStorage:
-    case DigitProgressDialogType.pendingSync:
       DigitSyncDialog.show(
         context,
         type: DigitSyncDialogType.failed,
@@ -551,6 +550,7 @@ void showDownloadDialog(
                     DownSyncCheckTotalCountEvent(
                       projectId: context.projectId,
                       boundaryCode: model.boundary,
+                      pendingSyncCount: model.pendingSyncCount ?? 0,
                     ),
                   );
             } else {
@@ -568,6 +568,7 @@ void showDownloadDialog(
         ),
       );
     case DigitProgressDialogType.dataFound:
+    case DigitProgressDialogType.pendingSync:
       DigitDialog.show(
         context,
         //[TODO: Localizations need to be added
@@ -577,24 +578,38 @@ void showDownloadDialog(
           primaryAction: DigitDialogActions(
             label: model.primaryButtonLabel ?? '',
             action: (ctx) {
-              context.read<BeneficiaryDownSyncBloc>().add(
-                    DownSyncBeneficiaryEvent(
-                      projectId: context.projectId,
-                      boundaryCode: model.boundary,
-                      // Batch Size need to be defined based on Internet speed.
-                      batchSize: model.batchSize ?? 1,
-                      initialServerCount: model.totalCount ?? 0,
-                    ),
-                  );
+              if (dialogType == DigitProgressDialogType.pendingSync) {
+                Navigator.of(context, rootNavigator: true).pop();
+                context.router.pop();
+              } else {
+                if ((model.totalCount ?? 0) > 0) {
+                  context.read<BeneficiaryDownSyncBloc>().add(
+                        DownSyncBeneficiaryEvent(
+                          projectId: context.projectId,
+                          boundaryCode: model.boundary,
+                          // Batch Size need to be defined based on Internet speed.
+                          batchSize: model.batchSize ?? 1,
+                          initialServerCount: model.totalCount ?? 0,
+                        ),
+                      );
+                } else {
+                  Navigator.of(context, rootNavigator: true).pop();
+                  context.read<BeneficiaryDownSyncBloc>().add(
+                        const DownSyncResetStateEvent(),
+                      );
+                }
+              }
             },
           ),
-          secondaryAction: DigitDialogActions(
-            label: model.secondaryButtonLabel ?? '',
-            action: (ctx) {
-              Navigator.pop(ctx);
-              context.router.pop();
-            },
-          ),
+          secondaryAction: model.secondaryButtonLabel != null
+              ? DigitDialogActions(
+                  label: model.secondaryButtonLabel ?? '',
+                  action: (ctx) {
+                    Navigator.of(context, rootNavigator: true).pop();
+                    context.router.pop();
+                  },
+                )
+              : null,
         ),
       );
     case DigitProgressDialogType.inProgress:

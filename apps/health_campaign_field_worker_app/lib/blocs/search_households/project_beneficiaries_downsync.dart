@@ -63,36 +63,38 @@ class BeneficiaryDownSyncBloc
     DownSyncCheckTotalCountEvent event,
     BeneficiaryDownSyncEmitter emit,
   ) async {
-    final existingDownSyncData =
-        await downSyncLocalRepository.search(DownsyncSearchModel(
-      locality: event.boundaryCode,
-    ));
-
-    int? lastSyncedTime = existingDownSyncData.isEmpty
-        ? null
-        : existingDownSyncData.first.lastSyncedTime;
-
-    //To get the server totalCount,
-    final initialResults = await downSyncRemoteRepository.downSync(
-      DownsyncSearchModel(
-        locality: event.boundaryCode,
-        offset: existingDownSyncData.firstOrNull?.offset ?? 0,
-        limit: 1,
-        lastSyncedTime: lastSyncedTime,
-        tenantId: envConfig.variables.tenantId,
-        projectId: event.projectId,
-      ),
-    );
-    if (initialResults.isNotEmpty) {
-      // Current response from server is String, Expecting it to be int
-      //[TODO: Need to move the dynamic keys to constants
-      int serverTotalCount = initialResults["DownsyncCriteria"]["totalCount"];
-
-      if (serverTotalCount > 0) {
-        emit(BeneficiaryDownSyncState.dataFound(serverTotalCount));
-      }
+    if (event.pendingSyncCount > 0) {
+      emit(const BeneficiaryDownSyncState.pendingSync());
     } else {
-      emit(const BeneficiaryDownSyncState.totalCountCheckFailed());
+      final existingDownSyncData =
+          await downSyncLocalRepository.search(DownsyncSearchModel(
+        locality: event.boundaryCode,
+      ));
+
+      int? lastSyncedTime = existingDownSyncData.isEmpty
+          ? null
+          : existingDownSyncData.first.lastSyncedTime;
+
+      //To get the server totalCount,
+      final initialResults = await downSyncRemoteRepository.downSync(
+        DownsyncSearchModel(
+          locality: event.boundaryCode,
+          offset: existingDownSyncData.firstOrNull?.offset ?? 0,
+          limit: 1,
+          lastSyncedTime: lastSyncedTime,
+          tenantId: envConfig.variables.tenantId,
+          projectId: event.projectId,
+        ),
+      );
+      if (initialResults.isNotEmpty) {
+        // Current response from server is String, Expecting it to be int
+        //[TODO: Need to move the dynamic keys to constants
+        int serverTotalCount = initialResults["DownsyncCriteria"]["totalCount"];
+
+        emit(BeneficiaryDownSyncState.dataFound(serverTotalCount));
+      } else {
+        emit(const BeneficiaryDownSyncState.totalCountCheckFailed());
+      }
     }
   }
 
@@ -134,7 +136,7 @@ class BeneficiaryDownSyncBloc
             ));
           }
 
-          if (offset <= totalCount) {
+          if (offset < totalCount) {
             //[TODO: Need to emit the sync count instead of zero
             emit(BeneficiaryDownSyncState.inProgress(offset, totalCount));
             //Make the batch API call
@@ -182,6 +184,7 @@ class BeneficiaryDownSyncBloc
           } else {
             await downSyncLocalRepository.update(
               existingDownSyncData.first.copyWith(
+                offset: totalCount,
                 lastSyncedTime: DateTime.now().millisecondsSinceEpoch,
               ),
             );
@@ -216,6 +219,7 @@ class BeneficiaryDownSyncEvent with _$BeneficiaryDownSyncEvent {
   const factory BeneficiaryDownSyncEvent.checkForData({
     required String projectId,
     required String boundaryCode,
+    required int pendingSyncCount,
   }) = DownSyncCheckTotalCountEvent;
 
   const factory BeneficiaryDownSyncEvent.downSyncReport() = DownSyncReportEvent;
@@ -244,4 +248,6 @@ class BeneficiaryDownSyncState with _$BeneficiaryDownSyncState {
   const factory BeneficiaryDownSyncState.report(
     List<DownsyncModel> downsyncCriteriaList,
   ) = _DownSyncReportState;
+  const factory BeneficiaryDownSyncState.pendingSync() =
+      _DownSyncPendingSyncState;
 }
