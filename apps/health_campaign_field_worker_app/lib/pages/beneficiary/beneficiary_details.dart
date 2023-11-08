@@ -163,9 +163,9 @@ class _BeneficiaryDetailsPageState
                                                 options: DigitDialogOptions(
                                                   titlePadding:
                                                       const EdgeInsets.fromLTRB(
-                                                    kPadding,
-                                                    kPadding,
-                                                    kPadding,
+                                                    kPadding * 2,
+                                                    kPadding * 2,
+                                                    kPadding * 2,
                                                     kPadding / 2,
                                                   ),
                                                   contentPadding:

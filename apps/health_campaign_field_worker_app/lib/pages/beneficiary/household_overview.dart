@@ -66,6 +66,12 @@ class _HouseholdOverviewPageState
                           height: MediaQuery.of(context).size.height / 1.25,
                           child: SingleChildScrollView(
                             child: DigitCard(
+                              padding: const EdgeInsets.fromLTRB(
+                                kPadding,
+                                kPadding,
+                                kPadding,
+                                0,
+                              ),
                               child: Column(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
@@ -691,6 +697,11 @@ class _HouseholdOverviewPageState
                   child: state.tasks?.first.status ==
                           Status.administeredSuccess.toValue()
                       ? DigitOutLineButton(
+                          buttonStyle: OutlinedButton.styleFrom(
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.zero,
+                            ),
+                          ),
                           label: localizations.translate(
                             i18.memberCard.deliverDetailsUpdateLabel,
                           ),

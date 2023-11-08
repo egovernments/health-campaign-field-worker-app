@@ -80,7 +80,9 @@ Widget buildTableContent(
                 ): '${fetchProductVariant(item, individualModel)?.condition?.split('<=age<').first} - ${fetchProductVariant(item, individualModel)?.condition?.split('<=age<').last} months',
               },
             ),
-            const Divider(),
+            const Divider(
+              thickness: 2.0,
+            ),
             // Build the DigitTable with the data
             DigitTable(
               headerList: headerListResource,
@@ -119,7 +121,7 @@ Widget buildTableContent(
                   },
                 ),
               ],
-              columnWidth: 140,
+              columnWidth: 150,
               height: ((fetchProductVariant(item, individualModel)!
                                   .productVariants ??
                               [])

@@ -9,7 +9,6 @@ class DigitDialog extends StatelessWidget {
     required this.options,
   });
 
-
   static Future<T?> show<T>(
     BuildContext context, {
     required DigitDialogOptions options,
@@ -37,7 +36,6 @@ class DigitDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-
         title: Padding(
           padding: options.dialogPadding != null
               ? options.dialogPadding!
@@ -64,6 +62,9 @@ class DigitDialog extends StatelessWidget {
                             options.secondaryAction!.action?.call(context),
                         label: options.secondaryAction!.label,
                         buttonStyle: OutlinedButton.styleFrom(
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.zero,
+                          ),
                           backgroundColor: Colors.white,
                           side: BorderSide(
                             width: 1.0,

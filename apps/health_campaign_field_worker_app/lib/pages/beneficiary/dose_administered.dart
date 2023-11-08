@@ -342,12 +342,17 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                 children: [
                                   Align(
                                     alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      localizations.translate(
-                                        i18.beneficiaryDetails
-                                            .resourcesTobeProvided,
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                        bottom: kPadding * 2,
                                       ),
-                                      style: theme.textTheme.displayMedium,
+                                      child: Text(
+                                        localizations.translate(
+                                          i18.beneficiaryDetails
+                                              .resourcesTobeProvided,
+                                        ),
+                                        style: theme.textTheme.displayMedium,
+                                      ),
                                     ),
                                   ),
                                   DigitTableCard(
@@ -366,14 +371,16 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                     },
                                     //[TODO:: Need to parse <=age< as an Expression
                                   ),
-                                  const Divider(),
+                                  const Divider(
+                                    thickness: 2.0,
+                                  ),
                                   DigitTable(
                                     headerList: headerListResource,
                                     tableData: tableDataRows,
                                     columnWidth:
                                         MediaQuery.of(context).size.width /
                                             2.18,
-                                    height: (tableDataRows.length + 1) * 59.5,
+                                    height: (tableDataRows.length + 1) * 57.5,
                                   ),
                                 ],
                               );

@@ -235,11 +235,17 @@ class _RecordPastDeliveryDetailsPageState
                 DigitCard(
                   child: Column(
                     children: [
-                      Text(
-                        localizations.translate(
-                          i18.deliverIntervention.recordPastDeliveryDeatils,
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: kPadding,
+                          right: kPadding,
                         ),
-                        style: theme.textTheme.displayMedium,
+                        child: Text(
+                          localizations.translate(
+                            i18.deliverIntervention.recordPastDeliveryDeatils,
+                          ),
+                          style: theme.textTheme.displayMedium,
+                        ),
                       ),
                       ...(futureTaskList?.asMap().entries.map((entry) {
                             final int doseNumber =
@@ -283,10 +289,16 @@ class _RecordPastDeliveryDetailsPageState
                                       errorMessage: localizations.translate(
                                         i18.common.corecommonRequired,
                                       ),
+                                      labelPadding: const EdgeInsets.only(
+                                        top: kPadding,
+                                        left: kPadding,
+                                      ),
                                     ),
 
                                     if (entry.key != futureTaskList.length - 1)
-                                      const Divider(), // Add Divider conditionally
+                                      const Divider(
+                                        thickness: 1.0,
+                                      ), // Add Divider conditionally
                                   ],
                                 );
                               },

@@ -334,16 +334,21 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
-      i18.home.warehouseManagerCheckList:
-          homeShowcaseData.wareHouseManagerChecklist.buildWith(
-        child: HomeItemCard(
-          icon: Icons.checklist,
-          label: i18.home.warehouseManagerCheckList,
-          onPressed: () => context.router.push(ChecklistWrapperRoute()),
-        ),
-      ),
+      //[todo] commenting for now since both the routes are same
+      // i18.home.warehouseManagerCheckList:
+      //     homeShowcaseData.wareHouseManagerChecklist.buildWith(
+      //   child: HomeItemCard(
+      //     enableCustomIcon: true,
+      //     customIcon: myChecklistSvg,
+      //     icon: Icons.checklist,
+      //     label: i18.home.warehouseManagerCheckList,
+      //     onPressed: () => context.router.push(ChecklistWrapperRoute()),
+      //   ),
+      // ),
       i18.home.myCheckList: homeShowcaseData.supervisorMyChecklist.buildWith(
         child: HomeItemCard(
+          enableCustomIcon: true,
+          customIcon: myChecklistSvg,
           icon: Icons.checklist,
           label: i18.home.myCheckList,
           onPressed: () => context.router.push(ChecklistWrapperRoute()),
@@ -419,8 +424,8 @@ class _HomePageState extends LocalizedState<HomePage> {
           homeShowcaseData.warehouseManagerManageStock.showcaseKey,
       i18.home.stockReconciliationLabel:
           homeShowcaseData.wareHouseManagerStockReconciliation.showcaseKey,
-      i18.home.warehouseManagerCheckList:
-          homeShowcaseData.wareHouseManagerChecklist.showcaseKey,
+      // i18.home.warehouseManagerCheckList:
+      //     homeShowcaseData.wareHouseManagerChecklist.showcaseKey,
       i18.home.myCheckList: homeShowcaseData.supervisorMyChecklist.showcaseKey,
       i18.home.fileComplaint:
           homeShowcaseData.distributorFileComplaint.showcaseKey,
@@ -433,7 +438,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.beneficiaryLabel,
       i18.home.manageStockLabel,
       i18.home.stockReconciliationLabel,
-      i18.home.warehouseManagerCheckList,
+      // i18.home.warehouseManagerCheckList,
       i18.home.myCheckList,
       i18.home.fileComplaint,
       i18.home.syncDataLabel,

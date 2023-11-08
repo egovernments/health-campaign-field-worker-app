@@ -42,7 +42,12 @@ class _ResourceBeneficiaryCardState
           Radius.circular(4.0),
         ),
       ),
-      margin: DigitTheme.instance.containerMargin,
+      margin: const EdgeInsets.fromLTRB(
+        kPadding / 2,
+        kPadding * 2,
+        kPadding / 2,
+        kPadding / 2,
+      ),
       padding: const EdgeInsets.all(8),
       child: Column(
         children: [

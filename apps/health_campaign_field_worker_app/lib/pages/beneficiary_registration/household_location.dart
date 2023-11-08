@@ -226,7 +226,6 @@ class _HouseholdLocationPageState
                         kPadding,
                         0,
                       ),
-                      // padding: const EdgeInsets.fromLTRB(0, 0, 0, bottom)
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,

@@ -130,6 +130,9 @@ class DigitAcknowledgement extends StatelessWidget {
                             onPressed: action,
                             label: actionLabel,
                             buttonStyle: OutlinedButton.styleFrom(
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.zero,
+                              ),
                               backgroundColor: Colors.white,
                               side: BorderSide(
                                 width: 1.0,
@@ -139,7 +142,6 @@ class DigitAcknowledgement extends StatelessWidget {
                                 MediaQuery.of(context).size.width / 1,
                                 50,
                               ),
-                              shape: null,
                             ),
                           ),
                         ],

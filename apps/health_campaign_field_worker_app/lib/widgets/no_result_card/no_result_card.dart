@@ -14,16 +14,23 @@ class NoResultCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Align(
       alignment: align,
       child: Padding(
         padding: const EdgeInsets.only(top: 100, bottom: 10, right: 8),
         child: Column(
           children: [
-            SvgPicture.asset(noResultSvg),
+            SvgPicture.asset(
+              noResultSvg,
+              width: 340,
+              height: 200,
+            ),
             const SizedBox(height: 20),
             Text(
               label ?? '',
+              style: theme.textTheme.bodyMedium,
             ),
           ],
         ),

@@ -1,16 +1,22 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 import '../../blocs/localization/app_localization.dart';
+import '../../utils/constants.dart';
 
 class HomeItemCard extends StatelessWidget {
   final IconData icon;
+  final String customIcon;
   final String label;
   final VoidCallback? onPressed;
+  final bool enableCustomIcon;
 
   const HomeItemCard({
     required this.icon,
     required this.label,
+    this.enableCustomIcon = false,
+    this.customIcon = "",
     this.onPressed,
     super.key,
   });
@@ -29,13 +35,20 @@ class HomeItemCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              icon,
-              color: onPressed == null
-                  ? theme.disabledColor
-                  : theme.colorScheme.secondary,
-              size: 30,
-            ),
+            if (enableCustomIcon)
+              SvgPicture.asset(
+                customIcon,
+                width: 25,
+                height: 25,
+              ),
+            if (!enableCustomIcon)
+              Icon(
+                icon,
+                color: onPressed == null
+                    ? theme.disabledColor
+                    : theme.colorScheme.secondary,
+                size: 30,
+              ),
             const SizedBox(height: 24),
             Text(
               AppLocalizations.of(context).translate(

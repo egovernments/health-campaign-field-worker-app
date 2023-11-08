@@ -20,6 +20,9 @@ class DigitOutLineButton extends StatelessWidget {
       style: onPressed != null
           ? buttonStyle
           : OutlinedButton.styleFrom(
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.zero,
+              ),
               backgroundColor: Colors.white,
               side: BorderSide(
                 width: 1.0,
@@ -36,7 +39,7 @@ class DigitOutLineButton extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: 19,
-            fontWeight: FontWeight.w700,
+            fontWeight: FontWeight.w600,
             fontStyle: FontStyle.normal,
             color: onPressed != null
                 ? theme.colorScheme.secondary

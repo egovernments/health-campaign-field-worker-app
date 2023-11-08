@@ -415,9 +415,12 @@ class _IndividualDetailsPageState
                                       ).toList(),
                                       formControlName: _idTypeKey,
                                       padding: EdgeInsets.only(
-                                        top: widget.isHeadOfHousehold ? 16 : 0,
-                                        bottom:
-                                            !widget.isHeadOfHousehold ? 0 : 16,
+                                        top: widget.isHeadOfHousehold
+                                            ? kPadding * 2
+                                            : 0,
+                                        bottom: !widget.isHeadOfHousehold
+                                            ? 0
+                                            : kPadding * 2,
                                       ),
                                     ),
                                   );
@@ -456,6 +459,10 @@ class _IndividualDetailsPageState
                                     },
                                   ),
                                 ],
+                              ),
+                            if (form.control(_idTypeKey).value == 'DEFAULT')
+                              const SizedBox(
+                                height: kPadding * 2,
                               ),
                             individualDetailsShowcaseData.dateOfBirth.buildWith(
                               child: DigitDobPicker(
@@ -592,23 +599,28 @@ class _IndividualDetailsPageState
 
                                   // ignore: no-empty-block
                                 )
-                              : DigitOutlineIconButton(
-                                  buttonStyle: OutlinedButton.styleFrom(
-                                    shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.zero,
-                                    ),
+                              : Container(
+                                  padding: const EdgeInsets.only(
+                                    bottom: 16,
                                   ),
-                                  onPressed: () {
-                                    context.router.push(QRScannerRoute(
-                                      quantity: 1,
-                                      isGS1code: false,
-                                      sinlgleValue: true,
-                                    ));
-                                  },
-                                  icon: Icons.qr_code,
-                                  label: localizations.translate(
-                                    i18.individualDetails
-                                        .linkVoucherToIndividual,
+                                  child: DigitOutlineIconButton(
+                                    buttonStyle: OutlinedButton.styleFrom(
+                                      shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.zero,
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      context.router.push(QRScannerRoute(
+                                        quantity: 1,
+                                        isGS1code: false,
+                                        sinlgleValue: true,
+                                      ));
+                                    },
+                                    icon: Icons.qr_code,
+                                    label: localizations.translate(
+                                      i18.individualDetails
+                                          .linkVoucherToIndividual,
+                                    ),
                                   ),
                                 ),
                         ),

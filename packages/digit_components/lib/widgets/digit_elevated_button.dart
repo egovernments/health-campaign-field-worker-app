@@ -30,7 +30,7 @@ class DigitElevatedButton extends StatelessWidget {
             color: Colors.black,
             fontFamily: 'Roboto',
             fontSize: 19,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w500,
           ),
         ),
         onPressed: onPressed,
