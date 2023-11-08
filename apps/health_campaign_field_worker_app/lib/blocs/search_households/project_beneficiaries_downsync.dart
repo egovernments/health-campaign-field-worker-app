@@ -180,10 +180,11 @@ class BeneficiaryDownSyncBloc
               break;
             }
           } else {
-            await downSyncLocalRepository.update(DownsyncModel(
-              offset: offset + event.batchSize,
-              lastSyncedTime: DateTime.now().millisecondsSinceEpoch,
-            ));
+            await downSyncLocalRepository.update(
+              existingDownSyncData.first.copyWith(
+                lastSyncedTime: DateTime.now().millisecondsSinceEpoch,
+              ),
+            );
             emit(const BeneficiaryDownSyncState.success());
             break; // If offset is greater than or equal to totalCount, exit the loop
           }

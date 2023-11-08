@@ -137,7 +137,8 @@ class _BoundarySelectionPageState
                                   i18.beneficiaryDetails.dataFound,
                                 ),
                                 projectId: context.projectId,
-                                boundary: selectedBoundary.toString(),
+                                boundary:
+                                    selectedBoundary!.value!.code.toString(),
                                 batchSize: 5,
                                 totalCount: initialServerCount,
                                 content: localizations.translate(
@@ -162,7 +163,8 @@ class _BoundarySelectionPageState
                                   i18.beneficiaryDetails.dataDownloadInProgress,
                                 ),
                                 projectId: context.projectId,
-                                boundary: selectedBoundary.toString(),
+                                boundary:
+                                    selectedBoundary!.value!.code.toString(),
                                 syncCount: syncCount,
                                 totalCount: totalCount,
                                 prefixLabel: syncCount.toString(),
@@ -184,7 +186,8 @@ class _BoundarySelectionPageState
                                   i18.common.coreCommonDownloadFailed,
                                 ),
                                 projectId: context.projectId,
-                                boundary: selectedBoundary.toString(),
+                                boundary:
+                                    selectedBoundary!.value!.code.toString(),
                                 content: localizations.translate(
                                   i18.beneficiaryDetails.dataFoundContent,
                                 ),
@@ -207,7 +210,8 @@ class _BoundarySelectionPageState
                                       .unableToCheckDataInServer,
                                 ),
                                 projectId: context.projectId,
-                                boundary: selectedBoundary.toString(),
+                                boundary:
+                                    selectedBoundary!.value!.code.toString(),
                                 primaryButtonLabel: localizations.translate(
                                   i18.syncDialog.retryButtonLabel,
                                 ),
@@ -226,7 +230,8 @@ class _BoundarySelectionPageState
                                   i18.beneficiaryDetails.insufficientStorage,
                                 ),
                                 projectId: context.projectId,
-                                boundary: selectedBoundary.toString(),
+                                boundary:
+                                    selectedBoundary!.value!.code.toString(),
                                 primaryButtonLabel: localizations.translate(
                                   i18.syncDialog.closeButtonLabel,
                                 ),
