@@ -66,7 +66,8 @@ class _BeneficiaryDetailsPageState
           final taskData = state.householdMemberWrapper.tasks
               ?.where((element) =>
                   element.projectBeneficiaryClientReferenceId ==
-                  projectBeneficiary.first.clientReferenceId)
+                      projectBeneficiary.first.clientReferenceId &&
+                  element.status != Status.beneficiaryRefused.toValue())
               .toList();
           final projectState = context.read<ProjectBloc>().state;
           final bloc = context.read<DeliverInterventionBloc>();

@@ -13,6 +13,8 @@ import '../../models/role_actions/role_actions_model.dart';
 import '../../utils/background_service.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/utils.dart';
+import '../../models/data_model.dart';
+import '../../utils/constants.dart';
 
 // part 'auth.freezed.dart' need to be added to auto generate the files for freezed model
 part 'auth.freezed.dart';
@@ -87,13 +89,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await localSecureStore.setAuthCredentials(result);
       await localSecureStore.setBoundaryRefetch(true);
 
-      final actionsWrapper = await mdmsRepository
-          .searchRoleActions(envConfig.variables.actionMapApiPath, {
-        "roleCodes": result.userRequestModel.roles.map((e) => e.code).toList(),
-        "tenantId": envConfig.variables.tenantId,
-        "actionMaster": "actions-test",
-        "enabled": true,
-      });
+      final actionsWrapper = await mdmsRepository.searchRoleActions(
+        envConfig.variables.actionMapApiPath,
+        localSecureStore,
+        {
+          "roleCodes":
+              result.userRequestModel.roles.map((e) => e.code).toList(),
+          "tenantId": envConfig.variables.tenantId,
+          "actionMaster": "actions-test",
+          "enabled": true,
+        },
+      );
       await localSecureStore.setBoundaryRefetch(true);
 
       emit(

@@ -86,6 +86,7 @@ class NetworkManager {
     // Recursive function which will call the Perfom Sync
 
     if (pendingSyncUpEntries.isNotEmpty || pendingSyncDownEntries.isNotEmpty) {
+      await Future.delayed(const Duration(seconds: 3));
       isSyncCompleted = await performSync(
         bandwidthModel: bandwidthModel,
         localRepositories: localRepositories,
