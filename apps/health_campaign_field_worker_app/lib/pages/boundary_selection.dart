@@ -190,8 +190,8 @@ class _BoundarySelectionPageState
                               );
                             },
                             success: () {
-                              // Navigator.of(context, rootNavigator: true).pop();
-
+                              Navigator.of(context, rootNavigator: true).pop();
+                              context.router.pop();
                               DigitSyncDialog.show(
                                 context,
                                 type: DigitSyncDialogType.complete,
