@@ -118,7 +118,7 @@ class MainApplicationState extends State<MainApplication>
                       return const MaterialApp(
                         home: Scaffold(
                           body: Center(
-                            child: Text('Loading'),
+                            child: Text('Carregando'),
                           ),
                         ),
                       );
