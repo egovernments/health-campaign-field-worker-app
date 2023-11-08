@@ -74,21 +74,22 @@ class _ResourceBeneficiaryCardState
                 },
               );
             },
-          ),Padding(
-                padding:const EdgeInsets.only(top: 16.0),
-                child: DigitCheckbox(
-                  label: localizations.translate(
-                    i18.deliverIntervention.deliverInteventionAdministeredLabel,
-                  ),
-                  value: doseAdministered,
-                  onChanged: (value) {
-                    setState(() {
-                      doseAdministered = value!;
-                      widget.checkDoseAdministration(value);
-                    });
-                  },
-                ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 16.0),
+            child: DigitCheckbox(
+              label: localizations.translate(
+                i18.deliverIntervention.deliverInteventionAdministeredLabel,
               ),
+              value: doseAdministered,
+              onChanged: (value) {
+                setState(() {
+                  doseAdministered = value!;
+                  widget.checkDoseAdministration(value);
+                });
+              },
+            ),
+          ),
           DigitTextFormField(
             formControlName: 'quantityWasted.${widget.cardIndex}',
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -104,7 +105,7 @@ class _ResourceBeneficiaryCardState
             validationMessages: {
               "required": (control) {
                 return localizations.translate(
-                  i18.common.coreQuantityWasted,
+                  i18.common.corecommonRequired,
                 );
               },
             },
