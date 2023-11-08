@@ -46,7 +46,7 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
       ),
       bottomNavigationBar: Offstage(
         offstage: !widget.isDataRecordSuccess,
-        // Show the bottom navigation bar if `sending` is true
+        // Show the bottom navigation bar if `isDataRecordSuccess` is true
         child: SizedBox(
           height: 145,
           child: DigitCard(
