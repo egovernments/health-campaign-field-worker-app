@@ -1,8 +1,5 @@
-import 'dart:math';
-
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -14,7 +11,6 @@ import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
 import '../widgets/localized.dart';
-import '../widgets/progress_indicator/progress_indicator.dart';
 
 class BoundarySelectionPage extends LocalizedStatefulWidget {
   const BoundarySelectionPage({
@@ -133,161 +129,115 @@ class _BoundarySelectionPageState
                         listener: (context, downSyncState) {
                           downSyncState.maybeWhen(
                             orElse: () => false,
-                            dataFound: (initialServerCount) => DigitDialog.show(
+                            dataFound: (initialServerCount) =>
+                                showDownloadDialog(
                               context,
-                              //[TODO: Localizations need to be added
-                              options: DigitDialogOptions(
-                                titleText: 'Data Found!',
-                                contentText:
-                                    'There are records found for the selected boundary. If you wish to download, Kindly, ensure stable internet connection and while the downloading is in progress, please donot minimize or close the app',
-                                primaryAction: DigitDialogActions(
-                                  label: localizations.translate(
-                                    i18.common.coreCommonDownload,
-                                  ),
-                                  action: (ctx) {
-                                    context.read<BeneficiaryDownSyncBloc>().add(
-                                          DownSyncBeneficiaryEvent(
-                                            projectId: context.projectId,
-                                            boundaryCode: selectedBoundary!
-                                                .value!.code
-                                                .toString(),
-                                            // Batch Size need to be defined based on Internet speed.
-                                            batchSize: 5,
-                                            initialServerCount:
-                                                initialServerCount,
-                                          ),
-                                        );
-                                  },
+                              model: DownloadBeneficiary(
+                                title: localizations.translate(
+                                  i18.beneficiaryDetails.dataFound,
                                 ),
-                                secondaryAction: DigitDialogActions(
-                                  label: localizations.translate(
-                                    i18.beneficiaryDetails
-                                        .proceedWithoutDownloading,
-                                  ),
-                                  action: (ctx) {
-                                    Navigator.pop(ctx);
-                                    context.router.pop();
-                                  },
+                                projectId: context.projectId,
+                                boundary: selectedBoundary.toString(),
+                                batchSize: 5,
+                                totalCount: initialServerCount,
+                                content: localizations.translate(
+                                  i18.beneficiaryDetails.dataFoundContent,
+                                ),
+                                primaryButtonLabel: localizations.translate(
+                                  i18.common.coreCommonDownload,
+                                ),
+                                secondaryButtonLabel: localizations.translate(
+                                  i18.beneficiaryDetails
+                                      .proceedWithoutDownloading,
                                 ),
                               ),
-                              // TODO: Secondary action button need to be added to route to Home screen
+                              dialogType: DigitProgressDialogType.dataFound,
+                              isPop: false,
                             ),
-                            inProgress: (syncCount, totalCount) {
-                              // TODO: Need to emit the Progress bar in the dialog
-                              Navigator.of(context, rootNavigator: true).pop();
-                              DigitDialog.show(
-                                context,
-                                options: DigitDialogOptions(
-                                  title: ProgressIndicatorContainer(
-                                    label: '',
-                                    prefixLabel: '$syncCount Completed',
-                                    suffixLabel: totalCount.toStringAsFixed(0),
-                                    value: totalCount == 0
-                                        ? 0
-                                        : min(syncCount / totalCount, 1),
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                      DigitTheme.instance.colorScheme.secondary,
-                                    ),
-                                    subLabel: 'Data is being downloaded',
-                                  ),
+                            inProgress: (syncCount, totalCount) =>
+                                showDownloadDialog(
+                              context,
+                              model: DownloadBeneficiary(
+                                title: localizations.translate(
+                                  i18.beneficiaryDetails.dataDownloadInProgress,
                                 ),
-                              );
-                            },
+                                projectId: context.projectId,
+                                boundary: selectedBoundary.toString(),
+                                syncCount: syncCount,
+                                totalCount: totalCount,
+                                prefixLabel: syncCount.toString(),
+                                suffixLabel: totalCount.toString(),
+                              ),
+                              dialogType: DigitProgressDialogType.inProgress,
+                              isPop: true,
+                            ),
                             success: () {
                               Navigator.of(context, rootNavigator: true).pop();
                               context.router.popAndPush((AcknowledgementRoute(
                                 isDataRecordSuccess: true,
                               )));
                             },
-                            failed: () {
-                              Navigator.of(context, rootNavigator: true).pop();
-                              DigitSyncDialog.show(
-                                context,
-                                type: DigitSyncDialogType.failed,
-                                label: 'Downloading Failed',
-                                primaryAction: DigitDialogActions(
-                                  label: localizations.translate(
-                                    i18.syncDialog.retryButtonLabel,
-                                  ),
-                                  action: (ctx) {
-                                    context.read<BeneficiaryDownSyncBloc>().add(
-                                          DownSyncCheckTotalCountEvent(
-                                            projectId: context.projectId,
-                                            boundaryCode: selectedBoundary!
-                                                .value!.code
-                                                .toString(),
-                                          ),
-                                        );
-                                    Navigator.of(context, rootNavigator: true)
-                                        .pop();
-                                  },
-                                ),
-                                secondaryAction: DigitDialogActions(
-                                  label: localizations.translate(
-                                    i18.beneficiaryDetails
-                                        .proceedWithoutDownloading,
-                                  ),
-                                  action: (ctx) {
-                                    Navigator.pop(ctx);
-                                    context.router.pop();
-                                  },
-                                ),
-                              );
-                            },
-                            totalCountCheckFailed: () => DigitSyncDialog.show(
+                            failed: () => showDownloadDialog(
                               context,
-                              type: DigitSyncDialogType.failed,
-                              label: 'Unable to check records in server',
-                              primaryAction: DigitDialogActions(
-                                label: localizations.translate(
+                              model: DownloadBeneficiary(
+                                title: localizations.translate(
+                                  i18.common.coreCommonDownloadFailed,
+                                ),
+                                projectId: context.projectId,
+                                boundary: selectedBoundary.toString(),
+                                content: localizations.translate(
+                                  i18.beneficiaryDetails.dataFoundContent,
+                                ),
+                                primaryButtonLabel: localizations.translate(
                                   i18.syncDialog.retryButtonLabel,
                                 ),
-                                action: (ctx) {
-                                  context.read<BeneficiaryDownSyncBloc>().add(
-                                        DownSyncCheckTotalCountEvent(
-                                          projectId: context.projectId,
-                                          boundaryCode: selectedBoundary!
-                                              .value!.code
-                                              .toString(),
-                                        ),
-                                      );
-                                  Navigator.pop(ctx);
-                                },
-                              ),
-                              secondaryAction: DigitDialogActions(
-                                label: localizations.translate(
+                                secondaryButtonLabel: localizations.translate(
                                   i18.beneficiaryDetails
                                       .proceedWithoutDownloading,
                                 ),
-                                action: (ctx) {
-                                  Navigator.pop(ctx);
-                                  context.router.pop();
-                                },
                               ),
+                              dialogType: DigitProgressDialogType.failed,
+                              isPop: true,
                             ),
-                            insufficientStorage: () => DigitSyncDialog.show(
+                            totalCountCheckFailed: () => showDownloadDialog(
                               context,
-                              type: DigitSyncDialogType.failed,
-                              label: 'Insufficient Storage',
-                              primaryAction: DigitDialogActions(
-                                label: localizations.translate(
+                              model: DownloadBeneficiary(
+                                title: localizations.translate(
+                                  i18.beneficiaryDetails
+                                      .unableToCheckDataInServer,
+                                ),
+                                projectId: context.projectId,
+                                boundary: selectedBoundary.toString(),
+                                primaryButtonLabel: localizations.translate(
+                                  i18.syncDialog.retryButtonLabel,
+                                ),
+                                secondaryButtonLabel: localizations.translate(
+                                  i18.beneficiaryDetails
+                                      .proceedWithoutDownloading,
+                                ),
+                              ),
+                              dialogType: DigitProgressDialogType.checkFailed,
+                              isPop: false,
+                            ),
+                            insufficientStorage: () => showDownloadDialog(
+                              context,
+                              model: DownloadBeneficiary(
+                                title: localizations.translate(
+                                  i18.beneficiaryDetails.insufficientStorage,
+                                ),
+                                projectId: context.projectId,
+                                boundary: selectedBoundary.toString(),
+                                primaryButtonLabel: localizations.translate(
                                   i18.syncDialog.closeButtonLabel,
                                 ),
-                                action: (ctx) {
-                                  Navigator.pop(ctx);
-                                  context.router.pop();
-                                },
-                              ),
-                              secondaryAction: DigitDialogActions(
-                                label: localizations.translate(
+                                secondaryButtonLabel: localizations.translate(
                                   i18.beneficiaryDetails
                                       .proceedWithoutDownloading,
                                 ),
-                                action: (ctx) {
-                                  Navigator.pop(ctx);
-                                  context.router.pop();
-                                },
                               ),
+                              dialogType:
+                                  DigitProgressDialogType.insufficientStorage,
+                              isPop: false,
                             ),
                           );
                         },

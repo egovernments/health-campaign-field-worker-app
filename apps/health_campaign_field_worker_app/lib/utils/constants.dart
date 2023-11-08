@@ -304,6 +304,43 @@ class EntityPlurals {
   }
 }
 
+enum DigitProgressDialogType {
+  inProgress,
+  dataFound,
+  success,
+  failed,
+  insufficientStorage,
+  checkFailed,
+  pendingSync,
+}
+
+class DownloadBeneficiary {
+  String title;
+  String projectId;
+  String boundary;
+  int? syncCount;
+  int? totalCount;
+  String? content;
+  int? batchSize;
+  String? primaryButtonLabel;
+  String? secondaryButtonLabel;
+  String? prefixLabel;
+  String? suffixLabel;
+  DownloadBeneficiary({
+    required this.title,
+    required this.projectId,
+    required this.boundary,
+    this.batchSize,
+    this.syncCount,
+    this.totalCount,
+    this.content,
+    this.primaryButtonLabel,
+    this.secondaryButtonLabel,
+    this.prefixLabel,
+    this.suffixLabel,
+  });
+}
+
 class DataModels {
   static DataModelType getDataModelForEntityName(String entity) {
     switch (entity) {

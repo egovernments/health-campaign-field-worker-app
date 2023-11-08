@@ -100,6 +100,7 @@ class Common {
   String get facilitySearchHeaderLabel => 'FACILITY_SEARCH_HEADER_LABEL';
 
   String get coreCommonDownload => 'CORE_COMMON_DOWNLOAD';
+  String get coreCommonDownloadFailed => 'CORE_COMMON_DOWNLOAD_FAILED';
 }
 
 class AdverseEvents {
@@ -302,6 +303,11 @@ class BeneficiaryDetails {
   String get deliveryHeader => 'DELIVERY_TABLE_HEADER';
 
   String get proceedWithoutDownloading => 'PROCEED_WITHOUT_DOWNLOADING';
+  String get unableToCheckDataInServer => 'FAILED_TO_CHECK_DATA_IN_SERVER';
+  String get dataFound => 'DATA_FOUND';
+  String get dataFoundContent => 'DATA_FOUND_CONTENT';
+  String get dataDownloadInProgress => 'DATA_DOWNLOAD_IN_PROGRESS';
+  String get insufficientStorage => 'INSUFFICIENT_STORAGE_WARNING';
 }
 
 class IndividualDetails {
