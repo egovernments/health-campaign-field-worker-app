@@ -33,6 +33,9 @@ class _BoundarySelectionPageState
   @override
   void initState() {
     context.read<SyncBloc>().add(SyncRefreshEvent(context.loggedInUserUuid));
+    context.read<BeneficiaryDownSyncBloc>().add(
+          const DownSyncResetStateEvent(),
+        );
     super.initState();
   }
 

@@ -57,20 +57,18 @@ class BeneficariesReportState extends LocalizedState<BeneficariesReportPage> {
         children: [
           BlocListener<SyncBloc, SyncState>(
             listener: (ctx, syncState) {
-              syncState.maybeWhen(
-                orElse: () => false,
-                pendingSync: (count) {
-                  setState(() {
-                    pendingSyncCount = count;
-                  });
-                },
-              );
+              setState(() {
+                pendingSyncCount = syncState.maybeWhen(
+                  orElse: () => 0,
+                  pendingSync: (count) => count,
+                );
+              });
             },
             child:
                 BlocListener<BeneficiaryDownSyncBloc, BeneficiaryDownSyncState>(
               listener: (ctx, state) {
                 state.maybeWhen(
-                  orElse: () => const Text(''),
+                  orElse: () => false,
                   report: (downsyncCriteriaList) {
                     setState(() {
                       downsyncList = downsyncCriteriaList;
