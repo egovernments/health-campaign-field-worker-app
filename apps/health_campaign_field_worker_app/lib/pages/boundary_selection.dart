@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
@@ -12,6 +14,7 @@ import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
 import '../widgets/localized.dart';
+import '../widgets/progress_indicator/progress_indicator.dart';
 
 class BoundarySelectionPage extends LocalizedStatefulWidget {
   const BoundarySelectionPage({
@@ -142,7 +145,6 @@ class _BoundarySelectionPageState
                                     i18.common.coreCommonDownload,
                                   ),
                                   action: (ctx) {
-                                    Navigator.pop(ctx);
                                     context.read<BeneficiaryDownSyncBloc>().add(
                                           DownSyncBeneficiaryEvent(
                                             projectId: context.projectId,
@@ -172,15 +174,17 @@ class _BoundarySelectionPageState
                             ),
                             inProgress: (syncCount, totalCount) {
                               // TODO: Need to emit the Progress bar in the dialog
-                              // Navigator.of(context, rootNavigator: true).pop();
+                              Navigator.of(context, rootNavigator: true).pop();
                               DigitDialog.show(
                                 context,
                                 options: DigitDialogOptions(
-                                  content: Column(
-                                    children: [
-                                      Text('Sync count : $syncCount'),
-                                      const Text('Data is being downloaded'),
-                                    ],
+                                  title: ProgressIndicatorContainer(
+                                    label: '',
+                                    prefixLabel: '$syncCount Completed',
+                                    suffixLabel: totalCount.toStringAsFixed(0),
+                                    value: totalCount == 0
+                                        ? 0
+                                        : min(syncCount / totalCount, 1),
                                   ),
                                 ),
                               );
@@ -205,7 +209,7 @@ class _BoundarySelectionPageState
                               );
                             },
                             failed: () {
-                              // Navigator.of(context, rootNavigator: true).pop();
+                              Navigator.of(context, rootNavigator: true).pop();
                               DigitSyncDialog.show(
                                 context,
                                 type: DigitSyncDialogType.failed,

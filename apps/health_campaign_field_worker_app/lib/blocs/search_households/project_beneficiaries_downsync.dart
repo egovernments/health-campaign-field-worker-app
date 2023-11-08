@@ -123,10 +123,19 @@ class BeneficiaryDownSyncBloc
           int? lastSyncedTime = existingDownSyncData.isEmpty
               ? null
               : existingDownSyncData.first.lastSyncedTime;
+          if (existingDownSyncData.isEmpty) {
+            await downSyncLocalRepository.create(DownsyncModel(
+              offset: offset,
+              limit: event.batchSize,
+              lastSyncedTime: lastSyncedTime,
+              totalCount: totalCount,
+              locality: event.boundaryCode,
+            ));
+          }
 
           if (offset <= totalCount) {
             //[TODO: Need to emit the sync count instead of zero
-            // emit(BeneficiaryDownSyncState.inProgress(offset, totalCount));
+            emit(BeneficiaryDownSyncState.inProgress(offset, totalCount));
             //Make the batch API call
             final downSyncResults = await downSyncRemoteRepository.downSync(
               DownsyncSearchModel(
@@ -151,19 +160,17 @@ class BeneficiaryDownSyncBloc
                 referralLocalRepository,
               ]);
               // Update the local downSync data for the boundary with the new values
-              offset += event.batchSize;
+              // offset += event.batchSize;
               totalCount = downSyncResults["DownsyncCriteria"]["totalCount"];
-              lastSyncedTime =
-                  downSyncResults["DownsyncCriteria"]["lastSyncedTime"];
 
               await downSyncLocalRepository.update(DownsyncModel(
-                offset: offset,
+                offset: offset + event.batchSize,
                 limit: event.batchSize,
                 lastSyncedTime: lastSyncedTime,
                 totalCount: totalCount,
                 locality: event.boundaryCode,
               ));
-              emit(BeneficiaryDownSyncState.inProgress(offset, totalCount));
+              // emit(BeneficiaryDownSyncState.inProgress(offset, totalCount));
             }
             // When API response failed
             else {
@@ -171,86 +178,15 @@ class BeneficiaryDownSyncBloc
               break;
             }
           } else {
+            await downSyncLocalRepository.update(DownsyncModel(
+              lastSyncedTime: DateTime.now().millisecondsSinceEpoch,
+            ));
             emit(const BeneficiaryDownSyncState.success());
             break; // If offset is greater than or equal to totalCount, exit the loop
           }
         }
       } catch (e) {
         emit(const BeneficiaryDownSyncState.failed());
-      }
-    }
-  }
-
-  void _fetchResults(
-    BeneficiaryDownSyncEmitter emit,
-    DownSyncBeneficiaryEvent event,
-  ) async {
-    int limit = event.batchSize;
-
-    while (true) {
-      // Check each time, till the loop runs the offset, limit, totalCount, lastSyncTime from Local DB of DownSync Model
-      final existingDownSyncData =
-          await downSyncLocalRepository.search(DownsyncSearchModel(
-        locality: event.boundaryCode,
-      ));
-
-      int offset = existingDownSyncData.isEmpty
-          ? 0
-          : existingDownSyncData.first.offset ?? 0;
-      int totalCount = event.initialServerCount;
-      int? lastSyncedTime = existingDownSyncData.isEmpty
-          ? null
-          : existingDownSyncData.first.lastSyncedTime;
-
-      if (offset >= totalCount) {
-        emit(BeneficiaryDownSyncState.inProgress(offset, totalCount));
-        //[TODO: Need to emit the sync count instead of zero
-        // emit(BeneficiaryDownSyncState.inProgress(offset, totalCount));
-        //Make the batch API call
-        final downSyncResults = await downSyncRemoteRepository.downSync(
-          DownsyncSearchModel(
-            locality: event.boundaryCode,
-            offset: offset,
-            limit: limit,
-            totalCount: totalCount,
-            tenantId: envConfig.variables.tenantId,
-            projectId: event.projectId,
-            lastSyncedTime: lastSyncedTime,
-          ),
-        );
-        // check if the API response is there or it failed
-        if (downSyncResults.isNotEmpty) {
-          await networkManager.writeToEntityDB(downSyncResults, [
-            householdLocalRepository,
-            householdMemberLocalRepository,
-            individualLocalRepository,
-            projectBeneficiaryLocalRepository,
-            taskLocalRepository,
-            sideEffectLocalRepository,
-            referralLocalRepository,
-          ]);
-          // Update the local downSync data for the boundary with the new values
-          offset += limit;
-          totalCount = downSyncResults["DownsyncCriteria"]["totalCount"];
-          lastSyncedTime =
-              downSyncResults["DownsyncCriteria"]["lastSyncedTime"];
-
-          await downSyncLocalRepository.update(DownsyncModel(
-            offset: offset,
-            limit: limit,
-            lastSyncedTime: lastSyncedTime,
-            totalCount: totalCount,
-            locality: event.boundaryCode,
-          ));
-        }
-        // When API response failed
-        else {
-          emit(const BeneficiaryDownSyncState.failed());
-          break;
-        }
-      } else {
-        emit(const BeneficiaryDownSyncState.success());
-        break; // If offset is greater than or equal to totalCount, exit the loop
       }
     }
   }
