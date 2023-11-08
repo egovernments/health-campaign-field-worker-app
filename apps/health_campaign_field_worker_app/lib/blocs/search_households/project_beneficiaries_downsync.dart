@@ -92,7 +92,7 @@ class BeneficiaryDownSyncBloc
         emit(BeneficiaryDownSyncState.dataFound(serverTotalCount));
       }
     } else {
-      emit(const BeneficiaryDownSyncState.failed());
+      emit(const BeneficiaryDownSyncState.totalCountCheckFailed());
     }
   }
 
@@ -181,6 +181,7 @@ class BeneficiaryDownSyncBloc
             }
           } else {
             await downSyncLocalRepository.update(DownsyncModel(
+              offset: offset + event.batchSize,
               lastSyncedTime: DateTime.now().millisecondsSinceEpoch,
             ));
             emit(const BeneficiaryDownSyncState.success());
@@ -230,11 +231,14 @@ class BeneficiaryDownSyncState with _$BeneficiaryDownSyncState {
     int totalCount,
   ) = _DownSyncInProgressState;
   const factory BeneficiaryDownSyncState.success() = _DownSyncSuccessState;
+  const factory BeneficiaryDownSyncState.loading() = _DownSyncLoadingState;
   const factory BeneficiaryDownSyncState.insufficientStorage() =
       _DownSyncInsufficientStorageState;
   const factory BeneficiaryDownSyncState.dataFound(int initialServerCount) =
       _DownSyncDataFoundState;
   const factory BeneficiaryDownSyncState.resetState() = _DownSyncResetState;
+  const factory BeneficiaryDownSyncState.totalCountCheckFailed() =
+      _DownSynnCountCheckFailedState;
   const factory BeneficiaryDownSyncState.failed() = _DownSyncFailureState;
   const factory BeneficiaryDownSyncState.report(
     List<DownsyncModel> downsyncCriteriaList,
