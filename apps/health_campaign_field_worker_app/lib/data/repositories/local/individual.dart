@@ -6,6 +6,7 @@ import 'package:drift/drift.dart';
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
+import '../../local_store/sql_store/sql_store.dart';
 
 class IndividualLocalRepository
     extends LocalRepository<IndividualModel, IndividualSearchModel> {
@@ -264,6 +265,72 @@ class IndividualLocalRepository
     });
 
     await super.create(entity);
+  }
+
+  @override
+  FutureOr<void> bulkCreate(
+    List<IndividualModel> entities,
+  ) async {
+    final individualCompanions = entities.map((e) => e.companion).toList();
+    final addressCompanions = entities
+        .map((e) =>
+            e.address?.map((a) {
+              return a
+                  .copyWith(
+                    relatedClientReferenceId: e.clientReferenceId,
+                    clientAuditDetails: e.clientAuditDetails,
+                  )
+                  .companion;
+            }).toList() ??
+            [])
+        .whereType<AddressCompanion>()
+        .toList();
+
+    final identifiers = entities
+        .map((e) => e.identifiers!.map((a) {
+              return a
+                  .copyWith(
+                    clientReferenceId: e.clientReferenceId,
+                    clientAuditDetails: e.clientAuditDetails,
+                  )
+                  .companion;
+            }).toList())
+        .whereType<IdentifierCompanion>()
+        .toList();
+
+    await sql.batch((batch) async {
+      final identifierCompanions = identifiers.map((e) {
+        return e;
+      }).toList();
+      final nameCompanions = entities.map((e) {
+        if (e.name != null) {
+          return e.name!.companion;
+        }
+      }).toList();
+      if (nameCompanions.isNotEmpty) {
+        batch.insertAll(
+          sql.name,
+          nameCompanions.whereNotNull().toList(),
+          mode: InsertMode.insertOrReplace,
+        );
+      }
+
+      batch.insertAll(
+        sql.address,
+        addressCompanions,
+        mode: InsertMode.insertOrReplace,
+      );
+      batch.insertAll(
+        sql.identifier,
+        identifierCompanions,
+        mode: InsertMode.insertOrReplace,
+      );
+      batch.insertAll(
+        sql.individual,
+        individualCompanions,
+        mode: InsertMode.insertOrReplace,
+      );
+    });
   }
 
   @override

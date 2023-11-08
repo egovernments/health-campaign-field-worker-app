@@ -6,5 +6,6 @@ enum AddressType {
   @MappableValue("PERMANENT") permanent,
   @MappableValue("CORRESPONDENCE") correspondence,
   @MappableValue("OTHER") other,
+  @MappableValue("string") string,
   ;
 }

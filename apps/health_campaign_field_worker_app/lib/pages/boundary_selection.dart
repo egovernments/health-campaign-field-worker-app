@@ -1,23 +1,51 @@
-import 'package:auto_route/auto_route.dart';
+import 'dart:math';
+
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../blocs/boundary/boundary.dart';
+import '../blocs/search_households/project_beneficiaries_downsync.dart';
 import '../models/data_model.dart';
+import '../router/app_router.dart';
+import '../utils/i18_key_constants.dart' as i18;
+import '../utils/utils.dart';
+import '../widgets/localized.dart';
+import '../widgets/progress_indicator/progress_indicator.dart';
 
-class BoundarySelectionPage extends StatefulWidget {
-  const BoundarySelectionPage({Key? key}) : super(key: key);
+class BoundarySelectionPage extends LocalizedStatefulWidget {
+  const BoundarySelectionPage({
+    super.key,
+    super.appLocalizations,
+  });
 
   @override
   State<BoundarySelectionPage> createState() => _BoundarySelectionPageState();
 }
 
-class _BoundarySelectionPageState extends State<BoundarySelectionPage> {
+class _BoundarySelectionPageState
+    extends LocalizedState<BoundarySelectionPage> {
   bool shouldPop = false;
   Map<String, FormControl<BoundaryModel>> formControls = {};
+
+  @override
+  void initState() {
+    super.initState();
+    initDiskSpace();
+  }
+
+  @override
+  void deactivate() {
+    context.read<BeneficiaryDownSyncBloc>().add(
+          const DownSyncResetStateEvent(),
+        );
+    super.deactivate();
+  }
+
+  Future<void> initDiskSpace() async {}
 
   @override
   Widget build(BuildContext context) {
@@ -100,28 +128,185 @@ class _BoundarySelectionPageState extends State<BoundarySelectionPage> {
                           },
                         ),
                       ),
-                      DigitCard(
-                        margin:
-                            const EdgeInsets.only(left: 0, right: 0, top: 10),
-                        child: SafeArea(
-                          child: DigitElevatedButton(
-                            onPressed: selectedBoundary == null
-                                ? null
-                                : () async {
-                                    setState(() {
-                                      shouldPop = true;
-                                    });
-
-                                    context.read<BoundaryBloc>().add(
-                                          const BoundarySubmitEvent(),
+                      BlocListener<BeneficiaryDownSyncBloc,
+                          BeneficiaryDownSyncState>(
+                        listener: (context, downSyncState) {
+                          downSyncState.maybeWhen(
+                            orElse: () => false,
+                            dataFound: (initialServerCount) => DigitDialog.show(
+                              context,
+                              //[TODO: Localizations need to be added
+                              options: DigitDialogOptions(
+                                titleText: 'Data Found!',
+                                contentText:
+                                    'There are records found for the selected boundary. If you wish to download, Kindly, ensure stable internet connection and while the downloading is in progress, please donot minimize or close the app',
+                                primaryAction: DigitDialogActions(
+                                  label: localizations.translate(
+                                    i18.common.coreCommonDownload,
+                                  ),
+                                  action: (ctx) {
+                                    context.read<BeneficiaryDownSyncBloc>().add(
+                                          DownSyncBeneficiaryEvent(
+                                            projectId: context.projectId,
+                                            boundaryCode: selectedBoundary!
+                                                .value!.code
+                                                .toString(),
+                                            // Batch Size need to be defined based on Internet speed.
+                                            batchSize: 10,
+                                            initialServerCount:
+                                                initialServerCount,
+                                          ),
                                         );
-
-                                    Future.delayed(
-                                      const Duration(milliseconds: 100),
-                                      () => context.router.pop(),
-                                    );
                                   },
-                            child: const Text('Submit'),
+                                ),
+                                secondaryAction: DigitDialogActions(
+                                  label: localizations.translate(
+                                    i18.beneficiaryDetails
+                                        .proceedWithoutDownloading,
+                                  ),
+                                  action: (ctx) {
+                                    Navigator.pop(ctx);
+                                    context.router.pop();
+                                  },
+                                ),
+                              ),
+                              // TODO: Secondary action button need to be added to route to Home screen
+                            ),
+                            inProgress: (syncCount, totalCount) {
+                              // TODO: Need to emit the Progress bar in the dialog
+                              Navigator.of(context, rootNavigator: true).pop();
+                              DigitDialog.show(
+                                context,
+                                options: DigitDialogOptions(
+                                  title: ProgressIndicatorContainer(
+                                    label: '',
+                                    prefixLabel: '$syncCount Completed',
+                                    suffixLabel: totalCount.toStringAsFixed(0),
+                                    value: totalCount == 0
+                                        ? 0
+                                        : min(syncCount / totalCount, 1),
+                                  ),
+                                ),
+                              );
+                            },
+                            success: () {
+                              // Navigator.of(context, rootNavigator: true).pop();
+
+                              DigitSyncDialog.show(
+                                context,
+                                type: DigitSyncDialogType.complete,
+                                label: localizations.translate(
+                                  i18.syncDialog.dataSyncedTitle,
+                                ),
+                                primaryAction: DigitDialogActions(
+                                  label: localizations.translate(
+                                    i18.syncDialog.closeButtonLabel,
+                                  ),
+                                  action: (ctx) {
+                                    Navigator.pop(ctx);
+                                  },
+                                ),
+                              );
+                            },
+                            failed: () {
+                              Navigator.of(context, rootNavigator: true).pop();
+                              DigitSyncDialog.show(
+                                context,
+                                type: DigitSyncDialogType.failed,
+                                label: 'Downloading Failed',
+                                primaryAction: DigitDialogActions(
+                                  label: localizations.translate(
+                                    i18.syncDialog.retryButtonLabel,
+                                  ),
+                                  action: (ctx) {
+                                    Navigator.pop(ctx);
+                                    context.read<BeneficiaryDownSyncBloc>().add(
+                                          DownSyncCheckTotalCountEvent(
+                                            projectId: context.projectId,
+                                            boundaryCode: selectedBoundary!
+                                                .value!.code
+                                                .toString(),
+                                          ),
+                                        );
+                                  },
+                                ),
+                                secondaryAction: DigitDialogActions(
+                                  label: localizations.translate(
+                                    i18.beneficiaryDetails
+                                        .proceedWithoutDownloading,
+                                  ),
+                                  action: (ctx) {
+                                    Navigator.pop(ctx);
+                                    context.router.pop();
+                                  },
+                                ),
+                              );
+                            },
+                            insufficientStorage: () => DigitSyncDialog.show(
+                              context,
+                              type: DigitSyncDialogType.failed,
+                              label: 'Insufficient Storage',
+                              primaryAction: DigitDialogActions(
+                                label: localizations.translate(
+                                  i18.syncDialog.closeButtonLabel,
+                                ),
+                                action: (ctx) {
+                                  Navigator.pop(ctx);
+                                  context.router.pop();
+                                },
+                              ),
+                              secondaryAction: DigitDialogActions(
+                                label: localizations.translate(
+                                  i18.beneficiaryDetails
+                                      .proceedWithoutDownloading,
+                                ),
+                                action: (ctx) {
+                                  Navigator.pop(ctx);
+                                  context.router.pop();
+                                },
+                              ),
+                            ),
+                          );
+                        },
+                        child: DigitCard(
+                          margin:
+                              const EdgeInsets.only(left: 0, right: 0, top: 10),
+                          child: SafeArea(
+                            child: DigitElevatedButton(
+                              onPressed: selectedBoundary == null
+                                  ? null
+                                  : () async {
+                                      setState(() {
+                                        shouldPop = true;
+                                      });
+
+                                      context.read<BoundaryBloc>().add(
+                                            const BoundarySubmitEvent(),
+                                          );
+                                      bool isOnline = await getIsConnected();
+
+                                      if (context.mounted) {
+                                        if (isOnline) {
+                                          context
+                                              .read<BeneficiaryDownSyncBloc>()
+                                              .add(
+                                                DownSyncCheckTotalCountEvent(
+                                                  projectId: context.projectId,
+                                                  boundaryCode: selectedBoundary
+                                                      .value!.code
+                                                      .toString(),
+                                                ),
+                                              );
+                                        } else {
+                                          Future.delayed(
+                                            const Duration(milliseconds: 100),
+                                            () => context.router.pop(),
+                                          );
+                                        }
+                                      }
+                                    },
+                              child: const Text('Submit'),
+                            ),
                           ),
                         ),
                       ),
@@ -152,7 +337,7 @@ class _BoundarySelectionPageState extends State<BoundarySelectionPage> {
 
     for (final label in labelList) {
       formControls[label] = FormControl<BoundaryModel>(
-        validators: label == labelList.first ? [Validators.required] : [],
+        validators: [],
         value: state.selectedBoundaryMap[label],
       );
     }

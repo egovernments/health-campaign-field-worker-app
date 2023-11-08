@@ -6,73 +6,60 @@ import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
-class SideEffectSearchModel extends EntitySearchModel {
-  final String? id;
-  final List<String>? taskClientReferenceId;
+class DownsyncCriteriaSearchModel extends EntitySearchModel {
   final String? projectId;
-  final int? reAttempts;
-  final List<String>? symptoms;
   final List<String>? clientReferenceId;
-  final String? tenantId;
   
-  SideEffectSearchModel({
-    this.id,
-    this.taskClientReferenceId,
+  DownsyncCriteriaSearchModel({
     this.projectId,
-    this.reAttempts,
-    this.symptoms,
     this.clientReferenceId,
-    this.tenantId,
     super.boundaryCode,
     super.isDeleted,
   }):  super();
 
   @MappableConstructor()
-  SideEffectSearchModel.ignoreDeleted({
-    this.id,
-    this.taskClientReferenceId,
+  DownsyncCriteriaSearchModel.ignoreDeleted({
     this.projectId,
-    this.reAttempts,
-    this.symptoms,
     this.clientReferenceId,
-    this.tenantId,
     super.boundaryCode,
   }):  super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true)
-class SideEffectModel extends EntityModel {
+class DownsyncCriteriaModel extends EntityModel {
 
-  static const schemaName = 'SideEffect';
+  static const schemaName = 'DownsyncCriteria';
 
-  final String? id;
+  final String? locality;
+  final String? tenantId;
+  final int? offset;
+  final int? limit;
   final String? projectId;
-  final String? taskClientReferenceId;
-  final int? reAttempts;
-  final List<String>? symptoms;
+  final int? lastSyncedTime;
+  final int? totalCount;
   final bool? nonRecoverableError;
   final String clientReferenceId;
-  final String? tenantId;
   final int? rowVersion;
-  final SideEffectAdditionalFields? additionalFields;
+  final DownsyncCriteriaAdditionalFields? additionalFields;
 
-  SideEffectModel({
+  DownsyncCriteriaModel({
     this.additionalFields,
-    this.id,
+    this.locality,
+    this.tenantId,
+    this.offset,
+    this.limit,
     this.projectId,
-    this.taskClientReferenceId,
-    this.reAttempts,
-    this.symptoms,
+    this.lastSyncedTime,
+    this.totalCount,
     this.nonRecoverableError = false,
     required this.clientReferenceId,
-    this.tenantId,
     this.rowVersion,
     super.auditDetails,super.clientAuditDetails,
     super.isDeleted = false,
   }): super();
 
-  SideEffectCompanion get companion {
-    return SideEffectCompanion(
+  DownsyncCriteriaCompanion get companion {
+    return DownsyncCriteriaCompanion(
       auditCreatedBy: Value(auditDetails?.createdBy),
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
@@ -83,23 +70,24 @@ class SideEffectModel extends EntityModel {
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
       isDeleted: Value(isDeleted),
-      id: Value(id),
+      locality: Value(locality),
+      tenantId: Value(tenantId),
+      offset: Value(offset),
+      limit: Value(limit),
       projectId: Value(projectId),
-      taskClientReferenceId: Value(taskClientReferenceId),
-      reAttempts: Value(reAttempts),
-      symptoms: Value(symptoms?.toString()),
+      lastSyncedTime: Value(lastSyncedTime),
+      totalCount: Value(totalCount),
       nonRecoverableError: Value(nonRecoverableError),
       clientReferenceId: Value(clientReferenceId),
-      tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),
       );
   }
 }
 
 @MappableClass(ignoreNull: true)
-class SideEffectAdditionalFields extends AdditionalFields {
-  SideEffectAdditionalFields({
-    super.schema = 'SideEffect',
+class DownsyncCriteriaAdditionalFields extends AdditionalFields {
+  DownsyncCriteriaAdditionalFields({
+    super.schema = 'DownsyncCriteria',
     required super.version,
     super.fields,
   });

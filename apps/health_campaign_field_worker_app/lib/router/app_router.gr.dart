@@ -229,9 +229,14 @@ class _$AppRouter extends RootStackRouter {
       );
     },
     BoundarySelectionRoute.name: (routeData) {
+      final args = routeData.argsAs<BoundarySelectionRouteArgs>(
+          orElse: () => const BoundarySelectionRouteArgs());
       return MaterialPageX<dynamic>(
         routeData: routeData,
-        child: const BoundarySelectionPage(),
+        child: BoundarySelectionPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
       );
     },
     ComplaintsInboxWrapperRoute.name: (routeData) {
@@ -1559,14 +1564,36 @@ class ProjectSelectionRouteArgs {
 
 /// generated route for
 /// [BoundarySelectionPage]
-class BoundarySelectionRoute extends PageRouteInfo<void> {
-  const BoundarySelectionRoute()
-      : super(
+class BoundarySelectionRoute extends PageRouteInfo<BoundarySelectionRouteArgs> {
+  BoundarySelectionRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+  }) : super(
           BoundarySelectionRoute.name,
           path: 'select-boundary',
+          args: BoundarySelectionRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
         );
 
   static const String name = 'BoundarySelectionRoute';
+}
+
+class BoundarySelectionRouteArgs {
+  const BoundarySelectionRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'BoundarySelectionRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
 }
 
 /// generated route for

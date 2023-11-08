@@ -303,3 +303,26 @@ class EntityPlurals {
     }
   }
 }
+
+class DataModels {
+  static DataModelType getDataModelForEntityName(String entity) {
+    switch (entity) {
+      case 'Households':
+        return DataModelType.household;
+      case 'HouseholdMembers':
+        return DataModelType.householdMember;
+      case 'Individuals':
+        return DataModelType.individual;
+      case 'ProjectBeneficiaries':
+        return DataModelType.projectBeneficiary;
+      case 'Tasks':
+        return DataModelType.task;
+      case 'SideEffects':
+        return DataModelType.sideEffect;
+      case 'Referrals':
+        return DataModelType.referral;
+      default:
+        return DataModelType.householdMember;
+    }
+  }
+}
