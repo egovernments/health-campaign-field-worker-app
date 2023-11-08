@@ -242,33 +242,7 @@ class _DeliverInterventionPageState
                                                       theme,
                                                     ),
                                                   );
-                                                } else if ((((form.control(
-                                                              _quantityWastedKey,
-                                                            ) as FormArray)
-                                                                .value) ??
-                                                            [])
-                                                        .any((e) =>
-                                                            e != null &&
-                                                            int.parse(e
-                                                                    .toString()) >
-                                                                1) &&
-                                                    form
-                                                            .control(
-                                                              _deliveryCommentKey,
-                                                            )
-                                                            .value ==
-                                                        null) {
-                                                  await DigitToast.show(
-                                                    context,
-                                                    options: DigitToastOptions(
-                                                      localizations.translate(i18
-                                                          .deliverIntervention
-                                                          .deliveryCommentRequired),
-                                                      true,
-                                                      theme,
-                                                    ),
-                                                  );
-                                                }else {
+                                                } else {
                                                   final shouldSubmit =
                                                       await DigitDialog.show<
                                                           bool>(
