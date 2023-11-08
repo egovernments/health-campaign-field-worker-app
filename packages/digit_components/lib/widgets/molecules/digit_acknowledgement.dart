@@ -6,27 +6,29 @@ class DigitAcknowledgement extends StatelessWidget {
   final String? subLabel;
   final String description;
   final IconData icon;
-  final VoidCallback action;
-  final String actionLabel;
+  final VoidCallback? action;
+  final String? actionLabel;
   final Color color;
   final bool enableBackToSearch;
   final bool enableViewHousehold;
   final VoidCallback? secondaryAction;
   final String? secondaryLabel;
+  final bool isActionLabel;
 
   DigitAcknowledgement.success({
     super.key,
     required this.label,
     this.subLabel,
     required this.description,
-    required this.action,
-    required this.actionLabel,
+    this.action,
+    this.actionLabel,
     IconData? icon,
     Color? color,
     this.enableBackToSearch = true,
     this.enableViewHousehold = false,
     this.secondaryAction,
     this.secondaryLabel,
+    this.isActionLabel= true,
   })  : color = color ?? DigitTheme.instance.colors.darkSpringGreen,
         icon = icon ?? Icons.check_circle;
 
@@ -43,6 +45,7 @@ class DigitAcknowledgement extends StatelessWidget {
     this.enableViewHousehold = false,
     this.secondaryAction,
     this.secondaryLabel,
+    this.isActionLabel = true,
   })  : color = color ?? DigitTheme.instance.colors.lavaRed,
         icon = icon ?? Icons.error;
 
@@ -128,7 +131,7 @@ class DigitAcknowledgement extends StatelessWidget {
                           ),
                           DigitOutLineButton(
                             onPressed: action,
-                            label: actionLabel,
+                            label: actionLabel ?? '',
                             buttonStyle: OutlinedButton.styleFrom(
                               backgroundColor: Colors.white,
                               side: BorderSide(
@@ -144,12 +147,12 @@ class DigitAcknowledgement extends StatelessWidget {
                           ),
                         ],
                       )
-                    else
+                    else if(isActionLabel)
                       Column(
                         children: [
                           DigitElevatedButton(
                             onPressed: action,
-                            child: Text(actionLabel),
+                            child: Text(actionLabel ?? ''),
                           ),
                           const SizedBox(
                             height: kPadding,
