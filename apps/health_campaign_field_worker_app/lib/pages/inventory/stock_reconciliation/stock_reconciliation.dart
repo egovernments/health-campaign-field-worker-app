@@ -305,7 +305,7 @@ class _StockReconciliationPageState
                                           ),
                                           label: localizations.translate(
                                             i18.stockReconciliationDetails
-                                                .facilityLabel,
+                                                .facilityName,
                                           ),
                                           suffix: const Padding(
                                             padding: EdgeInsets.all(8.0),
@@ -427,7 +427,7 @@ class _StockReconciliationPageState
                                       element: {
                                         localizations.translate(
                                           i18.stockReconciliationDetails
-                                              .spaqIssued,
+                                              .spaqSent,
                                         ): stockState.stockIssued
                                             .toStringAsFixed(0),
                                       },
@@ -451,7 +451,7 @@ class _StockReconciliationPageState
                                       element: {
                                         localizations.translate(
                                           i18.stockReconciliationDetails
-                                              .spaqOnHand,
+                                              .spaqTheoretical,
                                         ): stockState.stockInHand
                                             .toStringAsFixed(0),
                                       },
@@ -476,7 +476,7 @@ class _StockReconciliationPageState
                                       isRequired: true,
                                       label: localizations.translate(
                                         i18.stockReconciliationDetails
-                                            .manualSpaqCount,
+                                            .physicalSpaqCount,
                                       ),
                                       formControlName: _manualCountKey,
                                       keyboardType:

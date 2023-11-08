@@ -42,15 +42,24 @@ class _DeliverInterventionPageState
   // Constants for form control keys
   static const _resourceDeliveredKey = 'resourceDelivered';
   static const _quantityDistributedKey = 'quantityDistributed';
+  static const _quantityWastedKey = 'quantityWasted';
   static const _deliveryCommentKey = 'deliveryComment';
   static const _doseAdministrationKey = 'doseAdministered';
   static const _dateOfAdministrationKey = 'dateOfAdministration';
-
+  static const _defaultQuantity = 1;
+  static const _administeredQuantity = 2;
   // Variable to track dose administration status
   bool doseAdministered = false;
 
   // List of controllers for form elements
   final List _controllers = [];
+
+  // toggle doseAdministered
+  void checkDoseAdministration(bool newValue) {
+    setState(() {
+      doseAdministered = newValue;
+    });
+  }
 
 // Initialize the currentStep variable to keep track of the current step in a process.
   int currentStep = 0;
@@ -183,32 +192,7 @@ class _DeliverInterventionPageState
                                                       theme,
                                                     ),
                                                   );
-                                                } else if ((((form.control(
-                                                          _quantityDistributedKey,
-                                                        ) as FormArray)
-                                                            .value) ??
-                                                        [])
-                                                    .any((e) => e == null)) {
-                                                  await DigitToast.show(
-                                                    context,
-                                                    options: DigitToastOptions(
-                                                      localizations.translate(i18
-                                                          .deliverIntervention
-                                                          .resourceCannotBeZero),
-                                                      true,
-                                                      theme,
-                                                    ),
-                                                  );
-                                                } else if ((((form.control(
-                                                              _quantityDistributedKey,
-                                                            ) as FormArray)
-                                                                .value) ??
-                                                            [])
-                                                        .any((e) =>
-                                                            e != null &&
-                                                            int.parse(e
-                                                                    .toString()) >
-                                                                1) &&
+                                                } else if (doseAdministered &&
                                                     form
                                                             .control(
                                                               _deliveryCommentKey,
@@ -444,6 +428,10 @@ class _DeliverInterventionPageState
                                                           totalItems:
                                                               _controllers
                                                                   .length,
+                                                          isAdministered:
+                                                              doseAdministered,
+                                                          checkDoseAdministration:
+                                                              checkDoseAdministration,
                                                           onDelete: (index) {
                                                             (form.control(
                                                               _resourceDeliveredKey,
@@ -453,6 +441,12 @@ class _DeliverInterventionPageState
                                                             );
                                                             (form.control(
                                                               _quantityDistributedKey,
+                                                            ) as FormArray)
+                                                                .removeAt(
+                                                              index,
+                                                            );
+                                                            (form.control(
+                                                              _quantityWastedKey,
                                                             ) as FormArray)
                                                                 .removeAt(
                                                               index,
@@ -548,6 +542,8 @@ class _DeliverInterventionPageState
         .add(FormControl<ProductVariantModel>());
     (form.control(_quantityDistributedKey) as FormArray)
         .add(FormControl<String>(validators: [Validators.required]));
+    (form.control(_quantityWastedKey) as FormArray)
+        .add(FormControl<String>(validators: [Validators.required]));
   }
 
   // ignore: long-parameter-list
@@ -597,9 +593,9 @@ class _DeliverInterventionPageState
                 taskId: task?.id,
                 tenantId: envConfig.variables.tenantId,
                 rowVersion: oldTask?.rowVersion ?? 1,
-                quantity: (((form.control(_quantityDistributedKey) as FormArray)
-                        .value)?[productvariantList.indexOf(e)])
-                    .toString(),
+                quantity: doseAdministered
+                    ? _administeredQuantity.toString()
+                    : _defaultQuantity.toString(),
                 clientAuditDetails: ClientAuditDetails(
                   createdBy: context.loggedInUserUuid,
                   createdTime: context.millisecondsSinceEpoch(),
@@ -608,6 +604,15 @@ class _DeliverInterventionPageState
                   createdBy: context.loggedInUserUuid,
                   createdTime: context.millisecondsSinceEpoch(),
                 ),
+                additionalFields:
+                    TaskResourceAdditionalFields(version: 1, fields: [
+                  AdditionalField(
+                    _quantityWastedKey,
+                    (((form.control(_quantityWastedKey) as FormArray)
+                            .value)?[productvariantList.indexOf(e)])
+                        .toString(),
+                  ),
+                ]),
               ))
           .toList(),
       address: address?.copyWith(
@@ -694,6 +699,11 @@ class _DeliverInterventionPageState
       _quantityDistributedKey: FormArray<String>([
         ..._controllers.map(
           (e) => FormControl<String>(validators: [Validators.required]),
+        ),
+      ]),
+      _quantityWastedKey: FormArray<String>([
+        ..._controllers.map(
+          (e) => FormControl<String>(),
         ),
       ]),
     });

@@ -175,7 +175,7 @@ class MemberCard extends StatelessWidget {
                         icon: Icons.info_rounded,
                         iconSize: 20,
                         iconText: localizations.translate(
-                          (isNotEligible || isBeneficiaryIneligible)
+                          isHead ? i18.householdOverView.householdOverViewHouseholderHeadLabel : (isNotEligible || isBeneficiaryIneligible)
                               ? i18.householdOverView
                                   .householdOverViewNotEligibleIconLabel
                               : isBeneficiaryReferred
@@ -210,7 +210,7 @@ class MemberCard extends StatelessWidget {
             offstage: beneficiaryType != BeneficiaryType.individual,
             child: Padding(
               padding: const EdgeInsets.all(4.0),
-              child: Column(
+              child: isHead ? const Column(children: [],) :  Column(
                 children: [
                   isNotEligible ||
                           isBeneficiaryIneligible ||

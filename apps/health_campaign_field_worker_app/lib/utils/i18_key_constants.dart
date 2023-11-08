@@ -102,6 +102,8 @@ class Common {
   String get facilitySearchHeaderLabel => 'FACILITY_SEARCH_HEADER_LABEL';
 
   String get coreCommonWarning => 'CORE_COMMON_WARNING';
+  
+  String get coreQuantityWasted => 'CORE_QUANTITY_WASTED';
 }
 
 class AdverseEvents {
@@ -405,6 +407,9 @@ class HouseholdOverView {
   String get householdOverViewEditLabel =>
       'HOUSEHOLD_OVER_VIEW_EDIT_ICON_LABEL';
 
+  String get householdOverViewHouseholderHeadLabel =>
+      'HOUSEHOLD_OVER_VIEW_HOUSEHOLDER_HEAD_LABEL';
+
   String get householdOverViewDeleteLabel =>
       'HOUSEHOLD_OVER_VIEW_DELETE_ICON_LABEL';
 
@@ -487,6 +492,8 @@ class DeliverIntervention {
 
   String get deliverInterventionLabel => 'DELIVER_INTERVENTION_LABEL';
 
+  String get deliverInteventionAdministeredLabel => 'DELIVER_INTERVENTION_ADMINISTERED_LABEL';
+
   String get deliverInterventionResourceLabel =>
       'DELIVER_INTERVENTION_RESOURCE_LABEL';
 
@@ -501,6 +508,9 @@ class DeliverIntervention {
 
   String get quantityDistributedLabel =>
       'DELIVER_INTERVENTION_QUANTITY_DISTRIBUTED_LABEL_SPAQ';
+
+    String get quantityWastedLabel =>
+      'DELIVER_INTERVENTION_QUANTITY_WASTED_LABEL_SPAQ';
 
   String get deliveryCommentLabel =>
       'DELIVER_INTERVENTION_DELIVERY_COMMENT_LABEL';
@@ -673,6 +683,7 @@ class StockReconciliationDetails {
   String get reconciliationPageTitle => 'STOCK_RECONCILIATION_PAGE_TITLE';
 
   String get facilityLabel => 'STOCK_RECONCILIATION_FACILITY_LABEL';
+  String get facilityName => 'STOCK_RECONCILIATION_FACILITY_NAME';
 
   String get stockLabel => 'STOCK_LABEL';
 
@@ -700,6 +711,7 @@ class StockReconciliationDetails {
   String get infoCardTitle => 'STOCK_RECONCILIATION_INFO_CARD_TITLE';
 
   String get infoCardContent => 'STOCK_RECONCILIATION_INFO_CARD_CONTENT_SPAQ';
+  String get infoCardDescription => 'STOCK_RECONCILIATION_INFO_CARD_DESCRIPTION_SPAQ';
 
   String get dialogTitle => 'STOCK_RECONCILIATION_DIALOG_TITLE';
 
@@ -729,8 +741,11 @@ class StockReconciliationDetails {
   String get spaqDamaged => 'SPAQ_DAMAGED';
   String get spaqOnHand => 'SPAQ_ON_HAND';
   String get manualSpaqCount => 'MANUAL_SPAQ_COUNT';
+  String get physicalSpaqCount => 'PHYSICAL_SPAQ_COUNT';
   String get reconciliationCommentRequiredError =>
       'SPAQ_RECONCILIATION_COMMENT_IS_REQUIRED';
+  String get spaqSent => 'SPAQ_SENT';
+  String get spaqTheoretical => 'SPAQ_THEORETICAL';
 }
 
 class ManageStock {
