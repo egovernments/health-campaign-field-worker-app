@@ -569,7 +569,13 @@ class MemberCard extends StatelessWidget {
                                       ),
                                     ),
                                     onPressed: tasks != null &&
-                                            (tasks ?? []).isNotEmpty
+                                            (tasks ?? [])
+                                                .where((element) =>
+                                                    element.status !=
+                                                    Status.beneficiaryRefused
+                                                        .toValue())
+                                                .toList()
+                                                .isNotEmpty
                                         ? () async {
                                             Navigator.of(
                                               context,
@@ -602,20 +608,29 @@ class MemberCard extends StatelessWidget {
                                         50,
                                       ),
                                     ),
-                                    onPressed: () async {
-                                      Navigator.of(
-                                        context,
-                                        rootNavigator: true,
-                                      ).pop();
-                                      await context.router.push(
-                                        IneligibilityReasonsRoute(
-                                          projectBeneficiaryClientRefId:
-                                              projectBeneficiaryClientReferenceId ??
-                                                  '',
-                                          individual: individual,
-                                        ),
-                                      );
-                                    },
+                                    onPressed: tasks != null &&
+                                            (tasks ?? [])
+                                                .where((element) =>
+                                                    element.status !=
+                                                    Status.beneficiaryRefused
+                                                        .toValue())
+                                                .toList()
+                                                .isNotEmpty
+                                        ? null
+                                        : () async {
+                                            Navigator.of(
+                                              context,
+                                              rootNavigator: true,
+                                            ).pop();
+                                            await context.router.push(
+                                              IneligibilityReasonsRoute(
+                                                projectBeneficiaryClientRefId:
+                                                    projectBeneficiaryClientReferenceId ??
+                                                        '',
+                                                individual: individual,
+                                              ),
+                                            );
+                                          },
                                   ),
                                 ],
                               ),
