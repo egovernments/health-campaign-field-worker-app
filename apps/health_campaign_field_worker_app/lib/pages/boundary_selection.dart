@@ -152,7 +152,7 @@ class _BoundarySelectionPageState
                                                 .value!.code
                                                 .toString(),
                                             // Batch Size need to be defined based on Internet speed.
-                                            batchSize: 10,
+                                            batchSize: 5,
                                             initialServerCount:
                                                 initialServerCount,
                                           ),

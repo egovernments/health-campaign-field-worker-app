@@ -112,8 +112,7 @@ class NetworkManager {
   ) async {
     try {
       for (int i = 0; i <= response.keys.length - 1; i++) {
-        if (response.keys.elementAt(i) != 'DownsyncCriteria' &&
-            response.keys.elementAt(i) != 'HouseholdMembers') {
+        if (response.keys.elementAt(i) != 'DownsyncCriteria') {
           final local = RepositoryType.getLocalForType(
             DataModels.getDataModelForEntityName(response.keys.elementAt(i)),
             localRepositories,
