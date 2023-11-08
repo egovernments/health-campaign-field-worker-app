@@ -37,11 +37,5 @@
       "includeForQuery": true
     }
   ],
-  "customAttributes": [
-    {
-      "name": "downSyncCriteria",
-      "type": "DownsyncCriteria"
-    }
-  ],
   "isEnum": false
 }

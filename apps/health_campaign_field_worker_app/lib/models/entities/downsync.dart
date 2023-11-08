@@ -54,7 +54,6 @@ class DownsyncModel extends EntityModel {
   final bool? nonRecoverableError;
   final String? tenantId;
   final int? rowVersion;
-  final DownsyncCriteriaModel? downSyncCriteria;
   final DownsyncAdditionalFields? additionalFields;
 
   DownsyncModel({
@@ -68,7 +67,6 @@ class DownsyncModel extends EntityModel {
     this.nonRecoverableError = false,
     this.tenantId,
     this.rowVersion,
-    this.downSyncCriteria,
     super.auditDetails,super.clientAuditDetails,
     super.isDeleted = false,
   }): super();

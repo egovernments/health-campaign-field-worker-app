@@ -1,3 +1,4 @@
+import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,11 +29,20 @@ class BeneficariesReportState extends State<BeneficariesReportPage> {
     return Scaffold(
       body: BlocBuilder<BeneficiaryDownSyncBloc, BeneficiaryDownSyncState>(
         builder: (ctx, state) {
-          state.maybeWhen(
-              orElse: () => Text(''),
-              report: (downsyncCriteriaList) => Text('hello'));
-
-          return const Offstage();
+          return state.maybeWhen(
+            orElse: () => const Text(''),
+            report: (downsyncCriteriaList) => Column(
+              children: downsyncCriteriaList
+                  .map(
+                    (e) => DigitCard(
+                      child: Column(
+                        children: [Text(e.totalCount.toString())],
+                      ),
+                    ),
+                  )
+                  .toList(),
+            ),
+          );
         },
       ),
     );

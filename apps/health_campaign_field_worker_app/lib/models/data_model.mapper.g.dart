@@ -12,7 +12,6 @@ import 'entities/boundary.dart';
 import 'entities/deliver_strategy_type.dart';
 import 'entities/document.dart';
 import 'entities/downsync.dart';
-import 'entities/downsync_criteria.dart';
 import 'entities/facility.dart';
 import 'entities/gender.dart';
 import 'entities/household.dart';
@@ -75,9 +74,6 @@ var _mappers = <BaseMapper>{
   DownsyncSearchModelMapper._(),
   DownsyncModelMapper._(),
   DownsyncAdditionalFieldsMapper._(),
-  DownsyncCriteriaSearchModelMapper._(),
-  DownsyncCriteriaModelMapper._(),
-  DownsyncCriteriaAdditionalFieldsMapper._(),
   FacilitySearchModelMapper._(),
   FacilityModelMapper._(),
   FacilityAdditionalFieldsMapper._(),
@@ -209,7 +205,6 @@ class EntityModelMapper extends BaseMapper<EntityModel> {
     else if (v is BoundaryModel) { return BoundaryModelMapper._().encode(v); }
     else if (v is DocumentModel) { return DocumentModelMapper._().encode(v); }
     else if (v is DownsyncModel) { return DownsyncModelMapper._().encode(v); }
-    else if (v is DownsyncCriteriaModel) { return DownsyncCriteriaModelMapper._().encode(v); }
     else if (v is FacilityModel) { return FacilityModelMapper._().encode(v); }
     else if (v is HouseholdModel) { return HouseholdModelMapper._().encode(v); }
     else if (v is HouseholdMemberModel) { return HouseholdMemberModelMapper._().encode(v); }
@@ -304,7 +299,6 @@ class EntitySearchModelMapper extends BaseMapper<EntitySearchModel> {
     else if (v is BoundarySearchModel) { return BoundarySearchModelMapper._().encode(v); }
     else if (v is DocumentSearchModel) { return DocumentSearchModelMapper._().encode(v); }
     else if (v is DownsyncSearchModel) { return DownsyncSearchModelMapper._().encode(v); }
-    else if (v is DownsyncCriteriaSearchModel) { return DownsyncCriteriaSearchModelMapper._().encode(v); }
     else if (v is FacilitySearchModel) { return FacilitySearchModelMapper._().encode(v); }
     else if (v is HouseholdSearchModel) { return HouseholdSearchModelMapper._().encode(v); }
     else if (v is HouseholdMemberSearchModel) { return HouseholdMemberSearchModelMapper._().encode(v); }
@@ -362,7 +356,6 @@ class AdditionalFieldsMapper extends BaseMapper<AdditionalFields> {
     else if (v is AttributesAdditionalFields) { return AttributesAdditionalFieldsMapper._().encode(v); }
     else if (v is DocumentAdditionalFields) { return DocumentAdditionalFieldsMapper._().encode(v); }
     else if (v is DownsyncAdditionalFields) { return DownsyncAdditionalFieldsMapper._().encode(v); }
-    else if (v is DownsyncCriteriaAdditionalFields) { return DownsyncCriteriaAdditionalFieldsMapper._().encode(v); }
     else if (v is FacilityAdditionalFields) { return FacilityAdditionalFieldsMapper._().encode(v); }
     else if (v is HouseholdAdditionalFields) { return HouseholdAdditionalFieldsMapper._().encode(v); }
     else if (v is HouseholdMemberAdditionalFields) { return HouseholdMemberAdditionalFieldsMapper._().encode(v); }
@@ -981,15 +974,15 @@ class DownsyncModelMapper extends BaseMapper<DownsyncModel> {
 
   @override Function get decoder => decode;
   DownsyncModel decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  DownsyncModel fromMap(Map<String, dynamic> map) => DownsyncModel(additionalFields: Mapper.i.$getOpt(map, 'additionalFields'), locality: Mapper.i.$getOpt(map, 'locality'), projectId: Mapper.i.$getOpt(map, 'projectId'), offset: Mapper.i.$getOpt(map, 'offset'), limit: Mapper.i.$getOpt(map, 'limit'), lastSyncedTime: Mapper.i.$getOpt(map, 'lastSyncedTime'), totalCount: Mapper.i.$getOpt(map, 'totalCount'), nonRecoverableError: Mapper.i.$getOpt(map, 'nonRecoverableError') ?? false, tenantId: Mapper.i.$getOpt(map, 'tenantId'), rowVersion: Mapper.i.$getOpt(map, 'rowVersion'), downSyncCriteria: Mapper.i.$getOpt(map, 'downSyncCriteria'), auditDetails: Mapper.i.$getOpt(map, 'auditDetails'), clientAuditDetails: Mapper.i.$getOpt(map, 'clientAuditDetails'), isDeleted: Mapper.i.$getOpt(map, 'isDeleted') ?? false);
+  DownsyncModel fromMap(Map<String, dynamic> map) => DownsyncModel(additionalFields: Mapper.i.$getOpt(map, 'additionalFields'), locality: Mapper.i.$getOpt(map, 'locality'), projectId: Mapper.i.$getOpt(map, 'projectId'), offset: Mapper.i.$getOpt(map, 'offset'), limit: Mapper.i.$getOpt(map, 'limit'), lastSyncedTime: Mapper.i.$getOpt(map, 'lastSyncedTime'), totalCount: Mapper.i.$getOpt(map, 'totalCount'), nonRecoverableError: Mapper.i.$getOpt(map, 'nonRecoverableError') ?? false, tenantId: Mapper.i.$getOpt(map, 'tenantId'), rowVersion: Mapper.i.$getOpt(map, 'rowVersion'), auditDetails: Mapper.i.$getOpt(map, 'auditDetails'), clientAuditDetails: Mapper.i.$getOpt(map, 'clientAuditDetails'), isDeleted: Mapper.i.$getOpt(map, 'isDeleted') ?? false);
 
   @override Function get encoder => (DownsyncModel v) => encode(v);
   dynamic encode(DownsyncModel v) => toMap(v);
-  Map<String, dynamic> toMap(DownsyncModel d) => {if (Mapper.i.$enc(d.additionalFields, 'additionalFields') != null) 'additionalFields': Mapper.i.$enc(d.additionalFields, 'additionalFields'), if (Mapper.i.$enc(d.locality, 'locality') != null) 'locality': Mapper.i.$enc(d.locality, 'locality'), if (Mapper.i.$enc(d.projectId, 'projectId') != null) 'projectId': Mapper.i.$enc(d.projectId, 'projectId'), if (Mapper.i.$enc(d.offset, 'offset') != null) 'offset': Mapper.i.$enc(d.offset, 'offset'), if (Mapper.i.$enc(d.limit, 'limit') != null) 'limit': Mapper.i.$enc(d.limit, 'limit'), if (Mapper.i.$enc(d.lastSyncedTime, 'lastSyncedTime') != null) 'lastSyncedTime': Mapper.i.$enc(d.lastSyncedTime, 'lastSyncedTime'), if (Mapper.i.$enc(d.totalCount, 'totalCount') != null) 'totalCount': Mapper.i.$enc(d.totalCount, 'totalCount'), if (Mapper.i.$enc(d.nonRecoverableError, 'nonRecoverableError') != null) 'nonRecoverableError': Mapper.i.$enc(d.nonRecoverableError, 'nonRecoverableError'), if (Mapper.i.$enc(d.tenantId, 'tenantId') != null) 'tenantId': Mapper.i.$enc(d.tenantId, 'tenantId'), if (Mapper.i.$enc(d.rowVersion, 'rowVersion') != null) 'rowVersion': Mapper.i.$enc(d.rowVersion, 'rowVersion'), if (Mapper.i.$enc(d.downSyncCriteria, 'downSyncCriteria') != null) 'downSyncCriteria': Mapper.i.$enc(d.downSyncCriteria, 'downSyncCriteria'), if (Mapper.i.$enc(d.auditDetails, 'auditDetails') != null) 'auditDetails': Mapper.i.$enc(d.auditDetails, 'auditDetails'), if (Mapper.i.$enc(d.clientAuditDetails, 'clientAuditDetails') != null) 'clientAuditDetails': Mapper.i.$enc(d.clientAuditDetails, 'clientAuditDetails'), if (Mapper.i.$enc(d.isDeleted, 'isDeleted') != null) 'isDeleted': Mapper.i.$enc(d.isDeleted, 'isDeleted')};
+  Map<String, dynamic> toMap(DownsyncModel d) => {if (Mapper.i.$enc(d.additionalFields, 'additionalFields') != null) 'additionalFields': Mapper.i.$enc(d.additionalFields, 'additionalFields'), if (Mapper.i.$enc(d.locality, 'locality') != null) 'locality': Mapper.i.$enc(d.locality, 'locality'), if (Mapper.i.$enc(d.projectId, 'projectId') != null) 'projectId': Mapper.i.$enc(d.projectId, 'projectId'), if (Mapper.i.$enc(d.offset, 'offset') != null) 'offset': Mapper.i.$enc(d.offset, 'offset'), if (Mapper.i.$enc(d.limit, 'limit') != null) 'limit': Mapper.i.$enc(d.limit, 'limit'), if (Mapper.i.$enc(d.lastSyncedTime, 'lastSyncedTime') != null) 'lastSyncedTime': Mapper.i.$enc(d.lastSyncedTime, 'lastSyncedTime'), if (Mapper.i.$enc(d.totalCount, 'totalCount') != null) 'totalCount': Mapper.i.$enc(d.totalCount, 'totalCount'), if (Mapper.i.$enc(d.nonRecoverableError, 'nonRecoverableError') != null) 'nonRecoverableError': Mapper.i.$enc(d.nonRecoverableError, 'nonRecoverableError'), if (Mapper.i.$enc(d.tenantId, 'tenantId') != null) 'tenantId': Mapper.i.$enc(d.tenantId, 'tenantId'), if (Mapper.i.$enc(d.rowVersion, 'rowVersion') != null) 'rowVersion': Mapper.i.$enc(d.rowVersion, 'rowVersion'), if (Mapper.i.$enc(d.auditDetails, 'auditDetails') != null) 'auditDetails': Mapper.i.$enc(d.auditDetails, 'auditDetails'), if (Mapper.i.$enc(d.clientAuditDetails, 'clientAuditDetails') != null) 'clientAuditDetails': Mapper.i.$enc(d.clientAuditDetails, 'clientAuditDetails'), if (Mapper.i.$enc(d.isDeleted, 'isDeleted') != null) 'isDeleted': Mapper.i.$enc(d.isDeleted, 'isDeleted')};
 
-  @override String stringify(DownsyncModel self) => 'DownsyncModel(boundaryCode: ${Mapper.asString(self.boundaryCode)}, isDeleted: ${Mapper.asString(self.isDeleted)}, auditDetails: ${Mapper.asString(self.auditDetails)}, clientAuditDetails: ${Mapper.asString(self.clientAuditDetails)}, locality: ${Mapper.asString(self.locality)}, projectId: ${Mapper.asString(self.projectId)}, offset: ${Mapper.asString(self.offset)}, limit: ${Mapper.asString(self.limit)}, lastSyncedTime: ${Mapper.asString(self.lastSyncedTime)}, totalCount: ${Mapper.asString(self.totalCount)}, nonRecoverableError: ${Mapper.asString(self.nonRecoverableError)}, tenantId: ${Mapper.asString(self.tenantId)}, rowVersion: ${Mapper.asString(self.rowVersion)}, downSyncCriteria: ${Mapper.asString(self.downSyncCriteria)}, additionalFields: ${Mapper.asString(self.additionalFields)})';
-  @override int hash(DownsyncModel self) => Mapper.hash(self.boundaryCode) ^ Mapper.hash(self.isDeleted) ^ Mapper.hash(self.auditDetails) ^ Mapper.hash(self.clientAuditDetails) ^ Mapper.hash(self.locality) ^ Mapper.hash(self.projectId) ^ Mapper.hash(self.offset) ^ Mapper.hash(self.limit) ^ Mapper.hash(self.lastSyncedTime) ^ Mapper.hash(self.totalCount) ^ Mapper.hash(self.nonRecoverableError) ^ Mapper.hash(self.tenantId) ^ Mapper.hash(self.rowVersion) ^ Mapper.hash(self.downSyncCriteria) ^ Mapper.hash(self.additionalFields);
-  @override bool equals(DownsyncModel self, DownsyncModel other) => Mapper.isEqual(self.boundaryCode, other.boundaryCode) && Mapper.isEqual(self.isDeleted, other.isDeleted) && Mapper.isEqual(self.auditDetails, other.auditDetails) && Mapper.isEqual(self.clientAuditDetails, other.clientAuditDetails) && Mapper.isEqual(self.locality, other.locality) && Mapper.isEqual(self.projectId, other.projectId) && Mapper.isEqual(self.offset, other.offset) && Mapper.isEqual(self.limit, other.limit) && Mapper.isEqual(self.lastSyncedTime, other.lastSyncedTime) && Mapper.isEqual(self.totalCount, other.totalCount) && Mapper.isEqual(self.nonRecoverableError, other.nonRecoverableError) && Mapper.isEqual(self.tenantId, other.tenantId) && Mapper.isEqual(self.rowVersion, other.rowVersion) && Mapper.isEqual(self.downSyncCriteria, other.downSyncCriteria) && Mapper.isEqual(self.additionalFields, other.additionalFields);
+  @override String stringify(DownsyncModel self) => 'DownsyncModel(boundaryCode: ${Mapper.asString(self.boundaryCode)}, isDeleted: ${Mapper.asString(self.isDeleted)}, auditDetails: ${Mapper.asString(self.auditDetails)}, clientAuditDetails: ${Mapper.asString(self.clientAuditDetails)}, locality: ${Mapper.asString(self.locality)}, projectId: ${Mapper.asString(self.projectId)}, offset: ${Mapper.asString(self.offset)}, limit: ${Mapper.asString(self.limit)}, lastSyncedTime: ${Mapper.asString(self.lastSyncedTime)}, totalCount: ${Mapper.asString(self.totalCount)}, nonRecoverableError: ${Mapper.asString(self.nonRecoverableError)}, tenantId: ${Mapper.asString(self.tenantId)}, rowVersion: ${Mapper.asString(self.rowVersion)}, additionalFields: ${Mapper.asString(self.additionalFields)})';
+  @override int hash(DownsyncModel self) => Mapper.hash(self.boundaryCode) ^ Mapper.hash(self.isDeleted) ^ Mapper.hash(self.auditDetails) ^ Mapper.hash(self.clientAuditDetails) ^ Mapper.hash(self.locality) ^ Mapper.hash(self.projectId) ^ Mapper.hash(self.offset) ^ Mapper.hash(self.limit) ^ Mapper.hash(self.lastSyncedTime) ^ Mapper.hash(self.totalCount) ^ Mapper.hash(self.nonRecoverableError) ^ Mapper.hash(self.tenantId) ^ Mapper.hash(self.rowVersion) ^ Mapper.hash(self.additionalFields);
+  @override bool equals(DownsyncModel self, DownsyncModel other) => Mapper.isEqual(self.boundaryCode, other.boundaryCode) && Mapper.isEqual(self.isDeleted, other.isDeleted) && Mapper.isEqual(self.auditDetails, other.auditDetails) && Mapper.isEqual(self.clientAuditDetails, other.clientAuditDetails) && Mapper.isEqual(self.locality, other.locality) && Mapper.isEqual(self.projectId, other.projectId) && Mapper.isEqual(self.offset, other.offset) && Mapper.isEqual(self.limit, other.limit) && Mapper.isEqual(self.lastSyncedTime, other.lastSyncedTime) && Mapper.isEqual(self.totalCount, other.totalCount) && Mapper.isEqual(self.nonRecoverableError, other.nonRecoverableError) && Mapper.isEqual(self.tenantId, other.tenantId) && Mapper.isEqual(self.rowVersion, other.rowVersion) && Mapper.isEqual(self.additionalFields, other.additionalFields);
 
   @override Function get typeFactory => (f) => f<DownsyncModel>();
 }
@@ -1003,10 +996,9 @@ extension DownsyncModelMapperExtension  on DownsyncModel {
 abstract class DownsyncModelCopyWith<$R> {
   factory DownsyncModelCopyWith(DownsyncModel value, Then<DownsyncModel, $R> then) = _DownsyncModelCopyWithImpl<$R>;
   DownsyncAdditionalFieldsCopyWith<$R>? get additionalFields;
-  DownsyncCriteriaModelCopyWith<$R>? get downSyncCriteria;
   AuditDetailsCopyWith<$R>? get auditDetails;
   ClientAuditDetailsCopyWith<$R>? get clientAuditDetails;
-  $R call({DownsyncAdditionalFields? additionalFields, String? locality, String? projectId, int? offset, int? limit, int? lastSyncedTime, int? totalCount, bool? nonRecoverableError, String? tenantId, int? rowVersion, DownsyncCriteriaModel? downSyncCriteria, AuditDetails? auditDetails, ClientAuditDetails? clientAuditDetails, bool? isDeleted});
+  $R call({DownsyncAdditionalFields? additionalFields, String? locality, String? projectId, int? offset, int? limit, int? lastSyncedTime, int? totalCount, bool? nonRecoverableError, String? tenantId, int? rowVersion, AuditDetails? auditDetails, ClientAuditDetails? clientAuditDetails, bool? isDeleted});
   $R apply(DownsyncModel Function(DownsyncModel) transform);
 }
 
@@ -1014,10 +1006,9 @@ class _DownsyncModelCopyWithImpl<$R> extends BaseCopyWith<DownsyncModel, $R> imp
   _DownsyncModelCopyWithImpl(DownsyncModel value, Then<DownsyncModel, $R> then) : super(value, then);
 
   @override DownsyncAdditionalFieldsCopyWith<$R>? get additionalFields => $value.additionalFields != null ? DownsyncAdditionalFieldsCopyWith($value.additionalFields!, (v) => call(additionalFields: v)) : null;
-  @override DownsyncCriteriaModelCopyWith<$R>? get downSyncCriteria => $value.downSyncCriteria != null ? DownsyncCriteriaModelCopyWith($value.downSyncCriteria!, (v) => call(downSyncCriteria: v)) : null;
   @override AuditDetailsCopyWith<$R>? get auditDetails => $value.auditDetails != null ? AuditDetailsCopyWith($value.auditDetails!, (v) => call(auditDetails: v)) : null;
   @override ClientAuditDetailsCopyWith<$R>? get clientAuditDetails => $value.clientAuditDetails != null ? ClientAuditDetailsCopyWith($value.clientAuditDetails!, (v) => call(clientAuditDetails: v)) : null;
-  @override $R call({Object? additionalFields = $none, Object? locality = $none, Object? projectId = $none, Object? offset = $none, Object? limit = $none, Object? lastSyncedTime = $none, Object? totalCount = $none, Object? nonRecoverableError = $none, Object? tenantId = $none, Object? rowVersion = $none, Object? downSyncCriteria = $none, Object? auditDetails = $none, Object? clientAuditDetails = $none, Object? isDeleted = $none}) => $then(DownsyncModel(additionalFields: or(additionalFields, $value.additionalFields), locality: or(locality, $value.locality), projectId: or(projectId, $value.projectId), offset: or(offset, $value.offset), limit: or(limit, $value.limit), lastSyncedTime: or(lastSyncedTime, $value.lastSyncedTime), totalCount: or(totalCount, $value.totalCount), nonRecoverableError: or(nonRecoverableError, $value.nonRecoverableError), tenantId: or(tenantId, $value.tenantId), rowVersion: or(rowVersion, $value.rowVersion), downSyncCriteria: or(downSyncCriteria, $value.downSyncCriteria), auditDetails: or(auditDetails, $value.auditDetails), clientAuditDetails: or(clientAuditDetails, $value.clientAuditDetails), isDeleted: or(isDeleted, $value.isDeleted)));
+  @override $R call({Object? additionalFields = $none, Object? locality = $none, Object? projectId = $none, Object? offset = $none, Object? limit = $none, Object? lastSyncedTime = $none, Object? totalCount = $none, Object? nonRecoverableError = $none, Object? tenantId = $none, Object? rowVersion = $none, Object? auditDetails = $none, Object? clientAuditDetails = $none, Object? isDeleted = $none}) => $then(DownsyncModel(additionalFields: or(additionalFields, $value.additionalFields), locality: or(locality, $value.locality), projectId: or(projectId, $value.projectId), offset: or(offset, $value.offset), limit: or(limit, $value.limit), lastSyncedTime: or(lastSyncedTime, $value.lastSyncedTime), totalCount: or(totalCount, $value.totalCount), nonRecoverableError: or(nonRecoverableError, $value.nonRecoverableError), tenantId: or(tenantId, $value.tenantId), rowVersion: or(rowVersion, $value.rowVersion), auditDetails: or(auditDetails, $value.auditDetails), clientAuditDetails: or(clientAuditDetails, $value.clientAuditDetails), isDeleted: or(isDeleted, $value.isDeleted)));
 }
 
 class DownsyncAdditionalFieldsMapper extends BaseMapper<DownsyncAdditionalFields> {
@@ -1056,122 +1047,6 @@ class _DownsyncAdditionalFieldsCopyWithImpl<$R> extends BaseCopyWith<DownsyncAdd
 
   @override ListCopyWith<$R, AdditionalField, AdditionalFieldCopyWith<$R>> get fields => ListCopyWith($value.fields, (v, t) => AdditionalFieldCopyWith(v, t), (v) => call(fields: v));
   @override $R call({String? schema, int? version, List<AdditionalField>? fields}) => $then(DownsyncAdditionalFields(schema: schema ?? $value.schema, version: version ?? $value.version, fields: fields ?? $value.fields));
-}
-
-class DownsyncCriteriaSearchModelMapper extends BaseMapper<DownsyncCriteriaSearchModel> {
-  DownsyncCriteriaSearchModelMapper._();
-
-  @override Function get decoder => decode;
-  DownsyncCriteriaSearchModel decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  DownsyncCriteriaSearchModel fromMap(Map<String, dynamic> map) => DownsyncCriteriaSearchModel.ignoreDeleted(projectId: Mapper.i.$getOpt(map, 'projectId'), clientReferenceId: Mapper.i.$getOpt(map, 'clientReferenceId'), boundaryCode: Mapper.i.$getOpt(map, 'boundaryCode'));
-
-  @override Function get encoder => (DownsyncCriteriaSearchModel v) => encode(v);
-  dynamic encode(DownsyncCriteriaSearchModel v) => toMap(v);
-  Map<String, dynamic> toMap(DownsyncCriteriaSearchModel d) => {if (Mapper.i.$enc(d.projectId, 'projectId') != null) 'projectId': Mapper.i.$enc(d.projectId, 'projectId'), if (Mapper.i.$enc(d.clientReferenceId, 'clientReferenceId') != null) 'clientReferenceId': Mapper.i.$enc(d.clientReferenceId, 'clientReferenceId'), if (Mapper.i.$enc(d.boundaryCode, 'boundaryCode') != null) 'boundaryCode': Mapper.i.$enc(d.boundaryCode, 'boundaryCode')};
-
-  @override String stringify(DownsyncCriteriaSearchModel self) => 'DownsyncCriteriaSearchModel(boundaryCode: ${Mapper.asString(self.boundaryCode)}, isDeleted: ${Mapper.asString(self.isDeleted)}, auditDetails: ${Mapper.asString(self.auditDetails)}, additionalFields: ${Mapper.asString(self.additionalFields)}, projectId: ${Mapper.asString(self.projectId)}, clientReferenceId: ${Mapper.asString(self.clientReferenceId)})';
-  @override int hash(DownsyncCriteriaSearchModel self) => Mapper.hash(self.boundaryCode) ^ Mapper.hash(self.isDeleted) ^ Mapper.hash(self.auditDetails) ^ Mapper.hash(self.additionalFields) ^ Mapper.hash(self.projectId) ^ Mapper.hash(self.clientReferenceId);
-  @override bool equals(DownsyncCriteriaSearchModel self, DownsyncCriteriaSearchModel other) => Mapper.isEqual(self.boundaryCode, other.boundaryCode) && Mapper.isEqual(self.isDeleted, other.isDeleted) && Mapper.isEqual(self.auditDetails, other.auditDetails) && Mapper.isEqual(self.additionalFields, other.additionalFields) && Mapper.isEqual(self.projectId, other.projectId) && Mapper.isEqual(self.clientReferenceId, other.clientReferenceId);
-
-  @override Function get typeFactory => (f) => f<DownsyncCriteriaSearchModel>();
-}
-
-extension DownsyncCriteriaSearchModelMapperExtension  on DownsyncCriteriaSearchModel {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-  DownsyncCriteriaSearchModelCopyWith<DownsyncCriteriaSearchModel> get copyWith => DownsyncCriteriaSearchModelCopyWith(this, $identity);
-}
-
-abstract class DownsyncCriteriaSearchModelCopyWith<$R> {
-  factory DownsyncCriteriaSearchModelCopyWith(DownsyncCriteriaSearchModel value, Then<DownsyncCriteriaSearchModel, $R> then) = _DownsyncCriteriaSearchModelCopyWithImpl<$R>;
-  $R call({String? projectId, List<String>? clientReferenceId, String? boundaryCode});
-  $R apply(DownsyncCriteriaSearchModel Function(DownsyncCriteriaSearchModel) transform);
-}
-
-class _DownsyncCriteriaSearchModelCopyWithImpl<$R> extends BaseCopyWith<DownsyncCriteriaSearchModel, $R> implements DownsyncCriteriaSearchModelCopyWith<$R> {
-  _DownsyncCriteriaSearchModelCopyWithImpl(DownsyncCriteriaSearchModel value, Then<DownsyncCriteriaSearchModel, $R> then) : super(value, then);
-
-  @override $R call({Object? projectId = $none, Object? clientReferenceId = $none, Object? boundaryCode = $none}) => $then(DownsyncCriteriaSearchModel.ignoreDeleted(projectId: or(projectId, $value.projectId), clientReferenceId: or(clientReferenceId, $value.clientReferenceId), boundaryCode: or(boundaryCode, $value.boundaryCode)));
-}
-
-class DownsyncCriteriaModelMapper extends BaseMapper<DownsyncCriteriaModel> {
-  DownsyncCriteriaModelMapper._();
-
-  @override Function get decoder => decode;
-  DownsyncCriteriaModel decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  DownsyncCriteriaModel fromMap(Map<String, dynamic> map) => DownsyncCriteriaModel(additionalFields: Mapper.i.$getOpt(map, 'additionalFields'), locality: Mapper.i.$getOpt(map, 'locality'), tenantId: Mapper.i.$getOpt(map, 'tenantId'), offset: Mapper.i.$getOpt(map, 'offset'), limit: Mapper.i.$getOpt(map, 'limit'), projectId: Mapper.i.$getOpt(map, 'projectId'), lastSyncedTime: Mapper.i.$getOpt(map, 'lastSyncedTime'), totalCount: Mapper.i.$getOpt(map, 'totalCount'), nonRecoverableError: Mapper.i.$getOpt(map, 'nonRecoverableError') ?? false, clientReferenceId: Mapper.i.$get(map, 'clientReferenceId'), rowVersion: Mapper.i.$getOpt(map, 'rowVersion'), auditDetails: Mapper.i.$getOpt(map, 'auditDetails'), clientAuditDetails: Mapper.i.$getOpt(map, 'clientAuditDetails'), isDeleted: Mapper.i.$getOpt(map, 'isDeleted') ?? false);
-
-  @override Function get encoder => (DownsyncCriteriaModel v) => encode(v);
-  dynamic encode(DownsyncCriteriaModel v) => toMap(v);
-  Map<String, dynamic> toMap(DownsyncCriteriaModel d) => {if (Mapper.i.$enc(d.additionalFields, 'additionalFields') != null) 'additionalFields': Mapper.i.$enc(d.additionalFields, 'additionalFields'), if (Mapper.i.$enc(d.locality, 'locality') != null) 'locality': Mapper.i.$enc(d.locality, 'locality'), if (Mapper.i.$enc(d.tenantId, 'tenantId') != null) 'tenantId': Mapper.i.$enc(d.tenantId, 'tenantId'), if (Mapper.i.$enc(d.offset, 'offset') != null) 'offset': Mapper.i.$enc(d.offset, 'offset'), if (Mapper.i.$enc(d.limit, 'limit') != null) 'limit': Mapper.i.$enc(d.limit, 'limit'), if (Mapper.i.$enc(d.projectId, 'projectId') != null) 'projectId': Mapper.i.$enc(d.projectId, 'projectId'), if (Mapper.i.$enc(d.lastSyncedTime, 'lastSyncedTime') != null) 'lastSyncedTime': Mapper.i.$enc(d.lastSyncedTime, 'lastSyncedTime'), if (Mapper.i.$enc(d.totalCount, 'totalCount') != null) 'totalCount': Mapper.i.$enc(d.totalCount, 'totalCount'), if (Mapper.i.$enc(d.nonRecoverableError, 'nonRecoverableError') != null) 'nonRecoverableError': Mapper.i.$enc(d.nonRecoverableError, 'nonRecoverableError'), 'clientReferenceId': Mapper.i.$enc(d.clientReferenceId, 'clientReferenceId'), if (Mapper.i.$enc(d.rowVersion, 'rowVersion') != null) 'rowVersion': Mapper.i.$enc(d.rowVersion, 'rowVersion'), if (Mapper.i.$enc(d.auditDetails, 'auditDetails') != null) 'auditDetails': Mapper.i.$enc(d.auditDetails, 'auditDetails'), if (Mapper.i.$enc(d.clientAuditDetails, 'clientAuditDetails') != null) 'clientAuditDetails': Mapper.i.$enc(d.clientAuditDetails, 'clientAuditDetails'), if (Mapper.i.$enc(d.isDeleted, 'isDeleted') != null) 'isDeleted': Mapper.i.$enc(d.isDeleted, 'isDeleted')};
-
-  @override String stringify(DownsyncCriteriaModel self) => 'DownsyncCriteriaModel(boundaryCode: ${Mapper.asString(self.boundaryCode)}, isDeleted: ${Mapper.asString(self.isDeleted)}, auditDetails: ${Mapper.asString(self.auditDetails)}, clientAuditDetails: ${Mapper.asString(self.clientAuditDetails)}, locality: ${Mapper.asString(self.locality)}, tenantId: ${Mapper.asString(self.tenantId)}, offset: ${Mapper.asString(self.offset)}, limit: ${Mapper.asString(self.limit)}, projectId: ${Mapper.asString(self.projectId)}, lastSyncedTime: ${Mapper.asString(self.lastSyncedTime)}, totalCount: ${Mapper.asString(self.totalCount)}, nonRecoverableError: ${Mapper.asString(self.nonRecoverableError)}, clientReferenceId: ${Mapper.asString(self.clientReferenceId)}, rowVersion: ${Mapper.asString(self.rowVersion)}, additionalFields: ${Mapper.asString(self.additionalFields)})';
-  @override int hash(DownsyncCriteriaModel self) => Mapper.hash(self.boundaryCode) ^ Mapper.hash(self.isDeleted) ^ Mapper.hash(self.auditDetails) ^ Mapper.hash(self.clientAuditDetails) ^ Mapper.hash(self.locality) ^ Mapper.hash(self.tenantId) ^ Mapper.hash(self.offset) ^ Mapper.hash(self.limit) ^ Mapper.hash(self.projectId) ^ Mapper.hash(self.lastSyncedTime) ^ Mapper.hash(self.totalCount) ^ Mapper.hash(self.nonRecoverableError) ^ Mapper.hash(self.clientReferenceId) ^ Mapper.hash(self.rowVersion) ^ Mapper.hash(self.additionalFields);
-  @override bool equals(DownsyncCriteriaModel self, DownsyncCriteriaModel other) => Mapper.isEqual(self.boundaryCode, other.boundaryCode) && Mapper.isEqual(self.isDeleted, other.isDeleted) && Mapper.isEqual(self.auditDetails, other.auditDetails) && Mapper.isEqual(self.clientAuditDetails, other.clientAuditDetails) && Mapper.isEqual(self.locality, other.locality) && Mapper.isEqual(self.tenantId, other.tenantId) && Mapper.isEqual(self.offset, other.offset) && Mapper.isEqual(self.limit, other.limit) && Mapper.isEqual(self.projectId, other.projectId) && Mapper.isEqual(self.lastSyncedTime, other.lastSyncedTime) && Mapper.isEqual(self.totalCount, other.totalCount) && Mapper.isEqual(self.nonRecoverableError, other.nonRecoverableError) && Mapper.isEqual(self.clientReferenceId, other.clientReferenceId) && Mapper.isEqual(self.rowVersion, other.rowVersion) && Mapper.isEqual(self.additionalFields, other.additionalFields);
-
-  @override Function get typeFactory => (f) => f<DownsyncCriteriaModel>();
-}
-
-extension DownsyncCriteriaModelMapperExtension  on DownsyncCriteriaModel {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-  DownsyncCriteriaModelCopyWith<DownsyncCriteriaModel> get copyWith => DownsyncCriteriaModelCopyWith(this, $identity);
-}
-
-abstract class DownsyncCriteriaModelCopyWith<$R> {
-  factory DownsyncCriteriaModelCopyWith(DownsyncCriteriaModel value, Then<DownsyncCriteriaModel, $R> then) = _DownsyncCriteriaModelCopyWithImpl<$R>;
-  DownsyncCriteriaAdditionalFieldsCopyWith<$R>? get additionalFields;
-  AuditDetailsCopyWith<$R>? get auditDetails;
-  ClientAuditDetailsCopyWith<$R>? get clientAuditDetails;
-  $R call({DownsyncCriteriaAdditionalFields? additionalFields, String? locality, String? tenantId, int? offset, int? limit, String? projectId, int? lastSyncedTime, int? totalCount, bool? nonRecoverableError, String? clientReferenceId, int? rowVersion, AuditDetails? auditDetails, ClientAuditDetails? clientAuditDetails, bool? isDeleted});
-  $R apply(DownsyncCriteriaModel Function(DownsyncCriteriaModel) transform);
-}
-
-class _DownsyncCriteriaModelCopyWithImpl<$R> extends BaseCopyWith<DownsyncCriteriaModel, $R> implements DownsyncCriteriaModelCopyWith<$R> {
-  _DownsyncCriteriaModelCopyWithImpl(DownsyncCriteriaModel value, Then<DownsyncCriteriaModel, $R> then) : super(value, then);
-
-  @override DownsyncCriteriaAdditionalFieldsCopyWith<$R>? get additionalFields => $value.additionalFields != null ? DownsyncCriteriaAdditionalFieldsCopyWith($value.additionalFields!, (v) => call(additionalFields: v)) : null;
-  @override AuditDetailsCopyWith<$R>? get auditDetails => $value.auditDetails != null ? AuditDetailsCopyWith($value.auditDetails!, (v) => call(auditDetails: v)) : null;
-  @override ClientAuditDetailsCopyWith<$R>? get clientAuditDetails => $value.clientAuditDetails != null ? ClientAuditDetailsCopyWith($value.clientAuditDetails!, (v) => call(clientAuditDetails: v)) : null;
-  @override $R call({Object? additionalFields = $none, Object? locality = $none, Object? tenantId = $none, Object? offset = $none, Object? limit = $none, Object? projectId = $none, Object? lastSyncedTime = $none, Object? totalCount = $none, Object? nonRecoverableError = $none, String? clientReferenceId, Object? rowVersion = $none, Object? auditDetails = $none, Object? clientAuditDetails = $none, Object? isDeleted = $none}) => $then(DownsyncCriteriaModel(additionalFields: or(additionalFields, $value.additionalFields), locality: or(locality, $value.locality), tenantId: or(tenantId, $value.tenantId), offset: or(offset, $value.offset), limit: or(limit, $value.limit), projectId: or(projectId, $value.projectId), lastSyncedTime: or(lastSyncedTime, $value.lastSyncedTime), totalCount: or(totalCount, $value.totalCount), nonRecoverableError: or(nonRecoverableError, $value.nonRecoverableError), clientReferenceId: clientReferenceId ?? $value.clientReferenceId, rowVersion: or(rowVersion, $value.rowVersion), auditDetails: or(auditDetails, $value.auditDetails), clientAuditDetails: or(clientAuditDetails, $value.clientAuditDetails), isDeleted: or(isDeleted, $value.isDeleted)));
-}
-
-class DownsyncCriteriaAdditionalFieldsMapper extends BaseMapper<DownsyncCriteriaAdditionalFields> {
-  DownsyncCriteriaAdditionalFieldsMapper._();
-
-  @override Function get decoder => decode;
-  DownsyncCriteriaAdditionalFields decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  DownsyncCriteriaAdditionalFields fromMap(Map<String, dynamic> map) => DownsyncCriteriaAdditionalFields(schema: Mapper.i.$getOpt(map, 'schema') ?? 'DownsyncCriteria', version: Mapper.i.$get(map, 'version'), fields: Mapper.i.$getOpt(map, 'fields') ?? const []);
-
-  @override Function get encoder => (DownsyncCriteriaAdditionalFields v) => encode(v);
-  dynamic encode(DownsyncCriteriaAdditionalFields v) => toMap(v);
-  Map<String, dynamic> toMap(DownsyncCriteriaAdditionalFields d) => {'schema': Mapper.i.$enc(d.schema, 'schema'), 'version': Mapper.i.$enc(d.version, 'version'), 'fields': Mapper.i.$enc(d.fields, 'fields')};
-
-  @override String stringify(DownsyncCriteriaAdditionalFields self) => 'DownsyncCriteriaAdditionalFields(schema: ${Mapper.asString(self.schema)}, version: ${Mapper.asString(self.version)}, fields: ${Mapper.asString(self.fields)})';
-  @override int hash(DownsyncCriteriaAdditionalFields self) => Mapper.hash(self.schema) ^ Mapper.hash(self.version) ^ Mapper.hash(self.fields);
-  @override bool equals(DownsyncCriteriaAdditionalFields self, DownsyncCriteriaAdditionalFields other) => Mapper.isEqual(self.schema, other.schema) && Mapper.isEqual(self.version, other.version) && Mapper.isEqual(self.fields, other.fields);
-
-  @override Function get typeFactory => (f) => f<DownsyncCriteriaAdditionalFields>();
-}
-
-extension DownsyncCriteriaAdditionalFieldsMapperExtension  on DownsyncCriteriaAdditionalFields {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-  DownsyncCriteriaAdditionalFieldsCopyWith<DownsyncCriteriaAdditionalFields> get copyWith => DownsyncCriteriaAdditionalFieldsCopyWith(this, $identity);
-}
-
-abstract class DownsyncCriteriaAdditionalFieldsCopyWith<$R> {
-  factory DownsyncCriteriaAdditionalFieldsCopyWith(DownsyncCriteriaAdditionalFields value, Then<DownsyncCriteriaAdditionalFields, $R> then) = _DownsyncCriteriaAdditionalFieldsCopyWithImpl<$R>;
-  ListCopyWith<$R, AdditionalField, AdditionalFieldCopyWith<$R>> get fields;
-  $R call({String? schema, int? version, List<AdditionalField>? fields});
-  $R apply(DownsyncCriteriaAdditionalFields Function(DownsyncCriteriaAdditionalFields) transform);
-}
-
-class _DownsyncCriteriaAdditionalFieldsCopyWithImpl<$R> extends BaseCopyWith<DownsyncCriteriaAdditionalFields, $R> implements DownsyncCriteriaAdditionalFieldsCopyWith<$R> {
-  _DownsyncCriteriaAdditionalFieldsCopyWithImpl(DownsyncCriteriaAdditionalFields value, Then<DownsyncCriteriaAdditionalFields, $R> then) : super(value, then);
-
-  @override ListCopyWith<$R, AdditionalField, AdditionalFieldCopyWith<$R>> get fields => ListCopyWith($value.fields, (v, t) => AdditionalFieldCopyWith(v, t), (v) => call(fields: v));
-  @override $R call({String? schema, int? version, List<AdditionalField>? fields}) => $then(DownsyncCriteriaAdditionalFields(schema: schema ?? $value.schema, version: version ?? $value.version, fields: fields ?? $value.fields));
 }
 
 class FacilitySearchModelMapper extends BaseMapper<FacilitySearchModel> {
