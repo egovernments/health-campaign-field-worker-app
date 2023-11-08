@@ -16,7 +16,6 @@ class ResourceBeneficiaryCard extends LocalizedStatefulWidget {
   final int totalItems;
   final bool isAdministered;
 
-
   const ResourceBeneficiaryCard({
     Key? key,
     super.appLocalizations,
@@ -34,6 +33,7 @@ class ResourceBeneficiaryCard extends LocalizedStatefulWidget {
 
 class _ResourceBeneficiaryCardState
     extends LocalizedState<ResourceBeneficiaryCard> {
+  bool doseAdministered = false;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -72,12 +72,20 @@ class _ResourceBeneficiaryCardState
                 },
               );
             },
-          ),DigitCheckbox(
-                   label: localizations.translate(
-                    i18.deliverIntervention.deliverInteventionAdministeredDeliveredLabel,
-                          ),
-                      value: widget.isAdministered,
-          ),        
+          ),Padding(
+                padding:const EdgeInsets.only(top: 16.0),
+                child: DigitCheckbox(
+                  label: localizations.translate(
+                    i18.deliverIntervention.deliverInteventionAdministeredLabel,
+                  ),
+                  value: doseAdministered,
+                  onChanged: (value) {
+                    setState(() {
+                      doseAdministered = value!;
+                    });
+                  },
+                ),
+              ),
           DigitTextFormField(
             formControlName: 'quantityWasted.${widget.cardIndex}',
             keyboardType: const TextInputType.numberWithOptions(decimal: true),

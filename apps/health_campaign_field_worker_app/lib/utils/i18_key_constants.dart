@@ -492,7 +492,7 @@ class DeliverIntervention {
 
   String get deliverInterventionLabel => 'DELIVER_INTERVENTION_LABEL';
 
-  String get deliverInteventionAdministeredDeliveredLabel => 'DELIVER_INTERVENTION_ADMINISTERED_QUANTITY_LABEL';
+  String get deliverInteventionAdministeredLabel => 'DELIVER_INTERVENTION_ADMINISTERED_LABEL';
 
   String get deliverInterventionResourceLabel =>
       'DELIVER_INTERVENTION_RESOURCE_LABEL';
