@@ -210,7 +210,7 @@ class MemberCard extends StatelessWidget {
             offstage: beneficiaryType != BeneficiaryType.individual,
             child: Padding(
               padding: const EdgeInsets.all(4.0),
-              child: Column(
+              child: isHead ? const Column(children: [],) :  Column(
                 children: [
                   isNotEligible ||
                           isBeneficiaryIneligible ||
