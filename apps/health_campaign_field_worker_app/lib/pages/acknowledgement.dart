@@ -23,7 +23,6 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    // final bool isDataRecordSuccess = false;
 
     return Scaffold(
       body: widget.isDataRecordSuccess
