@@ -49,6 +49,7 @@ class BeneficiaryDownSyncBloc
     on(_handleDownSyncOfBeneficiaries);
     on(_handleCheckTotalCount);
     on(_handleDownSyncResetState);
+    on(_handleDownSyncReport);
   }
 
   FutureOr<void> _handleDownSyncResetState(
@@ -161,6 +162,7 @@ class BeneficiaryDownSyncBloc
               ]);
               // Update the local downSync data for the boundary with the new values
               // offset += event.batchSize;
+              // ignore: avoid_dynamic_calls
               totalCount = downSyncResults["DownsyncCriteria"]["totalCount"];
 
               await downSyncLocalRepository.update(DownsyncModel(
@@ -190,6 +192,14 @@ class BeneficiaryDownSyncBloc
       }
     }
   }
+
+  FutureOr<void> _handleDownSyncReport(
+    DownSyncReportEvent event,
+    BeneficiaryDownSyncEmitter emit,
+  ) async {
+    final result = await downSyncLocalRepository.search(DownsyncSearchModel());
+    emit(BeneficiaryDownSyncState.report(result));
+  }
 }
 
 @freezed
@@ -205,6 +215,8 @@ class BeneficiaryDownSyncEvent with _$BeneficiaryDownSyncEvent {
     required String projectId,
     required String boundaryCode,
   }) = DownSyncCheckTotalCountEvent;
+
+  const factory BeneficiaryDownSyncEvent.downSyncReport() = DownSyncReportEvent;
 
   const factory BeneficiaryDownSyncEvent.resetState() = DownSyncResetStateEvent;
 }
@@ -224,4 +236,7 @@ class BeneficiaryDownSyncState with _$BeneficiaryDownSyncState {
       _DownSyncDataFoundState;
   const factory BeneficiaryDownSyncState.resetState() = _DownSyncResetState;
   const factory BeneficiaryDownSyncState.failed() = _DownSyncFailureState;
+  const factory BeneficiaryDownSyncState.report(
+    List<DownsyncModel> downsyncCriteriaList,
+  ) = _DownSyncReportState;
 }

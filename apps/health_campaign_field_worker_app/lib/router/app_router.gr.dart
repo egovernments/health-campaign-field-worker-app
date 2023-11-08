@@ -95,6 +95,12 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    BeneficariesReportRoute.name: (routeData) {
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: const BeneficariesReportPage(),
+      );
+    },
     BeneficiaryRegistrationWrapperRoute.name: (routeData) {
       final args = routeData.argsAs<BeneficiaryRegistrationWrapperRouteArgs>();
       return MaterialPageX<dynamic>(
@@ -620,6 +626,11 @@ class _$AppRouter extends RootStackRouter {
               parent: AuthenticatedRouteWrapper.name,
             ),
             RouteConfig(
+              BeneficariesReportRoute.name,
+              path: 'beneficiary-downsync-report',
+              parent: AuthenticatedRouteWrapper.name,
+            ),
+            RouteConfig(
               BeneficiaryRegistrationWrapperRoute.name,
               path: 'beneficiary-registration',
               parent: AuthenticatedRouteWrapper.name,
@@ -1127,6 +1138,18 @@ class QRScannerRouteArgs {
   String toString() {
     return 'QRScannerRouteArgs{key: $key, appLocalizations: $appLocalizations, quantity: $quantity, isGS1code: $isGS1code, sinlgleValue: $sinlgleValue, isEditEnabled: $isEditEnabled}';
   }
+}
+
+/// generated route for
+/// [BeneficariesReportPage]
+class BeneficariesReportRoute extends PageRouteInfo<void> {
+  const BeneficariesReportRoute()
+      : super(
+          BeneficariesReportRoute.name,
+          path: 'beneficiary-downsync-report',
+        );
+
+  static const String name = 'BeneficariesReportRoute';
 }
 
 /// generated route for
