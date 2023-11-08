@@ -1,4 +1,5 @@
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/widgets/atoms/digit_checkbox.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,6 +14,8 @@ class ResourceBeneficiaryCard extends LocalizedStatefulWidget {
   final int cardIndex;
   final FormGroup form;
   final int totalItems;
+  final bool isAdministered;
+
 
   const ResourceBeneficiaryCard({
     Key? key,
@@ -21,6 +24,7 @@ class ResourceBeneficiaryCard extends LocalizedStatefulWidget {
     required this.cardIndex,
     required this.form,
     required this.totalItems,
+    this.isAdministered = false,
   }) : super(key: key);
 
   @override
@@ -68,27 +72,15 @@ class _ResourceBeneficiaryCardState
                 },
               );
             },
-          ),
-          DigitTextFormField(
-            formControlName: 'quantityDistributed.${widget.cardIndex}',
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            inputFormatters: [
-              LengthLimitingTextInputFormatter(1),
-              FilteringTextInputFormatter.allow(
-                RegExp(r'^[1-2]+$'),
-              ),
-            ],
-            label: localizations.translate(
-              i18.deliverIntervention.quantityDistributedLabel,
+          ),Offstage(
+              offstage: !widget.isAdministered,
+                child: DigitCheckbox(
+                   label: localizations.translate(
+                    i18.deliverIntervention.deliverInteventionQuantityDeliveredLabel,
+                          ),
+                      value: widget.isAdministered,
             ),
-            validationMessages: {
-              "required": (control) {
-                return localizations.translate(
-                  i18.common.corecommonRequired,
-                );
-              },
-            },
-          ),          
+          ),        
           DigitTextFormField(
             formControlName: 'quantityWasted.${widget.cardIndex}',
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
