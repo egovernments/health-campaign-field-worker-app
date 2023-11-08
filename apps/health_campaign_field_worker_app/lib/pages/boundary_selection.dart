@@ -190,10 +190,11 @@ class _BoundarySelectionPageState
                                 ),
                               );
                             },
-                            success: () {
+                            success: (result) {
                               Navigator.of(context, rootNavigator: true).pop();
                               context.router.popAndPush((AcknowledgementRoute(
                                   isDataRecordSuccess: true,
+                                result : result,
                               )));
                             },
                             failed: () {

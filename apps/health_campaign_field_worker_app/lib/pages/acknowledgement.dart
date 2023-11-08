@@ -1,34 +1,43 @@
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/utils/date_utils.dart';
 import 'package:flutter/material.dart';
 
+import '../models/entities/downsync.dart';
 import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/localized.dart';
 
 class AcknowledgementPage extends LocalizedStatefulWidget {
   bool isDataRecordSuccess;
+  final DownsyncModel? result;
 
   AcknowledgementPage({
     super.key,
     super.appLocalizations,
     this.isDataRecordSuccess = false,
+    this.result,
   });
 
   @override
   State<AcknowledgementPage> createState() => _AcknowledgementPageState();
 }
 
+
 class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
+    int? epochTime = widget.result?.lastSyncedTime;
+
+    String date= DigitDateUtils.getDateFromTimestamp(epochTime!);
+    String dataDescription = "Download Report:\n\n\nBoundary: ${widget.result?.locality}\nStatus: Download Completed\nDownloaded On: ${date}\nRecords Downloaded: ${widget.result?.totalCount}/${widget.result?.totalCount}";
+
 
     return Scaffold(
       body: widget.isDataRecordSuccess
           ? DigitAcknowledgement.success(
-        description: localizations.translate(
-            i18.acknowledgementSuccess.acknowledgementDescriptionText),
+        description: dataDescription,
         label: localizations
             .translate(i18.acknowledgementSuccess.acknowledgementLabelText),
         isActionLabel: false,
