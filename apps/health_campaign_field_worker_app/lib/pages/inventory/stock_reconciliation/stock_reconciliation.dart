@@ -464,7 +464,7 @@ class _StockReconciliationPageState
                                       iconColor: theme.colorScheme.surfaceTint,
                                       description: localizations.translate(
                                         i18.stockReconciliationDetails
-                                            .infoCardDescription,
+                                            .infoCardContent,
                                       ),
                                       title: localizations.translate(
                                         i18.stockReconciliationDetails
