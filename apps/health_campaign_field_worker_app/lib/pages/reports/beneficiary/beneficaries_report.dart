@@ -40,7 +40,6 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    // TODO [Need to add the i18 keys]
 
     return Scaffold(
       body: ScrollableContent(
@@ -52,7 +51,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
               onPressed: () {
                 context.router.replace(HomeRoute());
               },
-              child: const Text('Go To Home Screen'),
+              child: Text(localizations.translate(i18.acknowledgementSuccess.goToHome)),
             ),
           ),
         ),
@@ -235,7 +234,9 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      localizations.translate('Data Download Report'),
+                      localizations.translate(
+                        i18.beneficiaryDetails.datadownloadreport,
+                      ),
                       style: theme.textTheme.displayMedium,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -250,7 +251,9 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  'Boundary:',
+                                  localizations.translate(
+                                    i18.beneficiaryDetails.boundary,
+                                  ),
                                   style: theme.textTheme.headlineMedium,
                                 ),
                                 Text(
@@ -258,7 +261,9 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                                   style: theme.textTheme.headlineMedium,
                                 ),
                                 DigitOutLineButton(
-                                  label: 'Download',
+                                  label: localizations.translate(
+                                    i18.beneficiaryDetails.download,
+                                  ),
                                   onPressed: () {
                                     setState(() {
                                       selectedBoundary = e.locality;
@@ -276,11 +281,22 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                             ),
                             DigitTableCard(
                               element: {
-                                'Status : ': e.offset! < e.totalCount!
-                                    ? 'Partial Downloaded'
-                                    : 'Downloaded Completely',
-                                'Download Time : ': e.lastSyncedTime.toString(),
-                                'Total Records Downloaded : ':
+                            localizations.translate(
+                            i18.beneficiaryDetails.status,
+                            ):  e.offset == 0 && e.limit == 0
+
+                                    ? localizations.translate(
+                              i18.beneficiaryDetails.downloadcompleted,
+                            )
+                                    : localizations.translate(
+                              i18.beneficiaryDetails.partialdownloaded,
+                            ),
+                                localizations.translate(
+                                  i18.beneficiaryDetails.downloadtime,
+                                ): e.lastSyncedTime.toString(),
+                                localizations.translate(
+                                  i18.beneficiaryDetails.totalrecorddownload,
+                                ):
                                     e.offset == 0 && e.limit == 0
                                         ? '${e.totalCount}/${e.totalCount}'
                                         : '${e.offset}/${e.totalCount}',
