@@ -23,6 +23,7 @@ class PerformSyncUp {
     const householdAddressIdKey = 'householdAddressId';
     const individualAddressIdKey = 'individualAddressId';
     const householdIdKey = 'householdId';
+    const individualIdKey = 'individualId';
 
     List<EntityModel> getEntityModel(
       List<OpLogEntry<EntityModel>> opLogList,
@@ -63,8 +64,15 @@ class PerformSyncUp {
                   },
                 )?.id;
 
+                final individualId = e.additionalIds.firstWhereOrNull(
+                  (element) {
+                    return element.idType == individualIdKey;
+                  },
+                )?.id;
+
                 updatedEntity = updatedEntity.copyWith(
                   householdId: updatedEntity.householdId ?? hosueholdId,
+                  individualId: updatedEntity.individualId ?? individualId,
                 );
               }
 

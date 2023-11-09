@@ -22,6 +22,7 @@ class PerformSyncDown {
     const householdAddressIdKey = 'householdAddressId';
     const individualAddressIdKey = 'individualAddressId';
     const householdIdKey = 'householdId';
+    const individualIdKey = 'individualId';
 
     if (configuration.persistenceConfig ==
         PersistenceConfiguration.onlineOnly) {
@@ -377,6 +378,13 @@ class PerformSyncDown {
                             idType: householdIdKey,
                             id: responseEntity!.householdId!,
                           );
+                final individualAdditionalId =
+                    responseEntity?.individualId == null
+                        ? null
+                        : AdditionalId(
+                            idType: individualIdKey,
+                            id: responseEntity!.individualId!,
+                          );
 
                 await local.opLogManager.updateServerGeneratedIds(
                   model: UpdateServerGeneratedIdModel(
@@ -386,6 +394,8 @@ class PerformSyncDown {
                     rowVersion: rowVersion,
                     additionalIds: [
                       if (householdAdditionalId != null) householdAdditionalId,
+                      if (individualAdditionalId != null)
+                        individualAdditionalId,
                     ],
                   ),
                 );
