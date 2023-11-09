@@ -198,6 +198,9 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                           context.router.popAndPush((AcknowledgementRoute(
                             isDataRecordSuccess: true,
                             description: dataDescription,
+                            label: localizations.translate(i18
+                                .acknowledgementSuccess
+                                .dataDownloadedSuccessLabel),
                           )));
                         },
                         failed: () => showDownloadDialog(
@@ -251,20 +254,19 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                             title: localizations.translate(
                               i18.beneficiaryDetails.insufficientStorage,
                             ),
+                            content: localizations.translate(i18
+                                .beneficiaryDetails.insufficientStorageContent),
                             projectId: context.projectId,
                             appConfiguartion: appConfiguration,
                             boundary: selectedBoundary!.code.toString(),
                             primaryButtonLabel: localizations.translate(
-                              i18.syncDialog.closeButtonLabel,
-                            ),
-                            secondaryButtonLabel: localizations.translate(
-                              i18.beneficiaryDetails.proceedWithoutDownloading,
+                              i18.common.coreCommonOk,
                             ),
                             boundaryName: selectedBoundary!.name.toString(),
                           ),
                           dialogType:
                               DigitProgressDialogType.insufficientStorage,
-                          isPop: false,
+                          isPop: true,
                         ),
                       );
                     },

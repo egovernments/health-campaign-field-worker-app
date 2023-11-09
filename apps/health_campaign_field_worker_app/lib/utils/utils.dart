@@ -535,7 +535,6 @@ void showDownloadDialog(
   switch (dialogType) {
     case DigitProgressDialogType.failed:
     case DigitProgressDialogType.checkFailed:
-    case DigitProgressDialogType.insufficientStorage:
       DigitSyncDialog.show(
         context,
         type: DigitSyncDialogType.failed,
@@ -571,14 +570,18 @@ void showDownloadDialog(
       );
     case DigitProgressDialogType.dataFound:
     case DigitProgressDialogType.pendingSync:
+    case DigitProgressDialogType.insufficientStorage:
       DigitDialog.show(
         context,
-        //[TODO: Localizations need to be added
         options: DigitDialogOptions(
           titleText: model.title,
           titleIcon: Icon(
-            Icons.info_outline_rounded,
-            color: DigitTheme.instance.colorScheme.surfaceTint,
+            dialogType == DigitProgressDialogType.insufficientStorage
+                ? Icons.warning
+                : Icons.info_outline_rounded,
+            color: dialogType == DigitProgressDialogType.insufficientStorage
+                ? DigitTheme.instance.colorScheme.error
+                : DigitTheme.instance.colorScheme.surfaceTint,
           ),
           contentText: model.content,
           primaryAction: DigitDialogActions(

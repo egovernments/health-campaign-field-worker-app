@@ -149,7 +149,7 @@ class BeneficiaryDownSyncBloc
         .getFreeDiskSpace; // Returns the device available space in MB
     // emit(BeneficiaryDownSyncState.inProgress(0, serverTotalCount));
     // diskSpace in MB * 1000 comparison with serverTotalCount * 100KB * Number of entities * 2
-    if ((diskSpace ?? 0) * 1000 < (event.initialServerCount * 200 * 2)) {
+    if ((diskSpace ?? 0) * 1000 < (event.initialServerCount * 150 * 2)) {
       emit(const BeneficiaryDownSyncState.insufficientStorage());
     } else {
       try {

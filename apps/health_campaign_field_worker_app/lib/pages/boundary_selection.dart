@@ -284,6 +284,9 @@ class _BoundarySelectionPageState
                                         .popAndPush((AcknowledgementRoute(
                                       isDataRecordSuccess: true,
                                       description: dataDescription,
+                                      label: localizations.translate(i18
+                                          .acknowledgementSuccess
+                                          .dataDownloadedSuccessLabel),
                                     )));
                                   },
                                   failed: () => showDownloadDialog(
@@ -351,25 +354,23 @@ class _BoundarySelectionPageState
                                         i18.beneficiaryDetails
                                             .insufficientStorage,
                                       ),
+                                      content: localizations.translate(i18
+                                          .beneficiaryDetails
+                                          .insufficientStorageContent),
                                       projectId: context.projectId,
                                       appConfiguartion: appConfiguration,
                                       boundary: selectedBoundary!.value!.code
                                           .toString(),
                                       primaryButtonLabel:
                                           localizations.translate(
-                                        i18.syncDialog.closeButtonLabel,
-                                      ),
-                                      secondaryButtonLabel:
-                                          localizations.translate(
-                                        i18.beneficiaryDetails
-                                            .proceedWithoutDownloading,
+                                        i18.common.coreCommonOk,
                                       ),
                                       boundaryName: selectedBoundary.value!.name
                                           .toString(),
                                     ),
                                     dialogType: DigitProgressDialogType
                                         .insufficientStorage,
-                                    isPop: false,
+                                    isPop: true,
                                   ),
                                 );
                               },
