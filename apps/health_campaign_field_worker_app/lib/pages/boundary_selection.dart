@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/utils/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -209,10 +210,21 @@ class _BoundarySelectionPageState
                               dialogType: DigitProgressDialogType.inProgress,
                               isPop: true,
                             ),
-                            success: () {
+                            success: (result) {
+                              int? epochTime = result?.lastSyncedTime;
+
+                              String date= DigitDateUtils.getDateFromTimestamp(epochTime!);
+                              String dataDescription = "${localizations.translate(
+                                  i18.beneficiaryDetails.downloadreport)}\n\n\n${localizations.translate(
+                                  i18.beneficiaryDetails.boundary)} ${result?.locality}\n${localizations.translate(
+                                  i18.beneficiaryDetails.status)} ${localizations.translate(
+                                  i18.beneficiaryDetails.downloadcompleted)}\n${localizations.translate(
+                                  i18.beneficiaryDetails.downloadedon)} ${date}\n${localizations.translate(
+                                  i18.beneficiaryDetails.recordsdownload)} ${result?.totalCount}/${result?.totalCount}";
                               Navigator.of(context, rootNavigator: true).pop();
                               context.router.popAndPush((AcknowledgementRoute(
                                 isDataRecordSuccess: true,
+                                description: dataDescription,
                               )));
                             },
                             failed: () => showDownloadDialog(

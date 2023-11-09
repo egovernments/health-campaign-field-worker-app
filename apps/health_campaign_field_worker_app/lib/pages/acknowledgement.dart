@@ -7,11 +7,12 @@ import '../widgets/localized.dart';
 
 class AcknowledgementPage extends LocalizedStatefulWidget {
   bool isDataRecordSuccess;
-
+  String? description;
   AcknowledgementPage({
     super.key,
     super.appLocalizations,
     this.isDataRecordSuccess = false,
+    this.description,
   });
 
   @override
@@ -27,11 +28,11 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
     return Scaffold(
       body: widget.isDataRecordSuccess
           ? DigitAcknowledgement.success(
-        description: localizations.translate(
+        description: widget.description ?? localizations.translate(
             i18.acknowledgementSuccess.acknowledgementDescriptionText),
         label: localizations
             .translate(i18.acknowledgementSuccess.acknowledgementLabelText),
-        isActionLabel: false,
+        enableBackToSearch: false,
       )
           : DigitAcknowledgement.success(
         action: () {
@@ -39,7 +40,7 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
         },
         actionLabel:
         localizations.translate(i18.acknowledgementSuccess.actionLabelText),
-        description: localizations.translate(
+        description: widget.description ?? localizations.translate(
             i18.acknowledgementSuccess.acknowledgementDescriptionText),
         label: localizations
             .translate(i18.acknowledgementSuccess.acknowledgementLabelText),
