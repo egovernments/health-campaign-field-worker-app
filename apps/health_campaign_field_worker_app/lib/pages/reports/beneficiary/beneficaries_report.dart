@@ -308,7 +308,9 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                                       ),
                                 localizations.translate(
                                   i18.beneficiaryDetails.downloadtime,
-                                ): e.lastSyncedTime.toString(),
+                                ): e.lastSyncedTime != null
+                                    ? '${DigitDateUtils.getTimeFromTimestamp(e.lastSyncedTime!)} on ${DigitDateUtils.getDateFromTimestamp(e.lastSyncedTime!)}'
+                                    : '--',
                                 localizations.translate(
                                   i18.beneficiaryDetails.totalrecorddownload,
                                 ): e.offset == 0 && e.limit == 0
