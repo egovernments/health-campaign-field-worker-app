@@ -316,6 +316,11 @@ class BeneficiaryDetails {
   String get downloadedon => 'DOWNLOADED_ON';
   String get recordsdownload => 'RECORDS_DOWNLOAD';
   String get downloadcompleted => 'DOWNLOAD_COMPLETED';
+  String get datadownloadreport => 'DATA_DOWNLOAD_REPORT';
+  String get download => 'DOWNLOAD';
+  String get partialdownloaded => 'PARTIAL_DOWNLOAD';
+  String get downloadtime => 'DOWNLOAD_TIME';
+  String get totalrecorddownload => 'TOTAL_RECORD_DOWNLOAD';
 }
 
 class IndividualDetails {
