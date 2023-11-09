@@ -310,6 +310,12 @@ class BeneficiaryDetails {
   String get noDataFoundContent => 'NO_DATA_FOUND_CONTENT';
   String get dataDownloadInProgress => 'DATA_DOWNLOAD_IN_PROGRESS';
   String get insufficientStorage => 'INSUFFICIENT_STORAGE_WARNING';
+  String get downloadreport => 'DOWNLOAD_REPORT';
+  String get boundary => 'BOUNDARY';
+  String get status => 'STATUS';
+  String get downloadedon => 'DOWNLOADED_ON';
+  String get recordsdownload => 'RECORDS_DOWNLOAD';
+  String get downloadcompleted => 'DOWNLOAD_COMPLETED';
 }
 
 class IndividualDetails {

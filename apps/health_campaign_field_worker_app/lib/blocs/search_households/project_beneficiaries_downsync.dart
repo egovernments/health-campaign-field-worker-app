@@ -188,7 +188,13 @@ class BeneficiaryDownSyncBloc
                 lastSyncedTime: DateTime.now().millisecondsSinceEpoch,
               ),
             );
-            emit(const BeneficiaryDownSyncState.success());
+            final result = DownsyncModel(
+              offset: offset,
+              lastSyncedTime: DateTime.now().millisecondsSinceEpoch,
+              totalCount: totalCount,
+              locality: event.boundaryCode,
+            );
+            emit(BeneficiaryDownSyncState.success(result));
             break; // If offset is greater than or equal to totalCount, exit the loop
           }
         }
@@ -235,7 +241,7 @@ class BeneficiaryDownSyncState with _$BeneficiaryDownSyncState {
     int syncedCount,
     int totalCount,
   ) = _DownSyncInProgressState;
-  const factory BeneficiaryDownSyncState.success() = _DownSyncSuccessState;
+  const factory BeneficiaryDownSyncState.success(DownsyncModel downSyncResult,) = _DownSyncSuccessState;
   const factory BeneficiaryDownSyncState.loading() = _DownSyncLoadingState;
   const factory BeneficiaryDownSyncState.insufficientStorage() =
       _DownSyncInsufficientStorageState;
