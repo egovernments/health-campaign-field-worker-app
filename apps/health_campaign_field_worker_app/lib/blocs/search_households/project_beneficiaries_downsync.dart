@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../data/data_repository.dart';
+import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/network_manager.dart';
 import '../../models/data_model.dart';
 import '../../utils/environment_config.dart';
@@ -66,6 +67,7 @@ class BeneficiaryDownSyncBloc
     if (event.pendingSyncCount > 0) {
       emit(const BeneficiaryDownSyncState.pendingSync());
     } else {
+      await LocalSecureStore.instance.setManualSyncTrigger(true);
       final existingDownSyncData =
           await downSyncLocalRepository.search(DownsyncSearchModel(
         locality: event.boundaryCode,
@@ -181,6 +183,7 @@ class BeneficiaryDownSyncBloc
             // When API response failed
             else {
               emit(const BeneficiaryDownSyncState.failed());
+              await LocalSecureStore.instance.setManualSyncTrigger(false);
               break;
             }
           } else {
@@ -201,11 +204,13 @@ class BeneficiaryDownSyncBloc
               locality: event.boundaryCode,
               boundaryName: event.boundaryName,
             );
+            await LocalSecureStore.instance.setManualSyncTrigger(false);
             emit(BeneficiaryDownSyncState.success(result));
             break; // If offset is greater than or equal to totalCount, exit the loop
           }
         }
       } catch (e) {
+        await LocalSecureStore.instance.setManualSyncTrigger(false);
         emit(const BeneficiaryDownSyncState.failed());
       }
     }

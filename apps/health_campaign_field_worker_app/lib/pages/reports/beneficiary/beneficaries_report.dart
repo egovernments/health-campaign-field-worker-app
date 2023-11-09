@@ -52,8 +52,9 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
               onPressed: () {
                 context.router.replace(HomeRoute());
               },
-              child: Text(
-                  localizations.translate(i18.acknowledgementSuccess.goToHome)),
+              child: Text(localizations.translate(
+                i18.acknowledgementSuccess.goToHome,
+              )),
             ),
           ),
         ),

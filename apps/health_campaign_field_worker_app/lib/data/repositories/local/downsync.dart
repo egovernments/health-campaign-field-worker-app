@@ -71,6 +71,7 @@ class DownsyncLocalRepository
         locality: data.locality,
         offset: data.offset,
         limit: data.offset,
+        boundaryName: data.boundaryName,
         lastSyncedTime: data.lastSyncedTime,
         totalCount: data.totalCount,
         tenantId: data.tenantId,
