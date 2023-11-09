@@ -575,7 +575,10 @@ void showDownloadDialog(
         //[TODO: Localizations need to be added
         options: DigitDialogOptions(
           titleText: model.title,
-          titleIcon: const Icon(Icons.info),
+          titleIcon: Icon(
+            Icons.info,
+            color: DigitTheme.instance.colorScheme.surfaceTint,
+          ),
           contentText: model.content,
           primaryAction: DigitDialogActions(
             label: model.primaryButtonLabel ?? '',
