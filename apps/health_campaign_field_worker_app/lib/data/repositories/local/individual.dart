@@ -286,7 +286,7 @@ class IndividualLocalRepository
         .whereType<AddressCompanion>()
         .toList();
 
-    final identifiers = entities
+    final identifiersList = entities
         .map((e) => e.identifiers!.map((a) {
               return a
                   .copyWith(
@@ -295,13 +295,11 @@ class IndividualLocalRepository
                   )
                   .companion;
             }).toList())
-        .whereType<IdentifierCompanion>()
         .toList();
 
+    final identifierCompanions = identifiersList.expand((e) => [e[0]]).toList();
+
     await sql.batch((batch) async {
-      final identifierCompanions = identifiers.map((e) {
-        return e;
-      }).toList();
       final nameCompanions = entities.map((e) {
         if (e.name != null) {
           return e.name!.companion;
