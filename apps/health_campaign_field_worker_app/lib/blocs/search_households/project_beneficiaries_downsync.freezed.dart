@@ -753,7 +753,7 @@ mixin _$BeneficiaryDownSyncState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(int syncedCount, int totalCount) inProgress,
-    required TResult Function() success,
+    required TResult Function(DownsyncModel downSyncResult) success,
     required TResult Function() loading,
     required TResult Function() insufficientStorage,
     required TResult Function(int initialServerCount) dataFound,
@@ -767,7 +767,7 @@ mixin _$BeneficiaryDownSyncState {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int syncedCount, int totalCount)? inProgress,
-    TResult? Function()? success,
+    TResult? Function(DownsyncModel downSyncResult)? success,
     TResult? Function()? loading,
     TResult? Function()? insufficientStorage,
     TResult? Function(int initialServerCount)? dataFound,
@@ -781,7 +781,7 @@ mixin _$BeneficiaryDownSyncState {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int syncedCount, int totalCount)? inProgress,
-    TResult Function()? success,
+    TResult Function(DownsyncModel downSyncResult)? success,
     TResult Function()? loading,
     TResult Function()? insufficientStorage,
     TResult Function(int initialServerCount)? dataFound,
@@ -942,7 +942,7 @@ class _$_DownSyncInProgressState extends _DownSyncInProgressState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(int syncedCount, int totalCount) inProgress,
-    required TResult Function() success,
+    required TResult Function(DownsyncModel downSyncResult) success,
     required TResult Function() loading,
     required TResult Function() insufficientStorage,
     required TResult Function(int initialServerCount) dataFound,
@@ -959,7 +959,7 @@ class _$_DownSyncInProgressState extends _DownSyncInProgressState {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int syncedCount, int totalCount)? inProgress,
-    TResult? Function()? success,
+    TResult? Function(DownsyncModel downSyncResult)? success,
     TResult? Function()? loading,
     TResult? Function()? insufficientStorage,
     TResult? Function(int initialServerCount)? dataFound,
@@ -976,7 +976,7 @@ class _$_DownSyncInProgressState extends _DownSyncInProgressState {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int syncedCount, int totalCount)? inProgress,
-    TResult Function()? success,
+    TResult Function(DownsyncModel downSyncResult)? success,
     TResult Function()? loading,
     TResult Function()? insufficientStorage,
     TResult Function(int initialServerCount)? dataFound,
@@ -1072,6 +1072,8 @@ abstract class _$$_DownSyncSuccessStateCopyWith<$Res> {
   factory _$$_DownSyncSuccessStateCopyWith(_$_DownSyncSuccessState value,
           $Res Function(_$_DownSyncSuccessState) then) =
       __$$_DownSyncSuccessStateCopyWithImpl<$Res>;
+  @useResult
+  $Res call({DownsyncModel downSyncResult});
 }
 
 /// @nodoc
@@ -1082,32 +1084,58 @@ class __$$_DownSyncSuccessStateCopyWithImpl<$Res>
   __$$_DownSyncSuccessStateCopyWithImpl(_$_DownSyncSuccessState _value,
       $Res Function(_$_DownSyncSuccessState) _then)
       : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? downSyncResult = null,
+  }) {
+    return _then(_$_DownSyncSuccessState(
+      null == downSyncResult
+          ? _value.downSyncResult
+          : downSyncResult // ignore: cast_nullable_to_non_nullable
+              as DownsyncModel,
+    ));
+  }
 }
 
 /// @nodoc
 
 class _$_DownSyncSuccessState extends _DownSyncSuccessState {
-  const _$_DownSyncSuccessState() : super._();
+  const _$_DownSyncSuccessState(this.downSyncResult) : super._();
+
+  @override
+  final DownsyncModel downSyncResult;
 
   @override
   String toString() {
-    return 'BeneficiaryDownSyncState.success()';
+    return 'BeneficiaryDownSyncState.success(downSyncResult: $downSyncResult)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$_DownSyncSuccessState);
+        (other.runtimeType == runtimeType &&
+            other is _$_DownSyncSuccessState &&
+            (identical(other.downSyncResult, downSyncResult) ||
+                other.downSyncResult == downSyncResult));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode => Object.hash(runtimeType, downSyncResult);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_DownSyncSuccessStateCopyWith<_$_DownSyncSuccessState> get copyWith =>
+      __$$_DownSyncSuccessStateCopyWithImpl<_$_DownSyncSuccessState>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(int syncedCount, int totalCount) inProgress,
-    required TResult Function() success,
+    required TResult Function(DownsyncModel downSyncResult) success,
     required TResult Function() loading,
     required TResult Function() insufficientStorage,
     required TResult Function(int initialServerCount) dataFound,
@@ -1117,14 +1145,14 @@ class _$_DownSyncSuccessState extends _DownSyncSuccessState {
     required TResult Function(List<DownsyncModel> downsyncCriteriaList) report,
     required TResult Function() pendingSync,
   }) {
-    return success();
+    return success(downSyncResult);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int syncedCount, int totalCount)? inProgress,
-    TResult? Function()? success,
+    TResult? Function(DownsyncModel downSyncResult)? success,
     TResult? Function()? loading,
     TResult? Function()? insufficientStorage,
     TResult? Function(int initialServerCount)? dataFound,
@@ -1134,14 +1162,14 @@ class _$_DownSyncSuccessState extends _DownSyncSuccessState {
     TResult? Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult? Function()? pendingSync,
   }) {
-    return success?.call();
+    return success?.call(downSyncResult);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int syncedCount, int totalCount)? inProgress,
-    TResult Function()? success,
+    TResult Function(DownsyncModel downSyncResult)? success,
     TResult Function()? loading,
     TResult Function()? insufficientStorage,
     TResult Function(int initialServerCount)? dataFound,
@@ -1153,7 +1181,7 @@ class _$_DownSyncSuccessState extends _DownSyncSuccessState {
     required TResult orElse(),
   }) {
     if (success != null) {
-      return success();
+      return success(downSyncResult);
     }
     return orElse();
   }
@@ -1221,8 +1249,14 @@ class _$_DownSyncSuccessState extends _DownSyncSuccessState {
 }
 
 abstract class _DownSyncSuccessState extends BeneficiaryDownSyncState {
-  const factory _DownSyncSuccessState() = _$_DownSyncSuccessState;
+  const factory _DownSyncSuccessState(final DownsyncModel downSyncResult) =
+      _$_DownSyncSuccessState;
   const _DownSyncSuccessState._() : super._();
+
+  DownsyncModel get downSyncResult;
+  @JsonKey(ignore: true)
+  _$$_DownSyncSuccessStateCopyWith<_$_DownSyncSuccessState> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -1265,7 +1299,7 @@ class _$_DownSyncLoadingState extends _DownSyncLoadingState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(int syncedCount, int totalCount) inProgress,
-    required TResult Function() success,
+    required TResult Function(DownsyncModel downSyncResult) success,
     required TResult Function() loading,
     required TResult Function() insufficientStorage,
     required TResult Function(int initialServerCount) dataFound,
@@ -1282,7 +1316,7 @@ class _$_DownSyncLoadingState extends _DownSyncLoadingState {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int syncedCount, int totalCount)? inProgress,
-    TResult? Function()? success,
+    TResult? Function(DownsyncModel downSyncResult)? success,
     TResult? Function()? loading,
     TResult? Function()? insufficientStorage,
     TResult? Function(int initialServerCount)? dataFound,
@@ -1299,7 +1333,7 @@ class _$_DownSyncLoadingState extends _DownSyncLoadingState {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int syncedCount, int totalCount)? inProgress,
-    TResult Function()? success,
+    TResult Function(DownsyncModel downSyncResult)? success,
     TResult Function()? loading,
     TResult Function()? insufficientStorage,
     TResult Function(int initialServerCount)? dataFound,
@@ -1427,7 +1461,7 @@ class _$_DownSyncInsufficientStorageState
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(int syncedCount, int totalCount) inProgress,
-    required TResult Function() success,
+    required TResult Function(DownsyncModel downSyncResult) success,
     required TResult Function() loading,
     required TResult Function() insufficientStorage,
     required TResult Function(int initialServerCount) dataFound,
@@ -1444,7 +1478,7 @@ class _$_DownSyncInsufficientStorageState
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int syncedCount, int totalCount)? inProgress,
-    TResult? Function()? success,
+    TResult? Function(DownsyncModel downSyncResult)? success,
     TResult? Function()? loading,
     TResult? Function()? insufficientStorage,
     TResult? Function(int initialServerCount)? dataFound,
@@ -1461,7 +1495,7 @@ class _$_DownSyncInsufficientStorageState
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int syncedCount, int totalCount)? inProgress,
-    TResult Function()? success,
+    TResult Function(DownsyncModel downSyncResult)? success,
     TResult Function()? loading,
     TResult Function()? insufficientStorage,
     TResult Function(int initialServerCount)? dataFound,
@@ -1615,7 +1649,7 @@ class _$_DownSyncDataFoundState extends _DownSyncDataFoundState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(int syncedCount, int totalCount) inProgress,
-    required TResult Function() success,
+    required TResult Function(DownsyncModel downSyncResult) success,
     required TResult Function() loading,
     required TResult Function() insufficientStorage,
     required TResult Function(int initialServerCount) dataFound,
@@ -1632,7 +1666,7 @@ class _$_DownSyncDataFoundState extends _DownSyncDataFoundState {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int syncedCount, int totalCount)? inProgress,
-    TResult? Function()? success,
+    TResult? Function(DownsyncModel downSyncResult)? success,
     TResult? Function()? loading,
     TResult? Function()? insufficientStorage,
     TResult? Function(int initialServerCount)? dataFound,
@@ -1649,7 +1683,7 @@ class _$_DownSyncDataFoundState extends _DownSyncDataFoundState {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int syncedCount, int totalCount)? inProgress,
-    TResult Function()? success,
+    TResult Function(DownsyncModel downSyncResult)? success,
     TResult Function()? loading,
     TResult Function()? insufficientStorage,
     TResult Function(int initialServerCount)? dataFound,
@@ -1778,7 +1812,7 @@ class _$_DownSyncResetState extends _DownSyncResetState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(int syncedCount, int totalCount) inProgress,
-    required TResult Function() success,
+    required TResult Function(DownsyncModel downSyncResult) success,
     required TResult Function() loading,
     required TResult Function() insufficientStorage,
     required TResult Function(int initialServerCount) dataFound,
@@ -1795,7 +1829,7 @@ class _$_DownSyncResetState extends _DownSyncResetState {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int syncedCount, int totalCount)? inProgress,
-    TResult? Function()? success,
+    TResult? Function(DownsyncModel downSyncResult)? success,
     TResult? Function()? loading,
     TResult? Function()? insufficientStorage,
     TResult? Function(int initialServerCount)? dataFound,
@@ -1812,7 +1846,7 @@ class _$_DownSyncResetState extends _DownSyncResetState {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int syncedCount, int totalCount)? inProgress,
-    TResult Function()? success,
+    TResult Function(DownsyncModel downSyncResult)? success,
     TResult Function()? loading,
     TResult Function()? insufficientStorage,
     TResult Function(int initialServerCount)? dataFound,
@@ -1939,7 +1973,7 @@ class _$_DownSynnCountCheckFailedState extends _DownSynnCountCheckFailedState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(int syncedCount, int totalCount) inProgress,
-    required TResult Function() success,
+    required TResult Function(DownsyncModel downSyncResult) success,
     required TResult Function() loading,
     required TResult Function() insufficientStorage,
     required TResult Function(int initialServerCount) dataFound,
@@ -1956,7 +1990,7 @@ class _$_DownSynnCountCheckFailedState extends _DownSynnCountCheckFailedState {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int syncedCount, int totalCount)? inProgress,
-    TResult? Function()? success,
+    TResult? Function(DownsyncModel downSyncResult)? success,
     TResult? Function()? loading,
     TResult? Function()? insufficientStorage,
     TResult? Function(int initialServerCount)? dataFound,
@@ -1973,7 +2007,7 @@ class _$_DownSynnCountCheckFailedState extends _DownSynnCountCheckFailedState {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int syncedCount, int totalCount)? inProgress,
-    TResult Function()? success,
+    TResult Function(DownsyncModel downSyncResult)? success,
     TResult Function()? loading,
     TResult Function()? insufficientStorage,
     TResult Function(int initialServerCount)? dataFound,
@@ -2098,7 +2132,7 @@ class _$_DownSyncFailureState extends _DownSyncFailureState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(int syncedCount, int totalCount) inProgress,
-    required TResult Function() success,
+    required TResult Function(DownsyncModel downSyncResult) success,
     required TResult Function() loading,
     required TResult Function() insufficientStorage,
     required TResult Function(int initialServerCount) dataFound,
@@ -2115,7 +2149,7 @@ class _$_DownSyncFailureState extends _DownSyncFailureState {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int syncedCount, int totalCount)? inProgress,
-    TResult? Function()? success,
+    TResult? Function(DownsyncModel downSyncResult)? success,
     TResult? Function()? loading,
     TResult? Function()? insufficientStorage,
     TResult? Function(int initialServerCount)? dataFound,
@@ -2132,7 +2166,7 @@ class _$_DownSyncFailureState extends _DownSyncFailureState {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int syncedCount, int totalCount)? inProgress,
-    TResult Function()? success,
+    TResult Function(DownsyncModel downSyncResult)? success,
     TResult Function()? loading,
     TResult Function()? insufficientStorage,
     TResult Function(int initialServerCount)? dataFound,
@@ -2290,7 +2324,7 @@ class _$_DownSyncReportState extends _DownSyncReportState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(int syncedCount, int totalCount) inProgress,
-    required TResult Function() success,
+    required TResult Function(DownsyncModel downSyncResult) success,
     required TResult Function() loading,
     required TResult Function() insufficientStorage,
     required TResult Function(int initialServerCount) dataFound,
@@ -2307,7 +2341,7 @@ class _$_DownSyncReportState extends _DownSyncReportState {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int syncedCount, int totalCount)? inProgress,
-    TResult? Function()? success,
+    TResult? Function(DownsyncModel downSyncResult)? success,
     TResult? Function()? loading,
     TResult? Function()? insufficientStorage,
     TResult? Function(int initialServerCount)? dataFound,
@@ -2324,7 +2358,7 @@ class _$_DownSyncReportState extends _DownSyncReportState {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int syncedCount, int totalCount)? inProgress,
-    TResult Function()? success,
+    TResult Function(DownsyncModel downSyncResult)? success,
     TResult Function()? loading,
     TResult Function()? insufficientStorage,
     TResult Function(int initialServerCount)? dataFound,
@@ -2456,7 +2490,7 @@ class _$_DownSyncPendingSyncState extends _DownSyncPendingSyncState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(int syncedCount, int totalCount) inProgress,
-    required TResult Function() success,
+    required TResult Function(DownsyncModel downSyncResult) success,
     required TResult Function() loading,
     required TResult Function() insufficientStorage,
     required TResult Function(int initialServerCount) dataFound,
@@ -2473,7 +2507,7 @@ class _$_DownSyncPendingSyncState extends _DownSyncPendingSyncState {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(int syncedCount, int totalCount)? inProgress,
-    TResult? Function()? success,
+    TResult? Function(DownsyncModel downSyncResult)? success,
     TResult? Function()? loading,
     TResult? Function()? insufficientStorage,
     TResult? Function(int initialServerCount)? dataFound,
@@ -2490,7 +2524,7 @@ class _$_DownSyncPendingSyncState extends _DownSyncPendingSyncState {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int syncedCount, int totalCount)? inProgress,
-    TResult Function()? success,
+    TResult Function(DownsyncModel downSyncResult)? success,
     TResult Function()? loading,
     TResult Function()? insufficientStorage,
     TResult Function(int initialServerCount)? dataFound,

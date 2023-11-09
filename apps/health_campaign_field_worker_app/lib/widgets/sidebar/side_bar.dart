@@ -189,7 +189,7 @@ class SideBar extends StatelessWidget {
             icon: Icons.folder,
             onPressed: () {
               Navigator.of(context, rootNavigator: true).pop();
-              context.router.push(const BeneficariesReportRoute());
+              context.router.push(const BeneficiariesReportRoute());
             },
           ),
           DigitIconTile(

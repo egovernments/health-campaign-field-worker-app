@@ -211,16 +211,24 @@ class _BoundarySelectionPageState
                               isPop: true,
                             ),
                             success: (result) {
-                              int? epochTime = result?.lastSyncedTime;
+                              int? epochTime = result.lastSyncedTime;
 
-                              String date= DigitDateUtils.getDateFromTimestamp(epochTime!);
-                              String dataDescription = "${localizations.translate(
-                                  i18.beneficiaryDetails.downloadreport)}\n\n\n${localizations.translate(
-                                  i18.beneficiaryDetails.boundary)} ${result?.locality}\n${localizations.translate(
-                                  i18.beneficiaryDetails.status)} ${localizations.translate(
-                                  i18.beneficiaryDetails.downloadcompleted)}\n${localizations.translate(
-                                  i18.beneficiaryDetails.downloadedon)} ${date}\n${localizations.translate(
-                                  i18.beneficiaryDetails.recordsdownload)} ${result?.totalCount}/${result?.totalCount}";
+                              String date = DigitDateUtils.getDateFromTimestamp(
+                                  epochTime!);
+                              String dataDescription =
+                                  "${localizations.translate(
+                                i18.beneficiaryDetails.downloadreport,
+                              )}\n\n\n${localizations.translate(
+                                i18.beneficiaryDetails.boundary,
+                              )} ${result.locality}\n${localizations.translate(
+                                i18.beneficiaryDetails.status,
+                              )} ${localizations.translate(
+                                i18.beneficiaryDetails.downloadcompleted,
+                              )}\n${localizations.translate(
+                                i18.beneficiaryDetails.downloadedon,
+                              )} ${date}\n${localizations.translate(
+                                i18.beneficiaryDetails.recordsdownload,
+                              )} ${result.totalCount}/${result.totalCount}";
                               Navigator.of(context, rootNavigator: true).pop();
                               context.router.popAndPush((AcknowledgementRoute(
                                 isDataRecordSuccess: true,

@@ -93,6 +93,7 @@ class BeneficiaryDownSyncBloc
 
         emit(BeneficiaryDownSyncState.dataFound(serverTotalCount));
       } else {
+        emit(const BeneficiaryDownSyncState.resetState());
         emit(const BeneficiaryDownSyncState.totalCountCheckFailed());
       }
     }
@@ -137,7 +138,6 @@ class BeneficiaryDownSyncBloc
           }
 
           if (offset < totalCount) {
-            //[TODO: Need to emit the sync count instead of zero
             emit(BeneficiaryDownSyncState.inProgress(offset, totalCount));
             //Make the batch API call
             final downSyncResults = await downSyncRemoteRepository.downSync(
@@ -184,12 +184,13 @@ class BeneficiaryDownSyncBloc
           } else {
             await downSyncLocalRepository.update(
               existingDownSyncData.first.copyWith(
-                offset: totalCount,
+                offset: 0,
+                limit: 0,
                 lastSyncedTime: DateTime.now().millisecondsSinceEpoch,
               ),
             );
             final result = DownsyncModel(
-              offset: offset,
+              offset: totalCount,
               lastSyncedTime: DateTime.now().millisecondsSinceEpoch,
               totalCount: totalCount,
               locality: event.boundaryCode,
@@ -241,7 +242,9 @@ class BeneficiaryDownSyncState with _$BeneficiaryDownSyncState {
     int syncedCount,
     int totalCount,
   ) = _DownSyncInProgressState;
-  const factory BeneficiaryDownSyncState.success(DownsyncModel downSyncResult,) = _DownSyncSuccessState;
+  const factory BeneficiaryDownSyncState.success(
+    DownsyncModel downSyncResult,
+  ) = _DownSyncSuccessState;
   const factory BeneficiaryDownSyncState.loading() = _DownSyncLoadingState;
   const factory BeneficiaryDownSyncState.insufficientStorage() =
       _DownSyncInsufficientStorageState;
