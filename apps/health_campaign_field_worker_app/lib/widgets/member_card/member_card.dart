@@ -470,7 +470,11 @@ class MemberCard extends StatelessWidget {
                                                               .beneficiaryRefused
                                                               .toValue())
                                                       .toList()
-                                                      .isNotEmpty
+                                                      .isNotEmpty &&
+                                                  !checkStatus(
+                                                    tasks,
+                                                    context.selectedCycle,
+                                                  )
                                               ? null
                                               : () {
                                                   Navigator.of(context,
@@ -666,7 +670,11 @@ class MemberCard extends StatelessWidget {
                                                               .beneficiaryRefused
                                                               .toValue())
                                                       .toList()
-                                                      .isNotEmpty
+                                                      .isNotEmpty &&
+                                                  !checkStatus(
+                                                    tasks,
+                                                    context.selectedCycle,
+                                                  )
                                               ? null
                                               : () async {
                                                   Navigator.of(
