@@ -186,7 +186,7 @@ class SideBar extends StatelessWidget {
             title: AppLocalizations.of(context).translate(
               i18.common.coreCommonViewDownloadedData,
             ),
-            icon: Icons.folder,
+            icon: Icons.download,
             onPressed: () {
               Navigator.of(context, rootNavigator: true).pop();
               context.router.push(const BeneficiariesReportRoute());
