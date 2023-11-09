@@ -134,6 +134,7 @@ class BeneficiaryDownSyncBloc
               lastSyncedTime: lastSyncedTime,
               totalCount: totalCount,
               locality: event.boundaryCode,
+              boundaryName: event.boundaryName,
             ));
           }
 
@@ -173,6 +174,7 @@ class BeneficiaryDownSyncBloc
                 lastSyncedTime: lastSyncedTime,
                 totalCount: totalCount,
                 locality: event.boundaryCode,
+                boundaryName: event.boundaryName,
               ));
               // emit(BeneficiaryDownSyncState.inProgress(offset, totalCount));
             }
@@ -186,6 +188,9 @@ class BeneficiaryDownSyncBloc
               existingDownSyncData.first.copyWith(
                 offset: 0,
                 limit: 0,
+                totalCount: totalCount,
+                locality: event.boundaryCode,
+                boundaryName: event.boundaryName,
                 lastSyncedTime: DateTime.now().millisecondsSinceEpoch,
               ),
             );
@@ -194,6 +199,7 @@ class BeneficiaryDownSyncBloc
               lastSyncedTime: DateTime.now().millisecondsSinceEpoch,
               totalCount: totalCount,
               locality: event.boundaryCode,
+              boundaryName: event.boundaryName,
             );
             emit(BeneficiaryDownSyncState.success(result));
             break; // If offset is greater than or equal to totalCount, exit the loop
@@ -221,12 +227,14 @@ class BeneficiaryDownSyncEvent with _$BeneficiaryDownSyncEvent {
     required String boundaryCode,
     required int batchSize,
     required int initialServerCount,
+    required String boundaryName,
   }) = DownSyncBeneficiaryEvent;
 
   const factory BeneficiaryDownSyncEvent.checkForData({
     required String projectId,
     required String boundaryCode,
     required int pendingSyncCount,
+    required String boundaryName,
   }) = DownSyncCheckTotalCountEvent;
 
   const factory BeneficiaryDownSyncEvent.downSyncReport() = DownSyncReportEvent;

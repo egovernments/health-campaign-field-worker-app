@@ -19,10 +19,10 @@ mixin _$BeneficiaryDownSyncEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String projectId, String boundaryCode,
-            int batchSize, int initialServerCount)
+            int batchSize, int initialServerCount, String boundaryName)
         downSync,
-    required TResult Function(
-            String projectId, String boundaryCode, int pendingSyncCount)
+    required TResult Function(String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)
         checkForData,
     required TResult Function() downSyncReport,
     required TResult Function() resetState,
@@ -31,10 +31,10 @@ mixin _$BeneficiaryDownSyncEvent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String projectId, String boundaryCode, int batchSize,
-            int initialServerCount)?
+            int initialServerCount, String boundaryName)?
         downSync,
-    TResult? Function(
-            String projectId, String boundaryCode, int pendingSyncCount)?
+    TResult? Function(String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
         checkForData,
     TResult? Function()? downSyncReport,
     TResult? Function()? resetState,
@@ -43,10 +43,10 @@ mixin _$BeneficiaryDownSyncEvent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String projectId, String boundaryCode, int batchSize,
-            int initialServerCount)?
+            int initialServerCount, String boundaryName)?
         downSync,
-    TResult Function(
-            String projectId, String boundaryCode, int pendingSyncCount)?
+    TResult Function(String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
         checkForData,
     TResult Function()? downSyncReport,
     TResult Function()? resetState,
@@ -109,7 +109,8 @@ abstract class _$$DownSyncBeneficiaryEventCopyWith<$Res> {
       {String projectId,
       String boundaryCode,
       int batchSize,
-      int initialServerCount});
+      int initialServerCount,
+      String boundaryName});
 }
 
 /// @nodoc
@@ -128,6 +129,7 @@ class __$$DownSyncBeneficiaryEventCopyWithImpl<$Res>
     Object? boundaryCode = null,
     Object? batchSize = null,
     Object? initialServerCount = null,
+    Object? boundaryName = null,
   }) {
     return _then(_$DownSyncBeneficiaryEvent(
       projectId: null == projectId
@@ -146,6 +148,10 @@ class __$$DownSyncBeneficiaryEventCopyWithImpl<$Res>
           ? _value.initialServerCount
           : initialServerCount // ignore: cast_nullable_to_non_nullable
               as int,
+      boundaryName: null == boundaryName
+          ? _value.boundaryName
+          : boundaryName // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -157,7 +163,8 @@ class _$DownSyncBeneficiaryEvent implements DownSyncBeneficiaryEvent {
       {required this.projectId,
       required this.boundaryCode,
       required this.batchSize,
-      required this.initialServerCount});
+      required this.initialServerCount,
+      required this.boundaryName});
 
   @override
   final String projectId;
@@ -167,10 +174,12 @@ class _$DownSyncBeneficiaryEvent implements DownSyncBeneficiaryEvent {
   final int batchSize;
   @override
   final int initialServerCount;
+  @override
+  final String boundaryName;
 
   @override
   String toString() {
-    return 'BeneficiaryDownSyncEvent.downSync(projectId: $projectId, boundaryCode: $boundaryCode, batchSize: $batchSize, initialServerCount: $initialServerCount)';
+    return 'BeneficiaryDownSyncEvent.downSync(projectId: $projectId, boundaryCode: $boundaryCode, batchSize: $batchSize, initialServerCount: $initialServerCount, boundaryName: $boundaryName)';
   }
 
   @override
@@ -185,12 +194,14 @@ class _$DownSyncBeneficiaryEvent implements DownSyncBeneficiaryEvent {
             (identical(other.batchSize, batchSize) ||
                 other.batchSize == batchSize) &&
             (identical(other.initialServerCount, initialServerCount) ||
-                other.initialServerCount == initialServerCount));
+                other.initialServerCount == initialServerCount) &&
+            (identical(other.boundaryName, boundaryName) ||
+                other.boundaryName == boundaryName));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, projectId, boundaryCode, batchSize, initialServerCount);
+  int get hashCode => Object.hash(runtimeType, projectId, boundaryCode,
+      batchSize, initialServerCount, boundaryName);
 
   @JsonKey(ignore: true)
   @override
@@ -204,48 +215,50 @@ class _$DownSyncBeneficiaryEvent implements DownSyncBeneficiaryEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String projectId, String boundaryCode,
-            int batchSize, int initialServerCount)
+            int batchSize, int initialServerCount, String boundaryName)
         downSync,
-    required TResult Function(
-            String projectId, String boundaryCode, int pendingSyncCount)
+    required TResult Function(String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)
         checkForData,
     required TResult Function() downSyncReport,
     required TResult Function() resetState,
   }) {
-    return downSync(projectId, boundaryCode, batchSize, initialServerCount);
+    return downSync(
+        projectId, boundaryCode, batchSize, initialServerCount, boundaryName);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String projectId, String boundaryCode, int batchSize,
-            int initialServerCount)?
+            int initialServerCount, String boundaryName)?
         downSync,
-    TResult? Function(
-            String projectId, String boundaryCode, int pendingSyncCount)?
+    TResult? Function(String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
         checkForData,
     TResult? Function()? downSyncReport,
     TResult? Function()? resetState,
   }) {
     return downSync?.call(
-        projectId, boundaryCode, batchSize, initialServerCount);
+        projectId, boundaryCode, batchSize, initialServerCount, boundaryName);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String projectId, String boundaryCode, int batchSize,
-            int initialServerCount)?
+            int initialServerCount, String boundaryName)?
         downSync,
-    TResult Function(
-            String projectId, String boundaryCode, int pendingSyncCount)?
+    TResult Function(String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
         checkForData,
     TResult Function()? downSyncReport,
     TResult Function()? resetState,
     required TResult orElse(),
   }) {
     if (downSync != null) {
-      return downSync(projectId, boundaryCode, batchSize, initialServerCount);
+      return downSync(
+          projectId, boundaryCode, batchSize, initialServerCount, boundaryName);
     }
     return orElse();
   }
@@ -293,12 +306,14 @@ abstract class DownSyncBeneficiaryEvent implements BeneficiaryDownSyncEvent {
       {required final String projectId,
       required final String boundaryCode,
       required final int batchSize,
-      required final int initialServerCount}) = _$DownSyncBeneficiaryEvent;
+      required final int initialServerCount,
+      required final String boundaryName}) = _$DownSyncBeneficiaryEvent;
 
   String get projectId;
   String get boundaryCode;
   int get batchSize;
   int get initialServerCount;
+  String get boundaryName;
   @JsonKey(ignore: true)
   _$$DownSyncBeneficiaryEventCopyWith<_$DownSyncBeneficiaryEvent>
       get copyWith => throw _privateConstructorUsedError;
@@ -311,7 +326,11 @@ abstract class _$$DownSyncCheckTotalCountEventCopyWith<$Res> {
           $Res Function(_$DownSyncCheckTotalCountEvent) then) =
       __$$DownSyncCheckTotalCountEventCopyWithImpl<$Res>;
   @useResult
-  $Res call({String projectId, String boundaryCode, int pendingSyncCount});
+  $Res call(
+      {String projectId,
+      String boundaryCode,
+      int pendingSyncCount,
+      String boundaryName});
 }
 
 /// @nodoc
@@ -330,6 +349,7 @@ class __$$DownSyncCheckTotalCountEventCopyWithImpl<$Res>
     Object? projectId = null,
     Object? boundaryCode = null,
     Object? pendingSyncCount = null,
+    Object? boundaryName = null,
   }) {
     return _then(_$DownSyncCheckTotalCountEvent(
       projectId: null == projectId
@@ -344,6 +364,10 @@ class __$$DownSyncCheckTotalCountEventCopyWithImpl<$Res>
           ? _value.pendingSyncCount
           : pendingSyncCount // ignore: cast_nullable_to_non_nullable
               as int,
+      boundaryName: null == boundaryName
+          ? _value.boundaryName
+          : boundaryName // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -354,7 +378,8 @@ class _$DownSyncCheckTotalCountEvent implements DownSyncCheckTotalCountEvent {
   const _$DownSyncCheckTotalCountEvent(
       {required this.projectId,
       required this.boundaryCode,
-      required this.pendingSyncCount});
+      required this.pendingSyncCount,
+      required this.boundaryName});
 
   @override
   final String projectId;
@@ -362,10 +387,12 @@ class _$DownSyncCheckTotalCountEvent implements DownSyncCheckTotalCountEvent {
   final String boundaryCode;
   @override
   final int pendingSyncCount;
+  @override
+  final String boundaryName;
 
   @override
   String toString() {
-    return 'BeneficiaryDownSyncEvent.checkForData(projectId: $projectId, boundaryCode: $boundaryCode, pendingSyncCount: $pendingSyncCount)';
+    return 'BeneficiaryDownSyncEvent.checkForData(projectId: $projectId, boundaryCode: $boundaryCode, pendingSyncCount: $pendingSyncCount, boundaryName: $boundaryName)';
   }
 
   @override
@@ -378,12 +405,14 @@ class _$DownSyncCheckTotalCountEvent implements DownSyncCheckTotalCountEvent {
             (identical(other.boundaryCode, boundaryCode) ||
                 other.boundaryCode == boundaryCode) &&
             (identical(other.pendingSyncCount, pendingSyncCount) ||
-                other.pendingSyncCount == pendingSyncCount));
+                other.pendingSyncCount == pendingSyncCount) &&
+            (identical(other.boundaryName, boundaryName) ||
+                other.boundaryName == boundaryName));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, projectId, boundaryCode, pendingSyncCount);
+  int get hashCode => Object.hash(
+      runtimeType, projectId, boundaryCode, pendingSyncCount, boundaryName);
 
   @JsonKey(ignore: true)
   @override
@@ -396,47 +425,50 @@ class _$DownSyncCheckTotalCountEvent implements DownSyncCheckTotalCountEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String projectId, String boundaryCode,
-            int batchSize, int initialServerCount)
+            int batchSize, int initialServerCount, String boundaryName)
         downSync,
-    required TResult Function(
-            String projectId, String boundaryCode, int pendingSyncCount)
+    required TResult Function(String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)
         checkForData,
     required TResult Function() downSyncReport,
     required TResult Function() resetState,
   }) {
-    return checkForData(projectId, boundaryCode, pendingSyncCount);
+    return checkForData(
+        projectId, boundaryCode, pendingSyncCount, boundaryName);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String projectId, String boundaryCode, int batchSize,
-            int initialServerCount)?
+            int initialServerCount, String boundaryName)?
         downSync,
-    TResult? Function(
-            String projectId, String boundaryCode, int pendingSyncCount)?
+    TResult? Function(String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
         checkForData,
     TResult? Function()? downSyncReport,
     TResult? Function()? resetState,
   }) {
-    return checkForData?.call(projectId, boundaryCode, pendingSyncCount);
+    return checkForData?.call(
+        projectId, boundaryCode, pendingSyncCount, boundaryName);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String projectId, String boundaryCode, int batchSize,
-            int initialServerCount)?
+            int initialServerCount, String boundaryName)?
         downSync,
-    TResult Function(
-            String projectId, String boundaryCode, int pendingSyncCount)?
+    TResult Function(String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
         checkForData,
     TResult Function()? downSyncReport,
     TResult Function()? resetState,
     required TResult orElse(),
   }) {
     if (checkForData != null) {
-      return checkForData(projectId, boundaryCode, pendingSyncCount);
+      return checkForData(
+          projectId, boundaryCode, pendingSyncCount, boundaryName);
     }
     return orElse();
   }
@@ -484,11 +516,13 @@ abstract class DownSyncCheckTotalCountEvent
   const factory DownSyncCheckTotalCountEvent(
       {required final String projectId,
       required final String boundaryCode,
-      required final int pendingSyncCount}) = _$DownSyncCheckTotalCountEvent;
+      required final int pendingSyncCount,
+      required final String boundaryName}) = _$DownSyncCheckTotalCountEvent;
 
   String get projectId;
   String get boundaryCode;
   int get pendingSyncCount;
+  String get boundaryName;
   @JsonKey(ignore: true)
   _$$DownSyncCheckTotalCountEventCopyWith<_$DownSyncCheckTotalCountEvent>
       get copyWith => throw _privateConstructorUsedError;
@@ -533,10 +567,10 @@ class _$DownSyncReportEvent implements DownSyncReportEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String projectId, String boundaryCode,
-            int batchSize, int initialServerCount)
+            int batchSize, int initialServerCount, String boundaryName)
         downSync,
-    required TResult Function(
-            String projectId, String boundaryCode, int pendingSyncCount)
+    required TResult Function(String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)
         checkForData,
     required TResult Function() downSyncReport,
     required TResult Function() resetState,
@@ -548,10 +582,10 @@ class _$DownSyncReportEvent implements DownSyncReportEvent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String projectId, String boundaryCode, int batchSize,
-            int initialServerCount)?
+            int initialServerCount, String boundaryName)?
         downSync,
-    TResult? Function(
-            String projectId, String boundaryCode, int pendingSyncCount)?
+    TResult? Function(String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
         checkForData,
     TResult? Function()? downSyncReport,
     TResult? Function()? resetState,
@@ -563,10 +597,10 @@ class _$DownSyncReportEvent implements DownSyncReportEvent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String projectId, String boundaryCode, int batchSize,
-            int initialServerCount)?
+            int initialServerCount, String boundaryName)?
         downSync,
-    TResult Function(
-            String projectId, String boundaryCode, int pendingSyncCount)?
+    TResult Function(String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
         checkForData,
     TResult Function()? downSyncReport,
     TResult Function()? resetState,
@@ -661,10 +695,10 @@ class _$DownSyncResetStateEvent implements DownSyncResetStateEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String projectId, String boundaryCode,
-            int batchSize, int initialServerCount)
+            int batchSize, int initialServerCount, String boundaryName)
         downSync,
-    required TResult Function(
-            String projectId, String boundaryCode, int pendingSyncCount)
+    required TResult Function(String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)
         checkForData,
     required TResult Function() downSyncReport,
     required TResult Function() resetState,
@@ -676,10 +710,10 @@ class _$DownSyncResetStateEvent implements DownSyncResetStateEvent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String projectId, String boundaryCode, int batchSize,
-            int initialServerCount)?
+            int initialServerCount, String boundaryName)?
         downSync,
-    TResult? Function(
-            String projectId, String boundaryCode, int pendingSyncCount)?
+    TResult? Function(String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
         checkForData,
     TResult? Function()? downSyncReport,
     TResult? Function()? resetState,
@@ -691,10 +725,10 @@ class _$DownSyncResetStateEvent implements DownSyncResetStateEvent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String projectId, String boundaryCode, int batchSize,
-            int initialServerCount)?
+            int initialServerCount, String boundaryName)?
         downSync,
-    TResult Function(
-            String projectId, String boundaryCode, int pendingSyncCount)?
+    TResult Function(String projectId, String boundaryCode,
+            int pendingSyncCount, String boundaryName)?
         checkForData,
     TResult Function()? downSyncReport,
     TResult Function()? resetState,

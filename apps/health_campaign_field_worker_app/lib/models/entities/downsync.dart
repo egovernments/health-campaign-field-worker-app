@@ -13,6 +13,7 @@ class DownsyncSearchModel extends EntitySearchModel {
   final int? limit;
   final int? lastSyncedTime;
   final int? totalCount;
+  final String? boundaryName;
   final String? tenantId;
   
   DownsyncSearchModel({
@@ -22,6 +23,7 @@ class DownsyncSearchModel extends EntitySearchModel {
     this.limit,
     this.lastSyncedTime,
     this.totalCount,
+    this.boundaryName,
     this.tenantId,
     super.boundaryCode,
     super.isDeleted,
@@ -35,6 +37,7 @@ class DownsyncSearchModel extends EntitySearchModel {
     this.limit,
     this.lastSyncedTime,
     this.totalCount,
+    this.boundaryName,
     this.tenantId,
     super.boundaryCode,
   }):  super(isDeleted: false);
@@ -51,6 +54,7 @@ class DownsyncModel extends EntityModel {
   final int? limit;
   final int? lastSyncedTime;
   final int? totalCount;
+  final String? boundaryName;
   final bool? nonRecoverableError;
   final String? tenantId;
   final int? rowVersion;
@@ -64,6 +68,7 @@ class DownsyncModel extends EntityModel {
     this.limit,
     this.lastSyncedTime,
     this.totalCount,
+    this.boundaryName,
     this.nonRecoverableError = false,
     this.tenantId,
     this.rowVersion,
@@ -89,6 +94,7 @@ class DownsyncModel extends EntityModel {
       limit: Value(limit),
       lastSyncedTime: Value(lastSyncedTime),
       totalCount: Value(totalCount),
+      boundaryName: Value(boundaryName),
       nonRecoverableError: Value(nonRecoverableError),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),

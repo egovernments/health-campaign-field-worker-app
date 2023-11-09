@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../blocs/search_households/project_beneficiaries_downsync.dart';
 import '../../../blocs/sync/sync.dart';
+import '../../../models/entities/boundary.dart';
 import '../../../models/entities/downsync.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
@@ -24,7 +25,7 @@ class BeneficiariesReportPage extends LocalizedStatefulWidget {
 class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
   List<DownsyncModel> downSyncList = [];
   int pendingSyncCount = 0;
-  String? selectedBoundary;
+  BoundaryModel? selectedBoundary;
   @override
   void initState() {
     final syncBloc = context.read<SyncBloc>();
@@ -51,7 +52,8 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
               onPressed: () {
                 context.router.replace(HomeRoute());
               },
-              child: Text(localizations.translate(i18.acknowledgementSuccess.goToHome)),
+              child: Text(
+                  localizations.translate(i18.acknowledgementSuccess.goToHome)),
             ),
           ),
         ),
@@ -92,6 +94,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                       primaryButtonLabel: localizations.translate(
                         i18.acknowledgementSuccess.goToHome,
                       ),
+                      boundaryName: selectedBoundary!.name.toString(),
                     ),
                     dialogType: DigitProgressDialogType.pendingSync,
                     isPop: false,
@@ -123,6 +126,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                             ? i18.beneficiaryDetails.proceedWithoutDownloading
                             : i18.acknowledgementSuccess.goToHome,
                       ),
+                      boundaryName: selectedBoundary!.name.toString(),
                     ),
                     dialogType: DigitProgressDialogType.dataFound,
                     isPop: false,
@@ -139,6 +143,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                       totalCount: totalCount,
                       prefixLabel: syncCount.toString(),
                       suffixLabel: totalCount.toString(),
+                      boundaryName: selectedBoundary!.name.toString(),
                     ),
                     dialogType: DigitProgressDialogType.inProgress,
                     isPop: true,
@@ -147,12 +152,12 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                     int? epochTime = result.lastSyncedTime;
 
                     String date =
-                        DigitDateUtils.getDateFromTimestamp(epochTime!);
+                        '${DigitDateUtils.getTimeFromTimestamp(epochTime!)} on ${DigitDateUtils.getDateFromTimestamp(epochTime)}';
                     String dataDescription = "${localizations.translate(
                       i18.beneficiaryDetails.downloadreport,
                     )}\n\n\n${localizations.translate(
                       i18.beneficiaryDetails.boundary,
-                    )} ${result.locality}\n${localizations.translate(
+                    )} ${result.boundaryName}\n${localizations.translate(
                       i18.beneficiaryDetails.status,
                     )} ${localizations.translate(
                       i18.beneficiaryDetails.downloadcompleted,
@@ -185,6 +190,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                       secondaryButtonLabel: localizations.translate(
                         i18.beneficiaryDetails.proceedWithoutDownloading,
                       ),
+                      boundaryName: selectedBoundary!.name.toString(),
                     ),
                     dialogType: DigitProgressDialogType.failed,
                     isPop: true,
@@ -204,6 +210,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                       secondaryButtonLabel: localizations.translate(
                         i18.beneficiaryDetails.proceedWithoutDownloading,
                       ),
+                      boundaryName: selectedBoundary!.name.toString(),
                     ),
                     dialogType: DigitProgressDialogType.checkFailed,
                     isPop: false,
@@ -222,6 +229,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                       secondaryButtonLabel: localizations.translate(
                         i18.beneficiaryDetails.proceedWithoutDownloading,
                       ),
+                      boundaryName: selectedBoundary!.name.toString(),
                     ),
                     dialogType: DigitProgressDialogType.insufficientStorage,
                     isPop: false,
@@ -257,7 +265,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                                   style: theme.textTheme.headlineMedium,
                                 ),
                                 Text(
-                                  e.locality!,
+                                  e.boundaryName!,
                                   style: theme.textTheme.headlineMedium,
                                 ),
                                 DigitOutLineButton(
@@ -266,13 +274,18 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                                   ),
                                   onPressed: () {
                                     setState(() {
-                                      selectedBoundary = e.locality;
+                                      selectedBoundary = BoundaryModel(
+                                        code: e.locality,
+                                        name: e.boundaryName,
+                                      );
                                     });
                                     context.read<BeneficiaryDownSyncBloc>().add(
                                           DownSyncCheckTotalCountEvent(
                                             projectId: context.projectId,
                                             boundaryCode: e.locality!,
                                             pendingSyncCount: pendingSyncCount,
+                                            boundaryName:
+                                                e.boundaryName.toString(),
                                           ),
                                         );
                                   },
@@ -281,25 +294,25 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                             ),
                             DigitTableCard(
                               element: {
-                            localizations.translate(
-                            i18.beneficiaryDetails.status,
-                            ):  e.offset == 0 && e.limit == 0
-
+                                localizations.translate(
+                                  i18.beneficiaryDetails.status,
+                                ): e.offset == 0 && e.limit == 0
                                     ? localizations.translate(
-                              i18.beneficiaryDetails.downloadcompleted,
-                            )
+                                        i18.beneficiaryDetails
+                                            .downloadcompleted,
+                                      )
                                     : localizations.translate(
-                              i18.beneficiaryDetails.partialdownloaded,
-                            ),
+                                        i18.beneficiaryDetails
+                                            .partialdownloaded,
+                                      ),
                                 localizations.translate(
                                   i18.beneficiaryDetails.downloadtime,
                                 ): e.lastSyncedTime.toString(),
                                 localizations.translate(
                                   i18.beneficiaryDetails.totalrecorddownload,
-                                ):
-                                    e.offset == 0 && e.limit == 0
-                                        ? '${e.totalCount}/${e.totalCount}'
-                                        : '${e.offset}/${e.totalCount}',
+                                ): e.offset == 0 && e.limit == 0
+                                    ? '${e.totalCount}/${e.totalCount}'
+                                    : '${e.offset}/${e.totalCount}',
                               },
                             ),
                           ],

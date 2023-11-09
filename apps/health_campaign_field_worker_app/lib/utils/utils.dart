@@ -551,6 +551,7 @@ void showDownloadDialog(
                       projectId: context.projectId,
                       boundaryCode: model.boundary,
                       pendingSyncCount: model.pendingSyncCount ?? 0,
+                      boundaryName: model.boundaryName,
                     ),
                   );
             } else {
@@ -590,6 +591,7 @@ void showDownloadDialog(
                           // Batch Size need to be defined based on Internet speed.
                           batchSize: model.batchSize ?? 1,
                           initialServerCount: model.totalCount ?? 0,
+                          boundaryName: model.boundaryName,
                         ),
                       );
                 } else {

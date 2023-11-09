@@ -30996,6 +30996,7 @@ class DownsyncData extends DataClass implements Insertable<DownsyncData> {
   final int? limit;
   final int? lastSyncedTime;
   final int? totalCount;
+  final String? boundaryName;
   final String? auditCreatedBy;
   final bool? nonRecoverableError;
   final int? auditCreatedTime;
@@ -31016,6 +31017,7 @@ class DownsyncData extends DataClass implements Insertable<DownsyncData> {
       this.limit,
       this.lastSyncedTime,
       this.totalCount,
+      this.boundaryName,
       this.auditCreatedBy,
       this.nonRecoverableError,
       this.auditCreatedTime,
@@ -31044,6 +31046,8 @@ class DownsyncData extends DataClass implements Insertable<DownsyncData> {
           .mapFromDatabaseResponse(data['${effectivePrefix}last_synced_time']),
       totalCount: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}total_count']),
+      boundaryName: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}boundary_name']),
       auditCreatedBy: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}audit_created_by']),
       nonRecoverableError: const BoolType().mapFromDatabaseResponse(
@@ -31092,6 +31096,9 @@ class DownsyncData extends DataClass implements Insertable<DownsyncData> {
     }
     if (!nullToAbsent || totalCount != null) {
       map['total_count'] = Variable<int?>(totalCount);
+    }
+    if (!nullToAbsent || boundaryName != null) {
+      map['boundary_name'] = Variable<String?>(boundaryName);
     }
     if (!nullToAbsent || auditCreatedBy != null) {
       map['audit_created_by'] = Variable<String?>(auditCreatedBy);
@@ -31153,6 +31160,9 @@ class DownsyncData extends DataClass implements Insertable<DownsyncData> {
       totalCount: totalCount == null && nullToAbsent
           ? const Value.absent()
           : Value(totalCount),
+      boundaryName: boundaryName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(boundaryName),
       auditCreatedBy: auditCreatedBy == null && nullToAbsent
           ? const Value.absent()
           : Value(auditCreatedBy),
@@ -31205,6 +31215,7 @@ class DownsyncData extends DataClass implements Insertable<DownsyncData> {
       limit: serializer.fromJson<int?>(json['limit']),
       lastSyncedTime: serializer.fromJson<int?>(json['lastSyncedTime']),
       totalCount: serializer.fromJson<int?>(json['totalCount']),
+      boundaryName: serializer.fromJson<String?>(json['boundaryName']),
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       nonRecoverableError:
           serializer.fromJson<bool?>(json['nonRecoverableError']),
@@ -31231,6 +31242,7 @@ class DownsyncData extends DataClass implements Insertable<DownsyncData> {
       'limit': serializer.toJson<int?>(limit),
       'lastSyncedTime': serializer.toJson<int?>(lastSyncedTime),
       'totalCount': serializer.toJson<int?>(totalCount),
+      'boundaryName': serializer.toJson<String?>(boundaryName),
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'nonRecoverableError': serializer.toJson<bool?>(nonRecoverableError),
       'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
@@ -31254,6 +31266,7 @@ class DownsyncData extends DataClass implements Insertable<DownsyncData> {
           int? limit,
           int? lastSyncedTime,
           int? totalCount,
+          String? boundaryName,
           String? auditCreatedBy,
           bool? nonRecoverableError,
           int? auditCreatedTime,
@@ -31274,6 +31287,7 @@ class DownsyncData extends DataClass implements Insertable<DownsyncData> {
         limit: limit ?? this.limit,
         lastSyncedTime: lastSyncedTime ?? this.lastSyncedTime,
         totalCount: totalCount ?? this.totalCount,
+        boundaryName: boundaryName ?? this.boundaryName,
         auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
         nonRecoverableError: nonRecoverableError ?? this.nonRecoverableError,
         auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
@@ -31297,6 +31311,7 @@ class DownsyncData extends DataClass implements Insertable<DownsyncData> {
           ..write('limit: $limit, ')
           ..write('lastSyncedTime: $lastSyncedTime, ')
           ..write('totalCount: $totalCount, ')
+          ..write('boundaryName: $boundaryName, ')
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('nonRecoverableError: $nonRecoverableError, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
@@ -31322,6 +31337,7 @@ class DownsyncData extends DataClass implements Insertable<DownsyncData> {
       limit,
       lastSyncedTime,
       totalCount,
+      boundaryName,
       auditCreatedBy,
       nonRecoverableError,
       auditCreatedTime,
@@ -31345,6 +31361,7 @@ class DownsyncData extends DataClass implements Insertable<DownsyncData> {
           other.limit == this.limit &&
           other.lastSyncedTime == this.lastSyncedTime &&
           other.totalCount == this.totalCount &&
+          other.boundaryName == this.boundaryName &&
           other.auditCreatedBy == this.auditCreatedBy &&
           other.nonRecoverableError == this.nonRecoverableError &&
           other.auditCreatedTime == this.auditCreatedTime &&
@@ -31367,6 +31384,7 @@ class DownsyncCompanion extends UpdateCompanion<DownsyncData> {
   final Value<int?> limit;
   final Value<int?> lastSyncedTime;
   final Value<int?> totalCount;
+  final Value<String?> boundaryName;
   final Value<String?> auditCreatedBy;
   final Value<bool?> nonRecoverableError;
   final Value<int?> auditCreatedTime;
@@ -31387,6 +31405,7 @@ class DownsyncCompanion extends UpdateCompanion<DownsyncData> {
     this.limit = const Value.absent(),
     this.lastSyncedTime = const Value.absent(),
     this.totalCount = const Value.absent(),
+    this.boundaryName = const Value.absent(),
     this.auditCreatedBy = const Value.absent(),
     this.nonRecoverableError = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
@@ -31408,6 +31427,7 @@ class DownsyncCompanion extends UpdateCompanion<DownsyncData> {
     this.limit = const Value.absent(),
     this.lastSyncedTime = const Value.absent(),
     this.totalCount = const Value.absent(),
+    this.boundaryName = const Value.absent(),
     this.auditCreatedBy = const Value.absent(),
     this.nonRecoverableError = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
@@ -31429,6 +31449,7 @@ class DownsyncCompanion extends UpdateCompanion<DownsyncData> {
     Expression<int?>? limit,
     Expression<int?>? lastSyncedTime,
     Expression<int?>? totalCount,
+    Expression<String?>? boundaryName,
     Expression<String?>? auditCreatedBy,
     Expression<bool?>? nonRecoverableError,
     Expression<int?>? auditCreatedTime,
@@ -31450,6 +31471,7 @@ class DownsyncCompanion extends UpdateCompanion<DownsyncData> {
       if (limit != null) 'limit': limit,
       if (lastSyncedTime != null) 'last_synced_time': lastSyncedTime,
       if (totalCount != null) 'total_count': totalCount,
+      if (boundaryName != null) 'boundary_name': boundaryName,
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
       if (nonRecoverableError != null)
         'non_recoverable_error': nonRecoverableError,
@@ -31475,6 +31497,7 @@ class DownsyncCompanion extends UpdateCompanion<DownsyncData> {
       Value<int?>? limit,
       Value<int?>? lastSyncedTime,
       Value<int?>? totalCount,
+      Value<String?>? boundaryName,
       Value<String?>? auditCreatedBy,
       Value<bool?>? nonRecoverableError,
       Value<int?>? auditCreatedTime,
@@ -31495,6 +31518,7 @@ class DownsyncCompanion extends UpdateCompanion<DownsyncData> {
       limit: limit ?? this.limit,
       lastSyncedTime: lastSyncedTime ?? this.lastSyncedTime,
       totalCount: totalCount ?? this.totalCount,
+      boundaryName: boundaryName ?? this.boundaryName,
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
       nonRecoverableError: nonRecoverableError ?? this.nonRecoverableError,
       auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
@@ -31531,6 +31555,9 @@ class DownsyncCompanion extends UpdateCompanion<DownsyncData> {
     }
     if (totalCount.present) {
       map['total_count'] = Variable<int?>(totalCount.value);
+    }
+    if (boundaryName.present) {
+      map['boundary_name'] = Variable<String?>(boundaryName.value);
     }
     if (auditCreatedBy.present) {
       map['audit_created_by'] = Variable<String?>(auditCreatedBy.value);
@@ -31583,6 +31610,7 @@ class DownsyncCompanion extends UpdateCompanion<DownsyncData> {
           ..write('limit: $limit, ')
           ..write('lastSyncedTime: $lastSyncedTime, ')
           ..write('totalCount: $totalCount, ')
+          ..write('boundaryName: $boundaryName, ')
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('nonRecoverableError: $nonRecoverableError, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
@@ -31638,6 +31666,12 @@ class $DownsyncTable extends Downsync
   late final GeneratedColumn<int?> totalCount = GeneratedColumn<int?>(
       'total_count', aliasedName, true,
       type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _boundaryNameMeta =
+      const VerificationMeta('boundaryName');
+  @override
+  late final GeneratedColumn<String?> boundaryName = GeneratedColumn<String?>(
+      'boundary_name', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _auditCreatedByMeta =
       const VerificationMeta('auditCreatedBy');
   @override
@@ -31727,6 +31761,7 @@ class $DownsyncTable extends Downsync
         limit,
         lastSyncedTime,
         totalCount,
+        boundaryName,
         auditCreatedBy,
         nonRecoverableError,
         auditCreatedTime,
@@ -31777,6 +31812,12 @@ class $DownsyncTable extends Downsync
           _totalCountMeta,
           totalCount.isAcceptableOrUnknown(
               data['total_count']!, _totalCountMeta));
+    }
+    if (data.containsKey('boundary_name')) {
+      context.handle(
+          _boundaryNameMeta,
+          boundaryName.isAcceptableOrUnknown(
+              data['boundary_name']!, _boundaryNameMeta));
     }
     if (data.containsKey('audit_created_by')) {
       context.handle(

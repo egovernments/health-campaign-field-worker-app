@@ -318,6 +318,7 @@ class DownloadBeneficiary {
   String title;
   String projectId;
   String boundary;
+  String boundaryName;
   int? pendingSyncCount;
   int? syncCount;
   int? totalCount;
@@ -331,6 +332,7 @@ class DownloadBeneficiary {
     required this.title,
     required this.projectId,
     required this.boundary,
+    required this.boundaryName,
     this.pendingSyncCount,
     this.batchSize,
     this.syncCount,

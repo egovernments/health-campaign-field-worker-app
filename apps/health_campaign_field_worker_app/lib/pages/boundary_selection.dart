@@ -145,7 +145,7 @@ class _BoundarySelectionPageState
                                 projectId: context.projectId,
                                 boundary:
                                     selectedBoundary!.value!.code.toString(),
-                                batchSize: 5,
+                                batchSize: 15,
                                 totalCount: 0,
                                 content: localizations.translate(
                                   i18.syncDialog.pendingSyncContent,
@@ -153,6 +153,8 @@ class _BoundarySelectionPageState
                                 primaryButtonLabel: localizations.translate(
                                   i18.acknowledgementSuccess.goToHome,
                                 ),
+                                boundaryName:
+                                    selectedBoundary.value!.name.toString(),
                               ),
                               dialogType: DigitProgressDialogType.pendingSync,
                               isPop: false,
@@ -169,7 +171,7 @@ class _BoundarySelectionPageState
                                 projectId: context.projectId,
                                 boundary:
                                     selectedBoundary!.value!.code.toString(),
-                                batchSize: 5,
+                                batchSize: 15,
                                 totalCount: initialServerCount,
                                 content: localizations.translate(
                                   initialServerCount > 0
@@ -188,6 +190,8 @@ class _BoundarySelectionPageState
                                           .proceedWithoutDownloading
                                       : i18.acknowledgementSuccess.goToHome,
                                 ),
+                                boundaryName:
+                                    selectedBoundary.value!.name.toString(),
                               ),
                               dialogType: DigitProgressDialogType.dataFound,
                               isPop: false,
@@ -206,6 +210,8 @@ class _BoundarySelectionPageState
                                 totalCount: totalCount,
                                 prefixLabel: syncCount.toString(),
                                 suffixLabel: totalCount.toString(),
+                                boundaryName:
+                                    selectedBoundary.value!.name.toString(),
                               ),
                               dialogType: DigitProgressDialogType.inProgress,
                               isPop: true,
@@ -213,20 +219,20 @@ class _BoundarySelectionPageState
                             success: (result) {
                               int? epochTime = result.lastSyncedTime;
 
-                              String date = DigitDateUtils.getDateFromTimestamp(
-                                  epochTime!);
+                              String date =
+                                  '${DigitDateUtils.getTimeFromTimestamp(epochTime!)} on ${DigitDateUtils.getDateFromTimestamp(epochTime)}';
                               String dataDescription =
                                   "${localizations.translate(
                                 i18.beneficiaryDetails.downloadreport,
                               )}\n\n\n${localizations.translate(
                                 i18.beneficiaryDetails.boundary,
-                              )} ${result.locality}\n${localizations.translate(
+                              )} ${result.boundaryName}\n${localizations.translate(
                                 i18.beneficiaryDetails.status,
                               )} ${localizations.translate(
                                 i18.beneficiaryDetails.downloadcompleted,
                               )}\n${localizations.translate(
                                 i18.beneficiaryDetails.downloadedon,
-                              )} ${date}\n${localizations.translate(
+                              )} $date\n${localizations.translate(
                                 i18.beneficiaryDetails.recordsdownload,
                               )} ${result.totalCount}/${result.totalCount}";
                               Navigator.of(context, rootNavigator: true).pop();
@@ -255,6 +261,8 @@ class _BoundarySelectionPageState
                                   i18.beneficiaryDetails
                                       .proceedWithoutDownloading,
                                 ),
+                                boundaryName:
+                                    selectedBoundary.value!.name.toString(),
                               ),
                               dialogType: DigitProgressDialogType.failed,
                               isPop: true,
@@ -277,6 +285,8 @@ class _BoundarySelectionPageState
                                   i18.beneficiaryDetails
                                       .proceedWithoutDownloading,
                                 ),
+                                boundaryName:
+                                    selectedBoundary.value!.name.toString(),
                               ),
                               dialogType: DigitProgressDialogType.checkFailed,
                               isPop: false,
@@ -297,6 +307,8 @@ class _BoundarySelectionPageState
                                   i18.beneficiaryDetails
                                       .proceedWithoutDownloading,
                                 ),
+                                boundaryName:
+                                    selectedBoundary.value!.name.toString(),
                               ),
                               dialogType:
                                   DigitProgressDialogType.insufficientStorage,
@@ -344,6 +356,10 @@ class _BoundarySelectionPageState
                                                             .toString(),
                                                     pendingSyncCount:
                                                         pendingSyncCount,
+                                                    boundaryName:
+                                                        selectedBoundary
+                                                            .value!.name
+                                                            .toString(),
                                                   ),
                                                 );
                                           } else {
