@@ -86,7 +86,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                         i18.syncDialog.pendingSyncLabel,
                       ),
                       projectId: context.projectId,
-                      boundary: selectedBoundary.toString(),
+                      boundary: selectedBoundary!.code.toString(),
                       batchSize: 5,
                       totalCount: 0,
                       content: localizations.translate(
@@ -109,7 +109,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                             : i18.beneficiaryDetails.noDataFound,
                       ),
                       projectId: context.projectId,
-                      boundary: selectedBoundary.toString(),
+                      boundary: selectedBoundary!.code.toString(),
                       batchSize: 5,
                       totalCount: initialServerCount,
                       content: localizations.translate(
@@ -139,7 +139,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                         i18.beneficiaryDetails.dataDownloadInProgress,
                       ),
                       projectId: context.projectId,
-                      boundary: selectedBoundary.toString(),
+                      boundary: selectedBoundary!.code.toString(),
                       syncCount: syncCount,
                       totalCount: totalCount,
                       prefixLabel: syncCount.toString(),
@@ -181,7 +181,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                       ),
                       projectId: context.projectId,
                       pendingSyncCount: pendingSyncCount,
-                      boundary: selectedBoundary.toString(),
+                      boundary: selectedBoundary!.code.toString(),
                       content: localizations.translate(
                         i18.beneficiaryDetails.dataFoundContent,
                       ),
@@ -204,7 +204,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                       ),
                       projectId: context.projectId,
                       pendingSyncCount: pendingSyncCount,
-                      boundary: selectedBoundary.toString(),
+                      boundary: selectedBoundary!.code.toString(),
                       primaryButtonLabel: localizations.translate(
                         i18.syncDialog.retryButtonLabel,
                       ),
@@ -223,7 +223,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                         i18.beneficiaryDetails.insufficientStorage,
                       ),
                       projectId: context.projectId,
-                      boundary: selectedBoundary.toString(),
+                      boundary: selectedBoundary!.code.toString(),
                       primaryButtonLabel: localizations.translate(
                         i18.syncDialog.closeButtonLabel,
                       ),
