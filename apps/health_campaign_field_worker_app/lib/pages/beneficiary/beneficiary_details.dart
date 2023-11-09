@@ -140,72 +140,80 @@ class _BeneficiaryDetailsPageState
                                         margin: const EdgeInsets.only(
                                           top: 10,
                                         ),
-                                        child: DigitElevatedButton(
-                                          onPressed: () async {
-                                            final selectedCycle =
-                                                cycles.firstWhereOrNull((c) =>
-                                                    c.id == deliverState.cycle);
-                                            if (selectedCycle != null) {
-                                              bloc.add(
-                                                DeliverInterventionEvent
-                                                    .selectFutureCycleDose(
-                                                  deliverState.dose,
-                                                  projectState
-                                                      .projectType!.cycles!
-                                                      .firstWhere((c) =>
-                                                          c.id ==
-                                                          deliverState.cycle),
-                                                  state.selectedIndividual,
-                                                ),
-                                              );
-                                              await DigitDialog.show<bool>(
-                                                context,
-                                                options: DigitDialogOptions(
-                                                  titlePadding:
-                                                      const EdgeInsets.fromLTRB(
-                                                    kPadding * 2,
-                                                    kPadding * 2,
-                                                    kPadding * 2,
-                                                    kPadding / 2,
-                                                  ),
-                                                  contentPadding:
-                                                      const EdgeInsets.only(
-                                                    left: kPadding,
-                                                    right: kPadding,
-                                                    top: kPadding,
-                                                    bottom: 0,
-                                                  ),
-                                                  titleText: localizations
-                                                      .translate(i18
-                                                          .beneficiaryDetails
-                                                          .resourcesTobeDelivered),
-                                                  content: buildTableContent(
-                                                    deliverState,
-                                                    context,
-                                                    variant,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                            left: kPadding,
+                                            right: kPadding,
+                                          ),
+                                          child: DigitElevatedButton(
+                                            onPressed: () async {
+                                              final selectedCycle =
+                                                  cycles.firstWhereOrNull((c) =>
+                                                      c.id ==
+                                                      deliverState.cycle);
+                                              if (selectedCycle != null) {
+                                                bloc.add(
+                                                  DeliverInterventionEvent
+                                                      .selectFutureCycleDose(
+                                                    deliverState.dose,
+                                                    projectState
+                                                        .projectType!.cycles!
+                                                        .firstWhere((c) =>
+                                                            c.id ==
+                                                            deliverState.cycle),
                                                     state.selectedIndividual,
                                                   ),
-                                                  barrierDismissible: true,
-                                                  primaryAction:
-                                                      DigitDialogActions(
-                                                    label: localizations
+                                                );
+                                                await DigitDialog.show<bool>(
+                                                  context,
+                                                  options: DigitDialogOptions(
+                                                    titlePadding:
+                                                        const EdgeInsets
+                                                            .fromLTRB(
+                                                      kPadding * 2,
+                                                      kPadding * 2,
+                                                      kPadding * 2,
+                                                      kPadding / 2,
+                                                    ),
+                                                    contentPadding:
+                                                        const EdgeInsets.only(
+                                                      left: kPadding,
+                                                      right: kPadding,
+                                                      top: kPadding,
+                                                      bottom: 0,
+                                                    ),
+                                                    titleText: localizations
                                                         .translate(i18
                                                             .beneficiaryDetails
-                                                            .ctaProceed),
-                                                    action: (ctx) {
-                                                      Navigator.of(ctx).pop();
-                                                      router.push(
-                                                        DeliverInterventionRoute(),
-                                                      );
-                                                    },
+                                                            .resourcesTobeDelivered),
+                                                    content: buildTableContent(
+                                                      deliverState,
+                                                      context,
+                                                      variant,
+                                                      state.selectedIndividual,
+                                                    ),
+                                                    barrierDismissible: true,
+                                                    primaryAction:
+                                                        DigitDialogActions(
+                                                      label: localizations
+                                                          .translate(i18
+                                                              .beneficiaryDetails
+                                                              .ctaProceed),
+                                                      action: (ctx) {
+                                                        Navigator.of(ctx).pop();
+                                                        router.push(
+                                                          DeliverInterventionRoute(),
+                                                        );
+                                                      },
+                                                    ),
                                                   ),
-                                                ),
-                                              );
-                                            }
-                                          },
-                                          child: Center(
-                                            child: Text(
-                                              'Record Cycle ${(deliverState.cycle == 0 ? (deliverState.cycle + 1) : deliverState.cycle).toString()} Dose ${(deliverState.dose).toString()}',
+                                                );
+                                              }
+                                            },
+                                            child: Center(
+                                              child: Text(
+                                                'Record Cycle ${(deliverState.cycle == 0 ? (deliverState.cycle + 1) : deliverState.cycle).toString()} Dose ${(deliverState.dose).toString()}',
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -231,10 +239,10 @@ class _BeneficiaryDetailsPageState
                       children: [
                         DigitCard(
                           padding: const EdgeInsets.only(
-                            left: 16.0,
-                            top: 16,
-                            bottom: 4,
-                            right: 4,
+                            left: kPadding * 2,
+                            top: kPadding * 2,
+                            bottom: kPadding / 2,
+                            right: kPadding / 2,
                           ),
                           child: Column(
                             children: [

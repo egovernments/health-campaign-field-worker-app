@@ -8,14 +8,22 @@ class _IndividualDetailsShowcaseData {
 
   factory _IndividualDetailsShowcaseData() => _instance;
 
-  List<ShowcaseItemBuilder> get showcaseData => [
-        nameOfIndividual,
-        headOfHousehold,
-        idType,
-        dateOfBirth,
-        gender,
-        mobile,
-      ];
+  bool hidedata = true;
+  List<ShowcaseItemBuilder> get showcaseData {
+    List<ShowcaseItemBuilder> data = [
+      nameOfIndividual,
+      idType,
+      dateOfBirth,
+      gender,
+      mobile,
+    ];
+
+    if (!hidedata) {
+      data.insert(data.indexOf(nameOfIndividual) + 1, headOfHousehold);
+    }
+
+    return data;
+  }
 
   final nameOfIndividual = ShowcaseItemBuilder(
     messageLocalizationKey: i18.individualDetailsShowcase.firstNameOfIndividual,

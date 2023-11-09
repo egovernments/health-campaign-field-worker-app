@@ -3,11 +3,13 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
+import 'package:drift/drift.dart' hide Column;
 import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:isar/isar.dart';
 import '../blocs/auth/auth.dart';
 import '../blocs/search_households/search_households.dart';
 import '../blocs/sync/sync.dart';
@@ -334,17 +336,6 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
-      //[todo] commenting for now since both the routes are same
-      // i18.home.warehouseManagerCheckList:
-      //     homeShowcaseData.wareHouseManagerChecklist.buildWith(
-      //   child: HomeItemCard(
-      //     enableCustomIcon: true,
-      //     customIcon: myChecklistSvg,
-      //     icon: Icons.checklist,
-      //     label: i18.home.warehouseManagerCheckList,
-      //     onPressed: () => context.router.push(ChecklistWrapperRoute()),
-      //   ),
-      // ),
       i18.home.myCheckList: homeShowcaseData.supervisorMyChecklist.buildWith(
         child: HomeItemCard(
           enableCustomIcon: true,
@@ -424,8 +415,6 @@ class _HomePageState extends LocalizedState<HomePage> {
           homeShowcaseData.warehouseManagerManageStock.showcaseKey,
       i18.home.stockReconciliationLabel:
           homeShowcaseData.wareHouseManagerStockReconciliation.showcaseKey,
-      // i18.home.warehouseManagerCheckList:
-      //     homeShowcaseData.wareHouseManagerChecklist.showcaseKey,
       i18.home.myCheckList: homeShowcaseData.supervisorMyChecklist.showcaseKey,
       i18.home.fileComplaint:
           homeShowcaseData.distributorFileComplaint.showcaseKey,
@@ -438,7 +427,6 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.beneficiaryLabel,
       i18.home.manageStockLabel,
       i18.home.stockReconciliationLabel,
-      // i18.home.warehouseManagerCheckList,
       i18.home.myCheckList,
       i18.home.fileComplaint,
       i18.home.syncDataLabel,

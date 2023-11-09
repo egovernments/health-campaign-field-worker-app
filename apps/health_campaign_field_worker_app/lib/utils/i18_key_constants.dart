@@ -182,6 +182,10 @@ class HomeShowcase {
   String get inventoryReport {
     return 'WAREHOUSE_MANAGER_HOME_SHOWCASE_INVENTORY_REPORT';
   }
+
+  String get deleteAll {
+    return 'WAREHOUSE_MANAGER_HOME_SHOWCASE_DELETE_ALL';
+  }
 }
 
 class SearchBeneficiariesShowcase {
@@ -828,6 +832,8 @@ class Home {
   String get myCheckList => 'MY_CHECK_LIST_LABEL';
 
   String get warehouseManagerCheckList => 'WAREHOUSE_MANAGER_CHECK_LIST_LABEL';
+
+  String get deleteAllLabel => 'HOME_DELETE_ALL_LABEL';
 }
 
 class SearchBeneficiary {

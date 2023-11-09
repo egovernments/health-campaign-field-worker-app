@@ -146,6 +146,9 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                           );
                         },
                       ),
+                      const SizedBox(
+                        height: 10,
+                      ),
                       TextButton(
                         onPressed: () => DigitDialog.show(
                           context,

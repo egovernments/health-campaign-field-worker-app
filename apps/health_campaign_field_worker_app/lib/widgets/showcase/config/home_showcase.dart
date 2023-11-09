@@ -22,6 +22,7 @@ class _HomePageShowcaseData {
         supervisorMyChecklist,
         supervisorComplaints,
         supervisorSyncData,
+        deleteAll,
       ];
 
   final distributorProgressBar = ShowcaseItemBuilder(
@@ -79,5 +80,9 @@ class _HomePageShowcaseData {
 
   final inventoryReport = ShowcaseItemBuilder(
     messageLocalizationKey: i18.homeShowcase.inventoryReport,
+  );
+
+  final deleteAll = ShowcaseItemBuilder(
+    messageLocalizationKey: i18.homeShowcase.deleteAll,
   );
 }

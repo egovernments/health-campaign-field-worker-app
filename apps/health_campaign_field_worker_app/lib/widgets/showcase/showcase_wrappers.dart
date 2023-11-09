@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 
 import '../localized.dart';
 
+const kPadding = 8.0;
+
 class ShowcaseItemBuilder {
   final GlobalKey showcaseKey;
   final String messageLocalizationKey;
@@ -43,8 +45,21 @@ class _ShowcaseItemWrapperWidgetState
       disableMovingAnimation: true,
       disableScaleAnimation: true,
       description: localizations.translate(widget.messageLocalizationKey),
-      targetPadding: const EdgeInsets.all(8),
-      child: widget.child,
+      targetPadding: const EdgeInsets.fromLTRB(
+        kPadding / 2,
+        kPadding / 2,
+        kPadding / 2,
+        kPadding / 2,
+      ),
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(
+          kPadding / 2,
+          kPadding / 2,
+          kPadding / 2,
+          kPadding / 2,
+        ),
+        child: widget.child,
+      ),
     );
   }
 }

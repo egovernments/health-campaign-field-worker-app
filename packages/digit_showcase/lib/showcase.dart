@@ -533,7 +533,7 @@ class _ShowcaseState extends State<Showcase> {
     Rect rectBound,
     Size screenSize,
   ) {
-    var blur = 2.0;
+    var blur = 1.0;
     if (_showShowCase) {
       blur = widget.blurValue ?? showCaseWidgetState.blurValue;
     }
@@ -567,6 +567,7 @@ class _ShowcaseState extends State<Showcase> {
                 ? BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
                     child: Container(
+                      padding: const EdgeInsets.all(8.0 / 2),
                       width: MediaQuery.of(context).size.width,
                       height: MediaQuery.of(context).size.height,
                       decoration: BoxDecoration(
@@ -576,6 +577,12 @@ class _ShowcaseState extends State<Showcase> {
                     ),
                   )
                 : Container(
+                    padding: const EdgeInsets.fromLTRB(
+                      8.0,
+                      8.0,
+                      8.0,
+                      8.0,
+                    ),
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.height,
                     decoration: BoxDecoration(
@@ -687,8 +694,8 @@ class _TargetWidget extends StatelessWidget {
         onLongPress: onLongPress,
         onDoubleTap: onDoubleTap,
         child: Container(
-          height: size!.height + 16,
-          width: size!.width + 16,
+          height: size!.height + 200,
+          width: size!.width + 200,
           decoration: ShapeDecoration(
             shape: radius != null
                 ? RoundedRectangleBorder(borderRadius: radius!)

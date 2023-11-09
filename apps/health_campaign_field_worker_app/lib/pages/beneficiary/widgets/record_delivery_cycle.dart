@@ -210,7 +210,7 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                       ? localizations
                           .translate(i18.beneficiaryDetails.currentCycleLabel)
                       : '${localizations.translate(i18.beneficiaryDetails.beneficiaryCycle)} ${e.id}',
-                  style: theme.textTheme.headlineMedium,
+                  style: theme.textTheme.headlineLarge,
                   textAlign: TextAlign.left,
                 ),
               ),

@@ -52,156 +52,162 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
               ]),
               footer: SizedBox(
                 child: DigitCard(
-                  margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
-                  child: DigitElevatedButton(
-                    onPressed: () {
-                      form.markAllAsTouched();
-                      if (!form.valid) return;
+                  margin: const EdgeInsets.only(top: 10),
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      left: kPadding * 2,
+                      right: kPadding * 2,
+                    ),
+                    child: DigitElevatedButton(
+                      onPressed: () {
+                        form.markAllAsTouched();
+                        if (!form.valid) return;
 
-                      final memberCount =
-                          form.control(_memberCountKey).value as int;
+                        final memberCount =
+                            form.control(_memberCountKey).value as int;
 
-                      final dateOfRegistration = form
-                          .control(_dateOfRegistrationKey)
-                          .value as DateTime;
+                        final dateOfRegistration = form
+                            .control(_dateOfRegistrationKey)
+                            .value as DateTime;
 
-                      registrationState.maybeWhen(
-                        orElse: () {
-                          return;
-                        },
-                        create: (
-                          addressModel,
-                          householdModel,
-                          individualModel,
-                          registrationDate,
-                          searchQuery,
-                          loading,
-                          isHeadOfHousehold,
-                        ) {
-                          var household = householdModel;
-                          household ??= HouseholdModel(
-                            tenantId: envConfig.variables.tenantId,
-                            clientReferenceId: IdGen.i.identifier,
-                            rowVersion: 1,
-                            clientAuditDetails: ClientAuditDetails(
-                              createdBy: context.loggedInUserUuid,
-                              createdTime: context.millisecondsSinceEpoch(),
-                              lastModifiedBy: context.loggedInUserUuid,
-                              lastModifiedTime:
-                                  context.millisecondsSinceEpoch(),
-                            ),
-                            auditDetails: AuditDetails(
-                              createdBy: context.loggedInUserUuid,
-                              createdTime: context.millisecondsSinceEpoch(),
-                              lastModifiedBy: context.loggedInUserUuid,
-                              lastModifiedTime:
-                                  context.millisecondsSinceEpoch(),
-                            ),
-                          );
-
-                          household = household.copyWith(
-                            memberCount: memberCount,
-                            address: addressModel,
-                          );
-
-                          bloc.add(
-                            BeneficiaryRegistrationSaveHouseholdDetailsEvent(
-                              household: household!,
-                              registrationDate: dateOfRegistration,
-                            ),
-                          );
-                          context.router.push(
-                            IndividualDetailsRoute(isHeadOfHousehold: true),
-                          );
-                        },
-                        editHousehold: (
-                          addressModel,
-                          householdModel,
-                          individuals,
-                          registrationDate,
-                          projectBeneficiaryModel,
-                          loading,
-                        ) {
-                          var household = householdModel.copyWith(
-                            memberCount: memberCount,
-                            address: addressModel,
-                            clientAuditDetails: (householdModel
-                                            .clientAuditDetails?.createdBy !=
-                                        null &&
-                                    householdModel
-                                            .clientAuditDetails?.createdTime !=
-                                        null)
-                                ? ClientAuditDetails(
-                                    createdBy: householdModel
-                                        .clientAuditDetails!.createdBy,
-                                    createdTime: householdModel
-                                        .clientAuditDetails!.createdTime,
-                                    lastModifiedBy: householdModel
-                                        .clientAuditDetails!.lastModifiedBy,
-                                    lastModifiedTime:
-                                        DateTime.now().millisecondsSinceEpoch,
-                                  )
-                                : null,
-                            rowVersion: householdModel.rowVersion,
-                          );
-
-                          bloc.add(
-                            BeneficiaryRegistrationUpdateHouseholdDetailsEvent(
-                              household: household.copyWith(
-                                clientAuditDetails: (addressModel
-                                                .clientAuditDetails
-                                                ?.createdBy !=
-                                            null &&
-                                        addressModel.clientAuditDetails
-                                                ?.createdTime !=
-                                            null)
-                                    ? ClientAuditDetails(
-                                        createdBy: addressModel
-                                            .clientAuditDetails!.createdBy,
-                                        createdTime: addressModel
-                                            .clientAuditDetails!.createdTime,
-                                        lastModifiedBy:
-                                            context.loggedInUserUuid,
-                                        lastModifiedTime:
-                                            context.millisecondsSinceEpoch(),
-                                      )
-                                    : null,
+                        registrationState.maybeWhen(
+                          orElse: () {
+                            return;
+                          },
+                          create: (
+                            addressModel,
+                            householdModel,
+                            individualModel,
+                            registrationDate,
+                            searchQuery,
+                            loading,
+                            isHeadOfHousehold,
+                          ) {
+                            var household = householdModel;
+                            household ??= HouseholdModel(
+                              tenantId: envConfig.variables.tenantId,
+                              clientReferenceId: IdGen.i.identifier,
+                              rowVersion: 1,
+                              clientAuditDetails: ClientAuditDetails(
+                                createdBy: context.loggedInUserUuid,
+                                createdTime: context.millisecondsSinceEpoch(),
+                                lastModifiedBy: context.loggedInUserUuid,
+                                lastModifiedTime:
+                                    context.millisecondsSinceEpoch(),
                               ),
-                              addressModel: addressModel.copyWith(
-                                clientAuditDetails: (addressModel
-                                                .clientAuditDetails
-                                                ?.createdBy !=
-                                            null &&
-                                        addressModel.clientAuditDetails
-                                                ?.createdTime !=
-                                            null)
-                                    ? ClientAuditDetails(
-                                        createdBy: addressModel
-                                            .clientAuditDetails!.createdBy,
-                                        createdTime: addressModel
-                                            .clientAuditDetails!.createdTime,
-                                        lastModifiedBy:
-                                            context.loggedInUserUuid,
-                                        lastModifiedTime:
-                                            context.millisecondsSinceEpoch(),
-                                      )
-                                    : null,
+                              auditDetails: AuditDetails(
+                                createdBy: context.loggedInUserUuid,
+                                createdTime: context.millisecondsSinceEpoch(),
+                                lastModifiedBy: context.loggedInUserUuid,
+                                lastModifiedTime:
+                                    context.millisecondsSinceEpoch(),
                               ),
-                            ),
-                          );
+                            );
 
-                          (router.parent() as StackRouter).pop();
-                        },
-                      );
-                    },
-                    child: Center(
-                      child: Text(
-                        registrationState.mapOrNull(
-                              editHousehold: (value) => localizations
-                                  .translate(i18.common.coreCommonSave),
-                            ) ??
-                            localizations
-                                .translate(i18.householdDetails.actionLabel),
+                            household = household.copyWith(
+                              memberCount: memberCount,
+                              address: addressModel,
+                            );
+
+                            bloc.add(
+                              BeneficiaryRegistrationSaveHouseholdDetailsEvent(
+                                household: household!,
+                                registrationDate: dateOfRegistration,
+                              ),
+                            );
+                            context.router.push(
+                              IndividualDetailsRoute(isHeadOfHousehold: true),
+                            );
+                          },
+                          editHousehold: (
+                            addressModel,
+                            householdModel,
+                            individuals,
+                            registrationDate,
+                            projectBeneficiaryModel,
+                            loading,
+                          ) {
+                            var household = householdModel.copyWith(
+                              memberCount: memberCount,
+                              address: addressModel,
+                              clientAuditDetails: (householdModel
+                                              .clientAuditDetails?.createdBy !=
+                                          null &&
+                                      householdModel.clientAuditDetails
+                                              ?.createdTime !=
+                                          null)
+                                  ? ClientAuditDetails(
+                                      createdBy: householdModel
+                                          .clientAuditDetails!.createdBy,
+                                      createdTime: householdModel
+                                          .clientAuditDetails!.createdTime,
+                                      lastModifiedBy: householdModel
+                                          .clientAuditDetails!.lastModifiedBy,
+                                      lastModifiedTime:
+                                          DateTime.now().millisecondsSinceEpoch,
+                                    )
+                                  : null,
+                              rowVersion: householdModel.rowVersion,
+                            );
+
+                            bloc.add(
+                              BeneficiaryRegistrationUpdateHouseholdDetailsEvent(
+                                household: household.copyWith(
+                                  clientAuditDetails: (addressModel
+                                                  .clientAuditDetails
+                                                  ?.createdBy !=
+                                              null &&
+                                          addressModel.clientAuditDetails
+                                                  ?.createdTime !=
+                                              null)
+                                      ? ClientAuditDetails(
+                                          createdBy: addressModel
+                                              .clientAuditDetails!.createdBy,
+                                          createdTime: addressModel
+                                              .clientAuditDetails!.createdTime,
+                                          lastModifiedBy:
+                                              context.loggedInUserUuid,
+                                          lastModifiedTime:
+                                              context.millisecondsSinceEpoch(),
+                                        )
+                                      : null,
+                                ),
+                                addressModel: addressModel.copyWith(
+                                  clientAuditDetails: (addressModel
+                                                  .clientAuditDetails
+                                                  ?.createdBy !=
+                                              null &&
+                                          addressModel.clientAuditDetails
+                                                  ?.createdTime !=
+                                              null)
+                                      ? ClientAuditDetails(
+                                          createdBy: addressModel
+                                              .clientAuditDetails!.createdBy,
+                                          createdTime: addressModel
+                                              .clientAuditDetails!.createdTime,
+                                          lastModifiedBy:
+                                              context.loggedInUserUuid,
+                                          lastModifiedTime:
+                                              context.millisecondsSinceEpoch(),
+                                        )
+                                      : null,
+                                ),
+                              ),
+                            );
+
+                            (router.parent() as StackRouter).pop();
+                          },
+                        );
+                      },
+                      child: Center(
+                        child: Text(
+                          registrationState.mapOrNull(
+                                editHousehold: (value) => localizations
+                                    .translate(i18.common.coreCommonSave),
+                              ) ??
+                              localizations
+                                  .translate(i18.householdDetails.actionLabel),
+                        ),
                       ),
                     ),
                   ),
@@ -210,6 +216,12 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
               slivers: [
                 SliverToBoxAdapter(
                   child: DigitCard(
+                    padding: const EdgeInsets.fromLTRB(
+                      kPadding * 2,
+                      kPadding * 2,
+                      kPadding * 2,
+                      0,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,

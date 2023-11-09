@@ -243,6 +243,8 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
         checkIfBeneficiaryRefused(householdMember.tasks);
 
     return DigitCard(
+      padding: const EdgeInsets.fromLTRB(
+          kPadding, kPadding * 2, kPadding, kPadding * 2),
       child: Column(
         children: [
           Row(

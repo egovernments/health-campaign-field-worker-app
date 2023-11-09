@@ -43,7 +43,6 @@ class DigitLanguageCard extends StatelessWidget {
             width: 0,
           ),
           DigitElevatedButton(
-            //[todo] style need to added
             onPressed: onLanguageSubmit,
             child: Center(
                 child: Text(

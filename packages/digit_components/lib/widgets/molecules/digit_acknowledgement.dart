@@ -124,7 +124,7 @@ class DigitAcknowledgement extends StatelessWidget {
                               onPressed: secondaryAction,
                               child: Text(secondaryLabel ?? "")),
                           const SizedBox(
-                            height: kPadding,
+                            height: kPadding + 2,
                           ),
                           DigitOutLineButton(
                             onPressed: action,

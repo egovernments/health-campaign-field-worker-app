@@ -67,9 +67,9 @@ class _HouseholdOverviewPageState
                           child: SingleChildScrollView(
                             child: DigitCard(
                               padding: const EdgeInsets.fromLTRB(
+                                kPadding * 2,
                                 kPadding,
-                                kPadding,
-                                kPadding,
+                                kPadding * 2,
                                 0,
                               ),
                               child: Column(
@@ -697,11 +697,6 @@ class _HouseholdOverviewPageState
                   child: state.tasks?.first.status ==
                           Status.administeredSuccess.toValue()
                       ? DigitOutLineButton(
-                          buttonStyle: OutlinedButton.styleFrom(
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.zero,
-                            ),
-                          ),
                           label: localizations.translate(
                             i18.memberCard.deliverDetailsUpdateLabel,
                           ),
