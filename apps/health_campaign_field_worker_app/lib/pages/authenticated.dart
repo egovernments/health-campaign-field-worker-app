@@ -16,8 +16,10 @@ import '../blocs/sync/sync.dart';
 import '../data/data_repository.dart';
 import '../data/local_store/no_sql/schema/oplog.dart';
 import '../data/local_store/sql_store/sql_store.dart';
+import '../data/remote_client.dart';
 import '../data/repositories/local/address.dart';
 import '../data/repositories/oplog/oplog.dart';
+import '../data/repositories/remote/bandwidth_check.dart';
 import '../models/data_model.dart';
 import '../router/app_router.dart';
 import '../router/authenticated_route_observer.dart';
@@ -214,6 +216,10 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                 ),
                 BlocProvider(
                   create: (ctx) => BeneficiaryDownSyncBloc(
+                    //{TODO: Need to get the bandwidth path from config
+                    bandwidthCheckRepository: BandwidthCheckRepository(
+                        DioClient().dio,
+                        bandwidthPath: '/project/check/bandwidth'),
                     householdLocalRepository: ctx.read<
                         LocalRepository<HouseholdModel,
                             HouseholdSearchModel>>(),

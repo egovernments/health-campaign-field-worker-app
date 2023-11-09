@@ -547,7 +547,8 @@ void showDownloadDialog(
                 dialogType == DigitProgressDialogType.checkFailed) {
               Navigator.of(context, rootNavigator: true).pop();
               context.read<BeneficiaryDownSyncBloc>().add(
-                    DownSyncCheckTotalCountEvent(
+                    DownSyncGetBatchSizeEvent(
+                      appConfiguration: [model.appConfiguartion!],
                       projectId: context.projectId,
                       boundaryCode: model.boundary,
                       pendingSyncCount: model.pendingSyncCount ?? 0,
