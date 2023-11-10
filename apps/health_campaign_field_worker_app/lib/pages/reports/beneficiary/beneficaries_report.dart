@@ -305,23 +305,19 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                             (e) => DigitCard(
                               child: Column(
                                 children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        localizations.translate(
-                                          i18.beneficiaryDetails.boundary,
-                                        ),
-                                        style: theme.textTheme.headlineMedium,
-                                      ),
-                                      Text(
-                                        e.boundaryName!,
-                                        style: theme.textTheme.headlineMedium,
-                                      ),
-                                    ],
+                                  DigitTableCard(
+                                    padding: EdgeInsets.zero,
+                                    element: {
+                                      localizations.translate(
+                                        i18.beneficiaryDetails.boundary,
+                                      ): e.boundaryName!,
+                                    },
+                                    labelStyle: theme.textTheme.headlineMedium,
+                                    descriptionStyle:
+                                        theme.textTheme.headlineMedium,
                                   ),
                                   DigitTableCard(
+                                    topPadding: EdgeInsets.zero,
                                     element: {
                                       localizations.translate(
                                         i18.beneficiaryDetails.status,
