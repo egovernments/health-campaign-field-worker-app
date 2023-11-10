@@ -186,15 +186,11 @@ class HouseholdLocalRepository
     await sql.batch((batch) async {
       final addressCompanions = entities.map((e) {
         if (e.address != null) {
-          batch.deleteWhere(
-            sql.address,
-            (tbl) => tbl.relatedClientReferenceId.contains(e.clientReferenceId),
-          );
-
           return e.address!
               .copyWith(
                 relatedClientReferenceId: e.clientReferenceId,
                 clientAuditDetails: e.clientAuditDetails,
+                auditDetails: e.auditDetails,
               )
               .companion;
         }
