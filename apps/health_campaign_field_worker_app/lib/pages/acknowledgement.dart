@@ -7,12 +7,16 @@ import '../widgets/localized.dart';
 
 class AcknowledgementPage extends LocalizedStatefulWidget {
   bool isDataRecordSuccess;
+  String? label;
   String? description;
+  Map<String, dynamic>? descriptionTableData;
   AcknowledgementPage({
     super.key,
     super.appLocalizations,
     this.isDataRecordSuccess = false,
+    this.label,
     this.description,
+    this.descriptionTableData,
   });
 
   @override
@@ -24,26 +28,27 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-
     return Scaffold(
-      body: widget.isDataRecordSuccess
-          ? DigitAcknowledgement.success(
-        description: widget.description ?? localizations.translate(
-            i18.acknowledgementSuccess.acknowledgementDescriptionText),
-        label: localizations
-            .translate(i18.acknowledgementSuccess.acknowledgementLabelText),
-        enableBackToSearch: false,
-      )
-          : DigitAcknowledgement.success(
+      body: DigitAcknowledgement.success(
+        description: widget.description ??
+            localizations.translate(
+              i18.acknowledgementSuccess.acknowledgementDescriptionText,
+            ),
+        descriptionWidget: widget.isDataRecordSuccess
+            ? DigitTableCard(
+                element: widget.descriptionTableData ?? {},
+              )
+            : null,
+        label: widget.label ??
+            localizations.translate(
+              i18.acknowledgementSuccess.acknowledgementLabelText,
+            ),
         action: () {
           context.router.pop();
         },
+        enableBackToSearch: widget.isDataRecordSuccess ? false : true,
         actionLabel:
-        localizations.translate(i18.acknowledgementSuccess.actionLabelText),
-        description: widget.description ?? localizations.translate(
-            i18.acknowledgementSuccess.acknowledgementDescriptionText),
-        label: localizations
-            .translate(i18.acknowledgementSuccess.acknowledgementLabelText),
+            localizations.translate(i18.acknowledgementSuccess.actionLabelText),
       ),
       bottomNavigationBar: Offstage(
         offstage: !widget.isDataRecordSuccess,
@@ -55,13 +60,19 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
             child: Column(
               children: [
                 DigitElevatedButton(
-                    child: Text(localizations.translate(i18.acknowledgementSuccess.goToHome)),
-                    onPressed: () {context.router.pop();}),
+                  child: Text(localizations
+                      .translate(i18.acknowledgementSuccess.goToHome)),
+                  onPressed: () {
+                    context.router.popUntilRouteWithName(HomeRoute.name);
+                  },
+                ),
                 const SizedBox(
                   height: 12,
                 ),
                 DigitOutLineButton(
-                  onPressed: () {context.router.popAndPush(BoundarySelectionRoute());},
+                  onPressed: () {
+                    context.router.popAndPush(BoundarySelectionRoute());
+                  },
                   label: localizations
                       .translate(i18.acknowledgementSuccess.downloadmoredata),
                   buttonStyle: OutlinedButton.styleFrom(

@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 class DigitAcknowledgement extends StatelessWidget {
   final String label;
   final String? subLabel;
-  final String description;
+  final String? description;
+  final Widget? descriptionWidget;
   final IconData icon;
   final VoidCallback? action;
   final String? actionLabel;
@@ -19,7 +20,8 @@ class DigitAcknowledgement extends StatelessWidget {
     super.key,
     required this.label,
     this.subLabel,
-    required this.description,
+    this.description,
+    this.descriptionWidget,
     this.action,
     this.actionLabel,
     IconData? icon,
@@ -28,7 +30,7 @@ class DigitAcknowledgement extends StatelessWidget {
     this.enableViewHousehold = false,
     this.secondaryAction,
     this.secondaryLabel,
-    this.isActionLabel= true,
+    this.isActionLabel = true,
   })  : color = color ?? DigitTheme.instance.colors.darkSpringGreen,
         icon = icon ?? Icons.check_circle;
 
@@ -46,6 +48,7 @@ class DigitAcknowledgement extends StatelessWidget {
     this.secondaryAction,
     this.secondaryLabel,
     this.isActionLabel = true,
+    this.descriptionWidget,
   })  : color = color ?? DigitTheme.instance.colors.lavaRed,
         icon = icon ?? Icons.error;
 
@@ -104,10 +107,11 @@ class DigitAcknowledgement extends StatelessWidget {
               padding: DigitTheme.instance.containerMargin,
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: Text(
-                  description,
-                  style: theme.textTheme.bodyMedium,
-                ),
+                child: descriptionWidget ??
+                    Text(
+                      description ?? '',
+                      style: theme.textTheme.bodyMedium,
+                    ),
               ),
             ),
             if (enableBackToSearch)
@@ -147,7 +151,7 @@ class DigitAcknowledgement extends StatelessWidget {
                           ),
                         ],
                       )
-                    else if(isActionLabel)
+                    else if (isActionLabel)
                       Column(
                         children: [
                           DigitElevatedButton(

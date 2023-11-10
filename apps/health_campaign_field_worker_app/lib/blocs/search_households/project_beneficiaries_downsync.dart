@@ -6,9 +6,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../data/data_repository.dart';
+import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/network_manager.dart';
+import '../../data/repositories/remote/bandwidth_check.dart';
 import '../../models/data_model.dart';
+import '../../utils/background_service.dart';
 import '../../utils/environment_config.dart';
 
 part 'project_beneficiaries_downsync.freezed.dart';
@@ -35,6 +38,7 @@ class BeneficiaryDownSyncBloc
   final LocalRepository<ReferralModel, ReferralSearchModel>
       referralLocalRepository;
   final NetworkManager networkManager;
+  final BandwidthCheckRepository bandwidthCheckRepository;
   BeneficiaryDownSyncBloc({
     required this.downSyncRemoteRepository,
     required this.downSyncLocalRepository,
@@ -46,11 +50,13 @@ class BeneficiaryDownSyncBloc
     required this.sideEffectLocalRepository,
     required this.referralLocalRepository,
     required this.networkManager,
+    required this.bandwidthCheckRepository,
   }) : super(const BeneficiaryDownSyncState._()) {
     on(_handleDownSyncOfBeneficiaries);
     on(_handleCheckTotalCount);
     on(_handleDownSyncResetState);
     on(_handleDownSyncReport);
+    on(_handleCheckBandWidth);
   }
 
   FutureOr<void> _handleDownSyncResetState(
@@ -60,6 +66,36 @@ class BeneficiaryDownSyncBloc
     emit(const BeneficiaryDownSyncState.resetState());
   }
 
+  FutureOr<void> _handleCheckBandWidth(
+    DownSyncGetBatchSizeEvent event,
+    BeneficiaryDownSyncEmitter emit,
+  ) async {
+    try {
+      emit(const BeneficiaryDownSyncState.loading(false));
+      List speedArray = [];
+
+      final double speed = await bandwidthCheckRepository.pingBandwidthCheck(
+        bandWidthCheckModel: null,
+      );
+      speedArray.add(speed);
+      double sum = speedArray.fold(0, (p, c) => p + c);
+      int configuredBatchSize = getBatchSizeToBandwidth(
+        sum / speedArray.length,
+        event.appConfiguration,
+      );
+      emit(BeneficiaryDownSyncState.getBatchSize(
+        configuredBatchSize,
+        event.projectId,
+        event.boundaryCode,
+        event.pendingSyncCount,
+        event.boundaryName,
+      ));
+    } catch (e) {
+      emit(const BeneficiaryDownSyncState.resetState());
+      emit(const BeneficiaryDownSyncState.totalCountCheckFailed());
+    }
+  }
+
   FutureOr<void> _handleCheckTotalCount(
     DownSyncCheckTotalCountEvent event,
     BeneficiaryDownSyncEmitter emit,
@@ -67,6 +103,7 @@ class BeneficiaryDownSyncBloc
     if (event.pendingSyncCount > 0) {
       emit(const BeneficiaryDownSyncState.pendingSync());
     } else {
+      emit(const BeneficiaryDownSyncState.loading(true));
       await LocalSecureStore.instance.setManualSyncTrigger(true);
       final existingDownSyncData =
           await downSyncLocalRepository.search(DownsyncSearchModel(
@@ -83,6 +120,7 @@ class BeneficiaryDownSyncBloc
           locality: event.boundaryCode,
           offset: existingDownSyncData.firstOrNull?.offset ?? 0,
           limit: 1,
+          isDeleted: true,
           lastSyncedTime: lastSyncedTime,
           tenantId: envConfig.variables.tenantId,
           projectId: event.projectId,
@@ -93,7 +131,10 @@ class BeneficiaryDownSyncBloc
         //[TODO: Need to move the dynamic keys to constants
         int serverTotalCount = initialResults["DownsyncCriteria"]["totalCount"];
 
-        emit(BeneficiaryDownSyncState.dataFound(serverTotalCount));
+        emit(BeneficiaryDownSyncState.dataFound(
+          serverTotalCount,
+          event.batchSize,
+        ));
       } else {
         emit(const BeneficiaryDownSyncState.resetState());
         emit(const BeneficiaryDownSyncState.totalCountCheckFailed());
@@ -105,13 +146,14 @@ class BeneficiaryDownSyncBloc
     DownSyncBeneficiaryEvent event,
     BeneficiaryDownSyncEmitter emit,
   ) async {
+    emit(const BeneficiaryDownSyncState.loading(true));
     double? diskSpace = 0;
     // [TODO: Move the function DiskSpace.getFreeDiskSpace to utils
     diskSpace = await DiskSpace
         .getFreeDiskSpace; // Returns the device available space in MB
     // emit(BeneficiaryDownSyncState.inProgress(0, serverTotalCount));
     // diskSpace in MB * 1000 comparison with serverTotalCount * 100KB * Number of entities * 2
-    if ((diskSpace ?? 0) * 1000 < (event.initialServerCount * 200 * 2)) {
+    if ((diskSpace ?? 0) * 1000 < (event.initialServerCount * 150 * 2)) {
       emit(const BeneficiaryDownSyncState.insufficientStorage());
     } else {
       try {
@@ -152,6 +194,7 @@ class BeneficiaryDownSyncBloc
                 tenantId: envConfig.variables.tenantId,
                 projectId: event.projectId,
                 lastSyncedTime: lastSyncedTime,
+                isDeleted: true,
               ),
             );
             // check if the API response is there or it failed
@@ -239,8 +282,17 @@ class BeneficiaryDownSyncEvent with _$BeneficiaryDownSyncEvent {
     required String projectId,
     required String boundaryCode,
     required int pendingSyncCount,
+    required int batchSize,
     required String boundaryName,
   }) = DownSyncCheckTotalCountEvent;
+
+  const factory BeneficiaryDownSyncEvent.getBatchSize({
+    required List<AppConfiguration> appConfiguration,
+    required String projectId,
+    required String boundaryCode,
+    required int pendingSyncCount,
+    required String boundaryName,
+  }) = DownSyncGetBatchSizeEvent;
 
   const factory BeneficiaryDownSyncEvent.downSyncReport() = DownSyncReportEvent;
 
@@ -258,11 +310,21 @@ class BeneficiaryDownSyncState with _$BeneficiaryDownSyncState {
   const factory BeneficiaryDownSyncState.success(
     DownsyncModel downSyncResult,
   ) = _DownSyncSuccessState;
-  const factory BeneficiaryDownSyncState.loading() = _DownSyncLoadingState;
+  const factory BeneficiaryDownSyncState.getBatchSize(
+    int batchSize,
+    String projectId,
+    String boundaryCode,
+    int pendingSyncCount,
+    String boundaryName,
+  ) = _DownSyncGetBatchSizeState;
+  const factory BeneficiaryDownSyncState.loading(bool isPop) =
+      _DownSyncLoadingState;
   const factory BeneficiaryDownSyncState.insufficientStorage() =
       _DownSyncInsufficientStorageState;
-  const factory BeneficiaryDownSyncState.dataFound(int initialServerCount) =
-      _DownSyncDataFoundState;
+  const factory BeneficiaryDownSyncState.dataFound(
+    int initialServerCount,
+    int batchSize,
+  ) = _DownSyncDataFoundState;
   const factory BeneficiaryDownSyncState.resetState() = _DownSyncResetState;
   const factory BeneficiaryDownSyncState.totalCountCheckFailed() =
       _DownSynnCountCheckFailedState;

@@ -328,11 +328,13 @@ class DownloadBeneficiary {
   String? secondaryButtonLabel;
   String? prefixLabel;
   String? suffixLabel;
+  AppConfiguration? appConfiguartion;
   DownloadBeneficiary({
     required this.title,
     required this.projectId,
     required this.boundary,
     required this.boundaryName,
+    this.appConfiguartion,
     this.pendingSyncCount,
     this.batchSize,
     this.syncCount,

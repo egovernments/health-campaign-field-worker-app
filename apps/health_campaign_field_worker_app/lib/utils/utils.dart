@@ -535,7 +535,6 @@ void showDownloadDialog(
   switch (dialogType) {
     case DigitProgressDialogType.failed:
     case DigitProgressDialogType.checkFailed:
-    case DigitProgressDialogType.insufficientStorage:
       DigitSyncDialog.show(
         context,
         type: DigitSyncDialogType.failed,
@@ -547,7 +546,8 @@ void showDownloadDialog(
                 dialogType == DigitProgressDialogType.checkFailed) {
               Navigator.of(context, rootNavigator: true).pop();
               context.read<BeneficiaryDownSyncBloc>().add(
-                    DownSyncCheckTotalCountEvent(
+                    DownSyncGetBatchSizeEvent(
+                      appConfiguration: [model.appConfiguartion!],
                       projectId: context.projectId,
                       boundaryCode: model.boundary,
                       pendingSyncCount: model.pendingSyncCount ?? 0,
@@ -570,12 +570,19 @@ void showDownloadDialog(
       );
     case DigitProgressDialogType.dataFound:
     case DigitProgressDialogType.pendingSync:
+    case DigitProgressDialogType.insufficientStorage:
       DigitDialog.show(
         context,
-        //[TODO: Localizations need to be added
         options: DigitDialogOptions(
           titleText: model.title,
-          titleIcon: const Icon(Icons.info),
+          titleIcon: Icon(
+            dialogType == DigitProgressDialogType.insufficientStorage
+                ? Icons.warning
+                : Icons.info_outline_rounded,
+            color: dialogType == DigitProgressDialogType.insufficientStorage
+                ? DigitTheme.instance.colorScheme.error
+                : DigitTheme.instance.colorScheme.surfaceTint,
+          ),
           contentText: model.content,
           primaryAction: DigitDialogActions(
             label: model.primaryButtonLabel ?? '',
@@ -621,8 +628,8 @@ void showDownloadDialog(
         options: DigitDialogOptions(
           title: ProgressIndicatorContainer(
             label: '',
-            prefixLabel: model.prefixLabel ?? '',
-            suffixLabel: model.suffixLabel ?? '',
+            prefixLabel: '',
+            suffixLabel: '${model.prefixLabel}/${model.suffixLabel}' ?? '',
             value: model.totalCount == 0
                 ? 0
                 : min((model.syncCount ?? 0) / (model.totalCount ?? 1), 1),
