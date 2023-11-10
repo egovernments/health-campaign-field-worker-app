@@ -348,8 +348,8 @@ class _SearchBeneficiaryPageState
 
                         return Padding(
                           padding: const EdgeInsets.only(
-                            left: kPadding,
-                            right: kPadding,
+                            left: kPadding * 2,
+                            right: kPadding * 2,
                           ),
                           child: DigitElevatedButton(
                             onPressed: onPressed,
@@ -367,8 +367,8 @@ class _SearchBeneficiaryPageState
                     ),
                     Padding(
                       padding: const EdgeInsets.only(
-                        left: kPadding,
-                        right: kPadding,
+                        left: kPadding * 2,
+                        right: kPadding * 2,
                       ),
                       child: DigitOutlineIconButton(
                         buttonStyle: OutlinedButton.styleFrom(

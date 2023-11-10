@@ -94,7 +94,10 @@ class MemberCard extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.topRight,
                   child: Padding(
-                    padding: const EdgeInsets.all(0),
+                    padding: const EdgeInsets.only(
+                      left: kPadding,
+                      right: kPadding,
+                    ),
                     child: DigitIconButton(
                       onPressed: () => DigitActionDialog.show(
                         context,

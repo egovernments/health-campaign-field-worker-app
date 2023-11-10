@@ -97,15 +97,24 @@ class DigitAcknowledgement extends StatelessWidget {
                 ],
               ),
             ),
-            Padding(
-              padding: DigitTheme.instance.containerMargin,
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  description,
-                  style: theme.textTheme.bodyMedium,
+            Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: kPadding * 2.5,
+                    right: kPadding * 2,
+                    top: kPadding * 2,
+                    bottom: kPadding * 2,
+                  ),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      description,
+                      style: theme.textTheme.bodyMedium,
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
             if (enableBackToSearch)
               Padding(
@@ -149,9 +158,15 @@ class DigitAcknowledgement extends StatelessWidget {
                     else
                       Column(
                         children: [
-                          DigitElevatedButton(
-                            onPressed: action,
-                            child: Text(actionLabel),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              left: kPadding * 2,
+                              right: kPadding * 2,
+                            ),
+                            child: DigitElevatedButton(
+                              onPressed: action,
+                              child: Text(actionLabel),
+                            ),
                           ),
                           const SizedBox(
                             height: kPadding,

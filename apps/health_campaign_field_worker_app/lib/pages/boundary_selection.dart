@@ -104,24 +104,30 @@ class _BoundarySelectionPageState extends State<BoundarySelectionPage> {
                         margin:
                             const EdgeInsets.only(left: 0, right: 0, top: 10),
                         child: SafeArea(
-                          child: DigitElevatedButton(
-                            onPressed: selectedBoundary == null
-                                ? null
-                                : () async {
-                                    setState(() {
-                                      shouldPop = true;
-                                    });
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                              left: kPadding * 2,
+                              right: kPadding * 2,
+                            ),
+                            child: DigitElevatedButton(
+                              onPressed: selectedBoundary == null
+                                  ? null
+                                  : () async {
+                                      setState(() {
+                                        shouldPop = true;
+                                      });
 
-                                    context.read<BoundaryBloc>().add(
-                                          const BoundarySubmitEvent(),
-                                        );
+                                      context.read<BoundaryBloc>().add(
+                                            const BoundarySubmitEvent(),
+                                          );
 
-                                    Future.delayed(
-                                      const Duration(milliseconds: 100),
-                                      () => context.router.pop(),
-                                    );
-                                  },
-                            child: const Text('Submit'),
+                                      Future.delayed(
+                                        const Duration(milliseconds: 100),
+                                        () => context.router.pop(),
+                                      );
+                                    },
+                              child: const Text('Submit'),
+                            ),
                           ),
                         ),
                       ),

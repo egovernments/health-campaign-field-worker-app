@@ -142,8 +142,8 @@ class _BeneficiaryDetailsPageState
                                         ),
                                         child: Padding(
                                           padding: const EdgeInsets.only(
-                                            left: kPadding,
-                                            right: kPadding,
+                                            left: kPadding * 2,
+                                            right: kPadding * 2,
                                           ),
                                           child: DigitElevatedButton(
                                             onPressed: () async {
@@ -239,10 +239,10 @@ class _BeneficiaryDetailsPageState
                       children: [
                         DigitCard(
                           padding: const EdgeInsets.only(
-                            left: kPadding * 2,
+                            left: kPadding * 3,
                             top: kPadding * 2,
                             bottom: kPadding / 2,
-                            right: kPadding / 2,
+                            right: kPadding * 3,
                           ),
                           child: Column(
                             children: [
@@ -381,6 +381,12 @@ class _BeneficiaryDetailsPageState
                           BlocBuilder<ProjectBloc, ProjectState>(
                             builder: (context, projectState) {
                               return DigitCard(
+                                padding: const EdgeInsets.only(
+                                  left: kPadding * 2,
+                                  top: kPadding * 2,
+                                  bottom: kPadding / 2,
+                                  right: kPadding * 2,
+                                ),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisSize: MainAxisSize.min,

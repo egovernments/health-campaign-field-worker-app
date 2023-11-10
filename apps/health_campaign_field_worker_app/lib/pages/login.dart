@@ -69,6 +69,11 @@ class _LoginPageState extends LocalizedState<LoginPage> {
               form: buildForm,
               builder: (context, form, child) {
                 return DigitCard(
+                  padding: const EdgeInsets.only(
+                    left: kPadding * 2,
+                    right: kPadding * 2,
+                    top: kPadding * 2,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
@@ -153,6 +158,12 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                         onPressed: () => DigitDialog.show(
                           context,
                           options: DigitDialogOptions(
+                            titlePadding: const EdgeInsets.fromLTRB(
+                              kPadding * 2,
+                              kPadding * 2,
+                              kPadding * 2,
+                              kPadding * 2,
+                            ),
                             titleText: localizations.translate(
                               i18.forgotPassword.labelText,
                             ),

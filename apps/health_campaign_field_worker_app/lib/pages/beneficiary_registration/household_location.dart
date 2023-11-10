@@ -216,7 +216,8 @@ class _HouseholdLocationPageState
                             child: Center(
                               child: Text(
                                 localizations.translate(
-                                    i18.householdLocation.actionLabel),
+                                  i18.householdLocation.actionLabel,
+                                ),
                               ),
                             ),
                           ),

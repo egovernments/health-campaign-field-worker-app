@@ -32,6 +32,7 @@ class RecordDeliveryCycle extends LocalizedStatefulWidget {
 
 class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
   bool isExpanded = false;
+  bool isDivider = false;
 
   @override
   Widget build(BuildContext context) {
@@ -102,6 +103,7 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                                         onTap: () {
                                           setState(() {
                                             isExpanded = !isExpanded;
+                                            isDivider = !isDivider;
                                           });
                                         },
                                         child: Row(
@@ -201,7 +203,7 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                       left: 0,
                       right: 0,
                       top: kPadding,
-                      bottom: 0,
+                      bottom: kPadding,
                     ),
               child: Align(
                 alignment: Alignment.centerLeft,
@@ -288,6 +290,13 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
               columnWidth: 130,
               height: ((e.deliveries?.length ?? 0) + 1) * 57.5,
             ),
+            const SizedBox(
+              height: 16,
+            ),
+            if (!isDivider && i == cycles.length - 1)
+              const Divider(
+                thickness: 1.0,
+              ),
           ],
         ),
       );

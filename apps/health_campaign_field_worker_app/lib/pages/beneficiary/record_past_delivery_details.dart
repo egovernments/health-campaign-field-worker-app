@@ -244,79 +244,76 @@ class _RecordPastDeliveryDetailsPageState
               ),
               children: [
                 DigitCard(
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          left: kPadding,
-                          right: kPadding,
-                        ),
-                        child: Text(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: kPadding * 2,
+                      vertical: kPadding * 2,
+                    ),
+                    child: Column(
+                      children: [
+                        Text(
                           localizations.translate(
                             i18.deliverIntervention.recordPastDeliveryDeatils,
                           ),
                           style: theme.textTheme.displayMedium,
                         ),
-                      ),
-                      ...(futureTaskList?.asMap().entries.map((entry) {
-                            final int doseNumber =
-                                int.parse(entry.value.additionalFields?.fields
+                        ...(futureTaskList?.asMap().entries.map((entry) {
+                              final int doseNumber = int.parse(
+                                entry.value.additionalFields?.fields
                                     .firstWhereOrNull(
                                       (ele) =>
                                           ele.key ==
                                           AdditionalFieldsType.doseIndex
                                               .toValue(),
                                     )
-                                    ?.value);
+                                    ?.value,
+                              );
 
-                            return StatefulBuilder(
-                              builder: (context, setState) {
-                                return Column(
-                                  children: [
-                                    DigitRadioButtonList(
-                                      labelText: "${localizations.translate(
-                                        i18.deliverIntervention
-                                            .wasDosePastDeliveryDetails,
-                                      )} $doseNumber ${localizations.translate(
-                                        i18.deliverIntervention
-                                            .wasDosePastRecordDeliveryDetails,
-                                      )} ${localizations.translate(
-                                        i18.beneficiaryDetails.beneficiaryDose,
-                                      )} ${doseNumber - 1} ? *",
-                                      labelStyle: DigitTheme.instance
-                                          .mobileTheme.textTheme.headlineSmall,
-                                      formControlName:
-                                          "$_recordDoseAdministeredKey.${futureTaskList.indexOf(entry.value)}",
-                                      valueMapper: (val) =>
-                                          localizations.translate(val.label),
-                                      options: Constants.yesNo,
-                                      onValueChange: (val) {
-                                        form
-                                            .control(
-                                              "$_recordDoseAdministeredKey.${futureTaskList.indexOf(entry.value)}",
-                                            )
-                                            .value = val;
-                                      },
-                                      errorMessage: localizations.translate(
-                                        i18.common.corecommonRequired,
+                              return StatefulBuilder(
+                                builder: (context, setState) {
+                                  return Column(
+                                    children: [
+                                      DigitRadioButtonList(
+                                        labelText:
+                                            "${localizations.translate(i18.deliverIntervention.wasDosePastDeliveryDetails)} $doseNumber ${localizations.translate(i18.deliverIntervention.wasDosePastRecordDeliveryDetails)} ${localizations.translate(i18.beneficiaryDetails.beneficiaryDose)} ${doseNumber - 1} ? *",
+                                        labelStyle: DigitTheme
+                                            .instance
+                                            .mobileTheme
+                                            .textTheme
+                                            .headlineSmall,
+                                        formControlName:
+                                            "$_recordDoseAdministeredKey.${futureTaskList.indexOf(entry.value)}",
+                                        valueMapper: (val) =>
+                                            localizations.translate(val.label),
+                                        options: Constants.yesNo,
+                                        onValueChange: (val) {
+                                          form
+                                              .control(
+                                                "$_recordDoseAdministeredKey.${futureTaskList.indexOf(entry.value)}",
+                                              )
+                                              .value = val;
+                                        },
+                                        errorMessage: localizations.translate(
+                                          i18.common.corecommonRequired,
+                                        ),
+                                        labelPadding: const EdgeInsets.only(
+                                          top: kPadding,
+                                          left: kPadding,
+                                        ),
                                       ),
-                                      labelPadding: const EdgeInsets.only(
-                                        top: kPadding,
-                                        left: kPadding,
-                                      ),
-                                    ),
-
-                                    if (entry.key != futureTaskList.length - 1)
-                                      const Divider(
-                                        thickness: 1.0,
-                                      ), // Add Divider conditionally
-                                  ],
-                                );
-                              },
-                            );
-                          }).toList() ??
-                          []),
-                    ],
+                                      if (entry.key !=
+                                          futureTaskList.length - 1)
+                                        const Divider(
+                                          thickness: 1.0,
+                                        ),
+                                    ],
+                                  );
+                                },
+                              );
+                            }).toList() ??
+                            []),
+                      ],
+                    ),
                   ),
                 ),
               ],

@@ -68,141 +68,161 @@ class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                   showHelp: false,
                                 ),
                                 footer: SizedBox(
-                                  height: 100,
                                   child: DigitCard(
-                                    child: DigitElevatedButton(
-                                      onPressed: () async {
-                                        if (symptomsValues.any((e) => e)) {
-                                          setState(() {
-                                            symptomsSelected = true;
-                                          });
-                                          final router = context.router;
+                                    margin: const EdgeInsets.only(top: 10),
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                        left: kPadding * 2,
+                                        right: kPadding * 2,
+                                      ),
+                                      child: DigitElevatedButton(
+                                        onPressed: () async {
+                                          if (symptomsValues.any((e) => e)) {
+                                            setState(() {
+                                              symptomsSelected = true;
+                                            });
+                                            final router = context.router;
 
-                                          final shouldSubmit =
-                                              await DigitDialog.show<bool>(
-                                            context,
-                                            options: DigitDialogOptions(
-                                              titleText:
-                                                  localizations.translate(
-                                                i18.deliverIntervention
-                                                    .dialogTitle,
-                                              ),
-                                              contentText:
-                                                  localizations.translate(
-                                                i18.deliverIntervention
-                                                    .dialogContent,
-                                              ),
-                                              primaryAction: DigitDialogActions(
-                                                label: localizations.translate(
-                                                  i18.common.coreCommonSubmit,
+                                            final shouldSubmit =
+                                                await DigitDialog.show<bool>(
+                                              context,
+                                              options: DigitDialogOptions(
+                                                titlePadding:
+                                                    const EdgeInsets.fromLTRB(
+                                                  kPadding * 2,
+                                                  kPadding * 2,
+                                                  kPadding * 2,
+                                                  kPadding * 2,
                                                 ),
-                                                action: (ctx) {
-                                                  final List<String> symptoms =
-                                                      [];
+                                                titleText:
+                                                    localizations.translate(
+                                                  i18.deliverIntervention
+                                                      .dialogTitle,
+                                                ),
+                                                contentText:
+                                                    localizations.translate(
+                                                  i18.deliverIntervention
+                                                      .dialogContent,
+                                                ),
+                                                primaryAction:
+                                                    DigitDialogActions(
+                                                  label:
+                                                      localizations.translate(
+                                                    i18.common.coreCommonSubmit,
+                                                  ),
+                                                  action: (ctx) {
+                                                    final List<String>
+                                                        symptoms = [];
 
-                                                  for (int i = 0;
-                                                      i < symptomsValues.length;
-                                                      i++) {
-                                                    if (symptomsValues[i]) {
-                                                      symptoms.add(
-                                                        symptomsTypes[i],
-                                                      );
+                                                    for (int i = 0;
+                                                        i <
+                                                            symptomsValues
+                                                                .length;
+                                                        i++) {
+                                                      if (symptomsValues[i]) {
+                                                        symptoms.add(
+                                                          symptomsTypes[i],
+                                                        );
+                                                      }
                                                     }
-                                                  }
 
-                                                  final clientReferenceId =
-                                                      IdGen.i.identifier;
-                                                  context
-                                                      .read<SideEffectsBloc>()
-                                                      .add(
-                                                        SideEffectsSubmitEvent(
-                                                          SideEffectModel(
-                                                            id: null,
-                                                            taskClientReferenceId:
-                                                                widget
-                                                                    .tasks
-                                                                    .last
-                                                                    .clientReferenceId,
-                                                            projectId: context
-                                                                .projectId,
-                                                            symptoms: symptoms,
-                                                            clientReferenceId:
-                                                                clientReferenceId,
-                                                            tenantId: envConfig
-                                                                .variables
-                                                                .tenantId,
-                                                            rowVersion: 1,
-                                                            auditDetails:
-                                                                AuditDetails(
-                                                              createdBy: context
-                                                                  .loggedInUserUuid,
-                                                              createdTime: context
-                                                                  .millisecondsSinceEpoch(),
-                                                              lastModifiedBy:
-                                                                  context
-                                                                      .loggedInUserUuid,
-                                                              lastModifiedTime:
-                                                                  context
-                                                                      .millisecondsSinceEpoch(),
+                                                    final clientReferenceId =
+                                                        IdGen.i.identifier;
+                                                    context
+                                                        .read<SideEffectsBloc>()
+                                                        .add(
+                                                          SideEffectsSubmitEvent(
+                                                            SideEffectModel(
+                                                              id: null,
+                                                              taskClientReferenceId:
+                                                                  widget
+                                                                      .tasks
+                                                                      .last
+                                                                      .clientReferenceId,
+                                                              projectId: context
+                                                                  .projectId,
+                                                              symptoms:
+                                                                  symptoms,
+                                                              clientReferenceId:
+                                                                  clientReferenceId,
+                                                              tenantId:
+                                                                  envConfig
+                                                                      .variables
+                                                                      .tenantId,
+                                                              rowVersion: 1,
+                                                              auditDetails:
+                                                                  AuditDetails(
+                                                                createdBy: context
+                                                                    .loggedInUserUuid,
+                                                                createdTime: context
+                                                                    .millisecondsSinceEpoch(),
+                                                                lastModifiedBy:
+                                                                    context
+                                                                        .loggedInUserUuid,
+                                                                lastModifiedTime:
+                                                                    context
+                                                                        .millisecondsSinceEpoch(),
+                                                              ),
+                                                              clientAuditDetails:
+                                                                  ClientAuditDetails(
+                                                                createdBy: context
+                                                                    .loggedInUserUuid,
+                                                                createdTime: context
+                                                                    .millisecondsSinceEpoch(),
+                                                                lastModifiedBy:
+                                                                    context
+                                                                        .loggedInUserUuid,
+                                                                lastModifiedTime:
+                                                                    context
+                                                                        .millisecondsSinceEpoch(),
+                                                              ),
                                                             ),
-                                                            clientAuditDetails:
-                                                                ClientAuditDetails(
-                                                              createdBy: context
-                                                                  .loggedInUserUuid,
-                                                              createdTime: context
-                                                                  .millisecondsSinceEpoch(),
-                                                              lastModifiedBy:
-                                                                  context
-                                                                      .loggedInUserUuid,
-                                                              lastModifiedTime:
-                                                                  context
-                                                                      .millisecondsSinceEpoch(),
-                                                            ),
+                                                            false,
                                                           ),
-                                                          false,
-                                                        ),
-                                                      );
-                                                  Navigator.of(
+                                                        );
+                                                    Navigator.of(
+                                                      context,
+                                                      rootNavigator: true,
+                                                    ).pop(true);
+                                                  },
+                                                ),
+                                                secondaryAction:
+                                                    DigitDialogActions(
+                                                  label:
+                                                      localizations.translate(
+                                                    i18.common.coreCommonCancel,
+                                                  ),
+                                                  action: (context) =>
+                                                      Navigator.of(
                                                     context,
                                                     rootNavigator: true,
-                                                  ).pop(true);
-                                                },
-                                              ),
-                                              secondaryAction:
-                                                  DigitDialogActions(
-                                                label: localizations.translate(
-                                                  i18.common.coreCommonCancel,
+                                                  ).pop(false),
                                                 ),
-                                                action: (context) =>
-                                                    Navigator.of(
-                                                  context,
-                                                  rootNavigator: true,
-                                                ).pop(false),
                                               ),
-                                            ),
-                                          );
-
-                                          if (shouldSubmit ?? false) {
-                                            final parent =
-                                                router.parent() as StackRouter;
-                                            parent
-                                              ..pop()
-                                              ..pop();
-
-                                            router.push(
-                                              AcknowledgementRoute(),
                                             );
+
+                                            if (shouldSubmit ?? false) {
+                                              final parent = router.parent()
+                                                  as StackRouter;
+                                              parent
+                                                ..pop()
+                                                ..pop();
+
+                                              router.push(
+                                                AcknowledgementRoute(),
+                                              );
+                                            }
+                                          } else {
+                                            setState(() {
+                                              symptomsSelected = false;
+                                            });
                                           }
-                                        } else {
-                                          setState(() {
-                                            symptomsSelected = false;
-                                          });
-                                        }
-                                      },
-                                      child: Center(
-                                        child: Text(
-                                          localizations.translate(
-                                            i18.common.coreCommonNext,
+                                        },
+                                        child: Center(
+                                          child: Text(
+                                            localizations.translate(
+                                              i18.common.coreCommonNext,
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -211,6 +231,12 @@ class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                 ),
                                 children: [
                                   DigitCard(
+                                    padding: const EdgeInsets.only(
+                                      left: kPadding * 2,
+                                      right: kPadding * 2,
+                                      top: kPadding * 2,
+                                      bottom: kPadding * 2,
+                                    ),
                                     child: Column(
                                       children: [
                                         Row(
@@ -232,7 +258,11 @@ class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                         Align(
                                           alignment: Alignment.topLeft,
                                           child: Padding(
-                                            padding: const EdgeInsets.only(left: 0, right: kPadding, top: kPadding*2, bottom: kPadding*2),
+                                            padding: const EdgeInsets.only(
+                                              right: kPadding * 2,
+                                              top: kPadding * 2,
+                                              bottom: kPadding * 2,
+                                            ),
                                             child: Text(
                                               '${localizations.translate(
                                                 i18.adverseEvents
