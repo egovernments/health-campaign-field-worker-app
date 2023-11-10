@@ -207,7 +207,7 @@ class _InventoryReportDetailsPageState
                                               ),
                                               label: localizations.translate(
                                                 i18.stockReconciliationDetails
-                                                    .facilityLabel,
+                                                    .facilityName,
                                               ),
                                               suffix: const Padding(
                                                 padding: EdgeInsets.all(8.0),
