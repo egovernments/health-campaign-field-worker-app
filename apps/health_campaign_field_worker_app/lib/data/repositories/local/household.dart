@@ -182,18 +182,24 @@ class HouseholdLocalRepository
     List<HouseholdModel> entities,
   ) async {
     final householdCompanions = entities.map((e) => e.companion).toList();
-    final addressCompanions = entities.map((e) {
-      if (e.address != null) {
-        return e.address!
-            .copyWith(
-              relatedClientReferenceId: e.clientReferenceId,
-              clientAuditDetails: e.clientAuditDetails,
-            )
-            .companion;
-      }
-    }).toList();
 
     await sql.batch((batch) async {
+      final addressCompanions = entities.map((e) {
+        if (e.address != null) {
+          batch.deleteWhere(
+            sql.address,
+            (tbl) => tbl.relatedClientReferenceId.contains(e.clientReferenceId),
+          );
+
+          return e.address!
+              .copyWith(
+                relatedClientReferenceId: e.clientReferenceId,
+                clientAuditDetails: e.clientAuditDetails,
+              )
+              .companion;
+        }
+      }).toList();
+
       if (addressCompanions.isNotEmpty) {
         batch.insertAll(
           sql.address,
