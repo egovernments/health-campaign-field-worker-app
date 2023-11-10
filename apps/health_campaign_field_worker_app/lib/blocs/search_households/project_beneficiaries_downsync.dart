@@ -120,6 +120,7 @@ class BeneficiaryDownSyncBloc
           locality: event.boundaryCode,
           offset: existingDownSyncData.firstOrNull?.offset ?? 0,
           limit: 1,
+          isDeleted: true,
           lastSyncedTime: lastSyncedTime,
           tenantId: envConfig.variables.tenantId,
           projectId: event.projectId,
@@ -193,6 +194,7 @@ class BeneficiaryDownSyncBloc
                 tenantId: envConfig.variables.tenantId,
                 projectId: event.projectId,
                 lastSyncedTime: lastSyncedTime,
+                isDeleted: true,
               ),
             );
             // check if the API response is there or it failed
