@@ -306,6 +306,8 @@ class IndividualLocalRepository
           return e.name!
               .copyWith(
                 individualClientReferenceId: e.clientReferenceId,
+                clientAuditDetails: e.clientAuditDetails,
+                auditDetails: e.auditDetails,
               )
               .companion;
         }
