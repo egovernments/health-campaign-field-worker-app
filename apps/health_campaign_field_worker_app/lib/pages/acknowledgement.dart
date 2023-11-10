@@ -27,28 +27,22 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      body: widget.isDataRecordSuccess
-          ? DigitAcknowledgement.success(
-              description: widget.description ??
-                  localizations.translate(
-                    i18.acknowledgementSuccess.acknowledgementDescriptionText,
-                  ),
-              label: localizations.translate(
-                  i18.acknowledgementSuccess.acknowledgementLabelText,),
-              enableBackToSearch: false,
-            )
-          : DigitAcknowledgement.success(
-              action: () {
-                context.router.pop();
-              },
-              actionLabel: localizations
-                  .translate(i18.acknowledgementSuccess.actionLabelText),
-              description: widget.description ??
-                  localizations.translate(i18
-                      .acknowledgementSuccess.acknowledgementDescriptionText),
-              label: localizations.translate(
-                  i18.acknowledgementSuccess.acknowledgementLabelText),
+      body: DigitAcknowledgement.success(
+        description: widget.description ??
+            localizations.translate(
+              i18.acknowledgementSuccess.acknowledgementDescriptionText,
             ),
+        label: widget.label ??
+            localizations.translate(
+              i18.acknowledgementSuccess.acknowledgementLabelText,
+            ),
+        action: () {
+          context.router.pop();
+        },
+        enableBackToSearch: widget.isDataRecordSuccess ? false : true,
+        actionLabel:
+            localizations.translate(i18.acknowledgementSuccess.actionLabelText),
+      ),
       bottomNavigationBar: Offstage(
         offstage: !widget.isDataRecordSuccess,
         // Show the bottom navigation bar if `isDataRecordSuccess` is true
@@ -59,11 +53,12 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
             child: Column(
               children: [
                 DigitElevatedButton(
-                    child: Text(localizations
-                        .translate(i18.acknowledgementSuccess.goToHome)),
-                    onPressed: () {
-                      context.router.pop();
-                    }),
+                  child: Text(localizations
+                      .translate(i18.acknowledgementSuccess.goToHome)),
+                  onPressed: () {
+                    context.router.popUntilRouteWithName(HomeRoute.name);
+                  },
+                ),
                 const SizedBox(
                   height: 12,
                 ),
