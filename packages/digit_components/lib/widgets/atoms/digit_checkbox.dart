@@ -34,7 +34,8 @@ class DigitCheckbox extends StatelessWidget {
                   if (states.contains(MaterialState.selected)) {
                     return BorderSide(
                       width: 2.0,
-                      color: theme.colorScheme.secondary,
+                      color: value? theme.colorScheme.secondary
+                      : theme.colorScheme.onBackground,
                     );
                   }
                   return const BorderSide(width: 1.0);
