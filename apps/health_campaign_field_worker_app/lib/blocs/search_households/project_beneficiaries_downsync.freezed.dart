@@ -1131,7 +1131,7 @@ mixin _$BeneficiaryDownSyncState {
     required TResult Function(int batchSize, String projectId,
             String boundaryCode, int pendingSyncCount, String boundaryName)
         getBatchSize,
-    required TResult Function() loading,
+    required TResult Function(bool isPop) loading,
     required TResult Function() insufficientStorage,
     required TResult Function(int initialServerCount, int batchSize) dataFound,
     required TResult Function() resetState,
@@ -1148,7 +1148,7 @@ mixin _$BeneficiaryDownSyncState {
     TResult? Function(int batchSize, String projectId, String boundaryCode,
             int pendingSyncCount, String boundaryName)?
         getBatchSize,
-    TResult? Function()? loading,
+    TResult? Function(bool isPop)? loading,
     TResult? Function()? insufficientStorage,
     TResult? Function(int initialServerCount, int batchSize)? dataFound,
     TResult? Function()? resetState,
@@ -1165,7 +1165,7 @@ mixin _$BeneficiaryDownSyncState {
     TResult Function(int batchSize, String projectId, String boundaryCode,
             int pendingSyncCount, String boundaryName)?
         getBatchSize,
-    TResult Function()? loading,
+    TResult Function(bool isPop)? loading,
     TResult Function()? insufficientStorage,
     TResult Function(int initialServerCount, int batchSize)? dataFound,
     TResult Function()? resetState,
@@ -1332,7 +1332,7 @@ class _$_DownSyncInProgressState extends _DownSyncInProgressState {
     required TResult Function(int batchSize, String projectId,
             String boundaryCode, int pendingSyncCount, String boundaryName)
         getBatchSize,
-    required TResult Function() loading,
+    required TResult Function(bool isPop) loading,
     required TResult Function() insufficientStorage,
     required TResult Function(int initialServerCount, int batchSize) dataFound,
     required TResult Function() resetState,
@@ -1352,7 +1352,7 @@ class _$_DownSyncInProgressState extends _DownSyncInProgressState {
     TResult? Function(int batchSize, String projectId, String boundaryCode,
             int pendingSyncCount, String boundaryName)?
         getBatchSize,
-    TResult? Function()? loading,
+    TResult? Function(bool isPop)? loading,
     TResult? Function()? insufficientStorage,
     TResult? Function(int initialServerCount, int batchSize)? dataFound,
     TResult? Function()? resetState,
@@ -1372,7 +1372,7 @@ class _$_DownSyncInProgressState extends _DownSyncInProgressState {
     TResult Function(int batchSize, String projectId, String boundaryCode,
             int pendingSyncCount, String boundaryName)?
         getBatchSize,
-    TResult Function()? loading,
+    TResult Function(bool isPop)? loading,
     TResult Function()? insufficientStorage,
     TResult Function(int initialServerCount, int batchSize)? dataFound,
     TResult Function()? resetState,
@@ -1537,7 +1537,7 @@ class _$_DownSyncSuccessState extends _DownSyncSuccessState {
     required TResult Function(int batchSize, String projectId,
             String boundaryCode, int pendingSyncCount, String boundaryName)
         getBatchSize,
-    required TResult Function() loading,
+    required TResult Function(bool isPop) loading,
     required TResult Function() insufficientStorage,
     required TResult Function(int initialServerCount, int batchSize) dataFound,
     required TResult Function() resetState,
@@ -1557,7 +1557,7 @@ class _$_DownSyncSuccessState extends _DownSyncSuccessState {
     TResult? Function(int batchSize, String projectId, String boundaryCode,
             int pendingSyncCount, String boundaryName)?
         getBatchSize,
-    TResult? Function()? loading,
+    TResult? Function(bool isPop)? loading,
     TResult? Function()? insufficientStorage,
     TResult? Function(int initialServerCount, int batchSize)? dataFound,
     TResult? Function()? resetState,
@@ -1577,7 +1577,7 @@ class _$_DownSyncSuccessState extends _DownSyncSuccessState {
     TResult Function(int batchSize, String projectId, String boundaryCode,
             int pendingSyncCount, String boundaryName)?
         getBatchSize,
-    TResult Function()? loading,
+    TResult Function(bool isPop)? loading,
     TResult Function()? insufficientStorage,
     TResult Function(int initialServerCount, int batchSize)? dataFound,
     TResult Function()? resetState,
@@ -1787,7 +1787,7 @@ class _$_DownSyncGetBatchSizeState extends _DownSyncGetBatchSizeState {
     required TResult Function(int batchSize, String projectId,
             String boundaryCode, int pendingSyncCount, String boundaryName)
         getBatchSize,
-    required TResult Function() loading,
+    required TResult Function(bool isPop) loading,
     required TResult Function() insufficientStorage,
     required TResult Function(int initialServerCount, int batchSize) dataFound,
     required TResult Function() resetState,
@@ -1808,7 +1808,7 @@ class _$_DownSyncGetBatchSizeState extends _DownSyncGetBatchSizeState {
     TResult? Function(int batchSize, String projectId, String boundaryCode,
             int pendingSyncCount, String boundaryName)?
         getBatchSize,
-    TResult? Function()? loading,
+    TResult? Function(bool isPop)? loading,
     TResult? Function()? insufficientStorage,
     TResult? Function(int initialServerCount, int batchSize)? dataFound,
     TResult? Function()? resetState,
@@ -1829,7 +1829,7 @@ class _$_DownSyncGetBatchSizeState extends _DownSyncGetBatchSizeState {
     TResult Function(int batchSize, String projectId, String boundaryCode,
             int pendingSyncCount, String boundaryName)?
         getBatchSize,
-    TResult Function()? loading,
+    TResult Function(bool isPop)? loading,
     TResult Function()? insufficientStorage,
     TResult Function(int initialServerCount, int batchSize)? dataFound,
     TResult Function()? resetState,
@@ -1935,6 +1935,8 @@ abstract class _$$_DownSyncLoadingStateCopyWith<$Res> {
   factory _$$_DownSyncLoadingStateCopyWith(_$_DownSyncLoadingState value,
           $Res Function(_$_DownSyncLoadingState) then) =
       __$$_DownSyncLoadingStateCopyWithImpl<$Res>;
+  @useResult
+  $Res call({bool isPop});
 }
 
 /// @nodoc
@@ -1945,26 +1947,51 @@ class __$$_DownSyncLoadingStateCopyWithImpl<$Res>
   __$$_DownSyncLoadingStateCopyWithImpl(_$_DownSyncLoadingState _value,
       $Res Function(_$_DownSyncLoadingState) _then)
       : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? isPop = null,
+  }) {
+    return _then(_$_DownSyncLoadingState(
+      null == isPop
+          ? _value.isPop
+          : isPop // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
 }
 
 /// @nodoc
 
 class _$_DownSyncLoadingState extends _DownSyncLoadingState {
-  const _$_DownSyncLoadingState() : super._();
+  const _$_DownSyncLoadingState(this.isPop) : super._();
+
+  @override
+  final bool isPop;
 
   @override
   String toString() {
-    return 'BeneficiaryDownSyncState.loading()';
+    return 'BeneficiaryDownSyncState.loading(isPop: $isPop)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$_DownSyncLoadingState);
+        (other.runtimeType == runtimeType &&
+            other is _$_DownSyncLoadingState &&
+            (identical(other.isPop, isPop) || other.isPop == isPop));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode => Object.hash(runtimeType, isPop);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_DownSyncLoadingStateCopyWith<_$_DownSyncLoadingState> get copyWith =>
+      __$$_DownSyncLoadingStateCopyWithImpl<_$_DownSyncLoadingState>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -1974,7 +2001,7 @@ class _$_DownSyncLoadingState extends _DownSyncLoadingState {
     required TResult Function(int batchSize, String projectId,
             String boundaryCode, int pendingSyncCount, String boundaryName)
         getBatchSize,
-    required TResult Function() loading,
+    required TResult Function(bool isPop) loading,
     required TResult Function() insufficientStorage,
     required TResult Function(int initialServerCount, int batchSize) dataFound,
     required TResult Function() resetState,
@@ -1983,7 +2010,7 @@ class _$_DownSyncLoadingState extends _DownSyncLoadingState {
     required TResult Function(List<DownsyncModel> downsyncCriteriaList) report,
     required TResult Function() pendingSync,
   }) {
-    return loading();
+    return loading(isPop);
   }
 
   @override
@@ -1994,7 +2021,7 @@ class _$_DownSyncLoadingState extends _DownSyncLoadingState {
     TResult? Function(int batchSize, String projectId, String boundaryCode,
             int pendingSyncCount, String boundaryName)?
         getBatchSize,
-    TResult? Function()? loading,
+    TResult? Function(bool isPop)? loading,
     TResult? Function()? insufficientStorage,
     TResult? Function(int initialServerCount, int batchSize)? dataFound,
     TResult? Function()? resetState,
@@ -2003,7 +2030,7 @@ class _$_DownSyncLoadingState extends _DownSyncLoadingState {
     TResult? Function(List<DownsyncModel> downsyncCriteriaList)? report,
     TResult? Function()? pendingSync,
   }) {
-    return loading?.call();
+    return loading?.call(isPop);
   }
 
   @override
@@ -2014,7 +2041,7 @@ class _$_DownSyncLoadingState extends _DownSyncLoadingState {
     TResult Function(int batchSize, String projectId, String boundaryCode,
             int pendingSyncCount, String boundaryName)?
         getBatchSize,
-    TResult Function()? loading,
+    TResult Function(bool isPop)? loading,
     TResult Function()? insufficientStorage,
     TResult Function(int initialServerCount, int batchSize)? dataFound,
     TResult Function()? resetState,
@@ -2025,7 +2052,7 @@ class _$_DownSyncLoadingState extends _DownSyncLoadingState {
     required TResult orElse(),
   }) {
     if (loading != null) {
-      return loading();
+      return loading(isPop);
     }
     return orElse();
   }
@@ -2096,8 +2123,14 @@ class _$_DownSyncLoadingState extends _DownSyncLoadingState {
 }
 
 abstract class _DownSyncLoadingState extends BeneficiaryDownSyncState {
-  const factory _DownSyncLoadingState() = _$_DownSyncLoadingState;
+  const factory _DownSyncLoadingState(final bool isPop) =
+      _$_DownSyncLoadingState;
   const _DownSyncLoadingState._() : super._();
+
+  bool get isPop;
+  @JsonKey(ignore: true)
+  _$$_DownSyncLoadingStateCopyWith<_$_DownSyncLoadingState> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -2148,7 +2181,7 @@ class _$_DownSyncInsufficientStorageState
     required TResult Function(int batchSize, String projectId,
             String boundaryCode, int pendingSyncCount, String boundaryName)
         getBatchSize,
-    required TResult Function() loading,
+    required TResult Function(bool isPop) loading,
     required TResult Function() insufficientStorage,
     required TResult Function(int initialServerCount, int batchSize) dataFound,
     required TResult Function() resetState,
@@ -2168,7 +2201,7 @@ class _$_DownSyncInsufficientStorageState
     TResult? Function(int batchSize, String projectId, String boundaryCode,
             int pendingSyncCount, String boundaryName)?
         getBatchSize,
-    TResult? Function()? loading,
+    TResult? Function(bool isPop)? loading,
     TResult? Function()? insufficientStorage,
     TResult? Function(int initialServerCount, int batchSize)? dataFound,
     TResult? Function()? resetState,
@@ -2188,7 +2221,7 @@ class _$_DownSyncInsufficientStorageState
     TResult Function(int batchSize, String projectId, String boundaryCode,
             int pendingSyncCount, String boundaryName)?
         getBatchSize,
-    TResult Function()? loading,
+    TResult Function(bool isPop)? loading,
     TResult Function()? insufficientStorage,
     TResult Function(int initialServerCount, int batchSize)? dataFound,
     TResult Function()? resetState,
@@ -2358,7 +2391,7 @@ class _$_DownSyncDataFoundState extends _DownSyncDataFoundState {
     required TResult Function(int batchSize, String projectId,
             String boundaryCode, int pendingSyncCount, String boundaryName)
         getBatchSize,
-    required TResult Function() loading,
+    required TResult Function(bool isPop) loading,
     required TResult Function() insufficientStorage,
     required TResult Function(int initialServerCount, int batchSize) dataFound,
     required TResult Function() resetState,
@@ -2378,7 +2411,7 @@ class _$_DownSyncDataFoundState extends _DownSyncDataFoundState {
     TResult? Function(int batchSize, String projectId, String boundaryCode,
             int pendingSyncCount, String boundaryName)?
         getBatchSize,
-    TResult? Function()? loading,
+    TResult? Function(bool isPop)? loading,
     TResult? Function()? insufficientStorage,
     TResult? Function(int initialServerCount, int batchSize)? dataFound,
     TResult? Function()? resetState,
@@ -2398,7 +2431,7 @@ class _$_DownSyncDataFoundState extends _DownSyncDataFoundState {
     TResult Function(int batchSize, String projectId, String boundaryCode,
             int pendingSyncCount, String boundaryName)?
         getBatchSize,
-    TResult Function()? loading,
+    TResult Function(bool isPop)? loading,
     TResult Function()? insufficientStorage,
     TResult Function(int initialServerCount, int batchSize)? dataFound,
     TResult Function()? resetState,
@@ -2535,7 +2568,7 @@ class _$_DownSyncResetState extends _DownSyncResetState {
     required TResult Function(int batchSize, String projectId,
             String boundaryCode, int pendingSyncCount, String boundaryName)
         getBatchSize,
-    required TResult Function() loading,
+    required TResult Function(bool isPop) loading,
     required TResult Function() insufficientStorage,
     required TResult Function(int initialServerCount, int batchSize) dataFound,
     required TResult Function() resetState,
@@ -2555,7 +2588,7 @@ class _$_DownSyncResetState extends _DownSyncResetState {
     TResult? Function(int batchSize, String projectId, String boundaryCode,
             int pendingSyncCount, String boundaryName)?
         getBatchSize,
-    TResult? Function()? loading,
+    TResult? Function(bool isPop)? loading,
     TResult? Function()? insufficientStorage,
     TResult? Function(int initialServerCount, int batchSize)? dataFound,
     TResult? Function()? resetState,
@@ -2575,7 +2608,7 @@ class _$_DownSyncResetState extends _DownSyncResetState {
     TResult Function(int batchSize, String projectId, String boundaryCode,
             int pendingSyncCount, String boundaryName)?
         getBatchSize,
-    TResult Function()? loading,
+    TResult Function(bool isPop)? loading,
     TResult Function()? insufficientStorage,
     TResult Function(int initialServerCount, int batchSize)? dataFound,
     TResult Function()? resetState,
@@ -2708,7 +2741,7 @@ class _$_DownSynnCountCheckFailedState extends _DownSynnCountCheckFailedState {
     required TResult Function(int batchSize, String projectId,
             String boundaryCode, int pendingSyncCount, String boundaryName)
         getBatchSize,
-    required TResult Function() loading,
+    required TResult Function(bool isPop) loading,
     required TResult Function() insufficientStorage,
     required TResult Function(int initialServerCount, int batchSize) dataFound,
     required TResult Function() resetState,
@@ -2728,7 +2761,7 @@ class _$_DownSynnCountCheckFailedState extends _DownSynnCountCheckFailedState {
     TResult? Function(int batchSize, String projectId, String boundaryCode,
             int pendingSyncCount, String boundaryName)?
         getBatchSize,
-    TResult? Function()? loading,
+    TResult? Function(bool isPop)? loading,
     TResult? Function()? insufficientStorage,
     TResult? Function(int initialServerCount, int batchSize)? dataFound,
     TResult? Function()? resetState,
@@ -2748,7 +2781,7 @@ class _$_DownSynnCountCheckFailedState extends _DownSynnCountCheckFailedState {
     TResult Function(int batchSize, String projectId, String boundaryCode,
             int pendingSyncCount, String boundaryName)?
         getBatchSize,
-    TResult Function()? loading,
+    TResult Function(bool isPop)? loading,
     TResult Function()? insufficientStorage,
     TResult Function(int initialServerCount, int batchSize)? dataFound,
     TResult Function()? resetState,
@@ -2879,7 +2912,7 @@ class _$_DownSyncFailureState extends _DownSyncFailureState {
     required TResult Function(int batchSize, String projectId,
             String boundaryCode, int pendingSyncCount, String boundaryName)
         getBatchSize,
-    required TResult Function() loading,
+    required TResult Function(bool isPop) loading,
     required TResult Function() insufficientStorage,
     required TResult Function(int initialServerCount, int batchSize) dataFound,
     required TResult Function() resetState,
@@ -2899,7 +2932,7 @@ class _$_DownSyncFailureState extends _DownSyncFailureState {
     TResult? Function(int batchSize, String projectId, String boundaryCode,
             int pendingSyncCount, String boundaryName)?
         getBatchSize,
-    TResult? Function()? loading,
+    TResult? Function(bool isPop)? loading,
     TResult? Function()? insufficientStorage,
     TResult? Function(int initialServerCount, int batchSize)? dataFound,
     TResult? Function()? resetState,
@@ -2919,7 +2952,7 @@ class _$_DownSyncFailureState extends _DownSyncFailureState {
     TResult Function(int batchSize, String projectId, String boundaryCode,
             int pendingSyncCount, String boundaryName)?
         getBatchSize,
-    TResult Function()? loading,
+    TResult Function(bool isPop)? loading,
     TResult Function()? insufficientStorage,
     TResult Function(int initialServerCount, int batchSize)? dataFound,
     TResult Function()? resetState,
@@ -3083,7 +3116,7 @@ class _$_DownSyncReportState extends _DownSyncReportState {
     required TResult Function(int batchSize, String projectId,
             String boundaryCode, int pendingSyncCount, String boundaryName)
         getBatchSize,
-    required TResult Function() loading,
+    required TResult Function(bool isPop) loading,
     required TResult Function() insufficientStorage,
     required TResult Function(int initialServerCount, int batchSize) dataFound,
     required TResult Function() resetState,
@@ -3103,7 +3136,7 @@ class _$_DownSyncReportState extends _DownSyncReportState {
     TResult? Function(int batchSize, String projectId, String boundaryCode,
             int pendingSyncCount, String boundaryName)?
         getBatchSize,
-    TResult? Function()? loading,
+    TResult? Function(bool isPop)? loading,
     TResult? Function()? insufficientStorage,
     TResult? Function(int initialServerCount, int batchSize)? dataFound,
     TResult? Function()? resetState,
@@ -3123,7 +3156,7 @@ class _$_DownSyncReportState extends _DownSyncReportState {
     TResult Function(int batchSize, String projectId, String boundaryCode,
             int pendingSyncCount, String boundaryName)?
         getBatchSize,
-    TResult Function()? loading,
+    TResult Function(bool isPop)? loading,
     TResult Function()? insufficientStorage,
     TResult Function(int initialServerCount, int batchSize)? dataFound,
     TResult Function()? resetState,
@@ -3261,7 +3294,7 @@ class _$_DownSyncPendingSyncState extends _DownSyncPendingSyncState {
     required TResult Function(int batchSize, String projectId,
             String boundaryCode, int pendingSyncCount, String boundaryName)
         getBatchSize,
-    required TResult Function() loading,
+    required TResult Function(bool isPop) loading,
     required TResult Function() insufficientStorage,
     required TResult Function(int initialServerCount, int batchSize) dataFound,
     required TResult Function() resetState,
@@ -3281,7 +3314,7 @@ class _$_DownSyncPendingSyncState extends _DownSyncPendingSyncState {
     TResult? Function(int batchSize, String projectId, String boundaryCode,
             int pendingSyncCount, String boundaryName)?
         getBatchSize,
-    TResult? Function()? loading,
+    TResult? Function(bool isPop)? loading,
     TResult? Function()? insufficientStorage,
     TResult? Function(int initialServerCount, int batchSize)? dataFound,
     TResult? Function()? resetState,
@@ -3301,7 +3334,7 @@ class _$_DownSyncPendingSyncState extends _DownSyncPendingSyncState {
     TResult Function(int batchSize, String projectId, String boundaryCode,
             int pendingSyncCount, String boundaryName)?
         getBatchSize,
-    TResult Function()? loading,
+    TResult Function(bool isPop)? loading,
     TResult Function()? insufficientStorage,
     TResult Function(int initialServerCount, int batchSize)? dataFound,
     TResult Function()? resetState,

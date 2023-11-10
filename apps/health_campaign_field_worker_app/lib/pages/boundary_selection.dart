@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
+import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -152,6 +153,21 @@ class _BoundarySelectionPageState
                               listener: (context, downSyncState) {
                                 downSyncState.maybeWhen(
                                   orElse: () => false,
+                                  loading: (isPop) => {
+                                    if (isPop)
+                                      {
+                                        Navigator.of(
+                                          context,
+                                          rootNavigator: true,
+                                        ).pop(),
+                                      },
+                                    DigitSyncDialog.show(
+                                      context,
+                                      type: DigitSyncDialogType.inProgress,
+                                      label: 'Loading',
+                                      barrierDismissible: false,
+                                    ),
+                                  },
                                   getBatchSize: (
                                     batchSize,
                                     projectId,
@@ -241,7 +257,7 @@ class _BoundarySelectionPageState
                                     ),
                                     dialogType:
                                         DigitProgressDialogType.dataFound,
-                                    isPop: false,
+                                    isPop: true,
                                   ),
                                   inProgress: (syncCount, totalCount) =>
                                       showDownloadDialog(
@@ -352,7 +368,7 @@ class _BoundarySelectionPageState
                                     ),
                                     dialogType:
                                         DigitProgressDialogType.checkFailed,
-                                    isPop: false,
+                                    isPop: true,
                                   ),
                                   insufficientStorage: () => showDownloadDialog(
                                     context,

@@ -1,5 +1,6 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
+import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -79,6 +80,21 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                     listener: (ctx, state) {
                       state.maybeWhen(
                         orElse: () => false,
+                        loading: (isPop) => {
+                          if (isPop)
+                            {
+                              Navigator.of(
+                                context,
+                                rootNavigator: true,
+                              ).pop(),
+                            },
+                          DigitSyncDialog.show(
+                            context,
+                            type: DigitSyncDialogType.inProgress,
+                            label: 'Loading',
+                            barrierDismissible: false,
+                          ),
+                        },
                         getBatchSize: (
                           batchSize,
                           projectId,
@@ -155,7 +171,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                             boundaryName: selectedBoundary!.name.toString(),
                           ),
                           dialogType: DigitProgressDialogType.dataFound,
-                          isPop: false,
+                          isPop: true,
                         ),
                         inProgress: (syncCount, totalCount) =>
                             showDownloadDialog(
@@ -246,7 +262,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                             boundaryName: selectedBoundary!.name.toString(),
                           ),
                           dialogType: DigitProgressDialogType.checkFailed,
-                          isPop: false,
+                          isPop: true,
                         ),
                         insufficientStorage: () => showDownloadDialog(
                           context,
@@ -303,34 +319,6 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                                         e.boundaryName!,
                                         style: theme.textTheme.headlineMedium,
                                       ),
-                                      DigitOutLineButton(
-                                        label: localizations.translate(
-                                          i18.beneficiaryDetails.download,
-                                        ),
-                                        onPressed: () {
-                                          setState(() {
-                                            selectedBoundary = BoundaryModel(
-                                              code: e.locality,
-                                              name: e.boundaryName,
-                                            );
-                                          });
-                                          context
-                                              .read<BeneficiaryDownSyncBloc>()
-                                              .add(
-                                                DownSyncGetBatchSizeEvent(
-                                                  appConfiguration: [
-                                                    appConfiguration,
-                                                  ],
-                                                  projectId: context.projectId,
-                                                  boundaryCode: e.locality!,
-                                                  pendingSyncCount:
-                                                      pendingSyncCount,
-                                                  boundaryName:
-                                                      e.boundaryName.toString(),
-                                                ),
-                                              );
-                                        },
-                                      ),
                                     ],
                                   ),
                                   DigitTableCard(
@@ -357,6 +345,45 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                                       ): e.offset == 0 && e.limit == 0
                                           ? '${e.totalCount}/${e.totalCount}'
                                           : '${e.offset}/${e.totalCount}',
+                                    },
+                                  ),
+                                  DigitOutLineButton(
+                                    label: localizations.translate(
+                                      i18.beneficiaryDetails.download,
+                                    ),
+                                    buttonStyle: OutlinedButton.styleFrom(
+                                      backgroundColor: Colors.white,
+                                      side: BorderSide(
+                                        width: 1.0,
+                                        color: theme.colorScheme.secondary,
+                                      ),
+                                      minimumSize: Size(
+                                        MediaQuery.of(context).size.width,
+                                        50,
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        selectedBoundary = BoundaryModel(
+                                          code: e.locality,
+                                          name: e.boundaryName,
+                                        );
+                                      });
+                                      context
+                                          .read<BeneficiaryDownSyncBloc>()
+                                          .add(
+                                            DownSyncGetBatchSizeEvent(
+                                              appConfiguration: [
+                                                appConfiguration,
+                                              ],
+                                              projectId: context.projectId,
+                                              boundaryCode: e.locality!,
+                                              pendingSyncCount:
+                                                  pendingSyncCount,
+                                              boundaryName:
+                                                  e.boundaryName.toString(),
+                                            ),
+                                          );
                                     },
                                   ),
                                 ],

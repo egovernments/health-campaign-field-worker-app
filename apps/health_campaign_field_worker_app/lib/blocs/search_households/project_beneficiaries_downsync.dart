@@ -71,6 +71,7 @@ class BeneficiaryDownSyncBloc
     BeneficiaryDownSyncEmitter emit,
   ) async {
     try {
+      emit(const BeneficiaryDownSyncState.loading(false));
       List speedArray = [];
 
       final double speed = await bandwidthCheckRepository.pingBandwidthCheck(
@@ -102,6 +103,7 @@ class BeneficiaryDownSyncBloc
     if (event.pendingSyncCount > 0) {
       emit(const BeneficiaryDownSyncState.pendingSync());
     } else {
+      emit(const BeneficiaryDownSyncState.loading(true));
       await LocalSecureStore.instance.setManualSyncTrigger(true);
       final existingDownSyncData =
           await downSyncLocalRepository.search(DownsyncSearchModel(
@@ -143,6 +145,7 @@ class BeneficiaryDownSyncBloc
     DownSyncBeneficiaryEvent event,
     BeneficiaryDownSyncEmitter emit,
   ) async {
+    emit(const BeneficiaryDownSyncState.loading(true));
     double? diskSpace = 0;
     // [TODO: Move the function DiskSpace.getFreeDiskSpace to utils
     diskSpace = await DiskSpace
@@ -312,7 +315,8 @@ class BeneficiaryDownSyncState with _$BeneficiaryDownSyncState {
     int pendingSyncCount,
     String boundaryName,
   ) = _DownSyncGetBatchSizeState;
-  const factory BeneficiaryDownSyncState.loading() = _DownSyncLoadingState;
+  const factory BeneficiaryDownSyncState.loading(bool isPop) =
+      _DownSyncLoadingState;
   const factory BeneficiaryDownSyncState.insufficientStorage() =
       _DownSyncInsufficientStorageState;
   const factory BeneficiaryDownSyncState.dataFound(
