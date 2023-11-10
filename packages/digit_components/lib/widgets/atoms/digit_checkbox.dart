@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../theme/colors.dart';
+
 /*A single checkbox component */
 class DigitCheckbox extends StatelessWidget {
   final bool value;
@@ -34,7 +36,8 @@ class DigitCheckbox extends StatelessWidget {
                   if (states.contains(MaterialState.selected)) {
                     return BorderSide(
                       width: 2.0,
-                      color: theme.colorScheme.secondary,
+                      color: value? theme.colorScheme.secondary
+                        : const DigitColors().davyGray,
                     );
                   }
                   return const BorderSide(width: 1.0);
