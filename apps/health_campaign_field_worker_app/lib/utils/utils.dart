@@ -628,8 +628,8 @@ void showDownloadDialog(
         options: DigitDialogOptions(
           title: ProgressIndicatorContainer(
             label: '',
-            prefixLabel: model.prefixLabel ?? '',
-            suffixLabel: model.suffixLabel ?? '',
+            prefixLabel: '',
+            suffixLabel: '${model.prefixLabel}/${model.suffixLabel}' ?? '',
             value: model.totalCount == 0
                 ? 0
                 : min((model.syncCount ?? 0) / (model.totalCount ?? 1), 1),

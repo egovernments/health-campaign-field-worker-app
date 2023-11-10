@@ -9,12 +9,14 @@ class AcknowledgementPage extends LocalizedStatefulWidget {
   bool isDataRecordSuccess;
   String? label;
   String? description;
+  Map<String, dynamic>? descriptionTableData;
   AcknowledgementPage({
     super.key,
     super.appLocalizations,
     this.isDataRecordSuccess = false,
     this.label,
     this.description,
+    this.descriptionTableData,
   });
 
   @override
@@ -32,6 +34,11 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
             localizations.translate(
               i18.acknowledgementSuccess.acknowledgementDescriptionText,
             ),
+        descriptionWidget: widget.isDataRecordSuccess
+            ? DigitTableCard(
+                element: widget.descriptionTableData ?? {},
+              )
+            : null,
         label: widget.label ??
             localizations.translate(
               i18.acknowledgementSuccess.acknowledgementLabelText,

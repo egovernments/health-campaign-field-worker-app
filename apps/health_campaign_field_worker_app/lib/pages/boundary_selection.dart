@@ -310,6 +310,24 @@ class _BoundarySelectionPageState
                                       label: localizations.translate(i18
                                           .acknowledgementSuccess
                                           .dataDownloadedSuccessLabel),
+                                      descriptionTableData: {
+                                        localizations.translate(
+                                          i18.beneficiaryDetails.boundary,
+                                        ): result.boundaryName!,
+                                        localizations.translate(
+                                          i18.beneficiaryDetails.status,
+                                        ): localizations.translate(
+                                          i18.beneficiaryDetails
+                                              .downloadcompleted,
+                                        ),
+                                        localizations.translate(
+                                          i18.beneficiaryDetails.downloadtime,
+                                        ): date,
+                                        localizations.translate(
+                                          i18.beneficiaryDetails
+                                              .totalrecorddownload,
+                                        ): '${result.totalCount}/${result.totalCount}',
+                                      },
                                     )));
                                   },
                                   failed: () => showDownloadDialog(

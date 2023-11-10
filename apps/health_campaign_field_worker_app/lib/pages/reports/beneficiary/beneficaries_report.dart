@@ -214,6 +214,22 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                           context.router.popAndPush((AcknowledgementRoute(
                             isDataRecordSuccess: true,
                             description: dataDescription,
+                            descriptionTableData: {
+                              localizations.translate(
+                                i18.beneficiaryDetails.boundary,
+                              ): result.boundaryName!,
+                              localizations.translate(
+                                i18.beneficiaryDetails.status,
+                              ): localizations.translate(
+                                i18.beneficiaryDetails.downloadcompleted,
+                              ),
+                              localizations.translate(
+                                i18.beneficiaryDetails.downloadtime,
+                              ): date,
+                              localizations.translate(
+                                i18.beneficiaryDetails.totalrecorddownload,
+                              ): '${result.totalCount}/${result.totalCount}',
+                            },
                             label: localizations.translate(i18
                                 .acknowledgementSuccess
                                 .dataDownloadedSuccessLabel),
@@ -306,19 +322,10 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                               child: Column(
                                 children: [
                                   DigitTableCard(
-                                    padding: EdgeInsets.zero,
                                     element: {
                                       localizations.translate(
                                         i18.beneficiaryDetails.boundary,
                                       ): e.boundaryName!,
-                                    },
-                                    labelStyle: theme.textTheme.headlineMedium,
-                                    descriptionStyle:
-                                        theme.textTheme.headlineMedium,
-                                  ),
-                                  DigitTableCard(
-                                    topPadding: EdgeInsets.zero,
-                                    element: {
                                       localizations.translate(
                                         i18.beneficiaryDetails.status,
                                       ): e.offset == 0 && e.limit == 0
