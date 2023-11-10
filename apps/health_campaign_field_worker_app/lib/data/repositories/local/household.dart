@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math' as math;
 
+import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
 
 import '../../../models/data_model.dart';
@@ -181,8 +182,26 @@ class HouseholdLocalRepository
     List<HouseholdModel> entities,
   ) async {
     final householdCompanions = entities.map((e) => e.companion).toList();
+    final addressCompanions = entities.map((e) {
+      if (e.address != null) {
+        return e.address!
+            .copyWith(
+              relatedClientReferenceId: e.clientReferenceId,
+              clientAuditDetails: e.clientAuditDetails,
+            )
+            .companion;
+      }
+    }).toList();
 
     await sql.batch((batch) async {
+      if (addressCompanions.isNotEmpty) {
+        batch.insertAll(
+          sql.address,
+          addressCompanions.whereNotNull().toList(),
+          mode: InsertMode.insertOrReplace,
+        );
+      }
+
       batch.insertAll(
         sql.household,
         householdCompanions,
