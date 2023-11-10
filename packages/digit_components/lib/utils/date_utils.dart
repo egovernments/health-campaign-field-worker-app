@@ -14,7 +14,6 @@ class DigitDateUtils {
     // If the current day is earlier than the selected day in the same month,
     // reduce the month count and adjust the days accordingly.
     if (ageInDays < 0) {
-      ageInMonths--;
       ageInDays += DateTime(selectedDate.year, selectedDate.month + 1, 0).day;
     }
 
