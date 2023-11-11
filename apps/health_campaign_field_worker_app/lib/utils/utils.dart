@@ -1,6 +1,7 @@
 library app_utils;
 
 import 'dart:async';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:collection/collection.dart';
@@ -8,16 +9,24 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
+import 'package:digit_components/widgets/digit_dialog.dart';
+import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:uuid/uuid.dart';
 
+import '../blocs/search_households/project_beneficiaries_downsync.dart';
 import '../blocs/search_households/search_households.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../models/data_model.dart';
 import '../models/project_type/project_type_model.dart';
+import '../router/app_router.dart';
+import '../widgets/progress_indicator/progress_indicator.dart';
+import 'constants.dart';
+import 'extensions/extensions.dart';
 
 export 'app_exception.dart';
 export 'constants.dart';
@@ -498,4 +507,140 @@ DoseCriteriaModel? fetchProductVariant(
   }
 
   return null;
+}
+
+Future<bool> getIsConnected() async {
+  try {
+    final result = await InternetAddress.lookup('example.com');
+    if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+      return true;
+    }
+
+    return false;
+  } on SocketException catch (_) {
+    return false;
+  }
+}
+
+void showDownloadDialog(
+  BuildContext context, {
+  required DownloadBeneficiary model,
+  required DigitProgressDialogType dialogType,
+  bool isPop = true,
+}) {
+  if (isPop) {
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+
+  switch (dialogType) {
+    case DigitProgressDialogType.failed:
+    case DigitProgressDialogType.checkFailed:
+      DigitSyncDialog.show(
+        context,
+        type: DigitSyncDialogType.failed,
+        label: model.title,
+        primaryAction: DigitDialogActions(
+          label: model.primaryButtonLabel ?? '',
+          action: (ctx) {
+            if (dialogType == DigitProgressDialogType.failed ||
+                dialogType == DigitProgressDialogType.checkFailed) {
+              Navigator.of(context, rootNavigator: true).pop();
+              context.read<BeneficiaryDownSyncBloc>().add(
+                    DownSyncGetBatchSizeEvent(
+                      appConfiguration: [model.appConfiguartion!],
+                      projectId: context.projectId,
+                      boundaryCode: model.boundary,
+                      pendingSyncCount: model.pendingSyncCount ?? 0,
+                      boundaryName: model.boundaryName,
+                    ),
+                  );
+            } else {
+              Navigator.of(context, rootNavigator: true).pop();
+              context.router.pop();
+            }
+          },
+        ),
+        secondaryAction: DigitDialogActions(
+          label: model.secondaryButtonLabel ?? '',
+          action: (ctx) {
+            Navigator.of(context, rootNavigator: true).pop();
+            context.router.pop();
+          },
+        ),
+      );
+    case DigitProgressDialogType.dataFound:
+    case DigitProgressDialogType.pendingSync:
+    case DigitProgressDialogType.insufficientStorage:
+      DigitDialog.show(
+        context,
+        options: DigitDialogOptions(
+          titleText: model.title,
+          titleIcon: Icon(
+            dialogType == DigitProgressDialogType.insufficientStorage
+                ? Icons.warning
+                : Icons.info_outline_rounded,
+            color: dialogType == DigitProgressDialogType.insufficientStorage
+                ? DigitTheme.instance.colorScheme.error
+                : DigitTheme.instance.colorScheme.surfaceTint,
+          ),
+          contentText: model.content,
+          primaryAction: DigitDialogActions(
+            label: model.primaryButtonLabel ?? '',
+            action: (ctx) {
+              if (dialogType == DigitProgressDialogType.pendingSync) {
+                Navigator.of(context, rootNavigator: true).pop();
+                context.router.pop();
+              } else {
+                if ((model.totalCount ?? 0) > 0) {
+                  context.read<BeneficiaryDownSyncBloc>().add(
+                        DownSyncBeneficiaryEvent(
+                          projectId: context.projectId,
+                          boundaryCode: model.boundary,
+                          // Batch Size need to be defined based on Internet speed.
+                          batchSize: model.batchSize ?? 1,
+                          initialServerCount: model.totalCount ?? 0,
+                          boundaryName: model.boundaryName,
+                        ),
+                      );
+                } else {
+                  Navigator.of(context, rootNavigator: true).pop();
+                  context.read<BeneficiaryDownSyncBloc>().add(
+                        const DownSyncResetStateEvent(),
+                      );
+                }
+              }
+            },
+          ),
+          secondaryAction: model.secondaryButtonLabel != null
+              ? DigitDialogActions(
+                  label: model.secondaryButtonLabel ?? '',
+                  action: (ctx) {
+                    Navigator.of(context, rootNavigator: true).pop();
+                    context.router.pop();
+                  },
+                )
+              : null,
+        ),
+      );
+    case DigitProgressDialogType.inProgress:
+      DigitDialog.show(
+        context,
+        options: DigitDialogOptions(
+          title: ProgressIndicatorContainer(
+            label: '',
+            prefixLabel: '',
+            suffixLabel: '${model.prefixLabel}/${model.suffixLabel}' ?? '',
+            value: model.totalCount == 0
+                ? 0
+                : min((model.syncCount ?? 0) / (model.totalCount ?? 1), 1),
+            valueColor: AlwaysStoppedAnimation<Color>(
+              DigitTheme.instance.colorScheme.secondary,
+            ),
+            subLabel: model.title,
+          ),
+        ),
+      );
+    default:
+      return;
+  }
 }

@@ -95,6 +95,12 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    BeneficiariesReportRoute.name: (routeData) {
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: const BeneficiariesReportPage(),
+      );
+    },
     BeneficiaryRegistrationWrapperRoute.name: (routeData) {
       final args = routeData.argsAs<BeneficiaryRegistrationWrapperRouteArgs>();
       return MaterialPageX<dynamic>(
@@ -137,6 +143,10 @@ class _$AppRouter extends RootStackRouter {
         child: AcknowledgementPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
+          isDataRecordSuccess: args.isDataRecordSuccess,
+          label: args.label,
+          description: args.description,
+          descriptionTableData: args.descriptionTableData,
         ),
       );
     },
@@ -229,9 +239,14 @@ class _$AppRouter extends RootStackRouter {
       );
     },
     BoundarySelectionRoute.name: (routeData) {
+      final args = routeData.argsAs<BoundarySelectionRouteArgs>(
+          orElse: () => const BoundarySelectionRouteArgs());
       return MaterialPageX<dynamic>(
         routeData: routeData,
-        child: const BoundarySelectionPage(),
+        child: BoundarySelectionPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
       );
     },
     ComplaintsInboxWrapperRoute.name: (routeData) {
@@ -612,6 +627,11 @@ class _$AppRouter extends RootStackRouter {
             RouteConfig(
               QRScannerRoute.name,
               path: 'scanner',
+              parent: AuthenticatedRouteWrapper.name,
+            ),
+            RouteConfig(
+              BeneficiariesReportRoute.name,
+              path: 'beneficiary-downsync-report',
               parent: AuthenticatedRouteWrapper.name,
             ),
             RouteConfig(
@@ -1125,6 +1145,18 @@ class QRScannerRouteArgs {
 }
 
 /// generated route for
+/// [BeneficiariesReportPage]
+class BeneficiariesReportRoute extends PageRouteInfo<void> {
+  const BeneficiariesReportRoute()
+      : super(
+          BeneficiariesReportRoute.name,
+          path: 'beneficiary-downsync-report',
+        );
+
+  static const String name = 'BeneficiariesReportRoute';
+}
+
+/// generated route for
 /// [BeneficiaryRegistrationWrapperPage]
 class BeneficiaryRegistrationWrapperRoute
     extends PageRouteInfo<BeneficiaryRegistrationWrapperRouteArgs> {
@@ -1245,12 +1277,20 @@ class AcknowledgementRoute extends PageRouteInfo<AcknowledgementRouteArgs> {
   AcknowledgementRoute({
     Key? key,
     AppLocalizations? appLocalizations,
+    bool isDataRecordSuccess = false,
+    String? label,
+    String? description,
+    Map<String, dynamic>? descriptionTableData,
   }) : super(
           AcknowledgementRoute.name,
           path: 'acknowledgement',
           args: AcknowledgementRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
+            isDataRecordSuccess: isDataRecordSuccess,
+            label: label,
+            description: description,
+            descriptionTableData: descriptionTableData,
           ),
         );
 
@@ -1261,15 +1301,27 @@ class AcknowledgementRouteArgs {
   const AcknowledgementRouteArgs({
     this.key,
     this.appLocalizations,
+    this.isDataRecordSuccess = false,
+    this.label,
+    this.description,
+    this.descriptionTableData,
   });
 
   final Key? key;
 
   final AppLocalizations? appLocalizations;
 
+  final bool isDataRecordSuccess;
+
+  final String? label;
+
+  final String? description;
+
+  final Map<String, dynamic>? descriptionTableData;
+
   @override
   String toString() {
-    return 'AcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+    return 'AcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, isDataRecordSuccess: $isDataRecordSuccess, label: $label, description: $description, descriptionTableData: $descriptionTableData}';
   }
 }
 
@@ -1559,14 +1611,36 @@ class ProjectSelectionRouteArgs {
 
 /// generated route for
 /// [BoundarySelectionPage]
-class BoundarySelectionRoute extends PageRouteInfo<void> {
-  const BoundarySelectionRoute()
-      : super(
+class BoundarySelectionRoute extends PageRouteInfo<BoundarySelectionRouteArgs> {
+  BoundarySelectionRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+  }) : super(
           BoundarySelectionRoute.name,
           path: 'select-boundary',
+          args: BoundarySelectionRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
         );
 
   static const String name = 'BoundarySelectionRoute';
+}
+
+class BoundarySelectionRouteArgs {
+  const BoundarySelectionRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'BoundarySelectionRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
 }
 
 /// generated route for

@@ -823,6 +823,33 @@ class BoundaryOpLogManager extends OpLogManager<BoundaryModel> {
       throw UnimplementedError();
 }
 
+class DownsyncOpLogManager extends OpLogManager<DownsyncModel> {
+  DownsyncOpLogManager(super.isar);
+
+  @override
+  DownsyncModel applyServerGeneratedIdToEntity(
+    DownsyncModel entity,
+    String serverGeneratedId,
+    int rowVersion,
+  ) =>
+      throw UnimplementedError();
+
+  @override
+  String getClientReferenceId(DownsyncModel entity) =>
+      throw UnimplementedError();
+
+  @override
+  String? getServerGeneratedId(DownsyncModel entity) =>
+      throw UnimplementedError();
+
+  @override
+  int? getRowVersion(DownsyncModel entity) => throw UnimplementedError();
+
+  @override
+  bool? getNonRecoverableError(DownsyncModel entity) =>
+      throw UnimplementedError();
+}
+
 class PgrServiceOpLogManager extends OpLogManager<PgrServiceModel> {
   PgrServiceOpLogManager(super.isar);
 

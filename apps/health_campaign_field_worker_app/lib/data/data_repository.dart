@@ -64,8 +64,10 @@ abstract class RemoteRepository<D extends EntityModel,
 
   @override
   FutureOr<List<D>> search(
-    R query,
-  ) async {
+    R query, {
+    int? offSet,
+    int? limit,
+  }) async {
     Response response;
 
     try {
@@ -74,8 +76,8 @@ abstract class RemoteRepository<D extends EntityModel,
           return await dio.post(
             searchPath,
             queryParameters: {
-              'offset': 0,
-              'limit': 100,
+              'offset': offSet ?? 0,
+              'limit': limit ?? 100,
               'tenantId': envConfig.variables.tenantId,
               if (query.isDeleted ?? false) 'includeDeleted': query.isDeleted,
             },
@@ -86,7 +88,9 @@ abstract class RemoteRepository<D extends EntityModel,
                             ? entityNamePlural
                             : entityName == 'ServiceDefinition'
                                 ? 'ServiceDefinitionCriteria'
-                                : entityName:
+                                : entityName == 'Downsync'
+                                    ? 'DownsyncCriteria'
+                                    : entityName:
                         isPlural ? [query.toMap()] : query.toMap(),
                   },
           );
@@ -144,6 +148,50 @@ abstract class RemoteRepository<D extends EntityModel,
         "apiOperation": "CREATE",
       },
     );
+  }
+
+  FutureOr<Map<String, dynamic>> downSync(
+    R query, {
+    int? offSet,
+    int? limit,
+  }) async {
+    Response response;
+
+    try {
+      response = await executeFuture(
+        future: () async {
+          return await dio.post(
+            searchPath,
+            queryParameters: {
+              'offset': offSet ?? 0,
+              'limit': limit ?? 100,
+              'tenantId': envConfig.variables.tenantId,
+              if (query.isDeleted ?? false) 'includeDeleted': query.isDeleted,
+            },
+            data: {
+              entityName == 'Downsync' ? 'DownsyncCriteria' : entityName:
+                  query.toMap(),
+            },
+          );
+        },
+      );
+    } catch (error) {
+      return {};
+    }
+
+    final responseMap = response.data;
+
+    if (!responseMap.containsKey(
+      entityName,
+    )) {
+      throw InvalidApiResponseException(
+        data: query.toMap(),
+        path: searchPath,
+        response: responseMap,
+      );
+    }
+
+    return responseMap[entityName];
   }
 
   @override

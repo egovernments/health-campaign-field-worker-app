@@ -31,7 +31,7 @@ class RepositoryType {
 
     if (repository == null) {
       throw Exception(
-        'Remote repository is not configured in the network manager',
+        'Local repository is not configured in the network manager',
       );
     }
 
