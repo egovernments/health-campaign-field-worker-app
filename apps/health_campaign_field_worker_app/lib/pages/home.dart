@@ -176,6 +176,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                       prefixLabel: localizations.translate(
                         i18.home.progressIndicatorPrefixLabel,
                       ),
+                      localSecureStore: localSecureStore,
                     ),
                   ),
               ]),

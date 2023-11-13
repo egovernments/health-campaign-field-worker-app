@@ -1,10 +1,11 @@
 import 'dart:math';
 
-import 'package:collection/collection.dart';
+import 'package:digit_components/utils/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/data_repository.dart';
+import '../../data/repositories/local/individual.dart';
 import '../../data/repositories/local/project_beneficiary.dart';
 import '../../models/data_model.dart';
 import '../../utils/utils.dart';
@@ -13,11 +14,13 @@ import '../progress_indicator/progress_indicator.dart';
 class BeneficiaryProgressBar extends StatefulWidget {
   final String label;
   final String prefixLabel;
+  final LocalSecureStore localSecureStore;
 
   const BeneficiaryProgressBar({
     Key? key,
     required this.label,
     required this.prefixLabel,
+    required this.localSecureStore,
   }) : super(key: key);
 
   @override
@@ -26,13 +29,17 @@ class BeneficiaryProgressBar extends StatefulWidget {
 
 class _BeneficiaryProgressBarState extends State<BeneficiaryProgressBar> {
   int current = 0;
-
+  late final getSelectedProjectType;
   @override
   void didChangeDependencies() {
     final repository = context.read<
             LocalRepository<ProjectBeneficiaryModel,
                 ProjectBeneficiarySearchModel>>()
         as ProjectBeneficiaryLocalRepository;
+
+    final individualRepository =
+        context.read<LocalRepository<IndividualModel, IndividualSearchModel>>()
+            as IndividualLocalRepository;
 
     final now = DateTime.now();
     final gte = DateTime(
@@ -51,19 +58,69 @@ class _BeneficiaryProgressBarState extends State<BeneficiaryProgressBar> {
       999,
     );
 
+    int getAgeInYears(date) {
+      return DigitDateUtils.calculateAge(
+              DigitDateUtils.getFormattedDateToDateTime(date!) ??
+                  DateTime.now(),)
+          .years;
+    }
+
+    int getAgeInMonth(date) {
+      return DigitDateUtils.calculateAge(
+              DigitDateUtils.getFormattedDateToDateTime(date!) ??
+                  DateTime.now(),)
+          .months;
+    }
+
     repository.listenToChanges(
       query: ProjectBeneficiarySearchModel(
         projectId: context.projectId,
       ),
       listener: (data) {
         if (mounted) {
-          setState(() {
-            current = data
-                .where((element) =>
-                    element.dateOfRegistrationTime.isAfter(gte) &&
-                    (element.isDeleted == false || element.isDeleted == null) &&
-                    element.dateOfRegistrationTime.isBefore(lte))
-                .length;
+          setState(() async {
+            if (context.beneficiaryType == BeneficiaryType.individual) {
+              getSelectedProjectType =
+                  await widget.localSecureStore.selectedProjectType;
+              List<String> clientReferenceIdsList = data
+                  .map((element) => element.beneficiaryClientReferenceId)
+                  .where((value) => value != null)
+                  .cast<String>()
+                  .toList();
+              IndividualSearchModel individualSearchQuery =
+                  IndividualSearchModel(
+                      clientReferenceId: clientReferenceIdsList,);
+              List<IndividualModel> results =
+                  await individualRepository.search(individualSearchQuery);
+              current = results
+                  .where((element) =>
+                      DateTime.fromMicrosecondsSinceEpoch(
+                              element.clientAuditDetails!.createdTime,)
+                          .isAfter(gte) &&
+                      (element.isDeleted == false ||
+                          element.isDeleted == null) &&
+                      DateTime.fromMicrosecondsSinceEpoch(
+                              element.clientAuditDetails!.createdTime,)
+                          .isBefore(lte) &&
+                      checkEligibilityForAgeAndSideEffect(
+                        DigitDOBAge(
+                          years: getAgeInYears(element.dateOfBirth),
+                          months: getAgeInMonth(element.dateOfBirth),
+                        ),
+                        getSelectedProjectType,
+                        null,
+                        null,
+                      ))
+                  .length;
+            } else {
+              current = data
+                  .where((element) =>
+                      element.dateOfRegistrationTime.isAfter(gte) &&
+                      (element.isDeleted == false ||
+                          element.isDeleted == null) &&
+                      element.dateOfRegistrationTime.isBefore(lte))
+                  .length;
+            }
           });
         }
       },
