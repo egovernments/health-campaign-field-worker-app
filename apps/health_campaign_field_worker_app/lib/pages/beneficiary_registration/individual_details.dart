@@ -245,7 +245,11 @@ class _IndividualDetailsPageState
                     children: [
                       Text(
                         localizations.translate(
-                          i18.individualDetails.individualsDetailsLabelText,
+                          widget.isHeadOfHousehold
+                              ? i18
+                                  .individualDetails.individualsDetailsLabelText
+                              : i18.individualDetails
+                                  .childIndividualsDetailsLabelText,
                         ),
                         style: theme.textTheme.displayMedium,
                       ),
@@ -254,7 +258,10 @@ class _IndividualDetailsPageState
                           DigitTextFormField(
                             formControlName: _individualNameKey,
                             label: localizations.translate(
-                              i18.individualDetails.firstNameLabelText,
+                              widget.isHeadOfHousehold
+                                  ? i18.individualDetails.firstNameLabelText
+                                  : i18.individualDetails
+                                      .childFirstNameLabelText,
                             ),
                             maxLength: 200,
                             isRequired: true,
@@ -274,7 +281,10 @@ class _IndividualDetailsPageState
                           DigitTextFormField(
                             formControlName: _individualLastNameKey,
                             label: localizations.translate(
-                              i18.individualDetails.lastNameLabelText,
+                              widget.isHeadOfHousehold
+                                  ? i18.individualDetails.lastNameLabelText
+                                  : i18
+                                      .individualDetails.childLastNameLabelText,
                             ),
                             maxLength: 200,
                             isRequired: true,
@@ -371,23 +381,27 @@ class _IndividualDetailsPageState
                               },
                             ),
                           ),
-                          DigitTextFormField(
-                            keyboardType: TextInputType.number,
-                            formControlName: _mobileNumberKey,
-                            label: localizations.translate(
-                              i18.individualDetails.mobileNumberLabelText,
-                            ),
-                            maxLength: 9,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.allow(
-                                RegExp("[0-9]"),
+                          Offstage(
+                            offstage: !widget.isHeadOfHousehold,
+                            child: DigitTextFormField(
+                              keyboardType: TextInputType.number,
+                              formControlName: _mobileNumberKey,
+                              label: localizations.translate(
+                                i18.individualDetails.mobileNumberLabelText,
                               ),
-                            ],
-                            validationMessages: {
-                              'mobileNumber': (object) =>
-                                  localizations.translate(i18.individualDetails
-                                      .mobileNumberInvalidFormatValidationMessage),
-                            },
+                              maxLength: 9,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                  RegExp("[0-9]"),
+                                ),
+                              ],
+                              validationMessages: {
+                                'mobileNumber': (object) =>
+                                    localizations.translate(i18
+                                        .individualDetails
+                                        .mobileNumberInvalidFormatValidationMessage),
+                              },
+                            ),
                           ),
                         ],
                       ),

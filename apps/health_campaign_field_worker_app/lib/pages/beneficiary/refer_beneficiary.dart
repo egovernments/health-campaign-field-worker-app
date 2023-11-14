@@ -294,7 +294,7 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                         DigitTextFormField(
                           formControlName: _administrativeUnitKey,
                           label: localizations.translate(
-                            i18.referBeneficiary.administrationUnitFormLabel,
+                            i18.referBeneficiary.organizationUnitFormLabel,
                           ),
                           isRequired: true,
                           readOnly: true,
