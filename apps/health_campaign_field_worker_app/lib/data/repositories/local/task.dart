@@ -308,6 +308,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
               return a
                   .copyWith(
                     clientReferenceId: e.clientReferenceId,
+                    taskclientReferenceId: e.clientReferenceId,
                     clientAuditDetails: e.clientAuditDetails,
                     auditDetails: e.auditDetails,
                   )
