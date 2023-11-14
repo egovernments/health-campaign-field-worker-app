@@ -48,6 +48,7 @@ class DigitSearchDropdown<T> extends StatelessWidget {
           DigitReactiveTypeAhead<T, T>(
             formControlName: formControlName,
             stringify: valueMapper,
+            suggestionsBoxVerticalOffset: 0,
             initialValue: initialValue,
             initialValueText: initialValueText,
             onSuggestionSelected: onSuggestionSelected,

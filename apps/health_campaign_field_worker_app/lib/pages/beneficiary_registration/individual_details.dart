@@ -403,19 +403,24 @@ class _IndividualDetailsPageState
 
                                   return individualDetailsShowcaseData.idType
                                       .buildWith(
-                                    child: DigitReactiveDropdown<String>(
-                                      isRequired: true,
+                                    child: DigitSearchDropdown(
+                                      suggestionsCallback: (items, pattern) {
+                                        return items.where((element) => element
+                                            .toLowerCase()
+                                            .contains(pattern.toLowerCase()));
+                                      },
                                       label: localizations.translate(
                                         i18.individualDetails.idTypeLabelText,
                                       ),
-                                      validationMessages: {
-                                        'required': (object) =>
-                                            localizations.translate(
-                                              '${i18.individualDetails.idTypeLabelText}_IS_REQUIRED',
-                                            ),
-                                      },
+                                      menuItems: idTypeOptions.map(
+                                        (e) {
+                                          return localizations
+                                              .translate(e.name);
+                                        },
+                                      ).toList(),
+                                      formControlName: _idTypeKey,
                                       valueMapper: (e) => e,
-                                      onChanged: (value) {
+                                      onSuggestionSelected: (value) {
                                         setState(() {
                                           if (value == 'DEFAULT') {
                                             form.control(_idNumberKey).value =
@@ -428,21 +433,6 @@ class _IndividualDetailsPageState
                                       },
                                       initialValue:
                                           idTypeOptions.firstOrNull?.name,
-                                      menuItems: idTypeOptions.map(
-                                        (e) {
-                                          return localizations
-                                              .translate(e.name);
-                                        },
-                                      ).toList(),
-                                      formControlName: _idTypeKey,
-                                      padding: EdgeInsets.only(
-                                        top: widget.isHeadOfHousehold
-                                            ? kPadding * 2
-                                            : 0,
-                                        bottom: !widget.isHeadOfHousehold
-                                            ? 0
-                                            : kPadding * 2,
-                                      ),
                                     ),
                                   );
                                 },
@@ -590,33 +580,52 @@ class _IndividualDetailsPageState
                                     SizedBox(
                                       width:
                                           MediaQuery.of(context).size.width / 3,
-                                      child: Text(
-                                        localizations.translate(
-                                          i18.deliverIntervention.voucherCode,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                          left: kPadding,
+                                          right: kPadding,
+                                          bottom: kPadding * 2,
                                         ),
-                                        style: theme.textTheme.headlineSmall,
+                                        child: Text(
+                                          localizations.translate(
+                                            i18.deliverIntervention.voucherCode,
+                                          ),
+                                          style: theme.textTheme.headlineSmall,
+                                        ),
                                       ),
                                     ),
                                     Flexible(
-                                      child: Text(
-                                        overflow: TextOverflow.ellipsis,
-                                        localizations
-                                            .translate(state.qrcodes.first),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                          left: kPadding,
+                                          right: kPadding,
+                                          bottom: kPadding * 2,
+                                        ),
+                                        child: Text(
+                                          overflow: TextOverflow.ellipsis,
+                                          localizations
+                                              .translate(state.qrcodes.first),
+                                        ),
                                       ),
                                     ),
-                                    IconButton(
-                                      color: theme.colorScheme.secondary,
-                                      icon: const Icon(Icons.edit),
-                                      onPressed: () {
-                                        // TODO : [Need to handle the Scanner event];
-                                        // context.read<ScannerBloc>().add(ScannerScanEvent())
-                                        context.router.push(QRScannerRoute(
-                                          quantity: 1,
-                                          isGS1code: false,
-                                          sinlgleValue: true,
-                                          isEditEnabled: true,
-                                        ));
-                                      },
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        bottom: kPadding * 2,
+                                      ),
+                                      child: IconButton(
+                                        color: theme.colorScheme.secondary,
+                                        icon: const Icon(Icons.edit),
+                                        onPressed: () {
+                                          // TODO : [Need to handle the Scanner event];
+                                          // context.read<ScannerBloc>().add(ScannerScanEvent())
+                                          context.router.push(QRScannerRoute(
+                                            quantity: 1,
+                                            isGS1code: false,
+                                            sinlgleValue: true,
+                                            isEditEnabled: true,
+                                          ));
+                                        },
+                                      ),
                                     ),
                                   ],
 

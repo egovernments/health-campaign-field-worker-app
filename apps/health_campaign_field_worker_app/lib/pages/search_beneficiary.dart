@@ -69,17 +69,17 @@ class _SearchBeneficiaryPageState
                         children: [
                           Padding(
                             padding: const EdgeInsets.fromLTRB(
-                              kPadding * 2,
                               kPadding,
-                              kPadding * 2,
+                              kPadding,
+                              kPadding,
                               kPadding,
                             ),
                             child: Align(
                               alignment: Alignment.topLeft,
                               child: Padding(
                                 padding: const EdgeInsets.only(
-                                  left: kPadding * 2,
-                                  right: kPadding * 2,
+                                  left: kPadding,
+                                  right: kPadding,
                                 ),
                                 child: Text(
                                   localizations.translate(
@@ -102,8 +102,8 @@ class _SearchBeneficiaryPageState
                                 children: [
                                   Padding(
                                     padding: const EdgeInsets.only(
-                                      left: kPadding * 2,
-                                      right: kPadding * 2,
+                                      left: kPadding,
+                                      right: kPadding,
                                     ),
                                     child: DigitSearchBar(
                                       controller: searchController,
@@ -160,8 +160,8 @@ class _SearchBeneficiaryPageState
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(
-                                      left: kPadding * 2,
-                                      right: kPadding * 2,
+                                      left: kPadding,
+                                      right: kPadding,
                                     ),
                                     child: locationState.latitude != null
                                         ? Row(
@@ -227,8 +227,8 @@ class _SearchBeneficiaryPageState
                           if (searchState.resultsNotFound)
                             Padding(
                               padding: const EdgeInsets.only(
-                                left: kPadding * 2,
-                                right: kPadding * 2,
+                                left: kPadding,
+                                right: kPadding,
                               ),
                               child: DigitInfoCard(
                                 description: localizations.translate(
@@ -269,8 +269,8 @@ class _SearchBeneficiaryPageState
 
                               return Padding(
                                 padding: const EdgeInsets.only(
-                                  left: kPadding * 2,
-                                  right: kPadding * 2,
+                                  left: kPadding,
+                                  right: kPadding,
                                 ),
                                 child: ViewBeneficiaryCard(
                                   distance: distance,

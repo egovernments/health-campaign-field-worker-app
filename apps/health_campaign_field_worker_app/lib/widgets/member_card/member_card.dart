@@ -79,8 +79,8 @@ class MemberCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width / 2.5,
+              Expanded(
+                flex: 5, // Set the flex factor for the first widget
                 child: Padding(
                   padding: const EdgeInsets.only(left: 8.0, top: 8.0),
                   child: Text(
@@ -89,15 +89,12 @@ class MemberCard extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width / 3.5,
+              Expanded(
+                flex: 3, // Set the flex factor for the second widget
                 child: Align(
                   alignment: Alignment.topRight,
                   child: Padding(
-                    padding: const EdgeInsets.only(
-                      left: kPadding,
-                      right: kPadding,
-                    ),
+                    padding: const EdgeInsets.only(right: kPadding),
                     child: DigitIconButton(
                       onPressed: () => DigitActionDialog.show(
                         context,

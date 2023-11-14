@@ -1,6 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/widgets/atoms/digit_dropdown_mgram.dart';
+import 'package:digit_components/widgets/atoms/select_field_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -17,6 +19,10 @@ class BoundarySelectionPage extends StatefulWidget {
 
 class _BoundarySelectionPageState extends State<BoundarySelectionPage> {
   bool shouldPop = false;
+  var expenseTypeCtrl = TextEditingController();
+
+  Map<String, TextEditingController> dropdownControllers = {};
+
   Map<String, FormControl<BoundaryModel>> formControls = {};
 
   @override
@@ -74,11 +80,20 @@ class _BoundarySelectionPageState extends State<BoundarySelectionPage> {
                               padding: const EdgeInsets.symmetric(
                                 horizontal: kPadding * 2,
                               ),
-                              child: DigitDropdown<BoundaryModel>(
-                                initialValue: formControls[label]?.value,
+                              child: DigitSearchDropdown(
+                                isRequired: true,
+                                suggestionsCallback: (items, pattern) {
+                                  return items.where((element) => element.name!
+                                      .toLowerCase()
+                                      .contains(pattern.toLowerCase()));
+                                },
                                 label: label,
                                 menuItems: filteredItems,
-                                onChanged: (value) {
+                                formControlName: label,
+                                valueMapper: (value) {
+                                  return value.name ?? value.code ?? "No value";
+                                },
+                                onSuggestionSelected: (value) {
                                   if (value == null) return;
 
                                   context.read<BoundaryBloc>().add(
@@ -91,11 +106,73 @@ class _BoundarySelectionPageState extends State<BoundarySelectionPage> {
                                   // Call the resetChildDropdowns function when a parent dropdown is selected
                                   resetChildDropdowns(label, state);
                                 },
-                                valueMapper: (value) {
-                                  return value.name ?? value.code ?? 'No Value';
-                                },
-                                formControlName: label,
                               ),
+
+                              // DigitSearchDropdown<BoundaryModel>(
+
+                              //   label: label,
+                              //   menuItems: filteredItems,
+                              //   formControlName: label,
+                              //   initialValue: formControls[label]?.value,
+                              //   valueMapper: (value) {
+                              //     return value.name ?? value.code ?? 'No Value';
+                              //   },
+                              //   suggestionsCallback: (items, pattern) {
+                              //     return items
+                              //         .where((i) => i.name!
+                              //             .toLowerCase()
+                              //             .contains(pattern.toLowerCase()))
+                              //         .toList();
+                              //   },
+                              //   // onSuggestionSelected: (value) {
+                              //   //   print(value);
+                              //   //   if (value == null) return;
+
+                              //   //   context.read<BoundaryBloc>().add(
+                              //   //         BoundarySelectEvent(
+                              //   //           label: label,
+                              //   //           selectedBoundary: value,
+                              //   //         ),
+                              //   //       );
+                              //   //   formControls[label]?.updateValue(value);
+                              //   //   // Call the resetChildDropdowns function when a parent dropdown is selected
+                              //   //   resetChildDropdowns(label, state);
+                              //   // },
+                              //   onSuggestionSelected: (selectedValue) {
+                              //     print(
+                              //         'SelectedValue type: ${selectedValue.runtimeType}');
+
+                              //     // Handle the selection of a suggestion
+                              //     print('Selected: $selectedValue');
+                              //   },
+
+                              // ),
+
+                              //     SelectFieldBuilder(
+                              //   label,
+                              //   formControls[label]?.value,
+                              //   "",
+                              //   "",
+                              //   (value) {
+                              //     if (value == null) return;
+
+                              //     context.read<BoundaryBloc>().add(
+                              //           BoundarySelectEvent(
+                              //             label: label,
+                              //             selectedBoundary: value,
+                              //           ),
+                              //         );
+                              //     formControls[label]?.updateValue(value);
+                              //     // Call the resetChildDropdowns function when a parent dropdown is selected
+                              //     resetChildDropdowns(label, state);
+                              //   },
+                              //   dropdownItems,
+                              //   true,
+                              //   controller: controller,
+                              //   isEnabled: true,
+                              //   suggestionKey:
+                              //       GlobalKey<DigitDropdownMgramState>(),
+                              // ),
                             );
                           },
                         ),

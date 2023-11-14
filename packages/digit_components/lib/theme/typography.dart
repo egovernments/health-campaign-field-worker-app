@@ -20,8 +20,8 @@ abstract class DigitTypography {
       _normalBase.copyWith(color: _textColorNormal, fontFamily: 'Roboto');
   TextStyle get _light =>
       _normalBase.copyWith(color: _textColorLight, fontFamily: 'Roboto');
-  TextStyle get _big =>
-      _displayBase.copyWith(color: _textColorNormal, fontFamily: 'Roboto');
+  TextStyle get _big => _displayBase.copyWith(
+      color: _textColorNormal, fontFamily: 'Roboto Condensed');
 
   /// Follows Digit Typography standards
   ///

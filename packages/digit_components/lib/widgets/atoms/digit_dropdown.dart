@@ -35,7 +35,7 @@ class DigitDropdown<T> extends StatelessWidget {
             '$label${isRequired ? ' *' : ''}',
             style: Theme.of(context).textTheme.bodyLarge,
           ),
-          const SizedBox(height: kPadding),
+          const SizedBox(height: kPadding * 2),
           ReactiveDropdownField(
             onChanged: (control) {
               final value = control.value;

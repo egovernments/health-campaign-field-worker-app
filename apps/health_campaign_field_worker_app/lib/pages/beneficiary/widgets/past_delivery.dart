@@ -81,7 +81,7 @@ Widget buildTableContent(
               },
             ),
             const Divider(
-              thickness: 2.0,
+              thickness: 1.0,
             ),
             // Build the DigitTable with the data
             DigitTable(
@@ -121,7 +121,7 @@ Widget buildTableContent(
                   },
                 ),
               ],
-              columnWidth: 160,
+              columnWidth: 140,
               height: ((fetchProductVariant(item, individualModel)!
                                   .productVariants ??
                               [])

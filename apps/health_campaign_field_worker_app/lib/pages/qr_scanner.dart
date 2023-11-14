@@ -115,13 +115,13 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                     ),
                     // [TODO : Need move to constants]
                     Positioned(
-                      top: kPadding * 8,
+                      top: kPadding * 4,
                       left: MediaQuery.of(context).size.width / 3,
                       width: 250,
                       height: 250,
                       child: SizedBox(
-                        width: 150,
-                        height: 150,
+                        width: MediaQuery.of(context).size.width / 3,
+                        height: MediaQuery.of(context).size.height / 3,
                         // [TODO: Localization need to be added]
                         child: Text(
                           localizations.translate(
@@ -129,27 +129,30 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                           ),
                           style: const TextStyle(
                             color: Colors.white,
-                            fontSize: 20,
+                            fontSize: 16,
                           ),
                         ),
                       ),
                     ),
                     Positioned(
                       top: MediaQuery.of(context).size.height / 2.4,
-                      left: MediaQuery.of(context).size.width / 4.5,
+                      left: MediaQuery.of(context).size.width / 4,
                       width: 250,
                       height: 250,
                       child: SizedBox(
                         width: 150,
-                        height: 150,
+                        height: 50,
                         // [TODO: Localization need to be added]
-                        child: Text(
-                          localizations.translate(
-                            i18.deliverIntervention.manualScan,
-                          ),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: kPadding),
+                          child: Text(
+                            localizations.translate(
+                              i18.deliverIntervention.manualScan,
+                            ),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                            ),
                           ),
                         ),
                       ),
@@ -170,14 +173,17 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                               manualcode = true;
                             });
                           },
-                          child: Text(
-                            localizations.translate(
-                              i18.deliverIntervention.manualEnterCode,
-                            ),
-                            style: TextStyle(
-                              color: theme.colorScheme.secondary,
-                              fontSize: 20,
-                              decoration: TextDecoration.underline,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: kPadding),
+                            child: Text(
+                              localizations.translate(
+                                i18.deliverIntervention.manualEnterCode,
+                              ),
+                              style: TextStyle(
+                                color: theme.colorScheme.secondary,
+                                fontSize: 16,
+                                decoration: TextDecoration.underline,
+                              ),
                             ),
                           ),
                         ),
@@ -189,34 +195,42 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                       width: MediaQuery.of(context).size.width,
                       height: kPadding * 12,
                       child: DigitCard(
-                        child: DigitElevatedButton(
-                          child: Text(localizations
-                              .translate(i18.common.coreCommonSubmit)),
-                          onPressed: () async {
-                            if (widget.isGS1code &&
-                                result.length < widget.quantity) {
-                              buildDialog();
-                            } else {
-                              final bloc = context.read<SearchHouseholdsBloc>();
+                        margin: const EdgeInsets.only(top: 10),
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                            left: kPadding * 2,
+                            right: kPadding * 2,
+                          ),
+                          child: DigitElevatedButton(
+                            child: Text(localizations
+                                .translate(i18.common.coreCommonSubmit)),
+                            onPressed: () async {
+                              if (widget.isGS1code &&
+                                  result.length < widget.quantity) {
+                                buildDialog();
+                              } else {
+                                final bloc =
+                                    context.read<SearchHouseholdsBloc>();
 
-                              final scannerState =
-                                  context.read<ScannerBloc>().state;
+                                final scannerState =
+                                    context.read<ScannerBloc>().state;
 
-                              if (scannerState.qrcodes.isNotEmpty) {
-                                bloc.add(SearchHouseholdsEvent.searchByTag(
-                                  tag: scannerState.qrcodes.first,
-                                  projectId: context.projectId,
-                                ));
+                                if (scannerState.qrcodes.isNotEmpty) {
+                                  bloc.add(SearchHouseholdsEvent.searchByTag(
+                                    tag: scannerState.qrcodes.first,
+                                    projectId: context.projectId,
+                                  ));
+                                }
+                                context.router.pop();
                               }
-                              context.router.pop();
-                            }
-                          },
+                            },
+                          ),
                         ),
                       ),
                     ),
 
                     Positioned(
-                      bottom: (kPadding * 8),
+                      bottom: (kPadding * 9.5),
                       height: widget.isGS1code
                           ? state.barcodes.length < 10
                               ? (state.barcodes.length * 60) + 80
@@ -226,16 +240,11 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                               : MediaQuery.of(context).size.height / 2,
                       width: MediaQuery.of(context).size.width,
                       child: Container(
-                        margin: const EdgeInsets.all(kPadding),
                         width: 100,
                         height: 120,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: Colors.white,
-                          border: Border.all(
-                            color: DigitTheme.instance.colorScheme.outline,
-                            width: 1,
-                          ),
-                          borderRadius: const BorderRadius.only(
+                          borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(12.0),
                             topRight: Radius.circular(12.0),
                           ),
@@ -248,14 +257,14 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                               decoration: const BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(12.0),
-                                  topRight: Radius.circular(12.0),
+                                  topLeft: Radius.circular(16.0),
+                                  topRight: Radius.circular(16.0),
                                 ),
                               ),
                               padding: const EdgeInsets.only(
                                 bottom: kPadding * 2,
                                 top: kPadding * 2,
-                                left: kPadding * 2,
+                                left: kPadding * 3,
                               ),
                               width: MediaQuery.of(context).size.width,
                               child: widget.isGS1code
@@ -277,6 +286,10 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                                   return ListTile(
                                     shape: const Border(),
                                     title: Container(
+                                      margin: const EdgeInsets.only(
+                                        left: kPadding,
+                                        right: kPadding,
+                                      ),
                                       height: kPadding * 6,
                                       decoration: BoxDecoration(
                                         color: DigitTheme
@@ -290,7 +303,10 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                                           Radius.circular(4.0),
                                         ),
                                       ),
-                                      padding: const EdgeInsets.all(kPadding),
+                                      padding: const EdgeInsets.only(
+                                        bottom: kPadding * 2,
+                                        left: kPadding,
+                                      ),
                                       child: Row(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.end,
@@ -385,38 +401,44 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                         child: Icon(Icons.close),
                       ),
                     ),
-                    footer: DigitElevatedButton(
-                      child: Text(localizations.translate(
-                        i18.common.coreCommonSubmit,
-                      )),
-                      onPressed: () async {
-                        final bloc = context.read<ScannerBloc>();
-                        codes.add(_resourceController.value.text);
-                        bloc.add(
-                          ScannerEvent.handleScanner(
-                            state.barcodes,
-                            codes,
-                          ),
-                        );
-                        if (widget.isGS1code &&
-                            result.length < widget.quantity) {
-                          buildDialog();
-                        } else {
-                          final bloc = context.read<SearchHouseholdsBloc>();
-                          final scannerState =
-                              context.read<ScannerBloc>().state;
+                    footer: Padding(
+                      padding: const EdgeInsets.only(
+                        left: kPadding * 2,
+                        right: kPadding * 2,
+                      ),
+                      child: DigitElevatedButton(
+                        child: Text(localizations.translate(
+                          i18.common.coreCommonSubmit,
+                        )),
+                        onPressed: () async {
+                          final bloc = context.read<ScannerBloc>();
+                          codes.add(_resourceController.value.text);
+                          bloc.add(
+                            ScannerEvent.handleScanner(
+                              state.barcodes,
+                              codes,
+                            ),
+                          );
+                          if (widget.isGS1code &&
+                              result.length < widget.quantity) {
+                            buildDialog();
+                          } else {
+                            final bloc = context.read<SearchHouseholdsBloc>();
+                            final scannerState =
+                                context.read<ScannerBloc>().state;
 
-                          if (scannerState.qrcodes.isNotEmpty || manualcode) {
-                            bloc.add(SearchHouseholdsEvent.searchByTag(
-                              tag: manualcode
-                                  ? _resourceController.value.text
-                                  : scannerState.qrcodes.first,
-                              projectId: context.projectId,
-                            ));
+                            if (scannerState.qrcodes.isNotEmpty || manualcode) {
+                              bloc.add(SearchHouseholdsEvent.searchByTag(
+                                tag: manualcode
+                                    ? _resourceController.value.text
+                                    : scannerState.qrcodes.first,
+                                projectId: context.projectId,
+                              ));
+                            }
+                            context.router.pop();
                           }
-                          context.router.pop();
-                        }
-                      },
+                        },
+                      ),
                     ),
                     children: [
                       Container(
