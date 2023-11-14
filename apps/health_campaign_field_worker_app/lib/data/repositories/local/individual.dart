@@ -305,11 +305,6 @@ class IndividualLocalRepository
       final addressCompanions = addressList.expand((e) => [e[0]]).toList();
       final nameCompanions = entities.map((e) {
         if (e.name != null) {
-          // batch.deleteWhere(
-          //     sql.name,
-          //     (tbl) => tbl.individualClientReferenceId
-          //         .contains(e.clientReferenceId),);
-
           return e.name!
               .copyWith(
                 individualClientReferenceId: e.clientReferenceId,
