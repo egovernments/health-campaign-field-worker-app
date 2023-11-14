@@ -304,7 +304,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
     final taskCompanions = entities.map((e) => e.companion).toList();
 
     final resourcesList = entities
-        .map((e) => e.resources!.map((a) {
+        .map((e) => e.resources?.map((a) {
               return a
                   .copyWith(
                     clientReferenceId: e.clientReferenceId,
@@ -316,7 +316,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
             }).toList())
         .toList();
 
-    final resourcesCompanions = resourcesList.expand((e) => [e[0]]).toList();
+    final resourcesCompanions = resourcesList.expand((e) => [e?[0]]).toList();
 
     await sql.batch((batch) async {
       final addressCompanions = entities.map((e) {
@@ -334,7 +334,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
       if (resourcesCompanions.isNotEmpty) {
         batch.insertAll(
           sql.taskResource,
-          resourcesCompanions,
+          resourcesCompanions.whereNotNull().toList(),
           mode: InsertMode.insertOrReplace,
         );
       }
