@@ -351,7 +351,7 @@ class _StockReconciliationPageState
                                                   _productVariantKey,
                                               label: localizations.translate(
                                                 i18.stockReconciliationDetails
-                                                    .productLabel,
+                                                    .spaqLabel,
                                               ),
                                               isRequired: true,
                                               onChanged: (value) {
