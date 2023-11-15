@@ -104,6 +104,10 @@ class TaskLocalRepository extends TaskLocalBaseRepository {
               sql.task.projectBeneficiaryClientReferenceId.isIn(
                 query.projectBeneficiaryClientReferenceId!,
               ),
+            if (query.status != null)
+              sql.task.status.equals(
+                query.status,
+              ),
             if (userId != null)
               sql.task.auditCreatedBy.equals(
                 userId,
