@@ -307,7 +307,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
         .map((e) => e.resources?.map((a) {
               return a
                   .copyWith(
-                    clientReferenceId: e.clientReferenceId,
+                    clientReferenceId: a.clientReferenceId,
                     taskclientReferenceId: e.clientReferenceId,
                     clientAuditDetails: e.clientAuditDetails,
                     auditDetails: e.auditDetails,
@@ -373,7 +373,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
     final resourcesCompanions = entity.resources?.map((e) {
           return e
               .copyWith(
-                clientReferenceId: entity.clientReferenceId,
+                clientReferenceId: e.clientReferenceId,
                 taskclientReferenceId: entity.clientReferenceId,
               )
               .companion;

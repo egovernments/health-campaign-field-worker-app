@@ -62,7 +62,8 @@ class AuthenticatedPageWrapper extends StatelessWidget {
 
                     return GestureDetector(
                       onTap: () {
-                        ctx.router.navigate(BoundarySelectionRoute());
+                        ctx.router.popUntilRouteWithName(HomeRoute.name);
+                        ctx.router.push(BoundarySelectionRoute());
                       },
                       child: Row(
                         mainAxisSize: MainAxisSize.min,

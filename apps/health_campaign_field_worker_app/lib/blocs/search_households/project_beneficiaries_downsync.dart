@@ -71,6 +71,7 @@ class BeneficiaryDownSyncBloc
     BeneficiaryDownSyncEmitter emit,
   ) async {
     try {
+      emit(const BeneficiaryDownSyncState.resetState());
       emit(const BeneficiaryDownSyncState.loading(false));
       List speedArray = [];
 
