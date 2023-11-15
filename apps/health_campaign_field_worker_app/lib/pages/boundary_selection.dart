@@ -213,7 +213,7 @@ class _BoundarySelectionPageState
                                     ),
                                     dialogType:
                                         DigitProgressDialogType.pendingSync,
-                                    isPop: false,
+                                    isPop: true,
                                   ),
                                   dataFound: (initialServerCount, batchSize) =>
                                       showDownloadDialog(

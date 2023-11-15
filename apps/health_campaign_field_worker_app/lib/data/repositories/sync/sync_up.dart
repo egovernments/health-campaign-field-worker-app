@@ -8,7 +8,6 @@ import '../../../models/data_model.dart';
 import '../../../utils/environment_config.dart';
 import '../../data_repository.dart';
 import '../oplog/oplog.dart';
-import '../../local_store/no_sql/schema/oplog.dart' hide AdditionalId;
 import '../remote/pgr_service.dart';
 import 'remote_type.dart';
 
@@ -129,7 +128,7 @@ class PerformSyncUp {
         .indexOf(a.key)
         .compareTo(DataModelType.values.indexOf(b.key)));
 
-    for (final typeGroupedEntity in groupedEntries.entries) {
+    for (final typeGroupedEntity in entries) {
       final groupedOperations = typeGroupedEntity.value.groupListsBy(
         (element) => element.operation,
       );
@@ -287,8 +286,10 @@ class PerformSyncUp {
                   await remote.bulkCreate(entities);
               }
             } else if (operationGroupedEntity.key == DataOperation.update) {
+              await Future.delayed(const Duration(seconds: 1));
               await remote.bulkUpdate(entities);
             } else if (operationGroupedEntity.key == DataOperation.delete) {
+              await Future.delayed(const Duration(seconds: 1));
               await remote.bulkDelete(entities);
             }
             if (operationGroupedEntity.key == DataOperation.singleCreate) {

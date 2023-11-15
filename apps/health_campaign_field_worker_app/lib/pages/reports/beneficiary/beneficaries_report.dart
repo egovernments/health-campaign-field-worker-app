@@ -136,7 +136,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                             boundaryName: selectedBoundary!.name.toString(),
                           ),
                           dialogType: DigitProgressDialogType.pendingSync,
-                          isPop: false,
+                          isPop: true,
                         ),
                         dataFound: (initialServerCount, batchSize) =>
                             showDownloadDialog(
