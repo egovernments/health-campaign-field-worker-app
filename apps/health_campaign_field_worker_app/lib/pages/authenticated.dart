@@ -184,6 +184,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                               event.where((element) {
                                 switch (element.entityType) {
                                   case DataModelType.household:
+                                  case DataModelType.householdMember:
                                   case DataModelType.individual:
                                   case DataModelType.projectBeneficiary:
                                   case DataModelType.task:

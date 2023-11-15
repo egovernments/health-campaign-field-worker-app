@@ -141,7 +141,7 @@ class HouseholdMemberLocalRepository
   @override
   FutureOr<void> delete(
     HouseholdMemberModel entity, {
-    bool createOpLog = false,
+    bool createOpLog = true,
   }) async {
     final updated = entity.copyWith(
       isDeleted: true,
