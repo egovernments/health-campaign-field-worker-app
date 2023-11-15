@@ -701,6 +701,8 @@ class StockReconciliationDetails {
 
   String get productLabel => 'STOCK_RECONCILIATION_PRODUCT_LABEL';
 
+  String get spaqLabel => 'STOCK_RECONCILIATION_SPAQ_LABEL';
+
   String get dateOfReconciliation => 'STOCK_RECONCILIATION_DATE';
 
   String get stockReceived => 'STOCK_RECONCILIATION_STOCK_RECEIVED';
