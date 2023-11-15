@@ -529,6 +529,14 @@ class _HouseholdOverviewPageState
                                                 DigitDialog.show(
                                                   context,
                                                   options: DigitDialogOptions(
+                                                    titlePadding:
+                                                        const EdgeInsets
+                                                            .fromLTRB(
+                                                      kPadding * 2,
+                                                      kPadding * 2,
+                                                      kPadding * 2,
+                                                      kPadding / 2,
+                                                    ),
                                                     titleText: localizations
                                                         .translate(i18
                                                             .householdOverView

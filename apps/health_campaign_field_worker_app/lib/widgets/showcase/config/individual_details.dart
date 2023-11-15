@@ -12,15 +12,16 @@ class _IndividualDetailsShowcaseData {
   List<ShowcaseItemBuilder> get showcaseData {
     List<ShowcaseItemBuilder> data = [
       nameOfIndividual,
+      headOfHousehold,
       idType,
       dateOfBirth,
       gender,
       mobile,
     ];
 
-    if (!hidedata) {
-      data.insert(data.indexOf(nameOfIndividual) + 1, headOfHousehold);
-    }
+    // if (!hidedata) {
+    //   data.insert(data.indexOf(nameOfIndividual) + 1, headOfHousehold);
+    // }
 
     return data;
   }

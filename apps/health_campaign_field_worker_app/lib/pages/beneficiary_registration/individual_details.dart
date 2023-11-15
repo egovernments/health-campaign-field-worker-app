@@ -376,8 +376,7 @@ class _IndividualDetailsPageState
                               ),
                             ),
                             Offstage(
-                              offstage: !widget.isHeadOfHousehold ||
-                                  individualDetailsShowcaseData.hidedata,
+                              offstage: !widget.isHeadOfHousehold,
                               child: individualDetailsShowcaseData
                                   .headOfHousehold
                                   .buildWith(
@@ -391,6 +390,9 @@ class _IndividualDetailsPageState
                                   value: widget.isHeadOfHousehold,
                                 ),
                               ),
+                            ),
+                            const SizedBox(
+                              height: kPadding * 2,
                             ),
                             BlocBuilder<AppInitializationBloc,
                                 AppInitializationState>(
@@ -433,6 +435,14 @@ class _IndividualDetailsPageState
                                       },
                                       initialValue:
                                           idTypeOptions.firstOrNull?.name,
+                                      padding: EdgeInsets.only(
+                                        top: widget.isHeadOfHousehold
+                                            ? kPadding * 2
+                                            : 0,
+                                        bottom: !widget.isHeadOfHousehold
+                                            ? 0
+                                            : kPadding * 2,
+                                      ),
                                     ),
                                   );
                                 },

@@ -129,27 +129,40 @@ class DigitAcknowledgement extends StatelessWidget {
                     if (enableViewHousehold)
                       Column(
                         children: [
-                          DigitElevatedButton(
-                              onPressed: secondaryAction,
-                              child: Text(secondaryLabel ?? "")),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              left: kPadding * 2,
+                              right: kPadding * 2,
+                            ),
+                            child: DigitElevatedButton(
+                                onPressed: secondaryAction,
+                                child: Text(secondaryLabel ?? "")),
+                          ),
                           const SizedBox(
                             height: kPadding + 2,
                           ),
-                          DigitOutLineButton(
-                            onPressed: action,
-                            label: actionLabel,
-                            buttonStyle: OutlinedButton.styleFrom(
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.zero,
-                              ),
-                              backgroundColor: Colors.white,
-                              side: BorderSide(
-                                width: 1.0,
-                                color: Theme.of(context).colorScheme.secondary,
-                              ),
-                              minimumSize: Size(
-                                MediaQuery.of(context).size.width / 1,
-                                50,
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              left: kPadding * 2,
+                              right: kPadding * 2,
+                            ),
+                            child: DigitOutLineButton(
+                              onPressed: action,
+                              label: actionLabel,
+                              buttonStyle: OutlinedButton.styleFrom(
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.zero,
+                                ),
+                                backgroundColor: Colors.white,
+                                side: BorderSide(
+                                  width: 1.0,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                ),
+                                minimumSize: Size(
+                                  MediaQuery.of(context).size.width / 1,
+                                  50,
+                                ),
                               ),
                             ),
                           ),

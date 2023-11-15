@@ -50,5 +50,7 @@ flutter:
     - family: Roboto
       fonts:
         - asset: assets/fonts/Roboto/Roboto-Regular.ttf
+    - family: RobotoCondensed
+      fonts:
         - asset: assets/fonts/Roboto/RobotoCondensed-Regular.ttf
 

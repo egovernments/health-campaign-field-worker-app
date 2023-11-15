@@ -203,10 +203,10 @@ class _DeliverInterventionPageState
                                                         titlePadding:
                                                             const EdgeInsets
                                                                 .fromLTRB(
-                                                          kPadding,
                                                           kPadding * 2,
-                                                          kPadding,
-                                                          kPadding / 2,
+                                                          kPadding * 2,
+                                                          kPadding * 2,
+                                                          kPadding * 2,
                                                         ),
                                                         titleText: localizations
                                                             .translate(
@@ -521,7 +521,41 @@ class _DeliverInterventionPageState
                                                             .deliveryCommentOptions ??
                                                         <DeliveryCommentOptions>[];
 
-                                                    return DigitReactiveDropdown<
+                                                    return DigitSearchDropdown<
+                                                        String>(
+                                                      suggestionsCallback:
+                                                          (items, pattern) {
+                                                        return items.where(
+                                                          (element) => element
+                                                              .toLowerCase()
+                                                              .contains(pattern
+                                                                  .toLowerCase()),
+                                                        );
+                                                      },
+                                                      label: localizations
+                                                          .translate(
+                                                        i18.deliverIntervention
+                                                            .deliveryCommentLabel,
+                                                      ),
+                                                      menuItems:
+                                                          deliveryCommentOptions
+                                                              .map((e) {
+                                                        return localizations
+                                                            .translate(
+                                                          e.name,
+                                                        );
+                                                      }).toList(),
+                                                      formControlName:
+                                                          _deliveryCommentKey,
+                                                      valueMapper: (value) =>
+                                                          value,
+                                                      initialValue:
+                                                          deliveryCommentOptions
+                                                              .firstOrNull
+                                                              ?.name,
+                                                    );
+
+                                                    DigitReactiveDropdown<
                                                         String>(
                                                       label: localizations
                                                           .translate(

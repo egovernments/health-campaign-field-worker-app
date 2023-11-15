@@ -46,7 +46,6 @@ dependencies:
   url_launcher: ^6.1.10
   connectivity_plus: ^4.0.1
   material_design_icons_flutter: ^6.0.7096
-
   shared_preferences: ^2.1.0
   pretty_dio_logger: ^1.2.0-beta-1
   pluto_grid: ^7.0.1
@@ -101,6 +100,7 @@ flutter:
     - family: Roboto
       fonts:
         - asset: assets/fonts/Roboto/Roboto-Regular.ttf
+    - family: RobotoCondensed
+      fonts:
         - asset: assets/fonts/Roboto/RobotoCondensed-Regular.ttf
-
   uses-material-design: true

@@ -56,7 +56,18 @@ class _ResourceBeneficiaryCardState
               return productState.maybeWhen(
                 orElse: () => const Offstage(),
                 fetched: (productVariants) {
-                  return DigitReactiveDropdown(
+                  return DigitSearchDropdown(
+                    suggestionsCallback: (items, pattern) {
+                      return items.where(
+                        (element) =>
+                            (element.sku!
+                                .toLowerCase()
+                                .contains(pattern.toLowerCase())) ||
+                            (element.id
+                                .toLowerCase()
+                                .contains(pattern.toLowerCase())),
+                      );
+                    },
                     label: '${localizations.translate(
                       i18.deliverIntervention.resourceDeliveredLabel,
                     )}*',

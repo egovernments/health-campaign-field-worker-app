@@ -86,7 +86,6 @@ class DigitTextField extends StatelessWidget {
         readOnly: readOnly,
         validator: (value) => validator?.call(value),
         decoration: InputDecoration(
-          contentPadding: const EdgeInsets.only(left: 0),
           suffixIconConstraints: const BoxConstraints(
             maxHeight: 48,
             maxWidth: 48,

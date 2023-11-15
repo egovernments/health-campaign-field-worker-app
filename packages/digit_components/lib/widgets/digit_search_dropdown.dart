@@ -1,10 +1,10 @@
-import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/theme/digit_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_flutter_typeahead/reactive_flutter_typeahead.dart';
 
 import 'digit_reactive_type_ahead.dart';
 
-class DigitSearchDropdown<T> extends StatelessWidget {
+class DigitSearchDropdown<T> extends StatefulWidget {
   final Iterable<T> Function(Iterable<T> items, String pattern)
       suggestionsCallback;
   final SuggestionSelectionCallback<T>? onSuggestionSelected;
@@ -17,6 +17,7 @@ class DigitSearchDropdown<T> extends StatelessWidget {
   final VoidCallback? onChanged;
   final String Function(T value) valueMapper;
   final Map<String, String Function(Object object)>? validationMessages;
+  final EdgeInsets? padding;
 
   const DigitSearchDropdown({
     Key? key,
@@ -31,42 +32,70 @@ class DigitSearchDropdown<T> extends StatelessWidget {
     this.onChanged,
     this.validationMessages,
     this.initialValueText,
+    this.padding,
   }) : super(key: key);
+
+  @override
+  _DigitSearchDropdownState<T> createState() => _DigitSearchDropdownState<T>();
+}
+
+class _DigitSearchDropdownState<T> extends State<DigitSearchDropdown<T>> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 16),
+      padding: widget.padding ?? const EdgeInsets.only(top: kPadding * 2),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '$label${isRequired ? ' *' : ''}',
+            '${widget.label}${widget.isRequired ? ' *' : ''}',
             style: Theme.of(context).textTheme.bodyLarge,
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: kPadding),
           DigitReactiveTypeAhead<T, T>(
-            formControlName: formControlName,
-            stringify: valueMapper,
-            suggestionsBoxVerticalOffset: 0,
-            initialValue: initialValue,
-            initialValueText: initialValueText,
-            onSuggestionSelected: onSuggestionSelected,
-            debounceDuration: const Duration(milliseconds: 100),
-            suggestionsCallback: (pattern) => suggestionsCallback(
-              menuItems,
-              pattern,
-            ),
-            itemBuilder: (context, item) {
-              return Padding(
-                padding: const EdgeInsets.all(kPadding * 2),
-                child: Text(
-                  valueMapper(item),
-                  style: Theme.of(context).textTheme.bodyLarge,
+              textFieldConfiguration: const TextFieldConfiguration(
+                decoration: InputDecoration(
+                  suffixIcon: Padding(
+                      padding: EdgeInsets.all(kPadding),
+                      child: Icon(
+                        Icons.arrow_drop_down,
+                        size: 24,
+                      )),
                 ),
-              );
-            },
-          ),
+              ),
+              formControlName: widget.formControlName,
+              stringify: widget.valueMapper,
+              suggestionsBoxVerticalOffset: 0,
+              initialValue: widget.initialValue,
+              initialValueText: widget.initialValueText,
+              onSuggestionSelected: widget.onSuggestionSelected,
+              suggestionsCallback: (pattern) => widget.suggestionsCallback(
+                    widget.menuItems,
+                    pattern,
+                  ),
+              itemBuilder: (context, item) {
+                return Padding(
+                  padding: const EdgeInsets.all(kPadding * 2),
+                  child: Text(
+                    widget.valueMapper(item),
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                );
+              },
+              noItemsFoundBuilder: (context) {
+                return Padding(
+                  padding: const EdgeInsets.all(kPadding * 2),
+                  child: Text(
+                    'No items found!',
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                );
+              }),
         ],
       ),
     );

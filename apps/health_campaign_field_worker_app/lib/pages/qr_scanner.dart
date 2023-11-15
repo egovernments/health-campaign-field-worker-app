@@ -442,7 +442,7 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                     ),
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(kPadding),
+                        padding: const EdgeInsets.all(kPadding * 2),
                         child: Align(
                           alignment: Alignment.topLeft,
                           child: Text(
@@ -453,14 +453,26 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                           ),
                         ),
                       ),
-                      Text(localizations.translate(
-                        i18.deliverIntervention.manualCodeDescription,
-                      )),
-                      DigitTextField(
-                        label: localizations.translate(
-                          i18.deliverIntervention.resourceCode,
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: kPadding * 2,
+                          right: kPadding * 2,
                         ),
-                        controller: _resourceController,
+                        child: Text(localizations.translate(
+                          i18.deliverIntervention.manualCodeDescription,
+                        )),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: kPadding * 2,
+                          right: kPadding * 2,
+                        ),
+                        child: DigitTextField(
+                          label: localizations.translate(
+                            i18.deliverIntervention.resourceCode,
+                          ),
+                          controller: _resourceController,
+                        ),
                       ),
                     ],
                   ),
