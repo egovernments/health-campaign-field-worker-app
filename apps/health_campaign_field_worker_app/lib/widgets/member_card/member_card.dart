@@ -103,25 +103,11 @@ class MemberCard extends StatelessWidget {
                         widget: ActionCard(
                           items: [
                             ActionCardModel(
-                              icon: Icons.person,
-                              label: localizations.translate(
-                                i18.memberCard.assignAsHouseholdhead,
-                              ),
-                              action: isHead ? null : setAsHeadAction,
-                            ),
-                            ActionCardModel(
                               icon: Icons.edit,
                               label: localizations.translate(
                                 i18.memberCard.editIndividualDetails,
                               ),
                               action: editMemberAction,
-                            ),
-                            ActionCardModel(
-                              icon: Icons.delete,
-                              label: localizations.translate(
-                                i18.memberCard.deleteIndividualActionText,
-                              ),
-                              action: isHead ? null : deleteMemberAction,
                             ),
                           ],
                         ),

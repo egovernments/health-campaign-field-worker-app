@@ -257,7 +257,7 @@ class _InventoryReportDetailsPageState
                                                   label:
                                                       localizations.translate(
                                                     i18.stockReconciliationDetails
-                                                        .productLabel,
+                                                        .spaqLabel,
                                                   ),
                                                   isRequired: true,
                                                   onChanged: (value) {

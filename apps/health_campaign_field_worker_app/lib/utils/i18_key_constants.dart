@@ -299,11 +299,18 @@ class IndividualDetails {
 
   String get individualsDetailsLabelText => 'INDIVIDUAL_LABEL_TEXT';
 
+  String get childIndividualsDetailsLabelText => 'CHILD_INDIVIDUAL_LABEL_TEXT';
+
   String get nameLabelText => 'INDIVIDUAL_NAME_LABEL_TEXT';
 
   String get firstNameLabelText => 'INDIVIDUAL_FIRST_NAME_LABEL_TEXT';
 
   String get lastNameLabelText => 'INDIVIDUAL_LAST_NAME_LABEL_TEXT';
+
+  String get childFirstNameLabelText =>
+      'CHILD_INDIVIDUAL_FIRST_NAME_LABEL_TEXT';
+
+  String get childLastNameLabelText => 'CHILD_INDIVIDUAL_LAST_NAME_LABEL_TEXT';
 
   String get checkboxLabelText => 'HEAD_OF_HOUSEHOLD_LABEL_TEXT';
 
@@ -601,6 +608,8 @@ class WarehouseDetails {
 
   String get administrativeUnit => 'WAREHOUSE_DETAILS_ADMINISTRATIVE_UNIT';
 
+  String get organizationUnit => 'WAREHOSUE_DETAILS_ORGANIZATION_UNIT';
+
   String get warehouseNameId => 'WAREHOSUE_DETAILS_WAREHOUSE_NAME_ID';
 
   String get usNameCommunitySupervisor => 'US_NAME_COMMUNITY_SUPERVISOR';
@@ -691,6 +700,8 @@ class StockReconciliationDetails {
   String get stockLabel => 'STOCK_LABEL';
 
   String get productLabel => 'STOCK_RECONCILIATION_PRODUCT_LABEL';
+
+  String get spaqLabel => 'STOCK_RECONCILIATION_SPAQ_LABEL';
 
   String get dateOfReconciliation => 'STOCK_RECONCILIATION_DATE';
 
@@ -1101,6 +1112,7 @@ class ReferBeneficiary {
 
   String get dateOfReferralLabel => 'REFER_BENEFICIARY_DATE_OF_REFERRAL_LABEL';
   String get administrationUnitFormLabel => 'ADMINISTRATION_UNIT_FORM_LABEL';
+  String get organizationUnitFormLabel => 'ORGANIZATION_UNIT_FORM_LABEL';
   String get referredByLabel => 'REFERRED_BY_FORM_LABEL';
   String get referredToLabel => 'REFERRED_TO_FORM_LABEL';
   String get reasonForReferral => 'REASON_FOR_REFERRAL';
