@@ -40,7 +40,7 @@ class _BeneficiaryProgressBarState extends State<BeneficiaryProgressBar> {
       query: ProjectBeneficiarySearchModel(
         projectId: context.projectId,
       ),
-      listener: (data) {
+      listener: (data) async {
         if (mounted) {
           final now = DateTime.now();
           final gte = DateTime(
@@ -58,44 +58,43 @@ class _BeneficiaryProgressBarState extends State<BeneficiaryProgressBar> {
             59,
             999,
           );
-          setState(() async {
-            List<ProjectBeneficiaryModel> filteredProjectBeneficiaries = data
-                .where((element) =>
-                    element.dateOfRegistrationTime.isAfter(gte) &&
-                    (element.isDeleted == false || element.isDeleted == null) &&
-                    element.dateOfRegistrationTime.isBefore(lte))
+          List<ProjectBeneficiaryModel> filteredProjectBeneficiaries = data
+              .where((element) =>
+                  element.dateOfRegistrationTime.isAfter(gte) &&
+                  (element.isDeleted == false || element.isDeleted == null) &&
+                  element.dateOfRegistrationTime.isBefore(lte))
+              .toList();
+
+          List<String> clientReferenceIdsList = filteredProjectBeneficiaries
+              .map((element) => element.clientReferenceId)
+              .cast<String>()
+              .toList();
+
+          TaskSearchModel taskSearchQuery = TaskSearchModel(
+            projectBeneficiaryClientReferenceId: clientReferenceIdsList,
+            status: Status.administeredSuccess.toValue(),
+          );
+
+          List<TaskModel> results =
+              await taskRepository.search(taskSearchQuery);
+
+          // Grouping results by client reference ID
+          Map<String, List<TaskModel>> clientRefIdVsTask = {};
+
+          clientReferenceIdsList.forEach((element) {
+            var successfulAdministered = results
+                .where((result) =>
+                    result.projectBeneficiaryClientReferenceId == element &&
+                    result.status == Status.administeredSuccess.toValue())
                 .toList();
-
-            List<String> clientReferenceIdsList = filteredProjectBeneficiaries
-                .map((element) => element.clientReferenceId)
-                .cast<String>()
-                .toList();
-
-            TaskSearchModel taskSearchQuery = TaskSearchModel(
-              projectBeneficiaryClientReferenceId: clientReferenceIdsList,
-              status: Status.administeredSuccess.toValue(),
-            );
-
-            List<TaskModel> results =
-                await taskRepository.search(taskSearchQuery);
-
-            // Grouping results by client reference ID
-            Map<String, List<TaskModel>> clientRefIdVsTask = {};
-
-            clientReferenceIdsList.forEach((element) {
-              var successfulAdministered = results
-                  .where((result) =>
-                      result.projectBeneficiaryClientReferenceId == element &&
-                      result.status == Status.administeredSuccess.toValue())
-                  .toList();
-              clientRefIdVsTask[element] = clientRefIdVsTask[element] ?? [];
-              clientRefIdVsTask[element]?.addAll(successfulAdministered);
-            });
-
+            clientRefIdVsTask[element] = clientRefIdVsTask[element] ?? [];
+            clientRefIdVsTask[element]?.addAll(successfulAdministered);
+          });
+          setState(() {
             if (mounted) {
-                current = clientRefIdVsTask.values
-                    .where((value) => value.isNotEmpty)
-                    .length;
+              current = clientRefIdVsTask.values
+                  .where((value) => value.isNotEmpty)
+                  .length;
             }
           });
         }
