@@ -163,7 +163,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                   readOnly: true,
                                   formControlName: _administrativeUnitKey,
                                   label: localizations.translate(
-                                    i18.warehouseDetails.administrativeUnit,
+                                    i18.warehouseDetails.organizationUnit,
                                   ),
                                 ),
                               ]),
