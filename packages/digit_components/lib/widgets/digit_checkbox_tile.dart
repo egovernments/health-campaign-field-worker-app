@@ -26,7 +26,7 @@ class DigitCheckboxTile extends StatelessWidget {
       child: InkWell(
         onTap: () => onChanged?.call(!value),
         child: Padding(
-          padding: const EdgeInsets.only(left: 0, bottom: kPadding*2),
+          padding: const EdgeInsets.only(left: 0, bottom: kPadding * 2),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -34,10 +34,12 @@ class DigitCheckboxTile extends StatelessWidget {
                 value
                     ? Icons.check_box_outlined
                     : Icons.check_box_outline_blank_sharp,
-                color: theme.colorScheme.secondary,
-                size: kPadding*3,
+                color: value
+                    ? theme.colorScheme.secondary
+                    : const DigitColors().davyGray,
+                size: kPadding * 3,
               ),
-              const SizedBox(width: kPadding*2),
+              const SizedBox(width: kPadding * 2),
               Expanded(
                 child: Text(
                   label,
