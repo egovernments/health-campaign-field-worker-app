@@ -36,11 +36,11 @@ class _BeneficiaryProgressBarState extends State<BeneficiaryProgressBar> {
         context.read<LocalRepository<TaskModel, TaskSearchModel>>()
             as TaskLocalRepository;
 
-    repository.listenToChanges(
-      query: ProjectBeneficiarySearchModel(
+    taskRepository.listenToChanges(
+      query: TaskSearchModel(
         projectId: context.projectId,
       ),
-      listener: (data) async {
+      listener: (taskData) async {
         if (mounted) {
           final now = DateTime.now();
           final gte = DateTime(
@@ -48,7 +48,6 @@ class _BeneficiaryProgressBarState extends State<BeneficiaryProgressBar> {
             now.month,
             now.day,
           );
-
           final lte = DateTime(
             now.year,
             now.month,
@@ -58,29 +57,30 @@ class _BeneficiaryProgressBarState extends State<BeneficiaryProgressBar> {
             59,
             999,
           );
+          ProjectBeneficiarySearchModel beneficiarySearchModel =
+              ProjectBeneficiarySearchModel(
+            projectId: context.projectId,
+          );
+          List<ProjectBeneficiaryModel> data =
+              await repository.search(beneficiarySearchModel);
           List<ProjectBeneficiaryModel> filteredProjectBeneficiaries = data
               .where((element) =>
                   element.dateOfRegistrationTime.isAfter(gte) &&
                   (element.isDeleted == false || element.isDeleted == null) &&
                   element.dateOfRegistrationTime.isBefore(lte))
               .toList();
-
           List<String> clientReferenceIdsList = filteredProjectBeneficiaries
               .map((element) => element.clientReferenceId)
               .cast<String>()
               .toList();
-
           TaskSearchModel taskSearchQuery = TaskSearchModel(
             projectBeneficiaryClientReferenceId: clientReferenceIdsList,
             status: Status.administeredSuccess.toValue(),
           );
-
           List<TaskModel> results =
               await taskRepository.search(taskSearchQuery);
-
           // Grouping results by client reference ID
           Map<String, List<TaskModel>> clientRefIdVsTask = {};
-
           clientReferenceIdsList.forEach((element) {
             var successfulAdministered = results
                 .where((result) =>
