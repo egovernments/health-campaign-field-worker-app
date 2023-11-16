@@ -302,7 +302,7 @@ class _HouseholdOverviewPageState
                                                     children: [
                                                       IndividualDetailsRoute(
                                                         isHeadOfHousehold:
-                                                            false,
+                                                            isHead,
                                                       ),
                                                     ],
                                                   ),
