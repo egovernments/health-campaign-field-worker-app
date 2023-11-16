@@ -434,7 +434,7 @@ abstract class LocalRepository<D extends EntityModel,
       entity,
       operation,
       createdAt: DateTime.now(),
-      createdBy: auditDetails.createdBy,
+      createdBy: entity.clientAuditDetails!.lastModifiedBy,
       type: type,
     );
 
