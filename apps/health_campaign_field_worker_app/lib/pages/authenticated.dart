@@ -62,7 +62,8 @@ class AuthenticatedPageWrapper extends StatelessWidget {
 
                     return GestureDetector(
                       onTap: () {
-                        ctx.router.navigate(BoundarySelectionRoute());
+                        ctx.router.popUntilRouteWithName(HomeRoute.name);
+                        ctx.router.push(BoundarySelectionRoute());
                       },
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -184,6 +185,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                               event.where((element) {
                                 switch (element.entityType) {
                                   case DataModelType.household:
+                                  case DataModelType.householdMember:
                                   case DataModelType.individual:
                                   case DataModelType.projectBeneficiary:
                                   case DataModelType.task:

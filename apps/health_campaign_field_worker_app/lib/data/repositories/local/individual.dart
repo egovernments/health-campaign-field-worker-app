@@ -275,7 +275,7 @@ class IndividualLocalRepository
     final individualCompanions = entities.map((e) => e.companion).toList();
 
     final identifiersList = entities
-        .map((e) => e.identifiers!.map((a) {
+        .map((e) => e.identifiers?.map((a) {
               return a
                   .copyWith(
                     clientReferenceId: e.clientReferenceId,
@@ -286,7 +286,8 @@ class IndividualLocalRepository
             }).toList())
         .toList();
 
-    final identifierCompanions = identifiersList.expand((e) => [e[0]]).toList();
+    final identifierCompanions =
+        identifiersList.expand((e) => [e?[0]]).toList();
 
     await sql.batch((batch) async {
       final addressList = entities
@@ -305,11 +306,6 @@ class IndividualLocalRepository
       final addressCompanions = addressList.expand((e) => [e[0]]).toList();
       final nameCompanions = entities.map((e) {
         if (e.name != null) {
-          // batch.deleteWhere(
-          //     sql.name,
-          //     (tbl) => tbl.individualClientReferenceId
-          //         .contains(e.clientReferenceId),);
-
           return e.name!
               .copyWith(
                 individualClientReferenceId: e.clientReferenceId,
@@ -334,7 +330,7 @@ class IndividualLocalRepository
       );
       batch.insertAll(
         sql.identifier,
-        identifierCompanions,
+        identifierCompanions.whereNotNull().toList(),
         mode: InsertMode.insertOrReplace,
       );
       batch.insertAll(

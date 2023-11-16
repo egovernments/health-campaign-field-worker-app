@@ -51,8 +51,6 @@ class _BoundarySelectionPageState
     super.deactivate();
   }
 
-  Future<void> initDiskSpace() async {}
-
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -156,10 +154,10 @@ class _BoundarySelectionPageState
                                   loading: (isPop) => {
                                     if (isPop)
                                       {
-                                        Navigator.of(
-                                          context,
-                                          rootNavigator: true,
-                                        ).pop(),
+                                        Navigator.of(context,
+                                                rootNavigator: true)
+                                            .popUntil((route) =>
+                                                route is! PopupRoute),
                                       },
                                     DigitSyncDialog.show(
                                       context,
@@ -213,7 +211,7 @@ class _BoundarySelectionPageState
                                     ),
                                     dialogType:
                                         DigitProgressDialogType.pendingSync,
-                                    isPop: false,
+                                    isPop: true,
                                   ),
                                   dataFound: (initialServerCount, batchSize) =>
                                       showDownloadDialog(

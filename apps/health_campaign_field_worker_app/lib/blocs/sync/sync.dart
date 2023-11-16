@@ -65,11 +65,13 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
           (await isar.opLogs
                   .filter()
                   .createdByEqualTo(event.createdBy)
+                  .syncedUpEqualTo(true)
                   .syncedDownEqualTo(false)
                   .findAll())
               .where((element) {
             switch (element.entityType) {
               case DataModelType.household:
+              case DataModelType.householdMember:
               case DataModelType.individual:
               case DataModelType.projectBeneficiary:
               case DataModelType.task:

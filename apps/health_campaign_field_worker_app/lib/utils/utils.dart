@@ -616,7 +616,7 @@ void showDownloadDialog(
                   label: model.secondaryButtonLabel ?? '',
                   action: (ctx) {
                     Navigator.of(context, rootNavigator: true).pop();
-                    context.router.pop();
+                    context.router.popUntilRouteWithName(HomeRoute.name);
                   },
                 )
               : null,

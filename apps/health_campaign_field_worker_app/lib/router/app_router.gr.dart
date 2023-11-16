@@ -135,6 +135,18 @@ class _$AppRouter extends RootStackRouter {
         )),
       );
     },
+    BeneficiaryAcknowledgementRoute.name: (routeData) {
+      final args = routeData.argsAs<BeneficiaryAcknowledgementRouteArgs>(
+          orElse: () => const BeneficiaryAcknowledgementRouteArgs());
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: BeneficiaryAcknowledgementPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          enableViewHousehold: args.enableViewHousehold,
+        ),
+      );
+    },
     AcknowledgementRoute.name: (routeData) {
       final args = routeData.argsAs<AcknowledgementRouteArgs>(
           orElse: () => const AcknowledgementRouteArgs());
@@ -760,6 +772,11 @@ class _$AppRouter extends RootStackRouter {
               ],
             ),
             RouteConfig(
+              BeneficiaryAcknowledgementRoute.name,
+              path: 'beneficiary-acknowledgement',
+              parent: AuthenticatedRouteWrapper.name,
+            ),
+            RouteConfig(
               AcknowledgementRoute.name,
               path: 'acknowledgement',
               parent: AuthenticatedRouteWrapper.name,
@@ -1268,6 +1285,46 @@ class ChecklistWrapperRouteArgs {
   @override
   String toString() {
     return 'ChecklistWrapperRouteArgs{key: $key, isEditing: $isEditing}';
+  }
+}
+
+/// generated route for
+/// [BeneficiaryAcknowledgementPage]
+class BeneficiaryAcknowledgementRoute
+    extends PageRouteInfo<BeneficiaryAcknowledgementRouteArgs> {
+  BeneficiaryAcknowledgementRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    bool? enableViewHousehold,
+  }) : super(
+          BeneficiaryAcknowledgementRoute.name,
+          path: 'beneficiary-acknowledgement',
+          args: BeneficiaryAcknowledgementRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            enableViewHousehold: enableViewHousehold,
+          ),
+        );
+
+  static const String name = 'BeneficiaryAcknowledgementRoute';
+}
+
+class BeneficiaryAcknowledgementRouteArgs {
+  const BeneficiaryAcknowledgementRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.enableViewHousehold,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final bool? enableViewHousehold;
+
+  @override
+  String toString() {
+    return 'BeneficiaryAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, enableViewHousehold: $enableViewHousehold}';
   }
 }
 

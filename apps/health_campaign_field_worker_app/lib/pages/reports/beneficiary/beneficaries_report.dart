@@ -41,6 +41,14 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
   }
 
   @override
+  void deactivate() {
+    context.read<BeneficiaryDownSyncBloc>().add(
+          const DownSyncResetStateEvent(),
+        );
+    super.deactivate();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
@@ -83,10 +91,8 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                         loading: (isPop) => {
                           if (isPop)
                             {
-                              Navigator.of(
-                                context,
-                                rootNavigator: true,
-                              ).pop(),
+                              Navigator.of(context, rootNavigator: true)
+                                  .popUntil((route) => route is! PopupRoute),
                             },
                           DigitSyncDialog.show(
                             context,
@@ -136,7 +142,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                             boundaryName: selectedBoundary!.name.toString(),
                           ),
                           dialogType: DigitProgressDialogType.pendingSync,
-                          isPop: false,
+                          isPop: true,
                         ),
                         dataFound: (initialServerCount, batchSize) =>
                             showDownloadDialog(
