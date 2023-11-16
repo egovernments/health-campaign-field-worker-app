@@ -229,12 +229,6 @@ class _HouseholdLocationPageState
                 slivers: [
                   SliverToBoxAdapter(
                     child: DigitCard(
-                      padding: const EdgeInsets.fromLTRB(
-                        kPadding * 2,
-                        kPadding * 2,
-                        kPadding * 2,
-                        0,
-                      ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
@@ -344,7 +338,6 @@ class _HouseholdLocationPageState
                               ),
                             ),
                           ]),
-                          const SizedBox(height: 16),
                         ],
                       ),
                     ),

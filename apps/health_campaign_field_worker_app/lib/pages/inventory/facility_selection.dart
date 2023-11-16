@@ -45,7 +45,10 @@ class FacilitySelectionPage extends StatelessWidget {
                 slivers: [
                   SliverToBoxAdapter(
                     child: Padding(
-                      padding: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.only(
+                        left: kPadding * 2,
+                        right: kPadding * 2,
+                      ),
                       child: DigitTextFormField(
                         label: localizations
                             .translate(i18.common.facilitySearchHeaderLabel),
@@ -63,7 +66,10 @@ class FacilitySelectionPage extends StatelessWidget {
                             context.router.pop(facility);
                           },
                           child: Padding(
-                            padding: const EdgeInsets.all(16),
+                            padding: const EdgeInsets.only(
+                              left: kPadding * 2,
+                              bottom: kPadding * 2,
+                            ),
                             child: Text(facility.id),
                           ),
                         );

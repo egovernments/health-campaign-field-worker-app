@@ -60,183 +60,172 @@ class _RecordPastDeliveryDetailsPageState
                 height: 85,
                 child: DigitCard(
                   margin: const EdgeInsets.only(top: kPadding),
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      left: kPadding * 2,
-                      right: kPadding * 2,
-                    ),
-                    child: DigitElevatedButton(
-                      onPressed: () {
-                        for (int i = 0;
-                            i < (futureTaskList ?? []).length;
-                            i++) {
-                          if (form
-                                  .control("$_recordDoseAdministeredKey.$i")
-                                  .value ==
-                              null) {
-                            form
+                  child: DigitElevatedButton(
+                    onPressed: () {
+                      for (int i = 0; i < (futureTaskList ?? []).length; i++) {
+                        if (form
                                 .control("$_recordDoseAdministeredKey.$i")
-                                .setErrors({'': true});
-                          }
+                                .value ==
+                            null) {
+                          form
+                              .control("$_recordDoseAdministeredKey.$i")
+                              .setErrors({'': true});
                         }
+                      }
 
-                        form.markAllAsTouched();
+                      form.markAllAsTouched();
 
-                        if (!form.valid) return;
+                      if (!form.valid) return;
 
-                        DigitDialog.show<bool>(
-                          context,
-                          options: DigitDialogOptions(
-                            titlePadding: const EdgeInsets.fromLTRB(
-                              kPadding,
-                              kPadding,
-                              kPadding,
-                              0,
-                            ),
-                            titleText: localizations.translate(i18
-                                .deliverIntervention
-                                .didYouObservePreviousAdvEventsTitle),
-                            barrierDismissible: false,
-                            enableRecordPast: true,
-                            dialogPadding: const EdgeInsets.fromLTRB(
-                              kPadding,
-                              kPadding,
-                              kPadding,
-                              0,
-                            ),
-                            primaryAction: DigitDialogActions(
-                              label: localizations.translate(
-                                i18.common.coreCommonNo,
-                              ),
-                              action: (ctx) {
-                                router.pop();
-                                final event =
-                                    context.read<DeliverInterventionBloc>();
-
-                                for (int i = 0;
-                                    i < (futureTaskList ?? []).length;
-                                    i++) {
-                                  // Get the value of the form control for each task
-
-                                  final formControllValue = (form
-                                          .control(
-                                            "$_recordDoseAdministeredKey.$i",
-                                          )
-                                          .value as KeyValue)
-                                      .key;
-
-                                  // Determine the status based on the form control value
-                                  final status = formControllValue
-                                      ? Status.administeredSuccess.toValue()
-                                      : Status.administeredFailed.toValue();
-
-                                  // Create a new task with the updated status
-                                  final result = futureTaskList![i]
-                                      .copyWith(status: status);
-
-                                  // Add the updated task to the event
-                                  event.add(DeliverInterventionSubmitEvent(
-                                    result,
-                                    true,
-                                    context.boundary,
-                                  ));
-                                }
-                                final bloc =
-                                    context.read<HouseholdOverviewBloc>();
-
-                                bloc.add(HouseholdOverviewReloadEvent(
-                                  projectId: context.projectId,
-                                  projectBeneficiaryType:
-                                      context.beneficiaryType,
-                                ));
-
-                                event.add(DeliverInterventionSearchEvent(
-                                  TaskSearchModel(
-                                    projectBeneficiaryClientReferenceId: bloc
-                                        .state
-                                        .householdMemberWrapper
-                                        .projectBeneficiaries
-                                        .map((e) => e.clientReferenceId)
-                                        .toList(),
-                                  ),
-                                ));
-                                context.router.popUntilRouteWithName(
-                                  SearchBeneficiaryRoute.name,
-                                );
-                                bloc.add(HouseholdOverviewReloadEvent(
-                                  projectId: context.projectId,
-                                  projectBeneficiaryType:
-                                      context.beneficiaryType,
-                                ));
-                                Navigator.of(ctx).pop();
-
-                                router.push(
-                                  BeneficiaryDetailsRoute(),
-                                );
-                              },
-                            ),
-                            secondaryAction: DigitDialogActions(
-                              label: localizations.translate(
-                                i18.common.coreCommonYes,
-                              ),
-                              action: (ctx) {
-                                router.pop();
-                                final event =
-                                    context.read<DeliverInterventionBloc>();
-                                final bloc =
-                                    context.read<HouseholdOverviewBloc>();
-
-                                for (int i = 0;
-                                    i < (futureTaskList ?? []).length;
-                                    i++) {
-                                  // Get the value of the form control for each task
-
-                                  final formControllValue = (form
-                                          .control(
-                                            "$_recordDoseAdministeredKey.$i",
-                                          )
-                                          .value as KeyValue)
-                                      .key;
-
-                                  // Determine the status based on the form control value
-                                  final status = formControllValue
-                                      ? Status.administeredSuccess.toValue()
-                                      : Status.administeredFailed.toValue();
-
-                                  // Create a new task with the updated status
-                                  final result = futureTaskList![i]
-                                      .copyWith(status: status);
-
-                                  // Add the updated task to the event
-                                  event.add(DeliverInterventionSubmitEvent(
-                                    result,
-                                    true,
-                                    context.boundary,
-                                  ));
-                                }
-                                context.router.popUntilRouteWithName(
-                                  SearchBeneficiaryRoute.name,
-                                );
-                                bloc.add(HouseholdOverviewReloadEvent(
-                                  projectId: context.projectId,
-                                  projectBeneficiaryType:
-                                      context.beneficiaryType,
-                                ));
-                                Navigator.of(ctx).pop();
-                                router.push(
-                                  SideEffectsRoute(
-                                    tasks: [(futureTaskList ?? []).last],
-                                  ),
-                                );
-                              },
-                            ),
+                      DigitDialog.show<bool>(
+                        context,
+                        options: DigitDialogOptions(
+                          titlePadding: const EdgeInsets.fromLTRB(
+                            kPadding,
+                            kPadding,
+                            kPadding,
+                            0,
                           ),
-                        );
-                      },
-                      child: Center(
-                        child: Text(
-                          localizations.translate(i18.common.coreCommonNext),
+                          titleText: localizations.translate(i18
+                              .deliverIntervention
+                              .didYouObservePreviousAdvEventsTitle),
+                          barrierDismissible: false,
+                          enableRecordPast: true,
+                          dialogPadding: const EdgeInsets.fromLTRB(
+                            kPadding,
+                            kPadding,
+                            kPadding,
+                            0,
+                          ),
+                          primaryAction: DigitDialogActions(
+                            label: localizations.translate(
+                              i18.common.coreCommonNo,
+                            ),
+                            action: (ctx) {
+                              router.pop();
+                              final event =
+                                  context.read<DeliverInterventionBloc>();
+
+                              for (int i = 0;
+                                  i < (futureTaskList ?? []).length;
+                                  i++) {
+                                // Get the value of the form control for each task
+
+                                final formControllValue = (form
+                                        .control(
+                                          "$_recordDoseAdministeredKey.$i",
+                                        )
+                                        .value as KeyValue)
+                                    .key;
+
+                                // Determine the status based on the form control value
+                                final status = formControllValue
+                                    ? Status.administeredSuccess.toValue()
+                                    : Status.administeredFailed.toValue();
+
+                                // Create a new task with the updated status
+                                final result =
+                                    futureTaskList![i].copyWith(status: status);
+
+                                // Add the updated task to the event
+                                event.add(DeliverInterventionSubmitEvent(
+                                  result,
+                                  true,
+                                  context.boundary,
+                                ));
+                              }
+                              final bloc =
+                                  context.read<HouseholdOverviewBloc>();
+
+                              bloc.add(HouseholdOverviewReloadEvent(
+                                projectId: context.projectId,
+                                projectBeneficiaryType: context.beneficiaryType,
+                              ));
+
+                              event.add(DeliverInterventionSearchEvent(
+                                TaskSearchModel(
+                                  projectBeneficiaryClientReferenceId: bloc
+                                      .state
+                                      .householdMemberWrapper
+                                      .projectBeneficiaries
+                                      .map((e) => e.clientReferenceId)
+                                      .toList(),
+                                ),
+                              ));
+                              context.router.popUntilRouteWithName(
+                                SearchBeneficiaryRoute.name,
+                              );
+                              bloc.add(HouseholdOverviewReloadEvent(
+                                projectId: context.projectId,
+                                projectBeneficiaryType: context.beneficiaryType,
+                              ));
+                              Navigator.of(ctx).pop();
+
+                              router.push(
+                                BeneficiaryDetailsRoute(),
+                              );
+                            },
+                          ),
+                          secondaryAction: DigitDialogActions(
+                            label: localizations.translate(
+                              i18.common.coreCommonYes,
+                            ),
+                            action: (ctx) {
+                              router.pop();
+                              final event =
+                                  context.read<DeliverInterventionBloc>();
+                              final bloc =
+                                  context.read<HouseholdOverviewBloc>();
+
+                              for (int i = 0;
+                                  i < (futureTaskList ?? []).length;
+                                  i++) {
+                                // Get the value of the form control for each task
+
+                                final formControllValue = (form
+                                        .control(
+                                          "$_recordDoseAdministeredKey.$i",
+                                        )
+                                        .value as KeyValue)
+                                    .key;
+
+                                // Determine the status based on the form control value
+                                final status = formControllValue
+                                    ? Status.administeredSuccess.toValue()
+                                    : Status.administeredFailed.toValue();
+
+                                // Create a new task with the updated status
+                                final result =
+                                    futureTaskList![i].copyWith(status: status);
+
+                                // Add the updated task to the event
+                                event.add(DeliverInterventionSubmitEvent(
+                                  result,
+                                  true,
+                                  context.boundary,
+                                ));
+                              }
+                              context.router.popUntilRouteWithName(
+                                SearchBeneficiaryRoute.name,
+                              );
+                              bloc.add(HouseholdOverviewReloadEvent(
+                                projectId: context.projectId,
+                                projectBeneficiaryType: context.beneficiaryType,
+                              ));
+                              Navigator.of(ctx).pop();
+                              router.push(
+                                SideEffectsRoute(
+                                  tasks: [(futureTaskList ?? []).last],
+                                ),
+                              );
+                            },
+                          ),
                         ),
+                      );
+                    },
+                    child: Center(
+                      child: Text(
+                        localizations.translate(i18.common.coreCommonNext),
                       ),
                     ),
                   ),
@@ -246,8 +235,8 @@ class _RecordPastDeliveryDetailsPageState
                 DigitCard(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: kPadding * 2,
-                      vertical: kPadding * 2,
+                      horizontal: kPadding,
+                      vertical: kPadding,
                     ),
                     child: Column(
                       children: [
@@ -298,7 +287,6 @@ class _RecordPastDeliveryDetailsPageState
                                         ),
                                         labelPadding: const EdgeInsets.only(
                                           top: kPadding,
-                                          left: kPadding,
                                         ),
                                       ),
                                       if (entry.key !=

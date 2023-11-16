@@ -216,12 +216,6 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
               slivers: [
                 SliverToBoxAdapter(
                   child: DigitCard(
-                    padding: const EdgeInsets.fromLTRB(
-                      kPadding * 2,
-                      kPadding * 2,
-                      kPadding * 2,
-                      0,
-                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,

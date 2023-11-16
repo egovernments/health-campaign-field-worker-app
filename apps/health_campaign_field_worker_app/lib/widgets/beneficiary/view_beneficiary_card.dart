@@ -321,7 +321,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                 isCardExpanded
                     ? Icons.keyboard_arrow_up
                     : Icons.keyboard_arrow_down,
-                size: 16,
+                size: 24,
               ),
               onPressed: () => isCardExpanded = !isCardExpanded,
             ),

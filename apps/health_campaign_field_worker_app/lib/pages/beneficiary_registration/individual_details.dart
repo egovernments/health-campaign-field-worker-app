@@ -151,23 +151,15 @@ class _IndividualDetailsPageState
                               final submit = await DigitDialog.show<bool>(
                                 context,
                                 options: DigitDialogOptions(
-                                  titlePadding: const EdgeInsets.fromLTRB(
-                                    kPadding * 2,
-                                    kPadding * 2,
-                                    kPadding * 2,
-                                    kPadding / 2,
+                                  titlePadding: const EdgeInsets.only(
+                                    left: kPadding * 3,
+                                    top: kPadding * 2,
                                   ),
                                   titleText: localizations.translate(
                                     i18.deliverIntervention.dialogTitle,
                                   ),
                                   contentText: localizations.translate(
                                     i18.deliverIntervention.dialogContent,
-                                  ),
-                                  contentPadding: const EdgeInsets.fromLTRB(
-                                    kPadding,
-                                    kPadding * 2,
-                                    kPadding,
-                                    kPadding / 2,
                                   ),
                                   primaryAction: DigitDialogActions(
                                     label: localizations.translate(
@@ -335,12 +327,6 @@ class _IndividualDetailsPageState
               slivers: [
                 SliverToBoxAdapter(
                   child: DigitCard(
-                    padding: const EdgeInsets.fromLTRB(
-                      kPadding * 2,
-                      kPadding * 2,
-                      kPadding * 2,
-                      0,
-                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
@@ -370,9 +356,6 @@ class _IndividualDetailsPageState
                                       .translate(i18.common.maxCharsRequired)
                                       .replaceAll('{}', maxLength.toString()),
                                 },
-                                padding: const EdgeInsets.only(
-                                  top: kPadding * 2,
-                                ),
                               ),
                             ),
                             Offstage(
@@ -390,9 +373,6 @@ class _IndividualDetailsPageState
                                   value: widget.isHeadOfHousehold,
                                 ),
                               ),
-                            ),
-                            const SizedBox(
-                              height: kPadding * 2,
                             ),
                             BlocBuilder<AppInitializationBloc,
                                 AppInitializationState>(
@@ -476,7 +456,6 @@ class _IndividualDetailsPageState
                                         padding: const EdgeInsets.only(
                                           left: kPadding / 2,
                                           right: kPadding / 2,
-                                          top: kPadding * 2,
                                         ),
                                       );
                                     },
@@ -485,7 +464,7 @@ class _IndividualDetailsPageState
                               ),
                             if (form.control(_idTypeKey).value == 'DEFAULT')
                               const SizedBox(
-                                height: kPadding * 2,
+                                height: kPadding,
                               ),
                             individualDetailsShowcaseData.dateOfBirth.buildWith(
                               child: DigitDobPicker(
@@ -538,7 +517,12 @@ class _IndividualDetailsPageState
 
                                   return individualDetailsShowcaseData.gender
                                       .buildWith(
-                                    child: DigitReactiveDropdown<String>(
+                                    child: DigitSearchDropdown(
+                                      suggestionsCallback: (items, pattern) {
+                                        return items.where((element) => element
+                                            .toLowerCase()
+                                            .contains(pattern.toLowerCase()));
+                                      },
                                       label: localizations.translate(
                                         i18.individualDetails.genderLabelText,
                                       ),
@@ -553,7 +537,7 @@ class _IndividualDetailsPageState
                                           .toList(),
                                       formControlName: _genderKey,
                                       padding: const EdgeInsets.only(
-                                        top: kPadding * 2,
+                                        top: kPadding,
                                       ),
                                     ),
                                   );
@@ -562,9 +546,6 @@ class _IndividualDetailsPageState
                             ),
                             individualDetailsShowcaseData.mobile.buildWith(
                               child: DigitTextFormField(
-                                padding: const EdgeInsets.only(
-                                  top: kPadding * 2,
-                                ),
                                 keyboardType: TextInputType.number,
                                 formControlName: _mobileNumberKey,
                                 label: localizations.translate(

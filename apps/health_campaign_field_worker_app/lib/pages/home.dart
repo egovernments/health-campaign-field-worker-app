@@ -393,18 +393,20 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
-      'DB': HomeItemCard(
-        icon: Icons.table_chart,
-        label: 'DB',
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => DriftDbViewer(
-                context.read<LocalSqlDataStore>(),
+      i18.home.db: homeShowcaseData.db.buildWith(
+        child: HomeItemCard(
+          icon: Icons.table_chart,
+          label: i18.home.db,
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => DriftDbViewer(
+                  context.read<LocalSqlDataStore>(),
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     };
 
@@ -420,7 +422,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           homeShowcaseData.distributorFileComplaint.showcaseKey,
       i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.showcaseKey,
       i18.home.viewReportsLabel: homeShowcaseData.inventoryReport.showcaseKey,
-      'DB': homeShowcaseData.inventoryReport.showcaseKey,
+      i18.home.db: homeShowcaseData.inventoryReport.showcaseKey,
     };
 
     final homeItemsLabel = <String>[
@@ -431,7 +433,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.fileComplaint,
       i18.home.syncDataLabel,
       i18.home.viewReportsLabel,
-      'DB',
+      i18.home.db,
     ];
 
     final List<String> filteredLabels = homeItemsLabel;

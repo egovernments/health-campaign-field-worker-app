@@ -82,122 +82,129 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                 BackNavigationHelpHeaderWidget(),
               ]),
               footer: SizedBox(
-                height: 85,
+                height: 100,
                 child: DigitCard(
                   margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
                   child: ValueListenableBuilder(
                     valueListenable: clickedStatus,
                     builder: (context, bool isClicked, _) {
-                      return DigitElevatedButton(
-                        onPressed: isClicked
-                            ? null
-                            : () {
-                                if (form.control(_referralReason).value ==
-                                    null) {
-                                  clickedStatus.value = false;
-                                  form
-                                      .control(_referralReason)
-                                      .setErrors({'': true});
-                                }
-                                form.markAllAsTouched();
+                      return Padding(
+                        padding: const EdgeInsets.only(
+                          left: kPadding * 2,
+                          right: kPadding * 2,
+                        ),
+                        child: DigitElevatedButton(
+                          onPressed: isClicked
+                              ? null
+                              : () {
+                                  if (form.control(_referralReason).value ==
+                                      null) {
+                                    clickedStatus.value = false;
+                                    form
+                                        .control(_referralReason)
+                                        .setErrors({'': true});
+                                  }
+                                  form.markAllAsTouched();
 
-                                if (!form.valid) {
-                                  return;
-                                } else {
-                                  clickedStatus.value = true;
-                                  final recipient = form
-                                      .control(_referredToKey)
-                                      .value as FacilityModel;
-                                  final reason = form
-                                      .control(_referralReason)
-                                      .value as KeyValue;
-                                  final recipientType =
-                                      recipient.id == 'Community Health Worker'
-                                          ? 'STAFF'
-                                          : 'FACILITY';
-                                  final recipientId =
-                                      recipient.id == 'Community Health Worker'
-                                          ? context.loggedInUserUuid
-                                          : recipient.id;
-                                  final referralComment =
-                                      form.control(_referralComments).value;
+                                  if (!form.valid) {
+                                    return;
+                                  } else {
+                                    clickedStatus.value = true;
+                                    final recipient = form
+                                        .control(_referredToKey)
+                                        .value as FacilityModel;
+                                    final reason = form
+                                        .control(_referralReason)
+                                        .value as KeyValue;
+                                    final recipientType = recipient.id ==
+                                            'Community Health Worker'
+                                        ? 'STAFF'
+                                        : 'FACILITY';
+                                    final recipientId = recipient.id ==
+                                            'Community Health Worker'
+                                        ? context.loggedInUserUuid
+                                        : recipient.id;
+                                    final referralComment =
+                                        form.control(_referralComments).value;
 
-                                  final event = context.read<ReferralBloc>();
-                                  event.add(ReferralSubmitEvent(
-                                    ReferralModel(
-                                      clientReferenceId: IdGen.i.identifier,
-                                      projectId: context.projectId,
-                                      projectBeneficiaryClientReferenceId:
-                                          widget.projectBeneficiaryClientRefId,
-                                      referrerId: context.loggedInUserUuid,
-                                      recipientId: recipientId,
-                                      recipientType: recipientType,
-                                      reasons: [reason.key],
-                                      tenantId: envConfig.variables.tenantId,
-                                      rowVersion: 1,
-                                      auditDetails: AuditDetails(
-                                        createdBy: context.loggedInUserUuid,
-                                        createdTime:
-                                            context.millisecondsSinceEpoch(),
-                                        lastModifiedBy:
-                                            context.loggedInUserUuid,
-                                        lastModifiedTime:
-                                            context.millisecondsSinceEpoch(),
-                                      ),
-                                      clientAuditDetails: ClientAuditDetails(
-                                        createdBy: context.loggedInUserUuid,
-                                        createdTime:
-                                            context.millisecondsSinceEpoch(),
-                                        lastModifiedBy:
-                                            context.loggedInUserUuid,
-                                        lastModifiedTime:
-                                            context.millisecondsSinceEpoch(),
-                                      ),
-                                      additionalFields:
-                                          ReferralAdditionalFields(
-                                        version: 1,
-                                        fields: [
-                                          if (referralComment != null &&
-                                              referralComment
-                                                  .toString()
-                                                  .trim()
-                                                  .isNotEmpty)
-                                            AdditionalField(
-                                              AdditionalFieldsType
-                                                  .referralComments
-                                                  .toValue(),
-                                              referralComment,
-                                            ),
-                                        ],
-                                      ),
-                                    ),
-                                    false,
-                                  ));
-
-                                  final reloadState =
-                                      context.read<HouseholdOverviewBloc>();
-
-                                  Future.delayed(
-                                    const Duration(milliseconds: 500),
-                                    () {
-                                      reloadState
-                                          .add(HouseholdOverviewReloadEvent(
+                                    final event = context.read<ReferralBloc>();
+                                    event.add(ReferralSubmitEvent(
+                                      ReferralModel(
+                                        clientReferenceId: IdGen.i.identifier,
                                         projectId: context.projectId,
-                                        projectBeneficiaryType:
-                                            context.beneficiaryType,
-                                      ));
-                                    },
-                                  ).then((value) => context.router.popAndPush(
-                                        HouseholdAcknowledgementRoute(
-                                          enableViewHousehold: true,
+                                        projectBeneficiaryClientReferenceId:
+                                            widget
+                                                .projectBeneficiaryClientRefId,
+                                        referrerId: context.loggedInUserUuid,
+                                        recipientId: recipientId,
+                                        recipientType: recipientType,
+                                        reasons: [reason.key],
+                                        tenantId: envConfig.variables.tenantId,
+                                        rowVersion: 1,
+                                        auditDetails: AuditDetails(
+                                          createdBy: context.loggedInUserUuid,
+                                          createdTime:
+                                              context.millisecondsSinceEpoch(),
+                                          lastModifiedBy:
+                                              context.loggedInUserUuid,
+                                          lastModifiedTime:
+                                              context.millisecondsSinceEpoch(),
                                         ),
-                                      ));
-                                }
-                              },
-                        child: Center(
-                          child: Text(
-                            localizations
-                                .translate(i18.common.coreCommonSubmit),
+                                        clientAuditDetails: ClientAuditDetails(
+                                          createdBy: context.loggedInUserUuid,
+                                          createdTime:
+                                              context.millisecondsSinceEpoch(),
+                                          lastModifiedBy:
+                                              context.loggedInUserUuid,
+                                          lastModifiedTime:
+                                              context.millisecondsSinceEpoch(),
+                                        ),
+                                        additionalFields:
+                                            ReferralAdditionalFields(
+                                          version: 1,
+                                          fields: [
+                                            if (referralComment != null &&
+                                                referralComment
+                                                    .toString()
+                                                    .trim()
+                                                    .isNotEmpty)
+                                              AdditionalField(
+                                                AdditionalFieldsType
+                                                    .referralComments
+                                                    .toValue(),
+                                                referralComment,
+                                              ),
+                                          ],
+                                        ),
+                                      ),
+                                      false,
+                                    ));
+
+                                    final reloadState =
+                                        context.read<HouseholdOverviewBloc>();
+
+                                    Future.delayed(
+                                      const Duration(milliseconds: 500),
+                                      () {
+                                        reloadState
+                                            .add(HouseholdOverviewReloadEvent(
+                                          projectId: context.projectId,
+                                          projectBeneficiaryType:
+                                              context.beneficiaryType,
+                                        ));
+                                      },
+                                    ).then((value) => context.router.popAndPush(
+                                          HouseholdAcknowledgementRoute(
+                                            enableViewHousehold: true,
+                                          ),
+                                        ));
+                                  }
+                                },
+                          child: Center(
+                            child: Text(
+                              localizations
+                                  .translate(i18.common.coreCommonSubmit),
+                            ),
                           ),
                         ),
                       );
@@ -235,6 +242,10 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                               .translate(i18.common.coreCommonCancel),
                           confirmText:
                               localizations.translate(i18.common.coreCommonOk),
+                          padding: const EdgeInsets.only(
+                            bottom: kPadding,
+                            top: kPadding,
+                          ),
                         ),
                         DigitTextFormField(
                           formControlName: _administrativeUnitKey,
@@ -257,6 +268,7 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                           isRequired: true,
                         ),
                         DigitTextFormField(
+                          // padding: const EdgeInsets.only(top: kPadding / 2),
                           valueAccessor: FacilityValueAccessor(
                             facilities,
                           ),

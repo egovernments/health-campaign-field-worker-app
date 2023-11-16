@@ -200,10 +200,8 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
               padding: isCurrentCycle
                   ? const EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 0)
                   : const EdgeInsets.only(
-                      left: 0,
-                      right: 0,
-                      top: kPadding,
-                      bottom: kPadding,
+                      top: kPadding + 2,
+                      bottom: 0,
                     ),
               child: Align(
                 alignment: Alignment.centerLeft,
@@ -293,7 +291,7 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
             const SizedBox(
               height: 16,
             ),
-            if (!isDivider && i == cycles.length - 1)
+            if (!isCurrentCycle)
               const Divider(
                 thickness: 1.0,
               ),

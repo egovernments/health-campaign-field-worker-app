@@ -54,53 +54,60 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
                 height: 85,
                 child: DigitCard(
                   margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
-                  child: DigitElevatedButton(
-                    onPressed: () async {
-                      var complaintType = form.control(_complaintType).value;
-                      var otherComplaintTypeValue =
-                          form.control(_otherComplaintType).value;
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      left: kPadding * 2,
+                      right: kPadding * 2,
+                    ),
+                    child: DigitElevatedButton(
+                      onPressed: () async {
+                        var complaintType = form.control(_complaintType).value;
+                        var otherComplaintTypeValue =
+                            form.control(_otherComplaintType).value;
 
-                      if (complaintType == "Other") {
-                        form.control(_otherComplaintType).setValidators(
-                          [Validators.required],
-                          autoValidate: true,
-                        );
-                      } else {
-                        form.control(_otherComplaintType).setValidators(
-                          [],
-                          autoValidate: true,
-                        );
-                      }
-
-                      setState(() {
-                        form.markAllAsTouched();
-                      });
-
-                      if (!form.valid) return;
-
-                      state.whenOrNull(
-                        create: (
-                          loading,
-                          complaintType,
-                          _,
-                          addressModel,
-                          complaintsDetailsModel,
-                        ) {
-                          bloc.add(
-                            ComplaintsRegistrationEvent.saveComplaintType(
-                              complaintType: form.control(_complaintType).value,
-                              otherComplaintDescription:
-                                  otherComplaintTypeValue,
-                            ),
+                        if (complaintType == "Other") {
+                          form.control(_otherComplaintType).setValidators(
+                            [Validators.required],
+                            autoValidate: true,
                           );
-                        },
-                      );
+                        } else {
+                          form.control(_otherComplaintType).setValidators(
+                            [],
+                            autoValidate: true,
+                          );
+                        }
 
-                      router.push(ComplaintsLocationRoute());
-                    },
-                    child: Center(
-                      child: Text(
-                        localizations.translate(i18.complaints.actionLabel),
+                        setState(() {
+                          form.markAllAsTouched();
+                        });
+
+                        if (!form.valid) return;
+
+                        state.whenOrNull(
+                          create: (
+                            loading,
+                            complaintType,
+                            _,
+                            addressModel,
+                            complaintsDetailsModel,
+                          ) {
+                            bloc.add(
+                              ComplaintsRegistrationEvent.saveComplaintType(
+                                complaintType:
+                                    form.control(_complaintType).value,
+                                otherComplaintDescription:
+                                    otherComplaintTypeValue,
+                              ),
+                            );
+                          },
+                        );
+
+                        router.push(ComplaintsLocationRoute());
+                      },
+                      child: Center(
+                        child: Text(
+                          localizations.translate(i18.complaints.actionLabel),
+                        ),
                       ),
                     ),
                   ),

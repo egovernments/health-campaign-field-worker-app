@@ -834,6 +834,7 @@ class Home {
   String get warehouseManagerCheckList => 'WAREHOUSE_MANAGER_CHECK_LIST_LABEL';
 
   String get deleteAllLabel => 'HOME_DELETE_ALL_LABEL';
+  String get db => 'HOME_DB_LABEL';
 }
 
 class SearchBeneficiary {

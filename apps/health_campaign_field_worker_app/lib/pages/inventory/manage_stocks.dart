@@ -33,7 +33,12 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Padding(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.only(
+                  left: kPadding * 3,
+                  top: kPadding * 2,
+                  right: kPadding * 2,
+                  bottom: kPadding * 2,
+                ),
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: Text(
@@ -44,71 +49,101 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                 ),
               ),
               Column(children: [
-                DigitListView(
-                  title: localizations
-                      .translate(i18.manageStock.recordStockReceiptLabel),
-                  description: localizations
-                      .translate(i18.manageStock.recordStockReceiptDescription),
-                  prefixIcon: Icons.file_download_outlined,
-                  sufixIcon: Icons.arrow_circle_right,
-                  onPressed: () => context.router.push(
-                    RecordStockWrapperRoute(
-                      type: StockRecordEntryType.receipt,
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: kPadding * 2,
+                    right: kPadding * 2,
+                  ),
+                  child: DigitListView(
+                    title: localizations
+                        .translate(i18.manageStock.recordStockReceiptLabel),
+                    description: localizations.translate(
+                        i18.manageStock.recordStockReceiptDescription),
+                    prefixIcon: Icons.file_download_outlined,
+                    sufixIcon: Icons.arrow_circle_right,
+                    onPressed: () => context.router.push(
+                      RecordStockWrapperRoute(
+                        type: StockRecordEntryType.receipt,
+                      ),
                     ),
                   ),
                 ),
-                DigitListView(
-                  title: localizations
-                      .translate(i18.manageStock.recordStockIssuedLabel),
-                  description: localizations
-                      .translate(i18.manageStock.recordStockIssuedDescription),
-                  prefixIcon: Icons.file_upload_outlined,
-                  sufixIcon: Icons.arrow_circle_right,
-                  onPressed: () => context.router.push(
-                    RecordStockWrapperRoute(
-                      type: StockRecordEntryType.dispatch,
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: kPadding * 2,
+                    right: kPadding * 2,
+                  ),
+                  child: DigitListView(
+                    title: localizations
+                        .translate(i18.manageStock.recordStockIssuedLabel),
+                    description: localizations.translate(
+                        i18.manageStock.recordStockIssuedDescription),
+                    prefixIcon: Icons.file_upload_outlined,
+                    sufixIcon: Icons.arrow_circle_right,
+                    onPressed: () => context.router.push(
+                      RecordStockWrapperRoute(
+                        type: StockRecordEntryType.dispatch,
+                      ),
                     ),
                   ),
                 ),
-                DigitListView(
-                  title: localizations
-                      .translate(i18.manageStock.recordStockReturnedLabel),
-                  description: localizations.translate(
-                    i18.manageStock.recordStockReturnedDescription,
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: kPadding * 2,
+                    right: kPadding * 2,
                   ),
-                  prefixIcon: Icons.settings_backup_restore,
-                  sufixIcon: Icons.arrow_circle_right,
-                  onPressed: () => context.router.push(
-                    RecordStockWrapperRoute(
-                      type: StockRecordEntryType.returned,
+                  child: DigitListView(
+                    title: localizations
+                        .translate(i18.manageStock.recordStockReturnedLabel),
+                    description: localizations.translate(
+                      i18.manageStock.recordStockReturnedDescription,
+                    ),
+                    prefixIcon: Icons.settings_backup_restore,
+                    sufixIcon: Icons.arrow_circle_right,
+                    onPressed: () => context.router.push(
+                      RecordStockWrapperRoute(
+                        type: StockRecordEntryType.returned,
+                      ),
                     ),
                   ),
                 ),
-                DigitListView(
-                  title: localizations
-                      .translate(i18.manageStock.recordStockDamagedLabel),
-                  description: localizations.translate(
-                    i18.manageStock.recordStockDamagedDescription,
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: kPadding * 2,
+                    right: kPadding * 2,
                   ),
-                  prefixIcon: Icons.store,
-                  sufixIcon: Icons.arrow_circle_right,
-                  onPressed: () => context.router.push(
-                    RecordStockWrapperRoute(
-                      type: StockRecordEntryType.damaged,
+                  child: DigitListView(
+                    title: localizations
+                        .translate(i18.manageStock.recordStockDamagedLabel),
+                    description: localizations.translate(
+                      i18.manageStock.recordStockDamagedDescription,
+                    ),
+                    prefixIcon: Icons.store,
+                    sufixIcon: Icons.arrow_circle_right,
+                    onPressed: () => context.router.push(
+                      RecordStockWrapperRoute(
+                        type: StockRecordEntryType.damaged,
+                      ),
                     ),
                   ),
                 ),
-                DigitListView(
-                  title: localizations
-                      .translate(i18.manageStock.recordStockLossLabel),
-                  description: localizations.translate(
-                    i18.manageStock.recordStockDamagedDescription,
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: kPadding * 2,
+                    right: kPadding * 2,
                   ),
-                  prefixIcon: Icons.store,
-                  sufixIcon: Icons.arrow_circle_right,
-                  onPressed: () => context.router.push(
-                    RecordStockWrapperRoute(
-                      type: StockRecordEntryType.loss,
+                  child: DigitListView(
+                    title: localizations
+                        .translate(i18.manageStock.recordStockLossLabel),
+                    description: localizations.translate(
+                      i18.manageStock.recordStockDamagedDescription,
+                    ),
+                    prefixIcon: Icons.store,
+                    sufixIcon: Icons.arrow_circle_right,
+                    onPressed: () => context.router.push(
+                      RecordStockWrapperRoute(
+                        type: StockRecordEntryType.loss,
+                      ),
                     ),
                   ),
                 ),

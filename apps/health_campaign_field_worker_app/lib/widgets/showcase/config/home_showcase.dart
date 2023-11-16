@@ -23,6 +23,7 @@ class _HomePageShowcaseData {
         supervisorComplaints,
         supervisorSyncData,
         deleteAll,
+        db
       ];
 
   final distributorProgressBar = ShowcaseItemBuilder(
@@ -84,5 +85,9 @@ class _HomePageShowcaseData {
 
   final deleteAll = ShowcaseItemBuilder(
     messageLocalizationKey: i18.homeShowcase.deleteAll,
+  );
+
+  final db = ShowcaseItemBuilder(
+    messageLocalizationKey: i18.home.db,
   );
 }

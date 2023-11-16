@@ -200,14 +200,6 @@ class _DeliverInterventionPageState
                                                       context,
                                                       options:
                                                           DigitDialogOptions(
-                                                        titlePadding:
-                                                            const EdgeInsets
-                                                                .fromLTRB(
-                                                          kPadding * 2,
-                                                          kPadding * 2,
-                                                          kPadding * 2,
-                                                          kPadding * 2,
-                                                        ),
                                                         titleText: localizations
                                                             .translate(
                                                           i18.deliverIntervention
@@ -343,12 +335,6 @@ class _DeliverInterventionPageState
                                       Column(
                                         children: [
                                           DigitCard(
-                                            padding: const EdgeInsets.only(
-                                              left: kPadding * 2,
-                                              right: kPadding * 2,
-                                              top: kPadding * 2,
-                                              bottom: kPadding * 2,
-                                            ),
                                             child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
@@ -414,12 +400,6 @@ class _DeliverInterventionPageState
                                             ),
                                           ),
                                           DigitCard(
-                                            padding: const EdgeInsets.only(
-                                              left: kPadding * 2,
-                                              right: kPadding * 2,
-                                              bottom: kPadding * 2,
-                                              top: kPadding * 2,
-                                            ),
                                             child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
@@ -488,12 +468,6 @@ class _DeliverInterventionPageState
                                             ),
                                           ),
                                           DigitCard(
-                                            padding: const EdgeInsets.fromLTRB(
-                                              kPadding * 2,
-                                              kPadding * 2,
-                                              kPadding * 2,
-                                              kPadding * 2,
-                                            ),
                                             child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
@@ -553,29 +527,6 @@ class _DeliverInterventionPageState
                                                           deliveryCommentOptions
                                                               .firstOrNull
                                                               ?.name,
-                                                    );
-
-                                                    DigitReactiveDropdown<
-                                                        String>(
-                                                      label: localizations
-                                                          .translate(
-                                                        i18.deliverIntervention
-                                                            .deliveryCommentLabel,
-                                                      ),
-                                                      valueMapper: (value) =>
-                                                          value,
-                                                      initialValue:
-                                                          deliveryCommentOptions
-                                                              .firstOrNull
-                                                              ?.name,
-                                                      menuItems:
-                                                          deliveryCommentOptions
-                                                              .map((e) {
-                                                        return localizations
-                                                            .translate(e.name);
-                                                      }).toList(),
-                                                      formControlName:
-                                                          _deliveryCommentKey,
                                                     );
                                                   },
                                                 ),

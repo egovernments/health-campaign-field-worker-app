@@ -277,12 +277,6 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
               ),
               children: [
                 DigitCard(
-                  padding: const EdgeInsets.fromLTRB(
-                    kPadding * 2,
-                    kPadding * 2,
-                    kPadding * 2,
-                    0,
-                  ),
                   child: Column(
                     children: [
                       Text(
@@ -325,12 +319,6 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                         );
 
                         return DigitCard(
-                          padding: const EdgeInsets.fromLTRB(
-                            kPadding * 2,
-                            kPadding * 2,
-                            kPadding * 2,
-                            kPadding * 2,
-                          ),
                           child: BlocBuilder<DeliverInterventionBloc,
                               DeliverInterventionState>(
                             builder: (context, deliveryState) {

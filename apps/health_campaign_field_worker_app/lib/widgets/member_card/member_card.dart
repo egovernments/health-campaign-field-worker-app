@@ -70,7 +70,7 @@ class MemberCard extends StatelessWidget {
         ),
       ),
       margin: DigitTheme.instance.containerMargin,
-      padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
+      padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 4.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -160,7 +160,9 @@ class MemberCard extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 4.0, bottom: 4.0),
+            padding: const EdgeInsets.only(
+              left: kPadding / 2,
+            ),
             child: Offstage(
               offstage: beneficiaryType != BeneficiaryType.individual,
               child: !isDelivered ||
@@ -207,7 +209,10 @@ class MemberCard extends StatelessWidget {
             ),
           ),
           Offstage(
-            offstage: beneficiaryType != BeneficiaryType.individual,
+            offstage: beneficiaryType != BeneficiaryType.individual ||
+                isNotEligible ||
+                isBeneficiaryRefused ||
+                isBeneficiaryReferred,
             child: Padding(
               padding: const EdgeInsets.all(4.0),
               child: Column(
@@ -216,6 +221,10 @@ class MemberCard extends StatelessWidget {
                       ? const Offstage()
                       : !isNotEligible
                           ? DigitElevatedButton(
+                              // padding: const EdgeInsets.only(
+                              //   left: kPadding / 2,
+                              //   right: kPadding / 2,
+                              // ),
                               onPressed: () {
                                 final bloc =
                                     context.read<HouseholdOverviewBloc>();

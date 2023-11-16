@@ -141,23 +141,18 @@ class _ComplaintsInboxFilterPageState
                       children: [
                         Expanded(
                           flex: 1,
-                          child: OutlinedButton(
+                          child: DigitOutLineButton(
+                            label: localizations.translate(
+                              i18.complaints.complaintsFilterClearAll,
+                            ),
                             onPressed: () {
                               clearFilters(formGroup);
                             },
-                            style: OutlinedButton.styleFrom(
+                            buttonStyle: OutlinedButton.styleFrom(
                               shape: const BeveledRectangleBorder(),
                               padding: const EdgeInsets.all(10),
                               side: BorderSide(
                                 width: 1.0,
-                                color: theme.colorScheme.secondary,
-                              ),
-                            ),
-                            child: Text(
-                              localizations.translate(
-                                i18.complaints.complaintsFilterClearAll,
-                              ),
-                              style: TextStyle(
                                 color: theme.colorScheme.secondary,
                               ),
                             ),

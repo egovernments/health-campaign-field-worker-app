@@ -115,8 +115,8 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                     ),
                     // [TODO : Need move to constants]
                     Positioned(
-                      top: kPadding * 4,
-                      left: MediaQuery.of(context).size.width / 3,
+                      top: MediaQuery.of(context).size.width / 5,
+                      left: MediaQuery.of(context).size.width / 2.6,
                       width: 250,
                       height: 250,
                       child: SizedBox(
@@ -255,7 +255,6 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                           children: <Widget>[
                             Container(
                               decoration: const BoxDecoration(
-                                color: Colors.white,
                                 borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(16.0),
                                   topRight: Radius.circular(16.0),
@@ -401,48 +400,42 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                         child: Icon(Icons.close),
                       ),
                     ),
-                    footer: Padding(
-                      padding: const EdgeInsets.only(
-                        left: kPadding * 2,
-                        right: kPadding * 2,
-                      ),
-                      child: DigitElevatedButton(
-                        child: Text(localizations.translate(
-                          i18.common.coreCommonSubmit,
-                        )),
-                        onPressed: () async {
-                          final bloc = context.read<ScannerBloc>();
-                          codes.add(_resourceController.value.text);
-                          bloc.add(
-                            ScannerEvent.handleScanner(
-                              state.barcodes,
-                              codes,
-                            ),
-                          );
-                          if (widget.isGS1code &&
-                              result.length < widget.quantity) {
-                            buildDialog();
-                          } else {
-                            final bloc = context.read<SearchHouseholdsBloc>();
-                            final scannerState =
-                                context.read<ScannerBloc>().state;
+                    footer: DigitElevatedButton(
+                      child: Text(localizations.translate(
+                        i18.common.coreCommonSubmit,
+                      )),
+                      onPressed: () async {
+                        final bloc = context.read<ScannerBloc>();
+                        codes.add(_resourceController.value.text);
+                        bloc.add(
+                          ScannerEvent.handleScanner(
+                            state.barcodes,
+                            codes,
+                          ),
+                        );
+                        if (widget.isGS1code &&
+                            result.length < widget.quantity) {
+                          buildDialog();
+                        } else {
+                          final bloc = context.read<SearchHouseholdsBloc>();
+                          final scannerState =
+                              context.read<ScannerBloc>().state;
 
-                            if (scannerState.qrcodes.isNotEmpty || manualcode) {
-                              bloc.add(SearchHouseholdsEvent.searchByTag(
-                                tag: manualcode
-                                    ? _resourceController.value.text
-                                    : scannerState.qrcodes.first,
-                                projectId: context.projectId,
-                              ));
-                            }
-                            context.router.pop();
+                          if (scannerState.qrcodes.isNotEmpty || manualcode) {
+                            bloc.add(SearchHouseholdsEvent.searchByTag(
+                              tag: manualcode
+                                  ? _resourceController.value.text
+                                  : scannerState.qrcodes.first,
+                              projectId: context.projectId,
+                            ));
                           }
-                        },
-                      ),
+                          context.router.pop();
+                        }
+                      },
                     ),
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(kPadding * 2),
+                        padding: const EdgeInsets.all(kPadding),
                         child: Align(
                           alignment: Alignment.topLeft,
                           child: Text(
@@ -453,26 +446,14 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          left: kPadding * 2,
-                          right: kPadding * 2,
+                      Text(localizations.translate(
+                        i18.deliverIntervention.manualCodeDescription,
+                      )),
+                      DigitTextField(
+                        label: localizations.translate(
+                          i18.deliverIntervention.resourceCode,
                         ),
-                        child: Text(localizations.translate(
-                          i18.deliverIntervention.manualCodeDescription,
-                        )),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          left: kPadding * 2,
-                          right: kPadding * 2,
-                        ),
-                        child: DigitTextField(
-                          label: localizations.translate(
-                            i18.deliverIntervention.resourceCode,
-                          ),
-                          controller: _resourceController,
-                        ),
+                        controller: _resourceController,
                       ),
                     ],
                   ),

@@ -11,6 +11,7 @@ import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
 import '../../../widgets/header/back_navigation_help_header.dart';
 import '../../../widgets/localized.dart';
+import '../../../widgets/no_result_card/no_result_card.dart';
 
 class ComplaintsInboxPage extends LocalizedStatefulWidget {
   const ComplaintsInboxPage({
@@ -48,18 +49,15 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                     SliverToBoxAdapter(
                       child: Padding(
                         padding: const EdgeInsets.only(
-                          left: 16,
-                          top: 16,
-                          bottom: 16,
+                          left: kPadding*2,
+                          top: kPadding*2,
+                          bottom: kPadding*2,
                         ),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            localizations.translate(
-                              i18.complaints.inboxHeading,
-                            ),
-                            style: theme.textTheme.displayMedium,
+                        child: Text(
+                          localizations.translate(
+                            i18.complaints.inboxHeading,
                           ),
+                          style: theme.textTheme.displayMedium,
                         ),
                       ),
                     ),
@@ -143,8 +141,9 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                         child: Center(
                           child: Padding(
                             padding: const EdgeInsets.all(10),
-                            child: Text(
-                              localizations
+                            child: NoResultCard(
+                              align: Alignment.center,
+                              label: localizations
                                   .translate(i18.complaints.noComplaintsExist),
                             ),
                           ),
@@ -157,32 +156,38 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                 height: 85,
                 child: DigitCard(
                   margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
-                  child: DigitElevatedButton(
-                    onPressed: () async {
-                      var loggedInUserUuid = context.loggedInUserUuid;
-                      final bloc = context.read<ComplaintsInboxBloc>();
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      left: kPadding * 2,
+                      right: kPadding * 2,
+                    ),
+                    child: DigitElevatedButton(
+                      onPressed: () async {
+                        var loggedInUserUuid = context.loggedInUserUuid;
+                        final bloc = context.read<ComplaintsInboxBloc>();
 
-                      await router.push(
-                        ComplaintsRegistrationWrapperRoute(),
-                      );
+                        await router.push(
+                          ComplaintsRegistrationWrapperRoute(),
+                        );
 
-                      try {
-                        bloc.add(
-                          ComplaintInboxLoadComplaintsEvent(
-                            createdByUserId: loggedInUserUuid,
+                        try {
+                          bloc.add(
+                            ComplaintInboxLoadComplaintsEvent(
+                              createdByUserId: loggedInUserUuid,
+                            ),
+                          );
+                        } catch (error) {
+                          AppLogger.instance.error(
+                            title: 'Error',
+                            message: 'Error while loading complaints',
+                          );
+                        }
+                      },
+                      child: Center(
+                        child: Text(
+                          localizations.translate(
+                            i18.complaints.fileComplaintAction,
                           ),
-                        );
-                      } catch (error) {
-                        AppLogger.instance.error(
-                          title: 'Error',
-                          message: 'Error while loading complaints',
-                        );
-                      }
-                    },
-                    child: Center(
-                      child: Text(
-                        localizations.translate(
-                          i18.complaints.fileComplaintAction,
                         ),
                       ),
                     ),

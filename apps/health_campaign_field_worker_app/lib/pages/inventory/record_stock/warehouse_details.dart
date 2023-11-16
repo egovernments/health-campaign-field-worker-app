@@ -77,7 +77,6 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                         BackNavigationHelpHeaderWidget(),
                       ]),
                       footer: SizedBox(
-                        height: 85,
                         child: DigitCard(
                           margin: const EdgeInsets.only(
                             left: 0,
@@ -86,33 +85,39 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                           ),
                           child: ReactiveFormConsumer(
                             builder: (context, form, child) {
-                              return DigitElevatedButton(
-                                onPressed: !form.valid
-                                    ? null
-                                    : () {
-                                        form.markAllAsTouched();
-                                        if (!form.valid) {
-                                          return;
-                                        }
-                                        final dateOfRecord = form
-                                            .control(_dateOfEntryKey)
-                                            .value as DateTime;
+                              return Padding(
+                                padding: const EdgeInsets.only(
+                                  left: kPadding * 2,
+                                  right: kPadding * 2,
+                                ),
+                                child: DigitElevatedButton(
+                                  onPressed: !form.valid
+                                      ? null
+                                      : () {
+                                          form.markAllAsTouched();
+                                          if (!form.valid) {
+                                            return;
+                                          }
+                                          final dateOfRecord = form
+                                              .control(_dateOfEntryKey)
+                                              .value as DateTime;
 
-                                        final facility = form
-                                            .control(_warehouseKey)
-                                            .value as FacilityModel;
+                                          final facility = form
+                                              .control(_warehouseKey)
+                                              .value as FacilityModel;
 
-                                        context.read<RecordStockBloc>().add(
-                                              RecordStockSaveWarehouseDetailsEvent(
-                                                dateOfRecord: dateOfRecord,
-                                                facilityModel: facility,
-                                              ),
-                                            );
-                                        context.router.push(
-                                          StockDetailsRoute(),
-                                        );
-                                      },
-                                child: child!,
+                                          context.read<RecordStockBloc>().add(
+                                                RecordStockSaveWarehouseDetailsEvent(
+                                                  dateOfRecord: dateOfRecord,
+                                                  facilityModel: facility,
+                                                ),
+                                              );
+                                          context.router.push(
+                                            StockDetailsRoute(),
+                                          );
+                                        },
+                                  child: child!,
+                                ),
                               );
                             },
                             child: Center(
@@ -161,6 +166,8 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                 ),
                               ]),
                               DigitTextFormField(
+                                padding:
+                                    const EdgeInsets.only(bottom: kPadding),
                                 valueAccessor: FacilityValueAccessor(
                                   facilities,
                                 ),
@@ -173,7 +180,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                   child: Icon(Icons.search),
                                 ),
                                 formControlName: _warehouseKey,
-                                readOnly: true,
+                                // readOnly: true,
                                 onTap: () async {
                                   final parent =
                                       context.router.parent() as StackRouter;

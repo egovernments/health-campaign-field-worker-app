@@ -127,7 +127,7 @@ class _ComplaintsInboxSearchPageState
                       BlocBuilder<ComplaintsInboxBloc, ComplaintInboxState>(
                         builder: (context, state) {
                           return Padding(
-                            padding: const EdgeInsets.all(22),
+                            padding: const EdgeInsets.all(kPadding * 2),
                             child: Column(
                               children: [
                                 DigitTextFormField(
