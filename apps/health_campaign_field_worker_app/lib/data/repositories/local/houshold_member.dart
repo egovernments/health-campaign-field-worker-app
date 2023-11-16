@@ -54,6 +54,7 @@ class HouseholdMemberLocalRepository
           final householdMember = e.readTable(sql.householdMember);
 
           return HouseholdMemberModel(
+            id: householdMember.id,
             householdId: householdMember.householdId,
             householdClientReferenceId:
                 householdMember.householdClientReferenceId,
@@ -141,7 +142,7 @@ class HouseholdMemberLocalRepository
   @override
   FutureOr<void> delete(
     HouseholdMemberModel entity, {
-    bool createOpLog = false,
+    bool createOpLog = true,
   }) async {
     final updated = entity.copyWith(
       isDeleted: true,
