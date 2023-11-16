@@ -121,9 +121,7 @@ abstract class OpLogManager<T extends EntityModel> {
     oplogs = oplogs
         .sortedBy((element) => element.createdAt)
         .where(
-          (element) =>
-              element.entityType != DataModelType.householdMember &&
-              element.entityType != DataModelType.service,
+          (element) => element.entityType != DataModelType.service,
           // Added Memeber and service so that we don't get the respose from the server
         )
         .toList();
@@ -820,6 +818,33 @@ class BoundaryOpLogManager extends OpLogManager<BoundaryModel> {
 
   @override
   bool? getNonRecoverableError(BoundaryModel entity) =>
+      throw UnimplementedError();
+}
+
+class DownsyncOpLogManager extends OpLogManager<DownsyncModel> {
+  DownsyncOpLogManager(super.isar);
+
+  @override
+  DownsyncModel applyServerGeneratedIdToEntity(
+    DownsyncModel entity,
+    String serverGeneratedId,
+    int rowVersion,
+  ) =>
+      throw UnimplementedError();
+
+  @override
+  String getClientReferenceId(DownsyncModel entity) =>
+      throw UnimplementedError();
+
+  @override
+  String? getServerGeneratedId(DownsyncModel entity) =>
+      throw UnimplementedError();
+
+  @override
+  int? getRowVersion(DownsyncModel entity) => throw UnimplementedError();
+
+  @override
+  bool? getNonRecoverableError(DownsyncModel entity) =>
       throw UnimplementedError();
 }
 

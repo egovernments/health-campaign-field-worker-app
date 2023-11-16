@@ -1,6 +1,5 @@
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/widgets/atoms/digit_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -183,15 +182,27 @@ class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                           );
 
                                           if (shouldSubmit ?? false) {
-                                            final parent =
-                                                router.parent() as StackRouter;
-                                            parent
-                                              ..pop()
-                                              ..pop();
+                                            final reloadState = context
+                                                .read<HouseholdOverviewBloc>();
 
-                                            router.push(
-                                              AcknowledgementRoute(),
-                                            );
+                                            Future.delayed(
+                                              const Duration(milliseconds: 500),
+                                              () {
+                                                reloadState.add(
+                                                  HouseholdOverviewReloadEvent(
+                                                    projectId:
+                                                        context.projectId,
+                                                    projectBeneficiaryType:
+                                                        context.beneficiaryType,
+                                                  ),
+                                                );
+                                              },
+                                            ).then((value) =>
+                                                context.router.push(
+                                                  HouseholdAcknowledgementRoute(
+                                                    enableViewHousehold: true,
+                                                  ),
+                                                ));
                                           }
                                         } else {
                                           setState(() {
@@ -232,7 +243,11 @@ class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                         Align(
                                           alignment: Alignment.topLeft,
                                           child: Padding(
-                                            padding: const EdgeInsets.only(left: 0, right: kPadding, top: kPadding*2, bottom: kPadding*2),
+                                            padding: const EdgeInsets.only(
+                                                left: 0,
+                                                right: kPadding,
+                                                top: kPadding * 2,
+                                                bottom: kPadding * 2),
                                             child: Text(
                                               '${localizations.translate(
                                                 i18.adverseEvents

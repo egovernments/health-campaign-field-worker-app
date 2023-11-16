@@ -102,6 +102,16 @@ class DigitDateUtils {
     return DateFormat(dateFormat ?? "dd/MM/yyyy").format(date);
   }
 
+  // Function to get time from timestamp.
+  static String getTimeFromTimestamp(int timestamp,
+      {bool is24HourFormat = false}) {
+    DateTime date = DateTime.fromMillisecondsSinceEpoch(timestamp);
+
+    return is24HourFormat
+        ? DateFormat('HH:mm').format(date)
+        : DateFormat('hh:mm a').format(date);
+  }
+
   // Function to convert a date string to a timestamp in milliseconds.
   static int dateToTimeStamp(String dateTime) {
     try {

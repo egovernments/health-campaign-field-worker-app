@@ -344,23 +344,28 @@ class _HouseholdOverviewPageState
                                                         )
                                                         .toList();
 
-                                            final taskdata = state
-                                                .householdMemberWrapper.tasks
-                                                ?.where((element) =>
-                                                    element
-                                                        .projectBeneficiaryClientReferenceId ==
-                                                    projectBeneficiary.first
-                                                        .clientReferenceId)
-                                                .toList();
-                                            final referralData = state
-                                                .householdMemberWrapper
-                                                .referrals
-                                                ?.where((element) =>
-                                                    element
-                                                        .projectBeneficiaryClientReferenceId ==
-                                                    projectBeneficiary.first
-                                                        .clientReferenceId)
-                                                .toList();
+                                            final taskdata = projectBeneficiary
+                                                    .isNotEmpty
+                                                ? state.householdMemberWrapper
+                                                    .tasks
+                                                    ?.where((element) =>
+                                                        element
+                                                            .projectBeneficiaryClientReferenceId ==
+                                                        projectBeneficiary.first
+                                                            .clientReferenceId)
+                                                    .toList()
+                                                : null;
+                                            final referralData = projectBeneficiary
+                                                    .isNotEmpty
+                                                ? state.householdMemberWrapper
+                                                    .referrals
+                                                    ?.where((element) =>
+                                                        element
+                                                            .projectBeneficiaryClientReferenceId ==
+                                                        projectBeneficiary.first
+                                                            .clientReferenceId)
+                                                    .toList()
+                                                : null;
                                             final sideEffectData = taskdata !=
                                                         null &&
                                                     taskdata.isNotEmpty

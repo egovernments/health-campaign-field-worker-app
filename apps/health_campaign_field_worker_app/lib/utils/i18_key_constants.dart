@@ -68,6 +68,8 @@ class Common {
 
   String get coreCommonHome => 'CORE_COMMON_HOME';
 
+  String get coreCommonViewDownloadedData => 'CORE_COMMON_VIEW_DOWNLOADED_DATA';
+
   String get coreCommonlanguage => 'CORE_COMMON_LANGUAGE';
 
   String get coreCommonSyncProgress => 'CORE_COMMON_SYNC_PROGRESS';
@@ -96,6 +98,9 @@ class Common {
   String get min2CharsRequired => 'MIN_2_CHARS_REQUIRED';
 
   String get facilitySearchHeaderLabel => 'FACILITY_SEARCH_HEADER_LABEL';
+
+  String get coreCommonDownload => 'CORE_COMMON_DOWNLOAD';
+  String get coreCommonDownloadFailed => 'CORE_COMMON_DOWNLOAD_FAILED';
 }
 
 class AdverseEvents {
@@ -296,6 +301,28 @@ class BeneficiaryDetails {
   String get scannerDialogSecondaryAction => 'SCANNER_DIALOG_SECONDARY_ACTION';
   String get beneficiaryHeader => 'BENEFICIARY_HEADER';
   String get deliveryHeader => 'DELIVERY_TABLE_HEADER';
+
+  String get proceedWithoutDownloading => 'PROCEED_WITHOUT_DOWNLOADING';
+  String get unableToCheckDataInServer => 'FAILED_TO_CHECK_DATA_IN_SERVER';
+  String get dataFound => 'DATA_FOUND';
+  String get noDataFound => 'NO_DATA_FOUND';
+  String get dataFoundContent => 'DATA_FOUND_CONTENT';
+  String get noDataFoundContent => 'NO_DATA_FOUND_CONTENT';
+  String get dataDownloadInProgress => 'DATA_DOWNLOAD_IN_PROGRESS';
+  String get insufficientStorage => 'INSUFFICIENT_STORAGE_WARNING';
+  String get downloadreport => 'DOWNLOAD_REPORT';
+  String get boundary => 'BOUNDARY';
+  String get status => 'STATUS';
+  String get downloadedon => 'DOWNLOADED_ON';
+  String get recordsdownload => 'RECORDS_DOWNLOAD';
+  String get downloadcompleted => 'DOWNLOAD_COMPLETED';
+  String get datadownloadreport => 'DATA_DOWNLOAD_REPORT';
+  String get download => 'DOWNLOAD';
+  String get partialdownloaded => 'PARTIAL_DOWNLOAD';
+  String get downloadtime => 'DOWNLOAD_TIME';
+  String get totalrecorddownload => 'TOTAL_RECORD_DOWNLOAD';
+  String get insufficientStorageContent =>
+      'INSUFFICIENT_STORAGE_WARNING_CONTENT';
 }
 
 class IndividualDetails {
@@ -376,6 +403,10 @@ class AcknowledgementSuccess {
       'ACKNOWLEDGEMENT_SUCCESS_DESCRIPTION_TEXT';
 
   String get acknowledgementLabelText => 'ACKNOWLEDGEMENT_SUCCESS_LABEL_TEXT';
+
+  String get goToHome => 'GO_TO_HOME_SCREEN';
+  String get downloadmoredata => 'DOWNLOAD_MORE_DATA';
+  String get dataDownloadedSuccessLabel => 'DATA_DOWNLOADED_SUCCESS_LABEL';
 }
 
 class HouseholdDetails {
@@ -1071,6 +1102,8 @@ class SyncDialog {
   String get closeButtonLabel => 'SYNC_DIALOG_CLOSE_BUTTON_LABEL';
 
   String get retryButtonLabel => 'SYNC_DIALOG_RETRY_BUTTON_LABEL';
+  String get pendingSyncLabel => 'PENDING_SYNC_LABEL';
+  String get pendingSyncContent => 'PENDING_SYNC_CONTENT';
 }
 
 class ReferBeneficiary {

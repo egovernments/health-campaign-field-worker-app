@@ -12,6 +12,7 @@ export 'entities/blood_group.dart';
 export 'entities/boundary.dart';
 export 'entities/deliver_strategy_type.dart';
 export 'entities/document.dart';
+export 'entities/downsync.dart';
 export 'entities/facility.dart';
 export 'entities/gender.dart';
 export 'entities/household.dart';
@@ -170,4 +171,6 @@ enum DataModelType {
   boundary,
   serviceAttributes,
   locality,
+  downsync,
+  downsyncCriteria,
 }
