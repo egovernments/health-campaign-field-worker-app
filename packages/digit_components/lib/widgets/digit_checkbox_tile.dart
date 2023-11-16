@@ -1,4 +1,5 @@
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/widgets/atoms/checkbox_icon.dart';
 import 'package:flutter/material.dart';
 
 class DigitCheckboxTile extends StatelessWidget {
@@ -30,16 +31,12 @@ class DigitCheckboxTile extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Icon(
-                value
-                    ? Icons.check_box_outlined
-                    : Icons.check_box_outline_blank_sharp,
-                color: value
-                    ? theme.colorScheme.secondary
-                    : const DigitColors().davyGray,
-                size: kPadding * 3,
-              ),
-              const SizedBox(width: kPadding * 2),
+              value ?
+                  CheckboxIcon()
+              :
+                  CheckboxIcon(value: true,),
+              const SizedBox(width: kPadding*2),
+
               Expanded(
                 child: Text(
                   label,
