@@ -1,15 +1,17 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
-import 'local_store/secure_store/secure_store.dart';
-import 'repositories/sync/sync_down.dart';
+import 'package:health_campaign_field_worker_app/data/repositories/sync/remote_type.dart';
 import 'package:provider/provider.dart';
 
 import '../models/bandwidth/bandwidth_model.dart';
 import '../models/data_model.dart';
-import '../utils/debound.dart';
+import '../utils/constants.dart';
 import 'data_repository.dart';
+import 'local_store/secure_store/secure_store.dart';
+import 'repositories/sync/sync_down.dart';
 import 'repositories/sync/sync_up.dart';
 
 class NetworkManager {
@@ -101,6 +103,76 @@ class NetworkManager {
     }
 
     return isSyncCompleted;
+  }
+
+  //
+  FutureOr<void> writeToEntityDB(
+    Map<String, dynamic> response,
+    List<LocalRepository> localRepositories,
+  ) async {
+    try {
+      for (int i = 0; i <= response.keys.length - 1; i++) {
+        if (response.keys.elementAt(i) != 'DownsyncCriteria') {
+          final local = RepositoryType.getLocalForType(
+            DataModels.getDataModelForEntityName(response.keys.elementAt(i)),
+            localRepositories,
+          );
+          final List<dynamic> entityResponse =
+              response[response.keys.elementAt(i)] ?? [];
+
+          final entityList =
+              entityResponse.whereType<Map<String, dynamic>>().toList();
+
+          switch (response.keys.elementAt(i)) {
+            case "Households":
+              final entity = entityList
+                  .map((e) => Mapper.fromJson<HouseholdModel>(jsonEncode(e)))
+                  .toList();
+              await local.bulkCreate(entity);
+            case "HouseholdMembers":
+              final entity = entityList
+                  .map(
+                    (e) => Mapper.fromJson<HouseholdMemberModel>(jsonEncode(e)),
+                  )
+                  .toList();
+              await local.bulkCreate(entity);
+            case "Individuals":
+              final entity = entityList
+                  .map((e) => Mapper.fromJson<IndividualModel>(jsonEncode(e)))
+                  .toList();
+              await local.bulkCreate(entity);
+            case "ProjectBeneficiaries":
+              final entity = entityList
+                  .map((e) =>
+                      Mapper.fromJson<ProjectBeneficiaryModel>(jsonEncode(e)))
+                  .toList();
+              await local.bulkCreate(entity);
+            case "Tasks":
+              final entity = entityList
+                  .map((e) => Mapper.fromJson<TaskModel>(jsonEncode(e)))
+                  .toList();
+              await local.bulkCreate(entity);
+            case "SideEffects":
+              final entity = entityList
+                  .map((e) => Mapper.fromJson<SideEffectModel>(jsonEncode(e)))
+                  .toList();
+              await local.bulkCreate(entity);
+            case "Referrals":
+              final entity = entityList
+                  .map((e) => Mapper.fromJson<ReferralModel>(jsonEncode(e)))
+                  .toList();
+              await local.bulkCreate(entity);
+            default:
+              final entity = entityList
+                  .map((e) => Mapper.fromJson<EntityModel>(jsonEncode(e)))
+                  .toList();
+              await local.bulkCreate(entity);
+          }
+        }
+      }
+    } catch (e) {
+      rethrow;
+    }
   }
 
   FutureOr<int> getPendingSyncRecordsCount(

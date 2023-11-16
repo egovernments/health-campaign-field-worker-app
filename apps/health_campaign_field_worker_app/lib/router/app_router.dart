@@ -55,6 +55,7 @@ import '../pages/profile.dart';
 import '../pages/project_selection.dart';
 import '../pages/qr_scanner.dart';
 import '../pages/reason_for_deletion.dart';
+import '../pages/reports/beneficiary/beneficaries_report.dart';
 import '../pages/search_beneficiary.dart';
 import '../pages/unauthenticated.dart';
 
@@ -86,6 +87,10 @@ part 'app_router.gr.dart';
 
         AutoRoute(page: SearchBeneficiaryPage, path: 'search-beneficiary'),
         AutoRoute(page: QRScannerPage, path: 'scanner'),
+        AutoRoute(
+          page: BeneficiariesReportPage,
+          path: 'beneficiary-downsync-report',
+        ),
 
         /// Beneficiary Registration
         AutoRoute(

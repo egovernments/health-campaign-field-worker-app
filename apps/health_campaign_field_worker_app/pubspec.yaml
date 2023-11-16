@@ -63,6 +63,7 @@ dependencies:
   audioplayers: ^5.2.0
   gs1_barcode_parser: ^1.0.5
   qr_flutter: ^4.1.0
+  disk_space: ^0.2.1
 
 dev_dependencies:
   flutter_test:

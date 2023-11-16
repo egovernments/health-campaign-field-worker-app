@@ -303,3 +303,69 @@ class EntityPlurals {
     }
   }
 }
+
+enum DigitProgressDialogType {
+  inProgress,
+  dataFound,
+  success,
+  failed,
+  insufficientStorage,
+  checkFailed,
+  pendingSync,
+}
+
+class DownloadBeneficiary {
+  String title;
+  String projectId;
+  String boundary;
+  String boundaryName;
+  int? pendingSyncCount;
+  int? syncCount;
+  int? totalCount;
+  String? content;
+  int? batchSize;
+  String? primaryButtonLabel;
+  String? secondaryButtonLabel;
+  String? prefixLabel;
+  String? suffixLabel;
+  AppConfiguration? appConfiguartion;
+  DownloadBeneficiary({
+    required this.title,
+    required this.projectId,
+    required this.boundary,
+    required this.boundaryName,
+    this.appConfiguartion,
+    this.pendingSyncCount,
+    this.batchSize,
+    this.syncCount,
+    this.totalCount,
+    this.content,
+    this.primaryButtonLabel,
+    this.secondaryButtonLabel,
+    this.prefixLabel,
+    this.suffixLabel,
+  });
+}
+
+class DataModels {
+  static DataModelType getDataModelForEntityName(String entity) {
+    switch (entity) {
+      case 'Households':
+        return DataModelType.household;
+      case 'HouseholdMembers':
+        return DataModelType.householdMember;
+      case 'Individuals':
+        return DataModelType.individual;
+      case 'ProjectBeneficiaries':
+        return DataModelType.projectBeneficiary;
+      case 'Tasks':
+        return DataModelType.task;
+      case 'SideEffects':
+        return DataModelType.sideEffect;
+      case 'Referrals':
+        return DataModelType.referral;
+      default:
+        return DataModelType.householdMember;
+    }
+  }
+}
