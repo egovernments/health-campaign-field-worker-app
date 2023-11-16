@@ -298,6 +298,64 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
   }
 
   @override
+  FutureOr<void> bulkCreate(
+    List<TaskModel> entities,
+  ) async {
+    final taskCompanions = entities.map((e) => e.companion).toList();
+
+    final resourcesList = entities
+        .map((e) => e.resources?.map((a) {
+              return a
+                  .copyWith(
+                    clientReferenceId: a.clientReferenceId,
+                    taskclientReferenceId: e.clientReferenceId,
+                    clientAuditDetails: e.clientAuditDetails,
+                    auditDetails: e.auditDetails,
+                  )
+                  .companion;
+            }).toList())
+        .toList();
+
+    final resourcesCompanions = resourcesList.expand((e) => [e?[0]]).toList();
+
+    await sql.batch((batch) async {
+      final addressCompanions = entities.map((e) {
+        if (e.address != null) {
+          return e.address!
+              .copyWith(
+                relatedClientReferenceId: e.clientReferenceId,
+                clientAuditDetails: e.clientAuditDetails,
+                auditDetails: e.auditDetails,
+              )
+              .companion;
+        }
+      }).toList();
+
+      if (resourcesCompanions.isNotEmpty) {
+        batch.insertAll(
+          sql.taskResource,
+          resourcesCompanions.whereNotNull().toList(),
+          mode: InsertMode.insertOrReplace,
+        );
+      }
+
+      if (addressCompanions.isNotEmpty) {
+        batch.insertAll(
+          sql.address,
+          addressCompanions.whereNotNull().toList(),
+          mode: InsertMode.insertOrReplace,
+        );
+      }
+
+      batch.insertAll(
+        sql.task,
+        taskCompanions,
+        mode: InsertMode.insertOrReplace,
+      );
+    });
+  }
+
+  @override
   FutureOr<void> update(
     TaskModel entity, {
     bool createOpLog = true,
@@ -315,7 +373,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
     final resourcesCompanions = entity.resources?.map((e) {
           return e
               .copyWith(
-                clientReferenceId: entity.clientReferenceId,
+                clientReferenceId: e.clientReferenceId,
                 taskclientReferenceId: entity.clientReferenceId,
               )
               .companion;

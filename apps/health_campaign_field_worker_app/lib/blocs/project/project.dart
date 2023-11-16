@@ -523,6 +523,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         await localSecureStore.setSelectedProject(event.model);
         await localSecureStore.setSelectedProjectType(reqProjectType);
       }
+      await localSecureStore.setProjectSetUpComplete(event.model.id, true);
     } catch (_) {
       emit(state.copyWith(
         loading: false,

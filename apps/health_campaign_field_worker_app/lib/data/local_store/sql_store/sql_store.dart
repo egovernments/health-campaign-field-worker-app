@@ -17,6 +17,8 @@ import 'tables/address.dart';
 import 'tables/attributes.dart';
 import 'tables/boundary.dart';
 import 'tables/document.dart';
+import 'tables/downsync.dart';
+import 'tables/downsync_criteria.dart';
 import 'tables/facility.dart';
 import 'tables/household.dart';
 import 'tables/household_member.dart';
@@ -82,6 +84,8 @@ part 'sql_store.g.dart';
   PgrService,
   PgrComplainant,
   User,
+  Downsync,
+  DownsyncCriteria,
 ])
 class LocalSqlDataStore extends _$LocalSqlDataStore {
   LocalSqlDataStore() : super(_openConnection());

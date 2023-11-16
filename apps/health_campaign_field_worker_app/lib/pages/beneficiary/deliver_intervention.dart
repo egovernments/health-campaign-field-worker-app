@@ -355,11 +355,7 @@ class _DeliverInterventionPageState
                                                   stepRadius: 12.5,
                                                   steps: steps,
                                                   maxStepReached: 3,
-                                                  lineLength:
-                                                      MediaQuery.of(context)
-                                                              .size
-                                                              .width /
-                                                          steps.length,
+                                                  lineLength: (MediaQuery.of(context).size.width - 12.5*2*steps.length-45) / (steps.length-1),
                                                 ),
                                                 DigitDateFormPicker(
                                                   isEnabled: false,

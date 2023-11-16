@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:drift/drift.dart';
+
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
@@ -52,6 +54,7 @@ class HouseholdMemberLocalRepository
           final householdMember = e.readTable(sql.householdMember);
 
           return HouseholdMemberModel(
+            id: householdMember.id,
             householdId: householdMember.householdId,
             householdClientReferenceId:
                 householdMember.householdClientReferenceId,
@@ -102,6 +105,21 @@ class HouseholdMemberLocalRepository
   }
 
   @override
+  FutureOr<void> bulkCreate(
+    List<HouseholdMemberModel> entities,
+  ) async {
+    final householdMemberCompanions = entities.map((e) => e.companion).toList();
+
+    await sql.batch((batch) async {
+      batch.insertAll(
+        sql.householdMember,
+        householdMemberCompanions,
+        mode: InsertMode.insertOrReplace,
+      );
+    });
+  }
+
+  @override
   FutureOr<void> update(
     HouseholdMemberModel entity, {
     bool createOpLog = true,
@@ -124,7 +142,7 @@ class HouseholdMemberLocalRepository
   @override
   FutureOr<void> delete(
     HouseholdMemberModel entity, {
-    bool createOpLog = false,
+    bool createOpLog = true,
   }) async {
     final updated = entity.copyWith(
       isDeleted: true,

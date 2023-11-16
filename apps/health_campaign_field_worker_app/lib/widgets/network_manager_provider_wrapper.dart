@@ -15,6 +15,7 @@ import '../data/data_repository.dart';
 import '../data/local_store/sql_store/sql_store.dart';
 import '../data/network_manager.dart';
 import '../data/repositories/local/boundary.dart';
+import '../data/repositories/local/downsync.dart';
 import '../data/repositories/local/facility.dart';
 import '../data/repositories/local/household.dart';
 import '../data/repositories/local/houshold_member.dart';
@@ -36,6 +37,7 @@ import '../data/repositories/local/task.dart';
 import '../data/repositories/oplog/oplog.dart';
 import '../data/repositories/remote/auth.dart';
 import '../data/repositories/remote/boundary.dart';
+import '../data/repositories/remote/downsync.dart';
 import '../data/repositories/remote/facility.dart';
 import '../data/repositories/remote/household.dart';
 import '../data/repositories/remote/household_member.dart';
@@ -270,6 +272,12 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           PgrServiceOpLogManager(isar),
         ),
       ),
+      RepositoryProvider<LocalRepository<DownsyncModel, DownsyncSearchModel>>(
+        create: (_) => DownsyncLocalRepository(
+          sql,
+          DownsyncOpLogManager(isar),
+        ),
+      ),
     ];
   }
 
@@ -484,6 +492,14 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
               actionMap: actions,
             ),
           ),
+        // if (value == DataModelType.downsync)
+        RepositoryProvider<
+            RemoteRepository<DownsyncModel, DownsyncSearchModel>>(
+          create: (_) => DownsyncRemoteRepository(
+            dio,
+            actionMap: actions,
+          ),
+        ),
       ]);
     }
 

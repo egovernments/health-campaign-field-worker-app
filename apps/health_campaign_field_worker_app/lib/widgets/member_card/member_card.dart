@@ -375,13 +375,25 @@ class MemberCard extends StatelessWidget {
                                               context.boundary,
                                             ),
                                           );
-                                      final parent = context.router.parent()
-                                          as StackRouter;
-                                      parent
-                                        ..pop()
-                                        ..pop();
-                                      context.router.push(
-                                        AcknowledgementRoute(),
+                                      final reloadState =
+                                          context.read<HouseholdOverviewBloc>();
+                                      Future.delayed(
+                                        const Duration(milliseconds: 500),
+                                        () {
+                                          reloadState.add(
+                                            HouseholdOverviewReloadEvent(
+                                              projectId: context.projectId,
+                                              projectBeneficiaryType:
+                                                  context.beneficiaryType,
+                                            ),
+                                          );
+                                        },
+                                      ).then(
+                                        (value) => context.router.push(
+                                          HouseholdAcknowledgementRoute(
+                                            enableViewHousehold: true,
+                                          ),
+                                        ),
                                       );
                                     },
                                   ),

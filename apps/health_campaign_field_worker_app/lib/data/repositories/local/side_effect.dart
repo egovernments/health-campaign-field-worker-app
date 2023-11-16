@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:drift/drift.dart';
 
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
@@ -116,6 +117,21 @@ class SideEffectLocalRepository
     await sql.batch((batch) async {
       batch.insert(sql.sideEffect, sideEffectsCompanion);
       await super.create(entity);
+    });
+  }
+
+  @override
+  FutureOr<void> bulkCreate(
+    List<SideEffectModel> entities,
+  ) async {
+    final sideEffectCompanions = entities.map((e) => e.companion).toList();
+
+    await sql.batch((batch) async {
+      batch.insertAll(
+        sql.sideEffect,
+        sideEffectCompanions,
+        mode: InsertMode.insertOrReplace,
+      );
     });
   }
 

@@ -10,12 +10,16 @@ import 'package:location/location.dart';
 import '../blocs/boundary/boundary.dart';
 import '../blocs/household_details/household_details.dart';
 import '../blocs/localization/app_localization.dart';
+import '../blocs/search_households/project_beneficiaries_downsync.dart';
 import '../blocs/search_households/search_households.dart';
 import '../blocs/sync/sync.dart';
+import '../data/data_repository.dart';
 import '../data/local_store/no_sql/schema/oplog.dart';
 import '../data/local_store/sql_store/sql_store.dart';
+import '../data/remote_client.dart';
 import '../data/repositories/local/address.dart';
 import '../data/repositories/oplog/oplog.dart';
+import '../data/repositories/remote/bandwidth_check.dart';
 import '../models/data_model.dart';
 import '../router/app_router.dart';
 import '../router/authenticated_route_observer.dart';
@@ -58,7 +62,8 @@ class AuthenticatedPageWrapper extends StatelessWidget {
 
                     return GestureDetector(
                       onTap: () {
-                        ctx.router.navigate(const BoundarySelectionRoute());
+                        ctx.router.popUntilRouteWithName(HomeRoute.name);
+                        ctx.router.push(BoundarySelectionRoute());
                       },
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -69,8 +74,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                               padding: EdgeInsets.zero,
                             ),
                             onPressed: () {
-                              ctx.router
-                                  .navigate(const BoundarySelectionRoute());
+                              ctx.router.navigate(BoundarySelectionRoute());
                             },
                             child: Text(boundaryName),
                             // child: Text(boundaryName),
@@ -181,6 +185,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                               event.where((element) {
                                 switch (element.entityType) {
                                   case DataModelType.household:
+                                  case DataModelType.householdMember:
                                   case DataModelType.individual:
                                   case DataModelType.projectBeneficiary:
                                   case DataModelType.task:
@@ -210,6 +215,38 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                 BlocProvider(
                   create: (_) =>
                       HouseholdDetailsBloc(const HouseholdDetailsState()),
+                ),
+                BlocProvider(
+                  create: (ctx) => BeneficiaryDownSyncBloc(
+                    //{TODO: Need to get the bandwidth path from config
+                    bandwidthCheckRepository: BandwidthCheckRepository(
+                        DioClient().dio,
+                        bandwidthPath: '/project/check/bandwidth'),
+                    householdLocalRepository: ctx.read<
+                        LocalRepository<HouseholdModel,
+                            HouseholdSearchModel>>(),
+                    householdMemberLocalRepository: ctx.read<
+                        LocalRepository<HouseholdMemberModel,
+                            HouseholdMemberSearchModel>>(),
+                    individualLocalRepository: ctx.read<
+                        LocalRepository<IndividualModel,
+                            IndividualSearchModel>>(),
+                    projectBeneficiaryLocalRepository: ctx.read<
+                        LocalRepository<ProjectBeneficiaryModel,
+                            ProjectBeneficiarySearchModel>>(),
+                    taskLocalRepository:
+                        ctx.read<LocalRepository<TaskModel, TaskSearchModel>>(),
+                    sideEffectLocalRepository: ctx.read<
+                        LocalRepository<SideEffectModel,
+                            SideEffectSearchModel>>(),
+                    referralLocalRepository: ctx.read<
+                        LocalRepository<ReferralModel, ReferralSearchModel>>(),
+                    downSyncRemoteRepository: ctx.read<
+                        RemoteRepository<DownsyncModel, DownsyncSearchModel>>(),
+                    downSyncLocalRepository: ctx.read<
+                        LocalRepository<DownsyncModel, DownsyncSearchModel>>(),
+                    networkManager: ctx.read(),
+                  ),
                 ),
               ],
               child: AutoRouter(

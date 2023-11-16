@@ -8,6 +8,7 @@ import 'package:stream_transform/stream_transform.dart';
 import '../../data/repositories/local/address.dart';
 import '../../models/data_model.dart';
 import '../../utils/typedefs.dart';
+import '../../utils/utils.dart';
 
 part 'search_households.freezed.dart';
 
@@ -92,6 +93,17 @@ class SearchHouseholdsBloc
               },
             )?.individualClientReferenceId,
       );
+      final tasks = await fetchTaskbyProjectBeneficiary(projectBeneficiaries);
+
+      final sideEffects =
+          await sideEffectDataRepository.search(SideEffectSearchModel(
+        taskClientReferenceId: tasks.map((e) => e.clientReferenceId).toList(),
+      ));
+
+      final referrals = await referralDataRepository.search(ReferralSearchModel(
+        projectBeneficiaryClientReferenceId:
+            projectBeneficiaries.map((e) => e.clientReferenceId).toList(),
+      ));
 
       if (headOfHousehold == null) {
         emit(state.copyWith(
@@ -104,6 +116,9 @@ class SearchHouseholdsBloc
           headOfHousehold: headOfHousehold,
           members: individuals,
           projectBeneficiaries: projectBeneficiaries,
+          tasks: tasks.isNotEmpty ? tasks : null,
+          sideEffects: sideEffects.isNotEmpty ? sideEffects : null,
+          referrals: referrals.isNotEmpty ? referrals : null,
         );
 
         emit(
@@ -356,6 +371,32 @@ class SearchHouseholdsBloc
       );
     }
 
+    containers.sort((a, b) {
+      final d1 = calculateDistance(
+            Coordinate(
+              event.latitude,
+              event.longititude,
+            ),
+            Coordinate(
+              a.household.address?.latitude,
+              a.household.address?.longitude,
+            ),
+          ) ??
+          0;
+      final d2 = calculateDistance(
+            Coordinate(
+              event.latitude,
+              event.longititude,
+            ),
+            Coordinate(
+              b.household.address?.latitude,
+              b.household.address?.longitude,
+            ),
+          ) ??
+          0;
+
+      return d1.compareTo(d2);
+    });
     // Update the state with the results and mark the search as completed.
     emit(state.copyWith(
       householdMembers: containers,
@@ -562,6 +603,32 @@ class SearchHouseholdsBloc
       );
     }
 
+    containers.sort((a, b) {
+      final d1 = calculateDistance(
+            Coordinate(
+              event.latitude,
+              event.longitude,
+            ),
+            Coordinate(
+              a.household.address?.latitude,
+              a.household.address?.longitude,
+            ),
+          ) ??
+          0;
+      final d2 = calculateDistance(
+            Coordinate(
+              event.latitude,
+              event.longitude,
+            ),
+            Coordinate(
+              b.household.address?.latitude,
+              b.household.address?.longitude,
+            ),
+          ) ??
+          0;
+
+      return d1.compareTo(d2);
+    });
     // Update the state with the results and mark the search as completed.
     emit(state.copyWith(
       householdMembers: containers,

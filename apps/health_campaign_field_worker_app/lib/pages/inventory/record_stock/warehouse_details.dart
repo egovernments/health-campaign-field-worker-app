@@ -173,7 +173,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                   child: Icon(Icons.search),
                                 ),
                                 formControlName: _warehouseKey,
-                                readOnly: true,
+                                readOnly: false,
                                 onTap: () async {
                                   final parent =
                                       context.router.parent() as StackRouter;

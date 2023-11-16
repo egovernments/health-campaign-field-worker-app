@@ -1,0 +1,46 @@
+{
+  "name": "downsync",
+  "createRepository": true,
+  "ignoreFields": [
+    "clientReferenceId"
+  ],
+  "attributes": [
+    {
+      "name": "locality",
+      "type": "String",
+      "includeForQuery": true,
+      "isPk": true
+    },
+    {
+      "name": "projectId",
+      "type": "String",
+      "includeForQuery": true
+    },
+    {
+      "name": "offset",
+      "type": "int",
+      "includeForQuery": true
+    },
+    {
+      "name": "limit",
+      "type": "int",
+      "includeForQuery": true
+    },
+    {
+      "name": "lastSyncedTime",
+      "type": "int",
+      "includeForQuery": true
+    },
+    {
+      "name": "totalCount",
+      "type": "int",
+      "includeForQuery": true
+    },
+    {
+      "name": "boundaryName",
+      "type": "String",
+      "includeForQuery": true
+    }
+  ],
+  "isEnum": false
+}

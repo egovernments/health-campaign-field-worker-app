@@ -12,6 +12,10 @@
     {
       "name": "other",
       "value": "OTHER"
+    },
+    {
+      "name": "string",
+      "value": "string"
     }
   ],
   "isEnum": true

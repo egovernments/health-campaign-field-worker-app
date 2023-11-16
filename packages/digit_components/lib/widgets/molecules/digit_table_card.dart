@@ -9,6 +9,8 @@ class DigitTableCard extends StatelessWidget {
   final double gap;
   final num fraction;
   final EdgeInsetsGeometry? topPadding;
+  final TextStyle? labelStyle;
+  final TextStyle? descriptionStyle;
 
   const DigitTableCard({
     super.key,
@@ -19,6 +21,8 @@ class DigitTableCard extends StatelessWidget {
     this.gap = 0,
     this.fraction = 2,
     this.topPadding,
+    this.labelStyle,
+    this.descriptionStyle,
   });
 
   @override
@@ -44,7 +48,8 @@ class DigitTableCard extends StatelessWidget {
                             width: MediaQuery.of(context).size.width / fraction,
                             child: Text(
                               e,
-                              style: theme.textTheme.headlineSmall,
+                              style:
+                                  labelStyle ?? theme.textTheme.headlineSmall,
                               textAlign: TextAlign.start,
                             ),
                           ),
@@ -52,7 +57,10 @@ class DigitTableCard extends StatelessWidget {
                           Flexible(
                               child: Padding(
                             padding: const EdgeInsets.only(top: 1.4),
-                            child: Text(element[e].toString()),
+                            child: Text(
+                              element[e].toString(),
+                              style: descriptionStyle,
+                            ),
                           )),
                         ],
                       ),

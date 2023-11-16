@@ -427,7 +427,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                     child: Icon(Icons.search),
                                   ),
                                   formControlName: _transactingPartyKey,
-                                  readOnly: true,
+                                  readOnly: false,
                                   onTap: () async {
                                     final parent =
                                         context.router.parent() as StackRouter;

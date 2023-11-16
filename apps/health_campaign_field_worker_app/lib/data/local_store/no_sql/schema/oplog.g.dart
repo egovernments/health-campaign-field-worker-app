@@ -285,6 +285,8 @@ const _OpLogentityTypeEnumValueMap = {
   r'boundary': r'boundary',
   r'serviceAttributes': r'serviceAttributes',
   r'locality': r'locality',
+  r'downsync': r'downsync',
+  r'downsyncCriteria': r'downsyncCriteria',
 };
 const _OpLogentityTypeValueEnumMap = {
   r'user': DataModelType.user,
@@ -314,6 +316,8 @@ const _OpLogentityTypeValueEnumMap = {
   r'boundary': DataModelType.boundary,
   r'serviceAttributes': DataModelType.serviceAttributes,
   r'locality': DataModelType.locality,
+  r'downsync': DataModelType.downsync,
+  r'downsyncCriteria': DataModelType.downsyncCriteria,
 };
 const _OpLogoperationEnumValueMap = {
   r'create': r'create',

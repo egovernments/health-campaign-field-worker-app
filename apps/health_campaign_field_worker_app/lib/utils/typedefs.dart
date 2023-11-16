@@ -45,3 +45,5 @@ typedef SideEffectDataRepository
     = DataRepository<SideEffectModel, SideEffectSearchModel>;
 typedef ReferralDataRepository
     = DataRepository<ReferralModel, ReferralSearchModel>;
+typedef DownsyncDataRepository
+    = DataRepository<DownsyncModel, DownsyncSearchModel>;

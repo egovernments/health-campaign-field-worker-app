@@ -19,6 +19,7 @@ import '../pages/beneficiary/refer_beneficiary.dart';
 import '../pages/beneficiary/side_effects.dart';
 import '../pages/beneficiary/widgets/household_acknowledgement.dart';
 import '../pages/beneficiary/widgets/splash_acknowledgement.dart';
+import '../pages/beneficiary_registration/beneficiary_acknowledgement.dart';
 import '../pages/beneficiary_registration/beneficiary_registration_wrapper.dart';
 import '../pages/beneficiary_registration/household_details.dart';
 import '../pages/beneficiary_registration/household_location.dart';
@@ -55,6 +56,7 @@ import '../pages/profile.dart';
 import '../pages/project_selection.dart';
 import '../pages/qr_scanner.dart';
 import '../pages/reason_for_deletion.dart';
+import '../pages/reports/beneficiary/beneficaries_report.dart';
 import '../pages/search_beneficiary.dart';
 import '../pages/unauthenticated.dart';
 
@@ -86,6 +88,10 @@ part 'app_router.gr.dart';
 
         AutoRoute(page: SearchBeneficiaryPage, path: 'search-beneficiary'),
         AutoRoute(page: QRScannerPage, path: 'scanner'),
+        AutoRoute(
+          page: BeneficiariesReportPage,
+          path: 'beneficiary-downsync-report',
+        ),
 
         /// Beneficiary Registration
         AutoRoute(
@@ -159,7 +165,10 @@ part 'app_router.gr.dart';
           AutoRoute(page: ChecklistViewPage, path: 'view'),
           AutoRoute(page: ChecklistPreviewPage, path: 'preview'),
         ]),
-
+        AutoRoute(
+          page: BeneficiaryAcknowledgementPage,
+          path: 'beneficiary-acknowledgement',
+        ),
         AutoRoute(page: AcknowledgementPage, path: 'acknowledgement'),
         AutoRoute(
           page: ComplaintsAcknowledgementPage,

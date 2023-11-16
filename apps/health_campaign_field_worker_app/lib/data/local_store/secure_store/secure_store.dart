@@ -112,9 +112,8 @@ class LocalSecureStore {
     if (actionsListString == null) return null;
 
     try {
-      final actions = Mapper.fromMap<RoleActionsWrapperModel>(json.decode(
-        actionsListString,
-      ));
+      final actions =
+          RoleActionsWrapperModel.fromJson(json.decode(actionsListString));
 
       return actions;
     } catch (_) {
@@ -175,7 +174,7 @@ class LocalSecureStore {
   Future<void> setRoleActions(RoleActionsWrapperModel actions) async {
     await storage.write(
       key: actionsListkey,
-      value: actions.toString(),
+      value: json.encode(actions),
     );
   }
 
