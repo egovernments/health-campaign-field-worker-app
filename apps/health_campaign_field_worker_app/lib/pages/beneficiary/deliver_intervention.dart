@@ -234,11 +234,6 @@ class _DeliverInterventionPageState
 
                                                   if (shouldSubmit ?? false) {
                                                     if (context.mounted) {
-                                                      context.router
-                                                          .popUntilRouteWithName(
-                                                        BeneficiaryWrapperRoute
-                                                            .name,
-                                                      );
                                                       context
                                                           .read<
                                                               DeliverInterventionBloc>()
@@ -284,6 +279,11 @@ class _DeliverInterventionPageState
                                                                   ?.cycles
                                                                   ?.isNotEmpty ==
                                                               true) {
+                                                        context.router
+                                                            .popUntilRouteWithName(
+                                                          BeneficiaryWrapperRoute
+                                                              .name,
+                                                        );
                                                         context.router.push(
                                                           SplashAcknowledgementRoute(
                                                             enableBackToSearch:
@@ -291,12 +291,34 @@ class _DeliverInterventionPageState
                                                           ),
                                                         );
                                                       } else {
-                                                        context.router.push(
-                                                          SplashAcknowledgementRoute(
-                                                            enableBackToSearch:
-                                                                true,
+                                                        final reloadState =
+                                                            context.read<
+                                                                HouseholdOverviewBloc>();
+
+                                                        Future.delayed(
+                                                          const Duration(
+                                                            milliseconds: 1000,
                                                           ),
-                                                        );
+                                                          () {
+                                                            reloadState.add(
+                                                              HouseholdOverviewReloadEvent(
+                                                                projectId: context
+                                                                    .projectId,
+                                                                projectBeneficiaryType:
+                                                                    context
+                                                                        .beneficiaryType,
+                                                              ),
+                                                            );
+                                                          },
+                                                        ).then((value) {
+                                                          context.router
+                                                              .popAndPush(
+                                                            HouseholdAcknowledgementRoute(
+                                                              enableViewHousehold:
+                                                                  true,
+                                                            ),
+                                                          );
+                                                        });
                                                       }
                                                     }
                                                   }
@@ -355,7 +377,15 @@ class _DeliverInterventionPageState
                                                   stepRadius: 12.5,
                                                   steps: steps,
                                                   maxStepReached: 3,
-                                                  lineLength: (MediaQuery.of(context).size.width - 12.5*2*steps.length-45) / (steps.length-1),
+                                                  lineLength:
+                                                      (MediaQuery.of(context)
+                                                                  .size
+                                                                  .width -
+                                                              12.5 *
+                                                                  2 *
+                                                                  steps.length -
+                                                              45) /
+                                                          (steps.length - 1),
                                                 ),
                                                 DigitDateFormPicker(
                                                   isEnabled: false,
