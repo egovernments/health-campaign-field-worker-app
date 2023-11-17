@@ -165,7 +165,8 @@ class _BoundarySelectionPageState
                                           context,
                                           rootNavigator: true,
                                         ).popUntil(
-                                            (route) => route is! PopupRoute),
+                                          (route) => route is! PopupRoute,
+                                        ),
                                       },
                                     DigitSyncDialog.show(
                                       context,
@@ -310,8 +311,12 @@ class _BoundarySelectionPageState
                                     )} $date\n${localizations.translate(
                                       i18.beneficiaryDetails.recordsdownload,
                                     )} ${result.totalCount}/${result.totalCount}";
-                                    Navigator.of(context, rootNavigator: true)
-                                        .pop();
+                                    Navigator.of(
+                                      context,
+                                      rootNavigator: true,
+                                    ).popUntil(
+                                      (route) => route is! PopupRoute,
+                                    );
                                     context.router
                                         .popAndPush((AcknowledgementRoute(
                                       isDataRecordSuccess: true,
