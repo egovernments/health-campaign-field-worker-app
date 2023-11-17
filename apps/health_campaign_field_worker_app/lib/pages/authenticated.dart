@@ -50,39 +50,37 @@ class AuthenticatedPageWrapper extends StatelessWidget {
 
                     if (selectedBoundary == null) {
                       return const SizedBox.shrink();
-                    }
+                    } else {
+                      final boundaryName = selectedBoundary.name ??
+                          selectedBoundary.code ??
+                          AppLocalizations.of(context).translate(
+                            i18.projectSelection.onProjectMapped,
+                          );
 
-                    final boundaryName = selectedBoundary.name ??
-                        selectedBoundary.code ??
-                        AppLocalizations.of(context).translate(
-                          i18.projectSelection.onProjectMapped,
-                        );
+                      final theme = Theme.of(context);
 
-                    final theme = Theme.of(context);
-
-                    return GestureDetector(
-                      onTap: () {
-                        ctx.router.popUntilRouteWithName(HomeRoute.name);
-                        ctx.router.push(BoundarySelectionRoute());
-                      },
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          TextButton(
-                            style: TextButton.styleFrom(
-                              foregroundColor: theme.colorScheme.surface,
-                              padding: EdgeInsets.zero,
+                      return GestureDetector(
+                        onTap: () {
+                          ctx.router.popUntilRouteWithName(
+                            AuthenticatedRouteWrapper.name,
+                          );
+                          ctx.router.navigate(BoundarySelectionRoute());
+                        },
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              boundaryName,
+                              style: TextStyle(
+                                color: theme.colorScheme.surface,
+                                fontSize: 16,
+                              ),
                             ),
-                            onPressed: () {
-                              ctx.router.navigate(BoundarySelectionRoute());
-                            },
-                            child: Text(boundaryName),
-                            // child: Text(boundaryName),
-                          ),
-                          const Icon(Icons.arrow_drop_down_outlined),
-                        ],
-                      ),
-                    );
+                            const Icon(Icons.arrow_drop_down_outlined),
+                          ],
+                        ),
+                      );
+                    }
                   },
                 ),
               ],

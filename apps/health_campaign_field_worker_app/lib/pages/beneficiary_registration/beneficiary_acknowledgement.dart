@@ -38,14 +38,6 @@ class _BeneficiaryAcknowledgementPageState
               wrapper: bloc.state.householdMembers.first,
             ),
           );
-          // final wrapper = context
-          //     .read<HouseholdOverviewBloc>()
-          //     .state
-          //     .householdMemberWrapper;
-          //
-          // context.router.popAndPush(
-          //   BeneficiaryWrapperRoute(wrapper: wrapper),
-          // );
         },
         enableViewHousehold: widget.enableViewHousehold ?? false,
         secondaryLabel: localizations.translate(
