@@ -22,6 +22,10 @@ class DigitLanguageCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DigitCard(
+      padding: const EdgeInsets.symmetric(
+        vertical: 16,
+        horizontal: 8,
+      ),
       margin: const EdgeInsets.all(8),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,

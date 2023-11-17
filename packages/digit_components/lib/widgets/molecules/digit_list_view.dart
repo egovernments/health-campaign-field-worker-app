@@ -22,10 +22,6 @@ class DigitListView extends StatelessWidget {
     final theme = Theme.of(context);
     return DigitCard(
       onPressed: onPressed,
-      padding: const EdgeInsets.symmetric(
-        horizontal: kPadding,
-        vertical: kPadding * 2,
-      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

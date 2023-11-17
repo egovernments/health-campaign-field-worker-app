@@ -97,7 +97,11 @@ class DigitDialog extends StatelessWidget {
                   Padding(
                     padding: options.dialogPadding != null
                         ? options.dialogPadding!
-                        : const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+                        : const EdgeInsets.only(
+                            left: kPadding * 2,
+                            right: kPadding * 2,
+                            bottom: kPadding,
+                          ),
                     child: DigitElevatedButton(
                       onPressed: () =>
                           options.primaryAction!.action?.call(context),
@@ -146,8 +150,18 @@ class DigitDialogOptions {
     this.barrierDismissible = false,
     this.enableRecordPast = false,
     this.isScrollable = false,
-    this.titlePadding = const EdgeInsets.all(kPadding),
-    this.contentPadding = const EdgeInsets.all(kPadding),
+    this.titlePadding = const EdgeInsets.only(
+      left: kPadding * 3,
+      right: kPadding * 2,
+      bottom: kPadding * 2,
+      top: kPadding * 2,
+    ),
+    this.contentPadding = const EdgeInsets.only(
+      bottom: kPadding * 2,
+      top: kPadding * 2,
+      left: kPadding * 2,
+      right: kPadding * 2,
+    ),
     this.barrierColor,
     this.key,
     this.dialogPadding,

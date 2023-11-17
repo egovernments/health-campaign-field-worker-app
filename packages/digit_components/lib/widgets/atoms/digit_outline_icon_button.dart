@@ -23,7 +23,12 @@ class DigitOutlineIconButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return OutlinedButton(
       onPressed: onPressed,
-      style: buttonStyle,
+      style: buttonStyle ??
+          OutlinedButton.styleFrom(
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.zero,
+            ),
+          ),
       child: Padding(
         padding: const EdgeInsets.all(kPadding / 2),
         child: Row(
