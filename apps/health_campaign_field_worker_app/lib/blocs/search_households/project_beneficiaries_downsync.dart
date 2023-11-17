@@ -102,6 +102,7 @@ class BeneficiaryDownSyncBloc
     BeneficiaryDownSyncEmitter emit,
   ) async {
     if (event.pendingSyncCount > 0) {
+      emit(const BeneficiaryDownSyncState.loading(true));
       emit(const BeneficiaryDownSyncState.pendingSync());
     } else {
       emit(const BeneficiaryDownSyncState.loading(true));
