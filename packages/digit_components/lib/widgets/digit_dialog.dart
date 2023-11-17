@@ -94,9 +94,7 @@ class DigitDialog extends StatelessWidget {
               children: <Widget>[
                 if (options.primaryAction != null)
                   Padding(
-                    padding: options.dialogPadding != null
-                        ? options.dialogPadding!
-                        : const EdgeInsets.all(0),
+                    padding: options.dialogPadding != null ? options.dialogPadding! : const EdgeInsets.all(0),
                     child: DigitElevatedButton(
                       onPressed: () =>
                           options.primaryAction!.action?.call(context),
