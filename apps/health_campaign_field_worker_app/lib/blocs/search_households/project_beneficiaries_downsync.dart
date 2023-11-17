@@ -153,8 +153,7 @@ class BeneficiaryDownSyncBloc
     // [TODO: Move the function DiskSpace.getFreeDiskSpace to utils
     diskSpace = await DiskSpace
         .getFreeDiskSpace; // Returns the device available space in MB
-    // emit(BeneficiaryDownSyncState.inProgress(0, serverTotalCount));
-    // diskSpace in MB * 1000 comparison with serverTotalCount * 100KB * Number of entities * 2
+    // diskSpace in MB * 1000 comparison with serverTotalCount * 150KB * Number of entities * 2
     if ((diskSpace ?? 0) * 1000 < (event.initialServerCount * 150 * 2)) {
       emit(const BeneficiaryDownSyncState.insufficientStorage());
     } else {
@@ -211,8 +210,6 @@ class BeneficiaryDownSyncBloc
                 referralLocalRepository,
               ]);
               // Update the local downSync data for the boundary with the new values
-              // offset += event.batchSize;
-              // ignore: avoid_dynamic_calls
               totalCount = downSyncResults["DownsyncCriteria"]["totalCount"];
 
               await downSyncLocalRepository.update(DownsyncModel(
@@ -223,7 +220,6 @@ class BeneficiaryDownSyncBloc
                 locality: event.boundaryCode,
                 boundaryName: event.boundaryName,
               ));
-              // emit(BeneficiaryDownSyncState.inProgress(offset, totalCount));
             }
             // When API response failed
             else {
