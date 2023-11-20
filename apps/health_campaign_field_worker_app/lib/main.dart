@@ -1,5 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/widgets/atoms/digit_base_form_input.dart';
+import 'package:digit_components/widgets/atoms/digit_date_form_input.dart';
+import 'package:digit_components/widgets/atoms/digit_text_form_input.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
@@ -23,34 +26,30 @@ late Dio _dio;
 late Isar _isar;
 int i = 0;
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  final info = await PackageInfo.fromPlatform();
-
-  Bloc.observer = AppBlocObserver();
-  await AppSharedPreferences().init();
-
-  if (AppSharedPreferences().isFirstLaunch) {
-    AppLogger.instance.info('App Launched First Time', title: 'main');
-    await AppSharedPreferences().appLaunchedFirstTime();
-    await LocalSecureStore.instance.deleteAll();
-  }
-
-  await envConfig.initialize();
-  WidgetsBinding.instance.addObserver(AppLifecycleObserver());
-  _dio = DioClient().dio;
-
-  DigitUi.instance.initThemeComponents();
-  await Constants().initialize(info.version);
-  _isar = await Constants().isar;
-  await initializeService(_dio, _isar);
-
-  runApp(MainApplication(
-    appRouter: AppRouter(),
-    isar: _isar,
-    client: _dio,
-    sql: _sql,
+void main() {
+  runApp( MaterialApp(
+    home: Scaffold(
+      body: DigitCard(
+        child: Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              DigitDateFormInput(
+                label: "input",
+                controller: TextEditingController(),
+                // state: 'Disabled',
+                info: 'this is info',
+                innerLabel: 'innerlabel',
+                helpText: 'help text',
+                // suffixIcon: Icons.currency_rupee_sharp,
+                // prefixIcon: Icons.currency_rupee,
+              ),
+              // Add more instances of CustomTextField for different types
+            ],
+          ),
+        ),
+      ),
+    ),
   ));
 }
 
