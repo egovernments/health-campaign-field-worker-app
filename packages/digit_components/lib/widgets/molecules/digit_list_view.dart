@@ -23,7 +23,7 @@ class DigitListView extends StatelessWidget {
     return DigitCard(
       onPressed: onPressed,
       padding: const EdgeInsets.symmetric(
-        horizontal: kPadding,
+        horizontal: kPadding*2,
         vertical: kPadding * 2,
       ),
       child: Row(

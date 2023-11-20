@@ -355,6 +355,7 @@ class _HomePageState extends LocalizedState<HomePage> {
         label: i18.home.syncDataLabel,
         onPressed: () => _attemptSyncUp(context),
       ),
+      HomeItemCard(icon: Icons.report, label: 'report', onPressed: () => context.router.push(InventoryReportSelectionRoute()),),
       HomeItemCard(
         icon: Icons.call,
         label: i18.home.callbackLabel,

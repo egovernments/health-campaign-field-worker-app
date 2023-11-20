@@ -81,7 +81,9 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
                           complaint.serviceRequestId ??
                               "${localizations.translate(i18.complaints.inboxNotGeneratedLabel)}\n${localizations.translate(i18.complaints.inboxSyncRequiredLabel)}",
                           style: TextStyle(
-                            color: theme.colorScheme.secondary,
+                            color: complaint.serviceRequestId != null
+                                ? theme.colorScheme.secondary
+                                : DigitColors().woodsmokeBlack,
                           ),
                         ),
                       ),

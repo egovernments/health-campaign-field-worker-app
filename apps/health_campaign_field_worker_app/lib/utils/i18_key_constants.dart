@@ -101,6 +101,7 @@ class Common {
 
   String get coreCommonDownload => 'CORE_COMMON_DOWNLOAD';
   String get coreCommonDownloadFailed => 'CORE_COMMON_DOWNLOAD_FAILED';
+  String get maxCharsRequired => 'MAX_CHARS_ALLOWED';
 }
 
 class AdverseEvents {
