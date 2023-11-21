@@ -62,7 +62,7 @@ class _DigitSearchDropdownState<T> extends State<DigitSearchDropdown<T>> {
           DigitReactiveTypeAhead<T, T>(
               textFieldConfiguration: const TextFieldConfiguration(
                 decoration: InputDecoration(
-                  constraints: BoxConstraints(maxHeight: 42),
+                  // constraints: BoxConstraints(maxHeight: 42),
                   suffixIcon: Padding(
                       padding: EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
                       child: Icon(
@@ -77,13 +77,15 @@ class _DigitSearchDropdownState<T> extends State<DigitSearchDropdown<T>> {
               initialValue: widget.initialValue,
               initialValueText: widget.initialValueText,
               onSuggestionSelected: widget.onSuggestionSelected,
-              suggestionsCallback:  widget.isEnableSearch ? (pattern) => widget.suggestionsCallback(
-                    widget.menuItems,
-                    pattern,
-                  ) : (pattern) => widget.suggestionsCallback(
-                widget.menuItems,
-                '',
-              ),
+              suggestionsCallback: widget.isEnableSearch
+                  ? (pattern) => widget.suggestionsCallback(
+                        widget.menuItems,
+                        pattern,
+                      )
+                  : (pattern) => widget.suggestionsCallback(
+                        widget.menuItems,
+                        '',
+                      ),
               hideKeyboard: !widget.isEnableSearch,
               itemBuilder: (context, item) {
                 return Padding(
