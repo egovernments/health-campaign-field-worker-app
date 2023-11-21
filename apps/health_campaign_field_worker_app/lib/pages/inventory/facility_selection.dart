@@ -69,6 +69,7 @@ class FacilitySelectionPage extends StatelessWidget {
                             padding: const EdgeInsets.only(
                               left: kPadding * 2,
                               bottom: kPadding * 2,
+                              top: kPadding * 2,
                             ),
                             child: Text(facility.id),
                           ),

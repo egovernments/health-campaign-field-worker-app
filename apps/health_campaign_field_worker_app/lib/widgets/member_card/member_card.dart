@@ -414,7 +414,7 @@ class MemberCard extends StatelessWidget {
                                     },
                                   ),
                                   const SizedBox(
-                                    height: 10,
+                                    height: kPadding * 2,
                                   ),
                                   DigitOutLineButton(
                                     label: localizations.translate(
@@ -450,7 +450,7 @@ class MemberCard extends StatelessWidget {
                                     },
                                   ),
                                   const SizedBox(
-                                    height: 10,
+                                    height: kPadding * 2,
                                   ),
                                   DigitOutLineButton(
                                     label: localizations.translate(

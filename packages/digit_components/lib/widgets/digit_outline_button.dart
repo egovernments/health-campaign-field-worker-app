@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../theme/digit_theme.dart';
+
 class DigitOutLineButton extends StatelessWidget {
   final String label;
   final VoidCallback? onPressed;
@@ -34,13 +36,10 @@ class DigitOutLineButton extends StatelessWidget {
               ),
             ),
       child: Padding(
-        padding: const EdgeInsets.only(left: 15, right: 15),
+        padding: const EdgeInsets.only(left: kPadding * 2, right: kPadding * 2),
         child: Text(
           label,
-          style: TextStyle(
-            fontSize: 19,
-            fontWeight: FontWeight.w600,
-            fontStyle: FontStyle.normal,
+          style: DigitTheme.instance.mobileTheme.textTheme.headlineSmall?.apply(
             color: onPressed != null
                 ? theme.colorScheme.secondary
                 : theme.colorScheme.outline,

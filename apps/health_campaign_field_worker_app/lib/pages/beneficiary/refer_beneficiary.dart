@@ -78,270 +78,259 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
           body: ReactiveFormBuilder(
             form: buildForm,
             builder: (context, form, child) => ScrollableContent(
+              enableFixedButton: true,
               header: const Column(children: [
                 BackNavigationHelpHeaderWidget(),
               ]),
-              footer: SizedBox(
-                height: 100,
-                child: DigitCard(
-                  margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
-                  child: ValueListenableBuilder(
-                    valueListenable: clickedStatus,
-                    builder: (context, bool isClicked, _) {
-                      return Padding(
-                        padding: const EdgeInsets.only(
-                          left: kPadding * 2,
-                          right: kPadding * 2,
-                        ),
-                        child: DigitElevatedButton(
-                          onPressed: isClicked
-                              ? null
-                              : () {
-                                  if (form.control(_referralReason).value ==
-                                      null) {
-                                    clickedStatus.value = false;
-                                    form
-                                        .control(_referralReason)
-                                        .setErrors({'': true});
-                                  }
-                                  form.markAllAsTouched();
+              footer: DigitCard(
+                margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
+                padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
+                child: ValueListenableBuilder(
+                  valueListenable: clickedStatus,
+                  builder: (context, bool isClicked, _) {
+                    return DigitElevatedButton(
+                      onPressed: isClicked
+                          ? null
+                          : () {
+                              if (form.control(_referralReason).value == null) {
+                                clickedStatus.value = false;
+                                form
+                                    .control(_referralReason)
+                                    .setErrors({'': true});
+                              }
+                              form.markAllAsTouched();
 
-                                  if (!form.valid) {
-                                    return;
-                                  } else {
-                                    clickedStatus.value = true;
-                                    final recipient = form
-                                        .control(_referredToKey)
-                                        .value as FacilityModel;
-                                    final reason = form
-                                        .control(_referralReason)
-                                        .value as KeyValue;
-                                    final recipientType = recipient.id ==
-                                            'Community Health Worker'
+                              if (!form.valid) {
+                                return;
+                              } else {
+                                clickedStatus.value = true;
+                                final recipient = form
+                                    .control(_referredToKey)
+                                    .value as FacilityModel;
+                                final reason = form
+                                    .control(_referralReason)
+                                    .value as KeyValue;
+                                final recipientType =
+                                    recipient.id == 'Community Health Worker'
                                         ? 'STAFF'
                                         : 'FACILITY';
-                                    final recipientId = recipient.id ==
-                                            'Community Health Worker'
+                                final recipientId =
+                                    recipient.id == 'Community Health Worker'
                                         ? context.loggedInUserUuid
                                         : recipient.id;
-                                    final referralComment =
-                                        form.control(_referralComments).value;
+                                final referralComment =
+                                    form.control(_referralComments).value;
 
-                                    final event = context.read<ReferralBloc>();
-                                    event.add(ReferralSubmitEvent(
-                                      ReferralModel(
-                                        clientReferenceId: IdGen.i.identifier,
-                                        projectId: context.projectId,
-                                        projectBeneficiaryClientReferenceId:
-                                            widget
-                                                .projectBeneficiaryClientRefId,
-                                        referrerId: context.loggedInUserUuid,
-                                        recipientId: recipientId,
-                                        recipientType: recipientType,
-                                        reasons: [reason.key],
-                                        tenantId: envConfig.variables.tenantId,
-                                        rowVersion: 1,
-                                        auditDetails: AuditDetails(
-                                          createdBy: context.loggedInUserUuid,
-                                          createdTime:
-                                              context.millisecondsSinceEpoch(),
-                                          lastModifiedBy:
-                                              context.loggedInUserUuid,
-                                          lastModifiedTime:
-                                              context.millisecondsSinceEpoch(),
-                                        ),
-                                        clientAuditDetails: ClientAuditDetails(
-                                          createdBy: context.loggedInUserUuid,
-                                          createdTime:
-                                              context.millisecondsSinceEpoch(),
-                                          lastModifiedBy:
-                                              context.loggedInUserUuid,
-                                          lastModifiedTime:
-                                              context.millisecondsSinceEpoch(),
-                                        ),
-                                        additionalFields:
-                                            ReferralAdditionalFields(
-                                          version: 1,
-                                          fields: [
-                                            if (referralComment != null &&
-                                                referralComment
-                                                    .toString()
-                                                    .trim()
-                                                    .isNotEmpty)
-                                              AdditionalField(
-                                                AdditionalFieldsType
-                                                    .referralComments
-                                                    .toValue(),
-                                                referralComment,
-                                              ),
-                                          ],
-                                        ),
-                                      ),
-                                      false,
-                                    ));
-
-                                    final reloadState =
-                                        context.read<HouseholdOverviewBloc>();
-
-                                    Future.delayed(
-                                      const Duration(milliseconds: 500),
-                                      () {
-                                        reloadState
-                                            .add(HouseholdOverviewReloadEvent(
-                                          projectId: context.projectId,
-                                          projectBeneficiaryType:
-                                              context.beneficiaryType,
-                                        ));
-                                      },
-                                    ).then((value) => context.router.popAndPush(
-                                          HouseholdAcknowledgementRoute(
-                                            enableViewHousehold: true,
+                                final event = context.read<ReferralBloc>();
+                                event.add(ReferralSubmitEvent(
+                                  ReferralModel(
+                                    clientReferenceId: IdGen.i.identifier,
+                                    projectId: context.projectId,
+                                    projectBeneficiaryClientReferenceId:
+                                        widget.projectBeneficiaryClientRefId,
+                                    referrerId: context.loggedInUserUuid,
+                                    recipientId: recipientId,
+                                    recipientType: recipientType,
+                                    reasons: [reason.key],
+                                    tenantId: envConfig.variables.tenantId,
+                                    rowVersion: 1,
+                                    auditDetails: AuditDetails(
+                                      createdBy: context.loggedInUserUuid,
+                                      createdTime:
+                                          context.millisecondsSinceEpoch(),
+                                      lastModifiedBy: context.loggedInUserUuid,
+                                      lastModifiedTime:
+                                          context.millisecondsSinceEpoch(),
+                                    ),
+                                    clientAuditDetails: ClientAuditDetails(
+                                      createdBy: context.loggedInUserUuid,
+                                      createdTime:
+                                          context.millisecondsSinceEpoch(),
+                                      lastModifiedBy: context.loggedInUserUuid,
+                                      lastModifiedTime:
+                                          context.millisecondsSinceEpoch(),
+                                    ),
+                                    additionalFields: ReferralAdditionalFields(
+                                      version: 1,
+                                      fields: [
+                                        if (referralComment != null &&
+                                            referralComment
+                                                .toString()
+                                                .trim()
+                                                .isNotEmpty)
+                                          AdditionalField(
+                                            AdditionalFieldsType
+                                                .referralComments
+                                                .toValue(),
+                                            referralComment,
                                           ),
-                                        ));
-                                  }
-                                },
-                          child: Center(
-                            child: Text(
-                              localizations
-                                  .translate(i18.common.coreCommonSubmit),
-                            ),
-                          ),
+                                      ],
+                                    ),
+                                  ),
+                                  false,
+                                ));
+
+                                final reloadState =
+                                    context.read<HouseholdOverviewBloc>();
+
+                                Future.delayed(
+                                  const Duration(milliseconds: 500),
+                                  () {
+                                    reloadState
+                                        .add(HouseholdOverviewReloadEvent(
+                                      projectId: context.projectId,
+                                      projectBeneficiaryType:
+                                          context.beneficiaryType,
+                                    ));
+                                  },
+                                ).then((value) => context.router.popAndPush(
+                                      HouseholdAcknowledgementRoute(
+                                        enableViewHousehold: true,
+                                      ),
+                                    ));
+                              }
+                            },
+                      child: Center(
+                        child: Text(
+                          localizations.translate(i18.common.coreCommonSubmit),
                         ),
-                      );
-                    },
-                  ),
+                      ),
+                    );
+                  },
                 ),
               ),
-              children: [
-                DigitCard(
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              localizations.translate(
-                                i18.referBeneficiary.referralDetails,
+              slivers: [
+                SliverToBoxAdapter(
+                  child: DigitCard(
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                localizations.translate(
+                                  i18.referBeneficiary.referralDetails,
+                                ),
+                                style: theme.textTheme.displayMedium,
                               ),
-                              style: theme.textTheme.displayMedium,
+                            ),
+                          ],
+                        ),
+                        Column(children: [
+                          DigitDateFormPicker(
+                            isEnabled: false,
+                            formControlName: _dateOfReferralKey,
+                            label: localizations.translate(
+                              i18.referBeneficiary.dateOfReferralLabel,
+                            ),
+                            isRequired: false,
+                            initialDate: DateTime.now(),
+                            cancelText: localizations
+                                .translate(i18.common.coreCommonCancel),
+                            confirmText: localizations
+                                .translate(i18.common.coreCommonOk),
+                            padding: const EdgeInsets.only(
+                              bottom: kPadding,
+                              top: kPadding,
                             ),
                           ),
-                        ],
-                      ),
-                      Column(children: [
-                        DigitDateFormPicker(
-                          isEnabled: false,
-                          formControlName: _dateOfReferralKey,
-                          label: localizations.translate(
-                            i18.referBeneficiary.dateOfReferralLabel,
+                          DigitTextFormField(
+                            formControlName: _administrativeUnitKey,
+                            label: localizations.translate(
+                              i18.referBeneficiary.administrationUnitFormLabel,
+                            ),
+                            isRequired: true,
+                            readOnly: true,
                           ),
-                          isRequired: false,
-                          initialDate: DateTime.now(),
-                          cancelText: localizations
-                              .translate(i18.common.coreCommonCancel),
-                          confirmText:
-                              localizations.translate(i18.common.coreCommonOk),
-                          padding: const EdgeInsets.only(
-                            bottom: kPadding,
-                            top: kPadding,
-                          ),
-                        ),
-                        DigitTextFormField(
-                          formControlName: _administrativeUnitKey,
-                          label: localizations.translate(
-                            i18.referBeneficiary.administrationUnitFormLabel,
-                          ),
-                          isRequired: true,
-                          readOnly: true,
-                        ),
-                        DigitTextFormField(
-                          formControlName: _referredByKey,
-                          label: localizations.translate(
-                            i18.referBeneficiary.referredByLabel,
-                          ),
-                          validationMessages: {
-                            'required': (_) => localizations.translate(
-                                  i18.common.corecommonRequired,
-                                ),
-                          },
-                          isRequired: true,
-                        ),
-                        DigitTextFormField(
-                          // padding: const EdgeInsets.only(top: kPadding / 2),
-                          valueAccessor: FacilityValueAccessor(
-                            facilities,
-                          ),
-                          label: localizations.translate(
-                            i18.referBeneficiary.referredToLabel,
-                          ),
-                          isRequired: true,
-                          suffix: const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Icon(Icons.search),
-                          ),
-                          formControlName: _referredToKey,
-                          readOnly: false,
-                          validationMessages: {
-                            'required': (_) => localizations.translate(
-                                  i18.referBeneficiary
-                                      .facilityValidationMessage,
-                                ),
-                          },
-                          onTap: () async {
-                            final parent =
-                                context.router.parent() as StackRouter;
-                            final facility = await parent.push<FacilityModel>(
-                              FacilitySelectionRoute(
-                                facilities: facilities,
-                              ),
-                            );
-
-                            if (facility == null) return;
-                            form.control(_referredToKey).value = facility;
-                          },
-                        ),
-                        BlocBuilder<AppInitializationBloc,
-                            AppInitializationState>(
-                          builder: (context, state) {
-                            return state.maybeWhen(
-                              orElse: () => const Offstage(),
-                              initialized: (appConfiguration, _) {
-                                final List<KeyValue> reasons =
-                                    (appConfiguration.referralReasons ?? [])
-                                        .map((e) => KeyValue(e.code, e.code))
-                                        .toList();
-
-                                return DigitRadioButtonList<KeyValue>(
-                                  labelStyle: DigitTheme
-                                      .instance.mobileTheme.textTheme.bodyLarge,
-                                  formControlName: _referralReason,
-                                  valueMapper: (val) =>
-                                      localizations.translate(val.label),
-                                  options: reasons,
-                                  labelText: localizations.translate(
-                                    i18.referBeneficiary.reasonForReferral,
-                                  ),
-                                  isRequired: true,
-                                  errorMessage: localizations.translate(
+                          DigitTextFormField(
+                            formControlName: _referredByKey,
+                            label: localizations.translate(
+                              i18.referBeneficiary.referredByLabel,
+                            ),
+                            validationMessages: {
+                              'required': (_) => localizations.translate(
                                     i18.common.corecommonRequired,
                                   ),
-                                  onValueChange: (val) {
-                                    form.control(_referralReason).value = val;
-                                  },
-                                );
-                              },
-                            );
-                          },
-                        ),
-                        DigitTextFormField(
-                          formControlName: _referralComments,
-                          label: localizations.translate(
-                            i18.referBeneficiary.referralComments,
+                            },
+                            isRequired: true,
                           ),
-                        ),
-                      ]),
-                    ],
+                          DigitTextFormField(
+                            // padding: const EdgeInsets.only(top: kPadding / 2),
+                            valueAccessor: FacilityValueAccessor(
+                              facilities,
+                            ),
+                            label: localizations.translate(
+                              i18.referBeneficiary.referredToLabel,
+                            ),
+                            isRequired: true,
+                            suffix: const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Icon(Icons.search),
+                            ),
+                            formControlName: _referredToKey,
+                            readOnly: false,
+                            validationMessages: {
+                              'required': (_) => localizations.translate(
+                                    i18.referBeneficiary
+                                        .facilityValidationMessage,
+                                  ),
+                            },
+                            onTap: () async {
+                              final parent =
+                                  context.router.parent() as StackRouter;
+                              final facility = await parent.push<FacilityModel>(
+                                FacilitySelectionRoute(
+                                  facilities: facilities,
+                                ),
+                              );
+
+                              if (facility == null) return;
+                              form.control(_referredToKey).value = facility;
+                            },
+                          ),
+                          BlocBuilder<AppInitializationBloc,
+                              AppInitializationState>(
+                            builder: (context, state) {
+                              return state.maybeWhen(
+                                orElse: () => const Offstage(),
+                                initialized: (appConfiguration, _) {
+                                  final List<KeyValue> reasons =
+                                      (appConfiguration.referralReasons ?? [])
+                                          .map((e) => KeyValue(e.code, e.code))
+                                          .toList();
+
+                                  return DigitRadioButtonList<KeyValue>(
+                                    labelStyle: DigitTheme.instance.mobileTheme
+                                        .textTheme.bodyLarge,
+                                    formControlName: _referralReason,
+                                    valueMapper: (val) =>
+                                        localizations.translate(val.label),
+                                    options: reasons,
+                                    labelText: localizations.translate(
+                                      i18.referBeneficiary.reasonForReferral,
+                                    ),
+                                    isRequired: true,
+                                    errorMessage: localizations.translate(
+                                      i18.common.corecommonRequired,
+                                    ),
+                                    onValueChange: (val) {
+                                      form.control(_referralReason).value = val;
+                                    },
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                          DigitTextFormField(
+                            formControlName: _referralComments,
+                            label: localizations.translate(
+                              i18.referBeneficiary.referralComments,
+                            ),
+                          ),
+                        ]),
+                      ],
+                    ),
                   ),
                 ),
               ],
