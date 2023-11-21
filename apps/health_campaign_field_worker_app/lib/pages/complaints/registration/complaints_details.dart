@@ -80,13 +80,9 @@ class _ComplaintsDetailsPageState
                 ),
                 footer: SizedBox(
                   child: DigitCard(
-                    margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                        left: kPadding * 2,
-                        right: kPadding * 2,
-                      ),
-                      child: DigitElevatedButton(
+                    margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
+                    padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
+                    child: DigitElevatedButton(
                         onPressed: () async {
                           setState(() {
                             form.markAllAsTouched();
@@ -209,7 +205,6 @@ class _ComplaintsDetailsPageState
                           ),
                         ),
                       ),
-                    ),
                   ),
                 ),
                 children: [
@@ -245,13 +240,10 @@ class _ComplaintsDetailsPageState
                             label: localizations.translate(
                               i18.householdLocation.administrationAreaFormLabel,
                             ),
-                            maxLength: 64,
                             isRequired: true,
                             readOnly: true,
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 10.0),
-                            child: LabeledField(
+                          LabeledField(
                               label: "${localizations.translate(
                                 i18.complaints.complainantTypeQuestion,
                               )} *",
@@ -318,7 +310,6 @@ class _ComplaintsDetailsPageState
                                 ],
                               ),
                             ),
-                          ),
                           BlocBuilder<AuthBloc, AuthState>(
                             builder: (context, state) {
                               state.mapOrNull(
@@ -343,12 +334,14 @@ class _ComplaintsDetailsPageState
                                       i18.complaints.complainantName,
                                     ),
                                     readOnly: isRaisedForSelf,
-                                    maxLength: 64,
                                     isRequired: true,
                                     validationMessages: {
                                       'required': (object) =>
                                           localizations.translate(i18.complaints
                                               .validationRequiredError),
+                                      'maxLength': (object) => localizations
+                                          .translate(i18.common.maxCharsRequired)
+                                          .replaceAll('{}', '64'),
                                     },
                                   ),
                                   DigitTextFormField(
@@ -357,7 +350,7 @@ class _ComplaintsDetailsPageState
                                       i18.complaints.complainantContactNumber,
                                     ),
                                     readOnly: isRaisedForSelf,
-                                    maxLength: 10,
+
                                     isRequired: true,
                                     keyboardType: TextInputType.number,
                                     validationMessages: {
@@ -371,6 +364,9 @@ class _ComplaintsDetailsPageState
                                       'minLength': (object) =>
                                           localizations.translate(i18.complaints
                                               .validationMinLengthError),
+                                      'maxLength': (object) => localizations
+                                          .translate(i18.common.maxCharsRequired)
+                                          .replaceAll('{}', '10'),
                                     },
                                   ),
                                 ],
@@ -382,14 +378,17 @@ class _ComplaintsDetailsPageState
                             label: localizations.translate(
                               i18.complaints.supervisorName,
                             ),
-                            maxLength: 64,
+                            validationMessages: {
+                              'maxLength': (object) => localizations
+                                  .translate(i18.common.maxCharsRequired)
+                                  .replaceAll('{}', '64'),
+                            },
                           ),
                           DigitTextFormField(
                             formControlName: _supervisorContactNumber,
                             label: localizations.translate(
                               i18.complaints.supervisorContactNumber,
                             ),
-                            maxLength: 10,
                             keyboardType: TextInputType.number,
                             validationMessages: {
                               'mobileNumber': (object) =>
@@ -397,6 +396,12 @@ class _ComplaintsDetailsPageState
                                     i18.individualDetails
                                         .mobileNumberInvalidFormatValidationMessage,
                                   ),
+                              'minLength': (object) =>
+                                  localizations.translate(i18.complaints
+                                      .validationMinLengthError),
+                              'maxLength': (object) => localizations
+                                  .translate(i18.common.maxCharsRequired)
+                                  .replaceAll('{}', '10'),
                             },
                           ),
                           DigitTextFormField(
@@ -404,14 +409,16 @@ class _ComplaintsDetailsPageState
                             label: localizations.translate(
                               i18.complaints.complaintDescription,
                             ),
-                            maxLength: 1000,
-                            minLines: 4,
-                            maxLines: 4,
+                            minLines: 2,
+                            maxLines: 3,
                             isRequired: true,
                             validationMessages: {
                               'required': (object) => localizations.translate(
                                     i18.complaints.validationRequiredError,
                                   ),
+                              'maxLength': (object) => localizations
+                                  .translate(i18.common.maxCharsRequired)
+                                  .replaceAll('{}', '1000'),
                             },
                           ),
                         ]),
@@ -453,7 +460,7 @@ class _ComplaintsDetailsPageState
       _complainantName: FormControl<String>(
         value: complaintDetails?.complainantName,
         disabled: shouldDisableForm,
-        validators: [Validators.required],
+        validators: [Validators.required, Validators.maxLength(64)],
       ),
       _complainantContactNumber: FormControl<String>(
         value: complaintDetails?.complainantContactNumber,
@@ -462,21 +469,23 @@ class _ComplaintsDetailsPageState
           Validators.required,
           CustomValidator.validMobileNumber,
           Validators.minLength(10),
+          Validators.maxLength(10)
         ],
       ),
       _supervisorName: FormControl<String>(
         value: complaintDetails?.supervisorName,
         disabled: shouldDisableForm,
+        validators: [Validators.maxLength(64)],
       ),
       _supervisorContactNumber: FormControl<String>(
         value: complaintDetails?.supervisorContactNumber,
         disabled: shouldDisableForm,
-        validators: [CustomValidator.validMobileNumber],
+        validators: [CustomValidator.validMobileNumber, Validators.maxLength(10), Validators.minLength(10),],
       ),
       _complaintDescription: FormControl<String>(
         value: complaintDetails?.complaintDescription,
         disabled: shouldDisableForm,
-        validators: [Validators.required],
+        validators: [Validators.required, Validators.maxLength(1000)],
       ),
       _complaintDetailsForm: FormControl<String>(
         disabled: shouldDisableForm,

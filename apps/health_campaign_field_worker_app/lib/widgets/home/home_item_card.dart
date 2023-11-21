@@ -27,7 +27,7 @@ class HomeItemCard extends StatelessWidget {
 
     return DigitCard(
       onPressed: onPressed,
-      padding: const EdgeInsets.all(kPadding).copyWith(top: kPadding * 5),
+      padding: const EdgeInsets.all(kPadding).copyWith(top: kPadding * 3),
       child: Align(
         alignment: Alignment.topCenter,
         child: Column(
@@ -49,7 +49,7 @@ class HomeItemCard extends StatelessWidget {
                     : theme.colorScheme.secondary,
                 size: 30,
               ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
             Text(
               AppLocalizations.of(context).translate(
                 label,

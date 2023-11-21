@@ -26,6 +26,7 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
 
     return Scaffold(
       body: ScrollableContent(
+        enableFixedButton: true,
         header: Column(
           children: [
             const BackNavigationHelpHeaderWidget(),
@@ -43,9 +44,9 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
           ],
         ),
         footer: SizedBox(
-          height: 85,
           child: DigitCard(
-            margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
+            margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
+            padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
             child: DigitElevatedButton(
               onPressed: () {
                 router.pop();
@@ -63,7 +64,7 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 8, top: 16, bottom: 16),
+                  padding: const EdgeInsets.only( top: 16, bottom: 16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -92,7 +93,7 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
                 ),
                 const DigitDivider(),
                 Padding(
-                  padding: const EdgeInsets.only(left: 8, top: 16, bottom: 16),
+                  padding: const EdgeInsets.only(top: 16, bottom: 16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -119,7 +120,7 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
                 ),
                 const DigitDivider(),
                 Padding(
-                  padding: const EdgeInsets.only(left: 8, top: 16, bottom: 16),
+                  padding: const EdgeInsets.only(top: 16, bottom: 16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -144,7 +145,7 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
                 ),
                 const DigitDivider(),
                 Padding(
-                  padding: const EdgeInsets.only(left: 8, top: 16, bottom: 16),
+                  padding: const EdgeInsets.only(top: 16, bottom: 16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -167,7 +168,7 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
                 ),
                 const DigitDivider(),
                 Padding(
-                  padding: const EdgeInsets.only(left: 8, top: 16, bottom: 16),
+                  padding: const EdgeInsets.only(top: 16, bottom: 16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -190,7 +191,7 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
                 ),
                 const DigitDivider(),
                 Padding(
-                  padding: const EdgeInsets.only(left: 8, top: 16, bottom: 16),
+                  padding: const EdgeInsets.only(top: 16, bottom: 16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -214,7 +215,7 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
                 ),
                 const DigitDivider(),
                 Padding(
-                  padding: const EdgeInsets.only(left: 8, top: 16, bottom: 16),
+                  padding: const EdgeInsets.only(top: 16, bottom: 16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -239,7 +240,7 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
                 ),
                 const DigitDivider(),
                 Padding(
-                  padding: const EdgeInsets.only(left: 8, top: 16, bottom: 16),
+                  padding: const EdgeInsets.only(top: 16, bottom: 16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
