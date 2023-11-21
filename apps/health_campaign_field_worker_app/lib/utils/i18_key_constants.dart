@@ -124,6 +124,9 @@ class Common {
   String get coreCommonSyncInProgress => 'CORE_COMMON_SYNC_IN_PROGRESS';
 
   String get facilitySearchHeaderLabel => 'FACILITY_SEARCH_HEADER_LABEL';
+
+  String get coreCommonDownload => 'CORE_COMMON_DOWNLOAD';
+  String get coreCommonDownloadFailed => 'CORE_COMMON_DOWNLOAD_FAILED';
 }
 
 class HomeShowcase {

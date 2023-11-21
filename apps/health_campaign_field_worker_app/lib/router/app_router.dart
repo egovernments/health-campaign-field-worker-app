@@ -88,13 +88,10 @@ part 'app_router.gr.dart';
 
         AutoRoute(page: SearchBeneficiaryPage, path: 'search-beneficiary'),
         AutoRoute(page: QRScannerPage, path: 'scanner'),
-<<<<<<< HEAD
-=======
         AutoRoute(
           page: BeneficiariesReportPage,
           path: 'beneficiary-downsync-report',
         ),
->>>>>>> 4e68499fcbe8984ce9af0cae0319bb0184898fd1
 
         /// Beneficiary Registration
         AutoRoute(

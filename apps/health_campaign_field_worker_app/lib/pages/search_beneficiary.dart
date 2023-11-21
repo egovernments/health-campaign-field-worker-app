@@ -2,7 +2,6 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:location/location.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/beneficiary_registration/beneficiary_registration.dart';
@@ -68,12 +67,7 @@ class _SearchBeneficiaryPageState
                       child: Column(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.fromLTRB(
-                              kPadding,
-                              kPadding,
-                              kPadding,
-                              kPadding,
-                            ),
+                            padding: const EdgeInsets.all(kPadding),
                             child: Align(
                               alignment: Alignment.topLeft,
                               child: Padding(
@@ -108,12 +102,8 @@ class _SearchBeneficiaryPageState
                                     child: DigitSearchBar(
                                       controller: searchController,
                                       hintText: localizations.translate(
-                                        context.beneficiaryType !=
-                                                BeneficiaryType.individual
-                                            ? i18.searchBeneficiary
-                                                .beneficiarySearchHintText
-                                            : i18.searchBeneficiary
-                                                .beneficiaryIndividualSearchHintText,
+                                        i18.searchBeneficiary
+                                            .beneficiarySearchHintText,
                                       ),
                                       textCapitalization:
                                           TextCapitalization.words,
@@ -187,19 +177,17 @@ class _SearchBeneficiaryPageState
                                                     final bloc = context.read<
                                                         SearchHouseholdsBloc>();
                                                     bloc.add(
-                                                      SearchHouseholdsEvent
-                                                          .searchByProximity(
-                                                        latitude: locationState
-                                                            .latitude!,
-                                                        longititude:
-                                                            locationState
-                                                                .longitude!,
-                                                        projectId:
-                                                            context.projectId,
-                                                        maxRadius: appConfig
-                                                            .maxRadius!,
-                                                      ),
-                                                    );
+                                                        SearchHouseholdsEvent
+                                                            .searchByProximity(
+                                                      latitude: locationState
+                                                          .latitude!,
+                                                      longititude: locationState
+                                                          .longitude!,
+                                                      projectId:
+                                                          context.projectId,
+                                                      maxRadius:
+                                                          appConfig.maxRadius!,
+                                                    ));
                                                   } else {
                                                     final bloc = context.read<
                                                         SearchHouseholdsBloc>();
@@ -267,7 +255,6 @@ class _SearchBeneficiaryPageState
                                 ),
                               );
 
-<<<<<<< HEAD
                               return Padding(
                                 padding: const EdgeInsets.only(
                                   left: kPadding,
@@ -279,21 +266,6 @@ class _SearchBeneficiaryPageState
                                   onOpenPressed: () async {
                                     final scannerbloc =
                                         context.read<ScannerBloc>();
-=======
-                              return ViewBeneficiaryCard(
-                                distance: distance,
-                                householdMember: i,
-                                onOpenPressed: () async {
-                                  final scannerbloc =
-                                      context.read<ScannerBloc>();
-
-                                  scannerbloc.add(
-                                    const ScannerEvent.handleScanner([], []),
-                                  );
-
-                                  final bloc =
-                                      context.read<SearchHouseholdsBloc>();
->>>>>>> 4e68499fcbe8984ce9af0cae0319bb0184898fd1
 
                                     scannerbloc.add(
                                       const ScannerEvent.handleScanner([], []),
@@ -331,11 +303,9 @@ class _SearchBeneficiaryPageState
             bottomNavigationBar: SizedBox(
               height: 150,
               child: DigitCard(
-<<<<<<< HEAD
-                margin: const EdgeInsets.only(top: 10),
-=======
-                margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
->>>>>>> 4e68499fcbe8984ce9af0cae0319bb0184898fd1
+                margin: const EdgeInsets.only(
+                  top: 10,
+                ),
                 child: Column(
                   children: [
                     BlocBuilder<SearchHouseholdsBloc, SearchHouseholdsState>(
@@ -366,7 +336,6 @@ class _SearchBeneficiaryPageState
                                 ));
                               };
 
-<<<<<<< HEAD
                         return Padding(
                           padding: const EdgeInsets.only(
                             left: kPadding * 2,
@@ -379,20 +348,11 @@ class _SearchBeneficiaryPageState
                                 i18.searchBeneficiary.beneficiaryAddActionLabel,
                               )),
                             ),
-=======
-                        return DigitElevatedButton(
-                          onPressed: onPressed,
-                          child: Center(
-                            child: Text(localizations.translate(
-                              i18.searchBeneficiary.beneficiaryAddActionLabel,
-                            )),
->>>>>>> 4e68499fcbe8984ce9af0cae0319bb0184898fd1
                           ),
                         );
                       },
                     ),
                     const SizedBox(
-<<<<<<< HEAD
                       height: kPadding + 2,
                     ),
                     Padding(
@@ -406,10 +366,10 @@ class _SearchBeneficiaryPageState
                             borderRadius: BorderRadius.zero,
                           ),
                         ),
-                        textStyle: const TextStyle(
-                          fontFamily: "Roboto",
-                          fontSize: 19,
-                          fontWeight: FontWeight.w500,
+                        textStyle: DigitTheme
+                            .instance.mobileTheme.textTheme.headlineSmall
+                            ?.apply(
+                          color: theme.colorScheme.secondary,
                         ),
                         onPressed: () {
                           context.router.push(QRScannerRoute(
@@ -422,21 +382,6 @@ class _SearchBeneficiaryPageState
                         label: localizations.translate(
                           i18.deliverIntervention.scannerLabel,
                         ),
-=======
-                      height: kPadding,
-                    ),
-                    DigitOutlineIconButton(
-                      onPressed: () {
-                        context.router.push(QRScannerRoute(
-                          quantity: 1,
-                          isGS1code: false,
-                          sinlgleValue: true,
-                        ));
-                      },
-                      icon: Icons.qr_code,
-                      label: localizations.translate(
-                        i18.deliverIntervention.scannerLabel,
->>>>>>> 4e68499fcbe8984ce9af0cae0319bb0184898fd1
                       ),
                     ),
                   ],

@@ -140,7 +140,9 @@ class _BoundarySelectionPageState
                                       },
                                       formControlName: label,
                                       valueMapper: (value) {
-                                        return value.name ?? value.code ?? "No value";
+                                        return value.name ??
+                                            value.code ??
+                                            "No value";
                                       },
                                       onSuggestionSelected: (value) {
                                         if (value == null) return;

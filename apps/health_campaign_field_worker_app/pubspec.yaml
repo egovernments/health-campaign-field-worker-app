@@ -94,10 +94,7 @@ flutter_icons:
 flutter:
   assets:
     - ./
-<<<<<<< HEAD
     - assets/icons/svg/
-=======
->>>>>>> 4e68499fcbe8984ce9af0cae0319bb0184898fd1
     - ./assets/audio/add.wav
     - ./assets/audio/buzzer.wav
     

@@ -67,6 +67,7 @@ class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                   showHelp: false,
                                 ),
                                 footer: SizedBox(
+                                  height: 100,
                                   child: DigitCard(
                                     margin: const EdgeInsets.only(top: 10),
                                     child: Padding(
@@ -200,46 +201,35 @@ class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                               ),
                                             );
 
-<<<<<<< HEAD
                                             if (shouldSubmit ?? false) {
-                                              final parent = router.parent()
-                                                  as StackRouter;
-                                              parent
-                                                ..pop()
-                                                ..pop();
+                                              final reloadState = context.read<
+                                                  HouseholdOverviewBloc>();
 
-                                              router.push(
-                                                AcknowledgementRoute(),
-                                              );
+                                              Future.delayed(
+                                                const Duration(
+                                                    milliseconds: 500),
+                                                () {
+                                                  reloadState.add(
+                                                    HouseholdOverviewReloadEvent(
+                                                      projectId:
+                                                          context.projectId,
+                                                      projectBeneficiaryType:
+                                                          context
+                                                              .beneficiaryType,
+                                                    ),
+                                                  );
+                                                },
+                                              ).then((value) =>
+                                                  context.router.push(
+                                                    HouseholdAcknowledgementRoute(
+                                                      enableViewHousehold: true,
+                                                    ),
+                                                  ));
                                             }
                                           } else {
                                             setState(() {
                                               symptomsSelected = false;
                                             });
-=======
-                                          if (shouldSubmit ?? false) {
-                                            final reloadState = context
-                                                .read<HouseholdOverviewBloc>();
-
-                                            Future.delayed(
-                                              const Duration(milliseconds: 500),
-                                              () {
-                                                reloadState.add(
-                                                  HouseholdOverviewReloadEvent(
-                                                    projectId:
-                                                        context.projectId,
-                                                    projectBeneficiaryType:
-                                                        context.beneficiaryType,
-                                                  ),
-                                                );
-                                              },
-                                            ).then((value) =>
-                                                context.router.push(
-                                                  HouseholdAcknowledgementRoute(
-                                                    enableViewHousehold: true,
-                                                  ),
-                                                ));
->>>>>>> 4e68499fcbe8984ce9af0cae0319bb0184898fd1
                                           }
                                         },
                                         child: Center(
@@ -283,17 +273,10 @@ class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                           alignment: Alignment.topLeft,
                                           child: Padding(
                                             padding: const EdgeInsets.only(
-<<<<<<< HEAD
                                               right: kPadding * 2,
                                               top: kPadding * 2,
                                               bottom: kPadding * 2,
                                             ),
-=======
-                                                left: 0,
-                                                right: kPadding,
-                                                top: kPadding * 2,
-                                                bottom: kPadding * 2),
->>>>>>> 4e68499fcbe8984ce9af0cae0319bb0184898fd1
                                             child: Text(
                                               '${localizations.translate(
                                                 i18.adverseEvents

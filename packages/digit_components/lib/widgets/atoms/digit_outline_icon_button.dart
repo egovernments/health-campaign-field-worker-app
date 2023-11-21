@@ -43,7 +43,10 @@ class DigitOutlineIconButton extends StatelessWidget {
             Text(
               label,
               style: textStyle ??
-                  DigitTheme.instance.mobileTheme.textTheme.headlineSmall?.apply(color: DigitTheme.instance.colorScheme.secondary,),
+                  DigitTheme.instance.mobileTheme.textTheme.headlineSmall
+                      ?.apply(
+                    color: DigitTheme.instance.colorScheme.secondary,
+                  ),
             ),
           ],
         ),

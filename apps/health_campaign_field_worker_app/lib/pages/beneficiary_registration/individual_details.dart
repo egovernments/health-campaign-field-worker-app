@@ -21,6 +21,8 @@ import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
+import '../../widgets/showcase/config/showcase_constants.dart';
+import '../../widgets/showcase/showcase_button.dart';
 
 class IndividualDetailsPage extends LocalizedStatefulWidget {
   final bool isHeadOfHousehold;
