@@ -78,153 +78,141 @@ class _HouseholdLocationPageState
                     ),
                   ],
                 ),
-                footer: SizedBox(
-                  height: 85,
-                  child: DigitCard(
-                    margin: const EdgeInsets.only(top: 10),
-                    child: BlocBuilder<LocationBloc, LocationState>(
-                      builder: (context, locationState) {
-                        return Padding(
-                          padding: const EdgeInsets.only(
-                            left: kPadding * 2,
-                            right: kPadding * 2,
-                          ),
-                          child: DigitElevatedButton(
-                            onPressed: () {
-                              form.markAllAsTouched();
-                              if (!form.valid) return;
+                footer: DigitCard(
+                  margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
+                  padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
+                  child: BlocBuilder<LocationBloc, LocationState>(
+                    builder: (context, locationState) {
+                      return DigitElevatedButton(
+                        onPressed: () {
+                          form.markAllAsTouched();
+                          if (!form.valid) return;
 
-                              final addressLine1 = form
-                                  .control(_addressLine1Key)
-                                  .value as String?;
-                              final addressLine2 = form
-                                  .control(_addressLine2Key)
-                                  .value as String?;
-                              final landmark =
-                                  form.control(_landmarkKey).value as String?;
-                              final postalCode =
-                                  form.control(_postalCodeKey).value as String?;
+                          final addressLine1 =
+                              form.control(_addressLine1Key).value as String?;
+                          final addressLine2 =
+                              form.control(_addressLine2Key).value as String?;
+                          final landmark =
+                              form.control(_landmarkKey).value as String?;
+                          final postalCode =
+                              form.control(_postalCodeKey).value as String?;
 
-                              registrationState.maybeWhen(
-                                orElse: () {
-                                  return;
-                                },
-                                create: (
-                                  address,
-                                  householdModel,
-                                  individualModel,
-                                  registrationDate,
-                                  searchQuery,
-                                  loading,
-                                  isHeadOfHousehold,
-                                ) {
-                                  var addressModel = AddressModel(
-                                    addressLine1: addressLine1 != null &&
-                                            addressLine1.trim().isNotEmpty
-                                        ? addressLine1
-                                        : null,
-                                    addressLine2: addressLine2 != null &&
-                                            addressLine2.trim().isNotEmpty
-                                        ? addressLine2
-                                        : null,
-                                    landmark: landmark != null &&
-                                            landmark.trim().isNotEmpty
-                                        ? landmark
-                                        : null,
-                                    pincode: postalCode != null &&
-                                            postalCode.trim().isNotEmpty
-                                        ? postalCode
-                                        : null,
-                                    type: AddressType.correspondence,
-                                    latitude: form.control(_latKey).value ??
-                                        locationState.latitude,
-                                    longitude: form.control(_lngKey).value ??
-                                        locationState.longitude,
-                                    locationAccuracy:
-                                        form.control(_accuracyKey).value ??
-                                            locationState.accuracy,
-                                    locality: LocalityModel(
-                                      code: context.boundary.code!,
-                                      name: context.boundary.name,
-                                    ),
-                                    tenantId: envConfig.variables.tenantId,
-                                    rowVersion: 1,
-                                    auditDetails: AuditDetails(
-                                      createdBy: context.loggedInUserUuid,
-                                      createdTime:
-                                          context.millisecondsSinceEpoch(),
-                                    ),
-                                    clientAuditDetails: ClientAuditDetails(
-                                      createdBy: context.loggedInUserUuid,
-                                      createdTime:
-                                          context.millisecondsSinceEpoch(),
-                                      lastModifiedBy: context.loggedInUserUuid,
-                                      lastModifiedTime:
-                                          context.millisecondsSinceEpoch(),
-                                    ),
-                                  );
-
-                                  bloc.add(
-                                    BeneficiaryRegistrationSaveAddressEvent(
-                                      addressModel,
-                                    ),
-                                  );
-                                  router.push(HouseHoldDetailsRoute());
-                                },
-                                editHousehold: (
-                                  address,
-                                  householdModel,
-                                  individuals,
-                                  registrationDate,
-                                  projectBeneficiaryModel,
-                                  loading,
-                                ) {
-                                  var addressModel = address.copyWith(
-                                    addressLine1: addressLine1 != null &&
-                                            addressLine1.trim().isNotEmpty
-                                        ? addressLine1
-                                        : null,
-                                    addressLine2: addressLine2 != null &&
-                                            addressLine2.trim().isNotEmpty
-                                        ? addressLine2
-                                        : null,
-                                    landmark: landmark != null &&
-                                            landmark.trim().isNotEmpty
-                                        ? landmark
-                                        : null,
-                                    locality: address.locality,
-                                    pincode: postalCode != null &&
-                                            postalCode.trim().isNotEmpty
-                                        ? postalCode
-                                        : null,
-                                    type: AddressType.correspondence,
-                                    latitude: form.control(_latKey).value,
-                                    longitude: form.control(_lngKey).value,
-                                    locationAccuracy:
-                                        form.control(_accuracyKey).value,
-                                  );
-                                  // TODO [Linking of Voucher for Household based project  need to be handled]
-
-                                  bloc.add(
-                                    BeneficiaryRegistrationSaveAddressEvent(
-                                      addressModel,
-                                    ),
-                                  );
-                                  router.push(HouseHoldDetailsRoute());
-                                },
-                              );
+                          registrationState.maybeWhen(
+                            orElse: () {
+                              return;
                             },
-                            child: Center(
-                              child: Text(
-                                localizations.translate(
-                                  i18.householdLocation.actionLabel,
+                            create: (
+                              address,
+                              householdModel,
+                              individualModel,
+                              registrationDate,
+                              searchQuery,
+                              loading,
+                              isHeadOfHousehold,
+                            ) {
+                              var addressModel = AddressModel(
+                                addressLine1: addressLine1 != null &&
+                                        addressLine1.trim().isNotEmpty
+                                    ? addressLine1
+                                    : null,
+                                addressLine2: addressLine2 != null &&
+                                        addressLine2.trim().isNotEmpty
+                                    ? addressLine2
+                                    : null,
+                                landmark: landmark != null &&
+                                        landmark.trim().isNotEmpty
+                                    ? landmark
+                                    : null,
+                                pincode: postalCode != null &&
+                                        postalCode.trim().isNotEmpty
+                                    ? postalCode
+                                    : null,
+                                type: AddressType.correspondence,
+                                latitude: form.control(_latKey).value ??
+                                    locationState.latitude,
+                                longitude: form.control(_lngKey).value ??
+                                    locationState.longitude,
+                                locationAccuracy:
+                                    form.control(_accuracyKey).value ??
+                                        locationState.accuracy,
+                                locality: LocalityModel(
+                                  code: context.boundary.code!,
+                                  name: context.boundary.name,
                                 ),
-                              ),
+                                tenantId: envConfig.variables.tenantId,
+                                rowVersion: 1,
+                                auditDetails: AuditDetails(
+                                  createdBy: context.loggedInUserUuid,
+                                  createdTime: context.millisecondsSinceEpoch(),
+                                ),
+                                clientAuditDetails: ClientAuditDetails(
+                                  createdBy: context.loggedInUserUuid,
+                                  createdTime: context.millisecondsSinceEpoch(),
+                                  lastModifiedBy: context.loggedInUserUuid,
+                                  lastModifiedTime:
+                                      context.millisecondsSinceEpoch(),
+                                ),
+                              );
+
+                              bloc.add(
+                                BeneficiaryRegistrationSaveAddressEvent(
+                                  addressModel,
+                                ),
+                              );
+                              router.push(HouseHoldDetailsRoute());
+                            },
+                            editHousehold: (
+                              address,
+                              householdModel,
+                              individuals,
+                              registrationDate,
+                              projectBeneficiaryModel,
+                              loading,
+                            ) {
+                              var addressModel = address.copyWith(
+                                addressLine1: addressLine1 != null &&
+                                        addressLine1.trim().isNotEmpty
+                                    ? addressLine1
+                                    : null,
+                                addressLine2: addressLine2 != null &&
+                                        addressLine2.trim().isNotEmpty
+                                    ? addressLine2
+                                    : null,
+                                landmark: landmark != null &&
+                                        landmark.trim().isNotEmpty
+                                    ? landmark
+                                    : null,
+                                locality: address.locality,
+                                pincode: postalCode != null &&
+                                        postalCode.trim().isNotEmpty
+                                    ? postalCode
+                                    : null,
+                                type: AddressType.correspondence,
+                                latitude: form.control(_latKey).value,
+                                longitude: form.control(_lngKey).value,
+                                locationAccuracy:
+                                    form.control(_accuracyKey).value,
+                              );
+                              // TODO [Linking of Voucher for Household based project  need to be handled]
+
+                              bloc.add(
+                                BeneficiaryRegistrationSaveAddressEvent(
+                                  addressModel,
+                                ),
+                              );
+                              router.push(HouseHoldDetailsRoute());
+                            },
+                          );
+                        },
+                        child: Center(
+                          child: Text(
+                            localizations.translate(
+                              i18.householdLocation.actionLabel,
                             ),
                           ),
-                        );
-                      },
-                    ),
+                        ),
+                      );
+                    },
                   ),
                 ),
                 slivers: [
@@ -234,11 +222,16 @@ class _HouseholdLocationPageState
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(
-                            localizations.translate(
-                              i18.householdLocation.householdLocationLabelText,
+                          Padding(
+                            padding:
+                                const EdgeInsets.fromLTRB(0, 0, 0, kPadding),
+                            child: Text(
+                              localizations.translate(
+                                i18.householdLocation
+                                    .householdLocationLabelText,
+                              ),
+                              style: theme.textTheme.displayMedium,
                             ),
-                            style: theme.textTheme.displayMedium,
                           ),
                           Column(children: [
                             householdLocationShowcaseData.administrativeArea
@@ -329,11 +322,9 @@ class _HouseholdLocationPageState
                                 inputFormatters: [
                                   FilteringTextInputFormatter.digitsOnly,
                                 ],
-                                padding: EdgeInsets.zero,
                               ),
                             ),
                           ]),
-                          const SizedBox(height: 16),
                         ],
                       ),
                     ),

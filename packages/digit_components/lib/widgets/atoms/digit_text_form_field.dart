@@ -65,8 +65,7 @@ class DigitTextFormField extends StatelessWidget {
         label: '$label ${isRequired ? '*' : ''}',
         padding: padding ??
             const EdgeInsets.only(
-              top: kPadding * 2,
-              bottom: 0,
+              top: kPadding,
             ),
         labelStyle: labelStyle ?? Theme.of(context).textTheme.bodyLarge,
         child: Column(

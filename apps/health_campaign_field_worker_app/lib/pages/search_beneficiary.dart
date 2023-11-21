@@ -323,11 +323,6 @@ class _SearchBeneficiaryPageState
                             borderRadius: BorderRadius.zero,
                           ),
                         ),
-                        // textStyle: DigitTheme
-                        //     .instance.mobileTheme.textTheme.headlineSmall
-                        //     ?.apply(
-                        //   color: theme.colorScheme.secondary,
-                        // ),
                         onPressed: () {
                           context.router.push(QRScannerRoute(
                             quantity: 1,

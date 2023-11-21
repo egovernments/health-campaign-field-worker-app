@@ -27,7 +27,7 @@ class DigitCard extends StatelessWidget {
                   left: kPadding,
                   right: kPadding,
                   top: kPadding * 2,
-                  bottom: kPadding * 2,
+                  bottom: kPadding,
                 ),
             child: child,
           ),
