@@ -32,7 +32,7 @@ class CheckboxIcon extends StatelessWidget {
               child: Icon(
                 Icons.check,
                 size: 16.0,
-                color: DigitColors().burningOrange,
+                color: const DigitColors().burningOrange,
               ),
             )
           : null,
