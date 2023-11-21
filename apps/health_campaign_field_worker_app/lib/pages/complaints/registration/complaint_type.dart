@@ -50,61 +50,57 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
               header: const Column(children: [
                 BackNavigationHelpHeaderWidget(),
               ]),
-              footer: SizedBox(
-                child: DigitCard(
-                  margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
-                  padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
-                  child: DigitElevatedButton(
-                      onPressed: () async {
-                        var complaintType = form.control(_complaintType).value;
-                        var otherComplaintTypeValue =
-                            form.control(_otherComplaintType).value;
+              footer: DigitCard(
+                margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
+                padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
+                child: DigitElevatedButton(
+                  onPressed: () async {
+                    var complaintType = form.control(_complaintType).value;
+                    var otherComplaintTypeValue =
+                        form.control(_otherComplaintType).value;
 
-                        if (complaintType == "Other") {
-                          form.control(_otherComplaintType).setValidators(
-                            [Validators.required],
-                            autoValidate: true,
-                          );
-                        } else {
-                          form.control(_otherComplaintType).setValidators(
-                            [],
-                            autoValidate: true,
-                          );
-                        }
+                    if (complaintType == "Other") {
+                      form.control(_otherComplaintType).setValidators(
+                        [Validators.required],
+                        autoValidate: true,
+                      );
+                    } else {
+                      form.control(_otherComplaintType).setValidators(
+                        [],
+                        autoValidate: true,
+                      );
+                    }
 
-                        setState(() {
-                          form.markAllAsTouched();
-                        });
+                    setState(() {
+                      form.markAllAsTouched();
+                    });
 
-                        if (!form.valid) return;
+                    if (!form.valid) return;
 
-                        state.whenOrNull(
-                          create: (
-                            loading,
-                            complaintType,
-                            _,
-                            addressModel,
-                            complaintsDetailsModel,
-                          ) {
-                            bloc.add(
-                              ComplaintsRegistrationEvent.saveComplaintType(
-                                complaintType:
-                                    form.control(_complaintType).value,
-                                otherComplaintDescription:
-                                    otherComplaintTypeValue,
-                              ),
-                            );
-                          },
+                    state.whenOrNull(
+                      create: (
+                        loading,
+                        complaintType,
+                        _,
+                        addressModel,
+                        complaintsDetailsModel,
+                      ) {
+                        bloc.add(
+                          ComplaintsRegistrationEvent.saveComplaintType(
+                            complaintType: form.control(_complaintType).value,
+                            otherComplaintDescription: otherComplaintTypeValue,
+                          ),
                         );
-
-                        router.push(ComplaintsLocationRoute());
                       },
-                      child: Center(
-                        child: Text(
-                          localizations.translate(i18.complaints.actionLabel),
-                        ),
-                      ),
+                    );
+
+                    router.push(ComplaintsLocationRoute());
+                  },
+                  child: Center(
+                    child: Text(
+                      localizations.translate(i18.complaints.actionLabel),
                     ),
+                  ),
                 ),
               ),
               children: [
@@ -113,11 +109,14 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                        localizations.translate(
-                          i18.complaints.complaintsTypeHeading,
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: kPadding),
+                        child: Text(
+                          localizations.translate(
+                            i18.complaints.complaintsTypeHeading,
+                          ),
+                          style: theme.textTheme.displayMedium,
                         ),
-                        style: theme.textTheme.displayMedium,
                       ),
                       LabeledField(
                         label: localizations.translate(

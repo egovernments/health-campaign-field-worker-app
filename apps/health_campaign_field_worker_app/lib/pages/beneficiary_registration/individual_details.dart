@@ -427,7 +427,7 @@ class _IndividualDetailsPageState
                                               ),
                                         },
                                         padding: const EdgeInsets.only(
-                                          top: kPadding,
+                                          top: kPadding * 2,
                                           left: kPadding / 2,
                                           right: kPadding / 2,
                                         ),
@@ -513,6 +513,7 @@ class _IndividualDetailsPageState
                                       formControlName: _genderKey,
                                       padding: const EdgeInsets.only(
                                         top: kPadding,
+                                        bottom: kPadding,
                                       ),
                                       isEnableSearch: false,
                                     ),
@@ -527,9 +528,8 @@ class _IndividualDetailsPageState
                                 label: localizations.translate(
                                   i18.individualDetails.mobileNumberLabelText,
                                 ),
-                                maxLength: 10,
                                 validationMessages: {
-                                  'mobileNumber': (object) =>
+                                  'maxLength': (object) =>
                                       localizations.translate(i18
                                           .individualDetails
                                           .mobileNumberInvalidFormatValidationMessage),
@@ -768,7 +768,7 @@ class _IndividualDetailsPageState
       ),
       _mobileNumberKey:
           FormControl<String>(value: individual?.mobileNumber, validators: [
-        CustomValidator.validMobileNumber,
+        Validators.maxLength(10),
       ]),
     });
   }

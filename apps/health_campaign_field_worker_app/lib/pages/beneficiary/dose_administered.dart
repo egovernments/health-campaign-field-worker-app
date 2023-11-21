@@ -72,6 +72,7 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
           body: ReactiveFormBuilder(
             form: () => buildForm(context),
             builder: (context, form, child) => ScrollableContent(
+              enableFixedButton: true,
               header: const Column(children: [
                 BackNavigationHelpHeaderWidget(
                   showBackNavigation: false,
