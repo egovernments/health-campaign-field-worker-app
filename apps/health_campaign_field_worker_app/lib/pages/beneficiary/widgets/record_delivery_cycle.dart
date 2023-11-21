@@ -198,7 +198,7 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
           children: [
             Padding(
               padding: isCurrentCycle
-                  ? const EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 0)
+                  ? EdgeInsets.zero
                   : const EdgeInsets.only(
                       top: kPadding + 2,
                       bottom: 0,

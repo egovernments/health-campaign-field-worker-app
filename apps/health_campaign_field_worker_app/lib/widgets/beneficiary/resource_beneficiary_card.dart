@@ -42,13 +42,11 @@ class _ResourceBeneficiaryCardState
           Radius.circular(4.0),
         ),
       ),
-      margin: const EdgeInsets.fromLTRB(
-        kPadding / 2,
-        kPadding * 2,
-        kPadding / 2,
-        kPadding / 2,
+      margin: const EdgeInsets.only(
+        top: kPadding,
+        bottom: kPadding,
       ),
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(kPadding),
       child: Column(
         children: [
           BlocBuilder<ProductVariantBloc, ProductVariantState>(

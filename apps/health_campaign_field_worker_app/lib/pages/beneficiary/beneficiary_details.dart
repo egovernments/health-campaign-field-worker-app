@@ -134,87 +134,70 @@ class _BeneficiaryDetailsPageState
 
                           return cycles != null && cycles.isNotEmpty
                               ? deliverState.hasCycleArrived
-                                  ? SizedBox(
-                                      height: 90,
-                                      child: DigitCard(
-                                        margin: const EdgeInsets.only(
-                                          top: 10,
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                            left: kPadding * 2,
-                                            right: kPadding * 2,
-                                          ),
-                                          child: DigitElevatedButton(
-                                            onPressed: () async {
-                                              final selectedCycle =
-                                                  cycles.firstWhereOrNull((c) =>
-                                                      c.id ==
-                                                      deliverState.cycle);
-                                              if (selectedCycle != null) {
-                                                bloc.add(
-                                                  DeliverInterventionEvent
-                                                      .selectFutureCycleDose(
-                                                    deliverState.dose,
-                                                    projectState
-                                                        .projectType!.cycles!
-                                                        .firstWhere((c) =>
-                                                            c.id ==
-                                                            deliverState.cycle),
-                                                    state.selectedIndividual,
-                                                  ),
-                                                );
-                                                await DigitDialog.show<bool>(
-                                                  context,
-                                                  options: DigitDialogOptions(
-                                                    titlePadding:
-                                                        const EdgeInsets
-                                                            .fromLTRB(
-                                                      kPadding * 2,
-                                                      kPadding * 2,
-                                                      kPadding * 2,
-                                                      kPadding / 2,
-                                                    ),
-                                                    contentPadding:
-                                                        const EdgeInsets.only(
-                                                      left: kPadding,
-                                                      right: kPadding,
-                                                      top: kPadding,
-                                                      bottom: 0,
-                                                    ),
-                                                    titleText: localizations
-                                                        .translate(i18
-                                                            .beneficiaryDetails
-                                                            .resourcesTobeDelivered),
-                                                    content: buildTableContent(
-                                                      deliverState,
-                                                      context,
-                                                      variant,
-                                                      state.selectedIndividual,
-                                                    ),
-                                                    barrierDismissible: true,
-                                                    primaryAction:
-                                                        DigitDialogActions(
-                                                      label: localizations
-                                                          .translate(i18
-                                                              .beneficiaryDetails
-                                                              .ctaProceed),
-                                                      action: (ctx) {
-                                                        Navigator.of(ctx).pop();
-                                                        router.push(
-                                                          DeliverInterventionRoute(),
-                                                        );
-                                                      },
-                                                    ),
-                                                  ),
-                                                );
-                                              }
-                                            },
-                                            child: Center(
-                                              child: Text(
-                                                'Record Cycle ${(deliverState.cycle == 0 ? (deliverState.cycle + 1) : deliverState.cycle).toString()} Dose ${(deliverState.dose).toString()}',
+                                  ? DigitCard(
+                                      margin: const EdgeInsets.fromLTRB(
+                                          0, kPadding, 0, 0),
+                                      padding: const EdgeInsets.fromLTRB(
+                                          kPadding, 0, kPadding, 0),
+                                      child: DigitElevatedButton(
+                                        onPressed: () async {
+                                          final selectedCycle =
+                                              cycles.firstWhereOrNull((c) =>
+                                                  c.id == deliverState.cycle);
+                                          if (selectedCycle != null) {
+                                            bloc.add(
+                                              DeliverInterventionEvent
+                                                  .selectFutureCycleDose(
+                                                deliverState.dose,
+                                                projectState
+                                                    .projectType!.cycles!
+                                                    .firstWhere((c) =>
+                                                        c.id ==
+                                                        deliverState.cycle),
+                                                state.selectedIndividual,
                                               ),
-                                            ),
+                                            );
+                                            await DigitDialog.show<bool>(
+                                              context,
+                                              options: DigitDialogOptions(
+                                                titlePadding:
+                                                    const EdgeInsets.fromLTRB(
+                                                  kPadding,
+                                                  kPadding * 2,
+                                                  kPadding,
+                                                  kPadding / 2,
+                                                ),
+                                                titleText:
+                                                    localizations.translate(i18
+                                                        .beneficiaryDetails
+                                                        .resourcesTobeDelivered),
+                                                content: buildTableContent(
+                                                  deliverState,
+                                                  context,
+                                                  variant,
+                                                  state.selectedIndividual,
+                                                ),
+                                                barrierDismissible: true,
+                                                primaryAction:
+                                                    DigitDialogActions(
+                                                  label: localizations
+                                                      .translate(i18
+                                                          .beneficiaryDetails
+                                                          .ctaProceed),
+                                                  action: (ctx) {
+                                                    Navigator.of(ctx).pop();
+                                                    router.push(
+                                                      DeliverInterventionRoute(),
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        },
+                                        child: Center(
+                                          child: Text(
+                                            'Record Cycle ${(deliverState.cycle == 0 ? (deliverState.cycle + 1) : deliverState.cycle).toString()} Dose ${(deliverState.dose).toString()}',
                                           ),
                                         ),
                                       ),
@@ -390,23 +373,16 @@ class _BeneficiaryDetailsPageState
                                                                   ?.cycles ??
                                                               [])
                                                           .isNotEmpty
-                                                      ? Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(
-                                                            kPadding,
-                                                          ),
-                                                          child:
-                                                              RecordDeliveryCycle(
-                                                            projectCycles: projectState
-                                                                    .projectType
-                                                                    ?.cycles ??
-                                                                [],
-                                                            taskData:
-                                                                taskData ?? [],
-                                                            individualModel: state
-                                                                .selectedIndividual,
-                                                          ),
+                                                      ? RecordDeliveryCycle(
+                                                          projectCycles:
+                                                              projectState
+                                                                      .projectType
+                                                                      ?.cycles ??
+                                                                  [],
+                                                          taskData:
+                                                              taskData ?? [],
+                                                          individualModel: state
+                                                              .selectedIndividual,
                                                         )
                                                       : const Offstage(),
                                                 ],
