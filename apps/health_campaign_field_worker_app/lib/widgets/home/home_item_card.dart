@@ -27,7 +27,8 @@ class HomeItemCard extends StatelessWidget {
 
     return DigitCard(
       onPressed: onPressed,
-      padding: const EdgeInsets.all(kPadding).copyWith(top: kPadding * 3),
+      padding: const EdgeInsets.all(kPadding/2).copyWith(top: kPadding * 3),
+      margin: const EdgeInsets.all(kPadding),
       child: Align(
         alignment: Alignment.topCenter,
         child: Column(
@@ -50,12 +51,17 @@ class HomeItemCard extends StatelessWidget {
                 size: 30,
               ),
             const SizedBox(height: 16),
-            Text(
-              AppLocalizations.of(context).translate(
-                label,
-              ),
-              style: theme.textTheme.bodyMedium,
-              textAlign: TextAlign.center,
+            Wrap(
+              children: [
+                Text(
+                  AppLocalizations.of(context).translate(
+                    label,
+                  ),
+                  style: theme.textTheme.bodyMedium,
+                  textAlign: TextAlign.center,
+                  // overflow: TextOverflow.ellipsis,
+                ),
+              ],
             ),
           ],
         ),
