@@ -78,19 +78,11 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                       ]),
                       footer: SizedBox(
                         child: DigitCard(
-                          margin: const EdgeInsets.only(
-                            left: 0,
-                            right: 0,
-                            top: 10,
-                          ),
+                          margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
+                          padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
                           child: ReactiveFormConsumer(
                             builder: (context, form, child) {
-                              return Padding(
-                                padding: const EdgeInsets.only(
-                                  left: kPadding * 2,
-                                  right: kPadding * 2,
-                                ),
-                                child: DigitElevatedButton(
+                              return DigitElevatedButton(
                                   onPressed: !form.valid
                                       ? null
                                       : () {
@@ -117,8 +109,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                           );
                                         },
                                   child: child!,
-                                ),
-                              );
+                                );
                             },
                             child: Center(
                               child: Text(

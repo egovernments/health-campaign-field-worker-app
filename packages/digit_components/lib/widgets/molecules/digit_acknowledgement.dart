@@ -138,12 +138,7 @@ class DigitAcknowledgement extends StatelessWidget {
                           const SizedBox(
                             height: kPadding + 2,
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              left: kPadding * 2,
-                              right: kPadding * 2,
-                            ),
-                            child: DigitOutLineButton(
+                          DigitOutLineButton(
                               onPressed: action,
                               label: actionLabel ?? '',
                               buttonStyle: OutlinedButton.styleFrom(
@@ -162,22 +157,15 @@ class DigitAcknowledgement extends StatelessWidget {
                                 ),
                               ),
                             ),
-                          ),
                         ],
                       )
                     else if (isActionLabel)
                       Column(
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              left: kPadding * 2,
-                              right: kPadding * 2,
-                            ),
-                            child: DigitElevatedButton(
+                          DigitElevatedButton(
                               onPressed: action,
                               child: Text(actionLabel ?? ''),
                             ),
-                          ),
                           const SizedBox(
                             height: kPadding,
                           ),

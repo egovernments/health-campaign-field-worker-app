@@ -64,12 +64,12 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                     ...[
                       SliverToBoxAdapter(
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             TextButton(
                               style: TextButton.styleFrom(
                                 foregroundColor: theme.colorScheme.secondary,
-                                padding: EdgeInsets.zero,
+                                padding: const EdgeInsets.only(left: kPadding),
                               ),
                               onPressed: () {
                                 router.push(ComplaintsInboxSearchRoute());
@@ -77,6 +77,7 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                               child: Row(
                                 children: [
                                   const Icon(Icons.search),
+                                  const SizedBox(width: 5,),
                                   Text(localizations.translate(
                                     i18.complaints.searchCTA,
                                   )),
@@ -94,6 +95,7 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                               child: Row(
                                 children: [
                                   const Icon(Icons.filter_list_alt),
+                                  const SizedBox(width: 5,),
                                   Text(localizations.translate(
                                     i18.complaints.filterCTA,
                                   )),
@@ -103,7 +105,7 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                             TextButton(
                               style: TextButton.styleFrom(
                                 foregroundColor: theme.colorScheme.secondary,
-                                padding: EdgeInsets.zero,
+                                padding: const EdgeInsets.only(right: kPadding),
                               ),
                               onPressed: () {
                                 router.push(ComplaintsInboxSortRoute());
@@ -111,6 +113,7 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                               child: Row(
                                 children: [
                                   const Icon(Icons.segment),
+                                  const SizedBox(width: 5,),
                                   Text(localizations.translate(
                                     i18.complaints.sortCTA,
                                   )),
@@ -153,7 +156,7 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                 ),
               ),
               SizedBox(
-                height: 85,
+                // height: 85,
                 child: DigitCard(
                   margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
                   child: Padding(
@@ -237,7 +240,9 @@ class _ComplaintsInboxItem extends StatelessWidget {
                     item.serviceRequestId ??
                         "${localizations.translate(i18.complaints.inboxNotGeneratedLabel)}\n${localizations.translate(i18.complaints.inboxSyncRequiredLabel)}",
                     style: TextStyle(
-                      color: theme.colorScheme.secondary,
+                      color: item.serviceRequestId != null
+                          ? theme.colorScheme.secondary
+                          : const DigitColors().woodsmokeBlack,
                     ),
                   ),
                 ),
@@ -335,7 +340,7 @@ class _ComplaintsInboxItem extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 16, bottom: 10),
+            padding: const EdgeInsets.only(top: 16),
             child: Row(
               children: [
                 Expanded(
@@ -351,12 +356,13 @@ class _ComplaintsInboxItem extends StatelessWidget {
                         width: 1.0,
                         color: theme.colorScheme.secondary,
                       ),
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.zero,
+                      ),
                     ),
                     child: Text(
                       localizations.translate(i18.searchBeneficiary.iconLabel),
-                      style: TextStyle(
-                        color: theme.colorScheme.secondary,
-                      ),
+                      style: DigitTheme.instance.mobileTheme.textTheme.headlineSmall?.apply(color: theme.colorScheme.secondary,),
                     ),
                   ),
                 ),

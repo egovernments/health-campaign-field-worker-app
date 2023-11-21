@@ -33,12 +33,7 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Padding(
-                padding: const EdgeInsets.only(
-                  left: kPadding * 3,
-                  top: kPadding * 2,
-                  right: kPadding * 2,
-                  bottom: kPadding * 2,
-                ),
+                padding: const EdgeInsets.fromLTRB(kPadding*2, kPadding, kPadding*2, kPadding),
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: Text(
@@ -49,12 +44,7 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                 ),
               ),
               Column(children: [
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: kPadding * 2,
-                    right: kPadding * 2,
-                  ),
-                  child: DigitListView(
+                DigitListView(
                     title: localizations
                         .translate(i18.manageStock.recordStockReceiptLabel),
                     description: localizations.translate(
@@ -67,13 +57,7 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                       ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: kPadding * 2,
-                    right: kPadding * 2,
-                  ),
-                  child: DigitListView(
+                DigitListView(
                     title: localizations
                         .translate(i18.manageStock.recordStockIssuedLabel),
                     description: localizations.translate(
@@ -86,13 +70,7 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                       ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: kPadding * 2,
-                    right: kPadding * 2,
-                  ),
-                  child: DigitListView(
+                DigitListView(
                     title: localizations
                         .translate(i18.manageStock.recordStockReturnedLabel),
                     description: localizations.translate(
@@ -106,13 +84,7 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                       ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: kPadding * 2,
-                    right: kPadding * 2,
-                  ),
-                  child: DigitListView(
+                DigitListView(
                     title: localizations
                         .translate(i18.manageStock.recordStockDamagedLabel),
                     description: localizations.translate(
@@ -126,13 +98,7 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                       ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: kPadding * 2,
-                    right: kPadding * 2,
-                  ),
-                  child: DigitListView(
+                DigitListView(
                     title: localizations
                         .translate(i18.manageStock.recordStockLossLabel),
                     description: localizations.translate(
@@ -146,7 +112,6 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                       ),
                     ),
                   ),
-                ),
               ]),
               const SizedBox(height: 16),
             ],
