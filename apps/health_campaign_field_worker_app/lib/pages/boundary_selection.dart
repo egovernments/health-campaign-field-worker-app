@@ -130,7 +130,7 @@ class _BoundarySelectionPageState
                                             .toLowerCase()
                                             .contains(pattern.toLowerCase()));
                                       },
-                                      label: '$label*',
+                                      label: localizations.translate(label),
                                       menuItems: filteredItems,
                                       validationMessages: {
                                         'required': (object) =>

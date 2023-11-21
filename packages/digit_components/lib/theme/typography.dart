@@ -99,19 +99,19 @@ class DigitMobileTypography extends DigitTypography {
         fontFamily: 'Roboto',
       ),
       labelLarge: _normal.copyWith(
-          fontSize: 24,
-          fontWeight: FontWeight.w500,
-          fontStyle: FontStyle.italic),
+        fontSize: 24,
+        fontWeight: FontWeight.w500,
+      ),
       labelMedium: _light.copyWith(
-          fontSize: 20,
-          fontWeight: FontWeight.w400,
-          fontFamily: 'Roboto',
-          fontStyle: FontStyle.italic),
+        fontSize: 20,
+        fontWeight: FontWeight.w400,
+        fontFamily: 'Roboto',
+      ),
       labelSmall: _normal.copyWith(
-          fontSize: 16,
-          fontWeight: FontWeight.w400,
-          fontFamily: 'Roboto',
-          fontStyle: FontStyle.italic),
+        fontSize: 16,
+        fontWeight: FontWeight.w400,
+        fontFamily: 'Roboto',
+      ),
     );
   }
 }

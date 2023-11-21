@@ -54,27 +54,18 @@ class _SearchBeneficiaryPageState
               builder: (context, searchState) {
                 return ScrollableContent(
                   header: const Column(children: [
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: kPadding,
-                        right: kPadding,
-                      ),
-                      child: BackNavigationHelpHeaderWidget(),
-                    ),
+                    BackNavigationHelpHeaderWidget(),
                   ]),
                   slivers: [
                     SliverToBoxAdapter(
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(kPadding),
-                            child: Align(
-                              alignment: Alignment.topLeft,
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                  left: kPadding,
-                                  right: kPadding,
-                                ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(kPadding),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(kPadding),
+                              child: Align(
+                                alignment: Alignment.topLeft,
                                 child: Text(
                                   localizations.translate(
                                     context.beneficiaryType !=
@@ -85,21 +76,15 @@ class _SearchBeneficiaryPageState
                                             .searchIndividualLabelText,
                                   ),
                                   style: theme.textTheme.displayMedium,
-                                  textAlign: TextAlign.center,
+                                  textAlign: TextAlign.left,
                                 ),
                               ),
                             ),
-                          ),
-                          BlocBuilder<LocationBloc, LocationState>(
-                            builder: (context, locationState) {
-                              return Column(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                      left: kPadding,
-                                      right: kPadding,
-                                    ),
-                                    child: DigitSearchBar(
+                            BlocBuilder<LocationBloc, LocationState>(
+                              builder: (context, locationState) {
+                                return Column(
+                                  children: [
+                                    DigitSearchBar(
                                       controller: searchController,
                                       hintText: localizations.translate(
                                         i18.searchBeneficiary
@@ -147,13 +132,7 @@ class _SearchBeneficiaryPageState
                                         }
                                       },
                                     ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                      left: kPadding,
-                                      right: kPadding,
-                                    ),
-                                    child: locationState.latitude != null
+                                    locationState.latitude != null
                                         ? Row(
                                             children: [
                                               Switch(
@@ -177,17 +156,19 @@ class _SearchBeneficiaryPageState
                                                     final bloc = context.read<
                                                         SearchHouseholdsBloc>();
                                                     bloc.add(
-                                                        SearchHouseholdsEvent
-                                                            .searchByProximity(
-                                                      latitude: locationState
-                                                          .latitude!,
-                                                      longititude: locationState
-                                                          .longitude!,
-                                                      projectId:
-                                                          context.projectId,
-                                                      maxRadius:
-                                                          appConfig.maxRadius!,
-                                                    ));
+                                                      SearchHouseholdsEvent
+                                                          .searchByProximity(
+                                                        latitude: locationState
+                                                            .latitude!,
+                                                        longititude:
+                                                            locationState
+                                                                .longitude!,
+                                                        projectId:
+                                                            context.projectId,
+                                                        maxRadius: appConfig
+                                                            .maxRadius!,
+                                                      ),
+                                                    );
                                                   } else {
                                                     final bloc = context.read<
                                                         SearchHouseholdsBloc>();
@@ -206,19 +187,13 @@ class _SearchBeneficiaryPageState
                                             ],
                                           )
                                         : const Offstage(),
-                                  ),
-                                ],
-                              );
-                            },
-                          ),
-                          const SizedBox(height: 16),
-                          if (searchState.resultsNotFound)
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                left: kPadding,
-                                right: kPadding,
-                              ),
-                              child: DigitInfoCard(
+                                  ],
+                                );
+                              },
+                            ),
+                            const SizedBox(height: 16),
+                            if (searchState.resultsNotFound)
+                              DigitInfoCard(
                                 description: localizations.translate(
                                   i18.searchBeneficiary
                                       .beneficiaryInfoDescription,
@@ -227,8 +202,8 @@ class _SearchBeneficiaryPageState
                                   i18.searchBeneficiary.beneficiaryInfoTitle,
                                 ),
                               ),
-                            ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                     if (searchState.loading)
@@ -255,40 +230,34 @@ class _SearchBeneficiaryPageState
                                 ),
                               );
 
-                              return Padding(
-                                padding: const EdgeInsets.only(
-                                  left: kPadding,
-                                  right: kPadding,
-                                ),
-                                child: ViewBeneficiaryCard(
-                                  distance: distance,
-                                  householdMember: i,
-                                  onOpenPressed: () async {
-                                    final scannerbloc =
-                                        context.read<ScannerBloc>();
+                              return ViewBeneficiaryCard(
+                                distance: distance,
+                                householdMember: i,
+                                onOpenPressed: () async {
+                                  final scannerbloc =
+                                      context.read<ScannerBloc>();
 
-                                    scannerbloc.add(
-                                      const ScannerEvent.handleScanner([], []),
-                                    );
+                                  scannerbloc.add(
+                                    const ScannerEvent.handleScanner([], []),
+                                  );
 
-                                    final bloc =
-                                        context.read<SearchHouseholdsBloc>();
+                                  final bloc =
+                                      context.read<SearchHouseholdsBloc>();
 
-                                    await context.router.push(
-                                      BeneficiaryWrapperRoute(
-                                        wrapper: i,
-                                      ),
-                                    );
-                                    setState(() {
-                                      isProximityEnabled = false;
-                                    });
-                                    searchController.clear();
+                                  await context.router.push(
+                                    BeneficiaryWrapperRoute(
+                                      wrapper: i,
+                                    ),
+                                  );
+                                  setState(() {
+                                    isProximityEnabled = false;
+                                  });
+                                  searchController.clear();
 
-                                    bloc.add(
-                                      const SearchHouseholdsClearEvent(),
-                                    );
-                                  },
-                                ),
+                                  bloc.add(
+                                    const SearchHouseholdsClearEvent(),
+                                  );
+                                },
                               );
                             },
                             childCount: searchState.householdMembers.length,
@@ -302,75 +271,63 @@ class _SearchBeneficiaryPageState
             ),
             bottomNavigationBar: SizedBox(
               height: 150,
-              child: DigitCard(
-                margin: const EdgeInsets.only(
-                  top: 10,
-                ),
-                child: Column(
-                  children: [
-                    BlocBuilder<SearchHouseholdsBloc, SearchHouseholdsState>(
-                      builder: (context, state) {
-                        final router = context.router;
+              child: Card(
+                margin: const EdgeInsets.all(0),
+                // padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
+                child: Container(
+                  padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
+                  child: Column(
+                    children: [
+                      BlocBuilder<SearchHouseholdsBloc, SearchHouseholdsState>(
+                        builder: (context, state) {
+                          final router = context.router;
 
-                        final searchQuery = state.searchQuery;
-                        VoidCallback? onPressed;
+                          final searchQuery = state.searchQuery;
+                          VoidCallback? onPressed;
 
-                        onPressed = state.loading ||
-                                searchQuery == null ||
-                                searchQuery.isEmpty
-                            ? null
-                            : () {
-                                FocusManager.instance.primaryFocus?.unfocus();
+                          onPressed = state.loading ||
+                                  searchQuery == null ||
+                                  searchQuery.isEmpty
+                              ? null
+                              : () {
+                                  FocusManager.instance.primaryFocus?.unfocus();
 
-                                context.read<ScannerBloc>().add(
-                                      const ScannerEvent.handleScanner(
-                                        [],
-                                        [],
-                                      ),
-                                    );
-                                router.push(BeneficiaryRegistrationWrapperRoute(
-                                  initialState:
-                                      BeneficiaryRegistrationCreateState(
-                                    searchQuery: state.searchQuery,
-                                  ),
-                                ));
-                              };
+                                  context.read<ScannerBloc>().add(
+                                        const ScannerEvent.handleScanner(
+                                          [],
+                                          [],
+                                        ),
+                                      );
+                                  router
+                                      .push(BeneficiaryRegistrationWrapperRoute(
+                                    initialState:
+                                        BeneficiaryRegistrationCreateState(
+                                      searchQuery: state.searchQuery,
+                                    ),
+                                  ));
+                                };
 
-                        return Padding(
-                          padding: const EdgeInsets.only(
-                            left: kPadding * 2,
-                            right: kPadding * 2,
-                          ),
-                          child: DigitElevatedButton(
+                          return DigitElevatedButton(
                             onPressed: onPressed,
                             child: Center(
                               child: Text(localizations.translate(
                                 i18.searchBeneficiary.beneficiaryAddActionLabel,
                               )),
                             ),
-                          ),
-                        );
-                      },
-                    ),
-                    const SizedBox(
-                      height: kPadding + 2,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        left: kPadding * 2,
-                        right: kPadding * 2,
+                          );
+                        },
                       ),
-                      child: DigitOutlineIconButton(
+                      DigitOutlineIconButton(
                         buttonStyle: OutlinedButton.styleFrom(
                           shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.zero,
                           ),
                         ),
-                        textStyle: DigitTheme
-                            .instance.mobileTheme.textTheme.headlineSmall
-                            ?.apply(
-                          color: theme.colorScheme.secondary,
-                        ),
+                        // textStyle: DigitTheme
+                        //     .instance.mobileTheme.textTheme.headlineSmall
+                        //     ?.apply(
+                        //   color: theme.colorScheme.secondary,
+                        // ),
                         onPressed: () {
                           context.router.push(QRScannerRoute(
                             quantity: 1,
@@ -383,8 +340,8 @@ class _SearchBeneficiaryPageState
                           i18.deliverIntervention.scannerLabel,
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
