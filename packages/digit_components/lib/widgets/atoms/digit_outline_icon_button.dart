@@ -42,11 +42,8 @@ class DigitOutlineIconButton extends StatelessWidget {
             const SizedBox(width: kPadding),
             Text(
               label,
-              style: const TextStyle(
-                  fontFamily: 'Roboto',
-                  fontSize: 19,
-                  fontWeight: FontWeight.w600,
-                  fontStyle: FontStyle.normal),
+              style: textStyle ??
+                  DigitTheme.instance.mobileTheme.textTheme.headlineSmall?.apply(color: DigitTheme.instance.colorScheme.secondary,),
             ),
           ],
         ),

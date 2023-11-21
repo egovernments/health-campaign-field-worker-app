@@ -21,8 +21,6 @@ import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
-import '../../widgets/showcase/config/showcase_constants.dart';
-import '../../widgets/showcase/showcase_button.dart';
 
 class IndividualDetailsPage extends LocalizedStatefulWidget {
   final bool isHeadOfHousehold;
@@ -45,8 +43,8 @@ class _IndividualDetailsPageState
   static const _dobKey = 'dob';
   static const _genderKey = 'gender';
   static const _mobileNumberKey = 'mobileNumber';
-  static const maxLength = 200;
   bool isDuplicateTag = false;
+  static const maxLength = 200;
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +71,9 @@ class _IndividualDetailsPageState
                           isProximityEnabled: false,
                         ),
                       );
-                  router.push(AcknowledgementRoute());
+                  router.push(BeneficiaryAcknowledgementRoute(
+                    enableViewHousehold: true,
+                  ));
                 }
               },
             );
@@ -88,6 +88,7 @@ class _IndividualDetailsPageState
                 ),
               ]),
               footer: SizedBox(
+                height: 85,
                 child: DigitCard(
                   margin: const EdgeInsets.only(top: 10),
                   child: Padding(
@@ -151,10 +152,6 @@ class _IndividualDetailsPageState
                               final submit = await DigitDialog.show<bool>(
                                 context,
                                 options: DigitDialogOptions(
-                                  titlePadding: const EdgeInsets.only(
-                                    left: kPadding * 3,
-                                    top: kPadding * 2,
-                                  ),
                                   titleText: localizations.translate(
                                     i18.deliverIntervention.dialogTitle,
                                   ),
@@ -342,10 +339,11 @@ class _IndividualDetailsPageState
                             individualDetailsShowcaseData.nameOfIndividual
                                 .buildWith(
                               child: DigitTextFormField(
-                                formControlName: _individualNameKey,
+                                formControlName: 'individualName',
                                 label: localizations.translate(
                                   i18.individualDetails.nameLabelText,
                                 ),
+                                maxLength: 200,
                                 isRequired: true,
                                 validationMessages: {
                                   'required': (object) =>
@@ -360,18 +358,11 @@ class _IndividualDetailsPageState
                             ),
                             Offstage(
                               offstage: !widget.isHeadOfHousehold,
-                              child: individualDetailsShowcaseData
-                                  .headOfHousehold
-                                  .buildWith(
-                                child: DigitCheckbox(
-                                  padding: const EdgeInsets.only(
-                                    bottom: kPadding * 2,
-                                  ),
-                                  label: localizations.translate(
-                                    i18.individualDetails.checkboxLabelText,
-                                  ),
-                                  value: widget.isHeadOfHousehold,
+                              child: DigitCheckbox(
+                                label: localizations.translate(
+                                  i18.individualDetails.checkboxLabelText,
                                 ),
+                                value: widget.isHeadOfHousehold,
                               ),
                             ),
                             BlocBuilder<AppInitializationBloc,
@@ -413,16 +404,6 @@ class _IndividualDetailsPageState
                                           }
                                         });
                                       },
-                                      initialValue:
-                                          idTypeOptions.firstOrNull?.name,
-                                      padding: EdgeInsets.only(
-                                        top: widget.isHeadOfHousehold
-                                            ? kPadding * 2
-                                            : 0,
-                                        bottom: !widget.isHeadOfHousehold
-                                            ? 0
-                                            : kPadding * 2,
-                                      ),
                                     ),
                                   );
                                 },
@@ -453,13 +434,10 @@ class _IndividualDetailsPageState
                                                 '${i18.individualDetails.idNumberLabelText}_IS_REQUIRED',
                                               ),
                                         },
-                                        padding: const EdgeInsets.only(
-                                          left: kPadding / 2,
-                                          right: kPadding / 2,
-                                        ),
                                       );
                                     },
                                   ),
+                                  const SizedBox(height: 4),
                                 ],
                               ),
                             if (form.control(_idTypeKey).value == 'DEFAULT')
@@ -562,6 +540,7 @@ class _IndividualDetailsPageState
                             ),
                           ],
                         ),
+                        const SizedBox(height: 16),
                         BlocBuilder<ScannerBloc, ScannerState>(
                           builder: (context, state) => state.qrcodes.isNotEmpty
                               ? Row(
@@ -622,7 +601,7 @@ class _IndividualDetailsPageState
 
                                   // ignore: no-empty-block
                                 )
-                              : Container(
+                              : Padding(
                                   padding: const EdgeInsets.only(
                                     bottom: kPadding * 2,
                                     left: kPadding / 2,
@@ -659,16 +638,6 @@ class _IndividualDetailsPageState
           },
         ),
       ),
-      // bottomNavigationBar: SizedBox(
-      //   child: DigitElevatedButton(
-      //     onPressed: () {},
-      //     child: Center(
-      //       child: Text(localizations.translate(
-      //         i18.searchBeneficiary.beneficiaryAddActionLabel,
-      //       )),
-      //     ),
-      //   ),
-      // ),
     );
   }
 

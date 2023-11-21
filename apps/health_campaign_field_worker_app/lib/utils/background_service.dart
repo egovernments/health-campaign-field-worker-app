@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:battery_plus/battery_plus.dart';
 import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,6 +11,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:isar/isar.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:recase/recase.dart';
+
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/local_store/secure_store/secure_store.dart';
@@ -22,7 +24,6 @@ import '../models/data_model.dart';
 import '../widgets/network_manager_provider_wrapper.dart';
 import 'environment_config.dart';
 import 'utils.dart';
-import 'package:battery_plus/battery_plus.dart';
 
 final LocalSqlDataStore _sql = LocalSqlDataStore();
 late Dio _dio;
@@ -150,6 +151,9 @@ void onStart(ServiceInstance service) async {
                   ).pingBandwidthCheck(bandWidthCheckModel: null);
                   speedArray.add(speed);
                 } catch (e) {
+                  service.invoke('serviceRunning', {
+                    "enablesManualSync": true,
+                  });
                   service.stopSelf();
                   break;
                 }

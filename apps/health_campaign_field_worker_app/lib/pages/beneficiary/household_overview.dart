@@ -67,19 +67,25 @@ class _HouseholdOverviewPageState
                           child: SingleChildScrollView(
                             child: DigitCard(
                               child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  BlocBuilder<ProjectBloc, ProjectState>(
-                                    builder: (context, projectState) {
-                                      return Padding(
-                                        padding: const EdgeInsets.only(
-                                          left: kPadding,
-                                          right: kPadding,
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Flexible(
+                                        child: Text(
+                                          localizations.translate(
+                                            i18.householdOverView
+                                                .householdOverViewLabel,
+                                          ),
+                                          style: theme.textTheme.displayMedium,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
-                                        child: Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: DigitIconButton(
+                                      ),
+                                      BlocBuilder<ProjectBloc, ProjectState>(
+                                        builder: (context, projectState) {
+                                          return DigitIconButton(
                                             onPressed: () =>
                                                 DigitActionDialog.show(
                                               context,
@@ -228,23 +234,10 @@ class _HouseholdOverviewPageState
                                                   .householdOverViewEditIconText,
                                             ),
                                             icon: Icons.edit,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                      left: kPadding,
-                                      right: kPadding,
-                                    ),
-                                    child: Text(
-                                      localizations.translate(
-                                        i18.householdOverView
-                                            .householdOverViewLabel,
+                                          );
+                                        },
                                       ),
-                                      style: theme.textTheme.displayMedium,
-                                    ),
+                                    ],
                                   ),
                                   BlocBuilder<DeliverInterventionBloc,
                                       DeliverInterventionState>(
@@ -292,32 +285,22 @@ class _HouseholdOverviewPageState
                                       ),
                                     ),
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                      left: kPadding,
-                                      right: kPadding,
-                                    ),
-                                    child: DigitTableCard(
-                                      element: {
-                                        localizations.translate(i18
-                                                .householdOverView
-                                                .householdOverViewHouseholdHeadNameLabel):
-                                            state
-                                                .householdMemberWrapper
-                                                .headOfHousehold
-                                                .name
-                                                ?.givenName,
-                                        localizations.translate(
-                                          i18.householdLocation
-                                              .administrationAreaFormLabel,
-                                        ): context.boundary.name,
-                                        localizations.translate(
-                                          i18.deliverIntervention
-                                              .memberCountText,
-                                        ): state.householdMemberWrapper
-                                            .household.memberCount,
-                                      },
-                                    ),
+                                  DigitTableCard(
+                                    element: {
+                                      localizations.translate(i18
+                                              .householdOverView
+                                              .householdOverViewHouseholdHeadNameLabel):
+                                          state.householdMemberWrapper
+                                              .headOfHousehold.name?.givenName,
+                                      localizations.translate(
+                                        i18.householdLocation
+                                            .administrationAreaFormLabel,
+                                      ): context.boundary.name,
+                                      localizations.translate(
+                                        i18.deliverIntervention.memberCountText,
+                                      ): state.householdMemberWrapper.household
+                                          .memberCount,
+                                    },
                                   ),
                                   Column(
                                     children: state
@@ -361,23 +344,28 @@ class _HouseholdOverviewPageState
                                                         )
                                                         .toList();
 
-                                            final taskdata = state
-                                                .householdMemberWrapper.tasks
-                                                ?.where((element) =>
-                                                    element
-                                                        .projectBeneficiaryClientReferenceId ==
-                                                    projectBeneficiary.first
-                                                        .clientReferenceId)
-                                                .toList();
-                                            final referralData = state
-                                                .householdMemberWrapper
-                                                .referrals
-                                                ?.where((element) =>
-                                                    element
-                                                        .projectBeneficiaryClientReferenceId ==
-                                                    projectBeneficiary.first
-                                                        .clientReferenceId)
-                                                .toList();
+                                            final taskdata = projectBeneficiary
+                                                    .isNotEmpty
+                                                ? state.householdMemberWrapper
+                                                    .tasks
+                                                    ?.where((element) =>
+                                                        element
+                                                            .projectBeneficiaryClientReferenceId ==
+                                                        projectBeneficiary.first
+                                                            .clientReferenceId)
+                                                    .toList()
+                                                : null;
+                                            final referralData = projectBeneficiary
+                                                    .isNotEmpty
+                                                ? state.householdMemberWrapper
+                                                    .referrals
+                                                    ?.where((element) =>
+                                                        element
+                                                            .projectBeneficiaryClientReferenceId ==
+                                                        projectBeneficiary.first
+                                                            .clientReferenceId)
+                                                    .toList()
+                                                : null;
                                             final sideEffectData = taskdata !=
                                                         null &&
                                                     taskdata.isNotEmpty
@@ -523,14 +511,6 @@ class _HouseholdOverviewPageState
                                                 DigitDialog.show(
                                                   context,
                                                   options: DigitDialogOptions(
-                                                    titlePadding:
-                                                        const EdgeInsets
-                                                            .fromLTRB(
-                                                      kPadding * 2,
-                                                      kPadding * 2,
-                                                      kPadding * 2,
-                                                      kPadding / 2,
-                                                    ),
                                                     titleText: localizations
                                                         .translate(i18
                                                             .householdOverView
@@ -704,9 +684,6 @@ class _HouseholdOverviewPageState
                                       icon: Icons.add_circle,
                                     ),
                                   ),
-                                  const SizedBox(
-                                    height: kPadding,
-                                  ),
                                 ],
                               ),
                             ),
@@ -719,7 +696,7 @@ class _HouseholdOverviewPageState
           bottomNavigationBar: Offstage(
             offstage: beneficiaryType == BeneficiaryType.individual,
             child: SizedBox(
-              height: 90,
+              height: 85,
               child: BlocBuilder<DeliverInterventionBloc,
                   DeliverInterventionState>(
                 builder: (ctx, state) => DigitCard(

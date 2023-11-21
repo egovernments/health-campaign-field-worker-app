@@ -267,6 +267,7 @@ class _SearchBeneficiaryPageState
                                 ),
                               );
 
+<<<<<<< HEAD
                               return Padding(
                                 padding: const EdgeInsets.only(
                                   left: kPadding,
@@ -278,6 +279,21 @@ class _SearchBeneficiaryPageState
                                   onOpenPressed: () async {
                                     final scannerbloc =
                                         context.read<ScannerBloc>();
+=======
+                              return ViewBeneficiaryCard(
+                                distance: distance,
+                                householdMember: i,
+                                onOpenPressed: () async {
+                                  final scannerbloc =
+                                      context.read<ScannerBloc>();
+
+                                  scannerbloc.add(
+                                    const ScannerEvent.handleScanner([], []),
+                                  );
+
+                                  final bloc =
+                                      context.read<SearchHouseholdsBloc>();
+>>>>>>> 4e68499fcbe8984ce9af0cae0319bb0184898fd1
 
                                     scannerbloc.add(
                                       const ScannerEvent.handleScanner([], []),
@@ -315,7 +331,11 @@ class _SearchBeneficiaryPageState
             bottomNavigationBar: SizedBox(
               height: 150,
               child: DigitCard(
+<<<<<<< HEAD
                 margin: const EdgeInsets.only(top: 10),
+=======
+                margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
+>>>>>>> 4e68499fcbe8984ce9af0cae0319bb0184898fd1
                 child: Column(
                   children: [
                     BlocBuilder<SearchHouseholdsBloc, SearchHouseholdsState>(
@@ -346,6 +366,7 @@ class _SearchBeneficiaryPageState
                                 ));
                               };
 
+<<<<<<< HEAD
                         return Padding(
                           padding: const EdgeInsets.only(
                             left: kPadding * 2,
@@ -358,11 +379,20 @@ class _SearchBeneficiaryPageState
                                 i18.searchBeneficiary.beneficiaryAddActionLabel,
                               )),
                             ),
+=======
+                        return DigitElevatedButton(
+                          onPressed: onPressed,
+                          child: Center(
+                            child: Text(localizations.translate(
+                              i18.searchBeneficiary.beneficiaryAddActionLabel,
+                            )),
+>>>>>>> 4e68499fcbe8984ce9af0cae0319bb0184898fd1
                           ),
                         );
                       },
                     ),
                     const SizedBox(
+<<<<<<< HEAD
                       height: kPadding + 2,
                     ),
                     Padding(
@@ -392,6 +422,21 @@ class _SearchBeneficiaryPageState
                         label: localizations.translate(
                           i18.deliverIntervention.scannerLabel,
                         ),
+=======
+                      height: kPadding,
+                    ),
+                    DigitOutlineIconButton(
+                      onPressed: () {
+                        context.router.push(QRScannerRoute(
+                          quantity: 1,
+                          isGS1code: false,
+                          sinlgleValue: true,
+                        ));
+                      },
+                      icon: Icons.qr_code,
+                      label: localizations.translate(
+                        i18.deliverIntervention.scannerLabel,
+>>>>>>> 4e68499fcbe8984ce9af0cae0319bb0184898fd1
                       ),
                     ),
                   ],

@@ -99,16 +99,20 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                     )
                     .toList();
 
-        final taskdata = householdMember.tasks
-            ?.where((element) =>
-                element.projectBeneficiaryClientReferenceId ==
-                projectBeneficiary.first.clientReferenceId)
-            .toList();
-        final referralData = householdMember.referrals
-            ?.where((element) =>
-                element.projectBeneficiaryClientReferenceId ==
-                projectBeneficiary.first.clientReferenceId)
-            .toList();
+        final taskdata = projectBeneficiary.isNotEmpty
+            ? householdMember.tasks
+                ?.where((element) =>
+                    element.projectBeneficiaryClientReferenceId ==
+                    projectBeneficiary.first.clientReferenceId)
+                .toList()
+            : null;
+        final referralData = projectBeneficiary.isNotEmpty
+            ? householdMember.referrals
+                ?.where((element) =>
+                    element.projectBeneficiaryClientReferenceId ==
+                    projectBeneficiary.first.clientReferenceId)
+                .toList()
+            : null;
         final sideEffects = taskdata != null && taskdata.isNotEmpty
             ? householdMember.sideEffects
                 ?.where((element) =>

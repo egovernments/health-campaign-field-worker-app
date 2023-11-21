@@ -63,6 +63,8 @@ dependencies:
   qr_code_scanner: ^1.0.1
   audioplayers: ^5.2.0
   gs1_barcode_parser: ^1.0.5
+  disk_space: ^0.2.1
+
 
 dev_dependencies:
   flutter_test:
@@ -92,7 +94,10 @@ flutter_icons:
 flutter:
   assets:
     - ./
+<<<<<<< HEAD
     - assets/icons/svg/
+=======
+>>>>>>> 4e68499fcbe8984ce9af0cae0319bb0184898fd1
     - ./assets/audio/add.wav
     - ./assets/audio/buzzer.wav
     
