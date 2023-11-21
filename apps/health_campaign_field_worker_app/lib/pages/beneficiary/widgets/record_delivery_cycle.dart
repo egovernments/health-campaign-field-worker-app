@@ -291,7 +291,6 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
             const SizedBox(
               height: 16,
             ),
-            if (!isCurrentCycle)
               const Divider(
                 thickness: 1.0,
               ),
