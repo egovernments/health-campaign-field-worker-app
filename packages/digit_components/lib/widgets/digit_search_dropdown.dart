@@ -84,7 +84,7 @@ class _DigitSearchDropdownState<T> extends State<DigitSearchDropdown<T>> {
                 widget.menuItems,
                 '',
               ),
-              hideKeyboard: true,
+              hideKeyboard: !widget.isEnableSearch,
               itemBuilder: (context, item) {
                 return Padding(
                   padding: const EdgeInsets.all(kPadding * 2),
