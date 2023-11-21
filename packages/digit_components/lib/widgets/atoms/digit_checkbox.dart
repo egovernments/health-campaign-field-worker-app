@@ -13,7 +13,7 @@ class DigitCheckbox extends StatelessWidget {
     required this.label,
     this.onChanged,
     this.value = false,
-    this.padding = const EdgeInsets.only(top: 4),
+    this.padding = EdgeInsets.zero,
   });
 
   @override
