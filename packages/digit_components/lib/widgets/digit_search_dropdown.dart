@@ -60,8 +60,9 @@ class _DigitSearchDropdownState<T> extends State<DigitSearchDropdown<T>> {
           DigitReactiveTypeAhead<T, T>(
               textFieldConfiguration: const TextFieldConfiguration(
                 decoration: InputDecoration(
+                  constraints: BoxConstraints(maxHeight: 42),
                   suffixIcon: Padding(
-                      padding: EdgeInsets.all(kPadding),
+                      padding: EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
                       child: Icon(
                         Icons.arrow_drop_down,
                         size: 24,
