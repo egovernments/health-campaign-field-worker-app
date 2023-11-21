@@ -14,6 +14,10 @@ class DigitElevatedButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: const EdgeInsets.only(
+        top: kPadding,
+        bottom: kPadding,
+      ),
       constraints: const BoxConstraints(maxHeight: 50, minHeight: 40),
       decoration: BoxDecoration(
         border: Border(

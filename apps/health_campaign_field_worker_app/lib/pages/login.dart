@@ -69,11 +69,6 @@ class _LoginPageState extends LocalizedState<LoginPage> {
               form: buildForm,
               builder: (context, form, child) {
                 return DigitCard(
-                  padding: const EdgeInsets.only(
-                    left: kPadding * 2,
-                    right: kPadding * 2,
-                    top: kPadding * 2,
-                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
@@ -152,18 +147,12 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                         },
                       ),
                       const SizedBox(
-                        height: 8,
+                        height: 16,
                       ),
                       TextButton(
                         onPressed: () => DigitDialog.show(
                           context,
                           options: DigitDialogOptions(
-                            titlePadding: const EdgeInsets.fromLTRB(
-                              kPadding * 2,
-                              kPadding * 2,
-                              kPadding * 2,
-                              kPadding * 2,
-                            ),
                             titleText: localizations.translate(
                               i18.forgotPassword.labelText,
                             ),
@@ -179,6 +168,11 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                                       .pop(),
                             ),
                           ),
+                        ),
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          minimumSize: const Size(0, 0),
                         ),
                         child: Center(
                           child: Text(
@@ -201,7 +195,7 @@ class _LoginPageState extends LocalizedState<LoginPage> {
 
   FormGroup buildForm() => fb.group(<String, Object>{
         _userId: FormControl<String>(
-          value: 'Distributor2',
+          value: 'dsmr1',
           validators: [Validators.required],
         ),
         _password: FormControl<String>(

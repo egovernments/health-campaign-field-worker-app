@@ -39,12 +39,15 @@ class DigitDialog extends StatelessWidget {
         title: Padding(
           padding: options.dialogPadding != null
               ? options.dialogPadding!
-              : const EdgeInsets.all(0),
+              : const EdgeInsets.all(kPadding),
           child: options.title,
         ),
         content: SizedBox(
           width: MediaQuery.of(context).size.width,
-          child: options.content,
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: kPadding),
+            child: options.content,
+          ),
         ),
         scrollable: options.isScrollable,
         actionsAlignment: MainAxisAlignment.spaceBetween,
@@ -94,19 +97,10 @@ class DigitDialog extends StatelessWidget {
             Column(
               children: <Widget>[
                 if (options.primaryAction != null)
-                  Padding(
-                    padding: options.dialogPadding != null
-                        ? options.dialogPadding!
-                        : const EdgeInsets.only(
-                            left: kPadding * 2,
-                            right: kPadding * 2,
-                            bottom: kPadding,
-                          ),
-                    child: DigitElevatedButton(
-                      onPressed: () =>
-                          options.primaryAction!.action?.call(context),
-                      child: Center(child: Text(options.primaryAction!.label)),
-                    ),
+                  DigitElevatedButton(
+                    onPressed: () =>
+                        options.primaryAction!.action?.call(context),
+                    child: Center(child: Text(options.primaryAction!.label)),
                   ),
                 if (options.secondaryAction != null)
                   TextButton(
@@ -151,17 +145,10 @@ class DigitDialogOptions {
     this.enableRecordPast = false,
     this.isScrollable = false,
     this.titlePadding = const EdgeInsets.only(
-      left: kPadding * 3,
-      right: kPadding * 2,
-      bottom: kPadding * 2,
-      top: kPadding * 2,
+      top: kPadding,
+      bottom: kPadding,
     ),
-    this.contentPadding = const EdgeInsets.only(
-      bottom: kPadding * 2,
-      top: kPadding * 2,
-      left: kPadding * 2,
-      right: kPadding * 2,
-    ),
+    this.contentPadding = const EdgeInsets.all(kPadding),
     this.barrierColor,
     this.key,
     this.dialogPadding,
@@ -192,16 +179,9 @@ class DigitDialogOptions {
   Widget? get content {
     if (_contentWidget != null) return _contentWidget;
     if (contentText != null) {
-      return Padding(
-        padding: const EdgeInsets.only(
-          left: kPadding,
-          right: kPadding,
-          bottom: kPadding * 2,
-        ),
-        child: Text(
-          contentText!,
-          textAlign: TextAlign.left,
-        ),
+      return Text(
+        contentText!,
+        textAlign: TextAlign.left,
       );
     }
     return null;

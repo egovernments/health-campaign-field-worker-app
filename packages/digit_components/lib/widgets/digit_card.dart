@@ -24,8 +24,8 @@ class DigitCard extends StatelessWidget {
           child: Padding(
             padding: padding ??
                 const EdgeInsets.only(
-                  left: kPadding * 2,
-                  right: kPadding * 2,
+                  left: kPadding,
+                  right: kPadding,
                   top: kPadding * 2,
                   bottom: kPadding * 2,
                 ),
