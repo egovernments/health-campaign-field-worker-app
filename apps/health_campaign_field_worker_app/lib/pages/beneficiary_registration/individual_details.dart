@@ -395,6 +395,7 @@ class _IndividualDetailsPageState
                                           }
                                         });
                                       },
+                                      isEnableSearch: false,
                                     ),
                                   );
                                 },
@@ -513,6 +514,7 @@ class _IndividualDetailsPageState
                                       padding: const EdgeInsets.only(
                                         top: kPadding,
                                       ),
+                                      isEnableSearch: false,
                                     ),
                                   );
                                 },

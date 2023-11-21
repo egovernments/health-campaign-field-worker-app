@@ -14,6 +14,7 @@ class DigitSearchDropdown<T> extends StatefulWidget {
   final Iterable<T> menuItems;
   final String formControlName;
   final bool isRequired;
+  final bool isEnableSearch;
   final VoidCallback? onChanged;
   final String Function(T value) valueMapper;
   final Map<String, String Function(Object object)>? validationMessages;
@@ -33,6 +34,7 @@ class DigitSearchDropdown<T> extends StatefulWidget {
     this.validationMessages,
     this.initialValueText,
     this.padding,
+    this.isEnableSearch = true,
   }) : super(key: key);
 
   @override
@@ -75,10 +77,14 @@ class _DigitSearchDropdownState<T> extends State<DigitSearchDropdown<T>> {
               initialValue: widget.initialValue,
               initialValueText: widget.initialValueText,
               onSuggestionSelected: widget.onSuggestionSelected,
-              suggestionsCallback: (pattern) => widget.suggestionsCallback(
+              suggestionsCallback:  widget.isEnableSearch ? (pattern) => widget.suggestionsCallback(
                     widget.menuItems,
                     pattern,
-                  ),
+                  ) : (pattern) => widget.suggestionsCallback(
+                widget.menuItems,
+                '',
+              ),
+              hideKeyboard: true,
               itemBuilder: (context, item) {
                 return Padding(
                   padding: const EdgeInsets.all(kPadding * 2),
