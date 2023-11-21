@@ -409,7 +409,7 @@ class _ComplaintsDetailsPageState
                             label: localizations.translate(
                               i18.complaints.complaintDescription,
                             ),
-                            minLines: 2,
+                            minLines: 3,
                             maxLines: 3,
                             isRequired: true,
                             validationMessages: {

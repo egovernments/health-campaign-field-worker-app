@@ -535,7 +535,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                               label: localizations.translate(
                                 i18.stockDetails.commentsLabel,
                               ),
-                              minLines: 2,
+                              minLines: 3,
                               maxLines: 3,
                               formControlName: _commentsKey,
                             ),

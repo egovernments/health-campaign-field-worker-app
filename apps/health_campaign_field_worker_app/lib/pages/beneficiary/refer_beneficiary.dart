@@ -327,6 +327,8 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                             label: localizations.translate(
                               i18.referBeneficiary.referralComments,
                             ),
+                            minLines: 3,
+                            maxLines: 3,
                           ),
                         ]),
                       ],

@@ -503,7 +503,7 @@ class _StockReconciliationPageState
                                             .commentsLabel,
                                       ),
                                       maxLines: 3,
-                                      minLines: 2,
+                                      minLines: 3,
                                       formControlName:
                                           _reconciliationCommentsKey,
                                     ),
