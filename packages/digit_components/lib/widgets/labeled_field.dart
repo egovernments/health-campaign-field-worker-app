@@ -37,7 +37,8 @@ class LabeledField extends StatelessWidget {
                 Flexible(
                   child: Text(
                     label,
-                    style: labelStyle ?? Theme.of(context).textTheme.labelSmall,
+                    style: labelStyle ??
+                        DigitTheme.instance.mobileTheme.textTheme.labelSmall,
                   ),
                 ),
                 icon != null

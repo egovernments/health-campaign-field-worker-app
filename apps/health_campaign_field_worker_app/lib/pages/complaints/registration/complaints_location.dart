@@ -1,5 +1,6 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -30,6 +31,7 @@ class _ComplaintsLocationPageState
   static const _latKey = 'latKey';
   static const _lngKey = 'lngKey';
   static const _accuracyKey = 'accuracyKey';
+  int maxLength = 64;
 
   @override
   Widget build(BuildContext context) {
@@ -74,57 +76,55 @@ class _ComplaintsLocationPageState
                     BackNavigationHelpHeaderWidget(),
                   ],
                 ),
-                footer: SizedBox(
-                  child: DigitCard(
-                    margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
-                    padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
-                    child: DigitElevatedButton(
-                        onPressed: () {
-                          form.markAllAsTouched();
+                footer: DigitCard(
+                  margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
+                  padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
+                  child: DigitElevatedButton(
+                    onPressed: () {
+                      form.markAllAsTouched();
 
-                          if (!form.valid) return;
-                          FocusManager.instance.primaryFocus?.unfocus();
+                      if (!form.valid) return;
+                      FocusManager.instance.primaryFocus?.unfocus();
 
-                          final addressLine1 =
-                              form.control(_addressLine1Key).value as String?;
-                          final addressLine2 =
-                              form.control(_addressLine2Key).value as String?;
-                          final landmark =
-                              form.control(_landmarkKey).value as String?;
-                          final postalCode =
-                              form.control(_postalCodeKey).value as String?;
+                      final addressLine1 =
+                          form.control(_addressLine1Key).value as String?;
+                      final addressLine2 =
+                          form.control(_addressLine2Key).value as String?;
+                      final landmark =
+                          form.control(_landmarkKey).value as String?;
+                      final postalCode =
+                          form.control(_postalCodeKey).value as String?;
 
-                          state.whenOrNull(
-                            create: (
-                              loading,
-                              complaintType,
-                              _,
-                              addressModel,
-                              complaintsDetailsModel,
-                            ) {
-                              bloc.add(ComplaintsRegistrationEvent.saveAddress(
-                                addressModel: PgrAddressModel(
-                                  buildingName: addressLine1,
-                                  street: addressLine2,
-                                  landmark: landmark,
-                                  pincode: postalCode,
-                                  geoLocation: GeoLocation(
-                                    latitude: form.control(_latKey).value,
-                                    longitude: form.control(_lngKey).value,
-                                  ),
-                                ),
-                              ));
-                            },
-                          );
-
-                          router.push(ComplaintsDetailsRoute());
+                      state.whenOrNull(
+                        create: (
+                          loading,
+                          complaintType,
+                          _,
+                          addressModel,
+                          complaintsDetailsModel,
+                        ) {
+                          bloc.add(ComplaintsRegistrationEvent.saveAddress(
+                            addressModel: PgrAddressModel(
+                              buildingName: addressLine1,
+                              street: addressLine2,
+                              landmark: landmark,
+                              pincode: postalCode,
+                              geoLocation: GeoLocation(
+                                latitude: form.control(_latKey).value,
+                                longitude: form.control(_lngKey).value,
+                              ),
+                            ),
+                          ));
                         },
-                        child: Center(
-                          child: Text(
-                            localizations.translate(i18.complaints.actionLabel),
-                          ),
-                        ),
+                      );
+
+                      router.push(ComplaintsDetailsRoute());
+                    },
+                    child: Center(
+                      child: Text(
+                        localizations.translate(i18.complaints.actionLabel),
                       ),
+                    ),
                   ),
                 ),
                 children: [
@@ -133,11 +133,14 @@ class _ComplaintsLocationPageState
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(
-                          localizations.translate(
-                            i18.complaints.complaintsLocationLabel,
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: kPadding),
+                          child: Text(
+                            localizations.translate(
+                              i18.complaints.complaintsLocationLabel,
+                            ),
+                            style: theme.textTheme.displayMedium,
                           ),
-                          style: theme.textTheme.displayMedium,
                         ),
                         Column(children: [
                           DigitTextFormField(
@@ -146,11 +149,13 @@ class _ComplaintsLocationPageState
                               i18.householdLocation
                                   .householdAddressLine1LabelText,
                             ),
-                            maxLength: 64,
                             validationMessages: {
                               'required': (_) => localizations.translate(
                                     i18.common.min2CharsRequired,
                                   ),
+                              'maxLength': (object) => localizations
+                                  .translate(i18.common.maxCharsRequired)
+                                  .replaceAll('{}', maxLength.toString()),
                             },
                           ),
                           DigitTextFormField(
@@ -159,11 +164,13 @@ class _ComplaintsLocationPageState
                               i18.householdLocation
                                   .householdAddressLine2LabelText,
                             ),
-                            maxLength: 64,
                             validationMessages: {
                               'required': (_) => localizations.translate(
                                     i18.common.min2CharsRequired,
                                   ),
+                              'maxLength': (object) => localizations
+                                  .translate(i18.common.maxCharsRequired)
+                                  .replaceAll('{}', maxLength.toString()),
                             },
                             padding: const EdgeInsets.only(top: kPadding / 2),
                           ),
@@ -172,11 +179,13 @@ class _ComplaintsLocationPageState
                             label: localizations.translate(
                               i18.householdLocation.landmarkFormLabel,
                             ),
-                            maxLength: 64,
                             validationMessages: {
                               'required': (_) => localizations.translate(
                                     i18.common.min2CharsRequired,
                                   ),
+                              'maxLength': (object) => localizations
+                                  .translate(i18.common.maxCharsRequired)
+                                  .replaceAll('{}', maxLength.toString()),
                             },
                             padding: const EdgeInsets.only(top: kPadding / 2),
                           ),
@@ -186,11 +195,16 @@ class _ComplaintsLocationPageState
                             label: localizations.translate(
                               i18.householdLocation.postalCodeFormLabel,
                             ),
-                            maxLength: 64,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                            ],
                             validationMessages: {
                               'required': (_) => localizations.translate(
                                     i18.common.min2CharsRequired,
                                   ),
+                              'maxLength': (object) => localizations
+                                  .translate(i18.common.maxCharsRequired)
+                                  .replaceAll('{}', '6'),
                             },
                             padding: const EdgeInsets.only(top: kPadding / 3.5),
                           ),
@@ -220,18 +234,23 @@ class _ComplaintsLocationPageState
         disabled: shouldDisableForm,
         validators: [
           CustomValidator.requiredMin,
+          Validators.maxLength(maxLength),
         ],
       ),
       _addressLine2Key: FormControl<String>(
         value: addressModel?.street,
         disabled: shouldDisableForm,
-        validators: [CustomValidator.requiredMin],
+        validators: [
+          CustomValidator.requiredMin,
+          Validators.maxLength(maxLength),
+        ],
       ),
       _landmarkKey: FormControl<String>(
         value: addressModel?.landmark,
         disabled: shouldDisableForm,
         validators: [
           CustomValidator.requiredMin,
+          Validators.maxLength(maxLength),
         ],
       ),
       _postalCodeKey: FormControl<String>(
@@ -239,6 +258,7 @@ class _ComplaintsLocationPageState
         disabled: shouldDisableForm,
         validators: [
           CustomValidator.requiredMin,
+          Validators.maxLength(6),
         ],
       ),
       _latKey: FormControl<double>(
