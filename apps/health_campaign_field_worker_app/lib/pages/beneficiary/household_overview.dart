@@ -220,18 +220,6 @@ class _HouseholdOverviewPageState
                                       );
                                     },
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                      left: kPadding,
-                                      right: kPadding,
-                                    ),
-                                    child: Text(
-                                      localizations.translate(
-                                        i18.householdOverView
-                                            .householdOverViewLabel,
-                                      ),
-                                    ),
-                                  ),
                                   BlocBuilder<DeliverInterventionBloc,
                                       DeliverInterventionState>(
                                     builder: (ctx, state) => Offstage(

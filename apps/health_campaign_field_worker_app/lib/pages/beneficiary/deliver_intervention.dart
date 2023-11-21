@@ -467,7 +467,7 @@ class _DeliverInterventionPageState
                                                         );
                                                       });
                                                     },
-                                                    icon: Icons.add,
+                                                    icon: Icons.add_circle,
                                                     iconText:
                                                         localizations.translate(
                                                       i18.deliverIntervention
