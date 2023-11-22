@@ -10,6 +10,7 @@ class ScrollableContent extends StatelessWidget {
   final CrossAxisAlignment crossAxisAlignment;
   final List<Widget> children;
   final bool enableFixedButton;
+  final Color? backgroundColor;
 
   const ScrollableContent(
       {super.key,
@@ -21,6 +22,7 @@ class ScrollableContent extends StatelessWidget {
       this.crossAxisAlignment = CrossAxisAlignment.start,
       this.children = const <Widget>[],
       this.slivers = const [],
+      this.backgroundColor,
       this.enableFixedButton = false});
 
   @override
@@ -31,6 +33,7 @@ class ScrollableContent extends StatelessWidget {
       bottomNavigationBar = footer!;
     }
     return Scaffold(
+      backgroundColor: backgroundColor,
       body: CustomScrollView(
         controller: controller,
         primary: primary,
