@@ -158,7 +158,10 @@ class DigitTable extends StatelessWidget {
             : columnRowFixedHeight,
         padding: const EdgeInsets.only(left: 17, right: 5, top: 6, bottom: 6),
         alignment: Alignment.centerLeft,
-        child: Text(tableData[index].tableRow.first.label,
+        child: Text(
+            tableData[index].tableRow.first.label.toString().length > 28
+                ? '${tableData[index].tableRow.first.label.substring(0, 25)}...'
+                : tableData[index].tableRow.first.label.toString(),
             style: tableData[index].tableRow.first.style),
       ),
     );

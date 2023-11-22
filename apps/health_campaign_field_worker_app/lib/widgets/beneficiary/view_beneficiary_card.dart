@@ -301,10 +301,10 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
               tableData: tableData,
               columnWidth: 130,
               height: householdMember.members.length == 1
-                  ? 61 * 2
+                  ? 70 * 2
                   : householdMember.members.length <= 4
                       ? (householdMember.members.length + 1) * 58
-                      : 5 * 60,
+                      : 5 * 68,
               scrollPhysics: householdMember.members.length <= 4
                   ? const NeverScrollableScrollPhysics()
                   : const ClampingScrollPhysics(),
