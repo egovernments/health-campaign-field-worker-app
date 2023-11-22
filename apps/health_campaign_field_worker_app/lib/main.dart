@@ -2,7 +2,11 @@ import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_base_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_date_form_input.dart';
+import 'package:digit_components/widgets/atoms/digit_password_form_input.dart';
+import 'package:digit_components/widgets/atoms/digit_search_form_input.dart';
+import 'package:digit_components/widgets/atoms/digit_text_area_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_text_form_input.dart';
+import 'package:digit_components/widgets/atoms/digit_time_form_input.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
@@ -34,13 +38,14 @@ void main() {
           padding: EdgeInsets.all(8.0),
           child: Column(
             children: [
-              DigitDateFormInput(
+              DigitTextAreaFormInput(
                 label: "input",
                 controller: TextEditingController(),
                 // state: 'Disabled',
                 info: 'this is info',
                 innerLabel: 'innerlabel',
                 helpText: 'help text',
+                // onSuffixTap: (){print('tapppppppppp');},
                 // suffixIcon: Icons.currency_rupee_sharp,
                 // prefixIcon: Icons.currency_rupee,
               ),
