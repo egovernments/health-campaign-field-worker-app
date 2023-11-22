@@ -300,6 +300,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
               headerList: filteredHeaderList,
               tableData: tableData,
               columnWidth: 130,
+              columnRowFixedHeight: 62,
               height: householdMember.members.length == 1
                   ? 70 * 2
                   : householdMember.members.length <= 4

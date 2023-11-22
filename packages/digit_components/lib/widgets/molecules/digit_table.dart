@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
 
 class DigitTable extends StatelessWidget {
-  final double columnRowFixedHeight = 52.0;
+  final double columnRowFixedHeight;
   final List<TableHeader> headerList;
   final List<TableDataRow> tableData;
   final double columnWidth;
@@ -20,6 +20,7 @@ class DigitTable extends StatelessWidget {
     this.height,
     this.selectedIndex,
     this.scrollPhysics,
+    this.columnRowFixedHeight = 52.0,
   }) : super(key: key);
 
   List<Widget>? _getTitleWidget(ThemeData theme) {
