@@ -230,34 +230,37 @@ class _SearchBeneficiaryPageState
                                 ),
                               );
 
-                              return ViewBeneficiaryCard(
-                                distance: distance,
-                                householdMember: i,
-                                onOpenPressed: () async {
-                                  final scannerbloc =
-                                      context.read<ScannerBloc>();
+                              return Container(
+                                margin: const EdgeInsets.only(bottom: kPadding),
+                                child: ViewBeneficiaryCard(
+                                  distance: distance,
+                                  householdMember: i,
+                                  onOpenPressed: () async {
+                                    final scannerbloc =
+                                        context.read<ScannerBloc>();
 
-                                  scannerbloc.add(
-                                    const ScannerEvent.handleScanner([], []),
-                                  );
+                                    scannerbloc.add(
+                                      const ScannerEvent.handleScanner([], []),
+                                    );
 
-                                  final bloc =
-                                      context.read<SearchHouseholdsBloc>();
+                                    final bloc =
+                                        context.read<SearchHouseholdsBloc>();
 
-                                  await context.router.push(
-                                    BeneficiaryWrapperRoute(
-                                      wrapper: i,
-                                    ),
-                                  );
-                                  setState(() {
-                                    isProximityEnabled = false;
-                                  });
-                                  searchController.clear();
+                                    await context.router.push(
+                                      BeneficiaryWrapperRoute(
+                                        wrapper: i,
+                                      ),
+                                    );
+                                    setState(() {
+                                      isProximityEnabled = false;
+                                    });
+                                    searchController.clear();
 
-                                  bloc.add(
-                                    const SearchHouseholdsClearEvent(),
-                                  );
-                                },
+                                    bloc.add(
+                                      const SearchHouseholdsClearEvent(),
+                                    );
+                                  },
+                                ),
                               );
                             },
                             childCount: searchState.householdMembers.length,

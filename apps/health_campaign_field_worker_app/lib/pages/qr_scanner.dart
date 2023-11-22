@@ -155,7 +155,7 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                       ),
                     ),
                     Positioned(
-                      top: MediaQuery.of(context).size.height / 2.2,
+                      top: MediaQuery.of(context).size.height / 2.0,
                       left: MediaQuery.of(context).size.width / 6,
                       width: 250,
                       height: 50,
@@ -188,54 +188,47 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                     Positioned(
                       bottom: 0,
                       width: MediaQuery.of(context).size.width,
-                      height: kPadding * 12,
                       child: DigitCard(
-                        margin: const EdgeInsets.only(top: 10),
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                            left: kPadding * 2,
-                            right: kPadding * 2,
-                          ),
-                          child: DigitElevatedButton(
-                            child: Text(localizations
-                                .translate(i18.common.coreCommonSubmit)),
-                            onPressed: () async {
-                              if (widget.isGS1code &&
-                                  result.length < widget.quantity) {
-                                buildDialog();
-                              } else {
-                                final bloc =
-                                    context.read<SearchHouseholdsBloc>();
+                        margin: const EdgeInsets.only(top: kPadding),
+                        padding:
+                            const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
+                        child: DigitElevatedButton(
+                          child: Text(localizations
+                              .translate(i18.common.coreCommonSubmit)),
+                          onPressed: () async {
+                            if (widget.isGS1code &&
+                                result.length < widget.quantity) {
+                              buildDialog();
+                            } else {
+                              final bloc = context.read<SearchHouseholdsBloc>();
 
-                                final scannerState =
-                                    context.read<ScannerBloc>().state;
+                              final scannerState =
+                                  context.read<ScannerBloc>().state;
 
-                                if (scannerState.qrcodes.isNotEmpty) {
-                                  bloc.add(SearchHouseholdsEvent.searchByTag(
-                                    tag: scannerState.qrcodes.first,
-                                    projectId: context.projectId,
-                                  ));
-                                }
-                                context.router.pop();
+                              if (scannerState.qrcodes.isNotEmpty) {
+                                bloc.add(SearchHouseholdsEvent.searchByTag(
+                                  tag: scannerState.qrcodes.first,
+                                  projectId: context.projectId,
+                                ));
                               }
-                            },
-                          ),
+                              context.router.pop();
+                            }
+                          },
                         ),
                       ),
                     ),
 
                     Positioned(
-                      bottom: (kPadding * 9.5),
+                      bottom: (kPadding * 7.5),
                       height: widget.isGS1code
                           ? state.barcodes.length < 10
                               ? (state.barcodes.length * 60) + 80
-                              : MediaQuery.of(context).size.height / 2
+                              : MediaQuery.of(context).size.height / 2.2
                           : state.qrcodes.length < 10
                               ? (state.qrcodes.length * 60) + 80
                               : MediaQuery.of(context).size.height / 2,
                       width: MediaQuery.of(context).size.width,
                       child: Container(
-                        margin: const EdgeInsets.all(kPadding),
                         width: 100,
                         height: 120,
                         decoration: const BoxDecoration(
@@ -384,6 +377,7 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                 )
               : DigitCard(
                   child: ScrollableContent(
+                    backgroundColor: Colors.white,
                     header: GestureDetector(
                       onTap: () {
                         setState(() {
@@ -429,21 +423,24 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                       },
                     ),
                     children: [
-                      Container(
-                        padding: const EdgeInsets.all(kPadding),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            localizations.translate(
-                              i18.deliverIntervention.manualEnterCode,
-                            ),
-                            style: theme.textTheme.headlineLarge,
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          localizations.translate(
+                            i18.deliverIntervention.manualEnterCode,
                           ),
+                          style: theme.textTheme.headlineLarge,
                         ),
+                      ),
+                      const SizedBox(
+                        height: kPadding * 2,
                       ),
                       Text(localizations.translate(
                         i18.deliverIntervention.manualCodeDescription,
                       )),
+                      const SizedBox(
+                        height: kPadding * 2,
+                      ),
                       DigitTextField(
                         label: localizations.translate(
                           i18.deliverIntervention.resourceCode,
