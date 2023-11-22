@@ -381,7 +381,7 @@ class _DeliverInterventionPageState
                                                               12.5 *
                                                                   2 *
                                                                   steps.length -
-                                                              45) /
+                                                              50) /
                                                           (steps.length - 1),
                                                 ),
                                                 DigitDateFormPicker(
@@ -422,7 +422,7 @@ class _DeliverInterventionPageState
                                                         .deliverInterventionResourceLabel,
                                                   ),
                                                   style: theme
-                                                      .textTheme.displayMedium,
+                                                      .textTheme.headlineLarge,
                                                 ),
                                                 ..._controllers
                                                     .map((e) =>
@@ -490,7 +490,7 @@ class _DeliverInterventionPageState
                                                         .deliveryCommentLabel,
                                                   ),
                                                   style: theme
-                                                      .textTheme.displayMedium,
+                                                      .textTheme.headlineLarge,
                                                 ),
                                                 BlocBuilder<
                                                     AppInitializationBloc,

@@ -47,15 +47,15 @@ Widget buildTableContent(
       fetchProductVariant(item, individualModel)?.productVariants;
   final numRows = productVariants?.length ?? 0;
   const rowHeight = 82;
-  const paddingHeight = kPadding / 2;
+  const paddingHeight = kPadding * 2;
   final containerHeight = (numRows + 1) * rowHeight + paddingHeight;
 
   return Container(
     padding: const EdgeInsets.only(
       left: kPadding,
-      bottom: kPadding,
+      bottom: 0,
       right: kPadding,
-      top: kPadding / 2,
+      top: 0,
     ),
     height: containerHeight,
     width: MediaQuery.of(context).size.width / 1.25,

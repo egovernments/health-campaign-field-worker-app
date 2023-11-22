@@ -300,11 +300,11 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
               headerList: filteredHeaderList,
               tableData: tableData,
               columnWidth: 130,
-              columnRowFixedHeight: 62,
+              columnRowFixedHeight: 65,
               height: householdMember.members.length == 1
-                  ? 62 * 2
+                  ? 65 * 2
                   : householdMember.members.length <= 4
-                      ? (householdMember.members.length + 1) * 58
+                      ? (householdMember.members.length + 1) * 65
                       : 5 * 68,
               scrollPhysics: householdMember.members.length <= 4
                   ? const NeverScrollableScrollPhysics()

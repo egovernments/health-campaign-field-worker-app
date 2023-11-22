@@ -64,12 +64,12 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only( top: 16, bottom: 16),
+                  padding: const EdgeInsets.only(top: 16, bottom: 16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Expanded(
-                        flex: 2,
+                        flex: 3,
                         child: Text(
                           localizations
                               .translate(i18.complaints.inboxNumberLabel),
@@ -98,7 +98,7 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Expanded(
-                        flex: 2,
+                        flex: 3,
                         child: Text(
                           localizations
                               .translate(i18.complaints.inboxTypeLabel),
@@ -125,7 +125,7 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Expanded(
-                        flex: 2,
+                        flex: 3,
                         child: Text(
                           localizations
                               .translate(i18.complaints.inboxDateLabel),
@@ -150,7 +150,7 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Expanded(
-                        flex: 2,
+                        flex: 3,
                         child: Text(
                           localizations
                               .translate(i18.complaints.complainantName),
@@ -173,7 +173,7 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Expanded(
-                        flex: 2,
+                        flex: 3,
                         child: Text(
                           localizations
                               .translate(i18.complaints.inboxAreaLabel),
@@ -196,7 +196,7 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Expanded(
-                        flex: 2,
+                        flex: 3,
                         child: Text(
                           localizations.translate(
                             i18.complaints.complainantContactNumber,
@@ -220,7 +220,7 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Expanded(
-                        flex: 2,
+                        flex: 3,
                         child: Text(
                           localizations
                               .translate(i18.complaints.inboxStatusLabel),
@@ -245,7 +245,7 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Expanded(
-                        flex: 2,
+                        flex: 3,
                         child: Text(
                           localizations
                               .translate(i18.complaints.complaintDescription),

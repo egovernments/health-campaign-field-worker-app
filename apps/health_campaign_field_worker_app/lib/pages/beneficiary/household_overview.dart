@@ -271,6 +271,18 @@ class _HouseholdOverviewPageState
                                       left: kPadding,
                                       right: kPadding,
                                     ),
+                                    child: Text(
+                                      localizations.translate(i18
+                                          .householdOverView
+                                          .householdOverViewLabel),
+                                      style: theme.textTheme.displayMedium,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                      left: kPadding,
+                                      right: kPadding,
+                                    ),
                                     child: DigitTableCard(
                                       element: {
                                         localizations.translate(i18

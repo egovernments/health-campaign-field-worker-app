@@ -82,7 +82,7 @@ class MemberCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(
-                    width: MediaQuery.of(context).size.width / 2.5,
+                    width: MediaQuery.of(context).size.width / 1.8,
                     child: Padding(
                       padding:
                           const EdgeInsets.only(left: kPadding, top: kPadding),

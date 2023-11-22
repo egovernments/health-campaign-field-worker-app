@@ -79,37 +79,38 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                       footer: SizedBox(
                         child: DigitCard(
                           margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
-                          padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
+                          padding: const EdgeInsets.fromLTRB(
+                              kPadding, 0, kPadding, 0),
                           child: ReactiveFormConsumer(
                             builder: (context, form, child) {
                               return DigitElevatedButton(
-                                  onPressed: !form.valid
-                                      ? null
-                                      : () {
-                                          form.markAllAsTouched();
-                                          if (!form.valid) {
-                                            return;
-                                          }
-                                          final dateOfRecord = form
-                                              .control(_dateOfEntryKey)
-                                              .value as DateTime;
+                                onPressed: !form.valid
+                                    ? null
+                                    : () {
+                                        form.markAllAsTouched();
+                                        if (!form.valid) {
+                                          return;
+                                        }
+                                        final dateOfRecord = form
+                                            .control(_dateOfEntryKey)
+                                            .value as DateTime;
 
-                                          final facility = form
-                                              .control(_warehouseKey)
-                                              .value as FacilityModel;
+                                        final facility = form
+                                            .control(_warehouseKey)
+                                            .value as FacilityModel;
 
-                                          context.read<RecordStockBloc>().add(
-                                                RecordStockSaveWarehouseDetailsEvent(
-                                                  dateOfRecord: dateOfRecord,
-                                                  facilityModel: facility,
-                                                ),
-                                              );
-                                          context.router.push(
-                                            StockDetailsRoute(),
-                                          );
-                                        },
-                                  child: child!,
-                                );
+                                        context.read<RecordStockBloc>().add(
+                                              RecordStockSaveWarehouseDetailsEvent(
+                                                dateOfRecord: dateOfRecord,
+                                                facilityModel: facility,
+                                              ),
+                                            );
+                                        context.router.push(
+                                          StockDetailsRoute(),
+                                        );
+                                      },
+                                child: child!,
+                              );
                             },
                             child: Center(
                               child: Text(
@@ -156,23 +157,9 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                   ),
                                 ),
                               ]),
-                              DigitTextFormField(
-                                padding:
-                                    const EdgeInsets.only(bottom: kPadding),
-                                valueAccessor: FacilityValueAccessor(
-                                  facilities,
-                                ),
-                                isRequired: true,
-                                label: localizations.translate(
-                                  i18.stockReconciliationDetails.facilityLabel,
-                                ),
-                                suffix: const Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Icon(Icons.search),
-                                ),
-                                formControlName: _warehouseKey,
-                                readOnly: false,
+                              InkWell(
                                 onTap: () async {
+                                  print("----PROX---");
                                   final parent =
                                       context.router.parent() as StackRouter;
                                   final facility =
@@ -185,6 +172,41 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                   if (facility == null) return;
                                   form.control(_warehouseKey).value = facility;
                                 },
+                                child: IgnorePointer(
+                                  child: DigitTextFormField(
+                                    hideKeyboard: true,
+                                    padding:
+                                        const EdgeInsets.only(bottom: kPadding),
+                                    valueAccessor: FacilityValueAccessor(
+                                      facilities,
+                                    ),
+                                    isRequired: true,
+                                    label: localizations.translate(
+                                      i18.stockReconciliationDetails
+                                          .facilityLabel,
+                                    ),
+                                    suffix: const Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Icon(Icons.search),
+                                    ),
+                                    formControlName: _warehouseKey,
+                                    readOnly: true,
+                                    onTap: () async {
+                                      final parent = context.router.parent()
+                                          as StackRouter;
+                                      final facility =
+                                          await parent.push<FacilityModel>(
+                                        FacilitySelectionRoute(
+                                          facilities: facilities,
+                                        ),
+                                      );
+
+                                      if (facility == null) return;
+                                      form.control(_warehouseKey).value =
+                                          facility;
+                                    },
+                                  ),
+                                ),
                               ),
                             ],
                           ),

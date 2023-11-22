@@ -163,9 +163,9 @@ class _BeneficiaryDetailsPageState
                                                 titlePadding:
                                                     const EdgeInsets.fromLTRB(
                                                   kPadding,
-                                                  kPadding * 2,
+                                                  0,
                                                   kPadding,
-                                                  kPadding / 2,
+                                                  0,
                                                 ),
                                                 titleText:
                                                     localizations.translate(i18
@@ -205,6 +205,8 @@ class _BeneficiaryDetailsPageState
                                   : const SizedBox.shrink()
                               : DigitCard(
                                   margin: const EdgeInsets.only(top: kPadding),
+                                  padding: const EdgeInsets.fromLTRB(
+                                      kPadding, 0, kPadding, 0),
                                   child: DigitElevatedButton(
                                     child: Center(
                                       child: Text(localizations.translate(i18

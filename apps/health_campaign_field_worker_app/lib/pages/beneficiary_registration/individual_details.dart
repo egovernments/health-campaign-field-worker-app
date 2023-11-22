@@ -368,6 +368,7 @@ class _IndividualDetailsPageState
                                   return individualDetailsShowcaseData.idType
                                       .buildWith(
                                     child: DigitSearchDropdown(
+                                      isRequired: true,
                                       suggestionsCallback: (items, pattern) {
                                         return items.where((element) => element
                                             .toLowerCase()

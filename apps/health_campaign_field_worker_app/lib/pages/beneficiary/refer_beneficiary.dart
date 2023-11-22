@@ -255,27 +255,7 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                             },
                             isRequired: true,
                           ),
-                          DigitTextFormField(
-                            // padding: const EdgeInsets.only(top: kPadding / 2),
-                            valueAccessor: FacilityValueAccessor(
-                              facilities,
-                            ),
-                            label: localizations.translate(
-                              i18.referBeneficiary.referredToLabel,
-                            ),
-                            isRequired: true,
-                            suffix: const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Icon(Icons.search),
-                            ),
-                            formControlName: _referredToKey,
-                            readOnly: false,
-                            validationMessages: {
-                              'required': (_) => localizations.translate(
-                                    i18.referBeneficiary
-                                        .facilityValidationMessage,
-                                  ),
-                            },
+                          InkWell(
                             onTap: () async {
                               final parent =
                                   context.router.parent() as StackRouter;
@@ -288,6 +268,43 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                               if (facility == null) return;
                               form.control(_referredToKey).value = facility;
                             },
+                            child: IgnorePointer(
+                              child: DigitTextFormField(
+                                hideKeyboard: true,
+                                valueAccessor: FacilityValueAccessor(
+                                  facilities,
+                                ),
+                                label: localizations.translate(
+                                  i18.referBeneficiary.referredToLabel,
+                                ),
+                                isRequired: true,
+                                suffix: const Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Icon(Icons.search),
+                                ),
+                                formControlName: _referredToKey,
+                                readOnly: true,
+                                validationMessages: {
+                                  'required': (_) => localizations.translate(
+                                        i18.referBeneficiary
+                                            .facilityValidationMessage,
+                                      ),
+                                },
+                                onTap: () async {
+                                  final parent =
+                                      context.router.parent() as StackRouter;
+                                  final facility =
+                                      await parent.push<FacilityModel>(
+                                    FacilitySelectionRoute(
+                                      facilities: facilities,
+                                    ),
+                                  );
+
+                                  if (facility == null) return;
+                                  form.control(_referredToKey).value = facility;
+                                },
+                              ),
+                            ),
                           ),
                           BlocBuilder<AppInitializationBloc,
                               AppInitializationState>(
