@@ -59,9 +59,9 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
             orElse: () => const Offstage(),
             initialized: (appConfiguration, _) => ScrollableContent(
               footer: SizedBox(
-                height: 100,
                 child: DigitCard(
-                  margin: const EdgeInsets.all(kPadding),
+                  margin: const EdgeInsets.only(top: kPadding),
+                  padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
                   child: DigitElevatedButton(
                     onPressed: () {
                       context.router.replace(HomeRoute());
