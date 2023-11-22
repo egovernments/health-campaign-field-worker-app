@@ -51,7 +51,9 @@ class DigitOutlineIconButton extends StatelessWidget {
                 style: textStyle ??
                     DigitTheme.instance.mobileTheme.textTheme.headlineSmall
                         ?.apply(
-                      color: DigitTheme.instance.colorScheme.secondary,
+                      color: onPressed != null
+                          ? DigitTheme.instance.colorScheme.secondary
+                          : DigitTheme.instance.colorScheme.outline,
                     ),
               ),
             ],

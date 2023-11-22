@@ -74,7 +74,7 @@ class DigitDialog extends StatelessWidget {
                             color: Theme.of(context).colorScheme.secondary,
                           ),
                           minimumSize:
-                              Size(MediaQuery.of(context).size.width / 4, 45),
+                              Size(MediaQuery.of(context).size.width / 4, 50),
                         ),
                       ),
                     ),
@@ -82,7 +82,6 @@ class DigitDialog extends StatelessWidget {
                   if (options.primaryAction != null)
                     SizedBox(
                       width: MediaQuery.of(context).size.width / 3,
-                      height: 45,
                       child: DigitElevatedButton(
                         onPressed: () =>
                             options.primaryAction!.action?.call(context),
