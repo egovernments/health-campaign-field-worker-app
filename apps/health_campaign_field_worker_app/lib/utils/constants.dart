@@ -25,6 +25,7 @@ import '../data/repositories/local/project_beneficiary.dart';
 import '../data/repositories/local/project_facility.dart';
 import '../data/repositories/local/project_resource.dart';
 import '../data/repositories/local/project_staff.dart';
+import '../data/repositories/local/referral.dart';
 import '../data/repositories/local/service.dart';
 import '../data/repositories/local/service_definition.dart';
 import '../data/repositories/local/side_effect.dart';
@@ -122,6 +123,7 @@ class Constants {
       StockLocalRepository(sql, StockOpLogManager(isar)),
       TaskLocalRepository(sql, TaskOpLogManager(isar)),
       SideEffectLocalRepository(sql, SideEffectOpLogManager(isar)),
+      ReferralLocalRepository(sql, ReferralOpLogManager(isar)),
       StockReconciliationLocalRepository(
         sql,
         StockReconciliationOpLogManager(isar),
