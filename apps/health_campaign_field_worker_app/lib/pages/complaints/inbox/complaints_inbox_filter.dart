@@ -134,7 +134,8 @@ class _ComplaintsInboxFilterPageState
                 footer: SizedBox(
                   child: DigitCard(
                     margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
-                    padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
+                    padding:
+                        const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -285,24 +286,30 @@ class _ComplaintsInboxFilterPageState
                                     );
                                   },
                                 ),
-                                DigitReactiveDropdown<String>(
-                                  formControlName: _complaintType,
+                                DigitReactiveSearchDropdown<String>(
                                   label: localizations.translate(
                                     i18.complaints.complaintsTypeHeading,
                                   ),
+                                  form: formGroup,
                                   menuItems: complaintTypes.toList(),
+                                  formControlName: _complaintType,
                                   valueMapper: (value) {
                                     return localizations.translate(
                                       value.snakeCase.toUpperCase().trim(),
                                     );
                                   },
+                                  emptyText: localizations
+                                      .translate(i18.common.noMatchFound),
                                 ),
-                                DigitReactiveDropdown<String>(
-                                  formControlName: _complaintLocality,
+                                DigitReactiveSearchDropdown<String>(
                                   label: localizations
                                       .translate(i18.complaints.locality),
+                                  form: formGroup,
                                   menuItems: locality.toList(),
+                                  formControlName: _complaintLocality,
                                   valueMapper: (value) => value.trim(),
+                                  emptyText: localizations
+                                      .translate(i18.common.noMatchFound),
                                 ),
                                 if (uniqueStatuses.isNotEmpty) ...[
                                   LabeledField(

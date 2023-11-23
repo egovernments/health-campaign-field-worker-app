@@ -45,9 +45,7 @@ class _StockReconciliationPageState
       _facilityKey: FormControl<FacilityModel>(
         validators: [Validators.required],
       ),
-      _productVariantKey: FormControl<ProductVariantModel>(
-        validators: [Validators.required],
-      ),
+      _productVariantKey: FormControl<ProductVariantModel>(),
       _manualCountKey: FormControl<String>(
         value: '0',
         validators: [
@@ -129,7 +127,11 @@ class _StockReconciliationPageState
                                 child: ReactiveFormConsumer(
                                   builder: (ctx, form, child) =>
                                       DigitElevatedButton(
-                                    onPressed: !form.valid
+                                    onPressed: !form.valid ||
+                                            (form
+                                                    .control(_productVariantKey)
+                                                    .value ==
+                                                null)
                                         ? null
                                         : () async {
                                             form.markAllAsTouched();
@@ -363,16 +365,23 @@ class _StockReconciliationPageState
                                         return state.maybeWhen(
                                           orElse: () => const Offstage(),
                                           fetched: (productVariants) {
-                                            return DigitReactiveDropdown<
+                                            return DigitReactiveSearchDropdown<
                                                 ProductVariantModel>(
-                                              formControlName:
-                                                  _productVariantKey,
                                               label: localizations.translate(
                                                 i18.stockReconciliationDetails
                                                     .productLabel,
                                               ),
+                                              form: form,
+                                              menuItems: productVariants,
+                                              formControlName:
+                                                  _productVariantKey,
                                               isRequired: true,
-                                              onChanged: (value) {
+                                              valueMapper: (value) {
+                                                return localizations.translate(
+                                                  value.sku ?? value.id,
+                                                );
+                                              },
+                                              onSelected: (value) {
                                                 ctx
                                                     .read<
                                                         StockReconciliationBloc>()
@@ -382,20 +391,13 @@ class _StockReconciliationPageState
                                                       ),
                                                     );
                                               },
-                                              valueMapper: (value) {
-                                                return localizations.translate(
-                                                  value.sku ?? value.id,
-                                                );
-                                              },
-                                              menuItems: productVariants,
-                                              validationMessages: {
-                                                'required': (object) =>
-                                                    AppLocalizations.of(
-                                                      context,
-                                                    ).translate(i18
-                                                        .stockReconciliationDetails
-                                                        .fieldRequired),
-                                              },
+                                              validationMessage:
+                                                  localizations.translate(i18
+                                                      .common
+                                                      .corecommonRequired),
+                                              emptyText:
+                                                  localizations.translate(
+                                                      i18.common.noMatchFound),
                                             );
                                           },
                                         );

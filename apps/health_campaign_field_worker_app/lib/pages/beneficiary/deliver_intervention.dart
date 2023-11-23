@@ -506,19 +506,14 @@ class _DeliverInterventionPageState
                                                             .deliveryCommentOptions ??
                                                         <DeliveryCommentOptions>[];
 
-                                                    return DigitReactiveDropdown<
+                                                    return DigitReactiveSearchDropdown<
                                                         String>(
                                                       label: localizations
                                                           .translate(
                                                         i18.deliverIntervention
                                                             .deliveryCommentLabel,
                                                       ),
-                                                      valueMapper: (value) =>
-                                                          value,
-                                                      initialValue:
-                                                          deliveryCommentOptions
-                                                              .firstOrNull
-                                                              ?.name,
+                                                      form: form,
                                                       menuItems:
                                                           deliveryCommentOptions
                                                               .map((e) {
@@ -527,6 +522,11 @@ class _DeliverInterventionPageState
                                                       }).toList(),
                                                       formControlName:
                                                           _deliveryCommentKey,
+                                                      valueMapper: (value) =>
+                                                          value,
+                                                      emptyText: localizations
+                                                          .translate(i18.common
+                                                              .noMatchFound),
                                                     );
                                                   },
                                                 ),
