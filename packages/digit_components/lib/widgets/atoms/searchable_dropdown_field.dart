@@ -197,7 +197,10 @@ class SearchDropdownFormFieldState<T> extends State<SearchDropdownFormField>
                 decoration: widget.decoration ??
                     const InputDecoration(
                       border: UnderlineInputBorder(),
-                      suffixIcon: Icon(Icons.search),
+                      suffixIcon: Icon(
+                        Icons.arrow_drop_down_outlined,
+                        size: 24,
+                      ),
                     ),
                 isEmpty: _isEmpty,
                 isFocused: _isFocused,
@@ -250,8 +253,8 @@ class SearchDropdownFormFieldState<T> extends State<SearchDropdownFormField>
               elevation: 4.0,
               child: SizedBox(
                 height: _options != null && _options!.length > 2
-                    ? widget.dropdownHeight ?? 100
-                    : (_options ?? []).length * 50,
+                    ? widget.dropdownHeight ?? 140
+                    : (_options ?? []).length * 55,
                 child: Container(
                     color: widget.dropdownColor ?? Colors.white70,
                     child: ValueListenableBuilder(

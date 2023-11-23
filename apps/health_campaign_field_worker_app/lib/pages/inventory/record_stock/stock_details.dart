@@ -42,8 +42,8 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
   FormGroup _form() {
     return fb.group({
       _productVariantKey: FormControl<ProductVariantModel>(
-        validators: [Validators.required],
-      ),
+          // validators: [Validators.required],
+          ),
       _transactingPartyKey: FormControl<FacilityModel>(
         validators: [Validators.required],
       ),
@@ -158,7 +158,9 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                         child: ReactiveFormConsumer(
                           builder: (context, form, child) =>
                               DigitElevatedButton(
-                            onPressed: !form.valid
+                            onPressed: !form.valid ||
+                                    (form.control(_productVariantKey).value ==
+                                        null)
                                 ? null
                                 : () async {
                                     form.markAllAsTouched();
@@ -373,27 +375,26 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                 return state.maybeWhen(
                                   orElse: () => const Offstage(),
                                   fetched: (productVariants) {
-                                    return DigitReactiveDropdown<
+                                    return DigitReactiveSearchDropdown<
                                         ProductVariantModel>(
-                                      formControlName: _productVariantKey,
                                       label: localizations.translate(
                                         module.selectProductLabel,
                                       ),
+                                      form: form,
+                                      menuItems: productVariants,
                                       isRequired: true,
+                                      formControlName: _productVariantKey,
                                       valueMapper: (value) {
                                         return localizations.translate(
                                           value.sku ?? value.id,
                                         );
                                       },
-                                      menuItems: productVariants,
-                                      validationMessages: {
-                                        'required': (object) =>
-                                            '${module.selectProductLabel}_IS_REQUIRED',
-                                      },
-                                      padding: const EdgeInsets.only(
-                                        top: kPadding * 2,
-                                        bottom: kPadding * 2,
+                                      validationMessage:
+                                          localizations.translate(
+                                        i18.common.corecommonRequired,
                                       ),
+                                      emptyText: localizations
+                                          .translate(i18.common.noMatchFound),
                                     );
                                   },
                                 );
@@ -403,14 +404,19 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                               StockRecordEntryType.loss,
                               StockRecordEntryType.damaged,
                             ].contains(entryType))
-                              DigitReactiveDropdown<TransactionReason>(
+                              DigitReactiveSearchDropdown<TransactionReason>(
                                 label: localizations.translate(
                                   transactionReasonLabel ?? 'Reason',
                                 ),
+                                form: form,
                                 menuItems: reasons ?? [],
                                 formControlName: _transactionReasonKey,
                                 valueMapper: (value) => value.name.titleCase,
-                                isRequired: true,
+                                validationMessage: localizations.translate(
+                                  i18.common.corecommonRequired,
+                                ),
+                                emptyText: localizations
+                                    .translate(i18.common.noMatchFound),
                               ),
                             BlocBuilder<FacilityBloc, FacilityState>(
                               builder: (context, state) {
@@ -516,29 +522,23 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                       appConfiguration.transportTypes ??
                                           <TransportTypes>[];
 
-                                  return DigitReactiveDropdown<String>(
-                                    isRequired: false,
+                                  return DigitReactiveSearchDropdown<String>(
                                     label: localizations.translate(
                                       i18.stockDetails.transportTypeLabel,
                                     ),
-                                    valueMapper: (e) => e,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        form.control(_typeOfTransportKey);
-                                      });
-                                    },
-                                    initialValue:
-                                        transportTypeOptions.firstOrNull?.name,
+                                    form: form,
                                     menuItems: transportTypeOptions.map(
                                       (e) {
                                         return localizations.translate(e.name);
                                       },
                                     ).toList(),
                                     formControlName: _typeOfTransportKey,
-                                    padding: const EdgeInsets.only(
-                                      top: kPadding * 2,
-                                      bottom: kPadding * 2,
+                                    valueMapper: (value) => value,
+                                    validationMessage: localizations.translate(
+                                      i18.common.corecommonRequired,
                                     ),
+                                    emptyText: localizations
+                                        .translate(i18.common.noMatchFound),
                                   );
                                 },
                               ),
