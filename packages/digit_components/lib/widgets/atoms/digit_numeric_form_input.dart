@@ -13,10 +13,12 @@ class DigitNumericFormInput extends BaseDigitFormInput {
     String? helpText,
     TooltipTriggerMode triggerMode = TooltipTriggerMode.tap,
     bool preferToolTipBelow = false,
-    IconData? suffixIcon,
-    IconData? prefixIcon,
+    IconData suffixIcon = Icons.add,
+    IconData prefixIcon = Icons.remove,
     String? Function(String?)? validator,
     void Function(String?)? onError,
+    TextInputType keyboardType = TextInputType.number,
+    TextAlign textAlign = TextAlign.center,
   }) : super(
     key: key,
     controller: controller,
@@ -31,6 +33,8 @@ class DigitNumericFormInput extends BaseDigitFormInput {
     prefixIcon: prefixIcon,
     validator: validator,
     onError: onError,
+    keyboardType: keyboardType,
+    textAlign: textAlign,
   );
 
   @override
@@ -38,6 +42,26 @@ class DigitNumericFormInput extends BaseDigitFormInput {
 }
 
 class _DigitNumericFormInputState extends BaseDigitFormInputState {
+
+  @override
+  void onPrefixIconClick({void Function()? customFunction}) {
+    setState(() {
+      // Subtract 1 from the input value when the prefix icon is clicked
+      int currentValue = int.tryParse(widget.controller.text) ?? 0;
+      widget.controller.text = (currentValue - 1).toString();
+    });
+
+  }
+
+  @override
+  void onSuffixIconClick({void Function()? customFunction}) {
+    setState(() {
+      // Add 1 to the input value when the suffix icon is clicked
+      int currentValue = int.tryParse(widget.controller.text) ?? 0;
+      widget.controller.text = (currentValue + 1).toString();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // You can customize the appearance or behavior specific to the TextFormInput here

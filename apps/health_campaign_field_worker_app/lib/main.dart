@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_base_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_date_form_input.dart';
+import 'package:digit_components/widgets/atoms/digit_numeric_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_password_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_search_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_text_area_form_input.dart';
@@ -31,28 +32,112 @@ late Isar _isar;
 int i = 0;
 
 void main() {
-  runApp( MaterialApp(
+  runApp(MaterialApp(
     home: Scaffold(
-      body: DigitCard(
-        child: Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              DigitTextAreaFormInput(
-                label: "input",
-                controller: TextEditingController(),
-                // state: 'Disabled',
-                info: 'this is info',
-                innerLabel: 'innerlabel',
-                helpText: 'help text',
-                // onSuffixTap: (){print('tapppppppppp');},
-                // suffixIcon: Icons.currency_rupee_sharp,
-                // prefixIcon: Icons.currency_rupee,
+      body: ScrollableContent(
+        children: [
+          DigitCard(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  DigitTextAreaFormInput(
+                    label: "input",
+                    controller: TextEditingController(),
+                    // state: 'Disabled',
+                    info: 'this is info',
+                    innerLabel: 'innerlabel',
+                    helpText: 'help text',
+                    // onSuffixTap: (){print('tapppppppppp');},
+                    // suffixIcon: Icons.currency_rupee_sharp,
+                    // prefixIcon: Icons.currency_rupee,
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  DigitDateFormInput(
+                    label: "input",
+                    controller: TextEditingController(),
+                    // state: 'Disabled',
+                    info: 'this is info',
+                    innerLabel: 'innerlabel',
+                    helpText: 'help text',
+                    // onSuffixTap: (){print('tapppppppppp');},
+                    // suffixIcon: Icons.currency_rupee_sharp,
+                    // prefixIcon: Icons.currency_rupee,
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  DigitTimeFormInput(
+                    label: "input",
+                    controller: TextEditingController(),
+                    // state: 'Disabled',
+                    info: 'this is info',
+                    innerLabel: 'innerlabel',
+                    helpText: 'help text',
+                    // onSuffixTap: (){print('tapppppppppp');},
+                    // suffixIcon: Icons.currency_rupee_sharp,
+                    // prefixIcon: Icons.currency_rupee,
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  DigitSearchFormInput(
+                    label: "input",
+                    controller: TextEditingController(),
+                    // state: 'Disabled',
+                    info: 'this is info',
+                    innerLabel: 'innerlabel',
+                    helpText: 'help text',
+                    // onSuffixTap: (){print('tapppppppppp');},
+                    // suffixIcon: Icons.currency_rupee_sharp,
+                    // prefixIcon: Icons.currency_rupee,
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  DigitPasswordFormInput(
+                    label: "input",
+                    controller: TextEditingController(),
+                    // state: 'Disabled',
+                    info: 'this is info',
+                    innerLabel: 'innerlabel',
+                    helpText: 'help text',
+                    // onSuffixTap: (){print('tapppppppppp');},
+                    // suffixIcon: Icons.currency_rupee_sharp,
+                    // prefixIcon: Icons.currency_rupee,
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  DigitTextFormInput(
+                    label: "input",
+                    controller: TextEditingController(),
+                    // state: 'Disabled',
+                    info: 'this is info',
+                    innerLabel: 'innerlabel',
+                    helpText: 'help text',
+                    // onSuffixTap: (){print('tapppppppppp');},
+                    suffixIcon: Icons.currency_rupee_sharp,
+                    prefixIcon: Icons.currency_rupee,
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  DigitNumericFormInput(
+                    label: "input",
+                    controller: TextEditingController(),
+                    // state: 'Disabled',
+                    info: 'this is info',
+                    innerLabel: 'innerlabel',
+                    helpText: 'help text',
+                  ),
+                ],
               ),
-              // Add more instances of CustomTextField for different types
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     ),
   ));

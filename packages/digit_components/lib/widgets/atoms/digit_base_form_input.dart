@@ -23,6 +23,8 @@ class BaseDigitFormInput extends StatefulWidget {
   final void Function()? onSuffixTap;
   final int minLine;
   final int maxLine;
+  final TextInputType keyboardType;
+  final TextAlign textAlign;
 
   const BaseDigitFormInput({
     Key? key,
@@ -44,6 +46,8 @@ class BaseDigitFormInput extends StatefulWidget {
     this.onSuffixTap,
     this.minLine = 1,
     this.maxLine = 1,
+    this.keyboardType = TextInputType.text,
+    this.textAlign = TextAlign.start
 
   }) : super(key: key);
 
@@ -101,6 +105,10 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
     // Call the provided function if it's not null
     customFunction?.call();
   }
+  void onPrefixIconClick({void Function()? customFunction}) {
+    // Call the provided function if it's not null
+    customFunction?.call();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -141,17 +149,19 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
             autovalidateMode: AutovalidateMode.disabled,
             minLines: widget.minLine,
             maxLines: widget.maxLine,
+            keyboardType: widget.keyboardType,
+            textAlign: widget.textAlign,
             decoration: InputDecoration(
               isDense: true,
               contentPadding:
-                  EdgeInsets.only(top: 8, bottom: 8, left: 12, right: 12),
+                  const EdgeInsets.only(top: 8, bottom: 8, left: 12, right: 12),
               hintText: widget.innerLabel,
               filled: true,
               fillColor:
                   isDisabled ? const DigitColors().seaShellGray : Colors.white,
               border: OutlineInputBorder(
                   borderRadius: BorderRadius.zero,
-                  borderSide: BorderSide(color: DigitColors().burningOrange)),
+                  borderSide: BorderSide(color: const DigitColors().burningOrange)),
               errorBorder: OutlineInputBorder(
                 borderSide:
                     BorderSide(color: const DigitColors().lavaRed, width: 1.0),
@@ -164,42 +174,48 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
               ),
               focusedBorder: OutlineInputBorder(
                 borderSide:
-                    BorderSide(color: DigitColors().burningOrange, width: 1.0),
+                    BorderSide(color: const DigitColors().burningOrange, width: 1.0),
                 borderRadius: BorderRadius.zero,
               ),
               // suffix: Icon(widget.suffix, size: 24,),
               suffixIcon:  widget.suffixIcon != null
-                  ? Container(
-                      margin: EdgeInsets.only(left: 12),
-                      decoration: BoxDecoration(
-                        color: DigitColors().seaShellGray,
-                        border: Border.all(
-                          color: DigitColors().davyGray,
-                          width: 1.0,
+                  ? GestureDetector(
+                    onTap: onSuffixIconClick,
+                    child: Container(
+                        margin: const EdgeInsets.only(left: 12),
+                        decoration: BoxDecoration(
+                          color: const DigitColors().seaShellGray,
+                          border: Border.all(
+                            color: const DigitColors().davyGray,
+                            width: 1.0,
+                          ),
+                          borderRadius: BorderRadius.zero,
                         ),
-                        borderRadius: BorderRadius.zero,
+                        child: Icon(widget.suffixIcon!,
+                            size: 20, color: const DigitColors().davyGray),
                       ),
-                      child: Icon(widget.suffixIcon!,
-                          size: 20, color: DigitColors().davyGray),
-                    )
-                  : GestureDetector(
+                  )
+                  :  widget.suffix!=null ? GestureDetector(
                   onTap: onSuffixIconClick,
-                  child: Icon(widget.suffix, size: 24,),),
+                  child: Icon(widget.suffix, size: 24,),) : null,
               suffixIconColor: const DigitColors().davyGray,
               prefixIcon: widget.prefixIcon != null
-                  ? Container(
-                      margin: EdgeInsets.only(right: 12),
-                      decoration: BoxDecoration(
-                        color: DigitColors().seaShellGray,
-                        border: Border.all(
-                          color: DigitColors().davyGray,
-                          width: 1.0,
+                  ? GestureDetector(
+                    onTap: onPrefixIconClick,
+                    child: Container(
+                        margin: const EdgeInsets.only(right: 12),
+                        decoration: BoxDecoration(
+                          color: const DigitColors().seaShellGray,
+                          border: Border.all(
+                            color: const DigitColors().davyGray,
+                            width: 1.0,
+                          ),
+                          borderRadius: BorderRadius.zero,
                         ),
-                        borderRadius: BorderRadius.zero,
+                        child: Icon(widget.prefixIcon!,
+                            size: 20, color: const DigitColors().davyGray),
                       ),
-                      child: Icon(widget.prefixIcon!,
-                          size: 20, color: DigitColors().davyGray),
-                    )
+                  )
                   : null,
             ),
             onChanged: (value) {
@@ -222,7 +238,7 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
                   style: theme.textTheme.bodyMedium,
                 ),
               if (widget.charCount != null)
-                if (widget.helpText == null && _hasError==false) Spacer(),
+                if (widget.helpText == null && _hasError==false) const Spacer(),
               Text(
                 '${widget.controller.text.length ?? 0}/64',
               ),
