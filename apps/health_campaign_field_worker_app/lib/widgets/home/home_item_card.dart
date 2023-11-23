@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../blocs/localization/app_localization.dart';
-import '../../utils/constants.dart';
 
 class HomeItemCard extends StatelessWidget {
   final IconData icon;
@@ -27,10 +26,10 @@ class HomeItemCard extends StatelessWidget {
 
     return DigitCard(
       onPressed: onPressed,
-      padding: const EdgeInsets.all(kPadding/2).copyWith(top: kPadding * 3),
+      padding: const EdgeInsets.all(kPadding / 2).copyWith(top: kPadding * 3),
       margin: const EdgeInsets.all(kPadding),
       child: Align(
-        alignment: Alignment.topCenter,
+        alignment: Alignment.center,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -50,7 +49,6 @@ class HomeItemCard extends StatelessWidget {
                     : theme.colorScheme.secondary,
                 size: 30,
               ),
-            const SizedBox(height: 16),
             Wrap(
               children: [
                 Text(
