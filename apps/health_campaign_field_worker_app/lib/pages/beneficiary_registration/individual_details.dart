@@ -97,6 +97,9 @@ class _IndividualDetailsPageState
                     if (form.control(_dobKey).value == null) {
                       form.control(_dobKey).setErrors({'': true});
                     }
+                    if (form.control(_idTypeKey).value == null) {
+                      form.control(_idTypeKey).setErrors({'': true});
+                    }
                     final userId = context.loggedInUserUuid;
                     final projectId = context.projectId;
                     form.markAllAsTouched();
@@ -367,16 +370,11 @@ class _IndividualDetailsPageState
 
                                   return individualDetailsShowcaseData.idType
                                       .buildWith(
-                                    child: DigitSearchDropdown(
-                                      isRequired: true,
-                                      suggestionsCallback: (items, pattern) {
-                                        return items.where((element) => element
-                                            .toLowerCase()
-                                            .contains(pattern.toLowerCase()));
-                                      },
+                                    child: DigitReactiveSearchDropdown<String>(
                                       label: localizations.translate(
                                         i18.individualDetails.idTypeLabelText,
                                       ),
+                                      form: form,
                                       menuItems: idTypeOptions.map(
                                         (e) {
                                           return localizations
@@ -384,8 +382,10 @@ class _IndividualDetailsPageState
                                         },
                                       ).toList(),
                                       formControlName: _idTypeKey,
-                                      valueMapper: (e) => e,
-                                      onSuggestionSelected: (value) {
+                                      valueMapper: (value) {
+                                        return value;
+                                      },
+                                      onSelected: (value) {
                                         setState(() {
                                           if (value == 'DEFAULT') {
                                             form.control(_idNumberKey).value =
@@ -396,7 +396,13 @@ class _IndividualDetailsPageState
                                           }
                                         });
                                       },
-                                      isEnableSearch: false,
+                                      isRequired: true,
+                                      validationMessage:
+                                          localizations.translate(
+                                        i18.common.corecommonRequired,
+                                      ),
+                                      emptyText: localizations
+                                          .translate(i18.common.noMatchFound),
                                     ),
                                   );
                                 },
@@ -493,30 +499,22 @@ class _IndividualDetailsPageState
 
                                   return individualDetailsShowcaseData.gender
                                       .buildWith(
-                                    child: DigitSearchDropdown(
-                                      suggestionsCallback: (items, pattern) {
-                                        return items.where((element) => element
-                                            .toLowerCase()
-                                            .contains(pattern.toLowerCase()));
-                                      },
+                                    child: DigitReactiveSearchDropdown<String>(
                                       label: localizations.translate(
                                         i18.individualDetails.genderLabelText,
                                       ),
-                                      valueMapper: (value) =>
-                                          localizations.translate(value),
-                                      initialValue:
-                                          genderOptions.firstOrNull?.name,
+                                      form: form,
                                       menuItems: genderOptions
                                           .map(
                                             (e) => e.name,
                                           )
                                           .toList(),
                                       formControlName: _genderKey,
-                                      padding: const EdgeInsets.only(
-                                        top: kPadding,
-                                        bottom: kPadding,
-                                      ),
-                                      isEnableSearch: false,
+                                      valueMapper: (value) {
+                                        return localizations.translate(value);
+                                      },
+                                      emptyText: localizations
+                                          .translate(i18.common.noMatchFound),
                                     ),
                                   );
                                 },
@@ -739,7 +737,6 @@ class _IndividualDetailsPageState
         value: individual?.name?.givenName ?? searchQuery,
       ),
       _idTypeKey: FormControl<String>(
-        validators: [Validators.required],
         value: individual?.identifiers?.firstOrNull?.identifierType,
       ),
       _idNumberKey: FormControl<String>(

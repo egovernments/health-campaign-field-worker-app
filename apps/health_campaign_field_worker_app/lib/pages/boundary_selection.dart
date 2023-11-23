@@ -122,29 +122,18 @@ class _BoundarySelectionPageState
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: kPadding * 2,
                                     ),
-                                    child: DigitSearchDropdown(
-                                      isRequired: true,
-                                      suggestionsCallback: (items, pattern) {
-                                        return items.where((element) => element
-                                            .name!
-                                            .toLowerCase()
-                                            .contains(pattern.toLowerCase()));
-                                      },
+                                    child: DigitReactiveSearchDropdown<
+                                        BoundaryModel>(
                                       label: localizations.translate(label),
+                                      form: form,
                                       menuItems: filteredItems,
-                                      validationMessages: {
-                                        'required': (object) =>
-                                            localizations.translate(
-                                              i18.common.corecommonRequired,
-                                            ),
-                                      },
                                       formControlName: label,
                                       valueMapper: (value) {
                                         return value.name ??
                                             value.code ??
-                                            "No value";
+                                            'No Value';
                                       },
-                                      onSuggestionSelected: (value) {
+                                      onSelected: (value) {
                                         if (value == null) return;
 
                                         context.read<BoundaryBloc>().add(
@@ -157,6 +146,13 @@ class _BoundarySelectionPageState
                                         // Call the resetChildDropdowns function when a parent dropdown is selected
                                         resetChildDropdowns(label, state);
                                       },
+                                      isRequired: true,
+                                      validationMessage:
+                                          localizations.translate(
+                                        i18.common.corecommonRequired,
+                                      ),
+                                      emptyText: localizations
+                                          .translate(i18.common.noMatchFound),
                                     ),
                                   );
                                 },
@@ -465,7 +461,8 @@ class _BoundarySelectionPageState
                                                   isClicked
                                               ? null
                                               : () async {
-                                                  if (!form.valid) {
+                                                  if (!form.valid ||
+                                                      validateAllBoundarySelection()) {
                                                     clickedStatus.value = false;
                                                     await DigitToast.show(
                                                       context,
@@ -569,11 +566,28 @@ class _BoundarySelectionPageState
 
     for (final label in labelList) {
       formControls[label] = FormControl<BoundaryModel>(
-        validators: [Validators.required],
         value: state.selectedBoundaryMap[label],
       );
     }
 
     return fb.group(formControls);
+  }
+
+  bool validateAllBoundarySelection() {
+    // Iterate through the map entries
+    for (final entry in formControls.entries) {
+      // Access the form control
+      final formControl = entry.value;
+
+      // Check if the form control value is null
+      if (formControl.value == null) {
+        formControl.setErrors({'': true});
+        // Return true if any form control has a null value
+        return true;
+      }
+    }
+
+    // Return false if none of the form controls have a null value
+    return false;
   }
 }

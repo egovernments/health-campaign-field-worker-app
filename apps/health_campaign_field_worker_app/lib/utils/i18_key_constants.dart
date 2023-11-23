@@ -127,6 +127,7 @@ class Common {
 
   String get coreCommonDownload => 'CORE_COMMON_DOWNLOAD';
   String get coreCommonDownloadFailed => 'CORE_COMMON_DOWNLOAD_FAILED';
+  String get noMatchFound => 'CORE_COMMON_NO_MATCH_FOUND';
 }
 
 class HomeShowcase {
