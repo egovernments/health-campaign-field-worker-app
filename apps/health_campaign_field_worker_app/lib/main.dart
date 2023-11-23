@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_base_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_date_form_input.dart';
+import 'package:digit_components/widgets/atoms/digit_location_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_numeric_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_password_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_search_form_input.dart';
@@ -41,6 +42,18 @@ void main() {
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: [
+                  DigitTextFormInput(
+                    label: "input",
+                    controller: TextEditingController(),
+                    // state: 'Disabled',
+                    info: 'this is info',
+                    innerLabel: 'innerlabel',
+                    helpText: 'help text',
+                    // onSuffixTap: (){print('tapppppppppp');},
+                    // suffixIcon: Icons.currency_rupee_sharp,
+                    // prefixIcon: Icons.currency_rupee,
+                  ),
+                  const SizedBox(height: 8,),
                   DigitTextAreaFormInput(
                     label: "input",
                     controller: TextEditingController(),
@@ -126,6 +139,16 @@ void main() {
                     height: 8,
                   ),
                   DigitNumericFormInput(
+                    label: "input",
+                    controller: TextEditingController(),
+                    // state: 'Disabled',
+                    info: 'this is info',
+                    innerLabel: 'innerlabel',
+                    helpText: 'help text',
+                    initialValue: '0',
+                  ),
+                  const SizedBox(height: 8,),
+                  DigitLocationFormInput(
                     label: "input",
                     controller: TextEditingController(),
                     // state: 'Disabled',

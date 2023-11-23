@@ -7,6 +7,7 @@ class DigitTextFormInput extends BaseDigitFormInput {
     Key? key,
     required TextEditingController controller,
     String? label,
+    String? initialValue,
     String? info,
     bool charCount = false,
     String? innerLabel,
@@ -31,6 +32,7 @@ class DigitTextFormInput extends BaseDigitFormInput {
     prefixIcon: prefixIcon,
     validator: validator,
     onError: onError,
+    initialValue: initialValue,
   );
 
   @override

@@ -9,6 +9,7 @@ class DigitDateFormInput extends BaseDigitFormInput {
     required TextEditingController controller,
     String? label,
     String? info,
+    String? initialValue,
     bool charCount = false,
     String? innerLabel,
     String? helpText,
@@ -30,6 +31,7 @@ class DigitDateFormInput extends BaseDigitFormInput {
     validator: validator,
     onError: onError,
     suffix: suffix,
+    initialValue: initialValue,
   );
 
   @override

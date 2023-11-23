@@ -7,6 +7,7 @@ class DigitTextAreaFormInput extends BaseDigitFormInput {
     Key? key,
     required TextEditingController controller,
     String? label,
+    String? initialValue,
     String? info,
     bool charCount = false,
     String? innerLabel,
@@ -15,8 +16,9 @@ class DigitTextAreaFormInput extends BaseDigitFormInput {
     bool preferToolTipBelow = false,
     String? Function(String?)? validator,
     void Function(String?)? onError,
-    int maxLine = 3,
-    int minLine = 3,
+    int maxLine = 4,
+    int minLine = 4,
+    double height = 100,
   }) : super(
     key: key,
     controller: controller,
@@ -31,6 +33,8 @@ class DigitTextAreaFormInput extends BaseDigitFormInput {
     onError: onError,
     maxLine: maxLine,
     minLine: minLine,
+    initialValue: initialValue,
+    height: height,
   );
 
   @override

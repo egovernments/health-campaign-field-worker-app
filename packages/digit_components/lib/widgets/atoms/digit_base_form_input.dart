@@ -1,3 +1,4 @@
+import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
 import '../../theme/colors.dart';
@@ -25,31 +26,36 @@ class BaseDigitFormInput extends StatefulWidget {
   final int maxLine;
   final TextInputType keyboardType;
   final TextAlign textAlign;
+  final String? initialValue;
+  final double height;
+  final double width;
 
-  const BaseDigitFormInput({
-    Key? key,
-    required this.controller,
-    // required this.state,
-    this.state = 'default',
-    this.label,
-    this.info,
-    this.suffix,
-    this.charCount = false,
-    this.innerLabel,
-    this.helpText,
-    this.validator,
-    this.onError,
-    this.triggerMode = TooltipTriggerMode.tap,
-    this.preferToolTipBelow = false,
-    this.suffixIcon,
-    this.prefixIcon,
-    this.onSuffixTap,
-    this.minLine = 1,
-    this.maxLine = 1,
-    this.keyboardType = TextInputType.text,
-    this.textAlign = TextAlign.start
-
-  }) : super(key: key);
+  const BaseDigitFormInput(
+      {Key? key,
+      required this.controller,
+      // required this.state,
+      this.state = 'default',
+      this.initialValue,
+      this.label,
+      this.info,
+      this.suffix,
+      this.charCount = false,
+      this.innerLabel,
+      this.helpText,
+      this.validator,
+      this.onError,
+      this.triggerMode = TooltipTriggerMode.tap,
+      this.preferToolTipBelow = false,
+      this.suffixIcon,
+      this.prefixIcon,
+      this.onSuffixTap,
+      this.minLine = 1,
+      this.maxLine = 1,
+      this.height = 40,
+      this.width = 380,
+      this.keyboardType = TextInputType.text,
+      this.textAlign = TextAlign.start})
+      : super(key: key);
 
   @override
   BaseDigitFormInputState createState() => BaseDigitFormInputState();
@@ -58,38 +64,54 @@ class BaseDigitFormInput extends StatefulWidget {
 class BaseDigitFormInputState extends State<BaseDigitFormInput> {
   String? _value;
   bool _hasError = false;
-  late FocusNode _focusNode;
+  late FocusNode myFocusNode;
   bool isVisible = false;
 
   String? _errorMessage;
 
+  void onFocusChange() {
+    if (!myFocusNode.hasFocus) {
+      // If the focus is lost, perform validation
+      setState(() {
+        _errorMessage = customValidator?.call(widget.controller.text);
+        _hasError = _errorMessage != null;
+      });
+
+      // Call the provided onError function if there is an error
+      if (_hasError && widget.onError != null) {
+        widget.onError!(_errorMessage);
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    _focusNode = FocusNode();
-    _focusNode.addListener(() {
-      if (!_focusNode.hasFocus) {
-        // Call the custom validator when focus is lost
-        setState(() {
-          if (widget.validator != null) {
-            _errorMessage = widget.validator!(widget.controller.text);
-            _hasError = _errorMessage != null;
-          } else {
-            _errorMessage = customValidator!(widget.controller.text);
-            _hasError = _errorMessage != null;
-          }
-        });
-      }
-    });
+
+    myFocusNode = FocusNode();
+
+    myFocusNode.addListener(onFocusChange);
+
+    if (widget.initialValue != null) {
+      widget.controller.text = widget.initialValue!;
+    }
+
+    // _focusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    myFocusNode.removeListener(onFocusChange);
+    myFocusNode.dispose();
   }
 
   String? customValidator(String? value) {
     // Your custom validation logic here
-    if (_focusNode.hasFocus) {
-      // Only perform validation when the user is typing
-      if (value == null || value.isEmpty) {
-        return "Please enter a valid value."; // Return any non-null value to indicate validation failure
-      }
+    print('errrrrrrrrrrrrrrrrrrrrrrrrrrrrrr');
+    // Only perform validation when the user is typing
+    if (value == null || value.isEmpty) {
+      return "Please enter a valid value."; // Return any non-null value to indicate validation failure
     }
 
     return null; // Return null if the validation passes.
@@ -105,6 +127,7 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
     // Call the provided function if it's not null
     customFunction?.call();
   }
+
   void onPrefixIconClick({void Function()? customFunction}) {
     // Call the provided function if it's not null
     customFunction?.call();
@@ -142,7 +165,10 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
           height: 4,
         ),
         SizedBox(
+          height: widget.height,
+          width: widget.width,
           child: TextFormField(
+            focusNode: myFocusNode,
             obscureText: isVisible,
             controller: widget.controller,
             enabled: !isDisabled,
@@ -151,38 +177,38 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
             maxLines: widget.maxLine,
             keyboardType: widget.keyboardType,
             textAlign: widget.textAlign,
+            // style: DigitTheme.instance.mobileTheme.textTheme.bodyLarge?.apply(
+            //   color: theme.colorScheme.primary,
+            // ),
             decoration: InputDecoration(
               isDense: true,
               contentPadding:
-                  const EdgeInsets.only(top: 8, bottom: 8, left: 12, right: 12),
+                  const EdgeInsets.only(top: 10, bottom: 10, left: 12, right: 12),
               hintText: widget.innerLabel,
               filled: true,
               fillColor:
                   isDisabled ? const DigitColors().seaShellGray : Colors.white,
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.zero,
-                  borderSide: BorderSide(color: const DigitColors().burningOrange)),
-              errorBorder: OutlineInputBorder(
-                borderSide:
-                    BorderSide(color: const DigitColors().lavaRed, width: 1.0),
-                borderRadius: BorderRadius.zero,
-              ),
-              focusedErrorBorder: OutlineInputBorder(
-                borderSide:
-                    BorderSide(color: const DigitColors().lavaRed, width: 1.0),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: _hasError
+                      ? const DigitColors().lavaRed
+                      : const DigitColors().davyGray,
+                  width: 1.0,
+                ),
                 borderRadius: BorderRadius.zero,
               ),
               focusedBorder: OutlineInputBorder(
-                borderSide:
-                    BorderSide(color: const DigitColors().burningOrange, width: 1.0),
+                borderSide: BorderSide(
+                    color: const DigitColors().burningOrange, width: 1.0),
                 borderRadius: BorderRadius.zero,
               ),
+
               // suffix: Icon(widget.suffix, size: 24,),
-              suffixIcon:  widget.suffixIcon != null
+              suffixIcon: widget.suffixIcon != null
                   ? GestureDetector(
-                    onTap: onSuffixIconClick,
-                    child: Container(
-                        margin: const EdgeInsets.only(left: 12),
+                      onTap: onSuffixIconClick,
+                      child: Container(
+                        margin: const EdgeInsets.only(left: kPadding),
                         decoration: BoxDecoration(
                           color: const DigitColors().seaShellGray,
                           border: Border.all(
@@ -191,31 +217,67 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
                           ),
                           borderRadius: BorderRadius.zero,
                         ),
-                        child: Icon(widget.suffixIcon!,
-                            size: 20, color: const DigitColors().davyGray),
+                        child: Icon(
+                          widget.suffixIcon!,
+                          size: 20,
+                          color: const DigitColors().davyGray,
+                        ),
                       ),
-                  )
-                  :  widget.suffix!=null ? GestureDetector(
-                  onTap: onSuffixIconClick,
-                  child: Icon(widget.suffix, size: 24,),) : null,
+                    )
+                  : widget.suffix != null
+                      ? GestureDetector(
+                          onTap: onSuffixIconClick,
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.all(0.0), // Set padding to 0
+                            child: Icon(
+                              widget.suffix,
+                              size: 24,
+                            ),
+                          ),
+                        )
+                      : null,
               suffixIconColor: const DigitColors().davyGray,
               prefixIcon: widget.prefixIcon != null
                   ? GestureDetector(
-                    onTap: onPrefixIconClick,
-                    child: Container(
-                        margin: const EdgeInsets.only(right: 12),
+                      onTap: onPrefixIconClick,
+                      child: Container(
+                        margin: const EdgeInsets.only(right: kPadding),
                         decoration: BoxDecoration(
                           color: const DigitColors().seaShellGray,
-                          border: Border.all(
-                            color: const DigitColors().davyGray,
-                            width: 1.0,
+                          border: Border(
+                            top: BorderSide(
+                              color: MaterialStateColor.resolveWith((states) =>
+                                  states.contains(MaterialState.focused)
+                                      ? const DigitColors().burningOrange
+                                      : const DigitColors().davyGray),
+                              width: 1.0,
+                            ),
+                            bottom: BorderSide(
+                              color: MaterialStateColor.resolveWith((states) =>
+                                  states.contains(MaterialState.focused)
+                                      ? const DigitColors().burningOrange
+                                      : const DigitColors().davyGray),
+                              width: 1.0,
+                            ),
+                            left: BorderSide(
+                              color: MaterialStateColor.resolveWith((states) =>
+                                  states.contains(MaterialState.focused)
+                                      ? const DigitColors().burningOrange
+                                      : const DigitColors().davyGray),
+                              width: 1.0,
+                            ),
+                            right: BorderSide(
+                              color: const DigitColors().davyGray,
+                              width: 1.0,
+                            ),
                           ),
-                          borderRadius: BorderRadius.zero,
+                          // borderRadius: BorderRadius.zero,
                         ),
                         child: Icon(widget.prefixIcon!,
                             size: 20, color: const DigitColors().davyGray),
                       ),
-                  )
+                    )
                   : null,
             ),
             onChanged: (value) {
@@ -233,12 +295,31 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               if (widget.helpText != null)
-                _hasError ? Text(_errorMessage!) : Text(
-                  widget.helpText!,
-                  style: theme.textTheme.bodyMedium,
-                ),
+                _hasError
+                    ? Row(
+                        children: [
+                          Icon(
+                            Icons.info,
+                            color: const DigitColors().lavaRed,
+                            size: 16,
+                          ),
+                          Text(
+                            _errorMessage!,
+                            style: DigitTheme
+                                .instance.mobileTheme.textTheme.bodyMedium
+                                ?.apply(
+                              color: const DigitColors().lavaRed,
+                            ),
+                          ),
+                        ],
+                      )
+                    : Text(
+                        widget.helpText!,
+                        style: theme.textTheme.bodyMedium,
+                      ),
               if (widget.charCount != null)
-                if (widget.helpText == null && _hasError==false) const Spacer(),
+                if (widget.helpText == null && _hasError == false)
+                  const Spacer(),
               Text(
                 '${widget.controller.text.length ?? 0}/64',
               ),

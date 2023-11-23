@@ -16,6 +16,7 @@ class DigitTimeFormInput extends BaseDigitFormInput {
     IconData suffix = Icons.access_time,
     String? Function(String?)? validator,
     void Function(String?)? onError,
+    String? initialValue,
   }) : super(
     key: key,
     controller: controller,
@@ -29,6 +30,7 @@ class DigitTimeFormInput extends BaseDigitFormInput {
     suffix: suffix,
     validator: validator,
     onError: onError,
+    initialValue: initialValue,
   );
 
   @override

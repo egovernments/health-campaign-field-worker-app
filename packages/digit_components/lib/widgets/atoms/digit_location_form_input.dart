@@ -8,13 +8,13 @@ class DigitLocationFormInput extends BaseDigitFormInput {
     required TextEditingController controller,
     String? label,
     String? info,
+    String? initialValue,
     bool charCount = false,
     String? innerLabel,
     String? helpText,
     TooltipTriggerMode triggerMode = TooltipTriggerMode.tap,
     bool preferToolTipBelow = false,
-    IconData? suffixIcon,
-    IconData? prefixIcon,
+    IconData suffix = Icons.my_location,
     String? Function(String?)? validator,
     void Function(String?)? onError,
   }) : super(
@@ -27,10 +27,10 @@ class DigitLocationFormInput extends BaseDigitFormInput {
     helpText: helpText,
     triggerMode: triggerMode,
     preferToolTipBelow: preferToolTipBelow,
-    suffixIcon: suffixIcon,
-    prefixIcon: prefixIcon,
+    suffix: suffix,
     validator: validator,
     onError: onError,
+    initialValue: initialValue,
   );
 
   @override
@@ -38,6 +38,12 @@ class DigitLocationFormInput extends BaseDigitFormInput {
 }
 
 class _DigitLocationFormInputState extends BaseDigitFormInputState {
+
+  @override
+  void onSuffixIconClick({void Function()? customFunction}) {
+
+  }
+
   @override
   Widget build(BuildContext context) {
     // You can customize the appearance or behavior specific to the TextFormInput here

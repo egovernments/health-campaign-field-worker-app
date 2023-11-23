@@ -9,6 +9,7 @@ class DigitPasswordFormInput extends BaseDigitFormInput {
     required TextEditingController controller,
     String? label,
     String? info,
+    String? initialValue,
     bool charCount = false,
     String? innerLabel,
     String? helpText,
@@ -32,6 +33,7 @@ class DigitPasswordFormInput extends BaseDigitFormInput {
     validator: validator,
     onError: onError,
     onSuffixTap: onSuffixTap,
+    initialValue: initialValue,
   );
 
   @override

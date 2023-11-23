@@ -8,6 +8,7 @@ class DigitNumericFormInput extends BaseDigitFormInput {
     required TextEditingController controller,
     String? label,
     String? info,
+    String? initialValue,
     bool charCount = false,
     String? innerLabel,
     String? helpText,
@@ -35,6 +36,7 @@ class DigitNumericFormInput extends BaseDigitFormInput {
     onError: onError,
     keyboardType: keyboardType,
     textAlign: textAlign,
+    initialValue: initialValue,
   );
 
   @override
