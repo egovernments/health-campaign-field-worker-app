@@ -36,7 +36,6 @@ class SideEffectsPage extends LocalizedStatefulWidget {
 class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
   List<bool> symptomsValues = [];
   List<String> symptomsTypes = [];
-  bool stateChanged = false;
   bool symptomsSelected = true;
 
   @override
@@ -278,63 +277,71 @@ class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                                   symptomsValues.add(false);
                                                 }
 
-                                                return Column(
-                                                  children: symptomTypesOptions
-                                                      .mapIndexed(
-                                                        (i, e) =>
-                                                            StatefulBuilder(
-                                                          builder: (
-                                                            BuildContext
-                                                                context,
-                                                            StateSetter
-                                                                stateSetter,
-                                                          ) {
-                                                            return DigitCheckboxTile(
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .zero,
-                                                              label:
-                                                                  localizations
-                                                                      .translate(
-                                                                e.code,
-                                                              ),
-                                                              value:
-                                                                  symptomsValues[
-                                                                      i],
-                                                              onChanged:
-                                                                  (value) {
-                                                                stateSetter(
-                                                                  () {
-                                                                    symptomsValues[
-                                                                            i] =
-                                                                        !symptomsValues[
-                                                                            i];
-                                                                  },
-                                                                );
-                                                              },
-                                                            );
-                                                          },
+                                                return StatefulBuilder(
+                                                  builder: (
+                                                    BuildContext context,
+                                                    StateSetter stateSetter,
+                                                  ) {
+                                                    return Column(
+                                                      children: [
+                                                        Column(
+                                                          children:
+                                                              symptomTypesOptions
+                                                                  .mapIndexed(
+                                                                    (i, e) =>
+                                                                        DigitCheckboxTile(
+                                                                      padding:
+                                                                          EdgeInsets
+                                                                              .zero,
+                                                                      label: localizations
+                                                                          .translate(
+                                                                        e.code,
+                                                                      ),
+                                                                      value:
+                                                                          symptomsValues[
+                                                                              i],
+                                                                      onChanged:
+                                                                          (value) {
+                                                                        stateSetter(
+                                                                          () {
+                                                                            symptomsValues[i] =
+                                                                                !symptomsValues[i];
+                                                                            symptomsSelected =
+                                                                                symptomsValues.any(
+                                                                              (e) => e,
+                                                                            );
+                                                                          },
+                                                                        );
+                                                                      },
+                                                                    ),
+                                                                  )
+                                                                  .toList(),
                                                         ),
-                                                      )
-                                                      .toList(),
+                                                        Visibility(
+                                                          visible:
+                                                              !symptomsSelected,
+                                                          child: Align(
+                                                            alignment: Alignment
+                                                                .centerLeft,
+                                                            child: Text(
+                                                              localizations
+                                                                  .translate(
+                                                                i18.common
+                                                                    .coreCommonRequiredItems,
+                                                              ),
+                                                              style: TextStyle(
+                                                                color: theme
+                                                                    .colorScheme
+                                                                    .error,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
                                                 );
                                               },
-                                            ),
-                                          ),
-                                          Offstage(
-                                            offstage: symptomsSelected,
-                                            child: Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: Text(
-                                                localizations.translate(
-                                                  i18.common
-                                                      .coreCommonRequiredItems,
-                                                ),
-                                                style: TextStyle(
-                                                  color:
-                                                      theme.colorScheme.error,
-                                                ),
-                                              ),
                                             ),
                                           ),
                                         ],
