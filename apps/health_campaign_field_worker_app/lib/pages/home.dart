@@ -394,7 +394,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.db: homeShowcaseData.db.buildWith(
         child: HomeItemCard(
           icon: Icons.table_chart,
-          label: 'DB',
+          label: i18.home.db,
           onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute(
