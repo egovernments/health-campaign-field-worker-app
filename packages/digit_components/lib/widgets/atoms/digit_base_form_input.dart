@@ -1,5 +1,6 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../theme/colors.dart';
 
@@ -107,8 +108,6 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
   }
 
   String? customValidator(String? value) {
-    // Your custom validation logic here
-    print('errrrrrrrrrrrrrrrrrrrrrrrrrrrrrr');
     // Only perform validation when the user is typing
     if (value == null || value.isEmpty) {
       return "Please enter a valid value."; // Return any non-null value to indicate validation failure
@@ -329,3 +328,4 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
     );
   }
 }
+
