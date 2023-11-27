@@ -14,6 +14,7 @@ import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
 import '../../../widgets/header/back_navigation_help_header.dart';
 import '../../../widgets/localized.dart';
+import '../../../widgets/no_result_card/no_result_card.dart';
 
 class BeneficiariesReportPage extends LocalizedStatefulWidget {
   const BeneficiariesReportPage({super.key});
@@ -400,6 +401,14 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                             ),
                           )
                           .toList(),
+                      downSyncList.isEmpty
+                          ? NoResultCard(
+                              align: Alignment.center,
+                              label: localizations.translate(
+                                i18.common.noResultsFound,
+                              ),
+                            )
+                          : const SizedBox.shrink(),
                     ]),
                   ),
                 ),
