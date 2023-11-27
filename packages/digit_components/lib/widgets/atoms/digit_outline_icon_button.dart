@@ -21,25 +21,43 @@ class DigitOutlineIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return OutlinedButton(
-      onPressed: onPressed,
-      style: buttonStyle,
-      child: Padding(
-        padding: const EdgeInsets.all(kPadding / 2),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Flexible(
-                child: Icon(
-              icon,
-              color: iconColor,
-            )),
-            const SizedBox(width: kPadding),
-            Text(
-              label,
-              style: textStyle,
+    return Container(
+      margin: const EdgeInsets.only(
+        top: kPadding,
+        bottom: kPadding,
+      ),
+      constraints: const BoxConstraints(maxHeight: 50, minHeight: 40),
+      child: OutlinedButton(
+        onPressed: onPressed,
+        style: buttonStyle ??
+            OutlinedButton.styleFrom(
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.zero,
+              ),
             ),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.all(kPadding / 2),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Flexible(
+                  child: Icon(
+                icon,
+                color: iconColor,
+              )),
+              const SizedBox(width: kPadding),
+              Text(
+                label,
+                style: textStyle ??
+                    DigitTheme.instance.mobileTheme.textTheme.headlineSmall
+                        ?.apply(
+                      color: onPressed != null
+                          ? DigitTheme.instance.colorScheme.secondary
+                          : DigitTheme.instance.colorScheme.outline,
+                    ),
+              ),
+            ],
+          ),
         ),
       ),
     );

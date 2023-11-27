@@ -165,6 +165,11 @@ class _ReactiveTypeaheadState<T, V> extends ReactiveFormFieldState<T, V> {
     super.unsubscribeControl();
   }
 
+  /// Method to reset the dropdown by clearing the text in the text controller.
+  void resetDropdown() {
+    _textController.clear();
+  }
+
   @override
   void onControlValueChanged(dynamic value) {
     final effectiveValue = (value == null) ? '' : value.toString();

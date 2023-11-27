@@ -22,7 +22,13 @@ class SideBar extends StatelessWidget {
     final theme = Theme.of(context);
 
     return BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
-      return Column(
+      return ScrollableContent(
+        footer: SizedBox(
+          height: 100,
+          child: PoweredByDigit(
+            version: Constants().version,
+          ),
+        ),
         children: [
           Container(
             color: theme.colorScheme.secondary.withOpacity(0.12),
@@ -43,7 +49,7 @@ class SideBar extends StatelessWidget {
                     // ),
                     Text(
                       value.userModel.mobileNumber.toString(),
-                      style: theme.textTheme.labelSmall,
+                      style: theme.textTheme.bodyMedium,
                     ),
                   ],
                 ),
@@ -127,9 +133,9 @@ class SideBar extends StatelessWidget {
                                   );
                                 }).toList(),
                                 width: (MediaQuery.of(context).size.width *
-                                        0.56 /
+                                        0.65 /
                                         languages.length) -
-                                    (4 * languages.length),
+                                    (14 * languages.length),
                               ),
                             )
                           : const Offstage();
@@ -200,9 +206,6 @@ class SideBar extends StatelessWidget {
               context.read<BoundaryBloc>().add(const BoundaryResetEvent());
               context.read<AuthBloc>().add(const AuthLogoutEvent());
             },
-          ),
-          PoweredByDigit(
-            version: Constants().version,
           ),
         ],
       );

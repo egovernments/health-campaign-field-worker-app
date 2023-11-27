@@ -77,13 +77,10 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                         BackNavigationHelpHeaderWidget(),
                       ]),
                       footer: SizedBox(
-                        height: 85,
                         child: DigitCard(
-                          margin: const EdgeInsets.only(
-                            left: 0,
-                            right: 0,
-                            top: 10,
-                          ),
+                          margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
+                          padding: const EdgeInsets.fromLTRB(
+                              kPadding, 0, kPadding, 0),
                           child: ReactiveFormConsumer(
                             builder: (context, form, child) {
                               return DigitElevatedButton(
@@ -160,21 +157,9 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                   ),
                                 ),
                               ]),
-                              DigitTextFormField(
-                                valueAccessor: FacilityValueAccessor(
-                                  facilities,
-                                ),
-                                isRequired: true,
-                                label: localizations.translate(
-                                  i18.stockReconciliationDetails.facilityLabel,
-                                ),
-                                suffix: const Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Icon(Icons.search),
-                                ),
-                                formControlName: _warehouseKey,
-                                readOnly: false,
+                              InkWell(
                                 onTap: () async {
+                                  print("----PROX---");
                                   final parent =
                                       context.router.parent() as StackRouter;
                                   final facility =
@@ -187,6 +172,41 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                   if (facility == null) return;
                                   form.control(_warehouseKey).value = facility;
                                 },
+                                child: IgnorePointer(
+                                  child: DigitTextFormField(
+                                    hideKeyboard: true,
+                                    padding:
+                                        const EdgeInsets.only(bottom: kPadding),
+                                    valueAccessor: FacilityValueAccessor(
+                                      facilities,
+                                    ),
+                                    isRequired: true,
+                                    label: localizations.translate(
+                                      i18.stockReconciliationDetails
+                                          .facilityLabel,
+                                    ),
+                                    suffix: const Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Icon(Icons.search),
+                                    ),
+                                    formControlName: _warehouseKey,
+                                    readOnly: true,
+                                    onTap: () async {
+                                      final parent = context.router.parent()
+                                          as StackRouter;
+                                      final facility =
+                                          await parent.push<FacilityModel>(
+                                        FacilitySelectionRoute(
+                                          facilities: facilities,
+                                        ),
+                                      );
+
+                                      if (facility == null) return;
+                                      form.control(_warehouseKey).value =
+                                          facility;
+                                    },
+                                  ),
+                                ),
                               ),
                             ],
                           ),

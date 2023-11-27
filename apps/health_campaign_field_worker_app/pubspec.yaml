@@ -46,7 +46,6 @@ dependencies:
   url_launcher: ^6.1.10
   connectivity_plus: ^4.0.1
   material_design_icons_flutter: ^6.0.7096
-  
   shared_preferences: ^2.1.0
   pretty_dio_logger: ^1.2.0-beta-1
   pluto_grid: ^7.0.1
@@ -59,6 +58,8 @@ dependencies:
   digit_firebase_services: ^0.0.1
   package_info_plus: ^4.1.0
   expandable: ^5.0.1
+  flutter_svg: ^2.0.8
+  digit_showcase: ^0.0.1
   qr_code_scanner: ^1.0.1
   audioplayers: ^5.2.0
   gs1_barcode_parser: ^1.0.5
@@ -85,20 +86,23 @@ dependency_overrides:
   intl: ^0.18.0
 
 flutter_icons:
-  android: "ic_launcher"
+  android: 'ic_launcher'
   ios: true
-  image_path: "assets/icons/app_icon.png"
+  image_path: 'assets/icons/app_icon.png'
   min_sdk_android: 21
 
 flutter:
   assets:
     - ./
+    - assets/icons/svg/
     - ./assets/audio/add.wav
     - ./assets/audio/buzzer.wav
     
   fonts:
     - family: Roboto
       fonts:
-        - asset: assets/fonts/Roboto/RobotoCondensed-Regular.ttf
         - asset: assets/fonts/Roboto/Roboto-Regular.ttf
+    - family: RobotoCondensed
+      fonts:
+        - asset: assets/fonts/Roboto/RobotoCondensed-Regular.ttf
   uses-material-design: true

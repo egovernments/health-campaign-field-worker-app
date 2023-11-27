@@ -30,6 +30,7 @@ class DigitTextFormField extends StatelessWidget {
   final Widget? prefixIcon;
   final TextStyle? labelStyle;
   final EdgeInsets? padding;
+  final bool? hideKeyboard;
 
   const DigitTextFormField({
     super.key,
@@ -58,17 +59,23 @@ class DigitTextFormField extends StatelessWidget {
     this.hintText,
     this.labelStyle,
     this.padding,
+    this.hideKeyboard = false,
   });
 
   @override
   Widget build(BuildContext context) => LabeledField(
         label: '$label ${isRequired ? '*' : ''}',
-        padding: padding,
+        padding: padding ??
+            const EdgeInsets.only(
+              top: kPadding * 2,
+            ),
         labelStyle: labelStyle ?? Theme.of(context).textTheme.bodyLarge,
         child: Column(
           children: [
             Container(
-              color: readOnly ? const DigitColors().seaShellGray : null,
+              color: (readOnly && hideKeyboard == false)
+                  ? const DigitColors().seaShellGray
+                  : null,
               child: ReactiveTextField(
                   onChanged: onChanged,
                   readOnly: readOnly,
@@ -82,7 +89,7 @@ class DigitTextFormField extends StatelessWidget {
                   style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w400,
-                      color: readOnly
+                      color: (readOnly && hideKeyboard == false)
                           ? const DigitColors().davyGray
                           : DigitTheme.instance.colorScheme.onBackground),
                   obscureText: obscureText,
@@ -90,7 +97,7 @@ class DigitTextFormField extends StatelessWidget {
                   keyboardType: keyboardType,
                   inputFormatters: inputFormatters,
                   valueAccessor: valueAccessor,
-                  decoration: readOnly == true
+                  decoration: (readOnly && hideKeyboard == false)
                       ? InputDecoration(
                           enabledBorder: DigitTheme
                               .instance.inputDecorationTheme.disabledBorder,

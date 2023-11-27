@@ -114,7 +114,7 @@ class _ReasonForDeletionPageState
                     return Column(
                       children: [
                         Align(
-                          alignment: Alignment.centerLeft,
+                          alignment: Alignment.topLeft,
                           child: Text(
                             localizations.translate(
                               i18.reasonForDeletion.reasonForDeletionLabel,
