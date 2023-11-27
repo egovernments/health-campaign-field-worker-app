@@ -162,8 +162,6 @@ class SearchDropdownFormFieldState<T> extends State<SearchDropdownFormField>
 
   @override
   Widget build(BuildContext context) {
-    // print("_overlayEntry : $_overlayEntry");
-
     _displayItem =
         widget.displayItemFn(widget.form.control(widget.formControlName).value);
 
@@ -239,7 +237,6 @@ class SearchDropdownFormFieldState<T> extends State<SearchDropdownFormField>
 
   OverlayEntry _createOverlayEntry() {
     final renderObject = context.findRenderObject() as RenderBox;
-    // print(renderObject);
     final Size size = renderObject.size;
 
     var overlay = OverlayEntry(builder: (context) {
@@ -377,7 +374,6 @@ class SearchDropdownFormFieldState<T> extends State<SearchDropdownFormField>
   _onTextChanged(String? str) {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
     _debounce = Timer(const Duration(milliseconds: 300), () {
-      // print("_onChanged: $_lastSearchString = $str");
       if (_lastSearchString != str) {
         _lastSearchString = str;
         _search(str ?? "");
@@ -386,7 +382,6 @@ class SearchDropdownFormFieldState<T> extends State<SearchDropdownFormField>
   }
 
   _onKeyPressed(RawKeyEvent event) {
-    // print('_onKeyPressed : ${event.character}');
     if (event.isKeyPressed(LogicalKeyboardKey.enter)) {
       if (_searchFocusNode.hasFocus) {
         setState(() {
@@ -436,8 +431,6 @@ class SearchDropdownFormFieldState<T> extends State<SearchDropdownFormField>
     _options = items;
 
     _listItemsValueNotifier.value = items;
-
-    // print('_search ${_options!.length}');
   }
 
   _setValue() {
