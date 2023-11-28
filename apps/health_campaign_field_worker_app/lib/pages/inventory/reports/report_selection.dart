@@ -35,7 +35,7 @@ class _InventoryReportSelectionPageState
             mainAxisSize: MainAxisSize.min,
             children: [
               Padding(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.fromLTRB(kPadding*2, kPadding, kPadding*2, kPadding),
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: Text(

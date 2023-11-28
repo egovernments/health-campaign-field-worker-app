@@ -31,7 +31,7 @@ class _LoginPageState extends LocalizedState<LoginPage> {
     Widget buildPasswordVisibility() {
       return IconButton(
         icon: Icon(
-          passwordVisible ? Icons.visibility : Icons.visibility_off,
+          passwordVisible ? Icons.visibility_off : Icons.visibility,
         ),
         onPressed: () {
           setState(() {
@@ -146,6 +146,9 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                           );
                         },
                       ),
+                      const SizedBox(
+                        height: 16,
+                      ),
                       TextButton(
                         onPressed: () => DigitDialog.show(
                           context,
@@ -165,6 +168,11 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                                       .pop(),
                             ),
                           ),
+                        ),
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          minimumSize: const Size(0, 0),
                         ),
                         child: Center(
                           child: Text(

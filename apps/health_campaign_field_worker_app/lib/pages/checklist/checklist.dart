@@ -13,6 +13,7 @@ import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/action_card/action_card.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
+import '../../widgets/no_result_card/no_result_card.dart';
 
 class ChecklistPage extends LocalizedStatefulWidget {
   const ChecklistPage({
@@ -43,62 +44,76 @@ class _ChecklistPageState extends LocalizedState<ChecklistPage> {
                   child: CircularProgressIndicator(),
                 ),
                 serviceDefinitionFetch:
-                    (ServiceDefinitionServiceFetchedState value) => Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          localizations.translate(
-                            i18.checklist.checklistlabel,
+                    (ServiceDefinitionServiceFetchedState value) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                            padding: const EdgeInsets.all(
+                              kPadding,
+                            ),
+                            child: Text(
+                              localizations
+                                  .translate(i18.checklist.checklistlabel),
+                              style: theme.textTheme.displayMedium,
+                            ),
                           ),
-                          style: theme.textTheme.displayMedium,
                         ),
                       ),
-                    ),
-                    BlocBuilder<AuthBloc, AuthState>(
-                      builder: (context, authstate) {
-                        return authstate.maybeMap(
-                          orElse: () => const Offstage(),
-                          authenticated: (res) {
-                            List<String> roles = res.userModel.roles
-                                .map((e) => e.code.snakeCase.toUpperCase())
-                                .toList();
+                      BlocBuilder<AuthBloc, AuthState>(
+                        builder: (context, authstate) {
+                          return authstate.maybeMap(
+                            orElse: () => const Offstage(),
+                            authenticated: (res) {
+                              List<String> roles = res.userModel.roles
+                                  .map((e) => e.code.snakeCase.toUpperCase())
+                                  .toList();
+                              final values = value.serviceDefinitionList
+                                  .where((item) => !roles
+                                      .indexOf(
+                                        item.code!.split('.').last,
+                                      )
+                                      .isNegative);
 
-                            final values = value.serviceDefinitionList.where(
-                              (item) => !roles
-                                  .indexOf(item.code!.split('.').last)
-                                  .isNegative,
-                            );
+                              if (values.isEmpty) {
+                                return Column(
+                                  children: [
+                                    NoResultCard(
+                                      align: Alignment.center,
+                                      label: localizations.translate(
+                                        i18.common.noResultsFound,
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              }
 
-                            return Column(
-                              children: values
-                                  .map((e) => DigitProjectCell(
-                                        projectText: localizations
-                                            .translate('${e.code}'),
-                                        onTap: () {
-                                          context
-                                              .read<ServiceDefinitionBloc>()
-                                              .add(
-                                                ServiceDefinitionSelectionEvent(
-                                                  serviceDefinition: e,
-                                                ),
-                                              );
-
-                                          DigitActionDialog.show(
-                                            context,
-                                            widget: ActionCard(
-                                              items: [
+                              return Column(
+                                children: values
+                                    .map((e) => DigitProjectCell(
+                                          projectText: localizations
+                                              .translate('${e.code}'),
+                                          onTap: () {
+                                            context
+                                                .read<ServiceDefinitionBloc>()
+                                                .add(
+                                                  ServiceDefinitionSelectionEvent(
+                                                    serviceDefinition: e,
+                                                  ),
+                                                );
+                                            DigitActionDialog.show(
+                                              context,
+                                              widget: ActionCard(items: [
                                                 ActionCardModel(
                                                   icon: Icons.edit_calendar,
-                                                  label:
-                                                      localizations.translate(
-                                                    i18.checklist
-                                                        .checklistCreateActionLabel,
-                                                  ),
+                                                  label: localizations.translate(i18
+                                                      .checklist
+                                                      .checklistCreateActionLabel),
                                                   action: () {
                                                     context.router.push(
                                                       ChecklistBoundaryViewRoute(),
@@ -111,11 +126,9 @@ class _ChecklistPageState extends LocalizedState<ChecklistPage> {
                                                 ),
                                                 ActionCardModel(
                                                   icon: Icons.visibility,
-                                                  label:
-                                                      localizations.translate(
-                                                    i18.checklist
-                                                        .checklistViewActionLabel,
-                                                  ),
+                                                  label: localizations.translate(i18
+                                                      .checklist
+                                                      .checklistViewActionLabel),
                                                   action: () {
                                                     context
                                                         .read<ServiceBloc>()
@@ -136,19 +149,19 @@ class _ChecklistPageState extends LocalizedState<ChecklistPage> {
                                                     ).pop();
                                                   },
                                                 ),
-                                              ],
-                                            ),
-                                          );
-                                        },
-                                      ))
-                                  .toList(),
-                            );
-                          },
-                        );
-                      },
-                    ),
-                  ],
-                ),
+                                              ]),
+                                            );
+                                          },
+                                        ))
+                                    .toList(),
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ],
+                  );
+                },
               );
             },
           ),

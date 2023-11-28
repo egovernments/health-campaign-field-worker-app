@@ -20,8 +20,8 @@ abstract class DigitTypography {
       _normalBase.copyWith(color: _textColorNormal, fontFamily: 'Roboto');
   TextStyle get _light =>
       _normalBase.copyWith(color: _textColorLight, fontFamily: 'Roboto');
-  TextStyle get _big =>
-      _displayBase.copyWith(color: _textColorNormal, fontFamily: 'Roboto');
+  TextStyle get _big => _displayBase.copyWith(
+      color: _textColorNormal, fontFamily: 'Roboto Condensed');
 
   /// Follows Digit Typography standards
   ///
@@ -68,14 +68,14 @@ class DigitMobileTypography extends DigitTypography {
       displayMedium: _big.copyWith(
         fontSize: 32,
         fontWeight: FontWeight.w700,
-        fontFamily: 'Roboto Condensed',
+        fontFamily: 'RobotoCondensed',
       ),
       headlineLarge: _normal.copyWith(
         fontSize: 24,
         fontWeight: FontWeight.w700,
       ),
       headlineMedium: _normal.copyWith(
-        fontSize: 18,
+        fontSize: 20,
         fontWeight: FontWeight.w700,
       ),
       headlineSmall: _normal.copyWith(
@@ -99,11 +99,11 @@ class DigitMobileTypography extends DigitTypography {
         fontFamily: 'Roboto',
       ),
       labelLarge: _normal.copyWith(
-        fontSize: 19,
+        fontSize: 24,
         fontWeight: FontWeight.w500,
       ),
       labelMedium: _light.copyWith(
-        fontSize: 18,
+        fontSize: 20,
         fontWeight: FontWeight.w400,
         fontFamily: 'Roboto',
       ),

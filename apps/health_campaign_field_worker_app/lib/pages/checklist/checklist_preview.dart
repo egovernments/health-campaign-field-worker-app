@@ -106,6 +106,14 @@ class _ChecklistPreviewPageState extends LocalizedState<ChecklistPreviewPage> {
                                                         ),
                                                       );
                                                 },
+                                                buttonStyle:
+                                                    OutlinedButton.styleFrom(
+                                                  shape:
+                                                      const RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.zero,
+                                                  ),
+                                                ),
                                               ),
                                             ],
                                           ),

@@ -56,7 +56,6 @@ class _InventoryReportDetailsPageState
   static const _productVariantKey = 'productVariant';
   static const _facilityKey = 'facilityKey';
 
-
   void handleSelection(FormGroup form) {
     final event = widget.reportType == InventoryReportType.reconciliation
         ? InventoryReportLoadStockReconciliationDataEvent(
@@ -95,9 +94,7 @@ class _InventoryReportDetailsPageState
       _facilityKey: FormControl<FacilityModel>(
         validators: [Validators.required],
       ),
-      _productVariantKey: FormControl<ProductVariantModel>(
-        validators: [Validators.required],
-      ),
+      _productVariantKey: FormControl<ProductVariantModel>(),
     });
   }
 
@@ -131,11 +128,14 @@ class _InventoryReportDetailsPageState
             children: [
               const BackNavigationHelpHeaderWidget(),
               Container(
-                padding: const EdgeInsets.all(8),
-                child: Text(
-                  title,
-                  maxLines: 1,
-                  style: Theme.of(context).textTheme.displayMedium,
+                padding: const EdgeInsets.all(kPadding),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    title,
+                    maxLines: 1,
+                    style: Theme.of(context).textTheme.displayMedium,
+                  ),
                 ),
               ),
               ReactiveFormBuilder(
@@ -200,7 +200,7 @@ class _InventoryReportDetailsPageState
                                                 child: Icon(Icons.search),
                                               ),
                                               formControlName: _facilityKey,
-                                              readOnly: true,
+                                              readOnly: false,
                                               isRequired: true,
                                               onTap: () async {
                                                 final stockReconciliationBloc =
@@ -236,33 +236,36 @@ class _InventoryReportDetailsPageState
                                             return state.maybeWhen(
                                               orElse: () => const Offstage(),
                                               fetched: (productVariants) {
-                                                return DigitReactiveDropdown<
+                                                return DigitReactiveSearchDropdown<
                                                     ProductVariantModel>(
-                                                  formControlName:
-                                                      _productVariantKey,
                                                   label:
                                                       localizations.translate(
                                                     i18.stockReconciliationDetails
                                                         .productLabel,
                                                   ),
+                                                  form: form,
+                                                  menuItems: productVariants,
+                                                  formControlName:
+                                                      _productVariantKey,
                                                   isRequired: true,
-                                                  onChanged: (value) {
-                                                    handleSelection(form);
-                                                  },
                                                   valueMapper: (value) {
                                                     return localizations
                                                         .translate(
                                                       value.sku ?? value.id,
                                                     );
                                                   },
-                                                  menuItems: productVariants,
-                                                  validationMessages: {
-                                                    'required': (object) =>
-                                                        localizations.translate(
-                                                          i18.stockReconciliationDetails
-                                                              .fieldRequired,
-                                                        ),
+                                                  onSelected: (value) {
+                                                    handleSelection(form);
                                                   },
+                                                  validationMessage:
+                                                      localizations.translate(
+                                                    i18.common
+                                                        .corecommonRequired,
+                                                  ),
+                                                  emptyText:
+                                                      localizations.translate(
+                                                    i18.common.noMatchFound,
+                                                  ),
                                                 );
                                               },
                                             );
@@ -674,7 +677,7 @@ class _ReportDetailsContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(kPadding * 2),
+      padding: const EdgeInsets.all(kPadding),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,

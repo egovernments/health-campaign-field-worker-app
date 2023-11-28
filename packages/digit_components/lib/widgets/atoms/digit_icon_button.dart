@@ -44,13 +44,12 @@ class DigitIconButton extends StatelessWidget {
             width: 4,
           ),
           if (iconText != null)
-            Flexible(
-                child: Text(
+            Text(
               iconText!,
               style: TextStyle(
                   color: iconTextColor ?? theme.colorScheme.secondary,
                   fontSize: 16),
-            )),
+            ),
         ],
       ),
     );

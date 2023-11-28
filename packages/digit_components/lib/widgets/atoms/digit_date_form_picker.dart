@@ -60,7 +60,7 @@ class DigitDateFormPicker extends StatelessWidget {
   Widget build(BuildContext context) {
     return LabeledField(
       label: '$label ${isRequired ? '*' : ''}',
-      padding: padding,
+      padding: padding ?? const EdgeInsets.only(top: kPadding * 2),
       labelStyle: Theme.of(context).textTheme.bodyLarge,
       icon: icon,
       tooltipMessage: tooltipMessage,

@@ -25,6 +25,7 @@ class DigitIntegerFormPicker extends StatelessWidget {
   Widget build(BuildContext context) {
     if (!incrementer) {
       return LabeledField(
+          padding: const EdgeInsets.only(top: kPadding * 2),
           label: label,
           child: ReactiveTextField(
             formControlName: formControlName,
@@ -35,6 +36,8 @@ class DigitIntegerFormPicker extends StatelessWidget {
 
     return LabeledField(
         label: label,
+        padding: const EdgeInsets.only(top: kPadding * 2),
+        labelStyle: Theme.of(context).textTheme.bodyLarge,
         child: IntrinsicHeight(
           child: Row(
             children: [

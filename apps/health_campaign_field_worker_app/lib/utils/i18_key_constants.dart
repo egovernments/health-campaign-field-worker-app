@@ -25,6 +25,26 @@ const reasonForDeletion = ReasonForDeletion();
 const inventoryReportSelection = InventoryReportSelection();
 const inventoryReportDetails = InventoryReportDetails();
 const syncDialog = SyncDialog();
+const homeShowcase = HomeShowcase();
+const searchBeneficiariesShowcase = SearchBeneficiariesShowcase();
+const householdLocationShowcase = HouseholdLocationShowcase();
+const householdDetailsShowcase = HouseholdDetailsShowcase();
+const individualDetailsShowcase = IndividualDetailsShowcase();
+const householdOverviewShowcase = HouseholdOverviewShowcase();
+const deliverInterventionShowcase = DeliverInterventionShowcase();
+const selectStockShowcase = SelectStockShowcase();
+const warehouseDetailsShowcase = WarehouseDetailsShowcase();
+const stockDetailsReceiptShowcase = StockDetailsReceiptShowcase();
+const stockDetailsIssuedShowcase = StockDetailsIssuedShowcase();
+const stockDetailsReturnedShowcase = StockDetailsReturnedShowcase();
+const stockReconciliationShowcase = StockReconciliationShowcase();
+const selectChecklistShowcase = SelectChecklistShowcase();
+const checklistDataShowcase = ChecklistDataShowcase();
+const checklistListShowcase = ChecklistListShowcase();
+const complaintTypeShowcase = ComplaintTypeShowcase();
+const complaintsDetailsShowcase = ComplaintsDetailsShowcase();
+const complaintsDetailsViewShowcase = ComplaintsDetailsViewShowcase();
+const complaintsInboxShowcase = ComplaintsInboxShowcase();
 const referBeneficiary = ReferBeneficiary();
 
 class Common {
@@ -97,6 +117,374 @@ class Common {
 
   String get min2CharsRequired => 'MIN_2_CHARS_REQUIRED';
 
+  String get maxCharsRequired => 'MAX_CHARS_ALLOWED';
+
+  String get noResultsFound => 'NO_RESULTS_FOUND';
+
+  String get coreCommonSyncInProgress => 'CORE_COMMON_SYNC_IN_PROGRESS';
+
+  String get facilitySearchHeaderLabel => 'FACILITY_SEARCH_HEADER_LABEL';
+
+  String get coreCommonDownload => 'CORE_COMMON_DOWNLOAD';
+  String get coreCommonDownloadFailed => 'CORE_COMMON_DOWNLOAD_FAILED';
+  String get noMatchFound => 'CORE_COMMON_NO_MATCH_FOUND';
+}
+
+class HomeShowcase {
+  const HomeShowcase();
+
+  String get distributorProgressBar {
+    return 'DISTRIBUTOR_HOME_SHOWCASE_PROGRESS_BAR';
+  }
+
+  String get distributorBeneficiaries {
+    return 'DISTRIBUTOR_HOME_SHOWCASE_BENEFICIARIES';
+  }
+
+  String get distributorFileComplaint {
+    return 'DISTRIBUTOR_HOME_SHOWCASE_FILE_COMPLAINT';
+  }
+
+  String get distributorSyncData {
+    return 'DISTRIBUTOR_HOME_SHOWCASE_SYNC_DATA';
+  }
+
+  String get warehouseManagerManageStock {
+    return 'WAREHOUSE_MANAGER_HOME_SHOWCASE_MANAGE_STOCK';
+  }
+
+  String get wareHouseManagerStockReconciliation {
+    return 'WAREHOUSE_MANAGER_HOME_SHOWCASE_STOCK_RECONCILIATION';
+  }
+
+  String get warehouseManagerFileComplaint {
+    return 'WAREHOUSE_MANAGER_HOME_SHOWCASE_FILE_COMPLAINT';
+  }
+
+  String get warehouseManagerSyncData {
+    return 'WAREHOUSE_MANAGER_HOME_SHOWCASE_SYNC_DATA';
+  }
+
+  String get supervisorProgressBar {
+    return 'SUPERVISOR_HOME_SHOWCASE_PROGRESS_BAR';
+  }
+
+  String get supervisorMyChecklist {
+    return 'SUPERVISOR_HOME_SHOWCASE_MY_CHECKLIST';
+  }
+
+  String get supervisorComplaints {
+    return 'SUPERVISOR_HOME_SHOWCASE_COMPLAINTS';
+  }
+
+  String get supervisorSyncData {
+    return 'SUPERVISOR_HOME_SHOWCASE_SYNC_DATA';
+  }
+
+  String get wareHouseManagerChecklist {
+    return 'WAREHOUSE_MANAGER_HOME_SHOWCASE_CHECKLIST';
+  }
+
+  String get inventoryReport {
+    return 'WAREHOUSE_MANAGER_HOME_SHOWCASE_INVENTORY_REPORT';
+  }
+
+  String get deleteAll {
+    return 'WAREHOUSE_MANAGER_HOME_SHOWCASE_DELETE_ALL';
+  }
+}
+
+class SearchBeneficiariesShowcase {
+  const SearchBeneficiariesShowcase();
+
+  String get numberOfHouseholdsRegistered {
+    return 'SEARCH_BENEFICIARIES_SHOWCASE_NUMBER_OF_HOUSEHOLDS_REGISTERED';
+  }
+
+  String get numberOfBednetsDelivered {
+    return 'SEARCH_BENEFICIARIES_SHOWCASE_NUMBER_OF_BEDNETS_DELIVERED';
+  }
+
+  String get enterNameOfHouseholdHead {
+    return 'SEARCH_BENEFICIARIES_SHOWCASE_ENTER_NAME_OF_HOUSEHOLD_HEAD';
+  }
+
+  String get registerNewHousehold {
+    return 'SEARCH_BENEFICIARIES_SHOWCASE_REGISTER_NEW_HOUSEHOLD';
+  }
+
+  String get nameOfBeneficiary {
+    return 'SEARCH_BENEFICIARIES_SHOWCASE_NAME_OF_BENEFICIARY';
+  }
+
+  String get deliveryStatus {
+    return 'SEARCH_BENEFICIARIES_SHOWCASE_DELIVERY_STATUS';
+  }
+
+  String get open {
+    return 'SEARCH_BENEFICIARIES_SHOWCASE_OPEN';
+  }
+
+  String get beneficiary {
+    return 'SEARCH_BENEFICIARIES_SHOWCASE_BENEFICIARY';
+  }
+
+  String get age {
+    return 'SEARCH_BENEFICIARIES_SHOWCASE_AGE';
+  }
+
+  String get gender {
+    return 'SEARCH_BENEFICIARIES_SHOWCASE_GENDER';
+  }
+}
+
+String get numberOfHouseholdsRegistered {
+  return 'SEARCH_BENEFICIARIES_SHOWCASE_NUMBER_OF_HOUSEHOLDS_REGISTERED';
+}
+
+String get numberOfBednetsDelivered {
+  return 'SEARCH_BENEFICIARIES_SHOWCASE_NUMBER_OF_BEDNETS_DELIVERED';
+}
+
+String get enterNameOfHouseholdHead {
+  return 'SEARCH_BENEFICIARIES_SHOWCASE_ENTER_NAME_OF_HOUSEHOLD_HEAD';
+}
+
+String get registerNewHousehold {
+  return 'SEARCH_BENEFICIARIES_SHOWCASE_REGISTER_NEW_HOUSEHOLD';
+}
+
+class HouseholdLocationShowcase {
+  const HouseholdLocationShowcase();
+
+  String get administrativeArea {
+    return 'HOUSEHOLD_LOCATION_SHOWCASE_ADMINISTRATIVE_AREA';
+  }
+
+  String get landmark {
+    return 'HOUSEHOLD_LOCATION_SHOWCASE_LANDMARK';
+  }
+
+  String get address {
+    return 'HOUSEHOLD_LOCATION_SHOWCASE_ADDRESS';
+  }
+
+  String get postalCode {
+    return 'HOUSEHOLD_LOCATION_SHOWCASE_POSTAL_CODE';
+  }
+}
+
+class HouseholdDetailsShowcase {
+  const HouseholdDetailsShowcase();
+
+  String get dateOfRegistration {
+    return 'HOUSEHOLD_DETAILS_SHOWCASE_DATE_OF_REGISTRATION';
+  }
+
+  String get numberOfMembersLivingInHousehold {
+    return 'HOUSEHOLD_DETAILS_SHOWCASE_NUMBER_OF_MEMBERS_LIVING_IN_HOUSEHOLD';
+  }
+}
+
+class IndividualDetailsShowcase {
+  const IndividualDetailsShowcase();
+
+  String get firstNameOfIndividual {
+    return 'INDIVIDUAL_DETAILS_SHOWCASE_FIRST_NAME_OF_INDIVIDUAL';
+  }
+
+  String get lastNameOfIndividual {
+    return 'INDIVIDUAL_DETAILS_SHOWCASE_LAST_NAME_OF_INDIVIDUAL';
+  }
+
+  String get headOfHousehold {
+    return 'INDIVIDUAL_DETAILS_SHOWCASE_HEAD_OF_HOUSEHOLD';
+  }
+
+  String get age {
+    return 'INDIVIDUAL_DETAILS_SHOWCASE_AGE';
+  }
+
+  String get dateOfBirth {
+    return 'INDIVIDUAL_DETAILS_SHOWCASE_DATE_OF_BIRTH';
+  }
+
+  String get gender {
+    return 'INDIVIDUAL_DETAILS_SHOWCASE_GENDER';
+  }
+
+  String get mobile {
+    return 'INDIVIDUAL_DETAILS_SHOWCASE_MOBILE';
+  }
+
+  String get idType {
+    return 'INDIVIDUAL_DETAILS_SHOWCASE_ID_TYPE';
+  }
+}
+
+class HouseholdOverviewShowcase {
+  const HouseholdOverviewShowcase();
+
+  String get editHousehold {
+    return 'HOUSEHOLD_OVERVIEW_SHOWCASE_EDIT_HOUSEHOLD';
+  }
+
+  String get deliveryStatus {
+    return 'HOUSEHOLD_OVERVIEW_SHOWCASE_DELIVERY_STATUS';
+  }
+
+  String get householdHead {
+    return 'HOUSEHOLD_OVERVIEW_SHOWCASE_HOUSEHOLD_HEAD';
+  }
+
+  String get administrativeArea {
+    return 'HOUSEHOLD_OVERVIEW_SHOWCASE_ADMINISTRATIVE_AREA';
+  }
+
+  String get memberCount {
+    return 'HOUSEHOLD_OVERVIEW_SHOWCASE_MEMBER_COUNT';
+  }
+
+  String get householdIndividualCardTitle {
+    return 'HOUSEHOLD_OVERVIEW_SHOWCASE_HOUSEHOLD_INDIVIDUAL_CARD_TITLE';
+  }
+
+  String get editMember {
+    return 'HOUSEHOLD_OVERVIEW_SHOWCASE_EDIT_MEMBER';
+  }
+
+  String get addMember {
+    return 'HOUSEHOLD_OVERVIEW_SHOWCASE_ADD_MEMBER';
+  }
+
+  String get deliverIntervention {
+    return 'HOUSEHOLD_OVERVIEW_SHOWCASE_DELIVER_INTERVENTION';
+  }
+}
+
+class DeliverInterventionShowcase {
+  const DeliverInterventionShowcase();
+
+  String get memberCount {
+    return 'DELIVER_INTERVENTION_SHOWCASE_MEMBER_COUNT';
+  }
+
+  String get numberOfBednetsToDeliver {
+    return 'DELIVER_INTERVENTION_SHOWCASE_NUMBER_OF_BEDNETS_TO_DELIVER';
+  }
+
+  String get numberOfBednetsDistributed {
+    return 'DELIVER_INTERVENTION_SHOWCASE_NUMBER_OF_BEDNETS_DISTRIBUTED';
+  }
+
+  String get deliveryComment {
+    return 'DELIVER_INTERVENTION_SHOWCASE_DELIVERY_COMMENT';
+  }
+}
+
+class SelectStockShowcase {
+  const SelectStockShowcase();
+
+  String get recordStockReceipt {
+    return 'SELECT_STOCK_SHOWCASE_RECORD_STOCK_RECEIPT';
+  }
+
+  String get recordStockIssued {
+    return 'SELECT_STOCK_SHOWCASE_RECORD_STOCK_ISSUED';
+  }
+
+  String get recordStockReturned {
+    return 'SELECT_STOCK_SHOWCASE_RECORD_STOCK_RETURNED';
+  }
+}
+
+class WarehouseDetailsShowcase {
+  const WarehouseDetailsShowcase();
+
+  String get dateOfReceipt {
+    return 'WAREHOUSE_DETAILS_SHOWCASE_DATE_OF_RECEIPT';
+  }
+
+  String get administrativeUnit {
+    return 'WAREHOUSE_DETAILS_SHOWCASE_ADMINISTRATIVE_UNIT';
+  }
+
+  String get warehouseName {
+    return 'WAREHOUSE_DETAILS_SHOWCASE_WAREHOUSE_NAME';
+  }
+}
+
+class StockDetailsReceiptShowcase {
+  const StockDetailsReceiptShowcase();
+
+  String get receivedFrom {
+    return 'STOCK_DETAILS_RECEIPT_SHOWCASE_RECEIVED_FROM';
+  }
+
+  String get numberOfBednetsReceived {
+    return 'STOCK_DETAILS_RECEIPT_SHOWCASE_NUMBER_OF_BEDNETS_RECEIVED';
+  }
+
+  String get packingSlipId {
+    return 'STOCK_DETAILS_RECEIPT_SHOWCASE_PACKING_SLIP_ID';
+  }
+
+  String get numberOfNetsIndicatedOnPackingSlip {
+    return 'STOCK_DETAILS_RECEIPT_SHOWCASE_NUMBER_OF_NETS_INDICATED_ON_PACKING_SLIP';
+  }
+
+  String get typeOfTransport {
+    return 'STOCK_DETAILS_RECEIPT_SHOWCASE_TYPE_OF_TRANSPORT';
+  }
+
+  String get vehicleNumber {
+    return 'STOCK_DETAILS_RECEIPT_SHOWCASE_VEHICLE_NUMBER';
+  }
+
+  String get driverName {
+    return 'STOCK_DETAILS_RECEIPT_SHOWCASE_DRIVER_NAME';
+  }
+
+  String get comments {
+    return 'STOCK_DETAILS_RECEIPT_SHOWCASE_COMMENTS';
+  }
+}
+
+class StockDetailsIssuedShowcase {
+  const StockDetailsIssuedShowcase();
+
+  String get issuedTo {
+    return 'STOCK_DETAILS_ISSUED_SHOWCASE_ISSUED_TO';
+  }
+
+  String get numberOfBednetsIssued {
+    return 'STOCK_DETAILS_ISSUED_SHOWCASE_NUMBER_OF_BEDNETS_ISSUED';
+  }
+
+  String get packingSlipId {
+    return 'STOCK_DETAILS_ISSUED_SHOWCASE_PACKING_SLIP_ID';
+  }
+
+  String get numberOfNetsIndicatedOnPackingSlip {
+    return 'STOCK_DETAILS_ISSUED_SHOWCASE_NUMBER_OF_NETS_INDICATED_ON_PACKING_SLIP';
+  }
+
+  String get typeOfTransport {
+    return 'STOCK_DETAILS_ISSUED_SHOWCASE_TYPE_OF_TRANSPORT';
+  }
+
+  String get vehicleNumber {
+    return 'STOCK_DETAILS_ISSUED_SHOWCASE_VEHICLE_NUMBER';
+  }
+
+  String get driverName {
+    return 'STOCK_DETAILS_ISSUED_SHOWCASE_DRIVER_NAME';
+  }
+
+  String get comments {
+    return 'STOCK_DETAILS_ISSUED_SHOWCASE_COMMENTS';
+  }
+
   String get facilitySearchHeaderLabel => 'FACILITY_SEARCH_HEADER_LABEL';
 
   String get coreCommonDownload => 'CORE_COMMON_DOWNLOAD';
@@ -133,6 +521,242 @@ class Login {
   String get passwordPlaceholder => 'PASSWORD_PLACEHOLDER';
 
   String get actionLabel => 'LOGIN_ACTION_LABEL';
+}
+
+class StockDetailsReturnedShowcase {
+  const StockDetailsReturnedShowcase();
+
+  String get returnedFrom {
+    return 'STOCK_DETAILS_RETURNED_SHOWCASE_RETURNED_FROM';
+  }
+
+  String get numberOfBednetsReturned {
+    return 'STOCK_DETAILS_RETURNED_SHOWCASE_NUMBER_OF_BEDNETS_RETURNED';
+  }
+
+  String get packingSlipId {
+    return 'STOCK_DETAILS_RETURNED_SHOWCASE_PACKING_SLIP_ID';
+  }
+
+  String get numberOfNetsIndicatedOnPackingSlip {
+    return 'STOCK_DETAILS_RETURNED_SHOWCASE_NUMBER_OF_NETS_INDICATED_ON_PACKING_SLIP';
+  }
+
+  String get typeOfTransport {
+    return 'STOCK_DETAILS_RETURNED_SHOWCASE_TYPE_OF_TRANSPORT';
+  }
+
+  String get vehicleNumber {
+    return 'STOCK_DETAILS_RETURNED_SHOWCASE_VEHICLE_NUMBER';
+  }
+
+  String get driverName {
+    return 'STOCK_DETAILS_RETURNED_SHOWCASE_DRIVER_NAME';
+  }
+
+  String get comments {
+    return 'STOCK_DETAILS_RETURNED_SHOWCASE_COMMENT';
+  }
+}
+
+class StockReconciliationShowcase {
+  const StockReconciliationShowcase();
+
+  String get warehouseName {
+    return 'STOCK_RECONCILIATION_SHOWCASE_WAREHOUSE_NAME';
+  }
+
+  String get dateOfReconciliation {
+    return 'STOCK_RECONCILIATION_SHOWCASE_DATE_OF_RECONCILIATION';
+  }
+
+  String get stockReceived {
+    return 'STOCK_RECONCILIATION_SHOWCASE_STOCK_RECEIVED';
+  }
+
+  String get stockIssued {
+    return 'STOCK_RECONCILIATION_SHOWCASE_STOCK_ISSUED';
+  }
+
+  String get stockReturned {
+    return 'STOCK_RECONCILIATION_SHOWCASE_STOCK_RETURNED';
+  }
+
+  String get stockOnHand {
+    return 'STOCK_RECONCILIATION_SHOWCASE_STOCK_ON_HAND';
+  }
+
+  String get manualStockCount {
+    return 'STOCK_RECONCILIATION_SHOWCASE_MANUAL_STOCK_COUNT';
+  }
+
+  String get comments {
+    return 'STOCK_RECONCILIATION_SHOWCASE_COMMENTS';
+  }
+}
+
+class SelectChecklistShowcase {
+  const SelectChecklistShowcase();
+
+  String get selectChecklist {
+    return 'SELECT_CHECKLIST_SHOWCASE_SELECT_CHECKLIST';
+  }
+}
+
+class ChecklistDataShowcase {
+  const ChecklistDataShowcase();
+
+  String get date {
+    return 'CHECKLIST_DATA_SHOWCASE_DATE';
+  }
+
+  String get administrativeUnit {
+    return 'CHECKLIST_DATA_SHOWCASE_ADMINISTRATIVE_UNIT';
+  }
+}
+
+class ChecklistListShowcase {
+  const ChecklistListShowcase();
+
+  String get open {
+    return 'CHECKLIST_LIST_SHOWCASE_OPEN';
+  }
+}
+
+class ComplaintTypeShowcase {
+  const ComplaintTypeShowcase();
+
+  String get complaintType {
+    return 'COMPLAINT_TYPE_SHOWCASE_COMPLAINT_TYPE';
+  }
+
+  String get complaintTypeNext {
+    return 'COMPLAINT_TYPE_SHOWCASE_COMPLAINT_TYPE_NEXT';
+  }
+}
+
+class ComplaintsDetailsShowcase {
+  const ComplaintsDetailsShowcase();
+
+  String get complaintDate {
+    return 'COMPLAINT_DETAILS_SHOWCASE_DATE';
+  }
+
+  String get complaintOrganizationUnit {
+    return 'COMPLAINT_DETAILS_SHOWCASE_ORGANIZATION_UNIT';
+  }
+
+  String get complaintSelfOrOther {
+    return 'COMPLAINT_DETAILS_SHOWCASE_SELF_OR_OTHER';
+  }
+
+  String get complaintName {
+    return 'COMPLAINT_DETAILS_SHOWCASE_NAME';
+  }
+
+  String get complaintContact {
+    return 'COMPLAINT_DETAILS_SHOWCASE_CONTACT';
+  }
+
+  String get complaintSupervisorName {
+    return 'COMPLAINT_DETAILS_SHOWCASE_SUPERVISOR_NAME';
+  }
+
+  String get complaintSupervisorContact {
+    return 'COMPLAINT_DETAILS_SHOWCASE_SUPERVISOR_CONTACT';
+  }
+
+  String get complaintDescription {
+    return 'COMPLAINT_DETAILS_SHOWCASE_DESCRIPTION';
+  }
+
+  String get complaintSubmit {
+    return 'COMPLAINT_DETAILS_SHOWCASE_SUBMIT';
+  }
+}
+
+class ComplaintsDetailsViewShowcase {
+  const ComplaintsDetailsViewShowcase();
+
+  String get complaintNumber {
+    return 'COMPLAINT_DETAILS_VIEW_SHOWCASE_NUMBER';
+  }
+
+  String get complaintType {
+    return 'COMPLAINT_DETAILS_VIEW_SHOWCASE_TYPE';
+  }
+
+  String get complaintDate {
+    return 'COMPLAINT_DETAILS_VIEW_SHOWCASE_DATE';
+  }
+
+  String get complaintName {
+    return 'COMPLAINT_DETAILS_VIEW_SHOWCASE_NAME';
+  }
+
+  String get complaintArea {
+    return 'COMPLAINT_DETAILS_VIEW_SHOWCASE_AREA';
+  }
+
+  String get complaintContact {
+    return 'COMPLAINT_DETAILS_VIEW_CONTACT';
+  }
+
+  String get complaintStatus {
+    return 'COMPLAINT_DETAILS_VIEW_SHOWCASE_STATUS';
+  }
+
+  String get complaintDescription {
+    return 'COMPLAINT_DETAILS_VIEW_SHOWCASE_DESCRIPTION';
+  }
+
+  String get complaintClose {
+    return 'COMPLAINT_DETAILS_VIEW_SHOWCASE_CLOSE';
+  }
+}
+
+class ComplaintsInboxShowcase {
+  const ComplaintsInboxShowcase();
+
+  String get complaintSearch {
+    return 'COMPLAINT_INBOX_SHOWCASE_SEARCH';
+  }
+
+  String get complaintFilter {
+    return 'COMPLAINT_INBOX_SHOWCASE_FILTER';
+  }
+
+  String get complaintSort {
+    return 'COMPLAINT_INBOX_SHOWCASE_SORT';
+  }
+
+  String get complaintNumber {
+    return 'COMPLAINT_INBOX_SHOWCASE_NUMBER';
+  }
+
+  String get complaintType {
+    return 'COMPLAINT_INBOX_SHOWCASE_TYPE';
+  }
+
+  String get complaintDate {
+    return 'COMPLAINT_INBOX_SHOWCASE_DATE';
+  }
+
+  String get complaintArea {
+    return 'COMPLAINT_INBOX_SHOWCASE_AREA';
+  }
+
+  String get complaintStatus {
+    return 'COMPLAINT_INBOX_SHOWCASE_STATUS';
+  }
+
+  String get complaintOpen {
+    return 'COMPLAINT_INBOX_SHOWCASE_OPEN';
+  }
+
+  String get complaintCreate {
+    return 'COMPLAINT_INBOX_SHOWCASE_CREATE';
+  }
 }
 
 class Checklist {
@@ -215,6 +839,11 @@ class Home {
   String get dataSyncInfoContent => 'DATA_SYNC_INFO_CONTENT';
 
   String get myCheckList => 'MY_CHECK_LIST_LABEL';
+
+  String get warehouseManagerCheckList => 'WAREHOUSE_MANAGER_CHECK_LIST_LABEL';
+
+  String get deleteAllLabel => 'HOME_DELETE_ALL_LABEL';
+  String get db => 'HOME_DB_LABEL';
 }
 
 class SearchBeneficiary {
@@ -230,6 +859,9 @@ class SearchBeneficiary {
   String get noOfResourcesDelivered => 'NO_OF_RESOURCES_DELIVERED';
 
   String get beneficiarySearchHintText => 'BENEFICIARY_SEARCH_HINT_TEXT';
+
+  String get beneficiaryIndividualSearchHintText =>
+      'BENEFICIARY_INDIVIDUAL_SEARCH_HINT_TEXT';
 
   String get beneficiaryInfoDescription => 'BENEFICIARY_INFO_DESCRIPTION';
 

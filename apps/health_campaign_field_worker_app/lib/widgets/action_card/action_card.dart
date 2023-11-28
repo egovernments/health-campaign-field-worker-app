@@ -18,6 +18,9 @@ class ActionCard extends StatelessWidget {
               padding: const EdgeInsets.all(kPadding / 2),
               child: DigitOutlineIconButton(
                 buttonStyle: OutlinedButton.styleFrom(
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.zero,
+                  ),
                   backgroundColor: Colors.white,
                   side: BorderSide(
                     width: 1.0,

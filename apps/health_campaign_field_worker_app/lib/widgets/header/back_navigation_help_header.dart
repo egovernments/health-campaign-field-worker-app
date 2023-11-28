@@ -1,3 +1,4 @@
+import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -5,6 +6,7 @@ import '../../blocs/auth/auth.dart';
 import '../../blocs/localization/app_localization.dart';
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
+import '../showcase/showcase_button.dart';
 
 class BackNavigationHelpHeaderWidget extends StatelessWidget {
   final bool showHelp;
@@ -12,6 +14,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
   final bool showLogoutCTA;
   final VoidCallback? helpClicked;
   final VoidCallback? handleback;
+  final ShowcaseButton? showcaseButton;
 
   const BackNavigationHelpHeaderWidget({
     super.key,
@@ -20,6 +23,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
     this.showLogoutCTA = false,
     this.helpClicked,
     this.handleback,
+    this.showcaseButton,
   });
 
   @override
@@ -27,7 +31,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
       child: Row(
         children: [
           Expanded(
@@ -80,17 +84,28 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
               onPressed: helpClicked,
               child: Row(
                 children: <Widget>[
-                  Text(
-                    AppLocalizations.of(context)
-                        .translate(i18.common.coreCommonHelp),
-                    overflow: TextOverflow.ellipsis,
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      kPadding,
+                      kPadding,
+                      kPadding / 1,
+                      kPadding,
+                    ),
+                    child: Text(
+                      AppLocalizations.of(context)
+                          .translate(i18.common.coreCommonHelp),
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
+
                   const Icon(
                     Icons.help_outline_outlined,
                   ), // Add the icon to the right
                 ],
               ),
             ),
+          SizedBox(width: showcaseButton != null ? 16 : 0),
+          if (showcaseButton != null) showcaseButton!,
         ],
       ),
     );

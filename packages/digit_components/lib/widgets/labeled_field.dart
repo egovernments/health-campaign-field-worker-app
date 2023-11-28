@@ -1,3 +1,4 @@
+import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
 class LabeledField extends StatelessWidget {
@@ -26,7 +27,7 @@ class LabeledField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: padding ?? const EdgeInsets.only(top: 16),
+        padding: padding ?? const EdgeInsets.only(top: kPadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -36,7 +37,8 @@ class LabeledField extends StatelessWidget {
                 Flexible(
                   child: Text(
                     label,
-                    style: labelStyle ?? Theme.of(context).textTheme.labelSmall,
+                    style: labelStyle ??
+                        DigitTheme.instance.mobileTheme.textTheme.labelSmall,
                   ),
                 ),
                 icon != null

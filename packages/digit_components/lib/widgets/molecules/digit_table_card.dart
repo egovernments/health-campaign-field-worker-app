@@ -19,7 +19,7 @@ class DigitTableCard extends StatelessWidget {
     this.color,
     this.padding,
     this.gap = 0,
-    this.fraction = 2,
+    this.fraction = 1.8,
     this.topPadding,
     this.labelStyle,
     this.descriptionStyle,

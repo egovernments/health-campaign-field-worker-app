@@ -38,15 +38,26 @@ Widget buildTableContent(
     ),
   ];
 
+  // Calculate the height of the container based on the number of items in the table
+
+  final projectState = context.read<ProjectBloc>().state;
+  final item = projectState
+      .projectType!.cycles![currentCycle - 1].deliveries![currentDose - 1];
+  final productVariants =
+      fetchProductVariant(item, individualModel)?.productVariants;
+  final numRows = productVariants?.length ?? 0;
+  const rowHeight = 82;
+  const paddingHeight = kPadding * 2;
+  final containerHeight = (numRows + 1) * rowHeight + paddingHeight;
+
   return Container(
     padding: const EdgeInsets.only(
       left: kPadding,
-      bottom: kPadding,
+      bottom: 0,
       right: kPadding,
-      top: kPadding / 2,
+      top: 0,
     ),
-    // [TODO - need to set the height of the card based on the number of items]
-    height: MediaQuery.of(context).size.height / 2.6,
+    height: containerHeight,
     width: MediaQuery.of(context).size.width / 1.25,
     child: BlocBuilder<ProjectBloc, ProjectState>(
       builder: (context, projectState) {
@@ -69,7 +80,9 @@ Widget buildTableContent(
                 ): '${fetchProductVariant(item, individualModel)?.condition?.split('<=age<').first} - ${fetchProductVariant(item, individualModel)?.condition?.split('<=age<').last} months',
               },
             ),
-            const Divider(),
+            const Divider(
+              thickness: 1.0,
+            ),
             // Build the DigitTable with the data
             DigitTable(
               headerList: headerListResource,
@@ -108,7 +121,7 @@ Widget buildTableContent(
                   },
                 ),
               ],
-              columnWidth: 140,
+              columnWidth: 125,
               height: ((fetchProductVariant(item, individualModel)!
                                   .productVariants ??
                               [])
