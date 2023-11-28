@@ -101,7 +101,6 @@ class _$AppRouter extends RootStackRouter {
         child: const BeneficiariesReportPage(),
       );
     },
-
     BeneficiaryRegistrationWrapperRoute.name: (routeData) {
       final args = routeData.argsAs<BeneficiaryRegistrationWrapperRouteArgs>();
       return MaterialPageX<dynamic>(
@@ -1175,7 +1174,6 @@ class BeneficiariesReportRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-
 /// [BeneficiaryRegistrationWrapperPage]
 class BeneficiaryRegistrationWrapperRoute
     extends PageRouteInfo<BeneficiaryRegistrationWrapperRouteArgs> {

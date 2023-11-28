@@ -14,6 +14,7 @@ import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
 import '../../../widgets/header/back_navigation_help_header.dart';
 import '../../../widgets/localized.dart';
+import '../../../widgets/no_result_card/no_result_card.dart';
 
 class BeneficiariesReportPage extends LocalizedStatefulWidget {
   const BeneficiariesReportPage({super.key});
@@ -59,9 +60,9 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
             orElse: () => const Offstage(),
             initialized: (appConfiguration, _) => ScrollableContent(
               footer: SizedBox(
-                height: 100,
                 child: DigitCard(
-                  margin: const EdgeInsets.all(kPadding),
+                  margin: const EdgeInsets.only(top: kPadding),
+                  padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
                   child: DigitElevatedButton(
                     onPressed: () {
                       context.router.replace(HomeRoute());
@@ -400,6 +401,14 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                             ),
                           )
                           .toList(),
+                      downSyncList.isEmpty
+                          ? NoResultCard(
+                              align: Alignment.center,
+                              label: localizations.translate(
+                                i18.common.noResultsFound,
+                              ),
+                            )
+                          : const SizedBox.shrink(),
                     ]),
                   ),
                 ),

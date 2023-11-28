@@ -54,9 +54,10 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
         offstage: !widget.isDataRecordSuccess,
         // Show the bottom navigation bar if `isDataRecordSuccess` is true
         child: SizedBox(
-          height: 145,
+          height: 150,
           child: DigitCard(
-            margin: const EdgeInsets.only(left: 0, right: 0),
+            margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
+            padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
             child: Column(
               children: [
                 DigitElevatedButton(
@@ -77,6 +78,9 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
                       .translate(i18.acknowledgementSuccess.downloadmoredata),
                   buttonStyle: OutlinedButton.styleFrom(
                     backgroundColor: Colors.white,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.zero,
+                    ),
                     side: BorderSide(
                       width: 1.0,
                       color: theme.colorScheme.secondary,

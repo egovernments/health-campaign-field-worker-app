@@ -31,6 +31,8 @@ dependencies:
   package_info_plus: ^4.1.0
   easy_stepper: ^0.5.2+1
   intl: ^0.18.0
+  flutter_focus_watcher: ^2.0.0
+
 
 dev_dependencies:
   flutter_test:
@@ -48,4 +50,7 @@ flutter:
     - family: Roboto
       fonts:
         - asset: assets/fonts/Roboto/Roboto-Regular.ttf
+    - family: RobotoCondensed
+      fonts:
+        - asset: assets/fonts/Roboto/RobotoCondensed-Regular.ttf
 

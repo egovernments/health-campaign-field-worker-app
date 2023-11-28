@@ -31,12 +31,12 @@ class DigitCheckboxTile extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              value ?
-                  CheckboxIcon()
-              :
-                  CheckboxIcon(value: true,),
-              const SizedBox(width: kPadding*2),
-
+              value
+                  ? const CheckboxIcon(
+                      value: true,
+                    )
+                  : const CheckboxIcon(),
+              const SizedBox(width: kPadding * 2),
               Expanded(
                 child: Text(
                   label,

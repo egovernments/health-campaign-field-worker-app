@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 class CheckboxIcon extends StatelessWidget {
   final bool value;
 
-
   // Constructor for the DigitCheckbox widget with required parameters
   const CheckboxIcon({
     super.key,
@@ -21,19 +20,21 @@ class CheckboxIcon extends StatelessWidget {
       height: 24.0,
       decoration: BoxDecoration(
         border: Border.all(
-          color: value ? DigitColors().burningOrange : DigitColors().davyGray,
+          color: value
+              ? const DigitColors().burningOrange
+              : const DigitColors().davyGray,
           width: 2.0,
         ),
         borderRadius: BorderRadius.zero,
       ),
       child: value
           ? Center(
-        child: Icon(
-          Icons.check,
-          size: 16.0,
-          color: DigitColors().burningOrange,
-        ),
-      )
+              child: Icon(
+                Icons.check,
+                size: 16.0,
+                color: const DigitColors().burningOrange,
+              ),
+            )
           : null,
     );
   }

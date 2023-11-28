@@ -122,7 +122,7 @@ abstract class OpLogManager<T extends EntityModel> {
         .sortedBy((element) => element.createdAt)
         .where(
           (element) => element.entityType != DataModelType.service,
-          // Added Memeber and service so that we don't get the respose from the server
+          // Added service so that we don't get the response from the server
         )
         .toList();
 

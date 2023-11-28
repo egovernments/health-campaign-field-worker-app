@@ -55,10 +55,18 @@ class DigitTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ValueNotifier<String?> errorNotifier = ValueNotifier<String?>(null);
+
     return LabeledField(
+      labelStyle: Theme.of(context).textTheme.bodyLarge,
       label: isRequired ? "$label *" : label,
       textStyle: textStyle,
       child: TextFormField(
+        onFieldSubmitted: (value) {
+          if (validator != null) {
+            errorNotifier.value = validator!(value);
+          }
+        },
         style: TextStyle(
             color: readOnly == true
                 ? DigitTheme.instance.colorScheme.shadow

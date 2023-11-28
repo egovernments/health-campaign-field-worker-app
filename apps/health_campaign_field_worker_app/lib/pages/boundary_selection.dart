@@ -34,6 +34,9 @@ class _BoundarySelectionPageState
   int i = 0;
   int pendingSyncCount = 0;
   final clickedStatus = ValueNotifier<bool>(false);
+  var expenseTypeCtrl = TextEditingController();
+
+  Map<String, TextEditingController> dropdownControllers = {};
 
   @override
   void initState() {
@@ -60,6 +63,13 @@ class _BoundarySelectionPageState
 
   @override
   Widget build(BuildContext context) {
+    bool isDistributor = context.loggedInUserRoles
+        .where(
+          (role) => role.code == RolesType.distributor.toValue(),
+        )
+        .toList()
+        .isNotEmpty;
+
     return WillPopScope(
       onWillPop: () async => shouldPop,
       child: BlocBuilder<BoundaryBloc, BoundaryState>(
@@ -119,17 +129,18 @@ class _BoundarySelectionPageState
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: kPadding * 2,
                                     ),
-                                    child: DigitDropdown<BoundaryModel>(
-                                      initialValue: formControls[label]?.value,
-                                      label: '$label*',
+                                    child: DigitReactiveSearchDropdown<
+                                        BoundaryModel>(
+                                      label: localizations.translate(label),
+                                      form: form,
                                       menuItems: filteredItems,
-                                      validationMessages: {
-                                        'required': (object) =>
-                                            localizations.translate(
-                                              i18.common.corecommonRequired,
-                                            ),
+                                      formControlName: label,
+                                      valueMapper: (value) {
+                                        return value.name ??
+                                            value.code ??
+                                            'No Value';
                                       },
-                                      onChanged: (value) {
+                                      onSelected: (value) {
                                         if (value == null) return;
 
                                         context.read<BoundaryBloc>().add(
@@ -142,12 +153,13 @@ class _BoundarySelectionPageState
                                         // Call the resetChildDropdowns function when a parent dropdown is selected
                                         resetChildDropdowns(label, state);
                                       },
-                                      valueMapper: (value) {
-                                        return value.name ??
-                                            value.code ??
-                                            'No Value';
-                                      },
-                                      formControlName: label,
+                                      isRequired: true,
+                                      validationMessage:
+                                          localizations.translate(
+                                        i18.common.corecommonRequired,
+                                      ),
+                                      emptyText: localizations
+                                          .translate(i18.common.noMatchFound),
                                     ),
                                   );
                                 },
@@ -434,11 +446,10 @@ class _BoundarySelectionPageState
                                 );
                               },
                               child: DigitCard(
-                                margin: const EdgeInsets.only(
-                                  left: 0,
-                                  right: 0,
-                                  top: 10,
-                                ),
+                                margin: const EdgeInsets.fromLTRB(
+                                    0, kPadding, 0, 0),
+                                padding: const EdgeInsets.fromLTRB(
+                                    kPadding, 0, kPadding, 0),
                                 child: SafeArea(
                                   child: BlocListener<SyncBloc, SyncState>(
                                     listener: (context, syncState) {
@@ -457,7 +468,8 @@ class _BoundarySelectionPageState
                                                   isClicked
                                               ? null
                                               : () async {
-                                                  if (!form.valid) {
+                                                  if (!form.valid ||
+                                                      validateAllBoundarySelection()) {
                                                     clickedStatus.value = false;
                                                     await DigitToast.show(
                                                       context,
@@ -484,7 +496,8 @@ class _BoundarySelectionPageState
                                                         await getIsConnected();
 
                                                     if (context.mounted) {
-                                                      if (isOnline) {
+                                                      if (isOnline &&
+                                                          isDistributor) {
                                                         context
                                                             .read<
                                                                 BeneficiaryDownSyncBloc>()
@@ -561,11 +574,28 @@ class _BoundarySelectionPageState
 
     for (final label in labelList) {
       formControls[label] = FormControl<BoundaryModel>(
-        validators: [Validators.required],
         value: state.selectedBoundaryMap[label],
       );
     }
 
     return fb.group(formControls);
+  }
+
+  bool validateAllBoundarySelection() {
+    // Iterate through the map entries
+    for (final entry in formControls.entries) {
+      // Access the form control
+      final formControl = entry.value;
+
+      // Check if the form control value is null
+      if (formControl.value == null) {
+        formControl.setErrors({'': true});
+        // Return true if any form control has a null value
+        return true;
+      }
+    }
+
+    // Return false if none of the form controls have a null value
+    return false;
   }
 }

@@ -132,32 +132,28 @@ class _ComplaintsInboxFilterPageState
                   ],
                 ),
                 footer: SizedBox(
-                  height: 85,
                   child: DigitCard(
-                    margin: const EdgeInsets.only(left: 0, right: 0, top: 10),
+                    margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
+                    padding:
+                        const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Expanded(
                           flex: 1,
-                          child: OutlinedButton(
+                          child: DigitOutLineButton(
+                            label: localizations.translate(
+                              i18.complaints.complaintsFilterClearAll,
+                            ),
                             onPressed: () {
                               clearFilters(formGroup);
                             },
-                            style: OutlinedButton.styleFrom(
+                            buttonStyle: OutlinedButton.styleFrom(
                               shape: const BeveledRectangleBorder(),
-                              padding: const EdgeInsets.all(10),
+                              padding: const EdgeInsets.all(14),
                               side: BorderSide(
                                 width: 1.0,
-                                color: theme.colorScheme.secondary,
-                              ),
-                            ),
-                            child: Text(
-                              localizations.translate(
-                                i18.complaints.complaintsFilterClearAll,
-                              ),
-                              style: TextStyle(
                                 color: theme.colorScheme.secondary,
                               ),
                             ),
@@ -290,24 +286,30 @@ class _ComplaintsInboxFilterPageState
                                     );
                                   },
                                 ),
-                                DigitReactiveDropdown<String>(
-                                  formControlName: _complaintType,
+                                DigitReactiveSearchDropdown<String>(
                                   label: localizations.translate(
                                     i18.complaints.complaintsTypeHeading,
                                   ),
+                                  form: formGroup,
                                   menuItems: complaintTypes.toList(),
+                                  formControlName: _complaintType,
                                   valueMapper: (value) {
                                     return localizations.translate(
                                       value.snakeCase.toUpperCase().trim(),
                                     );
                                   },
+                                  emptyText: localizations
+                                      .translate(i18.common.noMatchFound),
                                 ),
-                                DigitReactiveDropdown<String>(
-                                  formControlName: _complaintLocality,
+                                DigitReactiveSearchDropdown<String>(
                                   label: localizations
                                       .translate(i18.complaints.locality),
+                                  form: formGroup,
                                   menuItems: locality.toList(),
+                                  formControlName: _complaintLocality,
                                   valueMapper: (value) => value.trim(),
+                                  emptyText: localizations
+                                      .translate(i18.common.noMatchFound),
                                 ),
                                 if (uniqueStatuses.isNotEmpty) ...[
                                   LabeledField(

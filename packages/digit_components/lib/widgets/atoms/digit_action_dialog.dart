@@ -25,6 +25,8 @@ class DigitActionDialog extends StatelessWidget {
             AlertDialog(
               insetPadding: EdgeInsets.zero,
               content: widget,
+              contentPadding: const EdgeInsets.fromLTRB(
+                  kPadding, kPadding * 2, kPadding, kPadding * 2),
             ),
           ],
         ),

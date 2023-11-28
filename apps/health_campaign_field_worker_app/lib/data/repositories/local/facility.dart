@@ -90,14 +90,6 @@ class FacilityLocalRepository
         facilityCompanion,
         mode: InsertMode.insertOrReplace,
       );
-
-      if (addressCompanion != null) {
-        batch.insert(
-          sql.address,
-          addressCompanion,
-          mode: InsertMode.insertOrReplace,
-        );
-      }
     });
 
     await super.create(

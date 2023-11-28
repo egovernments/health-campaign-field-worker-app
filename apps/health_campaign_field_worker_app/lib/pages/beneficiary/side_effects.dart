@@ -36,7 +36,6 @@ class SideEffectsPage extends LocalizedStatefulWidget {
 class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
   List<bool> symptomsValues = [];
   List<String> symptomsTypes = [];
-  bool stateChanged = false;
   bool symptomsSelected = true;
 
   @override
@@ -66,270 +65,287 @@ class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                 header: const BackNavigationHelpHeaderWidget(
                                   showHelp: false,
                                 ),
-                                footer: SizedBox(
-                                  height: 100,
-                                  child: DigitCard(
-                                    child: DigitElevatedButton(
-                                      onPressed: () async {
-                                        if (symptomsValues.any((e) => e)) {
-                                          setState(() {
-                                            symptomsSelected = true;
-                                          });
-                                          final router = context.router;
+                                footer: DigitCard(
+                                  margin: const EdgeInsets.fromLTRB(
+                                      0, kPadding, 0, 0),
+                                  padding: const EdgeInsets.fromLTRB(
+                                      kPadding, 0, kPadding, 0),
+                                  child: DigitElevatedButton(
+                                    onPressed: () async {
+                                      if (symptomsValues.any((e) => e)) {
+                                        setState(() {
+                                          symptomsSelected = true;
+                                        });
+                                        final router = context.router;
 
-                                          final shouldSubmit =
-                                              await DigitDialog.show<bool>(
-                                            context,
-                                            options: DigitDialogOptions(
-                                              titleText:
-                                                  localizations.translate(
-                                                i18.deliverIntervention
-                                                    .dialogTitle,
+                                        final shouldSubmit =
+                                            await DigitDialog.show<bool>(
+                                          context,
+                                          options: DigitDialogOptions(
+                                            titleText: localizations.translate(
+                                              i18.deliverIntervention
+                                                  .dialogTitle,
+                                            ),
+                                            contentText:
+                                                localizations.translate(
+                                              i18.deliverIntervention
+                                                  .dialogContent,
+                                            ),
+                                            primaryAction: DigitDialogActions(
+                                              label: localizations.translate(
+                                                i18.common.coreCommonSubmit,
                                               ),
-                                              contentText:
-                                                  localizations.translate(
-                                                i18.deliverIntervention
-                                                    .dialogContent,
-                                              ),
-                                              primaryAction: DigitDialogActions(
-                                                label: localizations.translate(
-                                                  i18.common.coreCommonSubmit,
-                                                ),
-                                                action: (ctx) {
-                                                  final List<String> symptoms =
-                                                      [];
+                                              action: (ctx) {
+                                                final List<String> symptoms =
+                                                    [];
 
-                                                  for (int i = 0;
-                                                      i < symptomsValues.length;
-                                                      i++) {
-                                                    if (symptomsValues[i]) {
-                                                      symptoms.add(
-                                                        symptomsTypes[i],
-                                                      );
-                                                    }
+                                                for (int i = 0;
+                                                    i < symptomsValues.length;
+                                                    i++) {
+                                                  if (symptomsValues[i]) {
+                                                    symptoms.add(
+                                                      symptomsTypes[i],
+                                                    );
                                                   }
+                                                }
 
-                                                  final clientReferenceId =
-                                                      IdGen.i.identifier;
-                                                  context
-                                                      .read<SideEffectsBloc>()
-                                                      .add(
-                                                        SideEffectsSubmitEvent(
-                                                          SideEffectModel(
-                                                            id: null,
-                                                            taskClientReferenceId:
-                                                                widget
-                                                                    .tasks
-                                                                    .last
-                                                                    .clientReferenceId,
-                                                            projectId: context
-                                                                .projectId,
-                                                            symptoms: symptoms,
-                                                            clientReferenceId:
-                                                                clientReferenceId,
-                                                            tenantId: envConfig
-                                                                .variables
-                                                                .tenantId,
-                                                            rowVersion: 1,
-                                                            auditDetails:
-                                                                AuditDetails(
-                                                              createdBy: context
-                                                                  .loggedInUserUuid,
-                                                              createdTime: context
-                                                                  .millisecondsSinceEpoch(),
-                                                              lastModifiedBy:
-                                                                  context
-                                                                      .loggedInUserUuid,
-                                                              lastModifiedTime:
-                                                                  context
-                                                                      .millisecondsSinceEpoch(),
-                                                            ),
-                                                            clientAuditDetails:
-                                                                ClientAuditDetails(
-                                                              createdBy: context
-                                                                  .loggedInUserUuid,
-                                                              createdTime: context
-                                                                  .millisecondsSinceEpoch(),
-                                                              lastModifiedBy:
-                                                                  context
-                                                                      .loggedInUserUuid,
-                                                              lastModifiedTime:
-                                                                  context
-                                                                      .millisecondsSinceEpoch(),
-                                                            ),
+                                                final clientReferenceId =
+                                                    IdGen.i.identifier;
+                                                context
+                                                    .read<SideEffectsBloc>()
+                                                    .add(
+                                                      SideEffectsSubmitEvent(
+                                                        SideEffectModel(
+                                                          id: null,
+                                                          taskClientReferenceId:
+                                                              widget.tasks.last
+                                                                  .clientReferenceId,
+                                                          projectId:
+                                                              context.projectId,
+                                                          symptoms: symptoms,
+                                                          clientReferenceId:
+                                                              clientReferenceId,
+                                                          tenantId: envConfig
+                                                              .variables
+                                                              .tenantId,
+                                                          rowVersion: 1,
+                                                          auditDetails:
+                                                              AuditDetails(
+                                                            createdBy: context
+                                                                .loggedInUserUuid,
+                                                            createdTime: context
+                                                                .millisecondsSinceEpoch(),
+                                                            lastModifiedBy: context
+                                                                .loggedInUserUuid,
+                                                            lastModifiedTime:
+                                                                context
+                                                                    .millisecondsSinceEpoch(),
                                                           ),
-                                                          false,
+                                                          clientAuditDetails:
+                                                              ClientAuditDetails(
+                                                            createdBy: context
+                                                                .loggedInUserUuid,
+                                                            createdTime: context
+                                                                .millisecondsSinceEpoch(),
+                                                            lastModifiedBy: context
+                                                                .loggedInUserUuid,
+                                                            lastModifiedTime:
+                                                                context
+                                                                    .millisecondsSinceEpoch(),
+                                                          ),
                                                         ),
-                                                      );
-                                                  Navigator.of(
-                                                    context,
-                                                    rootNavigator: true,
-                                                  ).pop(true);
-                                                },
-                                              ),
-                                              secondaryAction:
-                                                  DigitDialogActions(
-                                                label: localizations.translate(
-                                                  i18.common.coreCommonCancel,
-                                                ),
-                                                action: (context) =>
-                                                    Navigator.of(
+                                                        false,
+                                                      ),
+                                                    );
+                                                Navigator.of(
                                                   context,
                                                   rootNavigator: true,
-                                                ).pop(false),
-                                              ),
-                                            ),
-                                          );
-
-                                          if (shouldSubmit ?? false) {
-                                            final reloadState = context
-                                                .read<HouseholdOverviewBloc>();
-
-                                            Future.delayed(
-                                              const Duration(milliseconds: 500),
-                                              () {
-                                                reloadState.add(
-                                                  HouseholdOverviewReloadEvent(
-                                                    projectId:
-                                                        context.projectId,
-                                                    projectBeneficiaryType:
-                                                        context.beneficiaryType,
-                                                  ),
-                                                );
+                                                ).pop(true);
                                               },
-                                            ).then((value) =>
-                                                context.router.push(
-                                                  HouseholdAcknowledgementRoute(
-                                                    enableViewHousehold: true,
-                                                  ),
-                                                ));
-                                          }
-                                        } else {
-                                          setState(() {
-                                            symptomsSelected = false;
-                                          });
-                                        }
-                                      },
-                                      child: Center(
-                                        child: Text(
-                                          localizations.translate(
-                                            i18.common.coreCommonNext,
+                                            ),
+                                            secondaryAction: DigitDialogActions(
+                                              label: localizations.translate(
+                                                i18.common.coreCommonCancel,
+                                              ),
+                                              action: (context) => Navigator.of(
+                                                context,
+                                                rootNavigator: true,
+                                              ).pop(false),
+                                            ),
                                           ),
+                                        );
+
+                                        if (shouldSubmit ?? false) {
+                                          final reloadState = context
+                                              .read<HouseholdOverviewBloc>();
+
+                                          Future.delayed(
+                                            const Duration(milliseconds: 500),
+                                            () {
+                                              reloadState.add(
+                                                HouseholdOverviewReloadEvent(
+                                                  projectId: context.projectId,
+                                                  projectBeneficiaryType:
+                                                      context.beneficiaryType,
+                                                ),
+                                              );
+                                            },
+                                          ).then((value) => context.router.push(
+                                                HouseholdAcknowledgementRoute(
+                                                  enableViewHousehold: true,
+                                                ),
+                                              ));
+                                        }
+                                      } else {
+                                        setState(() {
+                                          symptomsSelected = false;
+                                        });
+                                      }
+                                    },
+                                    child: Center(
+                                      child: Text(
+                                        localizations.translate(
+                                          i18.common.coreCommonNext,
                                         ),
                                       ),
                                     ),
                                   ),
                                 ),
-                                children: [
-                                  DigitCard(
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Expanded(
-                                              child: Text(
-                                                localizations.translate(
-                                                  i18.adverseEvents
-                                                      .sideEffectsLabel,
+                                slivers: [
+                                  SliverToBoxAdapter(
+                                    child: DigitCard(
+                                      padding: const EdgeInsets.only(
+                                        left: kPadding * 2,
+                                        right: kPadding * 2,
+                                        top: kPadding * 2,
+                                        bottom: kPadding * 2,
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Expanded(
+                                                child: Text(
+                                                  localizations.translate(
+                                                    i18.adverseEvents
+                                                        .sideEffectsLabel,
+                                                  ),
+                                                  style: theme
+                                                      .textTheme.displayMedium,
                                                 ),
-                                                style: theme
-                                                    .textTheme.displayMedium,
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                        Align(
-                                          alignment: Alignment.topLeft,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 0,
-                                                right: kPadding,
+                                            ],
+                                          ),
+                                          Align(
+                                            alignment: Alignment.topLeft,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                right: kPadding * 2,
                                                 top: kPadding * 2,
-                                                bottom: kPadding * 2),
-                                            child: Text(
-                                              '${localizations.translate(
-                                                i18.adverseEvents
-                                                    .selectSymptomsLabel,
-                                              )}*',
-                                              style:
-                                                  theme.textTheme.headlineSmall,
+                                                bottom: kPadding * 2,
+                                              ),
+                                              child: Text(
+                                                '${localizations.translate(
+                                                  i18.adverseEvents
+                                                      .selectSymptomsLabel,
+                                                )}*',
+                                                style: theme
+                                                    .textTheme.headlineSmall,
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        BlocBuilder<AppInitializationBloc,
-                                            AppInitializationState>(
-                                          builder: (context, state) =>
-                                              state.maybeWhen(
-                                            orElse: () => const Offstage(),
-                                            initialized: (appConfiguration, _) {
-                                              final symptomTypesOptions =
-                                                  appConfiguration
-                                                          .symptomsTypes ??
-                                                      <SymptomsTypes>[];
-                                              symptomsTypes =
-                                                  symptomTypesOptions
-                                                      .map((e) => e.code)
-                                                      .toList();
+                                          BlocBuilder<AppInitializationBloc,
+                                              AppInitializationState>(
+                                            builder: (context, state) =>
+                                                state.maybeWhen(
+                                              orElse: () => const Offstage(),
+                                              initialized:
+                                                  (appConfiguration, _) {
+                                                final symptomTypesOptions =
+                                                    appConfiguration
+                                                            .symptomsTypes ??
+                                                        <SymptomsTypes>[];
+                                                symptomsTypes =
+                                                    symptomTypesOptions
+                                                        .map((e) => e.code)
+                                                        .toList();
 
-                                              for (var _
-                                                  in symptomTypesOptions) {
-                                                symptomsValues.add(false);
-                                              }
+                                                for (var _
+                                                    in symptomTypesOptions) {
+                                                  symptomsValues.add(false);
+                                                }
 
-                                              return Column(
-                                                children: symptomTypesOptions
-                                                    .mapIndexed(
-                                                      (i, e) => StatefulBuilder(
-                                                        builder: (
-                                                          BuildContext context,
-                                                          StateSetter
-                                                              stateSetter,
-                                                        ) {
-                                                          return DigitCheckboxTile(
-                                                            label: localizations
-                                                                .translate(
-                                                              e.code,
+                                                return StatefulBuilder(
+                                                  builder: (
+                                                    BuildContext context,
+                                                    StateSetter stateSetter,
+                                                  ) {
+                                                    return Column(
+                                                      children: [
+                                                        Column(
+                                                          children:
+                                                              symptomTypesOptions
+                                                                  .mapIndexed(
+                                                                    (i, e) =>
+                                                                        DigitCheckboxTile(
+                                                                      padding:
+                                                                          EdgeInsets
+                                                                              .zero,
+                                                                      label: localizations
+                                                                          .translate(
+                                                                        e.code,
+                                                                      ),
+                                                                      value:
+                                                                          symptomsValues[
+                                                                              i],
+                                                                      onChanged:
+                                                                          (value) {
+                                                                        stateSetter(
+                                                                          () {
+                                                                            symptomsValues[i] =
+                                                                                !symptomsValues[i];
+                                                                            symptomsSelected =
+                                                                                symptomsValues.any(
+                                                                              (e) => e,
+                                                                            );
+                                                                          },
+                                                                        );
+                                                                      },
+                                                                    ),
+                                                                  )
+                                                                  .toList(),
+                                                        ),
+                                                        Visibility(
+                                                          visible:
+                                                              !symptomsSelected,
+                                                          child: Align(
+                                                            alignment: Alignment
+                                                                .centerLeft,
+                                                            child: Text(
+                                                              localizations
+                                                                  .translate(
+                                                                i18.common
+                                                                    .coreCommonRequiredItems,
+                                                              ),
+                                                              style: TextStyle(
+                                                                color: theme
+                                                                    .colorScheme
+                                                                    .error,
+                                                              ),
                                                             ),
-                                                            value:
-                                                                symptomsValues[
-                                                                    i],
-                                                            onChanged: (value) {
-                                                              stateSetter(
-                                                                () {
-                                                                  symptomsValues[
-                                                                          i] =
-                                                                      !symptomsValues[
-                                                                          i];
-                                                                },
-                                                              );
-                                                            },
-                                                          );
-                                                        },
-                                                      ),
-                                                    )
-                                                    .toList(),
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                        Offstage(
-                                          offstage: symptomsSelected,
-                                          child: Align(
-                                            alignment: Alignment.centerLeft,
-                                            child: Text(
-                                              localizations.translate(
-                                                i18.common
-                                                    .coreCommonRequiredItems,
-                                              ),
-                                              style: TextStyle(
-                                                color: theme.colorScheme.error,
-                                              ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                              },
                                             ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ],

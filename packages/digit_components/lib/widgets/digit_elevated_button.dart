@@ -14,6 +14,10 @@ class DigitElevatedButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: const EdgeInsets.only(
+        top: kPadding,
+        bottom: kPadding,
+      ),
       constraints: const BoxConstraints(maxHeight: 50, minHeight: 40),
       decoration: BoxDecoration(
         border: Border(
@@ -26,6 +30,12 @@ class DigitElevatedButton extends StatelessWidget {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          textStyle: const TextStyle(
+            color: Colors.black,
+            fontFamily: 'Roboto',
+            fontSize: 19,
+            fontWeight: FontWeight.w500,
+          ),
         ),
         onPressed: onPressed,
         child: Center(child: child),

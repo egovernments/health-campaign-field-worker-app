@@ -1,19 +1,17 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
-import '../../router/app_router.dart';
-import '../../utils/utils.dart';
-import 'package:audioplayers/audioplayers.dart';
-
 import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
-import '../../widgets/localized.dart';
+import 'package:qr_code_scanner/qr_code_scanner.dart';
+
+import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
-import '../blocs/beneficiary_registration/beneficiary_registration.dart';
+import '../../utils/utils.dart';
+import '../../widgets/localized.dart';
 import '../blocs/scanner/scanner.dart';
 import '../blocs/search_households/search_households.dart';
-import '../models/entities/scanner_type.dart';
 
 class QRScannerPage extends LocalizedStatefulWidget {
   final bool sinlgleValue;
@@ -115,13 +113,13 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                     ),
                     // [TODO : Need move to constants]
                     Positioned(
-                      top: kPadding * 8,
-                      left: MediaQuery.of(context).size.width / 3,
+                      top: MediaQuery.of(context).size.width / 5,
+                      left: MediaQuery.of(context).size.width / 2.6,
                       width: 250,
                       height: 250,
                       child: SizedBox(
-                        width: 150,
-                        height: 150,
+                        width: MediaQuery.of(context).size.width / 3,
+                        height: MediaQuery.of(context).size.height / 3,
                         // [TODO: Localization need to be added]
                         child: Text(
                           localizations.translate(
@@ -129,55 +127,58 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                           ),
                           style: const TextStyle(
                             color: Colors.white,
-                            fontSize: 20,
+                            fontSize: 16,
                           ),
                         ),
                       ),
                     ),
                     Positioned(
                       top: MediaQuery.of(context).size.height / 2.4,
-                      left: MediaQuery.of(context).size.width / 4.5,
+                      left: MediaQuery.of(context).size.width / 4,
                       width: 250,
                       height: 250,
                       child: SizedBox(
                         width: 150,
-                        height: 150,
-                        // [TODO: Localization need to be added]
-                        child: Text(
-                          localizations.translate(
-                            i18.deliverIntervention.manualScan,
-                          ),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
+                        height: 50,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: kPadding),
+                          child: Text(
+                            localizations.translate(
+                              i18.deliverIntervention.manualScan,
+                            ),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                            ),
                           ),
                         ),
                       ),
                     ),
                     Positioned(
-                      top: MediaQuery.of(context).size.height / 2.2,
+                      top: MediaQuery.of(context).size.height / 2.0,
                       left: MediaQuery.of(context).size.width / 6,
                       width: 250,
                       height: 50,
                       child: SizedBox(
                         width: 150,
                         height: 50,
-                        // [TODO: Localization need to be added]
-
                         child: TextButton(
                           onPressed: () {
                             setState(() {
                               manualcode = true;
                             });
                           },
-                          child: Text(
-                            localizations.translate(
-                              i18.deliverIntervention.manualEnterCode,
-                            ),
-                            style: TextStyle(
-                              color: theme.colorScheme.secondary,
-                              fontSize: 20,
-                              decoration: TextDecoration.underline,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: kPadding),
+                            child: Text(
+                              localizations.translate(
+                                i18.deliverIntervention.manualEnterCode,
+                              ),
+                              style: TextStyle(
+                                color: theme.colorScheme.secondary,
+                                fontSize: 20,
+                                decoration: TextDecoration.underline,
+                              ),
                             ),
                           ),
                         ),
@@ -187,8 +188,10 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                     Positioned(
                       bottom: 0,
                       width: MediaQuery.of(context).size.width,
-                      height: kPadding * 12,
                       child: DigitCard(
+                        margin: const EdgeInsets.only(top: kPadding),
+                        padding:
+                            const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
                         child: DigitElevatedButton(
                           child: Text(localizations
                               .translate(i18.common.coreCommonSubmit)),
@@ -216,26 +219,21 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                     ),
 
                     Positioned(
-                      bottom: (kPadding * 8),
+                      bottom: (kPadding * 7.5),
                       height: widget.isGS1code
                           ? state.barcodes.length < 10
                               ? (state.barcodes.length * 60) + 80
-                              : MediaQuery.of(context).size.height / 2
+                              : MediaQuery.of(context).size.height / 2.2
                           : state.qrcodes.length < 10
                               ? (state.qrcodes.length * 60) + 80
                               : MediaQuery.of(context).size.height / 2,
                       width: MediaQuery.of(context).size.width,
                       child: Container(
-                        margin: const EdgeInsets.all(kPadding),
                         width: 100,
                         height: 120,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: Colors.white,
-                          border: Border.all(
-                            color: DigitTheme.instance.colorScheme.outline,
-                            width: 1,
-                          ),
-                          borderRadius: const BorderRadius.only(
+                          borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(12.0),
                             topRight: Radius.circular(12.0),
                           ),
@@ -248,14 +246,14 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                               decoration: const BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(12.0),
-                                  topRight: Radius.circular(12.0),
+                                  topLeft: Radius.circular(kPadding * 2),
+                                  topRight: Radius.circular(kPadding * 2),
                                 ),
                               ),
                               padding: const EdgeInsets.only(
                                 bottom: kPadding * 2,
                                 top: kPadding * 2,
-                                left: kPadding * 2,
+                                left: kPadding * 3,
                               ),
                               width: MediaQuery.of(context).size.width,
                               child: widget.isGS1code
@@ -277,6 +275,10 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                                   return ListTile(
                                     shape: const Border(),
                                     title: Container(
+                                      margin: const EdgeInsets.only(
+                                        left: kPadding,
+                                        right: kPadding,
+                                      ),
                                       height: kPadding * 6,
                                       decoration: BoxDecoration(
                                         color: DigitTheme
@@ -315,7 +317,8 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                                           ),
                                           Container(
                                             padding: const EdgeInsets.only(
-                                              bottom: kPadding,
+                                              bottom: kPadding * 2,
+                                              left: kPadding,
                                             ),
                                             child: IconButton(
                                               icon: const Icon(
@@ -374,6 +377,7 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                 )
               : DigitCard(
                   child: ScrollableContent(
+                    backgroundColor: Colors.white,
                     header: GestureDetector(
                       onTap: () {
                         setState(() {
@@ -419,21 +423,24 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                       },
                     ),
                     children: [
-                      Container(
-                        padding: const EdgeInsets.all(kPadding),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            localizations.translate(
-                              i18.deliverIntervention.manualEnterCode,
-                            ),
-                            style: theme.textTheme.headlineLarge,
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          localizations.translate(
+                            i18.deliverIntervention.manualEnterCode,
                           ),
+                          style: theme.textTheme.headlineLarge,
                         ),
+                      ),
+                      const SizedBox(
+                        height: kPadding * 2,
                       ),
                       Text(localizations.translate(
                         i18.deliverIntervention.manualCodeDescription,
                       )),
+                      const SizedBox(
+                        height: kPadding * 2,
+                      ),
                       DigitTextField(
                         label: localizations.translate(
                           i18.deliverIntervention.resourceCode,

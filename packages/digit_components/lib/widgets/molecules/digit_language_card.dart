@@ -22,6 +22,10 @@ class DigitLanguageCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DigitCard(
+      padding: const EdgeInsets.symmetric(
+        vertical: 16,
+        horizontal: 8,
+      ),
       margin: const EdgeInsets.all(8),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -30,11 +34,13 @@ class DigitLanguageCard extends StatelessWidget {
         children: [
           appLogo ?? const SizedBox.shrink(),
           DigitRowCard(
+            spacing: 20,
+            alignment: WrapAlignment.spaceBetween,
             onChanged: onLanguageChange,
             rowItems: digitRowCardItems,
             width:
                 (MediaQuery.of(context).size.width / digitRowCardItems.length) -
-                    16 * digitRowCardItems.length,
+                    8 * digitRowCardItems.length,
           ),
           const SizedBox(
             height: 24,
@@ -42,7 +48,10 @@ class DigitLanguageCard extends StatelessWidget {
           ),
           DigitElevatedButton(
             onPressed: onLanguageSubmit,
-            child: Center(child: Text(languageSubmitLabel)),
+            child: Center(
+                child: Text(
+              languageSubmitLabel,
+            )),
           ),
         ],
       ),

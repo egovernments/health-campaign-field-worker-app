@@ -40,9 +40,16 @@ class DigitDobPicker extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Padding(
-      padding: const EdgeInsets.only(top: 16),
+      padding: const EdgeInsets.only(
+        top: 8,
+        bottom: 8,
+      ),
       child: Container(
-        padding: const EdgeInsets.only(left: 8, right: 8, bottom: 16),
+        padding: const EdgeInsets.only(
+          left: 8,
+          right: 8,
+          bottom: 8,
+        ),
         decoration: BoxDecoration(
           color: theme.colorScheme.surface,
           borderRadius: BorderRadius.circular(4),
@@ -71,6 +78,7 @@ class DigitDobPicker extends StatelessWidget {
                 Expanded(
                   // Text form field for entering the age in years
                   child: DigitTextFormField(
+                      padding: EdgeInsets.zero,
                       maxLength: 3,
                       inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly,
@@ -96,6 +104,7 @@ class DigitDobPicker extends StatelessWidget {
                 Expanded(
                   // Text form field for entering the age in months
                   child: DigitTextFormField(
+                      padding: EdgeInsets.zero,
                       maxLength: 2,
                       inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly,
@@ -117,7 +126,6 @@ class DigitDobPicker extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 8.0),
             ReactiveFormConsumer(
               builder: (context, form, child) {
                 final datePickerControl = form.control(datePickerFormControl);

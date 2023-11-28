@@ -146,7 +146,7 @@ performBackgroundService({
         DigitToast.show(
           context!,
           options: DigitToastOptions(
-            'Background Service stated',
+            'Background Service Started',
             false,
             DigitTheme.instance.mobileTheme,
           ),

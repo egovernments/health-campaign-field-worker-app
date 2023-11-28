@@ -5,6 +5,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:stream_transform/stream_transform.dart';
+
 import '../../data/repositories/local/address.dart';
 import '../../models/data_model.dart';
 import '../../utils/typedefs.dart';
@@ -188,6 +189,10 @@ class SearchHouseholdsBloc
 
       // Search for tasks and side effects based on project beneficiaries.
       final tasks = await fetchTaskbyProjectBeneficiary(beneficiaries);
+      final referrals = await referralDataRepository.search(ReferralSearchModel(
+        projectBeneficiaryClientReferenceId:
+            beneficiaries.map((e) => e.clientReferenceId).toList(),
+      ));
 
       final sideEffects =
           await sideEffectDataRepository.search(SideEffectSearchModel(
@@ -204,6 +209,7 @@ class SearchHouseholdsBloc
           projectBeneficiaries: beneficiaries,
           tasks: tasks.isEmpty ? null : tasks,
           sideEffects: sideEffects.isEmpty ? null : sideEffects,
+          referrals: referrals.isEmpty ? null : referrals,
         ),
       );
     }
@@ -643,6 +649,7 @@ class SearchHouseholdsBloc
     emit(state.copyWith(
       searchQuery: null,
       householdMembers: [],
+      tag: null,
     ));
   }
 

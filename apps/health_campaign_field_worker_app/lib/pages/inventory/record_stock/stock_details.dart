@@ -42,8 +42,8 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
   FormGroup _form() {
     return fb.group({
       _productVariantKey: FormControl<ProductVariantModel>(
-        validators: [Validators.required],
-      ),
+          // validators: [Validators.required],
+          ),
       _transactingPartyKey: FormControl<FacilityModel>(
         validators: [Validators.required],
       ),
@@ -146,18 +146,21 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                 form: _form,
                 builder: (context, form, child) {
                   return ScrollableContent(
+                    enableFixedButton: true,
                     header: const Column(children: [
                       BackNavigationHelpHeaderWidget(),
                     ]),
                     footer: SizedBox(
-                      height: 85,
                       child: DigitCard(
-                        margin:
-                            const EdgeInsets.only(left: 0, right: 0, top: 10),
+                        margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
+                        padding:
+                            const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
                         child: ReactiveFormConsumer(
                           builder: (context, form, child) =>
                               DigitElevatedButton(
-                            onPressed: !form.valid
+                            onPressed: !form.valid ||
+                                    (form.control(_productVariantKey).value ==
+                                        null)
                                 ? null
                                 : () async {
                                     form.markAllAsTouched();
@@ -372,23 +375,26 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                 return state.maybeWhen(
                                   orElse: () => const Offstage(),
                                   fetched: (productVariants) {
-                                    return DigitReactiveDropdown<
+                                    return DigitReactiveSearchDropdown<
                                         ProductVariantModel>(
-                                      formControlName: _productVariantKey,
                                       label: localizations.translate(
                                         module.selectProductLabel,
                                       ),
+                                      form: form,
+                                      menuItems: productVariants,
                                       isRequired: true,
+                                      formControlName: _productVariantKey,
                                       valueMapper: (value) {
                                         return localizations.translate(
                                           value.sku ?? value.id,
                                         );
                                       },
-                                      menuItems: productVariants,
-                                      validationMessages: {
-                                        'required': (object) =>
-                                            '${module.selectProductLabel}_IS_REQUIRED',
-                                      },
+                                      validationMessage:
+                                          localizations.translate(
+                                        i18.common.corecommonRequired,
+                                      ),
+                                      emptyText: localizations
+                                          .translate(i18.common.noMatchFound),
                                     );
                                   },
                                 );
@@ -398,14 +404,19 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                               StockRecordEntryType.loss,
                               StockRecordEntryType.damaged,
                             ].contains(entryType))
-                              DigitReactiveDropdown<TransactionReason>(
+                              DigitReactiveSearchDropdown<TransactionReason>(
                                 label: localizations.translate(
                                   transactionReasonLabel ?? 'Reason',
                                 ),
+                                form: form,
                                 menuItems: reasons ?? [],
                                 formControlName: _transactionReasonKey,
                                 valueMapper: (value) => value.name.titleCase,
-                                isRequired: true,
+                                validationMessage: localizations.translate(
+                                  i18.common.corecommonRequired,
+                                ),
+                                emptyText: localizations
+                                    .translate(i18.common.noMatchFound),
                               ),
                             BlocBuilder<FacilityBloc, FacilityState>(
                               builder: (context, state) {
@@ -414,20 +425,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                     ) ??
                                     [];
 
-                                return DigitTextFormField(
-                                  valueAccessor: FacilityValueAccessor(
-                                    facilities,
-                                  ),
-                                  label: localizations.translate(
-                                    '${pageTitle}_${i18.stockReconciliationDetails.stockLabel}',
-                                  ),
-                                  isRequired: true,
-                                  suffix: const Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Icon(Icons.search),
-                                  ),
-                                  formControlName: _transactingPartyKey,
-                                  readOnly: false,
+                                return InkWell(
                                   onTap: () async {
                                     final parent =
                                         context.router.parent() as StackRouter;
@@ -442,15 +440,44 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                     form.control(_transactingPartyKey).value =
                                         facility;
                                   },
+                                  child: IgnorePointer(
+                                    child: DigitTextFormField(
+                                      valueAccessor: FacilityValueAccessor(
+                                        facilities,
+                                      ),
+                                      label: localizations.translate(
+                                        '${pageTitle}_${i18.stockReconciliationDetails.stockLabel}',
+                                      ),
+                                      isRequired: true,
+                                      suffix: const Padding(
+                                        padding: EdgeInsets.all(8.0),
+                                        child: Icon(Icons.search),
+                                      ),
+                                      formControlName: _transactingPartyKey,
+                                      readOnly: false,
+                                      onTap: () async {
+                                        final parent = context.router.parent()
+                                            as StackRouter;
+                                        final facility =
+                                            await parent.push<FacilityModel>(
+                                          FacilitySelectionRoute(
+                                            facilities: facilities,
+                                          ),
+                                        );
+
+                                        if (facility == null) return;
+                                        form
+                                            .control(_transactingPartyKey)
+                                            .value = facility;
+                                      },
+                                    ),
+                                  ),
                                 );
                               },
                             ),
                             DigitTextFormField(
                               formControlName: _transactionQuantityKey,
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                decimal: true,
-                              ),
+                              keyboardType: TextInputType.number,
                               isRequired: true,
                               validationMessages: {
                                 "number": (object) => localizations.translate(
@@ -474,6 +501,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                               formControlName: _waybillNumberKey,
                             ),
                             DigitTextFormField(
+                              keyboardType: TextInputType.number,
                               label: localizations.translate(
                                 i18.stockDetails
                                     .quantityOfProductIndicatedOnWaybillLabel,
@@ -494,25 +522,23 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                       appConfiguration.transportTypes ??
                                           <TransportTypes>[];
 
-                                  return DigitReactiveDropdown<String>(
-                                    isRequired: false,
+                                  return DigitReactiveSearchDropdown<String>(
                                     label: localizations.translate(
                                       i18.stockDetails.transportTypeLabel,
                                     ),
-                                    valueMapper: (e) => e,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        form.control(_typeOfTransportKey);
-                                      });
-                                    },
-                                    initialValue:
-                                        transportTypeOptions.firstOrNull?.name,
+                                    form: form,
                                     menuItems: transportTypeOptions.map(
                                       (e) {
                                         return localizations.translate(e.name);
                                       },
                                     ).toList(),
                                     formControlName: _typeOfTransportKey,
+                                    valueMapper: (value) => value,
+                                    validationMessage: localizations.translate(
+                                      i18.common.corecommonRequired,
+                                    ),
+                                    emptyText: localizations
+                                        .translate(i18.common.noMatchFound),
                                   );
                                 },
                               ),
@@ -527,7 +553,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                               label: localizations.translate(
                                 i18.stockDetails.commentsLabel,
                               ),
-                              minLines: 2,
+                              minLines: 3,
                               maxLines: 3,
                               formControlName: _commentsKey,
                             ),

@@ -82,7 +82,12 @@ class DigitAcknowledgement extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: DigitTheme.instance.containerMargin,
+                    padding: const EdgeInsets.only(
+                      left: kPadding * 2.5,
+                      right: kPadding * 2,
+                      top: kPadding * 2,
+                      bottom: kPadding * 2,
+                    ),
                     child: Icon(
                       icon,
                       size: 32,
@@ -131,33 +136,36 @@ class DigitAcknowledgement extends StatelessWidget {
                               onPressed: secondaryAction,
                               child: Text(secondaryLabel ?? "")),
                           const SizedBox(
-                            height: kPadding,
+                            height: kPadding + 2,
                           ),
                           DigitOutLineButton(
-                            onPressed: action,
-                            label: actionLabel ?? '',
-                            buttonStyle: OutlinedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              side: BorderSide(
-                                width: 1.0,
-                                color: Theme.of(context).colorScheme.secondary,
+                              onPressed: action,
+                              label: actionLabel ?? '',
+                              buttonStyle: OutlinedButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                side: BorderSide(
+                                  width: 1.0,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                ),
+                                minimumSize: Size(
+                                  MediaQuery.of(context).size.width / 1,
+                                  50,
+                                ),
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.zero,
+                                ),
                               ),
-                              minimumSize: Size(
-                                MediaQuery.of(context).size.width / 1,
-                                50,
-                              ),
-                              shape: null,
                             ),
-                          ),
                         ],
                       )
                     else if (isActionLabel)
                       Column(
                         children: [
                           DigitElevatedButton(
-                            onPressed: action,
-                            child: Text(actionLabel ?? ''),
-                          ),
+                              onPressed: action,
+                              child: Text(actionLabel ?? ''),
+                            ),
                           const SizedBox(
                             height: kPadding,
                           ),
