@@ -30,7 +30,7 @@ class StockDetailsPage extends LocalizedStatefulWidget {
 
 class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
   static const _productVariantKey = 'productVariant';
-  static const _transactingPartyKey = 'transactingParty';
+  static const _secondaryPartyKey = 'secondaryParty';
   static const _transactionQuantityKey = 'quantity';
   static const _transactionReasonKey = 'transactionReason';
   static const _waybillNumberKey = 'waybillNumber';
@@ -38,13 +38,15 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
   static const _vehicleNumberKey = 'vehicleNumber';
   static const _typeOfTransportKey = 'typeOfTransport';
   static const _commentsKey = 'comments';
+  static const _deliveryTeamKey = 'deliveryTeam';
+  bool deliveryTeamSelected = false;
 
-  FormGroup _form() {
+  FormGroup _form(StockRecordEntryType stockType) {
     return fb.group({
       _productVariantKey: FormControl<ProductVariantModel>(
           // validators: [Validators.required],
           ),
-      _transactingPartyKey: FormControl<FacilityModel>(
+      _secondaryPartyKey: FormControl<FacilityModel>(
         validators: [Validators.required],
       ),
       _transactionQuantityKey: FormControl<int>(validators: [
@@ -62,6 +64,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
       _vehicleNumberKey: FormControl<String>(),
       _typeOfTransportKey: FormControl<String>(),
       _commentsKey: FormControl<String>(),
+      _deliveryTeamKey: FormControl<String>(),
     });
   }
 
@@ -143,7 +146,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
               debugPrint(transactionPartyLabel);
 
               return ReactiveFormBuilder(
-                form: _form,
+                form: () => _form(entryType),
                 builder: (context, form, child) {
                   return ScrollableContent(
                     enableFixedButton: true,
@@ -197,7 +200,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                     }
 
                                     final transactingParty = form
-                                        .control(_transactingPartyKey)
+                                        .control(_secondaryPartyKey)
                                         .value as FacilityModel;
 
                                     final quantity = form
@@ -437,7 +440,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                     );
 
                                     if (facility == null) return;
-                                    form.control(_transactingPartyKey).value =
+                                    form.control(_secondaryPartyKey).value =
                                         facility;
                                   },
                                   child: IgnorePointer(
@@ -453,7 +456,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                         padding: EdgeInsets.all(8.0),
                                         child: Icon(Icons.search),
                                       ),
-                                      formControlName: _transactingPartyKey,
+                                      formControlName: _secondaryPartyKey,
                                       readOnly: false,
                                       onTap: () async {
                                         final parent = context.router.parent()
@@ -466,9 +469,8 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                         );
 
                                         if (facility == null) return;
-                                        form
-                                            .control(_transactingPartyKey)
-                                            .value = facility;
+                                        form.control(_secondaryPartyKey).value =
+                                            facility;
                                       },
                                     ),
                                   ),

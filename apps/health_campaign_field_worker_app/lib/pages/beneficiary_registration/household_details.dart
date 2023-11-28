@@ -56,24 +56,24 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                     if (!form.valid) return;
 
                     final memberCount =
-                        form.control(_memberCountKey).value as int;
+                    form.control(_memberCountKey).value as int;
 
                     final dateOfRegistration =
-                        form.control(_dateOfRegistrationKey).value as DateTime;
+                    form.control(_dateOfRegistrationKey).value as DateTime;
 
                     registrationState.maybeWhen(
                       orElse: () {
                         return;
                       },
                       create: (
-                        addressModel,
-                        householdModel,
-                        individualModel,
-                        registrationDate,
-                        searchQuery,
-                        loading,
-                        isHeadOfHousehold,
-                      ) {
+                          addressModel,
+                          householdModel,
+                          individualModel,
+                          registrationDate,
+                          searchQuery,
+                          loading,
+                          isHeadOfHousehold,
+                          ) {
                         var household = householdModel;
                         household ??= HouseholdModel(
                           tenantId: envConfig.variables.tenantId,
@@ -109,33 +109,33 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                         );
                       },
                       editHousehold: (
-                        addressModel,
-                        householdModel,
-                        individuals,
-                        registrationDate,
-                        projectBeneficiaryModel,
-                        loading,
-                      ) {
+                          addressModel,
+                          householdModel,
+                          individuals,
+                          registrationDate,
+                          projectBeneficiaryModel,
+                          loading,
+                          ) {
                         var household = householdModel.copyWith(
                           memberCount: memberCount,
                           address: addressModel,
                           clientAuditDetails:
-                              (householdModel.clientAuditDetails?.createdBy !=
-                                          null &&
-                                      householdModel.clientAuditDetails
-                                              ?.createdTime !=
-                                          null)
-                                  ? ClientAuditDetails(
-                                      createdBy: householdModel
-                                          .clientAuditDetails!.createdBy,
-                                      createdTime: householdModel
-                                          .clientAuditDetails!.createdTime,
-                                      lastModifiedBy: householdModel
-                                          .clientAuditDetails!.lastModifiedBy,
-                                      lastModifiedTime:
-                                          DateTime.now().millisecondsSinceEpoch,
-                                    )
-                                  : null,
+                          (householdModel.clientAuditDetails?.createdBy !=
+                              null &&
+                              householdModel.clientAuditDetails
+                                  ?.createdTime !=
+                                  null)
+                              ? ClientAuditDetails(
+                            createdBy: householdModel
+                                .clientAuditDetails!.createdBy,
+                            createdTime: householdModel
+                                .clientAuditDetails!.createdTime,
+                            lastModifiedBy: householdModel
+                                .clientAuditDetails!.lastModifiedBy,
+                            lastModifiedTime:
+                            DateTime.now().millisecondsSinceEpoch,
+                          )
+                              : null,
                           rowVersion: householdModel.rowVersion,
                         );
 
@@ -143,38 +143,38 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                           BeneficiaryRegistrationUpdateHouseholdDetailsEvent(
                             household: household.copyWith(
                               clientAuditDetails: (addressModel
-                                              .clientAuditDetails?.createdBy !=
-                                          null &&
-                                      addressModel.clientAuditDetails
-                                              ?.createdTime !=
-                                          null)
+                                  .clientAuditDetails?.createdBy !=
+                                  null &&
+                                  addressModel.clientAuditDetails
+                                      ?.createdTime !=
+                                      null)
                                   ? ClientAuditDetails(
-                                      createdBy: addressModel
-                                          .clientAuditDetails!.createdBy,
-                                      createdTime: addressModel
-                                          .clientAuditDetails!.createdTime,
-                                      lastModifiedBy: context.loggedInUserUuid,
-                                      lastModifiedTime:
-                                          context.millisecondsSinceEpoch(),
-                                    )
+                                createdBy: addressModel
+                                    .clientAuditDetails!.createdBy,
+                                createdTime: addressModel
+                                    .clientAuditDetails!.createdTime,
+                                lastModifiedBy: context.loggedInUserUuid,
+                                lastModifiedTime:
+                                context.millisecondsSinceEpoch(),
+                              )
                                   : null,
                             ),
                             addressModel: addressModel.copyWith(
                               clientAuditDetails: (addressModel
-                                              .clientAuditDetails?.createdBy !=
-                                          null &&
-                                      addressModel.clientAuditDetails
-                                              ?.createdTime !=
-                                          null)
+                                  .clientAuditDetails?.createdBy !=
+                                  null &&
+                                  addressModel.clientAuditDetails
+                                      ?.createdTime !=
+                                      null)
                                   ? ClientAuditDetails(
-                                      createdBy: addressModel
-                                          .clientAuditDetails!.createdBy,
-                                      createdTime: addressModel
-                                          .clientAuditDetails!.createdTime,
-                                      lastModifiedBy: context.loggedInUserUuid,
-                                      lastModifiedTime:
-                                          context.millisecondsSinceEpoch(),
-                                    )
+                                createdBy: addressModel
+                                    .clientAuditDetails!.createdBy,
+                                createdTime: addressModel
+                                    .clientAuditDetails!.createdTime,
+                                lastModifiedBy: context.loggedInUserUuid,
+                                lastModifiedTime:
+                                context.millisecondsSinceEpoch(),
+                              )
                                   : null,
                             ),
                           ),
@@ -187,9 +187,9 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                   child: Center(
                     child: Text(
                       registrationState.mapOrNull(
-                            editHousehold: (value) => localizations
-                                .translate(i18.common.coreCommonSave),
-                          ) ??
+                        editHousehold: (value) => localizations
+                            .translate(i18.common.coreCommonSave),
+                      ) ??
                           localizations
                               .translate(i18.householdDetails.actionLabel),
                     ),
@@ -273,7 +273,7 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
 
     return fb.group(<String, Object>{
       _dateOfRegistrationKey:
-          FormControl<DateTime>(value: registrationDate, validators: []),
+      FormControl<DateTime>(value: registrationDate, validators: []),
       _memberCountKey: FormControl<int>(value: household?.memberCount ?? 1),
     });
   }

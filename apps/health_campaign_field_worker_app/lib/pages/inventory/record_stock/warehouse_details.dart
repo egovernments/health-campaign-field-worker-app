@@ -31,14 +31,14 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
   static const _warehouseKey = 'warehouse';
 
   FormGroup buildForm() => fb.group(<String, Object>{
-        _dateOfEntryKey: FormControl<DateTime>(value: DateTime.now()),
-        _administrativeUnitKey: FormControl<String>(
-          value: context.boundary.name,
-        ),
-        _warehouseKey: FormControl<FacilityModel>(
-          validators: [Validators.required],
-        ),
-      });
+    _dateOfEntryKey: FormControl<DateTime>(value: DateTime.now()),
+    _administrativeUnitKey: FormControl<String>(
+      value: context.boundary.name,
+    ),
+    _warehouseKey: FormControl<FacilityModel>(
+      validators: [Validators.required],
+    ),
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -60,8 +60,8 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
           },
           builder: (ctx, facilityState) {
             final facilities = facilityState.whenOrNull(
-                  fetched: (facilities, _) => facilities,
-                ) ??
+              fetched: (facilities, _) => facilities,
+            ) ??
                 [];
 
             return Scaffold(
@@ -87,28 +87,28 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                 onPressed: !form.valid
                                     ? null
                                     : () {
-                                        form.markAllAsTouched();
-                                        if (!form.valid) {
-                                          return;
-                                        }
-                                        final dateOfRecord = form
-                                            .control(_dateOfEntryKey)
-                                            .value as DateTime;
+                                  form.markAllAsTouched();
+                                  if (!form.valid) {
+                                    return;
+                                  }
+                                  final dateOfRecord = form
+                                      .control(_dateOfEntryKey)
+                                      .value as DateTime;
 
-                                        final facility = form
-                                            .control(_warehouseKey)
-                                            .value as FacilityModel;
+                                  final facility = form
+                                      .control(_warehouseKey)
+                                      .value as FacilityModel;
 
-                                        context.read<RecordStockBloc>().add(
-                                              RecordStockSaveWarehouseDetailsEvent(
-                                                dateOfRecord: dateOfRecord,
-                                                facilityModel: facility,
-                                              ),
-                                            );
-                                        context.router.push(
-                                          StockDetailsRoute(),
-                                        );
-                                      },
+                                  context.read<RecordStockBloc>().add(
+                                    RecordStockSaveWarehouseDetailsEvent(
+                                      dateOfRecord: dateOfRecord,
+                                      facilityModel: facility,
+                                    ),
+                                  );
+                                  context.router.push(
+                                    StockDetailsRoute(),
+                                  );
+                                },
                                 child: child!,
                               );
                             },
@@ -161,9 +161,9 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                 onTap: () async {
                                   print("----PROX---");
                                   final parent =
-                                      context.router.parent() as StackRouter;
+                                  context.router.parent() as StackRouter;
                                   final facility =
-                                      await parent.push<FacilityModel>(
+                                  await parent.push<FacilityModel>(
                                     FacilitySelectionRoute(
                                       facilities: facilities,
                                     ),
@@ -176,7 +176,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                   child: DigitTextFormField(
                                     hideKeyboard: true,
                                     padding:
-                                        const EdgeInsets.only(bottom: kPadding),
+                                    const EdgeInsets.only(bottom: kPadding),
                                     valueAccessor: FacilityValueAccessor(
                                       facilities,
                                     ),
@@ -193,9 +193,9 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                     readOnly: true,
                                     onTap: () async {
                                       final parent = context.router.parent()
-                                          as StackRouter;
+                                      as StackRouter;
                                       final facility =
-                                          await parent.push<FacilityModel>(
+                                      await parent.push<FacilityModel>(
                                         FacilitySelectionRoute(
                                           facilities: facilities,
                                         ),

@@ -67,12 +67,12 @@ class _IndividualDetailsPageState
                 } else {
                   (router.parent() as StackRouter).pop();
                   context.read<SearchHouseholdsBloc>().add(
-                        SearchHouseholdsByHouseholdsEvent(
-                          householdModel: value.householdModel,
-                          projectId: context.projectId,
-                          isProximityEnabled: false,
-                        ),
-                      );
+                    SearchHouseholdsByHouseholdsEvent(
+                      householdModel: value.householdModel,
+                      projectId: context.projectId,
+                      isProximityEnabled: false,
+                    ),
+                  );
                   router.push(BeneficiaryAcknowledgementRoute(
                     enableViewHousehold: true,
                   ));
@@ -111,14 +111,14 @@ class _IndividualDetailsPageState
                         return;
                       },
                       create: (
-                        addressModel,
-                        householdModel,
-                        individualModel,
-                        registrationDate,
-                        searchQuery,
-                        loading,
-                        isHeadOfHousehold,
-                      ) async {
+                          addressModel,
+                          householdModel,
+                          individualModel,
+                          registrationDate,
+                          searchQuery,
+                          loading,
+                          isHeadOfHousehold,
+                          ) async {
                         final individual = _getIndividualModel(
                           context,
                           form: form,
@@ -198,12 +198,12 @@ class _IndividualDetailsPageState
                         }
                       },
                       editIndividual: (
-                        householdModel,
-                        individualModel,
-                        addressModel,
-                        projectBeneficiaryModel,
-                        loading,
-                      ) {
+                          householdModel,
+                          individualModel,
+                          addressModel,
+                          projectBeneficiaryModel,
+                          loading,
+                          ) {
                         final scannerBloc = context.read<ScannerBloc>();
                         final individual = _getIndividualModel(
                           context,
@@ -233,22 +233,22 @@ class _IndividualDetailsPageState
                               addressModel: addressModel,
                               model: individual.copyWith(
                                 clientAuditDetails: (individual
-                                                .clientAuditDetails
-                                                ?.createdBy !=
-                                            null &&
-                                        individual.clientAuditDetails
-                                                ?.createdTime !=
-                                            null)
+                                    .clientAuditDetails
+                                    ?.createdBy !=
+                                    null &&
+                                    individual.clientAuditDetails
+                                        ?.createdTime !=
+                                        null)
                                     ? ClientAuditDetails(
-                                        createdBy: individual
-                                            .clientAuditDetails!.createdBy,
-                                        createdTime: individual
-                                            .clientAuditDetails!.createdTime,
-                                        lastModifiedBy:
-                                            context.loggedInUserUuid,
-                                        lastModifiedTime:
-                                            context.millisecondsSinceEpoch(),
-                                      )
+                                  createdBy: individual
+                                      .clientAuditDetails!.createdBy,
+                                  createdTime: individual
+                                      .clientAuditDetails!.createdTime,
+                                  lastModifiedBy:
+                                  context.loggedInUserUuid,
+                                  lastModifiedTime:
+                                  context.millisecondsSinceEpoch(),
+                                )
                                     : null,
                               ),
                               tag: scannerBloc.state.qrcodes.isNotEmpty
@@ -259,10 +259,10 @@ class _IndividualDetailsPageState
                         }
                       },
                       addMember: (
-                        addressModel,
-                        householdModel,
-                        loading,
-                      ) {
+                          addressModel,
+                          householdModel,
+                          loading,
+                          ) {
                         final individual = _getIndividualModel(
                           context,
                           form: form,
@@ -305,9 +305,9 @@ class _IndividualDetailsPageState
                   child: Center(
                     child: Text(
                       state.mapOrNull(
-                            editIndividual: (value) => localizations
-                                .translate(i18.common.coreCommonSave),
-                          ) ??
+                        editIndividual: (value) => localizations
+                            .translate(i18.common.coreCommonSave),
+                      ) ??
                           localizations.translate(i18.common.coreCommonSubmit),
                     ),
                   ),
@@ -376,7 +376,7 @@ class _IndividualDetailsPageState
                                       ),
                                       form: form,
                                       menuItems: idTypeOptions.map(
-                                        (e) {
+                                            (e) {
                                           return localizations
                                               .translate(e.name);
                                         },
@@ -392,13 +392,13 @@ class _IndividualDetailsPageState
                                                 IdGen.i.identifier.toString();
                                           } else {
                                             form.control(_idNumberKey).value =
-                                                null;
+                                            null;
                                           }
                                         });
                                       },
                                       isRequired: true,
                                       validationMessage:
-                                          localizations.translate(
+                                      localizations.translate(
                                         i18.common.corecommonRequired,
                                       ),
                                       emptyText: localizations
@@ -416,8 +416,8 @@ class _IndividualDetailsPageState
                                     builder: (context, formGroup, child) {
                                       return DigitTextFormField(
                                         readOnly:
-                                            form.control(_idTypeKey).value ==
-                                                'DEFAULT',
+                                        form.control(_idTypeKey).value ==
+                                            'DEFAULT',
                                         isRequired: form
                                             .control(_idNumberKey)
                                             .validators
@@ -476,7 +476,7 @@ class _IndividualDetailsPageState
                                     formControl.setErrors({'': true});
                                   } else {
                                     DigitDOBAge age =
-                                        DigitDateUtils.calculateAge(value);
+                                    DigitDateUtils.calculateAge(value);
                                     if ((age.years == 0 && age.months == 0) ||
                                         age.months > 11 ||
                                         (age.years >= 150 && age.months > 0)) {
@@ -507,7 +507,7 @@ class _IndividualDetailsPageState
                                       menuItems: genderOptions
                                           .map(
                                             (e) => e.name,
-                                          )
+                                      )
                                           .toList(),
                                       formControlName: _genderKey,
                                       valueMapper: (value) {
@@ -541,68 +541,68 @@ class _IndividualDetailsPageState
                         BlocBuilder<ScannerBloc, ScannerState>(
                           builder: (context, state) => state.qrcodes.isNotEmpty
                               ? Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    SizedBox(
-                                      width:
-                                          MediaQuery.of(context).size.width / 3,
-                                      child: Text(
-                                        localizations.translate(
-                                          i18.deliverIntervention.voucherCode,
-                                        ),
-                                        style: theme.textTheme.headlineSmall,
-                                      ),
-                                    ),
-                                    Flexible(
-                                      child: Text(
-                                        overflow: TextOverflow.ellipsis,
-                                        localizations
-                                            .translate(state.qrcodes.first),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                        bottom: kPadding * 2,
-                                      ),
-                                      child: IconButton(
-                                        color: theme.colorScheme.secondary,
-                                        icon: const Icon(Icons.edit),
-                                        onPressed: () {
-                                          // TODO : [Need to handle the Scanner event];
-                                          // context.read<ScannerBloc>().add(ScannerScanEvent())
-                                          context.router.push(QRScannerRoute(
-                                            quantity: 1,
-                                            isGS1code: false,
-                                            sinlgleValue: true,
-                                            isEditEnabled: true,
-                                          ));
-                                        },
-                                      ),
-                                    ),
-                                  ],
-
-                                  // ignore: no-empty-block
-                                )
-                              : DigitOutlineIconButton(
-                                  buttonStyle: OutlinedButton.styleFrom(
-                                    shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.zero,
-                                    ),
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(
+                                width:
+                                MediaQuery.of(context).size.width / 3,
+                                child: Text(
+                                  localizations.translate(
+                                    i18.deliverIntervention.voucherCode,
                                   ),
+                                  style: theme.textTheme.headlineSmall,
+                                ),
+                              ),
+                              Flexible(
+                                child: Text(
+                                  overflow: TextOverflow.ellipsis,
+                                  localizations
+                                      .translate(state.qrcodes.first),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  bottom: kPadding * 2,
+                                ),
+                                child: IconButton(
+                                  color: theme.colorScheme.secondary,
+                                  icon: const Icon(Icons.edit),
                                   onPressed: () {
+                                    // TODO : [Need to handle the Scanner event];
+                                    // context.read<ScannerBloc>().add(ScannerScanEvent())
                                     context.router.push(QRScannerRoute(
                                       quantity: 1,
                                       isGS1code: false,
                                       sinlgleValue: true,
+                                      isEditEnabled: true,
                                     ));
                                   },
-                                  icon: Icons.qr_code,
-                                  label: localizations.translate(
-                                    i18.individualDetails
-                                        .linkVoucherToIndividual,
-                                  ),
                                 ),
+                              ),
+                            ],
+
+                            // ignore: no-empty-block
+                          )
+                              : DigitOutlineIconButton(
+                            buttonStyle: OutlinedButton.styleFrom(
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.zero,
+                              ),
+                            ),
+                            onPressed: () {
+                              context.router.push(QRScannerRoute(
+                                quantity: 1,
+                                isGS1code: false,
+                                sinlgleValue: true,
+                              ));
+                            },
+                            icon: Icons.qr_code,
+                            label: localizations.translate(
+                              i18.individualDetails
+                                  .linkVoucherToIndividual,
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -617,10 +617,10 @@ class _IndividualDetailsPageState
   }
 
   IndividualModel _getIndividualModel(
-    BuildContext context, {
-    required FormGroup form,
-    IndividualModel? oldIndividual,
-  }) {
+      BuildContext context, {
+        required FormGroup form,
+        IndividualModel? oldIndividual,
+      }) {
     final dob = form.control(_dobKey).value as DateTime?;
     String? dobString;
     if (dob != null) {
@@ -694,7 +694,7 @@ class _IndividualDetailsPageState
       gender: form.control(_genderKey).value == null
           ? null
           : Gender.values
-              .byName(form.control(_genderKey).value.toString().toLowerCase()),
+          .byName(form.control(_genderKey).value.toString().toLowerCase()),
       mobileNumber: form.control(_mobileNumberKey).value,
       dateOfBirth: dobString,
       identifiers: [
@@ -746,26 +746,26 @@ class _IndividualDetailsPageState
       _dobKey: FormControl<DateTime>(
         value: individual?.dateOfBirth != null
             ? DateFormat('dd/MM/yyyy').parse(
-                individual!.dateOfBirth!,
-              )
+          individual!.dateOfBirth!,
+        )
             : null,
       ),
       _genderKey: FormControl<String>(
         value: context.read<AppInitializationBloc>().state.maybeWhen(
-              orElse: () => null,
-              initialized: (appConfiguration, serviceRegistryList) {
-                final options =
-                    appConfiguration.genderOptions ?? <GenderOptions>[];
+          orElse: () => null,
+          initialized: (appConfiguration, serviceRegistryList) {
+            final options =
+                appConfiguration.genderOptions ?? <GenderOptions>[];
 
-                return options.map((e) => e.code).firstWhereOrNull(
-                      (element) =>
-                          element.toLowerCase() == individual?.gender?.name,
-                    );
-              },
-            ),
+            return options.map((e) => e.code).firstWhereOrNull(
+                  (element) =>
+              element.toLowerCase() == individual?.gender?.name,
+            );
+          },
+        ),
       ),
       _mobileNumberKey:
-          FormControl<String>(value: individual?.mobileNumber, validators: [
+      FormControl<String>(value: individual?.mobileNumber, validators: [
         Validators.maxLength(10),
       ]),
     });
