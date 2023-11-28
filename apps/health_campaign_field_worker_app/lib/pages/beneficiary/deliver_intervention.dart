@@ -355,17 +355,19 @@ class _DeliverInterventionPageState
                                                   style: theme
                                                       .textTheme.displayMedium,
                                                 ),
-                                                DigitTextFormField(
-                                                  readOnly: true,
-                                                  formControlName:
-                                                      _doseAdministrationKey,
-                                                  keyboardType:
-                                                      TextInputType.number,
-                                                  label: localizations
-                                                      .translate(i18
-                                                          .deliverIntervention
-                                                          .currentCycle),
-                                                ),
+                                                if (context.beneficiaryType ==
+                                                    BeneficiaryType.individual)
+                                                  DigitTextFormField(
+                                                    readOnly: true,
+                                                    formControlName:
+                                                        _doseAdministrationKey,
+                                                    keyboardType:
+                                                        TextInputType.number,
+                                                    label: localizations
+                                                        .translate(i18
+                                                            .deliverIntervention
+                                                            .currentCycle),
+                                                  ),
                                                 DigitStepper(
                                                   activeStep:
                                                       deliveryInterventionstate

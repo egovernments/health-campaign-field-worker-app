@@ -291,7 +291,6 @@ class _StockReconciliationPageState
 
                                         return InkWell(
                                           onTap: () async {
-                                            print("----PROX---");
                                             final stockReconciliationBloc =
                                                 context.read<
                                                     StockReconciliationBloc>();

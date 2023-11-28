@@ -10,8 +10,10 @@ import '../../blocs/auth/auth.dart';
 import '../../blocs/boundary/boundary.dart';
 import '../../blocs/localization/localization.dart';
 import '../../blocs/user/user.dart';
+import '../../models/data_model.dart';
 import '../../router/app_router.dart';
 import '../../utils/constants.dart';
+import '../../utils/extensions/extensions.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 
 class SideBar extends StatelessWidget {
@@ -20,6 +22,12 @@ class SideBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    bool isDistributor = context.loggedInUserRoles
+        .where(
+          (role) => role.code == RolesType.distributor.toValue(),
+        )
+        .toList()
+        .isNotEmpty;
 
     return BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
       return ScrollableContent(
@@ -188,16 +196,17 @@ class SideBar extends StatelessWidget {
               },
             );
           }),
-          DigitIconTile(
-            title: AppLocalizations.of(context).translate(
-              i18.common.coreCommonViewDownloadedData,
+          if (isDistributor)
+            DigitIconTile(
+              title: AppLocalizations.of(context).translate(
+                i18.common.coreCommonViewDownloadedData,
+              ),
+              icon: Icons.download,
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true).pop();
+                context.router.push(const BeneficiariesReportRoute());
+              },
             ),
-            icon: Icons.download,
-            onPressed: () {
-              Navigator.of(context, rootNavigator: true).pop();
-              context.router.push(const BeneficiariesReportRoute());
-            },
-          ),
           DigitIconTile(
             title: AppLocalizations.of(context)
                 .translate(i18.common.coreCommonLogout),
