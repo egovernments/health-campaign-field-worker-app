@@ -251,7 +251,7 @@ class SearchDropdownFormFieldState<T> extends State<SearchDropdownFormField>
               child: SizedBox(
                 height: _options != null && _options!.length > 2
                     ? widget.dropdownHeight ?? 140
-                    : (_options ?? []).length * 55,
+                    : (_options ?? []).length * 45,
                 child: Container(
                     color: widget.dropdownColor ?? Colors.white70,
                     child: ValueListenableBuilder(
