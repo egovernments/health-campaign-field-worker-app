@@ -1,4 +1,5 @@
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/widgets/atoms/digit_divider.dart';
 import 'package:digit_components/widgets/atoms/searchable_dropdown_field.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -51,6 +52,7 @@ class _DigitReactiveSearchDropdownState<T>
       label: '${widget.label}${widget.isRequired ? '*' : ''}',
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SearchDropdownFormField<T>(
             form: widget.form,
@@ -66,22 +68,35 @@ class _DigitReactiveSearchDropdownState<T>
                 .valueMapper(item)
                 .toLowerCase()
                 .contains(str.toLowerCase()),
+            dropdownItemSeparator: const DigitDivider(),
             dropdownItemFn:
                 (dynamic item, position, focused, selected, onTap) => ListTile(
-              title: Text(
-                widget.valueMapper(item),
-                style: TextStyle(
-                  color: selected
-                      ? DigitTheme.instance.colorScheme.secondary
-                      : DigitTheme.instance.colorScheme.onSurface,
-                ),
+              title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  Text(
+                    widget.valueMapper(item),
+                    style: TextStyle(
+                        color: selected
+                            ? DigitTheme.instance.colorScheme.secondary
+                            : DigitTheme.instance.colorScheme.onSurface,
+                        fontSize: 16),
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                ],
               ),
               dense: true,
               style: ListTileStyle.list,
-              contentPadding: const EdgeInsets.all(4.0),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16),
               visualDensity: const VisualDensity(
-                horizontal: VisualDensity.minimumDensity,
-              ),
+                  horizontal: VisualDensity.minimumDensity,
+                  vertical: VisualDensity.minimumDensity),
               tileColor: focused
                   ? DigitTheme.instance.colorScheme.surface
                   : Colors.transparent,

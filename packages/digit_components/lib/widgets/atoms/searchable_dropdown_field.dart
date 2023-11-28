@@ -245,7 +245,7 @@ class SearchDropdownFormFieldState<T> extends State<SearchDropdownFormField>
         child: CompositedTransformFollower(
           link: this._layerLink,
           showWhenUnlinked: false,
-          offset: Offset(0.0, size.height),
+          offset: Offset(0.0, size.height - 1),
           child: Material(
               elevation: 4.0,
               child: SizedBox(
