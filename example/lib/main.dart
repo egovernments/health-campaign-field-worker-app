@@ -9,6 +9,7 @@ import 'package:digit_components/widgets/atoms/digit_search_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_text_area_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_text_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_time_form_input.dart';
+import 'package:digit_components/widgets/atoms/digit_toggle.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -21,6 +22,7 @@ void main() {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     DigitTextFormInput(
                       label: "input",
@@ -140,21 +142,31 @@ void main() {
                       innerLabel: 'innerlabel',
                       helpText: 'help text',
                     ),
-                    SizedBox(height: 8,),
+                    const SizedBox(
+                      height: 8,
+                    ),
                     DigitRadioList(
-                      value: null, // Provide the current value of the selected radio button
-                      groupValue: null, // Provide the group value for the radio buttons
                       onChanged: (value) {
-                        // Handle the change in the selected radio button
-                        print('Selected value: $value');
+                        // print(value);
                       },
-                      label: 'Choose a digit',
                       radioButtons: [
-                        RadioButtonModel(value: 1, label: 'One'),
-                        RadioButtonModel(value: 2, label: 'Two'),
-                        RadioButtonModel(value: 3, label: 'Three'),
+                        RadioButtonModel(
+                          code: '1',
+                          name: 'One',
+                        ),
+                        RadioButtonModel(code: '2', name: 'Two'),
+                        RadioButtonModel(code: '3', name: 'Three'),
                         // Add more radio buttons as needed
                       ],
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    DigitToggle(
+                      onChanged: (value) {
+                        // print(value);
+                      },
+                      label: 'Toggle',
                     ),
                   ],
                 ),
