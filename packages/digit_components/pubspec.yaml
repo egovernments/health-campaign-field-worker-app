@@ -31,6 +31,7 @@ dependencies:
   package_info_plus: ^4.1.0
   easy_stepper: ^0.5.2+1
   intl: ^0.18.0
+  geolocator: ^10.1.0
 
 dev_dependencies:
   flutter_test:

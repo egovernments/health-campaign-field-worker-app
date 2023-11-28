@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:geolocator/geolocator.dart';
 import 'digit_base_form_input.dart';
 
 class DigitLocationFormInput extends BaseDigitFormInput {
@@ -40,8 +40,25 @@ class DigitLocationFormInput extends BaseDigitFormInput {
 class _DigitLocationFormInputState extends BaseDigitFormInputState {
 
   @override
-  void onSuffixIconClick({void Function()? customFunction}) {
+  void onSuffixIconClick({void Function()? customFunction}) async{
 
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      // Request location permission
+      permission = await Geolocator.requestPermission();
+    }
+
+    if (permission == LocationPermission.whileInUse ||
+        permission == LocationPermission.always) {
+      // Get the current position
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+
+      // Update the text field with the current location's latitude and longitude
+      String location = "${position.latitude}, ${position.longitude}";
+      widget.controller.text = location;
+    }
   }
 
   @override
