@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../utils/validators/validator.dart';
 import 'digit_base_form_input.dart';
 
 class DigitNumericFormInput extends BaseDigitFormInput {
@@ -9,6 +10,8 @@ class DigitNumericFormInput extends BaseDigitFormInput {
     String? label,
     String? info,
     String? initialValue,
+    bool readOnly = false,
+    bool isDisabled = false,
     bool charCount = false,
     String? innerLabel,
     String? helpText,
@@ -16,15 +19,17 @@ class DigitNumericFormInput extends BaseDigitFormInput {
     bool preferToolTipBelow = false,
     IconData suffixIcon = Icons.add,
     IconData prefixIcon = Icons.remove,
-    String? Function(String?)? validator,
     void Function(String?)? onError,
     TextInputType keyboardType = TextInputType.number,
     TextAlign textAlign = TextAlign.center,
+    final List<Validator>? validations,
   }) : super(
     key: key,
     controller: controller,
     label: label,
     info: info,
+    readOnly: readOnly,
+    isDisabled: isDisabled,
     charCount: charCount,
     innerLabel: innerLabel,
     helpText: helpText,
@@ -32,11 +37,11 @@ class DigitNumericFormInput extends BaseDigitFormInput {
     preferToolTipBelow: preferToolTipBelow,
     suffixIcon: suffixIcon,
     prefixIcon: prefixIcon,
-    validator: validator,
     onError: onError,
     keyboardType: keyboardType,
     textAlign: textAlign,
     initialValue: initialValue,
+    validations: validations,
   );
 
   @override

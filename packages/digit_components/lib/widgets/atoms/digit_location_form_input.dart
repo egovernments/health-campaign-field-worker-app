@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import '../../utils/validators/validator.dart';
 import 'digit_base_form_input.dart';
 
 class DigitLocationFormInput extends BaseDigitFormInput {
@@ -8,6 +9,8 @@ class DigitLocationFormInput extends BaseDigitFormInput {
     required TextEditingController controller,
     String? label,
     String? info,
+    bool readOnly = false,
+    bool isDisabled = false,
     String? initialValue,
     bool charCount = false,
     String? innerLabel,
@@ -15,22 +18,24 @@ class DigitLocationFormInput extends BaseDigitFormInput {
     TooltipTriggerMode triggerMode = TooltipTriggerMode.tap,
     bool preferToolTipBelow = false,
     IconData suffix = Icons.my_location,
-    String? Function(String?)? validator,
     void Function(String?)? onError,
+    final List<Validator>? validations,
   }) : super(
     key: key,
     controller: controller,
     label: label,
     info: info,
+    readOnly: readOnly,
+    isDisabled: isDisabled,
     charCount: charCount,
     innerLabel: innerLabel,
     helpText: helpText,
     triggerMode: triggerMode,
     preferToolTipBelow: preferToolTipBelow,
     suffix: suffix,
-    validator: validator,
     onError: onError,
     initialValue: initialValue,
+    validations: validations,
   );
 
   @override

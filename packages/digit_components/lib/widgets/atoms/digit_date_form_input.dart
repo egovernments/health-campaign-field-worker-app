@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../utils/validators/validator.dart';
 import 'digit_base_form_input.dart';
 
 class DigitDateFormInput extends BaseDigitFormInput {
@@ -10,28 +11,32 @@ class DigitDateFormInput extends BaseDigitFormInput {
     String? label,
     String? info,
     String? initialValue,
+    bool readOnly = false,
+    bool isDisabled = false,
     bool charCount = false,
     String? innerLabel,
     String? helpText,
     TooltipTriggerMode triggerMode = TooltipTriggerMode.tap,
     bool preferToolTipBelow = false,
     IconData suffix = Icons.date_range,
-    String? Function(String?)? validator,
     void Function(String?)? onError,
+    final List<Validator>? validations,
   }) : super(
     key: key,
     controller: controller,
     label: label,
     info: info,
+    readOnly: readOnly,
+    isDisabled: isDisabled,
     charCount: charCount,
     innerLabel: innerLabel,
     helpText: helpText,
     triggerMode: triggerMode,
     preferToolTipBelow: preferToolTipBelow,
-    validator: validator,
     onError: onError,
     suffix: suffix,
     initialValue: initialValue,
+    validations: validations,
   );
 
   @override

@@ -20,22 +20,42 @@ class DigitRadioList extends StatefulWidget {
 }
 
 class _DigitRadioListState extends State<DigitRadioList> {
+  late List<bool> isHoveredList;
+
+  @override
+  void initState() {
+    super.initState();
+    isHoveredList = List.generate(widget.radioButtons.length, (index) => false);
+  }
 
 
   @override
   Widget build(BuildContext context) {
-
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
-      children: widget.radioButtons
-          .map(
-            (button) => Padding(
-              padding: const EdgeInsets.only(bottom: 8,),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  GestureDetector(
-                    onTap: widget.isDisabled ? null : () {
+      children: widget.radioButtons.map(
+            (button) {
+          final index = widget.radioButtons.indexOf(button);
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                MouseRegion(
+                  onEnter: (_) {
+                    setState(() {
+                      isHoveredList[index] = true;
+                    });
+                  },
+                  onExit: (_) {
+                    setState(() {
+                      isHoveredList[index] = false;
+                    });
+                  },
+                  child: GestureDetector(
+                    onTap: widget.isDisabled
+                        ? null
+                        : () {
                       setState(() {
                         widget.groupValue = button.code;
                       });
@@ -49,20 +69,28 @@ class _DigitRadioListState extends State<DigitRadioList> {
                           width: 24, // Set width as needed
                           height: 24,
                           decoration: BoxDecoration(
-                            // borderRadius: BorderRadius.circular(2.0),
                             shape: BoxShape.circle,
                             border: Border.all(
-                              color: widget.isDisabled ? const DigitColors().cloudGray :widget.groupValue == button.code ? const DigitColors().burningOrange : const DigitColors().davyGray,
+                              color: widget.isDisabled
+                                  ? const DigitColors().cloudGray
+                                  : (widget.groupValue == button.code ||
+                                  isHoveredList[index])
+                                  ? const DigitColors().burningOrange
+                                  : const DigitColors().davyGray,
                               width: 1.0,
                             ),
                             color: Colors.transparent,
                           ),
-                          child: widget.groupValue == button.code ? Container(
+                          child: widget.groupValue == button.code
+                              ? Container(
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: widget.isDisabled ? const DigitColors().cloudGray : const DigitColors().burningOrange,
+                              color: widget.isDisabled
+                                  ? const DigitColors().cloudGray
+                                  : const DigitColors().burningOrange,
                             ),
-                          ) : null,
+                          )
+                              : null,
                         ),
                         const SizedBox(
                           width: 8,
@@ -80,12 +108,12 @@ class _DigitRadioListState extends State<DigitRadioList> {
                       ],
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          )
-          .toList(),
-
+          );
+        },
+      ).toList(),
     );
   }
 }

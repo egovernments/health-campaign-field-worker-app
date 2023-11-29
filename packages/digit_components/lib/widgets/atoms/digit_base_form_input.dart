@@ -1,15 +1,16 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
-import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../theme/colors.dart';
+import '../../utils/validators/validator.dart';
 
 enum InputState { Default, Filled, Disabled, NonEditable, Focus, Error }
 
 class BaseDigitFormInput extends StatefulWidget {
   // final InputState state;
   final TextEditingController controller;
-  final String state;
+  final bool readOnly;
+  final bool isDisabled;
   final String? label;
   final String? info;
   final bool charCount;
@@ -20,7 +21,6 @@ class BaseDigitFormInput extends StatefulWidget {
   final bool preferToolTipBelow;
   final IconData? suffixIcon;
   final IconData? prefixIcon;
-  final String? Function(String?)? validator;
   final void Function(String?)? onError;
   final void Function()? onSuffixTap;
   final int minLine;
@@ -30,12 +30,13 @@ class BaseDigitFormInput extends StatefulWidget {
   final String? initialValue;
   final double height;
   final double width;
+  final List<Validator>? validations;
 
   const BaseDigitFormInput(
       {Key? key,
       required this.controller,
-      // required this.state,
-      this.state = 'default',
+      this.isDisabled = false,
+      this.readOnly = false,
       this.initialValue,
       this.label,
       this.info,
@@ -43,7 +44,6 @@ class BaseDigitFormInput extends StatefulWidget {
       this.charCount = false,
       this.innerLabel,
       this.helpText,
-      this.validator,
       this.onError,
       this.triggerMode = TooltipTriggerMode.tap,
       this.preferToolTipBelow = false,
@@ -55,6 +55,7 @@ class BaseDigitFormInput extends StatefulWidget {
       this.height = 40,
       this.width = 380,
       this.keyboardType = TextInputType.text,
+        this.validations,
       this.textAlign = TextAlign.start})
       : super(key: key);
 
@@ -96,8 +97,6 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
     if (widget.initialValue != null) {
       widget.controller.text = widget.initialValue!;
     }
-
-    // _focusNode = FocusNode();
   }
 
   @override
@@ -108,12 +107,22 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
   }
 
   String? customValidator(String? value) {
-    // Only perform validation when the user is typing
-    if (value == null || value.isEmpty) {
-      return "Please enter a valid value."; // Return any non-null value to indicate validation failure
+    final validationError = InputValidators.validate(
+      value,
+      widget.validations ?? [],
+    );
+
+    setState(() {
+      _errorMessage = validationError;
+      _hasError = validationError != null;
+    });
+
+    // Call the provided onError function if there is an error
+    if (_hasError && widget.onError != null) {
+      widget.onError!(_errorMessage);
     }
 
-    return null; // Return null if the validation passes.
+    return validationError;
   }
 
   void toggleObsecureText() {
@@ -135,8 +144,20 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    bool isDisabled =
-        widget.state == 'Disabled' || widget.state == 'NonEditable';
+
+    int? getValidatorValue(List<Validator>? validators, ValidatorType type) {
+      for (var validator in validators!) {
+        if (validator.type == type) {
+          return validator.value as int?;
+        }
+      }
+      return null;
+    }
+    int? maxLengthValue;
+    if(widget.charCount){
+      maxLengthValue = getValidatorValue(widget.validations, ValidatorType.maxLength);
+    }
+
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -155,7 +176,7 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
                 triggerMode: widget.triggerMode,
                 child: const Icon(
                   Icons.info_outline,
-                  size: 20,
+                  size: 16,
                 ),
               )
           ],
@@ -164,29 +185,29 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
           height: 4,
         ),
         SizedBox(
-          height: widget.height,
-          width: widget.width,
           child: TextFormField(
             focusNode: myFocusNode,
             obscureText: isVisible,
             controller: widget.controller,
-            enabled: !isDisabled,
+            readOnly: widget.readOnly,
+            enabled: !widget.isDisabled,
             autovalidateMode: AutovalidateMode.disabled,
             minLines: widget.minLine,
             maxLines: widget.maxLine,
             keyboardType: widget.keyboardType,
             textAlign: widget.textAlign,
-            // style: DigitTheme.instance.mobileTheme.textTheme.bodyLarge?.apply(
-            //   color: theme.colorScheme.primary,
-            // ),
+            maxLength: maxLengthValue,
             decoration: InputDecoration(
               isDense: true,
+              counterText: '',
+              hoverColor: Colors.transparent,
               contentPadding:
-                  const EdgeInsets.only(top: 10, bottom: 10, left: 12, right: 12),
+                  const EdgeInsets.only(top: 8, bottom: 8, left: 12, right: 12),
               hintText: widget.innerLabel,
               filled: true,
-              fillColor:
-                  isDisabled ? const DigitColors().seaShellGray : Colors.white,
+              fillColor: widget.readOnly
+                  ? const DigitColors().seaShellGray
+                  : Colors.transparent,
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                   color: _hasError
@@ -201,17 +222,38 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
                     color: const DigitColors().burningOrange, width: 1.0),
                 borderRadius: BorderRadius.zero,
               ),
-
-              // suffix: Icon(widget.suffix, size: 24,),
+              disabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                    color: const DigitColors().cloudGray, width: 1.0),
+                borderRadius: BorderRadius.zero,
+              ),
+              prefixIconConstraints: widget.prefixIcon != null
+                  ? const BoxConstraints(
+                      maxWidth: 40,
+                      maxHeight: 40,
+                    )
+                  : null,
+              suffixIconConstraints: widget.suffixIcon != null
+                  ? const BoxConstraints(
+                      maxWidth: 40,
+                      maxHeight: 40,
+                    )
+                  : const BoxConstraints(
+                      maxHeight: 24,
+                    ),
               suffixIcon: widget.suffixIcon != null
                   ? GestureDetector(
                       onTap: onSuffixIconClick,
                       child: Container(
+                        height: 40,
+                        width: 40,
                         margin: const EdgeInsets.only(left: kPadding),
                         decoration: BoxDecoration(
                           color: const DigitColors().seaShellGray,
                           border: Border.all(
-                            color: const DigitColors().davyGray,
+                            color: widget.isDisabled
+                                ? const DigitColors().cloudGray
+                                : const DigitColors().davyGray,
                             width: 1.0,
                           ),
                           borderRadius: BorderRadius.zero,
@@ -219,7 +261,9 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
                         child: Icon(
                           widget.suffixIcon!,
                           size: 20,
-                          color: const DigitColors().davyGray,
+                          color: widget.isDisabled
+                              ? const DigitColors().cloudGray
+                              : const DigitColors().davyGray,
                         ),
                       ),
                     )
@@ -227,8 +271,9 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
                       ? GestureDetector(
                           onTap: onSuffixIconClick,
                           child: Padding(
-                            padding:
-                                const EdgeInsets.all(0.0), // Set padding to 0
+                            padding: const EdgeInsets.only(
+                              right: 8,
+                            ), // Set padding to 0
                             child: Icon(
                               widget.suffix,
                               size: 24,
@@ -236,45 +281,33 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
                           ),
                         )
                       : null,
-              suffixIconColor: const DigitColors().davyGray,
+              suffixIconColor: widget.isDisabled
+                  ? const DigitColors().cloudGray
+                  : const DigitColors().davyGray,
               prefixIcon: widget.prefixIcon != null
                   ? GestureDetector(
                       onTap: onPrefixIconClick,
                       child: Container(
+                        height: 40,
+                        width: 40,
                         margin: const EdgeInsets.only(right: kPadding),
                         decoration: BoxDecoration(
-                          color: const DigitColors().seaShellGray,
-                          border: Border(
-                            top: BorderSide(
-                              color: MaterialStateColor.resolveWith((states) =>
-                                  states.contains(MaterialState.focused)
-                                      ? const DigitColors().burningOrange
-                                      : const DigitColors().davyGray),
-                              width: 1.0,
-                            ),
-                            bottom: BorderSide(
-                              color: MaterialStateColor.resolveWith((states) =>
-                                  states.contains(MaterialState.focused)
-                                      ? const DigitColors().burningOrange
-                                      : const DigitColors().davyGray),
-                              width: 1.0,
-                            ),
-                            left: BorderSide(
-                              color: MaterialStateColor.resolveWith((states) =>
-                                  states.contains(MaterialState.focused)
-                                      ? const DigitColors().burningOrange
-                                      : const DigitColors().davyGray),
-                              width: 1.0,
-                            ),
-                            right: BorderSide(
-                              color: const DigitColors().davyGray,
-                              width: 1.0,
-                            ),
+                          color : const DigitColors().seaShellGray,
+                          border: Border.all(
+                            color: widget.isDisabled
+                                ? const DigitColors().cloudGray
+                                : const DigitColors().davyGray,
+                            width: 1.0,
                           ),
-                          // borderRadius: BorderRadius.zero,
+                          borderRadius: BorderRadius.zero,
                         ),
-                        child: Icon(widget.prefixIcon!,
-                            size: 20, color: const DigitColors().davyGray),
+                        child: Icon(
+                          widget.prefixIcon!,
+                          size: 20,
+                          color: widget.isDisabled
+                              ? const DigitColors().cloudGray
+                              : const DigitColors().davyGray,
+                        ),
                       ),
                     )
                   : null,
@@ -316,11 +349,12 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
                         widget.helpText!,
                         style: theme.textTheme.bodyMedium,
                       ),
-              if (widget.charCount != null)
+
                 if (widget.helpText == null && _hasError == false)
                   const Spacer(),
+              if (widget.charCount ==true)
               Text(
-                '${widget.controller.text.length ?? 0}/64',
+                '${widget.controller.text.length ?? 0}/$maxLengthValue',
               ),
             ],
           ),
@@ -328,4 +362,3 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
     );
   }
 }
-

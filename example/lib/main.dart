@@ -1,4 +1,5 @@
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/utils/validators/validator.dart';
 import 'package:digit_components/widgets/atoms/digit_base_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_date_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_location_form_input.dart';
@@ -31,6 +32,11 @@ void main() {
                       info: 'this is info',
                       innerLabel: 'innerlabel',
                       helpText: 'help text',
+                      charCount: true,
+                      validations: [
+                        Validator(ValidatorType.maxLength, 10, errorMessage: 'Maximum length is 10.'),
+                        Validator(ValidatorType.pattern, r'^[a-zA-Z0-9]+$', errorMessage: 'Invalid format.'),
+                      ],
                       // onSuffixTap: (){print('tapppppppppp');},
                       // suffixIcon: Icons.currency_rupee_sharp,
                       // prefixIcon: Icons.currency_rupee,
@@ -97,10 +103,12 @@ void main() {
                     DigitPasswordFormInput(
                       label: "input",
                       controller: TextEditingController(),
-                      // state: 'Disabled',
                       info: 'this is info',
                       innerLabel: 'innerlabel',
                       helpText: 'help text',
+                      validations: [
+                        Validator(ValidatorType.minLength, 6, errorMessage: 'Password must be at least 6 characters.'),
+                      ],
                       // onSuffixTap: (){print('tapppppppppp');},
                       // suffixIcon: Icons.currency_rupee_sharp,
                       // prefixIcon: Icons.currency_rupee,
@@ -115,6 +123,7 @@ void main() {
                       info: 'this is info',
                       innerLabel: 'innerlabel',
                       helpText: 'help text',
+                      isDisabled: true,
                       // onSuffixTap: (){print('tapppppppppp');},
                       suffixIcon: Icons.currency_rupee_sharp,
                       prefixIcon: Icons.currency_rupee,
@@ -126,10 +135,10 @@ void main() {
                       label: "input",
                       controller: TextEditingController(),
                       // state: 'Disabled',
-                      info: 'this is info',
                       innerLabel: 'innerlabel',
                       helpText: 'help text',
                       initialValue: '0',
+                      readOnly: true,
                     ),
                     const SizedBox(
                       height: 8,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../utils/validators/validator.dart';
 import 'digit_base_form_input.dart';
 
 class DigitTimeFormInput extends BaseDigitFormInput {
@@ -11,26 +12,30 @@ class DigitTimeFormInput extends BaseDigitFormInput {
     bool charCount = false,
     String? innerLabel,
     String? helpText,
+    bool readOnly = false,
+    bool isDisabled = false,
     TooltipTriggerMode triggerMode = TooltipTriggerMode.tap,
     bool preferToolTipBelow = false,
     IconData suffix = Icons.access_time,
-    String? Function(String?)? validator,
     void Function(String?)? onError,
+    final List<Validator>? validations,
     String? initialValue,
   }) : super(
     key: key,
     controller: controller,
     label: label,
     info: info,
+    readOnly: readOnly,
+    isDisabled: isDisabled,
     charCount: charCount,
     innerLabel: innerLabel,
     helpText: helpText,
     triggerMode: triggerMode,
     preferToolTipBelow: preferToolTipBelow,
     suffix: suffix,
-    validator: validator,
     onError: onError,
     initialValue: initialValue,
+    validations: validations,
   );
 
   @override
