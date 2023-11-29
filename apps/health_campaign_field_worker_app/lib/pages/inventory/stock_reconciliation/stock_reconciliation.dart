@@ -403,17 +403,20 @@ class _StockReconciliationPageState
                                                 );
                                               },
                                               onSelected: (value) {
-                                                ctx
-                                                    .read<
-                                                        StockReconciliationBloc>()
-                                                    .add(
-                                                      StockReconciliationSelectFacilityEvent(
-                                                        FacilityModel(
-                                                          id: context
-                                                              .loggedInUserUuid,
+                                                if (isDistributor) {
+                                                  ctx
+                                                      .read<
+                                                          StockReconciliationBloc>()
+                                                      .add(
+                                                        StockReconciliationSelectFacilityEvent(
+                                                          FacilityModel(
+                                                            id: context
+                                                                .loggedInUserUuid,
+                                                          ),
                                                         ),
-                                                      ),
-                                                    );
+                                                      );
+                                                }
+
                                                 ctx
                                                     .read<
                                                         StockReconciliationBloc>()
