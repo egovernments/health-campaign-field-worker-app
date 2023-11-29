@@ -39,15 +39,7 @@ class FacilityBloc extends Bloc<FacilityEvent, FacilityState> {
       ),
     ];
 
-    List<FacilityModel> facilities = [
-      FacilityModel(
-        id: 'Delivery Team',
-        additionalFields: FacilityAdditionalFields(
-          version: 1,
-          fields: [const AdditionalField('type', 'DeliveryTeam')],
-        ),
-      ),
-    ];
+    List<FacilityModel> facilities = [];
 
     if (event.loadAllProjects) {
       allFacilities.addAll(await facilityDataRepository.search(

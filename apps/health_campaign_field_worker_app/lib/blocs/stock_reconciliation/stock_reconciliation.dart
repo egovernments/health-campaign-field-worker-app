@@ -58,7 +58,7 @@ class StockReconciliationBloc
     final stocks = await stockRepository.search(
       StockSearchModel(
         productVariantId: productVariantId,
-        facilityId: facilityId,
+        receiverId: facilityId,
       ),
     );
 

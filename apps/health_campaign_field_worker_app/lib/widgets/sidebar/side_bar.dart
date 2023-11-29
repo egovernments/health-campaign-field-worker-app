@@ -3,6 +3,7 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_row_card/digit_row_card_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../../blocs/localization/app_localization.dart';
 import '../../blocs/app_initialization/app_initialization.dart';
@@ -10,11 +11,9 @@ import '../../blocs/auth/auth.dart';
 import '../../blocs/boundary/boundary.dart';
 import '../../blocs/localization/localization.dart';
 import '../../blocs/user/user.dart';
-import '../../models/data_model.dart';
 import '../../router/app_router.dart';
-import '../../utils/constants.dart';
-import '../../utils/extensions/extensions.dart';
 import '../../utils/i18_key_constants.dart' as i18;
+import '../../utils/utils.dart';
 
 class SideBar extends StatelessWidget {
   const SideBar({super.key});
@@ -22,27 +21,15 @@ class SideBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    bool isDistributor = context.loggedInUserRoles
-        .where(
-          (role) => role.code == RolesType.distributor.toValue(),
-    )
-        .toList()
-        .isNotEmpty;
 
     return BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
-      return ScrollableContent(
-        footer: SizedBox(
-          height: 100,
-          child: PoweredByDigit(
-            version: Constants().version,
-          ),
-        ),
+      return Column(
         children: [
           Container(
             color: theme.colorScheme.secondary.withOpacity(0.12),
             child: SizedBox(
               width: MediaQuery.of(context).size.width,
-              height: 200,
+              height: 280,
               child: state.maybeMap(
                 authenticated: (value) => Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -51,13 +38,14 @@ class SideBar extends StatelessWidget {
                       value.userModel.name.toString(),
                       style: theme.textTheme.displayMedium,
                     ),
-
-                    // const SizedBox(
-                    //   height: 8,
-                    // ),
                     Text(
                       value.userModel.mobileNumber.toString(),
-                      style: theme.textTheme.bodyMedium,
+                      style: theme.textTheme.labelSmall,
+                    ),
+                    QrImageView(
+                      data: context.loggedInUserUuid,
+                      version: QrVersions.auto,
+                      size: 150.0,
                     ),
                   ],
                 ),
@@ -98,54 +86,54 @@ class SideBar extends StatelessWidget {
                     builder: (context, localizationState) {
                       return localizationModulesList != null
                           ? Padding(
-                        padding: const EdgeInsets.only(top: 16),
-                        child: DigitRowCard(
-                          onChanged: (value) {
-                            int index = languages.indexWhere(
-                                  (ele) =>
-                              ele.value.toString() ==
-                                  value.value.toString(),
-                            );
-                            context
-                                .read<LocalizationBloc>()
-                                .add(LocalizationEvent.onLoadLocalization(
-                              module: localizationModulesList
-                                  .interfaces
-                                  .where((element) =>
-                              element.type ==
-                                  Modules.localizationModule)
-                                  .map((e) => e.name.toString())
-                                  .join(',')
-                                  .toString(),
-                              tenantId:
-                              appConfig.tenantId ?? "default",
-                              locale: value.value.toString(),
-                              path: Constants.localizationApiPath,
-                            ));
+                              padding: const EdgeInsets.only(top: 16),
+                              child: DigitRowCard(
+                                onChanged: (value) {
+                                  int index = languages.indexWhere(
+                                    (ele) =>
+                                        ele.value.toString() ==
+                                        value.value.toString(),
+                                  );
+                                  context
+                                      .read<LocalizationBloc>()
+                                      .add(LocalizationEvent.onLoadLocalization(
+                                        module: localizationModulesList
+                                            .interfaces
+                                            .where((element) =>
+                                                element.type ==
+                                                Modules.localizationModule)
+                                            .map((e) => e.name.toString())
+                                            .join(',')
+                                            .toString(),
+                                        tenantId:
+                                            appConfig.tenantId ?? "default",
+                                        locale: value.value.toString(),
+                                        path: Constants.localizationApiPath,
+                                      ));
 
-                            context.read<LocalizationBloc>().add(
-                              OnUpdateLocalizationIndexEvent(
-                                index: index,
-                                code: value.value.toString(),
+                                  context.read<LocalizationBloc>().add(
+                                        OnUpdateLocalizationIndexEvent(
+                                          index: index,
+                                          code: value.value.toString(),
+                                        ),
+                                      );
+                                },
+                                rowItems: languages!.map((e) {
+                                  var index = languages.indexOf(e);
+
+                                  return DigitRowCardModel(
+                                    label: e.label,
+                                    value: e.value,
+                                    isSelected:
+                                        index == localizationState.index,
+                                  );
+                                }).toList(),
+                                width: (MediaQuery.of(context).size.width *
+                                        0.56 /
+                                        languages.length) -
+                                    (4 * languages.length),
                               ),
-                            );
-                          },
-                          rowItems: languages!.map((e) {
-                            var index = languages.indexOf(e);
-
-                            return DigitRowCardModel(
-                              label: e.label,
-                              value: e.value,
-                              isSelected:
-                              index == localizationState.index,
-                            );
-                          }).toList(),
-                          width: (MediaQuery.of(context).size.width *
-                              0.65 /
-                              languages.length) -
-                              (14 * languages.length),
-                        ),
-                      )
+                            )
                           : const Offstage();
                     },
                   ),
@@ -161,7 +149,7 @@ class SideBar extends StatelessWidget {
               icon: Icons.person,
               onPressed: () async {
                 final connectivityResult =
-                await (Connectivity().checkConnectivity());
+                    await (Connectivity().checkConnectivity());
                 final isOnline =
                     connectivityResult == ConnectivityResult.wifi ||
                         connectivityResult == ConnectivityResult.mobile;
@@ -196,17 +184,16 @@ class SideBar extends StatelessWidget {
               },
             );
           }),
-          if (isDistributor)
-            DigitIconTile(
-              title: AppLocalizations.of(context).translate(
-                i18.common.coreCommonViewDownloadedData,
-              ),
-              icon: Icons.download,
-              onPressed: () {
-                Navigator.of(context, rootNavigator: true).pop();
-                context.router.push(const BeneficiariesReportRoute());
-              },
+          DigitIconTile(
+            title: AppLocalizations.of(context).translate(
+              i18.common.coreCommonViewDownloadedData,
             ),
+            icon: Icons.download,
+            onPressed: () {
+              Navigator.of(context, rootNavigator: true).pop();
+              context.router.push(const BeneficiariesReportRoute());
+            },
+          ),
           DigitIconTile(
             title: AppLocalizations.of(context)
                 .translate(i18.common.coreCommonLogout),
@@ -215,6 +202,9 @@ class SideBar extends StatelessWidget {
               context.read<BoundaryBloc>().add(const BoundaryResetEvent());
               context.read<AuthBloc>().add(const AuthLogoutEvent());
             },
+          ),
+          PoweredByDigit(
+            version: Constants().version,
           ),
         ],
       );
