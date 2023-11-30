@@ -66,7 +66,9 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
       _vehicleNumberKey: FormControl<String>(),
       _typeOfTransportKey: FormControl<String>(),
       _commentsKey: FormControl<String>(),
-      _deliveryTeamKey: FormControl<String>(),
+      _deliveryTeamKey: FormControl<String>(
+        validators: deliveryTeamSelected ? [Validators.required] : [],
+      ),
     });
   }
 
@@ -193,6 +195,16 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                       if (!form.valid) {
                                         return;
                                       }
+                                      final primaryId =
+                                          BlocProvider.of<RecordStockBloc>(
+                                        context,
+                                      ).state.primaryId;
+                                      final secondaryParty = form
+                                          .control(_secondaryPartyKey)
+                                          .value as FacilityModel?;
+                                      final deliveryTeamName = form
+                                          .control(_deliveryTeamKey)
+                                          .value as String?;
 
                                       if (deliveryTeamSelected &&
                                           (form
@@ -205,12 +217,27 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                   .control(_deliveryTeamKey)
                                                   .value
                                                   .toString()
+                                                  .trim()
                                                   .isEmpty)) {
                                         DigitToast.show(
                                           context,
                                           options: DigitToastOptions(
                                             localizations.translate(
                                               i18.stockDetails.teamCodeRequired,
+                                            ),
+                                            true,
+                                            theme,
+                                          ),
+                                        );
+                                      } else if ((primaryId ==
+                                              secondaryParty?.id) ||
+                                          (primaryId == deliveryTeamName)) {
+                                        DigitToast.show(
+                                          context,
+                                          options: DigitToastOptions(
+                                            localizations.translate(
+                                              i18.stockDetails
+                                                  .senderReceiverValidation,
                                             ),
                                             true,
                                             theme,
@@ -247,10 +274,6 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                 .value as TransactionReason?;
                                             break;
                                         }
-
-                                        final secondaryParty = form
-                                            .control(_secondaryPartyKey)
-                                            .value as FacilityModel;
 
                                         final quantity = form
                                             .control(_transactionQuantityKey)
@@ -305,7 +328,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                               senderId = deliveryTeamName;
                                               senderType = "STAFF";
                                             } else {
-                                              senderId = secondaryParty.id;
+                                              senderId = secondaryParty?.id;
                                               senderType = "WAREHOUSE";
                                             }
                                             receiverId = primaryId;
@@ -318,7 +341,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                               receiverId = deliveryTeamName;
                                               receiverType = "STAFF";
                                             } else {
-                                              receiverId = secondaryParty.id;
+                                              receiverId = secondaryParty?.id;
                                               receiverType = "WAREHOUSE";
                                             }
                                             senderId = primaryId;
@@ -516,19 +539,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                         ) ??
                                         [];
 
-                                    return DigitTextFormField(
-                                      valueAccessor: FacilityValueAccessor(
-                                        facilities,
-                                      ),
-                                      label: localizations.translate(
-                                        '${pageTitle}_${i18.stockReconciliationDetails.stockLabel}',
-                                      ),
-                                      isRequired: true,
-                                      suffix: const Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: Icon(Icons.search),
-                                      ),
-                                      formControlName: _secondaryPartyKey,
+                                    return InkWell(
                                       onTap: () async {
                                         final parent = context.router.parent()
                                             as StackRouter;
@@ -552,6 +563,53 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                           });
                                         }
                                       },
+                                      child: IgnorePointer(
+                                        child: DigitTextFormField(
+                                          valueAccessor: FacilityValueAccessor(
+                                            facilities,
+                                          ),
+                                          label: localizations.translate(
+                                            '${pageTitle}_${i18.stockReconciliationDetails.stockLabel}',
+                                          ),
+                                          isRequired: true,
+                                          validationMessages: {
+                                            'required': (object) =>
+                                                localizations.translate(
+                                                  '${i18.individualDetails.nameLabelText}_IS_REQUIRED',
+                                                ),
+                                          },
+                                          suffix: const Padding(
+                                            padding: EdgeInsets.all(8.0),
+                                            child: Icon(Icons.search),
+                                          ),
+                                          formControlName: _secondaryPartyKey,
+                                          onTap: () async {
+                                            final parent = context.router
+                                                .parent() as StackRouter;
+                                            final facility = await parent
+                                                .push<FacilityModel>(
+                                              FacilitySelectionRoute(
+                                                facilities: facilities,
+                                              ),
+                                            );
+
+                                            if (facility == null) return;
+                                            form
+                                                .control(_secondaryPartyKey)
+                                                .value = facility;
+                                            if (facility.id ==
+                                                'Delivery Team') {
+                                              setState(() {
+                                                deliveryTeamSelected = true;
+                                              });
+                                            } else {
+                                              setState(() {
+                                                deliveryTeamSelected = false;
+                                              });
+                                            }
+                                          },
+                                        ),
+                                      ),
                                     );
                                   },
                                 ),

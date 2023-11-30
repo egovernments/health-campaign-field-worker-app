@@ -1,4 +1,5 @@
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -161,50 +162,66 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                                 .control(_dateOfEntryKey)
                                                 .value as DateTime;
 
+                                            final teamCode = form
+                                                .control(_teamCodeKey)
+                                                .value as String?;
+
                                             final facility =
                                                 deliveryTeamSelected
                                                     ? FacilityModel(
-                                                        id: form
-                                                            .control(
-                                                              _teamCodeKey,
-                                                            )
-                                                            .value,
+                                                        id: teamCode ??
+                                                            'Delivery Team',
                                                       )
                                                     : form
                                                         .control(_warehouseKey)
                                                         .value;
 
-                                            final teamCode = form
-                                                .control(_teamCodeKey)
-                                                .value as String?;
                                             context.read<ScannerBloc>().add(
                                                   const ScannerEvent
                                                       .handleScanner([], []),
                                                 );
-
-                                            context.read<RecordStockBloc>().add(
-                                                  RecordStockSaveTransactionDetailsEvent(
-                                                    dateOfRecord: dateOfRecord,
-                                                    facilityModel:
-                                                        isWareHouseMgr
-                                                            ? facility
-                                                            : FacilityModel(
-                                                                id: teamCode
-                                                                    .toString(),
-                                                              ),
-                                                    primaryId: facility.id ==
-                                                            "Delivery Team"
-                                                        ? teamCode ?? ''
-                                                        : facility.id,
-                                                    primaryType: isDistributor ||
-                                                            deliveryTeamSelected
-                                                        ? "STAFF"
-                                                        : "WAREHOUSE",
+                                            if (deliveryTeamSelected &&
+                                                (teamCode == null ||
+                                                    teamCode.trim().isEmpty)) {
+                                              DigitToast.show(
+                                                context,
+                                                options: DigitToastOptions(
+                                                  localizations.translate(
+                                                    i18.stockDetails
+                                                        .teamCodeRequired,
                                                   ),
-                                                );
-                                            context.router.push(
-                                              StockDetailsRoute(),
-                                            );
+                                                  true,
+                                                  theme,
+                                                ),
+                                              );
+                                            } else {
+                                              context
+                                                  .read<RecordStockBloc>()
+                                                  .add(
+                                                    RecordStockSaveTransactionDetailsEvent(
+                                                      dateOfRecord:
+                                                          dateOfRecord,
+                                                      facilityModel:
+                                                          isWareHouseMgr
+                                                              ? facility
+                                                              : FacilityModel(
+                                                                  id: teamCode
+                                                                      .toString(),
+                                                                ),
+                                                      primaryId: facility.id ==
+                                                              "Delivery Team"
+                                                          ? teamCode ?? ''
+                                                          : facility.id,
+                                                      primaryType: isDistributor ||
+                                                              deliveryTeamSelected
+                                                          ? "STAFF"
+                                                          : "WAREHOUSE",
+                                                    ),
+                                                  );
+                                              context.router.push(
+                                                StockDetailsRoute(),
+                                              );
+                                            }
                                           },
                                     child: child!,
                                   );
@@ -288,7 +305,8 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                       child: DigitTextFormField(
                                         hideKeyboard: true,
                                         padding: const EdgeInsets.only(
-                                            bottom: kPadding),
+                                          bottom: kPadding,
+                                        ),
                                         valueAccessor: FacilityValueAccessor(
                                           facilities,
                                         ),
@@ -297,6 +315,12 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                           i18.stockReconciliationDetails
                                               .facilityLabel,
                                         ),
+                                        validationMessages: {
+                                          'required': (object) =>
+                                              localizations.translate(
+                                                '${i18.individualDetails.nameLabelText}_IS_REQUIRED',
+                                              ),
+                                        },
                                         suffix: const Padding(
                                           padding: EdgeInsets.all(8.0),
                                           child: Icon(Icons.search),

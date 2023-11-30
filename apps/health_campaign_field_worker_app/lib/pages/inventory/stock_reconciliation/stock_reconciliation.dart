@@ -409,6 +409,8 @@ class _StockReconciliationPageState
                                                     .add(
                                                       StockReconciliationSelectProductEvent(
                                                         value.id,
+                                                        isDistributor:
+                                                            isDistributor,
                                                       ),
                                                     );
                                               },

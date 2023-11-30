@@ -1315,6 +1315,9 @@ class StockDetails {
     return 'STOCK_DETAILS_RECEIVED_FROM_DAMAGED';
   }
 
+  String get senderReceiverValidation =>
+      'STOCK_DETAILS_SENDER_RECEIVER_ID_VALIDATION';
+
   String get selectTransactingPartyReceivedFromLost {
     return 'STOCK_DETAILS_RECEIVED_FROM_LOST';
   }

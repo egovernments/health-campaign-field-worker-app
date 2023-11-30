@@ -41,7 +41,9 @@ class StockReconciliationBloc
     StockReconciliationEmitter emit,
   ) async {
     emit(state.copyWith(productVariantId: event.productVariantId));
-    add(const StockReconciliationCalculateEvent());
+    add(StockReconciliationCalculateEvent(
+      isDistributor: event.isDistributor,
+    ));
   }
 
   FutureOr<void> _handleCalculate(
