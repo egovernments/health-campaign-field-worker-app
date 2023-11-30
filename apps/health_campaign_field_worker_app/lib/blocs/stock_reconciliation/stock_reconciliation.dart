@@ -53,7 +53,8 @@ class StockReconciliationBloc
     final productVariantId = state.productVariantId;
     final facilityId = state.facilityModel?.id;
 
-    if (productVariantId == null || facilityId == null) return;
+    if ((productVariantId == null) ||
+        (!event.isDistributor && facilityId == null)) return;
 
     final stocks = await stockRepository.search(
       StockSearchModel(
@@ -101,15 +102,18 @@ class StockReconciliationBloc
 @freezed
 class StockReconciliationEvent with _$StockReconciliationEvent {
   const factory StockReconciliationEvent.selectFacility(
-    FacilityModel facilityModel,
-  ) = StockReconciliationSelectFacilityEvent;
+    FacilityModel facilityModel, {
+    @Default(false) bool isDistributor,
+  }) = StockReconciliationSelectFacilityEvent;
 
   const factory StockReconciliationEvent.selectProduct(
-    String? productVariantId,
-  ) = StockReconciliationSelectProductEvent;
+    String? productVariantId, {
+    @Default(false) bool isDistributor,
+  }) = StockReconciliationSelectProductEvent;
 
-  const factory StockReconciliationEvent.calculate() =
-      StockReconciliationCalculateEvent;
+  const factory StockReconciliationEvent.calculate({
+    @Default(false) bool isDistributor,
+  }) = StockReconciliationCalculateEvent;
 
   const factory StockReconciliationEvent.create(
     StockReconciliationModel stockReconciliationModel,

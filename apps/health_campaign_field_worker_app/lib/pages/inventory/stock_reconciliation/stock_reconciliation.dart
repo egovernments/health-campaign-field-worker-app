@@ -403,20 +403,6 @@ class _StockReconciliationPageState
                                                 );
                                               },
                                               onSelected: (value) {
-                                                if (isDistributor) {
-                                                  ctx
-                                                      .read<
-                                                          StockReconciliationBloc>()
-                                                      .add(
-                                                        StockReconciliationSelectFacilityEvent(
-                                                          FacilityModel(
-                                                            id: context
-                                                                .loggedInUserUuid,
-                                                          ),
-                                                        ),
-                                                      );
-                                                }
-
                                                 ctx
                                                     .read<
                                                         StockReconciliationBloc>()
