@@ -403,11 +403,11 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                           .toList(),
                       downSyncList.isEmpty
                           ? NoResultCard(
-                        align: Alignment.center,
-                        label: localizations.translate(
-                          i18.common.noResultsFound,
-                        ),
-                      )
+                              align: Alignment.center,
+                              label: localizations.translate(
+                                i18.common.noResultsFound,
+                              ),
+                            )
                           : const SizedBox.shrink(),
                     ]),
                   ),

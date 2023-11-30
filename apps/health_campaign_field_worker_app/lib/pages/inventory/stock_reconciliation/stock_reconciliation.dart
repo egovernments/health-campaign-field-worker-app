@@ -311,11 +311,11 @@ class _StockReconciliationPageState
                                               ) ??
                                               [];
 
-                                          return InkWell(
-                                            onTap: () async {
-                                              final stockReconciliationBloc =
-                                                  context.read<
-                                                      StockReconciliationBloc>();
+                                        return InkWell(
+                                          onTap: () async {
+                                            final stockReconciliationBloc =
+                                                context.read<
+                                                    StockReconciliationBloc>();
 
                                               final facility = await context
                                                   .router
