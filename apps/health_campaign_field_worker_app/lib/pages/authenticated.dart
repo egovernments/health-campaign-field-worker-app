@@ -48,47 +48,51 @@ class AuthenticatedPageWrapper extends StatelessWidget {
               return Portal(
                 child: Scaffold(
                   appBar: AppBar(
-                    actions: [
-                      BlocBuilder<BoundaryBloc, BoundaryState>(
-                        builder: (ctx, state) {
-                          final selectedBoundary = ctx.boundaryOrNull;
+                    actions: showDrawer
+                        ? [
+                            BlocBuilder<BoundaryBloc, BoundaryState>(
+                              builder: (ctx, state) {
+                                final selectedBoundary = ctx.boundaryOrNull;
 
-                          if (selectedBoundary == null) {
-                            return const SizedBox.shrink();
-                          } else {
-                            final boundaryName = selectedBoundary.name ??
-                                selectedBoundary.code ??
-                                AppLocalizations.of(context).translate(
-                                  i18.projectSelection.onProjectMapped,
-                                );
+                                if (selectedBoundary == null) {
+                                  return const SizedBox.shrink();
+                                } else {
+                                  final boundaryName = selectedBoundary.name ??
+                                      selectedBoundary.code ??
+                                      AppLocalizations.of(context).translate(
+                                        i18.projectSelection.onProjectMapped,
+                                      );
 
-                            final theme = Theme.of(context);
+                                  final theme = Theme.of(context);
 
-                            return GestureDetector(
-                              onTap: () {
-                                ctx.router.popUntilRouteWithName(
-                                  AuthenticatedRouteWrapper.name,
-                                );
-                                ctx.router.navigate(BoundarySelectionRoute());
-                              },
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    boundaryName,
-                                    style: TextStyle(
-                                      color: theme.colorScheme.surface,
-                                      fontSize: 16,
+                                  return GestureDetector(
+                                    onTap: () {
+                                      ctx.router.popUntilRouteWithName(
+                                        AuthenticatedRouteWrapper.name,
+                                      );
+                                      ctx.router
+                                          .navigate(BoundarySelectionRoute());
+                                    },
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          boundaryName,
+                                          style: TextStyle(
+                                            color: theme.colorScheme.surface,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                        const Icon(
+                                            Icons.arrow_drop_down_outlined),
+                                      ],
                                     ),
-                                  ),
-                                  const Icon(Icons.arrow_drop_down_outlined),
-                                ],
-                              ),
-                            );
-                          }
-                        },
-                      ),
-                    ],
+                                  );
+                                }
+                              },
+                            ),
+                          ]
+                        : null,
                   ),
                   drawer: showDrawer ? const Drawer(child: SideBar()) : null,
                   body: MultiBlocProvider(
@@ -264,6 +268,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                             switch (context.router.topRoute.name) {
                               case ProjectSelectionRoute.name:
                               case BoundarySelectionRoute.name:
+                              case QRScannerRoute.name:
                                 shouldShowDrawer = false;
                                 break;
                               default:
