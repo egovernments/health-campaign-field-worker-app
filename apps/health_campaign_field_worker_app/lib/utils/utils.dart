@@ -64,18 +64,18 @@ class IdGen {
 class CustomValidator {
   /// Validates that control's value must be `true`
   static Map<String, dynamic>? requiredMin(
-      AbstractControl<dynamic> control,
-      ) {
+    AbstractControl<dynamic> control,
+  ) {
     return control.value == null ||
-        control.value.toString().length >= 2 ||
-        control.value.toString().trim().isEmpty
+            control.value.toString().length >= 2 ||
+            control.value.toString().trim().isEmpty
         ? null
         : {'required': true};
   }
 
   static Map<String, dynamic>? validMobileNumber(
-      AbstractControl<dynamic> control,
-      ) {
+    AbstractControl<dynamic> control,
+  ) {
     if (control.value == null || control.value.toString().isEmpty) {
       return null;
     }
@@ -90,8 +90,8 @@ class CustomValidator {
   }
 
   static Map<String, dynamic>? validStockCount(
-      AbstractControl<dynamic> control,
-      ) {
+    AbstractControl<dynamic> control,
+  ) {
     if (control.value == null || control.value.toString().isEmpty) {
       return {'required': true};
     }
@@ -162,7 +162,7 @@ String maskString(String input) {
 
   // Create a new string with the same length as the input string
   final maskedString =
-  List<String>.generate(input.length, (index) => maskingChar).join();
+      List<String>.generate(input.length, (index) => maskingChar).join();
 
   return maskedString;
 }
@@ -205,10 +205,10 @@ double? calculateDistance(Coordinate? start, Coordinate? end) {
 }
 
 Timer makePeriodicTimer(
-    Duration duration,
-    void Function(Timer timer) callback, {
-      bool fireNow = false,
-    }) {
+  Duration duration,
+  void Function(Timer timer) callback, {
+  bool fireNow = false,
+}) {
   var timer = Timer.periodic(duration, callback);
   if (fireNow) {
     callback(timer);
@@ -278,33 +278,34 @@ final requestData = {
 /// This checks for if the active cycle is a new cycle or its the past cycle,
 /// If the active cycle is same as past cycle then all validations for tracking delivery applies, else validations do not get applied
 bool checkEligibilityForActiveCycle(
-    int activeCycle,
-    HouseholdMemberWrapper householdWrapper,
-    ) {
+  int activeCycle,
+  HouseholdMemberWrapper householdWrapper,
+) {
   final pastCycle = (householdWrapper.tasks ?? []).isNotEmpty
       ? householdWrapper.tasks?.last.additionalFields?.fields
-      .firstWhereOrNull(
-        (e) => e.key == AdditionalFieldsType.cycleIndex.toValue(),
-  )
-      ?.value ??
-      '1'
+              .firstWhereOrNull(
+                (e) => e.key == AdditionalFieldsType.cycleIndex.toValue(),
+              )
+              ?.value ??
+          '1'
       : '1';
 
   return (activeCycle == int.parse(pastCycle));
 }
 
 /*Check for if the individual falls on the valid age category*/
+
 ///  * Returns [true] if the individual is in the same cycle and is eligible for the next dose,
 bool checkEligibilityForAgeAndSideEffect(
-    DigitDOBAge age,
-    ProjectType? projectType,
-    TaskModel? tasks,
-    List<SideEffectModel>? sideEffects,
-    ) {
+  DigitDOBAge age,
+  ProjectType? projectType,
+  TaskModel? tasks,
+  List<SideEffectModel>? sideEffects,
+) {
   int totalAgeMonths = age.years * 12 + age.months;
   final currentCycle = projectType?.cycles?.firstWhereOrNull(
-        (e) =>
-    (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
+    (e) =>
+        (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
         (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
     // Return null when no matching cycle is found
   );
@@ -314,25 +315,25 @@ bool checkEligibilityForAgeAndSideEffect(
     bool recordedSideEffect = false;
     if ((tasks != null) && sideEffects != null && sideEffects.isNotEmpty) {
       final lastTaskTime =
-      tasks.clientReferenceId == sideEffects.last.taskClientReferenceId
-          ? tasks.clientAuditDetails?.createdTime
-          : null;
+          tasks.clientReferenceId == sideEffects.last.taskClientReferenceId
+              ? tasks.clientAuditDetails?.createdTime
+              : null;
       recordedSideEffect = lastTaskTime != null &&
           (lastTaskTime >= currentCycle.startDate! &&
               lastTaskTime <= currentCycle.endDate!);
 
       return projectType?.validMinAge != null &&
-          projectType?.validMaxAge != null
+              projectType?.validMaxAge != null
           ? totalAgeMonths >= projectType!.validMinAge! &&
-          totalAgeMonths <= projectType.validMaxAge!
-          ? recordedSideEffect && !checkStatus([tasks], currentCycle)
-          ? false
-          : true
-          : false
+                  totalAgeMonths <= projectType.validMaxAge!
+              ? recordedSideEffect && !checkStatus([tasks], currentCycle)
+                  ? false
+                  : true
+              : false
           : false;
     } else {
       return totalAgeMonths >= projectType!.validMinAge! &&
-          totalAgeMonths <= projectType.validMaxAge!
+              totalAgeMonths <= projectType.validMaxAge!
           ? true
           : false;
     }
@@ -342,8 +343,8 @@ bool checkEligibilityForAgeAndSideEffect(
 }
 
 bool checkIfBeneficiaryRefused(
-    List<TaskModel>? tasks,
-    ) {
+  List<TaskModel>? tasks,
+) {
   final isBeneficiaryRefused = (tasks != null &&
       (tasks ?? []).isNotEmpty &&
       tasks.last.status == Status.beneficiaryRefused.toValue());
@@ -352,9 +353,9 @@ bool checkIfBeneficiaryRefused(
 }
 
 bool checkIfBeneficiaryReferred(
-    List<ReferralModel>? referrals,
-    Cycle currentCycle,
-    ) {
+  List<ReferralModel>? referrals,
+  Cycle currentCycle,
+) {
   if (currentCycle.startDate != null && currentCycle.endDate != null) {
     final isBeneficiaryReferred = (referrals != null &&
         (referrals ?? []).isNotEmpty &&
@@ -370,9 +371,9 @@ bool checkIfBeneficiaryReferred(
 }
 
 bool checkStatus(
-    List<TaskModel>? tasks,
-    Cycle? currentCycle,
-    ) {
+  List<TaskModel>? tasks,
+  Cycle? currentCycle,
+) {
   if (currentCycle != null &&
       currentCycle.startDate != null &&
       currentCycle.endDate != null) {
@@ -389,11 +390,11 @@ bool checkStatus(
 
         return isLastCycleRunning
             ? lastTask.status == Status.delivered.name
-            ? true
-            : diff.inHours >=
-            24 //[TODO: Need to move gap between doses to config
-            ? true
-            : false
+                ? true
+                : diff.inHours >=
+                        24 //[TODO: Need to move gap between doses to config
+                    ? true
+                    : false
             : true;
       } else {
         return false;
@@ -407,18 +408,18 @@ bool checkStatus(
 }
 
 bool recordedSideEffect(
-    Cycle? selectedCycle,
-    TaskModel? task,
-    List<SideEffectModel>? sideEffects,
-    ) {
+  Cycle? selectedCycle,
+  TaskModel? task,
+  List<SideEffectModel>? sideEffects,
+) {
   if (selectedCycle != null &&
       selectedCycle.startDate != null &&
       selectedCycle.endDate != null) {
     if ((task != null) && (sideEffects ?? []).isNotEmpty) {
       final lastTaskCreatedTime =
-      task.clientReferenceId == sideEffects?.last.taskClientReferenceId
-          ? task.clientAuditDetails?.createdTime
-          : null;
+          task.clientReferenceId == sideEffects?.last.taskClientReferenceId
+              ? task.clientAuditDetails?.createdTime
+              : null;
 
       return lastTaskCreatedTime != null &&
           lastTaskCreatedTime >= selectedCycle.startDate! &&
@@ -430,11 +431,11 @@ bool recordedSideEffect(
 }
 
 bool allDosesDelivered(
-    List<TaskModel>? tasks,
-    Cycle? selectedCycle,
-    List<SideEffectModel>? sideEffects,
-    IndividualModel? individualModel,
-    ) {
+  List<TaskModel>? tasks,
+  Cycle? selectedCycle,
+  List<SideEffectModel>? sideEffects,
+  IndividualModel? individualModel,
+) {
   if (selectedCycle == null ||
       selectedCycle.id == 0 ||
       (selectedCycle.deliveries ?? []).isEmpty) {
@@ -442,18 +443,18 @@ bool allDosesDelivered(
   } else {
     if ((tasks ?? []).isNotEmpty) {
       final lastCycle = int.tryParse(tasks?.last.additionalFields?.fields
-          .where(
-            (e) => e.key == AdditionalFieldsType.cycleIndex.toValue(),
-      )
-          .firstOrNull
-          ?.value ??
+              .where(
+                (e) => e.key == AdditionalFieldsType.cycleIndex.toValue(),
+              )
+              .firstOrNull
+              ?.value ??
           '');
       final lastDose = int.tryParse(tasks?.last.additionalFields?.fields
-          .where(
-            (e) => e.key == AdditionalFieldsType.doseIndex.toValue(),
-      )
-          .firstOrNull
-          ?.value ??
+              .where(
+                (e) => e.key == AdditionalFieldsType.doseIndex.toValue(),
+              )
+              .firstOrNull
+              ?.value ??
           '');
       if (lastDose != null &&
           lastDose == selectedCycle.deliveries?.length &&
@@ -476,14 +477,14 @@ bool allDosesDelivered(
 }
 
 DoseCriteriaModel? fetchProductVariant(
-    DeliveryModel? currentDelivery,
-    IndividualModel? individualModel,
-    ) {
+  DeliveryModel? currentDelivery,
+  IndividualModel? individualModel,
+) {
   if (currentDelivery != null && individualModel != null) {
     final individualAge = DigitDateUtils.calculateAge(
       DigitDateUtils.getFormattedDateToDateTime(
-        individualModel.dateOfBirth!,
-      ) ??
+            individualModel.dateOfBirth!,
+          ) ??
           DateTime.now(),
     );
     final individualAgeInMonths =
@@ -523,11 +524,11 @@ Future<bool> getIsConnected() async {
 }
 
 void showDownloadDialog(
-    BuildContext context, {
-      required DownloadBeneficiary model,
-      required DigitProgressDialogType dialogType,
-      bool isPop = true,
-    }) {
+  BuildContext context, {
+  required DownloadBeneficiary model,
+  required DigitProgressDialogType dialogType,
+  bool isPop = true,
+}) {
   if (isPop) {
     Navigator.of(context, rootNavigator: true).pop();
   }
@@ -546,14 +547,14 @@ void showDownloadDialog(
                 dialogType == DigitProgressDialogType.checkFailed) {
               Navigator.of(context, rootNavigator: true).pop();
               context.read<BeneficiaryDownSyncBloc>().add(
-                DownSyncGetBatchSizeEvent(
-                  appConfiguration: [model.appConfiguartion!],
-                  projectId: context.projectId,
-                  boundaryCode: model.boundary,
-                  pendingSyncCount: model.pendingSyncCount ?? 0,
-                  boundaryName: model.boundaryName,
-                ),
-              );
+                    DownSyncGetBatchSizeEvent(
+                      appConfiguration: [model.appConfiguartion!],
+                      projectId: context.projectId,
+                      boundaryCode: model.boundary,
+                      pendingSyncCount: model.pendingSyncCount ?? 0,
+                      boundaryName: model.boundaryName,
+                    ),
+                  );
             } else {
               Navigator.of(context, rootNavigator: true).pop();
               context.router.pop();
@@ -593,32 +594,32 @@ void showDownloadDialog(
               } else {
                 if ((model.totalCount ?? 0) > 0) {
                   context.read<BeneficiaryDownSyncBloc>().add(
-                    DownSyncBeneficiaryEvent(
-                      projectId: context.projectId,
-                      boundaryCode: model.boundary,
-                      // Batch Size need to be defined based on Internet speed.
-                      batchSize: model.batchSize ?? 1,
-                      initialServerCount: model.totalCount ?? 0,
-                      boundaryName: model.boundaryName,
-                    ),
-                  );
+                        DownSyncBeneficiaryEvent(
+                          projectId: context.projectId,
+                          boundaryCode: model.boundary,
+                          // Batch Size need to be defined based on Internet speed.
+                          batchSize: model.batchSize ?? 1,
+                          initialServerCount: model.totalCount ?? 0,
+                          boundaryName: model.boundaryName,
+                        ),
+                      );
                 } else {
                   Navigator.of(context, rootNavigator: true).pop();
                   context.read<BeneficiaryDownSyncBloc>().add(
-                    const DownSyncResetStateEvent(),
-                  );
+                        const DownSyncResetStateEvent(),
+                      );
                 }
               }
             },
           ),
           secondaryAction: model.secondaryButtonLabel != null
               ? DigitDialogActions(
-            label: model.secondaryButtonLabel ?? '',
-            action: (ctx) {
-              Navigator.of(context, rootNavigator: true).pop();
-              context.router.popUntilRouteWithName(HomeRoute.name);
-            },
-          )
+                  label: model.secondaryButtonLabel ?? '',
+                  action: (ctx) {
+                    Navigator.of(context, rootNavigator: true).pop();
+                    context.router.popUntilRouteWithName(HomeRoute.name);
+                  },
+                )
               : null,
         ),
       );

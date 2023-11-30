@@ -42,16 +42,16 @@ class _BoundarySelectionPageState
   void initState() {
     context.read<SyncBloc>().add(SyncRefreshEvent(context.loggedInUserUuid));
     context.read<BeneficiaryDownSyncBloc>().add(
-      const DownSyncResetStateEvent(),
-    );
+          const DownSyncResetStateEvent(),
+        );
     super.initState();
   }
 
   @override
   void deactivate() {
     context.read<BeneficiaryDownSyncBloc>().add(
-      const DownSyncResetStateEvent(),
-    );
+          const DownSyncResetStateEvent(),
+        );
     super.deactivate();
   }
 
@@ -66,7 +66,7 @@ class _BoundarySelectionPageState
     bool isDistributor = context.loggedInUserRoles
         .where(
           (role) => role.code == RolesType.distributor.toValue(),
-    )
+        )
         .toList()
         .isNotEmpty;
 
@@ -104,7 +104,7 @@ class _BoundarySelectionPageState
                                   final label = labelList.elementAt(labelIndex);
 
                                   final filteredItems =
-                                  state.boundaryList.where((element) {
+                                      state.boundaryList.where((element) {
                                     if (element.label != label) return false;
 
                                     if (labelIndex == 0) return true;
@@ -144,18 +144,18 @@ class _BoundarySelectionPageState
                                         if (value == null) return;
 
                                         context.read<BoundaryBloc>().add(
-                                          BoundarySelectEvent(
-                                            label: label,
-                                            selectedBoundary: value,
-                                          ),
-                                        );
+                                              BoundarySelectEvent(
+                                                label: label,
+                                                selectedBoundary: value,
+                                              ),
+                                            );
                                         formControls[label]?.updateValue(value);
                                         // Call the resetChildDropdowns function when a parent dropdown is selected
                                         resetChildDropdowns(label, state);
                                       },
                                       isRequired: true,
                                       validationMessage:
-                                      localizations.translate(
+                                          localizations.translate(
                                         i18.common.corecommonRequired,
                                       ),
                                       emptyText: localizations
@@ -177,7 +177,7 @@ class _BoundarySelectionPageState
                                           context,
                                           rootNavigator: true,
                                         ).popUntil(
-                                              (route) => route is! PopupRoute,
+                                          (route) => route is! PopupRoute,
                                         ),
                                       },
                                     DigitSyncDialog.show(
@@ -188,28 +188,28 @@ class _BoundarySelectionPageState
                                     ),
                                   },
                                   getBatchSize: (
-                                      batchSize,
-                                      projectId,
-                                      boundaryCode,
-                                      pendingSyncCount,
-                                      boundaryName,
-                                      ) =>
+                                    batchSize,
+                                    projectId,
+                                    boundaryCode,
+                                    pendingSyncCount,
+                                    boundaryName,
+                                  ) =>
                                       context
                                           .read<BeneficiaryDownSyncBloc>()
                                           .add(
-                                        DownSyncCheckTotalCountEvent(
-                                          projectId: context.projectId,
-                                          boundaryCode: selectedBoundary!
-                                              .value!.code
-                                              .toString(),
-                                          pendingSyncCount:
-                                          pendingSyncCount,
-                                          boundaryName: selectedBoundary
-                                              .value!.name
-                                              .toString(),
-                                          batchSize: batchSize,
-                                        ),
-                                      ),
+                                            DownSyncCheckTotalCountEvent(
+                                              projectId: context.projectId,
+                                              boundaryCode: selectedBoundary!
+                                                  .value!.code
+                                                  .toString(),
+                                              pendingSyncCount:
+                                                  pendingSyncCount,
+                                              boundaryName: selectedBoundary
+                                                  .value!.name
+                                                  .toString(),
+                                              batchSize: batchSize,
+                                            ),
+                                          ),
                                   pendingSync: () => showDownloadDialog(
                                     context,
                                     model: DownloadBeneficiary(
@@ -224,14 +224,14 @@ class _BoundarySelectionPageState
                                         i18.syncDialog.pendingSyncContent,
                                       ),
                                       primaryButtonLabel:
-                                      localizations.translate(
+                                          localizations.translate(
                                         i18.acknowledgementSuccess.goToHome,
                                       ),
                                       boundaryName: selectedBoundary.value!.name
                                           .toString(),
                                     ),
                                     dialogType:
-                                    DigitProgressDialogType.pendingSync,
+                                        DigitProgressDialogType.pendingSync,
                                     isPop: true,
                                   ),
                                   dataFound: (initialServerCount, batchSize) {
@@ -243,7 +243,7 @@ class _BoundarySelectionPageState
                                           initialServerCount > 0
                                               ? i18.beneficiaryDetails.dataFound
                                               : i18.beneficiaryDetails
-                                              .noDataFound,
+                                                  .noDataFound,
                                         ),
                                         appConfiguartion: appConfiguration,
                                         projectId: context.projectId,
@@ -254,56 +254,56 @@ class _BoundarySelectionPageState
                                         content: localizations.translate(
                                           initialServerCount > 0
                                               ? i18.beneficiaryDetails
-                                              .dataFoundContent
+                                                  .dataFoundContent
                                               : i18.beneficiaryDetails
-                                              .noDataFoundContent,
+                                                  .noDataFoundContent,
                                         ),
                                         primaryButtonLabel:
-                                        localizations.translate(
+                                            localizations.translate(
                                           initialServerCount > 0
                                               ? i18.common.coreCommonDownload
                                               : i18.common.coreCommonGoback,
                                         ),
                                         secondaryButtonLabel:
-                                        localizations.translate(
+                                            localizations.translate(
                                           initialServerCount > 0
                                               ? i18.beneficiaryDetails
-                                              .proceedWithoutDownloading
+                                                  .proceedWithoutDownloading
                                               : i18.acknowledgementSuccess
-                                              .goToHome,
+                                                  .goToHome,
                                         ),
                                         boundaryName: selectedBoundary
                                             .value!.name
                                             .toString(),
                                       ),
                                       dialogType:
-                                      DigitProgressDialogType.dataFound,
+                                          DigitProgressDialogType.dataFound,
                                       isPop: true,
                                     );
                                   },
                                   inProgress: (syncCount, totalCount) =>
                                       showDownloadDialog(
-                                        context,
-                                        model: DownloadBeneficiary(
-                                          title: localizations.translate(
-                                            i18.beneficiaryDetails
-                                                .dataDownloadInProgress,
-                                          ),
-                                          projectId: context.projectId,
-                                          boundary: selectedBoundary!.value!.code
-                                              .toString(),
-                                          appConfiguartion: appConfiguration,
-                                          syncCount: syncCount,
-                                          totalCount: totalCount,
-                                          prefixLabel: syncCount.toString(),
-                                          suffixLabel: totalCount.toString(),
-                                          boundaryName: selectedBoundary.value!.name
-                                              .toString(),
-                                        ),
-                                        dialogType:
-                                        DigitProgressDialogType.inProgress,
-                                        isPop: true,
+                                    context,
+                                    model: DownloadBeneficiary(
+                                      title: localizations.translate(
+                                        i18.beneficiaryDetails
+                                            .dataDownloadInProgress,
                                       ),
+                                      projectId: context.projectId,
+                                      boundary: selectedBoundary!.value!.code
+                                          .toString(),
+                                      appConfiguartion: appConfiguration,
+                                      syncCount: syncCount,
+                                      totalCount: totalCount,
+                                      prefixLabel: syncCount.toString(),
+                                      suffixLabel: totalCount.toString(),
+                                      boundaryName: selectedBoundary.value!.name
+                                          .toString(),
+                                    ),
+                                    dialogType:
+                                        DigitProgressDialogType.inProgress,
+                                    isPop: true,
+                                  ),
                                   success: (result) {
                                     int? epochTime = result.lastSyncedTime;
 
@@ -327,7 +327,7 @@ class _BoundarySelectionPageState
                                       context,
                                       rootNavigator: true,
                                     ).popUntil(
-                                          (route) => route is! PopupRoute,
+                                      (route) => route is! PopupRoute,
                                     );
                                     context.router
                                         .popAndPush((AcknowledgementRoute(
@@ -371,11 +371,11 @@ class _BoundarySelectionPageState
                                         i18.beneficiaryDetails.dataFoundContent,
                                       ),
                                       primaryButtonLabel:
-                                      localizations.translate(
+                                          localizations.translate(
                                         i18.syncDialog.retryButtonLabel,
                                       ),
                                       secondaryButtonLabel:
-                                      localizations.translate(
+                                          localizations.translate(
                                         i18.beneficiaryDetails
                                             .proceedWithoutDownloading,
                                       ),
@@ -387,33 +387,33 @@ class _BoundarySelectionPageState
                                   ),
                                   totalCountCheckFailed: () =>
                                       showDownloadDialog(
-                                        context,
-                                        model: DownloadBeneficiary(
-                                          title: localizations.translate(
-                                            i18.beneficiaryDetails
-                                                .unableToCheckDataInServer,
-                                          ),
-                                          appConfiguartion: appConfiguration,
-                                          projectId: context.projectId,
-                                          pendingSyncCount: pendingSyncCount,
-                                          boundary: selectedBoundary!.value!.code
-                                              .toString(),
-                                          primaryButtonLabel:
-                                          localizations.translate(
-                                            i18.syncDialog.retryButtonLabel,
-                                          ),
-                                          secondaryButtonLabel:
-                                          localizations.translate(
-                                            i18.beneficiaryDetails
-                                                .proceedWithoutDownloading,
-                                          ),
-                                          boundaryName: selectedBoundary.value!.name
-                                              .toString(),
-                                        ),
-                                        dialogType:
-                                        DigitProgressDialogType.checkFailed,
-                                        isPop: true,
+                                    context,
+                                    model: DownloadBeneficiary(
+                                      title: localizations.translate(
+                                        i18.beneficiaryDetails
+                                            .unableToCheckDataInServer,
                                       ),
+                                      appConfiguartion: appConfiguration,
+                                      projectId: context.projectId,
+                                      pendingSyncCount: pendingSyncCount,
+                                      boundary: selectedBoundary!.value!.code
+                                          .toString(),
+                                      primaryButtonLabel:
+                                          localizations.translate(
+                                        i18.syncDialog.retryButtonLabel,
+                                      ),
+                                      secondaryButtonLabel:
+                                          localizations.translate(
+                                        i18.beneficiaryDetails
+                                            .proceedWithoutDownloading,
+                                      ),
+                                      boundaryName: selectedBoundary.value!.name
+                                          .toString(),
+                                    ),
+                                    dialogType:
+                                        DigitProgressDialogType.checkFailed,
+                                    isPop: true,
+                                  ),
                                   insufficientStorage: () {
                                     clickedStatus.value = false;
                                     showDownloadDialog(
@@ -431,7 +431,7 @@ class _BoundarySelectionPageState
                                         boundary: selectedBoundary!.value!.code
                                             .toString(),
                                         primaryButtonLabel:
-                                        localizations.translate(
+                                            localizations.translate(
                                           i18.common.coreCommonOk,
                                         ),
                                         boundaryName: selectedBoundary
@@ -465,77 +465,77 @@ class _BoundarySelectionPageState
                                       builder: (context, bool isClicked, _) {
                                         return DigitElevatedButton(
                                           onPressed: selectedBoundary == null ||
-                                              isClicked
+                                                  isClicked
                                               ? null
                                               : () async {
-                                            if (!form.valid ||
-                                                validateAllBoundarySelection()) {
-                                              clickedStatus.value = false;
-                                              await DigitToast.show(
-                                                context,
-                                                options:
-                                                DigitToastOptions(
-                                                  localizations.translate(i18
-                                                      .common
-                                                      .corecommonRequired),
-                                                  true,
-                                                  Theme.of(context),
-                                                ),
-                                              );
-                                            } else {
-                                              setState(() {
-                                                shouldPop = true;
-                                              });
+                                                  if (!form.valid ||
+                                                      validateAllBoundarySelection()) {
+                                                    clickedStatus.value = false;
+                                                    await DigitToast.show(
+                                                      context,
+                                                      options:
+                                                          DigitToastOptions(
+                                                        localizations.translate(i18
+                                                            .common
+                                                            .corecommonRequired),
+                                                        true,
+                                                        Theme.of(context),
+                                                      ),
+                                                    );
+                                                  } else {
+                                                    setState(() {
+                                                      shouldPop = true;
+                                                    });
 
-                                              context
-                                                  .read<BoundaryBloc>()
-                                                  .add(
-                                                const BoundarySubmitEvent(),
-                                              );
-                                              bool isOnline =
-                                              await getIsConnected();
+                                                    context
+                                                        .read<BoundaryBloc>()
+                                                        .add(
+                                                          const BoundarySubmitEvent(),
+                                                        );
+                                                    bool isOnline =
+                                                        await getIsConnected();
 
-                                              if (context.mounted) {
-                                                if (isOnline &&
-                                                    isDistributor) {
-                                                  context
-                                                      .read<
-                                                      BeneficiaryDownSyncBloc>()
-                                                      .add(
-                                                    DownSyncGetBatchSizeEvent(
-                                                      appConfiguration: [
-                                                        appConfiguration,
-                                                      ],
-                                                      projectId: context
-                                                          .projectId,
-                                                      boundaryCode:
-                                                      selectedBoundary
-                                                          .value!
-                                                          .code
-                                                          .toString(),
-                                                      pendingSyncCount:
-                                                      pendingSyncCount,
-                                                      boundaryName:
-                                                      selectedBoundary
-                                                          .value!
-                                                          .name
-                                                          .toString(),
-                                                    ),
-                                                  );
-                                                } else {
-                                                  Future.delayed(
-                                                    const Duration(
-                                                      milliseconds: 100,
-                                                    ),
-                                                        () => context.router
-                                                        .pop(),
-                                                  );
-                                                }
-                                                clickedStatus.value =
-                                                true;
-                                              }
-                                            }
-                                          },
+                                                    if (context.mounted) {
+                                                      if (isOnline &&
+                                                          isDistributor) {
+                                                        context
+                                                            .read<
+                                                                BeneficiaryDownSyncBloc>()
+                                                            .add(
+                                                              DownSyncGetBatchSizeEvent(
+                                                                appConfiguration: [
+                                                                  appConfiguration,
+                                                                ],
+                                                                projectId: context
+                                                                    .projectId,
+                                                                boundaryCode:
+                                                                    selectedBoundary
+                                                                        .value!
+                                                                        .code
+                                                                        .toString(),
+                                                                pendingSyncCount:
+                                                                    pendingSyncCount,
+                                                                boundaryName:
+                                                                    selectedBoundary
+                                                                        .value!
+                                                                        .name
+                                                                        .toString(),
+                                                              ),
+                                                            );
+                                                      } else {
+                                                        Future.delayed(
+                                                          const Duration(
+                                                            milliseconds: 100,
+                                                          ),
+                                                          () => context.router
+                                                              .pop(),
+                                                        );
+                                                      }
+                                                      clickedStatus.value =
+                                                          true;
+                                                    }
+                                                  }
+                                                },
                                           child: const Text('Submit'),
                                         );
                                       },

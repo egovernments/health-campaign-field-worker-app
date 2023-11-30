@@ -42,9 +42,9 @@ class DigitOutlineIconButton extends StatelessWidget {
             children: [
               Flexible(
                   child: Icon(
-                    icon,
-                    color: iconColor,
-                  )),
+                icon,
+                color: iconColor,
+              )),
               const SizedBox(width: kPadding),
               Text(
                 label,
