@@ -34,37 +34,37 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
     select.watch().listen((results) {
       final data = results
           .map((e) {
-        final task = e.readTableOrNull(sql.task);
-        final resources = e.readTableOrNull(sql.taskResource);
-        if (task == null) return null;
+            final task = e.readTableOrNull(sql.task);
+            final resources = e.readTableOrNull(sql.taskResource);
+            if (task == null) return null;
 
-        return TaskModel(
-          id: task.id,
-          createdBy: task.createdBy,
-          clientReferenceId: task.clientReferenceId,
-          rowVersion: task.rowVersion,
-          tenantId: task.tenantId,
-          isDeleted: task.isDeleted,
-          projectId: task.projectId,
-          projectBeneficiaryId: task.projectBeneficiaryId,
-          createdDate: task.createdDate,
-          status: task.status,
-          resources: resources == null
-              ? null
-              : [
-            TaskResourceModel(
-              taskclientReferenceId: resources.taskclientReferenceId,
-              clientReferenceId: resources.clientReferenceId,
-              id: resources.id,
-              productVariantId: resources.productVariantId,
-              taskId: resources.taskId,
-              deliveryComment: resources.deliveryComment,
-              quantity: resources.quantity,
-              rowVersion: resources.rowVersion,
-            ),
-          ],
-        );
-      })
+            return TaskModel(
+              id: task.id,
+              createdBy: task.createdBy,
+              clientReferenceId: task.clientReferenceId,
+              rowVersion: task.rowVersion,
+              tenantId: task.tenantId,
+              isDeleted: task.isDeleted,
+              projectId: task.projectId,
+              projectBeneficiaryId: task.projectBeneficiaryId,
+              createdDate: task.createdDate,
+              status: task.status,
+              resources: resources == null
+                  ? null
+                  : [
+                      TaskResourceModel(
+                        taskclientReferenceId: resources.taskclientReferenceId,
+                        clientReferenceId: resources.clientReferenceId,
+                        id: resources.id,
+                        productVariantId: resources.productVariantId,
+                        taskId: resources.taskId,
+                        deliveryComment: resources.deliveryComment,
+                        quantity: resources.quantity,
+                        rowVersion: resources.rowVersion,
+                      ),
+                    ],
+            );
+          })
           .whereNotNull()
           .where((element) => element.isDeleted != true)
           .toList();
@@ -75,9 +75,9 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
 
   @override
   FutureOr<List<TaskModel>> search(
-      TaskSearchModel query, [
-        String? userId,
-      ]) async {
+    TaskSearchModel query, [
+    String? userId,
+  ]) async {
     final selectQuery = sql.select(sql.task).join([
       leftOuterJoin(
         sql.address,
@@ -95,20 +95,20 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
     ]);
 
     final results = await (selectQuery
-      ..where(buildAnd([
-        if (query.clientReferenceId != null)
-          sql.task.clientReferenceId.isIn(
-            query.clientReferenceId!,
-          ),
-        if (query.projectBeneficiaryClientReferenceId != null)
-          sql.task.projectBeneficiaryClientReferenceId.isIn(
-            query.projectBeneficiaryClientReferenceId!,
-          ),
-        if (userId != null)
-          sql.task.auditCreatedBy.equals(
-            userId,
-          ),
-      ])))
+          ..where(buildAnd([
+            if (query.clientReferenceId != null)
+              sql.task.clientReferenceId.isIn(
+                query.clientReferenceId!,
+              ),
+            if (query.projectBeneficiaryClientReferenceId != null)
+              sql.task.projectBeneficiaryClientReferenceId.isIn(
+                query.projectBeneficiaryClientReferenceId!,
+              ),
+            if (userId != null)
+              sql.task.auditCreatedBy.equals(
+                userId,
+              ),
+          ])))
         .get();
 
     final tasksMap = <String, TaskModel>{};
@@ -124,25 +124,25 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
       if (tasksMap.containsKey(task.clientReferenceId)) {
         // If it is, add the resource to the existing task's resources
         tasksMap[task.clientReferenceId]!.resources?.add(
-          TaskResourceModel(
-            taskclientReferenceId: task.clientReferenceId,
-            clientReferenceId: resources!.clientReferenceId,
-            id: resources.id,
-            isDelivered: resources.isDelivered,
-            productVariantId: resources.productVariantId,
-            tenantId: task.tenantId,
-            taskId: resources.taskId,
-            deliveryComment: resources.deliveryComment,
-            quantity: resources.quantity,
-            rowVersion: resources.rowVersion,
-            auditDetails: AuditDetails(
-              createdBy: resources.auditCreatedBy!,
-              createdTime: resources.auditCreatedTime!,
-              lastModifiedBy: resources.auditModifiedBy,
-              lastModifiedTime: resources.auditModifiedTime,
-            ),
-          ),
-        );
+              TaskResourceModel(
+                taskclientReferenceId: task.clientReferenceId,
+                clientReferenceId: resources!.clientReferenceId,
+                id: resources.id,
+                isDelivered: resources.isDelivered,
+                productVariantId: resources.productVariantId,
+                tenantId: task.tenantId,
+                taskId: resources.taskId,
+                deliveryComment: resources.deliveryComment,
+                quantity: resources.quantity,
+                rowVersion: resources.rowVersion,
+                auditDetails: AuditDetails(
+                  createdBy: resources.auditCreatedBy!,
+                  createdTime: resources.auditCreatedTime!,
+                  lastModifiedBy: resources.auditModifiedBy,
+                  lastModifiedTime: resources.auditModifiedTime,
+                ),
+              ),
+            );
       } else {
         // If it's not, create a new task and add it to the map
         tasksMap[task.clientReferenceId] = TaskModel(
@@ -155,96 +155,96 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
           projectId: task.projectId,
           projectBeneficiaryId: task.projectBeneficiaryId,
           projectBeneficiaryClientReferenceId:
-          task.projectBeneficiaryClientReferenceId,
+              task.projectBeneficiaryClientReferenceId,
           createdDate: task.createdDate,
           additionalFields: task.additionalFields == null
               ? null
               : Mapper.fromJson<TaskAdditionalFields>(
-            task.additionalFields!,
-          ),
+                  task.additionalFields!,
+                ),
           address: address == null
               ? null
               : AddressModel(
-            id: address.id,
-            relatedClientReferenceId: task.clientReferenceId,
-            tenantId: address.tenantId,
-            doorNo: address.doorNo,
-            latitude: address.latitude,
-            longitude: address.longitude,
-            landmark: address.landmark,
-            locationAccuracy: address.locationAccuracy,
-            addressLine1: address.addressLine1,
-            addressLine2: address.addressLine2,
-            city: address.city,
-            pincode: address.pincode,
-            type: address.type,
-            locality: address.localityBoundaryCode != null
-                ? LocalityModel(
-              code: address.localityBoundaryCode!,
-              name: address.localityBoundaryName,
-            )
-                : null,
-            rowVersion: address.rowVersion,
-            auditDetails: (task.auditCreatedBy != null &&
-                task.auditCreatedTime != null)
-                ? AuditDetails(
-              createdBy: task.auditCreatedBy!,
-              createdTime: task.auditCreatedTime!,
-              lastModifiedBy: task.auditModifiedBy,
-              lastModifiedTime: task.auditModifiedTime,
-            )
-                : null,
-            clientAuditDetails: (task.clientCreatedBy != null &&
-                task.clientCreatedTime != null)
-                ? ClientAuditDetails(
-              createdBy: task.clientCreatedBy!,
-              createdTime: task.clientCreatedTime!,
-              lastModifiedBy: task.clientModifiedBy,
-              lastModifiedTime: task.clientModifiedTime,
-            )
-                : null,
-          ),
+                  id: address.id,
+                  relatedClientReferenceId: task.clientReferenceId,
+                  tenantId: address.tenantId,
+                  doorNo: address.doorNo,
+                  latitude: address.latitude,
+                  longitude: address.longitude,
+                  landmark: address.landmark,
+                  locationAccuracy: address.locationAccuracy,
+                  addressLine1: address.addressLine1,
+                  addressLine2: address.addressLine2,
+                  city: address.city,
+                  pincode: address.pincode,
+                  type: address.type,
+                  locality: address.localityBoundaryCode != null
+                      ? LocalityModel(
+                          code: address.localityBoundaryCode!,
+                          name: address.localityBoundaryName,
+                        )
+                      : null,
+                  rowVersion: address.rowVersion,
+                  auditDetails: (task.auditCreatedBy != null &&
+                          task.auditCreatedTime != null)
+                      ? AuditDetails(
+                          createdBy: task.auditCreatedBy!,
+                          createdTime: task.auditCreatedTime!,
+                          lastModifiedBy: task.auditModifiedBy,
+                          lastModifiedTime: task.auditModifiedTime,
+                        )
+                      : null,
+                  clientAuditDetails: (task.clientCreatedBy != null &&
+                          task.clientCreatedTime != null)
+                      ? ClientAuditDetails(
+                          createdBy: task.clientCreatedBy!,
+                          createdTime: task.clientCreatedTime!,
+                          lastModifiedBy: task.clientModifiedBy,
+                          lastModifiedTime: task.clientModifiedTime,
+                        )
+                      : null,
+                ),
           status: task.status,
           auditDetails:
-          (task.auditCreatedBy != null && task.auditCreatedTime != null)
-              ? AuditDetails(
-            createdBy: task.auditCreatedBy!,
-            createdTime: task.auditCreatedTime!,
-            lastModifiedBy: task.auditModifiedBy,
-            lastModifiedTime: task.auditModifiedTime,
-          )
-              : null,
+              (task.auditCreatedBy != null && task.auditCreatedTime != null)
+                  ? AuditDetails(
+                      createdBy: task.auditCreatedBy!,
+                      createdTime: task.auditCreatedTime!,
+                      lastModifiedBy: task.auditModifiedBy,
+                      lastModifiedTime: task.auditModifiedTime,
+                    )
+                  : null,
           clientAuditDetails:
-          (task.clientCreatedBy != null && task.clientCreatedTime != null)
-              ? ClientAuditDetails(
-            createdBy: task.clientCreatedBy!,
-            createdTime: task.clientCreatedTime!,
-            lastModifiedBy: task.clientModifiedBy,
-            lastModifiedTime: task.clientModifiedTime,
-          )
-              : null,
+              (task.clientCreatedBy != null && task.clientCreatedTime != null)
+                  ? ClientAuditDetails(
+                      createdBy: task.clientCreatedBy!,
+                      createdTime: task.clientCreatedTime!,
+                      lastModifiedBy: task.clientModifiedBy,
+                      lastModifiedTime: task.clientModifiedTime,
+                    )
+                  : null,
           resources: resources == null
               ? null
               : [
-            TaskResourceModel(
-              taskclientReferenceId: task.clientReferenceId,
-              clientReferenceId: resources.clientReferenceId,
-              id: resources.id,
-              tenantId: task.tenantId,
-              isDelivered: resources.isDelivered,
-              productVariantId: resources.productVariantId,
-              taskId: resources.taskId,
-              deliveryComment: resources.deliveryComment,
-              quantity: resources.quantity,
-              rowVersion: resources.rowVersion,
-              auditDetails: AuditDetails(
-                createdBy: resources.auditCreatedBy!,
-                createdTime: resources.auditCreatedTime!,
-                lastModifiedBy: resources.auditModifiedBy,
-                lastModifiedTime: resources.auditModifiedTime,
-              ),
-            ),
-          ],
+                  TaskResourceModel(
+                    taskclientReferenceId: task.clientReferenceId,
+                    clientReferenceId: resources.clientReferenceId,
+                    id: resources.id,
+                    tenantId: task.tenantId,
+                    isDelivered: resources.isDelivered,
+                    productVariantId: resources.productVariantId,
+                    taskId: resources.taskId,
+                    deliveryComment: resources.deliveryComment,
+                    quantity: resources.quantity,
+                    rowVersion: resources.rowVersion,
+                    auditDetails: AuditDetails(
+                      createdBy: resources.auditCreatedBy!,
+                      createdTime: resources.auditCreatedTime!,
+                      lastModifiedBy: resources.auditModifiedBy,
+                      lastModifiedTime: resources.auditModifiedTime,
+                    ),
+                  ),
+                ],
         );
       }
     }
@@ -257,10 +257,10 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
 
   @override
   FutureOr<void> create(
-      TaskModel entity, {
-        bool createOpLog = true,
-        DataOperation dataOperation = DataOperation.create,
-      }) async {
+    TaskModel entity, {
+    bool createOpLog = true,
+    DataOperation dataOperation = DataOperation.create,
+  }) async {
     final taskCompanion = entity.companion;
     final addresses = entity.address?.copyWith(
       relatedClientReferenceId: entity.clientReferenceId,
@@ -299,21 +299,21 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
 
   @override
   FutureOr<void> bulkCreate(
-      List<TaskModel> entities,
-      ) async {
+    List<TaskModel> entities,
+  ) async {
     final taskCompanions = entities.map((e) => e.companion).toList();
 
     final resourcesList = entities
         .map((e) => e.resources?.map((a) {
-      return a
-          .copyWith(
-        clientReferenceId: a.clientReferenceId,
-        taskclientReferenceId: e.clientReferenceId,
-        clientAuditDetails: e.clientAuditDetails,
-        auditDetails: e.auditDetails,
-      )
-          .companion;
-    }).toList())
+              return a
+                  .copyWith(
+                    clientReferenceId: a.clientReferenceId,
+                    taskclientReferenceId: e.clientReferenceId,
+                    clientAuditDetails: e.clientAuditDetails,
+                    auditDetails: e.auditDetails,
+                  )
+                  .companion;
+            }).toList())
         .toList();
 
     final resourcesCompanions = resourcesList.expand((e) => [e?[0]]).toList();
@@ -323,10 +323,10 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
         if (e.address != null) {
           return e.address!
               .copyWith(
-            relatedClientReferenceId: e.clientReferenceId,
-            clientAuditDetails: e.clientAuditDetails,
-            auditDetails: e.auditDetails,
-          )
+                relatedClientReferenceId: e.clientReferenceId,
+                clientAuditDetails: e.clientAuditDetails,
+                auditDetails: e.auditDetails,
+              )
               .companion;
         }
       }).toList();
@@ -357,27 +357,27 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
 
   @override
   FutureOr<void> update(
-      TaskModel entity, {
-        bool createOpLog = true,
-      }) async {
+    TaskModel entity, {
+    bool createOpLog = true,
+  }) async {
     final taskCompanion = entity.companion;
 
     final addressCompanion = entity.address
         ?.copyWith(
-      relatedClientReferenceId: entity.clientReferenceId,
-      auditDetails: entity.auditDetails,
-      clientAuditDetails: entity.clientAuditDetails,
-    )
+          relatedClientReferenceId: entity.clientReferenceId,
+          auditDetails: entity.auditDetails,
+          clientAuditDetails: entity.clientAuditDetails,
+        )
         .companion;
 
     final resourcesCompanions = entity.resources?.map((e) {
-      return e
-          .copyWith(
-        clientReferenceId: e.clientReferenceId,
-        taskclientReferenceId: entity.clientReferenceId,
-      )
-          .companion;
-    }).toList() ??
+          return e
+              .copyWith(
+                clientReferenceId: e.clientReferenceId,
+                taskclientReferenceId: entity.clientReferenceId,
+              )
+              .companion;
+        }).toList() ??
         [];
 
     await sql.batch((batch) {
@@ -407,9 +407,9 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
 
   @override
   FutureOr<void> delete(
-      TaskModel entity, {
-        bool createOpLog = true,
-      }) async {
+    TaskModel entity, {
+    bool createOpLog = true,
+  }) async {
     final updated = entity.copyWith(
       isDeleted: true,
       rowVersion: entity.rowVersion,
