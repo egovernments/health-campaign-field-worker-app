@@ -177,8 +177,6 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                   .isEmpty)) {
                         form.control(_deliveryTeamKey).value =
                             scannerState.qrcodes.first;
-                      } else {
-                        form.control(_deliveryTeamKey).value = '';
                       }
 
                       return ScrollableContent(
@@ -550,6 +548,14 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
 
                                     return InkWell(
                                       onTap: () async {
+                                        context.read<ScannerBloc>().add(
+                                              const ScannerEvent.handleScanner(
+                                                [],
+                                                [],
+                                              ),
+                                            );
+                                        form.control(_deliveryTeamKey).value =
+                                            '';
                                         final parent = context.router.parent()
                                             as StackRouter;
                                         final facility =
@@ -593,6 +599,16 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                           ),
                                           formControlName: _secondaryPartyKey,
                                           onTap: () async {
+                                            context.read<ScannerBloc>().add(
+                                                  const ScannerEvent
+                                                      .handleScanner(
+                                                    [],
+                                                    [],
+                                                  ),
+                                                );
+                                            form
+                                                .control(_deliveryTeamKey)
+                                                .value = '';
                                             final parent = context.router
                                                 .parent() as StackRouter;
                                             final facility = await parent
@@ -629,6 +645,14 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                       i18.stockReconciliationDetails
                                           .teamCodeLabel,
                                     ),
+                                    onChanged: (val) {
+                                      context.read<ScannerBloc>().add(
+                                            const ScannerEvent.handleScanner(
+                                              [],
+                                              [],
+                                            ),
+                                          );
+                                    },
                                     suffix: IconButton(
                                       onPressed: () {
                                         context.router.push(QRScannerRoute(
