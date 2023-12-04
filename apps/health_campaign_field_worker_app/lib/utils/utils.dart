@@ -294,6 +294,7 @@ bool checkEligibilityForActiveCycle(
 }
 
 /*Check for if the individual falls on the valid age category*/
+
 ///  * Returns [true] if the individual is in the same cycle and is eligible for the next dose,
 bool checkEligibilityForAgeAndSideEffect(
   DigitDOBAge age,

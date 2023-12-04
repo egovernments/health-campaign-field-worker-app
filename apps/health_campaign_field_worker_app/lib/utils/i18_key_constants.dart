@@ -1101,6 +1101,8 @@ class HouseholdOverView {
 
   String get viewDeliveryLabel => 'VIEW_DELIVERY_DETAILS_LABEL';
 
+  String get transactionDetails => 'STOCK_TRANSACTION_DETAILS';
+
   String get householdOverViewAddActionText =>
       'HOUSEHOLD_OVER_VIEW__ADD_ACTION_TEXT';
 }
@@ -1295,6 +1297,8 @@ class StockDetails {
 
   String get damagedPageTitle => 'DAMAGED_STOCK_DETAILS';
 
+  String get transactionDetailsLabel => 'TRANSACTION_DETAILS_LABEL';
+
   /// Select Product label
   String get selectProductLabel => 'STOCK_DETAILS_SELECT_PRODUCT';
 
@@ -1305,9 +1309,14 @@ class StockDetails {
 
   String get selectTransactingPartyReturned => 'STOCK_DETAILS_RETURNED_TO';
 
+  String get teamCodeRequired => 'STOCK_DETAILS_TEAM_CODE_IS_REQUIRED';
+
   String get selectTransactingPartyReceivedFromDamaged {
     return 'STOCK_DETAILS_RECEIVED_FROM_DAMAGED';
   }
+
+  String get senderReceiverValidation =>
+      'STOCK_DETAILS_SENDER_RECEIVER_ID_VALIDATION';
 
   String get selectTransactingPartyReceivedFromLost {
     return 'STOCK_DETAILS_RECEIVED_FROM_LOST';
@@ -1399,6 +1408,8 @@ class StockReconciliationDetails {
   String get noProjectSelected => 'NO_PROJECT_SELECTED';
 
   String get fieldRequired => 'STOCK_RECONCILIATION_FILED_REQUIRED';
+
+  String get teamCodeLabel => 'STOCK_TEAM_CODE_LABEL';
 }
 
 class ManageStock {

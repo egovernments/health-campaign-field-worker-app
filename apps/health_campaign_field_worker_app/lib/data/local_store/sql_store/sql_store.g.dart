@@ -17154,6 +17154,10 @@ class StockData extends DataClass implements Insertable<StockData> {
   final String? transactingPartyType;
   final String? quantity;
   final String? waybillNumber;
+  final String? receiverId;
+  final String? receiverType;
+  final String? senderId;
+  final String? senderType;
   final String? auditCreatedBy;
   final bool? nonRecoverableError;
   final int? auditCreatedTime;
@@ -17180,6 +17184,10 @@ class StockData extends DataClass implements Insertable<StockData> {
       this.transactingPartyType,
       this.quantity,
       this.waybillNumber,
+      this.receiverId,
+      this.receiverType,
+      this.senderId,
+      this.senderType,
       this.auditCreatedBy,
       this.nonRecoverableError,
       this.auditCreatedTime,
@@ -17218,6 +17226,14 @@ class StockData extends DataClass implements Insertable<StockData> {
           .mapFromDatabaseResponse(data['${effectivePrefix}quantity']),
       waybillNumber: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}waybill_number']),
+      receiverId: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}receiver_id']),
+      receiverType: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}receiver_type']),
+      senderId: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}sender_id']),
+      senderType: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}sender_type']),
       auditCreatedBy: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}audit_created_by']),
       nonRecoverableError: const BoolType().mapFromDatabaseResponse(
@@ -17283,6 +17299,18 @@ class StockData extends DataClass implements Insertable<StockData> {
     }
     if (!nullToAbsent || waybillNumber != null) {
       map['waybill_number'] = Variable<String?>(waybillNumber);
+    }
+    if (!nullToAbsent || receiverId != null) {
+      map['receiver_id'] = Variable<String?>(receiverId);
+    }
+    if (!nullToAbsent || receiverType != null) {
+      map['receiver_type'] = Variable<String?>(receiverType);
+    }
+    if (!nullToAbsent || senderId != null) {
+      map['sender_id'] = Variable<String?>(senderId);
+    }
+    if (!nullToAbsent || senderType != null) {
+      map['sender_type'] = Variable<String?>(senderType);
     }
     if (!nullToAbsent || auditCreatedBy != null) {
       map['audit_created_by'] = Variable<String?>(auditCreatedBy);
@@ -17364,6 +17392,18 @@ class StockData extends DataClass implements Insertable<StockData> {
       waybillNumber: waybillNumber == null && nullToAbsent
           ? const Value.absent()
           : Value(waybillNumber),
+      receiverId: receiverId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(receiverId),
+      receiverType: receiverType == null && nullToAbsent
+          ? const Value.absent()
+          : Value(receiverType),
+      senderId: senderId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(senderId),
+      senderType: senderType == null && nullToAbsent
+          ? const Value.absent()
+          : Value(senderType),
       auditCreatedBy: auditCreatedBy == null && nullToAbsent
           ? const Value.absent()
           : Value(auditCreatedBy),
@@ -17426,6 +17466,10 @@ class StockData extends DataClass implements Insertable<StockData> {
           serializer.fromJson<String?>(json['transactingPartyType']),
       quantity: serializer.fromJson<String?>(json['quantity']),
       waybillNumber: serializer.fromJson<String?>(json['waybillNumber']),
+      receiverId: serializer.fromJson<String?>(json['receiverId']),
+      receiverType: serializer.fromJson<String?>(json['receiverType']),
+      senderId: serializer.fromJson<String?>(json['senderId']),
+      senderType: serializer.fromJson<String?>(json['senderType']),
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       nonRecoverableError:
           serializer.fromJson<bool?>(json['nonRecoverableError']),
@@ -17460,6 +17504,10 @@ class StockData extends DataClass implements Insertable<StockData> {
       'transactingPartyType': serializer.toJson<String?>(transactingPartyType),
       'quantity': serializer.toJson<String?>(quantity),
       'waybillNumber': serializer.toJson<String?>(waybillNumber),
+      'receiverId': serializer.toJson<String?>(receiverId),
+      'receiverType': serializer.toJson<String?>(receiverType),
+      'senderId': serializer.toJson<String?>(senderId),
+      'senderType': serializer.toJson<String?>(senderType),
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'nonRecoverableError': serializer.toJson<bool?>(nonRecoverableError),
       'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
@@ -17490,6 +17538,10 @@ class StockData extends DataClass implements Insertable<StockData> {
           String? transactingPartyType,
           String? quantity,
           String? waybillNumber,
+          String? receiverId,
+          String? receiverType,
+          String? senderId,
+          String? senderType,
           String? auditCreatedBy,
           bool? nonRecoverableError,
           int? auditCreatedTime,
@@ -17516,6 +17568,10 @@ class StockData extends DataClass implements Insertable<StockData> {
         transactingPartyType: transactingPartyType ?? this.transactingPartyType,
         quantity: quantity ?? this.quantity,
         waybillNumber: waybillNumber ?? this.waybillNumber,
+        receiverId: receiverId ?? this.receiverId,
+        receiverType: receiverType ?? this.receiverType,
+        senderId: senderId ?? this.senderId,
+        senderType: senderType ?? this.senderType,
         auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
         nonRecoverableError: nonRecoverableError ?? this.nonRecoverableError,
         auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
@@ -17545,6 +17601,10 @@ class StockData extends DataClass implements Insertable<StockData> {
           ..write('transactingPartyType: $transactingPartyType, ')
           ..write('quantity: $quantity, ')
           ..write('waybillNumber: $waybillNumber, ')
+          ..write('receiverId: $receiverId, ')
+          ..write('receiverType: $receiverType, ')
+          ..write('senderId: $senderId, ')
+          ..write('senderType: $senderType, ')
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('nonRecoverableError: $nonRecoverableError, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
@@ -17576,6 +17636,10 @@ class StockData extends DataClass implements Insertable<StockData> {
         transactingPartyType,
         quantity,
         waybillNumber,
+        receiverId,
+        receiverType,
+        senderId,
+        senderType,
         auditCreatedBy,
         nonRecoverableError,
         auditCreatedTime,
@@ -17606,6 +17670,10 @@ class StockData extends DataClass implements Insertable<StockData> {
           other.transactingPartyType == this.transactingPartyType &&
           other.quantity == this.quantity &&
           other.waybillNumber == this.waybillNumber &&
+          other.receiverId == this.receiverId &&
+          other.receiverType == this.receiverType &&
+          other.senderId == this.senderId &&
+          other.senderType == this.senderType &&
           other.auditCreatedBy == this.auditCreatedBy &&
           other.nonRecoverableError == this.nonRecoverableError &&
           other.auditCreatedTime == this.auditCreatedTime &&
@@ -17634,6 +17702,10 @@ class StockCompanion extends UpdateCompanion<StockData> {
   final Value<String?> transactingPartyType;
   final Value<String?> quantity;
   final Value<String?> waybillNumber;
+  final Value<String?> receiverId;
+  final Value<String?> receiverType;
+  final Value<String?> senderId;
+  final Value<String?> senderType;
   final Value<String?> auditCreatedBy;
   final Value<bool?> nonRecoverableError;
   final Value<int?> auditCreatedTime;
@@ -17660,6 +17732,10 @@ class StockCompanion extends UpdateCompanion<StockData> {
     this.transactingPartyType = const Value.absent(),
     this.quantity = const Value.absent(),
     this.waybillNumber = const Value.absent(),
+    this.receiverId = const Value.absent(),
+    this.receiverType = const Value.absent(),
+    this.senderId = const Value.absent(),
+    this.senderType = const Value.absent(),
     this.auditCreatedBy = const Value.absent(),
     this.nonRecoverableError = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
@@ -17687,6 +17763,10 @@ class StockCompanion extends UpdateCompanion<StockData> {
     this.transactingPartyType = const Value.absent(),
     this.quantity = const Value.absent(),
     this.waybillNumber = const Value.absent(),
+    this.receiverId = const Value.absent(),
+    this.receiverType = const Value.absent(),
+    this.senderId = const Value.absent(),
+    this.senderType = const Value.absent(),
     this.auditCreatedBy = const Value.absent(),
     this.nonRecoverableError = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
@@ -17714,6 +17794,10 @@ class StockCompanion extends UpdateCompanion<StockData> {
     Expression<String?>? transactingPartyType,
     Expression<String?>? quantity,
     Expression<String?>? waybillNumber,
+    Expression<String?>? receiverId,
+    Expression<String?>? receiverType,
+    Expression<String?>? senderId,
+    Expression<String?>? senderType,
     Expression<String?>? auditCreatedBy,
     Expression<bool?>? nonRecoverableError,
     Expression<int?>? auditCreatedTime,
@@ -17743,6 +17827,10 @@ class StockCompanion extends UpdateCompanion<StockData> {
         'transacting_party_type': transactingPartyType,
       if (quantity != null) 'quantity': quantity,
       if (waybillNumber != null) 'waybill_number': waybillNumber,
+      if (receiverId != null) 'receiver_id': receiverId,
+      if (receiverType != null) 'receiver_type': receiverType,
+      if (senderId != null) 'sender_id': senderId,
+      if (senderType != null) 'sender_type': senderType,
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
       if (nonRecoverableError != null)
         'non_recoverable_error': nonRecoverableError,
@@ -17774,6 +17862,10 @@ class StockCompanion extends UpdateCompanion<StockData> {
       Value<String?>? transactingPartyType,
       Value<String?>? quantity,
       Value<String?>? waybillNumber,
+      Value<String?>? receiverId,
+      Value<String?>? receiverType,
+      Value<String?>? senderId,
+      Value<String?>? senderType,
       Value<String?>? auditCreatedBy,
       Value<bool?>? nonRecoverableError,
       Value<int?>? auditCreatedTime,
@@ -17800,6 +17892,10 @@ class StockCompanion extends UpdateCompanion<StockData> {
       transactingPartyType: transactingPartyType ?? this.transactingPartyType,
       quantity: quantity ?? this.quantity,
       waybillNumber: waybillNumber ?? this.waybillNumber,
+      receiverId: receiverId ?? this.receiverId,
+      receiverType: receiverType ?? this.receiverType,
+      senderId: senderId ?? this.senderId,
+      senderType: senderType ?? this.senderType,
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
       nonRecoverableError: nonRecoverableError ?? this.nonRecoverableError,
       auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
@@ -17851,6 +17947,18 @@ class StockCompanion extends UpdateCompanion<StockData> {
     }
     if (waybillNumber.present) {
       map['waybill_number'] = Variable<String?>(waybillNumber.value);
+    }
+    if (receiverId.present) {
+      map['receiver_id'] = Variable<String?>(receiverId.value);
+    }
+    if (receiverType.present) {
+      map['receiver_type'] = Variable<String?>(receiverType.value);
+    }
+    if (senderId.present) {
+      map['sender_id'] = Variable<String?>(senderId.value);
+    }
+    if (senderType.present) {
+      map['sender_type'] = Variable<String?>(senderType.value);
     }
     if (auditCreatedBy.present) {
       map['audit_created_by'] = Variable<String?>(auditCreatedBy.value);
@@ -17917,6 +18025,10 @@ class StockCompanion extends UpdateCompanion<StockData> {
           ..write('transactingPartyType: $transactingPartyType, ')
           ..write('quantity: $quantity, ')
           ..write('waybillNumber: $waybillNumber, ')
+          ..write('receiverId: $receiverId, ')
+          ..write('receiverType: $receiverType, ')
+          ..write('senderId: $senderId, ')
+          ..write('senderType: $senderType, ')
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('nonRecoverableError: $nonRecoverableError, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
@@ -17997,6 +18109,27 @@ class $StockTable extends Stock with TableInfo<$StockTable, StockData> {
   @override
   late final GeneratedColumn<String?> waybillNumber = GeneratedColumn<String?>(
       'waybill_number', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _receiverIdMeta = const VerificationMeta('receiverId');
+  @override
+  late final GeneratedColumn<String?> receiverId = GeneratedColumn<String?>(
+      'receiver_id', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _receiverTypeMeta =
+      const VerificationMeta('receiverType');
+  @override
+  late final GeneratedColumn<String?> receiverType = GeneratedColumn<String?>(
+      'receiver_type', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _senderIdMeta = const VerificationMeta('senderId');
+  @override
+  late final GeneratedColumn<String?> senderId = GeneratedColumn<String?>(
+      'sender_id', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _senderTypeMeta = const VerificationMeta('senderType');
+  @override
+  late final GeneratedColumn<String?> senderType = GeneratedColumn<String?>(
+      'sender_type', aliasedName, true,
       type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _auditCreatedByMeta =
       const VerificationMeta('auditCreatedBy');
@@ -18108,6 +18241,10 @@ class $StockTable extends Stock with TableInfo<$StockTable, StockData> {
         transactingPartyType,
         quantity,
         waybillNumber,
+        receiverId,
+        receiverType,
+        senderId,
+        senderType,
         auditCreatedBy,
         nonRecoverableError,
         auditCreatedTime,
@@ -18185,6 +18322,28 @@ class $StockTable extends Stock with TableInfo<$StockTable, StockData> {
           _waybillNumberMeta,
           waybillNumber.isAcceptableOrUnknown(
               data['waybill_number']!, _waybillNumberMeta));
+    }
+    if (data.containsKey('receiver_id')) {
+      context.handle(
+          _receiverIdMeta,
+          receiverId.isAcceptableOrUnknown(
+              data['receiver_id']!, _receiverIdMeta));
+    }
+    if (data.containsKey('receiver_type')) {
+      context.handle(
+          _receiverTypeMeta,
+          receiverType.isAcceptableOrUnknown(
+              data['receiver_type']!, _receiverTypeMeta));
+    }
+    if (data.containsKey('sender_id')) {
+      context.handle(_senderIdMeta,
+          senderId.isAcceptableOrUnknown(data['sender_id']!, _senderIdMeta));
+    }
+    if (data.containsKey('sender_type')) {
+      context.handle(
+          _senderTypeMeta,
+          senderType.isAcceptableOrUnknown(
+              data['sender_type']!, _senderTypeMeta));
     }
     if (data.containsKey('audit_created_by')) {
       context.handle(
