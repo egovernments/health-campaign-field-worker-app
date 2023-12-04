@@ -40,7 +40,8 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
     super.initState();
   }
 
-  FormGroup buildForm(bool isDistributor) => fb.group(<String, Object>{
+  FormGroup buildForm(bool isDistributor, RecordStockState stockState) =>
+      fb.group(<String, Object>{
         _dateOfEntryKey: FormControl<DateTime>(value: DateTime.now()),
         _administrativeUnitKey: FormControl<String>(
           value: context.boundary.name,
@@ -49,6 +50,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
           validators: [Validators.required],
         ),
         _teamCodeKey: FormControl<String>(
+          value: stockState.primaryId ?? '',
           validators: deliveryTeamSelected ? [Validators.required] : [],
         ),
       });
@@ -118,12 +120,13 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                 },
                 child: BlocBuilder<ScannerBloc, ScannerState>(
                   builder: (context, scannerState) {
+                    final stockState =
+                        BlocProvider.of<RecordStockBloc>(context).state;
+
                     return ReactiveFormBuilder(
-                      form: () => buildForm(isDistributor),
+                      form: () => buildForm(isDistributor, stockState),
                       builder: (context, form, child) {
-                        final stockState =
-                            BlocProvider.of<RecordStockBloc>(context).state;
-                        if (stockState.primaryId != null) {
+                        if (scannerState.qrcodes.isNotEmpty) {
                           form.control(_teamCodeKey).value =
                               scannerState.qrcodes.last;
                         }
@@ -273,6 +276,13 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                   ]),
                                   InkWell(
                                     onTap: () async {
+                                      context.read<ScannerBloc>().add(
+                                            const ScannerEvent.handleScanner(
+                                              [],
+                                              [],
+                                            ),
+                                          );
+                                      form.control(_teamCodeKey).value = '';
                                       final parent = context.router.parent()
                                           as StackRouter;
                                       final facility =
@@ -322,6 +332,14 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                         formControlName: _warehouseKey,
                                         readOnly: true,
                                         onTap: () async {
+                                          context.read<ScannerBloc>().add(
+                                                const ScannerEvent
+                                                    .handleScanner(
+                                                  [],
+                                                  [],
+                                                ),
+                                              );
+                                          form.control(_teamCodeKey).value = '';
                                           final parent = context.router.parent()
                                               as StackRouter;
                                           final facility =
@@ -354,6 +372,14 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                             .teamCodeLabel,
                                       ),
                                       formControlName: _teamCodeKey,
+                                      onChanged: (val) {
+                                        context.read<ScannerBloc>().add(
+                                              const ScannerEvent.handleScanner(
+                                                [],
+                                                [],
+                                              ),
+                                            );
+                                      },
                                       isRequired: true,
                                       suffix: IconButton(
                                         onPressed: () {
