@@ -167,9 +167,18 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                 builder: (context, form, child) {
                   return BlocBuilder<ScannerBloc, ScannerState>(
                     builder: (context, scannerState) {
-                      if (scannerState.qrcodes.isNotEmpty) {
+                      if (scannerState.qrcodes.isNotEmpty &&
+                          (form.control(_deliveryTeamKey).value == null ||
+                              form
+                                  .control(_deliveryTeamKey)
+                                  .value
+                                  .toString()
+                                  .trim()
+                                  .isEmpty)) {
                         form.control(_deliveryTeamKey).value =
                             scannerState.qrcodes.first;
+                      } else {
+                        form.control(_deliveryTeamKey).value = '';
                       }
 
                       return ScrollableContent(
