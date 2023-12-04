@@ -30,25 +30,26 @@ class AddressLocalRepository {
     );
 
     (selectQuery
-      ..where(buildAnd([
-        sql.address.relatedClientReferenceId.isNotNull(),
-        sql.household.clientReferenceId.isNotNull(),
-        if (query.latitude != null &&
-            query.longitude != null &&
-            query.maxRadius != null)
-          CustomExpression<bool>('''
+          ..where(buildAnd([
+            sql.address.relatedClientReferenceId.isNotNull(),
+            sql.household.clientReferenceId.isNotNull(),
+            if (query.latitude != null &&
+                query.longitude != null &&
+                query.maxRadius != null)
+              CustomExpression<bool>('''
         (6371393 * acos(
             cos(${query.latitude! * math.pi / 180.0}) * cos((address.latitude * ${math.pi / 180.0}))
             * cos((address.longitude * ${math.pi / 180.0}) - ${query.longitude! * math.pi / 180.0})
             + sin(${query.latitude! * math.pi / 180.0}) * sin((address.latitude * ${math.pi / 180.0}))
         )) <= ${query.maxRadius!}
     '''),
-        if (query.latitude != null &&
-            query.longitude != null &&
-            query.maxRadius != null)
-          sql.address.longitude.isNotNull(),
-        sql.address.latitude.isNotNull(),
-      ])));
+            if (query.latitude != null &&
+                query.longitude != null &&
+                query.maxRadius != null)
+              sql.address.longitude.isNotNull(),
+            sql.address.latitude.isNotNull(),
+          ])))
+        .limit(5);
     final results = await selectQuery.get();
 
     return results
@@ -121,25 +122,27 @@ class AddressLocalRepository {
     );
 
     (selectQuery
-      ..where(buildAnd([
-        sql.address.relatedClientReferenceId.isNotNull(),
-        sql.individual.clientReferenceId.isNotNull(),
-        if (query.latitude != null &&
-            query.longitude != null &&
-            query.maxRadius != null)
-          CustomExpression<bool>('''
+          ..where(buildAnd([
+            sql.address.relatedClientReferenceId.isNotNull(),
+            sql.individual.clientReferenceId.isNotNull(),
+            if (query.latitude != null &&
+                query.longitude != null &&
+                query.maxRadius != null)
+              CustomExpression<bool>('''
         (6371393 * acos(
             cos(${query.latitude! * math.pi / 180.0}) * cos((address.latitude * ${math.pi / 180.0}))
             * cos((address.longitude * ${math.pi / 180.0}) - ${query.longitude! * math.pi / 180.0})
             + sin(${query.latitude! * math.pi / 180.0}) * sin((address.latitude * ${math.pi / 180.0}))
         )) <= ${query.maxRadius!}
     '''),
-        if (query.latitude != null &&
-            query.longitude != null &&
-            query.maxRadius != null)
-          sql.address.longitude.isNotNull(),
-        sql.address.latitude.isNotNull(),
-      ])));
+            if (query.latitude != null &&
+                query.longitude != null &&
+                query.maxRadius != null)
+              sql.address.longitude.isNotNull(),
+            sql.address.latitude.isNotNull(),
+          ])))
+        .limit(20);
+
     final results = await selectQuery.get();
 
     return results

@@ -122,7 +122,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
             : null;
         final ageInYears = DigitDateUtils.calculateAge(
           DigitDateUtils.getFormattedDateToDateTime(
-                e.dateOfBirth!,
+                e.dateOfBirth ?? '',
               ) ??
               DateTime.now(),
         ).years;

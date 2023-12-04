@@ -41,8 +41,6 @@ class IndividualLocalRepository
         ),
       ],
     );
-    final r = await selectQuery.get();
-    print(r.length);
 
     final results = await (selectQuery
           ..where(

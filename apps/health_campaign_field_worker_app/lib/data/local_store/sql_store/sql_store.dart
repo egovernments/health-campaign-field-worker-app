@@ -98,7 +98,7 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
       final dbFolder = await getApplicationDocumentsDirectory();
       final file = File(p.join(dbFolder.path, 'db.sqlite'));
 
-      return NativeDatabase(file, logStatements: true, setup: (data) {});
+      return NativeDatabase(file, logStatements: false, setup: (data) {});
     });
   }
 

@@ -10,42 +10,47 @@ class HouseholdMemberSearchModel extends EntitySearchModel {
   final String? id;
   final String? householdId;
   final String? householdClientReferenceId;
+  final List<String>? householdClientReferenceIds;
   final String? individualId;
   final String? individualClientReferenceId;
   final bool? isHeadOfHousehold;
+  final List<String>? individualClientReferenceIds;
   final List<String>? clientReferenceId;
   final String? tenantId;
-  
+
   HouseholdMemberSearchModel({
     this.id,
     this.householdId,
     this.householdClientReferenceId,
+    this.householdClientReferenceIds,
     this.individualId,
     this.individualClientReferenceId,
+    this.individualClientReferenceIds,
     this.isHeadOfHousehold,
     this.clientReferenceId,
     this.tenantId,
     super.boundaryCode,
     super.isDeleted,
-  }):  super();
+  }) : super();
 
   @MappableConstructor()
   HouseholdMemberSearchModel.ignoreDeleted({
     this.id,
     this.householdId,
     this.householdClientReferenceId,
+    this.householdClientReferenceIds,
     this.individualId,
     this.individualClientReferenceId,
+    this.individualClientReferenceIds,
     this.isHeadOfHousehold,
     this.clientReferenceId,
     this.tenantId,
     super.boundaryCode,
-  }):  super(isDeleted: false);
+  }) : super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true)
 class HouseholdMemberModel extends EntityModel {
-
   static const schemaName = 'HouseholdMember';
 
   final String? id;
@@ -72,9 +77,10 @@ class HouseholdMemberModel extends EntityModel {
     required this.clientReferenceId,
     this.tenantId,
     this.rowVersion,
-    super.auditDetails,super.clientAuditDetails,
+    super.auditDetails,
+    super.clientAuditDetails,
     super.isDeleted = false,
-  }): super();
+  }) : super();
 
   HouseholdMemberCompanion get companion {
     return HouseholdMemberCompanion(
@@ -98,7 +104,7 @@ class HouseholdMemberModel extends EntityModel {
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),
-      );
+    );
   }
 }
 
