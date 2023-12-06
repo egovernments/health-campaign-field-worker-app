@@ -5,6 +5,7 @@ import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+
 import '../../utils/i18_key_constants.dart' as i18;
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/localization/app_localization.dart';
@@ -120,87 +121,84 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
                 builder:
                     (BuildContext context, FormGroup formGroup, Widget? child) {
                   return ScrollableContent(
-                    footer: SizedBox(
-                      height: 85,
-                      child: DigitCard(
-                        margin:
-                            const EdgeInsets.only(left: 0, right: 0, top: 10),
-                        child: BlocBuilder<UserBloc, UserState>(
-                          builder: (ctx, state) {
-                            return DigitElevatedButton(
-                              onPressed: () async {
-                                final connectivityResult =
-                                    await (Connectivity().checkConnectivity());
-                                final isOnline = connectivityResult ==
-                                        ConnectivityResult.wifi ||
-                                    connectivityResult ==
-                                        ConnectivityResult.mobile;
+                    enableFixedButton: true,
+                    footer: DigitCard(
+                      margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
+                      padding:
+                          const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
+                      child: BlocBuilder<UserBloc, UserState>(
+                        builder: (ctx, state) {
+                          return DigitElevatedButton(
+                            onPressed: () async {
+                              final connectivityResult =
+                                  await (Connectivity().checkConnectivity());
+                              final isOnline = connectivityResult ==
+                                      ConnectivityResult.wifi ||
+                                  connectivityResult ==
+                                      ConnectivityResult.mobile;
 
-                                if (!isOnline) {
-                                  if (context.mounted) {
-                                    DigitDialog.show(
-                                      context,
-                                      options: DigitDialogOptions(
-                                        titleText: AppLocalizations.of(context)
-                                            .translate(
-                                          i18.common.connectionLabel,
-                                        ),
-                                        contentText:
-                                            AppLocalizations.of(context)
-                                                .translate(
-                                          i18.common.connectionContent,
-                                        ),
-                                        primaryAction: DigitDialogActions(
-                                          label: AppLocalizations.of(context)
-                                              .translate(
-                                            i18.common.coreCommonOk,
-                                          ),
-                                          action: (ctx) => Navigator.of(
-                                            context,
-                                            rootNavigator: true,
-                                          ).pop(),
-                                        ),
+                              if (!isOnline) {
+                                if (context.mounted) {
+                                  DigitDialog.show(
+                                    context,
+                                    options: DigitDialogOptions(
+                                      titleText: AppLocalizations.of(context)
+                                          .translate(
+                                        i18.common.connectionLabel,
                                       ),
-                                    );
-                                  }
-                                } else {
-                                  formGroup.markAllAsTouched();
-                                  if (!formGroup.valid) return;
-                                  UserModel? user = state.mapOrNull(
-                                    user: (value) => value.userModel,
+                                      contentText: AppLocalizations.of(context)
+                                          .translate(
+                                        i18.common.connectionContent,
+                                      ),
+                                      primaryAction: DigitDialogActions(
+                                        label: AppLocalizations.of(context)
+                                            .translate(
+                                          i18.common.coreCommonOk,
+                                        ),
+                                        action: (ctx) => Navigator.of(
+                                          context,
+                                          rootNavigator: true,
+                                        ).pop(),
+                                      ),
+                                    ),
                                   );
-                                  if (user != null) {
-                                    final updatedUser = user.copyWith(
-                                      gender: formGroup
-                                          .control(_genderKey)
-                                          .value as String,
-                                      mobileNumber: formGroup
-                                          .control(_mobileNumberKey)
-                                          .value,
-                                      name: formGroup.control(_name).value
-                                          as String,
-                                      emailId: formGroup.control(_emailId).value
-                                          as String,
-                                    );
-
-                                    ctx.read<UserBloc>().add(
-                                          UserEvent.updateUser(
-                                            user: updatedUser,
-                                            oldUser: user,
-                                          ),
-                                        );
-                                  }
                                 }
-                              },
-                              child: Center(
-                                child: Text(
-                                  localizations
-                                      .translate(i18.common.coreCommonSave),
-                                ),
+                              } else {
+                                formGroup.markAllAsTouched();
+                                if (!formGroup.valid) return;
+                                UserModel? user = state.mapOrNull(
+                                  user: (value) => value.userModel,
+                                );
+                                if (user != null) {
+                                  final updatedUser = user.copyWith(
+                                    gender: formGroup.control(_genderKey).value
+                                        as String,
+                                    mobileNumber: formGroup
+                                        .control(_mobileNumberKey)
+                                        .value,
+                                    name: formGroup.control(_name).value
+                                        as String,
+                                    emailId: formGroup.control(_emailId).value
+                                        as String,
+                                  );
+
+                                  ctx.read<UserBloc>().add(
+                                        UserEvent.updateUser(
+                                          user: updatedUser,
+                                          oldUser: user,
+                                        ),
+                                      );
+                                }
+                              }
+                            },
+                            child: Center(
+                              child: Text(
+                                localizations
+                                    .translate(i18.common.coreCommonSave),
                               ),
-                            );
-                          },
-                        ),
+                            ),
+                          );
+                        },
                       ),
                     ),
                     header: const Column(children: [
