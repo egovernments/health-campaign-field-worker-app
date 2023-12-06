@@ -128,7 +128,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                       builder: (context, form, child) {
                         if (scannerState.qrcodes.isNotEmpty) {
                           form.control(_teamCodeKey).value =
-                              scannerState.qrcodes.first;
+                              scannerState.qrcodes.last;
                         }
 
                         return ScrollableContent(
