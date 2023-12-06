@@ -48,9 +48,6 @@ class SideBar extends StatelessWidget {
                       value.userModel.name.toString(),
                       style: theme.textTheme.displayMedium,
                     ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
                     Text(
                       value.userModel.mobileNumber.toString(),
                       style: theme.textTheme.labelSmall,
@@ -79,9 +76,6 @@ class SideBar extends StatelessWidget {
                           size: 150.0,
                         ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 16.0,
                     ),
                   ],
                 ),
