@@ -30,6 +30,8 @@ class _SearchBeneficiaryPageState
     extends LocalizedState<SearchBeneficiaryPage> {
   final TextEditingController searchController = TextEditingController();
   bool isProximityEnabled = false;
+  int offset = 0;
+  int limit = 10;
 
   @override
   void initState() {
@@ -51,218 +53,245 @@ class _SearchBeneficiaryPageState
           final appConfig = state.appConfiguration;
 
           return Scaffold(
-            body: BlocBuilder<SearchHouseholdsBloc, SearchHouseholdsState>(
-              builder: (context, searchState) {
-                return ScrollableContent(
-                  header: const Column(children: [
-                    BackNavigationHelpHeaderWidget(),
-                  ]),
-                  slivers: [
-                    SliverToBoxAdapter(
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                localizations.translate(
-                                  context.beneficiaryType !=
-                                          BeneficiaryType.individual
-                                      ? i18
-                                          .searchBeneficiary.statisticsLabelText
-                                      : i18.searchBeneficiary
-                                          .searchIndividualLabelText,
-                                ),
-                                style: theme.textTheme.displayMedium,
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ),
-                          BlocBuilder<LocationBloc, LocationState>(
-                            builder: (context, locationState) {
-                              return Column(
-                                children: [
-                                  DigitSearchBar(
-                                    controller: searchController,
-                                    hintText: localizations.translate(
-                                      i18.searchBeneficiary
-                                          .beneficiarySearchHintText,
-                                    ),
-                                    textCapitalization:
-                                        TextCapitalization.words,
-                                    onChanged: (value) {
-                                      final bloc =
-                                          context.read<SearchHouseholdsBloc>();
+            body: NotificationListener<ScrollNotification>(
+              onNotification: (scrollNotification) {
+                if (scrollNotification is ScrollUpdateNotification) {
+                  final metrics = scrollNotification.metrics;
+                  print(metrics.atEdge);
+                  if (metrics.atEdge) {
+                    final bloc = context.read<SearchHouseholdsBloc>();
+                    final locationState = context.read<LocationBloc>().state;
+                    bloc.add(SearchHouseholdsEvent.searchByProximity(
+                      latitude: locationState.latitude!,
+                      longititude: locationState.longitude!,
+                      projectId: context.projectId,
+                      maxRadius: appConfig.maxRadius!,
+                      offset: offset + limit,
+                      limit: limit,
+                    ));
+                    setState(() {
+                      offset = (offset + limit);
+                    });
+                  }
 
-                                      if (value.trim().length < 2 &&
-                                          !isProximityEnabled) {
-                                        bloc.add(
-                                          const SearchHouseholdsClearEvent(),
-                                        );
-
-                                        return;
-                                      } else {
-                                        if (isProximityEnabled &&
-                                            value.trim().length < 2) {
-                                          bloc.add(SearchHouseholdsEvent
-                                              .searchByProximity(
-                                            latitude: locationState.latitude!,
-                                            longititude:
-                                                locationState.longitude!,
-                                            projectId: context.projectId,
-                                            maxRadius: appConfig.maxRadius!,
-                                          ));
-                                        } else {
-                                          bloc.add(
-                                            SearchHouseholdsSearchByHouseholdHeadEvent(
-                                              searchText: value.trim(),
-                                              projectId: context.projectId,
-                                              latitude: locationState.latitude,
-                                              longitude:
-                                                  locationState.longitude,
-                                              isProximityEnabled:
-                                                  isProximityEnabled,
-                                              maxRadius: appConfig.maxRadius,
-                                            ),
-                                          );
-                                        }
-                                      }
-                                    },
+                  double delta = 200.0;
+                  print(metrics.pixels);
+                  // Check if the user is scrolling up or down
+                  if (scrollNotification.scrollDelta! < 0) {
+                    // Scrolling down
+                    print("Scroll Down");
+                  } else if (scrollNotification.scrollDelta! > 0) {
+                    // Scrolling up
+                    print("Scroll UP");
+                  }
+                }
+                // Return true to allow the notification to continue to be dispatched to further ancestors.
+                return true;
+              },
+              child: BlocBuilder<SearchHouseholdsBloc, SearchHouseholdsState>(
+                builder: (context, searchState) {
+                  return ScrollableContent(
+                    header: const Column(children: [
+                      BackNavigationHelpHeaderWidget(),
+                    ]),
+                    slivers: [
+                      SliverToBoxAdapter(
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  localizations.translate(
+                                    context.beneficiaryType !=
+                                            BeneficiaryType.individual
+                                        ? i18.searchBeneficiary
+                                            .statisticsLabelText
+                                        : i18.searchBeneficiary
+                                            .searchIndividualLabelText,
                                   ),
-                                  locationState.latitude != null
-                                      ? Row(
-                                          children: [
-                                            Switch(
-                                              value: isProximityEnabled,
-                                              onChanged: (value) {
-                                                print("VALUE changed");
-                                                searchController.clear();
-                                                setState(() {
-                                                  isProximityEnabled = value;
-                                                });
-
-                                                if (locationState
-                                                        .hasPermissions &&
-                                                    value &&
-                                                    locationState.latitude !=
-                                                        null &&
-                                                    locationState.longitude !=
-                                                        null &&
-                                                    appConfig.maxRadius !=
-                                                        null &&
-                                                    isProximityEnabled) {
-                                                  final bloc = context.read<
-                                                      SearchHouseholdsBloc>();
-                                                  bloc.add(SearchHouseholdsEvent
-                                                      .searchByProximity(
-                                                    latitude:
-                                                        locationState.latitude!,
-                                                    longititude: locationState
-                                                        .longitude!,
-                                                    projectId:
-                                                        context.projectId,
-                                                    maxRadius:
-                                                        appConfig.maxRadius!,
-                                                  ));
-                                                } else {
-                                                  final bloc = context.read<
-                                                      SearchHouseholdsBloc>();
-                                                  bloc.add(
-                                                    const SearchHouseholdsClearEvent(),
-                                                  );
-                                                }
-                                              },
-                                            ),
-                                            Text(
-                                              localizations.translate(
-                                                i18.searchBeneficiary
-                                                    .proximityLabel,
-                                              ),
-                                            ),
-                                          ],
-                                        )
-                                      : const Offstage(),
-                                ],
-                              );
-                            },
-                          ),
-                          const SizedBox(height: 16),
-                          if (searchState.resultsNotFound)
-                            DigitInfoCard(
-                              description: localizations.translate(
-                                i18.searchBeneficiary
-                                    .beneficiaryInfoDescription,
-                              ),
-                              title: localizations.translate(
-                                i18.searchBeneficiary.beneficiaryInfoTitle,
+                                  style: theme.textTheme.displayMedium,
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
                             ),
-                        ],
-                      ),
-                    ),
-                    if (searchState.loading)
-                      const SliverFillRemaining(
-                        child: Center(
-                          child: CircularProgressIndicator(),
+                            BlocBuilder<LocationBloc, LocationState>(
+                              builder: (context, locationState) {
+                                return Column(
+                                  children: [
+                                    DigitSearchBar(
+                                      controller: searchController,
+                                      hintText: localizations.translate(
+                                        i18.searchBeneficiary
+                                            .beneficiarySearchHintText,
+                                      ),
+                                      textCapitalization:
+                                          TextCapitalization.words,
+                                      onChanged: (value) {
+                                        final bloc = context
+                                            .read<SearchHouseholdsBloc>();
+
+                                        if (value.trim().length < 2 &&
+                                            !isProximityEnabled) {
+                                          bloc.add(
+                                            const SearchHouseholdsClearEvent(),
+                                          );
+
+                                          return;
+                                        } else {
+                                          if (isProximityEnabled &&
+                                              value.trim().length < 2) {
+                                            bloc.add(SearchHouseholdsEvent
+                                                .searchByProximity(
+                                              latitude: locationState.latitude!,
+                                              longititude:
+                                                  locationState.longitude!,
+                                              projectId: context.projectId,
+                                              maxRadius: appConfig.maxRadius!,
+                                              offset: offset,
+                                              limit: limit,
+                                            ));
+                                          } else {
+                                            bloc.add(
+                                              SearchHouseholdsSearchByHouseholdHeadEvent(
+                                                searchText: value.trim(),
+                                                projectId: context.projectId,
+                                                latitude:
+                                                    locationState.latitude,
+                                                longitude:
+                                                    locationState.longitude,
+                                                isProximityEnabled:
+                                                    isProximityEnabled,
+                                                maxRadius: appConfig.maxRadius,
+                                              ),
+                                            );
+                                          }
+                                        }
+                                      },
+                                    ),
+                                    locationState.latitude != null
+                                        ? Row(
+                                            children: [
+                                              Switch(
+                                                value: isProximityEnabled,
+                                                onChanged: (value) {
+                                                  searchController.clear();
+                                                  setState(() {
+                                                    isProximityEnabled = value;
+                                                  });
+
+                                                  if (locationState
+                                                          .hasPermissions &&
+                                                      value &&
+                                                      locationState.latitude !=
+                                                          null &&
+                                                      locationState.longitude !=
+                                                          null &&
+                                                      appConfig.maxRadius !=
+                                                          null &&
+                                                      isProximityEnabled) {
+                                                    final bloc = context.read<
+                                                        SearchHouseholdsBloc>();
+                                                    bloc.add(
+                                                      SearchHouseholdsEvent
+                                                          .searchByProximity(
+                                                        latitude: locationState
+                                                            .latitude!,
+                                                        longititude:
+                                                            locationState
+                                                                .longitude!,
+                                                        projectId:
+                                                            context.projectId,
+                                                        maxRadius: appConfig
+                                                            .maxRadius!,
+                                                        offset: offset,
+                                                        limit: limit,
+                                                      ),
+                                                    );
+                                                  } else {
+                                                    final bloc = context.read<
+                                                        SearchHouseholdsBloc>();
+                                                    bloc.add(
+                                                      const SearchHouseholdsClearEvent(),
+                                                    );
+                                                  }
+                                                },
+                                              ),
+                                              Text(
+                                                localizations.translate(
+                                                  i18.searchBeneficiary
+                                                      .proximityLabel,
+                                                ),
+                                              ),
+                                            ],
+                                          )
+                                        : const Offstage(),
+                                  ],
+                                );
+                              },
+                            ),
+                            const SizedBox(height: 16),
+                            if (searchState.resultsNotFound)
+                              DigitInfoCard(
+                                description: localizations.translate(
+                                  i18.searchBeneficiary
+                                      .beneficiaryInfoDescription,
+                                ),
+                                title: localizations.translate(
+                                  i18.searchBeneficiary.beneficiaryInfoTitle,
+                                ),
+                              ),
+                          ],
                         ),
                       ),
-                    BlocBuilder<LocationBloc, LocationState>(
-                      builder: (context, locationState) {
-                        return SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                            (ctx, index) {
-                              final i =
-                                  searchState.householdMembers.elementAt(index);
-                              final distance = calculateDistance(
-                                Coordinate(
-                                  locationState.latitude,
-                                  locationState.longitude,
-                                ),
-                                Coordinate(
-                                  i.household.address?.latitude,
-                                  i.household.address?.longitude,
-                                ),
-                              );
-
-                              return ViewBeneficiaryCard(
-                                distance: distance,
-                                householdMember: i,
-                                onOpenPressed: () async {
-                                  final scannerbloc =
-                                      context.read<ScannerBloc>();
-
-                                  scannerbloc.add(
-                                    const ScannerEvent.handleScanner([], []),
-                                  );
-
-                                  final bloc =
-                                      context.read<SearchHouseholdsBloc>();
-
-                                  await context.router.push(
-                                    BeneficiaryWrapperRoute(
-                                      wrapper: i,
-                                    ),
-                                  );
-                                  setState(() {
-                                    isProximityEnabled = false;
-                                  });
-                                  searchController.clear();
-
-                                  bloc.add(
-                                    const SearchHouseholdsClearEvent(),
-                                  );
-                                },
-                              );
-                            },
-                            childCount: searchState.householdMembers.length,
+                      if (searchState.loading)
+                        const SliverFillRemaining(
+                          child: Center(
+                            child: CircularProgressIndicator(),
                           ),
-                        );
-                      },
-                    ),
-                  ],
-                );
-              },
+                        ),
+                      SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (ctx, index) {
+                            return ViewBeneficiaryCard(
+                              distance: 100,
+                              householdMember:
+                                  searchState.householdMembers.elementAt(index),
+                              onOpenPressed: () async {
+                                final scannerbloc = context.read<ScannerBloc>();
+
+                                scannerbloc.add(
+                                  const ScannerEvent.handleScanner([], []),
+                                );
+
+                                final bloc =
+                                    context.read<SearchHouseholdsBloc>();
+
+                                await context.router.push(
+                                  BeneficiaryWrapperRoute(
+                                    wrapper: searchState.householdMembers
+                                        .elementAt(index),
+                                  ),
+                                );
+                                setState(() {
+                                  isProximityEnabled = false;
+                                });
+                                searchController.clear();
+
+                                bloc.add(
+                                  const SearchHouseholdsClearEvent(),
+                                );
+                              },
+                            );
+                          },
+                          childCount: searchState.householdMembers.length,
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
             ),
             bottomNavigationBar: SizedBox(
               height: 150,

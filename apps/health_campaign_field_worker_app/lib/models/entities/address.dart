@@ -12,16 +12,20 @@ class AddressSearchModel extends EntitySearchModel {
   final double? longitude;
   final double? maxRadius;
   final String? tenantId;
-  
+  final int? offset;
+  final int? limit;
+
   AddressSearchModel({
     this.id,
     this.latitude,
     this.longitude,
     this.maxRadius,
     this.tenantId,
+    this.offset,
+    this.limit,
     super.boundaryCode,
     super.isDeleted,
-  }):  super();
+  }) : super();
 
   @MappableConstructor()
   AddressSearchModel.ignoreDeleted({
@@ -30,13 +34,14 @@ class AddressSearchModel extends EntitySearchModel {
     this.longitude,
     this.maxRadius,
     this.tenantId,
+    this.offset,
+    this.limit,
     super.boundaryCode,
-  }):  super(isDeleted: false);
+  }) : super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true)
 class AddressModel extends EntityModel {
-
   static const schemaName = 'Address';
 
   final String? id;
@@ -83,9 +88,10 @@ class AddressModel extends EntityModel {
     this.rowVersion,
     this.type,
     this.locality,
-    super.auditDetails,super.clientAuditDetails,
+    super.auditDetails,
+    super.clientAuditDetails,
     super.isDeleted = false,
-  }): super();
+  }) : super();
 
   AddressCompanion get companion {
     return AddressCompanion(
@@ -120,7 +126,7 @@ class AddressModel extends EntityModel {
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),
       type: Value(type),
-      );
+    );
   }
 }
 

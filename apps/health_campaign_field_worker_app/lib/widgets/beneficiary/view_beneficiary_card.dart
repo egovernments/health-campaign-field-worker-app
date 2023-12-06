@@ -128,7 +128,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
         ).years;
         final ageInMonths = DigitDateUtils.calculateAge(
           DigitDateUtils.getFormattedDateToDateTime(
-                e.dateOfBirth!,
+                e.dateOfBirth ?? '',
               ) ??
               DateTime.now(),
         ).months;
@@ -221,16 +221,20 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
     ).toList();
 
     final ageInYears = DigitDateUtils.calculateAge(
-      DigitDateUtils.getFormattedDateToDateTime(
-            householdMember.headOfHousehold.dateOfBirth!,
-          ) ??
-          DateTime.now(),
+      householdMember.headOfHousehold.dateOfBirth != null
+          ? DigitDateUtils.getFormattedDateToDateTime(
+                householdMember.headOfHousehold.dateOfBirth!,
+              ) ??
+              DateTime.now()
+          : DateTime.now(),
     ).years;
     final ageInMonths = DigitDateUtils.calculateAge(
-      DigitDateUtils.getFormattedDateToDateTime(
-            householdMember.headOfHousehold.dateOfBirth!,
-          ) ??
-          DateTime.now(),
+      householdMember.headOfHousehold.dateOfBirth != null
+          ? DigitDateUtils.getFormattedDateToDateTime(
+                householdMember.headOfHousehold.dateOfBirth!,
+              ) ??
+              DateTime.now()
+          : DateTime.now(),
     ).months;
 
     final isNotEligible = !checkEligibilityForAgeAndSideEffect(

@@ -222,12 +222,16 @@ class SearchHouseholdsBloc
     SearchHouseholdsByProximityEvent event,
     SearchHouseholdsEmitter emit,
   ) async {
+    emit(state.copyWith(loading: true));
+    print(DateTime.now());
     // Fetch individual results based on proximity and other criteria.
     final List<HouseholdModel> proximityBasedHouseholdsResults =
         await addressRepository.searchHouseHoldbyAddress(AddressSearchModel(
       latitude: event.latitude,
       longitude: event.longititude,
       maxRadius: event.maxRadius,
+      offset: event.offset,
+      limit: event.limit,
     ));
 
     // Extract individual IDs from proximity-based individual results.
@@ -355,7 +359,12 @@ class SearchHouseholdsBloc
 
       return d1.compareTo(d2);
     });
-    // Update the state with the results and mark the search as completed.
+    print("---LAST---");
+    if (containers.isNotEmpty) {
+      print(containers.length);
+      print(DateTime.now());
+    }
+    // Update the state with the   results and mark the search as completed.
     emit(state.copyWith(
       householdMembers: containers,
       loading: false,
@@ -587,6 +596,7 @@ class SearchHouseholdsBloc
 
       return d1.compareTo(d2);
     });
+
     // Update the state with the results and mark the search as completed.
     emit(state.copyWith(
       householdMembers: containers,
@@ -696,6 +706,8 @@ class SearchHouseholdsEvent with _$SearchHouseholdsEvent {
     required double longititude,
     required String projectId,
     required double maxRadius,
+    required int offset,
+    required int limit,
   }) = SearchHouseholdsByProximityEvent;
 
   const factory SearchHouseholdsEvent.searchByTag({

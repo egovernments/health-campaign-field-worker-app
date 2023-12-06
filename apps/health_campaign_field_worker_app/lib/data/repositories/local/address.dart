@@ -49,7 +49,7 @@ class AddressLocalRepository {
               sql.address.longitude.isNotNull(),
             sql.address.latitude.isNotNull(),
           ])))
-        .limit(5);
+        .limit(query.limit ?? 50, offset: query.offset ?? 0);
     final results = await selectQuery.get();
 
     return results
