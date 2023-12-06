@@ -2,6 +2,7 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/validators/validator.dart';
 import 'package:digit_components/widgets/atoms/digit_base_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_date_form_input.dart';
+import 'package:digit_components/widgets/atoms/digit_dropdown_input.dart' as dropdown;
 import 'package:digit_components/widgets/atoms/digit_location_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_numeric_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_password_form_input.dart';
@@ -115,6 +116,35 @@ void main() {
                       // suffixIcon: Icons.currency_rupee_sharp,
                       // prefixIcon: Icons.currency_rupee,
                     ),
+                    dropdown.DigitDropdown<int>(
+                      onChange: (String value, int index) => print(value),
+                      dropdownStyle: const dropdown.DropdownStyle(
+                        elevation: 6,
+                        padding: EdgeInsets.all(5),
+                      ),
+                      textEditingController: TextEditingController(),
+                      items: [
+                        'apple',
+                        'banana',
+                        'orange',
+                        'grapes',
+                      ]
+                          .asMap()
+                          .entries
+                          .map(
+                            (item) => dropdown.DropdownItem<String>(
+                          value: item.value,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(item.value),
+                          ),
+                        ),
+                      )
+                          .toList(),
+                      child: const Text(
+                        'dropdown',
+                      ),
+                    ),
                     const SizedBox(
                       height: 8,
                     ),
@@ -196,6 +226,43 @@ void main() {
                         print('Selected values: $selectedValues');
                       },
                     ),
+                    // CustomDropdown<int>(
+                    //   onChange: (int value, int index) => print(value),
+                    //   dropdownButtonStyle: const DropdownButtonStyle(
+                    //     width: 170,
+                    //     height: 40,
+                    //     elevation: 1,
+                    //     backgroundColor: Colors.white,
+                    //     primaryColor: Colors.black87,
+                    //   ),
+                    //   dropdownStyle: DropdownStyle(
+                    //     borderRadius: BorderRadius.circular(8),
+                    //     elevation: 6,
+                    //     padding: const EdgeInsets.all(5),
+                    //   ),
+                    //   items: [
+                    //     'item 1',
+                    //     'item 2',
+                    //     'item 3',
+                    //     'item 4',
+                    //   ]
+                    //       .asMap()
+                    //       .entries
+                    //       .map(
+                    //         (item) => DropdownItem<int>(
+                    //       value: item.key + 1,
+                    //       child: Padding(
+                    //         padding: const EdgeInsets.all(8.0),
+                    //         child: Text(item.value),
+                    //       ),
+                    //     ),
+                    //   )
+                    //       .toList(),
+                    //   child: const Text(
+                    //     'dropdown',
+                    //   ),
+                    // ),
+                    const SizedBox(height: 16,),
                   ],
                 ),
               ),

@@ -30,9 +30,7 @@ class _DigitRadioListState extends State<DigitRadioList> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        if (constraints.maxWidth < 600) {
+        if (MediaQuery.of(context).size.width< 720) {
           // If the width is less than 600 (e.g., phone), display in a column
           return Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -45,8 +43,7 @@ class _DigitRadioListState extends State<DigitRadioList> {
             children: _buildRadioButtons(),
           );
         }
-      },
-    );
+
   }
 
   List<Widget> _buildRadioButtons() {

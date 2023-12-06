@@ -1,5 +1,6 @@
 import 'package:digit_components/utils/validators/validator.dart';
 import 'package:digit_components/widgets/atoms/digit_date_form_input.dart';
+import 'package:digit_components/widgets/atoms/digit_dropdown_input.dart';
 import 'package:digit_components/widgets/atoms/digit_location_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_numeric_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_password_form_input.dart';
@@ -1175,6 +1176,48 @@ class HotReload extends StatelessWidget {
                       }),
                     ],
                     onChanged: (selectedValues) {},
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        WidgetbookFolder(
+          name: 'dropdown',
+          children: [
+            WidgetbookComponent(
+              name: 'dropdown',
+              useCases: [
+                WidgetbookUseCase(
+                  name: 'default',
+                  builder: (context) => DigitDropdown<int>(
+                    onChange: (String value, int index) => print(value),
+                    dropdownStyle: const DropdownStyle(
+                      elevation: 6,
+                      padding: EdgeInsets.all(5),
+                    ),
+                    textEditingController: TextEditingController(),
+                    items: [
+                      'apple',
+                      'banana',
+                      'orange',
+                      'grapes',
+                    ]
+                        .asMap()
+                        .entries
+                        .map(
+                          (item) => DropdownItem<String>(
+                        value: item.value,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(item.value),
+                        ),
+                      ),
+                    )
+                        .toList(),
+                    child: const Text(
+                      'dropdown',
+                    ),
                   ),
                 ),
               ],
