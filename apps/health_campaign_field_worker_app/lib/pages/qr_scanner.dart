@@ -164,6 +164,9 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                         height: 50,
                         child: TextButton(
                           onPressed: () {
+                            context
+                                .read<ScannerBloc>()
+                                .add(const ScannerEvent.handleScanner([], []));
                             setState(() {
                               manualcode = true;
                             });
