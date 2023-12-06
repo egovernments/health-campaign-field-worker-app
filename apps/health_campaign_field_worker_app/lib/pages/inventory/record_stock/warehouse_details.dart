@@ -125,21 +125,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                             BlocProvider.of<RecordStockBloc>(context).state;
                         if (stockState.primaryId != null) {
                           form.control(_teamCodeKey).value =
-                              stockState.primaryId;
-                        } else {
-                          if (scannerState.qrcodes.isNotEmpty &&
-                              (form.control(_teamCodeKey).value == null ||
-                                  form
-                                      .control(_teamCodeKey)
-                                      .value
-                                      .toString()
-                                      .trim()
-                                      .isEmpty)) {
-                            form.control(_teamCodeKey).value =
-                                scannerState.qrcodes.first;
-                          } else {
-                            form.control(_teamCodeKey).value = '';
-                          }
+                              scannerState.qrcodes.last;
                         }
 
                         return ScrollableContent(

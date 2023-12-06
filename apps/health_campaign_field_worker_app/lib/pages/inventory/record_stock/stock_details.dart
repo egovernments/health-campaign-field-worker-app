@@ -169,9 +169,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                     builder: (context, scannerState) {
                       if (scannerState.qrcodes.isNotEmpty) {
                         form.control(_deliveryTeamKey).value =
-                            scannerState.qrcodes.first;
-                      } else {
-                        form.control(_deliveryTeamKey).value = '';
+                            scannerState.qrcodes.last;
                       }
 
                       return ScrollableContent(
