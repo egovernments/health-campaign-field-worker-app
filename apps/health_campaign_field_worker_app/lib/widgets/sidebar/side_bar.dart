@@ -41,18 +41,47 @@ class SideBar extends StatelessWidget {
                 authenticated: (value) => Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    const SizedBox(
+                      height: 16.0,
+                    ),
                     Text(
                       value.userModel.name.toString(),
                       style: theme.textTheme.displayMedium,
+                    ),
+                    const SizedBox(
+                      height: 16.0,
                     ),
                     Text(
                       value.userModel.mobileNumber.toString(),
                       style: theme.textTheme.labelSmall,
                     ),
-                    QrImageView(
-                      data: context.loggedInUserUuid,
-                      version: QrVersions.auto,
-                      size: 150.0,
+                    const SizedBox(
+                      height: 16.0,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context, rootNavigator: true).pop();
+                        context.router.push(UserQRDetailsRoute());
+                      },
+                      child: Container(
+                        height: 155,
+                        width: 155,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            width: 2,
+                            color: DigitTheme.instance.colorScheme.secondary,
+                          ),
+                        ),
+                        child: QrImageView(
+                          data: context.loggedInUserUuid,
+                          version: QrVersions.auto,
+                          size: 150.0,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 16.0,
                     ),
                   ],
                 ),
