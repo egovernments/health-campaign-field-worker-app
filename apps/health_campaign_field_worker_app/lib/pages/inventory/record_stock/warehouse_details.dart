@@ -36,7 +36,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
 
   @override
   void initState() {
-    context.read<ScannerBloc>().add(const ScannerEvent.handleScanner([], []));
+    clearQRCodes();
     super.initState();
   }
 
@@ -276,12 +276,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                   ]),
                                   InkWell(
                                     onTap: () async {
-                                      context.read<ScannerBloc>().add(
-                                            const ScannerEvent.handleScanner(
-                                              [],
-                                              [],
-                                            ),
-                                          );
+                                      clearQRCodes();
                                       form.control(_teamCodeKey).value = '';
                                       final parent = context.router.parent()
                                           as StackRouter;
@@ -373,12 +368,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                       ),
                                       formControlName: _teamCodeKey,
                                       onChanged: (val) {
-                                        context.read<ScannerBloc>().add(
-                                              const ScannerEvent.handleScanner(
-                                                [],
-                                                [],
-                                              ),
-                                            );
+                                        clearQRCodes();
                                       },
                                       isRequired: true,
                                       suffix: IconButton(
@@ -410,5 +400,9 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
         );
       },
     );
+  }
+
+  void clearQRCodes() {
+    context.read<ScannerBloc>().add(const ScannerEvent.handleScanner([], []));
   }
 }

@@ -74,7 +74,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
 
   @override
   void initState() {
-    context.read<ScannerBloc>().add(const ScannerEvent.handleScanner([], []));
+    clearQRCodes();
     super.initState();
   }
 
@@ -541,12 +541,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
 
                                     return InkWell(
                                       onTap: () async {
-                                        context.read<ScannerBloc>().add(
-                                              const ScannerEvent.handleScanner(
-                                                [],
-                                                [],
-                                              ),
-                                            );
+                                        clearQRCodes();
                                         form.control(_deliveryTeamKey).value =
                                             '';
                                         final parent = context.router.parent()
@@ -592,13 +587,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                           ),
                                           formControlName: _secondaryPartyKey,
                                           onTap: () async {
-                                            context.read<ScannerBloc>().add(
-                                                  const ScannerEvent
-                                                      .handleScanner(
-                                                    [],
-                                                    [],
-                                                  ),
-                                                );
+                                            clearQRCodes();
                                             form
                                                 .control(_deliveryTeamKey)
                                                 .value = '';
@@ -639,12 +628,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                           .teamCodeLabel,
                                     ),
                                     onChanged: (val) {
-                                      context.read<ScannerBloc>().add(
-                                            const ScannerEvent.handleScanner(
-                                              [],
-                                              [],
-                                            ),
-                                          );
+                                      clearQRCodes();
                                     },
                                     suffix: IconButton(
                                       onPressed: () {
@@ -772,5 +756,9 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
         },
       ),
     );
+  }
+
+  void clearQRCodes() {
+    context.read<ScannerBloc>().add(const ScannerEvent.handleScanner([], []));
   }
 }
