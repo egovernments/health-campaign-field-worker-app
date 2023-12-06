@@ -28,94 +28,111 @@ class _DigitRadioListState extends State<DigitRadioList> {
     isHoveredList = List.generate(widget.radioButtons.length, (index) => false);
   }
 
-
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: widget.radioButtons.map(
-            (button) {
-          final index = widget.radioButtons.indexOf(button);
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                MouseRegion(
-                  onEnter: (_) {
-                    setState(() {
-                      isHoveredList[index] = true;
-                    });
-                  },
-                  onExit: (_) {
-                    setState(() {
-                      isHoveredList[index] = false;
-                    });
-                  },
-                  child: GestureDetector(
-                    onTap: widget.isDisabled
-                        ? null
-                        : () {
-                      setState(() {
-                        widget.groupValue = button.code;
-                      });
-                      widget.onChanged!(widget.groupValue);
-                    },
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(4.0),
-                          width: 24, // Set width as needed
-                          height: 24,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: widget.isDisabled
-                                  ? const DigitColors().cloudGray
-                                  : (widget.groupValue == button.code ||
-                                  isHoveredList[index])
-                                  ? const DigitColors().burningOrange
-                                  : const DigitColors().davyGray,
-                              width: 1.0,
-                            ),
-                            color: Colors.transparent,
-                          ),
-                          child: widget.groupValue == button.code
-                              ? Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: widget.isDisabled
-                                  ? const DigitColors().cloudGray
-                                  : const DigitColors().burningOrange,
-                            ),
-                          )
-                              : null,
-                        ),
-                        const SizedBox(
-                          width: 8,
-                        ),
-                        Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            button.name,
-                            style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400,
-                                fontFamily: 'Roboto'),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth < 600) {
+          // If the width is less than 600 (e.g., phone), display in a column
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: _buildRadioButtons(),
           );
-        },
-      ).toList(),
+        } else {
+          // If the width is 600 or more (e.g., larger screens), display in a row
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: _buildRadioButtons(),
+          );
+        }
+      },
     );
   }
+
+  List<Widget> _buildRadioButtons() {
+    return widget.radioButtons.map(
+          (button) {
+        final index = widget.radioButtons.indexOf(button);
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              MouseRegion(
+                onEnter: (_) {
+                  setState(() {
+                    isHoveredList[index] = true;
+                  });
+                },
+                onExit: (_) {
+                  setState(() {
+                    isHoveredList[index] = false;
+                  });
+                },
+                child: GestureDetector(
+                  onTap: widget.isDisabled
+                      ? null
+                      : () {
+                    setState(() {
+                      widget.groupValue == button.code ? widget.groupValue = '' : widget.groupValue = button.code;
+                    });
+                    widget.onChanged!(widget.groupValue);
+                  },
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(4.0),
+                        width: 24, // Set width as needed
+                        height: 24,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: widget.isDisabled
+                                ? const DigitColors().cloudGray
+                                : (widget.groupValue == button.code ||
+                                isHoveredList[index])
+                                ? const DigitColors().burningOrange
+                                : const DigitColors().davyGray,
+                            width: 1.0,
+                          ),
+                          color: Colors.transparent,
+                        ),
+                        child: widget.groupValue == button.code
+                            ? Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: widget.isDisabled
+                                ? const DigitColors().cloudGray
+                                : const DigitColors().burningOrange,
+                          ),
+                        )
+                            : null,
+                      ),
+                      const SizedBox(
+                        width: 8,
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          button.name,
+                          style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'Roboto'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    ).toList();
+  }
+
 }
 
 class RadioButtonModel {

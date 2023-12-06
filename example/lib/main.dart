@@ -11,6 +11,7 @@ import 'package:digit_components/widgets/atoms/digit_text_area_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_text_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_time_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_toggle.dart';
+import 'package:digit_components/widgets/atoms/digit_toggle_list.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -27,9 +28,10 @@ void main() {
                   children: [
                     DigitTextFormInput(
                       label: "input",
+                      initialValue: 'initial value',
                       controller: TextEditingController(),
                       // state: 'Disabled',
-                      info: 'this is info',
+                      // info: 'this is info',
                       innerLabel: 'innerlabel',
                       helpText: 'help text',
                       charCount: true,
@@ -48,7 +50,7 @@ void main() {
                       label: "input",
                       controller: TextEditingController(),
                       // state: 'Disabled',
-                      info: 'this is info',
+                      // info: 'this is info',
                       innerLabel: 'innerlabel',
                       helpText: 'help text',
                       // onSuffixTap: (){print('tapppppppppp');},
@@ -62,7 +64,7 @@ void main() {
                       label: "input",
                       controller: TextEditingController(),
                       // state: 'Disabled',
-                      info: 'this is info',
+                      // info: 'this is info',
                       innerLabel: 'innerlabel',
                       helpText: 'help text',
                       // onSuffixTap: (){print('tapppppppppp');},
@@ -76,7 +78,7 @@ void main() {
                       label: "input",
                       controller: TextEditingController(),
                       // state: 'Disabled',
-                      info: 'this is info',
+                      // info: 'this is info',
                       innerLabel: 'innerlabel',
                       helpText: 'help text',
                       // onSuffixTap: (){print('tapppppppppp');},
@@ -90,7 +92,7 @@ void main() {
                       label: "input",
                       controller: TextEditingController(),
                       // state: 'Disabled',
-                      info: 'this is info',
+                      // info: 'this is info',
                       innerLabel: 'innerlabel',
                       helpText: 'help text',
                       // onSuffixTap: (){print('tapppppppppp');},
@@ -103,7 +105,7 @@ void main() {
                     DigitPasswordFormInput(
                       label: "input",
                       controller: TextEditingController(),
-                      info: 'this is info',
+                      // info: 'this is info',
                       innerLabel: 'innerlabel',
                       helpText: 'help text',
                       validations: [
@@ -120,10 +122,10 @@ void main() {
                       label: "input",
                       controller: TextEditingController(),
                       // state: 'Disabled',
-                      info: 'this is info',
+                      // info: 'this is info',
                       innerLabel: 'innerlabel',
                       helpText: 'help text',
-                      isDisabled: true,
+                      // isDisabled: true,
                       // onSuffixTap: (){print('tapppppppppp');},
                       suffixIcon: Icons.currency_rupee_sharp,
                       prefixIcon: Icons.currency_rupee,
@@ -138,7 +140,7 @@ void main() {
                       innerLabel: 'innerlabel',
                       helpText: 'help text',
                       initialValue: '0',
-                      readOnly: true,
+                      // readOnly: true,
                     ),
                     const SizedBox(
                       height: 8,
@@ -147,7 +149,7 @@ void main() {
                       label: "input",
                       controller: TextEditingController(),
                       // state: 'Disabled',
-                      info: 'this is info',
+                      // info: 'this is info',
                       innerLabel: 'innerlabel',
                       helpText: 'help text',
                     ),
@@ -176,6 +178,23 @@ void main() {
                         // print(value);
                       },
                       label: 'Toggle',
+                    ),
+                    const SizedBox(height: 8,),
+                    DigitToggleList(
+                      toggleButtons: [
+                        ToggleButtonModel(name: 'Toggle 1', key: 'key1', onSelected: () {
+                          print('Toggle 1 selected!');
+                        }),
+                        ToggleButtonModel(name: 'Toggle 2', key: 'key2', onSelected: () {
+                          print('Toggle 2 selected!');
+                        }),
+                        ToggleButtonModel(name: 'Toggle 3', key: 'key3', onSelected: () {
+                          print('Toggle 3 selected!');
+                        }),
+                      ],
+                      onChanged: (selectedValues) {
+                        print('Selected values: $selectedValues');
+                      },
                     ),
                   ],
                 ),

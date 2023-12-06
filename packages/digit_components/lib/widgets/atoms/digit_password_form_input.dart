@@ -9,7 +9,8 @@ class DigitPasswordFormInput extends BaseDigitFormInput {
     Key? key,
     required TextEditingController controller,
     String? label,
-    String? info,
+    String? infoText,
+    bool? info,
     String? initialValue,
     bool readOnly = false,
     bool isDisabled = false,
@@ -27,6 +28,7 @@ class DigitPasswordFormInput extends BaseDigitFormInput {
     controller: controller,
     label: label,
     info: info,
+    infoText: infoText,
     readOnly: readOnly,
     isDisabled: isDisabled,
     charCount: charCount,
@@ -47,6 +49,14 @@ class DigitPasswordFormInput extends BaseDigitFormInput {
 
 class _DigitPasswordFormInputState extends BaseDigitFormInputState {
 
+  @override
+  void initState() {
+    // Call the initState method of the base class
+    super.initState();
+
+    // Set the initial value of isVisible to true
+    isVisible = true;
+  }
 
   @override
   void toggleObsecureText() {

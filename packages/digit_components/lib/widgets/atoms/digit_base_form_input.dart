@@ -1,18 +1,15 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
-
 import '../../theme/colors.dart';
 import '../../utils/validators/validator.dart';
 
-enum InputState { Default, Filled, Disabled, NonEditable, Focus, Error }
-
 class BaseDigitFormInput extends StatefulWidget {
-  // final InputState state;
   final TextEditingController controller;
   final bool readOnly;
   final bool isDisabled;
   final String? label;
-  final String? info;
+  final bool? info;
+  final String? infoText;
   final bool charCount;
   final String? innerLabel;
   final String? helpText;
@@ -40,6 +37,7 @@ class BaseDigitFormInput extends StatefulWidget {
       this.initialValue,
       this.label,
       this.info,
+        this.infoText,
       this.suffix,
       this.charCount = false,
       this.innerLabel,
@@ -147,45 +145,47 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
 
     int? getValidatorValue(List<Validator>? validators, ValidatorType type) {
       for (var validator in validators!) {
-        if (validator.type == type) {
-          return validator.value as int?;
+        if (validator?.type == type) {
+          return validator?.value as int?;
         }
       }
       return null;
     }
-    int? maxLengthValue;
-    if(widget.charCount){
-      maxLengthValue = getValidatorValue(widget.validations, ValidatorType.maxLength);
-    }
+    int? maxLengthValue = widget.charCount
+        ? (widget.validations != null
+        ? getValidatorValue(widget.validations, ValidatorType.maxLength) ?? 64
+        : 64)
+        : null;
 
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            if (widget?.label != null)
-              Text(
-                widget!.label!,
-                style: theme.textTheme.bodyLarge,
-              ),
-            if (widget?.info != null)
-              Tooltip(
-                message: widget.info,
-                preferBelow: widget.preferToolTipBelow,
-                triggerMode: widget.triggerMode,
-                child: const Icon(
-                  Icons.info_outline,
-                  size: 16,
+    return Container(
+      width: 600,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              if (widget?.label != null)
+                Text(
+                  widget!.label!,
+                  style: theme.textTheme.bodyLarge,
                 ),
-              )
-          ],
-        ),
-        const SizedBox(
-          height: 4,
-        ),
-        SizedBox(
-          child: TextFormField(
+              if (widget?.info == true)
+                Tooltip(
+                  message: widget.infoText,
+                  preferBelow: widget.preferToolTipBelow,
+                  triggerMode: widget.triggerMode,
+                  child: const Icon(
+                    Icons.info_outline,
+                    size: 16,
+                  ),
+                )
+            ],
+          ),
+          const SizedBox(
+            height: 4,
+          ),
+          TextFormField(
             focusNode: myFocusNode,
             obscureText: isVisible,
             controller: widget.controller,
@@ -198,11 +198,14 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
             textAlign: widget.textAlign,
             maxLength: maxLengthValue,
             decoration: InputDecoration(
-              isDense: true,
+              // isDense: true,
               counterText: '',
               hoverColor: Colors.transparent,
-              contentPadding:
-                  const EdgeInsets.only(top: 8, bottom: 8, left: 12, right: 12),
+
+              constraints: widget.minLine>1 ? const BoxConstraints(maxWidth: 600, maxHeight: 100, minHeight: 40): const BoxConstraints(maxWidth: 600, maxHeight: 40, minHeight: 40),
+              contentPadding: widget.minLine>1 ?
+              const EdgeInsets.only(top: 12, bottom: 12, left: 12, right: 12):
+                  const EdgeInsets.only(top: 4, bottom: 4, left: 12, right: 12),
               hintText: widget.innerLabel,
               filled: true,
               fillColor: widget.readOnly
@@ -229,13 +232,13 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
               ),
               prefixIconConstraints: widget.prefixIcon != null
                   ? const BoxConstraints(
-                      maxWidth: 40,
+                      maxWidth: 48,
                       maxHeight: 40,
                     )
                   : null,
               suffixIconConstraints: widget.suffixIcon != null
                   ? const BoxConstraints(
-                      maxWidth: 40,
+                      maxWidth: 48,
                       maxHeight: 40,
                     )
                   : const BoxConstraints(
@@ -243,20 +246,24 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
                     ),
               suffixIcon: widget.suffixIcon != null
                   ? GestureDetector(
-                      onTap: onSuffixIconClick,
+                      onTap: widget.readOnly ? null : onSuffixIconClick,
                       child: Container(
-                        height: 40,
+                        height: 38,
                         width: 40,
-                        margin: const EdgeInsets.only(left: kPadding),
+                        margin: const EdgeInsets.only(left: kPadding, right: 1,),
                         decoration: BoxDecoration(
                           color: const DigitColors().seaShellGray,
-                          border: Border.all(
-                            color: widget.isDisabled
-                                ? const DigitColors().cloudGray
-                                : const DigitColors().davyGray,
-                            width: 1.0,
+                          border: Border(
+                            left: BorderSide(
+                              color: widget.isDisabled
+                                  ? const DigitColors().cloudGray
+                                  : const DigitColors().davyGray,
+                              width: 1.0, // specify the width of the border
+                            ),
+                            top: BorderSide.none,
+                            bottom: BorderSide.none,
+                            right: BorderSide.none,
                           ),
-                          borderRadius: BorderRadius.zero,
                         ),
                         child: Icon(
                           widget.suffixIcon!,
@@ -269,13 +276,13 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
                     )
                   : widget.suffix != null
                       ? GestureDetector(
-                          onTap: onSuffixIconClick,
+                          onTap: widget.readOnly ? null : onSuffixIconClick,
                           child: Padding(
                             padding: const EdgeInsets.only(
                               right: 8,
                             ), // Set padding to 0
                             child: Icon(
-                              widget.suffix,
+                              isVisible==true ? Icons.visibility_off : widget.suffix,
                               size: 24,
                             ),
                           ),
@@ -286,20 +293,24 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
                   : const DigitColors().davyGray,
               prefixIcon: widget.prefixIcon != null
                   ? GestureDetector(
-                      onTap: onPrefixIconClick,
+                      onTap: widget.readOnly ? null : onPrefixIconClick,
                       child: Container(
-                        height: 40,
+                        height: 38,
                         width: 40,
-                        margin: const EdgeInsets.only(right: kPadding),
+                        margin: const EdgeInsets.only(right: kPadding, left: 1,),
                         decoration: BoxDecoration(
                           color : const DigitColors().seaShellGray,
-                          border: Border.all(
-                            color: widget.isDisabled
-                                ? const DigitColors().cloudGray
-                                : const DigitColors().davyGray,
-                            width: 1.0,
+                          border: Border(
+                            right: BorderSide(
+                              color: widget.isDisabled
+                                  ? const DigitColors().cloudGray
+                                  : const DigitColors().davyGray,
+                              width: 1.0, // specify the width of the border
+                            ),
+                            top: BorderSide.none,
+                            bottom: BorderSide.none,
+                            left: BorderSide.none,
                           ),
-                          borderRadius: BorderRadius.zero,
                         ),
                         child: Icon(
                           widget.prefixIcon!,
@@ -318,47 +329,47 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
               });
             },
           ),
-        ),
-        const SizedBox(
-          height: 4,
-        ),
-        if (widget.helpText != null || widget.charCount != null)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              if (widget.helpText != null)
-                _hasError
-                    ? Row(
-                        children: [
-                          Icon(
-                            Icons.info,
-                            color: const DigitColors().lavaRed,
-                            size: 16,
-                          ),
-                          Text(
-                            _errorMessage!,
-                            style: DigitTheme
-                                .instance.mobileTheme.textTheme.bodyMedium
-                                ?.apply(
-                              color: const DigitColors().lavaRed,
-                            ),
-                          ),
-                        ],
-                      )
-                    : Text(
-                        widget.helpText!,
-                        style: theme.textTheme.bodyMedium,
-                      ),
-
-                if (widget.helpText == null && _hasError == false)
-                  const Spacer(),
-              if (widget.charCount ==true)
-              Text(
-                '${widget.controller.text.length ?? 0}/$maxLengthValue',
-              ),
-            ],
+          const SizedBox(
+            height: 4,
           ),
-      ],
+          if (widget.helpText != null || widget.charCount != null)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                if (widget.helpText != null)
+                  _hasError
+                      ? Row(
+                          children: [
+                            Icon(
+                              Icons.info,
+                              color: const DigitColors().lavaRed,
+                              size: 16,
+                            ),
+                            Text(
+                              _errorMessage!,
+                              style: DigitTheme
+                                  .instance.mobileTheme.textTheme.bodyMedium
+                                  ?.apply(
+                                color: const DigitColors().lavaRed,
+                              ),
+                            ),
+                          ],
+                        )
+                      : Text(
+                          widget.helpText!,
+                          style: theme.textTheme.bodyMedium,
+                        ),
+
+                  if (widget.helpText == null && _hasError == false)
+                    const Spacer(),
+                if (widget.charCount ==true)
+                Text(
+                  '${widget.controller.text.length ?? 0}/$maxLengthValue',
+                ),
+              ],
+            ),
+        ],
+      ),
     );
   }
 }
