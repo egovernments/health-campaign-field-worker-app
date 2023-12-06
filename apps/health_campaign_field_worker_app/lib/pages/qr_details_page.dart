@@ -82,7 +82,9 @@ class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
                       child: Text(
                         value.userModel.name.toString(),
                         style: DigitTheme
-                            .instance.mobileTheme.textTheme.headlineMedium,
+                            .instance.mobileTheme.textTheme.headlineMedium
+                            ?.apply(
+                                color: DigitTheme.instance.colorScheme.shadow,),
                       ),
                     ),
                   ],
