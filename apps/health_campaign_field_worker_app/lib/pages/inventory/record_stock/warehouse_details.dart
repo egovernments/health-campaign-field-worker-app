@@ -57,13 +57,6 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    bool isWareHouseMgr = context.loggedInUserRoles
-        .where(
-          (role) => role.code == RolesType.warehouseManager.toValue(),
-        )
-        .toList()
-        .isNotEmpty;
-
     bool isDistributor = context.loggedInUserRoles
         .where(
           (role) => role.code == RolesType.distributor.toValue(),
@@ -108,7 +101,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                       facilities,
                     );
 
-                    return isWareHouseMgr ? facilities : teamFacilities;
+                    return isDistributor ? teamFacilities : facilities;
                   },
                 ) ??
                 [];
@@ -199,12 +192,12 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                                       dateOfRecord:
                                                           dateOfRecord,
                                                       facilityModel:
-                                                          isWareHouseMgr
-                                                              ? facility
-                                                              : FacilityModel(
+                                                          isDistributor
+                                                              ? FacilityModel(
                                                                   id: teamCode
                                                                       .toString(),
-                                                                ),
+                                                                )
+                                                              : facility,
                                                       primaryId: facility.id ==
                                                               "Delivery Team"
                                                           ? teamCode ?? ''
