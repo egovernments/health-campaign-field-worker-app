@@ -126,10 +126,10 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                     return ReactiveFormBuilder(
                       form: () => buildForm(isDistributor, stockState),
                       builder: (context, form, child) {
-                        if (scannerState.qrcodes.isNotEmpty) {
-                          form.control(_teamCodeKey).value =
-                              scannerState.qrcodes.last;
-                        }
+                        form.control(_teamCodeKey).value =
+                            scannerState.qrcodes.isNotEmpty
+                                ? scannerState.qrcodes.last
+                                : stockState.primaryId ?? '';
 
                         return ScrollableContent(
                           header: const Column(children: [
