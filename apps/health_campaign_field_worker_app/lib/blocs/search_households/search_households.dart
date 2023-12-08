@@ -189,6 +189,10 @@ class SearchHouseholdsBloc
       // Search for tasks and side effects based on project beneficiaries.
       final tasks = await fetchTaskbyProjectBeneficiary(beneficiaries);
 
+      final referrals = await referralDataRepository.search(ReferralSearchModel(
+        projectBeneficiaryClientReferenceId:
+            beneficiaries.map((e) => e.clientReferenceId).toList(),
+      ));
       final sideEffects =
           await sideEffectDataRepository.search(SideEffectSearchModel(
         taskClientReferenceId: tasks.map((e) => e.clientReferenceId).toList(),
@@ -204,6 +208,7 @@ class SearchHouseholdsBloc
           projectBeneficiaries: beneficiaries,
           tasks: tasks.isEmpty ? null : tasks,
           sideEffects: sideEffects.isEmpty ? null : sideEffects,
+          referrals: referrals.isEmpty ? null : referrals,
         ),
       );
     }
