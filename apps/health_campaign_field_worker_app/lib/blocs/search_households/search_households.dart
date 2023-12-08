@@ -194,6 +194,10 @@ class SearchHouseholdsBloc
             beneficiaries.map((e) => e.clientReferenceId).toList(),
       ));
 
+      final referrals = await referralDataRepository.search(ReferralSearchModel(
+        projectBeneficiaryClientReferenceId:
+            beneficiaries.map((e) => e.clientReferenceId).toList(),
+      ));
       final sideEffects =
           await sideEffectDataRepository.search(SideEffectSearchModel(
         taskClientReferenceId: tasks.map((e) => e.clientReferenceId).toList(),
