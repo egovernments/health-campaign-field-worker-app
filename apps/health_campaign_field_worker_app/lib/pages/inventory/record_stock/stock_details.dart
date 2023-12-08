@@ -170,11 +170,24 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                       form.control(_deliveryTeamKey).value =
                           scannerState.qrcodes.isNotEmpty
                               ? scannerState.qrcodes.last
-                              : form.control(_deliveryTeamKey).value ?? '';
+                              : '';
 
                       return ScrollableContent(
-                        header: const Column(children: [
-                          BackNavigationHelpHeaderWidget(),
+                        header: Column(children: [
+                          BackNavigationHelpHeaderWidget(
+                            handleback: () {
+                              final stockState =
+                                  context.read<RecordStockBloc>().state;
+                              if (stockState.primaryId != null) {
+                                context.read<ScannerBloc>().add(
+                                      ScannerEvent.handleScanner(
+                                        [],
+                                        [stockState.primaryId.toString()],
+                                      ),
+                                    );
+                              }
+                            },
+                          ),
                         ]),
                         enableFixedButton: true,
                         footer: DigitCard(

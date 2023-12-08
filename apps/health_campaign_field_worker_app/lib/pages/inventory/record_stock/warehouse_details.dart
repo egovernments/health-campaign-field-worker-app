@@ -122,7 +122,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                         form.control(_teamCodeKey).value =
                             scannerState.qrcodes.isNotEmpty
                                 ? scannerState.qrcodes.last
-                                : stockState.primaryId ?? '';
+                                : '';
 
                         return ScrollableContent(
                           header: const Column(children: [
