@@ -157,9 +157,12 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
         : 64)
         : null;
 
+    // Responsive width based on screen size
+    double inputWidth = MediaQuery.of(context).size.width < 600 ? 340 : 600;
+
 
     return Container(
-      width: 600,
+      width: inputWidth,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -168,7 +171,7 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
               if (widget?.label != null)
                 Text(
                   widget!.label!,
-                  style: theme.textTheme.bodyLarge,
+                  style: theme.textTheme.bodyLarge?.apply(color: const DigitColors().woodsmokeBlack),
                 ),
               if (widget?.info == true)
                 Tooltip(
@@ -357,7 +360,7 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
                         )
                       : Text(
                           widget.helpText!,
-                          style: theme.textTheme.bodyMedium,
+                          style: theme.textTheme.bodyMedium?.apply(color: const DigitColors().davyGray),
                         ),
 
                   if (widget.helpText == null && _hasError == false)

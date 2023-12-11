@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../../theme/colors.dart';
 
 
-class DigitDropdown<T> extends StatefulWidget {
+class DigitMultiSelectDropdown<T> extends StatefulWidget {
   /// the child widget for the button, this will be ignored if text is supplied
   final Widget child;
   final TextEditingController textEditingController;
@@ -16,7 +16,7 @@ class DigitDropdown<T> extends StatefulWidget {
   /// list of DropdownItems
   final List<DropdownItem<String>> items;
   final DropdownStyle dropdownStyle;
-
+  final List<DropdownItemType<T>> types;
   /// dropdownButtonStyles passes styles to OutlineButton.styleFrom()
   final DropdownButtonStyle dropdownButtonStyle;
 
@@ -26,11 +26,12 @@ class DigitDropdown<T> extends StatefulWidget {
 
   /// if true the dropdown icon will as a leading icon, default to false
   final bool leadingIcon;
-  const DigitDropdown({
+  const DigitMultiSelectDropdown({
     Key? key,
     this.hideIcon = false,
     required this.child,
     required this.items,
+    required this.types,
     this.dropdownStyle = const DropdownStyle(),
     this.dropdownButtonStyle = const DropdownButtonStyle(),
     this.icon,
@@ -40,80 +41,115 @@ class DigitDropdown<T> extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _DigitDropdownState<T> createState() => _DigitDropdownState<T>();
+  _DigitMultiSelectDropdownState<T> createState() => _DigitMultiSelectDropdownState<T>();
 }
 
-class _DigitDropdownState<T> extends State<DigitDropdown<T>>
+class _DigitMultiSelectDropdownState<T> extends State<DigitMultiSelectDropdown<T>>
     with TickerProviderStateMixin {
   final LayerLink _layerLink = LayerLink();
   late OverlayEntry _overlayEntry;
   bool _isOpen = false;
   int _currentIndex = -1;
-  late AnimationController _animationController;
-  late Animation<double> _expandAnimation;
-  late Animation<double> _rotateAnimation;
   late List<DropdownItem<String>> filteredItems;
   late List<DropdownItem<String>> _lastFilteredItems;
+  late List<String> selectedValues; // Add this property
+  late List<int> selectedIndices;
 
   @override
   void initState() {
     super.initState();
+    selectedValues = [];
+    selectedIndices = [];
     filteredItems = List.from(widget.items);
     _lastFilteredItems = List.from(widget.items);
-    _animationController =
-        AnimationController(vsync: this, duration: const Duration(milliseconds: 200));
-    _expandAnimation = CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    );
-    _rotateAnimation = Tween(begin: 0.0, end: 0.5).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
   }
 
   @override
   Widget build(BuildContext context) {
     var style = widget.dropdownButtonStyle;
-
-    // Responsive width based on screen size
-    double dropdownWidth = MediaQuery.of(context).size.width < 600 ? 340 : 600;
-
     // link the overlay to the button
     return CompositedTransformTarget(
       link: this._layerLink,
-      child: Container(
-        width: style.width ?? dropdownWidth,
-        height: style.height,
-        child: TextField(
-          onTap: _toggleDropdown,
-          onChanged: (input) {
-            _filterItems(input);
-            if (!listEquals(filteredItems, _lastFilteredItems)) {
-              _updateOverlay();
-              _lastFilteredItems = filteredItems;
-            }
-          },
-          controller: widget.textEditingController,
-          decoration: InputDecoration(
-            border: const OutlineInputBorder(
-              borderRadius: BorderRadius.zero,
+      child: Column(
+        children: [
+          Container(
+            width: style.width,
+            height: style.height,
+            child: TextField(
+              onTap: _toggleDropdown,
+              onChanged: (input) {
+                _filterItems(input);
+                if (!listEquals(filteredItems, _lastFilteredItems)) {
+                  _updateOverlay();
+                  _lastFilteredItems = filteredItems;
+                }
+              },
+              controller: widget.textEditingController,
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(
+                  borderRadius: BorderRadius.zero,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                      color: const DigitColors().burningOrange, width: 1.0),
+                  borderRadius: BorderRadius.zero,
+                ),
+                contentPadding: style.padding ?? const EdgeInsets.only(left: 8,),
+                suffixIcon: const Icon(Icons.search),
+                suffixIconColor: const DigitColors().davyGray,
+              ),
             ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                  color: const DigitColors().burningOrange, width: 1.0),
-              borderRadius: BorderRadius.zero,
-            ),
-            contentPadding: style.padding ?? const EdgeInsets.only(left: 8,),
-            suffixIcon: RotationTransition(
-              turns: _rotateAnimation,
-              child: widget.icon ?? const Icon(Icons.arrow_drop_down),
-            ),
-            suffixIconColor: const DigitColors().davyGray,
           ),
-        ),
+          if (selectedValues.isNotEmpty)
+            Wrap(
+              spacing: 8.0, // Adjust the spacing between chips
+              children: selectedValues.map((value) {
+                var typeName = '';
+
+                int index = int.tryParse(value) ?? -1;
+
+                for (var type in widget.types) {
+                  print(type.values);
+
+                  if (type.values.contains(type.values[index])) {
+                    setState(() {
+                      typeName = type.type;
+                    });
+                    break;
+                  }
+                }
+                return Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (typeName.isNotEmpty)
+                      Container(
+                        margin: EdgeInsets.only(right: 8.0),
+                        child: Text(
+                          typeName,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    Chip(
+                      label: Text(value),
+                      onDeleted: () {
+                        _removeSelectedValue(value);
+                      },
+                    ),
+                  ],
+                );
+              }).toList(),
+            ),
+        ],
       ),
     );
+  }
+
+
+
+  void _removeSelectedValue(String value) {
+    setState(() {
+      selectedValues.remove(value);
+    });
   }
 
   void _filterItems(String input) {
@@ -150,12 +186,9 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
     var offset = renderBox.localToGlobal(Offset.zero);
     var topOffset = offset.dy + size.height + 5;
     OverlayEntry overlayEntry = OverlayEntry(
-      // full screen GestureDetector to register when a
-      // user has clicked away from the dropdown
       builder: (context) => GestureDetector(
         onTap: () => _toggleDropdown(close: true),
         behavior: HitTestBehavior.translucent,
-        // full screen container to register taps anywhere and close drop down
         child: Container(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
@@ -166,50 +199,53 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
                 top: topOffset,
                 width: widget.dropdownStyle.width ?? size.width,
                 child: CompositedTransformFollower(
-                  offset:
-                  widget.dropdownStyle.offset ?? Offset(0, size.height + 5),
+                  offset: widget.dropdownStyle.offset ?? Offset(0, size.height + 5),
                   link: this._layerLink,
                   showWhenUnlinked: false,
                   child: Material(
                     elevation: widget.dropdownStyle.elevation ?? 0,
-                    borderRadius:
-                    widget.dropdownStyle.borderRadius ?? BorderRadius.zero,
+                    borderRadius: widget.dropdownStyle.borderRadius ?? BorderRadius.zero,
                     color: widget.dropdownStyle.color,
-                    child: SizeTransition(
-                      axisAlignment: 1,
-                      sizeFactor: _expandAnimation,
-                      child: ConstrainedBox(
-                        constraints: widget.dropdownStyle.constraints ??
-                            BoxConstraints(
-                              maxHeight: MediaQuery.of(context).size.height -
-                                  topOffset -
-                                  15,
+                    child: ConstrainedBox(
+                      constraints: widget.dropdownStyle.constraints ??
+                          BoxConstraints(
+                            maxHeight: MediaQuery.of(context).size.height -
+                                topOffset -
+                                15,
+                          ),
+                      child: ListView(
+                        padding: widget.dropdownStyle.padding ?? EdgeInsets.zero,
+                        shrinkWrap: true,
+                        children: widget.types
+                            .asMap()
+                            .entries
+                            .expand((typeEntry) {
+                          return [
+                            // Type widget
+                            ListTile(
+                              title: Text(typeEntry.value.type),
+                              onTap: null,
                             ),
-                        child: ListView(
-                          padding:
-                          widget.dropdownStyle.padding ?? EdgeInsets.zero,
-                          shrinkWrap: true,
-                          children: filteredItems.isNotEmpty
-                              ? filteredItems.asMap().entries.map((item) {
-                            return InkWell(
-                              onTap: () {
-                                setState(() => _currentIndex = item.key);
-                                widget.onChange(item.value.value, item.key);
-                                _toggleDropdown();
-                              },
-                              child: item.value,
-
-                            );
-                          }).toList():
-                          [
-                            const Center(
-                              child: Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Text("No Options available"),
-                              ),
-                            ),
-                          ],
-                        ),
+                            // Values widgets
+                            ...typeEntry.value.values.asMap().entries.map((valueEntry) {
+                              return InkWell(
+                                onTap: () {
+                                  setState(() => _currentIndex = valueEntry.key);
+                                  widget.onChange(valueEntry.value, valueEntry.key);
+                                  _toggleDropdown();
+                                },
+                                child: DropdownItem<String>(
+                                  value: valueEntry.value,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(valueEntry.value),
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          ];
+                        })
+                            .toList(),
                       ),
                     ),
                   ),
@@ -225,7 +261,6 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
 
   void _toggleDropdown({bool close = false}) async {
     if (_isOpen || close) {
-      await _animationController.reverse();
       _overlayEntry?.remove();
       setState(() {
         _isOpen = false;
@@ -237,12 +272,19 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
       });
       Overlay.of(context).insert(_overlayEntry!);
       setState(() => _isOpen = true);
-      _animationController.forward();
     }
     if (_currentIndex != -1) {
       setState(() {
-        widget.textEditingController.text =
-            widget.items[_currentIndex].value;
+        if (selectedIndices.contains(_currentIndex)) {
+          // If already selected, remove it
+          print(_currentIndex.toString());
+          selectedIndices.remove(_currentIndex);
+          selectedValues.remove(_currentIndex);
+        } else {
+          // If not selected, add it
+          selectedIndices.add(_currentIndex);
+          selectedValues.add(_currentIndex.toString());
+        }
       });
     }
   }
@@ -268,8 +310,8 @@ class DropdownButtonStyle {
   final Color backgroundColor;
   final EdgeInsets? padding;
   final BoxConstraints? constraints;
-  final double? width;
-  final double? height;
+  final double width;
+  final double height;
   final Color primaryColor;
   const DropdownButtonStyle({
     this.mainAxisAlignment,
@@ -277,11 +319,18 @@ class DropdownButtonStyle {
     this.primaryColor = Colors.black87,
     this.constraints,
     this.height = 40,
-    this.width,
+    this.width = 340,
     this.elevation = 1,
     this.padding,
     this.shape,
   });
+}
+
+class DropdownItemType<T> {
+  final String type;
+  final List<String> values;
+
+  const DropdownItemType({required this.type, required this.values});
 }
 
 class DropdownStyle {

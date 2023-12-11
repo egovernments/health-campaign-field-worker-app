@@ -1148,20 +1148,6 @@ class HotReload extends StatelessWidget {
               ],
             ),
             WidgetbookComponent(
-              name: 'Toggle',
-              useCases: [
-                WidgetbookUseCase(
-                  name: 'default',
-                  builder: (context) => DigitToggle(
-                    onChanged: (value) {
-                      // print(value);
-                    },
-                    label: 'Toggle',
-                  ),
-                ),
-              ],
-            ),
-            WidgetbookComponent(
               name: 'Toggle Group',
               useCases: [
                 WidgetbookUseCase(

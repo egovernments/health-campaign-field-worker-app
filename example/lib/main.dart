@@ -2,8 +2,10 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/validators/validator.dart';
 import 'package:digit_components/widgets/atoms/digit_base_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_date_form_input.dart';
-import 'package:digit_components/widgets/atoms/digit_dropdown_input.dart' as dropdown;
+import 'package:digit_components/widgets/atoms/digit_dropdown_input.dart'
+    as dropdown;
 import 'package:digit_components/widgets/atoms/digit_location_form_input.dart';
+import 'package:digit_components/widgets/atoms/digit_multiselect_dropdown.dart';
 import 'package:digit_components/widgets/atoms/digit_numeric_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_password_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_radio_list.dart';
@@ -37,8 +39,10 @@ void main() {
                       helpText: 'help text',
                       charCount: true,
                       validations: [
-                        Validator(ValidatorType.maxLength, 10, errorMessage: 'Maximum length is 10.'),
-                        Validator(ValidatorType.pattern, r'^[a-zA-Z0-9]+$', errorMessage: 'Invalid format.'),
+                        Validator(ValidatorType.maxLength, 10,
+                            errorMessage: 'Maximum length is 10.'),
+                        Validator(ValidatorType.pattern, r'^[a-zA-Z0-9]+$',
+                            errorMessage: 'Invalid format.'),
                       ],
                       // onSuffixTap: (){print('tapppppppppp');},
                       // suffixIcon: Icons.currency_rupee_sharp,
@@ -106,11 +110,12 @@ void main() {
                     DigitPasswordFormInput(
                       label: "input",
                       controller: TextEditingController(),
-                      // info: 'this is info',
                       innerLabel: 'innerlabel',
                       helpText: 'help text',
                       validations: [
-                        Validator(ValidatorType.minLength, 6, errorMessage: 'Password must be at least 6 characters.'),
+                        Validator(ValidatorType.minLength, 6,
+                            errorMessage:
+                                'Password must be at least 6 characters.'),
                       ],
                       // onSuffixTap: (){print('tapppppppppp');},
                       // suffixIcon: Icons.currency_rupee_sharp,
@@ -133,17 +138,39 @@ void main() {
                           .entries
                           .map(
                             (item) => dropdown.DropdownItem<String>(
-                          value: item.value,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(item.value),
-                          ),
-                        ),
-                      )
+                              value: item.value,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(item.value),
+                              ),
+                            ),
+                          )
                           .toList(),
                       child: const Text(
                         'dropdown',
                       ),
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    DigitMultiSelectDropdown<String>(
+                      items: [],
+                      types: const [
+                        DropdownItemType(
+                            type: 'Fruits',
+                            values: ['Apple', 'Banana', 'Orange', 'Grapes']),
+                        DropdownItemType(
+                            type: 'Vegetables',
+                            values: ['Carrot', 'Broccoli', 'Spinach']),
+                        // Add more types as needed
+                      ],
+                      onChange: (selectedValues, selectedIndices) {
+                        // Handle the selected values and indices
+                        print('Selected Values: $selectedValues');
+                        print('Selected Indices: $selectedIndices');
+                      },
+                      textEditingController: TextEditingController(),
+                      child: const Text('Select Items'),
                     ),
                     const SizedBox(
                       height: 8,
@@ -203,66 +230,37 @@ void main() {
                     const SizedBox(
                       height: 8,
                     ),
-                    DigitToggle(
-                      onChanged: (value) {
-                        // print(value);
-                      },
-                      label: 'Toggle',
+                    const SizedBox(
+                      height: 8,
                     ),
-                    const SizedBox(height: 8,),
                     DigitToggleList(
                       toggleButtons: [
-                        ToggleButtonModel(name: 'Toggle 1', key: 'key1', onSelected: () {
-                          print('Toggle 1 selected!');
-                        }),
-                        ToggleButtonModel(name: 'Toggle 2', key: 'key2', onSelected: () {
-                          print('Toggle 2 selected!');
-                        }),
-                        ToggleButtonModel(name: 'Toggle 3', key: 'key3', onSelected: () {
-                          print('Toggle 3 selected!');
-                        }),
+                        ToggleButtonModel(
+                            name: 'Toggle 1',
+                            key: 'key1',
+                            onSelected: () {
+                              print('Toggle 1 selected!');
+                            }),
+                        ToggleButtonModel(
+                            name: 'Toggle 2',
+                            key: 'key2',
+                            onSelected: () {
+                              print('Toggle 2 selected!');
+                            }),
+                        ToggleButtonModel(
+                            name: 'Toggle 3',
+                            key: 'key3',
+                            onSelected: () {
+                              print('Toggle 3 selected!');
+                            }),
                       ],
                       onChanged: (selectedValues) {
                         print('Selected values: $selectedValues');
                       },
                     ),
-                    // CustomDropdown<int>(
-                    //   onChange: (int value, int index) => print(value),
-                    //   dropdownButtonStyle: const DropdownButtonStyle(
-                    //     width: 170,
-                    //     height: 40,
-                    //     elevation: 1,
-                    //     backgroundColor: Colors.white,
-                    //     primaryColor: Colors.black87,
-                    //   ),
-                    //   dropdownStyle: DropdownStyle(
-                    //     borderRadius: BorderRadius.circular(8),
-                    //     elevation: 6,
-                    //     padding: const EdgeInsets.all(5),
-                    //   ),
-                    //   items: [
-                    //     'item 1',
-                    //     'item 2',
-                    //     'item 3',
-                    //     'item 4',
-                    //   ]
-                    //       .asMap()
-                    //       .entries
-                    //       .map(
-                    //         (item) => DropdownItem<int>(
-                    //       value: item.key + 1,
-                    //       child: Padding(
-                    //         padding: const EdgeInsets.all(8.0),
-                    //         child: Text(item.value),
-                    //       ),
-                    //     ),
-                    //   )
-                    //       .toList(),
-                    //   child: const Text(
-                    //     'dropdown',
-                    //   ),
-                    // ),
-                    const SizedBox(height: 16,),
+                    const SizedBox(
+                      height: 16,
+                    ),
                   ],
                 ),
               ),

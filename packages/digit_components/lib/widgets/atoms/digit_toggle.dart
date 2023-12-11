@@ -1,5 +1,6 @@
-import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
+
+import '../../theme/colors.dart';
 
 class DigitToggle extends StatefulWidget {
   final void Function(bool isSelected) onChanged;
@@ -37,10 +38,7 @@ class _DigitToggleState extends State<DigitToggle> {
         },
         child: GestureDetector(
           onTap: () {
-            widget.onChanged(!widget.isSelected);
-            setState(() {
-              widget.isSelected = !widget.isSelected;
-            });
+            widget.onChanged(true);
           },
           child: Container(
             height: 32,
@@ -53,18 +51,24 @@ class _DigitToggleState extends State<DigitToggle> {
               borderRadius: BorderRadius.zero,
               border: Border.all(
                 color: (isHovered || widget.isSelected)
-                    ? const DigitColors().burningOrange // Change to your desired color
-                    : const DigitColors().cloudGray, // Change to your desired color
+                    ? const DigitColors().burningOrange
+                    : const DigitColors().cloudGray,
                 width: 1.0,
               ),
-              color: widget.isSelected ? const DigitColors().burningOrange :Colors.transparent,
+              color: widget.isSelected
+                  ? const DigitColors().burningOrange
+                  : Colors.transparent,
             ),
             child: Center(
               child: Text(
                 widget.label,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: (isHovered && widget.isSelected==false) ? const DigitColors().burningOrange : widget.isSelected ? const DigitColors().white :const DigitColors().cloudGray,// Change to your desired color
+                  color: (isHovered && !widget.isSelected)
+                      ? const DigitColors().burningOrange
+                      : widget.isSelected
+                      ? const DigitColors().white
+                      : const DigitColors().cloudGray,
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
                   fontFamily: 'Roboto',

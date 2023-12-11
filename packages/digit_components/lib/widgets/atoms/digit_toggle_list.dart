@@ -17,14 +17,7 @@ class DigitToggleList extends StatefulWidget {
 }
 
 class _DigitToggleListState extends State<DigitToggleList> {
-  late List<bool> isSelectedList;
   int? selectedIndex;
-
-  @override
-  void initState() {
-    super.initState();
-    isSelectedList = List.generate(widget.toggleButtons.length, (index) => false);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,19 +32,20 @@ class _DigitToggleListState extends State<DigitToggleList> {
               onChanged: (isSelected) {
                 setState(() {
                   if (isSelected) {
-                    // Unselect the previously selected item
-                    if (selectedIndex != null && selectedIndex != index) {
-                      isSelectedList[selectedIndex!] = false;
+                    if (selectedIndex != null && selectedIndex == index) {
+                      // Clicked on the already selected item, unselect it
+                      selectedIndex = null;
+                    } else {
+                      // Unselect the previously selected item
+                      if (selectedIndex != null) {
+                        widget.toggleButtons[selectedIndex!].onSelected?.call();
+                      }
+                      selectedIndex = index;
                     }
-                    selectedIndex = index;
                   } else {
                     selectedIndex = null;
                   }
-
-                  isSelectedList[index] = isSelected;
                 });
-
-                widget.onChanged(isSelectedList);
 
                 // Check if the button is selected and has a callback
                 if (isSelected && button.onSelected != null) {
@@ -59,6 +53,7 @@ class _DigitToggleListState extends State<DigitToggleList> {
                 }
               },
               label: button.name,
+              isSelected: selectedIndex == index,
             ),
           );
         },
