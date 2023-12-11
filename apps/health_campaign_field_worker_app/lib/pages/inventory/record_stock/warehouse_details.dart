@@ -355,13 +355,25 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                   ),
                                   if (deliveryTeamSelected)
                                     DigitTextFormField(
+                                      hideKeyboard: true,
                                       label: localizations.translate(
                                         i18.stockReconciliationDetails
                                             .teamCodeLabel,
                                       ),
                                       formControlName: _teamCodeKey,
                                       onChanged: (val) {
-                                        clearQRCodes();
+                                        String? value = val as String?;
+                                        if (value != null &&
+                                            value.trim().isNotEmpty) {
+                                          context.read<ScannerBloc>().add(
+                                                ScannerEvent.handleScanner(
+                                                  [],
+                                                  [value],
+                                                ),
+                                              );
+                                        } else {
+                                          clearQRCodes();
+                                        }
                                       },
                                       isRequired: true,
                                       suffix: IconButton(

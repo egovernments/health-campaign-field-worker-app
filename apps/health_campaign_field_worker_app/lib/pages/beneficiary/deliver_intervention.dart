@@ -45,7 +45,7 @@ class _DeliverInterventionPageState
   static const _deliveryCommentKey = 'deliveryComment';
   static const _doseAdministrationKey = 'doseAdministered';
   static const _dateOfAdministrationKey = 'dateOfAdministration';
-
+  final clickedStatus = ValueNotifier<bool>(false);
   // Variable to track dose administration status
   bool doseAdministered = false;
 
@@ -149,186 +149,215 @@ class _DeliverInterventionPageState
                                               0, kPadding, 0, 0),
                                           padding: const EdgeInsets.fromLTRB(
                                               kPadding, 0, kPadding, 0),
-                                          child: DigitElevatedButton(
-                                            onPressed: () async {
-                                              if (((form.control(
-                                                _resourceDeliveredKey,
-                                              ) as FormArray)
-                                                          .value
-                                                      as List<
-                                                          ProductVariantModel?>)
-                                                  .any((ele) =>
-                                                      ele?.productId == null)) {
-                                                await DigitToast.show(
-                                                  context,
-                                                  options: DigitToastOptions(
-                                                    localizations.translate(i18
-                                                        .deliverIntervention
-                                                        .resourceDeliveredValidation),
-                                                    true,
-                                                    theme,
-                                                  ),
-                                                );
-                                              } else if ((((form.control(
-                                                        _quantityDistributedKey,
-                                                      ) as FormArray)
-                                                          .value) ??
-                                                      [])
-                                                  .any((e) => e == 0)) {
-                                                await DigitToast.show(
-                                                  context,
-                                                  options: DigitToastOptions(
-                                                    localizations.translate(i18
-                                                        .deliverIntervention
-                                                        .resourceCannotBeZero),
-                                                    true,
-                                                    theme,
-                                                  ),
-                                                );
-                                              } else {
-                                                final shouldSubmit =
-                                                    await DigitDialog.show<
-                                                        bool>(
-                                                  context,
-                                                  options: DigitDialogOptions(
-                                                    titleText:
-                                                        localizations.translate(
-                                                      i18.deliverIntervention
-                                                          .dialogTitle,
-                                                    ),
-                                                    contentText:
-                                                        localizations.translate(
-                                                      i18.deliverIntervention
-                                                          .dialogContent,
-                                                    ),
-                                                    primaryAction:
-                                                        DigitDialogActions(
-                                                      label: localizations
-                                                          .translate(
-                                                        i18.common
-                                                            .coreCommonSubmit,
-                                                      ),
-                                                      action: (ctx) {
-                                                        Navigator.of(
-                                                          context,
-                                                          rootNavigator: true,
-                                                        ).pop(true);
-                                                      },
-                                                    ),
-                                                    secondaryAction:
-                                                        DigitDialogActions(
-                                                      label: localizations
-                                                          .translate(
-                                                        i18.common
-                                                            .coreCommonCancel,
-                                                      ),
-                                                      action: (context) =>
-                                                          Navigator.of(
-                                                        context,
-                                                        rootNavigator: true,
-                                                      ).pop(false),
-                                                    ),
-                                                  ),
-                                                );
-
-                                                if (shouldSubmit ?? false) {
-                                                  if (context.mounted) {
-                                                    context
-                                                        .read<
-                                                            DeliverInterventionBloc>()
-                                                        .add(
-                                                          DeliverInterventionSubmitEvent(
-                                                            _getTaskModel(
-                                                              context,
-                                                              form: form,
-                                                              oldTask: null,
-                                                              projectBeneficiaryClientReferenceId:
-                                                                  projectBeneficiary
-                                                                      .first
-                                                                      .clientReferenceId,
-                                                              dose:
-                                                                  deliveryInterventionstate
-                                                                      .dose,
-                                                              cycle:
-                                                                  deliveryInterventionstate
-                                                                      .cycle,
-                                                              deliveryStrategy:
-                                                                  DeliverStrategyType
-                                                                      .direct
-                                                                      .toValue(),
-                                                              address:
-                                                                  householdMemberWrapper
-                                                                      .members
-                                                                      .first
-                                                                      .address
-                                                                      ?.first,
-                                                            ),
-                                                            false,
-                                                            context.boundary,
-                                                          ),
-                                                        );
-
-                                                    if (state.futureDeliveries !=
-                                                            null &&
-                                                        state.futureDeliveries!
-                                                            .isNotEmpty &&
-                                                        projectState
-                                                                .projectType
-                                                                ?.cycles
-                                                                ?.isNotEmpty ==
-                                                            true) {
-                                                      context.router
-                                                          .popUntilRouteWithName(
-                                                        BeneficiaryWrapperRoute
-                                                            .name,
-                                                      );
-                                                      context.router.push(
-                                                        SplashAcknowledgementRoute(
-                                                          enableBackToSearch:
-                                                              false,
-                                                        ),
-                                                      );
-                                                    } else {
-                                                      final reloadState =
-                                                          context.read<
-                                                              HouseholdOverviewBloc>();
-
-                                                      Future.delayed(
-                                                        const Duration(
-                                                          milliseconds: 1000,
-                                                        ),
-                                                        () {
-                                                          reloadState.add(
-                                                            HouseholdOverviewReloadEvent(
-                                                              projectId: context
-                                                                  .projectId,
-                                                              projectBeneficiaryType:
-                                                                  context
-                                                                      .beneficiaryType,
+                                          child: ValueListenableBuilder(
+                                            valueListenable: clickedStatus,
+                                            builder:
+                                                (context, bool isClicked, _) {
+                                              return DigitElevatedButton(
+                                                onPressed: isClicked
+                                                    ? null
+                                                    : () async {
+                                                        if (((form.control(
+                                                          _resourceDeliveredKey,
+                                                        ) as FormArray)
+                                                                    .value
+                                                                as List<
+                                                                    ProductVariantModel?>)
+                                                            .any((ele) =>
+                                                                ele?.productId ==
+                                                                null)) {
+                                                          await DigitToast.show(
+                                                            context,
+                                                            options:
+                                                                DigitToastOptions(
+                                                              localizations
+                                                                  .translate(i18
+                                                                      .deliverIntervention
+                                                                      .resourceDeliveredValidation),
+                                                              true,
+                                                              theme,
                                                             ),
                                                           );
-                                                        },
-                                                      ).then((value) {
-                                                        context.router
-                                                            .popAndPush(
-                                                          HouseholdAcknowledgementRoute(
-                                                            enableViewHousehold:
-                                                                true,
-                                                          ),
-                                                        );
-                                                      });
-                                                    }
-                                                  }
-                                                }
-                                              }
-                                            },
-                                            child: Center(
-                                              child: Text(
-                                                localizations.translate(
-                                                  i18.common.coreCommonSubmit,
+                                                        } else if ((((form
+                                                                        .control(
+                                                                  _quantityDistributedKey,
+                                                                ) as FormArray)
+                                                                    .value) ??
+                                                                [])
+                                                            .any((e) =>
+                                                                e == 0)) {
+                                                          await DigitToast.show(
+                                                            context,
+                                                            options:
+                                                                DigitToastOptions(
+                                                              localizations
+                                                                  .translate(i18
+                                                                      .deliverIntervention
+                                                                      .resourceCannotBeZero),
+                                                              true,
+                                                              theme,
+                                                            ),
+                                                          );
+                                                        } else {
+                                                          final shouldSubmit =
+                                                              await DigitDialog
+                                                                  .show<bool>(
+                                                            context,
+                                                            options:
+                                                                DigitDialogOptions(
+                                                              titleText:
+                                                                  localizations
+                                                                      .translate(
+                                                                i18.deliverIntervention
+                                                                    .dialogTitle,
+                                                              ),
+                                                              contentText:
+                                                                  localizations
+                                                                      .translate(
+                                                                i18.deliverIntervention
+                                                                    .dialogContent,
+                                                              ),
+                                                              primaryAction:
+                                                                  DigitDialogActions(
+                                                                label: localizations
+                                                                    .translate(
+                                                                  i18.common
+                                                                      .coreCommonSubmit,
+                                                                ),
+                                                                action: (ctx) {
+                                                                  clickedStatus
+                                                                          .value =
+                                                                      true;
+                                                                  Navigator.of(
+                                                                    context,
+                                                                    rootNavigator:
+                                                                        true,
+                                                                  ).pop(true);
+                                                                },
+                                                              ),
+                                                              secondaryAction:
+                                                                  DigitDialogActions(
+                                                                label: localizations
+                                                                    .translate(
+                                                                  i18.common
+                                                                      .coreCommonCancel,
+                                                                ),
+                                                                action:
+                                                                    (context) =>
+                                                                        Navigator
+                                                                            .of(
+                                                                  context,
+                                                                  rootNavigator:
+                                                                      true,
+                                                                ).pop(false),
+                                                              ),
+                                                            ),
+                                                          );
+
+                                                          if (shouldSubmit ??
+                                                              false) {
+                                                            if (context
+                                                                .mounted) {
+                                                              context
+                                                                  .read<
+                                                                      DeliverInterventionBloc>()
+                                                                  .add(
+                                                                    DeliverInterventionSubmitEvent(
+                                                                      _getTaskModel(
+                                                                        context,
+                                                                        form:
+                                                                            form,
+                                                                        oldTask:
+                                                                            null,
+                                                                        projectBeneficiaryClientReferenceId: projectBeneficiary
+                                                                            .first
+                                                                            .clientReferenceId,
+                                                                        dose: deliveryInterventionstate
+                                                                            .dose,
+                                                                        cycle: deliveryInterventionstate
+                                                                            .cycle,
+                                                                        deliveryStrategy: DeliverStrategyType
+                                                                            .direct
+                                                                            .toValue(),
+                                                                        address: householdMemberWrapper
+                                                                            .members
+                                                                            .first
+                                                                            .address
+                                                                            ?.first,
+                                                                      ),
+                                                                      false,
+                                                                      context
+                                                                          .boundary,
+                                                                    ),
+                                                                  );
+
+                                                              if (state.futureDeliveries !=
+                                                                      null &&
+                                                                  state
+                                                                      .futureDeliveries!
+                                                                      .isNotEmpty &&
+                                                                  projectState
+                                                                          .projectType
+                                                                          ?.cycles
+                                                                          ?.isNotEmpty ==
+                                                                      true) {
+                                                                context.router
+                                                                    .popUntilRouteWithName(
+                                                                  BeneficiaryWrapperRoute
+                                                                      .name,
+                                                                );
+                                                                context.router
+                                                                    .push(
+                                                                  SplashAcknowledgementRoute(
+                                                                    enableBackToSearch:
+                                                                        false,
+                                                                  ),
+                                                                );
+                                                              } else {
+                                                                final reloadState =
+                                                                    context.read<
+                                                                        HouseholdOverviewBloc>();
+
+                                                                Future.delayed(
+                                                                  const Duration(
+                                                                    milliseconds:
+                                                                        1000,
+                                                                  ),
+                                                                  () {
+                                                                    reloadState
+                                                                        .add(
+                                                                      HouseholdOverviewReloadEvent(
+                                                                        projectId:
+                                                                            context.projectId,
+                                                                        projectBeneficiaryType:
+                                                                            context.beneficiaryType,
+                                                                      ),
+                                                                    );
+                                                                  },
+                                                                ).then((value) {
+                                                                  context.router
+                                                                      .popAndPush(
+                                                                    HouseholdAcknowledgementRoute(
+                                                                      enableViewHousehold:
+                                                                          true,
+                                                                    ),
+                                                                  );
+                                                                });
+                                                              }
+                                                            }
+                                                          }
+                                                        }
+                                                      },
+                                                child: Center(
+                                                  child: Text(
+                                                    localizations.translate(
+                                                      i18.common
+                                                          .coreCommonSubmit,
+                                                    ),
+                                                  ),
                                                 ),
-                                              ),
-                                            ),
+                                              );
+                                            },
                                           ),
                                         );
                                       },
