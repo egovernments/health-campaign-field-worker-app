@@ -164,6 +164,9 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                         height: 50,
                         child: TextButton(
                           onPressed: () {
+                            context
+                                .read<ScannerBloc>()
+                                .add(const ScannerEvent.handleScanner([], []));
                             setState(() {
                               manualcode = true;
                             });
@@ -311,56 +314,52 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                                                       .value
                                                       .data
                                                       .toString()
-                                                  : state.qrcodes[index]
-                                                      .toString(),
+                                                  : trimString(state
+                                                      .qrcodes[index]
+                                                      .toString()),
                                             ),
                                           ),
-                                          Container(
-                                            padding: const EdgeInsets.only(
-                                              bottom: kPadding * 2,
-                                              left: kPadding,
+                                          IconButton(
+                                            icon: const Icon(
+                                              Icons.delete,
+                                              color: Colors.red,
+                                              size: 24,
                                             ),
-                                            child: IconButton(
-                                              icon: const Icon(
-                                                Icons.delete,
-                                                color: Colors.red,
-                                              ),
-                                              onPressed: () {
-                                                final bloc =
-                                                    context.read<ScannerBloc>();
-                                                if (widget.isGS1code) {
-                                                  result = List.from(
-                                                    state.barcodes,
-                                                  );
-                                                  result.removeAt(index);
-                                                  setState(() {
-                                                    result = result;
-                                                  });
+                                            onPressed: () {
+                                              final bloc =
+                                                  context.read<ScannerBloc>();
+                                              if (widget.isGS1code) {
+                                                result = List.from(
+                                                  state.barcodes,
+                                                );
+                                                result.removeAt(index);
+                                                setState(() {
+                                                  result = result;
+                                                });
 
-                                                  bloc.add(
-                                                    ScannerEvent.handleScanner(
-                                                      result,
-                                                      state.qrcodes,
-                                                    ),
-                                                  );
-                                                } else {
-                                                  codes = List.from(
+                                                bloc.add(
+                                                  ScannerEvent.handleScanner(
+                                                    result,
                                                     state.qrcodes,
-                                                  );
-                                                  codes.removeAt(index);
-                                                  setState(() {
-                                                    codes = codes;
-                                                  });
+                                                  ),
+                                                );
+                                              } else {
+                                                codes = List.from(
+                                                  state.qrcodes,
+                                                );
+                                                codes.removeAt(index);
+                                                setState(() {
+                                                  codes = codes;
+                                                });
 
-                                                  bloc.add(
-                                                    ScannerEvent.handleScanner(
-                                                      state.barcodes,
-                                                      codes,
-                                                    ),
-                                                  );
-                                                }
-                                              },
-                                            ),
+                                                bloc.add(
+                                                  ScannerEvent.handleScanner(
+                                                    state.barcodes,
+                                                    codes,
+                                                  ),
+                                                );
+                                              }
+                                            },
                                           ),
                                         ],
                                       ),
@@ -524,7 +523,6 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
     setState(() {
       this.controller = controller;
     });
-
     controller.scannedDataStream.listen((scanData) async {
       try {
         controller.pauseCamera();
@@ -655,5 +653,9 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
   void dispose() {
     controller?.dispose();
     super.dispose();
+  }
+
+  String trimString(String input) {
+    return input.length > 20 ? '${input.substring(0, 20)}...' : input;
   }
 }

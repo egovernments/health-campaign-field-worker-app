@@ -702,8 +702,15 @@ class _DeliverInterventionPageState
         ],
       ),
       _quantityDistributedKey: FormArray<int>([
-        ..._controllers.map(
-          (e) => FormControl<int>(value: 0, validators: [Validators.min(1)]),
+        ..._controllers.mapIndexed(
+          (i, e) => FormControl<int>(
+            value: context.beneficiaryType != BeneficiaryType.individual
+                ? int.tryParse(
+                    bloc.tasks?.last.resources?.elementAt(i).quantity ?? '0',
+                  )
+                : 0,
+            validators: [Validators.min(1)],
+          ),
         ),
       ]),
     });

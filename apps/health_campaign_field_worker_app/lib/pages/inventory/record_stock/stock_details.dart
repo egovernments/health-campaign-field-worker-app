@@ -74,7 +74,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
 
   @override
   void initState() {
-    context.read<ScannerBloc>().add(const ScannerEvent.handleScanner([], []));
+    clearQRCodes();
     super.initState();
   }
 
@@ -167,23 +167,27 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                 builder: (context, form, child) {
                   return BlocBuilder<ScannerBloc, ScannerState>(
                     builder: (context, scannerState) {
-                      if (scannerState.qrcodes.isNotEmpty &&
-                          (form.control(_deliveryTeamKey).value == null ||
-                              form
-                                  .control(_deliveryTeamKey)
-                                  .value
-                                  .toString()
-                                  .trim()
-                                  .isEmpty)) {
-                        form.control(_deliveryTeamKey).value =
-                            scannerState.qrcodes.first;
-                      } else {
-                        form.control(_deliveryTeamKey).value = '';
-                      }
+                      form.control(_deliveryTeamKey).value =
+                          scannerState.qrcodes.isNotEmpty
+                              ? scannerState.qrcodes.last
+                              : '';
 
                       return ScrollableContent(
-                        header: const Column(children: [
-                          BackNavigationHelpHeaderWidget(),
+                        header: Column(children: [
+                          BackNavigationHelpHeaderWidget(
+                            handleback: () {
+                              final stockState =
+                                  context.read<RecordStockBloc>().state;
+                              if (stockState.primaryId != null) {
+                                context.read<ScannerBloc>().add(
+                                      ScannerEvent.handleScanner(
+                                        [],
+                                        [stockState.primaryId.toString()],
+                                      ),
+                                    );
+                              }
+                            },
+                          ),
                         ]),
                         enableFixedButton: true,
                         footer: DigitCard(
@@ -550,6 +554,9 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
 
                                     return InkWell(
                                       onTap: () async {
+                                        clearQRCodes();
+                                        form.control(_deliveryTeamKey).value =
+                                            '';
                                         final parent = context.router.parent()
                                             as StackRouter;
                                         final facility =
@@ -593,6 +600,10 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                           ),
                                           formControlName: _secondaryPartyKey,
                                           onTap: () async {
+                                            clearQRCodes();
+                                            form
+                                                .control(_deliveryTeamKey)
+                                                .value = '';
                                             final parent = context.router
                                                 .parent() as StackRouter;
                                             final facility = await parent
@@ -629,6 +640,9 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                       i18.stockReconciliationDetails
                                           .teamCodeLabel,
                                     ),
+                                    onChanged: (val) {
+                                      clearQRCodes();
+                                    },
                                     suffix: IconButton(
                                       onPressed: () {
                                         context.router.push(QRScannerRoute(
@@ -755,5 +769,9 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
         },
       ),
     );
+  }
+
+  void clearQRCodes() {
+    context.read<ScannerBloc>().add(const ScannerEvent.handleScanner([], []));
   }
 }
