@@ -142,7 +142,7 @@ class AddressLocalRepository {
   (selectQuery
         ..where(buildAnd([
           sql.address.relatedClientReferenceId.isNotNull(),
-          sql.household.clientReferenceId.isNotNull(),
+          sql.individual.clientReferenceId.isNotNull(),
           if (query.latitude != null &&
               query.longitude != null &&
               query.maxRadius != null)
