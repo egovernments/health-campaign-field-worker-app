@@ -37,6 +37,10 @@ class _SearchBeneficiaryPageState
 
   @override
   void initState() {
+    context
+        .read<SearchHouseholdsBloc>()
+        .add(const SearchHouseholdsClearEvent());
+
     setState(() {
       offset = 0;
       limit = 10;
