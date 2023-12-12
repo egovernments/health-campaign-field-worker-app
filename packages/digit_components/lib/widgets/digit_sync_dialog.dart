@@ -66,12 +66,6 @@ class DigitSyncDialog {
       primaryAction: primaryAction,
       secondaryAction: secondaryAction,
       barrierDismissible: barrierDismissible,
-      contentPadding: const EdgeInsets.fromLTRB(
-        kPadding,
-        kPadding * 3,
-        kPadding,
-        kPadding * 2,
-      ),
       key: key,
     );
   }

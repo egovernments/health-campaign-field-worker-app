@@ -362,6 +362,12 @@ class _SearchBeneficiaryPageState
                                       searchQuery: state.searchQuery,
                                     ),
                                   ));
+                                  searchController.clear();
+                                  final bloc =
+                                      context.read<SearchHouseholdsBloc>();
+                                  bloc.add(
+                                    const SearchHouseholdsClearEvent(),
+                                  );
                                 };
 
                           return DigitElevatedButton(

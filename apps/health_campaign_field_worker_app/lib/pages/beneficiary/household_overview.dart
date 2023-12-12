@@ -417,7 +417,7 @@ class _HouseholdOverviewPageState
                                             final isBeneficiaryReferred =
                                                 checkIfBeneficiaryReferred(
                                               referralData,
-                                              currentCycle ?? Cycle(),
+                                              currentCycle ?? const Cycle(),
                                             );
 
                                             return MemberCard(
@@ -468,7 +468,15 @@ class _HouseholdOverviewPageState
                                                         (element) =>
                                                             element
                                                                 .beneficiaryClientReferenceId ==
-                                                            e.clientReferenceId,
+                                                            (context.beneficiaryType ==
+                                                                    BeneficiaryType
+                                                                        .individual
+                                                                ? e
+                                                                    .clientReferenceId
+                                                                : state
+                                                                    .householdMemberWrapper
+                                                                    .household
+                                                                    .clientReferenceId),
                                                       ),
                                                     ),
                                                     children: [

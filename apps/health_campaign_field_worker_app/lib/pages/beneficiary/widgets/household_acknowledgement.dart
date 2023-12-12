@@ -34,9 +34,8 @@ class _HouseholdAcknowledgementPageState
               action: () {
                 final parent = context.router.parent() as StackRouter;
                 // Pop twice to navigate back to the previous screen
-                parent
-                  ..pop()
-                  ..pop();
+                parent.popUntilRouteWithName(HomeRoute.name);
+                parent.push(SearchBeneficiaryRoute());
               },
               secondaryAction: () {
                 final wrapper = context
@@ -58,7 +57,8 @@ class _HouseholdAcknowledgementPageState
                 i18.acknowledgementSuccess.acknowledgementDescriptionText,
               ),
               label: localizations.translate(
-                  i18.acknowledgementSuccess.acknowledgementLabelText),
+                i18.acknowledgementSuccess.acknowledgementLabelText,
+              ),
             );
           },
         ),

@@ -361,7 +361,18 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                       ),
                                       formControlName: _teamCodeKey,
                                       onChanged: (val) {
-                                        clearQRCodes();
+                                        String? value = val as String?;
+                                        if (value != null &&
+                                            value.trim().isNotEmpty) {
+                                          context.read<ScannerBloc>().add(
+                                                ScannerEvent.handleScanner(
+                                                  [],
+                                                  [value],
+                                                ),
+                                              );
+                                        } else {
+                                          clearQRCodes();
+                                        }
                                       },
                                       isRequired: true,
                                       suffix: IconButton(
