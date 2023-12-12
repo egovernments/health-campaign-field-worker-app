@@ -45,6 +45,7 @@ class DigitDropdown<T> extends StatefulWidget {
 
 class _DigitDropdownState<T> extends State<DigitDropdown<T>>
     with TickerProviderStateMixin {
+  final FocusNode _focusNode = FocusNode();
   final LayerLink _layerLink = LayerLink();
   late OverlayEntry _overlayEntry;
   bool _isOpen = false;
@@ -58,6 +59,7 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
   @override
   void initState() {
     super.initState();
+    _focusNode.addListener(_onFocusChange);
     filteredItems = List.from(widget.items);
     _lastFilteredItems = List.from(widget.items);
     _animationController =
@@ -70,6 +72,20 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
       parent: _animationController,
       curve: Curves.easeInOut,
     ));
+  }
+
+  @override
+  void dispose() {
+    _focusNode.removeListener(_onFocusChange);
+    _focusNode.dispose();
+    // ...
+    super.dispose();
+  }
+
+  void _onFocusChange() {
+    if (!_focusNode.hasFocus) {
+      _toggleDropdown(close: true);
+    }
   }
 
   @override
@@ -86,7 +102,10 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
         width: style.width ?? dropdownWidth,
         height: style.height,
         child: TextField(
-          onTap: _toggleDropdown,
+          onTap: () {
+            _toggleDropdown();
+            FocusScope.of(context).requestFocus(_focusNode);
+          },
           onChanged: (input) {
             _filterItems(input);
             if (!listEquals(filteredItems, _lastFilteredItems)) {
@@ -94,6 +113,7 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
               _lastFilteredItems = filteredItems;
             }
           },
+          focusNode: _focusNode,
           controller: widget.textEditingController,
           decoration: InputDecoration(
             border: const OutlineInputBorder(
@@ -187,17 +207,36 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
                             ),
                         child: ListView(
                           padding:
-                          widget.dropdownStyle.padding ?? EdgeInsets.zero,
+                          EdgeInsets.zero,
                           shrinkWrap: true,
                           children: filteredItems.isNotEmpty
                               ? filteredItems.asMap().entries.map((item) {
+
+                            Color backgroundColor =
+                            item.key % 2 == 0 ? const DigitColors().white : const DigitColors().alabasterWhite;
+                            bool isHovered = false;
                             return InkWell(
+                              onHover: (hover) {
+                                print("Hover: $hover");
+                                setState(() {
+                                  isHovered = hover;
+                                });
+                              },
                               onTap: () {
                                 setState(() => _currentIndex = item.key);
                                 widget.onChange(item.value.value, item.key);
                                 _toggleDropdown();
                               },
-                              child: item.value,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: isHovered ? Colors.blue : Colors.red,
+                                  ),
+                                  color: backgroundColor,
+                                ),
+                                padding: EdgeInsets.zero,
+                                child: item.value,
+                              ),
 
                             );
                           }).toList():
@@ -242,7 +281,7 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
     if (_currentIndex != -1) {
       setState(() {
         widget.textEditingController.text =
-            widget.items[_currentIndex].value;
+            filteredItems[_currentIndex].value;
       });
     }
   }

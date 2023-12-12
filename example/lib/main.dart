@@ -1,6 +1,7 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/validators/validator.dart';
 import 'package:digit_components/widgets/atoms/digit_base_form_input.dart';
+import 'package:digit_components/widgets/atoms/digit_button.dart';
 import 'package:digit_components/widgets/atoms/digit_date_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_dropdown_input.dart'
     as dropdown;
@@ -33,6 +34,7 @@ void main() {
                       label: "input",
                       initialValue: 'initial value',
                       controller: TextEditingController(),
+
                       // state: 'Disabled',
                       // info: 'this is info',
                       innerLabel: 'innerlabel',
@@ -122,7 +124,10 @@ void main() {
                       // prefixIcon: Icons.currency_rupee,
                     ),
                     dropdown.DigitDropdown<int>(
-                      onChange: (String value, int index) => print(value),
+                      onChange: (String value, int index) => {
+                        print(value),
+                        print(index),
+                      },
                       dropdownStyle: const dropdown.DropdownStyle(
                         elevation: 6,
                         padding: EdgeInsets.all(5),
@@ -260,6 +265,82 @@ void main() {
                     ),
                     const SizedBox(
                       height: 16,
+                    ),
+                    CustomButton(
+                      prefixIcon: Icons.add,
+                      label: 'Primary Button',
+                      onPressed: () {
+                        // Add your primary button logic here
+                        print('Primary button pressed');
+                      },
+                      type: ButtonType.primary,
+                    ),
+                    SizedBox(height: 16),
+                    CustomButton(
+                      label: 'Secondary Button',
+                      onPressed: () {
+                        // Add your secondary button logic here
+                        print('Secondary button pressed');
+                      },
+                      type: ButtonType.secondary,
+                    ),
+                    SizedBox(height: 16),
+                    CustomButton(
+                      label: 'link',
+                      onPressed: () {
+                        // Add your secondary button logic here
+                        print('link pressed');
+                      },
+                      type: ButtonType.link,
+                    ),
+                    SizedBox(height: 16),
+                    CustomButton(
+                      label: 'tertiary Button',
+                      onPressed: () {
+                        // Add your secondary button logic here
+                        print('tertiary button pressed');
+                      },
+                      type: ButtonType.tertiary,
+                    ),
+                    CustomButton(
+                      prefixIcon: Icons.add,
+                      label: 'Primary Button',
+                      onPressed: () {
+                        // Add your primary button logic here
+                        print('Primary button pressed');
+                      },
+                      type: ButtonType.primary,
+                      isDisabled: true,
+                    ),
+                    SizedBox(height: 16),
+                    CustomButton(
+                      label: 'Secondary Button',
+                      onPressed: () {
+                        // Add your secondary button logic here
+                        print('Secondary button pressed');
+                      },
+                      isDisabled: true,
+                      type: ButtonType.secondary,
+                    ),
+                    SizedBox(height: 16),
+                    CustomButton(
+                      label: 'link',
+                      onPressed: () {
+                        // Add your secondary button logic here
+                        print('link pressed');
+                      },
+                      isDisabled: true,
+                      type: ButtonType.link,
+                    ),
+                    SizedBox(height: 16),
+                    CustomButton(
+                      label: 'tertiary Button',
+                      onPressed: () {
+                        // Add your secondary button logic here
+                        print('tertiary button pressed');
+                      },
+                      isDisabled: true,
+                      type: ButtonType.tertiary,
                     ),
                   ],
                 ),

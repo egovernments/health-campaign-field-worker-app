@@ -1,4 +1,5 @@
 import 'package:digit_components/utils/validators/validator.dart';
+import 'package:digit_components/widgets/atoms/digit_button.dart';
 import 'package:digit_components/widgets/atoms/digit_date_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_dropdown_input.dart';
 import 'package:digit_components/widgets/atoms/digit_location_form_input.dart';
@@ -1148,6 +1149,20 @@ class HotReload extends StatelessWidget {
               ],
             ),
             WidgetbookComponent(
+              name: 'Toggle',
+              useCases: [
+                WidgetbookUseCase(
+                  name: 'default',
+                  builder: (context) => DigitToggle(
+                    onChanged: (value) {
+                      // print(value);
+                    },
+                    label: 'Toggle',
+                  ),
+                ),
+              ],
+            ),
+            WidgetbookComponent(
               name: 'Toggle Group',
               useCases: [
                 WidgetbookUseCase(
@@ -1204,6 +1219,92 @@ class HotReload extends StatelessWidget {
                     child: const Text(
                       'dropdown',
                     ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        WidgetbookFolder(
+          name: 'Buttons',
+          children: [
+            WidgetbookComponent(
+              name: 'primary',
+              useCases: [
+                WidgetbookUseCase(
+                  name: 'default',
+                  builder: (context) => CustomButton(
+                    prefixIcon: Icons.add,
+                    label: 'Primary Button',
+                    onPressed: () {
+                      // Add your primary button logic here
+                      print('Primary button pressed');
+                    },
+                    type: ButtonType.primary,
+                    isDisabled: context.knobs.boolean(
+                      label: 'disable',
+                      initialValue: false,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            WidgetbookComponent(
+              name: 'secondary',
+              useCases: [
+                WidgetbookUseCase(
+                  name: 'default',
+                  builder: (context) => CustomButton(
+                    label: 'Secondary Button',
+                    onPressed: () {
+                      // Add your secondary button logic here
+                      print('Secondary button pressed');
+                    },
+                    isDisabled: context.knobs.boolean(
+                      label: 'disable',
+                      initialValue: false,
+                    ),
+                    type: ButtonType.secondary,
+                  ),
+                ),
+              ],
+            ),
+            WidgetbookComponent(
+              name: 'tertiary',
+              useCases: [
+                WidgetbookUseCase(
+                  name: 'default',
+                  builder: (context) => CustomButton(
+                    label: 'tertiary Button',
+                    onPressed: () {
+                      // Add your secondary button logic here
+                      print('tertiary button pressed');
+                    },
+                    isDisabled: context.knobs.boolean(
+                      label: 'disable',
+                      initialValue: false,
+                    ),
+                    type: ButtonType.tertiary,
+                  ),
+                ),
+              ],
+            ),
+            WidgetbookComponent(
+              name: 'link',
+              useCases: [
+                WidgetbookUseCase(
+                  name: 'default',
+                  builder: (context) => CustomButton(
+                    label: 'link',
+                    onPressed: () {
+                      // Add your secondary button logic here
+                      print('link pressed');
+                    },
+                    isDisabled: context.knobs.boolean(
+                      label: 'disable',
+                      initialValue: false,
+                    ),
+                    type: ButtonType.link,
                   ),
                 ),
               ],
