@@ -263,7 +263,7 @@ class SearchHouseholdsBloc
     List<SideEffectModel> sideEffects = [];
     List<ReferralModel> referrals = [];
     List<TaskModel> tasks = [];
-    if (projectBeneficiaries.isEmpty) {
+    if (projectBeneficiaries.isNotEmpty) {
       // Search for tasks and side effects based on project beneficiaries.
       tasks = await fetchTaskbyProjectBeneficiary(projectBeneficiaries);
 
