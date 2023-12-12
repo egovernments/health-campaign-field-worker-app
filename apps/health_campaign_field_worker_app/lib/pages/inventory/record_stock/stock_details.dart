@@ -608,6 +608,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                         },
                                         child: IgnorePointer(
                                           child: DigitTextFormField(
+                                            hideKeyboard: true,
                                             valueAccessor:
                                                 FacilityValueAccessor(
                                               facilities,

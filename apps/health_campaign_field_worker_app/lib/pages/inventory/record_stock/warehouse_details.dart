@@ -355,7 +355,6 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                   ),
                                   if (deliveryTeamSelected)
                                     DigitTextFormField(
-                                      hideKeyboard: true,
                                       label: localizations.translate(
                                         i18.stockReconciliationDetails
                                             .teamCodeLabel,
