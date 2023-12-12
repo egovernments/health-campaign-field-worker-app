@@ -5,10 +5,10 @@ import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:stream_transform/stream_transform.dart';
+
 import '../../data/repositories/local/address.dart';
 import '../../models/data_model.dart';
 import '../../utils/typedefs.dart';
-
 
 part 'search_households.freezed.dart';
 
@@ -263,7 +263,7 @@ class SearchHouseholdsBloc
     List<SideEffectModel> sideEffects = [];
     List<ReferralModel> referrals = [];
     List<TaskModel> tasks = [];
-    if (projectBeneficiaries.isEmpty) {
+    if (projectBeneficiaries.isNotEmpty) {
       // Search for tasks and side effects based on project beneficiaries.
       tasks = await fetchTaskbyProjectBeneficiary(projectBeneficiaries);
 
@@ -302,8 +302,10 @@ class SearchHouseholdsBloc
           .where((element) => membersIds.contains(element.clientReferenceId))
           .toList();
       final List<ProjectBeneficiaryModel> beneficiaries = projectBeneficiaries
-          .where((element) => individualClientReferenceIds
-              .contains(element.beneficiaryClientReferenceId))
+          .where((element) => beneficiaryType == BeneficiaryType.individual
+              ? individualClientReferenceIds
+                  .contains(element.beneficiaryClientReferenceId)
+              : househHoldIds.contains(element.beneficiaryClientReferenceId))
           .toList();
       // Find the head of household from the individuals.
       final head = individuals.firstWhereOrNull(
@@ -420,7 +422,7 @@ class SearchHouseholdsBloc
     final containers = <HouseholdMemberWrapper>[];
     List<ReferralModel> referrals = [];
     List<TaskModel> tasks = [];
-    if (projectBeneficiaries.isEmpty) {
+    if (projectBeneficiaries.isNotEmpty) {
       // Search for tasks and side effects based on project beneficiaries.
       tasks = await fetchTaskbyProjectBeneficiary(projectBeneficiaries);
 
@@ -453,8 +455,11 @@ class SearchHouseholdsBloc
           .where((element) => membersIds.contains(element.clientReferenceId))
           .toList();
       final List<ProjectBeneficiaryModel> beneficiaries = projectBeneficiaries
-          .where((element) => individualClientReferenceIds
-              .contains(element.beneficiaryClientReferenceId))
+          .where((element) => beneficiaryType == BeneficiaryType.individual
+              ? individualClientReferenceIds
+                  .contains(element.beneficiaryClientReferenceId)
+              : (househHoldIds ?? [])
+                  .contains(element.beneficiaryClientReferenceId))
           .toList();
       // Find the head of household from the individuals.
       final head = indResults.firstWhereOrNull(
