@@ -64,9 +64,10 @@ class _SearchBeneficiaryPageState
             body: NotificationListener<ScrollNotification>(
               onNotification: (scrollNotification) {
                 if (scrollNotification is ScrollUpdateNotification) {
-                  final metrics = scrollNotification.metrics;
-
-                  if (metrics.atEdge) {
+                  final metrics = scrollNotification.metrics;              
+                  if (metrics.atEdge &&
+                      isProximityEnabled &&
+                      searchController.text == '') {
                     final bloc = context.read<SearchHouseholdsBloc>();
 
                     bloc.add(SearchHouseholdsEvent.searchByProximity(
@@ -284,7 +285,8 @@ class _SearchBeneficiaryPageState
                                   margin:
                                       const EdgeInsets.only(bottom: kPadding),
                                   child: ViewBeneficiaryCard(
-                                    distance: distance,
+                                    distance:
+                                        isProximityEnabled ? distance : null,
                                     householdMember: i,
                                     onOpenPressed: () async {
                                       final scannerbloc =
@@ -292,7 +294,7 @@ class _SearchBeneficiaryPageState
 
                                       scannerbloc.add(
                                         const ScannerEvent.handleScanner(
-                                            [], []),
+                                            [], [],),
                                       );
 
                                       final bloc =
