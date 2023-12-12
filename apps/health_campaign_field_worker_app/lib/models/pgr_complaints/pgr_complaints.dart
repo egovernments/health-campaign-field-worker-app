@@ -1,6 +1,7 @@
+import 'dart:convert';
+
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:drift/drift.dart';
-import 'dart:convert';
 
 import '../../data/local_store/sql_store/sql_store.dart';
 import '../data_model.dart';
@@ -131,6 +132,7 @@ class PgrServiceModel extends EntityModel {
   final int rowVersion;
   final PgrAddressModel address;
   final String? additionalDetail;
+  final ClientAuditDetails clientAuditDetails;
 
   const PgrServiceModel({
     required this.clientReferenceId,
@@ -148,6 +150,7 @@ class PgrServiceModel extends EntityModel {
     this.rowVersion = 1,
     required this.address,
     this.additionalDetail,
+    required this.clientAuditDetails,
     super.auditDetails,
   }) : super();
 

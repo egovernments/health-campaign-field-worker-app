@@ -29,6 +29,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
   List<DownsyncModel> downSyncList = [];
   int pendingSyncCount = 0;
   BoundaryModel? selectedBoundary;
+
   @override
   void initState() {
     final syncBloc = context.read<SyncBloc>();

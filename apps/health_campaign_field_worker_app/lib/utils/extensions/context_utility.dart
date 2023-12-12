@@ -85,13 +85,11 @@ extension ContextUtilityExtensions on BuildContext {
     }
   }
 
-  String get loggedInUserUuid => loggedInUser.uuid;
-
-  UserRequestModel get loggedInUser {
+  List<UserRoleModel> get loggedInUserRoles {
     final authBloc = _get<AuthBloc>();
     final userRequestObject = authBloc.state.whenOrNull(
-      authenticated: (accessToken, refreshToken, userModel, actions) {
-        return userModel;
+      authenticated: (accessToken, refreshToken, userModel, actionsWrapper) {
+        return userModel.roles;
       },
     );
 
@@ -102,11 +100,13 @@ extension ContextUtilityExtensions on BuildContext {
     return userRequestObject;
   }
 
-  List<UserRoleModel> get loggedInUserRoles {
+  String get loggedInUserUuid => loggedInUser.uuid;
+
+  UserRequestModel get loggedInUser {
     final authBloc = _get<AuthBloc>();
     final userRequestObject = authBloc.state.whenOrNull(
-      authenticated: (accessToken, refreshToken, userModel, actionsWrapper) {
-        return userModel.roles;
+      authenticated: (accessToken, refreshToken, userModel, actions) {
+        return userModel;
       },
     );
 
