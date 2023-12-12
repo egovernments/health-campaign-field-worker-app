@@ -60,7 +60,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
     bool isDistributor = context.loggedInUserRoles
         .where(
           (role) => role.code == RolesType.distributor.toValue(),
-        )
+    )
         .toList()
         .isNotEmpty;
 
@@ -82,28 +82,28 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
           },
           builder: (ctx, facilityState) {
             final facilities = facilityState.whenOrNull(
-                  fetched: (facilities, _) {
-                    final teamFacilities = [
-                      FacilityModel(
-                        id: 'Delivery Team',
-                        additionalFields: FacilityAdditionalFields(
-                          version: 1,
-                          fields: [
-                            const AdditionalField(
-                              'type',
-                              'DeliveryTeam',
-                            ),
-                          ],
+              fetched: (facilities, _) {
+                final teamFacilities = [
+                  FacilityModel(
+                    id: 'Delivery Team',
+                    additionalFields: FacilityAdditionalFields(
+                      version: 1,
+                      fields: [
+                        const AdditionalField(
+                          'type',
+                          'DeliveryTeam',
                         ),
-                      ),
-                    ];
-                    teamFacilities.addAll(
-                      facilities,
-                    );
+                      ],
+                    ),
+                  ),
+                ];
+                teamFacilities.addAll(
+                  facilities,
+                );
 
-                    return isDistributor ? teamFacilities : facilities;
-                  },
-                ) ??
+                return isDistributor ? teamFacilities : facilities;
+              },
+            ) ??
                 [];
 
             return Scaffold(
@@ -120,9 +120,9 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                       form: () => buildForm(isDistributor, stockState),
                       builder: (context, form, child) {
                         form.control(_teamCodeKey).value =
-                            scannerState.qrcodes.isNotEmpty
-                                ? scannerState.qrcodes.last
-                                : '';
+                        scannerState.qrcodes.isNotEmpty
+                            ? scannerState.qrcodes.last
+                            : '';
 
                         return ScrollableContent(
                           header: const Column(children: [
@@ -131,7 +131,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                           footer: SizedBox(
                             child: DigitCard(
                               margin:
-                                  const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
+                              const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
                               padding: const EdgeInsets.fromLTRB(
                                 kPadding,
                                 0,
@@ -144,75 +144,75 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                     onPressed: !form.valid
                                         ? null
                                         : () {
-                                            form.markAllAsTouched();
-                                            if (!form.valid) {
-                                              return;
-                                            }
-                                            final dateOfRecord = form
-                                                .control(_dateOfEntryKey)
-                                                .value as DateTime;
+                                      form.markAllAsTouched();
+                                      if (!form.valid) {
+                                        return;
+                                      }
+                                      final dateOfRecord = form
+                                          .control(_dateOfEntryKey)
+                                          .value as DateTime;
 
-                                            final teamCode = form
-                                                .control(_teamCodeKey)
-                                                .value as String?;
+                                      final teamCode = form
+                                          .control(_teamCodeKey)
+                                          .value as String?;
 
-                                            final facility =
+                                      final facility =
+                                      deliveryTeamSelected
+                                          ? FacilityModel(
+                                        id: teamCode ??
+                                            'Delivery Team',
+                                      )
+                                          : form
+                                          .control(_warehouseKey)
+                                          .value;
+
+                                      context.read<ScannerBloc>().add(
+                                        const ScannerEvent
+                                            .handleScanner([], []),
+                                      );
+                                      if (deliveryTeamSelected &&
+                                          (teamCode == null ||
+                                              teamCode.trim().isEmpty)) {
+                                        DigitToast.show(
+                                          context,
+                                          options: DigitToastOptions(
+                                            localizations.translate(
+                                              i18.stockDetails
+                                                  .teamCodeRequired,
+                                            ),
+                                            true,
+                                            theme,
+                                          ),
+                                        );
+                                      } else {
+                                        context
+                                            .read<RecordStockBloc>()
+                                            .add(
+                                          RecordStockSaveTransactionDetailsEvent(
+                                            dateOfRecord:
+                                            dateOfRecord,
+                                            facilityModel:
+                                            isDistributor
+                                                ? FacilityModel(
+                                              id: teamCode
+                                                  .toString(),
+                                            )
+                                                : facility,
+                                            primaryId: facility.id ==
+                                                "Delivery Team"
+                                                ? teamCode ?? ''
+                                                : facility.id,
+                                            primaryType: isDistributor ||
                                                 deliveryTeamSelected
-                                                    ? FacilityModel(
-                                                        id: teamCode ??
-                                                            'Delivery Team',
-                                                      )
-                                                    : form
-                                                        .control(_warehouseKey)
-                                                        .value;
-
-                                            context.read<ScannerBloc>().add(
-                                                  const ScannerEvent
-                                                      .handleScanner([], []),
-                                                );
-                                            if (deliveryTeamSelected &&
-                                                (teamCode == null ||
-                                                    teamCode.trim().isEmpty)) {
-                                              DigitToast.show(
-                                                context,
-                                                options: DigitToastOptions(
-                                                  localizations.translate(
-                                                    i18.stockDetails
-                                                        .teamCodeRequired,
-                                                  ),
-                                                  true,
-                                                  theme,
-                                                ),
-                                              );
-                                            } else {
-                                              context
-                                                  .read<RecordStockBloc>()
-                                                  .add(
-                                                    RecordStockSaveTransactionDetailsEvent(
-                                                      dateOfRecord:
-                                                          dateOfRecord,
-                                                      facilityModel:
-                                                          isDistributor
-                                                              ? FacilityModel(
-                                                                  id: teamCode
-                                                                      .toString(),
-                                                                )
-                                                              : facility,
-                                                      primaryId: facility.id ==
-                                                              "Delivery Team"
-                                                          ? teamCode ?? ''
-                                                          : facility.id,
-                                                      primaryType: isDistributor ||
-                                                              deliveryTeamSelected
-                                                          ? "STAFF"
-                                                          : "WAREHOUSE",
-                                                    ),
-                                                  );
-                                              context.router.push(
-                                                StockDetailsRoute(),
-                                              );
-                                            }
-                                          },
+                                                ? "STAFF"
+                                                : "WAREHOUSE",
+                                          ),
+                                        );
+                                        context.router.push(
+                                          StockDetailsRoute(),
+                                        );
+                                      }
+                                    },
                                     child: child!,
                                   );
                                 },
@@ -235,13 +235,13 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                   Text(
                                     isDistributor
                                         ? localizations.translate(
-                                            i18.stockDetails
-                                                .transactionDetailsLabel,
-                                          )
+                                      i18.stockDetails
+                                          .transactionDetailsLabel,
+                                    )
                                         : localizations.translate(
-                                            i18.warehouseDetails
-                                                .warehouseDetailsLabel,
-                                          ),
+                                      i18.warehouseDetails
+                                          .warehouseDetailsLabel,
+                                    ),
                                     style: theme.textTheme.displayMedium,
                                   ),
                                   Column(children: [
@@ -272,9 +272,9 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                       clearQRCodes();
                                       form.control(_teamCodeKey).value = '';
                                       final parent = context.router.parent()
-                                          as StackRouter;
+                                      as StackRouter;
                                       final facility =
-                                          await parent.push<FacilityModel>(
+                                      await parent.push<FacilityModel>(
                                         FacilitySelectionRoute(
                                           facilities: facilities,
                                         ),
@@ -321,17 +321,17 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                         readOnly: true,
                                         onTap: () async {
                                           context.read<ScannerBloc>().add(
-                                                const ScannerEvent
-                                                    .handleScanner(
-                                                  [],
-                                                  [],
-                                                ),
-                                              );
+                                            const ScannerEvent
+                                                .handleScanner(
+                                              [],
+                                              [],
+                                            ),
+                                          );
                                           form.control(_teamCodeKey).value = '';
                                           final parent = context.router.parent()
-                                              as StackRouter;
+                                          as StackRouter;
                                           final facility =
-                                              await parent.push<FacilityModel>(
+                                          await parent.push<FacilityModel>(
                                             FacilitySelectionRoute(
                                               facilities: facilities,
                                             ),
@@ -366,11 +366,11 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                         if (value != null &&
                                             value.trim().isNotEmpty) {
                                           context.read<ScannerBloc>().add(
-                                                ScannerEvent.handleScanner(
-                                                  [],
-                                                  [value],
-                                                ),
-                                              );
+                                            ScannerEvent.handleScanner(
+                                              [],
+                                              [value],
+                                            ),
+                                          );
                                         } else {
                                           clearQRCodes();
                                         }
