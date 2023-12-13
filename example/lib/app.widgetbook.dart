@@ -1,5 +1,6 @@
 import 'package:digit_components/utils/validators/validator.dart';
 import 'package:digit_components/widgets/atoms/digit_button.dart';
+import 'package:digit_components/widgets/atoms/digit_checkbox_icon.dart';
 import 'package:digit_components/widgets/atoms/digit_date_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_dropdown_input.dart';
 import 'package:digit_components/widgets/atoms/digit_location_form_input.dart';
@@ -26,7 +27,6 @@ class HotReload extends StatelessWidget {
   Widget build(BuildContext context) {
     return Widgetbook.material(
       addons: [
-
         DeviceFrameAddon(
           devices: [
             Devices.ios.iPhoneSE,
@@ -40,7 +40,10 @@ class HotReload extends StatelessWidget {
           ],
           initialDevice: Devices.ios.iPhone13,
         ),
-
+        AlignmentAddon(
+            initialAlignment: Alignment.center,
+        ),
+        // ThemeAddon(themes: themes, themeBuilder: themeBuilder)   digit theme addon
       ],
       directories: [
         WidgetbookFolder(
@@ -611,7 +614,9 @@ class HotReload extends StatelessWidget {
                       initialValue: 'this is info',
                     ),
                     validations: [
-                      Validator(ValidatorType.minLength, 6, errorMessage: 'Password must be at least 6 characters.'),
+                      Validator(ValidatorType.minLength, 6,
+                          errorMessage:
+                              'Password must be at least 6 characters.'),
                     ],
                   ),
                 ),
@@ -644,7 +649,9 @@ class HotReload extends StatelessWidget {
                       initialValue: 'this is info',
                     ),
                     validations: [
-                      Validator(ValidatorType.minLength, 6, errorMessage: 'Password must be at least 6 characters.'),
+                      Validator(ValidatorType.minLength, 6,
+                          errorMessage:
+                              'Password must be at least 6 characters.'),
                     ],
                   ),
                 ),
@@ -678,7 +685,9 @@ class HotReload extends StatelessWidget {
                       initialValue: 'this is info',
                     ),
                     validations: [
-                      Validator(ValidatorType.minLength, 6, errorMessage: 'Password must be at least 6 characters.'),
+                      Validator(ValidatorType.minLength, 6,
+                          errorMessage:
+                              'Password must be at least 6 characters.'),
                     ],
                   ),
                 ),
@@ -712,7 +721,9 @@ class HotReload extends StatelessWidget {
                       initialValue: 'this is info',
                     ),
                     validations: [
-                      Validator(ValidatorType.minLength, 6, errorMessage: 'Password must be at least 6 characters.'),
+                      Validator(ValidatorType.minLength, 6,
+                          errorMessage:
+                              'Password must be at least 6 characters.'),
                     ],
                   ),
                 ),
@@ -1134,7 +1145,6 @@ class HotReload extends StatelessWidget {
                     onChanged: (value) {
                       // print(value);
                     },
-
                     radioButtons: [
                       RadioButtonModel(
                         code: '',
@@ -1149,32 +1159,32 @@ class HotReload extends StatelessWidget {
               ],
             ),
             WidgetbookComponent(
-              name: 'Toggle',
-              useCases: [
-                WidgetbookUseCase(
-                  name: 'default',
-                  builder: (context) => DigitToggle(
-                    onChanged: (value) {
-                      // print(value);
-                    },
-                    label: 'Toggle',
-                  ),
-                ),
-              ],
-            ),
-            WidgetbookComponent(
               name: 'Toggle Group',
               useCases: [
                 WidgetbookUseCase(
                   name: 'default',
                   builder: (context) => DigitToggleList(
                     toggleButtons: [
-                      ToggleButtonModel(name: 'Toggle 1', key: 'key1', onSelected: () {
-                      }),
-                      ToggleButtonModel(name: 'Toggle 2', key: 'key2', onSelected: () {
-                      }),
-                      ToggleButtonModel(name: 'Toggle 3', key: 'key3', onSelected: () {
-                      }),
+                      ToggleButtonModel(
+                          name: 'Toggle 1', key: 'key1', onSelected: () {}),
+                      ToggleButtonModel(
+                          name: 'Toggle 2', key: 'key2', onSelected: () {}),
+                      ToggleButtonModel(
+                          name: 'Toggle 3', key: 'key3', onSelected: () {}),
+                    ],
+                    onChanged: (selectedValues) {},
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'filled',
+                  builder: (context) => DigitToggleList(
+                    toggleButtons: [
+                      ToggleButtonModel(
+                          name: 'Toggle 1', key: 'key1', onSelected: () {}),
+                      ToggleButtonModel(
+                          name: 'Toggle 2', key: 'key2', onSelected: () {}),
+                      ToggleButtonModel(
+                          name: 'Toggle 3', key: 'key3', onSelected: () {}),
                     ],
                     onChanged: (selectedValues) {},
                   ),
@@ -1208,13 +1218,13 @@ class HotReload extends StatelessWidget {
                         .entries
                         .map(
                           (item) => DropdownItem<String>(
-                        value: item.value,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(item.value),
-                        ),
-                      ),
-                    )
+                            value: item.value,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(item.value),
+                            ),
+                          ),
+                        )
                         .toList(),
                     child: const Text(
                       'dropdown',
@@ -1234,7 +1244,6 @@ class HotReload extends StatelessWidget {
                 WidgetbookUseCase(
                   name: 'default',
                   builder: (context) => CustomButton(
-                    prefixIcon: Icons.add,
                     label: 'Primary Button',
                     onPressed: () {
                       // Add your primary button logic here
@@ -1245,6 +1254,50 @@ class HotReload extends StatelessWidget {
                       label: 'disable',
                       initialValue: false,
                     ),
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'prefixIcon',
+                  builder: (context) => CustomButton(
+                    prefixIcon: context.knobs.list(label: 'prefixIcon', options: [
+                      Icons.add,
+                      Icons.crop_square_sharp,
+                      Icons.circle,
+                      Icons.arrow_forward,
+                      Icons.location_disabled_outlined,
+                    ]),
+                    label: 'Primary Button',
+                    onPressed: () {
+                      // Add your primary button logic here
+                      print('Primary button pressed');
+                    },
+                    type: ButtonType.primary,
+                    isDisabled: context.knobs.boolean(
+                      label: 'disable',
+                      initialValue: false,
+                    ),
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'suffixIcon',
+                  builder: (context) => CustomButton(
+                    label: 'Primary Button',
+                    onPressed: () {
+                      // Add your primary button logic here
+                      print('Primary button pressed');
+                    },
+                    type: ButtonType.primary,
+                    isDisabled: context.knobs.boolean(
+                      label: 'disable',
+                      initialValue: false,
+                    ),
+                    suffixIcon: context.knobs.list(label: 'suffixIcon', options: [
+                      Icons.add,
+                      Icons.crop_square_sharp,
+                      Icons.circle,
+                      Icons.arrow_forward,
+                      Icons.location_disabled_outlined,
+                    ]),
                   ),
                 ),
               ],
@@ -1267,6 +1320,50 @@ class HotReload extends StatelessWidget {
                     type: ButtonType.secondary,
                   ),
                 ),
+                WidgetbookUseCase(
+                  name: 'prefixIcon',
+                  builder: (context) => CustomButton(
+                    label: 'Secondary Button',
+                    onPressed: () {
+                      // Add your secondary button logic here
+                      print('Secondary button pressed');
+                    },
+                    isDisabled: context.knobs.boolean(
+                      label: 'disable',
+                      initialValue: false,
+                    ),
+                    type: ButtonType.secondary,
+                    prefixIcon: context.knobs.list(label: 'prefixIcon', options: [
+                      Icons.add,
+                      Icons.crop_square_sharp,
+                      Icons.circle,
+                      Icons.arrow_forward,
+                      Icons.location_disabled_outlined,
+                    ]),
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'suffixIcon',
+                  builder: (context) => CustomButton(
+                    label: 'Secondary Button',
+                    onPressed: () {
+                      // Add your secondary button logic here
+                      print('Secondary button pressed');
+                    },
+                    isDisabled: context.knobs.boolean(
+                      label: 'disable',
+                      initialValue: false,
+                    ),
+                    type: ButtonType.secondary,
+                    suffixIcon: context.knobs.list(label: 'suffixIcon', options: [
+                      Icons.add,
+                      Icons.crop_square_sharp,
+                      Icons.circle,
+                      Icons.arrow_forward,
+                      Icons.location_disabled_outlined,
+                    ]),
+                  ),
+                ),
               ],
             ),
             WidgetbookComponent(
@@ -1287,6 +1384,50 @@ class HotReload extends StatelessWidget {
                     type: ButtonType.tertiary,
                   ),
                 ),
+                WidgetbookUseCase(
+                  name: 'prefixIcon',
+                  builder: (context) => CustomButton(
+                    label: 'tertiary Button',
+                    onPressed: () {
+                      // Add your secondary button logic here
+                      print('tertiary button pressed');
+                    },
+                    isDisabled: context.knobs.boolean(
+                      label: 'disable',
+                      initialValue: false,
+                    ),
+                    type: ButtonType.tertiary,
+                    prefixIcon: context.knobs.list(label: 'prefixIcon', options: [
+                      Icons.add,
+                      Icons.crop_square_sharp,
+                      Icons.circle,
+                      Icons.arrow_forward,
+                      Icons.location_disabled_outlined,
+                    ]),
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'suffixIcon',
+                  builder: (context) => CustomButton(
+                    label: 'tertiary Button',
+                    onPressed: () {
+                      // Add your secondary button logic here
+                      print('tertiary button pressed');
+                    },
+                    isDisabled: context.knobs.boolean(
+                      label: 'disable',
+                      initialValue: false,
+                    ),
+                    type: ButtonType.tertiary,
+                    suffixIcon: context.knobs.list(label: 'suffixIcon', options: [
+                      Icons.add,
+                      Icons.crop_square_sharp,
+                      Icons.circle,
+                      Icons.arrow_forward,
+                      Icons.location_disabled_outlined,
+                    ]),
+                  ),
+                ),
               ],
             ),
             WidgetbookComponent(
@@ -1295,7 +1436,7 @@ class HotReload extends StatelessWidget {
                 WidgetbookUseCase(
                   name: 'default',
                   builder: (context) => CustomButton(
-                    label: 'link',
+                    label: 'Link',
                     onPressed: () {
                       // Add your secondary button logic here
                       print('link pressed');
@@ -1307,8 +1448,93 @@ class HotReload extends StatelessWidget {
                     type: ButtonType.link,
                   ),
                 ),
+                WidgetbookUseCase(
+                  name: 'prefixIcon',
+                  builder: (context) => CustomButton(
+                    label: 'Link',
+                    onPressed: () {
+                      // Add your secondary button logic here
+                      print('link pressed');
+                    },
+                    isDisabled: context.knobs.boolean(
+                      label: 'disable',
+                      initialValue: false,
+                    ),
+                    type: ButtonType.link,
+                    prefixIcon: context.knobs.list(label: 'prefixIcon', options: [
+                      Icons.add,
+                      Icons.crop_square_sharp,
+                      Icons.circle,
+                      Icons.arrow_forward,
+                      Icons.location_disabled_outlined,
+                    ]),
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'suffixIcon',
+                  builder: (context) => CustomButton(
+                    label: 'Link',
+                    onPressed: () {
+                      // Add your secondary button logic here
+                      print('link pressed');
+                    },
+                    isDisabled: context.knobs.boolean(
+                      label: 'disable',
+                      initialValue: false,
+                    ),
+                    type: ButtonType.link,
+                    suffixIcon: context.knobs.list(label: 'suffixIcon', options: [
+                      Icons.add,
+                      Icons.crop_square_sharp,
+                      Icons.circle,
+                      Icons.arrow_forward,
+                      Icons.location_disabled_outlined,
+                    ]),
+                  ),
+                ),
               ],
             ),
+          ],
+        ),
+        WidgetbookFolder(
+          name: 'Checkbox ',
+          children: [
+            WidgetbookComponent(
+              name: 'Checkbox Icon',
+              useCases: [
+                WidgetbookUseCase(
+                  name: 'unchecked',
+                  builder: (context) => DigitCheckboxIcon(
+                    state: CheckboxState.unchecked,
+                    isDisabled: context.knobs.boolean(
+                      label: 'disabled',
+                      initialValue: false,
+                    ),
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'checked',
+                  builder: (context) => DigitCheckboxIcon(
+                    state: CheckboxState.checked,
+                    isDisabled: context.knobs.boolean(
+                      label: 'disabled',
+                      initialValue: false,
+                    ),
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'intermediate',
+                  builder: (context) => DigitCheckboxIcon(
+                    state: CheckboxState.intermediate,
+                    isDisabled: context.knobs.boolean(
+                      label: 'disabled',
+                      initialValue: false,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
           ],
         ),
       ],

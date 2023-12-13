@@ -55,6 +55,8 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
   late Animation<double> _rotateAnimation;
   late List<DropdownItem<String>> filteredItems;
   late List<DropdownItem<String>> _lastFilteredItems;
+  late List<bool> itemHoverStates;
+
 
   @override
   void initState() {
@@ -62,6 +64,7 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
     _focusNode.addListener(_onFocusChange);
     filteredItems = List.from(widget.items);
     _lastFilteredItems = List.from(widget.items);
+    itemHoverStates = List.generate(widget.items.length, (index) => false);
     _animationController =
         AnimationController(vsync: this, duration: const Duration(milliseconds: 200));
     _expandAnimation = CurvedAnimation(
@@ -168,7 +171,7 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
     var size = renderBox.size;
 
     var offset = renderBox.localToGlobal(Offset.zero);
-    var topOffset = offset.dy + size.height + 5;
+    var topOffset = offset.dy + size.height ;
     OverlayEntry overlayEntry = OverlayEntry(
       // full screen GestureDetector to register when a
       // user has clicked away from the dropdown
@@ -187,7 +190,7 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
                 width: widget.dropdownStyle.width ?? size.width,
                 child: CompositedTransformFollower(
                   offset:
-                  widget.dropdownStyle.offset ?? Offset(0, size.height + 5),
+                  widget.dropdownStyle.offset ?? Offset(0, size.height),
                   link: this._layerLink,
                   showWhenUnlinked: false,
                   child: Material(
@@ -214,30 +217,35 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
 
                             Color backgroundColor =
                             item.key % 2 == 0 ? const DigitColors().white : const DigitColors().alabasterWhite;
-                            bool isHovered = false;
-                            return InkWell(
-                              onHover: (hover) {
-                                print("Hover: $hover");
-                                setState(() {
-                                  isHovered = hover;
-                                });
-                              },
-                              onTap: () {
-                                setState(() => _currentIndex = item.key);
-                                widget.onChange(item.value.value, item.key);
-                                _toggleDropdown();
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: isHovered ? Colors.blue : Colors.red,
-                                  ),
-                                  color: backgroundColor,
-                                ),
-                                padding: EdgeInsets.zero,
-                                child: item.value,
-                              ),
 
+                            return StatefulBuilder(
+                              builder: (context, setState) {
+                                return InkWell(
+                                  splashColor: Colors.transparent,
+                                  hoverColor: Colors.transparent,
+                                  onHover: (hover){
+                                    setState(() {
+                                      itemHoverStates[item.key] = hover;
+                                    });
+                                  },
+                                  onTap: () {
+                                    setState(() => _currentIndex = item.key);
+                                    widget.onChange(item.value.value, item.key);
+                                    _toggleDropdown();
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: itemHoverStates[item.key] ? const DigitColors().burningOrange : Colors.transparent,
+                                      ),
+                                      color: itemHoverStates[item.key] ? const DigitColors().orangeBG :backgroundColor,
+                                    ),
+                                    padding: EdgeInsets.zero,
+                                    child: item.value,
+                                  ),
+
+                                );
+                              }
                             );
                           }).toList():
                           [

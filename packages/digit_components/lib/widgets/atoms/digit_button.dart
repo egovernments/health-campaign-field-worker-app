@@ -57,10 +57,10 @@ class _CustomButtonState extends State<CustomButton> {
             height: 40,
             width: double.infinity,
             decoration: BoxDecoration(
-              boxShadow: (widget.type == ButtonType.primary && isHovered == false)
+              boxShadow: (widget.type == ButtonType.primary)
                   ? [
                 BoxShadow(
-                  color: const DigitColors().woodsmokeBlack,
+                  color: isHovered ? const DigitColors().burningOrange :const DigitColors().woodsmokeBlack,
                   offset: const Offset(0, 2.0),
                 ),
               ]

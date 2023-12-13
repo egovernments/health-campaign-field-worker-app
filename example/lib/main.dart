@@ -2,6 +2,7 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/validators/validator.dart';
 import 'package:digit_components/widgets/atoms/digit_base_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_button.dart';
+import 'package:digit_components/widgets/atoms/digit_checkbox_icon.dart';
 import 'package:digit_components/widgets/atoms/digit_date_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_dropdown_input.dart'
     as dropdown;
@@ -123,6 +124,9 @@ void main() {
                       // suffixIcon: Icons.currency_rupee_sharp,
                       // prefixIcon: Icons.currency_rupee,
                     ),
+                    const SizedBox(
+                      height: 8,
+                    ),
                     dropdown.DigitDropdown<int>(
                       onChange: (String value, int index) => {
                         print(value),
@@ -145,8 +149,8 @@ void main() {
                             (item) => dropdown.DropdownItem<String>(
                               value: item.value,
                               child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(item.value),
+                                padding: const EdgeInsets.only(left: 10, top: 12, bottom: 12,),
+                                child: Text(item.value, style: const TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w400, fontSize: 14,),),
                               ),
                             ),
                           )
@@ -216,7 +220,7 @@ void main() {
                       helpText: 'help text',
                     ),
                     const SizedBox(
-                      height: 8,
+                      height: 16,
                     ),
                     DigitRadioList(
                       onChanged: (value) {
@@ -233,10 +237,7 @@ void main() {
                       ],
                     ),
                     const SizedBox(
-                      height: 8,
-                    ),
-                    const SizedBox(
-                      height: 8,
+                      height: 16,
                     ),
                     DigitToggleList(
                       toggleButtons: [
@@ -275,7 +276,7 @@ void main() {
                       },
                       type: ButtonType.primary,
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     CustomButton(
                       label: 'Secondary Button',
                       onPressed: () {
@@ -284,7 +285,7 @@ void main() {
                       },
                       type: ButtonType.secondary,
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     CustomButton(
                       label: 'link',
                       onPressed: () {
@@ -293,7 +294,7 @@ void main() {
                       },
                       type: ButtonType.link,
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     CustomButton(
                       label: 'tertiary Button',
                       onPressed: () {
@@ -306,41 +307,52 @@ void main() {
                       prefixIcon: Icons.add,
                       label: 'Primary Button',
                       onPressed: () {
-                        // Add your primary button logic here
                         print('Primary button pressed');
                       },
                       type: ButtonType.primary,
                       isDisabled: true,
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     CustomButton(
                       label: 'Secondary Button',
                       onPressed: () {
-                        // Add your secondary button logic here
                         print('Secondary button pressed');
                       },
                       isDisabled: true,
                       type: ButtonType.secondary,
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     CustomButton(
                       label: 'link',
                       onPressed: () {
-                        // Add your secondary button logic here
                         print('link pressed');
                       },
                       isDisabled: true,
                       type: ButtonType.link,
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     CustomButton(
                       label: 'tertiary Button',
                       onPressed: () {
-                        // Add your secondary button logic here
                         print('tertiary button pressed');
                       },
                       isDisabled: true,
                       type: ButtonType.tertiary,
+                    ),
+                    const SizedBox(height: 16),
+                    DigitCheckboxIcon(
+                      state: CheckboxState.checked,
+                      isDisabled: true,
+                    ),
+                    const SizedBox(height: 16),
+                    DigitCheckboxIcon(
+                      state: CheckboxState.unchecked,
+                      isDisabled: true,
+                    ),
+                    const SizedBox(height: 16),
+                    DigitCheckboxIcon(
+                      state: CheckboxState.intermediate,
+                      isDisabled: true,
                     ),
                   ],
                 ),
