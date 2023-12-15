@@ -162,24 +162,36 @@ void main() {
                     const SizedBox(
                       height: 16,
                     ),
-                    DigitMultiSelectDropdown<String>(
-                      items: [],
-                      types: const [
-                        DropdownItemType(
-                            type: 'Fruits',
-                            values: ['Apple', 'Banana', 'Orange', 'Grapes']),
-                        DropdownItemType(
-                            type: 'Vegetables',
-                            values: ['Carrot', 'Broccoli', 'Spinach']),
-                        // Add more types as needed
-                      ],
-                      onChange: (selectedValues, selectedIndices) {
-                        // Handle the selected values and indices
-                        print('Selected Values: $selectedValues');
-                        print('Selected Indices: $selectedIndices');
-                      },
+                    DigitMultiSelectDropdown<String>(onChange: (String value, int index) => {
+                      print(value),
+                      print(index),
+                    },
+                      dropdownStyle: const DropdownStyle(
+                        elevation: 6,
+                        padding: EdgeInsets.all(5),
+                      ),
                       textEditingController: TextEditingController(),
-                      child: const Text('Select Items'),
+                      items: [
+                        'apple',
+                        'banana',
+                        'orange',
+                        'grapes',
+                      ]
+                          .asMap()
+                          .entries
+                          .map(
+                            (item) => DropdownItem<String>(
+                          value: item.value,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 10, top: 12, bottom: 12,),
+                            child: Text(item.value, style: const TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w400, fontSize: 14,),),
+                          ),
+                        ),
+                      )
+                          .toList(),
+                      child: const Text(
+                        'dropdown',
+                      ),
                     ),
                     const SizedBox(
                       height: 8,

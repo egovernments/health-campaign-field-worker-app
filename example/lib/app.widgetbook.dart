@@ -43,7 +43,7 @@ class HotReload extends StatelessWidget {
         AlignmentAddon(
             initialAlignment: Alignment.center,
         ),
-        // ThemeAddon(themes: themes, themeBuilder: themeBuilder)   digit theme addon
+        // ThemeAddon(themes: themes, themeBuilder: themeBuilder)
       ],
       directories: [
         WidgetbookFolder(

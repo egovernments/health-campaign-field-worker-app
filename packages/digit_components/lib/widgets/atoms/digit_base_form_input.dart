@@ -78,11 +78,12 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
       });
 
       // Call the provided onError function if there is an error
-      if (_hasError && widget.onError != null) {
-        widget.onError!(_errorMessage);
+      if (_hasError) {
+        widget.onError?.call(_errorMessage);
       }
     }
   }
+
 
   @override
   void initState() {
@@ -115,10 +116,6 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
       _hasError = validationError != null;
     });
 
-    // Call the provided onError function if there is an error
-    if (_hasError && widget.onError != null) {
-      widget.onError!(_errorMessage);
-    }
 
     return validationError;
   }
@@ -171,7 +168,12 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
               if (widget?.label != null)
                 Text(
                   widget!.label!,
-                  style: theme.textTheme.bodyLarge?.apply(color: const DigitColors().woodsmokeBlack),
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                    fontFamily: 'Roboto',
+                    color: const DigitColors().woodsmokeBlack,
+                  ),
                 ),
               if (widget?.info == true)
                 Tooltip(
@@ -339,7 +341,7 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                if (widget.helpText != null)
+                if (widget.helpText != null || _hasError)
                   _hasError
                       ? Row(
                           children: [
@@ -350,9 +352,10 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
                             ),
                             Text(
                               _errorMessage!,
-                              style: DigitTheme
-                                  .instance.mobileTheme.textTheme.bodyMedium
-                                  ?.apply(
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                fontFamily: 'Roboto',
                                 color: const DigitColors().lavaRed,
                               ),
                             ),
@@ -360,7 +363,12 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
                         )
                       : Text(
                           widget.helpText!,
-                          style: theme.textTheme.bodyMedium?.apply(color: const DigitColors().davyGray),
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'Roboto',
+                            color: const DigitColors().davyGray,
+                          ),
                         ),
 
                   if (widget.helpText == null && _hasError == false)
