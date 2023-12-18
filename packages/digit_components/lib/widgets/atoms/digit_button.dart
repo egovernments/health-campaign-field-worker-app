@@ -93,7 +93,7 @@ class _CustomButtonState extends State<CustomButton> {
   Widget _buildButton() {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8),
+        padding: (widget.type == ButtonType.tertiary || widget.type ==ButtonType.link) ?  EdgeInsets.zero : const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

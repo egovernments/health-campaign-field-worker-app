@@ -23,6 +23,7 @@ class DigitTextAreaFormInput extends BaseDigitFormInput {
     int maxLine = 4,
     int minLine = 4,
     double height = 100,
+    final void Function(String)? onChange,
   }) : super(
     key: key,
     controller: controller,
@@ -42,6 +43,7 @@ class DigitTextAreaFormInput extends BaseDigitFormInput {
     initialValue: initialValue,
     height: height,
     validations: validations,
+    onChange: onChange,
   );
 
   @override

@@ -32,6 +32,7 @@ dependencies:
   easy_stepper: ^0.5.2+1
   intl: ^0.18.0
   geolocator: ^10.1.0
+  
 
 dev_dependencies:
   flutter_test:
@@ -41,6 +42,7 @@ dev_dependencies:
   freezed: ^2.2.0
   bloc_test: ^9.1.0
   mocktail: ^0.3.0
+  mockito: ^5.0.15
 
 flutter:
   assets:

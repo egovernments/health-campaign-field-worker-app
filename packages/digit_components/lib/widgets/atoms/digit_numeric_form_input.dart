@@ -24,6 +24,7 @@ class DigitNumericFormInput extends BaseDigitFormInput {
     TextInputType keyboardType = TextInputType.number,
     TextAlign textAlign = TextAlign.center,
     final List<Validator>? validations,
+    final void Function(String)? onChange,
   }) : super(
     key: key,
     controller: controller,
@@ -44,6 +45,7 @@ class DigitNumericFormInput extends BaseDigitFormInput {
     textAlign: textAlign,
     initialValue: initialValue,
     validations: validations,
+    onChange: onChange,
   );
 
   @override

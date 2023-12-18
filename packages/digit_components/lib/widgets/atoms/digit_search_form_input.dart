@@ -21,6 +21,7 @@ class DigitSearchFormInput extends BaseDigitFormInput {
     void Function(String?)? onError,
     void Function()? onSuffixTap,
     final List<Validator>? validations,
+    final void Function(String)? onChange,
   }) : super(
     key: key,
     controller: controller,
@@ -38,6 +39,7 @@ class DigitSearchFormInput extends BaseDigitFormInput {
     onError: onError,
     onSuffixTap: onSuffixTap,
     validations: validations,
+    onChange: onChange,
   );
 
   @override

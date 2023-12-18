@@ -21,6 +21,7 @@ class DigitTimeFormInput extends BaseDigitFormInput {
     void Function(String?)? onError,
     final List<Validator>? validations,
     String? initialValue,
+    final void Function(String)? onChange,
   }) : super(
     key: key,
     controller: controller,
@@ -38,6 +39,7 @@ class DigitTimeFormInput extends BaseDigitFormInput {
     onError: onError,
     initialValue: initialValue,
     validations: validations,
+    onChange: onChange,
   );
 
   @override

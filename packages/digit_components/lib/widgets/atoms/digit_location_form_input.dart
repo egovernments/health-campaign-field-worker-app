@@ -21,6 +21,7 @@ class DigitLocationFormInput extends BaseDigitFormInput {
     IconData suffix = Icons.my_location,
     void Function(String?)? onError,
     final List<Validator>? validations,
+    final void Function(String)? onChange,
   }) : super(
     key: key,
     controller: controller,
@@ -38,6 +39,7 @@ class DigitLocationFormInput extends BaseDigitFormInput {
     onError: onError,
     initialValue: initialValue,
     validations: validations,
+    onChange: onChange,
   );
 
   @override

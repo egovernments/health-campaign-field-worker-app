@@ -23,6 +23,7 @@ class DigitPasswordFormInput extends BaseDigitFormInput {
     void Function(String?)? onError,
     void Function()? onSuffixTap,
     final List<Validator>? validations,
+    final void Function(String)? onChange,
   }) : super(
     key: key,
     controller: controller,
@@ -41,6 +42,7 @@ class DigitPasswordFormInput extends BaseDigitFormInput {
     onSuffixTap: onSuffixTap,
     initialValue: initialValue,
     validations: validations,
+    onChange: onChange,
   );
 
   @override

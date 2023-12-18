@@ -162,36 +162,14 @@ void main() {
                     const SizedBox(
                       height: 16,
                     ),
-                    DigitMultiSelectDropdown<String>(onChange: (String value, int index) => {
-                      print(value),
-                      print(index),
-                    },
-                      dropdownStyle: const DropdownStyle(
-                        elevation: 6,
-                        padding: EdgeInsets.all(5),
-                      ),
-                      textEditingController: TextEditingController(),
-                      items: [
-                        'apple',
-                        'banana',
-                        'orange',
-                        'grapes',
-                      ]
-                          .asMap()
-                          .entries
-                          .map(
-                            (item) => DropdownItem<String>(
-                          value: item.value,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 10, top: 12, bottom: 12,),
-                            child: Text(item.value, style: const TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w400, fontSize: 14,),),
-                          ),
-                        ),
-                      )
-                          .toList(),
-                      child: const Text(
-                        'dropdown',
-                      ),
+                    MultiSelectDropDown<int>(
+                      onOptionSelected: (List<DropdownListItem> selectedOptions) {},
+                      options:  [],
+                      selectionType: SelectionType.single,
+                      // chipConfig: const ChipConfig(wrapType: WrapType.wrap),
+                      dropdownHeight: 300,
+                      optionTextStyle: const TextStyle(fontSize: 16),
+                      selectedOptionIcon: const Icon(Icons.check_circle),
                     ),
                     const SizedBox(
                       height: 8,

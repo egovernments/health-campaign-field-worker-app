@@ -32,6 +32,7 @@ class DigitIconButton extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
+
           Flexible(
             child: imageIcon ??
                 Icon(

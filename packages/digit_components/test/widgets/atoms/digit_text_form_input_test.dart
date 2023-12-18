@@ -275,14 +275,14 @@ void main() {
             body: DigitTextFormInput(
               controller: controller,
               label: 'Test Label',
-              initialValue: 'Initial Value',
+              initialValue: 'Initial',
             ),
           ),
         ),
       );
 
       // Verify the initial value is set
-      expect(find.text('Initial Value'), findsOneWidget);
+      expect(find.text('Initial'), findsOneWidget);
     });
   });
 }

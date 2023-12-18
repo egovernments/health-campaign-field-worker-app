@@ -22,6 +22,7 @@ class DigitDateFormInput extends BaseDigitFormInput {
     IconData suffix = Icons.date_range,
     void Function(String?)? onError,
     final List<Validator>? validations,
+    final void Function(String)? onChange,
   }) : super(
     key: key,
     controller: controller,
@@ -39,6 +40,7 @@ class DigitDateFormInput extends BaseDigitFormInput {
     suffix: suffix,
     initialValue: initialValue,
     validations: validations,
+    onChange: onChange,
   );
 
   @override

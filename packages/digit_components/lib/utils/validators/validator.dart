@@ -44,6 +44,30 @@ class InputValidators {
           }
         }
         break;
+      case ValidatorType.required:
+        if (value == null || value.isEmpty) {
+          return validation.errorMessage ?? 'Field is required';
+        }
+        break;
+
+      case ValidatorType.minValue:
+        if (value != null) {
+          final intValue = int.tryParse(value);
+
+          if (intValue == null || intValue < validation.value) {
+            return validation.errorMessage ?? 'Value is less than the minimum allowed';
+          }
+        }
+        break;
+      case ValidatorType.maxValue:
+        if (value != null) {
+          final intValue = int.tryParse(value);
+
+          if (intValue == null || intValue > validation.value) {
+            return validation.errorMessage ?? 'Value exceeds the maximum allowed';
+          }
+        }
+        break;
 
       default:
         return null;
@@ -51,6 +75,7 @@ class InputValidators {
     return null;
   }
 }
+
 enum ValidatorType {
   maxLength,
   pattern,
@@ -58,12 +83,16 @@ enum ValidatorType {
   mobileNumber,
   email,
   customFunction,
+  required,
+  minValue,
+  maxValue,
 }
 
 class Validator {
   final ValidatorType type;
-  final dynamic value;
+  final dynamic? value;
   final String? errorMessage;
   final String? Function(String?)? customValidation;
+
   Validator(this.type, this.value, {this.errorMessage, this.customValidation});
 }

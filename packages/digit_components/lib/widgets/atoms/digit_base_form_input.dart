@@ -28,6 +28,7 @@ class BaseDigitFormInput extends StatefulWidget {
   final double height;
   final double width;
   final List<Validator>? validations;
+  final void Function(String)? onChange;
 
   const BaseDigitFormInput(
       {Key? key,
@@ -52,6 +53,7 @@ class BaseDigitFormInput extends StatefulWidget {
       this.maxLine = 1,
       this.height = 40,
       this.width = 380,
+        this.onChange,
       this.keyboardType = TextInputType.text,
         this.validations,
       this.textAlign = TextAlign.start})
@@ -332,6 +334,8 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
               setState(() {
                 _value = value;
               });
+              widget.onChange?.call(value);
+
             },
           ),
           const SizedBox(

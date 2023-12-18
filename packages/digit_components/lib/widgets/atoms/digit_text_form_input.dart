@@ -22,6 +22,7 @@ class DigitTextFormInput extends BaseDigitFormInput {
     IconData? prefixIcon,
     void Function(String?)? onError,
     final List<Validator>? validations,
+    final void Function(String)? onChange,
   }) : super(
     key: key,
     controller: controller,
@@ -40,6 +41,7 @@ class DigitTextFormInput extends BaseDigitFormInput {
     onError: onError,
     initialValue: initialValue,
     validations: validations,
+    onChange: onChange,
   );
 
   @override
