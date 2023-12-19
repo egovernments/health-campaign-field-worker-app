@@ -5,8 +5,9 @@ import '../../theme/colors.dart';
 class DigitCheckboxIcon extends StatelessWidget {
   final CheckboxState state;
   final bool isDisabled;
+  final Color? color;
 
-  DigitCheckboxIcon({required this.state, this.isDisabled = false});
+  DigitCheckboxIcon({required this.state, this.isDisabled = false, this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,7 @@ class DigitCheckboxIcon extends StatelessWidget {
           height: 24.0,
           decoration: BoxDecoration(
             border: Border.all(
-              color: isDisabled ? const DigitColors().cloudGray : const DigitColors().davyGray,
+              color: color ?? (isDisabled ? const DigitColors().cloudGray : const DigitColors().davyGray),
               width: 2.0,
             ),
             borderRadius: BorderRadius.zero,
@@ -33,7 +34,7 @@ class DigitCheckboxIcon extends StatelessWidget {
             height: 24.0,
             decoration: BoxDecoration(
               border: Border.all(
-                color: isDisabled ? const DigitColors().cloudGray : const DigitColors().burningOrange,
+                color: color ?? (isDisabled ? const DigitColors().cloudGray : const DigitColors().burningOrange),
                 width: 2.0,
               ),
               borderRadius: BorderRadius.zero,
@@ -42,7 +43,7 @@ class DigitCheckboxIcon extends StatelessWidget {
               child: Icon(
                 Icons.square,
                 size: 16.0,
-                color: isDisabled ? const DigitColors().cloudGray : const DigitColors().burningOrange,
+                color: color ?? (isDisabled ? const DigitColors().cloudGray : const DigitColors().burningOrange),
               ),
             ));
       case CheckboxState.checked:
@@ -51,7 +52,7 @@ class DigitCheckboxIcon extends StatelessWidget {
             height: 24.0,
             decoration: BoxDecoration(
               border: Border.all(
-                color: isDisabled ? const DigitColors().cloudGray : const DigitColors().burningOrange,
+                color: color ?? (isDisabled ? const DigitColors().cloudGray : const DigitColors().burningOrange),
                 width: 2.0,
               ),
               borderRadius: BorderRadius.zero,
@@ -60,7 +61,7 @@ class DigitCheckboxIcon extends StatelessWidget {
               child: Icon(
                 Icons.check,
                 size: 16.0,
-                color: isDisabled ? const DigitColors().cloudGray : const DigitColors().burningOrange,
+                color: color ?? (isDisabled ? const DigitColors().cloudGray : const DigitColors().burningOrange),
               ),
             ));
     }

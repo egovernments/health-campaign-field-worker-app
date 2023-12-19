@@ -1,4 +1,5 @@
 library multiselect_dropdown;
+
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_row_card/digit_row_card_model.dart';
 import 'package:flutter/foundation.dart';
@@ -6,27 +7,29 @@ import 'package:flutter/material.dart';
 
 import 'digit_checkbox_icon.dart';
 
-typedef OnOptionSelected<T> = void Function(List<DropdownListItem<T>> selectedOptions);
+typedef OnOptionSelected<T> = void Function(
+    List<DropdownListItem<T>> selectedOptions);
 
 class MultiSelectDropDown<int> extends StatefulWidget {
   // selection type of the dropdown
   final SelectionType selectionType;
+  final ChipPosition chipPosition;
 
   // Options
   final List<DropdownListItem<int>> options;
   final List<DropdownListItem<int>> selectedOptions;
-  final List<DropdownListItem<int>> disabledOptions;
   final OnOptionSelected<int>? onOptionSelected;
 
   // selected option
   final Icon? selectedOptionIcon;
   final Color? selectedOptionTextColor;
   final Color? selectedOptionBackgroundColor;
-  final Widget Function(BuildContext, DropdownListItem<int>)? selectedItemBuilder;
+  final Widget Function(BuildContext, DropdownListItem<int>)?
+      selectedItemBuilder;
 
   // chip configuration
   final bool showChipInSingleSelectMode;
-  // final ChipConfig chipConfig;
+  final ChipConfig chipConfig;
 
   // options configuration
   final Color? optionsBackgroundColor;
@@ -38,7 +41,6 @@ class MultiSelectDropDown<int> extends StatefulWidget {
   // dropdownfield configuration
   final Color? backgroundColor;
   final Icon? suffixIcon;
-  final Icon? clearIcon;
   final Decoration? inputDecoration;
   final double? borderRadius;
   final BorderRadiusGeometry? radiusGeometry;
@@ -57,46 +59,43 @@ class MultiSelectDropDown<int> extends StatefulWidget {
   /// [controller] is the controller for the dropdown. It can be used to programmatically open and close the dropdown.
   final MultiSelectController<int>? controller;
 
-  final bool searchEnabled;
-
-  const MultiSelectDropDown(
-      {Key? key,
-        required this.onOptionSelected,
-        required this.options,
-        this.selectedOptionTextColor,
-        // this.chipConfig = const ChipConfig(),
-        this.selectionType = SelectionType.multi,
-        this.selectedOptions = const [],
-        this.disabledOptions = const [],
-        this.alwaysShowOptionIcon = false,
-        this.optionTextStyle,
-        this.selectedOptionIcon = const Icon(Icons.check),
-        this.selectedOptionBackgroundColor,
-        this.optionsBackgroundColor,
-        this.backgroundColor = Colors.white,
-        this.dropdownHeight = 200,
-        this.showChipInSingleSelectMode = false,
-        this.suffixIcon = const Icon(Icons.arrow_drop_down),
-        this.clearIcon = const Icon(Icons.close_outlined, size: 14),
-        this.selectedItemBuilder,
-        this.optionSeparator,
-        this.inputDecoration,
-        this.padding,
-        this.focusedBorderColor = Colors.black54,
-        this.borderColor = Colors.grey,
-        this.borderWidth = 0.4,
-        this.focusedBorderWidth = 0.4,
-        this.borderRadius = 12.0,
-        this.radiusGeometry,
-        this.showClearIcon = true,
-        this.maxItems,
-        this.focusNode,
-        this.controller,
-        this.searchEnabled = false,})
-      :super(key: key);
+  const MultiSelectDropDown({
+    Key? key,
+    required this.onOptionSelected,
+    required this.options,
+    this.selectedOptionTextColor,
+    this.chipConfig = const ChipConfig(),
+    this.chipPosition = ChipPosition.outside,
+    this.selectionType = SelectionType.multi,
+    this.selectedOptions = const [],
+    this.alwaysShowOptionIcon = false,
+    this.optionTextStyle,
+    this.selectedOptionIcon = const Icon(Icons.check),
+    this.selectedOptionBackgroundColor,
+    this.optionsBackgroundColor,
+    this.backgroundColor = Colors.white,
+    this.dropdownHeight = 200,
+    this.showChipInSingleSelectMode = false,
+    this.suffixIcon = const Icon(Icons.arrow_drop_down),
+    this.selectedItemBuilder,
+    this.optionSeparator,
+    this.inputDecoration,
+    this.padding,
+    this.focusedBorderColor = Colors.black54,
+    this.borderColor = Colors.grey,
+    this.borderWidth = 0.4,
+    this.focusedBorderWidth = 0.4,
+    this.borderRadius = 12.0,
+    this.radiusGeometry,
+    this.showClearIcon = true,
+    this.maxItems,
+    this.focusNode,
+    this.controller,
+  }) : super(key: key);
 
   @override
-  State<MultiSelectDropDown<int>> createState() => _MultiSelectDropDownState<int>();
+  State<MultiSelectDropDown<int>> createState() =>
+      _MultiSelectDropDownState<int>();
 }
 
 class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
@@ -120,9 +119,6 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
   /// value notifier that is used for controller.
   MultiSelectController<T>? _controller;
 
-  /// search field focus node
-  FocusNode? _searchFocusNode;
-
   @override
   void initState() {
     super.initState();
@@ -133,35 +129,25 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
     _controller = widget.controller ?? MultiSelectController<T>();
   }
 
-  void _initialize(){
+  void _initialize() {
     if (!mounted) return;
     _addOptions();
     _overlayState ??= Overlay.of(context);
     _focusNode.addListener(_handleFocusChange);
-
-    if (widget.searchEnabled) {
-      _searchFocusNode = FocusNode();
-      _searchFocusNode!.addListener(_handleFocusChange);
-    }
   }
 
   /// Adds the selected options and disabled options to the options list.
   void _addOptions() {
     setState(() {
-      // _selectedOptions.addAll(_controller?.selectedOptions.isNotEmpty == true
-      //     ? _controller!.selectedOptions
-      //     : widget.selectedOptions);
-      // _disabledOptions.addAll(_controller?.disabledOptions.isNotEmpty == true
-      //     ? _controller!.disabledOptions
-      //     : widget.disabledOptions);
+      _selectedOptions.addAll(_controller?.selectedOptions.isNotEmpty == true
+          ? _controller!.selectedOptions
+          : widget.selectedOptions);
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_controller != null && _controller?._isDisposed == false) {
         _controller!.setOptions(_options);
         _controller!.setSelectedOptions(_selectedOptions);
-        _controller!.setDisabledOptions(_disabledOptions);
-
         _controller!.addListener(_handleControllerChange);
       }
     });
@@ -172,24 +158,21 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
     if (_focusNode.hasFocus && mounted) {
       _overlayEntry = _buildOverlayEntry();
       Overlay.of(context).insert(_overlayEntry!);
-      return;
+      // return;
     }
 
-    if ((_searchFocusNode == null || _searchFocusNode?.hasFocus == false) &&
-        _overlayEntry != null) {
+    if (_focusNode.hasFocus == false && _overlayEntry != null) {
       _overlayEntry?.remove();
     }
 
     if (mounted) {
       setState(() {
-        _selectionMode =
-            _focusNode.hasFocus || _searchFocusNode?.hasFocus == true;
+        _selectionMode = _focusNode.hasFocus == true;
       });
     }
 
     if (_controller != null) {
-      _controller!.value._isDropdownOpen =
-          _focusNode.hasFocus || _searchFocusNode?.hasFocus == true;
+      _controller!.value._isDropdownOpen = _focusNode.hasFocus == true;
     }
   }
 
@@ -227,19 +210,6 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
       }
     }
 
-    // If the disabled options are changed externally, then the disabled options are updated.
-    if (listEquals(widget.disabledOptions, oldWidget.disabledOptions) ==
-        false) {
-      _disabledOptions.clear();
-      _disabledOptions.addAll(widget.options
-          .where((element) => widget.disabledOptions.contains(element)));
-
-      // If the controller is not null, then the disabled options are updated in the controller.
-      if (_controller != null) {
-        _controller!.setDisabledOptions(_disabledOptions);
-      }
-    }
-
     super.didUpdateWidget(oldWidget);
   }
 
@@ -257,54 +227,61 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
 
   @override
   Widget build(BuildContext context) {
-
     double dropdownWidth = MediaQuery.of(context).size.width < 600 ? 340 : 600;
-    return CompositedTransformTarget(
-      link: _layerLink,
-      child: Focus(
-        canRequestFocus: true,
-        skipTraversal: true,
-        focusNode: _focusNode,
-        child: InkWell(
-          splashColor: null,
-          splashFactory: null,
-          onTap: _toggleFocus,
-          child: Container(
-            height:  40,
-            width: dropdownWidth,
-            constraints: const BoxConstraints(
-              minWidth: 340,
-              minHeight: 40,
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 0),
-            decoration: _getContainerDecoration(),
-            child: Row(
-              children: [
-                Expanded(
-                  child: _getContainerContent(),
-                ),
-                if (widget.showClearIcon && _anyItemSelected) ...[
-                  const SizedBox(width: 4),
-                  InkWell(
-                    onTap: () => clear(),
-                    child: const Icon(
-                      Icons.close_outlined,
-                      size: 20,
-                    ),
+    return Column(
+      children: [
+        CompositedTransformTarget(
+          link: _layerLink,
+          child: Focus(
+            canRequestFocus: true,
+            skipTraversal: true,
+            focusNode: _focusNode,
+            child: InkWell(
+              splashColor: Colors.transparent,
+              // Set splashColor to transparent
+              highlightColor: Colors.transparent,
+              hoverColor: Colors.transparent,
+              onTap: _toggleFocus,
+              child: StatefulBuilder(builder: (context, setState) {
+                return Container(
+                  height: 40,
+                  width: dropdownWidth,
+                  constraints: const BoxConstraints(
+                    minWidth: 340,
+                    minHeight: 40,
                   ),
-                  const SizedBox(width: 4)
-                ],
-                if (!_selectionMode)
-                  AnimatedRotation(
-                    turns: _selectionMode ? 0.5 : 0,
-                    duration: const Duration(milliseconds: 200),
-                    child: widget.suffixIcon,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8.0, vertical: 0),
+                  decoration: _getContainerDecoration(),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: (_selectedOptions.isNotEmpty)
+                            ? Text('${_selectedOptions.length} Selected')
+                            : const Text(''),
+                      ),
+                      AnimatedRotation(
+                        turns: _selectionMode ? 0.5 : 0,
+                        duration: const Duration(milliseconds: 200),
+                        child: widget.suffixIcon,
+                      ),
+                    ],
                   ),
-              ],
+                );
+              }),
             ),
           ),
         ),
-      ),
+        const SizedBox(
+          height: 8,
+        ),
+        if (_anyItemSelected)
+          SizedBox(
+            // height: 40,
+            width: dropdownWidth,
+            child: _getContainerContent(),
+          )
+      ],
     );
   }
 
@@ -313,8 +290,8 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
     if (_selectedOptions.isEmpty) {
       return const Text('select items to show here');
     }
-    return const Text('need to work');
-    // return _buildSelectedItems();
+
+    return _buildSelectedItems();
   }
 
   /// return true if any item is selected.
@@ -323,18 +300,19 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
   /// Container decoration for the dropdown.
   Decoration _getContainerDecoration() {
     return BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.zero,
-          border: _selectionMode
-              ? Border.all(
-            color: widget.focusedBorderColor ?? const DigitColors().burningOrange,
-            width: widget.focusedBorderWidth ?? 1,
-          )
-              : Border.all(
-            color: const DigitColors().davyGray,
-            width: widget.borderWidth ?? 1,
-          ),
-        );
+      color: Colors.white,
+      borderRadius: BorderRadius.zero,
+      border: _selectionMode
+          ? Border.all(
+              color: const DigitColors().burningOrange ??
+                  const DigitColors().burningOrange,
+              width: 1,
+            )
+          : Border.all(
+              color: const DigitColors().davyGray,
+              width: 1,
+            ),
+    );
   }
 
   /// Dispose the focus node and overlay entry.
@@ -348,9 +326,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
       _overlayState?.dispose();
     }
     _focusNode.removeListener(_handleFocusChange);
-    _searchFocusNode?.removeListener(_handleFocusChange);
     _focusNode.dispose();
-    _searchFocusNode?.dispose();
     _controller?.removeListener(_handleControllerChange);
 
     if (widget.controller == null || widget.controller?.isDisposed == true) {
@@ -373,9 +349,6 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
 
   /// Handle the focus change on tap outside of the dropdown.
   void _onOutSideTap() {
-    if (_searchFocusNode != null) {
-      _searchFocusNode!.unfocus();
-    }
     _focusNode.unfocus();
   }
 
@@ -394,116 +367,65 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
     final values = _calculateOffsetSize();
     // Get the size from the first item in the values list
     final size = values[0] as Size;
-    // Get the showOnTop value from the second item in the values list
-    final showOnTop = values[1] as bool;
 
     return OverlayEntry(builder: (context) {
-      List<DropdownListItem<T>> options = [DropdownListItem(value: 1, label: 'first'), DropdownListItem(value: 2, label: 'second')];
+      List<DropdownListItem<T>> options = [
+        const DropdownListItem(value: 1, label: 'firstddddddddddddd'),
+        const DropdownListItem(value: 2, label: 'seconddddddddddddddddd'),
+        const DropdownListItem(value: 3, label: 'thiraaaaaaaaaaaad'),
+        const DropdownListItem(value: 4, label: 'foussssssssr'),
+        const DropdownListItem(value: 5, label: 'fivssssssssssse'),
+      ];
       List<DropdownListItem<T>> selectedOptions = [..._selectedOptions];
-      final searchController = TextEditingController();
 
       return StatefulBuilder(builder: ((context, dropdownState) {
         return Stack(
           children: [
             Positioned.fill(
                 child: GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  onTap: _onOutSideTap,
-                  child: Container(
-                    color: Colors.transparent,
-                  ),
-                )),
+              behavior: HitTestBehavior.translucent,
+              onTap: _onOutSideTap,
+              child: Container(
+                color: Colors.transparent,
+              ),
+            )),
             CompositedTransformFollower(
               link: _layerLink,
               showWhenUnlinked: false,
-              targetAnchor:
-              Alignment.bottomLeft,
-              followerAnchor:
-              Alignment.topLeft,
+              targetAnchor: Alignment.bottomLeft,
+              followerAnchor: Alignment.topLeft,
               offset: Offset.zero,
               child: Material(
                   borderRadius: BorderRadius.zero,
                   // elevation: 4,
-                  shadowColor: Colors.black,
+                  shadowColor: null,
                   child: Container(
-                    constraints: widget.searchEnabled
-                        ? BoxConstraints.loose(
-                        Size(size.width,  50))
-                        : BoxConstraints.loose(
-                        Size(size.width, 100)),
+                    constraints: BoxConstraints.loose(Size(size.width, 250)),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        if (widget.searchEnabled) ...[
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: TextFormField(
-                              controller: searchController,
-                              onTapOutside: (_) {},
-                              scrollPadding: EdgeInsets.only(
-                                  bottom:
-                                  MediaQuery.of(context).viewInsets.bottom),
-                              focusNode: _searchFocusNode,
-                              decoration: InputDecoration(
-                                fillColor: Colors.grey.shade200,
-                                isDense: true,
-                                hintText: 'Search',
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide(
-                                    color: Colors.grey.shade300,
-                                    width: 0.8,
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide(
-                                    color: Theme.of(context).primaryColor,
-                                    width: 0.8,
-                                  ),
-                                ),
-                                suffixIcon: IconButton(
-                                  icon: const Icon(Icons.close),
-                                  onPressed: () {
-                                    searchController.clear();
-                                    dropdownState(() {
-                                      options = _options;
-                                    });
-                                  },
-                                ),
-                              ),
-                              onChanged: (value) {
-                                dropdownState(() {
-                                  options = _options
-                                      .where((element) => element.label
-                                      .toLowerCase()
-                                      .contains(value.toLowerCase()))
-                                      .toList();
-                                });
-                              },
-                            ),
-                          ),
-                          const Divider(
-                            height: 1,
-                          ),
-                        ],
                         Expanded(
                           child: ListView.separated(
                             separatorBuilder: (_, __) =>
-                            widget.optionSeparator ??
+                                widget.optionSeparator ??
                                 const SizedBox(height: 0),
                             shrinkWrap: true,
                             padding: EdgeInsets.zero,
                             itemCount: options.length,
                             itemBuilder: (context, index) {
                               final option = options[index];
-                              final isSelected =
-                              selectedOptions.contains(option);
-                              final primaryColor =
-                                  Theme.of(context).primaryColor;
-
-                              return _buildOption(option, primaryColor,
-                                  isSelected, dropdownState, selectedOptions);
+                              bool isSelected = selectedOptions.any((item) =>
+                                  item.value == option.value &&
+                                  item.label == option.label);
+                              Color backgroundColor = index % 2 == 0
+                                  ? const DigitColors().white
+                                  : const DigitColors().alabasterWhite;
+                              return _buildOption(
+                                  option,
+                                  isSelected,
+                                  dropdownState,
+                                  backgroundColor,
+                                  selectedOptions);
                             },
                           ),
                         ),
@@ -519,48 +441,65 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
 
   ListTile _buildOption(
       DropdownListItem<T> option,
-      Color primaryColor,
       bool isSelected,
       StateSetter dropdownState,
+      Color backgroundColor,
       List<DropdownListItem<T>> selectedOptions) {
     return ListTile(
-        title:  Row(
-          children: [
-            if (isSelected)
-              DigitCheckboxIcon(state: CheckboxState.checked),
-            if (!isSelected)
-              DigitCheckboxIcon(state: CheckboxState.unchecked),
-            Text(option.label),
-          ],
-        ),
-        textColor: const DigitColors().woodsmokeBlack,
-        focusColor: Colors.red,
-        selectedColor: widget.selectedOptionTextColor ?? primaryColor,
-        selected: isSelected,
-        autofocus: true,
-        dense: true,
-        tileColor: widget.optionsBackgroundColor ?? Colors.white,
-        selectedTileColor:
-        widget.selectedOptionBackgroundColor ?? Colors.grey.shade200,
-        enabled: !_disabledOptions.contains(option),
-        onTap: () {
-          if (widget.selectionType == SelectionType.multi) {
-            if (isSelected) {
-              dropdownState(() {
-                selectedOptions.remove(option);
-              });
-              setState(() {
-                _selectedOptions.remove(option);
-              });
-            }
-          }
+      title: Row(
+        children: [
+          if (isSelected)
+            DigitCheckboxIcon(
+              state: CheckboxState.checked,
+              color: const DigitColors().white,
+            ),
+          if (!isSelected) DigitCheckboxIcon(state: CheckboxState.unchecked),
+          const SizedBox(
+            width: 10,
+          ),
+          Text(
+            option.label,
+            style: const TextStyle(
+                fontFamily: 'Roboto',
+                fontWeight: FontWeight.w700,
+                fontSize: 16),
+          ),
+        ],
+      ),
+      textColor: const DigitColors().davyGray,
+      selectedColor: const DigitColors().white,
+      selected: isSelected,
+      autofocus: true,
+      tileColor: backgroundColor,
+      selectedTileColor: const DigitColors().burningOrange,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+      onTap: () {
+        if (isSelected) {
+          dropdownState(() {
+            selectedOptions.remove(option);
+          });
+          setState(() {
+            _selectedOptions.remove(option);
+          });
+          bool isSelected1 = selectedOptions.any((item) =>
+          item.value == option.value &&
+              item.label == option.label);
+          print(isSelected1);
+        } else {
+          dropdownState(() {
+            selectedOptions.add(option);
+          });
+          setState(() {
+            _selectedOptions.add(option);
+          });
+        }
 
-          if (_controller != null) {
-            _controller!.value._selectedOptions.clear();
-            _controller!.value._selectedOptions.addAll(_selectedOptions);
-          }
-          widget.onOptionSelected?.call(_selectedOptions);
-        },
+        if (_controller != null) {
+          _controller!.value._selectedOptions.clear();
+          _controller!.value._selectedOptions.addAll(_selectedOptions);
+        }
+        widget.onOptionSelected?.call(_selectedOptions);
+      },
     );
   }
 
@@ -578,6 +517,54 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
     if (_focusNode.hasFocus) _focusNode.unfocus();
   }
 
+  /// Build the selected items for the dropdown.
+  Widget _buildSelectedItems() {
+    return Wrap(
+      spacing: widget.chipConfig.spacing,
+      runSpacing: widget.chipConfig.runSpacing,
+      children: [
+        ..._selectedOptions.asMap().entries.map((entry) {
+          final index = entry.key;
+          final item = entry.value;
+
+          Widget chip = widget.selectedItemBuilder != null
+              ? widget.selectedItemBuilder!(context, item)
+              : _buildChip(item, widget.chipConfig);
+
+          return chip;
+        }),
+        if (_selectedOptions
+            .isNotEmpty) // Display "Clear All" only if there are selected options
+          InkWell(
+            onTap: () => clear(),
+            child: Chip(
+              label: Text('Clear All',
+                  style: TextStyle(color: const DigitColors().burningOrange)),
+            ),
+          ),
+      ],
+    );
+  }
+
+  /// Buid the selected item chip.
+  Widget _buildChip(DropdownListItem<T> item, ChipConfig chipConfig) {
+    return SelectionChip<T>(
+      item: item,
+      chipConfig: chipConfig,
+      onItemDelete: (removedItem) {
+        if (_controller != null) {
+          _controller!.clearSelection(removedItem);
+        } else {
+          setState(() {
+            _selectedOptions.remove(removedItem);
+          });
+          widget.onOptionSelected?.call(_selectedOptions);
+        }
+        if (_focusNode.hasFocus) _focusNode.unfocus();
+      },
+    );
+  }
+
   /// handle the controller change.
   void _handleControllerChange() {
     // if the controller is null, return.
@@ -587,7 +574,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
     if (_options != _controller!.value._options) {
       setState(() {
         _options.clear();
-        _options.addAll(_controller!.value._options as Iterable<DropdownListItem<T>>);
+        _options.addAll(_controller!.value._options);
       });
     }
 
@@ -595,7 +582,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
     if (_selectedOptions != _controller!.value._selectedOptions) {
       setState(() {
         _selectedOptions.clear();
-        _selectedOptions.addAll(_controller!.value._selectedOptions as Iterable<DropdownListItem<T>>);
+        _selectedOptions.addAll(_controller!.value._selectedOptions);
       });
       widget.onOptionSelected?.call(_selectedOptions);
     }
@@ -652,12 +639,6 @@ class MultiSelectController<T>
     if (value._disabledOptions.contains(option)) {
       throw Exception('Cannot clear selection of a disabled option');
     }
-
-    if (!value._options.contains(option)) {
-      throw Exception(
-          'Cannot clear selection of an option that is not in the options list');
-    }
-
     value._selectedOptions.remove(option);
     notifyListeners();
   }
@@ -690,30 +671,6 @@ class MultiSelectController<T>
     }
 
     value._selectedOptions.add(option);
-    notifyListeners();
-  }
-
-  /// set disabled options
-  /// [MultiSelectController] is used to set disabled options.
-  void setDisabledOptions(List<DropdownListItem<T>> disabledOptions) {
-    if (disabledOptions.any((element) => !value._options.contains(element))) {
-      throw Exception(
-          'Cannot disable options that are not in the options list');
-    }
-
-    value._disabledOptions.clear();
-    value._disabledOptions.addAll(disabledOptions);
-    notifyListeners();
-  }
-
-  /// setDisabledOption method
-  /// [MultiSelectController] is used to set disabled option.
-  void setDisabledOption(DropdownListItem<T> disabledOption) {
-    if (!value._options.contains(disabledOption)) {
-      throw Exception('Cannot disable option that is not in the options list');
-    }
-
-    value._disabledOptions.add(disabledOption);
     notifyListeners();
   }
 
@@ -757,20 +714,25 @@ class MultiSelectController<T>
     value._isDropdownOpen = false;
     notifyListeners();
   }
-
-
 }
 
 enum SelectionType {
-single,
-multi,
+  single,
+  multi,
+}
+
+enum ChipPosition {
+  inside,
+  outside,
 }
 
 class DropdownListItem<T> extends StatelessWidget {
   final String label;
   final int value;
 
-  const DropdownListItem({Key? key, required this.value, required this.label}) : super(key: key);
+  const DropdownListItem({Key? key, required this.value, required this.label})
+      : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return DropdownListItem<int>(
@@ -780,63 +742,74 @@ class DropdownListItem<T> extends StatelessWidget {
   }
 }
 
-/// Buid the selected item chip.
-// Widget _buildChip(ValueItem<T> item, ChipConfig chipConfig) {
-//   return SelectionChip<T>(
-//     item: item,
-//     chipConfig: chipConfig,
-//     onItemDelete: (removedItem) {
-//       if (_controller != null) {
-//         _controller!.clearSelection(removedItem);
-//       } else {
-//         setState(() {
-//           _selectedOptions.remove(removedItem);
-//         });
-//         widget.onOptionSelected?.call(_selectedOptions);
-//       }
-//       if (_focusNode.hasFocus) _focusNode.unfocus();
-//     },
-//   );
-// }
+class ChipConfig {
+  final Icon? deleteIcon;
 
-/// Build the selected items for the dropdown.
-// Widget _buildSelectedItems() {
-//   // if (widget.chipConfig.wrapType == WrapType.scroll) {
-//   //   return ListView.separated(
-//   //     separatorBuilder: (context, index) =>
-//   //         _getChipSeparator(widget.chipConfig),
-//   //     scrollDirection: Axis.horizontal,
-//   //     itemCount: _selectedOptions.length,
-//   //     shrinkWrap: true,
-//   //     itemBuilder: (context, index) {
-//   //       final option = _selectedOptions[index];
-//   //       if (widget.selectedItemBuilder != null) {
-//   //         return widget.selectedItemBuilder!(context, option);
-//   //       }
-//   //       return _buildChip(option, widget.chipConfig);
-//   //     },
-//   //   );
-//   // }
-//   // return Wrap(
-//   //     // spacing: widget.chipConfig.spacing,
-//   //     // runSpacing: widget.chipConfig.runSpacing,
-//   //     children: mapIndexed(_selectedOptions, (index, item) {
-//   //       if (widget.selectedItemBuilder != null) {
-//   //         return widget.selectedItemBuilder!(
-//   //             context, _selectedOptions[index]);
-//   //       }
-//   //       return _buildChip(_selectedOptions[index], widget.chipConfig);
-//   //     }).toList());
-// }
+  final Color deleteIconColor;
+  final Color labelColor;
+  final Color? backgroundColor;
 
-/// Get the chip separator.
-// Widget _getChipSeparator(ChipConfig chipConfig) {
-//   if (chipConfig.separator != null) {
-//     return chipConfig.separator!;
-//   }
-//
-//   return SizedBox(
-//     width: chipConfig.spacing,
-//   );
-// }
+  final TextStyle? labelStyle;
+  final EdgeInsets padding;
+  final EdgeInsets labelPadding;
 
+  final double radius;
+  final double spacing;
+  final double runSpacing;
+
+  final Widget? separator;
+
+  final bool autoScroll;
+
+  const ChipConfig({
+    this.deleteIcon,
+    this.deleteIconColor = Colors.white,
+    this.backgroundColor,
+    this.padding = const EdgeInsets.only(left: 12, top: 0, right: 4, bottom: 0),
+    this.radius = 18,
+    this.spacing = 8,
+    this.runSpacing = 8,
+    this.separator,
+    this.labelColor = Colors.white,
+    this.labelStyle,
+    this.labelPadding = EdgeInsets.zero,
+    this.autoScroll = false,
+  });
+}
+
+class SelectionChip<T> extends StatelessWidget {
+  final ChipConfig chipConfig;
+  final Function(DropdownListItem<T>) onItemDelete;
+  final DropdownListItem<T> item;
+
+  const SelectionChip({
+    Key? key,
+    required this.chipConfig,
+    required this.item,
+    required this.onItemDelete,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Chip(
+      padding: chipConfig.padding,
+      label: Text(item.label),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(chipConfig.radius),
+      ),
+      deleteIcon: Icon(
+        Icons.cancel,
+        color: const DigitColors().davyGray,
+      ),
+      deleteIconColor: chipConfig.deleteIconColor,
+      labelPadding: chipConfig.labelPadding,
+      backgroundColor: const DigitColors().quillGray,
+      labelStyle: chipConfig.labelStyle ??
+          TextStyle(
+              color: const DigitColors().woodsmokeBlack,
+              fontSize: 14,
+              fontWeight: FontWeight.w400),
+      onDeleted: () => onItemDelete(item),
+    );
+  }
+}
