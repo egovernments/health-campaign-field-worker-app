@@ -350,17 +350,19 @@ class SearchHouseholdsBloc
 
       if (head == null) continue;
       // Create a container for household members and associated data.
-      containers.add(
-        HouseholdMemberWrapper(
-          household: householdresult,
-          headOfHousehold: head,
-          members: individualMemebrs,
-          projectBeneficiaries: beneficiaries,
-          tasks: tasks.isEmpty ? null : tasks,
-          sideEffects: sideEffects.isEmpty ? null : sideEffects,
-          referrals: referrals.isEmpty ? null : referrals,
-        ),
-      );
+      if (beneficiaries.isNotEmpty) {
+        containers.add(
+          HouseholdMemberWrapper(
+            household: householdresult,
+            headOfHousehold: head,
+            members: individualMemebrs,
+            projectBeneficiaries: beneficiaries,
+            tasks: tasks.isEmpty ? null : tasks,
+            sideEffects: sideEffects.isEmpty ? null : sideEffects,
+            referrals: referrals.isEmpty ? null : referrals,
+          ),
+        );
+      }
     }
     // Update the state with the   results and mark the search as completed.
     emit(state.copyWith(
@@ -446,6 +448,11 @@ class SearchHouseholdsBloc
           ? househHoldIds
           : individualClientReferenceIds,
     );
+    householdMembers.removeWhere((ele) => projectBeneficiaries.any((p) => p
+        .beneficiaryClientReferenceId!
+        .contains(beneficiaryType == BeneficiaryType.individual
+            ? ele.individualClientReferenceId.toString()
+            : ele.householdClientReferenceId.toString())));
     // Search for individual results based on the search text only.
 
     List<SideEffectModel> sideEffects = [];
@@ -506,18 +513,20 @@ class SearchHouseholdsBloc
 
       // Search for project beneficiaries based on client reference ID and project.
 
-      // Create a container for household members and associated data.
-      containers.add(
-        HouseholdMemberWrapper(
-          household: householdresult,
-          headOfHousehold: head,
-          members: individualMemebrs,
-          projectBeneficiaries: beneficiaries,
-          tasks: tasks.isEmpty ? null : tasks,
-          sideEffects: sideEffects.isEmpty ? null : sideEffects,
-          referrals: referrals.isEmpty ? null : referrals,
-        ),
-      );
+      if (beneficiaries.isNotEmpty) {
+        // Create a container for household members and associated data.
+        containers.add(
+          HouseholdMemberWrapper(
+            household: householdresult,
+            headOfHousehold: head,
+            members: individualMemebrs,
+            projectBeneficiaries: beneficiaries,
+            tasks: tasks.isEmpty ? null : tasks,
+            sideEffects: sideEffects.isEmpty ? null : sideEffects,
+            referrals: referrals.isEmpty ? null : referrals,
+          ),
+        );
+      }
 
       // Update the state with the results and mark the search as completed.
     }
