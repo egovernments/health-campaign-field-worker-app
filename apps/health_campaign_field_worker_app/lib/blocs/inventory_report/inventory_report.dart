@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
 
+import '../../data/local_store/secure_store/secure_store.dart';
 import '../../models/data_model.dart';
 import '../../utils/app_exception.dart';
 import '../../utils/environment_config.dart';
@@ -45,40 +46,63 @@ class InventoryReportBloc
 
     List<TransactionReason>? transactionReason;
     List<TransactionType>? transactionType;
+    String? senderId;
+    String? receiverId;
 
     if (reportType == InventoryReportType.receipt) {
       transactionType = [TransactionType.received];
       transactionReason = [TransactionReason.received];
+      receiverId = facilityId;
+      senderId = null;
     } else if (reportType == InventoryReportType.dispatch) {
       transactionType = [TransactionType.dispatched];
       transactionReason = [];
+      receiverId = null;
+      senderId = facilityId;
     } else if (reportType == InventoryReportType.returned) {
       transactionType = [TransactionType.received];
       transactionReason = [TransactionReason.returned];
+      receiverId = null;
+      senderId = facilityId;
     } else if (reportType == InventoryReportType.damage) {
       transactionType = [TransactionType.dispatched];
       transactionReason = [
         TransactionReason.damagedInStorage,
         TransactionReason.damagedInTransit,
       ];
+      receiverId = facilityId;
+      senderId = null;
     } else if (reportType == InventoryReportType.loss) {
       transactionType = [TransactionType.dispatched];
       transactionReason = [
         TransactionReason.lostInStorage,
         TransactionReason.lostInTransit,
       ];
+      receiverId = facilityId;
+      senderId = null;
     }
+    final user = await LocalSecureStore.instance.userRequestModel;
 
-    final data = (await stockRepository.search(
-      StockSearchModel(
-        transactionType: transactionType,
-        transactionReason: transactionReason,
-        tenantId: envConfig.variables.tenantId,
-        facilityId: facilityId,
-        productVariantId: productVariantId,
-      ),
-    ))
-        .where((element) => element.auditDetails != null);
+    final data = (receiverId != null
+            ? await stockRepository.search(
+                StockSearchModel(
+                  transactionType: transactionType,
+                  tenantId: envConfig.variables.tenantId,
+                  receiverId: receiverId,
+                  productVariantId: productVariantId,
+                ),
+              )
+            : await stockRepository.search(
+                StockSearchModel(
+                  transactionType: transactionType,
+                  tenantId: envConfig.variables.tenantId,
+                  senderId: senderId,
+                  productVariantId: productVariantId,
+                ),
+              ))
+        .where((element) =>
+            element.auditDetails != null &&
+            element.auditDetails?.createdBy == user?.uuid);
 
     final groupedData = data.groupListsBy(
       (element) => DateFormat('dd MMM yyyy').format(

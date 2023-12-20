@@ -100,6 +100,13 @@ class _InventoryReportDetailsPageState
 
   @override
   Widget build(BuildContext context) {
+    bool isDistributor = context.loggedInUserRoles
+        .where(
+          (role) => role.code == RolesType.distributor.toValue(),
+        )
+        .toList()
+        .isNotEmpty;
+
     return Scaffold(
       bottomNavigationBar: DigitCard(
         padding: const EdgeInsets.all(8.0),
@@ -170,66 +177,106 @@ class _InventoryReportDetailsPageState
                                   DigitCard(
                                     child: Column(
                                       children: [
-                                        BlocConsumer<FacilityBloc,
-                                            FacilityState>(
-                                          listener: (context, state) =>
-                                              state.whenOrNull(
-                                            empty: () =>
-                                                NoFacilitiesAssignedDialog.show(
-                                              context,
+                                        if (!isDistributor)
+                                          BlocConsumer<FacilityBloc,
+                                              FacilityState>(
+                                            listener: (context, state) =>
+                                                state.whenOrNull(
+                                              empty: () =>
+                                                  NoFacilitiesAssignedDialog
+                                                      .show(
+                                                context,
+                                              ),
                                             ),
-                                          ),
-                                          builder: (context, state) {
-                                            final facilities = state.whenOrNull(
-                                                  fetched: (facilities, _) =>
+                                            builder: (context, state) {
+                                              final facilities =
+                                                  state.whenOrNull(
+                                                        fetched:
+                                                            (facilities, _) =>
+                                                                facilities,
+                                                      ) ??
+                                                      [];
+
+                                              return InkWell(
+                                                onTap: () async {
+                                                  final stockReconciliationBloc =
+                                                      context.read<
+                                                          StockReconciliationBloc>();
+
+                                                  final facility = await context
+                                                      .router
+                                                      .push<FacilityModel>(
+                                                    FacilitySelectionRoute(
+                                                      facilities: facilities,
+                                                    ),
+                                                  );
+
+                                                  if (facility == null) return;
+                                                  form
+                                                      .control(_facilityKey)
+                                                      .value = facility;
+                                                  stockReconciliationBloc.add(
+                                                    StockReconciliationSelectFacilityEvent(
+                                                      facility,
+                                                    ),
+                                                  );
+
+                                                  handleSelection(form);
+                                                },
+                                                child: IgnorePointer(
+                                                  child: DigitTextFormField(
+                                                    valueAccessor:
+                                                        FacilityValueAccessor(
                                                       facilities,
-                                                ) ??
-                                                [];
+                                                    ),
+                                                    label:
+                                                        localizations.translate(
+                                                      i18.stockReconciliationDetails
+                                                          .facilityLabel,
+                                                    ),
+                                                    suffix: const Padding(
+                                                      padding:
+                                                          EdgeInsets.all(8.0),
+                                                      child: Icon(Icons.search),
+                                                    ),
+                                                    formControlName:
+                                                        _facilityKey,
+                                                    readOnly: false,
+                                                    isRequired: true,
+                                                    onTap: () async {
+                                                      final stockReconciliationBloc =
+                                                          context.read<
+                                                              StockReconciliationBloc>();
 
-                                            return DigitTextFormField(
-                                              valueAccessor:
-                                                  FacilityValueAccessor(
-                                                facilities,
-                                              ),
-                                              label: localizations.translate(
-                                                i18.stockReconciliationDetails
-                                                    .facilityLabel,
-                                              ),
-                                              suffix: const Padding(
-                                                padding: EdgeInsets.all(8.0),
-                                                child: Icon(Icons.search),
-                                              ),
-                                              formControlName: _facilityKey,
-                                              readOnly: false,
-                                              isRequired: true,
-                                              onTap: () async {
-                                                final stockReconciliationBloc =
-                                                    context.read<
-                                                        StockReconciliationBloc>();
+                                                      final facility =
+                                                          await context.router
+                                                              .push<
+                                                                  FacilityModel>(
+                                                        FacilitySelectionRoute(
+                                                          facilities:
+                                                              facilities,
+                                                        ),
+                                                      );
 
-                                                final facility = await context
-                                                    .router
-                                                    .push<FacilityModel>(
-                                                  FacilitySelectionRoute(
-                                                    facilities: facilities,
+                                                      if (facility == null)
+                                                        return;
+                                                      form
+                                                          .control(_facilityKey)
+                                                          .value = facility;
+                                                      stockReconciliationBloc
+                                                          .add(
+                                                        StockReconciliationSelectFacilityEvent(
+                                                          facility,
+                                                        ),
+                                                      );
+
+                                                      handleSelection(form);
+                                                    },
                                                   ),
-                                                );
-
-                                                if (facility == null) return;
-                                                form
-                                                    .control(_facilityKey)
-                                                    .value = facility;
-                                                stockReconciliationBloc.add(
-                                                  StockReconciliationSelectFacilityEvent(
-                                                    facility,
-                                                  ),
-                                                );
-
-                                                handleSelection(form);
-                                              },
-                                            );
-                                          },
-                                        ),
+                                                ),
+                                              );
+                                            },
+                                          ),
                                         BlocBuilder<ProductVariantBloc,
                                             ProductVariantState>(
                                           builder: (context, state) {
@@ -367,11 +414,18 @@ class _InventoryReportDetailsPageState
                                                         DigitGridCell(
                                                           key:
                                                               transactingPartyKey,
-                                                          value: model
-                                                                  .transactingPartyId ??
-                                                              model
-                                                                  .transactingPartyType ??
-                                                              '',
+                                                          value: widget
+                                                                      .reportType ==
+                                                                  InventoryReportType
+                                                                      .receipt
+                                                              ? model.receiverId ??
+                                                                  model
+                                                                      .receiverType ??
+                                                                  ''
+                                                              : model.senderId ??
+                                                                  model
+                                                                      .receiverType ??
+                                                                  '',
                                                         ),
                                                       ],
                                                     ),

@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../data/local_store/secure_store/secure_store.dart';
 import '../../models/data_model.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/typedefs.dart';
@@ -58,13 +59,18 @@ class StockReconciliationBloc
     if ((productVariantId == null) ||
         (!event.isDistributor && facilityId == null)) return;
 
-    final stocks = await stockRepository.search(
+    final user = await LocalSecureStore.instance.userRequestModel;
+
+    final stocks = (await stockRepository.search(
       StockSearchModel(
         productVariantId: productVariantId,
         receiverId: facilityId,
       ),
-    );
-
+    ))
+        .where((element) =>
+            element.auditDetails != null &&
+            element.auditDetails?.createdBy == user?.uuid)
+        .toList();
     emit(state.copyWith(loading: false, stockModels: stocks));
   }
 
