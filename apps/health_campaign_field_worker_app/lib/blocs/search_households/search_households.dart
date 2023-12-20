@@ -289,6 +289,11 @@ class SearchHouseholdsBloc
           ? househHoldIds
           : individualClientReferenceIds,
     );
+    householdMembers.removeWhere((ele) => projectBeneficiaries.any((p) => p
+        .beneficiaryClientReferenceId!
+        .contains(beneficiaryType == BeneficiaryType.individual
+            ? ele.individualClientReferenceId.toString()
+            : ele.householdClientReferenceId.toString())));
 
     List<SideEffectModel> sideEffects = [];
     List<ReferralModel> referrals = [];
