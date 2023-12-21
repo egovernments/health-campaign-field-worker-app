@@ -564,72 +564,79 @@ class _IndividualDetailsPageState
                           ],
                         ),
                         const SizedBox(height: 16),
-                        BlocBuilder<ScannerBloc, ScannerState>(
-                          builder: (context, state) => state.qrcodes.isNotEmpty
-                              ? Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    SizedBox(
-                                      width:
-                                          MediaQuery.of(context).size.width / 3,
-                                      child: Text(
-                                        localizations.translate(
-                                          i18.deliverIntervention.voucherCode,
+                        if ((context.beneficiaryType ==
+                                    BeneficiaryType.household &&
+                                widget.isHeadOfHousehold) ||
+                            (context.beneficiaryType ==
+                                BeneficiaryType.individual))
+                          BlocBuilder<ScannerBloc, ScannerState>(
+                            builder: (context, state) => state
+                                    .qrcodes.isNotEmpty
+                                ? Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                3,
+                                        child: Text(
+                                          localizations.translate(
+                                            i18.deliverIntervention.voucherCode,
+                                          ),
+                                          style: theme.textTheme.headlineSmall,
                                         ),
-                                        style: theme.textTheme.headlineSmall,
                                       ),
-                                    ),
-                                    Flexible(
-                                      child: Text(
-                                        overflow: TextOverflow.ellipsis,
-                                        localizations
-                                            .translate(state.qrcodes.first),
+                                      Flexible(
+                                        child: Text(
+                                          overflow: TextOverflow.ellipsis,
+                                          localizations
+                                              .translate(state.qrcodes.first),
+                                        ),
                                       ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                        bottom: kPadding * 2,
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                          bottom: kPadding * 2,
+                                        ),
+                                        child: IconButton(
+                                          color: theme.colorScheme.secondary,
+                                          icon: const Icon(Icons.edit),
+                                          onPressed: () {
+                                            // TODO : [Need to handle the Scanner event];
+                                            // context.read<ScannerBloc>().add(ScannerScanEvent())
+                                            context.router.push(QRScannerRoute(
+                                              quantity: 1,
+                                              isGS1code: false,
+                                              sinlgleValue: true,
+                                              isEditEnabled: true,
+                                            ));
+                                          },
+                                        ),
                                       ),
-                                      child: IconButton(
-                                        color: theme.colorScheme.secondary,
-                                        icon: const Icon(Icons.edit),
-                                        onPressed: () {
-                                          // TODO : [Need to handle the Scanner event];
-                                          // context.read<ScannerBloc>().add(ScannerScanEvent())
-                                          context.router.push(QRScannerRoute(
-                                            quantity: 1,
-                                            isGS1code: false,
-                                            sinlgleValue: true,
-                                            isEditEnabled: true,
-                                          ));
-                                        },
-                                      ),
-                                    ),
-                                  ],
+                                    ],
 
-                                  // ignore: no-empty-block
-                                )
-                              : DigitOutlineIconButton(
-                                  buttonStyle: OutlinedButton.styleFrom(
-                                    shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.zero,
+                                    // ignore: no-empty-block
+                                  )
+                                : DigitOutlineIconButton(
+                                    buttonStyle: OutlinedButton.styleFrom(
+                                      shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.zero,
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      context.router.push(QRScannerRoute(
+                                        quantity: 1,
+                                        isGS1code: false,
+                                        sinlgleValue: true,
+                                      ));
+                                    },
+                                    icon: Icons.qr_code,
+                                    label: localizations.translate(
+                                      i18.individualDetails
+                                          .linkVoucherToIndividual,
                                     ),
                                   ),
-                                  onPressed: () {
-                                    context.router.push(QRScannerRoute(
-                                      quantity: 1,
-                                      isGS1code: false,
-                                      sinlgleValue: true,
-                                    ));
-                                  },
-                                  icon: Icons.qr_code,
-                                  label: localizations.translate(
-                                    i18.individualDetails
-                                        .linkVoucherToIndividual,
-                                  ),
-                                ),
-                        ),
+                          ),
                       ],
                     ),
                   ),
