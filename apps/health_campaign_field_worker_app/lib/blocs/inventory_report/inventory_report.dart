@@ -90,6 +90,7 @@ class InventoryReportBloc
                   tenantId: envConfig.variables.tenantId,
                   receiverId: receiverId,
                   productVariantId: productVariantId,
+                  transactionReason: transactionReason,
                 ),
               )
             : await stockRepository.search(
@@ -98,6 +99,7 @@ class InventoryReportBloc
                   tenantId: envConfig.variables.tenantId,
                   senderId: senderId,
                   productVariantId: productVariantId,
+                  transactionReason: transactionReason,
                 ),
               ))
         .where((element) =>

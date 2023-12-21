@@ -415,9 +415,18 @@ class _InventoryReportDetailsPageState
                                                           key:
                                                               transactingPartyKey,
                                                           value: widget
-                                                                      .reportType ==
-                                                                  InventoryReportType
-                                                                      .receipt
+                                                                          .reportType ==
+                                                                      InventoryReportType
+                                                                          .receipt ||
+                                                                  widget.reportType ==
+                                                                      InventoryReportType
+                                                                          .dispatch ||
+                                                                  widget.reportType ==
+                                                                      InventoryReportType
+                                                                          .loss ||
+                                                                  widget.reportType ==
+                                                                      InventoryReportType
+                                                                          .damage
                                                               ? model.receiverId ??
                                                                   model
                                                                       .receiverType ??

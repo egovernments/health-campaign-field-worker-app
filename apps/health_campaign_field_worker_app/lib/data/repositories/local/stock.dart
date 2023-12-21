@@ -36,8 +36,10 @@ class StockLocalRepository
             buildAnd(
               [
                 if (query.id != null) sql.stock.id.equals(query.id),
-                if (query.facilityId != null)
-                  sql.stock.facilityId.equals(query.facilityId),
+                if (query.receiverId != null)
+                  sql.stock.receiverId.equals(query.receiverId),
+                if (query.senderId != null)
+                  sql.stock.senderId.equals(query.senderId),
                 if (query.productVariantId != null)
                   sql.stock.productVariantId.equals(query.productVariantId),
                 if (query.clientReferenceId != null)
@@ -74,6 +76,10 @@ class StockLocalRepository
         tenantId: data.tenantId,
         facilityId: data.facilityId,
         productVariantId: data.productVariantId,
+        receiverId: data.receiverId,
+        senderId: data.senderId,
+        receiverType: data.receiverType,
+        senderType: data.senderType,
         referenceId: data.referenceId,
         referenceIdType: data.referenceIdType,
         transactionType: data.transactionType,
