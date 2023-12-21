@@ -423,23 +423,36 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                     version: 1,
                                                     fields: [
                                                       if (waybillQuantity !=
-                                                          null)
+                                                              null &&
+                                                          waybillQuantity
+                                                              .trim()
+                                                              .isNotEmpty)
                                                         AdditionalField(
                                                           'waybill_quantity',
                                                           waybillQuantity,
                                                         ),
-                                                      if (vehicleNumber != null)
+                                                      if (vehicleNumber !=
+                                                              null &&
+                                                          vehicleNumber
+                                                              .trim()
+                                                              .isNotEmpty)
                                                         AdditionalField(
                                                           'vehicle_number',
                                                           vehicleNumber,
                                                         ),
-                                                      if (comments != null)
+                                                      if (comments != null &&
+                                                          comments
+                                                              .trim()
+                                                              .isNotEmpty)
                                                         AdditionalField(
                                                           'comments',
                                                           comments,
                                                         ),
                                                       if (deliveryTeamName !=
-                                                          null)
+                                                              null &&
+                                                          deliveryTeamName
+                                                              .trim()
+                                                              .isNotEmpty)
                                                         AdditionalField(
                                                           'deliveryTeam',
                                                           deliveryTeamName,
