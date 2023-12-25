@@ -1,5 +1,6 @@
 library multiselect_dropdown;
 
+import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_row_card/digit_row_card_model.dart';
 import 'package:flutter/foundation.dart';
@@ -58,7 +59,7 @@ class MultiSelectDropDown<int> extends StatefulWidget {
   /// Controller for the dropdown
   /// [controller] is the controller for the dropdown. It can be used to programmatically open and close the dropdown.
   final MultiSelectController<int>? controller;
-
+  
   const MultiSelectDropDown({
     Key? key,
     required this.onOptionSelected,
@@ -66,7 +67,7 @@ class MultiSelectDropDown<int> extends StatefulWidget {
     this.selectedOptionTextColor,
     this.chipConfig = const ChipConfig(),
     this.chipPosition = ChipPosition.outside,
-    this.selectionType = SelectionType.multi,
+    this.selectionType = SelectionType.multiSelect,
     this.selectedOptions = const [],
     this.alwaysShowOptionIcon = false,
     this.optionTextStyle,
@@ -369,13 +370,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
     final size = values[0] as Size;
 
     return OverlayEntry(builder: (context) {
-      List<DropdownListItem<T>> options = [
-        const DropdownListItem(value: 1, label: 'firstddddddddddddd'),
-        const DropdownListItem(value: 2, label: 'seconddddddddddddddddd'),
-        const DropdownListItem(value: 3, label: 'thiraaaaaaaaaaaad'),
-        const DropdownListItem(value: 4, label: 'foussssssssr'),
-        const DropdownListItem(value: 5, label: 'fivssssssssssse'),
-      ];
+      List<DropdownListItem<T>> options = widget.options;
       List<DropdownListItem<T>> selectedOptions = [..._selectedOptions];
 
       return StatefulBuilder(builder: ((context, dropdownState) {
@@ -405,29 +400,9 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Expanded(
-                          child: ListView.separated(
-                            separatorBuilder: (_, __) =>
-                                widget.optionSeparator ??
-                                const SizedBox(height: 0),
-                            shrinkWrap: true,
-                            padding: EdgeInsets.zero,
-                            itemCount: options.length,
-                            itemBuilder: (context, index) {
-                              final option = options[index];
-                              bool isSelected = selectedOptions.any((item) =>
-                                  item.value == option.value &&
-                                  item.label == option.label);
-                              Color backgroundColor = index % 2 == 0
-                                  ? const DigitColors().white
-                                  : const DigitColors().alabasterWhite;
-                              return _buildOption(
-                                  option,
-                                  isSelected,
-                                  dropdownState,
-                                  backgroundColor,
-                                  selectedOptions);
-                            },
-                          ),
+                          child: widget.selectionType == SelectionType.nestedMultiSelect
+                              ? _buildNestedOptions(options, selectedOptions, dropdownState)
+                              : _buildFlatOptions(options, selectedOptions, dropdownState),
                         ),
                       ],
                     ),
@@ -437,6 +412,87 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
         );
       }));
     });
+  }
+
+  Widget _buildFlatOptions(
+      List<DropdownListItem<T>> options,
+      List<DropdownListItem<T>> selectedOptions,
+      StateSetter dropdownState) {
+    return ListView.separated(
+      separatorBuilder: (_, __) =>
+      widget.optionSeparator ?? const SizedBox(height: 0),
+      shrinkWrap: true,
+      padding: EdgeInsets.zero,
+      itemCount: options.length,
+      itemBuilder: (context, index) {
+        final option = options[index];
+        bool isSelected = selectedOptions.any((item) =>
+        item.value == option.value &&
+            item.label == option.label);
+        Color backgroundColor = index % 2 == 0
+            ? const DigitColors().white
+            : const DigitColors().alabasterWhite;
+        return _buildOption(
+          option,
+          isSelected,
+          dropdownState,
+          backgroundColor,
+          selectedOptions,
+        );
+      },
+    );
+  }
+
+  Widget _buildNestedOptions(
+      List<DropdownListItem<T>> options,
+      List<DropdownListItem<T>> selectedOptions,
+      StateSetter dropdownState) {
+    // Group options by type
+    final groupedOptions = groupBy(options, (option) => option.type);
+
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: groupedOptions.length,
+      itemBuilder: (context, index) {
+        final type = groupedOptions.keys.elementAt(index);
+        final typeOptions = groupedOptions[type] ?? [];
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (type != null) Container(
+              padding: const EdgeInsets.all(10),
+              color: const DigitColors().alabasterWhite,
+              child: Text(
+                type,
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 16,
+                  fontFamily: 'Roboto',
+                  color: const DigitColors().davyGray,
+                ),
+              ),
+            ),
+            ...typeOptions.map((option) {
+              bool isSelected = selectedOptions.any((item) =>
+              item.value == option.value &&
+                  item.label == option.label);
+              Color backgroundColor = options.indexOf(option) % 2 == 0
+                  ? const DigitColors().white
+                  : const DigitColors().alabasterWhite;
+
+              return _buildOption(
+                option,
+                isSelected,
+                dropdownState,
+                backgroundColor,
+                selectedOptions,
+              );
+            }).toList(),
+          ],
+        );
+      },
+    );
   }
 
   ListTile _buildOption(
@@ -470,7 +526,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
       selectedColor: const DigitColors().white,
       selected: isSelected,
       autofocus: true,
-      tileColor: backgroundColor,
+      tileColor: widget.selectionType==SelectionType.nestedMultiSelect  ? const DigitColors().white :backgroundColor,
       selectedTileColor: const DigitColors().burningOrange,
       contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
       onTap: () {
@@ -550,6 +606,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
   Widget _buildChip(DropdownListItem<T> item, ChipConfig chipConfig) {
     return SelectionChip<T>(
       item: item,
+      selectionType: widget.selectionType,
       chipConfig: chipConfig,
       onItemDelete: (removedItem) {
         if (_controller != null) {
@@ -717,8 +774,8 @@ class MultiSelectController<T>
 }
 
 enum SelectionType {
-  single,
-  multi,
+  multiSelect,
+  nestedMultiSelect,
 }
 
 enum ChipPosition {
@@ -729,8 +786,9 @@ enum ChipPosition {
 class DropdownListItem<T> extends StatelessWidget {
   final String label;
   final int value;
+  final String? type;
 
-  const DropdownListItem({Key? key, required this.value, required this.label})
+  const DropdownListItem({Key? key, required this.value, required this.label, this.type})
       : super(key: key);
 
   @override
@@ -738,6 +796,7 @@ class DropdownListItem<T> extends StatelessWidget {
     return DropdownListItem<int>(
       label: label,
       value: value,
+      type: type,
     );
   }
 }
@@ -778,6 +837,7 @@ class ChipConfig {
 }
 
 class SelectionChip<T> extends StatelessWidget {
+  final SelectionType selectionType;
   final ChipConfig chipConfig;
   final Function(DropdownListItem<T>) onItemDelete;
   final DropdownListItem<T> item;
@@ -787,29 +847,32 @@ class SelectionChip<T> extends StatelessWidget {
     required this.chipConfig,
     required this.item,
     required this.onItemDelete,
+    required this.selectionType,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Chip(
-      padding: chipConfig.padding,
-      label: Text(item.label),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(chipConfig.radius),
-      ),
-      deleteIcon: Icon(
-        Icons.cancel,
-        color: const DigitColors().davyGray,
-      ),
-      deleteIconColor: chipConfig.deleteIconColor,
-      labelPadding: chipConfig.labelPadding,
-      backgroundColor: const DigitColors().quillGray,
-      labelStyle: chipConfig.labelStyle ??
-          TextStyle(
+
+      return Chip(
+        padding: chipConfig.padding,
+        label: Text('${item.type}: ${item.label}'),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(chipConfig.radius),
+        ),
+        deleteIcon: Icon(
+          Icons.cancel,
+          color: const DigitColors().davyGray,
+        ),
+        deleteIconColor: chipConfig.deleteIconColor,
+        labelPadding: chipConfig.labelPadding,
+        backgroundColor: const DigitColors().quillGray,
+        labelStyle: chipConfig.labelStyle ??
+            TextStyle(
               color: const DigitColors().woodsmokeBlack,
               fontSize: 14,
-              fontWeight: FontWeight.w400),
-      onDeleted: () => onItemDelete(item),
-    );
+              fontWeight: FontWeight.w400,
+            ),
+        onDeleted: () => onItemDelete(item),
+      );
   }
 }

@@ -128,7 +128,7 @@ void main() {
                       height: 8,
                     ),
                     dropdown.DigitDropdown<int>(
-                      onChange: (String value, int index) => {
+                      onChange: (String value, String index) => {
                         print(value),
                         print(index),
                       },
@@ -159,17 +159,102 @@ void main() {
                         'dropdown',
                       ),
                     ),
+                    const SizedBox(height: 16,),
+                    dropdown.DigitDropdown<int>(
+                      onChange: (String value, String type) => {
+                        print(value),
+                        print(type),
+                      },
+                      dropdownStyle: const dropdown.DropdownStyle(
+                        elevation: 6,
+                        padding: EdgeInsets.all(5),
+                      ),
+                      textEditingController: TextEditingController(),
+                      dropdownType: dropdown.DropdownType.nestedSelect,
+                      items: const [  dropdown.DropdownItem<String>(
+                          value: 'apple',
+                          type: 'group B',
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 10, top: 12, bottom: 12,),
+                            child: Text('apple', style: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w400, fontSize: 14,),),
+                          ),
+                        ),
+                        dropdown.DropdownItem<String>(
+                          value: 'grapes',
+                          type: 'group A',
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 10, top: 12, bottom: 12,),
+                            child: Text('grapes', style: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w400, fontSize: 14,),),
+                          ),
+                        ),
+                        dropdown.DropdownItem<String>(
+                          value: 'banana',
+                          type: 'group B',
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 10, top: 12, bottom: 12,),
+                            child: Text('banana', style: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w400, fontSize: 14,),),
+                          ),
+                        ),
+                        dropdown.DropdownItem<String>(
+                          value: 'papaya',
+                          type: 'group A',
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 10, top: 12, bottom: 12,),
+                            child: Text('papaya', style: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w400, fontSize: 14,),),
+                          ),
+                        ),
+                        dropdown.DropdownItem<String>(
+                          value: 'pine apple',
+                          type: 'group B',
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 10, top: 12, bottom: 12,),
+                            child: Text('pine apple', style: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w400, fontSize: 14,),),
+                          ),
+                        ),
+                        dropdown.DropdownItem<String>(
+                          value: 'watermelon',
+                          type: 'group A',
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 10, top: 12, bottom: 12,),
+                            child: Text('watermelon', style: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w400, fontSize: 14,),),
+                          ),
+                        ),
+                      ],
+                      child: const Text(
+                        'dropdown',
+                      ),
+                    ),
                     const SizedBox(
                       height: 16,
                     ),
                     MultiSelectDropDown<int>(
                       onOptionSelected: (List<DropdownListItem> selectedOptions) {},
-                      options:  [],
-                      selectionType: SelectionType.single,
+                      options:  const [
+                        DropdownListItem(value: 1, label: 'firstddddddddddddd'),
+                        DropdownListItem(value: 2, label: 'seconddddddddddddddddd'),
+                        DropdownListItem(value: 3, label: 'thiraaaaaaaaaaaad'),
+                        DropdownListItem(value: 4, label: 'foussssssssr'),
+                        DropdownListItem(value: 5, label: 'fivssssssssssse'),
+                      ],
+                      selectionType: SelectionType.multiSelect,
                       // chipConfig: const ChipConfig(wrapType: WrapType.wrap),
                       dropdownHeight: 300,
                       optionTextStyle: const TextStyle(fontSize: 16),
-                      selectedOptionIcon: const Icon(Icons.check_circle),
+                    ),
+                    const SizedBox(height: 16,),
+                    MultiSelectDropDown<int>(
+                      onOptionSelected: (List<DropdownListItem> selectedOptions) {},
+                      options:  const [
+                        DropdownListItem(value: 1, label: 'firstddddddddddddd', type: 'aaaaa',),
+                        DropdownListItem(value: 2, label: 'seconddddddddddddddddd', type: 'aaaaa',),
+                        DropdownListItem(value: 3, label: 'thiraaaaaaaaaaaad', type: 'bbbbb',),
+                        DropdownListItem(value: 4, label: 'foussssssssr', type: 'aaaaa',),
+                        DropdownListItem(value: 5, label: 'fivssssssssssse', type: 'bbbbb',),
+                      ],
+                      selectionType: SelectionType.nestedMultiSelect,
+                      // chipConfig: const ChipConfig(wrapType: WrapType.wrap),
+                      dropdownHeight: 300,
+                      optionTextStyle: const TextStyle(fontSize: 16),
                     ),
                     const SizedBox(
                       height: 8,

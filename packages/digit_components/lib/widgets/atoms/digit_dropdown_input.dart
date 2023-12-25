@@ -11,7 +11,7 @@ class DigitDropdown<T> extends StatefulWidget {
 
   /// onChange is called when the selected option is changed.;
   /// It will pass back the value and the index of the option.
-  final void Function(String, int) onChange;
+  final void Function(String, String) onChange;
 
   /// list of DropdownItems
   final List<DropdownItem<String>> items;
@@ -23,6 +23,7 @@ class DigitDropdown<T> extends StatefulWidget {
   /// dropdown button icon defaults to caret
   final Icon? icon;
   final bool hideIcon;
+  final DropdownType dropdownType;
 
   /// if true the dropdown icon will as a leading icon, default to false
   final bool leadingIcon;
@@ -36,6 +37,7 @@ class DigitDropdown<T> extends StatefulWidget {
     this.icon,
     this.leadingIcon = false,
     required this.onChange,
+    this.dropdownType = DropdownType.singleSelect,
     required this.textEditingController,
   }) : super(key: key);
 
@@ -50,6 +52,7 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
   late OverlayEntry _overlayEntry;
   bool _isOpen = false;
   int _currentIndex = -1;
+  String _nestedSelected = '';
   late AnimationController _animationController;
   late Animation<double> _expandAnimation;
   late Animation<double> _rotateAnimation;
@@ -120,6 +123,11 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
           controller: widget.textEditingController,
           decoration: InputDecoration(
             border: const OutlineInputBorder(
+              borderRadius: BorderRadius.zero,
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                  color: const DigitColors().woodsmokeBlack, width: 1.0),
               borderRadius: BorderRadius.zero,
             ),
             focusedBorder: OutlineInputBorder(
@@ -208,55 +216,7 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
                                   topOffset -
                                   15,
                             ),
-                        child: ListView(
-                          padding:
-                          EdgeInsets.zero,
-                          shrinkWrap: true,
-                          children: filteredItems.isNotEmpty
-                              ? filteredItems.asMap().entries.map((item) {
-
-                            Color backgroundColor =
-                            item.key % 2 == 0 ? const DigitColors().white : const DigitColors().alabasterWhite;
-
-                            return StatefulBuilder(
-                              builder: (context, setState) {
-                                return InkWell(
-                                  splashColor: Colors.transparent,
-                                  hoverColor: Colors.transparent,
-                                  onHover: (hover){
-                                    setState(() {
-                                      itemHoverStates[item.key] = hover;
-                                    });
-                                  },
-                                  onTap: () {
-                                    setState(() => _currentIndex = item.key);
-                                    widget.onChange(item.value.value, item.key);
-                                    _toggleDropdown();
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: itemHoverStates[item.key] ? const DigitColors().burningOrange : Colors.transparent,
-                                      ),
-                                      color: itemHoverStates[item.key] ? const DigitColors().orangeBG :backgroundColor,
-                                    ),
-                                    padding: EdgeInsets.zero,
-                                    child: item.value,
-                                  ),
-
-                                );
-                              }
-                            );
-                          }).toList():
-                          [
-                            const Center(
-                              child: Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Text("No Options available"),
-                              ),
-                            ),
-                          ],
-                        ),
+                        child:_buildDropdownListView(),
                       ),
                     ),
                   ),
@@ -268,6 +228,211 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
       ),
     );
     return overlayEntry;
+  }
+
+  Widget _buildDropdownListView() {
+    switch (widget.dropdownType) {
+      case DropdownType.singleSelect:
+        return _buildListView();
+      case DropdownType.nestedSelect:
+        return _buildNestedListView();
+      case DropdownType.treeSelect:
+        return _buildTreeSelectListView();
+    }
+  }
+
+  Widget _buildListView() {
+    return ListView(
+      padding: EdgeInsets.zero,
+      shrinkWrap: true,
+      children: filteredItems.isNotEmpty
+          ? filteredItems.asMap().entries.map((item) {
+        Color backgroundColor =
+        item.key % 2 == 0 ? const DigitColors().white : const DigitColors().alabasterWhite;
+
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return InkWell(
+              splashColor: Colors.transparent,
+              hoverColor: Colors.transparent,
+              onHover: (hover) {
+                setState(() {
+                  itemHoverStates[item.key] = hover;
+                });
+              },
+              onTap: () {
+                setState(() => _currentIndex = item.key);
+                widget.onChange(item.value.value, 'selected');
+                _toggleDropdown();
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: itemHoverStates[item.key]
+                        ? const DigitColors().burningOrange
+                        : Colors.transparent,
+                  ),
+                  color: itemHoverStates[item.key]
+                      ? const DigitColors().orangeBG
+                      : backgroundColor,
+                ),
+                padding: EdgeInsets.zero,
+                child: item.value,
+              ),
+            );
+          },
+        );
+      }).toList()
+          : [
+        const Center(
+          child: Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text("No Options available"),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildNestedListView() {
+    return ListView(
+      padding: EdgeInsets.zero,
+      shrinkWrap: true,
+      children: _buildGroupedItems(),
+    );
+  }
+
+  List<Widget> _buildGroupedItems() {
+    List<Widget> groupedItems = [];
+    Set<String?> uniqueTypes = filteredItems.map((item) => item.type).toSet();
+
+    for (String? type in uniqueTypes) {
+      if (type != null) {
+        // Add a header for the type
+        groupedItems.add(
+          Container(
+            padding: const EdgeInsets.all(10),
+            color: const DigitColors().alabasterWhite,
+            child: Text(
+              type,
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 16,
+                fontFamily: 'Roboto',
+                color: const DigitColors().davyGray,
+              ),
+            ),
+          ),
+        );
+
+        // Add items of the current type
+        List<DropdownItem<String>> typeItems =
+        widget.items.where((item) => item.type == type).toList();
+
+        for (DropdownItem<String> item in typeItems) {
+
+          groupedItems.add(
+            StatefulBuilder(
+              builder: (context, setState) {
+                return InkWell(
+                  splashColor: Colors.transparent,
+                  hoverColor: Colors.transparent,
+                  onHover: (hover) {
+                    setState(() {
+                      itemHoverStates[typeItems.indexOf(item)] = hover;
+                    });
+                  },
+                  onTap: () {
+                    _nestedSelected = '$type,${item.value}';
+                    widget.onChange(item.value, type);
+                    _toggleDropdown();
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: itemHoverStates[typeItems.indexOf(item)]
+                            ? const DigitColors().burningOrange
+                            : Colors.transparent,
+                      ),
+                      color: itemHoverStates[typeItems.indexOf(item)]
+                          ? const DigitColors().orangeBG
+                          : const DigitColors().white,
+                    ),
+                    padding: EdgeInsets.zero,
+                    child: item.child,
+                  ),
+                );
+              },
+            ),
+          );
+        }
+      }
+    }
+
+    // Add a message if no options are available
+    if (groupedItems.isEmpty) {
+      groupedItems.add(
+        const Center(
+          child: Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text("No Options available"),
+          ),
+        ),
+      );
+    }
+
+    return groupedItems;
+  }
+
+  Widget _buildTreeSelectListView() {
+    return ListView(
+      padding: EdgeInsets.zero,
+      shrinkWrap: true,
+      children: filteredItems.isNotEmpty
+          ? filteredItems.asMap().entries.map((item) {
+        // Handle tree-select item UI here
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return InkWell(
+              splashColor: Colors.transparent,
+              hoverColor: Colors.transparent,
+              onHover: (hover) {
+                setState(() {
+                  itemHoverStates[item.key] = hover;
+                });
+              },
+              onTap: () {
+                setState(() => _currentIndex = item.key);
+                widget.onChange(item.value.value, item.key as String);
+                _toggleDropdown();
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: itemHoverStates[item.key]
+                        ? const DigitColors().burningOrange
+                        : Colors.transparent,
+                  ),
+                  // color: itemHoverStates[item.key]
+                  //     ? const DigitColors().orangeBG
+                  //     : backgroundColor,
+                ),
+                padding: EdgeInsets.zero,
+                child: item.value,
+              ),
+            );
+          },
+        );
+      }).toList()
+          : [
+        const Center(
+          child: Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text("No Options available"),
+          ),
+        ),
+      ],
+    );
   }
 
   void _toggleDropdown({bool close = false}) async {
@@ -291,6 +456,10 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
         widget.textEditingController.text =
             filteredItems[_currentIndex].value;
       });
+    }else if(widget.dropdownType == DropdownType.nestedSelect){
+      setState(() {
+        widget.textEditingController.text = _nestedSelected;
+      });
     }
   }
 }
@@ -299,9 +468,10 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
 /// It holds the value of the item.
 class DropdownItem<String> extends StatelessWidget {
   final String value;
+  final String? type;
   final Widget child;
 
-  const DropdownItem({Key? key, required this.value, required this.child}) : super(key: key);
+  const DropdownItem({Key? key, required this.value, this.type, required this.child}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return child;
@@ -353,4 +523,10 @@ class DropdownStyle {
     this.padding,
     this.borderRadius = BorderRadius.zero,
   });
+}
+
+enum DropdownType{
+  singleSelect,
+  nestedSelect,
+  treeSelect
 }

@@ -32,7 +32,7 @@ dependencies:
   easy_stepper: ^0.5.2+1
   intl: ^0.18.0
   geolocator: ^10.1.0
-  
+  collection: ^1.15.0
 
 dev_dependencies:
   flutter_test:

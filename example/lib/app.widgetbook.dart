@@ -4,6 +4,7 @@ import 'package:digit_components/widgets/atoms/digit_checkbox_icon.dart';
 import 'package:digit_components/widgets/atoms/digit_date_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_dropdown_input.dart';
 import 'package:digit_components/widgets/atoms/digit_location_form_input.dart';
+import 'package:digit_components/widgets/atoms/digit_multiselect_dropdown.dart';
 import 'package:digit_components/widgets/atoms/digit_numeric_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_password_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_radio_list.dart';
@@ -1197,12 +1198,12 @@ class HotReload extends StatelessWidget {
           name: 'dropdown',
           children: [
             WidgetbookComponent(
-              name: 'dropdown',
+              name: 'Single Select',
               useCases: [
                 WidgetbookUseCase(
                   name: 'default',
                   builder: (context) => DigitDropdown<int>(
-                    onChange: (String value, int index) => print(value),
+                    onChange: (String value, String index) => print(value),
                     dropdownStyle: const DropdownStyle(
                       elevation: 6,
                       padding: EdgeInsets.all(5),
@@ -1229,6 +1230,102 @@ class HotReload extends StatelessWidget {
                     child: const Text(
                       'dropdown',
                     ),
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'nested',
+                  builder: (context) => DigitDropdown<int>(
+                    onChange: (String value, String type) => {
+                      print(value),
+                      print(type),
+                    },
+                    dropdownStyle: const DropdownStyle(
+                      elevation: 6,
+                      padding: EdgeInsets.all(5),
+                    ),
+                    textEditingController: TextEditingController(),
+                    dropdownType: DropdownType.nestedSelect,
+                    items: const [  DropdownItem<String>(
+                      value: 'apple',
+                      type: 'group B',
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 10, top: 12, bottom: 12,),
+                        child: Text('apple', style: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w400, fontSize: 14,),),
+                      ),
+                    ),
+                      DropdownItem<String>(
+                        value: 'grapes',
+                        type: 'group A',
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 10, top: 12, bottom: 12,),
+                          child: Text('grapes', style: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w400, fontSize: 14,),),
+                        ),
+                      ),
+                      DropdownItem<String>(
+                        value: 'banana',
+                        type: 'group B',
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 10, top: 12, bottom: 12,),
+                          child: Text('banana', style: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w400, fontSize: 14,),),
+                        ),
+                      ),
+                      DropdownItem<String>(
+                        value: 'papaya',
+                        type: 'group A',
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 10, top: 12, bottom: 12,),
+                          child: Text('papaya', style: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w400, fontSize: 14,),),
+                        ),
+                      ),
+                      DropdownItem<String>(
+                        value: 'pine apple',
+                        type: 'group B',
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 10, top: 12, bottom: 12,),
+                          child: Text('pine apple', style: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w400, fontSize: 14,),),
+                        ),
+                      ),
+                      DropdownItem<String>(
+                        value: 'watermelon',
+                        type: 'group A',
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 10, top: 12, bottom: 12,),
+                          child: Text('watermelon', style: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w400, fontSize: 14,),),
+                        ),
+                      ),
+                    ],
+                    child: const Text(
+                      'dropdown',
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            WidgetbookComponent(
+              name: 'Multi Select',
+              useCases: [
+                WidgetbookUseCase(
+                  name: 'default',
+                  builder: (context) => MultiSelectDropDown<int>(
+                    onOptionSelected: (List<DropdownListItem> selectedOptions) {},
+                    options:  [],
+                    selectionType: SelectionType.multiSelect,
+                    // chipConfig: const ChipConfig(wrapType: WrapType.wrap),
+                    dropdownHeight: 300,
+                    optionTextStyle: const TextStyle(fontSize: 16),
+                    selectedOptionIcon: const Icon(Icons.check_circle),
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'nested',
+                  builder: (context) => MultiSelectDropDown<int>(
+                    onOptionSelected: (List<DropdownListItem> selectedOptions) {},
+                    options:  [],
+                    selectionType: SelectionType.multiSelect,
+                    // chipConfig: const ChipConfig(wrapType: WrapType.wrap),
+                    dropdownHeight: 300,
+                    optionTextStyle: const TextStyle(fontSize: 16),
+                    selectedOptionIcon: const Icon(Icons.check_circle),
                   ),
                 ),
               ],
