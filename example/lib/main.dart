@@ -244,7 +244,12 @@ void main() {
                       height: 16,
                     ),
                     TreeSelectDropDown<int>(
-                      onOptionSelected: (List<TreeNode> selectedOptions) {},
+                      onOptionSelected: (List<TreeNode> selectedOptions) {
+                        print(selectedOptions);
+                        for (TreeNode node in selectedOptions) {
+                          print("Node: ${node.value}");
+                        }
+                      },
                       options:  Nodes,
                       treeselectionType: TreeselectionType.MultiSelect,
                       // chipConfig: const ChipConfig(wrapType: WrapType.wrap),

@@ -6,8 +6,6 @@ import 'package:digit_components/models/digit_row_card/digit_row_card_model.dart
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'digit_checkbox_icon.dart';
-
 typedef OnOptionSelected<T> = void Function(
     List<TreeNode> selectedOptions);
 
@@ -202,7 +200,6 @@ class _TreeSelectDropDownState<T> extends State<TreeSelectDropDown<T>> {
         _controller!.setSelectedOptions(_selectedOptions);
       }
     }
-
     super.didUpdateWidget(oldWidget);
   }
 
@@ -231,7 +228,6 @@ class _TreeSelectDropDownState<T> extends State<TreeSelectDropDown<T>> {
             focusNode: _focusNode,
             child: InkWell(
               splashColor: Colors.transparent,
-              // Set splashColor to transparent
               highlightColor: Colors.transparent,
               hoverColor: Colors.transparent,
               onTap: _toggleFocus,
@@ -243,14 +239,13 @@ class _TreeSelectDropDownState<T> extends State<TreeSelectDropDown<T>> {
                     minWidth: 340,
                     minHeight: 40,
                   ),
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 0),
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 0),
                   decoration: _getContainerDecoration(),
                   child: Row(
                     children: [
                       Expanded(
                         child: (_selectedOptions.isNotEmpty)
-                            ? Text('${_selectedOptions.length} Selected')
+                            ? Text(_selectedOptions.first.value.toString())
                             : const Text(''),
                       ),
                       AnimatedRotation(
@@ -368,13 +363,14 @@ class _TreeSelectDropDownState<T> extends State<TreeSelectDropDown<T>> {
         return Stack(
           children: [
             Positioned.fill(
-                child: GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  onTap: _onOutSideTap,
-                  child: Container(
-                    color: Colors.transparent,
-                  ),
-                )),
+              child: GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: _onOutSideTap,
+                child: Container(
+                  color: Colors.transparent,
+                ),
+              ),
+            ),
             CompositedTransformFollower(
               link: _layerLink,
               showWhenUnlinked: false,
@@ -382,26 +378,28 @@ class _TreeSelectDropDownState<T> extends State<TreeSelectDropDown<T>> {
               followerAnchor: Alignment.topLeft,
               offset: Offset.zero,
               child: Material(
-                  borderRadius: BorderRadius.zero,
-                  // elevation: 4,
-                  shadowColor: null,
-                  child: Container(
-                    constraints: BoxConstraints.loose(Size(size.width, 250)),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Expanded(
-                          child : _buildFlatOptions(options, selectedOptions, dropdownState),
-                        ),
-                      ],
-                    ),
-                  )),
+                borderRadius: BorderRadius.zero,
+                // elevation: 4,
+                shadowColor: null,
+                child: Container(
+                  // Remove explicit height constraint
+                  // constraints: BoxConstraints.loose(Size(size.width, 250)),
+                  width: size.width,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _buildFlatOptions(options, selectedOptions, dropdownState),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ],
         );
       }));
     });
   }
+
 
   Widget _buildFlatOptions(
       List<TreeNode> options,
@@ -444,6 +442,7 @@ class _TreeSelectDropDownState<T> extends State<TreeSelectDropDown<T>> {
       isSelected: isSelected,
       selectedOptions: selectedOptions,
       backgroundColor: backgroundColor,
+      focusNode: _focusNode,
       onOptionSelected: (updatedOptions) {
         dropdownState(() {
           selectedOptions.clear();
@@ -637,6 +636,7 @@ class TreeNodeWidget extends StatefulWidget {
   final List<TreeNode> selectedOptions;
   final Color backgroundColor;
   final ValueChanged<List<TreeNode>> onOptionSelected;
+  final FocusNode focusNode;
 
   const TreeNodeWidget({
     Key? key,
@@ -645,6 +645,7 @@ class TreeNodeWidget extends StatefulWidget {
     required this.selectedOptions,
     required this.onOptionSelected,
     required this.backgroundColor,
+    required this.focusNode,
   }) : super(key: key);
 
   @override
@@ -713,6 +714,7 @@ class _TreeNodeWidgetState extends State<TreeNodeWidget> {
                       return TreeNodeWidget(
                         option: child,
                         isSelected: isChildSelected,
+                        focusNode: widget.focusNode,
                         selectedOptions: widget.selectedOptions,
                         onOptionSelected: widget.onOptionSelected,
                         backgroundColor: widget.backgroundColor,
@@ -724,20 +726,19 @@ class _TreeNodeWidgetState extends State<TreeNodeWidget> {
             ),
         ],
       ),
-      // ... (rest of your ListTile properties)
       onTap: () {
         if(widget.option.children.isNotEmpty){
           setState(() {
             _isExpanded = !_isExpanded;
           });
         }
-
         if (widget.option.children.isNotEmpty) {
           widget.onOptionSelected(widget.selectedOptions);
         } else if (widget.isSelected) {
           widget.onOptionSelected([...widget.selectedOptions]..remove(widget.option));
         } else {
           widget.onOptionSelected([...widget.selectedOptions, widget.option]);
+          widget.focusNode.unfocus();
         }
       },
     );

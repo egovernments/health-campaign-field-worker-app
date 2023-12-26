@@ -395,15 +395,14 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                   // elevation: 4,
                   shadowColor: null,
                   child: Container(
-                    constraints: BoxConstraints.loose(Size(size.width, 250)),
+                    // constraints: BoxConstraints.loose(Size(size.width, 250)),
+                    width: size.width,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Expanded(
-                          child: widget.selectionType == SelectionType.nestedMultiSelect
-                              ? _buildNestedOptions(options, selectedOptions, dropdownState)
-                              : _buildFlatOptions(options, selectedOptions, dropdownState),
-                        ),
+                        widget.selectionType == SelectionType.nestedMultiSelect
+                            ? _buildNestedOptions(options, selectedOptions, dropdownState)
+                            : _buildFlatOptions(options, selectedOptions, dropdownState),
                       ],
                     ),
                   )),
