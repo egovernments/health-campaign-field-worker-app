@@ -236,8 +236,6 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
         return _buildListView();
       case DropdownType.nestedSelect:
         return _buildNestedListView();
-      case DropdownType.treeSelect:
-        return _buildTreeSelectListView();
     }
   }
 
@@ -330,37 +328,46 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
         widget.items.where((item) => item.type == type).toList();
 
         for (DropdownItem<String> item in typeItems) {
-
           groupedItems.add(
             StatefulBuilder(
               builder: (context, setState) {
-                return InkWell(
-                  splashColor: Colors.transparent,
-                  hoverColor: Colors.transparent,
-                  onHover: (hover) {
-                    setState(() {
-                      itemHoverStates[typeItems.indexOf(item)] = hover;
-                    });
-                  },
-                  onTap: () {
-                    _nestedSelected = '$type,${item.value}';
-                    widget.onChange(item.value, type);
-                    _toggleDropdown();
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: itemHoverStates[typeItems.indexOf(item)]
-                            ? const DigitColors().burningOrange
-                            : Colors.transparent,
+                return Column(
+                  children: [
+                    InkWell(
+                      splashColor: Colors.transparent,
+                      hoverColor: Colors.transparent,
+                      onHover: (hover) {
+                        setState(() {
+                          itemHoverStates[typeItems.indexOf(item)] = hover;
+                        });
+                      },
+                      onTap: () {
+                        _nestedSelected = '$type,${item.value}';
+                        widget.onChange(item.value, type);
+                        _toggleDropdown();
+                      },
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: itemHoverStates[typeItems.indexOf(item)]
+                                ? const DigitColors().burningOrange
+                                : Colors.transparent,
+                          ),
+                          color: itemHoverStates[typeItems.indexOf(item)]
+                              ? const DigitColors().orangeBG
+                              : const DigitColors().white,
+                        ),
+                        padding: EdgeInsets.zero,
+                        child: item.child,
                       ),
-                      color: itemHoverStates[typeItems.indexOf(item)]
-                          ? const DigitColors().orangeBG
-                          : const DigitColors().white,
                     ),
-                    padding: EdgeInsets.zero,
-                    child: item.child,
-                  ),
+                    Container(height: 2,
+                      color: const DigitColors().quillGray,
+                      width: MediaQuery.of(context).size.width,
+                      margin: EdgeInsets.only(left: 10, right: 10,),
+                    ) // Divider after each option
+                  ],
                 );
               },
             ),
@@ -384,56 +391,9 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
     return groupedItems;
   }
 
-  Widget _buildTreeSelectListView() {
-    return ListView(
-      padding: EdgeInsets.zero,
-      shrinkWrap: true,
-      children: filteredItems.isNotEmpty
-          ? filteredItems.asMap().entries.map((item) {
-        // Handle tree-select item UI here
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return InkWell(
-              splashColor: Colors.transparent,
-              hoverColor: Colors.transparent,
-              onHover: (hover) {
-                setState(() {
-                  itemHoverStates[item.key] = hover;
-                });
-              },
-              onTap: () {
-                setState(() => _currentIndex = item.key);
-                widget.onChange(item.value.value, item.key as String);
-                _toggleDropdown();
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: itemHoverStates[item.key]
-                        ? const DigitColors().burningOrange
-                        : Colors.transparent,
-                  ),
-                  // color: itemHoverStates[item.key]
-                  //     ? const DigitColors().orangeBG
-                  //     : backgroundColor,
-                ),
-                padding: EdgeInsets.zero,
-                child: item.value,
-              ),
-            );
-          },
-        );
-      }).toList()
-          : [
-        const Center(
-          child: Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text("No Options available"),
-          ),
-        ),
-      ],
-    );
-  }
+
+
+
 
   void _toggleDropdown({bool close = false}) async {
     if (_isOpen || close) {
@@ -528,5 +488,6 @@ class DropdownStyle {
 enum DropdownType{
   singleSelect,
   nestedSelect,
-  treeSelect
 }
+
+

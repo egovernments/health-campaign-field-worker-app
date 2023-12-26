@@ -6,6 +6,7 @@ import 'package:digit_components/widgets/atoms/digit_checkbox_icon.dart';
 import 'package:digit_components/widgets/atoms/digit_date_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_dropdown_input.dart'
     as dropdown;
+import 'package:digit_components/widgets/atoms/digit_dropdown_input.dart';
 import 'package:digit_components/widgets/atoms/digit_location_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_multiselect_dropdown.dart';
 import 'package:digit_components/widgets/atoms/digit_numeric_form_input.dart';
@@ -17,7 +18,22 @@ import 'package:digit_components/widgets/atoms/digit_text_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_time_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_toggle.dart';
 import 'package:digit_components/widgets/atoms/digit_toggle_list.dart';
+import 'package:digit_components/widgets/atoms/digit_tree_select_dropdown.dart';
 import 'package:flutter/material.dart';
+
+
+final List<TreeNode> Nodes = [
+  TreeNode('A', [
+    TreeNode('A1', [TreeNode('C1', []),
+      TreeNode('C2', []),]),
+    TreeNode('A2', []),
+  ]),
+  TreeNode('B', [
+    TreeNode('B1', []),
+    TreeNode('B2', []),
+  ]),
+];
+
 
 void main() {
   runApp(
@@ -33,12 +49,12 @@ void main() {
                   children: [
                     DigitTextFormInput(
                       label: "input",
-                      initialValue: 'initial value',
+                      initialValue: 'value',
                       controller: TextEditingController(),
 
                       // state: 'Disabled',
                       // info: 'this is info',
-                      innerLabel: 'innerlabel',
+                      innerLabel: 'label',
                       helpText: 'help text',
                       charCount: true,
                       validations: [
@@ -59,7 +75,7 @@ void main() {
                       controller: TextEditingController(),
                       // state: 'Disabled',
                       // info: 'this is info',
-                      innerLabel: 'innerlabel',
+                      innerLabel: 'label',
                       helpText: 'help text',
                       // onSuffixTap: (){print('tapppppppppp');},
                       // suffixIcon: Icons.currency_rupee_sharp,
@@ -227,6 +243,15 @@ void main() {
                     const SizedBox(
                       height: 16,
                     ),
+                    TreeSelectDropDown<int>(
+                      onOptionSelected: (List<TreeNode> selectedOptions) {},
+                      options:  Nodes,
+                      treeselectionType: TreeselectionType.MultiSelect,
+                      // chipConfig: const ChipConfig(wrapType: WrapType.wrap),
+                      dropdownHeight: 300,
+                      optionTextStyle: const TextStyle(fontSize: 16),
+                    ),
+                    const SizedBox(height: 16,),
                     MultiSelectDropDown<int>(
                       onOptionSelected: (List<DropdownListItem> selectedOptions) {},
                       options:  const [
@@ -439,3 +464,6 @@ void main() {
     ),
   );
 }
+
+
+
