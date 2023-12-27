@@ -699,9 +699,9 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                       suffix: IconButton(
                                         onPressed: () {
                                           context.router.push(QRScannerRoute(
-                                            quantity: 1,
+                                            quantity: 5,
                                             isGS1code: false,
-                                            sinlgleValue: true,
+                                            sinlgleValue: false,
                                           ));
                                         },
                                         icon: Icon(
@@ -781,7 +781,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                             onChanged: (value) {
                                               setState(() {
                                                 form.control(
-                                                    _typeOfTransportKey);
+                                                    _typeOfTransportKey,);
                                               });
                                             },
                                             initialValue: transportTypeOptions
@@ -812,6 +812,26 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                     minLines: 2,
                                     maxLines: 3,
                                     formControlName: _commentsKey,
+                                  ),
+
+                                  DigitOutlineIconButton(
+                                    buttonStyle: OutlinedButton.styleFrom(
+                                      shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.zero,
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      context.router.push(QRScannerRoute(
+                                        quantity: 5,
+                                        isGS1code: true,
+                                        sinlgleValue: false,
+                                      ));
+                                    },
+                                    icon: Icons.qr_code,
+                                    label: localizations.translate(
+                                      i18.common
+                                          .scanBales,
+                                    ),
                                   ),
                                 ],
                               ),
