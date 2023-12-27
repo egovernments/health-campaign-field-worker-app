@@ -1,17 +1,20 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:camera/camera.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-
+import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/localized.dart';
 import '../blocs/scanner/scanner.dart';
 import '../blocs/search_households/search_households.dart';
+import '../vision_detector_views/detector_view.dart';
+import '../vision_detector_views/painters/barcode_detector_painter.dart';
 
 class QRScannerPage extends LocalizedStatefulWidget {
   final bool sinlgleValue;
@@ -33,6 +36,12 @@ class QRScannerPage extends LocalizedStatefulWidget {
 }
 
 class _QRScannerPageState extends LocalizedState<QRScannerPage> {
+  final BarcodeScanner _barcodeScanner = BarcodeScanner();
+  bool _canProcess = true;
+  bool _isBusy = false;
+  CustomPaint? _customPaint;
+  String? _text;
+  var _cameraLensDirection = CameraLensDirection.back;
   AudioPlayer player = AudioPlayer();
   QRViewController? controller;
   List<GS1Barcode> result = [];
@@ -70,7 +79,15 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height,
                         color: Colors.green[300],
-                        child: _buildQrView(context),
+                        child: DetectorView(
+                          title: 'Barcode Scanner',
+                          customPaint: _customPaint,
+                          text: _text,
+                          onImage: _processImage,
+                          initialCameraLensDirection: _cameraLensDirection,
+                          onCameraLensDirectionChanged: (value) =>
+                              _cameraLensDirection = value,
+                        ),
                       ),
                     ),
                     Positioned(
@@ -492,92 +509,84 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
     );
   }
 
-  Widget _buildQrView(BuildContext context) {
-    // For this example we check how width or tall the device is and change the scanArea and overlay accordingly.
-
-    // To ensure the Scanner view is properly sizes after rotation
-    // we need to listen for Flutter SizeChanged notification and update controller
-
-    return Stack(
-      children: [
-        // [TODO: Localization need to be added]
-        const Positioned(top: 500, child: Text('coundnot scan the QR code')),
-        QRView(
-          key: qrKey,
-          onQRViewCreated: _onQRViewCreated,
-          overlay: QrScannerOverlayShape(
-            cutOutBottomOffset: 150,
-            cutOutWidth: 250,
-            cutOutHeight: 250,
-          ),
-          onPermissionSet: (ctrl, p) => _onPermissionSet(context, ctrl, p),
-        ),
-      ],
-    );
-  }
-
-  void _onQRViewCreated(QRViewController controller) async {
-    controller.flipCamera();
-
-    controller.flipCamera();
+  Future<void> _processImage(InputImage inputImage) async {
+    if (!_canProcess) return;
+    if (_isBusy) return;
+    _isBusy = true;
     setState(() {
-      this.controller = controller;
+      _text = '';
     });
-    controller.scannedDataStream.listen((scanData) async {
-      try {
-        controller.pauseCamera();
-        final bloc = context.read<ScannerBloc>();
+    final barcodes = await _barcodeScanner.processImage(inputImage);
 
-        if (!widget.isGS1code) {
-          if (bloc.state.qrcodes.contains(scanData.code)) {
+    if (inputImage.metadata?.size != null &&
+        inputImage.metadata?.rotation != null) {
+      if (barcodes.isNotEmpty) {
+        final bloc = context.read<ScannerBloc>();
+        if (widget.isGS1code) {
+          try {
+            final parser = GS1BarcodeParser.defaultParser();
+            final parsedResult =
+                parser.parse(barcodes.first.displayValue.toString());
+            final alreadyScanned = bloc.state.barcodes.any((element) =>
+                element.elements.entries.last.value.data ==
+                parsedResult.elements.entries.last.value.data);
+            if (alreadyScanned) {
+              await handleError(
+                i18.deliverIntervention.resourceAlreadyScanned,
+              );
+            } else if (widget.quantity > result.length) {
+              await storeValue(parsedResult);
+            } else {
+              await handleError(
+                i18.deliverIntervention.scannedResourceCountMisMatch,
+              );
+            }
+          } catch (e) {
+            await handleError(
+              i18.deliverIntervention.scannedResourceCountMisMatch,
+            );
+          }
+        } else {
+          if (bloc.state.qrcodes.contains(barcodes.first.displayValue)) {
             Future.delayed(const Duration(seconds: 10));
             await handleError(
-              controller,
               i18.deliverIntervention.resourceAlreadyScanned,
             );
             Future.delayed(const Duration(seconds: 3));
 
             return;
           } else {
-            await storeCode(scanData.code!, controller);
+            await storeCode(barcodes.first.displayValue.toString());
             Future.delayed(const Duration(seconds: 3));
           }
-        } else {
-          final parser = GS1BarcodeParser.defaultParser();
-          final parsedResult = parser.parse(scanData.code!);
-          if (parsedResult.elements.keys.join('') != '01111021') {
-            await handleError(
-              controller,
-              i18.deliverIntervention.scanValidResource,
-            );
-          } else {
-            final alreadyScanned = bloc.state.barcodes.any((element) =>
-                element.elements.entries.last.value.data ==
-                parsedResult.elements.entries.last.value.data);
-
-            if (alreadyScanned) {
-              await handleError(
-                controller,
-                i18.deliverIntervention.resourceAlreadyScanned,
-              );
-            } else if (widget.quantity > result.length) {
-              await storeValue(parsedResult, controller);
-            } else {
-              await handleError(
-                controller,
-                i18.deliverIntervention.scannedResourceCountMisMatch,
-              );
-            }
-          }
         }
-      } catch (e) {
-        await handleError(controller, i18.deliverIntervention.unableToScan);
       }
-    });
+
+      final painter = BarcodeDetectorPainter(
+        barcodes,
+        inputImage.metadata!.size,
+        inputImage.metadata!.rotation,
+        _cameraLensDirection,
+      );
+      _customPaint = CustomPaint(painter: painter);
+    } else {
+      String text = 'Barcodes found: ${barcodes.length}\n\n';
+      for (final barcode in barcodes) {
+        text += 'Barcode: ${barcode.rawValue}\n\n';
+      }
+      _text = text;
+      // TODO: set _customPaint to draw boundingRect on top of image
+      _customPaint = null;
+    }
+    _isBusy = false;
+    if (mounted) {
+      setState(() {});
+    }
   }
 
-  Future handleError(QRViewController controller, String message) async {
-    controller.pauseCamera();
+// need to remove this
+
+  Future handleError(String message) async {
     player.play(AssetSource("audio/buzzer.wav"));
 
     if (player.state == PlayerState.completed || result.isEmpty) {
@@ -590,10 +599,14 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
         ),
       );
     }
-    Future.delayed(const Duration(seconds: 1), () => controller.resumeCamera());
+    Future.delayed(
+      const Duration(seconds: 1),
+    );
   }
 
-  Future storeCode(String code, QRViewController controller) async {
+  Future storeCode(
+    String code,
+  ) async {
     player.play(AssetSource("audio/add.wav"));
     final bloc = context.read<ScannerBloc>();
     codes = List.from(bloc.state.qrcodes);
@@ -612,13 +625,12 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
       codes,
     ));
 
-    Future.delayed(const Duration(seconds: 1), () => controller.resumeCamera());
-
     return;
   }
 
-  Future storeValue(GS1Barcode scanData, QRViewController controller) async {
-    controller.pauseCamera();
+  Future storeValue(
+    GS1Barcode scanData,
+  ) async {
     final parsedresult = scanData;
     final bloc = context.read<ScannerBloc>();
 
@@ -635,23 +647,17 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
     setState(() {
       result = result;
     });
-    Future.delayed(const Duration(seconds: 1), () => controller.resumeCamera());
+    Future.delayed(
+      const Duration(seconds: 5),
+    );
 
     return;
-  }
-
-  void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
-    if (!p) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        // [TODO: Localization need to be added]
-        const SnackBar(content: Text('no Permission')),
-      );
-    }
   }
 
   @override
   void dispose() {
     controller?.dispose();
+    _barcodeScanner.close();
     super.dispose();
   }
 
