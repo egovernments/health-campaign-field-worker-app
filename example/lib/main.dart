@@ -245,13 +245,27 @@ void main() {
                     ),
                     TreeSelectDropDown<int>(
                       onOptionSelected: (List<TreeNode> selectedOptions) {
-                        print(selectedOptions);
+                        // print(selectedOptions);
                         for (TreeNode node in selectedOptions) {
-                          print("Node: ${node.value}");
+                          // print("Node: ${node.value}");
                         }
                       },
                       options:  Nodes,
                       treeselectionType: TreeselectionType.MultiSelect,
+                      // chipConfig: const ChipConfig(wrapType: WrapType.wrap),
+                      dropdownHeight: 300,
+                      optionTextStyle: const TextStyle(fontSize: 16),
+                    ),
+                    SizedBox(height: 16,),
+                    TreeSelectDropDown<int>(
+                      onOptionSelected: (List<TreeNode> selectedOptions) {
+                        // print(selectedOptions);
+                        for (TreeNode node in selectedOptions) {
+                          // print("Node: ${node.value}");
+                        }
+                      },
+                      options:  Nodes,
+                      treeselectionType: TreeselectionType.singleSelect,
                       // chipConfig: const ChipConfig(wrapType: WrapType.wrap),
                       dropdownHeight: 300,
                       optionTextStyle: const TextStyle(fontSize: 16),
