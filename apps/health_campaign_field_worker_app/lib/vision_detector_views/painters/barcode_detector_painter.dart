@@ -63,19 +63,7 @@ class BarcodeDetectorPainter extends CustomPainter {
         rotation,
         cameraLensDirection,
       );
-      // final bottom = translateY(
-      //   barcode.boundingBox.bottom,
-      //   size,
-      //   imageSize,
-      //   rotation,
-      //   cameraLensDirection,
-      // );
-      //
-      // // Draw a bounding rectangle around the barcode
-      // canvas.drawRect(
-      //   Rect.fromLTRB(left, top, right, bottom),
-      //   paint,
-      // );
+
 
       final List<Offset> cornerPoints = <Offset>[];
       for (final point in barcode.cornerPoints) {
