@@ -64,6 +64,8 @@ dependencies:
   audioplayers: ^5.2.0
   gs1_barcode_parser: ^1.0.5
   disk_space: ^0.2.1
+  google_mlkit_barcode_scanning: ^0.10.0
+  camera: ^0.10.5+7
 
 
 dev_dependencies:
