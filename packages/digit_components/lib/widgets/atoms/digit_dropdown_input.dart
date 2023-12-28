@@ -206,6 +206,7 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
                     borderRadius:
                     widget.dropdownStyle.borderRadius ?? BorderRadius.zero,
                     color: widget.dropdownStyle.color,
+                    clipBehavior: Clip.none,
                     child: SizeTransition(
                       axisAlignment: 1,
                       sizeFactor: _expandAnimation,
@@ -233,9 +234,15 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
   Widget _buildDropdownListView() {
     switch (widget.dropdownType) {
       case DropdownType.singleSelect:
-        return _buildListView();
+        return SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: _buildListView(),
+        );
       case DropdownType.nestedSelect:
-        return _buildNestedListView();
+        return SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: _buildNestedListView(),
+        );
     }
   }
 
@@ -390,10 +397,6 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
 
     return groupedItems;
   }
-
-
-
-
 
   void _toggleDropdown({bool close = false}) async {
     if (_isOpen || close) {

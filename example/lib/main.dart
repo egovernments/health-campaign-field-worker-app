@@ -23,16 +23,27 @@ import 'package:flutter/material.dart';
 
 
 final List<TreeNode> Nodes = [
-  TreeNode('A', [
-    TreeNode('A1', [TreeNode('C1', []),
-      TreeNode('C2', []),]),
-    TreeNode('A2', []),
+  TreeNode('A', 'A', [
+    TreeNode('A.A1', 'A1', [TreeNode('A.A1.A3', 'A3', [TreeNode('A.A1.A3.A5', 'A5', []),
+      TreeNode('A.A1.A3.A6', 'A6', []),]),
+      TreeNode('A.A1.A4', 'A4', []),]),
+    TreeNode('A.A2', 'A2', []),
   ]),
-  TreeNode('B', [
-    TreeNode('B1', []),
-    TreeNode('B2', []),
+  TreeNode('B', 'B', [
+    TreeNode('B.B1', 'B1', []),
+    TreeNode('B.B2', 'B2', []),
+  ]),
+  TreeNode('C', 'C', [
+    TreeNode('C.C1', 'C1', []),
+    TreeNode('C.C2', 'C2', []),
+  ]),
+  TreeNode('D', 'D', [
+    TreeNode('D.D1', 'D1', []),
+    TreeNode('D.D2', 'D2', []),
   ]),
 ];
+
+final TreeSelectController<int> _controller = TreeSelectController();
 
 
 void main() {
@@ -254,6 +265,7 @@ void main() {
                       treeselectionType: TreeselectionType.MultiSelect,
                       // chipConfig: const ChipConfig(wrapType: WrapType.wrap),
                       dropdownHeight: 300,
+                      controller: _controller,
                       optionTextStyle: const TextStyle(fontSize: 16),
                     ),
                     SizedBox(height: 16,),
@@ -469,6 +481,38 @@ void main() {
                       isDisabled: true,
                     ),
                     const SizedBox(height: 16),
+                    dropdown.DigitDropdown<int>(
+                      onChange: (String value, String index) => {
+                        print(value),
+                        print(index),
+                      },
+                      dropdownStyle: const dropdown.DropdownStyle(
+                        elevation: 6,
+                        padding: EdgeInsets.all(5),
+                      ),
+                      textEditingController: TextEditingController(),
+                      items: [
+                        'apple',
+                        'banana',
+                        'orange',
+                        'grapes',
+                      ]
+                          .asMap()
+                          .entries
+                          .map(
+                            (item) => dropdown.DropdownItem<String>(
+                          value: item.value,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 10, top: 12, bottom: 12,),
+                            child: Text(item.value, style: const TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w400, fontSize: 14,),),
+                          ),
+                        ),
+                      )
+                          .toList(),
+                      child: const Text(
+                        'dropdown',
+                      ),
+                    ),
                     DigitCheckboxIcon(
                       state: CheckboxState.intermediate,
                       isDisabled: true,
