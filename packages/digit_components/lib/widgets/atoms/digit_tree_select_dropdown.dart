@@ -30,7 +30,6 @@ class TreeSelectDropDown<int> extends StatefulWidget {
   // options configuration
   final Color? optionsBackgroundColor;
   final TextStyle? optionTextStyle;
-  final double dropdownHeight;
   final Widget? optionSeparator;
   final bool alwaysShowOptionIcon;
 
@@ -69,7 +68,6 @@ class TreeSelectDropDown<int> extends StatefulWidget {
     this.selectedOptionBackgroundColor,
     this.optionsBackgroundColor,
     this.backgroundColor = Colors.white,
-    this.dropdownHeight = 200,
     this.suffixIcon = const Icon(Icons.arrow_drop_down),
     this.selectedItemBuilder,
     this.optionSeparator,
@@ -212,7 +210,7 @@ class _TreeSelectDropDownState<T> extends State<TreeSelectDropDown<T>> {
 
     final availableHeight = MediaQuery.of(context).size.height - offset.dy;
 
-    return [size, availableHeight < widget.dropdownHeight];
+    return [size, availableHeight];
   }
 
   @override
@@ -453,7 +451,7 @@ class _TreeSelectDropDownState<T> extends State<TreeSelectDropDown<T>> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        _buildFlatOptions(
+                        _buildFlatOptions(values,
                             options, selectedOptions, dropdownState),
                       ],
                     ),
@@ -467,29 +465,34 @@ class _TreeSelectDropDownState<T> extends State<TreeSelectDropDown<T>> {
     });
   }
 
-  Widget _buildFlatOptions(List<TreeNode> options,
+  Widget _buildFlatOptions(List<dynamic>values, List<TreeNode> options,
       List<TreeNode> selectedOptions, StateSetter dropdownState) {
-    return ListView.separated(
-      separatorBuilder: (_, __) =>
-          widget.optionSeparator ?? const SizedBox(height: 0),
-      shrinkWrap: true,
-      padding: EdgeInsets.zero,
-      itemCount: options.length,
-      itemBuilder: (context, index) {
-        final option = options[index];
-        bool isSelected =
-            selectedOptions.any((item) => item.value == option.value);
-        Color backgroundColor = index % 2 == 0
-            ? const DigitColors().white
-            : const DigitColors().alabasterWhite;
-        return _buildOption(
-          option,
-          isSelected,
-          dropdownState,
-          backgroundColor,
-          selectedOptions,
-        );
-      },
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxHeight: values[1]-30,
+      ),
+      child: ListView.separated(
+        separatorBuilder: (_, __) =>
+            widget.optionSeparator ?? const SizedBox(height: 0),
+        shrinkWrap: true,
+        padding: EdgeInsets.zero,
+        itemCount: options.length,
+        itemBuilder: (context, index) {
+          final option = options[index];
+          bool isSelected =
+              selectedOptions.any((item) => item.value == option.value);
+          Color backgroundColor = index % 2 == 0
+              ? const DigitColors().white
+              : const DigitColors().alabasterWhite;
+          return _buildOption(
+            option,
+            isSelected,
+            dropdownState,
+            backgroundColor,
+            selectedOptions,
+          );
+        },
+      ),
     );
   }
 

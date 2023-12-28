@@ -264,7 +264,6 @@ void main() {
                       options:  Nodes,
                       treeselectionType: TreeselectionType.MultiSelect,
                       // chipConfig: const ChipConfig(wrapType: WrapType.wrap),
-                      dropdownHeight: 300,
                       controller: _controller,
                       optionTextStyle: const TextStyle(fontSize: 16),
                     ),
@@ -279,7 +278,6 @@ void main() {
                       options:  Nodes,
                       treeselectionType: TreeselectionType.singleSelect,
                       // chipConfig: const ChipConfig(wrapType: WrapType.wrap),
-                      dropdownHeight: 300,
                       optionTextStyle: const TextStyle(fontSize: 16),
                     ),
                     const SizedBox(height: 16,),
@@ -294,7 +292,6 @@ void main() {
                       ],
                       selectionType: SelectionType.multiSelect,
                       // chipConfig: const ChipConfig(wrapType: WrapType.wrap),
-                      dropdownHeight: 300,
                       optionTextStyle: const TextStyle(fontSize: 16),
                     ),
                     const SizedBox(height: 16,),
@@ -308,8 +305,7 @@ void main() {
                         DropdownListItem(value: 5, label: 'fivssssssssssse', type: 'bbbbb',),
                       ],
                       selectionType: SelectionType.nestedMultiSelect,
-                      // chipConfig: const ChipConfig(wrapType: WrapType.wrap),
-                      dropdownHeight: 300,
+
                       optionTextStyle: const TextStyle(fontSize: 16),
                     ),
                     const SizedBox(

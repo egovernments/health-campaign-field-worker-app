@@ -35,7 +35,6 @@ class MultiSelectDropDown<int> extends StatefulWidget {
   // options configuration
   final Color? optionsBackgroundColor;
   final TextStyle? optionTextStyle;
-  final double dropdownHeight;
   final Widget? optionSeparator;
   final bool alwaysShowOptionIcon;
 
@@ -75,7 +74,6 @@ class MultiSelectDropDown<int> extends StatefulWidget {
     this.selectedOptionBackgroundColor,
     this.optionsBackgroundColor,
     this.backgroundColor = Colors.white,
-    this.dropdownHeight = 200,
     this.showChipInSingleSelectMode = false,
     this.suffixIcon = const Icon(Icons.arrow_drop_down),
     this.selectedItemBuilder,
@@ -223,7 +221,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
 
     final availableHeight = MediaQuery.of(context).size.height - offset.dy;
 
-    return [size, availableHeight < widget.dropdownHeight];
+    return [size, availableHeight];
   }
 
   @override
@@ -401,8 +399,8 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         widget.selectionType == SelectionType.nestedMultiSelect
-                            ? _buildNestedOptions(options, selectedOptions, dropdownState)
-                            : _buildFlatOptions(options, selectedOptions, dropdownState),
+                            ? _buildNestedOptions(values, options, selectedOptions, dropdownState)
+                            : _buildFlatOptions(values, options, selectedOptions, dropdownState),
                       ],
                     ),
                   )),
@@ -414,83 +412,95 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
   }
 
   Widget _buildFlatOptions(
+  List<dynamic>values,
       List<DropdownListItem<T>> options,
       List<DropdownListItem<T>> selectedOptions,
       StateSetter dropdownState) {
-    return ListView.separated(
-      separatorBuilder: (_, __) =>
-      widget.optionSeparator ?? const SizedBox(height: 0),
-      shrinkWrap: true,
-      padding: EdgeInsets.zero,
-      itemCount: options.length,
-      itemBuilder: (context, index) {
-        final option = options[index];
-        bool isSelected = selectedOptions.any((item) =>
-        item.value == option.value &&
-            item.label == option.label);
-        Color backgroundColor = index % 2 == 0
-            ? const DigitColors().white
-            : const DigitColors().alabasterWhite;
-        return _buildOption(
-          option,
-          isSelected,
-          dropdownState,
-          backgroundColor,
-          selectedOptions,
-        );
-      },
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxHeight: values[1]-30,
+      ),
+      child: ListView.separated(
+        separatorBuilder: (_, __) =>
+        widget.optionSeparator ?? const SizedBox(height: 0),
+        shrinkWrap: true,
+        padding: EdgeInsets.zero,
+        itemCount: options.length,
+        itemBuilder: (context, index) {
+          final option = options[index];
+          bool isSelected = selectedOptions.any((item) =>
+          item.value == option.value &&
+              item.label == option.label);
+          Color backgroundColor = index % 2 == 0
+              ? const DigitColors().white
+              : const DigitColors().alabasterWhite;
+          return _buildOption(
+            option,
+            isSelected,
+            dropdownState,
+            backgroundColor,
+            selectedOptions,
+          );
+        },
+      ),
     );
   }
 
   Widget _buildNestedOptions(
+      List<dynamic>values,
       List<DropdownListItem<T>> options,
       List<DropdownListItem<T>> selectedOptions,
       StateSetter dropdownState) {
     // Group options by type
     final groupedOptions = groupBy(options, (option) => option.type);
 
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: groupedOptions.length,
-      itemBuilder: (context, index) {
-        final type = groupedOptions.keys.elementAt(index);
-        final typeOptions = groupedOptions[type] ?? [];
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxHeight: values[1]-30,
+      ),
+      child: ListView.builder(
+        shrinkWrap: true,
+        itemCount: groupedOptions.length,
+        itemBuilder: (context, index) {
+          final type = groupedOptions.keys.elementAt(index);
+          final typeOptions = groupedOptions[type] ?? [];
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (type != null) Container(
-              padding: const EdgeInsets.all(10),
-              color: const DigitColors().alabasterWhite,
-              child: Text(
-                type,
-                style: TextStyle(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 16,
-                  fontFamily: 'Roboto',
-                  color: const DigitColors().davyGray,
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (type != null) Container(
+                padding: const EdgeInsets.all(10),
+                color: const DigitColors().alabasterWhite,
+                child: Text(
+                  type,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 16,
+                    fontFamily: 'Roboto',
+                    color: const DigitColors().davyGray,
+                  ),
                 ),
               ),
-            ),
-            ...typeOptions.map((option) {
-              bool isSelected = selectedOptions.any((item) =>
-              item.value == option.value &&
-                  item.label == option.label);
-              Color backgroundColor = options.indexOf(option) % 2 == 0
-                  ? const DigitColors().white
-                  : const DigitColors().alabasterWhite;
+              ...typeOptions.map((option) {
+                bool isSelected = selectedOptions.any((item) =>
+                item.value == option.value &&
+                    item.label == option.label);
+                Color backgroundColor = options.indexOf(option) % 2 == 0
+                    ? const DigitColors().white
+                    : const DigitColors().alabasterWhite;
 
-              return _buildOption(
-                option,
-                isSelected,
-                dropdownState,
-                backgroundColor,
-                selectedOptions,
-              );
-            }).toList(),
-          ],
-        );
-      },
+                return _buildOption(
+                  option,
+                  isSelected,
+                  dropdownState,
+                  backgroundColor,
+                  selectedOptions,
+                );
+              }).toList(),
+            ],
+          );
+        },
+      ),
     );
   }
 

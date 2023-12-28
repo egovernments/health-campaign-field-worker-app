@@ -14,6 +14,7 @@ import 'package:digit_components/widgets/atoms/digit_text_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_time_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_toggle.dart';
 import 'package:digit_components/widgets/atoms/digit_toggle_list.dart';
+import 'package:digit_components/widgets/atoms/digit_tree_select_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:widgetbook/widgetbook.dart';
 
@@ -1308,24 +1309,105 @@ class HotReload extends StatelessWidget {
                   name: 'default',
                   builder: (context) => MultiSelectDropDown<int>(
                     onOptionSelected: (List<DropdownListItem> selectedOptions) {},
-                    options:  [],
+                    options:  const [
+                      DropdownListItem(value: 1, label: 'firstddddddddddddd'),
+                      DropdownListItem(value: 2, label: 'seconddddddddddddddddd'),
+                      DropdownListItem(value: 3, label: 'thiraaaaaaaaaaaad'),
+                      DropdownListItem(value: 4, label: 'foussssssssr'),
+                      DropdownListItem(value: 5, label: 'fivssssssssssse'),
+                    ],
                     selectionType: SelectionType.multiSelect,
                     // chipConfig: const ChipConfig(wrapType: WrapType.wrap),
-                    dropdownHeight: 300,
                     optionTextStyle: const TextStyle(fontSize: 16),
-                    selectedOptionIcon: const Icon(Icons.check_circle),
                   ),
                 ),
                 WidgetbookUseCase(
                   name: 'nested',
                   builder: (context) => MultiSelectDropDown<int>(
                     onOptionSelected: (List<DropdownListItem> selectedOptions) {},
-                    options:  [],
-                    selectionType: SelectionType.multiSelect,
-                    // chipConfig: const ChipConfig(wrapType: WrapType.wrap),
-                    dropdownHeight: 300,
+                    options:  const [
+                      DropdownListItem(value: 1, label: 'firstddddddddddddd', type: 'aaaaa',),
+                      DropdownListItem(value: 2, label: 'seconddddddddddddddddd', type: 'aaaaa',),
+                      DropdownListItem(value: 3, label: 'thiraaaaaaaaaaaad', type: 'bbbbb',),
+                      DropdownListItem(value: 4, label: 'foussssssssr', type: 'aaaaa',),
+                      DropdownListItem(value: 5, label: 'fivssssssssssse', type: 'bbbbb',),
+                    ],
+                    selectionType: SelectionType.nestedMultiSelect,
+
                     optionTextStyle: const TextStyle(fontSize: 16),
-                    selectedOptionIcon: const Icon(Icons.check_circle),
+                  ),
+                ),
+              ],
+            ),
+            WidgetbookComponent(
+              name: 'Tree Select',
+              useCases: [
+                WidgetbookUseCase(
+                  name: 'default',
+                  builder: (context) => TreeSelectDropDown<int>(
+                    onOptionSelected: (List<TreeNode> selectedOptions) {
+                      // print(selectedOptions);
+                      for (TreeNode node in selectedOptions) {
+                        // print("Node: ${node.value}");
+                      }
+                    },
+                    options:  [
+                      TreeNode('A', 'A', [
+                        TreeNode('A.A1', 'A1', [TreeNode('A.A1.A3', 'A3', [TreeNode('A.A1.A3.A5', 'A5', []),
+                          TreeNode('A.A1.A3.A6', 'A6', []),]),
+                          TreeNode('A.A1.A4', 'A4', []),]),
+                        TreeNode('A.A2', 'A2', []),
+                      ]),
+                      TreeNode('B', 'B', [
+                        TreeNode('B.B1', 'B1', []),
+                        TreeNode('B.B2', 'B2', []),
+                      ]),
+                      TreeNode('C', 'C', [
+                        TreeNode('C.C1', 'C1', []),
+                        TreeNode('C.C2', 'C2', []),
+                      ]),
+                      TreeNode('D', 'D', [
+                        TreeNode('D.D1', 'D1', []),
+                        TreeNode('D.D2', 'D2', []),
+                      ]),
+                    ],
+                    treeselectionType: TreeselectionType.singleSelect,
+                    // chipConfig: const ChipConfig(wrapType: WrapType.wrap),
+                    optionTextStyle: const TextStyle(fontSize: 16),
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'Multi Select Tree',
+                  builder: (context) => TreeSelectDropDown<int>(
+                    onOptionSelected: (List<TreeNode> selectedOptions) {
+                      // print(selectedOptions);
+                      for (TreeNode node in selectedOptions) {
+                        // print("Node: ${node.value}");
+                      }
+                    },
+                    options:  [
+                      TreeNode('A', 'A', [
+                        TreeNode('A.A1', 'A1', [TreeNode('A.A1.A3', 'A3', [TreeNode('A.A1.A3.A5', 'A5', []),
+                          TreeNode('A.A1.A3.A6', 'A6', []),]),
+                          TreeNode('A.A1.A4', 'A4', []),]),
+                        TreeNode('A.A2', 'A2', []),
+                      ]),
+                      TreeNode('B', 'B', [
+                        TreeNode('B.B1', 'B1', []),
+                        TreeNode('B.B2', 'B2', []),
+                      ]),
+                      TreeNode('C', 'C', [
+                        TreeNode('C.C1', 'C1', []),
+                        TreeNode('C.C2', 'C2', []),
+                      ]),
+                      TreeNode('D', 'D', [
+                        TreeNode('D.D1', 'D1', []),
+                        TreeNode('D.D2', 'D2', []),
+                      ]),
+                    ],
+                    treeselectionType: TreeselectionType.MultiSelect,
+
+                    optionTextStyle: const TextStyle(fontSize: 16),
                   ),
                 ),
               ],
