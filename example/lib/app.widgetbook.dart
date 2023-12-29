@@ -1,5 +1,6 @@
 import 'package:digit_components/utils/validators/validator.dart';
 import 'package:digit_components/widgets/atoms/digit_button.dart';
+import 'package:digit_components/widgets/atoms/digit_checkbox.dart';
 import 'package:digit_components/widgets/atoms/digit_checkbox_icon.dart';
 import 'package:digit_components/widgets/atoms/digit_date_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_dropdown_input.dart';
@@ -17,6 +18,9 @@ import 'package:digit_components/widgets/atoms/digit_toggle_list.dart';
 import 'package:digit_components/widgets/atoms/digit_tree_select_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:widgetbook/widgetbook.dart';
+
+
+
 
 void main() {
   runApp(const HotReload());
@@ -43,7 +47,7 @@ class HotReload extends StatelessWidget {
           initialDevice: Devices.ios.iPhone13,
         ),
         AlignmentAddon(
-            initialAlignment: Alignment.center,
+          initialAlignment: Alignment.center,
         ),
         // ThemeAddon(themes: themes, themeBuilder: themeBuilder)
       ],
@@ -56,150 +60,154 @@ class HotReload extends StatelessWidget {
               useCases: [
                 WidgetbookUseCase(
                   name: 'default',
-                  builder: (context) => DigitTextFormInput(
-                    label: context.knobs.string(
-                      label: 'Title',
-                      initialValue: '',
-                    ),
-                    helpText: context.knobs.string(
-                      label: 'help text',
-                      initialValue: '',
-                    ),
-                    charCount: context.knobs.boolean(
-                      label: 'char count',
-                      initialValue: false,
-                    ),
-                    innerLabel: context.knobs.string(
-                      label: 'inner label',
-                      initialValue: '',
-                    ),
-                    info: context.knobs.boolean(
-                      label: 'info',
-                      initialValue: false,
-                    ),
-                    infoText: context.knobs.string(
-                      label: 'infoText',
-                      initialValue: 'this is info',
-                    ),
-                    controller: TextEditingController(),
-                    validations: [
-                      Validator(ValidatorType.maxLength, 10,
-                          errorMessage: 'Maximum length is 10.'),
-                      Validator(ValidatorType.pattern, r'^[a-zA-Z0-9]+$',
-                          errorMessage: 'Invalid format.'),
-                    ],
-                  ),
+                  builder: (context) =>
+                      DigitTextFormInput(
+                        label: context.knobs.string(
+                          label: 'Title',
+                          initialValue: '',
+                        ),
+                        helpText: context.knobs.string(
+                          label: 'help text',
+                          initialValue: '',
+                        ),
+                        charCount: context.knobs.boolean(
+                          label: 'char count',
+                          initialValue: false,
+                        ),
+                        innerLabel: context.knobs.string(
+                          label: 'inner label',
+                          initialValue: '',
+                        ),
+                        info: context.knobs.boolean(
+                          label: 'info',
+                          initialValue: false,
+                        ),
+                        infoText: context.knobs.string(
+                          label: 'infoText',
+                          initialValue: 'this is info',
+                        ),
+                        controller: TextEditingController(),
+                        validations: [
+                          Validator(ValidatorType.maxLength, 10,
+                              errorMessage: 'Maximum length is 10.'),
+                          Validator(ValidatorType.pattern, r'^[a-zA-Z0-9]+$',
+                              errorMessage: 'Invalid format.'),
+                        ],
+                      ),
                 ),
                 WidgetbookUseCase(
                   name: 'filled',
-                  builder: (context) => DigitTextFormInput(
-                    label: context.knobs.string(
-                      label: 'Title',
-                      initialValue: '',
-                    ),
-                    initialValue: 'sdfjsdjf',
-                    helpText: context.knobs.string(
-                      label: 'help text',
-                      initialValue: '',
-                    ),
-                    charCount: context.knobs.boolean(
-                      label: 'char count',
-                      initialValue: false,
-                    ),
-                    innerLabel: context.knobs.string(
-                      label: 'inner label',
-                      initialValue: '',
-                    ),
-                    info: context.knobs.boolean(
-                      label: 'info',
-                      initialValue: false,
-                    ),
-                    infoText: context.knobs.string(
-                      label: 'infoText',
-                      initialValue: 'this is info',
-                    ),
-                    controller: TextEditingController(),
-                    validations: [
-                      Validator(ValidatorType.maxLength, 10,
-                          errorMessage: 'Maximum length is 10.'),
-                      Validator(ValidatorType.pattern, r'^[a-zA-Z0-9]+$',
-                          errorMessage: 'Invalid format.'),
-                    ],
-                  ),
+                  builder: (context) =>
+                      DigitTextFormInput(
+                        label: context.knobs.string(
+                          label: 'Title',
+                          initialValue: '',
+                        ),
+                        initialValue: 'sdfjsdjf',
+                        helpText: context.knobs.string(
+                          label: 'help text',
+                          initialValue: '',
+                        ),
+                        charCount: context.knobs.boolean(
+                          label: 'char count',
+                          initialValue: false,
+                        ),
+                        innerLabel: context.knobs.string(
+                          label: 'inner label',
+                          initialValue: '',
+                        ),
+                        info: context.knobs.boolean(
+                          label: 'info',
+                          initialValue: false,
+                        ),
+                        infoText: context.knobs.string(
+                          label: 'infoText',
+                          initialValue: 'this is info',
+                        ),
+                        controller: TextEditingController(),
+                        validations: [
+                          Validator(ValidatorType.maxLength, 10,
+                              errorMessage: 'Maximum length is 10.'),
+                          Validator(ValidatorType.pattern, r'^[a-zA-Z0-9]+$',
+                              errorMessage: 'Invalid format.'),
+                        ],
+                      ),
                 ),
                 WidgetbookUseCase(
                   name: 'disabled',
-                  builder: (context) => DigitTextFormInput(
-                    controller: TextEditingController(),
-                    isDisabled: true,
-                    label: context.knobs.string(
-                      label: 'Title',
-                      initialValue: '',
-                    ),
-                    helpText: context.knobs.string(
-                      label: 'help text',
-                      initialValue: '',
-                    ),
-                    charCount: context.knobs.boolean(
-                      label: 'char count',
-                      initialValue: false,
-                    ),
-                    innerLabel: context.knobs.string(
-                      label: 'inner label',
-                      initialValue: '',
-                    ),
-                    info: context.knobs.boolean(
-                      label: 'info',
-                      initialValue: false,
-                    ),
-                    infoText: context.knobs.string(
-                      label: 'infoText',
-                      initialValue: 'this is info',
-                    ),
-                    validations: [
-                      Validator(ValidatorType.maxLength, 10,
-                          errorMessage: 'Maximum length is 10.'),
-                      Validator(ValidatorType.pattern, r'^[a-zA-Z0-9]+$',
-                          errorMessage: 'Invalid format.'),
-                    ],
-                  ),
+                  builder: (context) =>
+                      DigitTextFormInput(
+                        controller: TextEditingController(),
+                        isDisabled: true,
+                        label: context.knobs.string(
+                          label: 'Title',
+                          initialValue: '',
+                        ),
+                        helpText: context.knobs.string(
+                          label: 'help text',
+                          initialValue: '',
+                        ),
+                        charCount: context.knobs.boolean(
+                          label: 'char count',
+                          initialValue: false,
+                        ),
+                        innerLabel: context.knobs.string(
+                          label: 'inner label',
+                          initialValue: '',
+                        ),
+                        info: context.knobs.boolean(
+                          label: 'info',
+                          initialValue: false,
+                        ),
+                        infoText: context.knobs.string(
+                          label: 'infoText',
+                          initialValue: 'this is info',
+                        ),
+                        validations: [
+                          Validator(ValidatorType.maxLength, 10,
+                              errorMessage: 'Maximum length is 10.'),
+                          Validator(ValidatorType.pattern, r'^[a-zA-Z0-9]+$',
+                              errorMessage: 'Invalid format.'),
+                        ],
+                      ),
                 ),
                 WidgetbookUseCase(
                   name: 'non Editable',
-                  builder: (context) => DigitTextFormInput(
-                    controller: TextEditingController(),
-                    readOnly: true,
-                    label: context.knobs.string(
-                      label: 'Title',
-                      initialValue: '',
-                    ),
-                    helpText: context.knobs.string(
-                      label: 'help text',
-                      initialValue: '',
-                    ),
-                    charCount: context.knobs.boolean(
-                      label: 'char count',
-                      initialValue: false,
-                    ),
-                    innerLabel: context.knobs.string(
-                      label: 'inner label',
-                      initialValue: '',
-                    ),
-                    info: context.knobs.boolean(
-                      label: 'info',
-                      initialValue: false,
-                    ),
-                    infoText: context.knobs.string(
-                      label: 'infoText',
-                      initialValue: 'this is info',
-                    ),
-                    validations: [
-                      Validator(ValidatorType.maxLength, 10,
-                          errorMessage: 'Maximum length is 10.'),
-                      Validator(ValidatorType.pattern, r'^[a-zA-Z0-9]+$',
-                          errorMessage: 'Invalid format.'),
-                    ],
-                  ),
+                  builder: (context) =>
+                      DigitTextFormInput(
+                        controller: TextEditingController(),
+                        readOnly: true,
+                        label: context.knobs.string(
+                          label: 'Title',
+                          initialValue: '',
+                        ),
+                        helpText: context.knobs.string(
+                          label: 'help text',
+                          initialValue: '',
+                        ),
+                        charCount: context.knobs.boolean(
+                          label: 'char count',
+                          initialValue: false,
+                        ),
+                        innerLabel: context.knobs.string(
+                          label: 'inner label',
+                          initialValue: '',
+                        ),
+                        info: context.knobs.boolean(
+                          label: 'info',
+                          initialValue: false,
+                        ),
+                        infoText: context.knobs.string(
+                          label: 'infoText',
+                          initialValue: 'this is info',
+                        ),
+                        validations: [
+                          Validator(ValidatorType.maxLength, 10,
+                              errorMessage: 'Maximum length is 10.'),
+                          Validator(ValidatorType.pattern, r'^[a-zA-Z0-9]+$',
+                              errorMessage: 'Invalid format.'),
+                        ],
+                      ),
                 ),
               ],
             ),
@@ -208,125 +216,129 @@ class HotReload extends StatelessWidget {
               useCases: [
                 WidgetbookUseCase(
                   name: 'default',
-                  builder: (context) => DigitDateFormInput(
-                    controller: TextEditingController(),
-                    label: context.knobs.string(
-                      label: 'Title',
-                      initialValue: '',
-                    ),
-                    helpText: context.knobs.string(
-                      label: 'help text',
-                      initialValue: '',
-                    ),
-                    charCount: context.knobs.boolean(
-                      label: 'char count',
-                      initialValue: false,
-                    ),
-                    innerLabel: context.knobs.string(
-                      label: 'inner label',
-                      initialValue: '',
-                    ),
-                    info: context.knobs.boolean(
-                      label: 'info',
-                      initialValue: false,
-                    ),
-                    infoText: context.knobs.string(
-                      label: 'infoText',
-                      initialValue: 'this is info',
-                    ),
-                  ),
+                  builder: (context) =>
+                      DigitDateFormInput(
+                        controller: TextEditingController(),
+                        label: context.knobs.string(
+                          label: 'Title',
+                          initialValue: '',
+                        ),
+                        helpText: context.knobs.string(
+                          label: 'help text',
+                          initialValue: '',
+                        ),
+                        charCount: context.knobs.boolean(
+                          label: 'char count',
+                          initialValue: false,
+                        ),
+                        innerLabel: context.knobs.string(
+                          label: 'inner label',
+                          initialValue: '',
+                        ),
+                        info: context.knobs.boolean(
+                          label: 'info',
+                          initialValue: false,
+                        ),
+                        infoText: context.knobs.string(
+                          label: 'infoText',
+                          initialValue: 'this is info',
+                        ),
+                      ),
                 ),
                 WidgetbookUseCase(
                   name: 'filled',
-                  builder: (context) => DigitDateFormInput(
-                    controller: TextEditingController(),
-                    label: context.knobs.string(
-                      label: 'Title',
-                      initialValue: '',
-                    ),
-                    helpText: context.knobs.string(
-                      label: 'help text',
-                      initialValue: '',
-                    ),
-                    charCount: context.knobs.boolean(
-                      label: 'char count',
-                      initialValue: false,
-                    ),
-                    innerLabel: context.knobs.string(
-                      label: 'inner label',
-                      initialValue: '',
-                    ),
-                    info: context.knobs.boolean(
-                      label: 'info',
-                      initialValue: false,
-                    ),
-                    infoText: context.knobs.string(
-                      label: 'infoText',
-                      initialValue: 'this is info',
-                    ),
-                  ),
+                  builder: (context) =>
+                      DigitDateFormInput(
+                        controller: TextEditingController(),
+                        label: context.knobs.string(
+                          label: 'Title',
+                          initialValue: '',
+                        ),
+                        helpText: context.knobs.string(
+                          label: 'help text',
+                          initialValue: '',
+                        ),
+                        charCount: context.knobs.boolean(
+                          label: 'char count',
+                          initialValue: false,
+                        ),
+                        innerLabel: context.knobs.string(
+                          label: 'inner label',
+                          initialValue: '',
+                        ),
+                        info: context.knobs.boolean(
+                          label: 'info',
+                          initialValue: false,
+                        ),
+                        infoText: context.knobs.string(
+                          label: 'infoText',
+                          initialValue: 'this is info',
+                        ),
+                      ),
                 ),
                 WidgetbookUseCase(
                   name: 'disabled',
-                  builder: (context) => DigitDateFormInput(
-                    controller: TextEditingController(),
-                    isDisabled: true,
-                    label: context.knobs.string(
-                      label: 'Title',
-                      initialValue: '',
-                    ),
-                    helpText: context.knobs.string(
-                      label: 'help text',
-                      initialValue: '',
-                    ),
-                    charCount: context.knobs.boolean(
-                      label: 'char count',
-                      initialValue: false,
-                    ),
-                    innerLabel: context.knobs.string(
-                      label: 'inner label',
-                      initialValue: '',
-                    ),
-                    info: context.knobs.boolean(
-                      label: 'info',
-                      initialValue: false,
-                    ),
-                    infoText: context.knobs.string(
-                      label: 'infoText',
-                      initialValue: 'this is info',
-                    ),
-                  ),
+                  builder: (context) =>
+                      DigitDateFormInput(
+                        controller: TextEditingController(),
+                        isDisabled: true,
+                        label: context.knobs.string(
+                          label: 'Title',
+                          initialValue: '',
+                        ),
+                        helpText: context.knobs.string(
+                          label: 'help text',
+                          initialValue: '',
+                        ),
+                        charCount: context.knobs.boolean(
+                          label: 'char count',
+                          initialValue: false,
+                        ),
+                        innerLabel: context.knobs.string(
+                          label: 'inner label',
+                          initialValue: '',
+                        ),
+                        info: context.knobs.boolean(
+                          label: 'info',
+                          initialValue: false,
+                        ),
+                        infoText: context.knobs.string(
+                          label: 'infoText',
+                          initialValue: 'this is info',
+                        ),
+                      ),
                 ),
                 WidgetbookUseCase(
                   name: 'non Editable',
-                  builder: (context) => DigitDateFormInput(
-                    controller: TextEditingController(),
-                    readOnly: true,
-                    label: context.knobs.string(
-                      label: 'Title',
-                      initialValue: '',
-                    ),
-                    helpText: context.knobs.string(
-                      label: 'help text',
-                      initialValue: '',
-                    ),
-                    charCount: context.knobs.boolean(
-                      label: 'char count',
-                      initialValue: false,
-                    ),
-                    innerLabel: context.knobs.string(
-                      label: 'inner label',
-                      initialValue: '',
-                    ),
-                    info: context.knobs.boolean(
-                      label: 'info',
-                      initialValue: false,
-                    ),
-                    infoText: context.knobs.string(
-                      label: 'infoText',
-                      initialValue: 'this is info',
-                    ),
-                  ),
+                  builder: (context) =>
+                      DigitDateFormInput(
+                        controller: TextEditingController(),
+                        readOnly: true,
+                        label: context.knobs.string(
+                          label: 'Title',
+                          initialValue: '',
+                        ),
+                        helpText: context.knobs.string(
+                          label: 'help text',
+                          initialValue: '',
+                        ),
+                        charCount: context.knobs.boolean(
+                          label: 'char count',
+                          initialValue: false,
+                        ),
+                        innerLabel: context.knobs.string(
+                          label: 'inner label',
+                          initialValue: '',
+                        ),
+                        info: context.knobs.boolean(
+                          label: 'info',
+                          initialValue: false,
+                        ),
+                        infoText: context.knobs.string(
+                          label: 'infoText',
+                          initialValue: 'this is info',
+                        ),
+                      ),
                 ),
               ],
             ),
@@ -335,125 +347,129 @@ class HotReload extends StatelessWidget {
               useCases: [
                 WidgetbookUseCase(
                   name: 'default',
-                  builder: (context) => DigitTimeFormInput(
-                    controller: TextEditingController(),
-                    label: context.knobs.string(
-                      label: 'Title',
-                      initialValue: '',
-                    ),
-                    helpText: context.knobs.string(
-                      label: 'help text',
-                      initialValue: '',
-                    ),
-                    charCount: context.knobs.boolean(
-                      label: 'char count',
-                      initialValue: false,
-                    ),
-                    innerLabel: context.knobs.string(
-                      label: 'inner label',
-                      initialValue: '',
-                    ),
-                    info: context.knobs.boolean(
-                      label: 'info',
-                      initialValue: false,
-                    ),
-                    infoText: context.knobs.string(
-                      label: 'infoText',
-                      initialValue: 'this is info',
-                    ),
-                  ),
+                  builder: (context) =>
+                      DigitTimeFormInput(
+                        controller: TextEditingController(),
+                        label: context.knobs.string(
+                          label: 'Title',
+                          initialValue: '',
+                        ),
+                        helpText: context.knobs.string(
+                          label: 'help text',
+                          initialValue: '',
+                        ),
+                        charCount: context.knobs.boolean(
+                          label: 'char count',
+                          initialValue: false,
+                        ),
+                        innerLabel: context.knobs.string(
+                          label: 'inner label',
+                          initialValue: '',
+                        ),
+                        info: context.knobs.boolean(
+                          label: 'info',
+                          initialValue: false,
+                        ),
+                        infoText: context.knobs.string(
+                          label: 'infoText',
+                          initialValue: 'this is info',
+                        ),
+                      ),
                 ),
                 WidgetbookUseCase(
                   name: 'filled',
-                  builder: (context) => DigitTimeFormInput(
-                    controller: TextEditingController(),
-                    label: context.knobs.string(
-                      label: 'Title',
-                      initialValue: '',
-                    ),
-                    helpText: context.knobs.string(
-                      label: 'help text',
-                      initialValue: '',
-                    ),
-                    charCount: context.knobs.boolean(
-                      label: 'char count',
-                      initialValue: false,
-                    ),
-                    innerLabel: context.knobs.string(
-                      label: 'inner label',
-                      initialValue: '',
-                    ),
-                    info: context.knobs.boolean(
-                      label: 'info',
-                      initialValue: false,
-                    ),
-                    infoText: context.knobs.string(
-                      label: 'infoText',
-                      initialValue: 'this is info',
-                    ),
-                  ),
+                  builder: (context) =>
+                      DigitTimeFormInput(
+                        controller: TextEditingController(),
+                        label: context.knobs.string(
+                          label: 'Title',
+                          initialValue: '',
+                        ),
+                        helpText: context.knobs.string(
+                          label: 'help text',
+                          initialValue: '',
+                        ),
+                        charCount: context.knobs.boolean(
+                          label: 'char count',
+                          initialValue: false,
+                        ),
+                        innerLabel: context.knobs.string(
+                          label: 'inner label',
+                          initialValue: '',
+                        ),
+                        info: context.knobs.boolean(
+                          label: 'info',
+                          initialValue: false,
+                        ),
+                        infoText: context.knobs.string(
+                          label: 'infoText',
+                          initialValue: 'this is info',
+                        ),
+                      ),
                 ),
                 WidgetbookUseCase(
                   name: 'disabled',
-                  builder: (context) => DigitTimeFormInput(
-                    isDisabled: true,
-                    controller: TextEditingController(),
-                    label: context.knobs.string(
-                      label: 'Title',
-                      initialValue: '',
-                    ),
-                    helpText: context.knobs.string(
-                      label: 'help text',
-                      initialValue: '',
-                    ),
-                    charCount: context.knobs.boolean(
-                      label: 'char count',
-                      initialValue: false,
-                    ),
-                    innerLabel: context.knobs.string(
-                      label: 'inner label',
-                      initialValue: '',
-                    ),
-                    info: context.knobs.boolean(
-                      label: 'info',
-                      initialValue: false,
-                    ),
-                    infoText: context.knobs.string(
-                      label: 'infoText',
-                      initialValue: 'this is info',
-                    ),
-                  ),
+                  builder: (context) =>
+                      DigitTimeFormInput(
+                        isDisabled: true,
+                        controller: TextEditingController(),
+                        label: context.knobs.string(
+                          label: 'Title',
+                          initialValue: '',
+                        ),
+                        helpText: context.knobs.string(
+                          label: 'help text',
+                          initialValue: '',
+                        ),
+                        charCount: context.knobs.boolean(
+                          label: 'char count',
+                          initialValue: false,
+                        ),
+                        innerLabel: context.knobs.string(
+                          label: 'inner label',
+                          initialValue: '',
+                        ),
+                        info: context.knobs.boolean(
+                          label: 'info',
+                          initialValue: false,
+                        ),
+                        infoText: context.knobs.string(
+                          label: 'infoText',
+                          initialValue: 'this is info',
+                        ),
+                      ),
                 ),
                 WidgetbookUseCase(
                   name: 'non Editable',
-                  builder: (context) => DigitTimeFormInput(
-                    controller: TextEditingController(),
-                    readOnly: true,
-                    label: context.knobs.string(
-                      label: 'Title',
-                      initialValue: '',
-                    ),
-                    helpText: context.knobs.string(
-                      label: 'help text',
-                      initialValue: '',
-                    ),
-                    charCount: context.knobs.boolean(
-                      label: 'char count',
-                      initialValue: false,
-                    ),
-                    innerLabel: context.knobs.string(
-                      label: 'inner label',
-                      initialValue: '',
-                    ),
-                    info: context.knobs.boolean(
-                      label: 'info',
-                      initialValue: false,
-                    ),
-                    infoText: context.knobs.string(
-                      label: 'infoText',
-                      initialValue: 'this is info',
-                    ),
-                  ),
+                  builder: (context) =>
+                      DigitTimeFormInput(
+                        controller: TextEditingController(),
+                        readOnly: true,
+                        label: context.knobs.string(
+                          label: 'Title',
+                          initialValue: '',
+                        ),
+                        helpText: context.knobs.string(
+                          label: 'help text',
+                          initialValue: '',
+                        ),
+                        charCount: context.knobs.boolean(
+                          label: 'char count',
+                          initialValue: false,
+                        ),
+                        innerLabel: context.knobs.string(
+                          label: 'inner label',
+                          initialValue: '',
+                        ),
+                        info: context.knobs.boolean(
+                          label: 'info',
+                          initialValue: false,
+                        ),
+                        infoText: context.knobs.string(
+                          label: 'infoText',
+                          initialValue: 'this is info',
+                        ),
+                      ),
                 ),
               ],
             ),
@@ -462,125 +478,129 @@ class HotReload extends StatelessWidget {
               useCases: [
                 WidgetbookUseCase(
                   name: 'default',
-                  builder: (context) => DigitSearchFormInput(
-                    controller: TextEditingController(),
-                    label: context.knobs.string(
-                      label: 'Title',
-                      initialValue: '',
-                    ),
-                    helpText: context.knobs.string(
-                      label: 'help text',
-                      initialValue: '',
-                    ),
-                    charCount: context.knobs.boolean(
-                      label: 'char count',
-                      initialValue: false,
-                    ),
-                    innerLabel: context.knobs.string(
-                      label: 'inner label',
-                      initialValue: '',
-                    ),
-                    info: context.knobs.boolean(
-                      label: 'info',
-                      initialValue: false,
-                    ),
-                    infoText: context.knobs.string(
-                      label: 'infoText',
-                      initialValue: 'this is info',
-                    ),
-                  ),
+                  builder: (context) =>
+                      DigitSearchFormInput(
+                        controller: TextEditingController(),
+                        label: context.knobs.string(
+                          label: 'Title',
+                          initialValue: '',
+                        ),
+                        helpText: context.knobs.string(
+                          label: 'help text',
+                          initialValue: '',
+                        ),
+                        charCount: context.knobs.boolean(
+                          label: 'char count',
+                          initialValue: false,
+                        ),
+                        innerLabel: context.knobs.string(
+                          label: 'inner label',
+                          initialValue: '',
+                        ),
+                        info: context.knobs.boolean(
+                          label: 'info',
+                          initialValue: false,
+                        ),
+                        infoText: context.knobs.string(
+                          label: 'infoText',
+                          initialValue: 'this is info',
+                        ),
+                      ),
                 ),
                 WidgetbookUseCase(
                   name: 'filled',
-                  builder: (context) => DigitSearchFormInput(
-                    controller: TextEditingController(),
-                    label: context.knobs.string(
-                      label: 'Title',
-                      initialValue: '',
-                    ),
-                    helpText: context.knobs.string(
-                      label: 'help text',
-                      initialValue: '',
-                    ),
-                    charCount: context.knobs.boolean(
-                      label: 'char count',
-                      initialValue: false,
-                    ),
-                    innerLabel: context.knobs.string(
-                      label: 'inner label',
-                      initialValue: '',
-                    ),
-                    info: context.knobs.boolean(
-                      label: 'info',
-                      initialValue: false,
-                    ),
-                    infoText: context.knobs.string(
-                      label: 'infoText',
-                      initialValue: 'this is info',
-                    ),
-                  ),
+                  builder: (context) =>
+                      DigitSearchFormInput(
+                        controller: TextEditingController(),
+                        label: context.knobs.string(
+                          label: 'Title',
+                          initialValue: '',
+                        ),
+                        helpText: context.knobs.string(
+                          label: 'help text',
+                          initialValue: '',
+                        ),
+                        charCount: context.knobs.boolean(
+                          label: 'char count',
+                          initialValue: false,
+                        ),
+                        innerLabel: context.knobs.string(
+                          label: 'inner label',
+                          initialValue: '',
+                        ),
+                        info: context.knobs.boolean(
+                          label: 'info',
+                          initialValue: false,
+                        ),
+                        infoText: context.knobs.string(
+                          label: 'infoText',
+                          initialValue: 'this is info',
+                        ),
+                      ),
                 ),
                 WidgetbookUseCase(
                   name: 'disabled',
-                  builder: (context) => DigitSearchFormInput(
-                    isDisabled: true,
-                    controller: TextEditingController(),
-                    label: context.knobs.string(
-                      label: 'Title',
-                      initialValue: '',
-                    ),
-                    helpText: context.knobs.string(
-                      label: 'help text',
-                      initialValue: '',
-                    ),
-                    charCount: context.knobs.boolean(
-                      label: 'char count',
-                      initialValue: false,
-                    ),
-                    innerLabel: context.knobs.string(
-                      label: 'inner label',
-                      initialValue: '',
-                    ),
-                    info: context.knobs.boolean(
-                      label: 'info',
-                      initialValue: false,
-                    ),
-                    infoText: context.knobs.string(
-                      label: 'infoText',
-                      initialValue: 'this is info',
-                    ),
-                  ),
+                  builder: (context) =>
+                      DigitSearchFormInput(
+                        isDisabled: true,
+                        controller: TextEditingController(),
+                        label: context.knobs.string(
+                          label: 'Title',
+                          initialValue: '',
+                        ),
+                        helpText: context.knobs.string(
+                          label: 'help text',
+                          initialValue: '',
+                        ),
+                        charCount: context.knobs.boolean(
+                          label: 'char count',
+                          initialValue: false,
+                        ),
+                        innerLabel: context.knobs.string(
+                          label: 'inner label',
+                          initialValue: '',
+                        ),
+                        info: context.knobs.boolean(
+                          label: 'info',
+                          initialValue: false,
+                        ),
+                        infoText: context.knobs.string(
+                          label: 'infoText',
+                          initialValue: 'this is info',
+                        ),
+                      ),
                 ),
                 WidgetbookUseCase(
                   name: 'non Editable',
-                  builder: (context) => DigitSearchFormInput(
-                    readOnly: true,
-                    controller: TextEditingController(),
-                    label: context.knobs.string(
-                      label: 'Title',
-                      initialValue: '',
-                    ),
-                    helpText: context.knobs.string(
-                      label: 'help text',
-                      initialValue: '',
-                    ),
-                    charCount: context.knobs.boolean(
-                      label: 'char count',
-                      initialValue: false,
-                    ),
-                    innerLabel: context.knobs.string(
-                      label: 'inner label',
-                      initialValue: '',
-                    ),
-                    info: context.knobs.boolean(
-                      label: 'info',
-                      initialValue: false,
-                    ),
-                    infoText: context.knobs.string(
-                      label: 'infoText',
-                      initialValue: 'this is info',
-                    ),
-                  ),
+                  builder: (context) =>
+                      DigitSearchFormInput(
+                        readOnly: true,
+                        controller: TextEditingController(),
+                        label: context.knobs.string(
+                          label: 'Title',
+                          initialValue: '',
+                        ),
+                        helpText: context.knobs.string(
+                          label: 'help text',
+                          initialValue: '',
+                        ),
+                        charCount: context.knobs.boolean(
+                          label: 'char count',
+                          initialValue: false,
+                        ),
+                        innerLabel: context.knobs.string(
+                          label: 'inner label',
+                          initialValue: '',
+                        ),
+                        info: context.knobs.boolean(
+                          label: 'info',
+                          initialValue: false,
+                        ),
+                        infoText: context.knobs.string(
+                          label: 'infoText',
+                          initialValue: 'this is info',
+                        ),
+                      ),
                 ),
               ],
             ),
@@ -589,145 +609,149 @@ class HotReload extends StatelessWidget {
               useCases: [
                 WidgetbookUseCase(
                   name: 'default',
-                  builder: (context) => DigitPasswordFormInput(
-                    controller: TextEditingController(),
-                    label: context.knobs.string(
-                      label: 'Title',
-                      initialValue: '',
-                    ),
-                    helpText: context.knobs.string(
-                      label: 'help text',
-                      initialValue: '',
-                    ),
-                    charCount: context.knobs.boolean(
-                      label: 'char count',
-                      initialValue: false,
-                    ),
-                    innerLabel: context.knobs.string(
-                      label: 'inner label',
-                      initialValue: '',
-                    ),
-                    info: context.knobs.boolean(
-                      label: 'info',
-                      initialValue: false,
-                    ),
-                    infoText: context.knobs.string(
-                      label: 'infoText',
-                      initialValue: 'this is info',
-                    ),
-                    validations: [
-                      Validator(ValidatorType.minLength, 6,
-                          errorMessage:
+                  builder: (context) =>
+                      DigitPasswordFormInput(
+                        controller: TextEditingController(),
+                        label: context.knobs.string(
+                          label: 'Title',
+                          initialValue: '',
+                        ),
+                        helpText: context.knobs.string(
+                          label: 'help text',
+                          initialValue: '',
+                        ),
+                        charCount: context.knobs.boolean(
+                          label: 'char count',
+                          initialValue: false,
+                        ),
+                        innerLabel: context.knobs.string(
+                          label: 'inner label',
+                          initialValue: '',
+                        ),
+                        info: context.knobs.boolean(
+                          label: 'info',
+                          initialValue: false,
+                        ),
+                        infoText: context.knobs.string(
+                          label: 'infoText',
+                          initialValue: 'this is info',
+                        ),
+                        validations: [
+                          Validator(ValidatorType.minLength, 6,
+                              errorMessage:
                               'Password must be at least 6 characters.'),
-                    ],
-                  ),
+                        ],
+                      ),
                 ),
                 WidgetbookUseCase(
                   name: 'filled',
-                  builder: (context) => DigitPasswordFormInput(
-                    controller: TextEditingController(),
-                    label: context.knobs.string(
-                      label: 'Title',
-                      initialValue: '',
-                    ),
-                    helpText: context.knobs.string(
-                      label: 'help text',
-                      initialValue: '',
-                    ),
-                    charCount: context.knobs.boolean(
-                      label: 'char count',
-                      initialValue: false,
-                    ),
-                    innerLabel: context.knobs.string(
-                      label: 'inner label',
-                      initialValue: '',
-                    ),
-                    info: context.knobs.boolean(
-                      label: 'info',
-                      initialValue: false,
-                    ),
-                    infoText: context.knobs.string(
-                      label: 'infoText',
-                      initialValue: 'this is info',
-                    ),
-                    validations: [
-                      Validator(ValidatorType.minLength, 6,
-                          errorMessage:
+                  builder: (context) =>
+                      DigitPasswordFormInput(
+                        controller: TextEditingController(),
+                        label: context.knobs.string(
+                          label: 'Title',
+                          initialValue: '',
+                        ),
+                        helpText: context.knobs.string(
+                          label: 'help text',
+                          initialValue: '',
+                        ),
+                        charCount: context.knobs.boolean(
+                          label: 'char count',
+                          initialValue: false,
+                        ),
+                        innerLabel: context.knobs.string(
+                          label: 'inner label',
+                          initialValue: '',
+                        ),
+                        info: context.knobs.boolean(
+                          label: 'info',
+                          initialValue: false,
+                        ),
+                        infoText: context.knobs.string(
+                          label: 'infoText',
+                          initialValue: 'this is info',
+                        ),
+                        validations: [
+                          Validator(ValidatorType.minLength, 6,
+                              errorMessage:
                               'Password must be at least 6 characters.'),
-                    ],
-                  ),
+                        ],
+                      ),
                 ),
                 WidgetbookUseCase(
                   name: 'disabled',
-                  builder: (context) => DigitPasswordFormInput(
-                    isDisabled: true,
-                    controller: TextEditingController(),
-                    label: context.knobs.string(
-                      label: 'Title',
-                      initialValue: '',
-                    ),
-                    helpText: context.knobs.string(
-                      label: 'help text',
-                      initialValue: '',
-                    ),
-                    charCount: context.knobs.boolean(
-                      label: 'char count',
-                      initialValue: false,
-                    ),
-                    innerLabel: context.knobs.string(
-                      label: 'inner label',
-                      initialValue: '',
-                    ),
-                    info: context.knobs.boolean(
-                      label: 'info',
-                      initialValue: false,
-                    ),
-                    infoText: context.knobs.string(
-                      label: 'infoText',
-                      initialValue: 'this is info',
-                    ),
-                    validations: [
-                      Validator(ValidatorType.minLength, 6,
-                          errorMessage:
+                  builder: (context) =>
+                      DigitPasswordFormInput(
+                        isDisabled: true,
+                        controller: TextEditingController(),
+                        label: context.knobs.string(
+                          label: 'Title',
+                          initialValue: '',
+                        ),
+                        helpText: context.knobs.string(
+                          label: 'help text',
+                          initialValue: '',
+                        ),
+                        charCount: context.knobs.boolean(
+                          label: 'char count',
+                          initialValue: false,
+                        ),
+                        innerLabel: context.knobs.string(
+                          label: 'inner label',
+                          initialValue: '',
+                        ),
+                        info: context.knobs.boolean(
+                          label: 'info',
+                          initialValue: false,
+                        ),
+                        infoText: context.knobs.string(
+                          label: 'infoText',
+                          initialValue: 'this is info',
+                        ),
+                        validations: [
+                          Validator(ValidatorType.minLength, 6,
+                              errorMessage:
                               'Password must be at least 6 characters.'),
-                    ],
-                  ),
+                        ],
+                      ),
                 ),
                 WidgetbookUseCase(
                   name: 'non Editable',
-                  builder: (context) => DigitPasswordFormInput(
-                    readOnly: true,
-                    controller: TextEditingController(),
-                    label: context.knobs.string(
-                      label: 'Title',
-                      initialValue: '',
-                    ),
-                    helpText: context.knobs.string(
-                      label: 'help text',
-                      initialValue: '',
-                    ),
-                    charCount: context.knobs.boolean(
-                      label: 'char count',
-                      initialValue: false,
-                    ),
-                    innerLabel: context.knobs.string(
-                      label: 'inner label',
-                      initialValue: '',
-                    ),
-                    info: context.knobs.boolean(
-                      label: 'info',
-                      initialValue: false,
-                    ),
-                    infoText: context.knobs.string(
-                      label: 'infoText',
-                      initialValue: 'this is info',
-                    ),
-                    validations: [
-                      Validator(ValidatorType.minLength, 6,
-                          errorMessage:
+                  builder: (context) =>
+                      DigitPasswordFormInput(
+                        readOnly: true,
+                        controller: TextEditingController(),
+                        label: context.knobs.string(
+                          label: 'Title',
+                          initialValue: '',
+                        ),
+                        helpText: context.knobs.string(
+                          label: 'help text',
+                          initialValue: '',
+                        ),
+                        charCount: context.knobs.boolean(
+                          label: 'char count',
+                          initialValue: false,
+                        ),
+                        innerLabel: context.knobs.string(
+                          label: 'inner label',
+                          initialValue: '',
+                        ),
+                        info: context.knobs.boolean(
+                          label: 'info',
+                          initialValue: false,
+                        ),
+                        infoText: context.knobs.string(
+                          label: 'infoText',
+                          initialValue: 'this is info',
+                        ),
+                        validations: [
+                          Validator(ValidatorType.minLength, 6,
+                              errorMessage:
                               'Password must be at least 6 characters.'),
-                    ],
-                  ),
+                        ],
+                      ),
                 ),
               ],
             ),
@@ -736,125 +760,129 @@ class HotReload extends StatelessWidget {
               useCases: [
                 WidgetbookUseCase(
                   name: 'default',
-                  builder: (context) => DigitNumericFormInput(
-                    controller: TextEditingController(),
-                    label: context.knobs.string(
-                      label: 'Title',
-                      initialValue: '',
-                    ),
-                    helpText: context.knobs.string(
-                      label: 'help text',
-                      initialValue: '',
-                    ),
-                    charCount: context.knobs.boolean(
-                      label: 'char count',
-                      initialValue: false,
-                    ),
-                    innerLabel: context.knobs.string(
-                      label: 'inner label',
-                      initialValue: '',
-                    ),
-                    info: context.knobs.boolean(
-                      label: 'info',
-                      initialValue: false,
-                    ),
-                    infoText: context.knobs.string(
-                      label: 'infoText',
-                      initialValue: 'this is info',
-                    ),
-                  ),
+                  builder: (context) =>
+                      DigitNumericFormInput(
+                        controller: TextEditingController(),
+                        label: context.knobs.string(
+                          label: 'Title',
+                          initialValue: '',
+                        ),
+                        helpText: context.knobs.string(
+                          label: 'help text',
+                          initialValue: '',
+                        ),
+                        charCount: context.knobs.boolean(
+                          label: 'char count',
+                          initialValue: false,
+                        ),
+                        innerLabel: context.knobs.string(
+                          label: 'inner label',
+                          initialValue: '',
+                        ),
+                        info: context.knobs.boolean(
+                          label: 'info',
+                          initialValue: false,
+                        ),
+                        infoText: context.knobs.string(
+                          label: 'infoText',
+                          initialValue: 'this is info',
+                        ),
+                      ),
                 ),
                 WidgetbookUseCase(
                   name: 'filled',
-                  builder: (context) => DigitNumericFormInput(
-                    controller: TextEditingController(),
-                    label: context.knobs.string(
-                      label: 'Title',
-                      initialValue: '',
-                    ),
-                    helpText: context.knobs.string(
-                      label: 'help text',
-                      initialValue: '',
-                    ),
-                    charCount: context.knobs.boolean(
-                      label: 'char count',
-                      initialValue: false,
-                    ),
-                    innerLabel: context.knobs.string(
-                      label: 'inner label',
-                      initialValue: '',
-                    ),
-                    info: context.knobs.boolean(
-                      label: 'info',
-                      initialValue: false,
-                    ),
-                    infoText: context.knobs.string(
-                      label: 'infoText',
-                      initialValue: 'this is info',
-                    ),
-                  ),
+                  builder: (context) =>
+                      DigitNumericFormInput(
+                        controller: TextEditingController(),
+                        label: context.knobs.string(
+                          label: 'Title',
+                          initialValue: '',
+                        ),
+                        helpText: context.knobs.string(
+                          label: 'help text',
+                          initialValue: '',
+                        ),
+                        charCount: context.knobs.boolean(
+                          label: 'char count',
+                          initialValue: false,
+                        ),
+                        innerLabel: context.knobs.string(
+                          label: 'inner label',
+                          initialValue: '',
+                        ),
+                        info: context.knobs.boolean(
+                          label: 'info',
+                          initialValue: false,
+                        ),
+                        infoText: context.knobs.string(
+                          label: 'infoText',
+                          initialValue: 'this is info',
+                        ),
+                      ),
                 ),
                 WidgetbookUseCase(
                   name: 'disabled',
-                  builder: (context) => DigitNumericFormInput(
-                    isDisabled: true,
-                    controller: TextEditingController(),
-                    label: context.knobs.string(
-                      label: 'Title',
-                      initialValue: '',
-                    ),
-                    helpText: context.knobs.string(
-                      label: 'help text',
-                      initialValue: '',
-                    ),
-                    charCount: context.knobs.boolean(
-                      label: 'char count',
-                      initialValue: false,
-                    ),
-                    innerLabel: context.knobs.string(
-                      label: 'inner label',
-                      initialValue: '',
-                    ),
-                    info: context.knobs.boolean(
-                      label: 'info',
-                      initialValue: false,
-                    ),
-                    infoText: context.knobs.string(
-                      label: 'infoText',
-                      initialValue: 'this is info',
-                    ),
-                  ),
+                  builder: (context) =>
+                      DigitNumericFormInput(
+                        isDisabled: true,
+                        controller: TextEditingController(),
+                        label: context.knobs.string(
+                          label: 'Title',
+                          initialValue: '',
+                        ),
+                        helpText: context.knobs.string(
+                          label: 'help text',
+                          initialValue: '',
+                        ),
+                        charCount: context.knobs.boolean(
+                          label: 'char count',
+                          initialValue: false,
+                        ),
+                        innerLabel: context.knobs.string(
+                          label: 'inner label',
+                          initialValue: '',
+                        ),
+                        info: context.knobs.boolean(
+                          label: 'info',
+                          initialValue: false,
+                        ),
+                        infoText: context.knobs.string(
+                          label: 'infoText',
+                          initialValue: 'this is info',
+                        ),
+                      ),
                 ),
                 WidgetbookUseCase(
                   name: 'non Editable',
-                  builder: (context) => DigitNumericFormInput(
-                    readOnly: true,
-                    controller: TextEditingController(),
-                    label: context.knobs.string(
-                      label: 'Title',
-                      initialValue: '',
-                    ),
-                    helpText: context.knobs.string(
-                      label: 'help text',
-                      initialValue: '',
-                    ),
-                    charCount: context.knobs.boolean(
-                      label: 'char count',
-                      initialValue: false,
-                    ),
-                    innerLabel: context.knobs.string(
-                      label: 'inner label',
-                      initialValue: '',
-                    ),
-                    info: context.knobs.boolean(
-                      label: 'info',
-                      initialValue: false,
-                    ),
-                    infoText: context.knobs.string(
-                      label: 'infoText',
-                      initialValue: 'this is info',
-                    ),
-                  ),
+                  builder: (context) =>
+                      DigitNumericFormInput(
+                        readOnly: true,
+                        controller: TextEditingController(),
+                        label: context.knobs.string(
+                          label: 'Title',
+                          initialValue: '',
+                        ),
+                        helpText: context.knobs.string(
+                          label: 'help text',
+                          initialValue: '',
+                        ),
+                        charCount: context.knobs.boolean(
+                          label: 'char count',
+                          initialValue: false,
+                        ),
+                        innerLabel: context.knobs.string(
+                          label: 'inner label',
+                          initialValue: '',
+                        ),
+                        info: context.knobs.boolean(
+                          label: 'info',
+                          initialValue: false,
+                        ),
+                        infoText: context.knobs.string(
+                          label: 'infoText',
+                          initialValue: 'this is info',
+                        ),
+                      ),
                 ),
               ],
             ),
@@ -863,125 +891,129 @@ class HotReload extends StatelessWidget {
               useCases: [
                 WidgetbookUseCase(
                   name: 'default',
-                  builder: (context) => DigitLocationFormInput(
-                    controller: TextEditingController(),
-                    label: context.knobs.string(
-                      label: 'Title',
-                      initialValue: '',
-                    ),
-                    helpText: context.knobs.string(
-                      label: 'help text',
-                      initialValue: '',
-                    ),
-                    charCount: context.knobs.boolean(
-                      label: 'char count',
-                      initialValue: false,
-                    ),
-                    innerLabel: context.knobs.string(
-                      label: 'inner label',
-                      initialValue: '',
-                    ),
-                    info: context.knobs.boolean(
-                      label: 'info',
-                      initialValue: false,
-                    ),
-                    infoText: context.knobs.string(
-                      label: 'infoText',
-                      initialValue: 'this is info',
-                    ),
-                  ),
+                  builder: (context) =>
+                      DigitLocationFormInput(
+                        controller: TextEditingController(),
+                        label: context.knobs.string(
+                          label: 'Title',
+                          initialValue: '',
+                        ),
+                        helpText: context.knobs.string(
+                          label: 'help text',
+                          initialValue: '',
+                        ),
+                        charCount: context.knobs.boolean(
+                          label: 'char count',
+                          initialValue: false,
+                        ),
+                        innerLabel: context.knobs.string(
+                          label: 'inner label',
+                          initialValue: '',
+                        ),
+                        info: context.knobs.boolean(
+                          label: 'info',
+                          initialValue: false,
+                        ),
+                        infoText: context.knobs.string(
+                          label: 'infoText',
+                          initialValue: 'this is info',
+                        ),
+                      ),
                 ),
                 WidgetbookUseCase(
                   name: 'filled',
-                  builder: (context) => DigitLocationFormInput(
-                    controller: TextEditingController(),
-                    label: context.knobs.string(
-                      label: 'Title',
-                      initialValue: '',
-                    ),
-                    helpText: context.knobs.string(
-                      label: 'help text',
-                      initialValue: '',
-                    ),
-                    charCount: context.knobs.boolean(
-                      label: 'char count',
-                      initialValue: false,
-                    ),
-                    innerLabel: context.knobs.string(
-                      label: 'inner label',
-                      initialValue: '',
-                    ),
-                    info: context.knobs.boolean(
-                      label: 'info',
-                      initialValue: false,
-                    ),
-                    infoText: context.knobs.string(
-                      label: 'infoText',
-                      initialValue: 'this is info',
-                    ),
-                  ),
+                  builder: (context) =>
+                      DigitLocationFormInput(
+                        controller: TextEditingController(),
+                        label: context.knobs.string(
+                          label: 'Title',
+                          initialValue: '',
+                        ),
+                        helpText: context.knobs.string(
+                          label: 'help text',
+                          initialValue: '',
+                        ),
+                        charCount: context.knobs.boolean(
+                          label: 'char count',
+                          initialValue: false,
+                        ),
+                        innerLabel: context.knobs.string(
+                          label: 'inner label',
+                          initialValue: '',
+                        ),
+                        info: context.knobs.boolean(
+                          label: 'info',
+                          initialValue: false,
+                        ),
+                        infoText: context.knobs.string(
+                          label: 'infoText',
+                          initialValue: 'this is info',
+                        ),
+                      ),
                 ),
                 WidgetbookUseCase(
                   name: 'disabled',
-                  builder: (context) => DigitLocationFormInput(
-                    controller: TextEditingController(),
-                    isDisabled: true,
-                    label: context.knobs.string(
-                      label: 'Title',
-                      initialValue: '',
-                    ),
-                    helpText: context.knobs.string(
-                      label: 'help text',
-                      initialValue: '',
-                    ),
-                    charCount: context.knobs.boolean(
-                      label: 'char count',
-                      initialValue: false,
-                    ),
-                    innerLabel: context.knobs.string(
-                      label: 'inner label',
-                      initialValue: '',
-                    ),
-                    info: context.knobs.boolean(
-                      label: 'info',
-                      initialValue: false,
-                    ),
-                    infoText: context.knobs.string(
-                      label: 'infoText',
-                      initialValue: 'this is info',
-                    ),
-                  ),
+                  builder: (context) =>
+                      DigitLocationFormInput(
+                        controller: TextEditingController(),
+                        isDisabled: true,
+                        label: context.knobs.string(
+                          label: 'Title',
+                          initialValue: '',
+                        ),
+                        helpText: context.knobs.string(
+                          label: 'help text',
+                          initialValue: '',
+                        ),
+                        charCount: context.knobs.boolean(
+                          label: 'char count',
+                          initialValue: false,
+                        ),
+                        innerLabel: context.knobs.string(
+                          label: 'inner label',
+                          initialValue: '',
+                        ),
+                        info: context.knobs.boolean(
+                          label: 'info',
+                          initialValue: false,
+                        ),
+                        infoText: context.knobs.string(
+                          label: 'infoText',
+                          initialValue: 'this is info',
+                        ),
+                      ),
                 ),
                 WidgetbookUseCase(
                   name: 'non Editable',
-                  builder: (context) => DigitLocationFormInput(
-                    controller: TextEditingController(),
-                    readOnly: true,
-                    label: context.knobs.string(
-                      label: 'Title',
-                      initialValue: '',
-                    ),
-                    helpText: context.knobs.string(
-                      label: 'help text',
-                      initialValue: '',
-                    ),
-                    charCount: context.knobs.boolean(
-                      label: 'char count',
-                      initialValue: false,
-                    ),
-                    innerLabel: context.knobs.string(
-                      label: 'inner label',
-                      initialValue: '',
-                    ),
-                    info: context.knobs.boolean(
-                      label: 'info',
-                      initialValue: false,
-                    ),
-                    infoText: context.knobs.string(
-                      label: 'infoText',
-                      initialValue: 'this is info',
-                    ),
-                  ),
+                  builder: (context) =>
+                      DigitLocationFormInput(
+                        controller: TextEditingController(),
+                        readOnly: true,
+                        label: context.knobs.string(
+                          label: 'Title',
+                          initialValue: '',
+                        ),
+                        helpText: context.knobs.string(
+                          label: 'help text',
+                          initialValue: '',
+                        ),
+                        charCount: context.knobs.boolean(
+                          label: 'char count',
+                          initialValue: false,
+                        ),
+                        innerLabel: context.knobs.string(
+                          label: 'inner label',
+                          initialValue: '',
+                        ),
+                        info: context.knobs.boolean(
+                          label: 'info',
+                          initialValue: false,
+                        ),
+                        infoText: context.knobs.string(
+                          label: 'infoText',
+                          initialValue: 'this is info',
+                        ),
+                      ),
                 ),
               ],
             ),
@@ -990,125 +1022,129 @@ class HotReload extends StatelessWidget {
               useCases: [
                 WidgetbookUseCase(
                   name: 'default',
-                  builder: (context) => DigitTextAreaFormInput(
-                    controller: TextEditingController(),
-                    label: context.knobs.string(
-                      label: 'Title',
-                      initialValue: '',
-                    ),
-                    helpText: context.knobs.string(
-                      label: 'help text',
-                      initialValue: '',
-                    ),
-                    charCount: context.knobs.boolean(
-                      label: 'char count',
-                      initialValue: false,
-                    ),
-                    innerLabel: context.knobs.string(
-                      label: 'inner label',
-                      initialValue: '',
-                    ),
-                    info: context.knobs.boolean(
-                      label: 'info',
-                      initialValue: false,
-                    ),
-                    infoText: context.knobs.string(
-                      label: 'infoText',
-                      initialValue: 'this is info',
-                    ),
-                  ),
+                  builder: (context) =>
+                      DigitTextAreaFormInput(
+                        controller: TextEditingController(),
+                        label: context.knobs.string(
+                          label: 'Title',
+                          initialValue: '',
+                        ),
+                        helpText: context.knobs.string(
+                          label: 'help text',
+                          initialValue: '',
+                        ),
+                        charCount: context.knobs.boolean(
+                          label: 'char count',
+                          initialValue: false,
+                        ),
+                        innerLabel: context.knobs.string(
+                          label: 'inner label',
+                          initialValue: '',
+                        ),
+                        info: context.knobs.boolean(
+                          label: 'info',
+                          initialValue: false,
+                        ),
+                        infoText: context.knobs.string(
+                          label: 'infoText',
+                          initialValue: 'this is info',
+                        ),
+                      ),
                 ),
                 WidgetbookUseCase(
                   name: 'filled',
-                  builder: (context) => DigitTextAreaFormInput(
-                    controller: TextEditingController(),
-                    label: context.knobs.string(
-                      label: 'Title',
-                      initialValue: '',
-                    ),
-                    helpText: context.knobs.string(
-                      label: 'help text',
-                      initialValue: '',
-                    ),
-                    charCount: context.knobs.boolean(
-                      label: 'char count',
-                      initialValue: false,
-                    ),
-                    innerLabel: context.knobs.string(
-                      label: 'inner label',
-                      initialValue: '',
-                    ),
-                    info: context.knobs.boolean(
-                      label: 'info',
-                      initialValue: false,
-                    ),
-                    infoText: context.knobs.string(
-                      label: 'infoText',
-                      initialValue: 'this is info',
-                    ),
-                  ),
+                  builder: (context) =>
+                      DigitTextAreaFormInput(
+                        controller: TextEditingController(),
+                        label: context.knobs.string(
+                          label: 'Title',
+                          initialValue: '',
+                        ),
+                        helpText: context.knobs.string(
+                          label: 'help text',
+                          initialValue: '',
+                        ),
+                        charCount: context.knobs.boolean(
+                          label: 'char count',
+                          initialValue: false,
+                        ),
+                        innerLabel: context.knobs.string(
+                          label: 'inner label',
+                          initialValue: '',
+                        ),
+                        info: context.knobs.boolean(
+                          label: 'info',
+                          initialValue: false,
+                        ),
+                        infoText: context.knobs.string(
+                          label: 'infoText',
+                          initialValue: 'this is info',
+                        ),
+                      ),
                 ),
                 WidgetbookUseCase(
                   name: 'disabled',
-                  builder: (context) => DigitTextAreaFormInput(
-                    controller: TextEditingController(),
-                    isDisabled: true,
-                    label: context.knobs.string(
-                      label: 'Title',
-                      initialValue: '',
-                    ),
-                    helpText: context.knobs.string(
-                      label: 'help text',
-                      initialValue: '',
-                    ),
-                    charCount: context.knobs.boolean(
-                      label: 'char count',
-                      initialValue: false,
-                    ),
-                    innerLabel: context.knobs.string(
-                      label: 'inner label',
-                      initialValue: '',
-                    ),
-                    info: context.knobs.boolean(
-                      label: 'info',
-                      initialValue: false,
-                    ),
-                    infoText: context.knobs.string(
-                      label: 'infoText',
-                      initialValue: 'this is info',
-                    ),
-                  ),
+                  builder: (context) =>
+                      DigitTextAreaFormInput(
+                        controller: TextEditingController(),
+                        isDisabled: true,
+                        label: context.knobs.string(
+                          label: 'Title',
+                          initialValue: '',
+                        ),
+                        helpText: context.knobs.string(
+                          label: 'help text',
+                          initialValue: '',
+                        ),
+                        charCount: context.knobs.boolean(
+                          label: 'char count',
+                          initialValue: false,
+                        ),
+                        innerLabel: context.knobs.string(
+                          label: 'inner label',
+                          initialValue: '',
+                        ),
+                        info: context.knobs.boolean(
+                          label: 'info',
+                          initialValue: false,
+                        ),
+                        infoText: context.knobs.string(
+                          label: 'infoText',
+                          initialValue: 'this is info',
+                        ),
+                      ),
                 ),
                 WidgetbookUseCase(
                   name: 'non Editable',
-                  builder: (context) => DigitTextAreaFormInput(
-                    controller: TextEditingController(),
-                    readOnly: true,
-                    label: context.knobs.string(
-                      label: 'Title',
-                      initialValue: '',
-                    ),
-                    helpText: context.knobs.string(
-                      label: 'help text',
-                      initialValue: '',
-                    ),
-                    charCount: context.knobs.boolean(
-                      label: 'char count',
-                      initialValue: false,
-                    ),
-                    innerLabel: context.knobs.string(
-                      label: 'inner label',
-                      initialValue: '',
-                    ),
-                    info: context.knobs.boolean(
-                      label: 'info',
-                      initialValue: false,
-                    ),
-                    infoText: context.knobs.string(
-                      label: 'infoText',
-                      initialValue: 'this is info',
-                    ),
-                  ),
+                  builder: (context) =>
+                      DigitTextAreaFormInput(
+                        controller: TextEditingController(),
+                        readOnly: true,
+                        label: context.knobs.string(
+                          label: 'Title',
+                          initialValue: '',
+                        ),
+                        helpText: context.knobs.string(
+                          label: 'help text',
+                          initialValue: '',
+                        ),
+                        charCount: context.knobs.boolean(
+                          label: 'char count',
+                          initialValue: false,
+                        ),
+                        innerLabel: context.knobs.string(
+                          label: 'inner label',
+                          initialValue: '',
+                        ),
+                        info: context.knobs.boolean(
+                          label: 'info',
+                          initialValue: false,
+                        ),
+                        infoText: context.knobs.string(
+                          label: 'infoText',
+                          initialValue: 'this is info',
+                        ),
+                      ),
                 ),
               ],
             ),
@@ -1122,41 +1158,47 @@ class HotReload extends StatelessWidget {
               useCases: [
                 WidgetbookUseCase(
                   name: 'default',
-                  builder: (context) => DigitRadioList(
-                    onChanged: (value) {
-                      // print(value);
-                    },
-                    isDisabled: context.knobs.boolean(
-                      label: 'disabled',
-                      initialValue: false,
-                    ),
-                    radioButtons: [
-                      RadioButtonModel(
-                        code: '1',
-                        name: 'One',
+                  builder: (context) =>
+                      DigitRadioList(
+                        onChanged: (value) {
+                          // print(value);
+                        },
+                        isDisabled: context.knobs.boolean(
+                          label: 'disabled',
+                          initialValue: false,
+                        ),
+                        radioButtons: [
+                          RadioButtonModel(
+                            code: '1',
+                            name: 'One',
+                          ),
+                          RadioButtonModel(code: '2', name: 'Two'),
+                          RadioButtonModel(code: '3', name: 'Three'),
+                          // Add more radio buttons as needed
+                        ],
                       ),
-                      RadioButtonModel(code: '2', name: 'Two'),
-                      RadioButtonModel(code: '3', name: 'Three'),
-                      // Add more radio buttons as needed
-                    ],
-                  ),
                 ),
                 WidgetbookUseCase(
                   name: 'filled',
-                  builder: (context) => DigitRadioList(
-                    onChanged: (value) {
-                      // print(value);
-                    },
-                    radioButtons: [
-                      RadioButtonModel(
-                        code: '',
-                        name: 'One',
+                  builder: (context) =>
+                      DigitRadioList(
+                        onChanged: (value) {
+                          // print(value);
+                        },
+                        radioButtons: [
+                          RadioButtonModel(
+                            code: '',
+                            name: 'One',
+                          ),
+                          RadioButtonModel(code: '2', name: 'Two'),
+                          RadioButtonModel(code: '3', name: 'Three'),
+                          // Add more radio buttons as needed
+                        ],
+                        isDisabled: context.knobs.boolean(
+                          label: 'disabled',
+                          initialValue: false,
+                        ),
                       ),
-                      RadioButtonModel(code: '2', name: 'Two'),
-                      RadioButtonModel(code: '3', name: 'Three'),
-                      // Add more radio buttons as needed
-                    ],
-                  ),
                 ),
               ],
             ),
@@ -1165,31 +1207,18 @@ class HotReload extends StatelessWidget {
               useCases: [
                 WidgetbookUseCase(
                   name: 'default',
-                  builder: (context) => DigitToggleList(
-                    toggleButtons: [
-                      ToggleButtonModel(
-                          name: 'Toggle 1', key: 'key1', onSelected: () {}),
-                      ToggleButtonModel(
-                          name: 'Toggle 2', key: 'key2', onSelected: () {}),
-                      ToggleButtonModel(
-                          name: 'Toggle 3', key: 'key3', onSelected: () {}),
-                    ],
-                    onChanged: (selectedValues) {},
-                  ),
-                ),
-                WidgetbookUseCase(
-                  name: 'filled',
-                  builder: (context) => DigitToggleList(
-                    toggleButtons: [
-                      ToggleButtonModel(
-                          name: 'Toggle 1', key: 'key1', onSelected: () {}),
-                      ToggleButtonModel(
-                          name: 'Toggle 2', key: 'key2', onSelected: () {}),
-                      ToggleButtonModel(
-                          name: 'Toggle 3', key: 'key3', onSelected: () {}),
-                    ],
-                    onChanged: (selectedValues) {},
-                  ),
+                  builder: (context) =>
+                      DigitToggleList(
+                        toggleButtons: [
+                          ToggleButtonModel(
+                              name: 'Toggle 1', key: 'key1', onSelected: () {}),
+                          ToggleButtonModel(
+                              name: 'Toggle 2', key: 'key2', onSelected: () {}),
+                          ToggleButtonModel(
+                              name: 'Toggle 3', key: 'key3', onSelected: () {}),
+                        ],
+                        onChanged: (selectedValues) {},
+                      ),
                 ),
               ],
             ),
@@ -1203,102 +1232,130 @@ class HotReload extends StatelessWidget {
               useCases: [
                 WidgetbookUseCase(
                   name: 'default',
-                  builder: (context) => DigitDropdown<int>(
-                    onChange: (String value, String index) => print(value),
-                    dropdownStyle: const DropdownStyle(
-                      elevation: 6,
-                      padding: EdgeInsets.all(5),
-                    ),
-                    textEditingController: TextEditingController(),
-                    items: [
-                      'apple',
-                      'banana',
-                      'orange',
-                      'grapes',
-                    ]
-                        .asMap()
-                        .entries
-                        .map(
-                          (item) => DropdownItem<String>(
-                            value: item.value,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(item.value),
-                            ),
-                          ),
+                  builder: (context) =>
+                      DigitDropdown<int>(
+                        onChange: (String value, String index) => print(value),
+                        dropdownStyle: const DropdownStyle(
+                          elevation: 6,
+                          padding: EdgeInsets.all(5),
+                        ),
+                        textEditingController: TextEditingController(),
+                        items: [
+                          'apple',
+                          'banana',
+                          'orange',
+                          'grapes',
+                        ]
+                            .asMap()
+                            .entries
+                            .map(
+                              (item) =>
+                              DropdownItem<String>(
+                                value: item.value,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(item.value),
+                                ),
+                              ),
                         )
-                        .toList(),
-                    child: const Text(
-                      'dropdown',
-                    ),
-                  ),
+                            .toList(),
+                        child: const Text(
+                          'dropdown',
+                        ),
+                      ),
                 ),
                 WidgetbookUseCase(
                   name: 'nested',
-                  builder: (context) => DigitDropdown<int>(
-                    onChange: (String value, String type) => {
-                      print(value),
-                      print(type),
-                    },
-                    dropdownStyle: const DropdownStyle(
-                      elevation: 6,
-                      padding: EdgeInsets.all(5),
-                    ),
-                    textEditingController: TextEditingController(),
-                    dropdownType: DropdownType.nestedSelect,
-                    items: const [  DropdownItem<String>(
-                      value: 'apple',
-                      type: 'group B',
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 10, top: 12, bottom: 12,),
-                        child: Text('apple', style: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w400, fontSize: 14,),),
-                      ),
-                    ),
-                      DropdownItem<String>(
-                        value: 'grapes',
-                        type: 'group A',
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 10, top: 12, bottom: 12,),
-                          child: Text('grapes', style: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w400, fontSize: 14,),),
+                  builder: (context) =>
+                      DigitDropdown<int>(
+                        onChange: (String value, String type) =>
+                        {
+                          print(value),
+                          print(type),
+                        },
+                        dropdownStyle: const DropdownStyle(
+                          elevation: 6,
+                          padding: EdgeInsets.all(5),
+                        ),
+                        textEditingController: TextEditingController(),
+                        dropdownType: DropdownType.nestedSelect,
+                        items: const [ DropdownItem<String>(
+                          value: 'apple',
+                          type: 'group B',
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                              left: 10, top: 12, bottom: 12,),
+                            child: Text('apple', style: TextStyle(
+                              fontFamily: 'Roboto',
+                              fontWeight: FontWeight.w400,
+                              fontSize: 14,),),
+                          ),
+                        ),
+                          DropdownItem<String>(
+                            value: 'grapes',
+                            type: 'group A',
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                left: 10, top: 12, bottom: 12,),
+                              child: Text('grapes', style: TextStyle(
+                                fontFamily: 'Roboto',
+                                fontWeight: FontWeight.w400,
+                                fontSize: 14,),),
+                            ),
+                          ),
+                          DropdownItem<String>(
+                            value: 'banana',
+                            type: 'group B',
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                left: 10, top: 12, bottom: 12,),
+                              child: Text('banana', style: TextStyle(
+                                fontFamily: 'Roboto',
+                                fontWeight: FontWeight.w400,
+                                fontSize: 14,),),
+                            ),
+                          ),
+                          DropdownItem<String>(
+                            value: 'papaya',
+                            type: 'group A',
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                left: 10, top: 12, bottom: 12,),
+                              child: Text('papaya', style: TextStyle(
+                                fontFamily: 'Roboto',
+                                fontWeight: FontWeight.w400,
+                                fontSize: 14,),),
+                            ),
+                          ),
+                          DropdownItem<String>(
+                            value: 'pine apple',
+                            type: 'group B',
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                left: 10, top: 12, bottom: 12,),
+                              child: Text('pine apple', style: TextStyle(
+                                fontFamily: 'Roboto',
+                                fontWeight: FontWeight.w400,
+                                fontSize: 14,),),
+                            ),
+                          ),
+                          DropdownItem<String>(
+                            value: 'watermelon',
+                            type: 'group A',
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                left: 10, top: 12, bottom: 12,),
+                              child: Text('watermelon', style: TextStyle(
+                                fontFamily: 'Roboto',
+                                fontWeight: FontWeight.w400,
+                                fontSize: 14,),),
+                            ),
+                          ),
+                        ],
+                        child: const Text(
+                          'dropdown',
                         ),
                       ),
-                      DropdownItem<String>(
-                        value: 'banana',
-                        type: 'group B',
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 10, top: 12, bottom: 12,),
-                          child: Text('banana', style: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w400, fontSize: 14,),),
-                        ),
-                      ),
-                      DropdownItem<String>(
-                        value: 'papaya',
-                        type: 'group A',
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 10, top: 12, bottom: 12,),
-                          child: Text('papaya', style: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w400, fontSize: 14,),),
-                        ),
-                      ),
-                      DropdownItem<String>(
-                        value: 'pine apple',
-                        type: 'group B',
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 10, top: 12, bottom: 12,),
-                          child: Text('pine apple', style: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w400, fontSize: 14,),),
-                        ),
-                      ),
-                      DropdownItem<String>(
-                        value: 'watermelon',
-                        type: 'group A',
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 10, top: 12, bottom: 12,),
-                          child: Text('watermelon', style: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w400, fontSize: 14,),),
-                        ),
-                      ),
-                    ],
-                    child: const Text(
-                      'dropdown',
-                    ),
-                  ),
                 ),
               ],
             ),
@@ -1307,35 +1364,50 @@ class HotReload extends StatelessWidget {
               useCases: [
                 WidgetbookUseCase(
                   name: 'default',
-                  builder: (context) => MultiSelectDropDown<int>(
-                    onOptionSelected: (List<DropdownListItem> selectedOptions) {},
-                    options:  const [
-                      DropdownListItem(value: 1, label: 'firstddddddddddddd'),
-                      DropdownListItem(value: 2, label: 'seconddddddddddddddddd'),
-                      DropdownListItem(value: 3, label: 'thiraaaaaaaaaaaad'),
-                      DropdownListItem(value: 4, label: 'foussssssssr'),
-                      DropdownListItem(value: 5, label: 'fivssssssssssse'),
-                    ],
-                    selectionType: SelectionType.multiSelect,
-                    // chipConfig: const ChipConfig(wrapType: WrapType.wrap),
-                    optionTextStyle: const TextStyle(fontSize: 16),
-                  ),
+                  builder: (context) =>
+                      MultiSelectDropDown<int>(
+                        onOptionSelected: (
+                            List<DropdownListItem> selectedOptions) {},
+                        options: const [
+                          DropdownListItem(
+                              value: 1, label: 'firstddddddddddddd'),
+                          DropdownListItem(
+                              value: 2, label: 'seconddddddddddddddddd'),
+                          DropdownListItem(
+                              value: 3, label: 'thiraaaaaaaaaaaad'),
+                          DropdownListItem(value: 4, label: 'foussssssssr'),
+                          DropdownListItem(value: 5, label: 'fivssssssssssse'),
+                        ],
+                        selectionType: SelectionType.multiSelect,
+                        // chipConfig: const ChipConfig(wrapType: WrapType.wrap),
+                        optionTextStyle: const TextStyle(fontSize: 16),
+                      ),
                 ),
                 WidgetbookUseCase(
                   name: 'nested',
-                  builder: (context) => MultiSelectDropDown<int>(
-                    onOptionSelected: (List<DropdownListItem> selectedOptions) {},
-                    options:  const [
-                      DropdownListItem(value: 1, label: 'firstddddddddddddd', type: 'aaaaa',),
-                      DropdownListItem(value: 2, label: 'seconddddddddddddddddd', type: 'aaaaa',),
-                      DropdownListItem(value: 3, label: 'thiraaaaaaaaaaaad', type: 'bbbbb',),
-                      DropdownListItem(value: 4, label: 'foussssssssr', type: 'aaaaa',),
-                      DropdownListItem(value: 5, label: 'fivssssssssssse', type: 'bbbbb',),
-                    ],
-                    selectionType: SelectionType.nestedMultiSelect,
+                  builder: (context) =>
+                      MultiSelectDropDown<int>(
+                        onOptionSelected: (
+                            List<DropdownListItem> selectedOptions) {},
+                        options: const [
+                          DropdownListItem(value: 1,
+                            label: 'firstddddddddddddd',
+                            type: 'aaaaa',),
+                          DropdownListItem(value: 2,
+                            label: 'seconddddddddddddddddd',
+                            type: 'aaaaa',),
+                          DropdownListItem(value: 3,
+                            label: 'thiraaaaaaaaaaaad',
+                            type: 'bbbbb',),
+                          DropdownListItem(
+                            value: 4, label: 'foussssssssr', type: 'aaaaa',),
+                          DropdownListItem(
+                            value: 5, label: 'fivssssssssssse', type: 'bbbbb',),
+                        ],
+                        selectionType: SelectionType.nestedMultiSelect,
 
-                    optionTextStyle: const TextStyle(fontSize: 16),
-                  ),
+                        optionTextStyle: const TextStyle(fontSize: 16),
+                      ),
                 ),
               ],
             ),
@@ -1344,71 +1416,78 @@ class HotReload extends StatelessWidget {
               useCases: [
                 WidgetbookUseCase(
                   name: 'default',
-                  builder: (context) => TreeSelectDropDown<int>(
-                    onOptionSelected: (List<TreeNode> selectedOptions) {
-                      // print(selectedOptions);
-                      for (TreeNode node in selectedOptions) {
-                        // print("Node: ${node.value}");
-                      }
-                    },
-                    options:  [
-                      TreeNode('A', 'A', [
-                        TreeNode('A.A1', 'A1', [TreeNode('A.A1.A3', 'A3', [TreeNode('A.A1.A3.A5', 'A5', []),
-                          TreeNode('A.A1.A3.A6', 'A6', []),]),
-                          TreeNode('A.A1.A4', 'A4', []),]),
-                        TreeNode('A.A2', 'A2', []),
-                      ]),
-                      TreeNode('B', 'B', [
-                        TreeNode('B.B1', 'B1', []),
-                        TreeNode('B.B2', 'B2', []),
-                      ]),
-                      TreeNode('C', 'C', [
-                        TreeNode('C.C1', 'C1', []),
-                        TreeNode('C.C2', 'C2', []),
-                      ]),
-                      TreeNode('D', 'D', [
-                        TreeNode('D.D1', 'D1', []),
-                        TreeNode('D.D2', 'D2', []),
-                      ]),
-                    ],
-                    treeselectionType: TreeselectionType.singleSelect,
-                    // chipConfig: const ChipConfig(wrapType: WrapType.wrap),
-                    optionTextStyle: const TextStyle(fontSize: 16),
-                  ),
+                  builder: (context) =>
+                      TreeSelectDropDown<int>(
+                        onOptionSelected: (List<TreeNode> selectedOptions) {
+                          // print(selectedOptions);
+                          for (TreeNode node in selectedOptions) {
+                            // print("Node: ${node.value}");
+                          }
+                        },
+                        options: [
+                          TreeNode('A', 'A', [
+                            TreeNode('A.A1', 'A1', [TreeNode('A.A1.A3', 'A3',
+                                [TreeNode('A.A1.A3.A5', 'A5', []),
+                                  TreeNode('A.A1.A3.A6', 'A6', []),
+                                ]),
+                              TreeNode('A.A1.A4', 'A4', []),
+                            ]),
+                            TreeNode('A.A2', 'A2', []),
+                          ]),
+                          TreeNode('B', 'B', [
+                            TreeNode('B.B1', 'B1', []),
+                            TreeNode('B.B2', 'B2', []),
+                          ]),
+                          TreeNode('C', 'C', [
+                            TreeNode('C.C1', 'C1', []),
+                            TreeNode('C.C2', 'C2', []),
+                          ]),
+                          TreeNode('D', 'D', [
+                            TreeNode('D.D1', 'D1', []),
+                            TreeNode('D.D2', 'D2', []),
+                          ]),
+                        ],
+                        treeselectionType: TreeselectionType.singleSelect,
+                        // chipConfig: const ChipConfig(wrapType: WrapType.wrap),
+                        optionTextStyle: const TextStyle(fontSize: 16),
+                      ),
                 ),
                 WidgetbookUseCase(
                   name: 'Multi Select Tree',
-                  builder: (context) => TreeSelectDropDown<int>(
-                    onOptionSelected: (List<TreeNode> selectedOptions) {
-                      // print(selectedOptions);
-                      for (TreeNode node in selectedOptions) {
-                        // print("Node: ${node.value}");
-                      }
-                    },
-                    options:  [
-                      TreeNode('A', 'A', [
-                        TreeNode('A.A1', 'A1', [TreeNode('A.A1.A3', 'A3', [TreeNode('A.A1.A3.A5', 'A5', []),
-                          TreeNode('A.A1.A3.A6', 'A6', []),]),
-                          TreeNode('A.A1.A4', 'A4', []),]),
-                        TreeNode('A.A2', 'A2', []),
-                      ]),
-                      TreeNode('B', 'B', [
-                        TreeNode('B.B1', 'B1', []),
-                        TreeNode('B.B2', 'B2', []),
-                      ]),
-                      TreeNode('C', 'C', [
-                        TreeNode('C.C1', 'C1', []),
-                        TreeNode('C.C2', 'C2', []),
-                      ]),
-                      TreeNode('D', 'D', [
-                        TreeNode('D.D1', 'D1', []),
-                        TreeNode('D.D2', 'D2', []),
-                      ]),
-                    ],
-                    treeselectionType: TreeselectionType.MultiSelect,
+                  builder: (context) =>
+                      TreeSelectDropDown<int>(
+                        onOptionSelected: (List<TreeNode> selectedOptions) {
+                          for (TreeNode node in selectedOptions) {
+                            // print("Node: ${node.value}");
+                          }
+                        },
+                        options: [
+                          TreeNode('A', 'A', [
+                            TreeNode('A.A1', 'A1', [TreeNode('A.A1.A3', 'A3',
+                                [TreeNode('A.A1.A3.A5', 'A5', []),
+                                  TreeNode('A.A1.A3.A6', 'A6', []),
+                                ]),
+                              TreeNode('A.A1.A4', 'A4', []),
+                            ]),
+                            TreeNode('A.A2', 'A2', []),
+                          ]),
+                          TreeNode('B', 'B', [
+                            TreeNode('B.B1', 'B1', []),
+                            TreeNode('B.B2', 'B2', []),
+                          ]),
+                          TreeNode('C', 'C', [
+                            TreeNode('C.C1', 'C1', []),
+                            TreeNode('C.C2', 'C2', []),
+                          ]),
+                          TreeNode('D', 'D', [
+                            TreeNode('D.D1', 'D1', []),
+                            TreeNode('D.D2', 'D2', []),
+                          ]),
+                        ],
+                        treeselectionType: TreeselectionType.MultiSelect,
 
-                    optionTextStyle: const TextStyle(fontSize: 16),
-                  ),
+                        optionTextStyle: const TextStyle(fontSize: 16),
+                      ),
                 ),
               ],
             ),
@@ -1422,62 +1501,67 @@ class HotReload extends StatelessWidget {
               useCases: [
                 WidgetbookUseCase(
                   name: 'default',
-                  builder: (context) => CustomButton(
-                    label: 'Primary Button',
-                    onPressed: () {
-                      // Add your primary button logic here
-                      print('Primary button pressed');
-                    },
-                    type: ButtonType.primary,
-                    isDisabled: context.knobs.boolean(
-                      label: 'disable',
-                      initialValue: false,
-                    ),
-                  ),
+                  builder: (context) =>
+                      CustomButton(
+                        label: 'Primary Button',
+                        onPressed: () {
+                          // Add your primary button logic here
+                          print('Primary button pressed');
+                        },
+                        type: ButtonType.primary,
+                        isDisabled: context.knobs.boolean(
+                          label: 'disable',
+                          initialValue: false,
+                        ),
+                      ),
                 ),
                 WidgetbookUseCase(
                   name: 'prefixIcon',
-                  builder: (context) => CustomButton(
-                    prefixIcon: context.knobs.list(label: 'prefixIcon', options: [
-                      Icons.add,
-                      Icons.crop_square_sharp,
-                      Icons.circle,
-                      Icons.arrow_forward,
-                      Icons.location_disabled_outlined,
-                    ]),
-                    label: 'Primary Button',
-                    onPressed: () {
-                      // Add your primary button logic here
-                      print('Primary button pressed');
-                    },
-                    type: ButtonType.primary,
-                    isDisabled: context.knobs.boolean(
-                      label: 'disable',
-                      initialValue: false,
-                    ),
-                  ),
+                  builder: (context) =>
+                      CustomButton(
+                        prefixIcon: context.knobs.list(
+                            label: 'prefixIcon', options: [
+                          Icons.add,
+                          Icons.crop_square_sharp,
+                          Icons.circle,
+                          Icons.arrow_forward,
+                          Icons.location_disabled_outlined,
+                        ]),
+                        label: 'Primary Button',
+                        onPressed: () {
+                          // Add your primary button logic here
+                          print('Primary button pressed');
+                        },
+                        type: ButtonType.primary,
+                        isDisabled: context.knobs.boolean(
+                          label: 'disable',
+                          initialValue: false,
+                        ),
+                      ),
                 ),
                 WidgetbookUseCase(
                   name: 'suffixIcon',
-                  builder: (context) => CustomButton(
-                    label: 'Primary Button',
-                    onPressed: () {
-                      // Add your primary button logic here
-                      print('Primary button pressed');
-                    },
-                    type: ButtonType.primary,
-                    isDisabled: context.knobs.boolean(
-                      label: 'disable',
-                      initialValue: false,
-                    ),
-                    suffixIcon: context.knobs.list(label: 'suffixIcon', options: [
-                      Icons.add,
-                      Icons.crop_square_sharp,
-                      Icons.circle,
-                      Icons.arrow_forward,
-                      Icons.location_disabled_outlined,
-                    ]),
-                  ),
+                  builder: (context) =>
+                      CustomButton(
+                        label: 'Primary Button',
+                        onPressed: () {
+                          // Add your primary button logic here
+                          print('Primary button pressed');
+                        },
+                        type: ButtonType.primary,
+                        isDisabled: context.knobs.boolean(
+                          label: 'disable',
+                          initialValue: false,
+                        ),
+                        suffixIcon: context.knobs.list(
+                            label: 'suffixIcon', options: [
+                          Icons.add,
+                          Icons.crop_square_sharp,
+                          Icons.circle,
+                          Icons.arrow_forward,
+                          Icons.location_disabled_outlined,
+                        ]),
+                      ),
                 ),
               ],
             ),
@@ -1486,62 +1570,67 @@ class HotReload extends StatelessWidget {
               useCases: [
                 WidgetbookUseCase(
                   name: 'default',
-                  builder: (context) => CustomButton(
-                    label: 'Secondary Button',
-                    onPressed: () {
-                      // Add your secondary button logic here
-                      print('Secondary button pressed');
-                    },
-                    isDisabled: context.knobs.boolean(
-                      label: 'disable',
-                      initialValue: false,
-                    ),
-                    type: ButtonType.secondary,
-                  ),
+                  builder: (context) =>
+                      CustomButton(
+                        label: 'Secondary Button',
+                        onPressed: () {
+                          // Add your secondary button logic here
+                          print('Secondary button pressed');
+                        },
+                        isDisabled: context.knobs.boolean(
+                          label: 'disable',
+                          initialValue: false,
+                        ),
+                        type: ButtonType.secondary,
+                      ),
                 ),
                 WidgetbookUseCase(
                   name: 'prefixIcon',
-                  builder: (context) => CustomButton(
-                    label: 'Secondary Button',
-                    onPressed: () {
-                      // Add your secondary button logic here
-                      print('Secondary button pressed');
-                    },
-                    isDisabled: context.knobs.boolean(
-                      label: 'disable',
-                      initialValue: false,
-                    ),
-                    type: ButtonType.secondary,
-                    prefixIcon: context.knobs.list(label: 'prefixIcon', options: [
-                      Icons.add,
-                      Icons.crop_square_sharp,
-                      Icons.circle,
-                      Icons.arrow_forward,
-                      Icons.location_disabled_outlined,
-                    ]),
-                  ),
+                  builder: (context) =>
+                      CustomButton(
+                        label: 'Secondary Button',
+                        onPressed: () {
+                          // Add your secondary button logic here
+                          print('Secondary button pressed');
+                        },
+                        isDisabled: context.knobs.boolean(
+                          label: 'disable',
+                          initialValue: false,
+                        ),
+                        type: ButtonType.secondary,
+                        prefixIcon: context.knobs.list(
+                            label: 'prefixIcon', options: [
+                          Icons.add,
+                          Icons.crop_square_sharp,
+                          Icons.circle,
+                          Icons.arrow_forward,
+                          Icons.location_disabled_outlined,
+                        ]),
+                      ),
                 ),
                 WidgetbookUseCase(
                   name: 'suffixIcon',
-                  builder: (context) => CustomButton(
-                    label: 'Secondary Button',
-                    onPressed: () {
-                      // Add your secondary button logic here
-                      print('Secondary button pressed');
-                    },
-                    isDisabled: context.knobs.boolean(
-                      label: 'disable',
-                      initialValue: false,
-                    ),
-                    type: ButtonType.secondary,
-                    suffixIcon: context.knobs.list(label: 'suffixIcon', options: [
-                      Icons.add,
-                      Icons.crop_square_sharp,
-                      Icons.circle,
-                      Icons.arrow_forward,
-                      Icons.location_disabled_outlined,
-                    ]),
-                  ),
+                  builder: (context) =>
+                      CustomButton(
+                        label: 'Secondary Button',
+                        onPressed: () {
+                          // Add your secondary button logic here
+                          print('Secondary button pressed');
+                        },
+                        isDisabled: context.knobs.boolean(
+                          label: 'disable',
+                          initialValue: false,
+                        ),
+                        type: ButtonType.secondary,
+                        suffixIcon: context.knobs.list(
+                            label: 'suffixIcon', options: [
+                          Icons.add,
+                          Icons.crop_square_sharp,
+                          Icons.circle,
+                          Icons.arrow_forward,
+                          Icons.location_disabled_outlined,
+                        ]),
+                      ),
                 ),
               ],
             ),
@@ -1550,62 +1639,67 @@ class HotReload extends StatelessWidget {
               useCases: [
                 WidgetbookUseCase(
                   name: 'default',
-                  builder: (context) => CustomButton(
-                    label: 'tertiary Button',
-                    onPressed: () {
-                      // Add your secondary button logic here
-                      print('tertiary button pressed');
-                    },
-                    isDisabled: context.knobs.boolean(
-                      label: 'disable',
-                      initialValue: false,
-                    ),
-                    type: ButtonType.tertiary,
-                  ),
+                  builder: (context) =>
+                      CustomButton(
+                        label: 'tertiary Button',
+                        onPressed: () {
+                          // Add your secondary button logic here
+                          print('tertiary button pressed');
+                        },
+                        isDisabled: context.knobs.boolean(
+                          label: 'disable',
+                          initialValue: false,
+                        ),
+                        type: ButtonType.tertiary,
+                      ),
                 ),
                 WidgetbookUseCase(
                   name: 'prefixIcon',
-                  builder: (context) => CustomButton(
-                    label: 'tertiary Button',
-                    onPressed: () {
-                      // Add your secondary button logic here
-                      print('tertiary button pressed');
-                    },
-                    isDisabled: context.knobs.boolean(
-                      label: 'disable',
-                      initialValue: false,
-                    ),
-                    type: ButtonType.tertiary,
-                    prefixIcon: context.knobs.list(label: 'prefixIcon', options: [
-                      Icons.add,
-                      Icons.crop_square_sharp,
-                      Icons.circle,
-                      Icons.arrow_forward,
-                      Icons.location_disabled_outlined,
-                    ]),
-                  ),
+                  builder: (context) =>
+                      CustomButton(
+                        label: 'tertiary Button',
+                        onPressed: () {
+                          // Add your secondary button logic here
+                          print('tertiary button pressed');
+                        },
+                        isDisabled: context.knobs.boolean(
+                          label: 'disable',
+                          initialValue: false,
+                        ),
+                        type: ButtonType.tertiary,
+                        prefixIcon: context.knobs.list(
+                            label: 'prefixIcon', options: [
+                          Icons.add,
+                          Icons.crop_square_sharp,
+                          Icons.circle,
+                          Icons.arrow_forward,
+                          Icons.location_disabled_outlined,
+                        ]),
+                      ),
                 ),
                 WidgetbookUseCase(
                   name: 'suffixIcon',
-                  builder: (context) => CustomButton(
-                    label: 'tertiary Button',
-                    onPressed: () {
-                      // Add your secondary button logic here
-                      print('tertiary button pressed');
-                    },
-                    isDisabled: context.knobs.boolean(
-                      label: 'disable',
-                      initialValue: false,
-                    ),
-                    type: ButtonType.tertiary,
-                    suffixIcon: context.knobs.list(label: 'suffixIcon', options: [
-                      Icons.add,
-                      Icons.crop_square_sharp,
-                      Icons.circle,
-                      Icons.arrow_forward,
-                      Icons.location_disabled_outlined,
-                    ]),
-                  ),
+                  builder: (context) =>
+                      CustomButton(
+                        label: 'tertiary Button',
+                        onPressed: () {
+                          // Add your secondary button logic here
+                          print('tertiary button pressed');
+                        },
+                        isDisabled: context.knobs.boolean(
+                          label: 'disable',
+                          initialValue: false,
+                        ),
+                        type: ButtonType.tertiary,
+                        suffixIcon: context.knobs.list(
+                            label: 'suffixIcon', options: [
+                          Icons.add,
+                          Icons.crop_square_sharp,
+                          Icons.circle,
+                          Icons.arrow_forward,
+                          Icons.location_disabled_outlined,
+                        ]),
+                      ),
                 ),
               ],
             ),
@@ -1614,62 +1708,67 @@ class HotReload extends StatelessWidget {
               useCases: [
                 WidgetbookUseCase(
                   name: 'default',
-                  builder: (context) => CustomButton(
-                    label: 'Link',
-                    onPressed: () {
-                      // Add your secondary button logic here
-                      print('link pressed');
-                    },
-                    isDisabled: context.knobs.boolean(
-                      label: 'disable',
-                      initialValue: false,
-                    ),
-                    type: ButtonType.link,
-                  ),
+                  builder: (context) =>
+                      CustomButton(
+                        label: 'Link',
+                        onPressed: () {
+                          // Add your secondary button logic here
+                          print('link pressed');
+                        },
+                        isDisabled: context.knobs.boolean(
+                          label: 'disable',
+                          initialValue: false,
+                        ),
+                        type: ButtonType.link,
+                      ),
                 ),
                 WidgetbookUseCase(
                   name: 'prefixIcon',
-                  builder: (context) => CustomButton(
-                    label: 'Link',
-                    onPressed: () {
-                      // Add your secondary button logic here
-                      print('link pressed');
-                    },
-                    isDisabled: context.knobs.boolean(
-                      label: 'disable',
-                      initialValue: false,
-                    ),
-                    type: ButtonType.link,
-                    prefixIcon: context.knobs.list(label: 'prefixIcon', options: [
-                      Icons.add,
-                      Icons.crop_square_sharp,
-                      Icons.circle,
-                      Icons.arrow_forward,
-                      Icons.location_disabled_outlined,
-                    ]),
-                  ),
+                  builder: (context) =>
+                      CustomButton(
+                        label: 'Link',
+                        onPressed: () {
+                          // Add your secondary button logic here
+                          print('link pressed');
+                        },
+                        isDisabled: context.knobs.boolean(
+                          label: 'disable',
+                          initialValue: false,
+                        ),
+                        type: ButtonType.link,
+                        prefixIcon: context.knobs.list(
+                            label: 'prefixIcon', options: [
+                          Icons.add,
+                          Icons.crop_square_sharp,
+                          Icons.circle,
+                          Icons.arrow_forward,
+                          Icons.location_disabled_outlined,
+                        ]),
+                      ),
                 ),
                 WidgetbookUseCase(
                   name: 'suffixIcon',
-                  builder: (context) => CustomButton(
-                    label: 'Link',
-                    onPressed: () {
-                      // Add your secondary button logic here
-                      print('link pressed');
-                    },
-                    isDisabled: context.knobs.boolean(
-                      label: 'disable',
-                      initialValue: false,
-                    ),
-                    type: ButtonType.link,
-                    suffixIcon: context.knobs.list(label: 'suffixIcon', options: [
-                      Icons.add,
-                      Icons.crop_square_sharp,
-                      Icons.circle,
-                      Icons.arrow_forward,
-                      Icons.location_disabled_outlined,
-                    ]),
-                  ),
+                  builder: (context) =>
+                      CustomButton(
+                        label: 'Link',
+                        onPressed: () {
+                          // Add your secondary button logic here
+                          print('link pressed');
+                        },
+                        isDisabled: context.knobs.boolean(
+                          label: 'disable',
+                          initialValue: false,
+                        ),
+                        type: ButtonType.link,
+                        suffixIcon: context.knobs.list(
+                            label: 'suffixIcon', options: [
+                          Icons.add,
+                          Icons.crop_square_sharp,
+                          Icons.circle,
+                          Icons.arrow_forward,
+                          Icons.location_disabled_outlined,
+                        ]),
+                      ),
                 ),
               ],
             ),
@@ -1679,37 +1778,28 @@ class HotReload extends StatelessWidget {
           name: 'Checkbox ',
           children: [
             WidgetbookComponent(
-              name: 'Checkbox Icon',
+              name: 'Checkbox',
               useCases: [
                 WidgetbookUseCase(
-                  name: 'unchecked',
-                  builder: (context) => DigitCheckboxIcon(
-                    state: CheckboxState.unchecked,
-                    isDisabled: context.knobs.boolean(
-                      label: 'disabled',
-                      initialValue: false,
-                    ),
-                  ),
-                ),
-                WidgetbookUseCase(
-                  name: 'checked',
-                  builder: (context) => DigitCheckboxIcon(
-                    state: CheckboxState.checked,
-                    isDisabled: context.knobs.boolean(
-                      label: 'disabled',
-                      initialValue: false,
-                    ),
-                  ),
-                ),
-                WidgetbookUseCase(
-                  name: 'intermediate',
-                  builder: (context) => DigitCheckboxIcon(
-                    state: CheckboxState.intermediate,
-                    isDisabled: context.knobs.boolean(
-                      label: 'disabled',
-                      initialValue: false,
-                    ),
-                  ),
+                  name: 'Default',
+                  builder: (context) =>
+                      DigitCheckbox(
+                        label: context.knobs.string(
+                          label: 'Label',
+                          initialValue: '',
+                        ),
+                        value: context.knobs.boolean(
+                          label: 'Initial Value',
+                          initialValue: false,
+                        ),
+                        onChanged: (value) {
+                          print(value);
+                        },
+                        disabled: context.knobs.boolean(
+                            label: 'Disabled',
+                          initialValue: false,
+                        ),
+                      ),
                 ),
               ],
             ),

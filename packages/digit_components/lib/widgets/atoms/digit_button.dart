@@ -110,8 +110,8 @@ class _CustomButtonState extends State<CustomButton> {
               widget.label,
               style: TextStyle(
                 fontFamily: 'Roboto',
-                fontSize: 19,
-                fontWeight: FontWeight.w500,
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
                 color: widget.type == ButtonType.primary
                     ? const DigitColors().white
                     : (widget.isDisabled ? const DigitColors().cloudGray: const DigitColors().burningOrange),

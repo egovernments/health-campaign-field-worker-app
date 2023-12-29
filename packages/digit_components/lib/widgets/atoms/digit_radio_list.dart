@@ -113,7 +113,8 @@ class _DigitRadioListState extends State<DigitRadioList> {
                         alignment: Alignment.center,
                         child: Text(
                           button.name,
-                          style: const TextStyle(
+                          style: TextStyle(
+                            color: widget.isDisabled ? const DigitColors().cloudGray : const DigitColors().woodsmokeBlack,
                               fontSize: 16,
                               fontWeight: FontWeight.w400,
                               fontFamily: 'Roboto'),

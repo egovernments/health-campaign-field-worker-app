@@ -2,6 +2,7 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/validators/validator.dart';
 import 'package:digit_components/widgets/atoms/digit_base_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_button.dart';
+import 'package:digit_components/widgets/atoms/digit_checkbox.dart';
 import 'package:digit_components/widgets/atoms/digit_checkbox_icon.dart';
 import 'package:digit_components/widgets/atoms/digit_date_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_dropdown_input.dart'
@@ -414,7 +415,7 @@ void main() {
                     ),
                     const SizedBox(height: 16),
                     CustomButton(
-                      label: 'link',
+                      label: 'Link',
                       onPressed: () {
                         // Add your secondary button logic here
                         print('link pressed');
@@ -450,7 +451,7 @@ void main() {
                     ),
                     const SizedBox(height: 16),
                     CustomButton(
-                      label: 'link',
+                      label: 'Link',
                       onPressed: () {
                         print('link pressed');
                       },
@@ -467,14 +468,13 @@ void main() {
                       type: ButtonType.tertiary,
                     ),
                     const SizedBox(height: 16),
-                    DigitCheckboxIcon(
-                      state: CheckboxState.checked,
-                      isDisabled: true,
-                    ),
-                    const SizedBox(height: 16),
-                    DigitCheckboxIcon(
-                      state: CheckboxState.unchecked,
-                      isDisabled: true,
+                    DigitCheckbox(
+                        label: 'checkbox',
+                         value: false,
+                      onChanged: (value){
+                          print(value);
+                      },
+
                     ),
                     const SizedBox(height: 16),
                     dropdown.DigitDropdown<int>(
@@ -508,10 +508,6 @@ void main() {
                       child: const Text(
                         'dropdown',
                       ),
-                    ),
-                    DigitCheckboxIcon(
-                      state: CheckboxState.intermediate,
-                      isDisabled: true,
                     ),
                   ],
                 ),

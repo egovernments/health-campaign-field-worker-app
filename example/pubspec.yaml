@@ -54,4 +54,9 @@ flutter:
   assets:
     - ./
 
+  fonts:
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto-Regular.ttf
+
   uses-material-design: true
