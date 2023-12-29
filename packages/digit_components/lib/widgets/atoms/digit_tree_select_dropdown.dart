@@ -788,7 +788,7 @@ class _TreeNodeWidgetState extends State<TreeNodeWidget> {
           widget.treeselectionType == TreeselectionType.singleSelect
               ? const DigitColors().burningOrange
               : const DigitColors().white,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+      contentPadding: _isExpanded ? const EdgeInsets.only(top: 4, bottom: 4): const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
       title: Column(
         children: [
           Row(
