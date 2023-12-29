@@ -47,6 +47,7 @@ import 'tables/target.dart';
 import 'tables/task.dart';
 import 'tables/task_resource.dart';
 import 'tables/user.dart';
+import 'tables/h_f_referral.dart';
 
 part 'sql_store.g.dart';
 
@@ -86,6 +87,7 @@ part 'sql_store.g.dart';
   User,
   Downsync,
   DownsyncCriteria,
+  HFReferral,
 ])
 class LocalSqlDataStore extends _$LocalSqlDataStore {
   LocalSqlDataStore() : super(_openConnection());

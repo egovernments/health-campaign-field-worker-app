@@ -8,6 +8,10 @@
     {
       "name": "Distributor",
       "value": "DISTRIBUTOR"
+    },
+    {
+      "name": "Health Facility Worker",
+      "value": "HEALTH_FACILITY_WORKER"
     }
   ],
   "isEnum": true

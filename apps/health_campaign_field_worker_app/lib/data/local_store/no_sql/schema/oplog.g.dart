@@ -287,6 +287,7 @@ const _OpLogentityTypeEnumValueMap = {
   r'locality': r'locality',
   r'downsync': r'downsync',
   r'downsyncCriteria': r'downsyncCriteria',
+  r'hFReferral': r'hFReferral',
 };
 const _OpLogentityTypeValueEnumMap = {
   r'user': DataModelType.user,
@@ -318,6 +319,7 @@ const _OpLogentityTypeValueEnumMap = {
   r'locality': DataModelType.locality,
   r'downsync': DataModelType.downsync,
   r'downsyncCriteria': DataModelType.downsyncCriteria,
+  r'hFReferral': DataModelType.hFReferral,
 };
 const _OpLogoperationEnumValueMap = {
   r'create': r'create',

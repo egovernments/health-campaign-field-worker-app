@@ -72,7 +72,7 @@ class SideBar extends StatelessWidget {
                           ),
                         ),
                         child: QrImageView(
-                          data: context.loggedInUserUuid,
+                          data: 'BeneficiaryID12345678',
                           version: QrVersions.auto,
                           size: 150.0,
                         ),

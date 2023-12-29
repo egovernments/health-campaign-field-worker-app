@@ -10,5 +10,12 @@ enum AdditionalFieldsType {
   @MappableValue("dateOfAdministration") dateOfAdministration,
   @MappableValue("dateOfDelivery") dateOfDelivery,
   @MappableValue("referralComments") referralComments,
+  @MappableValue("cycle") cycle,
+  @MappableValue("hfCoordinator") hFCoordinator,
+  @MappableValue("referredBy") referredBy,
+  @MappableValue("dateOfEvaluation") dateOfEvaluation,
+  @MappableValue("nameOfReferral") nameOfReferral,
+  @MappableValue("gender") gender,
+  @MappableValue("age") age,
   ;
 }

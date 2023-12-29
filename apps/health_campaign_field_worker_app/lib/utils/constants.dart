@@ -15,6 +15,7 @@ import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/local_store/sql_store/sql_store.dart';
 import '../data/repositories/local/boundary.dart';
 import '../data/repositories/local/facility.dart';
+import '../data/repositories/local/h_f_referral.dart';
 import '../data/repositories/local/household.dart';
 import '../data/repositories/local/houshold_member.dart';
 import '../data/repositories/local/individual.dart';
@@ -35,6 +36,7 @@ import '../data/repositories/local/task.dart';
 import '../data/repositories/oplog/oplog.dart';
 import '../data/repositories/remote/boundary.dart';
 import '../data/repositories/remote/facility.dart';
+import '../data/repositories/remote/h_f_referral.dart';
 import '../data/repositories/remote/household.dart';
 import '../data/repositories/remote/household_member.dart';
 import '../data/repositories/remote/individual.dart';
@@ -152,6 +154,10 @@ class Constants {
         sql,
         PgrServiceOpLogManager(isar),
       ),
+      HFReferralLocalRepository(
+        sql,
+        HFReferralOpLogManager(isar),
+      ),
     ];
   }
 
@@ -221,6 +227,8 @@ class Constants {
           SideEffectRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.referral)
           ReferralRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.hFReferral)
+          HFReferralRemoteRepository(dio, actionMap: actions),
       ]);
     }
 
@@ -369,6 +377,8 @@ class DataModels {
         return DataModelType.sideEffect;
       case 'Referrals':
         return DataModelType.referral;
+      case 'HFReferrals':
+        return DataModelType.hFReferral;
       default:
         return DataModelType.householdMember;
     }

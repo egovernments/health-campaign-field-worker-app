@@ -47,3 +47,5 @@ typedef ReferralDataRepository
     = DataRepository<ReferralModel, ReferralSearchModel>;
 typedef DownsyncDataRepository
     = DataRepository<DownsyncModel, DownsyncSearchModel>;
+typedef HFReferralDataRepository
+    = DataRepository<HFReferralModel, HFReferralSearchModel>;

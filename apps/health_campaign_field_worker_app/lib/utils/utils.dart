@@ -645,3 +645,14 @@ void showDownloadDialog(
       return;
   }
 }
+
+// Returns value of the Additional Field Model, by passing the key and additional Fields list as <Map<String, dynamic>>
+dynamic getValueByKey(List<Map<String, dynamic>> data, String key) {
+  for (var map in data) {
+    if (map["key"] == key) {
+      return map["value"];
+    }
+  }
+
+  return null; // Key not found
+}

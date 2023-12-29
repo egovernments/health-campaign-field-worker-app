@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:digit_components/digit_components.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -74,6 +75,7 @@ class SearchDropdownFormField<T> extends StatefulWidget {
   final void Function()? onFieldTap;
   final String formControlName;
   final ShowErrorsFunction<T>? showErrors;
+  final bool enabled;
 
   const SearchDropdownFormField({
     Key? key,
@@ -99,6 +101,7 @@ class SearchDropdownFormField<T> extends StatefulWidget {
     this.onFieldTap,
     required this.formControlName,
     this.showErrors,
+    this.enabled = true,
   }) : super(key: key);
 
   @override
@@ -168,14 +171,16 @@ class SearchDropdownFormFieldState<T> extends State<SearchDropdownFormField>
     return CompositedTransformTarget(
       link: this._layerLink,
       child: GestureDetector(
-        onTap: () {
-          _selectedItem = null;
-          _widgetFocusNode.requestFocus();
-          _toggleOverlay();
-          if (widget.onFieldTap != null) {
-            widget.onFieldTap!();
-          }
-        },
+        onTap: widget.enabled
+            ? () {
+                _selectedItem = null;
+                _widgetFocusNode.requestFocus();
+                _toggleOverlay();
+                if (widget.onFieldTap != null) {
+                  widget.onFieldTap!();
+                }
+              }
+            : null,
         child: Focus(
           autofocus: widget.autoFocus,
           focusNode: _widgetFocusNode,
@@ -193,16 +198,25 @@ class SearchDropdownFormFieldState<T> extends State<SearchDropdownFormField>
             builder: (state) {
               return InputDecorator(
                 decoration: widget.decoration ??
-                    const InputDecoration(
-                      border: UnderlineInputBorder(),
+                    InputDecoration(
+                      enabled: widget.enabled,
+                      border: const UnderlineInputBorder(),
+                      fillColor: widget.enabled
+                          ? DigitTheme.instance.colors.seaShellGray
+                          : const DigitColors().white,
+                      disabledBorder: DigitTheme
+                          .instance.inputDecorationTheme.disabledBorder,
                       suffixIcon: Icon(
                         Icons.arrow_drop_down_outlined,
                         size: 24,
+                        color: widget.enabled
+                            ? const DigitColors().woodsmokeBlack
+                            : const DigitColors().cloudGray,
                       ),
                     ),
                 isEmpty: _isEmpty,
                 isFocused: _isFocused,
-                child: this._overlayEntry != null
+                child: this._overlayEntry != null && widget.enabled == false
                     ? EditableText(
                         textInputAction: TextInputAction.none,
                         keyboardType: TextInputType.name,
@@ -212,13 +226,17 @@ class SearchDropdownFormFieldState<T> extends State<SearchDropdownFormField>
                         controller: _searchTextController,
                         cursorColor: widget.cursorColor ?? Colors.black87,
                         focusNode: _searchFocusNode,
-                        backgroundCursorColor: Colors.transparent,
-                        onChanged: (str) {
-                          if (_overlayEntry == null) {
-                            _addOverlay();
-                          }
-                          _onTextChanged(str);
-                        },
+                        backgroundCursorColor: widget.enabled
+                            ? Colors.transparent
+                            : const DigitColors().hintGrey,
+                        onChanged: widget.enabled
+                            ? (str) {
+                                if (_overlayEntry == null) {
+                                  _addOverlay();
+                                }
+                                _onTextChanged(str);
+                              }
+                            : null,
                         onSubmitted: (str) {
                           _searchTextController.value =
                               const TextEditingValue(text: "");

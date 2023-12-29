@@ -61,7 +61,7 @@ class StockReconciliationBloc
 
     final user = await LocalSecureStore.instance.userRequestModel;
 
-    final stocks = (await stockRepository.search(
+    final receivedStocks = (await stockRepository.search(
       StockSearchModel(
         productVariantId: productVariantId,
         receiverId: facilityId,
@@ -71,7 +71,21 @@ class StockReconciliationBloc
             element.auditDetails != null &&
             element.auditDetails?.createdBy == user?.uuid)
         .toList();
-    emit(state.copyWith(loading: false, stockModels: stocks));
+    final sentStocks = (await stockRepository.search(
+      StockSearchModel(
+        productVariantId: productVariantId,
+        senderId: facilityId,
+      ),
+    ))
+        .where((element) =>
+            element.auditDetails != null &&
+            element.auditDetails?.createdBy == user?.uuid)
+        .toList();
+
+    emit(state.copyWith(
+      loading: false,
+      stockModels: [...receivedStocks, ...sentStocks],
+    ));
   }
 
   FutureOr<void> _handleCreate(
