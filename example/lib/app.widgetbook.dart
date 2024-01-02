@@ -1,3 +1,4 @@
+import 'package:digit_components/theme/colors.dart';
 import 'package:digit_components/utils/validators/validator.dart';
 import 'package:digit_components/widgets/atoms/digit_button.dart';
 import 'package:digit_components/widgets/atoms/digit_checkbox.dart';
@@ -1253,7 +1254,7 @@ class HotReload extends StatelessWidget {
                               DropdownItem<String>(
                                 value: item.value,
                                 child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                  padding: const EdgeInsets.all(0),
                                   child: Text(item.value),
                                 ),
                               ),
@@ -1357,6 +1358,124 @@ class HotReload extends StatelessWidget {
                         ),
                       ),
                 ),
+                WidgetbookUseCase(
+                  name: 'nested text',
+                  builder: (context) =>
+                      DigitDropdown<int>(
+                        onChange: (String value, String index) => {
+                          print(value),
+                          print(index),
+                        },
+                        dropdownStyle: const DropdownStyle(
+                          elevation: 6,
+                          padding: EdgeInsets.all(5),
+                        ),
+                        textEditingController: TextEditingController(),
+                        items: [
+                          'apple',
+                          'banana',
+                          'orange',
+                          'grapes',
+                        ]
+                            .asMap()
+                            .entries
+                            .map(
+                              (item) => DropdownItem<String>(
+                            value: item.value,
+                            description: 'description for ${item.value}',
+                            child: Padding(
+                              padding:  const EdgeInsets.all(0),
+                              child: Text(item.value, style:  TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w400, fontSize: 16, color: const DigitColors().davyGray),),
+                            ),
+                          ),
+                        )
+                            .toList(),
+                        child: const Text(
+                          'dropdown',
+                        ),
+                      ),
+                ),
+                WidgetbookUseCase(
+                  name: 'with icon',
+                  builder: (context) =>
+                      DigitDropdown<int>(
+                        onChange: (String value, String index) => {
+                          print(value),
+                          print(index),
+                        },
+                        dropdownStyle: const DropdownStyle(
+                          elevation: 6,
+                          padding: EdgeInsets.all(5),
+                        ),
+                        textIcon: Icons.article,
+                        textEditingController: TextEditingController(),
+                        items: [
+                          'apple',
+                          'banana',
+                          'orange',
+                          'grapes',
+                        ]
+                            .asMap()
+                            .entries
+                            .map(
+                              (item) => DropdownItem<String>(
+                            value: item.value,
+                            description: 'description for ${item.value}',
+                            child: Padding(
+                              padding:  const EdgeInsets.only(left: 0, top: 0,),
+                              child: Text(item.value, style:  TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w400, fontSize: 16, color: const DigitColors().davyGray),),
+                            ),
+                          ),
+                        )
+                            .toList(),
+                        child: const Text(
+                          'dropdown',
+                        ),
+                      ),
+                ),
+                WidgetbookUseCase(
+                  name: 'profile select',
+                  builder: (context) =>
+                      DigitDropdown<int>(
+                        onChange: (String value, String index) => {
+                          print(value),
+                          print(index),
+                        },
+                        dropdownStyle: const DropdownStyle(
+                          elevation: 6,
+                          padding: EdgeInsets.all(5),
+                        ),
+                        textEditingController: TextEditingController(),
+                        textIcon: Icons.article,
+                        dropdownType: DropdownType.profileSelect,
+
+                        items: [
+                          'apple',
+                          'banana',
+                          'orange',
+                          'grapes',
+                        ]
+                            .asMap()
+                            .entries
+                            .map(
+                              (item) => DropdownItem<String>(
+                            value: item.value,
+                            description: 'description for ${item.value} one',
+                            profileImage: const NetworkImage(
+                              'https://images.unsplash.com/photo-1608848461950-0fe51dfc41cb?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8fA%3D%3D',
+                            ),
+                            child: Padding(
+                              padding:  const EdgeInsets.only(left: 0, top: 0,),
+                              child: Text(item.value, style:  TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w400, fontSize: 16, color: const DigitColors().davyGray),),
+                            ),
+                          ),
+                        )
+                            .toList(),
+                        child: const Text(
+                          'dropdown',
+                        ),
+                      ),
+                ),
               ],
             ),
             WidgetbookComponent(
@@ -1406,6 +1525,42 @@ class HotReload extends StatelessWidget {
                         ],
                         selectionType: SelectionType.nestedMultiSelect,
 
+                        optionTextStyle: const TextStyle(fontSize: 16),
+                      ),
+                ),
+                WidgetbookUseCase(
+                  name: 'nested text',
+                  builder: (context) =>
+                      MultiSelectDropDown<int>(
+                        onOptionSelected: (List<DropdownListItem> selectedOptions) {},
+                        options:  const [
+                          DropdownListItem(value: 1, label: 'firstddddddddddddd', description: 'ddddddddddddddddddddd',),
+                          DropdownListItem(value: 2, label: 'seconddddddddddddddddd', description: 'ddddddddddddddddddddd',),
+                          DropdownListItem(value: 3, label: 'thiraaaaaaaaaaaad', description: 'ddddddddddddddddddddd',),
+                          DropdownListItem(value: 4, label: 'foussssssssr', description: 'ddddddddddddddddddddd',),
+                          DropdownListItem(value: 5, label: 'fivssssssssssse', description: 'ddddddddddddddddddddd',),
+                        ],
+                        selectionType: SelectionType.multiSelect,
+
+                        // chipConfig: const ChipConfig(wrapType: WrapType.wrap),
+                        optionTextStyle: const TextStyle(fontSize: 16),
+                      ),
+                ),
+                WidgetbookUseCase(
+                  name: 'with icon',
+                  builder: (context) =>
+                      MultiSelectDropDown<int>(
+                        onOptionSelected: (List<DropdownListItem> selectedOptions) {},
+                        options:  const [
+                          DropdownListItem(value: 1, label: 'firstddddddddddddd', description: 'ddddddddddddddddddddd',),
+                          DropdownListItem(value: 2, label: 'seconddddddddddddddddd', description: 'ddddddddddddddddddddd',),
+                          DropdownListItem(value: 3, label: 'thiraaaaaaaaaaaad', description: 'ddddddddddddddddddddd',),
+                          DropdownListItem(value: 4, label: 'foussssssssr', description: 'ddddddddddddddddddddd',),
+                          DropdownListItem(value: 5, label: 'fivssssssssssse', description: 'ddddddddddddddddddddd',),
+                        ],
+                        selectionType: SelectionType.multiSelect,
+                        textIcon: Icons.article,
+                        // chipConfig: const ChipConfig(wrapType: WrapType.wrap),
                         optionTextStyle: const TextStyle(fontSize: 16),
                       ),
                 ),

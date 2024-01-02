@@ -15,6 +15,7 @@ class MultiSelectDropDown<int> extends StatefulWidget {
   // selection type of the dropdown
   final SelectionType selectionType;
   final ChipPosition chipPosition;
+  final IconData? textIcon;
 
   // Options
   final List<DropdownListItem<int>> options;
@@ -58,7 +59,7 @@ class MultiSelectDropDown<int> extends StatefulWidget {
   /// Controller for the dropdown
   /// [controller] is the controller for the dropdown. It can be used to programmatically open and close the dropdown.
   final MultiSelectController<int>? controller;
-  
+
   const MultiSelectDropDown({
     Key? key,
     required this.onOptionSelected,
@@ -89,7 +90,7 @@ class MultiSelectDropDown<int> extends StatefulWidget {
     this.showClearIcon = true,
     this.maxItems,
     this.focusNode,
-    this.controller,
+    this.controller, this.textIcon,
   }) : super(key: key);
 
   @override
@@ -524,12 +525,29 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
               const SizedBox(
                 width: 10,
               ),
-              Text(
-                option.label,
-                style: const TextStyle(
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      if(widget.textIcon!=null)Icon(widget.textIcon, size: 20, color: isSelected ? const DigitColors().white : const DigitColors().davyGray,),
+                      if(widget.textIcon!=null) const SizedBox(width: 4,),
+                      Text(
+                        option.label,
+                        style: const TextStyle(
+                            fontFamily: 'Roboto',
+                            fontWeight: FontWeight.w700,
+                            fontSize: 16),
+                      ),
+                    ],
+                  ),
+                  if(option.description!=null)Text(option.description!,style: TextStyle(
+                    fontSize: 12,
+                    color: isSelected ? const DigitColors().white : const DigitColors().davyGray,
+                    fontWeight: FontWeight.w400,
                     fontFamily: 'Roboto',
-                    fontWeight: FontWeight.w700,
-                    fontSize: 16),
+                  ),),
+                ],
               ),
             ],
           ),
@@ -813,8 +831,9 @@ class DropdownListItem<T> extends StatelessWidget {
   final String label;
   final int value;
   final String? type;
+  final String? description;
 
-  const DropdownListItem({Key? key, required this.value, required this.label, this.type})
+  const DropdownListItem({Key? key, required this.value, required this.label, this.type, this.description})
       : super(key: key);
 
   @override
@@ -823,6 +842,7 @@ class DropdownListItem<T> extends StatelessWidget {
       label: label,
       value: value,
       type: type,
+      description: description,
     );
   }
 }

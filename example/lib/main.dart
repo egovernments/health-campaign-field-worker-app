@@ -165,6 +165,9 @@ void main() {
                         padding: EdgeInsets.all(5),
                       ),
                       textEditingController: TextEditingController(),
+                      textIcon: Icons.article,
+                      dropdownType: DropdownType.profileSelect,
+
                       items: [
                         'apple',
                         'banana',
@@ -175,13 +178,84 @@ void main() {
                           .entries
                           .map(
                             (item) => dropdown.DropdownItem<String>(
-                              value: item.value,
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 10, top: 12, bottom: 12,),
-                                child: Text(item.value, style: const TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w400, fontSize: 14,),),
+                          value: item.value,
+                          description: 'description for ${item.value} one',
+                              profileImage: const NetworkImage(
+                                'https://images.unsplash.com/photo-1608848461950-0fe51dfc41cb?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8fA%3D%3D',
                               ),
-                            ),
-                          )
+                          child: Padding(
+                            padding:  const EdgeInsets.only(left: 0, top: 0,),
+                            child: Text(item.value, style:  TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w400, fontSize: 16, color: DigitColors().davyGray),),
+                          ),
+                        ),
+                      )
+                          .toList(),
+                      child: const Text(
+                        'dropdown',
+                      ),
+                    ),
+                    const SizedBox(height: 16,),
+                    dropdown.DigitDropdown<int>(
+                      onChange: (String value, String index) => {
+                        print(value),
+                        print(index),
+                      },
+                      dropdownStyle: const dropdown.DropdownStyle(
+                        elevation: 6,
+                        padding: EdgeInsets.all(5),
+                      ),
+                      textEditingController: TextEditingController(),
+                      textIcon: Icons.article,
+                      items: [
+                        'apple',
+                        'banana',
+                        'orange',
+                        'grapes',
+                      ]
+                          .asMap()
+                          .entries
+                          .map(
+                            (item) => dropdown.DropdownItem<String>(
+                          value: item.value,
+                          description: 'description for ${item.value} one',
+                          child: Padding(
+                            padding:  const EdgeInsets.only(left: 0, top: 0,),
+                            child: Text(item.value, style:  TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w400, fontSize: 16, color: DigitColors().davyGray),),
+                          ),
+                        ),
+                      )
+                          .toList(),
+                      child: const Text(
+                        'dropdown',
+                      ),
+                    ),
+                    dropdown.DigitDropdown<int>(
+                      onChange: (String value, String index) => {
+                        print(value),
+                        print(index),
+                      },
+                      dropdownStyle: const dropdown.DropdownStyle(
+                        elevation: 6,
+                        padding: EdgeInsets.all(5),
+                      ),
+                      textEditingController: TextEditingController(),
+                      items: [
+                        'apple',
+                        'banana',
+                        'orange',
+                        'grapes',
+                      ]
+                          .asMap()
+                          .entries
+                          .map(
+                            (item) => dropdown.DropdownItem<String>(
+                          value: item.value,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 0, top: 0, bottom: 0,),
+                            child: Text(item.value, style: const TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w400, fontSize: 14,),),
+                          ),
+                        ),
+                      )
                           .toList(),
                       child: const Text(
                         'dropdown',
@@ -292,6 +366,34 @@ void main() {
                         DropdownListItem(value: 5, label: 'fivssssssssssse'),
                       ],
                       selectionType: SelectionType.multiSelect,
+                      // chipConfig: const ChipConfig(wrapType: WrapType.wrap),
+                      optionTextStyle: const TextStyle(fontSize: 16),
+                    ),
+                    MultiSelectDropDown<int>(
+                      onOptionSelected: (List<DropdownListItem> selectedOptions) {},
+                      options:  const [
+                        DropdownListItem(value: 1, label: 'firstddddddddddddd'),
+                        DropdownListItem(value: 2, label: 'seconddddddddddddddddd'),
+                        DropdownListItem(value: 3, label: 'thiraaaaaaaaaaaad'),
+                        DropdownListItem(value: 4, label: 'foussssssssr'),
+                        DropdownListItem(value: 5, label: 'fivssssssssssse'),
+                      ],
+                      selectionType: SelectionType.multiSelect,
+                      textIcon: Icons.article,
+                      // chipConfig: const ChipConfig(wrapType: WrapType.wrap),
+                      optionTextStyle: const TextStyle(fontSize: 16),
+                    ),
+                    MultiSelectDropDown<int>(
+                      onOptionSelected: (List<DropdownListItem> selectedOptions) {},
+                      options:  const [
+                        DropdownListItem(value: 1, label: 'firstddddddddddddd', description: 'ddddddddddddddddddddd',),
+                        DropdownListItem(value: 2, label: 'seconddddddddddddddddd', description: 'ddddddddddddddddddddd',),
+                        DropdownListItem(value: 3, label: 'thiraaaaaaaaaaaad', description: 'ddddddddddddddddddddd',),
+                        DropdownListItem(value: 4, label: 'foussssssssr', description: 'ddddddddddddddddddddd',),
+                        DropdownListItem(value: 5, label: 'fivssssssssssse', description: 'ddddddddddddddddddddd',),
+                      ],
+                      selectionType: SelectionType.multiSelect,
+                      textIcon: Icons.article,
                       // chipConfig: const ChipConfig(wrapType: WrapType.wrap),
                       optionTextStyle: const TextStyle(fontSize: 16),
                     ),
