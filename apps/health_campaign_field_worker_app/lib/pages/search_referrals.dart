@@ -154,15 +154,23 @@ class _SearchReferralsPageState extends LocalizedState<SearchReferralsPage> {
 
                           VoidCallback? onPressed;
 
-                          onPressed = () {
-                            FocusManager.instance.primaryFocus?.unfocus();
-
-                            router.push(
-                              HFCreateReferralWrapperRoute(
-                                viewOnly: false,
-                              ),
-                            );
-                          };
+                          onPressed = state.loading ||
+                                  state.searchQuery == null ||
+                                  (state.searchQuery ?? '').length < 2
+                              ? null
+                              : () {
+                                  FocusManager.instance.primaryFocus?.unfocus();
+                                  final bloc =
+                                  context.read<SearchReferralsBloc>();
+                                  bloc.add(
+                                    const SearchReferralsClearEvent(),
+                                  );
+                                  router.push(
+                                    HFCreateReferralWrapperRoute(
+                                      viewOnly: false,
+                                    ),
+                                  );
+                                };
 
                           return DigitElevatedButton(
                             onPressed: onPressed,

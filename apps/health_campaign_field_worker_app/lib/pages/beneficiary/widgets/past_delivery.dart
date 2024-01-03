@@ -121,7 +121,7 @@ Widget buildTableContent(
                   },
                 ),
               ],
-              columnWidth: 125,
+              columnWidth: 150,
               height: ((fetchProductVariant(item, individualModel)!
                                   .productVariants ??
                               [])

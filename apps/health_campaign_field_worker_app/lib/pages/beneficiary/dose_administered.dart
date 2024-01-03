@@ -101,6 +101,9 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                               if (!form.valid)
                                 return;
                               else {
+                                final doseAdministered = form
+                                    .control(_doseAdministeredKey)
+                                    .value as KeyValue;
                                 clickedStatus.value = true;
                                 final bloc = context
                                     .read<DeliverInterventionBloc>()
@@ -108,7 +111,8 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                 final event =
                                     context.read<DeliverInterventionBloc>();
 
-                                if (doseAdministered && context.mounted) {
+                                if (doseAdministered.key == true &&
+                                    context.mounted) {
                                   // Iterate through future deliveries
 
                                   for (var e in bloc.futureDeliveries!) {

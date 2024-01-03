@@ -216,7 +216,7 @@ class SearchDropdownFormFieldState<T> extends State<SearchDropdownFormField>
                     ),
                 isEmpty: _isEmpty,
                 isFocused: _isFocused,
-                child: this._overlayEntry != null && widget.enabled == false
+                child: this._overlayEntry != null
                     ? EditableText(
                         textInputAction: TextInputAction.none,
                         keyboardType: TextInputType.name,
