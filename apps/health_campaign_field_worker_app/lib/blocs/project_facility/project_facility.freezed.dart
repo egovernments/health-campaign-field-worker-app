@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'project_facility.dart';
 
@@ -90,22 +90,25 @@ class _$ProjectFacilityEventCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$ProjectFacilityLoadEventCopyWith<$Res>
+abstract class _$$ProjectFacilityLoadEventImplCopyWith<$Res>
     implements $ProjectFacilityEventCopyWith<$Res> {
-  factory _$$ProjectFacilityLoadEventCopyWith(_$ProjectFacilityLoadEvent value,
-          $Res Function(_$ProjectFacilityLoadEvent) then) =
-      __$$ProjectFacilityLoadEventCopyWithImpl<$Res>;
+  factory _$$ProjectFacilityLoadEventImplCopyWith(
+          _$ProjectFacilityLoadEventImpl value,
+          $Res Function(_$ProjectFacilityLoadEventImpl) then) =
+      __$$ProjectFacilityLoadEventImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({ProjectFacilitySearchModel query});
 }
 
 /// @nodoc
-class __$$ProjectFacilityLoadEventCopyWithImpl<$Res>
-    extends _$ProjectFacilityEventCopyWithImpl<$Res, _$ProjectFacilityLoadEvent>
-    implements _$$ProjectFacilityLoadEventCopyWith<$Res> {
-  __$$ProjectFacilityLoadEventCopyWithImpl(_$ProjectFacilityLoadEvent _value,
-      $Res Function(_$ProjectFacilityLoadEvent) _then)
+class __$$ProjectFacilityLoadEventImplCopyWithImpl<$Res>
+    extends _$ProjectFacilityEventCopyWithImpl<$Res,
+        _$ProjectFacilityLoadEventImpl>
+    implements _$$ProjectFacilityLoadEventImplCopyWith<$Res> {
+  __$$ProjectFacilityLoadEventImplCopyWithImpl(
+      _$ProjectFacilityLoadEventImpl _value,
+      $Res Function(_$ProjectFacilityLoadEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -113,7 +116,7 @@ class __$$ProjectFacilityLoadEventCopyWithImpl<$Res>
   $Res call({
     Object? query = null,
   }) {
-    return _then(_$ProjectFacilityLoadEvent(
+    return _then(_$ProjectFacilityLoadEventImpl(
       query: null == query
           ? _value.query
           : query // ignore: cast_nullable_to_non_nullable
@@ -124,8 +127,8 @@ class __$$ProjectFacilityLoadEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ProjectFacilityLoadEvent implements ProjectFacilityLoadEvent {
-  const _$ProjectFacilityLoadEvent({required this.query});
+class _$ProjectFacilityLoadEventImpl implements ProjectFacilityLoadEvent {
+  const _$ProjectFacilityLoadEventImpl({required this.query});
 
   @override
   final ProjectFacilitySearchModel query;
@@ -136,10 +139,10 @@ class _$ProjectFacilityLoadEvent implements ProjectFacilityLoadEvent {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ProjectFacilityLoadEvent &&
+            other is _$ProjectFacilityLoadEventImpl &&
             (identical(other.query, query) || other.query == query));
   }
 
@@ -149,10 +152,9 @@ class _$ProjectFacilityLoadEvent implements ProjectFacilityLoadEvent {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ProjectFacilityLoadEventCopyWith<_$ProjectFacilityLoadEvent>
-      get copyWith =>
-          __$$ProjectFacilityLoadEventCopyWithImpl<_$ProjectFacilityLoadEvent>(
-              this, _$identity);
+  _$$ProjectFacilityLoadEventImplCopyWith<_$ProjectFacilityLoadEventImpl>
+      get copyWith => __$$ProjectFacilityLoadEventImplCopyWithImpl<
+          _$ProjectFacilityLoadEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -214,13 +216,13 @@ class _$ProjectFacilityLoadEvent implements ProjectFacilityLoadEvent {
 abstract class ProjectFacilityLoadEvent implements ProjectFacilityEvent {
   const factory ProjectFacilityLoadEvent(
           {required final ProjectFacilitySearchModel query}) =
-      _$ProjectFacilityLoadEvent;
+      _$ProjectFacilityLoadEventImpl;
 
   @override
   ProjectFacilitySearchModel get query;
   @override
   @JsonKey(ignore: true)
-  _$$ProjectFacilityLoadEventCopyWith<_$ProjectFacilityLoadEvent>
+  _$$ProjectFacilityLoadEventImplCopyWith<_$ProjectFacilityLoadEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -293,27 +295,28 @@ class _$ProjectFacilityStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$ProjectFacilityEmptyStateCopyWith<$Res> {
-  factory _$$ProjectFacilityEmptyStateCopyWith(
-          _$ProjectFacilityEmptyState value,
-          $Res Function(_$ProjectFacilityEmptyState) then) =
-      __$$ProjectFacilityEmptyStateCopyWithImpl<$Res>;
+abstract class _$$ProjectFacilityEmptyStateImplCopyWith<$Res> {
+  factory _$$ProjectFacilityEmptyStateImplCopyWith(
+          _$ProjectFacilityEmptyStateImpl value,
+          $Res Function(_$ProjectFacilityEmptyStateImpl) then) =
+      __$$ProjectFacilityEmptyStateImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$ProjectFacilityEmptyStateCopyWithImpl<$Res>
+class __$$ProjectFacilityEmptyStateImplCopyWithImpl<$Res>
     extends _$ProjectFacilityStateCopyWithImpl<$Res,
-        _$ProjectFacilityEmptyState>
-    implements _$$ProjectFacilityEmptyStateCopyWith<$Res> {
-  __$$ProjectFacilityEmptyStateCopyWithImpl(_$ProjectFacilityEmptyState _value,
-      $Res Function(_$ProjectFacilityEmptyState) _then)
+        _$ProjectFacilityEmptyStateImpl>
+    implements _$$ProjectFacilityEmptyStateImplCopyWith<$Res> {
+  __$$ProjectFacilityEmptyStateImplCopyWithImpl(
+      _$ProjectFacilityEmptyStateImpl _value,
+      $Res Function(_$ProjectFacilityEmptyStateImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$ProjectFacilityEmptyState implements ProjectFacilityEmptyState {
-  const _$ProjectFacilityEmptyState();
+class _$ProjectFacilityEmptyStateImpl implements ProjectFacilityEmptyState {
+  const _$ProjectFacilityEmptyStateImpl();
 
   @override
   String toString() {
@@ -321,10 +324,10 @@ class _$ProjectFacilityEmptyState implements ProjectFacilityEmptyState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ProjectFacilityEmptyState);
+            other is _$ProjectFacilityEmptyStateImpl);
   }
 
   @override
@@ -401,32 +404,32 @@ class _$ProjectFacilityEmptyState implements ProjectFacilityEmptyState {
 }
 
 abstract class ProjectFacilityEmptyState implements ProjectFacilityState {
-  const factory ProjectFacilityEmptyState() = _$ProjectFacilityEmptyState;
+  const factory ProjectFacilityEmptyState() = _$ProjectFacilityEmptyStateImpl;
 }
 
 /// @nodoc
-abstract class _$$ProjectFacilityLoadingStateCopyWith<$Res> {
-  factory _$$ProjectFacilityLoadingStateCopyWith(
-          _$ProjectFacilityLoadingState value,
-          $Res Function(_$ProjectFacilityLoadingState) then) =
-      __$$ProjectFacilityLoadingStateCopyWithImpl<$Res>;
+abstract class _$$ProjectFacilityLoadingStateImplCopyWith<$Res> {
+  factory _$$ProjectFacilityLoadingStateImplCopyWith(
+          _$ProjectFacilityLoadingStateImpl value,
+          $Res Function(_$ProjectFacilityLoadingStateImpl) then) =
+      __$$ProjectFacilityLoadingStateImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$ProjectFacilityLoadingStateCopyWithImpl<$Res>
+class __$$ProjectFacilityLoadingStateImplCopyWithImpl<$Res>
     extends _$ProjectFacilityStateCopyWithImpl<$Res,
-        _$ProjectFacilityLoadingState>
-    implements _$$ProjectFacilityLoadingStateCopyWith<$Res> {
-  __$$ProjectFacilityLoadingStateCopyWithImpl(
-      _$ProjectFacilityLoadingState _value,
-      $Res Function(_$ProjectFacilityLoadingState) _then)
+        _$ProjectFacilityLoadingStateImpl>
+    implements _$$ProjectFacilityLoadingStateImplCopyWith<$Res> {
+  __$$ProjectFacilityLoadingStateImplCopyWithImpl(
+      _$ProjectFacilityLoadingStateImpl _value,
+      $Res Function(_$ProjectFacilityLoadingStateImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$ProjectFacilityLoadingState implements ProjectFacilityLoadingState {
-  const _$ProjectFacilityLoadingState();
+class _$ProjectFacilityLoadingStateImpl implements ProjectFacilityLoadingState {
+  const _$ProjectFacilityLoadingStateImpl();
 
   @override
   String toString() {
@@ -434,10 +437,10 @@ class _$ProjectFacilityLoadingState implements ProjectFacilityLoadingState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ProjectFacilityLoadingState);
+            other is _$ProjectFacilityLoadingStateImpl);
   }
 
   @override
@@ -514,27 +517,28 @@ class _$ProjectFacilityLoadingState implements ProjectFacilityLoadingState {
 }
 
 abstract class ProjectFacilityLoadingState implements ProjectFacilityState {
-  const factory ProjectFacilityLoadingState() = _$ProjectFacilityLoadingState;
+  const factory ProjectFacilityLoadingState() =
+      _$ProjectFacilityLoadingStateImpl;
 }
 
 /// @nodoc
-abstract class _$$ProjectFacilityFetchedStateCopyWith<$Res> {
-  factory _$$ProjectFacilityFetchedStateCopyWith(
-          _$ProjectFacilityFetchedState value,
-          $Res Function(_$ProjectFacilityFetchedState) then) =
-      __$$ProjectFacilityFetchedStateCopyWithImpl<$Res>;
+abstract class _$$ProjectFacilityFetchedStateImplCopyWith<$Res> {
+  factory _$$ProjectFacilityFetchedStateImplCopyWith(
+          _$ProjectFacilityFetchedStateImpl value,
+          $Res Function(_$ProjectFacilityFetchedStateImpl) then) =
+      __$$ProjectFacilityFetchedStateImplCopyWithImpl<$Res>;
   @useResult
   $Res call({List<ProjectFacilityModel> projectFacilities});
 }
 
 /// @nodoc
-class __$$ProjectFacilityFetchedStateCopyWithImpl<$Res>
+class __$$ProjectFacilityFetchedStateImplCopyWithImpl<$Res>
     extends _$ProjectFacilityStateCopyWithImpl<$Res,
-        _$ProjectFacilityFetchedState>
-    implements _$$ProjectFacilityFetchedStateCopyWith<$Res> {
-  __$$ProjectFacilityFetchedStateCopyWithImpl(
-      _$ProjectFacilityFetchedState _value,
-      $Res Function(_$ProjectFacilityFetchedState) _then)
+        _$ProjectFacilityFetchedStateImpl>
+    implements _$$ProjectFacilityFetchedStateImplCopyWith<$Res> {
+  __$$ProjectFacilityFetchedStateImplCopyWithImpl(
+      _$ProjectFacilityFetchedStateImpl _value,
+      $Res Function(_$ProjectFacilityFetchedStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -542,7 +546,7 @@ class __$$ProjectFacilityFetchedStateCopyWithImpl<$Res>
   $Res call({
     Object? projectFacilities = null,
   }) {
-    return _then(_$ProjectFacilityFetchedState(
+    return _then(_$ProjectFacilityFetchedStateImpl(
       projectFacilities: null == projectFacilities
           ? _value._projectFacilities
           : projectFacilities // ignore: cast_nullable_to_non_nullable
@@ -553,14 +557,16 @@ class __$$ProjectFacilityFetchedStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ProjectFacilityFetchedState implements ProjectFacilityFetchedState {
-  const _$ProjectFacilityFetchedState(
+class _$ProjectFacilityFetchedStateImpl implements ProjectFacilityFetchedState {
+  const _$ProjectFacilityFetchedStateImpl(
       {required final List<ProjectFacilityModel> projectFacilities})
       : _projectFacilities = projectFacilities;
 
   final List<ProjectFacilityModel> _projectFacilities;
   @override
   List<ProjectFacilityModel> get projectFacilities {
+    if (_projectFacilities is EqualUnmodifiableListView)
+      return _projectFacilities;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_projectFacilities);
   }
@@ -571,10 +577,10 @@ class _$ProjectFacilityFetchedState implements ProjectFacilityFetchedState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ProjectFacilityFetchedState &&
+            other is _$ProjectFacilityFetchedStateImpl &&
             const DeepCollectionEquality()
                 .equals(other._projectFacilities, _projectFacilities));
   }
@@ -586,9 +592,9 @@ class _$ProjectFacilityFetchedState implements ProjectFacilityFetchedState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ProjectFacilityFetchedStateCopyWith<_$ProjectFacilityFetchedState>
-      get copyWith => __$$ProjectFacilityFetchedStateCopyWithImpl<
-          _$ProjectFacilityFetchedState>(this, _$identity);
+  _$$ProjectFacilityFetchedStateImplCopyWith<_$ProjectFacilityFetchedStateImpl>
+      get copyWith => __$$ProjectFacilityFetchedStateImplCopyWithImpl<
+          _$ProjectFacilityFetchedStateImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -663,10 +669,10 @@ class _$ProjectFacilityFetchedState implements ProjectFacilityFetchedState {
 abstract class ProjectFacilityFetchedState implements ProjectFacilityState {
   const factory ProjectFacilityFetchedState(
           {required final List<ProjectFacilityModel> projectFacilities}) =
-      _$ProjectFacilityFetchedState;
+      _$ProjectFacilityFetchedStateImpl;
 
   List<ProjectFacilityModel> get projectFacilities;
   @JsonKey(ignore: true)
-  _$$ProjectFacilityFetchedStateCopyWith<_$ProjectFacilityFetchedState>
+  _$$ProjectFacilityFetchedStateImplCopyWith<_$ProjectFacilityFetchedStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'roles_model.dart';
 
@@ -74,22 +74,22 @@ class _$RolesWrapperModelCopyWithImpl<$Res, $Val extends RolesWrapperModel>
 }
 
 /// @nodoc
-abstract class _$$_RolesWrapperModelCopyWith<$Res>
+abstract class _$$RolesWrapperModelImplCopyWith<$Res>
     implements $RolesWrapperModelCopyWith<$Res> {
-  factory _$$_RolesWrapperModelCopyWith(_$_RolesWrapperModel value,
-          $Res Function(_$_RolesWrapperModel) then) =
-      __$$_RolesWrapperModelCopyWithImpl<$Res>;
+  factory _$$RolesWrapperModelImplCopyWith(_$RolesWrapperModelImpl value,
+          $Res Function(_$RolesWrapperModelImpl) then) =
+      __$$RolesWrapperModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String tenantId, String moduleName, List<RolesModel> roles});
 }
 
 /// @nodoc
-class __$$_RolesWrapperModelCopyWithImpl<$Res>
-    extends _$RolesWrapperModelCopyWithImpl<$Res, _$_RolesWrapperModel>
-    implements _$$_RolesWrapperModelCopyWith<$Res> {
-  __$$_RolesWrapperModelCopyWithImpl(
-      _$_RolesWrapperModel _value, $Res Function(_$_RolesWrapperModel) _then)
+class __$$RolesWrapperModelImplCopyWithImpl<$Res>
+    extends _$RolesWrapperModelCopyWithImpl<$Res, _$RolesWrapperModelImpl>
+    implements _$$RolesWrapperModelImplCopyWith<$Res> {
+  __$$RolesWrapperModelImplCopyWithImpl(_$RolesWrapperModelImpl _value,
+      $Res Function(_$RolesWrapperModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -99,7 +99,7 @@ class __$$_RolesWrapperModelCopyWithImpl<$Res>
     Object? moduleName = null,
     Object? roles = null,
   }) {
-    return _then(_$_RolesWrapperModel(
+    return _then(_$RolesWrapperModelImpl(
       tenantId: null == tenantId
           ? _value.tenantId
           : tenantId // ignore: cast_nullable_to_non_nullable
@@ -119,15 +119,15 @@ class __$$_RolesWrapperModelCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
-class _$_RolesWrapperModel implements _RolesWrapperModel {
-  const _$_RolesWrapperModel(
+class _$RolesWrapperModelImpl implements _RolesWrapperModel {
+  const _$RolesWrapperModelImpl(
       {required this.tenantId,
       required this.moduleName,
       final List<RolesModel> roles = const []})
       : _roles = roles;
 
-  factory _$_RolesWrapperModel.fromJson(Map<String, dynamic> json) =>
-      _$$_RolesWrapperModelFromJson(json);
+  factory _$RolesWrapperModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$RolesWrapperModelImplFromJson(json);
 
   @override
   final String tenantId;
@@ -137,6 +137,7 @@ class _$_RolesWrapperModel implements _RolesWrapperModel {
   @override
   @JsonKey()
   List<RolesModel> get roles {
+    if (_roles is EqualUnmodifiableListView) return _roles;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_roles);
   }
@@ -147,10 +148,10 @@ class _$_RolesWrapperModel implements _RolesWrapperModel {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_RolesWrapperModel &&
+            other is _$RolesWrapperModelImpl &&
             (identical(other.tenantId, tenantId) ||
                 other.tenantId == tenantId) &&
             (identical(other.moduleName, moduleName) ||
@@ -166,13 +167,13 @@ class _$_RolesWrapperModel implements _RolesWrapperModel {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_RolesWrapperModelCopyWith<_$_RolesWrapperModel> get copyWith =>
-      __$$_RolesWrapperModelCopyWithImpl<_$_RolesWrapperModel>(
+  _$$RolesWrapperModelImplCopyWith<_$RolesWrapperModelImpl> get copyWith =>
+      __$$RolesWrapperModelImplCopyWithImpl<_$RolesWrapperModelImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_RolesWrapperModelToJson(
+    return _$$RolesWrapperModelImplToJson(
       this,
     );
   }
@@ -182,10 +183,10 @@ abstract class _RolesWrapperModel implements RolesWrapperModel {
   const factory _RolesWrapperModel(
       {required final String tenantId,
       required final String moduleName,
-      final List<RolesModel> roles}) = _$_RolesWrapperModel;
+      final List<RolesModel> roles}) = _$RolesWrapperModelImpl;
 
   factory _RolesWrapperModel.fromJson(Map<String, dynamic> json) =
-      _$_RolesWrapperModel.fromJson;
+      _$RolesWrapperModelImpl.fromJson;
 
   @override
   String get tenantId;
@@ -195,7 +196,7 @@ abstract class _RolesWrapperModel implements RolesWrapperModel {
   List<RolesModel> get roles;
   @override
   @JsonKey(ignore: true)
-  _$$_RolesWrapperModelCopyWith<_$_RolesWrapperModel> get copyWith =>
+  _$$RolesWrapperModelImplCopyWith<_$RolesWrapperModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -259,22 +260,22 @@ class _$RolesModelCopyWithImpl<$Res, $Val extends RolesModel>
 }
 
 /// @nodoc
-abstract class _$$_RolesModelCopyWith<$Res>
+abstract class _$$RolesModelImplCopyWith<$Res>
     implements $RolesModelCopyWith<$Res> {
-  factory _$$_RolesModelCopyWith(
-          _$_RolesModel value, $Res Function(_$_RolesModel) then) =
-      __$$_RolesModelCopyWithImpl<$Res>;
+  factory _$$RolesModelImplCopyWith(
+          _$RolesModelImpl value, $Res Function(_$RolesModelImpl) then) =
+      __$$RolesModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({Code code, String name, String? description});
 }
 
 /// @nodoc
-class __$$_RolesModelCopyWithImpl<$Res>
-    extends _$RolesModelCopyWithImpl<$Res, _$_RolesModel>
-    implements _$$_RolesModelCopyWith<$Res> {
-  __$$_RolesModelCopyWithImpl(
-      _$_RolesModel _value, $Res Function(_$_RolesModel) _then)
+class __$$RolesModelImplCopyWithImpl<$Res>
+    extends _$RolesModelCopyWithImpl<$Res, _$RolesModelImpl>
+    implements _$$RolesModelImplCopyWith<$Res> {
+  __$$RolesModelImplCopyWithImpl(
+      _$RolesModelImpl _value, $Res Function(_$RolesModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -284,7 +285,7 @@ class __$$_RolesModelCopyWithImpl<$Res>
     Object? name = null,
     Object? description = freezed,
   }) {
-    return _then(_$_RolesModel(
+    return _then(_$RolesModelImpl(
       code: null == code
           ? _value.code
           : code // ignore: cast_nullable_to_non_nullable
@@ -304,12 +305,12 @@ class __$$_RolesModelCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(explicitToJson: true)
-class _$_RolesModel implements _RolesModel {
-  const _$_RolesModel(
+class _$RolesModelImpl implements _RolesModel {
+  const _$RolesModelImpl(
       {required this.code, required this.name, this.description});
 
-  factory _$_RolesModel.fromJson(Map<String, dynamic> json) =>
-      _$$_RolesModelFromJson(json);
+  factory _$RolesModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$RolesModelImplFromJson(json);
 
   @override
   final Code code;
@@ -324,10 +325,10 @@ class _$_RolesModel implements _RolesModel {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_RolesModel &&
+            other is _$RolesModelImpl &&
             (identical(other.code, code) || other.code == code) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.description, description) ||
@@ -341,12 +342,12 @@ class _$_RolesModel implements _RolesModel {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_RolesModelCopyWith<_$_RolesModel> get copyWith =>
-      __$$_RolesModelCopyWithImpl<_$_RolesModel>(this, _$identity);
+  _$$RolesModelImplCopyWith<_$RolesModelImpl> get copyWith =>
+      __$$RolesModelImplCopyWithImpl<_$RolesModelImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_RolesModelToJson(
+    return _$$RolesModelImplToJson(
       this,
     );
   }
@@ -356,10 +357,10 @@ abstract class _RolesModel implements RolesModel {
   const factory _RolesModel(
       {required final Code code,
       required final String name,
-      final String? description}) = _$_RolesModel;
+      final String? description}) = _$RolesModelImpl;
 
   factory _RolesModel.fromJson(Map<String, dynamic> json) =
-      _$_RolesModel.fromJson;
+      _$RolesModelImpl.fromJson;
 
   @override
   Code get code;
@@ -369,6 +370,6 @@ abstract class _RolesModel implements RolesModel {
   String? get description;
   @override
   @JsonKey(ignore: true)
-  _$$_RolesModelCopyWith<_$_RolesModel> get copyWith =>
+  _$$RolesModelImplCopyWith<_$RolesModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

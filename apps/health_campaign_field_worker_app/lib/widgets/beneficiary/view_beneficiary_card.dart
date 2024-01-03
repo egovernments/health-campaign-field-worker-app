@@ -281,11 +281,11 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                       ? (householdMember.tasks ?? []).isNotEmpty &&
                               !isNotEligible &&
                               !isBeneficiaryRefused
-                          ? Status.visited.toValue()
-                          : Status.notVisited.toValue()
+                          ? Status.visited.name
+                          : Status.notVisited.name
                       : (householdMember.tasks ?? []).isNotEmpty
-                          ? Status.visited.toValue()
-                          : Status.notVisited.toValue(),
+                          ? Status.visited.name
+                          : Status.notVisited.name,
                   title: [
                     householdMember.headOfHousehold.name?.givenName,
                     householdMember.headOfHousehold.name?.familyName,
@@ -349,19 +349,19 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
     if (statusKeys.isNotEligible) {
       return 'Not Eligible';
     } else if (statusKeys.isBeneficiaryReferred) {
-      return localizations.translate(Status.beneficiaryReferred.toValue());
+      return localizations.translate(Status.beneficiaryReferred.name);
     } else if (taskData != null) {
       if (taskData.isEmpty) {
-        return localizations.translate(Status.notVisited.toValue());
+        return localizations.translate(Status.notVisited.name);
       } else if (statusKeys.isBeneficiaryRefused && !statusKeys.isStatusReset) {
-        return localizations.translate(Status.beneficiaryRefused.toValue());
+        return localizations.translate(Status.beneficiaryRefused.name);
       } else if (statusKeys.isStatusReset) {
-        return localizations.translate(Status.notVisited.toValue());
+        return localizations.translate(Status.notVisited.name);
       } else {
-        return localizations.translate(Status.visited.toValue());
+        return localizations.translate(Status.visited.name);
       }
     } else {
-      return localizations.translate(Status.notVisited.toValue());
+      return localizations.translate(Status.notVisited.name);
     }
   }
 

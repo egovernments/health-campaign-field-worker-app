@@ -64,7 +64,7 @@ class LocalSecureStore {
     if (projectString == null) return null;
 
     try {
-      final project = Mapper.fromMap<ProjectModel>(json.decode(projectString));
+      final project = ProjectModelMapper.fromMap(json.decode(projectString));
 
       return project;
     } catch (_) {

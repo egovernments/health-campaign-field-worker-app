@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'household_details.dart';
 
@@ -90,25 +90,25 @@ class _$HouseholdDetailsEventCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$HouseholdDetailsSubmitEventCopyWith<$Res>
+abstract class _$$HouseholdDetailsSubmitEventImplCopyWith<$Res>
     implements $HouseholdDetailsEventCopyWith<$Res> {
-  factory _$$HouseholdDetailsSubmitEventCopyWith(
-          _$HouseholdDetailsSubmitEvent value,
-          $Res Function(_$HouseholdDetailsSubmitEvent) then) =
-      __$$HouseholdDetailsSubmitEventCopyWithImpl<$Res>;
+  factory _$$HouseholdDetailsSubmitEventImplCopyWith(
+          _$HouseholdDetailsSubmitEventImpl value,
+          $Res Function(_$HouseholdDetailsSubmitEventImpl) then) =
+      __$$HouseholdDetailsSubmitEventImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({HouseholdModel householdModel});
 }
 
 /// @nodoc
-class __$$HouseholdDetailsSubmitEventCopyWithImpl<$Res>
+class __$$HouseholdDetailsSubmitEventImplCopyWithImpl<$Res>
     extends _$HouseholdDetailsEventCopyWithImpl<$Res,
-        _$HouseholdDetailsSubmitEvent>
-    implements _$$HouseholdDetailsSubmitEventCopyWith<$Res> {
-  __$$HouseholdDetailsSubmitEventCopyWithImpl(
-      _$HouseholdDetailsSubmitEvent _value,
-      $Res Function(_$HouseholdDetailsSubmitEvent) _then)
+        _$HouseholdDetailsSubmitEventImpl>
+    implements _$$HouseholdDetailsSubmitEventImplCopyWith<$Res> {
+  __$$HouseholdDetailsSubmitEventImplCopyWithImpl(
+      _$HouseholdDetailsSubmitEventImpl _value,
+      $Res Function(_$HouseholdDetailsSubmitEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -116,7 +116,7 @@ class __$$HouseholdDetailsSubmitEventCopyWithImpl<$Res>
   $Res call({
     Object? householdModel = null,
   }) {
-    return _then(_$HouseholdDetailsSubmitEvent(
+    return _then(_$HouseholdDetailsSubmitEventImpl(
       householdModel: null == householdModel
           ? _value.householdModel
           : householdModel // ignore: cast_nullable_to_non_nullable
@@ -127,8 +127,8 @@ class __$$HouseholdDetailsSubmitEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$HouseholdDetailsSubmitEvent implements HouseholdDetailsSubmitEvent {
-  const _$HouseholdDetailsSubmitEvent({required this.householdModel});
+class _$HouseholdDetailsSubmitEventImpl implements HouseholdDetailsSubmitEvent {
+  const _$HouseholdDetailsSubmitEventImpl({required this.householdModel});
 
   @override
   final HouseholdModel householdModel;
@@ -139,10 +139,10 @@ class _$HouseholdDetailsSubmitEvent implements HouseholdDetailsSubmitEvent {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$HouseholdDetailsSubmitEvent &&
+            other is _$HouseholdDetailsSubmitEventImpl &&
             (identical(other.householdModel, householdModel) ||
                 other.householdModel == householdModel));
   }
@@ -153,9 +153,9 @@ class _$HouseholdDetailsSubmitEvent implements HouseholdDetailsSubmitEvent {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$HouseholdDetailsSubmitEventCopyWith<_$HouseholdDetailsSubmitEvent>
-      get copyWith => __$$HouseholdDetailsSubmitEventCopyWithImpl<
-          _$HouseholdDetailsSubmitEvent>(this, _$identity);
+  _$$HouseholdDetailsSubmitEventImplCopyWith<_$HouseholdDetailsSubmitEventImpl>
+      get copyWith => __$$HouseholdDetailsSubmitEventImplCopyWithImpl<
+          _$HouseholdDetailsSubmitEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -217,13 +217,13 @@ class _$HouseholdDetailsSubmitEvent implements HouseholdDetailsSubmitEvent {
 abstract class HouseholdDetailsSubmitEvent implements HouseholdDetailsEvent {
   const factory HouseholdDetailsSubmitEvent(
           {required final HouseholdModel householdModel}) =
-      _$HouseholdDetailsSubmitEvent;
+      _$HouseholdDetailsSubmitEventImpl;
 
   @override
   HouseholdModel get householdModel;
   @override
   @JsonKey(ignore: true)
-  _$$HouseholdDetailsSubmitEventCopyWith<_$HouseholdDetailsSubmitEvent>
+  _$$HouseholdDetailsSubmitEventImplCopyWith<_$HouseholdDetailsSubmitEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -284,11 +284,12 @@ class _$HouseholdDetailsStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_HouseholdDetailsStateCopyWith<$Res>
+abstract class _$$HouseholdDetailsStateImplCopyWith<$Res>
     implements $HouseholdDetailsStateCopyWith<$Res> {
-  factory _$$_HouseholdDetailsStateCopyWith(_$_HouseholdDetailsState value,
-          $Res Function(_$_HouseholdDetailsState) then) =
-      __$$_HouseholdDetailsStateCopyWithImpl<$Res>;
+  factory _$$HouseholdDetailsStateImplCopyWith(
+          _$HouseholdDetailsStateImpl value,
+          $Res Function(_$HouseholdDetailsStateImpl) then) =
+      __$$HouseholdDetailsStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -296,11 +297,12 @@ abstract class _$$_HouseholdDetailsStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_HouseholdDetailsStateCopyWithImpl<$Res>
-    extends _$HouseholdDetailsStateCopyWithImpl<$Res, _$_HouseholdDetailsState>
-    implements _$$_HouseholdDetailsStateCopyWith<$Res> {
-  __$$_HouseholdDetailsStateCopyWithImpl(_$_HouseholdDetailsState _value,
-      $Res Function(_$_HouseholdDetailsState) _then)
+class __$$HouseholdDetailsStateImplCopyWithImpl<$Res>
+    extends _$HouseholdDetailsStateCopyWithImpl<$Res,
+        _$HouseholdDetailsStateImpl>
+    implements _$$HouseholdDetailsStateImplCopyWith<$Res> {
+  __$$HouseholdDetailsStateImplCopyWithImpl(_$HouseholdDetailsStateImpl _value,
+      $Res Function(_$HouseholdDetailsStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -310,7 +312,7 @@ class __$$_HouseholdDetailsStateCopyWithImpl<$Res>
     Object? isEditModeEnabled = null,
     Object? householdModel = freezed,
   }) {
-    return _then(_$_HouseholdDetailsState(
+    return _then(_$HouseholdDetailsStateImpl(
       loading: null == loading
           ? _value.loading
           : loading // ignore: cast_nullable_to_non_nullable
@@ -329,8 +331,8 @@ class __$$_HouseholdDetailsStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_HouseholdDetailsState extends _HouseholdDetailsState {
-  const _$_HouseholdDetailsState(
+class _$HouseholdDetailsStateImpl extends _HouseholdDetailsState {
+  const _$HouseholdDetailsStateImpl(
       {this.loading = false,
       this.isEditModeEnabled = true,
       this.householdModel})
@@ -351,10 +353,10 @@ class _$_HouseholdDetailsState extends _HouseholdDetailsState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_HouseholdDetailsState &&
+            other is _$HouseholdDetailsStateImpl &&
             (identical(other.loading, loading) || other.loading == loading) &&
             (identical(other.isEditModeEnabled, isEditModeEnabled) ||
                 other.isEditModeEnabled == isEditModeEnabled) &&
@@ -369,16 +371,16 @@ class _$_HouseholdDetailsState extends _HouseholdDetailsState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_HouseholdDetailsStateCopyWith<_$_HouseholdDetailsState> get copyWith =>
-      __$$_HouseholdDetailsStateCopyWithImpl<_$_HouseholdDetailsState>(
-          this, _$identity);
+  _$$HouseholdDetailsStateImplCopyWith<_$HouseholdDetailsStateImpl>
+      get copyWith => __$$HouseholdDetailsStateImplCopyWithImpl<
+          _$HouseholdDetailsStateImpl>(this, _$identity);
 }
 
 abstract class _HouseholdDetailsState extends HouseholdDetailsState {
   const factory _HouseholdDetailsState(
       {final bool loading,
       final bool isEditModeEnabled,
-      final HouseholdModel? householdModel}) = _$_HouseholdDetailsState;
+      final HouseholdModel? householdModel}) = _$HouseholdDetailsStateImpl;
   const _HouseholdDetailsState._() : super._();
 
   @override
@@ -389,6 +391,6 @@ abstract class _HouseholdDetailsState extends HouseholdDetailsState {
   HouseholdModel? get householdModel;
   @override
   @JsonKey(ignore: true)
-  _$$_HouseholdDetailsStateCopyWith<_$_HouseholdDetailsState> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$HouseholdDetailsStateImplCopyWith<_$HouseholdDetailsStateImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }

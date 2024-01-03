@@ -139,7 +139,7 @@ class _$LoadLocationEventImpl implements LoadLocationEvent {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$LoadLocationEventImpl &&
@@ -293,7 +293,7 @@ class _$ListenLocationEventImpl implements ListenLocationEvent {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ListenLocationEventImpl &&
@@ -450,7 +450,7 @@ class _$RequestLocationServiceEventImpl implements RequestLocationServiceEvent {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$RequestLocationServiceEventImpl &&
@@ -609,7 +609,7 @@ class _$RequestLocationPermissionEventImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$RequestLocationPermissionEventImpl &&
@@ -767,7 +767,7 @@ class _$LocationSetLatLngEventImpl implements LocationSetLatLngEvent {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$LocationSetLatLngEventImpl &&
@@ -1052,7 +1052,7 @@ class _$LocationStateImpl extends _LocationState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$LocationStateImpl &&

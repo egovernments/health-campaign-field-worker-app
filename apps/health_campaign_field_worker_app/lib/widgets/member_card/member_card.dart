@@ -182,7 +182,7 @@ class MemberCard extends StatelessWidget {
                                   ? i18.householdOverView
                                       .householdOverViewBeneficiaryReferredLabel
                                   : isBeneficiaryRefused
-                                      ? Status.beneficiaryRefused.toValue()
+                                      ? Status.beneficiaryRefused.name
                                       // [TODO Need to update the localization]
                                       : i18.householdOverView
                                           .householdOverViewNotDeliveredIconLabel,
@@ -243,7 +243,7 @@ class MemberCard extends StatelessWidget {
                                 final futureTaskList = tasks
                                     ?.where((task) =>
                                         task.status ==
-                                        Status.delivered.toValue())
+                                        Status.delivered.name)
                                     .toList();
 
                                 if ((futureTaskList ?? []).isNotEmpty) {
@@ -361,7 +361,7 @@ class MemberCard extends StatelessWidget {
                                                 projectId: context.projectId,
                                                 status: Status
                                                     .beneficiaryRefused
-                                                    .toValue(),
+                                                    .name,
                                                 clientAuditDetails:
                                                     ClientAuditDetails(
                                                   createdBy:
@@ -380,7 +380,7 @@ class MemberCard extends StatelessWidget {
                                                     AdditionalField(
                                                       'taskStatus',
                                                       Status.beneficiaryRefused
-                                                          .toValue(),
+                                                          .name,
                                                     ),
                                                   ],
                                                 ),

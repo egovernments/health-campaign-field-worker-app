@@ -13,7 +13,7 @@ import '../../../models/entities/gender.dart';
 import '../../../models/entities/transaction_reason.dart';
 import '../../../models/entities/transaction_type.dart';
 import '../../../models/pgr_complaints/pgr_complaints.dart';
-import 'tables/address.dart';
+import 'tables/address.dart' as at;
 import 'tables/attributes.dart';
 import 'tables/boundary.dart';
 import 'tables/document.dart';
@@ -51,7 +51,7 @@ import 'tables/user.dart';
 part 'sql_store.g.dart';
 
 @DriftDatabase(tables: [
-  Address,
+  at.Address,
   Name,
   Boundary,
   Document,
@@ -139,21 +139,21 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
           // Create table for PgrService
           try {
             allTables.forEach((e) async {
-              late final GeneratedColumn<int?> clientModifiedTime =
-                  GeneratedColumn<int?>(
+              late final GeneratedColumn<int> clientModifiedTime =
+                  GeneratedColumn<int>(
                 'client_modified_time',
                 e.aliasedName,
                 true,
-                type: const IntType(),
+                type: DriftSqlType.int,
                 requiredDuringInsert: false,
               );
 
-              late final GeneratedColumn<int?> clientCreatedTime =
-                  GeneratedColumn<int?>(
+              late final GeneratedColumn<int> clientCreatedTime =
+                  GeneratedColumn<int>(
                 'client_created_time',
                 e.aliasedName,
                 true,
-                type: const IntType(),
+                type: DriftSqlType.int,
                 requiredDuringInsert: false,
               );
               AppLogger.instance.info('Applying migration $from to $to');

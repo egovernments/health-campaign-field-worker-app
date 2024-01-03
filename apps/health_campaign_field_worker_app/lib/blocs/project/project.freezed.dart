@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'project.dart';
 
@@ -75,25 +75,27 @@ class _$ProjectEventCopyWithImpl<$Res, $Val extends ProjectEvent>
 }
 
 /// @nodoc
-abstract class _$$ProjectInitializeEventCopyWith<$Res> {
-  factory _$$ProjectInitializeEventCopyWith(_$ProjectInitializeEvent value,
-          $Res Function(_$ProjectInitializeEvent) then) =
-      __$$ProjectInitializeEventCopyWithImpl<$Res>;
+abstract class _$$ProjectInitializeEventImplCopyWith<$Res> {
+  factory _$$ProjectInitializeEventImplCopyWith(
+          _$ProjectInitializeEventImpl value,
+          $Res Function(_$ProjectInitializeEventImpl) then) =
+      __$$ProjectInitializeEventImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$ProjectInitializeEventCopyWithImpl<$Res>
-    extends _$ProjectEventCopyWithImpl<$Res, _$ProjectInitializeEvent>
-    implements _$$ProjectInitializeEventCopyWith<$Res> {
-  __$$ProjectInitializeEventCopyWithImpl(_$ProjectInitializeEvent _value,
-      $Res Function(_$ProjectInitializeEvent) _then)
+class __$$ProjectInitializeEventImplCopyWithImpl<$Res>
+    extends _$ProjectEventCopyWithImpl<$Res, _$ProjectInitializeEventImpl>
+    implements _$$ProjectInitializeEventImplCopyWith<$Res> {
+  __$$ProjectInitializeEventImplCopyWithImpl(
+      _$ProjectInitializeEventImpl _value,
+      $Res Function(_$ProjectInitializeEventImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$ProjectInitializeEvent implements ProjectInitializeEvent {
-  const _$ProjectInitializeEvent();
+class _$ProjectInitializeEventImpl implements ProjectInitializeEvent {
+  const _$ProjectInitializeEventImpl();
 
   @override
   String toString() {
@@ -101,9 +103,10 @@ class _$ProjectInitializeEvent implements ProjectInitializeEvent {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$ProjectInitializeEvent);
+        (other.runtimeType == runtimeType &&
+            other is _$ProjectInitializeEventImpl);
   }
 
   @override
@@ -173,25 +176,26 @@ class _$ProjectInitializeEvent implements ProjectInitializeEvent {
 }
 
 abstract class ProjectInitializeEvent implements ProjectEvent {
-  const factory ProjectInitializeEvent() = _$ProjectInitializeEvent;
+  const factory ProjectInitializeEvent() = _$ProjectInitializeEventImpl;
 }
 
 /// @nodoc
-abstract class _$$ProjectSelectProjectEventCopyWith<$Res> {
-  factory _$$ProjectSelectProjectEventCopyWith(
-          _$ProjectSelectProjectEvent value,
-          $Res Function(_$ProjectSelectProjectEvent) then) =
-      __$$ProjectSelectProjectEventCopyWithImpl<$Res>;
+abstract class _$$ProjectSelectProjectEventImplCopyWith<$Res> {
+  factory _$$ProjectSelectProjectEventImplCopyWith(
+          _$ProjectSelectProjectEventImpl value,
+          $Res Function(_$ProjectSelectProjectEventImpl) then) =
+      __$$ProjectSelectProjectEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call({ProjectModel model});
 }
 
 /// @nodoc
-class __$$ProjectSelectProjectEventCopyWithImpl<$Res>
-    extends _$ProjectEventCopyWithImpl<$Res, _$ProjectSelectProjectEvent>
-    implements _$$ProjectSelectProjectEventCopyWith<$Res> {
-  __$$ProjectSelectProjectEventCopyWithImpl(_$ProjectSelectProjectEvent _value,
-      $Res Function(_$ProjectSelectProjectEvent) _then)
+class __$$ProjectSelectProjectEventImplCopyWithImpl<$Res>
+    extends _$ProjectEventCopyWithImpl<$Res, _$ProjectSelectProjectEventImpl>
+    implements _$$ProjectSelectProjectEventImplCopyWith<$Res> {
+  __$$ProjectSelectProjectEventImplCopyWithImpl(
+      _$ProjectSelectProjectEventImpl _value,
+      $Res Function(_$ProjectSelectProjectEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -199,7 +203,7 @@ class __$$ProjectSelectProjectEventCopyWithImpl<$Res>
   $Res call({
     Object? model = null,
   }) {
-    return _then(_$ProjectSelectProjectEvent(
+    return _then(_$ProjectSelectProjectEventImpl(
       null == model
           ? _value.model
           : model // ignore: cast_nullable_to_non_nullable
@@ -210,8 +214,8 @@ class __$$ProjectSelectProjectEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ProjectSelectProjectEvent implements ProjectSelectProjectEvent {
-  const _$ProjectSelectProjectEvent(this.model);
+class _$ProjectSelectProjectEventImpl implements ProjectSelectProjectEvent {
+  const _$ProjectSelectProjectEventImpl(this.model);
 
   @override
   final ProjectModel model;
@@ -222,10 +226,10 @@ class _$ProjectSelectProjectEvent implements ProjectSelectProjectEvent {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ProjectSelectProjectEvent &&
+            other is _$ProjectSelectProjectEventImpl &&
             (identical(other.model, model) || other.model == model));
   }
 
@@ -235,9 +239,9 @@ class _$ProjectSelectProjectEvent implements ProjectSelectProjectEvent {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ProjectSelectProjectEventCopyWith<_$ProjectSelectProjectEvent>
-      get copyWith => __$$ProjectSelectProjectEventCopyWithImpl<
-          _$ProjectSelectProjectEvent>(this, _$identity);
+  _$$ProjectSelectProjectEventImplCopyWith<_$ProjectSelectProjectEventImpl>
+      get copyWith => __$$ProjectSelectProjectEventImplCopyWithImpl<
+          _$ProjectSelectProjectEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -304,11 +308,11 @@ class _$ProjectSelectProjectEvent implements ProjectSelectProjectEvent {
 
 abstract class ProjectSelectProjectEvent implements ProjectEvent {
   const factory ProjectSelectProjectEvent(final ProjectModel model) =
-      _$ProjectSelectProjectEvent;
+      _$ProjectSelectProjectEventImpl;
 
   ProjectModel get model;
   @JsonKey(ignore: true)
-  _$$ProjectSelectProjectEventCopyWith<_$ProjectSelectProjectEvent>
+  _$$ProjectSelectProjectEventImplCopyWith<_$ProjectSelectProjectEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -418,11 +422,11 @@ class _$ProjectStateCopyWithImpl<$Res, $Val extends ProjectState>
 }
 
 /// @nodoc
-abstract class _$$_ProjectStateCopyWith<$Res>
+abstract class _$$ProjectStateImplCopyWith<$Res>
     implements $ProjectStateCopyWith<$Res> {
-  factory _$$_ProjectStateCopyWith(
-          _$_ProjectState value, $Res Function(_$_ProjectState) then) =
-      __$$_ProjectStateCopyWithImpl<$Res>;
+  factory _$$ProjectStateImplCopyWith(
+          _$ProjectStateImpl value, $Res Function(_$ProjectStateImpl) then) =
+      __$$ProjectStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -440,11 +444,11 @@ abstract class _$$_ProjectStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_ProjectStateCopyWithImpl<$Res>
-    extends _$ProjectStateCopyWithImpl<$Res, _$_ProjectState>
-    implements _$$_ProjectStateCopyWith<$Res> {
-  __$$_ProjectStateCopyWithImpl(
-      _$_ProjectState _value, $Res Function(_$_ProjectState) _then)
+class __$$ProjectStateImplCopyWithImpl<$Res>
+    extends _$ProjectStateCopyWithImpl<$Res, _$ProjectStateImpl>
+    implements _$$ProjectStateImplCopyWith<$Res> {
+  __$$ProjectStateImplCopyWithImpl(
+      _$ProjectStateImpl _value, $Res Function(_$ProjectStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -457,7 +461,7 @@ class __$$_ProjectStateCopyWithImpl<$Res>
     Object? loading = null,
     Object? syncError = freezed,
   }) {
-    return _then(_$_ProjectState(
+    return _then(_$ProjectStateImpl(
       projects: null == projects
           ? _value._projects
           : projects // ignore: cast_nullable_to_non_nullable
@@ -488,8 +492,8 @@ class __$$_ProjectStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_ProjectState extends _ProjectState {
-  const _$_ProjectState(
+class _$ProjectStateImpl extends _ProjectState {
+  const _$ProjectStateImpl(
       {final List<ProjectModel> projects = const [],
       this.projectType,
       this.selectedCycle,
@@ -503,6 +507,7 @@ class _$_ProjectState extends _ProjectState {
   @override
   @JsonKey()
   List<ProjectModel> get projects {
+    if (_projects is EqualUnmodifiableListView) return _projects;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_projects);
   }
@@ -525,10 +530,10 @@ class _$_ProjectState extends _ProjectState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ProjectState &&
+            other is _$ProjectStateImpl &&
             const DeepCollectionEquality().equals(other._projects, _projects) &&
             (identical(other.projectType, projectType) ||
                 other.projectType == projectType) &&
@@ -554,8 +559,8 @@ class _$_ProjectState extends _ProjectState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ProjectStateCopyWith<_$_ProjectState> get copyWith =>
-      __$$_ProjectStateCopyWithImpl<_$_ProjectState>(this, _$identity);
+  _$$ProjectStateImplCopyWith<_$ProjectStateImpl> get copyWith =>
+      __$$ProjectStateImplCopyWithImpl<_$ProjectStateImpl>(this, _$identity);
 }
 
 abstract class _ProjectState extends ProjectState {
@@ -565,7 +570,7 @@ abstract class _ProjectState extends ProjectState {
       final Cycle? selectedCycle,
       final ProjectModel? selectedProject,
       final bool loading,
-      final ProjectSyncErrorType? syncError}) = _$_ProjectState;
+      final ProjectSyncErrorType? syncError}) = _$ProjectStateImpl;
   const _ProjectState._() : super._();
 
   @override
@@ -582,6 +587,6 @@ abstract class _ProjectState extends ProjectState {
   ProjectSyncErrorType? get syncError;
   @override
   @JsonKey(ignore: true)
-  _$$_ProjectStateCopyWith<_$_ProjectState> get copyWith =>
+  _$$ProjectStateImplCopyWith<_$ProjectStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

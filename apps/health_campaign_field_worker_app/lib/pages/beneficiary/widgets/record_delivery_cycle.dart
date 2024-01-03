@@ -227,7 +227,7 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                                     (f) =>
                                         f.key ==
                                         AdditionalFieldsType.doseIndex
-                                            .toValue(),
+                                            .name,
                                   )
                                   ?.value ==
                               '0${item.id}' &&
@@ -236,7 +236,7 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                                     (c) =>
                                         c.key ==
                                         AdditionalFieldsType.cycleIndex
-                                            .toValue(),
+                                            .name,
                                   )
                                   ?.value ==
                               '0${e.id}')
@@ -250,15 +250,15 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                     TableData(
                       localizations.translate(
                         index == selectedIndex
-                            ? Status.toAdminister.toValue()
-                            : tasks?.status ?? Status.inComplete.toValue(),
+                            ? Status.toAdminister.name
+                            : tasks?.status ?? Status.inComplete.name,
                       ),
                       cellKey: 'status',
                       style: TextStyle(
                         color: index == selectedIndex
                             ? null
                             : tasks?.status ==
-                                    Status.administeredSuccess.toValue()
+                                    Status.administeredSuccess.name
                                 ? DigitTheme
                                     .instance.colorScheme.onSurfaceVariant
                                 : DigitTheme.instance.colorScheme.error,
@@ -267,15 +267,15 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                       ),
                     ),
                     TableData(
-                      tasks?.status == Status.administeredFailed.toValue() ||
+                      tasks?.status == Status.administeredFailed.name ||
                               (tasks?.additionalFields?.fields
                                       .where((e) =>
                                           e.key ==
                                           AdditionalFieldsType.deliveryStrategy
-                                              .toValue())
+                                              .name)
                                       .firstOrNull
                                       ?.value ==
-                                  DeliverStrategyType.indirect.toValue())
+                                  DeliverStrategyType.indirect.name)
                           ? ' -- '
                           : tasks?.clientAuditDetails?.createdTime.toDateTime
                                   .getFormattedDate() ??

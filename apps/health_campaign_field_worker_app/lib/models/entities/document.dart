@@ -5,8 +5,10 @@ import 'package:drift/drift.dart';
 import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
 
-@MappableClass(ignoreNull: true)
-class DocumentSearchModel extends EntitySearchModel {
+part 'document.mapper.dart';
+
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class DocumentSearchModel extends EntitySearchModel with DocumentSearchModelMappable {
   final List<String>? clientReferenceId;
   final String? tenantId;
   
@@ -25,8 +27,8 @@ class DocumentSearchModel extends EntitySearchModel {
   }):  super(isDeleted: false);
 }
 
-@MappableClass(ignoreNull: true)
-class DocumentModel extends EntityModel {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class DocumentModel extends EntityModel with DocumentModelMappable {
 
   static const schemaName = 'Document';
 
@@ -78,11 +80,12 @@ class DocumentModel extends EntityModel {
   }
 }
 
-@MappableClass(ignoreNull: true)
-class DocumentAdditionalFields extends AdditionalFields {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class DocumentAdditionalFields extends AdditionalFields with DocumentAdditionalFieldsMappable {
   DocumentAdditionalFields({
     super.schema = 'Document',
     required super.version,
     super.fields,
   });
 }
+

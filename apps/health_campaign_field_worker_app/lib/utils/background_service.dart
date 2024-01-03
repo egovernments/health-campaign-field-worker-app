@@ -51,7 +51,7 @@ Future<void> initializeService(dio, isar) async {
   flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>()
-      ?.requestPermission();
+      ?.requestNotificationsPermission();
 
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<

@@ -5,8 +5,10 @@ import 'package:drift/drift.dart';
 import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
 
-@MappableClass(ignoreNull: true)
-class IndividualSearchModel extends EntitySearchModel {
+part 'individual.mapper.dart';
+
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class IndividualSearchModel extends EntitySearchModel with IndividualSearchModelMappable {
   final String? id;
   final String? dateOfBirth;
   final List<String>? clientReferenceId;
@@ -40,8 +42,8 @@ class IndividualSearchModel extends EntitySearchModel {
   }):  super(isDeleted: false);
 }
 
-@MappableClass(ignoreNull: true)
-class IndividualModel extends EntityModel {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class IndividualModel extends EntityModel with IndividualModelMappable {
 
   static const schemaName = 'Individual';
 
@@ -120,11 +122,12 @@ class IndividualModel extends EntityModel {
   }
 }
 
-@MappableClass(ignoreNull: true)
-class IndividualAdditionalFields extends AdditionalFields {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class IndividualAdditionalFields extends AdditionalFields with IndividualAdditionalFieldsMappable {
   IndividualAdditionalFields({
     super.schema = 'Individual',
     required super.version,
     super.fields,
   });
 }
+

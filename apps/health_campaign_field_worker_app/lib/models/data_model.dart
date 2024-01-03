@@ -1,8 +1,10 @@
+@MappableLib()
 library models;
 
 import 'package:dart_mappable/dart_mappable.dart';
 
-export 'data_model.mapper.g.dart';
+import 'entities/address.dart';
+
 export 'entities/additional_fields_type.dart';
 export 'entities/address.dart';
 export 'entities/address_type.dart';
@@ -51,6 +53,9 @@ export 'pgr_complaints/pgr_address.dart';
 export 'pgr_complaints/pgr_complaints.dart';
 export 'pgr_complaints/pgr_complaints_response.dart';
 
+part 'data_model.mapper.dart';
+
+
 abstract class DataModel {
   final String? boundaryCode;
   final bool? isDeleted;
@@ -61,8 +66,8 @@ abstract class DataModel {
   });
 }
 
-@MappableClass()
-abstract class EntityModel extends DataModel {
+@MappableClass(includeSubClasses: [AddressModel])
+abstract class EntityModel extends DataModel with EntityModelMappable {
   final AuditDetails? auditDetails;
   final ClientAuditDetails? clientAuditDetails;
   const EntityModel({
@@ -72,8 +77,8 @@ abstract class EntityModel extends DataModel {
   });
 }
 
-@MappableClass(ignoreNull: true)
-abstract class EntitySearchModel extends DataModel {
+@MappableClass(ignoreNull: true, includeSubClasses: [AddressSearchModel])
+abstract class EntitySearchModel extends DataModel with EntitySearchModelMappable {
   final AuditDetails? auditDetails;
   final AdditionalFields? additionalFields;
 
@@ -93,7 +98,7 @@ abstract class EntitySearchModel extends DataModel {
 }
 
 @MappableClass()
-abstract class AdditionalFields {
+abstract class AdditionalFields with AdditionalFieldsMappable {
   final String schema;
   final int version;
   final List<AdditionalField> fields;
@@ -105,8 +110,8 @@ abstract class AdditionalFields {
   });
 }
 
-@MappableClass()
-class AdditionalField {
+@MappableClass(includeSubClasses: [])
+class AdditionalField with AdditionalFieldMappable {
   final String key;
   final dynamic value;
 
@@ -114,7 +119,7 @@ class AdditionalField {
 }
 
 @MappableClass()
-class ClientAuditDetails {
+class ClientAuditDetails with ClientAuditDetailsMappable {
   final int createdTime;
   final int? lastModifiedTime;
   final String createdBy;
@@ -130,7 +135,7 @@ class ClientAuditDetails {
 }
 
 @MappableClass()
-class AuditDetails {
+class AuditDetails with AuditDetailsMappable {
   final String createdBy;
   final String lastModifiedBy;
   final int createdTime;

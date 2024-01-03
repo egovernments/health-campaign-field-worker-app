@@ -5,8 +5,10 @@ import 'package:dart_mappable/dart_mappable.dart';
 import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
 
-@MappableClass(ignoreNull: true)
-class {{name.pascalCase()}}SearchModel extends EntitySearchModel {
+part '{{name.snakeCase()}}.mapper.dart';
+
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class {{name.pascalCase()}}SearchModel extends EntitySearchModel with {{name.pascalCase()}}SearchModelMappable {
   {{#attributes}}{{#includeForQuery}}final {{#isList}}List<{{/isList}}{{type}}{{#isList}}>{{/isList}}? {{name.camelCase()}};
   {{/includeForQuery}}{{/attributes}}{{#customAttributes}}{{#includeForQuery}}final {{#isList}}List<{{/isList}}{{type.pascalCase()}}{{^isEnum}}SearchModel{{/isEnum}}{{#isList}}>{{/isList}}? {{name.camelCase()}};
   {{/includeForQuery}}{{/customAttributes}}{{#dateTimeAttributes}}{{#includeForQuery}}final {{type.pascalCase()}}? {{name.camelCase()}}Time;
@@ -37,8 +39,8 @@ class {{name.pascalCase()}}SearchModel extends EntitySearchModel {
   {{/includeForQuery}}{{/dateTimeAttributes}}
 }
 
-@MappableClass(ignoreNull: true)
-class {{name.pascalCase()}}Model extends EntityModel {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class {{name.pascalCase()}}Model extends EntityModel with {{name.pascalCase()}}ModelMappable {
 
   static const schemaName = '{{name.pascalCase()}}';
 
@@ -82,15 +84,17 @@ class {{name.pascalCase()}}Model extends EntityModel {
   }
 }
 
-@MappableClass(ignoreNull: true)
-class {{name.pascalCase()}}AdditionalFields extends AdditionalFields {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class {{name.pascalCase()}}AdditionalFields extends AdditionalFields with {{name.pascalCase()}}AdditionalFieldsMappable {
   {{name.pascalCase()}}AdditionalFields({
     super.schema = '{{name.pascalCase()}}',
     required super.version,
     super.fields,
   });
 }
+
 {{/isEnum}}{{#isEnum}}
+part '{{name.snakeCase()}}.mapper.dart';
 @MappableEnum(caseStyle: CaseStyle.upperCase)
 enum {{name.pascalCase()}} {
   {{#enumValues}}@MappableValue("{{value}}") {{name.camelCase()}},

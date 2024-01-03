@@ -5,8 +5,10 @@ import 'package:drift/drift.dart';
 import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
 
-@MappableClass(ignoreNull: true)
-class ProjectStaffSearchModel extends EntitySearchModel {
+part 'project_staff.mapper.dart';
+
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class ProjectStaffSearchModel extends EntitySearchModel with ProjectStaffSearchModelMappable {
   final String? id;
   final String? staffId;
   final String? userId;
@@ -58,8 +60,8 @@ class ProjectStaffSearchModel extends EntitySearchModel {
   
 }
 
-@MappableClass(ignoreNull: true)
-class ProjectStaffModel extends EntityModel {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class ProjectStaffModel extends EntityModel with ProjectStaffModelMappable {
 
   static const schemaName = 'ProjectStaff';
 
@@ -129,11 +131,12 @@ class ProjectStaffModel extends EntityModel {
   }
 }
 
-@MappableClass(ignoreNull: true)
-class ProjectStaffAdditionalFields extends AdditionalFields {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class ProjectStaffAdditionalFields extends AdditionalFields with ProjectStaffAdditionalFieldsMappable {
   ProjectStaffAdditionalFields({
     super.schema = 'ProjectStaff',
     required super.version,
     super.fields,
   });
 }
+

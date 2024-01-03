@@ -2,8 +2,10 @@ import 'package:dart_mappable/dart_mappable.dart';
 
 import '../data_model.dart';
 
+part 'pgr_complaints_response.mapper.dart';
+
 @MappableClass(ignoreNull: true)
-class PgrServiceCreateResponseModel extends EntityModel {
+class PgrServiceCreateResponseModel extends EntityModel with PgrServiceCreateResponseModelMappable {
   final List<PgrComplaintResponseModel> serviceWrappers;
 
   const PgrServiceCreateResponseModel({
@@ -12,7 +14,7 @@ class PgrServiceCreateResponseModel extends EntityModel {
 }
 
 @MappableClass(ignoreNull: true)
-class PgrComplaintResponseModel extends EntityModel {
+class PgrComplaintResponseModel extends EntityModel with PgrComplaintResponseModelMappable {
   final PgrServiceResponseModel service;
   final PgrWorkflowModel? workflow;
 
@@ -23,7 +25,7 @@ class PgrComplaintResponseModel extends EntityModel {
 }
 
 @MappableClass(ignoreNull: true)
-class PgrComplainantResponseModel extends EntityModel {
+class PgrComplainantResponseModel extends EntityModel with PgrComplainantResponseModelMappable {
   final int? id;
   final String? userName;
   final String? name;
@@ -56,7 +58,7 @@ class PgrComplainantResponseModel extends EntityModel {
 }
 
 @MappableClass(ignoreNull: true)
-class PgrServiceResponseModel extends EntityModel {
+class PgrServiceResponseModel extends EntityModel with PgrServiceResponseModelMappable {
   final bool? active;
   final PgrComplainantResponseModel? user;
   final String? id;

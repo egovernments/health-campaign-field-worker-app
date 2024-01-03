@@ -73,14 +73,14 @@ class _BeneficiaryDetailsPageState
           final lastDose = taskData != null && taskData.isNotEmpty
               ? taskData.last.additionalFields?.fields
                       .firstWhereOrNull((e) =>
-                          e.key == AdditionalFieldsType.doseIndex.toValue())
+                          e.key == AdditionalFieldsType.doseIndex.name)
                       ?.value ??
                   '1'
               : '0';
           final lastCycle = taskData != null && taskData.isNotEmpty
               ? taskData.last.additionalFields?.fields
                       .firstWhereOrNull((e) =>
-                          e.key == AdditionalFieldsType.cycleIndex.toValue())
+                          e.key == AdditionalFieldsType.cycleIndex.name)
                       ?.value ??
                   '1'
               : '1';

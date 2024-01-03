@@ -25,7 +25,7 @@ class SideBar extends StatelessWidget {
     final theme = Theme.of(context);
     bool isDistributor = context.loggedInUserRoles
         .where(
-          (role) => role.code == RolesType.distributor.toValue(),
+          (role) => role.code == RolesType.distributor.name,
         )
         .toList()
         .isNotEmpty;

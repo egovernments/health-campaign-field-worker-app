@@ -52,7 +52,7 @@ class ServiceDefinitionLocalRepository extends LocalRepository<
           ..where(buildAnd([
             if (query.id != null)
               sql.serviceDefinition.id.equals(
-                query.id,
+                query.id!,
               ),
           ])))
         .get();
@@ -65,7 +65,7 @@ class ServiceDefinitionLocalRepository extends LocalRepository<
       final val = await (selectattributeQuery
             ..where(buildAnd([
               sql.attributes.referenceId.equals(
-                data.id,
+                data.id!,
               ),
             ])))
           .get();

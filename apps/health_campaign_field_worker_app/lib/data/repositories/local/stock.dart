@@ -35,13 +35,13 @@ class StockLocalRepository
           ..where(
             buildAnd(
               [
-                if (query.id != null) sql.stock.id.equals(query.id),
+                if (query.id != null) sql.stock.id.equals(query.id!),
                 if (query.receiverId != null)
-                  sql.stock.receiverId.equals(query.receiverId),
+                  sql.stock.receiverId.equals(query.receiverId!),
                 if (query.senderId != null)
-                  sql.stock.senderId.equals(query.senderId),
+                  sql.stock.senderId.equals(query.senderId!),
                 if (query.productVariantId != null)
-                  sql.stock.productVariantId.equals(query.productVariantId),
+                  sql.stock.productVariantId.equals(query.productVariantId!),
                 if (query.clientReferenceId != null)
                   sql.stock.clientReferenceId.isIn(query.clientReferenceId!),
                 if (userId != null)

@@ -30,23 +30,23 @@ class HouseholdMemberLocalRepository
                   ),
                 if (query.householdClientReferenceId != null)
                   sql.householdMember.householdClientReferenceId.equals(
-                    query.householdClientReferenceId,
+                    query.householdClientReferenceId!,
                   ),
                 if (query.individualClientReferenceId != null)
                   sql.householdMember.individualClientReferenceId.equals(
-                    query.individualClientReferenceId,
+                    query.individualClientReferenceId!,
                   ),
                 if (query.householdId != null)
                   sql.householdMember.householdId.equals(
-                    query.householdId,
+                    query.householdId!,
                   ),
                 if (query.individualId != null)
                   sql.householdMember.individualId.equals(
-                    query.individualId,
+                    query.individualId!,
                   ),
                 if (query.isHeadOfHousehold != null)
                   sql.householdMember.isHeadOfHousehold.equals(
-                    query.isHeadOfHousehold,
+                    query.isHeadOfHousehold!,
                   ),
                 if (userId != null)
                   sql.householdMember.auditCreatedBy.equals(

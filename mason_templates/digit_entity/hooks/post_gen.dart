@@ -8,7 +8,7 @@ import 'lib/models.dart';
 void run(HookContext context) async {
   final variables = context.vars;
 
-  ConfigModel model = Mapper.fromMap<ConfigModel>(variables);
+  ConfigModel model = ConfigModelMapper.fromMap(variables);
   if (!model.createRepository) {
     final path = p.join(
       'data',

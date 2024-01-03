@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'household_overview.dart';
 
@@ -156,11 +156,11 @@ class _$HouseholdOverviewEventCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$HouseholdOverviewDeleteHouseholdEventCopyWith<$Res> {
-  factory _$$HouseholdOverviewDeleteHouseholdEventCopyWith(
-          _$HouseholdOverviewDeleteHouseholdEvent value,
-          $Res Function(_$HouseholdOverviewDeleteHouseholdEvent) then) =
-      __$$HouseholdOverviewDeleteHouseholdEventCopyWithImpl<$Res>;
+abstract class _$$HouseholdOverviewDeleteHouseholdEventImplCopyWith<$Res> {
+  factory _$$HouseholdOverviewDeleteHouseholdEventImplCopyWith(
+          _$HouseholdOverviewDeleteHouseholdEventImpl value,
+          $Res Function(_$HouseholdOverviewDeleteHouseholdEventImpl) then) =
+      __$$HouseholdOverviewDeleteHouseholdEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call(
       {String projectId,
@@ -171,13 +171,13 @@ abstract class _$$HouseholdOverviewDeleteHouseholdEventCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$HouseholdOverviewDeleteHouseholdEventCopyWithImpl<$Res>
+class __$$HouseholdOverviewDeleteHouseholdEventImplCopyWithImpl<$Res>
     extends _$HouseholdOverviewEventCopyWithImpl<$Res,
-        _$HouseholdOverviewDeleteHouseholdEvent>
-    implements _$$HouseholdOverviewDeleteHouseholdEventCopyWith<$Res> {
-  __$$HouseholdOverviewDeleteHouseholdEventCopyWithImpl(
-      _$HouseholdOverviewDeleteHouseholdEvent _value,
-      $Res Function(_$HouseholdOverviewDeleteHouseholdEvent) _then)
+        _$HouseholdOverviewDeleteHouseholdEventImpl>
+    implements _$$HouseholdOverviewDeleteHouseholdEventImplCopyWith<$Res> {
+  __$$HouseholdOverviewDeleteHouseholdEventImplCopyWithImpl(
+      _$HouseholdOverviewDeleteHouseholdEventImpl _value,
+      $Res Function(_$HouseholdOverviewDeleteHouseholdEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -189,7 +189,7 @@ class __$$HouseholdOverviewDeleteHouseholdEventCopyWithImpl<$Res>
     Object? projectBeneficiaryModel = null,
     Object? projectBeneficiaryType = null,
   }) {
-    return _then(_$HouseholdOverviewDeleteHouseholdEvent(
+    return _then(_$HouseholdOverviewDeleteHouseholdEventImpl(
       projectId: null == projectId
           ? _value.projectId
           : projectId // ignore: cast_nullable_to_non_nullable
@@ -216,9 +216,9 @@ class __$$HouseholdOverviewDeleteHouseholdEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$HouseholdOverviewDeleteHouseholdEvent
+class _$HouseholdOverviewDeleteHouseholdEventImpl
     implements HouseholdOverviewDeleteHouseholdEvent {
-  const _$HouseholdOverviewDeleteHouseholdEvent(
+  const _$HouseholdOverviewDeleteHouseholdEventImpl(
       {required this.projectId,
       required this.householdModel,
       required final List<IndividualModel> members,
@@ -233,6 +233,7 @@ class _$HouseholdOverviewDeleteHouseholdEvent
   final List<IndividualModel> _members;
   @override
   List<IndividualModel> get members {
+    if (_members is EqualUnmodifiableListView) return _members;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_members);
   }
@@ -248,10 +249,10 @@ class _$HouseholdOverviewDeleteHouseholdEvent
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$HouseholdOverviewDeleteHouseholdEvent &&
+            other is _$HouseholdOverviewDeleteHouseholdEventImpl &&
             (identical(other.projectId, projectId) ||
                 other.projectId == projectId) &&
             (identical(other.householdModel, householdModel) ||
@@ -276,10 +277,10 @@ class _$HouseholdOverviewDeleteHouseholdEvent
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$HouseholdOverviewDeleteHouseholdEventCopyWith<
-          _$HouseholdOverviewDeleteHouseholdEvent>
-      get copyWith => __$$HouseholdOverviewDeleteHouseholdEventCopyWithImpl<
-          _$HouseholdOverviewDeleteHouseholdEvent>(this, _$identity);
+  _$$HouseholdOverviewDeleteHouseholdEventImplCopyWith<
+          _$HouseholdOverviewDeleteHouseholdEventImpl>
+      get copyWith => __$$HouseholdOverviewDeleteHouseholdEventImplCopyWithImpl<
+          _$HouseholdOverviewDeleteHouseholdEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -435,7 +436,7 @@ abstract class HouseholdOverviewDeleteHouseholdEvent
           required final List<IndividualModel> members,
           required final ProjectBeneficiaryModel projectBeneficiaryModel,
           required final BeneficiaryType projectBeneficiaryType}) =
-      _$HouseholdOverviewDeleteHouseholdEvent;
+      _$HouseholdOverviewDeleteHouseholdEventImpl;
 
   String get projectId;
   HouseholdModel get householdModel;
@@ -443,17 +444,17 @@ abstract class HouseholdOverviewDeleteHouseholdEvent
   ProjectBeneficiaryModel get projectBeneficiaryModel;
   BeneficiaryType get projectBeneficiaryType;
   @JsonKey(ignore: true)
-  _$$HouseholdOverviewDeleteHouseholdEventCopyWith<
-          _$HouseholdOverviewDeleteHouseholdEvent>
+  _$$HouseholdOverviewDeleteHouseholdEventImplCopyWith<
+          _$HouseholdOverviewDeleteHouseholdEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$HouseholdOverviewDeleteIndividualEventCopyWith<$Res> {
-  factory _$$HouseholdOverviewDeleteIndividualEventCopyWith(
-          _$HouseholdOverviewDeleteIndividualEvent value,
-          $Res Function(_$HouseholdOverviewDeleteIndividualEvent) then) =
-      __$$HouseholdOverviewDeleteIndividualEventCopyWithImpl<$Res>;
+abstract class _$$HouseholdOverviewDeleteIndividualEventImplCopyWith<$Res> {
+  factory _$$HouseholdOverviewDeleteIndividualEventImplCopyWith(
+          _$HouseholdOverviewDeleteIndividualEventImpl value,
+          $Res Function(_$HouseholdOverviewDeleteIndividualEventImpl) then) =
+      __$$HouseholdOverviewDeleteIndividualEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call(
       {String projectId,
@@ -463,13 +464,13 @@ abstract class _$$HouseholdOverviewDeleteIndividualEventCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$HouseholdOverviewDeleteIndividualEventCopyWithImpl<$Res>
+class __$$HouseholdOverviewDeleteIndividualEventImplCopyWithImpl<$Res>
     extends _$HouseholdOverviewEventCopyWithImpl<$Res,
-        _$HouseholdOverviewDeleteIndividualEvent>
-    implements _$$HouseholdOverviewDeleteIndividualEventCopyWith<$Res> {
-  __$$HouseholdOverviewDeleteIndividualEventCopyWithImpl(
-      _$HouseholdOverviewDeleteIndividualEvent _value,
-      $Res Function(_$HouseholdOverviewDeleteIndividualEvent) _then)
+        _$HouseholdOverviewDeleteIndividualEventImpl>
+    implements _$$HouseholdOverviewDeleteIndividualEventImplCopyWith<$Res> {
+  __$$HouseholdOverviewDeleteIndividualEventImplCopyWithImpl(
+      _$HouseholdOverviewDeleteIndividualEventImpl _value,
+      $Res Function(_$HouseholdOverviewDeleteIndividualEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -480,7 +481,7 @@ class __$$HouseholdOverviewDeleteIndividualEventCopyWithImpl<$Res>
     Object? individualModel = null,
     Object? projectBeneficiaryType = null,
   }) {
-    return _then(_$HouseholdOverviewDeleteIndividualEvent(
+    return _then(_$HouseholdOverviewDeleteIndividualEventImpl(
       projectId: null == projectId
           ? _value.projectId
           : projectId // ignore: cast_nullable_to_non_nullable
@@ -503,9 +504,9 @@ class __$$HouseholdOverviewDeleteIndividualEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$HouseholdOverviewDeleteIndividualEvent
+class _$HouseholdOverviewDeleteIndividualEventImpl
     implements HouseholdOverviewDeleteIndividualEvent {
-  const _$HouseholdOverviewDeleteIndividualEvent(
+  const _$HouseholdOverviewDeleteIndividualEventImpl(
       {required this.projectId,
       required this.householdModel,
       required this.individualModel,
@@ -526,10 +527,10 @@ class _$HouseholdOverviewDeleteIndividualEvent
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$HouseholdOverviewDeleteIndividualEvent &&
+            other is _$HouseholdOverviewDeleteIndividualEventImpl &&
             (identical(other.projectId, projectId) ||
                 other.projectId == projectId) &&
             (identical(other.householdModel, householdModel) ||
@@ -547,10 +548,11 @@ class _$HouseholdOverviewDeleteIndividualEvent
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$HouseholdOverviewDeleteIndividualEventCopyWith<
-          _$HouseholdOverviewDeleteIndividualEvent>
-      get copyWith => __$$HouseholdOverviewDeleteIndividualEventCopyWithImpl<
-          _$HouseholdOverviewDeleteIndividualEvent>(this, _$identity);
+  _$$HouseholdOverviewDeleteIndividualEventImplCopyWith<
+          _$HouseholdOverviewDeleteIndividualEventImpl>
+      get copyWith =>
+          __$$HouseholdOverviewDeleteIndividualEventImplCopyWithImpl<
+              _$HouseholdOverviewDeleteIndividualEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -705,24 +707,24 @@ abstract class HouseholdOverviewDeleteIndividualEvent
           required final HouseholdModel householdModel,
           required final IndividualModel individualModel,
           required final BeneficiaryType projectBeneficiaryType}) =
-      _$HouseholdOverviewDeleteIndividualEvent;
+      _$HouseholdOverviewDeleteIndividualEventImpl;
 
   String get projectId;
   HouseholdModel get householdModel;
   IndividualModel get individualModel;
   BeneficiaryType get projectBeneficiaryType;
   @JsonKey(ignore: true)
-  _$$HouseholdOverviewDeleteIndividualEventCopyWith<
-          _$HouseholdOverviewDeleteIndividualEvent>
+  _$$HouseholdOverviewDeleteIndividualEventImplCopyWith<
+          _$HouseholdOverviewDeleteIndividualEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$HouseholdOverviewSetAsHeadEventCopyWith<$Res> {
-  factory _$$HouseholdOverviewSetAsHeadEventCopyWith(
-          _$HouseholdOverviewSetAsHeadEvent value,
-          $Res Function(_$HouseholdOverviewSetAsHeadEvent) then) =
-      __$$HouseholdOverviewSetAsHeadEventCopyWithImpl<$Res>;
+abstract class _$$HouseholdOverviewSetAsHeadEventImplCopyWith<$Res> {
+  factory _$$HouseholdOverviewSetAsHeadEventImplCopyWith(
+          _$HouseholdOverviewSetAsHeadEventImpl value,
+          $Res Function(_$HouseholdOverviewSetAsHeadEventImpl) then) =
+      __$$HouseholdOverviewSetAsHeadEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call(
       {String projectId,
@@ -732,13 +734,13 @@ abstract class _$$HouseholdOverviewSetAsHeadEventCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$HouseholdOverviewSetAsHeadEventCopyWithImpl<$Res>
+class __$$HouseholdOverviewSetAsHeadEventImplCopyWithImpl<$Res>
     extends _$HouseholdOverviewEventCopyWithImpl<$Res,
-        _$HouseholdOverviewSetAsHeadEvent>
-    implements _$$HouseholdOverviewSetAsHeadEventCopyWith<$Res> {
-  __$$HouseholdOverviewSetAsHeadEventCopyWithImpl(
-      _$HouseholdOverviewSetAsHeadEvent _value,
-      $Res Function(_$HouseholdOverviewSetAsHeadEvent) _then)
+        _$HouseholdOverviewSetAsHeadEventImpl>
+    implements _$$HouseholdOverviewSetAsHeadEventImplCopyWith<$Res> {
+  __$$HouseholdOverviewSetAsHeadEventImplCopyWithImpl(
+      _$HouseholdOverviewSetAsHeadEventImpl _value,
+      $Res Function(_$HouseholdOverviewSetAsHeadEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -749,7 +751,7 @@ class __$$HouseholdOverviewSetAsHeadEventCopyWithImpl<$Res>
     Object? householdModel = null,
     Object? projectBeneficiaryType = null,
   }) {
-    return _then(_$HouseholdOverviewSetAsHeadEvent(
+    return _then(_$HouseholdOverviewSetAsHeadEventImpl(
       projectId: null == projectId
           ? _value.projectId
           : projectId // ignore: cast_nullable_to_non_nullable
@@ -772,9 +774,9 @@ class __$$HouseholdOverviewSetAsHeadEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$HouseholdOverviewSetAsHeadEvent
+class _$HouseholdOverviewSetAsHeadEventImpl
     implements HouseholdOverviewSetAsHeadEvent {
-  const _$HouseholdOverviewSetAsHeadEvent(
+  const _$HouseholdOverviewSetAsHeadEventImpl(
       {required this.projectId,
       required this.individualModel,
       required this.householdModel,
@@ -795,10 +797,10 @@ class _$HouseholdOverviewSetAsHeadEvent
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$HouseholdOverviewSetAsHeadEvent &&
+            other is _$HouseholdOverviewSetAsHeadEventImpl &&
             (identical(other.projectId, projectId) ||
                 other.projectId == projectId) &&
             (identical(other.individualModel, individualModel) ||
@@ -816,9 +818,10 @@ class _$HouseholdOverviewSetAsHeadEvent
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$HouseholdOverviewSetAsHeadEventCopyWith<_$HouseholdOverviewSetAsHeadEvent>
-      get copyWith => __$$HouseholdOverviewSetAsHeadEventCopyWithImpl<
-          _$HouseholdOverviewSetAsHeadEvent>(this, _$identity);
+  _$$HouseholdOverviewSetAsHeadEventImplCopyWith<
+          _$HouseholdOverviewSetAsHeadEventImpl>
+      get copyWith => __$$HouseholdOverviewSetAsHeadEventImplCopyWithImpl<
+          _$HouseholdOverviewSetAsHeadEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -973,35 +976,36 @@ abstract class HouseholdOverviewSetAsHeadEvent
           required final IndividualModel individualModel,
           required final HouseholdModel householdModel,
           required final BeneficiaryType projectBeneficiaryType}) =
-      _$HouseholdOverviewSetAsHeadEvent;
+      _$HouseholdOverviewSetAsHeadEventImpl;
 
   String get projectId;
   IndividualModel get individualModel;
   HouseholdModel get householdModel;
   BeneficiaryType get projectBeneficiaryType;
   @JsonKey(ignore: true)
-  _$$HouseholdOverviewSetAsHeadEventCopyWith<_$HouseholdOverviewSetAsHeadEvent>
+  _$$HouseholdOverviewSetAsHeadEventImplCopyWith<
+          _$HouseholdOverviewSetAsHeadEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$HouseholdOverviewSelectIndividualEventCopyWith<$Res> {
-  factory _$$HouseholdOverviewSelectIndividualEventCopyWith(
-          _$HouseholdOverviewSelectIndividualEvent value,
-          $Res Function(_$HouseholdOverviewSelectIndividualEvent) then) =
-      __$$HouseholdOverviewSelectIndividualEventCopyWithImpl<$Res>;
+abstract class _$$HouseholdOverviewSelectIndividualEventImplCopyWith<$Res> {
+  factory _$$HouseholdOverviewSelectIndividualEventImplCopyWith(
+          _$HouseholdOverviewSelectIndividualEventImpl value,
+          $Res Function(_$HouseholdOverviewSelectIndividualEventImpl) then) =
+      __$$HouseholdOverviewSelectIndividualEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call({IndividualModel individualModel});
 }
 
 /// @nodoc
-class __$$HouseholdOverviewSelectIndividualEventCopyWithImpl<$Res>
+class __$$HouseholdOverviewSelectIndividualEventImplCopyWithImpl<$Res>
     extends _$HouseholdOverviewEventCopyWithImpl<$Res,
-        _$HouseholdOverviewSelectIndividualEvent>
-    implements _$$HouseholdOverviewSelectIndividualEventCopyWith<$Res> {
-  __$$HouseholdOverviewSelectIndividualEventCopyWithImpl(
-      _$HouseholdOverviewSelectIndividualEvent _value,
-      $Res Function(_$HouseholdOverviewSelectIndividualEvent) _then)
+        _$HouseholdOverviewSelectIndividualEventImpl>
+    implements _$$HouseholdOverviewSelectIndividualEventImplCopyWith<$Res> {
+  __$$HouseholdOverviewSelectIndividualEventImplCopyWithImpl(
+      _$HouseholdOverviewSelectIndividualEventImpl _value,
+      $Res Function(_$HouseholdOverviewSelectIndividualEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1009,7 +1013,7 @@ class __$$HouseholdOverviewSelectIndividualEventCopyWithImpl<$Res>
   $Res call({
     Object? individualModel = null,
   }) {
-    return _then(_$HouseholdOverviewSelectIndividualEvent(
+    return _then(_$HouseholdOverviewSelectIndividualEventImpl(
       individualModel: null == individualModel
           ? _value.individualModel
           : individualModel // ignore: cast_nullable_to_non_nullable
@@ -1020,9 +1024,9 @@ class __$$HouseholdOverviewSelectIndividualEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$HouseholdOverviewSelectIndividualEvent
+class _$HouseholdOverviewSelectIndividualEventImpl
     implements HouseholdOverviewSelectIndividualEvent {
-  const _$HouseholdOverviewSelectIndividualEvent(
+  const _$HouseholdOverviewSelectIndividualEventImpl(
       {required this.individualModel});
 
   @override
@@ -1034,10 +1038,10 @@ class _$HouseholdOverviewSelectIndividualEvent
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$HouseholdOverviewSelectIndividualEvent &&
+            other is _$HouseholdOverviewSelectIndividualEventImpl &&
             (identical(other.individualModel, individualModel) ||
                 other.individualModel == individualModel));
   }
@@ -1048,10 +1052,11 @@ class _$HouseholdOverviewSelectIndividualEvent
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$HouseholdOverviewSelectIndividualEventCopyWith<
-          _$HouseholdOverviewSelectIndividualEvent>
-      get copyWith => __$$HouseholdOverviewSelectIndividualEventCopyWithImpl<
-          _$HouseholdOverviewSelectIndividualEvent>(this, _$identity);
+  _$$HouseholdOverviewSelectIndividualEventImplCopyWith<
+          _$HouseholdOverviewSelectIndividualEventImpl>
+      get copyWith =>
+          __$$HouseholdOverviewSelectIndividualEventImplCopyWithImpl<
+              _$HouseholdOverviewSelectIndividualEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -1200,33 +1205,33 @@ abstract class HouseholdOverviewSelectIndividualEvent
     implements HouseholdOverviewEvent {
   const factory HouseholdOverviewSelectIndividualEvent(
           {required final IndividualModel individualModel}) =
-      _$HouseholdOverviewSelectIndividualEvent;
+      _$HouseholdOverviewSelectIndividualEventImpl;
 
   IndividualModel get individualModel;
   @JsonKey(ignore: true)
-  _$$HouseholdOverviewSelectIndividualEventCopyWith<
-          _$HouseholdOverviewSelectIndividualEvent>
+  _$$HouseholdOverviewSelectIndividualEventImplCopyWith<
+          _$HouseholdOverviewSelectIndividualEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$HouseholdOverviewReloadEventCopyWith<$Res> {
-  factory _$$HouseholdOverviewReloadEventCopyWith(
-          _$HouseholdOverviewReloadEvent value,
-          $Res Function(_$HouseholdOverviewReloadEvent) then) =
-      __$$HouseholdOverviewReloadEventCopyWithImpl<$Res>;
+abstract class _$$HouseholdOverviewReloadEventImplCopyWith<$Res> {
+  factory _$$HouseholdOverviewReloadEventImplCopyWith(
+          _$HouseholdOverviewReloadEventImpl value,
+          $Res Function(_$HouseholdOverviewReloadEventImpl) then) =
+      __$$HouseholdOverviewReloadEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String projectId, BeneficiaryType projectBeneficiaryType});
 }
 
 /// @nodoc
-class __$$HouseholdOverviewReloadEventCopyWithImpl<$Res>
+class __$$HouseholdOverviewReloadEventImplCopyWithImpl<$Res>
     extends _$HouseholdOverviewEventCopyWithImpl<$Res,
-        _$HouseholdOverviewReloadEvent>
-    implements _$$HouseholdOverviewReloadEventCopyWith<$Res> {
-  __$$HouseholdOverviewReloadEventCopyWithImpl(
-      _$HouseholdOverviewReloadEvent _value,
-      $Res Function(_$HouseholdOverviewReloadEvent) _then)
+        _$HouseholdOverviewReloadEventImpl>
+    implements _$$HouseholdOverviewReloadEventImplCopyWith<$Res> {
+  __$$HouseholdOverviewReloadEventImplCopyWithImpl(
+      _$HouseholdOverviewReloadEventImpl _value,
+      $Res Function(_$HouseholdOverviewReloadEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1235,7 +1240,7 @@ class __$$HouseholdOverviewReloadEventCopyWithImpl<$Res>
     Object? projectId = null,
     Object? projectBeneficiaryType = null,
   }) {
-    return _then(_$HouseholdOverviewReloadEvent(
+    return _then(_$HouseholdOverviewReloadEventImpl(
       projectId: null == projectId
           ? _value.projectId
           : projectId // ignore: cast_nullable_to_non_nullable
@@ -1250,8 +1255,9 @@ class __$$HouseholdOverviewReloadEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$HouseholdOverviewReloadEvent implements HouseholdOverviewReloadEvent {
-  const _$HouseholdOverviewReloadEvent(
+class _$HouseholdOverviewReloadEventImpl
+    implements HouseholdOverviewReloadEvent {
+  const _$HouseholdOverviewReloadEventImpl(
       {required this.projectId, required this.projectBeneficiaryType});
 
   @override
@@ -1265,10 +1271,10 @@ class _$HouseholdOverviewReloadEvent implements HouseholdOverviewReloadEvent {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$HouseholdOverviewReloadEvent &&
+            other is _$HouseholdOverviewReloadEventImpl &&
             (identical(other.projectId, projectId) ||
                 other.projectId == projectId) &&
             (identical(other.projectBeneficiaryType, projectBeneficiaryType) ||
@@ -1282,9 +1288,10 @@ class _$HouseholdOverviewReloadEvent implements HouseholdOverviewReloadEvent {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$HouseholdOverviewReloadEventCopyWith<_$HouseholdOverviewReloadEvent>
-      get copyWith => __$$HouseholdOverviewReloadEventCopyWithImpl<
-          _$HouseholdOverviewReloadEvent>(this, _$identity);
+  _$$HouseholdOverviewReloadEventImplCopyWith<
+          _$HouseholdOverviewReloadEventImpl>
+      get copyWith => __$$HouseholdOverviewReloadEventImplCopyWithImpl<
+          _$HouseholdOverviewReloadEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -1433,12 +1440,13 @@ abstract class HouseholdOverviewReloadEvent implements HouseholdOverviewEvent {
   const factory HouseholdOverviewReloadEvent(
           {required final String projectId,
           required final BeneficiaryType projectBeneficiaryType}) =
-      _$HouseholdOverviewReloadEvent;
+      _$HouseholdOverviewReloadEventImpl;
 
   String get projectId;
   BeneficiaryType get projectBeneficiaryType;
   @JsonKey(ignore: true)
-  _$$HouseholdOverviewReloadEventCopyWith<_$HouseholdOverviewReloadEvent>
+  _$$HouseholdOverviewReloadEventImplCopyWith<
+          _$HouseholdOverviewReloadEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -1513,11 +1521,12 @@ class _$HouseholdOverviewStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_HouseholdOverviewStateCopyWith<$Res>
+abstract class _$$HouseholdOverviewStateImplCopyWith<$Res>
     implements $HouseholdOverviewStateCopyWith<$Res> {
-  factory _$$_HouseholdOverviewStateCopyWith(_$_HouseholdOverviewState value,
-          $Res Function(_$_HouseholdOverviewState) then) =
-      __$$_HouseholdOverviewStateCopyWithImpl<$Res>;
+  factory _$$HouseholdOverviewStateImplCopyWith(
+          _$HouseholdOverviewStateImpl value,
+          $Res Function(_$HouseholdOverviewStateImpl) then) =
+      __$$HouseholdOverviewStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -1530,12 +1539,13 @@ abstract class _$$_HouseholdOverviewStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_HouseholdOverviewStateCopyWithImpl<$Res>
+class __$$HouseholdOverviewStateImplCopyWithImpl<$Res>
     extends _$HouseholdOverviewStateCopyWithImpl<$Res,
-        _$_HouseholdOverviewState>
-    implements _$$_HouseholdOverviewStateCopyWith<$Res> {
-  __$$_HouseholdOverviewStateCopyWithImpl(_$_HouseholdOverviewState _value,
-      $Res Function(_$_HouseholdOverviewState) _then)
+        _$HouseholdOverviewStateImpl>
+    implements _$$HouseholdOverviewStateImplCopyWith<$Res> {
+  __$$HouseholdOverviewStateImplCopyWithImpl(
+      _$HouseholdOverviewStateImpl _value,
+      $Res Function(_$HouseholdOverviewStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1545,7 +1555,7 @@ class __$$_HouseholdOverviewStateCopyWithImpl<$Res>
     Object? householdMemberWrapper = null,
     Object? selectedIndividual = freezed,
   }) {
-    return _then(_$_HouseholdOverviewState(
+    return _then(_$HouseholdOverviewStateImpl(
       loading: null == loading
           ? _value.loading
           : loading // ignore: cast_nullable_to_non_nullable
@@ -1564,8 +1574,8 @@ class __$$_HouseholdOverviewStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_HouseholdOverviewState implements _HouseholdOverviewState {
-  const _$_HouseholdOverviewState(
+class _$HouseholdOverviewStateImpl implements _HouseholdOverviewState {
+  const _$HouseholdOverviewStateImpl(
       {this.loading = false,
       required this.householdMemberWrapper,
       this.selectedIndividual});
@@ -1584,10 +1594,10 @@ class _$_HouseholdOverviewState implements _HouseholdOverviewState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_HouseholdOverviewState &&
+            other is _$HouseholdOverviewStateImpl &&
             (identical(other.loading, loading) || other.loading == loading) &&
             (identical(other.householdMemberWrapper, householdMemberWrapper) ||
                 other.householdMemberWrapper == householdMemberWrapper) &&
@@ -1602,16 +1612,17 @@ class _$_HouseholdOverviewState implements _HouseholdOverviewState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_HouseholdOverviewStateCopyWith<_$_HouseholdOverviewState> get copyWith =>
-      __$$_HouseholdOverviewStateCopyWithImpl<_$_HouseholdOverviewState>(
-          this, _$identity);
+  _$$HouseholdOverviewStateImplCopyWith<_$HouseholdOverviewStateImpl>
+      get copyWith => __$$HouseholdOverviewStateImplCopyWithImpl<
+          _$HouseholdOverviewStateImpl>(this, _$identity);
 }
 
 abstract class _HouseholdOverviewState implements HouseholdOverviewState {
   const factory _HouseholdOverviewState(
-      {final bool loading,
-      required final HouseholdMemberWrapper householdMemberWrapper,
-      final IndividualModel? selectedIndividual}) = _$_HouseholdOverviewState;
+          {final bool loading,
+          required final HouseholdMemberWrapper householdMemberWrapper,
+          final IndividualModel? selectedIndividual}) =
+      _$HouseholdOverviewStateImpl;
 
   @override
   bool get loading;
@@ -1621,6 +1632,6 @@ abstract class _HouseholdOverviewState implements HouseholdOverviewState {
   IndividualModel? get selectedIndividual;
   @override
   @JsonKey(ignore: true)
-  _$$_HouseholdOverviewStateCopyWith<_$_HouseholdOverviewState> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$HouseholdOverviewStateImplCopyWith<_$HouseholdOverviewStateImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }

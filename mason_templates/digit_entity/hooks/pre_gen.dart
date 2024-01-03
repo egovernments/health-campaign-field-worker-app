@@ -6,7 +6,7 @@ import 'lib/models.dart';
 void run(HookContext context) {
   final variables = context.vars;
 
-  ConfigModel model = Mapper.fromMap<ConfigModel>(variables);
+  ConfigModel model = ConfigModelMapper.fromMap(variables);
 
   model = model.copyWith.attributes.addAll(
     [

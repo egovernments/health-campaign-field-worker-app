@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'boundary.dart';
 
@@ -88,25 +88,25 @@ class _$BoundaryEventCopyWithImpl<$Res, $Val extends BoundaryEvent>
 }
 
 /// @nodoc
-abstract class _$$BoundaryResetEventCopyWith<$Res> {
-  factory _$$BoundaryResetEventCopyWith(_$BoundaryResetEvent value,
-          $Res Function(_$BoundaryResetEvent) then) =
-      __$$BoundaryResetEventCopyWithImpl<$Res>;
+abstract class _$$BoundaryResetEventImplCopyWith<$Res> {
+  factory _$$BoundaryResetEventImplCopyWith(_$BoundaryResetEventImpl value,
+          $Res Function(_$BoundaryResetEventImpl) then) =
+      __$$BoundaryResetEventImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$BoundaryResetEventCopyWithImpl<$Res>
-    extends _$BoundaryEventCopyWithImpl<$Res, _$BoundaryResetEvent>
-    implements _$$BoundaryResetEventCopyWith<$Res> {
-  __$$BoundaryResetEventCopyWithImpl(
-      _$BoundaryResetEvent _value, $Res Function(_$BoundaryResetEvent) _then)
+class __$$BoundaryResetEventImplCopyWithImpl<$Res>
+    extends _$BoundaryEventCopyWithImpl<$Res, _$BoundaryResetEventImpl>
+    implements _$$BoundaryResetEventImplCopyWith<$Res> {
+  __$$BoundaryResetEventImplCopyWithImpl(_$BoundaryResetEventImpl _value,
+      $Res Function(_$BoundaryResetEventImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$BoundaryResetEvent implements BoundaryResetEvent {
-  const _$BoundaryResetEvent();
+class _$BoundaryResetEventImpl implements BoundaryResetEvent {
+  const _$BoundaryResetEventImpl();
 
   @override
   String toString() {
@@ -114,9 +114,9 @@ class _$BoundaryResetEvent implements BoundaryResetEvent {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$BoundaryResetEvent);
+        (other.runtimeType == runtimeType && other is _$BoundaryResetEventImpl);
   }
 
   @override
@@ -199,24 +199,24 @@ class _$BoundaryResetEvent implements BoundaryResetEvent {
 }
 
 abstract class BoundaryResetEvent implements BoundaryEvent {
-  const factory BoundaryResetEvent() = _$BoundaryResetEvent;
+  const factory BoundaryResetEvent() = _$BoundaryResetEventImpl;
 }
 
 /// @nodoc
-abstract class _$$BoundarySearchEventCopyWith<$Res> {
-  factory _$$BoundarySearchEventCopyWith(_$BoundarySearchEvent value,
-          $Res Function(_$BoundarySearchEvent) then) =
-      __$$BoundarySearchEventCopyWithImpl<$Res>;
+abstract class _$$BoundarySearchEventImplCopyWith<$Res> {
+  factory _$$BoundarySearchEventImplCopyWith(_$BoundarySearchEventImpl value,
+          $Res Function(_$BoundarySearchEventImpl) then) =
+      __$$BoundarySearchEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String code});
 }
 
 /// @nodoc
-class __$$BoundarySearchEventCopyWithImpl<$Res>
-    extends _$BoundaryEventCopyWithImpl<$Res, _$BoundarySearchEvent>
-    implements _$$BoundarySearchEventCopyWith<$Res> {
-  __$$BoundarySearchEventCopyWithImpl(
-      _$BoundarySearchEvent _value, $Res Function(_$BoundarySearchEvent) _then)
+class __$$BoundarySearchEventImplCopyWithImpl<$Res>
+    extends _$BoundaryEventCopyWithImpl<$Res, _$BoundarySearchEventImpl>
+    implements _$$BoundarySearchEventImplCopyWith<$Res> {
+  __$$BoundarySearchEventImplCopyWithImpl(_$BoundarySearchEventImpl _value,
+      $Res Function(_$BoundarySearchEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -224,7 +224,7 @@ class __$$BoundarySearchEventCopyWithImpl<$Res>
   $Res call({
     Object? code = null,
   }) {
-    return _then(_$BoundarySearchEvent(
+    return _then(_$BoundarySearchEventImpl(
       code: null == code
           ? _value.code
           : code // ignore: cast_nullable_to_non_nullable
@@ -235,8 +235,8 @@ class __$$BoundarySearchEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$BoundarySearchEvent implements BoundarySearchEvent {
-  const _$BoundarySearchEvent({required this.code});
+class _$BoundarySearchEventImpl implements BoundarySearchEvent {
+  const _$BoundarySearchEventImpl({required this.code});
 
   @override
   final String code;
@@ -247,10 +247,10 @@ class _$BoundarySearchEvent implements BoundarySearchEvent {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$BoundarySearchEvent &&
+            other is _$BoundarySearchEventImpl &&
             (identical(other.code, code) || other.code == code));
   }
 
@@ -260,8 +260,8 @@ class _$BoundarySearchEvent implements BoundarySearchEvent {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$BoundarySearchEventCopyWith<_$BoundarySearchEvent> get copyWith =>
-      __$$BoundarySearchEventCopyWithImpl<_$BoundarySearchEvent>(
+  _$$BoundarySearchEventImplCopyWith<_$BoundarySearchEventImpl> get copyWith =>
+      __$$BoundarySearchEventImplCopyWithImpl<_$BoundarySearchEventImpl>(
           this, _$identity);
 
   @override
@@ -342,29 +342,29 @@ class _$BoundarySearchEvent implements BoundarySearchEvent {
 
 abstract class BoundarySearchEvent implements BoundaryEvent {
   const factory BoundarySearchEvent({required final String code}) =
-      _$BoundarySearchEvent;
+      _$BoundarySearchEventImpl;
 
   String get code;
   @JsonKey(ignore: true)
-  _$$BoundarySearchEventCopyWith<_$BoundarySearchEvent> get copyWith =>
+  _$$BoundarySearchEventImplCopyWith<_$BoundarySearchEventImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$BoundarySelectEventCopyWith<$Res> {
-  factory _$$BoundarySelectEventCopyWith(_$BoundarySelectEvent value,
-          $Res Function(_$BoundarySelectEvent) then) =
-      __$$BoundarySelectEventCopyWithImpl<$Res>;
+abstract class _$$BoundarySelectEventImplCopyWith<$Res> {
+  factory _$$BoundarySelectEventImplCopyWith(_$BoundarySelectEventImpl value,
+          $Res Function(_$BoundarySelectEventImpl) then) =
+      __$$BoundarySelectEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String label, BoundaryModel selectedBoundary});
 }
 
 /// @nodoc
-class __$$BoundarySelectEventCopyWithImpl<$Res>
-    extends _$BoundaryEventCopyWithImpl<$Res, _$BoundarySelectEvent>
-    implements _$$BoundarySelectEventCopyWith<$Res> {
-  __$$BoundarySelectEventCopyWithImpl(
-      _$BoundarySelectEvent _value, $Res Function(_$BoundarySelectEvent) _then)
+class __$$BoundarySelectEventImplCopyWithImpl<$Res>
+    extends _$BoundaryEventCopyWithImpl<$Res, _$BoundarySelectEventImpl>
+    implements _$$BoundarySelectEventImplCopyWith<$Res> {
+  __$$BoundarySelectEventImplCopyWithImpl(_$BoundarySelectEventImpl _value,
+      $Res Function(_$BoundarySelectEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -373,7 +373,7 @@ class __$$BoundarySelectEventCopyWithImpl<$Res>
     Object? label = null,
     Object? selectedBoundary = null,
   }) {
-    return _then(_$BoundarySelectEvent(
+    return _then(_$BoundarySelectEventImpl(
       label: null == label
           ? _value.label
           : label // ignore: cast_nullable_to_non_nullable
@@ -388,8 +388,8 @@ class __$$BoundarySelectEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$BoundarySelectEvent implements BoundarySelectEvent {
-  const _$BoundarySelectEvent(
+class _$BoundarySelectEventImpl implements BoundarySelectEvent {
+  const _$BoundarySelectEventImpl(
       {required this.label, required this.selectedBoundary});
 
   @override
@@ -403,10 +403,10 @@ class _$BoundarySelectEvent implements BoundarySelectEvent {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$BoundarySelectEvent &&
+            other is _$BoundarySelectEventImpl &&
             (identical(other.label, label) || other.label == label) &&
             (identical(other.selectedBoundary, selectedBoundary) ||
                 other.selectedBoundary == selectedBoundary));
@@ -418,8 +418,8 @@ class _$BoundarySelectEvent implements BoundarySelectEvent {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$BoundarySelectEventCopyWith<_$BoundarySelectEvent> get copyWith =>
-      __$$BoundarySelectEventCopyWithImpl<_$BoundarySelectEvent>(
+  _$$BoundarySelectEventImplCopyWith<_$BoundarySelectEventImpl> get copyWith =>
+      __$$BoundarySelectEventImplCopyWithImpl<_$BoundarySelectEventImpl>(
           this, _$identity);
 
   @override
@@ -500,36 +500,37 @@ class _$BoundarySelectEvent implements BoundarySelectEvent {
 
 abstract class BoundarySelectEvent implements BoundaryEvent {
   const factory BoundarySelectEvent(
-      {required final String label,
-      required final BoundaryModel selectedBoundary}) = _$BoundarySelectEvent;
+          {required final String label,
+          required final BoundaryModel selectedBoundary}) =
+      _$BoundarySelectEventImpl;
 
   String get label;
   BoundaryModel get selectedBoundary;
   @JsonKey(ignore: true)
-  _$$BoundarySelectEventCopyWith<_$BoundarySelectEvent> get copyWith =>
+  _$$BoundarySelectEventImplCopyWith<_$BoundarySelectEventImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$BoundarySubmitEventCopyWith<$Res> {
-  factory _$$BoundarySubmitEventCopyWith(_$BoundarySubmitEvent value,
-          $Res Function(_$BoundarySubmitEvent) then) =
-      __$$BoundarySubmitEventCopyWithImpl<$Res>;
+abstract class _$$BoundarySubmitEventImplCopyWith<$Res> {
+  factory _$$BoundarySubmitEventImplCopyWith(_$BoundarySubmitEventImpl value,
+          $Res Function(_$BoundarySubmitEventImpl) then) =
+      __$$BoundarySubmitEventImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$BoundarySubmitEventCopyWithImpl<$Res>
-    extends _$BoundaryEventCopyWithImpl<$Res, _$BoundarySubmitEvent>
-    implements _$$BoundarySubmitEventCopyWith<$Res> {
-  __$$BoundarySubmitEventCopyWithImpl(
-      _$BoundarySubmitEvent _value, $Res Function(_$BoundarySubmitEvent) _then)
+class __$$BoundarySubmitEventImplCopyWithImpl<$Res>
+    extends _$BoundaryEventCopyWithImpl<$Res, _$BoundarySubmitEventImpl>
+    implements _$$BoundarySubmitEventImplCopyWith<$Res> {
+  __$$BoundarySubmitEventImplCopyWithImpl(_$BoundarySubmitEventImpl _value,
+      $Res Function(_$BoundarySubmitEventImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$BoundarySubmitEvent implements BoundarySubmitEvent {
-  const _$BoundarySubmitEvent();
+class _$BoundarySubmitEventImpl implements BoundarySubmitEvent {
+  const _$BoundarySubmitEventImpl();
 
   @override
   String toString() {
@@ -537,9 +538,10 @@ class _$BoundarySubmitEvent implements BoundarySubmitEvent {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$BoundarySubmitEvent);
+        (other.runtimeType == runtimeType &&
+            other is _$BoundarySubmitEventImpl);
   }
 
   @override
@@ -622,7 +624,7 @@ class _$BoundarySubmitEvent implements BoundarySubmitEvent {
 }
 
 abstract class BoundarySubmitEvent implements BoundaryEvent {
-  const factory BoundarySubmitEvent() = _$BoundarySubmitEvent;
+  const factory BoundarySubmitEvent() = _$BoundarySubmitEventImpl;
 }
 
 /// @nodoc
@@ -691,11 +693,11 @@ class _$BoundaryStateCopyWithImpl<$Res, $Val extends BoundaryState>
 }
 
 /// @nodoc
-abstract class _$$_BoundaryStateCopyWith<$Res>
+abstract class _$$BoundaryStateImplCopyWith<$Res>
     implements $BoundaryStateCopyWith<$Res> {
-  factory _$$_BoundaryStateCopyWith(
-          _$_BoundaryState value, $Res Function(_$_BoundaryState) then) =
-      __$$_BoundaryStateCopyWithImpl<$Res>;
+  factory _$$BoundaryStateImplCopyWith(
+          _$BoundaryStateImpl value, $Res Function(_$BoundaryStateImpl) then) =
+      __$$BoundaryStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -706,11 +708,11 @@ abstract class _$$_BoundaryStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_BoundaryStateCopyWithImpl<$Res>
-    extends _$BoundaryStateCopyWithImpl<$Res, _$_BoundaryState>
-    implements _$$_BoundaryStateCopyWith<$Res> {
-  __$$_BoundaryStateCopyWithImpl(
-      _$_BoundaryState _value, $Res Function(_$_BoundaryState) _then)
+class __$$BoundaryStateImplCopyWithImpl<$Res>
+    extends _$BoundaryStateCopyWithImpl<$Res, _$BoundaryStateImpl>
+    implements _$$BoundaryStateImplCopyWith<$Res> {
+  __$$BoundaryStateImplCopyWithImpl(
+      _$BoundaryStateImpl _value, $Res Function(_$BoundaryStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -721,7 +723,7 @@ class __$$_BoundaryStateCopyWithImpl<$Res>
     Object? selectedBoundaryMap = null,
     Object? hasSubmitted = null,
   }) {
-    return _then(_$_BoundaryState(
+    return _then(_$BoundaryStateImpl(
       loading: null == loading
           ? _value.loading
           : loading // ignore: cast_nullable_to_non_nullable
@@ -744,8 +746,8 @@ class __$$_BoundaryStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_BoundaryState extends _BoundaryState {
-  const _$_BoundaryState(
+class _$BoundaryStateImpl extends _BoundaryState {
+  const _$BoundaryStateImpl(
       {this.loading = false,
       final List<BoundaryModel> boundaryList = const [],
       final Map<String, BoundaryModel?> selectedBoundaryMap = const {},
@@ -761,6 +763,7 @@ class _$_BoundaryState extends _BoundaryState {
   @override
   @JsonKey()
   List<BoundaryModel> get boundaryList {
+    if (_boundaryList is EqualUnmodifiableListView) return _boundaryList;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_boundaryList);
   }
@@ -769,6 +772,8 @@ class _$_BoundaryState extends _BoundaryState {
   @override
   @JsonKey()
   Map<String, BoundaryModel?> get selectedBoundaryMap {
+    if (_selectedBoundaryMap is EqualUnmodifiableMapView)
+      return _selectedBoundaryMap;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableMapView(_selectedBoundaryMap);
   }
@@ -778,10 +783,10 @@ class _$_BoundaryState extends _BoundaryState {
   final bool hasSubmitted;
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_BoundaryState &&
+            other is _$BoundaryStateImpl &&
             (identical(other.loading, loading) || other.loading == loading) &&
             const DeepCollectionEquality()
                 .equals(other._boundaryList, _boundaryList) &&
@@ -802,8 +807,8 @@ class _$_BoundaryState extends _BoundaryState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_BoundaryStateCopyWith<_$_BoundaryState> get copyWith =>
-      __$$_BoundaryStateCopyWithImpl<_$_BoundaryState>(this, _$identity);
+  _$$BoundaryStateImplCopyWith<_$BoundaryStateImpl> get copyWith =>
+      __$$BoundaryStateImplCopyWithImpl<_$BoundaryStateImpl>(this, _$identity);
 }
 
 abstract class _BoundaryState extends BoundaryState {
@@ -811,7 +816,7 @@ abstract class _BoundaryState extends BoundaryState {
       {final bool loading,
       final List<BoundaryModel> boundaryList,
       final Map<String, BoundaryModel?> selectedBoundaryMap,
-      final bool hasSubmitted}) = _$_BoundaryState;
+      final bool hasSubmitted}) = _$BoundaryStateImpl;
   const _BoundaryState._() : super._();
 
   @override
@@ -824,6 +829,6 @@ abstract class _BoundaryState extends BoundaryState {
   bool get hasSubmitted;
   @override
   @JsonKey(ignore: true)
-  _$$_BoundaryStateCopyWith<_$_BoundaryState> get copyWith =>
+  _$$BoundaryStateImplCopyWith<_$BoundaryStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'app_config_model.dart';
 
@@ -73,11 +73,11 @@ class _$MdmsRequestModelCopyWithImpl<$Res, $Val extends MdmsRequestModel>
 }
 
 /// @nodoc
-abstract class _$$_MdmsRequestModelCopyWith<$Res>
+abstract class _$$MdmsRequestModelImplCopyWith<$Res>
     implements $MdmsRequestModelCopyWith<$Res> {
-  factory _$$_MdmsRequestModelCopyWith(
-          _$_MdmsRequestModel value, $Res Function(_$_MdmsRequestModel) then) =
-      __$$_MdmsRequestModelCopyWithImpl<$Res>;
+  factory _$$MdmsRequestModelImplCopyWith(_$MdmsRequestModelImpl value,
+          $Res Function(_$MdmsRequestModelImpl) then) =
+      __$$MdmsRequestModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({@JsonKey(name: 'MdmsCriteria') MdmsCriteriaModel mdmsCriteria});
@@ -87,11 +87,11 @@ abstract class _$$_MdmsRequestModelCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_MdmsRequestModelCopyWithImpl<$Res>
-    extends _$MdmsRequestModelCopyWithImpl<$Res, _$_MdmsRequestModel>
-    implements _$$_MdmsRequestModelCopyWith<$Res> {
-  __$$_MdmsRequestModelCopyWithImpl(
-      _$_MdmsRequestModel _value, $Res Function(_$_MdmsRequestModel) _then)
+class __$$MdmsRequestModelImplCopyWithImpl<$Res>
+    extends _$MdmsRequestModelCopyWithImpl<$Res, _$MdmsRequestModelImpl>
+    implements _$$MdmsRequestModelImplCopyWith<$Res> {
+  __$$MdmsRequestModelImplCopyWithImpl(_$MdmsRequestModelImpl _value,
+      $Res Function(_$MdmsRequestModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -99,7 +99,7 @@ class __$$_MdmsRequestModelCopyWithImpl<$Res>
   $Res call({
     Object? mdmsCriteria = null,
   }) {
-    return _then(_$_MdmsRequestModel(
+    return _then(_$MdmsRequestModelImpl(
       mdmsCriteria: null == mdmsCriteria
           ? _value.mdmsCriteria
           : mdmsCriteria // ignore: cast_nullable_to_non_nullable
@@ -110,12 +110,12 @@ class __$$_MdmsRequestModelCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_MdmsRequestModel implements _MdmsRequestModel {
-  const _$_MdmsRequestModel(
+class _$MdmsRequestModelImpl implements _MdmsRequestModel {
+  const _$MdmsRequestModelImpl(
       {@JsonKey(name: 'MdmsCriteria') required this.mdmsCriteria});
 
-  factory _$_MdmsRequestModel.fromJson(Map<String, dynamic> json) =>
-      _$$_MdmsRequestModelFromJson(json);
+  factory _$MdmsRequestModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$MdmsRequestModelImplFromJson(json);
 
   @override
   @JsonKey(name: 'MdmsCriteria')
@@ -127,10 +127,10 @@ class _$_MdmsRequestModel implements _MdmsRequestModel {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_MdmsRequestModel &&
+            other is _$MdmsRequestModelImpl &&
             (identical(other.mdmsCriteria, mdmsCriteria) ||
                 other.mdmsCriteria == mdmsCriteria));
   }
@@ -142,12 +142,13 @@ class _$_MdmsRequestModel implements _MdmsRequestModel {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_MdmsRequestModelCopyWith<_$_MdmsRequestModel> get copyWith =>
-      __$$_MdmsRequestModelCopyWithImpl<_$_MdmsRequestModel>(this, _$identity);
+  _$$MdmsRequestModelImplCopyWith<_$MdmsRequestModelImpl> get copyWith =>
+      __$$MdmsRequestModelImplCopyWithImpl<_$MdmsRequestModelImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_MdmsRequestModelToJson(
+    return _$$MdmsRequestModelImplToJson(
       this,
     );
   }
@@ -156,17 +157,17 @@ class _$_MdmsRequestModel implements _MdmsRequestModel {
 abstract class _MdmsRequestModel implements MdmsRequestModel {
   const factory _MdmsRequestModel(
       {@JsonKey(name: 'MdmsCriteria')
-          required final MdmsCriteriaModel mdmsCriteria}) = _$_MdmsRequestModel;
+      required final MdmsCriteriaModel mdmsCriteria}) = _$MdmsRequestModelImpl;
 
   factory _MdmsRequestModel.fromJson(Map<String, dynamic> json) =
-      _$_MdmsRequestModel.fromJson;
+      _$MdmsRequestModelImpl.fromJson;
 
   @override
   @JsonKey(name: 'MdmsCriteria')
   MdmsCriteriaModel get mdmsCriteria;
   @override
   @JsonKey(ignore: true)
-  _$$_MdmsRequestModelCopyWith<_$_MdmsRequestModel> get copyWith =>
+  _$$MdmsRequestModelImplCopyWith<_$MdmsRequestModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -225,22 +226,22 @@ class _$MdmsCriteriaModelCopyWithImpl<$Res, $Val extends MdmsCriteriaModel>
 }
 
 /// @nodoc
-abstract class _$$_MdmsCriteriaModelCopyWith<$Res>
+abstract class _$$MdmsCriteriaModelImplCopyWith<$Res>
     implements $MdmsCriteriaModelCopyWith<$Res> {
-  factory _$$_MdmsCriteriaModelCopyWith(_$_MdmsCriteriaModel value,
-          $Res Function(_$_MdmsCriteriaModel) then) =
-      __$$_MdmsCriteriaModelCopyWithImpl<$Res>;
+  factory _$$MdmsCriteriaModelImplCopyWith(_$MdmsCriteriaModelImpl value,
+          $Res Function(_$MdmsCriteriaModelImpl) then) =
+      __$$MdmsCriteriaModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String tenantId, List<MdmsModuleDetailModel> moduleDetails});
 }
 
 /// @nodoc
-class __$$_MdmsCriteriaModelCopyWithImpl<$Res>
-    extends _$MdmsCriteriaModelCopyWithImpl<$Res, _$_MdmsCriteriaModel>
-    implements _$$_MdmsCriteriaModelCopyWith<$Res> {
-  __$$_MdmsCriteriaModelCopyWithImpl(
-      _$_MdmsCriteriaModel _value, $Res Function(_$_MdmsCriteriaModel) _then)
+class __$$MdmsCriteriaModelImplCopyWithImpl<$Res>
+    extends _$MdmsCriteriaModelCopyWithImpl<$Res, _$MdmsCriteriaModelImpl>
+    implements _$$MdmsCriteriaModelImplCopyWith<$Res> {
+  __$$MdmsCriteriaModelImplCopyWithImpl(_$MdmsCriteriaModelImpl _value,
+      $Res Function(_$MdmsCriteriaModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -249,7 +250,7 @@ class __$$_MdmsCriteriaModelCopyWithImpl<$Res>
     Object? tenantId = null,
     Object? moduleDetails = null,
   }) {
-    return _then(_$_MdmsCriteriaModel(
+    return _then(_$MdmsCriteriaModelImpl(
       tenantId: null == tenantId
           ? _value.tenantId
           : tenantId // ignore: cast_nullable_to_non_nullable
@@ -264,20 +265,21 @@ class __$$_MdmsCriteriaModelCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_MdmsCriteriaModel implements _MdmsCriteriaModel {
-  const _$_MdmsCriteriaModel(
+class _$MdmsCriteriaModelImpl implements _MdmsCriteriaModel {
+  const _$MdmsCriteriaModelImpl(
       {required this.tenantId,
       required final List<MdmsModuleDetailModel> moduleDetails})
       : _moduleDetails = moduleDetails;
 
-  factory _$_MdmsCriteriaModel.fromJson(Map<String, dynamic> json) =>
-      _$$_MdmsCriteriaModelFromJson(json);
+  factory _$MdmsCriteriaModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$MdmsCriteriaModelImplFromJson(json);
 
   @override
   final String tenantId;
   final List<MdmsModuleDetailModel> _moduleDetails;
   @override
   List<MdmsModuleDetailModel> get moduleDetails {
+    if (_moduleDetails is EqualUnmodifiableListView) return _moduleDetails;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_moduleDetails);
   }
@@ -288,10 +290,10 @@ class _$_MdmsCriteriaModel implements _MdmsCriteriaModel {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_MdmsCriteriaModel &&
+            other is _$MdmsCriteriaModelImpl &&
             (identical(other.tenantId, tenantId) ||
                 other.tenantId == tenantId) &&
             const DeepCollectionEquality()
@@ -306,13 +308,13 @@ class _$_MdmsCriteriaModel implements _MdmsCriteriaModel {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_MdmsCriteriaModelCopyWith<_$_MdmsCriteriaModel> get copyWith =>
-      __$$_MdmsCriteriaModelCopyWithImpl<_$_MdmsCriteriaModel>(
+  _$$MdmsCriteriaModelImplCopyWith<_$MdmsCriteriaModelImpl> get copyWith =>
+      __$$MdmsCriteriaModelImplCopyWithImpl<_$MdmsCriteriaModelImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_MdmsCriteriaModelToJson(
+    return _$$MdmsCriteriaModelImplToJson(
       this,
     );
   }
@@ -322,10 +324,10 @@ abstract class _MdmsCriteriaModel implements MdmsCriteriaModel {
   const factory _MdmsCriteriaModel(
           {required final String tenantId,
           required final List<MdmsModuleDetailModel> moduleDetails}) =
-      _$_MdmsCriteriaModel;
+      _$MdmsCriteriaModelImpl;
 
   factory _MdmsCriteriaModel.fromJson(Map<String, dynamic> json) =
-      _$_MdmsCriteriaModel.fromJson;
+      _$MdmsCriteriaModelImpl.fromJson;
 
   @override
   String get tenantId;
@@ -333,7 +335,7 @@ abstract class _MdmsCriteriaModel implements MdmsCriteriaModel {
   List<MdmsModuleDetailModel> get moduleDetails;
   @override
   @JsonKey(ignore: true)
-  _$$_MdmsCriteriaModelCopyWith<_$_MdmsCriteriaModel> get copyWith =>
+  _$$MdmsCriteriaModelImplCopyWith<_$MdmsCriteriaModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -394,22 +396,24 @@ class _$MdmsModuleDetailModelCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_MdmsModuleDetailModelCopyWith<$Res>
+abstract class _$$MdmsModuleDetailModelImplCopyWith<$Res>
     implements $MdmsModuleDetailModelCopyWith<$Res> {
-  factory _$$_MdmsModuleDetailModelCopyWith(_$_MdmsModuleDetailModel value,
-          $Res Function(_$_MdmsModuleDetailModel) then) =
-      __$$_MdmsModuleDetailModelCopyWithImpl<$Res>;
+  factory _$$MdmsModuleDetailModelImplCopyWith(
+          _$MdmsModuleDetailModelImpl value,
+          $Res Function(_$MdmsModuleDetailModelImpl) then) =
+      __$$MdmsModuleDetailModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String moduleName, List<MdmsMasterDetailModel> masterDetails});
 }
 
 /// @nodoc
-class __$$_MdmsModuleDetailModelCopyWithImpl<$Res>
-    extends _$MdmsModuleDetailModelCopyWithImpl<$Res, _$_MdmsModuleDetailModel>
-    implements _$$_MdmsModuleDetailModelCopyWith<$Res> {
-  __$$_MdmsModuleDetailModelCopyWithImpl(_$_MdmsModuleDetailModel _value,
-      $Res Function(_$_MdmsModuleDetailModel) _then)
+class __$$MdmsModuleDetailModelImplCopyWithImpl<$Res>
+    extends _$MdmsModuleDetailModelCopyWithImpl<$Res,
+        _$MdmsModuleDetailModelImpl>
+    implements _$$MdmsModuleDetailModelImplCopyWith<$Res> {
+  __$$MdmsModuleDetailModelImplCopyWithImpl(_$MdmsModuleDetailModelImpl _value,
+      $Res Function(_$MdmsModuleDetailModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -418,7 +422,7 @@ class __$$_MdmsModuleDetailModelCopyWithImpl<$Res>
     Object? moduleName = null,
     Object? masterDetails = null,
   }) {
-    return _then(_$_MdmsModuleDetailModel(
+    return _then(_$MdmsModuleDetailModelImpl(
       moduleName: null == moduleName
           ? _value.moduleName
           : moduleName // ignore: cast_nullable_to_non_nullable
@@ -433,20 +437,21 @@ class __$$_MdmsModuleDetailModelCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_MdmsModuleDetailModel implements _MdmsModuleDetailModel {
-  const _$_MdmsModuleDetailModel(
+class _$MdmsModuleDetailModelImpl implements _MdmsModuleDetailModel {
+  const _$MdmsModuleDetailModelImpl(
       {required this.moduleName,
       required final List<MdmsMasterDetailModel> masterDetails})
       : _masterDetails = masterDetails;
 
-  factory _$_MdmsModuleDetailModel.fromJson(Map<String, dynamic> json) =>
-      _$$_MdmsModuleDetailModelFromJson(json);
+  factory _$MdmsModuleDetailModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$MdmsModuleDetailModelImplFromJson(json);
 
   @override
   final String moduleName;
   final List<MdmsMasterDetailModel> _masterDetails;
   @override
   List<MdmsMasterDetailModel> get masterDetails {
+    if (_masterDetails is EqualUnmodifiableListView) return _masterDetails;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_masterDetails);
   }
@@ -457,10 +462,10 @@ class _$_MdmsModuleDetailModel implements _MdmsModuleDetailModel {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_MdmsModuleDetailModel &&
+            other is _$MdmsModuleDetailModelImpl &&
             (identical(other.moduleName, moduleName) ||
                 other.moduleName == moduleName) &&
             const DeepCollectionEquality()
@@ -475,13 +480,13 @@ class _$_MdmsModuleDetailModel implements _MdmsModuleDetailModel {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_MdmsModuleDetailModelCopyWith<_$_MdmsModuleDetailModel> get copyWith =>
-      __$$_MdmsModuleDetailModelCopyWithImpl<_$_MdmsModuleDetailModel>(
-          this, _$identity);
+  _$$MdmsModuleDetailModelImplCopyWith<_$MdmsModuleDetailModelImpl>
+      get copyWith => __$$MdmsModuleDetailModelImplCopyWithImpl<
+          _$MdmsModuleDetailModelImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_MdmsModuleDetailModelToJson(
+    return _$$MdmsModuleDetailModelImplToJson(
       this,
     );
   }
@@ -491,10 +496,10 @@ abstract class _MdmsModuleDetailModel implements MdmsModuleDetailModel {
   const factory _MdmsModuleDetailModel(
           {required final String moduleName,
           required final List<MdmsMasterDetailModel> masterDetails}) =
-      _$_MdmsModuleDetailModel;
+      _$MdmsModuleDetailModelImpl;
 
   factory _MdmsModuleDetailModel.fromJson(Map<String, dynamic> json) =
-      _$_MdmsModuleDetailModel.fromJson;
+      _$MdmsModuleDetailModelImpl.fromJson;
 
   @override
   String get moduleName;
@@ -502,8 +507,8 @@ abstract class _MdmsModuleDetailModel implements MdmsModuleDetailModel {
   List<MdmsMasterDetailModel> get masterDetails;
   @override
   @JsonKey(ignore: true)
-  _$$_MdmsModuleDetailModelCopyWith<_$_MdmsModuleDetailModel> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$MdmsModuleDetailModelImplCopyWith<_$MdmsModuleDetailModelImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 MdmsMasterDetailModel _$MdmsMasterDetailModelFromJson(
@@ -556,22 +561,24 @@ class _$MdmsMasterDetailModelCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_MdmsMasterDetailModelCopyWith<$Res>
+abstract class _$$MdmsMasterDetailModelImplCopyWith<$Res>
     implements $MdmsMasterDetailModelCopyWith<$Res> {
-  factory _$$_MdmsMasterDetailModelCopyWith(_$_MdmsMasterDetailModel value,
-          $Res Function(_$_MdmsMasterDetailModel) then) =
-      __$$_MdmsMasterDetailModelCopyWithImpl<$Res>;
+  factory _$$MdmsMasterDetailModelImplCopyWith(
+          _$MdmsMasterDetailModelImpl value,
+          $Res Function(_$MdmsMasterDetailModelImpl) then) =
+      __$$MdmsMasterDetailModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String name});
 }
 
 /// @nodoc
-class __$$_MdmsMasterDetailModelCopyWithImpl<$Res>
-    extends _$MdmsMasterDetailModelCopyWithImpl<$Res, _$_MdmsMasterDetailModel>
-    implements _$$_MdmsMasterDetailModelCopyWith<$Res> {
-  __$$_MdmsMasterDetailModelCopyWithImpl(_$_MdmsMasterDetailModel _value,
-      $Res Function(_$_MdmsMasterDetailModel) _then)
+class __$$MdmsMasterDetailModelImplCopyWithImpl<$Res>
+    extends _$MdmsMasterDetailModelCopyWithImpl<$Res,
+        _$MdmsMasterDetailModelImpl>
+    implements _$$MdmsMasterDetailModelImplCopyWith<$Res> {
+  __$$MdmsMasterDetailModelImplCopyWithImpl(_$MdmsMasterDetailModelImpl _value,
+      $Res Function(_$MdmsMasterDetailModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -579,7 +586,7 @@ class __$$_MdmsMasterDetailModelCopyWithImpl<$Res>
   $Res call({
     Object? name = null,
   }) {
-    return _then(_$_MdmsMasterDetailModel(
+    return _then(_$MdmsMasterDetailModelImpl(
       null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -590,11 +597,11 @@ class __$$_MdmsMasterDetailModelCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_MdmsMasterDetailModel implements _MdmsMasterDetailModel {
-  const _$_MdmsMasterDetailModel(this.name);
+class _$MdmsMasterDetailModelImpl implements _MdmsMasterDetailModel {
+  const _$MdmsMasterDetailModelImpl(this.name);
 
-  factory _$_MdmsMasterDetailModel.fromJson(Map<String, dynamic> json) =>
-      _$$_MdmsMasterDetailModelFromJson(json);
+  factory _$MdmsMasterDetailModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$MdmsMasterDetailModelImplFromJson(json);
 
   @override
   final String name;
@@ -605,10 +612,10 @@ class _$_MdmsMasterDetailModel implements _MdmsMasterDetailModel {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_MdmsMasterDetailModel &&
+            other is _$MdmsMasterDetailModelImpl &&
             (identical(other.name, name) || other.name == name));
   }
 
@@ -619,13 +626,13 @@ class _$_MdmsMasterDetailModel implements _MdmsMasterDetailModel {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_MdmsMasterDetailModelCopyWith<_$_MdmsMasterDetailModel> get copyWith =>
-      __$$_MdmsMasterDetailModelCopyWithImpl<_$_MdmsMasterDetailModel>(
-          this, _$identity);
+  _$$MdmsMasterDetailModelImplCopyWith<_$MdmsMasterDetailModelImpl>
+      get copyWith => __$$MdmsMasterDetailModelImplCopyWithImpl<
+          _$MdmsMasterDetailModelImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_MdmsMasterDetailModelToJson(
+    return _$$MdmsMasterDetailModelImplToJson(
       this,
     );
   }
@@ -633,17 +640,17 @@ class _$_MdmsMasterDetailModel implements _MdmsMasterDetailModel {
 
 abstract class _MdmsMasterDetailModel implements MdmsMasterDetailModel {
   const factory _MdmsMasterDetailModel(final String name) =
-      _$_MdmsMasterDetailModel;
+      _$MdmsMasterDetailModelImpl;
 
   factory _MdmsMasterDetailModel.fromJson(Map<String, dynamic> json) =
-      _$_MdmsMasterDetailModel.fromJson;
+      _$MdmsMasterDetailModelImpl.fromJson;
 
   @override
   String get name;
   @override
   @JsonKey(ignore: true)
-  _$$_MdmsMasterDetailModelCopyWith<_$_MdmsMasterDetailModel> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$MdmsMasterDetailModelImplCopyWith<_$MdmsMasterDetailModelImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 AppConfigPrimaryWrapperModel _$AppConfigPrimaryWrapperModelFromJson(
@@ -681,13 +688,12 @@ abstract class $AppConfigPrimaryWrapperModelCopyWith<$Res> {
   @useResult
   $Res call(
       {@JsonKey(name: 'HCM-FIELD-APP-CONFIG')
-          AppConfigSecondaryWrapperModel? appConfig,
-      @JsonKey(name: 'module-version')
-          RowVersionWrapperModel? rowVersions,
+      AppConfigSecondaryWrapperModel? appConfig,
+      @JsonKey(name: 'module-version') RowVersionWrapperModel? rowVersions,
       @JsonKey(name: 'HCM-SYMPTOMS-TYPES')
-          SymptomsTypesSecondaryWrapperModel? symptomsTypes,
+      SymptomsTypesSecondaryWrapperModel? symptomsTypes,
       @JsonKey(name: 'HCM-REFERRAL-REASONS')
-          ReferralReasonsWrapperModel? referralReasons});
+      ReferralReasonsWrapperModel? referralReasons});
 
   $AppConfigSecondaryWrapperModelCopyWith<$Res>? get appConfig;
   $RowVersionWrapperModelCopyWith<$Res>? get rowVersions;
@@ -787,23 +793,22 @@ class _$AppConfigPrimaryWrapperModelCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_AppConfigPrimaryWrapperModelCopyWith<$Res>
+abstract class _$$AppConfigPrimaryWrapperModelImplCopyWith<$Res>
     implements $AppConfigPrimaryWrapperModelCopyWith<$Res> {
-  factory _$$_AppConfigPrimaryWrapperModelCopyWith(
-          _$_AppConfigPrimaryWrapperModel value,
-          $Res Function(_$_AppConfigPrimaryWrapperModel) then) =
-      __$$_AppConfigPrimaryWrapperModelCopyWithImpl<$Res>;
+  factory _$$AppConfigPrimaryWrapperModelImplCopyWith(
+          _$AppConfigPrimaryWrapperModelImpl value,
+          $Res Function(_$AppConfigPrimaryWrapperModelImpl) then) =
+      __$$AppConfigPrimaryWrapperModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
       {@JsonKey(name: 'HCM-FIELD-APP-CONFIG')
-          AppConfigSecondaryWrapperModel? appConfig,
-      @JsonKey(name: 'module-version')
-          RowVersionWrapperModel? rowVersions,
+      AppConfigSecondaryWrapperModel? appConfig,
+      @JsonKey(name: 'module-version') RowVersionWrapperModel? rowVersions,
       @JsonKey(name: 'HCM-SYMPTOMS-TYPES')
-          SymptomsTypesSecondaryWrapperModel? symptomsTypes,
+      SymptomsTypesSecondaryWrapperModel? symptomsTypes,
       @JsonKey(name: 'HCM-REFERRAL-REASONS')
-          ReferralReasonsWrapperModel? referralReasons});
+      ReferralReasonsWrapperModel? referralReasons});
 
   @override
   $AppConfigSecondaryWrapperModelCopyWith<$Res>? get appConfig;
@@ -816,13 +821,13 @@ abstract class _$$_AppConfigPrimaryWrapperModelCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_AppConfigPrimaryWrapperModelCopyWithImpl<$Res>
+class __$$AppConfigPrimaryWrapperModelImplCopyWithImpl<$Res>
     extends _$AppConfigPrimaryWrapperModelCopyWithImpl<$Res,
-        _$_AppConfigPrimaryWrapperModel>
-    implements _$$_AppConfigPrimaryWrapperModelCopyWith<$Res> {
-  __$$_AppConfigPrimaryWrapperModelCopyWithImpl(
-      _$_AppConfigPrimaryWrapperModel _value,
-      $Res Function(_$_AppConfigPrimaryWrapperModel) _then)
+        _$AppConfigPrimaryWrapperModelImpl>
+    implements _$$AppConfigPrimaryWrapperModelImplCopyWith<$Res> {
+  __$$AppConfigPrimaryWrapperModelImplCopyWithImpl(
+      _$AppConfigPrimaryWrapperModelImpl _value,
+      $Res Function(_$AppConfigPrimaryWrapperModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -833,7 +838,7 @@ class __$$_AppConfigPrimaryWrapperModelCopyWithImpl<$Res>
     Object? symptomsTypes = freezed,
     Object? referralReasons = freezed,
   }) {
-    return _then(_$_AppConfigPrimaryWrapperModel(
+    return _then(_$AppConfigPrimaryWrapperModelImpl(
       appConfig: freezed == appConfig
           ? _value.appConfig
           : appConfig // ignore: cast_nullable_to_non_nullable
@@ -856,15 +861,17 @@ class __$$_AppConfigPrimaryWrapperModelCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_AppConfigPrimaryWrapperModel implements _AppConfigPrimaryWrapperModel {
-  const _$_AppConfigPrimaryWrapperModel(
+class _$AppConfigPrimaryWrapperModelImpl
+    implements _AppConfigPrimaryWrapperModel {
+  const _$AppConfigPrimaryWrapperModelImpl(
       {@JsonKey(name: 'HCM-FIELD-APP-CONFIG') this.appConfig,
       @JsonKey(name: 'module-version') this.rowVersions,
       @JsonKey(name: 'HCM-SYMPTOMS-TYPES') this.symptomsTypes,
       @JsonKey(name: 'HCM-REFERRAL-REASONS') this.referralReasons});
 
-  factory _$_AppConfigPrimaryWrapperModel.fromJson(Map<String, dynamic> json) =>
-      _$$_AppConfigPrimaryWrapperModelFromJson(json);
+  factory _$AppConfigPrimaryWrapperModelImpl.fromJson(
+          Map<String, dynamic> json) =>
+      _$$AppConfigPrimaryWrapperModelImplFromJson(json);
 
   @override
   @JsonKey(name: 'HCM-FIELD-APP-CONFIG')
@@ -885,10 +892,10 @@ class _$_AppConfigPrimaryWrapperModel implements _AppConfigPrimaryWrapperModel {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_AppConfigPrimaryWrapperModel &&
+            other is _$AppConfigPrimaryWrapperModelImpl &&
             (identical(other.appConfig, appConfig) ||
                 other.appConfig == appConfig) &&
             (identical(other.rowVersions, rowVersions) ||
@@ -907,13 +914,14 @@ class _$_AppConfigPrimaryWrapperModel implements _AppConfigPrimaryWrapperModel {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_AppConfigPrimaryWrapperModelCopyWith<_$_AppConfigPrimaryWrapperModel>
-      get copyWith => __$$_AppConfigPrimaryWrapperModelCopyWithImpl<
-          _$_AppConfigPrimaryWrapperModel>(this, _$identity);
+  _$$AppConfigPrimaryWrapperModelImplCopyWith<
+          _$AppConfigPrimaryWrapperModelImpl>
+      get copyWith => __$$AppConfigPrimaryWrapperModelImplCopyWithImpl<
+          _$AppConfigPrimaryWrapperModelImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_AppConfigPrimaryWrapperModelToJson(
+    return _$$AppConfigPrimaryWrapperModelImplToJson(
       this,
     );
   }
@@ -923,17 +931,17 @@ abstract class _AppConfigPrimaryWrapperModel
     implements AppConfigPrimaryWrapperModel {
   const factory _AppConfigPrimaryWrapperModel(
           {@JsonKey(name: 'HCM-FIELD-APP-CONFIG')
-              final AppConfigSecondaryWrapperModel? appConfig,
+          final AppConfigSecondaryWrapperModel? appConfig,
           @JsonKey(name: 'module-version')
-              final RowVersionWrapperModel? rowVersions,
+          final RowVersionWrapperModel? rowVersions,
           @JsonKey(name: 'HCM-SYMPTOMS-TYPES')
-              final SymptomsTypesSecondaryWrapperModel? symptomsTypes,
+          final SymptomsTypesSecondaryWrapperModel? symptomsTypes,
           @JsonKey(name: 'HCM-REFERRAL-REASONS')
-              final ReferralReasonsWrapperModel? referralReasons}) =
-      _$_AppConfigPrimaryWrapperModel;
+          final ReferralReasonsWrapperModel? referralReasons}) =
+      _$AppConfigPrimaryWrapperModelImpl;
 
   factory _AppConfigPrimaryWrapperModel.fromJson(Map<String, dynamic> json) =
-      _$_AppConfigPrimaryWrapperModel.fromJson;
+      _$AppConfigPrimaryWrapperModelImpl.fromJson;
 
   @override
   @JsonKey(name: 'HCM-FIELD-APP-CONFIG')
@@ -949,7 +957,8 @@ abstract class _AppConfigPrimaryWrapperModel
   ReferralReasonsWrapperModel? get referralReasons;
   @override
   @JsonKey(ignore: true)
-  _$$_AppConfigPrimaryWrapperModelCopyWith<_$_AppConfigPrimaryWrapperModel>
+  _$$AppConfigPrimaryWrapperModelImplCopyWith<
+          _$AppConfigPrimaryWrapperModelImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -1006,25 +1015,25 @@ class _$AppConfigSecondaryWrapperModelCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_AppConfigSecondaryWrapperModelCopyWith<$Res>
+abstract class _$$AppConfigSecondaryWrapperModelImplCopyWith<$Res>
     implements $AppConfigSecondaryWrapperModelCopyWith<$Res> {
-  factory _$$_AppConfigSecondaryWrapperModelCopyWith(
-          _$_AppConfigSecondaryWrapperModel value,
-          $Res Function(_$_AppConfigSecondaryWrapperModel) then) =
-      __$$_AppConfigSecondaryWrapperModelCopyWithImpl<$Res>;
+  factory _$$AppConfigSecondaryWrapperModelImplCopyWith(
+          _$AppConfigSecondaryWrapperModelImpl value,
+          $Res Function(_$AppConfigSecondaryWrapperModelImpl) then) =
+      __$$AppConfigSecondaryWrapperModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({@JsonKey(name: 'appConfig') List<AppConfig>? appConfiglist});
 }
 
 /// @nodoc
-class __$$_AppConfigSecondaryWrapperModelCopyWithImpl<$Res>
+class __$$AppConfigSecondaryWrapperModelImplCopyWithImpl<$Res>
     extends _$AppConfigSecondaryWrapperModelCopyWithImpl<$Res,
-        _$_AppConfigSecondaryWrapperModel>
-    implements _$$_AppConfigSecondaryWrapperModelCopyWith<$Res> {
-  __$$_AppConfigSecondaryWrapperModelCopyWithImpl(
-      _$_AppConfigSecondaryWrapperModel _value,
-      $Res Function(_$_AppConfigSecondaryWrapperModel) _then)
+        _$AppConfigSecondaryWrapperModelImpl>
+    implements _$$AppConfigSecondaryWrapperModelImplCopyWith<$Res> {
+  __$$AppConfigSecondaryWrapperModelImplCopyWithImpl(
+      _$AppConfigSecondaryWrapperModelImpl _value,
+      $Res Function(_$AppConfigSecondaryWrapperModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1032,7 +1041,7 @@ class __$$_AppConfigSecondaryWrapperModelCopyWithImpl<$Res>
   $Res call({
     Object? appConfiglist = freezed,
   }) {
-    return _then(_$_AppConfigSecondaryWrapperModel(
+    return _then(_$AppConfigSecondaryWrapperModelImpl(
       appConfiglist: freezed == appConfiglist
           ? _value._appConfiglist
           : appConfiglist // ignore: cast_nullable_to_non_nullable
@@ -1043,15 +1052,15 @@ class __$$_AppConfigSecondaryWrapperModelCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_AppConfigSecondaryWrapperModel
+class _$AppConfigSecondaryWrapperModelImpl
     implements _AppConfigSecondaryWrapperModel {
-  const _$_AppConfigSecondaryWrapperModel(
+  const _$AppConfigSecondaryWrapperModelImpl(
       {@JsonKey(name: 'appConfig') final List<AppConfig>? appConfiglist})
       : _appConfiglist = appConfiglist;
 
-  factory _$_AppConfigSecondaryWrapperModel.fromJson(
+  factory _$AppConfigSecondaryWrapperModelImpl.fromJson(
           Map<String, dynamic> json) =>
-      _$$_AppConfigSecondaryWrapperModelFromJson(json);
+      _$$AppConfigSecondaryWrapperModelImplFromJson(json);
 
   final List<AppConfig>? _appConfiglist;
   @override
@@ -1059,6 +1068,7 @@ class _$_AppConfigSecondaryWrapperModel
   List<AppConfig>? get appConfiglist {
     final value = _appConfiglist;
     if (value == null) return null;
+    if (_appConfiglist is EqualUnmodifiableListView) return _appConfiglist;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
@@ -1069,10 +1079,10 @@ class _$_AppConfigSecondaryWrapperModel
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_AppConfigSecondaryWrapperModel &&
+            other is _$AppConfigSecondaryWrapperModelImpl &&
             const DeepCollectionEquality()
                 .equals(other._appConfiglist, _appConfiglist));
   }
@@ -1085,13 +1095,14 @@ class _$_AppConfigSecondaryWrapperModel
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_AppConfigSecondaryWrapperModelCopyWith<_$_AppConfigSecondaryWrapperModel>
-      get copyWith => __$$_AppConfigSecondaryWrapperModelCopyWithImpl<
-          _$_AppConfigSecondaryWrapperModel>(this, _$identity);
+  _$$AppConfigSecondaryWrapperModelImplCopyWith<
+          _$AppConfigSecondaryWrapperModelImpl>
+      get copyWith => __$$AppConfigSecondaryWrapperModelImplCopyWithImpl<
+          _$AppConfigSecondaryWrapperModelImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_AppConfigSecondaryWrapperModelToJson(
+    return _$$AppConfigSecondaryWrapperModelImplToJson(
       this,
     );
   }
@@ -1101,17 +1112,18 @@ abstract class _AppConfigSecondaryWrapperModel
     implements AppConfigSecondaryWrapperModel {
   const factory _AppConfigSecondaryWrapperModel(
           {@JsonKey(name: 'appConfig') final List<AppConfig>? appConfiglist}) =
-      _$_AppConfigSecondaryWrapperModel;
+      _$AppConfigSecondaryWrapperModelImpl;
 
   factory _AppConfigSecondaryWrapperModel.fromJson(Map<String, dynamic> json) =
-      _$_AppConfigSecondaryWrapperModel.fromJson;
+      _$AppConfigSecondaryWrapperModelImpl.fromJson;
 
   @override
   @JsonKey(name: 'appConfig')
   List<AppConfig>? get appConfiglist;
   @override
   @JsonKey(ignore: true)
-  _$$_AppConfigSecondaryWrapperModelCopyWith<_$_AppConfigSecondaryWrapperModel>
+  _$$AppConfigSecondaryWrapperModelImplCopyWith<
+          _$AppConfigSecondaryWrapperModelImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -1167,11 +1179,12 @@ class _$RowVersionWrapperModelCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_RowVersionWrapperModelCopyWith<$Res>
+abstract class _$$RowVersionWrapperModelImplCopyWith<$Res>
     implements $RowVersionWrapperModelCopyWith<$Res> {
-  factory _$$_RowVersionWrapperModelCopyWith(_$_RowVersionWrapperModel value,
-          $Res Function(_$_RowVersionWrapperModel) then) =
-      __$$_RowVersionWrapperModelCopyWithImpl<$Res>;
+  factory _$$RowVersionWrapperModelImplCopyWith(
+          _$RowVersionWrapperModelImpl value,
+          $Res Function(_$RowVersionWrapperModelImpl) then) =
+      __$$RowVersionWrapperModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -1179,12 +1192,13 @@ abstract class _$$_RowVersionWrapperModelCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_RowVersionWrapperModelCopyWithImpl<$Res>
+class __$$RowVersionWrapperModelImplCopyWithImpl<$Res>
     extends _$RowVersionWrapperModelCopyWithImpl<$Res,
-        _$_RowVersionWrapperModel>
-    implements _$$_RowVersionWrapperModelCopyWith<$Res> {
-  __$$_RowVersionWrapperModelCopyWithImpl(_$_RowVersionWrapperModel _value,
-      $Res Function(_$_RowVersionWrapperModel) _then)
+        _$RowVersionWrapperModelImpl>
+    implements _$$RowVersionWrapperModelImplCopyWith<$Res> {
+  __$$RowVersionWrapperModelImplCopyWithImpl(
+      _$RowVersionWrapperModelImpl _value,
+      $Res Function(_$RowVersionWrapperModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1192,7 +1206,7 @@ class __$$_RowVersionWrapperModelCopyWithImpl<$Res>
   $Res call({
     Object? rowVersionslist = freezed,
   }) {
-    return _then(_$_RowVersionWrapperModel(
+    return _then(_$RowVersionWrapperModelImpl(
       rowVersionslist: freezed == rowVersionslist
           ? _value._rowVersionslist
           : rowVersionslist // ignore: cast_nullable_to_non_nullable
@@ -1203,13 +1217,13 @@ class __$$_RowVersionWrapperModelCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_RowVersionWrapperModel implements _RowVersionWrapperModel {
-  const _$_RowVersionWrapperModel(
+class _$RowVersionWrapperModelImpl implements _RowVersionWrapperModel {
+  const _$RowVersionWrapperModelImpl(
       {@JsonKey(name: 'ROW_VERSIONS') final List<RowVersions>? rowVersionslist})
       : _rowVersionslist = rowVersionslist;
 
-  factory _$_RowVersionWrapperModel.fromJson(Map<String, dynamic> json) =>
-      _$$_RowVersionWrapperModelFromJson(json);
+  factory _$RowVersionWrapperModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$RowVersionWrapperModelImplFromJson(json);
 
   final List<RowVersions>? _rowVersionslist;
   @override
@@ -1217,6 +1231,7 @@ class _$_RowVersionWrapperModel implements _RowVersionWrapperModel {
   List<RowVersions>? get rowVersionslist {
     final value = _rowVersionslist;
     if (value == null) return null;
+    if (_rowVersionslist is EqualUnmodifiableListView) return _rowVersionslist;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
@@ -1227,10 +1242,10 @@ class _$_RowVersionWrapperModel implements _RowVersionWrapperModel {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_RowVersionWrapperModel &&
+            other is _$RowVersionWrapperModelImpl &&
             const DeepCollectionEquality()
                 .equals(other._rowVersionslist, _rowVersionslist));
   }
@@ -1243,13 +1258,13 @@ class _$_RowVersionWrapperModel implements _RowVersionWrapperModel {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_RowVersionWrapperModelCopyWith<_$_RowVersionWrapperModel> get copyWith =>
-      __$$_RowVersionWrapperModelCopyWithImpl<_$_RowVersionWrapperModel>(
-          this, _$identity);
+  _$$RowVersionWrapperModelImplCopyWith<_$RowVersionWrapperModelImpl>
+      get copyWith => __$$RowVersionWrapperModelImplCopyWithImpl<
+          _$RowVersionWrapperModelImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_RowVersionWrapperModelToJson(
+    return _$$RowVersionWrapperModelImplToJson(
       this,
     );
   }
@@ -1257,20 +1272,19 @@ class _$_RowVersionWrapperModel implements _RowVersionWrapperModel {
 
 abstract class _RowVersionWrapperModel implements RowVersionWrapperModel {
   const factory _RowVersionWrapperModel(
-          {@JsonKey(name: 'ROW_VERSIONS')
-              final List<RowVersions>? rowVersionslist}) =
-      _$_RowVersionWrapperModel;
+      {@JsonKey(name: 'ROW_VERSIONS')
+      final List<RowVersions>? rowVersionslist}) = _$RowVersionWrapperModelImpl;
 
   factory _RowVersionWrapperModel.fromJson(Map<String, dynamic> json) =
-      _$_RowVersionWrapperModel.fromJson;
+      _$RowVersionWrapperModelImpl.fromJson;
 
   @override
   @JsonKey(name: 'ROW_VERSIONS')
   List<RowVersions>? get rowVersionslist;
   @override
   @JsonKey(ignore: true)
-  _$$_RowVersionWrapperModelCopyWith<_$_RowVersionWrapperModel> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$RowVersionWrapperModelImplCopyWith<_$RowVersionWrapperModelImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 AppConfig _$AppConfigFromJson(Map<String, dynamic> json) {
@@ -1334,42 +1348,31 @@ abstract class $AppConfigCopyWith<$Res> {
       _$AppConfigCopyWithImpl<$Res, AppConfig>;
   @useResult
   $Res call(
-      {@JsonKey(name: 'NETWORK_DETECTION')
-          String networkDetection,
-      @JsonKey(name: 'PERSISTENCE_MODE')
-          String persistenceMode,
-      @JsonKey(name: 'SYNC_METHOD')
-          String syncMethod,
-      @JsonKey(name: 'SYNC_TRIGGER')
-          String syncTrigger,
-      @JsonKey(name: 'LANGUAGES')
-          List<Languages> languages,
-      @JsonKey(name: 'TENANT_ID')
-          String? tenantId,
-      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE')
-          double? maxRadius,
+      {@JsonKey(name: 'NETWORK_DETECTION') String networkDetection,
+      @JsonKey(name: 'PERSISTENCE_MODE') String persistenceMode,
+      @JsonKey(name: 'SYNC_METHOD') String syncMethod,
+      @JsonKey(name: 'SYNC_TRIGGER') String syncTrigger,
+      @JsonKey(name: 'LANGUAGES') List<Languages> languages,
+      @JsonKey(name: 'TENANT_ID') String? tenantId,
+      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') double? maxRadius,
       @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
-          List<DeletionReasonOptions> householdDeletionReasonOptions,
+      List<DeletionReasonOptions> householdDeletionReasonOptions,
       @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')
-          List<BandWidthBatchSize> bandWidthBatchSize,
+      List<BandWidthBatchSize> bandWidthBatchSize,
       @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')
-          BackgroundServiceConfig? backgroundServiceConfig,
+      BackgroundServiceConfig? backgroundServiceConfig,
       @JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS')
-          List<DeletionReasonOptions> householdMemberDeletionReasonOptions,
+      List<DeletionReasonOptions> householdMemberDeletionReasonOptions,
       @JsonKey(name: 'GENDER_OPTIONS_POPULATOR')
-          List<GenderOptions> genderOptions,
-      @JsonKey(name: 'CHECKLIST_TYPES')
-          List<CheckListTypes> checklistTypes,
+      List<GenderOptions> genderOptions,
+      @JsonKey(name: 'CHECKLIST_TYPES') List<CheckListTypes> checklistTypes,
       @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
-          List<IdTypeOptions> idTypeOptions,
+      List<IdTypeOptions> idTypeOptions,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
-          List<DeliveryCommentOptions> deliveryCommentOptions,
-      @JsonKey(name: 'BACKEND_INTERFACE')
-          BackendInterface backendInterface,
-      @JsonKey(name: 'CALL_SUPPORT')
-          List<CallSupportList>? callSupportOptions,
-      @JsonKey(name: 'TRANSPORT_TYPES')
-          List<TransportTypes> transportTypes});
+      List<DeliveryCommentOptions> deliveryCommentOptions,
+      @JsonKey(name: 'BACKEND_INTERFACE') BackendInterface backendInterface,
+      @JsonKey(name: 'CALL_SUPPORT') List<CallSupportList>? callSupportOptions,
+      @JsonKey(name: 'TRANSPORT_TYPES') List<TransportTypes> transportTypes});
 
   $BackgroundServiceConfigCopyWith<$Res>? get backgroundServiceConfig;
   $BackendInterfaceCopyWith<$Res> get backendInterface;
@@ -1507,49 +1510,39 @@ class _$AppConfigCopyWithImpl<$Res, $Val extends AppConfig>
 }
 
 /// @nodoc
-abstract class _$$_AppConfigCopyWith<$Res> implements $AppConfigCopyWith<$Res> {
-  factory _$$_AppConfigCopyWith(
-          _$_AppConfig value, $Res Function(_$_AppConfig) then) =
-      __$$_AppConfigCopyWithImpl<$Res>;
+abstract class _$$AppConfigImplCopyWith<$Res>
+    implements $AppConfigCopyWith<$Res> {
+  factory _$$AppConfigImplCopyWith(
+          _$AppConfigImpl value, $Res Function(_$AppConfigImpl) then) =
+      __$$AppConfigImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'NETWORK_DETECTION')
-          String networkDetection,
-      @JsonKey(name: 'PERSISTENCE_MODE')
-          String persistenceMode,
-      @JsonKey(name: 'SYNC_METHOD')
-          String syncMethod,
-      @JsonKey(name: 'SYNC_TRIGGER')
-          String syncTrigger,
-      @JsonKey(name: 'LANGUAGES')
-          List<Languages> languages,
-      @JsonKey(name: 'TENANT_ID')
-          String? tenantId,
-      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE')
-          double? maxRadius,
+      {@JsonKey(name: 'NETWORK_DETECTION') String networkDetection,
+      @JsonKey(name: 'PERSISTENCE_MODE') String persistenceMode,
+      @JsonKey(name: 'SYNC_METHOD') String syncMethod,
+      @JsonKey(name: 'SYNC_TRIGGER') String syncTrigger,
+      @JsonKey(name: 'LANGUAGES') List<Languages> languages,
+      @JsonKey(name: 'TENANT_ID') String? tenantId,
+      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') double? maxRadius,
       @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
-          List<DeletionReasonOptions> householdDeletionReasonOptions,
+      List<DeletionReasonOptions> householdDeletionReasonOptions,
       @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')
-          List<BandWidthBatchSize> bandWidthBatchSize,
+      List<BandWidthBatchSize> bandWidthBatchSize,
       @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')
-          BackgroundServiceConfig? backgroundServiceConfig,
+      BackgroundServiceConfig? backgroundServiceConfig,
       @JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS')
-          List<DeletionReasonOptions> householdMemberDeletionReasonOptions,
+      List<DeletionReasonOptions> householdMemberDeletionReasonOptions,
       @JsonKey(name: 'GENDER_OPTIONS_POPULATOR')
-          List<GenderOptions> genderOptions,
-      @JsonKey(name: 'CHECKLIST_TYPES')
-          List<CheckListTypes> checklistTypes,
+      List<GenderOptions> genderOptions,
+      @JsonKey(name: 'CHECKLIST_TYPES') List<CheckListTypes> checklistTypes,
       @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
-          List<IdTypeOptions> idTypeOptions,
+      List<IdTypeOptions> idTypeOptions,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
-          List<DeliveryCommentOptions> deliveryCommentOptions,
-      @JsonKey(name: 'BACKEND_INTERFACE')
-          BackendInterface backendInterface,
-      @JsonKey(name: 'CALL_SUPPORT')
-          List<CallSupportList>? callSupportOptions,
-      @JsonKey(name: 'TRANSPORT_TYPES')
-          List<TransportTypes> transportTypes});
+      List<DeliveryCommentOptions> deliveryCommentOptions,
+      @JsonKey(name: 'BACKEND_INTERFACE') BackendInterface backendInterface,
+      @JsonKey(name: 'CALL_SUPPORT') List<CallSupportList>? callSupportOptions,
+      @JsonKey(name: 'TRANSPORT_TYPES') List<TransportTypes> transportTypes});
 
   @override
   $BackgroundServiceConfigCopyWith<$Res>? get backgroundServiceConfig;
@@ -1558,11 +1551,11 @@ abstract class _$$_AppConfigCopyWith<$Res> implements $AppConfigCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_AppConfigCopyWithImpl<$Res>
-    extends _$AppConfigCopyWithImpl<$Res, _$_AppConfig>
-    implements _$$_AppConfigCopyWith<$Res> {
-  __$$_AppConfigCopyWithImpl(
-      _$_AppConfig _value, $Res Function(_$_AppConfig) _then)
+class __$$AppConfigImplCopyWithImpl<$Res>
+    extends _$AppConfigCopyWithImpl<$Res, _$AppConfigImpl>
+    implements _$$AppConfigImplCopyWith<$Res> {
+  __$$AppConfigImplCopyWithImpl(
+      _$AppConfigImpl _value, $Res Function(_$AppConfigImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1587,7 +1580,7 @@ class __$$_AppConfigCopyWithImpl<$Res>
     Object? callSupportOptions = freezed,
     Object? transportTypes = null,
   }) {
-    return _then(_$_AppConfig(
+    return _then(_$AppConfigImpl(
       networkDetection: null == networkDetection
           ? _value.networkDetection
           : networkDetection // ignore: cast_nullable_to_non_nullable
@@ -1667,46 +1660,36 @@ class __$$_AppConfigCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_AppConfig implements _AppConfig {
-  _$_AppConfig(
-      {@JsonKey(name: 'NETWORK_DETECTION')
-          required this.networkDetection,
-      @JsonKey(name: 'PERSISTENCE_MODE')
-          required this.persistenceMode,
-      @JsonKey(name: 'SYNC_METHOD')
-          required this.syncMethod,
-      @JsonKey(name: 'SYNC_TRIGGER')
-          required this.syncTrigger,
-      @JsonKey(name: 'LANGUAGES')
-          required final List<Languages> languages,
-      @JsonKey(name: 'TENANT_ID')
-          this.tenantId,
-      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE')
-          this.maxRadius,
+class _$AppConfigImpl implements _AppConfig {
+  _$AppConfigImpl(
+      {@JsonKey(name: 'NETWORK_DETECTION') required this.networkDetection,
+      @JsonKey(name: 'PERSISTENCE_MODE') required this.persistenceMode,
+      @JsonKey(name: 'SYNC_METHOD') required this.syncMethod,
+      @JsonKey(name: 'SYNC_TRIGGER') required this.syncTrigger,
+      @JsonKey(name: 'LANGUAGES') required final List<Languages> languages,
+      @JsonKey(name: 'TENANT_ID') this.tenantId,
+      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') this.maxRadius,
       @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
-          required final List<DeletionReasonOptions>
-              householdDeletionReasonOptions,
+      required final List<DeletionReasonOptions> householdDeletionReasonOptions,
       @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')
-          required final List<BandWidthBatchSize> bandWidthBatchSize,
-      @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')
-          this.backgroundServiceConfig,
+      required final List<BandWidthBatchSize> bandWidthBatchSize,
+      @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG') this.backgroundServiceConfig,
       @JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS')
-          required final List<DeletionReasonOptions>
-              householdMemberDeletionReasonOptions,
+      required final List<DeletionReasonOptions>
+          householdMemberDeletionReasonOptions,
       @JsonKey(name: 'GENDER_OPTIONS_POPULATOR')
-          required final List<GenderOptions> genderOptions,
+      required final List<GenderOptions> genderOptions,
       @JsonKey(name: 'CHECKLIST_TYPES')
-          required final List<CheckListTypes> checklistTypes,
+      required final List<CheckListTypes> checklistTypes,
       @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
-          required final List<IdTypeOptions> idTypeOptions,
+      required final List<IdTypeOptions> idTypeOptions,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
-          required final List<DeliveryCommentOptions> deliveryCommentOptions,
-      @JsonKey(name: 'BACKEND_INTERFACE')
-          required this.backendInterface,
+      required final List<DeliveryCommentOptions> deliveryCommentOptions,
+      @JsonKey(name: 'BACKEND_INTERFACE') required this.backendInterface,
       @JsonKey(name: 'CALL_SUPPORT')
-          required final List<CallSupportList>? callSupportOptions,
+      required final List<CallSupportList>? callSupportOptions,
       @JsonKey(name: 'TRANSPORT_TYPES')
-          required final List<TransportTypes> transportTypes})
+      required final List<TransportTypes> transportTypes})
       : _languages = languages,
         _householdDeletionReasonOptions = householdDeletionReasonOptions,
         _bandWidthBatchSize = bandWidthBatchSize,
@@ -1719,8 +1702,8 @@ class _$_AppConfig implements _AppConfig {
         _callSupportOptions = callSupportOptions,
         _transportTypes = transportTypes;
 
-  factory _$_AppConfig.fromJson(Map<String, dynamic> json) =>
-      _$$_AppConfigFromJson(json);
+  factory _$AppConfigImpl.fromJson(Map<String, dynamic> json) =>
+      _$$AppConfigImplFromJson(json);
 
   @override
   @JsonKey(name: 'NETWORK_DETECTION')
@@ -1738,6 +1721,7 @@ class _$_AppConfig implements _AppConfig {
   @override
   @JsonKey(name: 'LANGUAGES')
   List<Languages> get languages {
+    if (_languages is EqualUnmodifiableListView) return _languages;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_languages);
   }
@@ -1752,6 +1736,8 @@ class _$_AppConfig implements _AppConfig {
   @override
   @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
   List<DeletionReasonOptions> get householdDeletionReasonOptions {
+    if (_householdDeletionReasonOptions is EqualUnmodifiableListView)
+      return _householdDeletionReasonOptions;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_householdDeletionReasonOptions);
   }
@@ -1760,6 +1746,8 @@ class _$_AppConfig implements _AppConfig {
   @override
   @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')
   List<BandWidthBatchSize> get bandWidthBatchSize {
+    if (_bandWidthBatchSize is EqualUnmodifiableListView)
+      return _bandWidthBatchSize;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_bandWidthBatchSize);
   }
@@ -1771,6 +1759,8 @@ class _$_AppConfig implements _AppConfig {
   @override
   @JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS')
   List<DeletionReasonOptions> get householdMemberDeletionReasonOptions {
+    if (_householdMemberDeletionReasonOptions is EqualUnmodifiableListView)
+      return _householdMemberDeletionReasonOptions;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_householdMemberDeletionReasonOptions);
   }
@@ -1779,6 +1769,7 @@ class _$_AppConfig implements _AppConfig {
   @override
   @JsonKey(name: 'GENDER_OPTIONS_POPULATOR')
   List<GenderOptions> get genderOptions {
+    if (_genderOptions is EqualUnmodifiableListView) return _genderOptions;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_genderOptions);
   }
@@ -1787,6 +1778,7 @@ class _$_AppConfig implements _AppConfig {
   @override
   @JsonKey(name: 'CHECKLIST_TYPES')
   List<CheckListTypes> get checklistTypes {
+    if (_checklistTypes is EqualUnmodifiableListView) return _checklistTypes;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_checklistTypes);
   }
@@ -1795,6 +1787,7 @@ class _$_AppConfig implements _AppConfig {
   @override
   @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
   List<IdTypeOptions> get idTypeOptions {
+    if (_idTypeOptions is EqualUnmodifiableListView) return _idTypeOptions;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_idTypeOptions);
   }
@@ -1803,6 +1796,8 @@ class _$_AppConfig implements _AppConfig {
   @override
   @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
   List<DeliveryCommentOptions> get deliveryCommentOptions {
+    if (_deliveryCommentOptions is EqualUnmodifiableListView)
+      return _deliveryCommentOptions;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_deliveryCommentOptions);
   }
@@ -1816,6 +1811,8 @@ class _$_AppConfig implements _AppConfig {
   List<CallSupportList>? get callSupportOptions {
     final value = _callSupportOptions;
     if (value == null) return null;
+    if (_callSupportOptions is EqualUnmodifiableListView)
+      return _callSupportOptions;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
@@ -1824,6 +1821,7 @@ class _$_AppConfig implements _AppConfig {
   @override
   @JsonKey(name: 'TRANSPORT_TYPES')
   List<TransportTypes> get transportTypes {
+    if (_transportTypes is EqualUnmodifiableListView) return _transportTypes;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_transportTypes);
   }
@@ -1834,10 +1832,10 @@ class _$_AppConfig implements _AppConfig {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_AppConfig &&
+            other is _$AppConfigImpl &&
             (identical(other.networkDetection, networkDetection) ||
                 other.networkDetection == networkDetection) &&
             (identical(other.persistenceMode, persistenceMode) ||
@@ -1906,12 +1904,12 @@ class _$_AppConfig implements _AppConfig {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_AppConfigCopyWith<_$_AppConfig> get copyWith =>
-      __$$_AppConfigCopyWithImpl<_$_AppConfig>(this, _$identity);
+  _$$AppConfigImplCopyWith<_$AppConfigImpl> get copyWith =>
+      __$$AppConfigImplCopyWithImpl<_$AppConfigImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_AppConfigToJson(
+    return _$$AppConfigImplToJson(
       this,
     );
   }
@@ -1920,46 +1918,39 @@ class _$_AppConfig implements _AppConfig {
 abstract class _AppConfig implements AppConfig {
   factory _AppConfig(
       {@JsonKey(name: 'NETWORK_DETECTION')
-          required final String networkDetection,
-      @JsonKey(name: 'PERSISTENCE_MODE')
-          required final String persistenceMode,
-      @JsonKey(name: 'SYNC_METHOD')
-          required final String syncMethod,
-      @JsonKey(name: 'SYNC_TRIGGER')
-          required final String syncTrigger,
-      @JsonKey(name: 'LANGUAGES')
-          required final List<Languages> languages,
-      @JsonKey(name: 'TENANT_ID')
-          final String? tenantId,
-      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE')
-          final double? maxRadius,
+      required final String networkDetection,
+      @JsonKey(name: 'PERSISTENCE_MODE') required final String persistenceMode,
+      @JsonKey(name: 'SYNC_METHOD') required final String syncMethod,
+      @JsonKey(name: 'SYNC_TRIGGER') required final String syncTrigger,
+      @JsonKey(name: 'LANGUAGES') required final List<Languages> languages,
+      @JsonKey(name: 'TENANT_ID') final String? tenantId,
+      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') final double? maxRadius,
       @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
-          required final List<DeletionReasonOptions>
-              householdDeletionReasonOptions,
+      required final List<DeletionReasonOptions> householdDeletionReasonOptions,
       @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')
-          required final List<BandWidthBatchSize> bandWidthBatchSize,
+      required final List<BandWidthBatchSize> bandWidthBatchSize,
       @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')
-          final BackgroundServiceConfig? backgroundServiceConfig,
+      final BackgroundServiceConfig? backgroundServiceConfig,
       @JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS')
-          required final List<DeletionReasonOptions>
-              householdMemberDeletionReasonOptions,
+      required final List<DeletionReasonOptions>
+          householdMemberDeletionReasonOptions,
       @JsonKey(name: 'GENDER_OPTIONS_POPULATOR')
-          required final List<GenderOptions> genderOptions,
+      required final List<GenderOptions> genderOptions,
       @JsonKey(name: 'CHECKLIST_TYPES')
-          required final List<CheckListTypes> checklistTypes,
+      required final List<CheckListTypes> checklistTypes,
       @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
-          required final List<IdTypeOptions> idTypeOptions,
+      required final List<IdTypeOptions> idTypeOptions,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
-          required final List<DeliveryCommentOptions> deliveryCommentOptions,
+      required final List<DeliveryCommentOptions> deliveryCommentOptions,
       @JsonKey(name: 'BACKEND_INTERFACE')
-          required final BackendInterface backendInterface,
+      required final BackendInterface backendInterface,
       @JsonKey(name: 'CALL_SUPPORT')
-          required final List<CallSupportList>? callSupportOptions,
+      required final List<CallSupportList>? callSupportOptions,
       @JsonKey(name: 'TRANSPORT_TYPES')
-          required final List<TransportTypes> transportTypes}) = _$_AppConfig;
+      required final List<TransportTypes> transportTypes}) = _$AppConfigImpl;
 
   factory _AppConfig.fromJson(Map<String, dynamic> json) =
-      _$_AppConfig.fromJson;
+      _$AppConfigImpl.fromJson;
 
   @override
   @JsonKey(name: 'NETWORK_DETECTION')
@@ -2017,7 +2008,7 @@ abstract class _AppConfig implements AppConfig {
   List<TransportTypes> get transportTypes;
   @override
   @JsonKey(ignore: true)
-  _$$_AppConfigCopyWith<_$_AppConfig> get copyWith =>
+  _$$AppConfigImplCopyWith<_$AppConfigImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -2075,22 +2066,22 @@ class _$IdTypeOptionsCopyWithImpl<$Res, $Val extends IdTypeOptions>
 }
 
 /// @nodoc
-abstract class _$$_IdTypeOptionsCopyWith<$Res>
+abstract class _$$IdTypeOptionsImplCopyWith<$Res>
     implements $IdTypeOptionsCopyWith<$Res> {
-  factory _$$_IdTypeOptionsCopyWith(
-          _$_IdTypeOptions value, $Res Function(_$_IdTypeOptions) then) =
-      __$$_IdTypeOptionsCopyWithImpl<$Res>;
+  factory _$$IdTypeOptionsImplCopyWith(
+          _$IdTypeOptionsImpl value, $Res Function(_$IdTypeOptionsImpl) then) =
+      __$$IdTypeOptionsImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String name, String code});
 }
 
 /// @nodoc
-class __$$_IdTypeOptionsCopyWithImpl<$Res>
-    extends _$IdTypeOptionsCopyWithImpl<$Res, _$_IdTypeOptions>
-    implements _$$_IdTypeOptionsCopyWith<$Res> {
-  __$$_IdTypeOptionsCopyWithImpl(
-      _$_IdTypeOptions _value, $Res Function(_$_IdTypeOptions) _then)
+class __$$IdTypeOptionsImplCopyWithImpl<$Res>
+    extends _$IdTypeOptionsCopyWithImpl<$Res, _$IdTypeOptionsImpl>
+    implements _$$IdTypeOptionsImplCopyWith<$Res> {
+  __$$IdTypeOptionsImplCopyWithImpl(
+      _$IdTypeOptionsImpl _value, $Res Function(_$IdTypeOptionsImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -2099,7 +2090,7 @@ class __$$_IdTypeOptionsCopyWithImpl<$Res>
     Object? name = null,
     Object? code = null,
   }) {
-    return _then(_$_IdTypeOptions(
+    return _then(_$IdTypeOptionsImpl(
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -2114,11 +2105,11 @@ class __$$_IdTypeOptionsCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_IdTypeOptions implements _IdTypeOptions {
-  _$_IdTypeOptions({required this.name, required this.code});
+class _$IdTypeOptionsImpl implements _IdTypeOptions {
+  _$IdTypeOptionsImpl({required this.name, required this.code});
 
-  factory _$_IdTypeOptions.fromJson(Map<String, dynamic> json) =>
-      _$$_IdTypeOptionsFromJson(json);
+  factory _$IdTypeOptionsImpl.fromJson(Map<String, dynamic> json) =>
+      _$$IdTypeOptionsImplFromJson(json);
 
   @override
   final String name;
@@ -2131,10 +2122,10 @@ class _$_IdTypeOptions implements _IdTypeOptions {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_IdTypeOptions &&
+            other is _$IdTypeOptionsImpl &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.code, code) || other.code == code));
   }
@@ -2146,12 +2137,12 @@ class _$_IdTypeOptions implements _IdTypeOptions {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_IdTypeOptionsCopyWith<_$_IdTypeOptions> get copyWith =>
-      __$$_IdTypeOptionsCopyWithImpl<_$_IdTypeOptions>(this, _$identity);
+  _$$IdTypeOptionsImplCopyWith<_$IdTypeOptionsImpl> get copyWith =>
+      __$$IdTypeOptionsImplCopyWithImpl<_$IdTypeOptionsImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_IdTypeOptionsToJson(
+    return _$$IdTypeOptionsImplToJson(
       this,
     );
   }
@@ -2160,10 +2151,10 @@ class _$_IdTypeOptions implements _IdTypeOptions {
 abstract class _IdTypeOptions implements IdTypeOptions {
   factory _IdTypeOptions(
       {required final String name,
-      required final String code}) = _$_IdTypeOptions;
+      required final String code}) = _$IdTypeOptionsImpl;
 
   factory _IdTypeOptions.fromJson(Map<String, dynamic> json) =
-      _$_IdTypeOptions.fromJson;
+      _$IdTypeOptionsImpl.fromJson;
 
   @override
   String get name;
@@ -2171,7 +2162,7 @@ abstract class _IdTypeOptions implements IdTypeOptions {
   String get code;
   @override
   @JsonKey(ignore: true)
-  _$$_IdTypeOptionsCopyWith<_$_IdTypeOptions> get copyWith =>
+  _$$IdTypeOptionsImplCopyWith<_$IdTypeOptionsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -2241,11 +2232,11 @@ class _$BandWidthBatchSizeCopyWithImpl<$Res, $Val extends BandWidthBatchSize>
 }
 
 /// @nodoc
-abstract class _$$_BandWidthBatchSizeCopyWith<$Res>
+abstract class _$$BandWidthBatchSizeImplCopyWith<$Res>
     implements $BandWidthBatchSizeCopyWith<$Res> {
-  factory _$$_BandWidthBatchSizeCopyWith(_$_BandWidthBatchSize value,
-          $Res Function(_$_BandWidthBatchSize) then) =
-      __$$_BandWidthBatchSizeCopyWithImpl<$Res>;
+  factory _$$BandWidthBatchSizeImplCopyWith(_$BandWidthBatchSizeImpl value,
+          $Res Function(_$BandWidthBatchSizeImpl) then) =
+      __$$BandWidthBatchSizeImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -2255,11 +2246,11 @@ abstract class _$$_BandWidthBatchSizeCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_BandWidthBatchSizeCopyWithImpl<$Res>
-    extends _$BandWidthBatchSizeCopyWithImpl<$Res, _$_BandWidthBatchSize>
-    implements _$$_BandWidthBatchSizeCopyWith<$Res> {
-  __$$_BandWidthBatchSizeCopyWithImpl(
-      _$_BandWidthBatchSize _value, $Res Function(_$_BandWidthBatchSize) _then)
+class __$$BandWidthBatchSizeImplCopyWithImpl<$Res>
+    extends _$BandWidthBatchSizeCopyWithImpl<$Res, _$BandWidthBatchSizeImpl>
+    implements _$$BandWidthBatchSizeImplCopyWith<$Res> {
+  __$$BandWidthBatchSizeImplCopyWithImpl(_$BandWidthBatchSizeImpl _value,
+      $Res Function(_$BandWidthBatchSizeImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -2269,7 +2260,7 @@ class __$$_BandWidthBatchSizeCopyWithImpl<$Res>
     Object? maxRange = null,
     Object? batchSize = null,
   }) {
-    return _then(_$_BandWidthBatchSize(
+    return _then(_$BandWidthBatchSizeImpl(
       minRange: null == minRange
           ? _value.minRange
           : minRange // ignore: cast_nullable_to_non_nullable
@@ -2288,14 +2279,14 @@ class __$$_BandWidthBatchSizeCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_BandWidthBatchSize implements _BandWidthBatchSize {
-  _$_BandWidthBatchSize(
+class _$BandWidthBatchSizeImpl implements _BandWidthBatchSize {
+  _$BandWidthBatchSizeImpl(
       {@JsonKey(name: 'MIN_RANGE') required this.minRange,
       @JsonKey(name: 'MAX_RANGE') required this.maxRange,
       @JsonKey(name: 'BATCH_SIZE') required this.batchSize});
 
-  factory _$_BandWidthBatchSize.fromJson(Map<String, dynamic> json) =>
-      _$$_BandWidthBatchSizeFromJson(json);
+  factory _$BandWidthBatchSizeImpl.fromJson(Map<String, dynamic> json) =>
+      _$$BandWidthBatchSizeImplFromJson(json);
 
   @override
   @JsonKey(name: 'MIN_RANGE')
@@ -2313,10 +2304,10 @@ class _$_BandWidthBatchSize implements _BandWidthBatchSize {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_BandWidthBatchSize &&
+            other is _$BandWidthBatchSizeImpl &&
             (identical(other.minRange, minRange) ||
                 other.minRange == minRange) &&
             (identical(other.maxRange, maxRange) ||
@@ -2332,13 +2323,13 @@ class _$_BandWidthBatchSize implements _BandWidthBatchSize {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_BandWidthBatchSizeCopyWith<_$_BandWidthBatchSize> get copyWith =>
-      __$$_BandWidthBatchSizeCopyWithImpl<_$_BandWidthBatchSize>(
+  _$$BandWidthBatchSizeImplCopyWith<_$BandWidthBatchSizeImpl> get copyWith =>
+      __$$BandWidthBatchSizeImplCopyWithImpl<_$BandWidthBatchSizeImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_BandWidthBatchSizeToJson(
+    return _$$BandWidthBatchSizeImplToJson(
       this,
     );
   }
@@ -2349,10 +2340,10 @@ abstract class _BandWidthBatchSize implements BandWidthBatchSize {
           {@JsonKey(name: 'MIN_RANGE') required final double minRange,
           @JsonKey(name: 'MAX_RANGE') required final double maxRange,
           @JsonKey(name: 'BATCH_SIZE') required final int batchSize}) =
-      _$_BandWidthBatchSize;
+      _$BandWidthBatchSizeImpl;
 
   factory _BandWidthBatchSize.fromJson(Map<String, dynamic> json) =
-      _$_BandWidthBatchSize.fromJson;
+      _$BandWidthBatchSizeImpl.fromJson;
 
   @override
   @JsonKey(name: 'MIN_RANGE')
@@ -2365,7 +2356,7 @@ abstract class _BandWidthBatchSize implements BandWidthBatchSize {
   int get batchSize;
   @override
   @JsonKey(ignore: true)
-  _$$_BandWidthBatchSizeCopyWith<_$_BandWidthBatchSize> get copyWith =>
+  _$$BandWidthBatchSizeImplCopyWith<_$BandWidthBatchSizeImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -2425,23 +2416,25 @@ class _$DeliveryCommentOptionsCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_DeliveryCommentOptionsCopyWith<$Res>
+abstract class _$$DeliveryCommentOptionsImplCopyWith<$Res>
     implements $DeliveryCommentOptionsCopyWith<$Res> {
-  factory _$$_DeliveryCommentOptionsCopyWith(_$_DeliveryCommentOptions value,
-          $Res Function(_$_DeliveryCommentOptions) then) =
-      __$$_DeliveryCommentOptionsCopyWithImpl<$Res>;
+  factory _$$DeliveryCommentOptionsImplCopyWith(
+          _$DeliveryCommentOptionsImpl value,
+          $Res Function(_$DeliveryCommentOptionsImpl) then) =
+      __$$DeliveryCommentOptionsImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String name, String code});
 }
 
 /// @nodoc
-class __$$_DeliveryCommentOptionsCopyWithImpl<$Res>
+class __$$DeliveryCommentOptionsImplCopyWithImpl<$Res>
     extends _$DeliveryCommentOptionsCopyWithImpl<$Res,
-        _$_DeliveryCommentOptions>
-    implements _$$_DeliveryCommentOptionsCopyWith<$Res> {
-  __$$_DeliveryCommentOptionsCopyWithImpl(_$_DeliveryCommentOptions _value,
-      $Res Function(_$_DeliveryCommentOptions) _then)
+        _$DeliveryCommentOptionsImpl>
+    implements _$$DeliveryCommentOptionsImplCopyWith<$Res> {
+  __$$DeliveryCommentOptionsImplCopyWithImpl(
+      _$DeliveryCommentOptionsImpl _value,
+      $Res Function(_$DeliveryCommentOptionsImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -2450,7 +2443,7 @@ class __$$_DeliveryCommentOptionsCopyWithImpl<$Res>
     Object? name = null,
     Object? code = null,
   }) {
-    return _then(_$_DeliveryCommentOptions(
+    return _then(_$DeliveryCommentOptionsImpl(
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -2465,11 +2458,11 @@ class __$$_DeliveryCommentOptionsCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_DeliveryCommentOptions implements _DeliveryCommentOptions {
-  _$_DeliveryCommentOptions({required this.name, required this.code});
+class _$DeliveryCommentOptionsImpl implements _DeliveryCommentOptions {
+  _$DeliveryCommentOptionsImpl({required this.name, required this.code});
 
-  factory _$_DeliveryCommentOptions.fromJson(Map<String, dynamic> json) =>
-      _$$_DeliveryCommentOptionsFromJson(json);
+  factory _$DeliveryCommentOptionsImpl.fromJson(Map<String, dynamic> json) =>
+      _$$DeliveryCommentOptionsImplFromJson(json);
 
   @override
   final String name;
@@ -2482,10 +2475,10 @@ class _$_DeliveryCommentOptions implements _DeliveryCommentOptions {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_DeliveryCommentOptions &&
+            other is _$DeliveryCommentOptionsImpl &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.code, code) || other.code == code));
   }
@@ -2497,13 +2490,13 @@ class _$_DeliveryCommentOptions implements _DeliveryCommentOptions {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_DeliveryCommentOptionsCopyWith<_$_DeliveryCommentOptions> get copyWith =>
-      __$$_DeliveryCommentOptionsCopyWithImpl<_$_DeliveryCommentOptions>(
-          this, _$identity);
+  _$$DeliveryCommentOptionsImplCopyWith<_$DeliveryCommentOptionsImpl>
+      get copyWith => __$$DeliveryCommentOptionsImplCopyWithImpl<
+          _$DeliveryCommentOptionsImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_DeliveryCommentOptionsToJson(
+    return _$$DeliveryCommentOptionsImplToJson(
       this,
     );
   }
@@ -2512,10 +2505,10 @@ class _$_DeliveryCommentOptions implements _DeliveryCommentOptions {
 abstract class _DeliveryCommentOptions implements DeliveryCommentOptions {
   factory _DeliveryCommentOptions(
       {required final String name,
-      required final String code}) = _$_DeliveryCommentOptions;
+      required final String code}) = _$DeliveryCommentOptionsImpl;
 
   factory _DeliveryCommentOptions.fromJson(Map<String, dynamic> json) =
-      _$_DeliveryCommentOptions.fromJson;
+      _$DeliveryCommentOptionsImpl.fromJson;
 
   @override
   String get name;
@@ -2523,8 +2516,8 @@ abstract class _DeliveryCommentOptions implements DeliveryCommentOptions {
   String get code;
   @override
   @JsonKey(ignore: true)
-  _$$_DeliveryCommentOptionsCopyWith<_$_DeliveryCommentOptions> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$DeliveryCommentOptionsImplCopyWith<_$DeliveryCommentOptionsImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 DeletionReasonOptions _$DeletionReasonOptionsFromJson(
@@ -2583,22 +2576,24 @@ class _$DeletionReasonOptionsCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_DeletionReasonOptionsCopyWith<$Res>
+abstract class _$$DeletionReasonOptionsImplCopyWith<$Res>
     implements $DeletionReasonOptionsCopyWith<$Res> {
-  factory _$$_DeletionReasonOptionsCopyWith(_$_DeletionReasonOptions value,
-          $Res Function(_$_DeletionReasonOptions) then) =
-      __$$_DeletionReasonOptionsCopyWithImpl<$Res>;
+  factory _$$DeletionReasonOptionsImplCopyWith(
+          _$DeletionReasonOptionsImpl value,
+          $Res Function(_$DeletionReasonOptionsImpl) then) =
+      __$$DeletionReasonOptionsImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String value, String code});
 }
 
 /// @nodoc
-class __$$_DeletionReasonOptionsCopyWithImpl<$Res>
-    extends _$DeletionReasonOptionsCopyWithImpl<$Res, _$_DeletionReasonOptions>
-    implements _$$_DeletionReasonOptionsCopyWith<$Res> {
-  __$$_DeletionReasonOptionsCopyWithImpl(_$_DeletionReasonOptions _value,
-      $Res Function(_$_DeletionReasonOptions) _then)
+class __$$DeletionReasonOptionsImplCopyWithImpl<$Res>
+    extends _$DeletionReasonOptionsCopyWithImpl<$Res,
+        _$DeletionReasonOptionsImpl>
+    implements _$$DeletionReasonOptionsImplCopyWith<$Res> {
+  __$$DeletionReasonOptionsImplCopyWithImpl(_$DeletionReasonOptionsImpl _value,
+      $Res Function(_$DeletionReasonOptionsImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -2607,7 +2602,7 @@ class __$$_DeletionReasonOptionsCopyWithImpl<$Res>
     Object? value = null,
     Object? code = null,
   }) {
-    return _then(_$_DeletionReasonOptions(
+    return _then(_$DeletionReasonOptionsImpl(
       value: null == value
           ? _value.value
           : value // ignore: cast_nullable_to_non_nullable
@@ -2622,11 +2617,11 @@ class __$$_DeletionReasonOptionsCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_DeletionReasonOptions implements _DeletionReasonOptions {
-  _$_DeletionReasonOptions({required this.value, required this.code});
+class _$DeletionReasonOptionsImpl implements _DeletionReasonOptions {
+  _$DeletionReasonOptionsImpl({required this.value, required this.code});
 
-  factory _$_DeletionReasonOptions.fromJson(Map<String, dynamic> json) =>
-      _$$_DeletionReasonOptionsFromJson(json);
+  factory _$DeletionReasonOptionsImpl.fromJson(Map<String, dynamic> json) =>
+      _$$DeletionReasonOptionsImplFromJson(json);
 
   @override
   final String value;
@@ -2639,10 +2634,10 @@ class _$_DeletionReasonOptions implements _DeletionReasonOptions {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_DeletionReasonOptions &&
+            other is _$DeletionReasonOptionsImpl &&
             (identical(other.value, value) || other.value == value) &&
             (identical(other.code, code) || other.code == code));
   }
@@ -2654,13 +2649,13 @@ class _$_DeletionReasonOptions implements _DeletionReasonOptions {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_DeletionReasonOptionsCopyWith<_$_DeletionReasonOptions> get copyWith =>
-      __$$_DeletionReasonOptionsCopyWithImpl<_$_DeletionReasonOptions>(
-          this, _$identity);
+  _$$DeletionReasonOptionsImplCopyWith<_$DeletionReasonOptionsImpl>
+      get copyWith => __$$DeletionReasonOptionsImplCopyWithImpl<
+          _$DeletionReasonOptionsImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_DeletionReasonOptionsToJson(
+    return _$$DeletionReasonOptionsImplToJson(
       this,
     );
   }
@@ -2669,10 +2664,10 @@ class _$_DeletionReasonOptions implements _DeletionReasonOptions {
 abstract class _DeletionReasonOptions implements DeletionReasonOptions {
   factory _DeletionReasonOptions(
       {required final String value,
-      required final String code}) = _$_DeletionReasonOptions;
+      required final String code}) = _$DeletionReasonOptionsImpl;
 
   factory _DeletionReasonOptions.fromJson(Map<String, dynamic> json) =
-      _$_DeletionReasonOptions.fromJson;
+      _$DeletionReasonOptionsImpl.fromJson;
 
   @override
   String get value;
@@ -2680,8 +2675,8 @@ abstract class _DeletionReasonOptions implements DeletionReasonOptions {
   String get code;
   @override
   @JsonKey(ignore: true)
-  _$$_DeletionReasonOptionsCopyWith<_$_DeletionReasonOptions> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$DeletionReasonOptionsImplCopyWith<_$DeletionReasonOptionsImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 GenderOptions _$GenderOptionsFromJson(Map<String, dynamic> json) {
@@ -2738,22 +2733,22 @@ class _$GenderOptionsCopyWithImpl<$Res, $Val extends GenderOptions>
 }
 
 /// @nodoc
-abstract class _$$_GenderOptionsCopyWith<$Res>
+abstract class _$$GenderOptionsImplCopyWith<$Res>
     implements $GenderOptionsCopyWith<$Res> {
-  factory _$$_GenderOptionsCopyWith(
-          _$_GenderOptions value, $Res Function(_$_GenderOptions) then) =
-      __$$_GenderOptionsCopyWithImpl<$Res>;
+  factory _$$GenderOptionsImplCopyWith(
+          _$GenderOptionsImpl value, $Res Function(_$GenderOptionsImpl) then) =
+      __$$GenderOptionsImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String name, String code});
 }
 
 /// @nodoc
-class __$$_GenderOptionsCopyWithImpl<$Res>
-    extends _$GenderOptionsCopyWithImpl<$Res, _$_GenderOptions>
-    implements _$$_GenderOptionsCopyWith<$Res> {
-  __$$_GenderOptionsCopyWithImpl(
-      _$_GenderOptions _value, $Res Function(_$_GenderOptions) _then)
+class __$$GenderOptionsImplCopyWithImpl<$Res>
+    extends _$GenderOptionsCopyWithImpl<$Res, _$GenderOptionsImpl>
+    implements _$$GenderOptionsImplCopyWith<$Res> {
+  __$$GenderOptionsImplCopyWithImpl(
+      _$GenderOptionsImpl _value, $Res Function(_$GenderOptionsImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -2762,7 +2757,7 @@ class __$$_GenderOptionsCopyWithImpl<$Res>
     Object? name = null,
     Object? code = null,
   }) {
-    return _then(_$_GenderOptions(
+    return _then(_$GenderOptionsImpl(
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -2777,11 +2772,11 @@ class __$$_GenderOptionsCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_GenderOptions implements _GenderOptions {
-  _$_GenderOptions({required this.name, required this.code});
+class _$GenderOptionsImpl implements _GenderOptions {
+  _$GenderOptionsImpl({required this.name, required this.code});
 
-  factory _$_GenderOptions.fromJson(Map<String, dynamic> json) =>
-      _$$_GenderOptionsFromJson(json);
+  factory _$GenderOptionsImpl.fromJson(Map<String, dynamic> json) =>
+      _$$GenderOptionsImplFromJson(json);
 
   @override
   final String name;
@@ -2794,10 +2789,10 @@ class _$_GenderOptions implements _GenderOptions {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_GenderOptions &&
+            other is _$GenderOptionsImpl &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.code, code) || other.code == code));
   }
@@ -2809,12 +2804,12 @@ class _$_GenderOptions implements _GenderOptions {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_GenderOptionsCopyWith<_$_GenderOptions> get copyWith =>
-      __$$_GenderOptionsCopyWithImpl<_$_GenderOptions>(this, _$identity);
+  _$$GenderOptionsImplCopyWith<_$GenderOptionsImpl> get copyWith =>
+      __$$GenderOptionsImplCopyWithImpl<_$GenderOptionsImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_GenderOptionsToJson(
+    return _$$GenderOptionsImplToJson(
       this,
     );
   }
@@ -2823,10 +2818,10 @@ class _$_GenderOptions implements _GenderOptions {
 abstract class _GenderOptions implements GenderOptions {
   factory _GenderOptions(
       {required final String name,
-      required final String code}) = _$_GenderOptions;
+      required final String code}) = _$GenderOptionsImpl;
 
   factory _GenderOptions.fromJson(Map<String, dynamic> json) =
-      _$_GenderOptions.fromJson;
+      _$GenderOptionsImpl.fromJson;
 
   @override
   String get name;
@@ -2834,7 +2829,7 @@ abstract class _GenderOptions implements GenderOptions {
   String get code;
   @override
   @JsonKey(ignore: true)
-  _$$_GenderOptionsCopyWith<_$_GenderOptions> get copyWith =>
+  _$$GenderOptionsImplCopyWith<_$GenderOptionsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -2906,11 +2901,12 @@ class _$BackgroundServiceConfigCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_BackgroundServiceConfigCopyWith<$Res>
+abstract class _$$BackgroundServiceConfigImplCopyWith<$Res>
     implements $BackgroundServiceConfigCopyWith<$Res> {
-  factory _$$_BackgroundServiceConfigCopyWith(_$_BackgroundServiceConfig value,
-          $Res Function(_$_BackgroundServiceConfig) then) =
-      __$$_BackgroundServiceConfigCopyWithImpl<$Res>;
+  factory _$$BackgroundServiceConfigImplCopyWith(
+          _$BackgroundServiceConfigImpl value,
+          $Res Function(_$BackgroundServiceConfigImpl) then) =
+      __$$BackgroundServiceConfigImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -2920,12 +2916,13 @@ abstract class _$$_BackgroundServiceConfigCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_BackgroundServiceConfigCopyWithImpl<$Res>
+class __$$BackgroundServiceConfigImplCopyWithImpl<$Res>
     extends _$BackgroundServiceConfigCopyWithImpl<$Res,
-        _$_BackgroundServiceConfig>
-    implements _$$_BackgroundServiceConfigCopyWith<$Res> {
-  __$$_BackgroundServiceConfigCopyWithImpl(_$_BackgroundServiceConfig _value,
-      $Res Function(_$_BackgroundServiceConfig) _then)
+        _$BackgroundServiceConfigImpl>
+    implements _$$BackgroundServiceConfigImplCopyWith<$Res> {
+  __$$BackgroundServiceConfigImplCopyWithImpl(
+      _$BackgroundServiceConfigImpl _value,
+      $Res Function(_$BackgroundServiceConfigImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -2935,7 +2932,7 @@ class __$$_BackgroundServiceConfigCopyWithImpl<$Res>
     Object? serviceInterval = null,
     Object? apiConcurrency = null,
   }) {
-    return _then(_$_BackgroundServiceConfig(
+    return _then(_$BackgroundServiceConfigImpl(
       batteryPercentCutOff: null == batteryPercentCutOff
           ? _value.batteryPercentCutOff
           : batteryPercentCutOff // ignore: cast_nullable_to_non_nullable
@@ -2954,17 +2951,15 @@ class __$$_BackgroundServiceConfigCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_BackgroundServiceConfig implements _BackgroundServiceConfig {
-  _$_BackgroundServiceConfig(
+class _$BackgroundServiceConfigImpl implements _BackgroundServiceConfig {
+  _$BackgroundServiceConfigImpl(
       {@JsonKey(name: 'BATTERY_PERCENT_CUT_OFF')
-          required this.batteryPercentCutOff,
-      @JsonKey(name: 'SERVICE_INTERVAL')
-          required this.serviceInterval,
-      @JsonKey(name: 'API_CONCURRENCY')
-          required this.apiConcurrency});
+      required this.batteryPercentCutOff,
+      @JsonKey(name: 'SERVICE_INTERVAL') required this.serviceInterval,
+      @JsonKey(name: 'API_CONCURRENCY') required this.apiConcurrency});
 
-  factory _$_BackgroundServiceConfig.fromJson(Map<String, dynamic> json) =>
-      _$$_BackgroundServiceConfigFromJson(json);
+  factory _$BackgroundServiceConfigImpl.fromJson(Map<String, dynamic> json) =>
+      _$$BackgroundServiceConfigImplFromJson(json);
 
   @override
   @JsonKey(name: 'BATTERY_PERCENT_CUT_OFF')
@@ -2982,10 +2977,10 @@ class _$_BackgroundServiceConfig implements _BackgroundServiceConfig {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_BackgroundServiceConfig &&
+            other is _$BackgroundServiceConfigImpl &&
             (identical(other.batteryPercentCutOff, batteryPercentCutOff) ||
                 other.batteryPercentCutOff == batteryPercentCutOff) &&
             (identical(other.serviceInterval, serviceInterval) ||
@@ -3002,14 +2997,13 @@ class _$_BackgroundServiceConfig implements _BackgroundServiceConfig {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_BackgroundServiceConfigCopyWith<_$_BackgroundServiceConfig>
-      get copyWith =>
-          __$$_BackgroundServiceConfigCopyWithImpl<_$_BackgroundServiceConfig>(
-              this, _$identity);
+  _$$BackgroundServiceConfigImplCopyWith<_$BackgroundServiceConfigImpl>
+      get copyWith => __$$BackgroundServiceConfigImplCopyWithImpl<
+          _$BackgroundServiceConfigImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_BackgroundServiceConfigToJson(
+    return _$$BackgroundServiceConfigImplToJson(
       this,
     );
   }
@@ -3018,14 +3012,13 @@ class _$_BackgroundServiceConfig implements _BackgroundServiceConfig {
 abstract class _BackgroundServiceConfig implements BackgroundServiceConfig {
   factory _BackgroundServiceConfig(
       {@JsonKey(name: 'BATTERY_PERCENT_CUT_OFF')
-          required final int batteryPercentCutOff,
-      @JsonKey(name: 'SERVICE_INTERVAL')
-          required final int serviceInterval,
+      required final int batteryPercentCutOff,
+      @JsonKey(name: 'SERVICE_INTERVAL') required final int serviceInterval,
       @JsonKey(name: 'API_CONCURRENCY')
-          required final int apiConcurrency}) = _$_BackgroundServiceConfig;
+      required final int apiConcurrency}) = _$BackgroundServiceConfigImpl;
 
   factory _BackgroundServiceConfig.fromJson(Map<String, dynamic> json) =
-      _$_BackgroundServiceConfig.fromJson;
+      _$BackgroundServiceConfigImpl.fromJson;
 
   @override
   @JsonKey(name: 'BATTERY_PERCENT_CUT_OFF')
@@ -3038,7 +3031,7 @@ abstract class _BackgroundServiceConfig implements BackgroundServiceConfig {
   int get apiConcurrency;
   @override
   @JsonKey(ignore: true)
-  _$$_BackgroundServiceConfigCopyWith<_$_BackgroundServiceConfig>
+  _$$BackgroundServiceConfigImplCopyWith<_$BackgroundServiceConfigImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -3091,22 +3084,22 @@ class _$BackendInterfaceCopyWithImpl<$Res, $Val extends BackendInterface>
 }
 
 /// @nodoc
-abstract class _$$_BackendInterfaceCopyWith<$Res>
+abstract class _$$BackendInterfaceImplCopyWith<$Res>
     implements $BackendInterfaceCopyWith<$Res> {
-  factory _$$_BackendInterfaceCopyWith(
-          _$_BackendInterface value, $Res Function(_$_BackendInterface) then) =
-      __$$_BackendInterfaceCopyWithImpl<$Res>;
+  factory _$$BackendInterfaceImplCopyWith(_$BackendInterfaceImpl value,
+          $Res Function(_$BackendInterfaceImpl) then) =
+      __$$BackendInterfaceImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({@JsonKey(name: 'interfaces') List<Interfaces> interface});
 }
 
 /// @nodoc
-class __$$_BackendInterfaceCopyWithImpl<$Res>
-    extends _$BackendInterfaceCopyWithImpl<$Res, _$_BackendInterface>
-    implements _$$_BackendInterfaceCopyWith<$Res> {
-  __$$_BackendInterfaceCopyWithImpl(
-      _$_BackendInterface _value, $Res Function(_$_BackendInterface) _then)
+class __$$BackendInterfaceImplCopyWithImpl<$Res>
+    extends _$BackendInterfaceCopyWithImpl<$Res, _$BackendInterfaceImpl>
+    implements _$$BackendInterfaceImplCopyWith<$Res> {
+  __$$BackendInterfaceImplCopyWithImpl(_$BackendInterfaceImpl _value,
+      $Res Function(_$BackendInterfaceImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -3114,7 +3107,7 @@ class __$$_BackendInterfaceCopyWithImpl<$Res>
   $Res call({
     Object? interface = null,
   }) {
-    return _then(_$_BackendInterface(
+    return _then(_$BackendInterfaceImpl(
       interface: null == interface
           ? _value._interface
           : interface // ignore: cast_nullable_to_non_nullable
@@ -3125,18 +3118,19 @@ class __$$_BackendInterfaceCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_BackendInterface implements _BackendInterface {
-  _$_BackendInterface(
+class _$BackendInterfaceImpl implements _BackendInterface {
+  _$BackendInterfaceImpl(
       {@JsonKey(name: 'interfaces') required final List<Interfaces> interface})
       : _interface = interface;
 
-  factory _$_BackendInterface.fromJson(Map<String, dynamic> json) =>
-      _$$_BackendInterfaceFromJson(json);
+  factory _$BackendInterfaceImpl.fromJson(Map<String, dynamic> json) =>
+      _$$BackendInterfaceImplFromJson(json);
 
   final List<Interfaces> _interface;
   @override
   @JsonKey(name: 'interfaces')
   List<Interfaces> get interface {
+    if (_interface is EqualUnmodifiableListView) return _interface;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_interface);
   }
@@ -3147,10 +3141,10 @@ class _$_BackendInterface implements _BackendInterface {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_BackendInterface &&
+            other is _$BackendInterfaceImpl &&
             const DeepCollectionEquality()
                 .equals(other._interface, _interface));
   }
@@ -3163,12 +3157,13 @@ class _$_BackendInterface implements _BackendInterface {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_BackendInterfaceCopyWith<_$_BackendInterface> get copyWith =>
-      __$$_BackendInterfaceCopyWithImpl<_$_BackendInterface>(this, _$identity);
+  _$$BackendInterfaceImplCopyWith<_$BackendInterfaceImpl> get copyWith =>
+      __$$BackendInterfaceImplCopyWithImpl<_$BackendInterfaceImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_BackendInterfaceToJson(
+    return _$$BackendInterfaceImplToJson(
       this,
     );
   }
@@ -3177,17 +3172,17 @@ class _$_BackendInterface implements _BackendInterface {
 abstract class _BackendInterface implements BackendInterface {
   factory _BackendInterface(
       {@JsonKey(name: 'interfaces')
-          required final List<Interfaces> interface}) = _$_BackendInterface;
+      required final List<Interfaces> interface}) = _$BackendInterfaceImpl;
 
   factory _BackendInterface.fromJson(Map<String, dynamic> json) =
-      _$_BackendInterface.fromJson;
+      _$BackendInterfaceImpl.fromJson;
 
   @override
   @JsonKey(name: 'interfaces')
   List<Interfaces> get interface;
   @override
   @JsonKey(ignore: true)
-  _$$_BackendInterfaceCopyWith<_$_BackendInterface> get copyWith =>
+  _$$BackendInterfaceImplCopyWith<_$BackendInterfaceImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -3239,22 +3234,22 @@ class _$InterfacesWrapperCopyWithImpl<$Res, $Val extends InterfacesWrapper>
 }
 
 /// @nodoc
-abstract class _$$_InterfacesWrapperCopyWith<$Res>
+abstract class _$$InterfacesWrapperImplCopyWith<$Res>
     implements $InterfacesWrapperCopyWith<$Res> {
-  factory _$$_InterfacesWrapperCopyWith(_$_InterfacesWrapper value,
-          $Res Function(_$_InterfacesWrapper) then) =
-      __$$_InterfacesWrapperCopyWithImpl<$Res>;
+  factory _$$InterfacesWrapperImplCopyWith(_$InterfacesWrapperImpl value,
+          $Res Function(_$InterfacesWrapperImpl) then) =
+      __$$InterfacesWrapperImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({List<Interfaces> interface});
 }
 
 /// @nodoc
-class __$$_InterfacesWrapperCopyWithImpl<$Res>
-    extends _$InterfacesWrapperCopyWithImpl<$Res, _$_InterfacesWrapper>
-    implements _$$_InterfacesWrapperCopyWith<$Res> {
-  __$$_InterfacesWrapperCopyWithImpl(
-      _$_InterfacesWrapper _value, $Res Function(_$_InterfacesWrapper) _then)
+class __$$InterfacesWrapperImplCopyWithImpl<$Res>
+    extends _$InterfacesWrapperCopyWithImpl<$Res, _$InterfacesWrapperImpl>
+    implements _$$InterfacesWrapperImplCopyWith<$Res> {
+  __$$InterfacesWrapperImplCopyWithImpl(_$InterfacesWrapperImpl _value,
+      $Res Function(_$InterfacesWrapperImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -3262,7 +3257,7 @@ class __$$_InterfacesWrapperCopyWithImpl<$Res>
   $Res call({
     Object? interface = null,
   }) {
-    return _then(_$_InterfacesWrapper(
+    return _then(_$InterfacesWrapperImpl(
       interface: null == interface
           ? _value._interface
           : interface // ignore: cast_nullable_to_non_nullable
@@ -3273,16 +3268,17 @@ class __$$_InterfacesWrapperCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_InterfacesWrapper implements _InterfacesWrapper {
-  _$_InterfacesWrapper({required final List<Interfaces> interface})
+class _$InterfacesWrapperImpl implements _InterfacesWrapper {
+  _$InterfacesWrapperImpl({required final List<Interfaces> interface})
       : _interface = interface;
 
-  factory _$_InterfacesWrapper.fromJson(Map<String, dynamic> json) =>
-      _$$_InterfacesWrapperFromJson(json);
+  factory _$InterfacesWrapperImpl.fromJson(Map<String, dynamic> json) =>
+      _$$InterfacesWrapperImplFromJson(json);
 
   final List<Interfaces> _interface;
   @override
   List<Interfaces> get interface {
+    if (_interface is EqualUnmodifiableListView) return _interface;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_interface);
   }
@@ -3293,10 +3289,10 @@ class _$_InterfacesWrapper implements _InterfacesWrapper {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_InterfacesWrapper &&
+            other is _$InterfacesWrapperImpl &&
             const DeepCollectionEquality()
                 .equals(other._interface, _interface));
   }
@@ -3309,13 +3305,13 @@ class _$_InterfacesWrapper implements _InterfacesWrapper {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_InterfacesWrapperCopyWith<_$_InterfacesWrapper> get copyWith =>
-      __$$_InterfacesWrapperCopyWithImpl<_$_InterfacesWrapper>(
+  _$$InterfacesWrapperImplCopyWith<_$InterfacesWrapperImpl> get copyWith =>
+      __$$InterfacesWrapperImplCopyWithImpl<_$InterfacesWrapperImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_InterfacesWrapperToJson(
+    return _$$InterfacesWrapperImplToJson(
       this,
     );
   }
@@ -3323,16 +3319,16 @@ class _$_InterfacesWrapper implements _InterfacesWrapper {
 
 abstract class _InterfacesWrapper implements InterfacesWrapper {
   factory _InterfacesWrapper({required final List<Interfaces> interface}) =
-      _$_InterfacesWrapper;
+      _$InterfacesWrapperImpl;
 
   factory _InterfacesWrapper.fromJson(Map<String, dynamic> json) =
-      _$_InterfacesWrapper.fromJson;
+      _$InterfacesWrapperImpl.fromJson;
 
   @override
   List<Interfaces> get interface;
   @override
   @JsonKey(ignore: true)
-  _$$_InterfacesWrapperCopyWith<_$_InterfacesWrapper> get copyWith =>
+  _$$InterfacesWrapperImplCopyWith<_$InterfacesWrapperImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -3406,11 +3402,11 @@ class _$InterfacesCopyWithImpl<$Res, $Val extends Interfaces>
 }
 
 /// @nodoc
-abstract class _$$_InterfacesCopyWith<$Res>
+abstract class _$$InterfacesImplCopyWith<$Res>
     implements $InterfacesCopyWith<$Res> {
-  factory _$$_InterfacesCopyWith(
-          _$_Interfaces value, $Res Function(_$_Interfaces) then) =
-      __$$_InterfacesCopyWithImpl<$Res>;
+  factory _$$InterfacesImplCopyWith(
+          _$InterfacesImpl value, $Res Function(_$InterfacesImpl) then) =
+      __$$InterfacesImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String type, String name, Config config});
@@ -3420,11 +3416,11 @@ abstract class _$$_InterfacesCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_InterfacesCopyWithImpl<$Res>
-    extends _$InterfacesCopyWithImpl<$Res, _$_Interfaces>
-    implements _$$_InterfacesCopyWith<$Res> {
-  __$$_InterfacesCopyWithImpl(
-      _$_Interfaces _value, $Res Function(_$_Interfaces) _then)
+class __$$InterfacesImplCopyWithImpl<$Res>
+    extends _$InterfacesCopyWithImpl<$Res, _$InterfacesImpl>
+    implements _$$InterfacesImplCopyWith<$Res> {
+  __$$InterfacesImplCopyWithImpl(
+      _$InterfacesImpl _value, $Res Function(_$InterfacesImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -3434,7 +3430,7 @@ class __$$_InterfacesCopyWithImpl<$Res>
     Object? name = null,
     Object? config = null,
   }) {
-    return _then(_$_Interfaces(
+    return _then(_$InterfacesImpl(
       type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
@@ -3453,11 +3449,12 @@ class __$$_InterfacesCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_Interfaces implements _Interfaces {
-  _$_Interfaces({required this.type, required this.name, required this.config});
+class _$InterfacesImpl implements _Interfaces {
+  _$InterfacesImpl(
+      {required this.type, required this.name, required this.config});
 
-  factory _$_Interfaces.fromJson(Map<String, dynamic> json) =>
-      _$$_InterfacesFromJson(json);
+  factory _$InterfacesImpl.fromJson(Map<String, dynamic> json) =>
+      _$$InterfacesImplFromJson(json);
 
   @override
   final String type;
@@ -3472,10 +3469,10 @@ class _$_Interfaces implements _Interfaces {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_Interfaces &&
+            other is _$InterfacesImpl &&
             (identical(other.type, type) || other.type == type) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.config, config) || other.config == config));
@@ -3488,12 +3485,12 @@ class _$_Interfaces implements _Interfaces {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_InterfacesCopyWith<_$_Interfaces> get copyWith =>
-      __$$_InterfacesCopyWithImpl<_$_Interfaces>(this, _$identity);
+  _$$InterfacesImplCopyWith<_$InterfacesImpl> get copyWith =>
+      __$$InterfacesImplCopyWithImpl<_$InterfacesImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_InterfacesToJson(
+    return _$$InterfacesImplToJson(
       this,
     );
   }
@@ -3503,10 +3500,10 @@ abstract class _Interfaces implements Interfaces {
   factory _Interfaces(
       {required final String type,
       required final String name,
-      required final Config config}) = _$_Interfaces;
+      required final Config config}) = _$InterfacesImpl;
 
   factory _Interfaces.fromJson(Map<String, dynamic> json) =
-      _$_Interfaces.fromJson;
+      _$InterfacesImpl.fromJson;
 
   @override
   String get type;
@@ -3516,7 +3513,7 @@ abstract class _Interfaces implements Interfaces {
   Config get config;
   @override
   @JsonKey(ignore: true)
-  _$$_InterfacesCopyWith<_$_Interfaces> get copyWith =>
+  _$$InterfacesImplCopyWith<_$InterfacesImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -3566,19 +3563,21 @@ class _$ConfigCopyWithImpl<$Res, $Val extends Config>
 }
 
 /// @nodoc
-abstract class _$$_ConfigCopyWith<$Res> implements $ConfigCopyWith<$Res> {
-  factory _$$_ConfigCopyWith(_$_Config value, $Res Function(_$_Config) then) =
-      __$$_ConfigCopyWithImpl<$Res>;
+abstract class _$$ConfigImplCopyWith<$Res> implements $ConfigCopyWith<$Res> {
+  factory _$$ConfigImplCopyWith(
+          _$ConfigImpl value, $Res Function(_$ConfigImpl) then) =
+      __$$ConfigImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({int localStoreTTL});
 }
 
 /// @nodoc
-class __$$_ConfigCopyWithImpl<$Res>
-    extends _$ConfigCopyWithImpl<$Res, _$_Config>
-    implements _$$_ConfigCopyWith<$Res> {
-  __$$_ConfigCopyWithImpl(_$_Config _value, $Res Function(_$_Config) _then)
+class __$$ConfigImplCopyWithImpl<$Res>
+    extends _$ConfigCopyWithImpl<$Res, _$ConfigImpl>
+    implements _$$ConfigImplCopyWith<$Res> {
+  __$$ConfigImplCopyWithImpl(
+      _$ConfigImpl _value, $Res Function(_$ConfigImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -3586,7 +3585,7 @@ class __$$_ConfigCopyWithImpl<$Res>
   $Res call({
     Object? localStoreTTL = null,
   }) {
-    return _then(_$_Config(
+    return _then(_$ConfigImpl(
       localStoreTTL: null == localStoreTTL
           ? _value.localStoreTTL
           : localStoreTTL // ignore: cast_nullable_to_non_nullable
@@ -3597,11 +3596,11 @@ class __$$_ConfigCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_Config implements _Config {
-  _$_Config({required this.localStoreTTL});
+class _$ConfigImpl implements _Config {
+  _$ConfigImpl({required this.localStoreTTL});
 
-  factory _$_Config.fromJson(Map<String, dynamic> json) =>
-      _$$_ConfigFromJson(json);
+  factory _$ConfigImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ConfigImplFromJson(json);
 
   @override
   final int localStoreTTL;
@@ -3612,10 +3611,10 @@ class _$_Config implements _Config {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_Config &&
+            other is _$ConfigImpl &&
             (identical(other.localStoreTTL, localStoreTTL) ||
                 other.localStoreTTL == localStoreTTL));
   }
@@ -3627,27 +3626,27 @@ class _$_Config implements _Config {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ConfigCopyWith<_$_Config> get copyWith =>
-      __$$_ConfigCopyWithImpl<_$_Config>(this, _$identity);
+  _$$ConfigImplCopyWith<_$ConfigImpl> get copyWith =>
+      __$$ConfigImplCopyWithImpl<_$ConfigImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_ConfigToJson(
+    return _$$ConfigImplToJson(
       this,
     );
   }
 }
 
 abstract class _Config implements Config {
-  factory _Config({required final int localStoreTTL}) = _$_Config;
+  factory _Config({required final int localStoreTTL}) = _$ConfigImpl;
 
-  factory _Config.fromJson(Map<String, dynamic> json) = _$_Config.fromJson;
+  factory _Config.fromJson(Map<String, dynamic> json) = _$ConfigImpl.fromJson;
 
   @override
   int get localStoreTTL;
   @override
   @JsonKey(ignore: true)
-  _$$_ConfigCopyWith<_$_Config> get copyWith =>
+  _$$ConfigImplCopyWith<_$ConfigImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -3710,21 +3709,22 @@ class _$LanguagesCopyWithImpl<$Res, $Val extends Languages>
 }
 
 /// @nodoc
-abstract class _$$_LanguagesCopyWith<$Res> implements $LanguagesCopyWith<$Res> {
-  factory _$$_LanguagesCopyWith(
-          _$_Languages value, $Res Function(_$_Languages) then) =
-      __$$_LanguagesCopyWithImpl<$Res>;
+abstract class _$$LanguagesImplCopyWith<$Res>
+    implements $LanguagesCopyWith<$Res> {
+  factory _$$LanguagesImplCopyWith(
+          _$LanguagesImpl value, $Res Function(_$LanguagesImpl) then) =
+      __$$LanguagesImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String label, String value, bool isSelected});
 }
 
 /// @nodoc
-class __$$_LanguagesCopyWithImpl<$Res>
-    extends _$LanguagesCopyWithImpl<$Res, _$_Languages>
-    implements _$$_LanguagesCopyWith<$Res> {
-  __$$_LanguagesCopyWithImpl(
-      _$_Languages _value, $Res Function(_$_Languages) _then)
+class __$$LanguagesImplCopyWithImpl<$Res>
+    extends _$LanguagesCopyWithImpl<$Res, _$LanguagesImpl>
+    implements _$$LanguagesImplCopyWith<$Res> {
+  __$$LanguagesImplCopyWithImpl(
+      _$LanguagesImpl _value, $Res Function(_$LanguagesImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -3734,7 +3734,7 @@ class __$$_LanguagesCopyWithImpl<$Res>
     Object? value = null,
     Object? isSelected = null,
   }) {
-    return _then(_$_Languages(
+    return _then(_$LanguagesImpl(
       label: null == label
           ? _value.label
           : label // ignore: cast_nullable_to_non_nullable
@@ -3753,12 +3753,12 @@ class __$$_LanguagesCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_Languages implements _Languages {
-  _$_Languages(
+class _$LanguagesImpl implements _Languages {
+  _$LanguagesImpl(
       {required this.label, required this.value, this.isSelected = false});
 
-  factory _$_Languages.fromJson(Map<String, dynamic> json) =>
-      _$$_LanguagesFromJson(json);
+  factory _$LanguagesImpl.fromJson(Map<String, dynamic> json) =>
+      _$$LanguagesImplFromJson(json);
 
   @override
   final String label;
@@ -3774,10 +3774,10 @@ class _$_Languages implements _Languages {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_Languages &&
+            other is _$LanguagesImpl &&
             (identical(other.label, label) || other.label == label) &&
             (identical(other.value, value) || other.value == value) &&
             (identical(other.isSelected, isSelected) ||
@@ -3791,12 +3791,12 @@ class _$_Languages implements _Languages {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_LanguagesCopyWith<_$_Languages> get copyWith =>
-      __$$_LanguagesCopyWithImpl<_$_Languages>(this, _$identity);
+  _$$LanguagesImplCopyWith<_$LanguagesImpl> get copyWith =>
+      __$$LanguagesImplCopyWithImpl<_$LanguagesImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_LanguagesToJson(
+    return _$$LanguagesImplToJson(
       this,
     );
   }
@@ -3806,10 +3806,10 @@ abstract class _Languages implements Languages {
   factory _Languages(
       {required final String label,
       required final String value,
-      final bool isSelected}) = _$_Languages;
+      final bool isSelected}) = _$LanguagesImpl;
 
   factory _Languages.fromJson(Map<String, dynamic> json) =
-      _$_Languages.fromJson;
+      _$LanguagesImpl.fromJson;
 
   @override
   String get label;
@@ -3819,7 +3819,7 @@ abstract class _Languages implements Languages {
   bool get isSelected;
   @override
   @JsonKey(ignore: true)
-  _$$_LanguagesCopyWith<_$_Languages> get copyWith =>
+  _$$LanguagesImplCopyWith<_$LanguagesImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -3877,22 +3877,22 @@ class _$CheckListTypesCopyWithImpl<$Res, $Val extends CheckListTypes>
 }
 
 /// @nodoc
-abstract class _$$_CheckListTypesCopyWith<$Res>
+abstract class _$$CheckListTypesImplCopyWith<$Res>
     implements $CheckListTypesCopyWith<$Res> {
-  factory _$$_CheckListTypesCopyWith(
-          _$_CheckListTypes value, $Res Function(_$_CheckListTypes) then) =
-      __$$_CheckListTypesCopyWithImpl<$Res>;
+  factory _$$CheckListTypesImplCopyWith(_$CheckListTypesImpl value,
+          $Res Function(_$CheckListTypesImpl) then) =
+      __$$CheckListTypesImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String name, String code});
 }
 
 /// @nodoc
-class __$$_CheckListTypesCopyWithImpl<$Res>
-    extends _$CheckListTypesCopyWithImpl<$Res, _$_CheckListTypes>
-    implements _$$_CheckListTypesCopyWith<$Res> {
-  __$$_CheckListTypesCopyWithImpl(
-      _$_CheckListTypes _value, $Res Function(_$_CheckListTypes) _then)
+class __$$CheckListTypesImplCopyWithImpl<$Res>
+    extends _$CheckListTypesCopyWithImpl<$Res, _$CheckListTypesImpl>
+    implements _$$CheckListTypesImplCopyWith<$Res> {
+  __$$CheckListTypesImplCopyWithImpl(
+      _$CheckListTypesImpl _value, $Res Function(_$CheckListTypesImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -3901,7 +3901,7 @@ class __$$_CheckListTypesCopyWithImpl<$Res>
     Object? name = null,
     Object? code = null,
   }) {
-    return _then(_$_CheckListTypes(
+    return _then(_$CheckListTypesImpl(
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -3916,11 +3916,11 @@ class __$$_CheckListTypesCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_CheckListTypes implements _CheckListTypes {
-  _$_CheckListTypes({required this.name, required this.code});
+class _$CheckListTypesImpl implements _CheckListTypes {
+  _$CheckListTypesImpl({required this.name, required this.code});
 
-  factory _$_CheckListTypes.fromJson(Map<String, dynamic> json) =>
-      _$$_CheckListTypesFromJson(json);
+  factory _$CheckListTypesImpl.fromJson(Map<String, dynamic> json) =>
+      _$$CheckListTypesImplFromJson(json);
 
   @override
   final String name;
@@ -3933,10 +3933,10 @@ class _$_CheckListTypes implements _CheckListTypes {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_CheckListTypes &&
+            other is _$CheckListTypesImpl &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.code, code) || other.code == code));
   }
@@ -3948,12 +3948,13 @@ class _$_CheckListTypes implements _CheckListTypes {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_CheckListTypesCopyWith<_$_CheckListTypes> get copyWith =>
-      __$$_CheckListTypesCopyWithImpl<_$_CheckListTypes>(this, _$identity);
+  _$$CheckListTypesImplCopyWith<_$CheckListTypesImpl> get copyWith =>
+      __$$CheckListTypesImplCopyWithImpl<_$CheckListTypesImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_CheckListTypesToJson(
+    return _$$CheckListTypesImplToJson(
       this,
     );
   }
@@ -3962,10 +3963,10 @@ class _$_CheckListTypes implements _CheckListTypes {
 abstract class _CheckListTypes implements CheckListTypes {
   factory _CheckListTypes(
       {required final String name,
-      required final String code}) = _$_CheckListTypes;
+      required final String code}) = _$CheckListTypesImpl;
 
   factory _CheckListTypes.fromJson(Map<String, dynamic> json) =
-      _$_CheckListTypes.fromJson;
+      _$CheckListTypesImpl.fromJson;
 
   @override
   String get name;
@@ -3973,7 +3974,7 @@ abstract class _CheckListTypes implements CheckListTypes {
   String get code;
   @override
   @JsonKey(ignore: true)
-  _$$_CheckListTypesCopyWith<_$_CheckListTypes> get copyWith =>
+  _$$CheckListTypesImplCopyWith<_$CheckListTypesImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -4031,22 +4032,22 @@ class _$CallSupportListCopyWithImpl<$Res, $Val extends CallSupportList>
 }
 
 /// @nodoc
-abstract class _$$_CallSupportListCopyWith<$Res>
+abstract class _$$CallSupportListImplCopyWith<$Res>
     implements $CallSupportListCopyWith<$Res> {
-  factory _$$_CallSupportListCopyWith(
-          _$_CallSupportList value, $Res Function(_$_CallSupportList) then) =
-      __$$_CallSupportListCopyWithImpl<$Res>;
+  factory _$$CallSupportListImplCopyWith(_$CallSupportListImpl value,
+          $Res Function(_$CallSupportListImpl) then) =
+      __$$CallSupportListImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String name, String code});
 }
 
 /// @nodoc
-class __$$_CallSupportListCopyWithImpl<$Res>
-    extends _$CallSupportListCopyWithImpl<$Res, _$_CallSupportList>
-    implements _$$_CallSupportListCopyWith<$Res> {
-  __$$_CallSupportListCopyWithImpl(
-      _$_CallSupportList _value, $Res Function(_$_CallSupportList) _then)
+class __$$CallSupportListImplCopyWithImpl<$Res>
+    extends _$CallSupportListCopyWithImpl<$Res, _$CallSupportListImpl>
+    implements _$$CallSupportListImplCopyWith<$Res> {
+  __$$CallSupportListImplCopyWithImpl(
+      _$CallSupportListImpl _value, $Res Function(_$CallSupportListImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -4055,7 +4056,7 @@ class __$$_CallSupportListCopyWithImpl<$Res>
     Object? name = null,
     Object? code = null,
   }) {
-    return _then(_$_CallSupportList(
+    return _then(_$CallSupportListImpl(
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -4070,11 +4071,11 @@ class __$$_CallSupportListCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_CallSupportList implements _CallSupportList {
-  _$_CallSupportList({required this.name, required this.code});
+class _$CallSupportListImpl implements _CallSupportList {
+  _$CallSupportListImpl({required this.name, required this.code});
 
-  factory _$_CallSupportList.fromJson(Map<String, dynamic> json) =>
-      _$$_CallSupportListFromJson(json);
+  factory _$CallSupportListImpl.fromJson(Map<String, dynamic> json) =>
+      _$$CallSupportListImplFromJson(json);
 
   @override
   final String name;
@@ -4087,10 +4088,10 @@ class _$_CallSupportList implements _CallSupportList {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_CallSupportList &&
+            other is _$CallSupportListImpl &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.code, code) || other.code == code));
   }
@@ -4102,12 +4103,13 @@ class _$_CallSupportList implements _CallSupportList {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_CallSupportListCopyWith<_$_CallSupportList> get copyWith =>
-      __$$_CallSupportListCopyWithImpl<_$_CallSupportList>(this, _$identity);
+  _$$CallSupportListImplCopyWith<_$CallSupportListImpl> get copyWith =>
+      __$$CallSupportListImplCopyWithImpl<_$CallSupportListImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_CallSupportListToJson(
+    return _$$CallSupportListImplToJson(
       this,
     );
   }
@@ -4116,10 +4118,10 @@ class _$_CallSupportList implements _CallSupportList {
 abstract class _CallSupportList implements CallSupportList {
   factory _CallSupportList(
       {required final String name,
-      required final String code}) = _$_CallSupportList;
+      required final String code}) = _$CallSupportListImpl;
 
   factory _CallSupportList.fromJson(Map<String, dynamic> json) =
-      _$_CallSupportList.fromJson;
+      _$CallSupportListImpl.fromJson;
 
   @override
   String get name;
@@ -4127,7 +4129,7 @@ abstract class _CallSupportList implements CallSupportList {
   String get code;
   @override
   @JsonKey(ignore: true)
-  _$$_CallSupportListCopyWith<_$_CallSupportList> get copyWith =>
+  _$$CallSupportListImplCopyWith<_$CallSupportListImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -4185,22 +4187,22 @@ class _$TransportTypesCopyWithImpl<$Res, $Val extends TransportTypes>
 }
 
 /// @nodoc
-abstract class _$$_TransportTypesCopyWith<$Res>
+abstract class _$$TransportTypesImplCopyWith<$Res>
     implements $TransportTypesCopyWith<$Res> {
-  factory _$$_TransportTypesCopyWith(
-          _$_TransportTypes value, $Res Function(_$_TransportTypes) then) =
-      __$$_TransportTypesCopyWithImpl<$Res>;
+  factory _$$TransportTypesImplCopyWith(_$TransportTypesImpl value,
+          $Res Function(_$TransportTypesImpl) then) =
+      __$$TransportTypesImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String name, String code});
 }
 
 /// @nodoc
-class __$$_TransportTypesCopyWithImpl<$Res>
-    extends _$TransportTypesCopyWithImpl<$Res, _$_TransportTypes>
-    implements _$$_TransportTypesCopyWith<$Res> {
-  __$$_TransportTypesCopyWithImpl(
-      _$_TransportTypes _value, $Res Function(_$_TransportTypes) _then)
+class __$$TransportTypesImplCopyWithImpl<$Res>
+    extends _$TransportTypesCopyWithImpl<$Res, _$TransportTypesImpl>
+    implements _$$TransportTypesImplCopyWith<$Res> {
+  __$$TransportTypesImplCopyWithImpl(
+      _$TransportTypesImpl _value, $Res Function(_$TransportTypesImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -4209,7 +4211,7 @@ class __$$_TransportTypesCopyWithImpl<$Res>
     Object? name = null,
     Object? code = null,
   }) {
-    return _then(_$_TransportTypes(
+    return _then(_$TransportTypesImpl(
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -4224,11 +4226,11 @@ class __$$_TransportTypesCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_TransportTypes implements _TransportTypes {
-  _$_TransportTypes({required this.name, required this.code});
+class _$TransportTypesImpl implements _TransportTypes {
+  _$TransportTypesImpl({required this.name, required this.code});
 
-  factory _$_TransportTypes.fromJson(Map<String, dynamic> json) =>
-      _$$_TransportTypesFromJson(json);
+  factory _$TransportTypesImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TransportTypesImplFromJson(json);
 
   @override
   final String name;
@@ -4241,10 +4243,10 @@ class _$_TransportTypes implements _TransportTypes {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TransportTypes &&
+            other is _$TransportTypesImpl &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.code, code) || other.code == code));
   }
@@ -4256,12 +4258,13 @@ class _$_TransportTypes implements _TransportTypes {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TransportTypesCopyWith<_$_TransportTypes> get copyWith =>
-      __$$_TransportTypesCopyWithImpl<_$_TransportTypes>(this, _$identity);
+  _$$TransportTypesImplCopyWith<_$TransportTypesImpl> get copyWith =>
+      __$$TransportTypesImplCopyWithImpl<_$TransportTypesImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_TransportTypesToJson(
+    return _$$TransportTypesImplToJson(
       this,
     );
   }
@@ -4270,10 +4273,10 @@ class _$_TransportTypes implements _TransportTypes {
 abstract class _TransportTypes implements TransportTypes {
   factory _TransportTypes(
       {required final String name,
-      required final String code}) = _$_TransportTypes;
+      required final String code}) = _$TransportTypesImpl;
 
   factory _TransportTypes.fromJson(Map<String, dynamic> json) =
-      _$_TransportTypes.fromJson;
+      _$TransportTypesImpl.fromJson;
 
   @override
   String get name;
@@ -4281,7 +4284,7 @@ abstract class _TransportTypes implements TransportTypes {
   String get code;
   @override
   @JsonKey(ignore: true)
-  _$$_TransportTypesCopyWith<_$_TransportTypes> get copyWith =>
+  _$$TransportTypesImplCopyWith<_$TransportTypesImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -4339,22 +4342,22 @@ class _$RowVersionsCopyWithImpl<$Res, $Val extends RowVersions>
 }
 
 /// @nodoc
-abstract class _$$_RowVersionsCopyWith<$Res>
+abstract class _$$RowVersionsImplCopyWith<$Res>
     implements $RowVersionsCopyWith<$Res> {
-  factory _$$_RowVersionsCopyWith(
-          _$_RowVersions value, $Res Function(_$_RowVersions) then) =
-      __$$_RowVersionsCopyWithImpl<$Res>;
+  factory _$$RowVersionsImplCopyWith(
+          _$RowVersionsImpl value, $Res Function(_$RowVersionsImpl) then) =
+      __$$RowVersionsImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String module, String version});
 }
 
 /// @nodoc
-class __$$_RowVersionsCopyWithImpl<$Res>
-    extends _$RowVersionsCopyWithImpl<$Res, _$_RowVersions>
-    implements _$$_RowVersionsCopyWith<$Res> {
-  __$$_RowVersionsCopyWithImpl(
-      _$_RowVersions _value, $Res Function(_$_RowVersions) _then)
+class __$$RowVersionsImplCopyWithImpl<$Res>
+    extends _$RowVersionsCopyWithImpl<$Res, _$RowVersionsImpl>
+    implements _$$RowVersionsImplCopyWith<$Res> {
+  __$$RowVersionsImplCopyWithImpl(
+      _$RowVersionsImpl _value, $Res Function(_$RowVersionsImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -4363,7 +4366,7 @@ class __$$_RowVersionsCopyWithImpl<$Res>
     Object? module = null,
     Object? version = null,
   }) {
-    return _then(_$_RowVersions(
+    return _then(_$RowVersionsImpl(
       module: null == module
           ? _value.module
           : module // ignore: cast_nullable_to_non_nullable
@@ -4378,11 +4381,11 @@ class __$$_RowVersionsCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_RowVersions implements _RowVersions {
-  _$_RowVersions({required this.module, required this.version});
+class _$RowVersionsImpl implements _RowVersions {
+  _$RowVersionsImpl({required this.module, required this.version});
 
-  factory _$_RowVersions.fromJson(Map<String, dynamic> json) =>
-      _$$_RowVersionsFromJson(json);
+  factory _$RowVersionsImpl.fromJson(Map<String, dynamic> json) =>
+      _$$RowVersionsImplFromJson(json);
 
   @override
   final String module;
@@ -4395,10 +4398,10 @@ class _$_RowVersions implements _RowVersions {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_RowVersions &&
+            other is _$RowVersionsImpl &&
             (identical(other.module, module) || other.module == module) &&
             (identical(other.version, version) || other.version == version));
   }
@@ -4410,12 +4413,12 @@ class _$_RowVersions implements _RowVersions {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_RowVersionsCopyWith<_$_RowVersions> get copyWith =>
-      __$$_RowVersionsCopyWithImpl<_$_RowVersions>(this, _$identity);
+  _$$RowVersionsImplCopyWith<_$RowVersionsImpl> get copyWith =>
+      __$$RowVersionsImplCopyWithImpl<_$RowVersionsImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_RowVersionsToJson(
+    return _$$RowVersionsImplToJson(
       this,
     );
   }
@@ -4424,10 +4427,10 @@ class _$_RowVersions implements _RowVersions {
 abstract class _RowVersions implements RowVersions {
   factory _RowVersions(
       {required final String module,
-      required final String version}) = _$_RowVersions;
+      required final String version}) = _$RowVersionsImpl;
 
   factory _RowVersions.fromJson(Map<String, dynamic> json) =
-      _$_RowVersions.fromJson;
+      _$RowVersionsImpl.fromJson;
 
   @override
   String get module;
@@ -4435,6 +4438,6 @@ abstract class _RowVersions implements RowVersions {
   String get version;
   @override
   @JsonKey(ignore: true)
-  _$$_RowVersionsCopyWith<_$_RowVersions> get copyWith =>
+  _$$RowVersionsImplCopyWith<_$RowVersionsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

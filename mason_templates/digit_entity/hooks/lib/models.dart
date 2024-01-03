@@ -1,9 +1,9 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
-export 'models.mapper.g.dart';
+part 'models.mapper.dart';
 
 @MappableClass()
-class ConfigModel {
+class ConfigModel with ConfigModelMappable {
   final String name;
   final bool persistBoundaryParameters;
   final List<String> ignoreFields;
@@ -37,7 +37,7 @@ class ConfigModel {
 }
 
 @MappableClass()
-class AttributeModel {
+class AttributeModel with AttributeModelMappable {
   final String name;
   final String type;
   final String columnType;
@@ -72,7 +72,7 @@ class AttributeModel {
 }
 
 @MappableClass()
-class TableReferenceModel {
+class TableReferenceModel with TableReferenceModelMappable {
   final String table;
   final String column;
   final String pkName;
@@ -85,7 +85,7 @@ class TableReferenceModel {
 }
 
 @MappableClass()
-class EnumValues {
+class EnumValues with EnumValuesMappable {
   final String name;
   final String value;
 

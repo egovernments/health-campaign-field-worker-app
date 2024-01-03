@@ -278,7 +278,7 @@ class _DeliverInterventionPageState
                                                                             .cycle,
                                                                         deliveryStrategy: DeliverStrategyType
                                                                             .direct
-                                                                            .toValue(),
+                                                                            .name,
                                                                         address: householdMemberWrapper
                                                                             .members
                                                                             .first
@@ -652,32 +652,32 @@ class _DeliverInterventionPageState
         relatedClientReferenceId: clientReferenceId,
         id: null,
       ),
-      status: Status.administeredSuccess.toValue(),
+      status: Status.administeredSuccess.name,
       additionalFields: TaskAdditionalFields(
         version: task.additionalFields?.version ?? 1,
         fields: [
           AdditionalField(
-            AdditionalFieldsType.dateOfDelivery.toValue(),
+            AdditionalFieldsType.dateOfDelivery.name,
             DateTime.now().millisecondsSinceEpoch.toString(),
           ),
           AdditionalField(
-            AdditionalFieldsType.dateOfAdministration.toValue(),
+            AdditionalFieldsType.dateOfAdministration.name,
             DateTime.now().millisecondsSinceEpoch.toString(),
           ),
           AdditionalField(
-            AdditionalFieldsType.dateOfVerification.toValue(),
+            AdditionalFieldsType.dateOfVerification.name,
             DateTime.now().millisecondsSinceEpoch.toString(),
           ),
           AdditionalField(
-            AdditionalFieldsType.cycleIndex.toValue(),
+            AdditionalFieldsType.cycleIndex.name,
             "0${cycle ?? 1}",
           ),
           AdditionalField(
-            AdditionalFieldsType.doseIndex.toValue(),
+            AdditionalFieldsType.doseIndex.name,
             "0${dose ?? 1}",
           ),
           AdditionalField(
-            AdditionalFieldsType.deliveryStrategy.toValue(),
+            AdditionalFieldsType.deliveryStrategy.name,
             deliveryStrategy,
           ),
         ],
