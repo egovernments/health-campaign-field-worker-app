@@ -209,7 +209,7 @@ enum PgrServiceApplicationStatus {
 }
 
 @MappableClass(ignoreNull: true)
-class PgrFilters {
+class PgrFilters with PgrFiltersMappable {
   String? complaintAssignedTo;
   String? complaintTypeCode;
   String? locality;
@@ -224,7 +224,7 @@ class PgrFilters {
 }
 
 @MappableClass(ignoreNull: true)
-class PgrSearchKeys {
+class PgrSearchKeys with PgrSearchKeysMappable {
   String? complaintNumber;
   String? complainantMobileNumber;
 
@@ -235,7 +235,7 @@ class PgrSearchKeys {
 }
 
 @MappableClass(ignoreNull: true)
-class PgrAdditionalDetails {
+class PgrAdditionalDetails with PgrAdditionalDetailsMappable {
   String? supervisorName;
   String? supervisorContactNumber;
   String? otherComplaintDescription;

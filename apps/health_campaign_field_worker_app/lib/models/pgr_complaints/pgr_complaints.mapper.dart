@@ -212,6 +212,129 @@ class _PgrComplaintModelCopyWithImpl<$R, $Out>
       _PgrComplaintModelCopyWithImpl($value, $cast, t);
 }
 
+class PgrRolesModelMapper extends ClassMapperBase<PgrRolesModel> {
+  PgrRolesModelMapper._();
+
+  static PgrRolesModelMapper? _instance;
+  static PgrRolesModelMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = PgrRolesModelMapper._());
+      EntityModelMapper.ensureInitialized();
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'PgrRolesModel';
+
+  static String _$name(PgrRolesModel v) => v.name;
+  static const Field<PgrRolesModel, String> _f$name = Field('name', _$name);
+  static String _$code(PgrRolesModel v) => v.code;
+  static const Field<PgrRolesModel, String> _f$code = Field('code', _$code);
+  static AuditDetails? _$auditDetails(PgrRolesModel v) => v.auditDetails;
+  static const Field<PgrRolesModel, AuditDetails> _f$auditDetails =
+      Field('auditDetails', _$auditDetails, mode: FieldMode.member);
+  static ClientAuditDetails? _$clientAuditDetails(PgrRolesModel v) =>
+      v.clientAuditDetails;
+  static const Field<PgrRolesModel, ClientAuditDetails> _f$clientAuditDetails =
+      Field('clientAuditDetails', _$clientAuditDetails, mode: FieldMode.member);
+
+  @override
+  final MappableFields<PgrRolesModel> fields = const {
+    #name: _f$name,
+    #code: _f$code,
+    #auditDetails: _f$auditDetails,
+    #clientAuditDetails: _f$clientAuditDetails,
+  };
+  @override
+  final bool ignoreNull = true;
+
+  static PgrRolesModel _instantiate(DecodingData data) {
+    return PgrRolesModel(name: data.dec(_f$name), code: data.dec(_f$code));
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static PgrRolesModel fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<PgrRolesModel>(map);
+  }
+
+  static PgrRolesModel fromJson(String json) {
+    return ensureInitialized().decodeJson<PgrRolesModel>(json);
+  }
+}
+
+mixin PgrRolesModelMappable {
+  String toJson() {
+    return PgrRolesModelMapper.ensureInitialized()
+        .encodeJson<PgrRolesModel>(this as PgrRolesModel);
+  }
+
+  Map<String, dynamic> toMap() {
+    return PgrRolesModelMapper.ensureInitialized()
+        .encodeMap<PgrRolesModel>(this as PgrRolesModel);
+  }
+
+  PgrRolesModelCopyWith<PgrRolesModel, PgrRolesModel, PgrRolesModel>
+      get copyWith => _PgrRolesModelCopyWithImpl(
+          this as PgrRolesModel, $identity, $identity);
+  @override
+  String toString() {
+    return PgrRolesModelMapper.ensureInitialized()
+        .stringifyValue(this as PgrRolesModel);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            PgrRolesModelMapper.ensureInitialized()
+                .isValueEqual(this as PgrRolesModel, other));
+  }
+
+  @override
+  int get hashCode {
+    return PgrRolesModelMapper.ensureInitialized()
+        .hashValue(this as PgrRolesModel);
+  }
+}
+
+extension PgrRolesModelValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, PgrRolesModel, $Out> {
+  PgrRolesModelCopyWith<$R, PgrRolesModel, $Out> get $asPgrRolesModel =>
+      $base.as((v, t, t2) => _PgrRolesModelCopyWithImpl(v, t, t2));
+}
+
+abstract class PgrRolesModelCopyWith<$R, $In extends PgrRolesModel, $Out>
+    implements EntityModelCopyWith<$R, $In, $Out> {
+  @override
+  $R call({String? name, String? code});
+  PgrRolesModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
+}
+
+class _PgrRolesModelCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, PgrRolesModel, $Out>
+    implements PgrRolesModelCopyWith<$R, PgrRolesModel, $Out> {
+  _PgrRolesModelCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<PgrRolesModel> $mapper =
+      PgrRolesModelMapper.ensureInitialized();
+  @override
+  $R call({String? name, String? code}) => $apply(FieldCopyWithData(
+      {if (name != null) #name: name, if (code != null) #code: code}));
+  @override
+  PgrRolesModel $make(CopyWithData data) => PgrRolesModel(
+      name: data.get(#name, or: $value.name),
+      code: data.get(#code, or: $value.code));
+
+  @override
+  PgrRolesModelCopyWith<$R2, PgrRolesModel, $Out2> $chain<$R2, $Out2>(
+          Then<$Out2, $R2> t) =>
+      _PgrRolesModelCopyWithImpl($value, $cast, t);
+}
+
 class PgrServiceModelMapper extends ClassMapperBase<PgrServiceModel> {
   PgrServiceModelMapper._();
 
@@ -774,129 +897,6 @@ class _PgrComplainantModelCopyWithImpl<$R, $Out>
   PgrComplainantModelCopyWith<$R2, PgrComplainantModel, $Out2>
       $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
           _PgrComplainantModelCopyWithImpl($value, $cast, t);
-}
-
-class PgrRolesModelMapper extends ClassMapperBase<PgrRolesModel> {
-  PgrRolesModelMapper._();
-
-  static PgrRolesModelMapper? _instance;
-  static PgrRolesModelMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = PgrRolesModelMapper._());
-      EntityModelMapper.ensureInitialized();
-    }
-    return _instance!;
-  }
-
-  @override
-  final String id = 'PgrRolesModel';
-
-  static String _$name(PgrRolesModel v) => v.name;
-  static const Field<PgrRolesModel, String> _f$name = Field('name', _$name);
-  static String _$code(PgrRolesModel v) => v.code;
-  static const Field<PgrRolesModel, String> _f$code = Field('code', _$code);
-  static AuditDetails? _$auditDetails(PgrRolesModel v) => v.auditDetails;
-  static const Field<PgrRolesModel, AuditDetails> _f$auditDetails =
-      Field('auditDetails', _$auditDetails, mode: FieldMode.member);
-  static ClientAuditDetails? _$clientAuditDetails(PgrRolesModel v) =>
-      v.clientAuditDetails;
-  static const Field<PgrRolesModel, ClientAuditDetails> _f$clientAuditDetails =
-      Field('clientAuditDetails', _$clientAuditDetails, mode: FieldMode.member);
-
-  @override
-  final MappableFields<PgrRolesModel> fields = const {
-    #name: _f$name,
-    #code: _f$code,
-    #auditDetails: _f$auditDetails,
-    #clientAuditDetails: _f$clientAuditDetails,
-  };
-  @override
-  final bool ignoreNull = true;
-
-  static PgrRolesModel _instantiate(DecodingData data) {
-    return PgrRolesModel(name: data.dec(_f$name), code: data.dec(_f$code));
-  }
-
-  @override
-  final Function instantiate = _instantiate;
-
-  static PgrRolesModel fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<PgrRolesModel>(map);
-  }
-
-  static PgrRolesModel fromJson(String json) {
-    return ensureInitialized().decodeJson<PgrRolesModel>(json);
-  }
-}
-
-mixin PgrRolesModelMappable {
-  String toJson() {
-    return PgrRolesModelMapper.ensureInitialized()
-        .encodeJson<PgrRolesModel>(this as PgrRolesModel);
-  }
-
-  Map<String, dynamic> toMap() {
-    return PgrRolesModelMapper.ensureInitialized()
-        .encodeMap<PgrRolesModel>(this as PgrRolesModel);
-  }
-
-  PgrRolesModelCopyWith<PgrRolesModel, PgrRolesModel, PgrRolesModel>
-      get copyWith => _PgrRolesModelCopyWithImpl(
-          this as PgrRolesModel, $identity, $identity);
-  @override
-  String toString() {
-    return PgrRolesModelMapper.ensureInitialized()
-        .stringifyValue(this as PgrRolesModel);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            PgrRolesModelMapper.ensureInitialized()
-                .isValueEqual(this as PgrRolesModel, other));
-  }
-
-  @override
-  int get hashCode {
-    return PgrRolesModelMapper.ensureInitialized()
-        .hashValue(this as PgrRolesModel);
-  }
-}
-
-extension PgrRolesModelValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, PgrRolesModel, $Out> {
-  PgrRolesModelCopyWith<$R, PgrRolesModel, $Out> get $asPgrRolesModel =>
-      $base.as((v, t, t2) => _PgrRolesModelCopyWithImpl(v, t, t2));
-}
-
-abstract class PgrRolesModelCopyWith<$R, $In extends PgrRolesModel, $Out>
-    implements EntityModelCopyWith<$R, $In, $Out> {
-  @override
-  $R call({String? name, String? code});
-  PgrRolesModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
-}
-
-class _PgrRolesModelCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, PgrRolesModel, $Out>
-    implements PgrRolesModelCopyWith<$R, PgrRolesModel, $Out> {
-  _PgrRolesModelCopyWithImpl(super.value, super.then, super.then2);
-
-  @override
-  late final ClassMapperBase<PgrRolesModel> $mapper =
-      PgrRolesModelMapper.ensureInitialized();
-  @override
-  $R call({String? name, String? code}) => $apply(FieldCopyWithData(
-      {if (name != null) #name: name, if (code != null) #code: code}));
-  @override
-  PgrRolesModel $make(CopyWithData data) => PgrRolesModel(
-      name: data.get(#name, or: $value.name),
-      code: data.get(#code, or: $value.code));
-
-  @override
-  PgrRolesModelCopyWith<$R2, PgrRolesModel, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _PgrRolesModelCopyWithImpl($value, $cast, t);
 }
 
 class PgrWorkflowModelMapper extends ClassMapperBase<PgrWorkflowModel> {

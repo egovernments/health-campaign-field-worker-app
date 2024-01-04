@@ -2,8 +2,12 @@
 library models;
 
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:health_campaign_field_worker_app/models/pgr_complaints/pgr_address.dart';
+import 'package:health_campaign_field_worker_app/models/pgr_complaints/pgr_complaints.dart';
+import 'package:health_campaign_field_worker_app/models/pgr_complaints/pgr_complaints_response.dart';
 
 import 'entities/address.dart';
+import 'entities/boundary.dart';
 import 'entities/locality.dart';
 
 export 'entities/additional_fields_type.dart';
@@ -67,7 +71,7 @@ abstract class DataModel {
   });
 }
 
-@MappableClass(includeSubClasses: [AddressModel, LocalityModel])
+@MappableClass(includeSubClasses: [AddressModel, LocalityModel, BoundaryModel, PgrAddressModel, PgrComplaintModel, PgrRolesModel, PgrServiceModel, PgrServiceCreateResponseModel, PgrComplaintResponseModel, PgrServiceResponseModel])
 abstract class EntityModel extends DataModel with EntityModelMappable {
   final AuditDetails? auditDetails;
   final ClientAuditDetails? clientAuditDetails;
@@ -78,7 +82,7 @@ abstract class EntityModel extends DataModel with EntityModelMappable {
   });
 }
 
-@MappableClass(ignoreNull: true, includeSubClasses: [AddressSearchModel, LocalitySearchModel])
+@MappableClass(ignoreNull: true, includeSubClasses: [AddressSearchModel, LocalitySearchModel, BoundarySearchModel, PgrServiceSearchModel])
 abstract class EntitySearchModel extends DataModel with EntitySearchModelMappable {
   final AuditDetails? auditDetails;
   final AdditionalFields? additionalFields;

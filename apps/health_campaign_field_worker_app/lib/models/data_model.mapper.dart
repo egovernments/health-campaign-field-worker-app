@@ -15,6 +15,17 @@ class EntityModelMapper extends ClassMapperBase<EntityModel> {
       MapperContainer.globals.use(_instance = EntityModelMapper._());
       AddressModelMapper.ensureInitialized();
       LocalityModelMapper.ensureInitialized();
+      BoundaryModelMapper.ensureInitialized();
+      PgrAddressModelMapper.ensureInitialized();
+      PgrComplaintModelMapper.ensureInitialized();
+      PgrServiceModelMapper.ensureInitialized();
+      PgrComplainantModelMapper.ensureInitialized();
+      PgrRolesModelMapper.ensureInitialized();
+      PgrWorkflowModelMapper.ensureInitialized();
+      PgrServiceCreateResponseModelMapper.ensureInitialized();
+      PgrComplaintResponseModelMapper.ensureInitialized();
+      PgrServiceResponseModelMapper.ensureInitialized();
+      PgrComplainantResponseModelMapper.ensureInitialized();
       AuditDetailsMapper.ensureInitialized();
       ClientAuditDetailsMapper.ensureInitialized();
     }
@@ -66,13 +77,7 @@ mixin EntityModelMappable {
 
 abstract class EntityModelCopyWith<$R, $In extends EntityModel, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
-  ClientAuditDetailsCopyWith<$R, ClientAuditDetails, ClientAuditDetails>?
-      get clientAuditDetails;
-  $R call(
-      {AuditDetails? auditDetails,
-      ClientAuditDetails? clientAuditDetails,
-      bool? isDeleted});
+  $R call();
   EntityModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -544,6 +549,8 @@ class EntitySearchModelMapper extends ClassMapperBase<EntitySearchModel> {
       MapperContainer.globals.use(_instance = EntitySearchModelMapper._());
       AddressSearchModelMapper.ensureInitialized();
       LocalitySearchModelMapper.ensureInitialized();
+      BoundarySearchModelMapper.ensureInitialized();
+      PgrServiceSearchModelMapper.ensureInitialized();
       AuditDetailsMapper.ensureInitialized();
       AdditionalFieldsMapper.ensureInitialized();
     }
@@ -598,7 +605,7 @@ mixin EntitySearchModelMappable {
 
 abstract class EntitySearchModelCopyWith<$R, $In extends EntitySearchModel,
     $Out> implements ClassCopyWith<$R, $In, $Out> {
-  $R call({String? boundaryCode});
+  $R call();
   EntitySearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }

@@ -82,7 +82,7 @@ class PgrAddressModel extends EntityModel with PgrAddressModelMappable {
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class GeoLocation {
+class GeoLocation with GeoLocationMappable {
   double? latitude;
   double? longitude;
   Map<String, dynamic>? additionalDetails;
