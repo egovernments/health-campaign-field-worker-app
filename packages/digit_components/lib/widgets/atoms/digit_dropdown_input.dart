@@ -292,7 +292,7 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
                       ),
                       padding: EdgeInsets.zero,
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 10, top: 8,bottom: 8),
+                        padding: widget.dropdownType==DropdownType.singleSelect && item.value.description == null ? const EdgeInsets.only(left: 10, top: 16,bottom: 16):const EdgeInsets.only(left: 10, top: 8,bottom: 8),
                         child: Row(
                           children: [
                             if (widget.dropdownType ==

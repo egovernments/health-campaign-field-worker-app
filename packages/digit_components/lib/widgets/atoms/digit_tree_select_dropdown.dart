@@ -772,12 +772,15 @@ class _TreeNodeWidgetState extends State<TreeNodeWidget> {
       }
     }
   }
+  bool _selected(TreeNode node){
+    return widget.selectedOptions.any((item) => item.key == node.key);
+  }
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       selectedColor: Colors.transparent,
-      selected: widget.isSelected,
+      selected: _selected(widget.currentOption),
       autofocus: false,
       hoverColor: Colors.transparent,
       focusColor: Colors.transparent,
