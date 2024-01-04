@@ -1,3 +1,4 @@
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:isar/isar.dart';
 
 import '../../../../models/data_model.dart';
@@ -10,7 +11,7 @@ class OpLog {
   late String entityString;
 
   @ignore
-  T getEntity<T extends EntityModel>() => Mapper.fromJson<T>(entityString);
+  T getEntity<T extends EntityModel>() => MapperContainer.globals.fromJson<T>(entityString);
 
   void entity<T extends EntityModel>(T entity) {
     entityString = entity.toJson();

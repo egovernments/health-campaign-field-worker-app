@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -137,7 +138,7 @@ abstract class RemoteRepository<D extends EntityModel,
 
     final entityList = entityResponse.whereType<Map<String, dynamic>>();
 
-    return entityList.map((e) => Mapper.fromMap<D>(e)).toList();
+    return entityList.map((e) => MapperContainer.globals.fromMap<D>(e)).toList();
   }
 
   FutureOr<Response> singleCreate(D entity) async {
@@ -344,7 +345,7 @@ abstract class RemoteRepository<D extends EntityModel,
   }
 
   List<Map<String, dynamic>> _getMap(List<EntityModel> entities) {
-    return entities.map((e) => Mapper.toMap(e)).toList();
+    return entities.map((e) => MapperContainer.globals.toMap(e)).toList();
   }
 
   FutureOr<T> executeFuture<T>({

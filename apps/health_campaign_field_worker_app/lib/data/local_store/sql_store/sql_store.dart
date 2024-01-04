@@ -51,7 +51,7 @@ import 'tables/user.dart';
 part 'sql_store.g.dart';
 
 @DriftDatabase(tables: [
-  at.Address,
+  at.Address, // TODO: address same in sql_store.g.dart and rename the address class created in the same file to avoid conflict
   Name,
   Boundary,
   Document,

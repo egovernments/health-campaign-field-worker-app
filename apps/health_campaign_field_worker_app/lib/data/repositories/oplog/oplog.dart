@@ -165,7 +165,7 @@ abstract class OpLogManager<T extends EntityModel> {
             .oplog);
       });
     } else if (entry != null) {
-      await put(entry.copyWith(syncedUp: true, syncedUpOn: DateTime.now()));
+      // await put(entry.copyWith(syncedUp: true, syncedUpOn: DateTime.now()));
     } else if (id != null) {
       OpLog? oplog;
 
@@ -173,12 +173,12 @@ abstract class OpLogManager<T extends EntityModel> {
       if (oplog == null) return;
       final fetchedEntry = OpLogEntry.fromOpLog<T>(oplog);
 
-      await put(
-        fetchedEntry.copyWith(
-          syncedUp: true,
-          syncedUpOn: DateTime.now(),
-        ),
-      );
+      // await put(
+      //   fetchedEntry.copyWith(
+      //     syncedUp: true,
+      //     syncedUpOn: DateTime.now(),
+      //   ),
+      // );
     } else if (clientReferenceId != null) {
       final oplog = await isar.opLogs
           .filter()
@@ -189,12 +189,12 @@ abstract class OpLogManager<T extends EntityModel> {
 
       final fetchedEntry = OpLogEntry.fromOpLog<T>(oplog);
 
-      await put(
-        fetchedEntry.copyWith(
-          syncedUp: true,
-          syncedUpOn: DateTime.now(),
-        ),
-      );
+      // await put(
+      //   fetchedEntry.copyWith(
+      //     syncedUp: true,
+      //     syncedUpOn: DateTime.now(),
+      //   ),
+      // );
     } else {
       throw AppException('Invalid arguments');
     }

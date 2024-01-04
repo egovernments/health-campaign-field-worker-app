@@ -6,14 +6,14 @@
 
 part of 'project.dart';
 
-class ProjectSearchModelMapper extends SubClassMapperBase<ProjectSearchModel> {
+class ProjectSearchModelMapper extends ClassMapperBase<ProjectSearchModel> {
   ProjectSearchModelMapper._();
 
   static ProjectSearchModelMapper? _instance;
   static ProjectSearchModelMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = ProjectSearchModelMapper._());
-      EntitySearchModelMapper.ensureInitialized().addSubMapper(_instance!);
+      EntitySearchModelMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -92,14 +92,6 @@ class ProjectSearchModelMapper extends SubClassMapperBase<ProjectSearchModel> {
   };
   @override
   final bool ignoreNull = true;
-
-  @override
-  final String discriminatorKey = 'type';
-  @override
-  final dynamic discriminatorValue = MappableClass.useAsDefault;
-  @override
-  late final ClassMapperBase superMapper =
-      EntitySearchModelMapper.ensureInitialized();
 
   static ProjectSearchModel _instantiate(DecodingData data) {
     return ProjectSearchModel.ignoreDeleted(
@@ -251,14 +243,14 @@ class _ProjectSearchModelCopyWithImpl<$R, $Out>
       _ProjectSearchModelCopyWithImpl($value, $cast, t);
 }
 
-class ProjectModelMapper extends SubClassMapperBase<ProjectModel> {
+class ProjectModelMapper extends ClassMapperBase<ProjectModel> {
   ProjectModelMapper._();
 
   static ProjectModelMapper? _instance;
   static ProjectModelMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = ProjectModelMapper._());
-      EntityModelMapper.ensureInitialized().addSubMapper(_instance!);
+      EntityModelMapper.ensureInitialized();
       ProjectAdditionalFieldsMapper.ensureInitialized();
       AddressModelMapper.ensureInitialized();
       TargetModelMapper.ensureInitialized();
@@ -380,14 +372,6 @@ class ProjectModelMapper extends SubClassMapperBase<ProjectModel> {
   };
   @override
   final bool ignoreNull = true;
-
-  @override
-  final String discriminatorKey = 'type';
-  @override
-  final dynamic discriminatorValue = MappableClass.useAsDefault;
-  @override
-  late final ClassMapperBase superMapper =
-      EntityModelMapper.ensureInitialized();
 
   static ProjectModel _instantiate(DecodingData data) {
     return ProjectModel(
@@ -637,7 +621,7 @@ class _ProjectModelCopyWithImpl<$R, $Out>
 }
 
 class ProjectAdditionalFieldsMapper
-    extends SubClassMapperBase<ProjectAdditionalFields> {
+    extends ClassMapperBase<ProjectAdditionalFields> {
   ProjectAdditionalFieldsMapper._();
 
   static ProjectAdditionalFieldsMapper? _instance;
@@ -645,7 +629,7 @@ class ProjectAdditionalFieldsMapper
     if (_instance == null) {
       MapperContainer.globals
           .use(_instance = ProjectAdditionalFieldsMapper._());
-      AdditionalFieldsMapper.ensureInitialized().addSubMapper(_instance!);
+      AdditionalFieldsMapper.ensureInitialized();
       AdditionalFieldMapper.ensureInitialized();
     }
     return _instance!;
@@ -672,14 +656,6 @@ class ProjectAdditionalFieldsMapper
   };
   @override
   final bool ignoreNull = true;
-
-  @override
-  final String discriminatorKey = 'type';
-  @override
-  final dynamic discriminatorValue = MappableClass.useAsDefault;
-  @override
-  late final ClassMapperBase superMapper =
-      AdditionalFieldsMapper.ensureInitialized();
 
   static ProjectAdditionalFields _instantiate(DecodingData data) {
     return ProjectAdditionalFields(

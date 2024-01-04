@@ -2,9 +2,9 @@
 library models;
 
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:health_campaign_field_worker_app/models/pgr_complaints/pgr_address.dart';
-import 'package:health_campaign_field_worker_app/models/pgr_complaints/pgr_complaints.dart';
-import 'package:health_campaign_field_worker_app/models/pgr_complaints/pgr_complaints_response.dart';
+import 'pgr_complaints/pgr_address.dart';
+import 'pgr_complaints/pgr_complaints.dart';
+import 'pgr_complaints/pgr_complaints_response.dart';
 
 import 'entities/address.dart';
 import 'entities/boundary.dart';
