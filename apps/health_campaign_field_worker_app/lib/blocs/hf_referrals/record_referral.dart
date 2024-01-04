@@ -53,7 +53,7 @@ class RecordHFReferralBloc
       },
       create: (value) async {
         if (!value.viewOnly) {
-          final facilityId = event.hfReferralModel.facilityId;
+          final facilityId = event.hfReferralModel.projectFacilityId;
           final dateOfEvaluation =
               event.hfReferralModel.auditDetails?.createdTime;
 
@@ -112,7 +112,7 @@ class RecordHFReferralBloc
         throw const InvalidRecordHFReferralStateException();
       },
       view: (value) async {
-        final facilityId = event.hfReferralModel.facilityId;
+        final facilityId = event.hfReferralModel.projectFacilityId;
         final dateOfEvaluation =
             event.hfReferralModel.auditDetails?.createdTime;
 

@@ -4,19 +4,20 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
+
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/localized.dart';
 import '../blocs/scanner/scanner.dart';
 import '../blocs/search_households/search_households.dart';
-import '../vision_detector_views/detector_view.dart';
-import '../vision_detector_views/painters/barcode_detector_painter.dart';
 import '../blocs/search_referrals/search_referrals.dart';
 import '../models/data_model.dart';
+import '../vision_detector_views/detector_view.dart';
+import '../vision_detector_views/painters/barcode_detector_painter.dart';
 
 class QRScannerPage extends LocalizedStatefulWidget {
   final bool sinlgleValue;
@@ -672,8 +673,11 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
     );
 
     result.add(parsedresult);
-    bloc.add(ScannerEvent.handleScanner(result, bloc.state.qrcodes,
-        isReferral: isHealthFacilityWorker));
+    bloc.add(ScannerEvent.handleScanner(
+      result,
+      bloc.state.qrcodes,
+      isReferral: isHealthFacilityWorker,
+    ));
     setState(() {
       result = result;
     });

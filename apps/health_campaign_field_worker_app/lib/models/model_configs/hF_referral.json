@@ -26,7 +26,7 @@
       "includeForQuery": true
     },
     {
-      "name": "facilityId",
+      "name": "projectFacilityId",
       "type": "String",
       "includeForQuery": true
     },

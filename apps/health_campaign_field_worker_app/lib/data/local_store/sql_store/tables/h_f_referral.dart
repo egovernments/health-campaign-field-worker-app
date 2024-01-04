@@ -8,7 +8,7 @@ class HFReferral extends Table {
   TextColumn get tenantId => text().nullable()();
   TextColumn get name => text().nullable()();
   TextColumn get projectId => text().nullable()();
-  TextColumn get facilityId => text().nullable()();
+  TextColumn get projectFacilityId => text().nullable()();
   TextColumn get symptomSurveyId => text().nullable()();
   TextColumn get beneficiaryId => text().nullable()();
   TextColumn get referralCode => text().nullable()();

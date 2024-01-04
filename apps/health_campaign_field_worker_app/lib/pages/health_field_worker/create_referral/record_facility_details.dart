@@ -56,7 +56,7 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
       builder: (ctx, facilityState) {
         return facilityState.maybeWhen(
           orElse: () => const SizedBox.shrink(),
-          fetched: (_, facilities) {
+          fetched: (facilities, _) {
             final projectFacilities = facilities
                 .where((e) => e.id != 'N/A' && e.id != 'Delivery Team')
                 .toList();
@@ -348,7 +348,8 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
         value: referralState.mapOrNull(
           create: (value) => value.viewOnly
               ? facilities
-                  .where((e) => e.id == value.hfReferralModel?.facilityId)
+                  .where(
+                      (e) => e.id == value.hfReferralModel?.projectFacilityId)
                   .first
               : null,
         ),

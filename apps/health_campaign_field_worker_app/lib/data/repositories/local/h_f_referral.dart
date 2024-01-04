@@ -148,7 +148,7 @@ class HFReferralLocalRepository
             isDeleted: referral.isDeleted,
             name: referral.name,
             projectId: referral.projectId,
-            facilityId: referral.facilityId,
+            projectFacilityId: referral.projectFacilityId,
             symptom: referral.symptom,
             symptomSurveyId: referral.symptomSurveyId,
             beneficiaryId: referral.beneficiaryId,

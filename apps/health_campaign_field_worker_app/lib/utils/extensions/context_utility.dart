@@ -46,6 +46,19 @@ extension ContextUtilityExtensions on BuildContext {
     return selectedCycle;
   }
 
+  ProjectType? get selectedProjectType {
+    final projectBloc = _get<ProjectBloc>();
+
+    final projectState = projectBloc.state;
+    final projectType = projectState.projectType;
+
+    if (selectedCycle == null) {
+      return null;
+    }
+
+    return projectType;
+  }
+
   List<String> get cycles {
     final projectBloc = _get<ProjectBloc>();
 

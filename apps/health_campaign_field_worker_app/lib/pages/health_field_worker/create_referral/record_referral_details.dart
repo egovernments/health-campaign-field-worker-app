@@ -161,8 +161,8 @@ class _RecordReferralDetailsPageState
                                         final nameOfChild = form
                                             .control(_nameOfChildKey)
                                             .value as String;
-                                        final age = form.control(_ageKey).value
-                                            as String;
+                                        final age =
+                                            form.control(_ageKey).value as int;
                                         final gender = form
                                             .control(_genderKey)
                                             .value as String;
@@ -200,7 +200,7 @@ class _RecordReferralDetailsPageState
                                           RecordHFReferralCreateEntryEvent(
                                             hfReferralModel: HFReferralModel(
                                               clientReferenceId: hfClientRefId,
-                                              facilityId: facilityId,
+                                              projectFacilityId: facilityId,
                                               projectId: context.projectId,
                                               name: nameOfChild,
                                               beneficiaryId: beneficiaryId,
@@ -440,6 +440,16 @@ class _RecordReferralDetailsPageState
                                               localizations.translate(
                                                 i18.common.corecommonRequired,
                                               ),
+                                          'max': (_) => localizations.translate(
+                                                i18.common.maxCharsRequired
+                                                  ..replaceAll(
+                                                    '{}',
+                                                    (context.selectedProjectType
+                                                                ?.validMaxAge ??
+                                                            '')
+                                                        .toString(),
+                                                  ),
+                                              ),
                                         },
                                       ),
                                       BlocBuilder<AppInitializationBloc,
@@ -624,7 +634,7 @@ class _RecordReferralDetailsPageState
             ) ??
             false,
       ),
-      _ageKey: FormControl<String>(
+      _ageKey: FormControl<int>(
         value: referralState.mapOrNull(
           create: (value) => value.viewOnly
               ? value.hfReferralModel?.additionalFields?.fields
@@ -639,6 +649,8 @@ class _RecordReferralDetailsPageState
             false,
         validators: [
           Validators.required,
+          if (context.selectedProjectType?.validMaxAge != null)
+            Validators.max(context.selectedProjectType?.validMaxAge),
         ],
       ),
       _referralReason: FormControl<KeyValue>(

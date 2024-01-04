@@ -72,7 +72,7 @@ class SideBar extends StatelessWidget {
                           ),
                         ),
                         child: QrImageView(
-                          data: 'BeneficiaryID12345678',
+                          data: context.loggedInUserUuid,
                           version: QrVersions.auto,
                           size: 150.0,
                         ),
@@ -155,7 +155,11 @@ class SideBar extends StatelessWidget {
                                   return DigitRowCardModel(
                                     label: e.label,
                                     value: e.value,
-                                    isSelected: languages[index].value == AppSharedPreferences().getSelectedLocale ? true : false,
+                                    isSelected: languages[index].value ==
+                                            AppSharedPreferences()
+                                                .getSelectedLocale
+                                        ? true
+                                        : false,
                                   );
                                 }).toList(),
                                 width: (MediaQuery.of(context).size.width *

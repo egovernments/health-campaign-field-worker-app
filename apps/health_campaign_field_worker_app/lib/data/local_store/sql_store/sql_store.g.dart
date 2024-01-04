@@ -32996,7 +32996,7 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
   final String? tenantId;
   final String? name;
   final String? projectId;
-  final String? facilityId;
+  final String? projectFacilityId;
   final String? symptomSurveyId;
   final String? beneficiaryId;
   final String? referralCode;
@@ -33020,7 +33020,7 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
       this.tenantId,
       this.name,
       this.projectId,
-      this.facilityId,
+      this.projectFacilityId,
       this.symptomSurveyId,
       this.beneficiaryId,
       this.referralCode,
@@ -33050,8 +33050,8 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
           .mapFromDatabaseResponse(data['${effectivePrefix}name']),
       projectId: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}project_id']),
-      facilityId: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}facility_id']),
+      projectFacilityId: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}project_facility_id']),
       symptomSurveyId: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}symptom_survey_id']),
       beneficiaryId: const StringType()
@@ -33105,8 +33105,8 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
     if (!nullToAbsent || projectId != null) {
       map['project_id'] = Variable<String?>(projectId);
     }
-    if (!nullToAbsent || facilityId != null) {
-      map['facility_id'] = Variable<String?>(facilityId);
+    if (!nullToAbsent || projectFacilityId != null) {
+      map['project_facility_id'] = Variable<String?>(projectFacilityId);
     }
     if (!nullToAbsent || symptomSurveyId != null) {
       map['symptom_survey_id'] = Variable<String?>(symptomSurveyId);
@@ -33173,9 +33173,9 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
       projectId: projectId == null && nullToAbsent
           ? const Value.absent()
           : Value(projectId),
-      facilityId: facilityId == null && nullToAbsent
+      projectFacilityId: projectFacilityId == null && nullToAbsent
           ? const Value.absent()
-          : Value(facilityId),
+          : Value(projectFacilityId),
       symptomSurveyId: symptomSurveyId == null && nullToAbsent
           ? const Value.absent()
           : Value(symptomSurveyId),
@@ -33239,7 +33239,8 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
       tenantId: serializer.fromJson<String?>(json['tenantId']),
       name: serializer.fromJson<String?>(json['name']),
       projectId: serializer.fromJson<String?>(json['projectId']),
-      facilityId: serializer.fromJson<String?>(json['facilityId']),
+      projectFacilityId:
+          serializer.fromJson<String?>(json['projectFacilityId']),
       symptomSurveyId: serializer.fromJson<String?>(json['symptomSurveyId']),
       beneficiaryId: serializer.fromJson<String?>(json['beneficiaryId']),
       referralCode: serializer.fromJson<String?>(json['referralCode']),
@@ -33269,7 +33270,7 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
       'tenantId': serializer.toJson<String?>(tenantId),
       'name': serializer.toJson<String?>(name),
       'projectId': serializer.toJson<String?>(projectId),
-      'facilityId': serializer.toJson<String?>(facilityId),
+      'projectFacilityId': serializer.toJson<String?>(projectFacilityId),
       'symptomSurveyId': serializer.toJson<String?>(symptomSurveyId),
       'beneficiaryId': serializer.toJson<String?>(beneficiaryId),
       'referralCode': serializer.toJson<String?>(referralCode),
@@ -33296,7 +33297,7 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
           String? tenantId,
           String? name,
           String? projectId,
-          String? facilityId,
+          String? projectFacilityId,
           String? symptomSurveyId,
           String? beneficiaryId,
           String? referralCode,
@@ -33320,7 +33321,7 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
         tenantId: tenantId ?? this.tenantId,
         name: name ?? this.name,
         projectId: projectId ?? this.projectId,
-        facilityId: facilityId ?? this.facilityId,
+        projectFacilityId: projectFacilityId ?? this.projectFacilityId,
         symptomSurveyId: symptomSurveyId ?? this.symptomSurveyId,
         beneficiaryId: beneficiaryId ?? this.beneficiaryId,
         referralCode: referralCode ?? this.referralCode,
@@ -33347,7 +33348,7 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
           ..write('tenantId: $tenantId, ')
           ..write('name: $name, ')
           ..write('projectId: $projectId, ')
-          ..write('facilityId: $facilityId, ')
+          ..write('projectFacilityId: $projectFacilityId, ')
           ..write('symptomSurveyId: $symptomSurveyId, ')
           ..write('beneficiaryId: $beneficiaryId, ')
           ..write('referralCode: $referralCode, ')
@@ -33376,7 +33377,7 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
         tenantId,
         name,
         projectId,
-        facilityId,
+        projectFacilityId,
         symptomSurveyId,
         beneficiaryId,
         referralCode,
@@ -33404,7 +33405,7 @@ class HFReferralData extends DataClass implements Insertable<HFReferralData> {
           other.tenantId == this.tenantId &&
           other.name == this.name &&
           other.projectId == this.projectId &&
-          other.facilityId == this.facilityId &&
+          other.projectFacilityId == this.projectFacilityId &&
           other.symptomSurveyId == this.symptomSurveyId &&
           other.beneficiaryId == this.beneficiaryId &&
           other.referralCode == this.referralCode &&
@@ -33430,7 +33431,7 @@ class HFReferralCompanion extends UpdateCompanion<HFReferralData> {
   final Value<String?> tenantId;
   final Value<String?> name;
   final Value<String?> projectId;
-  final Value<String?> facilityId;
+  final Value<String?> projectFacilityId;
   final Value<String?> symptomSurveyId;
   final Value<String?> beneficiaryId;
   final Value<String?> referralCode;
@@ -33454,7 +33455,7 @@ class HFReferralCompanion extends UpdateCompanion<HFReferralData> {
     this.tenantId = const Value.absent(),
     this.name = const Value.absent(),
     this.projectId = const Value.absent(),
-    this.facilityId = const Value.absent(),
+    this.projectFacilityId = const Value.absent(),
     this.symptomSurveyId = const Value.absent(),
     this.beneficiaryId = const Value.absent(),
     this.referralCode = const Value.absent(),
@@ -33479,7 +33480,7 @@ class HFReferralCompanion extends UpdateCompanion<HFReferralData> {
     this.tenantId = const Value.absent(),
     this.name = const Value.absent(),
     this.projectId = const Value.absent(),
-    this.facilityId = const Value.absent(),
+    this.projectFacilityId = const Value.absent(),
     this.symptomSurveyId = const Value.absent(),
     this.beneficiaryId = const Value.absent(),
     this.referralCode = const Value.absent(),
@@ -33504,7 +33505,7 @@ class HFReferralCompanion extends UpdateCompanion<HFReferralData> {
     Expression<String?>? tenantId,
     Expression<String?>? name,
     Expression<String?>? projectId,
-    Expression<String?>? facilityId,
+    Expression<String?>? projectFacilityId,
     Expression<String?>? symptomSurveyId,
     Expression<String?>? beneficiaryId,
     Expression<String?>? referralCode,
@@ -33529,7 +33530,7 @@ class HFReferralCompanion extends UpdateCompanion<HFReferralData> {
       if (tenantId != null) 'tenant_id': tenantId,
       if (name != null) 'name': name,
       if (projectId != null) 'project_id': projectId,
-      if (facilityId != null) 'facility_id': facilityId,
+      if (projectFacilityId != null) 'project_facility_id': projectFacilityId,
       if (symptomSurveyId != null) 'symptom_survey_id': symptomSurveyId,
       if (beneficiaryId != null) 'beneficiary_id': beneficiaryId,
       if (referralCode != null) 'referral_code': referralCode,
@@ -33558,7 +33559,7 @@ class HFReferralCompanion extends UpdateCompanion<HFReferralData> {
       Value<String?>? tenantId,
       Value<String?>? name,
       Value<String?>? projectId,
-      Value<String?>? facilityId,
+      Value<String?>? projectFacilityId,
       Value<String?>? symptomSurveyId,
       Value<String?>? beneficiaryId,
       Value<String?>? referralCode,
@@ -33582,7 +33583,7 @@ class HFReferralCompanion extends UpdateCompanion<HFReferralData> {
       tenantId: tenantId ?? this.tenantId,
       name: name ?? this.name,
       projectId: projectId ?? this.projectId,
-      facilityId: facilityId ?? this.facilityId,
+      projectFacilityId: projectFacilityId ?? this.projectFacilityId,
       symptomSurveyId: symptomSurveyId ?? this.symptomSurveyId,
       beneficiaryId: beneficiaryId ?? this.beneficiaryId,
       referralCode: referralCode ?? this.referralCode,
@@ -33619,8 +33620,8 @@ class HFReferralCompanion extends UpdateCompanion<HFReferralData> {
     if (projectId.present) {
       map['project_id'] = Variable<String?>(projectId.value);
     }
-    if (facilityId.present) {
-      map['facility_id'] = Variable<String?>(facilityId.value);
+    if (projectFacilityId.present) {
+      map['project_facility_id'] = Variable<String?>(projectFacilityId.value);
     }
     if (symptomSurveyId.present) {
       map['symptom_survey_id'] = Variable<String?>(symptomSurveyId.value);
@@ -33686,7 +33687,7 @@ class HFReferralCompanion extends UpdateCompanion<HFReferralData> {
           ..write('tenantId: $tenantId, ')
           ..write('name: $name, ')
           ..write('projectId: $projectId, ')
-          ..write('facilityId: $facilityId, ')
+          ..write('projectFacilityId: $projectFacilityId, ')
           ..write('symptomSurveyId: $symptomSurveyId, ')
           ..write('beneficiaryId: $beneficiaryId, ')
           ..write('referralCode: $referralCode, ')
@@ -33736,11 +33737,12 @@ class $HFReferralTable extends HFReferral
   late final GeneratedColumn<String?> projectId = GeneratedColumn<String?>(
       'project_id', aliasedName, true,
       type: const StringType(), requiredDuringInsert: false);
-  final VerificationMeta _facilityIdMeta = const VerificationMeta('facilityId');
+  final VerificationMeta _projectFacilityIdMeta =
+      const VerificationMeta('projectFacilityId');
   @override
-  late final GeneratedColumn<String?> facilityId = GeneratedColumn<String?>(
-      'facility_id', aliasedName, true,
-      type: const StringType(), requiredDuringInsert: false);
+  late final GeneratedColumn<String?> projectFacilityId =
+      GeneratedColumn<String?>('project_facility_id', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _symptomSurveyIdMeta =
       const VerificationMeta('symptomSurveyId');
   @override
@@ -33858,7 +33860,7 @@ class $HFReferralTable extends HFReferral
         tenantId,
         name,
         projectId,
-        facilityId,
+        projectFacilityId,
         symptomSurveyId,
         beneficiaryId,
         referralCode,
@@ -33902,11 +33904,11 @@ class $HFReferralTable extends HFReferral
       context.handle(_projectIdMeta,
           projectId.isAcceptableOrUnknown(data['project_id']!, _projectIdMeta));
     }
-    if (data.containsKey('facility_id')) {
+    if (data.containsKey('project_facility_id')) {
       context.handle(
-          _facilityIdMeta,
-          facilityId.isAcceptableOrUnknown(
-              data['facility_id']!, _facilityIdMeta));
+          _projectFacilityIdMeta,
+          projectFacilityId.isAcceptableOrUnknown(
+              data['project_facility_id']!, _projectFacilityIdMeta));
     }
     if (data.containsKey('symptom_survey_id')) {
       context.handle(

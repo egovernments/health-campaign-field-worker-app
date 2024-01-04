@@ -11,7 +11,7 @@ class HFReferralSearchModel extends EntitySearchModel {
   final String? tenantId;
   final String? name;
   final String? projectId;
-  final String? facilityId;
+  final String? projectFacilityId;
   final String? symptomSurveyId;
   final String? beneficiaryId;
   final String? referralCode;
@@ -24,7 +24,7 @@ class HFReferralSearchModel extends EntitySearchModel {
     this.tenantId,
     this.name,
     this.projectId,
-    this.facilityId,
+    this.projectFacilityId,
     this.symptomSurveyId,
     this.beneficiaryId,
     this.referralCode,
@@ -41,7 +41,7 @@ class HFReferralSearchModel extends EntitySearchModel {
     this.tenantId,
     this.name,
     this.projectId,
-    this.facilityId,
+    this.projectFacilityId,
     this.symptomSurveyId,
     this.beneficiaryId,
     this.referralCode,
@@ -61,7 +61,7 @@ class HFReferralModel extends EntityModel {
   final String? tenantId;
   final String? name;
   final String? projectId;
-  final String? facilityId;
+  final String? projectFacilityId;
   final String? symptomSurveyId;
   final String? beneficiaryId;
   final String? referralCode;
@@ -78,7 +78,7 @@ class HFReferralModel extends EntityModel {
     this.tenantId,
     this.name,
     this.projectId,
-    this.facilityId,
+    this.projectFacilityId,
     this.symptomSurveyId,
     this.beneficiaryId,
     this.referralCode,
@@ -107,7 +107,7 @@ class HFReferralModel extends EntityModel {
       tenantId: Value(tenantId),
       name: Value(name),
       projectId: Value(projectId),
-      facilityId: Value(facilityId),
+      projectFacilityId: Value(projectFacilityId),
       symptomSurveyId: Value(symptomSurveyId),
       beneficiaryId: Value(beneficiaryId),
       referralCode: Value(referralCode),
