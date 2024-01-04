@@ -384,7 +384,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.beneficiaryReferralLabel:
           homeShowcaseData.beneficiaryReferral.buildWith(
         child: HomeItemCard(
-          icon: Icons.people_alt_rounded,
+          icon: Icons.supervised_user_circle_rounded,
           label: i18.home.beneficiaryReferralLabel,
           onPressed: () async {
             final searchBloc = context.read<SearchReferralsBloc>();

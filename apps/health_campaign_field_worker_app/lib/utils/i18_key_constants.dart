@@ -1782,8 +1782,7 @@ class ReferBeneficiary {
   String get referralCodeLabel => 'REFERRAL_CODE_LABEL';
   String get reasonForReferralHeader => 'REASON_FOR_REFERRAL_HEADER';
   String get searchReferralsHeader => 'SEARCH_REFERRALS_HEADER';
-  String get referredByTeamCodeLabel => 'REFERRED_BY_TEAM_CODE_LABEL'
-      ''
-      '';
+  String get referredByTeamCodeLabel => 'REFERRED_BY_TEAM_CODE_LABEL';
+  String get selectCycle => 'REFERRAL_SELECT_CYCLE';
   String get createReferralLabel => 'CREATE_REFERRAL_LABEL';
 }

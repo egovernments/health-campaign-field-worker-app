@@ -265,13 +265,13 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
                                       i18.referBeneficiary
                                           .healthFacilityCoordinatorLabel,
                                     ),
-                                    validationMessages: {
-                                      'required': (_) =>
-                                          localizations.translate(
-                                            i18.common.corecommonRequired,
-                                          ),
-                                    },
-                                    isRequired: true,
+                                    // validationMessages: {
+                                    //   'required': (_) =>
+                                    //       localizations.translate(
+                                    //         i18.common.corecommonRequired,
+                                    //       ),
+                                    // },
+                                    // isRequired: true,
                                     readOnly: viewOnly,
                                   ),
                                   DigitTextFormField(
@@ -322,9 +322,14 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
     return fb.group(<String, Object>{
       _dateOfEvaluationKey: FormControl<DateTime>(
         value: dateOfEvaluation,
-        validators: [Validators.max(DateTime.now())],
+        validators: [Validators.max(DateTime.now()), Validators.required],
       ),
-      _administrativeUnitKey: FormControl<String>(value: context.boundary.name),
+      _administrativeUnitKey: FormControl<String>(
+        value: context.boundary.name,
+        validators: [
+          Validators.required,
+        ],
+      ),
       _hfCoordinatorKey: FormControl<String>(
         value: referralState.mapOrNull(
           create: (value) => value.viewOnly
@@ -335,6 +340,9 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
                   .value
               : context.loggedInUser.name,
         ),
+        // validators: [
+        //   Validators.required,
+        // ],
       ),
       _evaluationFacilityKey: FormControl<FacilityModel>(
         value: referralState.mapOrNull(

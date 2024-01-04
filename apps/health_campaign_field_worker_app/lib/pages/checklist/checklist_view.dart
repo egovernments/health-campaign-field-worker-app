@@ -60,7 +60,9 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
         .isNotEmpty;
 
     return WillPopScope(
-      onWillPop: () => _onBackPressed(context),
+      onWillPop: isHealthFacilityWorker && widget.referralClientRefId != null
+          ? () async => false
+          : () async => _onBackPressed(context),
       child: Scaffold(
         body: BlocBuilder<ServiceDefinitionBloc, ServiceDefinitionState>(
           builder: (context, state) {
@@ -84,8 +86,10 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
               orElse: () => Text(state.runtimeType.toString()),
               serviceDefinitionFetch: (value) {
                 return ScrollableContent(
-                  header: const Column(children: [
-                    BackNavigationHelpHeaderWidget(),
+                  header: Column(children: [
+                    if (!(isHealthFacilityWorker &&
+                        widget.referralClientRefId != null))
+                      const BackNavigationHelpHeaderWidget(),
                   ]),
                   enableFixedButton: true,
                   footer: DigitCard(

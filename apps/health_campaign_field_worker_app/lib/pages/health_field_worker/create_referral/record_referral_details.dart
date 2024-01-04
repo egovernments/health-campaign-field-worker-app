@@ -90,7 +90,23 @@ class _RecordReferralDetailsPageState
                               onPressed: isClicked
                                   ? null
                                   : () {
-                                      if (form.control(_referralReason).value ==
+                                      if (form.control(_cycleKey).value ==
+                                          null) {
+                                        clickedStatus.value = false;
+                                        form
+                                            .control(_cycleKey)
+                                            .setErrors({'': true});
+                                      } else if (form
+                                              .control(_genderKey)
+                                              .value ==
+                                          null) {
+                                        clickedStatus.value = false;
+                                        form
+                                            .control(_genderKey)
+                                            .setErrors({'': true});
+                                      } else if (form
+                                              .control(_referralReason)
+                                              .value ==
                                           null) {
                                         clickedStatus.value = false;
                                         form
@@ -359,15 +375,20 @@ class _RecordReferralDetailsPageState
                                     Column(children: [
                                       DigitReactiveSearchDropdown<String>(
                                         label: localizations.translate(
-                                          i18.deliverIntervention.cycle,
+                                          i18.referBeneficiary.selectCycle,
                                         ),
                                         form: form,
+                                        isRequired: true,
                                         enabled: !viewOnly,
                                         menuItems: context.cycles,
                                         formControlName: _cycleKey,
                                         valueMapper: (value) {
                                           return '${localizations.translate(i18.deliverIntervention.cycle)} $value';
                                         },
+                                        validationMessage:
+                                            localizations.translate(
+                                          i18.common.corecommonRequired,
+                                        ),
                                         emptyText: localizations
                                             .translate(i18.common.noMatchFound),
                                       ),
@@ -446,6 +467,10 @@ class _RecordReferralDetailsPageState
                                                     (e) => e.name,
                                                   )
                                                   .toList(),
+                                              validationMessage:
+                                                  localizations.translate(
+                                                i18.common.corecommonRequired,
+                                              ),
                                               formControlName: _genderKey,
                                               valueMapper: (value) {
                                                 return localizations
@@ -547,16 +572,16 @@ class _RecordReferralDetailsPageState
               create: (value) => value.viewOnly,
             ) ??
             false,
-        validators: [Validators.required],
       ),
       _nameOfChildKey: FormControl<String>(
         value: referralState.mapOrNull(
           create: (value) => value.viewOnly
               ? value.hfReferralModel?.additionalFields?.fields
-                  .where((e) => e.key == AdditionalFieldsType.cycle.toValue())
+                  .where((e) =>
+                      e.key == AdditionalFieldsType.nameOfReferral.toValue())
                   .first
                   .value
-              : null,
+              : value.hfReferralModel?.name ?? '',
         ),
         disabled: referralState.mapOrNull(
               create: (value) => value.viewOnly,
@@ -568,8 +593,7 @@ class _RecordReferralDetailsPageState
       ),
       _beneficiaryIdKey: FormControl<String>(
         value: referralState.mapOrNull(
-          create: (value) =>
-              value.viewOnly ? value.hfReferralModel?.beneficiaryId : null,
+          create: (value) => value.hfReferralModel?.beneficiaryId,
         ),
         disabled: referralState.mapOrNull(
               create: (value) => value.viewOnly,
@@ -613,6 +637,9 @@ class _RecordReferralDetailsPageState
               create: (value) => value.viewOnly,
             ) ??
             false,
+        validators: [
+          Validators.required,
+        ],
       ),
       _referralReason: FormControl<KeyValue>(
         value: referralState.mapOrNull(
@@ -628,6 +655,9 @@ class _RecordReferralDetailsPageState
               create: (value) => value.viewOnly,
             ) ??
             false,
+        // validators: [
+        //   Validators.required,
+        // ],
       ),
     });
   }

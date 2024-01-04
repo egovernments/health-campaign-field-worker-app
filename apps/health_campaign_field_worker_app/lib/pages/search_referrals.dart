@@ -6,6 +6,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/scanner/scanner.dart';
 import '../blocs/search_referrals/search_referrals.dart';
+import '../models/data_model.dart';
 import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
@@ -161,14 +162,20 @@ class _SearchReferralsPageState extends LocalizedState<SearchReferralsPage> {
                               : () {
                                   FocusManager.instance.primaryFocus?.unfocus();
                                   final bloc =
-                                  context.read<SearchReferralsBloc>();
-                                  bloc.add(
-                                    const SearchReferralsClearEvent(),
-                                  );
+                                      context.read<SearchReferralsBloc>();
                                   router.push(
                                     HFCreateReferralWrapperRoute(
                                       viewOnly: false,
+                                      hfReferralModel: HFReferralModel(
+                                        clientReferenceId: '',
+                                        name: state.searchQuery,
+                                        beneficiaryId: state.tag,
+                                      ),
                                     ),
+                                  );
+                                  searchController.clear();
+                                  bloc.add(
+                                    const SearchReferralsClearEvent(),
                                   );
                                 };
 
