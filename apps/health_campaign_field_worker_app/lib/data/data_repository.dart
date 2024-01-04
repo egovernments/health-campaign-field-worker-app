@@ -97,6 +97,10 @@ abstract class RemoteRepository<D extends EntityModel,
           );
         },
       );
+      AppLogger.instance.info(
+        'search Response Result: ${response.data}',
+        title: 'Data Repo',
+      );
     } catch (error) {
       return [];
     }
@@ -137,8 +141,22 @@ abstract class RemoteRepository<D extends EntityModel,
     }
 
     final entityList = entityResponse.whereType<Map<String, dynamic>>();
+    var mapperRes = <D>[];
+    try {
+      AppLogger.instance.error(
+        message: 'mappercontainer ${MapperContainer.globals}',
+        title: 'Mapper Contianer',
+      );
+      mapperRes = entityList.map((e) =>
+          MapperContainer.globals.fromMap<D>(e)).toList();
+    } catch (e) {
+      AppLogger.instance.error(
+        message: e.toString(),
+        title: 'Data Repo',
+      );
+    }
 
-    return entityList.map((e) => MapperContainer.globals.fromMap<D>(e)).toList();
+    return mapperRes;
   }
 
   FutureOr<Response> singleCreate(D entity) async {
@@ -345,7 +363,7 @@ abstract class RemoteRepository<D extends EntityModel,
   }
 
   List<Map<String, dynamic>> _getMap(List<EntityModel> entities) {
-    return entities.map((e) => MapperContainer.globals.toMap(e)).toList();
+    return entities.map((e) => EntityModelMapper.fromMap(e.toMap()).toMap()).toList();
   }
 
   FutureOr<T> executeFuture<T>({

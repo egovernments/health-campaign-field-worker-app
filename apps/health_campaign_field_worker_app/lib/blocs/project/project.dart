@@ -145,6 +145,10 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       projectStaffList = await projectStaffRemoteRepository.search(
         ProjectStaffSearchModel(staffId: uuid),
       );
+      AppLogger.instance.info(
+        'projectStaff Result: $projectStaffList',
+        title: 'Selected Project ProjectBloc',
+      );
     } catch (error) {
       emit(
         state.copyWith(

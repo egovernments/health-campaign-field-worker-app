@@ -7,7 +7,7 @@
 part of 'project_staff.dart';
 
 class ProjectStaffSearchModelMapper
-    extends SubClassMapperBase<ProjectStaffSearchModel> {
+    extends ClassMapperBase<ProjectStaffSearchModel> {
   ProjectStaffSearchModelMapper._();
 
   static ProjectStaffSearchModelMapper? _instance;
@@ -15,7 +15,7 @@ class ProjectStaffSearchModelMapper
     if (_instance == null) {
       MapperContainer.globals
           .use(_instance = ProjectStaffSearchModelMapper._());
-      EntitySearchModelMapper.ensureInitialized().addSubMapper(_instance!);
+      EntitySearchModelMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -81,14 +81,6 @@ class ProjectStaffSearchModelMapper
   };
   @override
   final bool ignoreNull = true;
-
-  @override
-  final String discriminatorKey = 'type';
-  @override
-  final dynamic discriminatorValue = MappableClass.useAsDefault;
-  @override
-  late final ClassMapperBase superMapper =
-      EntitySearchModelMapper.ensureInitialized();
 
   static ProjectStaffSearchModel _instantiate(DecodingData data) {
     return ProjectStaffSearchModel.ignoreDeleted(
@@ -222,14 +214,165 @@ class _ProjectStaffSearchModelCopyWithImpl<$R, $Out>
           _ProjectStaffSearchModelCopyWithImpl($value, $cast, t);
 }
 
-class ProjectStaffModelMapper extends SubClassMapperBase<ProjectStaffModel> {
+class ProjectStaffAdditionalFieldsMapper
+    extends ClassMapperBase<ProjectStaffAdditionalFields> {
+  ProjectStaffAdditionalFieldsMapper._();
+
+  static ProjectStaffAdditionalFieldsMapper? _instance;
+  static ProjectStaffAdditionalFieldsMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals
+          .use(_instance = ProjectStaffAdditionalFieldsMapper._());
+      AdditionalFieldsMapper.ensureInitialized();
+      AdditionalFieldMapper.ensureInitialized();
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'ProjectStaffAdditionalFields';
+
+  static String _$schema(ProjectStaffAdditionalFields v) => v.schema;
+  static const Field<ProjectStaffAdditionalFields, String> _f$schema =
+      Field('schema', _$schema, opt: true, def: 'ProjectStaff');
+  static int _$version(ProjectStaffAdditionalFields v) => v.version;
+  static const Field<ProjectStaffAdditionalFields, int> _f$version =
+      Field('version', _$version);
+  static List<AdditionalField> _$fields(ProjectStaffAdditionalFields v) =>
+      v.fields;
+  static const Field<ProjectStaffAdditionalFields, List<AdditionalField>>
+      _f$fields = Field('fields', _$fields, opt: true, def: const []);
+
+  @override
+  final MappableFields<ProjectStaffAdditionalFields> fields = const {
+    #schema: _f$schema,
+    #version: _f$version,
+    #fields: _f$fields,
+  };
+  @override
+  final bool ignoreNull = true;
+
+  static ProjectStaffAdditionalFields _instantiate(DecodingData data) {
+    return ProjectStaffAdditionalFields(
+        schema: data.dec(_f$schema),
+        version: data.dec(_f$version),
+        fields: data.dec(_f$fields));
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static ProjectStaffAdditionalFields fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<ProjectStaffAdditionalFields>(map);
+  }
+
+  static ProjectStaffAdditionalFields fromJson(String json) {
+    return ensureInitialized().decodeJson<ProjectStaffAdditionalFields>(json);
+  }
+}
+
+mixin ProjectStaffAdditionalFieldsMappable {
+  String toJson() {
+    return ProjectStaffAdditionalFieldsMapper.ensureInitialized()
+        .encodeJson<ProjectStaffAdditionalFields>(
+            this as ProjectStaffAdditionalFields);
+  }
+
+  Map<String, dynamic> toMap() {
+    return ProjectStaffAdditionalFieldsMapper.ensureInitialized()
+        .encodeMap<ProjectStaffAdditionalFields>(
+            this as ProjectStaffAdditionalFields);
+  }
+
+  ProjectStaffAdditionalFieldsCopyWith<ProjectStaffAdditionalFields,
+          ProjectStaffAdditionalFields, ProjectStaffAdditionalFields>
+      get copyWith => _ProjectStaffAdditionalFieldsCopyWithImpl(
+          this as ProjectStaffAdditionalFields, $identity, $identity);
+  @override
+  String toString() {
+    return ProjectStaffAdditionalFieldsMapper.ensureInitialized()
+        .stringifyValue(this as ProjectStaffAdditionalFields);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            ProjectStaffAdditionalFieldsMapper.ensureInitialized()
+                .isValueEqual(this as ProjectStaffAdditionalFields, other));
+  }
+
+  @override
+  int get hashCode {
+    return ProjectStaffAdditionalFieldsMapper.ensureInitialized()
+        .hashValue(this as ProjectStaffAdditionalFields);
+  }
+}
+
+extension ProjectStaffAdditionalFieldsValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, ProjectStaffAdditionalFields, $Out> {
+  ProjectStaffAdditionalFieldsCopyWith<$R, ProjectStaffAdditionalFields, $Out>
+      get $asProjectStaffAdditionalFields => $base.as(
+          (v, t, t2) => _ProjectStaffAdditionalFieldsCopyWithImpl(v, t, t2));
+}
+
+abstract class ProjectStaffAdditionalFieldsCopyWith<
+    $R,
+    $In extends ProjectStaffAdditionalFields,
+    $Out> implements AdditionalFieldsCopyWith<$R, $In, $Out> {
+  @override
+  ListCopyWith<$R, AdditionalField,
+      AdditionalFieldCopyWith<$R, AdditionalField, AdditionalField>> get fields;
+  @override
+  $R call({String? schema, int? version, List<AdditionalField>? fields});
+  ProjectStaffAdditionalFieldsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
+      Then<$Out2, $R2> t);
+}
+
+class _ProjectStaffAdditionalFieldsCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, ProjectStaffAdditionalFields, $Out>
+    implements
+        ProjectStaffAdditionalFieldsCopyWith<$R, ProjectStaffAdditionalFields,
+            $Out> {
+  _ProjectStaffAdditionalFieldsCopyWithImpl(
+      super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<ProjectStaffAdditionalFields> $mapper =
+      ProjectStaffAdditionalFieldsMapper.ensureInitialized();
+  @override
+  ListCopyWith<$R, AdditionalField,
+          AdditionalFieldCopyWith<$R, AdditionalField, AdditionalField>>
+      get fields => ListCopyWith($value.fields, (v, t) => v.copyWith.$chain(t),
+          (v) => call(fields: v));
+  @override
+  $R call({String? schema, int? version, List<AdditionalField>? fields}) =>
+      $apply(FieldCopyWithData({
+        if (schema != null) #schema: schema,
+        if (version != null) #version: version,
+        if (fields != null) #fields: fields
+      }));
+  @override
+  ProjectStaffAdditionalFields $make(CopyWithData data) =>
+      ProjectStaffAdditionalFields(
+          schema: data.get(#schema, or: $value.schema),
+          version: data.get(#version, or: $value.version),
+          fields: data.get(#fields, or: $value.fields));
+
+  @override
+  ProjectStaffAdditionalFieldsCopyWith<$R2, ProjectStaffAdditionalFields, $Out2>
+      $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+          _ProjectStaffAdditionalFieldsCopyWithImpl($value, $cast, t);
+}
+
+class ProjectStaffModelMapper extends ClassMapperBase<ProjectStaffModel> {
   ProjectStaffModelMapper._();
 
   static ProjectStaffModelMapper? _instance;
   static ProjectStaffModelMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = ProjectStaffModelMapper._());
-      EntityModelMapper.ensureInitialized().addSubMapper(_instance!);
+      EntityModelMapper.ensureInitialized();
       ProjectStaffAdditionalFieldsMapper.ensureInitialized();
       AuditDetailsMapper.ensureInitialized();
       ClientAuditDetailsMapper.ensureInitialized();
@@ -316,14 +459,6 @@ class ProjectStaffModelMapper extends SubClassMapperBase<ProjectStaffModel> {
   };
   @override
   final bool ignoreNull = true;
-
-  @override
-  final String discriminatorKey = 'type';
-  @override
-  final dynamic discriminatorValue = MappableClass.useAsDefault;
-  @override
-  late final ClassMapperBase superMapper =
-      EntityModelMapper.ensureInitialized();
 
   static ProjectStaffModel _instantiate(DecodingData data) {
     return ProjectStaffModel(
@@ -505,163 +640,4 @@ class _ProjectStaffModelCopyWithImpl<$R, $Out>
   ProjectStaffModelCopyWith<$R2, ProjectStaffModel, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
       _ProjectStaffModelCopyWithImpl($value, $cast, t);
-}
-
-class ProjectStaffAdditionalFieldsMapper
-    extends SubClassMapperBase<ProjectStaffAdditionalFields> {
-  ProjectStaffAdditionalFieldsMapper._();
-
-  static ProjectStaffAdditionalFieldsMapper? _instance;
-  static ProjectStaffAdditionalFieldsMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals
-          .use(_instance = ProjectStaffAdditionalFieldsMapper._());
-      AdditionalFieldsMapper.ensureInitialized().addSubMapper(_instance!);
-      AdditionalFieldMapper.ensureInitialized();
-    }
-    return _instance!;
-  }
-
-  @override
-  final String id = 'ProjectStaffAdditionalFields';
-
-  static String _$schema(ProjectStaffAdditionalFields v) => v.schema;
-  static const Field<ProjectStaffAdditionalFields, String> _f$schema =
-      Field('schema', _$schema, opt: true, def: 'ProjectStaff');
-  static int _$version(ProjectStaffAdditionalFields v) => v.version;
-  static const Field<ProjectStaffAdditionalFields, int> _f$version =
-      Field('version', _$version);
-  static List<AdditionalField> _$fields(ProjectStaffAdditionalFields v) =>
-      v.fields;
-  static const Field<ProjectStaffAdditionalFields, List<AdditionalField>>
-      _f$fields = Field('fields', _$fields, opt: true, def: const []);
-
-  @override
-  final MappableFields<ProjectStaffAdditionalFields> fields = const {
-    #schema: _f$schema,
-    #version: _f$version,
-    #fields: _f$fields,
-  };
-  @override
-  final bool ignoreNull = true;
-
-  @override
-  final String discriminatorKey = 'type';
-  @override
-  final dynamic discriminatorValue = MappableClass.useAsDefault;
-  @override
-  late final ClassMapperBase superMapper =
-      AdditionalFieldsMapper.ensureInitialized();
-
-  static ProjectStaffAdditionalFields _instantiate(DecodingData data) {
-    return ProjectStaffAdditionalFields(
-        schema: data.dec(_f$schema),
-        version: data.dec(_f$version),
-        fields: data.dec(_f$fields));
-  }
-
-  @override
-  final Function instantiate = _instantiate;
-
-  static ProjectStaffAdditionalFields fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<ProjectStaffAdditionalFields>(map);
-  }
-
-  static ProjectStaffAdditionalFields fromJson(String json) {
-    return ensureInitialized().decodeJson<ProjectStaffAdditionalFields>(json);
-  }
-}
-
-mixin ProjectStaffAdditionalFieldsMappable {
-  String toJson() {
-    return ProjectStaffAdditionalFieldsMapper.ensureInitialized()
-        .encodeJson<ProjectStaffAdditionalFields>(
-            this as ProjectStaffAdditionalFields);
-  }
-
-  Map<String, dynamic> toMap() {
-    return ProjectStaffAdditionalFieldsMapper.ensureInitialized()
-        .encodeMap<ProjectStaffAdditionalFields>(
-            this as ProjectStaffAdditionalFields);
-  }
-
-  ProjectStaffAdditionalFieldsCopyWith<ProjectStaffAdditionalFields,
-          ProjectStaffAdditionalFields, ProjectStaffAdditionalFields>
-      get copyWith => _ProjectStaffAdditionalFieldsCopyWithImpl(
-          this as ProjectStaffAdditionalFields, $identity, $identity);
-  @override
-  String toString() {
-    return ProjectStaffAdditionalFieldsMapper.ensureInitialized()
-        .stringifyValue(this as ProjectStaffAdditionalFields);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ProjectStaffAdditionalFieldsMapper.ensureInitialized()
-                .isValueEqual(this as ProjectStaffAdditionalFields, other));
-  }
-
-  @override
-  int get hashCode {
-    return ProjectStaffAdditionalFieldsMapper.ensureInitialized()
-        .hashValue(this as ProjectStaffAdditionalFields);
-  }
-}
-
-extension ProjectStaffAdditionalFieldsValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, ProjectStaffAdditionalFields, $Out> {
-  ProjectStaffAdditionalFieldsCopyWith<$R, ProjectStaffAdditionalFields, $Out>
-      get $asProjectStaffAdditionalFields => $base.as(
-          (v, t, t2) => _ProjectStaffAdditionalFieldsCopyWithImpl(v, t, t2));
-}
-
-abstract class ProjectStaffAdditionalFieldsCopyWith<
-    $R,
-    $In extends ProjectStaffAdditionalFields,
-    $Out> implements AdditionalFieldsCopyWith<$R, $In, $Out> {
-  @override
-  ListCopyWith<$R, AdditionalField,
-      AdditionalFieldCopyWith<$R, AdditionalField, AdditionalField>> get fields;
-  @override
-  $R call({String? schema, int? version, List<AdditionalField>? fields});
-  ProjectStaffAdditionalFieldsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
-      Then<$Out2, $R2> t);
-}
-
-class _ProjectStaffAdditionalFieldsCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, ProjectStaffAdditionalFields, $Out>
-    implements
-        ProjectStaffAdditionalFieldsCopyWith<$R, ProjectStaffAdditionalFields,
-            $Out> {
-  _ProjectStaffAdditionalFieldsCopyWithImpl(
-      super.value, super.then, super.then2);
-
-  @override
-  late final ClassMapperBase<ProjectStaffAdditionalFields> $mapper =
-      ProjectStaffAdditionalFieldsMapper.ensureInitialized();
-  @override
-  ListCopyWith<$R, AdditionalField,
-          AdditionalFieldCopyWith<$R, AdditionalField, AdditionalField>>
-      get fields => ListCopyWith($value.fields, (v, t) => v.copyWith.$chain(t),
-          (v) => call(fields: v));
-  @override
-  $R call({String? schema, int? version, List<AdditionalField>? fields}) =>
-      $apply(FieldCopyWithData({
-        if (schema != null) #schema: schema,
-        if (version != null) #version: version,
-        if (fields != null) #fields: fields
-      }));
-  @override
-  ProjectStaffAdditionalFields $make(CopyWithData data) =>
-      ProjectStaffAdditionalFields(
-          schema: data.get(#schema, or: $value.schema),
-          version: data.get(#version, or: $value.version),
-          fields: data.get(#fields, or: $value.fields));
-
-  @override
-  ProjectStaffAdditionalFieldsCopyWith<$R2, ProjectStaffAdditionalFields, $Out2>
-      $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-          _ProjectStaffAdditionalFieldsCopyWithImpl($value, $cast, t);
 }

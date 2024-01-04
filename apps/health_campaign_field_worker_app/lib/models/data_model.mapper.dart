@@ -26,6 +26,7 @@ class EntityModelMapper extends ClassMapperBase<EntityModel> {
       PgrComplaintResponseModelMapper.ensureInitialized();
       PgrServiceResponseModelMapper.ensureInitialized();
       PgrComplainantResponseModelMapper.ensureInitialized();
+      ProjectStaffModelMapper.ensureInitialized();
       AuditDetailsMapper.ensureInitialized();
       ClientAuditDetailsMapper.ensureInitialized();
     }
@@ -89,6 +90,7 @@ class AdditionalFieldsMapper extends ClassMapperBase<AdditionalFields> {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = AdditionalFieldsMapper._());
       LocalityAdditionalFieldsMapper.ensureInitialized();
+      ProjectStaffAdditionalFieldsMapper.ensureInitialized();
       AddressAdditionalFieldsMapper.ensureInitialized();
       AdditionalFieldMapper.ensureInitialized();
     }
@@ -551,6 +553,7 @@ class EntitySearchModelMapper extends ClassMapperBase<EntitySearchModel> {
       LocalitySearchModelMapper.ensureInitialized();
       BoundarySearchModelMapper.ensureInitialized();
       PgrServiceSearchModelMapper.ensureInitialized();
+      ProjectStaffSearchModelMapper.ensureInitialized();
       AuditDetailsMapper.ensureInitialized();
       AdditionalFieldsMapper.ensureInitialized();
     }
