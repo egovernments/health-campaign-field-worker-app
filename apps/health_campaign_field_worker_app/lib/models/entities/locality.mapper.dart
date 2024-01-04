@@ -168,6 +168,159 @@ class _LocalitySearchModelCopyWithImpl<$R, $Out>
           _LocalitySearchModelCopyWithImpl($value, $cast, t);
 }
 
+class LocalityAdditionalFieldsMapper
+    extends SubClassMapperBase<LocalityAdditionalFields> {
+  LocalityAdditionalFieldsMapper._();
+
+  static LocalityAdditionalFieldsMapper? _instance;
+  static LocalityAdditionalFieldsMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals
+          .use(_instance = LocalityAdditionalFieldsMapper._());
+      AdditionalFieldsMapper.ensureInitialized().addSubMapper(_instance!);
+      AdditionalFieldMapper.ensureInitialized();
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'LocalityAdditionalFields';
+
+  static String _$schema(LocalityAdditionalFields v) => v.schema;
+  static const Field<LocalityAdditionalFields, String> _f$schema =
+      Field('schema', _$schema, opt: true, def: 'Locality');
+  static int _$version(LocalityAdditionalFields v) => v.version;
+  static const Field<LocalityAdditionalFields, int> _f$version =
+      Field('version', _$version);
+  static List<AdditionalField> _$fields(LocalityAdditionalFields v) => v.fields;
+  static const Field<LocalityAdditionalFields, List<AdditionalField>>
+      _f$fields = Field('fields', _$fields, opt: true, def: const []);
+
+  @override
+  final MappableFields<LocalityAdditionalFields> fields = const {
+    #schema: _f$schema,
+    #version: _f$version,
+    #fields: _f$fields,
+  };
+  @override
+  final bool ignoreNull = true;
+
+  @override
+  final String discriminatorKey = 'type';
+  @override
+  final dynamic discriminatorValue = MappableClass.useAsDefault;
+  @override
+  late final ClassMapperBase superMapper =
+      AdditionalFieldsMapper.ensureInitialized();
+
+  static LocalityAdditionalFields _instantiate(DecodingData data) {
+    return LocalityAdditionalFields(
+        schema: data.dec(_f$schema),
+        version: data.dec(_f$version),
+        fields: data.dec(_f$fields));
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static LocalityAdditionalFields fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<LocalityAdditionalFields>(map);
+  }
+
+  static LocalityAdditionalFields fromJson(String json) {
+    return ensureInitialized().decodeJson<LocalityAdditionalFields>(json);
+  }
+}
+
+mixin LocalityAdditionalFieldsMappable {
+  String toJson() {
+    return LocalityAdditionalFieldsMapper.ensureInitialized()
+        .encodeJson<LocalityAdditionalFields>(this as LocalityAdditionalFields);
+  }
+
+  Map<String, dynamic> toMap() {
+    return LocalityAdditionalFieldsMapper.ensureInitialized()
+        .encodeMap<LocalityAdditionalFields>(this as LocalityAdditionalFields);
+  }
+
+  LocalityAdditionalFieldsCopyWith<LocalityAdditionalFields,
+          LocalityAdditionalFields, LocalityAdditionalFields>
+      get copyWith => _LocalityAdditionalFieldsCopyWithImpl(
+          this as LocalityAdditionalFields, $identity, $identity);
+  @override
+  String toString() {
+    return LocalityAdditionalFieldsMapper.ensureInitialized()
+        .stringifyValue(this as LocalityAdditionalFields);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            LocalityAdditionalFieldsMapper.ensureInitialized()
+                .isValueEqual(this as LocalityAdditionalFields, other));
+  }
+
+  @override
+  int get hashCode {
+    return LocalityAdditionalFieldsMapper.ensureInitialized()
+        .hashValue(this as LocalityAdditionalFields);
+  }
+}
+
+extension LocalityAdditionalFieldsValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, LocalityAdditionalFields, $Out> {
+  LocalityAdditionalFieldsCopyWith<$R, LocalityAdditionalFields, $Out>
+      get $asLocalityAdditionalFields => $base
+          .as((v, t, t2) => _LocalityAdditionalFieldsCopyWithImpl(v, t, t2));
+}
+
+abstract class LocalityAdditionalFieldsCopyWith<
+    $R,
+    $In extends LocalityAdditionalFields,
+    $Out> implements AdditionalFieldsCopyWith<$R, $In, $Out> {
+  @override
+  ListCopyWith<$R, AdditionalField,
+      AdditionalFieldCopyWith<$R, AdditionalField, AdditionalField>> get fields;
+  @override
+  $R call({String? schema, int? version, List<AdditionalField>? fields});
+  LocalityAdditionalFieldsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
+      Then<$Out2, $R2> t);
+}
+
+class _LocalityAdditionalFieldsCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, LocalityAdditionalFields, $Out>
+    implements
+        LocalityAdditionalFieldsCopyWith<$R, LocalityAdditionalFields, $Out> {
+  _LocalityAdditionalFieldsCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<LocalityAdditionalFields> $mapper =
+      LocalityAdditionalFieldsMapper.ensureInitialized();
+  @override
+  ListCopyWith<$R, AdditionalField,
+          AdditionalFieldCopyWith<$R, AdditionalField, AdditionalField>>
+      get fields => ListCopyWith($value.fields, (v, t) => v.copyWith.$chain(t),
+          (v) => call(fields: v));
+  @override
+  $R call({String? schema, int? version, List<AdditionalField>? fields}) =>
+      $apply(FieldCopyWithData({
+        if (schema != null) #schema: schema,
+        if (version != null) #version: version,
+        if (fields != null) #fields: fields
+      }));
+  @override
+  LocalityAdditionalFields $make(CopyWithData data) => LocalityAdditionalFields(
+      schema: data.get(#schema, or: $value.schema),
+      version: data.get(#version, or: $value.version),
+      fields: data.get(#fields, or: $value.fields));
+
+  @override
+  LocalityAdditionalFieldsCopyWith<$R2, LocalityAdditionalFields, $Out2>
+      $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+          _LocalityAdditionalFieldsCopyWithImpl($value, $cast, t);
+}
+
 class LocalityModelMapper extends SubClassMapperBase<LocalityModel> {
   LocalityModelMapper._();
 
@@ -392,157 +545,4 @@ class _LocalityModelCopyWithImpl<$R, $Out>
   LocalityModelCopyWith<$R2, LocalityModel, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
       _LocalityModelCopyWithImpl($value, $cast, t);
-}
-
-class LocalityAdditionalFieldsMapper
-    extends SubClassMapperBase<LocalityAdditionalFields> {
-  LocalityAdditionalFieldsMapper._();
-
-  static LocalityAdditionalFieldsMapper? _instance;
-  static LocalityAdditionalFieldsMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals
-          .use(_instance = LocalityAdditionalFieldsMapper._());
-      AdditionalFieldsMapper.ensureInitialized().addSubMapper(_instance!);
-      AdditionalFieldMapper.ensureInitialized();
-    }
-    return _instance!;
-  }
-
-  @override
-  final String id = 'LocalityAdditionalFields';
-
-  static String _$schema(LocalityAdditionalFields v) => v.schema;
-  static const Field<LocalityAdditionalFields, String> _f$schema =
-      Field('schema', _$schema, opt: true, def: 'Locality');
-  static int _$version(LocalityAdditionalFields v) => v.version;
-  static const Field<LocalityAdditionalFields, int> _f$version =
-      Field('version', _$version);
-  static List<AdditionalField> _$fields(LocalityAdditionalFields v) => v.fields;
-  static const Field<LocalityAdditionalFields, List<AdditionalField>>
-      _f$fields = Field('fields', _$fields, opt: true, def: const []);
-
-  @override
-  final MappableFields<LocalityAdditionalFields> fields = const {
-    #schema: _f$schema,
-    #version: _f$version,
-    #fields: _f$fields,
-  };
-  @override
-  final bool ignoreNull = true;
-
-  @override
-  final String discriminatorKey = 'type';
-  @override
-  final dynamic discriminatorValue = MappableClass.useAsDefault;
-  @override
-  late final ClassMapperBase superMapper =
-      AdditionalFieldsMapper.ensureInitialized();
-
-  static LocalityAdditionalFields _instantiate(DecodingData data) {
-    return LocalityAdditionalFields(
-        schema: data.dec(_f$schema),
-        version: data.dec(_f$version),
-        fields: data.dec(_f$fields));
-  }
-
-  @override
-  final Function instantiate = _instantiate;
-
-  static LocalityAdditionalFields fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<LocalityAdditionalFields>(map);
-  }
-
-  static LocalityAdditionalFields fromJson(String json) {
-    return ensureInitialized().decodeJson<LocalityAdditionalFields>(json);
-  }
-}
-
-mixin LocalityAdditionalFieldsMappable {
-  String toJson() {
-    return LocalityAdditionalFieldsMapper.ensureInitialized()
-        .encodeJson<LocalityAdditionalFields>(this as LocalityAdditionalFields);
-  }
-
-  Map<String, dynamic> toMap() {
-    return LocalityAdditionalFieldsMapper.ensureInitialized()
-        .encodeMap<LocalityAdditionalFields>(this as LocalityAdditionalFields);
-  }
-
-  LocalityAdditionalFieldsCopyWith<LocalityAdditionalFields,
-          LocalityAdditionalFields, LocalityAdditionalFields>
-      get copyWith => _LocalityAdditionalFieldsCopyWithImpl(
-          this as LocalityAdditionalFields, $identity, $identity);
-  @override
-  String toString() {
-    return LocalityAdditionalFieldsMapper.ensureInitialized()
-        .stringifyValue(this as LocalityAdditionalFields);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            LocalityAdditionalFieldsMapper.ensureInitialized()
-                .isValueEqual(this as LocalityAdditionalFields, other));
-  }
-
-  @override
-  int get hashCode {
-    return LocalityAdditionalFieldsMapper.ensureInitialized()
-        .hashValue(this as LocalityAdditionalFields);
-  }
-}
-
-extension LocalityAdditionalFieldsValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, LocalityAdditionalFields, $Out> {
-  LocalityAdditionalFieldsCopyWith<$R, LocalityAdditionalFields, $Out>
-      get $asLocalityAdditionalFields => $base
-          .as((v, t, t2) => _LocalityAdditionalFieldsCopyWithImpl(v, t, t2));
-}
-
-abstract class LocalityAdditionalFieldsCopyWith<
-    $R,
-    $In extends LocalityAdditionalFields,
-    $Out> implements AdditionalFieldsCopyWith<$R, $In, $Out> {
-  @override
-  ListCopyWith<$R, AdditionalField,
-      AdditionalFieldCopyWith<$R, AdditionalField, AdditionalField>> get fields;
-  @override
-  $R call({String? schema, int? version, List<AdditionalField>? fields});
-  LocalityAdditionalFieldsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
-      Then<$Out2, $R2> t);
-}
-
-class _LocalityAdditionalFieldsCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, LocalityAdditionalFields, $Out>
-    implements
-        LocalityAdditionalFieldsCopyWith<$R, LocalityAdditionalFields, $Out> {
-  _LocalityAdditionalFieldsCopyWithImpl(super.value, super.then, super.then2);
-
-  @override
-  late final ClassMapperBase<LocalityAdditionalFields> $mapper =
-      LocalityAdditionalFieldsMapper.ensureInitialized();
-  @override
-  ListCopyWith<$R, AdditionalField,
-          AdditionalFieldCopyWith<$R, AdditionalField, AdditionalField>>
-      get fields => ListCopyWith($value.fields, (v, t) => v.copyWith.$chain(t),
-          (v) => call(fields: v));
-  @override
-  $R call({String? schema, int? version, List<AdditionalField>? fields}) =>
-      $apply(FieldCopyWithData({
-        if (schema != null) #schema: schema,
-        if (version != null) #version: version,
-        if (fields != null) #fields: fields
-      }));
-  @override
-  LocalityAdditionalFields $make(CopyWithData data) => LocalityAdditionalFields(
-      schema: data.get(#schema, or: $value.schema),
-      version: data.get(#version, or: $value.version),
-      fields: data.get(#fields, or: $value.fields));
-
-  @override
-  LocalityAdditionalFieldsCopyWith<$R2, LocalityAdditionalFields, $Out2>
-      $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-          _LocalityAdditionalFieldsCopyWithImpl($value, $cast, t);
 }

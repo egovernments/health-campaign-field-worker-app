@@ -4,6 +4,7 @@ library models;
 import 'package:dart_mappable/dart_mappable.dart';
 
 import 'entities/address.dart';
+import 'entities/locality.dart';
 
 export 'entities/additional_fields_type.dart';
 export 'entities/address.dart';
@@ -66,7 +67,7 @@ abstract class DataModel {
   });
 }
 
-@MappableClass(includeSubClasses: [AddressModel])
+@MappableClass(includeSubClasses: [AddressModel, LocalityModel])
 abstract class EntityModel extends DataModel with EntityModelMappable {
   final AuditDetails? auditDetails;
   final ClientAuditDetails? clientAuditDetails;
@@ -77,7 +78,7 @@ abstract class EntityModel extends DataModel with EntityModelMappable {
   });
 }
 
-@MappableClass(ignoreNull: true, includeSubClasses: [AddressSearchModel])
+@MappableClass(ignoreNull: true, includeSubClasses: [AddressSearchModel, LocalitySearchModel])
 abstract class EntitySearchModel extends DataModel with EntitySearchModelMappable {
   final AuditDetails? auditDetails;
   final AdditionalFields? additionalFields;
@@ -97,7 +98,7 @@ abstract class EntitySearchModel extends DataModel with EntitySearchModelMappabl
   }) : super(isDeleted: false);
 }
 
-@MappableClass()
+@MappableClass(includeSubClasses: [LocalityAdditionalFields])
 abstract class AdditionalFields with AdditionalFieldsMappable {
   final String schema;
   final int version;

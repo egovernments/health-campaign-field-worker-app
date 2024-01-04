@@ -83,8 +83,8 @@ class AdditionalFieldsMapper extends ClassMapperBase<AdditionalFields> {
   static AdditionalFieldsMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = AdditionalFieldsMapper._());
-      AddressAdditionalFieldsMapper.ensureInitialized();
       LocalityAdditionalFieldsMapper.ensureInitialized();
+      AddressAdditionalFieldsMapper.ensureInitialized();
       AdditionalFieldMapper.ensureInitialized();
     }
     return _instance!;
@@ -543,6 +543,7 @@ class EntitySearchModelMapper extends ClassMapperBase<EntitySearchModel> {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = EntitySearchModelMapper._());
       AddressSearchModelMapper.ensureInitialized();
+      LocalitySearchModelMapper.ensureInitialized();
       AuditDetailsMapper.ensureInitialized();
       AdditionalFieldsMapper.ensureInitialized();
     }
