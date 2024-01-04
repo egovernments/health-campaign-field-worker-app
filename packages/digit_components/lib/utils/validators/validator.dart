@@ -22,17 +22,17 @@ class InputValidators {
         }
         break;
       case ValidatorType.pattern:
-        if (value != null && !RegExp(validation.value).hasMatch(value)) {
+        if (value != null && value.isNotEmpty && !RegExp(validation.value).hasMatch(value)) {
           return validation.errorMessage ?? 'Invalid format';
         }
         break;
       case ValidatorType.mobileNumber:
-        if (value != null && !RegExp(r'^[0-9]{10}$').hasMatch(value)) {
+        if (value != null && value.isNotEmpty && !RegExp(r'^[0-9]{10}$').hasMatch(value)) {
           return validation.errorMessage ?? 'Invalid mobile number';
         }
         break;
       case ValidatorType.email:
-        if (value != null && !RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$').hasMatch(value)) {
+        if (value != null && value.isNotEmpty && !RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$').hasMatch(value)) {
           return validation.errorMessage ?? 'Invalid email address';
         }
         break;
