@@ -440,15 +440,16 @@ class _RecordReferralDetailsPageState
                                               localizations.translate(
                                                 i18.common.corecommonRequired,
                                               ),
-                                          'max': (_) => localizations.translate(
-                                                i18.common.maxCharsRequired
-                                                  ..replaceAll(
-                                                    '{}',
-                                                    (context.selectedProjectType
-                                                                ?.validMaxAge ??
-                                                            '')
-                                                        .toString(),
-                                                  ),
+                                          'max': (_) => localizations
+                                              .translate(
+                                                i18.common.maxValue,
+                                              )
+                                              .replaceAll(
+                                                '{}',
+                                                (context.selectedProjectType
+                                                            ?.validMaxAge ??
+                                                        '')
+                                                    .toString(),
                                               ),
                                         },
                                       ),
@@ -647,11 +648,14 @@ class _RecordReferralDetailsPageState
               create: (value) => value.viewOnly,
             ) ??
             false,
-        validators: [
-          Validators.required,
-          if (context.selectedProjectType?.validMaxAge != null)
-            Validators.max(context.selectedProjectType?.validMaxAge),
-        ],
+        validators: (context.selectedProjectType?.validMaxAge != null)
+            ? [
+                Validators.required,
+                Validators.max<int>(
+                  context.selectedProjectType?.validMaxAge ?? 60,
+                ),
+              ]
+            : [Validators.required],
       ),
       _referralReason: FormControl<KeyValue>(
         value: referralState.mapOrNull(

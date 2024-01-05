@@ -119,6 +119,8 @@ class Common {
 
   String get maxCharsRequired => 'MAX_CHARS_ALLOWED';
 
+  String get maxValue => 'MAX_VALUE_ALLOWED';
+
   String get noResultsFound => 'NO_RESULTS_FOUND';
 
   String get coreCommonSyncInProgress => 'CORE_COMMON_SYNC_IN_PROGRESS';
