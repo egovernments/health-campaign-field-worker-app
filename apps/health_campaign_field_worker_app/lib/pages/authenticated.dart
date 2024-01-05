@@ -47,7 +47,9 @@ class AuthenticatedPageWrapper extends StatelessWidget {
 
               return Portal(
                 child: Scaffold(
+                  backgroundColor: DigitTheme.instance.colorScheme.background,
                   appBar: AppBar(
+            backgroundColor: DigitTheme.instance.colorScheme.primary,
                     actions: showDrawer
                         ? [
                             BlocBuilder<BoundaryBloc, BoundaryState>(

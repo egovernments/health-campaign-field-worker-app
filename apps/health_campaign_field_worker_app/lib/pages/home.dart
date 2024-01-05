@@ -94,6 +94,7 @@ class _HomePageState extends LocalizedState<HomePage> {
     ];
 
     return Scaffold(
+     backgroundColor: DigitTheme.instance.colorScheme.background,
       body: BlocListener<SyncBloc, SyncState>(
         listener: (context, state) {
           state.maybeWhen(

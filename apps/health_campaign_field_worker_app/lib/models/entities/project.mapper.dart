@@ -57,13 +57,13 @@ class ProjectSearchModelMapper extends ClassMapperBase<ProjectSearchModel> {
   static String? _$boundaryCode(ProjectSearchModel v) => v.boundaryCode;
   static const Field<ProjectSearchModel, String> _f$boundaryCode =
       Field('boundaryCode', _$boundaryCode, opt: true);
-  static AuditDetails? _$auditDetails(ProjectSearchModel v) => v.auditDetails;
-  static const Field<ProjectSearchModel, AuditDetails> _f$auditDetails =
-      Field('auditDetails', _$auditDetails, mode: FieldMode.member);
   static AdditionalFields? _$additionalFields(ProjectSearchModel v) =>
       v.additionalFields;
   static const Field<ProjectSearchModel, AdditionalFields> _f$additionalFields =
-      Field('additionalFields', _$additionalFields, mode: FieldMode.member);
+      Field('additionalFields', _$additionalFields, opt: true);
+  static AuditDetails? _$auditDetails(ProjectSearchModel v) => v.auditDetails;
+  static const Field<ProjectSearchModel, AuditDetails> _f$auditDetails =
+      Field('auditDetails', _$auditDetails, opt: true);
   static DateTime? _$startDateTime(ProjectSearchModel v) => v.startDateTime;
   static const Field<ProjectSearchModel, DateTime> _f$startDateTime =
       Field('startDateTime', _$startDateTime, mode: FieldMode.member);
@@ -85,8 +85,8 @@ class ProjectSearchModelMapper extends ClassMapperBase<ProjectSearchModel> {
     #startDate: _f$startDate,
     #endDate: _f$endDate,
     #boundaryCode: _f$boundaryCode,
-    #auditDetails: _f$auditDetails,
     #additionalFields: _f$additionalFields,
+    #auditDetails: _f$auditDetails,
     #startDateTime: _f$startDateTime,
     #endDateTime: _f$endDateTime,
   };
@@ -106,7 +106,9 @@ class ProjectSearchModelMapper extends ClassMapperBase<ProjectSearchModel> {
         tenantId: data.dec(_f$tenantId),
         startDate: data.dec(_f$startDate),
         endDate: data.dec(_f$endDate),
-        boundaryCode: data.dec(_f$boundaryCode));
+        boundaryCode: data.dec(_f$boundaryCode),
+        additionalFields: data.dec(_f$additionalFields),
+        auditDetails: data.dec(_f$auditDetails));
   }
 
   @override
@@ -167,6 +169,11 @@ extension ProjectSearchModelValueCopy<$R, $Out>
 abstract class ProjectSearchModelCopyWith<$R, $In extends ProjectSearchModel,
     $Out> implements EntitySearchModelCopyWith<$R, $In, $Out> {
   @override
+  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
+      get additionalFields;
+  @override
+  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
+  @override
   $R call(
       {String? id,
       String? projectTypeId,
@@ -179,7 +186,9 @@ abstract class ProjectSearchModelCopyWith<$R, $In extends ProjectSearchModel,
       String? tenantId,
       int? startDate,
       int? endDate,
-      String? boundaryCode});
+      String? boundaryCode,
+      AdditionalFields? additionalFields,
+      AuditDetails? auditDetails});
   ProjectSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -193,6 +202,13 @@ class _ProjectSearchModelCopyWithImpl<$R, $Out>
   late final ClassMapperBase<ProjectSearchModel> $mapper =
       ProjectSearchModelMapper.ensureInitialized();
   @override
+  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
+      get additionalFields => $value.additionalFields?.copyWith
+          .$chain((v) => call(additionalFields: v));
+  @override
+  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
+      $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
+  @override
   $R call(
           {Object? id = $none,
           Object? projectTypeId = $none,
@@ -205,7 +221,9 @@ class _ProjectSearchModelCopyWithImpl<$R, $Out>
           Object? tenantId = $none,
           Object? startDate = $none,
           Object? endDate = $none,
-          Object? boundaryCode = $none}) =>
+          Object? boundaryCode = $none,
+          Object? additionalFields = $none,
+          Object? auditDetails = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
         if (projectTypeId != $none) #projectTypeId: projectTypeId,
@@ -218,7 +236,9 @@ class _ProjectSearchModelCopyWithImpl<$R, $Out>
         if (tenantId != $none) #tenantId: tenantId,
         if (startDate != $none) #startDate: startDate,
         if (endDate != $none) #endDate: endDate,
-        if (boundaryCode != $none) #boundaryCode: boundaryCode
+        if (boundaryCode != $none) #boundaryCode: boundaryCode,
+        if (additionalFields != $none) #additionalFields: additionalFields,
+        if (auditDetails != $none) #auditDetails: auditDetails
       }));
   @override
   ProjectSearchModel $make(CopyWithData data) =>
@@ -235,7 +255,10 @@ class _ProjectSearchModelCopyWithImpl<$R, $Out>
           tenantId: data.get(#tenantId, or: $value.tenantId),
           startDate: data.get(#startDate, or: $value.startDate),
           endDate: data.get(#endDate, or: $value.endDate),
-          boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
+          boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode),
+          additionalFields:
+              data.get(#additionalFields, or: $value.additionalFields),
+          auditDetails: data.get(#auditDetails, or: $value.auditDetails));
 
   @override
   ProjectSearchModelCopyWith<$R2, ProjectSearchModel, $Out2> $chain<$R2, $Out2>(
@@ -251,12 +274,6 @@ class ProjectModelMapper extends ClassMapperBase<ProjectModel> {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = ProjectModelMapper._());
       EntityModelMapper.ensureInitialized();
-      ProjectAdditionalFieldsMapper.ensureInitialized();
-      AddressModelMapper.ensureInitialized();
-      TargetModelMapper.ensureInitialized();
-      DocumentModelMapper.ensureInitialized();
-      AuditDetailsMapper.ensureInitialized();
-      ClientAuditDetailsMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -630,7 +647,6 @@ class ProjectAdditionalFieldsMapper
       MapperContainer.globals
           .use(_instance = ProjectAdditionalFieldsMapper._());
       AdditionalFieldsMapper.ensureInitialized();
-      AdditionalFieldMapper.ensureInitialized();
     }
     return _instance!;
   }

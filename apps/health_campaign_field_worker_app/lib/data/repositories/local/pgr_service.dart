@@ -207,12 +207,7 @@ class PgrServiceLocalRepository
         active: pgrService.active,
         source: pgrService.source,
         additionalDetail: pgrService.additionalFields,
-        clientAuditDetails: ClientAuditDetails(
-          createdBy: pgrService.auditCreatedBy!,
-          createdTime: pgrService.auditCreatedTime!,
-          lastModifiedTime: pgrService.auditModifiedTime,
-          lastModifiedBy: pgrService.auditModifiedBy,
-        ),
+    
       );
     }).toList();
   }

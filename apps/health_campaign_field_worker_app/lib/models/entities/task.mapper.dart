@@ -13,7 +13,6 @@ class TaskSearchModelMapper extends SubClassMapperBase<TaskSearchModel> {
   static TaskSearchModelMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = TaskSearchModelMapper._());
-      EntitySearchModelMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
   }
@@ -67,13 +66,13 @@ class TaskSearchModelMapper extends SubClassMapperBase<TaskSearchModel> {
   static String? _$boundaryCode(TaskSearchModel v) => v.boundaryCode;
   static const Field<TaskSearchModel, String> _f$boundaryCode =
       Field('boundaryCode', _$boundaryCode, opt: true);
-  static AuditDetails? _$auditDetails(TaskSearchModel v) => v.auditDetails;
-  static const Field<TaskSearchModel, AuditDetails> _f$auditDetails =
-      Field('auditDetails', _$auditDetails, mode: FieldMode.member);
   static AdditionalFields? _$additionalFields(TaskSearchModel v) =>
       v.additionalFields;
   static const Field<TaskSearchModel, AdditionalFields> _f$additionalFields =
-      Field('additionalFields', _$additionalFields, mode: FieldMode.member);
+      Field('additionalFields', _$additionalFields, opt: true);
+  static AuditDetails? _$auditDetails(TaskSearchModel v) => v.auditDetails;
+  static const Field<TaskSearchModel, AuditDetails> _f$auditDetails =
+      Field('auditDetails', _$auditDetails, opt: true);
   static DateTime? _$plannedStartDateTime(TaskSearchModel v) =>
       v.plannedStartDateTime;
   static const Field<TaskSearchModel, DateTime> _f$plannedStartDateTime = Field(
@@ -109,8 +108,8 @@ class TaskSearchModelMapper extends SubClassMapperBase<TaskSearchModel> {
     #actualStartDate: _f$actualStartDate,
     #actualEndDate: _f$actualEndDate,
     #boundaryCode: _f$boundaryCode,
-    #auditDetails: _f$auditDetails,
     #additionalFields: _f$additionalFields,
+    #auditDetails: _f$auditDetails,
     #plannedStartDateTime: _f$plannedStartDateTime,
     #plannedEndDateTime: _f$plannedEndDateTime,
     #actualStartDateTime: _f$actualStartDateTime,
@@ -142,7 +141,9 @@ class TaskSearchModelMapper extends SubClassMapperBase<TaskSearchModel> {
         plannedEndDate: data.dec(_f$plannedEndDate),
         actualStartDate: data.dec(_f$actualStartDate),
         actualEndDate: data.dec(_f$actualEndDate),
-        boundaryCode: data.dec(_f$boundaryCode));
+        boundaryCode: data.dec(_f$boundaryCode),
+        additionalFields: data.dec(_f$additionalFields),
+        auditDetails: data.dec(_f$auditDetails));
   }
 
   @override
@@ -205,6 +206,11 @@ abstract class TaskSearchModelCopyWith<$R, $In extends TaskSearchModel, $Out>
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get clientReferenceId;
   @override
+  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
+      get additionalFields;
+  @override
+  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
+  @override
   $R call(
       {String? id,
       String? projectId,
@@ -218,7 +224,9 @@ abstract class TaskSearchModelCopyWith<$R, $In extends TaskSearchModel, $Out>
       int? plannedEndDate,
       int? actualStartDate,
       int? actualEndDate,
-      String? boundaryCode});
+      String? boundaryCode,
+      AdditionalFields? additionalFields,
+      AuditDetails? auditDetails});
   TaskSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -249,6 +257,13 @@ class _TaskSearchModelCopyWithImpl<$R, $Out>
               (v) => call(clientReferenceId: v))
           : null;
   @override
+  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
+      get additionalFields => $value.additionalFields?.copyWith
+          .$chain((v) => call(additionalFields: v));
+  @override
+  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
+      $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
+  @override
   $R call(
           {Object? id = $none,
           Object? projectId = $none,
@@ -262,7 +277,9 @@ class _TaskSearchModelCopyWithImpl<$R, $Out>
           Object? plannedEndDate = $none,
           Object? actualStartDate = $none,
           Object? actualEndDate = $none,
-          Object? boundaryCode = $none}) =>
+          Object? boundaryCode = $none,
+          Object? additionalFields = $none,
+          Object? auditDetails = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
         if (projectId != $none) #projectId: projectId,
@@ -279,7 +296,9 @@ class _TaskSearchModelCopyWithImpl<$R, $Out>
         if (plannedEndDate != $none) #plannedEndDate: plannedEndDate,
         if (actualStartDate != $none) #actualStartDate: actualStartDate,
         if (actualEndDate != $none) #actualEndDate: actualEndDate,
-        if (boundaryCode != $none) #boundaryCode: boundaryCode
+        if (boundaryCode != $none) #boundaryCode: boundaryCode,
+        if (additionalFields != $none) #additionalFields: additionalFields,
+        if (auditDetails != $none) #auditDetails: auditDetails
       }));
   @override
   TaskSearchModel $make(CopyWithData data) => TaskSearchModel.ignoreDeleted(
@@ -300,7 +319,10 @@ class _TaskSearchModelCopyWithImpl<$R, $Out>
       plannedEndDate: data.get(#plannedEndDate, or: $value.plannedEndDate),
       actualStartDate: data.get(#actualStartDate, or: $value.actualStartDate),
       actualEndDate: data.get(#actualEndDate, or: $value.actualEndDate),
-      boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
+      boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode),
+      additionalFields:
+          data.get(#additionalFields, or: $value.additionalFields),
+      auditDetails: data.get(#auditDetails, or: $value.auditDetails));
 
   @override
   TaskSearchModelCopyWith<$R2, TaskSearchModel, $Out2> $chain<$R2, $Out2>(
@@ -315,12 +337,6 @@ class TaskModelMapper extends SubClassMapperBase<TaskModel> {
   static TaskModelMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = TaskModelMapper._());
-      EntityModelMapper.ensureInitialized().addSubMapper(_instance!);
-      TaskAdditionalFieldsMapper.ensureInitialized();
-      TaskResourceModelMapper.ensureInitialized();
-      AddressModelMapper.ensureInitialized();
-      AuditDetailsMapper.ensureInitialized();
-      ClientAuditDetailsMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -697,8 +713,6 @@ class TaskAdditionalFieldsMapper
   static TaskAdditionalFieldsMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = TaskAdditionalFieldsMapper._());
-      AdditionalFieldsMapper.ensureInitialized().addSubMapper(_instance!);
-      AdditionalFieldMapper.ensureInitialized();
     }
     return _instance!;
   }

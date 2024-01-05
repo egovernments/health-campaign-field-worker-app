@@ -13,7 +13,6 @@ class NameSearchModelMapper extends SubClassMapperBase<NameSearchModel> {
   static NameSearchModelMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = NameSearchModelMapper._());
-      EntitySearchModelMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
   }
@@ -39,13 +38,13 @@ class NameSearchModelMapper extends SubClassMapperBase<NameSearchModel> {
   static String? _$boundaryCode(NameSearchModel v) => v.boundaryCode;
   static const Field<NameSearchModel, String> _f$boundaryCode =
       Field('boundaryCode', _$boundaryCode, opt: true);
-  static AuditDetails? _$auditDetails(NameSearchModel v) => v.auditDetails;
-  static const Field<NameSearchModel, AuditDetails> _f$auditDetails =
-      Field('auditDetails', _$auditDetails, mode: FieldMode.member);
   static AdditionalFields? _$additionalFields(NameSearchModel v) =>
       v.additionalFields;
   static const Field<NameSearchModel, AdditionalFields> _f$additionalFields =
-      Field('additionalFields', _$additionalFields, mode: FieldMode.member);
+      Field('additionalFields', _$additionalFields, opt: true);
+  static AuditDetails? _$auditDetails(NameSearchModel v) => v.auditDetails;
+  static const Field<NameSearchModel, AuditDetails> _f$auditDetails =
+      Field('auditDetails', _$auditDetails, opt: true);
 
   @override
   final MappableFields<NameSearchModel> fields = const {
@@ -55,8 +54,8 @@ class NameSearchModelMapper extends SubClassMapperBase<NameSearchModel> {
     #otherNames: _f$otherNames,
     #tenantId: _f$tenantId,
     #boundaryCode: _f$boundaryCode,
-    #auditDetails: _f$auditDetails,
     #additionalFields: _f$additionalFields,
+    #auditDetails: _f$auditDetails,
   };
   @override
   final bool ignoreNull = true;
@@ -76,7 +75,9 @@ class NameSearchModelMapper extends SubClassMapperBase<NameSearchModel> {
         familyName: data.dec(_f$familyName),
         otherNames: data.dec(_f$otherNames),
         tenantId: data.dec(_f$tenantId),
-        boundaryCode: data.dec(_f$boundaryCode));
+        boundaryCode: data.dec(_f$boundaryCode),
+        additionalFields: data.dec(_f$additionalFields),
+        auditDetails: data.dec(_f$auditDetails));
   }
 
   @override
@@ -135,13 +136,20 @@ extension NameSearchModelValueCopy<$R, $Out>
 abstract class NameSearchModelCopyWith<$R, $In extends NameSearchModel, $Out>
     implements EntitySearchModelCopyWith<$R, $In, $Out> {
   @override
+  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
+      get additionalFields;
+  @override
+  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
+  @override
   $R call(
       {String? id,
       String? givenName,
       String? familyName,
       String? otherNames,
       String? tenantId,
-      String? boundaryCode});
+      String? boundaryCode,
+      AdditionalFields? additionalFields,
+      AuditDetails? auditDetails});
   NameSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -155,20 +163,31 @@ class _NameSearchModelCopyWithImpl<$R, $Out>
   late final ClassMapperBase<NameSearchModel> $mapper =
       NameSearchModelMapper.ensureInitialized();
   @override
+  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
+      get additionalFields => $value.additionalFields?.copyWith
+          .$chain((v) => call(additionalFields: v));
+  @override
+  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
+      $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
+  @override
   $R call(
           {Object? id = $none,
           Object? givenName = $none,
           Object? familyName = $none,
           Object? otherNames = $none,
           Object? tenantId = $none,
-          Object? boundaryCode = $none}) =>
+          Object? boundaryCode = $none,
+          Object? additionalFields = $none,
+          Object? auditDetails = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
         if (givenName != $none) #givenName: givenName,
         if (familyName != $none) #familyName: familyName,
         if (otherNames != $none) #otherNames: otherNames,
         if (tenantId != $none) #tenantId: tenantId,
-        if (boundaryCode != $none) #boundaryCode: boundaryCode
+        if (boundaryCode != $none) #boundaryCode: boundaryCode,
+        if (additionalFields != $none) #additionalFields: additionalFields,
+        if (auditDetails != $none) #auditDetails: auditDetails
       }));
   @override
   NameSearchModel $make(CopyWithData data) => NameSearchModel.ignoreDeleted(
@@ -177,7 +196,10 @@ class _NameSearchModelCopyWithImpl<$R, $Out>
       familyName: data.get(#familyName, or: $value.familyName),
       otherNames: data.get(#otherNames, or: $value.otherNames),
       tenantId: data.get(#tenantId, or: $value.tenantId),
-      boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
+      boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode),
+      additionalFields:
+          data.get(#additionalFields, or: $value.additionalFields),
+      auditDetails: data.get(#auditDetails, or: $value.auditDetails));
 
   @override
   NameSearchModelCopyWith<$R2, NameSearchModel, $Out2> $chain<$R2, $Out2>(
@@ -192,10 +214,6 @@ class NameModelMapper extends SubClassMapperBase<NameModel> {
   static NameModelMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = NameModelMapper._());
-      EntityModelMapper.ensureInitialized().addSubMapper(_instance!);
-      NameAdditionalFieldsMapper.ensureInitialized();
-      AuditDetailsMapper.ensureInitialized();
-      ClientAuditDetailsMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -445,8 +463,6 @@ class NameAdditionalFieldsMapper
   static NameAdditionalFieldsMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = NameAdditionalFieldsMapper._());
-      AdditionalFieldsMapper.ensureInitialized().addSubMapper(_instance!);
-      AdditionalFieldMapper.ensureInitialized();
     }
     return _instance!;
   }

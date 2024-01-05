@@ -33,6 +33,8 @@ class IdentifierSearchModel extends EntitySearchModel with IdentifierSearchModel
     this.clientReferenceId,
     this.tenantId,
     super.boundaryCode,
+        super.additionalFields,
+    super.auditDetails,
   }):  super(isDeleted: false);
 }
 

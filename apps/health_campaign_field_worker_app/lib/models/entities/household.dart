@@ -42,6 +42,8 @@ class HouseholdSearchModel extends EntitySearchModel with HouseholdSearchModelMa
     this.clientReferenceId,
     this.tenantId,
     super.boundaryCode,
+        super.additionalFields,
+    super.auditDetails,
   }):  super(isDeleted: false);
 }
 

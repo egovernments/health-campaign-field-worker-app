@@ -589,13 +589,7 @@ class PerformSyncDown {
                         complaintClientReferenceId: e.serviceRequestId ?? '',
                       ),
                       address: PgrAddressModel(),
-                      clientAuditDetails: ClientAuditDetails(
-                        createdTime: e.clientAuditDetails!.createdTime,
-                        createdBy: e.clientAuditDetails!.createdBy,
-                        lastModifiedBy: e.clientAuditDetails!.lastModifiedBy,
-                        lastModifiedTime:
-                            e.clientAuditDetails!.lastModifiedTime,
-                      ),
+              
                     ))
                 .toList();
 

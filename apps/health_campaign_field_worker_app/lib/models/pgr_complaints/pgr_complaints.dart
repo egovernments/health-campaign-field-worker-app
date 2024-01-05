@@ -16,6 +16,8 @@ class PgrComplaintModel extends EntityModel with PgrComplaintModelMappable {
   const PgrComplaintModel({
     required this.service,
     this.workflow,
+       super.isDeleted  = false,
+        super.auditDetails,
   }) : super();
 }
 
@@ -53,6 +55,7 @@ class PgrComplainantModel extends EntityModel with PgrComplainantModelMappable {
     this.isDeleted = false,
     this.rowVersion = 1,
     super.auditDetails,
+
   }) : super();
 
   PgrComplainantCompanion get companion {
@@ -86,6 +89,8 @@ class PgrRolesModel extends EntityModel with PgrRolesModelMappable {
   const PgrRolesModel({
     required this.name,
     required this.code,
+        super.isDeleted  = false,
+        super.auditDetails,
   }) : super();
 }
 
@@ -113,6 +118,10 @@ class PgrServiceSearchModel extends EntitySearchModel with PgrServiceSearchModel
     this.clientReferenceId,
     this.complainantMobileNumber,
     this.complaintNumber,
+       super.isDeleted  = false,
+        super.auditDetails,
+        super.additionalFields,
+        super.boundaryCode,
   }) : super();
 }
 
@@ -129,14 +138,13 @@ class PgrServiceModel extends EntityModel with PgrServiceModelMappable {
   final String? accountId;
   final PgrServiceApplicationStatus applicationStatus;
   final String? source;
-  @override
   final bool isDeleted;
   final int rowVersion;
   final PgrAddressModel address;
   final String? additionalDetail;
-  final ClientAuditDetails clientAuditDetails;
 
-  const PgrServiceModel({
+
+  const PgrServiceModel( {
     required this.clientReferenceId,
     this.active = true,
     this.id,
@@ -152,9 +160,9 @@ class PgrServiceModel extends EntityModel with PgrServiceModelMappable {
     this.rowVersion = 1,
     required this.address,
     this.additionalDetail,
-    required this.clientAuditDetails,
     super.auditDetails,
-  }) : super();
+
+  }) : super(isDeleted: false);
 
   PgrServiceCompanion get companion {
     return PgrServiceCompanion(
@@ -191,6 +199,8 @@ class PgrWorkflowModel extends EntityModel with PgrWorkflowModelMappable {
     required this.action,
     @MappableField(key: 'assignes') this.assignees = const [],
     required this.comments,
+    super.auditDetails,
+  super.isDeleted  = false,
   }) : super();
 }
 

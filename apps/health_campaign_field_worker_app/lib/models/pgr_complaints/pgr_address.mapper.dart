@@ -13,9 +13,6 @@ class PgrAddressModelMapper extends SubClassMapperBase<PgrAddressModel> {
   static PgrAddressModelMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = PgrAddressModelMapper._());
-      EntityModelMapper.ensureInitialized().addSubMapper(_instance!);
-      LocalityModelMapper.ensureInitialized();
-      GeoLocationMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -84,7 +81,7 @@ class PgrAddressModelMapper extends SubClassMapperBase<PgrAddressModel> {
       Field('rowVersion', _$rowVersion, opt: true);
   static AuditDetails? _$auditDetails(PgrAddressModel v) => v.auditDetails;
   static const Field<PgrAddressModel, AuditDetails> _f$auditDetails =
-      Field('auditDetails', _$auditDetails, mode: FieldMode.member);
+      Field('auditDetails', _$auditDetails, opt: true);
   static ClientAuditDetails? _$clientAuditDetails(PgrAddressModel v) =>
       v.clientAuditDetails;
   static const Field<PgrAddressModel, ClientAuditDetails>
@@ -146,7 +143,8 @@ class PgrAddressModelMapper extends SubClassMapperBase<PgrAddressModel> {
         geoLocation: data.dec(_f$geoLocation),
         additionDetails: data.dec(_f$additionDetails),
         isDeleted: data.dec(_f$isDeleted),
-        rowVersion: data.dec(_f$rowVersion));
+        rowVersion: data.dec(_f$rowVersion),
+        auditDetails: data.dec(_f$auditDetails));
   }
 
   @override
@@ -209,6 +207,8 @@ abstract class PgrAddressModelCopyWith<$R, $In extends PgrAddressModel, $Out>
   MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>?
       get additionDetails;
   @override
+  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
+  @override
   $R call(
       {String? tenantId,
       String? relatedClientReferenceId,
@@ -228,7 +228,8 @@ abstract class PgrAddressModelCopyWith<$R, $In extends PgrAddressModel, $Out>
       GeoLocation? geoLocation,
       Map<String, dynamic>? additionDetails,
       bool? isDeleted,
-      int? rowVersion});
+      int? rowVersion,
+      AuditDetails? auditDetails});
   PgrAddressModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -256,6 +257,9 @@ class _PgrAddressModelCopyWithImpl<$R, $Out>
               (v) => call(additionDetails: v))
           : null;
   @override
+  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
+      $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
+  @override
   $R call(
           {Object? tenantId = $none,
           Object? relatedClientReferenceId = $none,
@@ -275,7 +279,8 @@ class _PgrAddressModelCopyWithImpl<$R, $Out>
           Object? geoLocation = $none,
           Object? additionDetails = $none,
           Object? isDeleted = $none,
-          Object? rowVersion = $none}) =>
+          Object? rowVersion = $none,
+          Object? auditDetails = $none}) =>
       $apply(FieldCopyWithData({
         if (tenantId != $none) #tenantId: tenantId,
         if (relatedClientReferenceId != $none)
@@ -296,7 +301,8 @@ class _PgrAddressModelCopyWithImpl<$R, $Out>
         if (geoLocation != $none) #geoLocation: geoLocation,
         if (additionDetails != $none) #additionDetails: additionDetails,
         if (isDeleted != $none) #isDeleted: isDeleted,
-        if (rowVersion != $none) #rowVersion: rowVersion
+        if (rowVersion != $none) #rowVersion: rowVersion,
+        if (auditDetails != $none) #auditDetails: auditDetails
       }));
   @override
   PgrAddressModel $make(CopyWithData data) => PgrAddressModel(
@@ -319,7 +325,8 @@ class _PgrAddressModelCopyWithImpl<$R, $Out>
       geoLocation: data.get(#geoLocation, or: $value.geoLocation),
       additionDetails: data.get(#additionDetails, or: $value.additionDetails),
       isDeleted: data.get(#isDeleted, or: $value.isDeleted),
-      rowVersion: data.get(#rowVersion, or: $value.rowVersion));
+      rowVersion: data.get(#rowVersion, or: $value.rowVersion),
+      auditDetails: data.get(#auditDetails, or: $value.auditDetails));
 
   @override
   PgrAddressModelCopyWith<$R2, PgrAddressModel, $Out2> $chain<$R2, $Out2>(

@@ -33,6 +33,8 @@ class FacilitySearchModel extends EntitySearchModel with FacilitySearchModelMapp
     this.storageCapacity,
     this.tenantId,
     super.boundaryCode,
+    super.additionalFields,
+    super.auditDetails,
   }):  super(isDeleted: false);
 }
 

@@ -39,6 +39,8 @@ class IndividualSearchModel extends EntitySearchModel with IndividualSearchModel
     this.gender,
     this.identifiers,
     super.boundaryCode,
+        super.additionalFields,
+    super.auditDetails,
   }):  super(isDeleted: false);
 }
 

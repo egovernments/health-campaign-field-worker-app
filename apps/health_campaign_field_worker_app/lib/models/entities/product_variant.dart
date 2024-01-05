@@ -33,6 +33,8 @@ class ProductVariantSearchModel extends EntitySearchModel with ProductVariantSea
     this.variation,
     this.tenantId,
     super.boundaryCode,
+        super.additionalFields,
+    super.auditDetails,
   }):  super(isDeleted: false);
 }
 

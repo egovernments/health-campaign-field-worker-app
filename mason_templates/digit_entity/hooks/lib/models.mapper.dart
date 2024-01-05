@@ -13,8 +13,6 @@ class ConfigModelMapper extends ClassMapperBase<ConfigModel> {
   static ConfigModelMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = ConfigModelMapper._());
-      EnumValuesMapper.ensureInitialized();
-      AttributeModelMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -411,7 +409,6 @@ class AttributeModelMapper extends ClassMapperBase<AttributeModel> {
   static AttributeModelMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = AttributeModelMapper._());
-      TableReferenceModelMapper.ensureInitialized();
     }
     return _instance!;
   }

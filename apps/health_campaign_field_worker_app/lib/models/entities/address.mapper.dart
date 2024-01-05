@@ -13,7 +13,6 @@ class AddressSearchModelMapper extends SubClassMapperBase<AddressSearchModel> {
   static AddressSearchModelMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = AddressSearchModelMapper._());
-      EntitySearchModelMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
   }
@@ -45,13 +44,13 @@ class AddressSearchModelMapper extends SubClassMapperBase<AddressSearchModel> {
   static String? _$boundaryCode(AddressSearchModel v) => v.boundaryCode;
   static const Field<AddressSearchModel, String> _f$boundaryCode =
       Field('boundaryCode', _$boundaryCode, opt: true);
-  static AuditDetails? _$auditDetails(AddressSearchModel v) => v.auditDetails;
-  static const Field<AddressSearchModel, AuditDetails> _f$auditDetails =
-      Field('auditDetails', _$auditDetails, mode: FieldMode.member);
   static AdditionalFields? _$additionalFields(AddressSearchModel v) =>
       v.additionalFields;
   static const Field<AddressSearchModel, AdditionalFields> _f$additionalFields =
-      Field('additionalFields', _$additionalFields, mode: FieldMode.member);
+      Field('additionalFields', _$additionalFields, opt: true);
+  static AuditDetails? _$auditDetails(AddressSearchModel v) => v.auditDetails;
+  static const Field<AddressSearchModel, AuditDetails> _f$auditDetails =
+      Field('auditDetails', _$auditDetails, opt: true);
 
   @override
   final MappableFields<AddressSearchModel> fields = const {
@@ -63,8 +62,8 @@ class AddressSearchModelMapper extends SubClassMapperBase<AddressSearchModel> {
     #maxRadius: _f$maxRadius,
     #tenantId: _f$tenantId,
     #boundaryCode: _f$boundaryCode,
-    #auditDetails: _f$auditDetails,
     #additionalFields: _f$additionalFields,
+    #auditDetails: _f$auditDetails,
   };
   @override
   final bool ignoreNull = true;
@@ -86,7 +85,9 @@ class AddressSearchModelMapper extends SubClassMapperBase<AddressSearchModel> {
         offset: data.dec(_f$offset),
         maxRadius: data.dec(_f$maxRadius),
         tenantId: data.dec(_f$tenantId),
-        boundaryCode: data.dec(_f$boundaryCode));
+        boundaryCode: data.dec(_f$boundaryCode),
+        additionalFields: data.dec(_f$additionalFields),
+        auditDetails: data.dec(_f$auditDetails));
   }
 
   @override
@@ -147,6 +148,11 @@ extension AddressSearchModelValueCopy<$R, $Out>
 abstract class AddressSearchModelCopyWith<$R, $In extends AddressSearchModel,
     $Out> implements EntitySearchModelCopyWith<$R, $In, $Out> {
   @override
+  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
+      get additionalFields;
+  @override
+  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
+  @override
   $R call(
       {String? id,
       double? latitude,
@@ -155,7 +161,9 @@ abstract class AddressSearchModelCopyWith<$R, $In extends AddressSearchModel,
       int? offset,
       double? maxRadius,
       String? tenantId,
-      String? boundaryCode});
+      String? boundaryCode,
+      AdditionalFields? additionalFields,
+      AuditDetails? auditDetails});
   AddressSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -169,6 +177,13 @@ class _AddressSearchModelCopyWithImpl<$R, $Out>
   late final ClassMapperBase<AddressSearchModel> $mapper =
       AddressSearchModelMapper.ensureInitialized();
   @override
+  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
+      get additionalFields => $value.additionalFields?.copyWith
+          .$chain((v) => call(additionalFields: v));
+  @override
+  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
+      $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
+  @override
   $R call(
           {Object? id = $none,
           Object? latitude = $none,
@@ -177,7 +192,9 @@ class _AddressSearchModelCopyWithImpl<$R, $Out>
           Object? offset = $none,
           Object? maxRadius = $none,
           Object? tenantId = $none,
-          Object? boundaryCode = $none}) =>
+          Object? boundaryCode = $none,
+          Object? additionalFields = $none,
+          Object? auditDetails = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
         if (latitude != $none) #latitude: latitude,
@@ -186,7 +203,9 @@ class _AddressSearchModelCopyWithImpl<$R, $Out>
         if (offset != $none) #offset: offset,
         if (maxRadius != $none) #maxRadius: maxRadius,
         if (tenantId != $none) #tenantId: tenantId,
-        if (boundaryCode != $none) #boundaryCode: boundaryCode
+        if (boundaryCode != $none) #boundaryCode: boundaryCode,
+        if (additionalFields != $none) #additionalFields: additionalFields,
+        if (auditDetails != $none) #auditDetails: auditDetails
       }));
   @override
   AddressSearchModel $make(CopyWithData data) =>
@@ -198,12 +217,166 @@ class _AddressSearchModelCopyWithImpl<$R, $Out>
           offset: data.get(#offset, or: $value.offset),
           maxRadius: data.get(#maxRadius, or: $value.maxRadius),
           tenantId: data.get(#tenantId, or: $value.tenantId),
-          boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
+          boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode),
+          additionalFields:
+              data.get(#additionalFields, or: $value.additionalFields),
+          auditDetails: data.get(#auditDetails, or: $value.auditDetails));
 
   @override
   AddressSearchModelCopyWith<$R2, AddressSearchModel, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
       _AddressSearchModelCopyWithImpl($value, $cast, t);
+}
+
+class AddressAdditionalFieldsMapper
+    extends SubClassMapperBase<AddressAdditionalFields> {
+  AddressAdditionalFieldsMapper._();
+
+  static AddressAdditionalFieldsMapper? _instance;
+  static AddressAdditionalFieldsMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals
+          .use(_instance = AddressAdditionalFieldsMapper._());
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'AddressAdditionalFields';
+
+  static String _$schema(AddressAdditionalFields v) => v.schema;
+  static const Field<AddressAdditionalFields, String> _f$schema =
+      Field('schema', _$schema, opt: true, def: 'Address');
+  static int _$version(AddressAdditionalFields v) => v.version;
+  static const Field<AddressAdditionalFields, int> _f$version =
+      Field('version', _$version);
+  static List<AdditionalField> _$fields(AddressAdditionalFields v) => v.fields;
+  static const Field<AddressAdditionalFields, List<AdditionalField>> _f$fields =
+      Field('fields', _$fields, opt: true, def: const []);
+
+  @override
+  final MappableFields<AddressAdditionalFields> fields = const {
+    #schema: _f$schema,
+    #version: _f$version,
+    #fields: _f$fields,
+  };
+  @override
+  final bool ignoreNull = true;
+
+  @override
+  final String discriminatorKey = 'type';
+  @override
+  final dynamic discriminatorValue = MappableClass.useAsDefault;
+  @override
+  late final ClassMapperBase superMapper =
+      AdditionalFieldsMapper.ensureInitialized();
+
+  static AddressAdditionalFields _instantiate(DecodingData data) {
+    return AddressAdditionalFields(
+        schema: data.dec(_f$schema),
+        version: data.dec(_f$version),
+        fields: data.dec(_f$fields));
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static AddressAdditionalFields fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<AddressAdditionalFields>(map);
+  }
+
+  static AddressAdditionalFields fromJson(String json) {
+    return ensureInitialized().decodeJson<AddressAdditionalFields>(json);
+  }
+}
+
+mixin AddressAdditionalFieldsMappable {
+  String toJson() {
+    return AddressAdditionalFieldsMapper.ensureInitialized()
+        .encodeJson<AddressAdditionalFields>(this as AddressAdditionalFields);
+  }
+
+  Map<String, dynamic> toMap() {
+    return AddressAdditionalFieldsMapper.ensureInitialized()
+        .encodeMap<AddressAdditionalFields>(this as AddressAdditionalFields);
+  }
+
+  AddressAdditionalFieldsCopyWith<AddressAdditionalFields,
+          AddressAdditionalFields, AddressAdditionalFields>
+      get copyWith => _AddressAdditionalFieldsCopyWithImpl(
+          this as AddressAdditionalFields, $identity, $identity);
+  @override
+  String toString() {
+    return AddressAdditionalFieldsMapper.ensureInitialized()
+        .stringifyValue(this as AddressAdditionalFields);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            AddressAdditionalFieldsMapper.ensureInitialized()
+                .isValueEqual(this as AddressAdditionalFields, other));
+  }
+
+  @override
+  int get hashCode {
+    return AddressAdditionalFieldsMapper.ensureInitialized()
+        .hashValue(this as AddressAdditionalFields);
+  }
+}
+
+extension AddressAdditionalFieldsValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, AddressAdditionalFields, $Out> {
+  AddressAdditionalFieldsCopyWith<$R, AddressAdditionalFields, $Out>
+      get $asAddressAdditionalFields => $base
+          .as((v, t, t2) => _AddressAdditionalFieldsCopyWithImpl(v, t, t2));
+}
+
+abstract class AddressAdditionalFieldsCopyWith<
+    $R,
+    $In extends AddressAdditionalFields,
+    $Out> implements AdditionalFieldsCopyWith<$R, $In, $Out> {
+  @override
+  ListCopyWith<$R, AdditionalField,
+      AdditionalFieldCopyWith<$R, AdditionalField, AdditionalField>> get fields;
+  @override
+  $R call({String? schema, int? version, List<AdditionalField>? fields});
+  AddressAdditionalFieldsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
+      Then<$Out2, $R2> t);
+}
+
+class _AddressAdditionalFieldsCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, AddressAdditionalFields, $Out>
+    implements
+        AddressAdditionalFieldsCopyWith<$R, AddressAdditionalFields, $Out> {
+  _AddressAdditionalFieldsCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<AddressAdditionalFields> $mapper =
+      AddressAdditionalFieldsMapper.ensureInitialized();
+  @override
+  ListCopyWith<$R, AdditionalField,
+          AdditionalFieldCopyWith<$R, AdditionalField, AdditionalField>>
+      get fields => ListCopyWith($value.fields, (v, t) => v.copyWith.$chain(t),
+          (v) => call(fields: v));
+  @override
+  $R call({String? schema, int? version, List<AdditionalField>? fields}) =>
+      $apply(FieldCopyWithData({
+        if (schema != null) #schema: schema,
+        if (version != null) #version: version,
+        if (fields != null) #fields: fields
+      }));
+  @override
+  AddressAdditionalFields $make(CopyWithData data) => AddressAdditionalFields(
+      schema: data.get(#schema, or: $value.schema),
+      version: data.get(#version, or: $value.version),
+      fields: data.get(#fields, or: $value.fields));
+
+  @override
+  AddressAdditionalFieldsCopyWith<$R2, AddressAdditionalFields, $Out2>
+      $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+          _AddressAdditionalFieldsCopyWithImpl($value, $cast, t);
 }
 
 class AddressModelMapper extends SubClassMapperBase<AddressModel> {
@@ -213,12 +386,6 @@ class AddressModelMapper extends SubClassMapperBase<AddressModel> {
   static AddressModelMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = AddressModelMapper._());
-      EntityModelMapper.ensureInitialized().addSubMapper(_instance!);
-      AddressAdditionalFieldsMapper.ensureInitialized();
-      AddressTypeMapper.ensureInitialized();
-      LocalityModelMapper.ensureInitialized();
-      AuditDetailsMapper.ensureInitialized();
-      ClientAuditDetailsMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -574,157 +741,4 @@ class _AddressModelCopyWithImpl<$R, $Out>
   AddressModelCopyWith<$R2, AddressModel, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
       _AddressModelCopyWithImpl($value, $cast, t);
-}
-
-class AddressAdditionalFieldsMapper
-    extends SubClassMapperBase<AddressAdditionalFields> {
-  AddressAdditionalFieldsMapper._();
-
-  static AddressAdditionalFieldsMapper? _instance;
-  static AddressAdditionalFieldsMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals
-          .use(_instance = AddressAdditionalFieldsMapper._());
-      AdditionalFieldsMapper.ensureInitialized().addSubMapper(_instance!);
-      AdditionalFieldMapper.ensureInitialized();
-    }
-    return _instance!;
-  }
-
-  @override
-  final String id = 'AddressAdditionalFields';
-
-  static String _$schema(AddressAdditionalFields v) => v.schema;
-  static const Field<AddressAdditionalFields, String> _f$schema =
-      Field('schema', _$schema, opt: true, def: 'Address');
-  static int _$version(AddressAdditionalFields v) => v.version;
-  static const Field<AddressAdditionalFields, int> _f$version =
-      Field('version', _$version);
-  static List<AdditionalField> _$fields(AddressAdditionalFields v) => v.fields;
-  static const Field<AddressAdditionalFields, List<AdditionalField>> _f$fields =
-      Field('fields', _$fields, opt: true, def: const []);
-
-  @override
-  final MappableFields<AddressAdditionalFields> fields = const {
-    #schema: _f$schema,
-    #version: _f$version,
-    #fields: _f$fields,
-  };
-  @override
-  final bool ignoreNull = true;
-
-  @override
-  final String discriminatorKey = 'type';
-  @override
-  final dynamic discriminatorValue = MappableClass.useAsDefault;
-  @override
-  late final ClassMapperBase superMapper =
-      AdditionalFieldsMapper.ensureInitialized();
-
-  static AddressAdditionalFields _instantiate(DecodingData data) {
-    return AddressAdditionalFields(
-        schema: data.dec(_f$schema),
-        version: data.dec(_f$version),
-        fields: data.dec(_f$fields));
-  }
-
-  @override
-  final Function instantiate = _instantiate;
-
-  static AddressAdditionalFields fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<AddressAdditionalFields>(map);
-  }
-
-  static AddressAdditionalFields fromJson(String json) {
-    return ensureInitialized().decodeJson<AddressAdditionalFields>(json);
-  }
-}
-
-mixin AddressAdditionalFieldsMappable {
-  String toJson() {
-    return AddressAdditionalFieldsMapper.ensureInitialized()
-        .encodeJson<AddressAdditionalFields>(this as AddressAdditionalFields);
-  }
-
-  Map<String, dynamic> toMap() {
-    return AddressAdditionalFieldsMapper.ensureInitialized()
-        .encodeMap<AddressAdditionalFields>(this as AddressAdditionalFields);
-  }
-
-  AddressAdditionalFieldsCopyWith<AddressAdditionalFields,
-          AddressAdditionalFields, AddressAdditionalFields>
-      get copyWith => _AddressAdditionalFieldsCopyWithImpl(
-          this as AddressAdditionalFields, $identity, $identity);
-  @override
-  String toString() {
-    return AddressAdditionalFieldsMapper.ensureInitialized()
-        .stringifyValue(this as AddressAdditionalFields);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            AddressAdditionalFieldsMapper.ensureInitialized()
-                .isValueEqual(this as AddressAdditionalFields, other));
-  }
-
-  @override
-  int get hashCode {
-    return AddressAdditionalFieldsMapper.ensureInitialized()
-        .hashValue(this as AddressAdditionalFields);
-  }
-}
-
-extension AddressAdditionalFieldsValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, AddressAdditionalFields, $Out> {
-  AddressAdditionalFieldsCopyWith<$R, AddressAdditionalFields, $Out>
-      get $asAddressAdditionalFields => $base
-          .as((v, t, t2) => _AddressAdditionalFieldsCopyWithImpl(v, t, t2));
-}
-
-abstract class AddressAdditionalFieldsCopyWith<
-    $R,
-    $In extends AddressAdditionalFields,
-    $Out> implements AdditionalFieldsCopyWith<$R, $In, $Out> {
-  @override
-  ListCopyWith<$R, AdditionalField,
-      AdditionalFieldCopyWith<$R, AdditionalField, AdditionalField>> get fields;
-  @override
-  $R call({String? schema, int? version, List<AdditionalField>? fields});
-  AddressAdditionalFieldsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
-      Then<$Out2, $R2> t);
-}
-
-class _AddressAdditionalFieldsCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, AddressAdditionalFields, $Out>
-    implements
-        AddressAdditionalFieldsCopyWith<$R, AddressAdditionalFields, $Out> {
-  _AddressAdditionalFieldsCopyWithImpl(super.value, super.then, super.then2);
-
-  @override
-  late final ClassMapperBase<AddressAdditionalFields> $mapper =
-      AddressAdditionalFieldsMapper.ensureInitialized();
-  @override
-  ListCopyWith<$R, AdditionalField,
-          AdditionalFieldCopyWith<$R, AdditionalField, AdditionalField>>
-      get fields => ListCopyWith($value.fields, (v, t) => v.copyWith.$chain(t),
-          (v) => call(fields: v));
-  @override
-  $R call({String? schema, int? version, List<AdditionalField>? fields}) =>
-      $apply(FieldCopyWithData({
-        if (schema != null) #schema: schema,
-        if (version != null) #version: version,
-        if (fields != null) #fields: fields
-      }));
-  @override
-  AddressAdditionalFields $make(CopyWithData data) => AddressAdditionalFields(
-      schema: data.get(#schema, or: $value.schema),
-      version: data.get(#version, or: $value.version),
-      fields: data.get(#fields, or: $value.fields));
-
-  @override
-  AddressAdditionalFieldsCopyWith<$R2, AddressAdditionalFields, $Out2>
-      $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-          _AddressAdditionalFieldsCopyWithImpl($value, $cast, t);
 }

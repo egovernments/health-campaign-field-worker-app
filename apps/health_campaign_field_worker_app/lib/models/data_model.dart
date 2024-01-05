@@ -1,4 +1,4 @@
-@MappableLib()
+@MappableLib(generateInitializerForScope: InitializerScope.package,)
 library models;
 
 import 'package:dart_mappable/dart_mappable.dart';
@@ -61,7 +61,6 @@ export 'pgr_complaints/pgr_complaints_response.dart';
 
 part 'data_model.mapper.dart';
 
-
 abstract class DataModel {
   final String? boundaryCode;
   final bool? isDeleted;
@@ -72,7 +71,9 @@ abstract class DataModel {
   });
 }
 
-@MappableClass(includeSubClasses: [AddressModel, LocalityModel, BoundaryModel, PgrAddressModel, PgrComplaintModel, PgrRolesModel, PgrServiceModel, PgrServiceCreateResponseModel, PgrComplaintResponseModel, PgrServiceResponseModel, ProjectStaffModel])
+@MappableClass(includeSubClasses: [
+  BoundaryModel
+])
 abstract class EntityModel extends DataModel with EntityModelMappable {
   final AuditDetails? auditDetails;
   final ClientAuditDetails? clientAuditDetails;
@@ -83,8 +84,12 @@ abstract class EntityModel extends DataModel with EntityModelMappable {
   });
 }
 
-@MappableClass(ignoreNull: true, includeSubClasses: [AddressSearchModel, LocalitySearchModel, BoundarySearchModel, PgrServiceSearchModel, ProjectStaffSearchModel])
-abstract class EntitySearchModel extends DataModel with EntitySearchModelMappable {
+@MappableClass(ignoreNull: true, includeSubClasses: [
+  AddressSearchModel,
+
+])
+abstract class EntitySearchModel extends DataModel
+    with EntitySearchModelMappable {
   final AuditDetails? auditDetails;
   final AdditionalFields? additionalFields;
 
@@ -103,7 +108,8 @@ abstract class EntitySearchModel extends DataModel with EntitySearchModelMappabl
   }) : super(isDeleted: false);
 }
 
-@MappableClass(includeSubClasses: [LocalityAdditionalFields, ProjectStaffAdditionalFields])
+@MappableClass(
+    includeSubClasses: [AddressAdditionalFields],)
 abstract class AdditionalFields with AdditionalFieldsMappable {
   final String schema;
   final int version;

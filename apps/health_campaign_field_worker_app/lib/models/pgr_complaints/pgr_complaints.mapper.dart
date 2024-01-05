@@ -75,8 +75,6 @@ class PgrComplaintModelMapper extends ClassMapperBase<PgrComplaintModel> {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = PgrComplaintModelMapper._());
       EntityModelMapper.ensureInitialized();
-      PgrServiceModelMapper.ensureInitialized();
-      PgrWorkflowModelMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -90,9 +88,12 @@ class PgrComplaintModelMapper extends ClassMapperBase<PgrComplaintModel> {
   static PgrWorkflowModel? _$workflow(PgrComplaintModel v) => v.workflow;
   static const Field<PgrComplaintModel, PgrWorkflowModel> _f$workflow =
       Field('workflow', _$workflow, opt: true);
+  static bool? _$isDeleted(PgrComplaintModel v) => v.isDeleted;
+  static const Field<PgrComplaintModel, bool> _f$isDeleted =
+      Field('isDeleted', _$isDeleted, opt: true, def: false);
   static AuditDetails? _$auditDetails(PgrComplaintModel v) => v.auditDetails;
   static const Field<PgrComplaintModel, AuditDetails> _f$auditDetails =
-      Field('auditDetails', _$auditDetails, mode: FieldMode.member);
+      Field('auditDetails', _$auditDetails, opt: true);
   static ClientAuditDetails? _$clientAuditDetails(PgrComplaintModel v) =>
       v.clientAuditDetails;
   static const Field<PgrComplaintModel, ClientAuditDetails>
@@ -103,6 +104,7 @@ class PgrComplaintModelMapper extends ClassMapperBase<PgrComplaintModel> {
   final MappableFields<PgrComplaintModel> fields = const {
     #service: _f$service,
     #workflow: _f$workflow,
+    #isDeleted: _f$isDeleted,
     #auditDetails: _f$auditDetails,
     #clientAuditDetails: _f$clientAuditDetails,
   };
@@ -111,7 +113,10 @@ class PgrComplaintModelMapper extends ClassMapperBase<PgrComplaintModel> {
 
   static PgrComplaintModel _instantiate(DecodingData data) {
     return PgrComplaintModel(
-        service: data.dec(_f$service), workflow: data.dec(_f$workflow));
+        service: data.dec(_f$service),
+        workflow: data.dec(_f$workflow),
+        isDeleted: data.dec(_f$isDeleted),
+        auditDetails: data.dec(_f$auditDetails));
   }
 
   @override
@@ -175,7 +180,13 @@ abstract class PgrComplaintModelCopyWith<$R, $In extends PgrComplaintModel,
   PgrWorkflowModelCopyWith<$R, PgrWorkflowModel, PgrWorkflowModel>?
       get workflow;
   @override
-  $R call({PgrServiceModel? service, PgrWorkflowModel? workflow});
+  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
+  @override
+  $R call(
+      {PgrServiceModel? service,
+      PgrWorkflowModel? workflow,
+      bool? isDeleted,
+      AuditDetails? auditDetails});
   PgrComplaintModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -196,143 +207,31 @@ class _PgrComplaintModelCopyWithImpl<$R, $Out>
       get workflow =>
           $value.workflow?.copyWith.$chain((v) => call(workflow: v));
   @override
-  $R call({PgrServiceModel? service, Object? workflow = $none}) =>
+  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
+      $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
+  @override
+  $R call(
+          {PgrServiceModel? service,
+          Object? workflow = $none,
+          Object? isDeleted = $none,
+          Object? auditDetails = $none}) =>
       $apply(FieldCopyWithData({
         if (service != null) #service: service,
-        if (workflow != $none) #workflow: workflow
+        if (workflow != $none) #workflow: workflow,
+        if (isDeleted != $none) #isDeleted: isDeleted,
+        if (auditDetails != $none) #auditDetails: auditDetails
       }));
   @override
   PgrComplaintModel $make(CopyWithData data) => PgrComplaintModel(
       service: data.get(#service, or: $value.service),
-      workflow: data.get(#workflow, or: $value.workflow));
+      workflow: data.get(#workflow, or: $value.workflow),
+      isDeleted: data.get(#isDeleted, or: $value.isDeleted),
+      auditDetails: data.get(#auditDetails, or: $value.auditDetails));
 
   @override
   PgrComplaintModelCopyWith<$R2, PgrComplaintModel, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
       _PgrComplaintModelCopyWithImpl($value, $cast, t);
-}
-
-class PgrRolesModelMapper extends ClassMapperBase<PgrRolesModel> {
-  PgrRolesModelMapper._();
-
-  static PgrRolesModelMapper? _instance;
-  static PgrRolesModelMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = PgrRolesModelMapper._());
-      EntityModelMapper.ensureInitialized();
-    }
-    return _instance!;
-  }
-
-  @override
-  final String id = 'PgrRolesModel';
-
-  static String _$name(PgrRolesModel v) => v.name;
-  static const Field<PgrRolesModel, String> _f$name = Field('name', _$name);
-  static String _$code(PgrRolesModel v) => v.code;
-  static const Field<PgrRolesModel, String> _f$code = Field('code', _$code);
-  static AuditDetails? _$auditDetails(PgrRolesModel v) => v.auditDetails;
-  static const Field<PgrRolesModel, AuditDetails> _f$auditDetails =
-      Field('auditDetails', _$auditDetails, mode: FieldMode.member);
-  static ClientAuditDetails? _$clientAuditDetails(PgrRolesModel v) =>
-      v.clientAuditDetails;
-  static const Field<PgrRolesModel, ClientAuditDetails> _f$clientAuditDetails =
-      Field('clientAuditDetails', _$clientAuditDetails, mode: FieldMode.member);
-
-  @override
-  final MappableFields<PgrRolesModel> fields = const {
-    #name: _f$name,
-    #code: _f$code,
-    #auditDetails: _f$auditDetails,
-    #clientAuditDetails: _f$clientAuditDetails,
-  };
-  @override
-  final bool ignoreNull = true;
-
-  static PgrRolesModel _instantiate(DecodingData data) {
-    return PgrRolesModel(name: data.dec(_f$name), code: data.dec(_f$code));
-  }
-
-  @override
-  final Function instantiate = _instantiate;
-
-  static PgrRolesModel fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<PgrRolesModel>(map);
-  }
-
-  static PgrRolesModel fromJson(String json) {
-    return ensureInitialized().decodeJson<PgrRolesModel>(json);
-  }
-}
-
-mixin PgrRolesModelMappable {
-  String toJson() {
-    return PgrRolesModelMapper.ensureInitialized()
-        .encodeJson<PgrRolesModel>(this as PgrRolesModel);
-  }
-
-  Map<String, dynamic> toMap() {
-    return PgrRolesModelMapper.ensureInitialized()
-        .encodeMap<PgrRolesModel>(this as PgrRolesModel);
-  }
-
-  PgrRolesModelCopyWith<PgrRolesModel, PgrRolesModel, PgrRolesModel>
-      get copyWith => _PgrRolesModelCopyWithImpl(
-          this as PgrRolesModel, $identity, $identity);
-  @override
-  String toString() {
-    return PgrRolesModelMapper.ensureInitialized()
-        .stringifyValue(this as PgrRolesModel);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            PgrRolesModelMapper.ensureInitialized()
-                .isValueEqual(this as PgrRolesModel, other));
-  }
-
-  @override
-  int get hashCode {
-    return PgrRolesModelMapper.ensureInitialized()
-        .hashValue(this as PgrRolesModel);
-  }
-}
-
-extension PgrRolesModelValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, PgrRolesModel, $Out> {
-  PgrRolesModelCopyWith<$R, PgrRolesModel, $Out> get $asPgrRolesModel =>
-      $base.as((v, t, t2) => _PgrRolesModelCopyWithImpl(v, t, t2));
-}
-
-abstract class PgrRolesModelCopyWith<$R, $In extends PgrRolesModel, $Out>
-    implements EntityModelCopyWith<$R, $In, $Out> {
-  @override
-  $R call({String? name, String? code});
-  PgrRolesModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
-}
-
-class _PgrRolesModelCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, PgrRolesModel, $Out>
-    implements PgrRolesModelCopyWith<$R, PgrRolesModel, $Out> {
-  _PgrRolesModelCopyWithImpl(super.value, super.then, super.then2);
-
-  @override
-  late final ClassMapperBase<PgrRolesModel> $mapper =
-      PgrRolesModelMapper.ensureInitialized();
-  @override
-  $R call({String? name, String? code}) => $apply(FieldCopyWithData(
-      {if (name != null) #name: name, if (code != null) #code: code}));
-  @override
-  PgrRolesModel $make(CopyWithData data) => PgrRolesModel(
-      name: data.get(#name, or: $value.name),
-      code: data.get(#code, or: $value.code));
-
-  @override
-  PgrRolesModelCopyWith<$R2, PgrRolesModel, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _PgrRolesModelCopyWithImpl($value, $cast, t);
 }
 
 class PgrServiceModelMapper extends ClassMapperBase<PgrServiceModel> {
@@ -343,11 +242,6 @@ class PgrServiceModelMapper extends ClassMapperBase<PgrServiceModel> {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = PgrServiceModelMapper._());
       EntityModelMapper.ensureInitialized();
-      PgrServiceApplicationStatusMapper.ensureInitialized();
-      PgrComplainantModelMapper.ensureInitialized();
-      PgrAddressModelMapper.ensureInitialized();
-      ClientAuditDetailsMapper.ensureInitialized();
-      AuditDetailsMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -401,13 +295,14 @@ class PgrServiceModelMapper extends ClassMapperBase<PgrServiceModel> {
   static String? _$additionalDetail(PgrServiceModel v) => v.additionalDetail;
   static const Field<PgrServiceModel, String> _f$additionalDetail =
       Field('additionalDetail', _$additionalDetail, opt: true);
-  static ClientAuditDetails _$clientAuditDetails(PgrServiceModel v) =>
-      v.clientAuditDetails;
-  static const Field<PgrServiceModel, ClientAuditDetails>
-      _f$clientAuditDetails = Field('clientAuditDetails', _$clientAuditDetails);
   static AuditDetails? _$auditDetails(PgrServiceModel v) => v.auditDetails;
   static const Field<PgrServiceModel, AuditDetails> _f$auditDetails =
       Field('auditDetails', _$auditDetails, opt: true);
+  static ClientAuditDetails? _$clientAuditDetails(PgrServiceModel v) =>
+      v.clientAuditDetails;
+  static const Field<PgrServiceModel, ClientAuditDetails>
+      _f$clientAuditDetails =
+      Field('clientAuditDetails', _$clientAuditDetails, mode: FieldMode.member);
 
   @override
   final MappableFields<PgrServiceModel> fields = const {
@@ -426,8 +321,8 @@ class PgrServiceModelMapper extends ClassMapperBase<PgrServiceModel> {
     #rowVersion: _f$rowVersion,
     #address: _f$address,
     #additionalDetail: _f$additionalDetail,
-    #clientAuditDetails: _f$clientAuditDetails,
     #auditDetails: _f$auditDetails,
+    #clientAuditDetails: _f$clientAuditDetails,
   };
   @override
   final bool ignoreNull = true;
@@ -449,7 +344,6 @@ class PgrServiceModelMapper extends ClassMapperBase<PgrServiceModel> {
         rowVersion: data.dec(_f$rowVersion),
         address: data.dec(_f$address),
         additionalDetail: data.dec(_f$additionalDetail),
-        clientAuditDetails: data.dec(_f$clientAuditDetails),
         auditDetails: data.dec(_f$auditDetails));
   }
 
@@ -511,8 +405,6 @@ abstract class PgrServiceModelCopyWith<$R, $In extends PgrServiceModel, $Out>
   PgrComplainantModelCopyWith<$R, PgrComplainantModel, PgrComplainantModel>
       get user;
   PgrAddressModelCopyWith<$R, PgrAddressModel, PgrAddressModel> get address;
-  ClientAuditDetailsCopyWith<$R, ClientAuditDetails, ClientAuditDetails>
-      get clientAuditDetails;
   @override
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
   @override
@@ -532,7 +424,6 @@ abstract class PgrServiceModelCopyWith<$R, $In extends PgrServiceModel, $Out>
       int? rowVersion,
       PgrAddressModel? address,
       String? additionalDetail,
-      covariant ClientAuditDetails? clientAuditDetails,
       AuditDetails? auditDetails});
   PgrServiceModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
@@ -553,10 +444,6 @@ class _PgrServiceModelCopyWithImpl<$R, $Out>
   PgrAddressModelCopyWith<$R, PgrAddressModel, PgrAddressModel> get address =>
       $value.address.copyWith.$chain((v) => call(address: v));
   @override
-  ClientAuditDetailsCopyWith<$R, ClientAuditDetails, ClientAuditDetails>
-      get clientAuditDetails => $value.clientAuditDetails.copyWith
-          .$chain((v) => call(clientAuditDetails: v));
-  @override
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
       $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
   @override
@@ -576,7 +463,6 @@ class _PgrServiceModelCopyWithImpl<$R, $Out>
           int? rowVersion,
           PgrAddressModel? address,
           Object? additionalDetail = $none,
-          ClientAuditDetails? clientAuditDetails,
           Object? auditDetails = $none}) =>
       $apply(FieldCopyWithData({
         if (clientReferenceId != null) #clientReferenceId: clientReferenceId,
@@ -594,7 +480,6 @@ class _PgrServiceModelCopyWithImpl<$R, $Out>
         if (rowVersion != null) #rowVersion: rowVersion,
         if (address != null) #address: address,
         if (additionalDetail != $none) #additionalDetail: additionalDetail,
-        if (clientAuditDetails != null) #clientAuditDetails: clientAuditDetails,
         if (auditDetails != $none) #auditDetails: auditDetails
       }));
   @override
@@ -618,8 +503,6 @@ class _PgrServiceModelCopyWithImpl<$R, $Out>
       address: data.get(#address, or: $value.address),
       additionalDetail:
           data.get(#additionalDetail, or: $value.additionalDetail),
-      clientAuditDetails:
-          data.get(#clientAuditDetails, or: $value.clientAuditDetails),
       auditDetails: data.get(#auditDetails, or: $value.auditDetails));
 
   @override
@@ -636,8 +519,6 @@ class PgrComplainantModelMapper extends ClassMapperBase<PgrComplainantModel> {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = PgrComplainantModelMapper._());
       EntityModelMapper.ensureInitialized();
-      PgrRolesModelMapper.ensureInitialized();
-      AuditDetailsMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -899,6 +780,157 @@ class _PgrComplainantModelCopyWithImpl<$R, $Out>
           _PgrComplainantModelCopyWithImpl($value, $cast, t);
 }
 
+class PgrRolesModelMapper extends ClassMapperBase<PgrRolesModel> {
+  PgrRolesModelMapper._();
+
+  static PgrRolesModelMapper? _instance;
+  static PgrRolesModelMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = PgrRolesModelMapper._());
+      EntityModelMapper.ensureInitialized();
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'PgrRolesModel';
+
+  static String _$name(PgrRolesModel v) => v.name;
+  static const Field<PgrRolesModel, String> _f$name = Field('name', _$name);
+  static String _$code(PgrRolesModel v) => v.code;
+  static const Field<PgrRolesModel, String> _f$code = Field('code', _$code);
+  static bool? _$isDeleted(PgrRolesModel v) => v.isDeleted;
+  static const Field<PgrRolesModel, bool> _f$isDeleted =
+      Field('isDeleted', _$isDeleted, opt: true, def: false);
+  static AuditDetails? _$auditDetails(PgrRolesModel v) => v.auditDetails;
+  static const Field<PgrRolesModel, AuditDetails> _f$auditDetails =
+      Field('auditDetails', _$auditDetails, opt: true);
+  static ClientAuditDetails? _$clientAuditDetails(PgrRolesModel v) =>
+      v.clientAuditDetails;
+  static const Field<PgrRolesModel, ClientAuditDetails> _f$clientAuditDetails =
+      Field('clientAuditDetails', _$clientAuditDetails, mode: FieldMode.member);
+
+  @override
+  final MappableFields<PgrRolesModel> fields = const {
+    #name: _f$name,
+    #code: _f$code,
+    #isDeleted: _f$isDeleted,
+    #auditDetails: _f$auditDetails,
+    #clientAuditDetails: _f$clientAuditDetails,
+  };
+  @override
+  final bool ignoreNull = true;
+
+  static PgrRolesModel _instantiate(DecodingData data) {
+    return PgrRolesModel(
+        name: data.dec(_f$name),
+        code: data.dec(_f$code),
+        isDeleted: data.dec(_f$isDeleted),
+        auditDetails: data.dec(_f$auditDetails));
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static PgrRolesModel fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<PgrRolesModel>(map);
+  }
+
+  static PgrRolesModel fromJson(String json) {
+    return ensureInitialized().decodeJson<PgrRolesModel>(json);
+  }
+}
+
+mixin PgrRolesModelMappable {
+  String toJson() {
+    return PgrRolesModelMapper.ensureInitialized()
+        .encodeJson<PgrRolesModel>(this as PgrRolesModel);
+  }
+
+  Map<String, dynamic> toMap() {
+    return PgrRolesModelMapper.ensureInitialized()
+        .encodeMap<PgrRolesModel>(this as PgrRolesModel);
+  }
+
+  PgrRolesModelCopyWith<PgrRolesModel, PgrRolesModel, PgrRolesModel>
+      get copyWith => _PgrRolesModelCopyWithImpl(
+          this as PgrRolesModel, $identity, $identity);
+  @override
+  String toString() {
+    return PgrRolesModelMapper.ensureInitialized()
+        .stringifyValue(this as PgrRolesModel);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            PgrRolesModelMapper.ensureInitialized()
+                .isValueEqual(this as PgrRolesModel, other));
+  }
+
+  @override
+  int get hashCode {
+    return PgrRolesModelMapper.ensureInitialized()
+        .hashValue(this as PgrRolesModel);
+  }
+}
+
+extension PgrRolesModelValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, PgrRolesModel, $Out> {
+  PgrRolesModelCopyWith<$R, PgrRolesModel, $Out> get $asPgrRolesModel =>
+      $base.as((v, t, t2) => _PgrRolesModelCopyWithImpl(v, t, t2));
+}
+
+abstract class PgrRolesModelCopyWith<$R, $In extends PgrRolesModel, $Out>
+    implements EntityModelCopyWith<$R, $In, $Out> {
+  @override
+  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
+  @override
+  $R call(
+      {String? name,
+      String? code,
+      bool? isDeleted,
+      AuditDetails? auditDetails});
+  PgrRolesModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
+}
+
+class _PgrRolesModelCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, PgrRolesModel, $Out>
+    implements PgrRolesModelCopyWith<$R, PgrRolesModel, $Out> {
+  _PgrRolesModelCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<PgrRolesModel> $mapper =
+      PgrRolesModelMapper.ensureInitialized();
+  @override
+  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
+      $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
+  @override
+  $R call(
+          {String? name,
+          String? code,
+          Object? isDeleted = $none,
+          Object? auditDetails = $none}) =>
+      $apply(FieldCopyWithData({
+        if (name != null) #name: name,
+        if (code != null) #code: code,
+        if (isDeleted != $none) #isDeleted: isDeleted,
+        if (auditDetails != $none) #auditDetails: auditDetails
+      }));
+  @override
+  PgrRolesModel $make(CopyWithData data) => PgrRolesModel(
+      name: data.get(#name, or: $value.name),
+      code: data.get(#code, or: $value.code),
+      isDeleted: data.get(#isDeleted, or: $value.isDeleted),
+      auditDetails: data.get(#auditDetails, or: $value.auditDetails));
+
+  @override
+  PgrRolesModelCopyWith<$R2, PgrRolesModel, $Out2> $chain<$R2, $Out2>(
+          Then<$Out2, $R2> t) =>
+      _PgrRolesModelCopyWithImpl($value, $cast, t);
+}
+
 class PgrWorkflowModelMapper extends ClassMapperBase<PgrWorkflowModel> {
   PgrWorkflowModelMapper._();
 
@@ -926,7 +958,10 @@ class PgrWorkflowModelMapper extends ClassMapperBase<PgrWorkflowModel> {
       Field('comments', _$comments);
   static AuditDetails? _$auditDetails(PgrWorkflowModel v) => v.auditDetails;
   static const Field<PgrWorkflowModel, AuditDetails> _f$auditDetails =
-      Field('auditDetails', _$auditDetails, mode: FieldMode.member);
+      Field('auditDetails', _$auditDetails, opt: true);
+  static bool? _$isDeleted(PgrWorkflowModel v) => v.isDeleted;
+  static const Field<PgrWorkflowModel, bool> _f$isDeleted =
+      Field('isDeleted', _$isDeleted, opt: true, def: false);
   static ClientAuditDetails? _$clientAuditDetails(PgrWorkflowModel v) =>
       v.clientAuditDetails;
   static const Field<PgrWorkflowModel, ClientAuditDetails>
@@ -939,6 +974,7 @@ class PgrWorkflowModelMapper extends ClassMapperBase<PgrWorkflowModel> {
     #assignees: _f$assignees,
     #comments: _f$comments,
     #auditDetails: _f$auditDetails,
+    #isDeleted: _f$isDeleted,
     #clientAuditDetails: _f$clientAuditDetails,
   };
   @override
@@ -948,7 +984,9 @@ class PgrWorkflowModelMapper extends ClassMapperBase<PgrWorkflowModel> {
     return PgrWorkflowModel(
         action: data.dec(_f$action),
         assignees: data.dec(_f$assignees),
-        comments: data.dec(_f$comments));
+        comments: data.dec(_f$comments),
+        auditDetails: data.dec(_f$auditDetails),
+        isDeleted: data.dec(_f$isDeleted));
   }
 
   @override
@@ -1009,7 +1047,14 @@ abstract class PgrWorkflowModelCopyWith<$R, $In extends PgrWorkflowModel, $Out>
     implements EntityModelCopyWith<$R, $In, $Out> {
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>> get assignees;
   @override
-  $R call({String? action, List<String>? assignees, String? comments});
+  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
+  @override
+  $R call(
+      {String? action,
+      List<String>? assignees,
+      String? comments,
+      AuditDetails? auditDetails,
+      bool? isDeleted});
   PgrWorkflowModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -1027,17 +1072,29 @@ class _PgrWorkflowModelCopyWithImpl<$R, $Out>
       ListCopyWith($value.assignees, (v, t) => ObjectCopyWith(v, $identity, t),
           (v) => call(assignees: v));
   @override
-  $R call({String? action, List<String>? assignees, String? comments}) =>
+  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
+      $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
+  @override
+  $R call(
+          {String? action,
+          List<String>? assignees,
+          String? comments,
+          Object? auditDetails = $none,
+          Object? isDeleted = $none}) =>
       $apply(FieldCopyWithData({
         if (action != null) #action: action,
         if (assignees != null) #assignees: assignees,
-        if (comments != null) #comments: comments
+        if (comments != null) #comments: comments,
+        if (auditDetails != $none) #auditDetails: auditDetails,
+        if (isDeleted != $none) #isDeleted: isDeleted
       }));
   @override
   PgrWorkflowModel $make(CopyWithData data) => PgrWorkflowModel(
       action: data.get(#action, or: $value.action),
       assignees: data.get(#assignees, or: $value.assignees),
-      comments: data.get(#comments, or: $value.comments));
+      comments: data.get(#comments, or: $value.comments),
+      auditDetails: data.get(#auditDetails, or: $value.auditDetails),
+      isDeleted: data.get(#isDeleted, or: $value.isDeleted));
 
   @override
   PgrWorkflowModelCopyWith<$R2, PgrWorkflowModel, $Out2> $chain<$R2, $Out2>(
@@ -1054,7 +1111,6 @@ class PgrServiceSearchModelMapper
     if (_instance == null) {
       MapperContainer.globals.use(_instance = PgrServiceSearchModelMapper._());
       EntitySearchModelMapper.ensureInitialized();
-      PgrServiceApplicationStatusMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -1102,15 +1158,21 @@ class PgrServiceSearchModelMapper
       v.complaintNumber;
   static const Field<PgrServiceSearchModel, String> _f$complaintNumber =
       Field('complaintNumber', _$complaintNumber, opt: true);
+  static bool? _$isDeleted(PgrServiceSearchModel v) => v.isDeleted;
+  static const Field<PgrServiceSearchModel, bool> _f$isDeleted =
+      Field('isDeleted', _$isDeleted, opt: true, def: false);
   static AuditDetails? _$auditDetails(PgrServiceSearchModel v) =>
       v.auditDetails;
   static const Field<PgrServiceSearchModel, AuditDetails> _f$auditDetails =
-      Field('auditDetails', _$auditDetails, mode: FieldMode.member);
+      Field('auditDetails', _$auditDetails, opt: true);
   static AdditionalFields? _$additionalFields(PgrServiceSearchModel v) =>
       v.additionalFields;
   static const Field<PgrServiceSearchModel, AdditionalFields>
       _f$additionalFields =
-      Field('additionalFields', _$additionalFields, mode: FieldMode.member);
+      Field('additionalFields', _$additionalFields, opt: true);
+  static String? _$boundaryCode(PgrServiceSearchModel v) => v.boundaryCode;
+  static const Field<PgrServiceSearchModel, String> _f$boundaryCode =
+      Field('boundaryCode', _$boundaryCode, opt: true);
 
   @override
   final MappableFields<PgrServiceSearchModel> fields = const {
@@ -1124,8 +1186,10 @@ class PgrServiceSearchModelMapper
     #clientReferenceId: _f$clientReferenceId,
     #complainantMobileNumber: _f$complainantMobileNumber,
     #complaintNumber: _f$complaintNumber,
+    #isDeleted: _f$isDeleted,
     #auditDetails: _f$auditDetails,
     #additionalFields: _f$additionalFields,
+    #boundaryCode: _f$boundaryCode,
   };
   @override
   final bool ignoreNull = true;
@@ -1141,7 +1205,11 @@ class PgrServiceSearchModelMapper
         serviceRequestId: data.dec(_f$serviceRequestId),
         clientReferenceId: data.dec(_f$clientReferenceId),
         complainantMobileNumber: data.dec(_f$complainantMobileNumber),
-        complaintNumber: data.dec(_f$complaintNumber));
+        complaintNumber: data.dec(_f$complaintNumber),
+        isDeleted: data.dec(_f$isDeleted),
+        auditDetails: data.dec(_f$auditDetails),
+        additionalFields: data.dec(_f$additionalFields),
+        boundaryCode: data.dec(_f$boundaryCode));
   }
 
   @override
@@ -1209,6 +1277,11 @@ abstract class PgrServiceSearchModelCopyWith<
       ObjectCopyWith<$R, PgrServiceApplicationStatus,
           PgrServiceApplicationStatus>>? get complaintStatus;
   @override
+  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
+  @override
+  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
+      get additionalFields;
+  @override
   $R call(
       {String? complaintAssignedTo,
       String? currentUserName,
@@ -1219,7 +1292,11 @@ abstract class PgrServiceSearchModelCopyWith<
       String? serviceRequestId,
       String? clientReferenceId,
       String? complainantMobileNumber,
-      String? complaintNumber});
+      String? complaintNumber,
+      bool? isDeleted,
+      AuditDetails? auditDetails,
+      AdditionalFields? additionalFields,
+      String? boundaryCode});
   PgrServiceSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -1245,6 +1322,13 @@ class _PgrServiceSearchModelCopyWithImpl<$R, $Out>
               (v) => call(complaintStatus: v))
           : null;
   @override
+  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
+      $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
+  @override
+  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
+      get additionalFields => $value.additionalFields?.copyWith
+          .$chain((v) => call(additionalFields: v));
+  @override
   $R call(
           {Object? complaintAssignedTo = $none,
           Object? currentUserName = $none,
@@ -1255,7 +1339,11 @@ class _PgrServiceSearchModelCopyWithImpl<$R, $Out>
           Object? serviceRequestId = $none,
           Object? clientReferenceId = $none,
           Object? complainantMobileNumber = $none,
-          Object? complaintNumber = $none}) =>
+          Object? complaintNumber = $none,
+          Object? isDeleted = $none,
+          Object? auditDetails = $none,
+          Object? additionalFields = $none,
+          Object? boundaryCode = $none}) =>
       $apply(FieldCopyWithData({
         if (complaintAssignedTo != $none)
           #complaintAssignedTo: complaintAssignedTo,
@@ -1268,7 +1356,11 @@ class _PgrServiceSearchModelCopyWithImpl<$R, $Out>
         if (clientReferenceId != $none) #clientReferenceId: clientReferenceId,
         if (complainantMobileNumber != $none)
           #complainantMobileNumber: complainantMobileNumber,
-        if (complaintNumber != $none) #complaintNumber: complaintNumber
+        if (complaintNumber != $none) #complaintNumber: complaintNumber,
+        if (isDeleted != $none) #isDeleted: isDeleted,
+        if (auditDetails != $none) #auditDetails: auditDetails,
+        if (additionalFields != $none) #additionalFields: additionalFields,
+        if (boundaryCode != $none) #boundaryCode: boundaryCode
       }));
   @override
   PgrServiceSearchModel $make(CopyWithData data) => PgrServiceSearchModel(
@@ -1286,7 +1378,12 @@ class _PgrServiceSearchModelCopyWithImpl<$R, $Out>
           data.get(#clientReferenceId, or: $value.clientReferenceId),
       complainantMobileNumber: data.get(#complainantMobileNumber,
           or: $value.complainantMobileNumber),
-      complaintNumber: data.get(#complaintNumber, or: $value.complaintNumber));
+      complaintNumber: data.get(#complaintNumber, or: $value.complaintNumber),
+      isDeleted: data.get(#isDeleted, or: $value.isDeleted),
+      auditDetails: data.get(#auditDetails, or: $value.auditDetails),
+      additionalFields:
+          data.get(#additionalFields, or: $value.additionalFields),
+      boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
 
   @override
   PgrServiceSearchModelCopyWith<$R2, PgrServiceSearchModel, $Out2>
@@ -1301,7 +1398,6 @@ class PgrFiltersMapper extends ClassMapperBase<PgrFilters> {
   static PgrFiltersMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = PgrFiltersMapper._());
-      PgrServiceApplicationStatusMapper.ensureInitialized();
     }
     return _instance!;
   }

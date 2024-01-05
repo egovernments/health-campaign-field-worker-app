@@ -14,7 +14,6 @@ class AttributesSearchModelMapper
   static AttributesSearchModelMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = AttributesSearchModelMapper._());
-      EntitySearchModelMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
   }
@@ -52,15 +51,15 @@ class AttributesSearchModelMapper
   static String? _$boundaryCode(AttributesSearchModel v) => v.boundaryCode;
   static const Field<AttributesSearchModel, String> _f$boundaryCode =
       Field('boundaryCode', _$boundaryCode, opt: true);
-  static AuditDetails? _$auditDetails(AttributesSearchModel v) =>
-      v.auditDetails;
-  static const Field<AttributesSearchModel, AuditDetails> _f$auditDetails =
-      Field('auditDetails', _$auditDetails, mode: FieldMode.member);
   static AdditionalFields? _$additionalFields(AttributesSearchModel v) =>
       v.additionalFields;
   static const Field<AttributesSearchModel, AdditionalFields>
       _f$additionalFields =
-      Field('additionalFields', _$additionalFields, mode: FieldMode.member);
+      Field('additionalFields', _$additionalFields, opt: true);
+  static AuditDetails? _$auditDetails(AttributesSearchModel v) =>
+      v.auditDetails;
+  static const Field<AttributesSearchModel, AuditDetails> _f$auditDetails =
+      Field('auditDetails', _$auditDetails, opt: true);
 
   @override
   final MappableFields<AttributesSearchModel> fields = const {
@@ -74,8 +73,8 @@ class AttributesSearchModelMapper
     #regex: _f$regex,
     #order: _f$order,
     #boundaryCode: _f$boundaryCode,
-    #auditDetails: _f$auditDetails,
     #additionalFields: _f$additionalFields,
+    #auditDetails: _f$auditDetails,
   };
   @override
   final bool ignoreNull = true;
@@ -99,7 +98,9 @@ class AttributesSearchModelMapper
         required: data.dec(_f$required),
         regex: data.dec(_f$regex),
         order: data.dec(_f$order),
-        boundaryCode: data.dec(_f$boundaryCode));
+        boundaryCode: data.dec(_f$boundaryCode),
+        additionalFields: data.dec(_f$additionalFields),
+        auditDetails: data.dec(_f$auditDetails));
   }
 
   @override
@@ -162,6 +163,11 @@ abstract class AttributesSearchModelCopyWith<
     $In extends AttributesSearchModel,
     $Out> implements EntitySearchModelCopyWith<$R, $In, $Out> {
   @override
+  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
+      get additionalFields;
+  @override
+  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
+  @override
   $R call(
       {String? id,
       String? dataType,
@@ -172,7 +178,9 @@ abstract class AttributesSearchModelCopyWith<
       bool? required,
       String? regex,
       int? order,
-      String? boundaryCode});
+      String? boundaryCode,
+      AdditionalFields? additionalFields,
+      AuditDetails? auditDetails});
   AttributesSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -186,6 +194,13 @@ class _AttributesSearchModelCopyWithImpl<$R, $Out>
   late final ClassMapperBase<AttributesSearchModel> $mapper =
       AttributesSearchModelMapper.ensureInitialized();
   @override
+  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
+      get additionalFields => $value.additionalFields?.copyWith
+          .$chain((v) => call(additionalFields: v));
+  @override
+  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
+      $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
+  @override
   $R call(
           {Object? id = $none,
           Object? dataType = $none,
@@ -196,7 +211,9 @@ class _AttributesSearchModelCopyWithImpl<$R, $Out>
           Object? required = $none,
           Object? regex = $none,
           Object? order = $none,
-          Object? boundaryCode = $none}) =>
+          Object? boundaryCode = $none,
+          Object? additionalFields = $none,
+          Object? auditDetails = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
         if (dataType != $none) #dataType: dataType,
@@ -207,7 +224,9 @@ class _AttributesSearchModelCopyWithImpl<$R, $Out>
         if (required != $none) #required: required,
         if (regex != $none) #regex: regex,
         if (order != $none) #order: order,
-        if (boundaryCode != $none) #boundaryCode: boundaryCode
+        if (boundaryCode != $none) #boundaryCode: boundaryCode,
+        if (additionalFields != $none) #additionalFields: additionalFields,
+        if (auditDetails != $none) #auditDetails: auditDetails
       }));
   @override
   AttributesSearchModel $make(CopyWithData data) =>
@@ -221,7 +240,10 @@ class _AttributesSearchModelCopyWithImpl<$R, $Out>
           required: data.get(#required, or: $value.required),
           regex: data.get(#regex, or: $value.regex),
           order: data.get(#order, or: $value.order),
-          boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
+          boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode),
+          additionalFields:
+              data.get(#additionalFields, or: $value.additionalFields),
+          auditDetails: data.get(#auditDetails, or: $value.auditDetails));
 
   @override
   AttributesSearchModelCopyWith<$R2, AttributesSearchModel, $Out2>
@@ -236,10 +258,6 @@ class AttributesModelMapper extends SubClassMapperBase<AttributesModel> {
   static AttributesModelMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = AttributesModelMapper._());
-      EntityModelMapper.ensureInitialized().addSubMapper(_instance!);
-      AttributesAdditionalFieldsMapper.ensureInitialized();
-      AuditDetailsMapper.ensureInitialized();
-      ClientAuditDetailsMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -538,8 +556,6 @@ class AttributesAdditionalFieldsMapper
     if (_instance == null) {
       MapperContainer.globals
           .use(_instance = AttributesAdditionalFieldsMapper._());
-      AdditionalFieldsMapper.ensureInitialized().addSubMapper(_instance!);
-      AdditionalFieldMapper.ensureInitialized();
     }
     return _instance!;
   }

@@ -15,7 +15,6 @@ class ProjectFacilitySearchModelMapper
     if (_instance == null) {
       MapperContainer.globals
           .use(_instance = ProjectFacilitySearchModelMapper._());
-      EntitySearchModelMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
   }
@@ -39,15 +38,15 @@ class ProjectFacilitySearchModelMapper
   static String? _$boundaryCode(ProjectFacilitySearchModel v) => v.boundaryCode;
   static const Field<ProjectFacilitySearchModel, String> _f$boundaryCode =
       Field('boundaryCode', _$boundaryCode, opt: true);
-  static AuditDetails? _$auditDetails(ProjectFacilitySearchModel v) =>
-      v.auditDetails;
-  static const Field<ProjectFacilitySearchModel, AuditDetails> _f$auditDetails =
-      Field('auditDetails', _$auditDetails, mode: FieldMode.member);
   static AdditionalFields? _$additionalFields(ProjectFacilitySearchModel v) =>
       v.additionalFields;
   static const Field<ProjectFacilitySearchModel, AdditionalFields>
       _f$additionalFields =
-      Field('additionalFields', _$additionalFields, mode: FieldMode.member);
+      Field('additionalFields', _$additionalFields, opt: true);
+  static AuditDetails? _$auditDetails(ProjectFacilitySearchModel v) =>
+      v.auditDetails;
+  static const Field<ProjectFacilitySearchModel, AuditDetails> _f$auditDetails =
+      Field('auditDetails', _$auditDetails, opt: true);
 
   @override
   final MappableFields<ProjectFacilitySearchModel> fields = const {
@@ -56,8 +55,8 @@ class ProjectFacilitySearchModelMapper
     #projectId: _f$projectId,
     #tenantId: _f$tenantId,
     #boundaryCode: _f$boundaryCode,
-    #auditDetails: _f$auditDetails,
     #additionalFields: _f$additionalFields,
+    #auditDetails: _f$auditDetails,
   };
   @override
   final bool ignoreNull = true;
@@ -76,7 +75,9 @@ class ProjectFacilitySearchModelMapper
         facilityId: data.dec(_f$facilityId),
         projectId: data.dec(_f$projectId),
         tenantId: data.dec(_f$tenantId),
-        boundaryCode: data.dec(_f$boundaryCode));
+        boundaryCode: data.dec(_f$boundaryCode),
+        additionalFields: data.dec(_f$additionalFields),
+        auditDetails: data.dec(_f$auditDetails));
   }
 
   @override
@@ -143,12 +144,19 @@ abstract class ProjectFacilitySearchModelCopyWith<
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get facilityId;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get projectId;
   @override
+  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
+      get additionalFields;
+  @override
+  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
+  @override
   $R call(
       {String? id,
       List<String>? facilityId,
       List<String>? projectId,
       String? tenantId,
-      String? boundaryCode});
+      String? boundaryCode,
+      AdditionalFields? additionalFields,
+      AuditDetails? auditDetails});
   ProjectFacilitySearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -180,18 +188,29 @@ class _ProjectFacilitySearchModelCopyWithImpl<$R, $Out>
               (v) => call(projectId: v))
           : null;
   @override
+  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
+      get additionalFields => $value.additionalFields?.copyWith
+          .$chain((v) => call(additionalFields: v));
+  @override
+  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
+      $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
+  @override
   $R call(
           {Object? id = $none,
           Object? facilityId = $none,
           Object? projectId = $none,
           Object? tenantId = $none,
-          Object? boundaryCode = $none}) =>
+          Object? boundaryCode = $none,
+          Object? additionalFields = $none,
+          Object? auditDetails = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
         if (facilityId != $none) #facilityId: facilityId,
         if (projectId != $none) #projectId: projectId,
         if (tenantId != $none) #tenantId: tenantId,
-        if (boundaryCode != $none) #boundaryCode: boundaryCode
+        if (boundaryCode != $none) #boundaryCode: boundaryCode,
+        if (additionalFields != $none) #additionalFields: additionalFields,
+        if (auditDetails != $none) #auditDetails: auditDetails
       }));
   @override
   ProjectFacilitySearchModel $make(CopyWithData data) =>
@@ -200,7 +219,10 @@ class _ProjectFacilitySearchModelCopyWithImpl<$R, $Out>
           facilityId: data.get(#facilityId, or: $value.facilityId),
           projectId: data.get(#projectId, or: $value.projectId),
           tenantId: data.get(#tenantId, or: $value.tenantId),
-          boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
+          boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode),
+          additionalFields:
+              data.get(#additionalFields, or: $value.additionalFields),
+          auditDetails: data.get(#auditDetails, or: $value.auditDetails));
 
   @override
   ProjectFacilitySearchModelCopyWith<$R2, ProjectFacilitySearchModel, $Out2>
@@ -216,10 +238,6 @@ class ProjectFacilityModelMapper
   static ProjectFacilityModelMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = ProjectFacilityModelMapper._());
-      EntityModelMapper.ensureInitialized().addSubMapper(_instance!);
-      ProjectFacilityAdditionalFieldsMapper.ensureInitialized();
-      AuditDetailsMapper.ensureInitialized();
-      ClientAuditDetailsMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -461,8 +479,6 @@ class ProjectFacilityAdditionalFieldsMapper
     if (_instance == null) {
       MapperContainer.globals
           .use(_instance = ProjectFacilityAdditionalFieldsMapper._());
-      AdditionalFieldsMapper.ensureInitialized().addSubMapper(_instance!);
-      AdditionalFieldMapper.ensureInitialized();
     }
     return _instance!;
   }

@@ -25,14 +25,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.2+1"
-  ansicolor:
-    dependency: transitive
-    description:
-      name: ansicolor
-      sha256: "8bf17a8ff6ea17499e40a2d2542c2f481cd7615760c6d34065cb22bfd22e6880"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.2"
   args:
     dependency: transitive
     description:
@@ -198,14 +190,6 @@ packages:
     description:
       name: dart_mappable
       sha256: "7b6d38ae95f1ae8ffa65df9a5464f14b56c2de94699a035202ca4cd3a0ba249e"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.2.0"
-  dart_mappable_builder:
-    dependency: "direct dev"
-    description:
-      name: dart_mappable_builder
-      sha256: "98c058f7e80a98ea42d357d888ed1648d96bedac8b16872b58fc7024faefcdfe"
       url: "https://pub.dev"
     source: hosted
     version: "4.2.0"
@@ -457,14 +441,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
-  source_gen:
-    dependency: transitive
-    description:
-      name: source_gen
-      sha256: "14658ba5f669685cd3d63701d01b31ea748310f7ab854e471962670abcf57832"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.5.0"
   source_span:
     dependency: transitive
     description:

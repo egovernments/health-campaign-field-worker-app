@@ -26,6 +26,8 @@ class BoundarySearchModel extends EntitySearchModel with BoundarySearchModelMapp
     this.tenantId,
     this.code,
     super.boundaryCode,
+    super.additionalFields,
+    super.auditDetails,
   }) : super(isDeleted: false);
 }
 

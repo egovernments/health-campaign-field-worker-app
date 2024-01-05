@@ -24,6 +24,8 @@ class TaskResourceSearchModel extends EntitySearchModel with TaskResourceSearchM
     this.id,
     this.tenantId,
     super.boundaryCode,
+        super.additionalFields,
+    super.auditDetails,
   }):  super(isDeleted: false);
 }
 

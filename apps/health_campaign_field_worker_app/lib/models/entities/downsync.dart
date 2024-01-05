@@ -42,6 +42,8 @@ class DownsyncSearchModel extends EntitySearchModel with DownsyncSearchModelMapp
     this.boundaryName,
     this.tenantId,
     super.boundaryCode,
+        super.additionalFields,
+    super.auditDetails,
   }):  super(isDeleted: false);
 }
 

@@ -51,6 +51,8 @@ class ProjectBeneficiarySearchModel extends EntitySearchModel with ProjectBenefi
     this.tenantId,
     int? dateOfRegistration,
     super.boundaryCode,
+        super.additionalFields,
+    super.auditDetails,
   }): dateOfRegistrationTime = dateOfRegistration == null
   ? null
       : DateTime.fromMillisecondsSinceEpoch(dateOfRegistration),

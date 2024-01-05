@@ -15,7 +15,6 @@ class StockReconciliationSearchModelMapper
     if (_instance == null) {
       MapperContainer.globals
           .use(_instance = StockReconciliationSearchModelMapper._());
-      EntitySearchModelMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
   }
@@ -51,17 +50,16 @@ class StockReconciliationSearchModelMapper
       v.boundaryCode;
   static const Field<StockReconciliationSearchModel, String> _f$boundaryCode =
       Field('boundaryCode', _$boundaryCode, opt: true);
-  static AuditDetails? _$auditDetails(StockReconciliationSearchModel v) =>
-      v.auditDetails;
-  static const Field<StockReconciliationSearchModel, AuditDetails>
-      _f$auditDetails =
-      Field('auditDetails', _$auditDetails, mode: FieldMode.member);
   static AdditionalFields? _$additionalFields(
           StockReconciliationSearchModel v) =>
       v.additionalFields;
   static const Field<StockReconciliationSearchModel, AdditionalFields>
       _f$additionalFields =
-      Field('additionalFields', _$additionalFields, mode: FieldMode.member);
+      Field('additionalFields', _$additionalFields, opt: true);
+  static AuditDetails? _$auditDetails(StockReconciliationSearchModel v) =>
+      v.auditDetails;
+  static const Field<StockReconciliationSearchModel, AuditDetails>
+      _f$auditDetails = Field('auditDetails', _$auditDetails, opt: true);
   static DateTime? _$dateOfReconciliationTime(
           StockReconciliationSearchModel v) =>
       v.dateOfReconciliationTime;
@@ -79,8 +77,8 @@ class StockReconciliationSearchModelMapper
     #clientReferenceId: _f$clientReferenceId,
     #dateOfReconciliation: _f$dateOfReconciliation,
     #boundaryCode: _f$boundaryCode,
-    #auditDetails: _f$auditDetails,
     #additionalFields: _f$additionalFields,
+    #auditDetails: _f$auditDetails,
     #dateOfReconciliationTime: _f$dateOfReconciliationTime,
   };
   @override
@@ -102,7 +100,9 @@ class StockReconciliationSearchModelMapper
         productVariantId: data.dec(_f$productVariantId),
         clientReferenceId: data.dec(_f$clientReferenceId),
         dateOfReconciliation: data.dec(_f$dateOfReconciliation),
-        boundaryCode: data.dec(_f$boundaryCode));
+        boundaryCode: data.dec(_f$boundaryCode),
+        additionalFields: data.dec(_f$additionalFields),
+        auditDetails: data.dec(_f$auditDetails));
   }
 
   @override
@@ -170,6 +170,11 @@ abstract class StockReconciliationSearchModelCopyWith<
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get clientReferenceId;
   @override
+  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
+      get additionalFields;
+  @override
+  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
+  @override
   $R call(
       {String? id,
       String? tenantId,
@@ -177,7 +182,9 @@ abstract class StockReconciliationSearchModelCopyWith<
       String? productVariantId,
       List<String>? clientReferenceId,
       int? dateOfReconciliation,
-      String? boundaryCode});
+      String? boundaryCode,
+      AdditionalFields? additionalFields,
+      AuditDetails? auditDetails});
   StockReconciliationSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -202,6 +209,13 @@ class _StockReconciliationSearchModelCopyWithImpl<$R, $Out>
               (v) => call(clientReferenceId: v))
           : null;
   @override
+  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
+      get additionalFields => $value.additionalFields?.copyWith
+          .$chain((v) => call(additionalFields: v));
+  @override
+  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
+      $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
+  @override
   $R call(
           {Object? id = $none,
           Object? tenantId = $none,
@@ -209,7 +223,9 @@ class _StockReconciliationSearchModelCopyWithImpl<$R, $Out>
           Object? productVariantId = $none,
           Object? clientReferenceId = $none,
           Object? dateOfReconciliation = $none,
-          Object? boundaryCode = $none}) =>
+          Object? boundaryCode = $none,
+          Object? additionalFields = $none,
+          Object? auditDetails = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
         if (tenantId != $none) #tenantId: tenantId,
@@ -218,7 +234,9 @@ class _StockReconciliationSearchModelCopyWithImpl<$R, $Out>
         if (clientReferenceId != $none) #clientReferenceId: clientReferenceId,
         if (dateOfReconciliation != $none)
           #dateOfReconciliation: dateOfReconciliation,
-        if (boundaryCode != $none) #boundaryCode: boundaryCode
+        if (boundaryCode != $none) #boundaryCode: boundaryCode,
+        if (additionalFields != $none) #additionalFields: additionalFields,
+        if (auditDetails != $none) #auditDetails: auditDetails
       }));
   @override
   StockReconciliationSearchModel $make(CopyWithData data) =>
@@ -232,7 +250,10 @@ class _StockReconciliationSearchModelCopyWithImpl<$R, $Out>
               data.get(#clientReferenceId, or: $value.clientReferenceId),
           dateOfReconciliation:
               data.get(#dateOfReconciliation, or: $value.dateOfReconciliation),
-          boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
+          boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode),
+          additionalFields:
+              data.get(#additionalFields, or: $value.additionalFields),
+          auditDetails: data.get(#auditDetails, or: $value.auditDetails));
 
   @override
   StockReconciliationSearchModelCopyWith<$R2, StockReconciliationSearchModel,
@@ -250,10 +271,6 @@ class StockReconciliationModelMapper
     if (_instance == null) {
       MapperContainer.globals
           .use(_instance = StockReconciliationModelMapper._());
-      EntityModelMapper.ensureInitialized().addSubMapper(_instance!);
-      StockReconciliationAdditionalFieldsMapper.ensureInitialized();
-      AuditDetailsMapper.ensureInitialized();
-      ClientAuditDetailsMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -585,8 +602,6 @@ class StockReconciliationAdditionalFieldsMapper
     if (_instance == null) {
       MapperContainer.globals
           .use(_instance = StockReconciliationAdditionalFieldsMapper._());
-      AdditionalFieldsMapper.ensureInitialized().addSubMapper(_instance!);
-      AdditionalFieldMapper.ensureInitialized();
     }
     return _instance!;
   }

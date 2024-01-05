@@ -27,6 +27,8 @@ class UserSearchModel extends EntitySearchModel with UserSearchModelMappable {
     this.userName,
     this.uuid,
     super.boundaryCode,
+        super.additionalFields,
+    super.auditDetails,
   }):  super(isDeleted: false);
 }
 

@@ -15,7 +15,6 @@ class ProjectBeneficiarySearchModelMapper
     if (_instance == null) {
       MapperContainer.globals
           .use(_instance = ProjectBeneficiarySearchModelMapper._());
-      EntitySearchModelMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
   }
@@ -73,17 +72,16 @@ class ProjectBeneficiarySearchModelMapper
       v.boundaryCode;
   static const Field<ProjectBeneficiarySearchModel, String> _f$boundaryCode =
       Field('boundaryCode', _$boundaryCode, opt: true);
-  static AuditDetails? _$auditDetails(ProjectBeneficiarySearchModel v) =>
-      v.auditDetails;
-  static const Field<ProjectBeneficiarySearchModel, AuditDetails>
-      _f$auditDetails =
-      Field('auditDetails', _$auditDetails, mode: FieldMode.member);
   static AdditionalFields? _$additionalFields(
           ProjectBeneficiarySearchModel v) =>
       v.additionalFields;
   static const Field<ProjectBeneficiarySearchModel, AdditionalFields>
       _f$additionalFields =
-      Field('additionalFields', _$additionalFields, mode: FieldMode.member);
+      Field('additionalFields', _$additionalFields, opt: true);
+  static AuditDetails? _$auditDetails(ProjectBeneficiarySearchModel v) =>
+      v.auditDetails;
+  static const Field<ProjectBeneficiarySearchModel, AuditDetails>
+      _f$auditDetails = Field('auditDetails', _$auditDetails, opt: true);
   static DateTime? _$dateOfRegistrationTime(ProjectBeneficiarySearchModel v) =>
       v.dateOfRegistrationTime;
   static const Field<ProjectBeneficiarySearchModel, DateTime>
@@ -104,8 +102,8 @@ class ProjectBeneficiarySearchModelMapper
     #tenantId: _f$tenantId,
     #dateOfRegistration: _f$dateOfRegistration,
     #boundaryCode: _f$boundaryCode,
-    #auditDetails: _f$auditDetails,
     #additionalFields: _f$additionalFields,
+    #auditDetails: _f$auditDetails,
     #dateOfRegistrationTime: _f$dateOfRegistrationTime,
   };
   @override
@@ -133,7 +131,9 @@ class ProjectBeneficiarySearchModelMapper
         clientReferenceId: data.dec(_f$clientReferenceId),
         tenantId: data.dec(_f$tenantId),
         dateOfRegistration: data.dec(_f$dateOfRegistration),
-        boundaryCode: data.dec(_f$boundaryCode));
+        boundaryCode: data.dec(_f$boundaryCode),
+        additionalFields: data.dec(_f$additionalFields),
+        auditDetails: data.dec(_f$auditDetails));
   }
 
   @override
@@ -202,6 +202,11 @@ abstract class ProjectBeneficiarySearchModelCopyWith<
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get clientReferenceId;
   @override
+  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
+      get additionalFields;
+  @override
+  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
+  @override
   $R call(
       {String? id,
       String? projectId,
@@ -213,7 +218,9 @@ abstract class ProjectBeneficiarySearchModelCopyWith<
       List<String>? clientReferenceId,
       String? tenantId,
       int? dateOfRegistration,
-      String? boundaryCode});
+      String? boundaryCode,
+      AdditionalFields? additionalFields,
+      AuditDetails? auditDetails});
   ProjectBeneficiarySearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -247,6 +254,13 @@ class _ProjectBeneficiarySearchModelCopyWithImpl<$R, $Out>
               (v) => call(clientReferenceId: v))
           : null;
   @override
+  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
+      get additionalFields => $value.additionalFields?.copyWith
+          .$chain((v) => call(additionalFields: v));
+  @override
+  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
+      $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
+  @override
   $R call(
           {Object? id = $none,
           Object? projectId = $none,
@@ -258,7 +272,9 @@ class _ProjectBeneficiarySearchModelCopyWithImpl<$R, $Out>
           Object? clientReferenceId = $none,
           Object? tenantId = $none,
           Object? dateOfRegistration = $none,
-          Object? boundaryCode = $none}) =>
+          Object? boundaryCode = $none,
+          Object? additionalFields = $none,
+          Object? auditDetails = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
         if (projectId != $none) #projectId: projectId,
@@ -274,10 +290,13 @@ class _ProjectBeneficiarySearchModelCopyWithImpl<$R, $Out>
         if (tenantId != $none) #tenantId: tenantId,
         if (dateOfRegistration != $none)
           #dateOfRegistration: dateOfRegistration,
-        if (boundaryCode != $none) #boundaryCode: boundaryCode
+        if (boundaryCode != $none) #boundaryCode: boundaryCode,
+        if (additionalFields != $none) #additionalFields: additionalFields,
+        if (auditDetails != $none) #auditDetails: auditDetails
       }));
   @override
-  ProjectBeneficiarySearchModel $make(CopyWithData data) =>
+  ProjectBeneficiarySearchModel $make(
+          CopyWithData data) =>
       ProjectBeneficiarySearchModel.ignoreDeleted(
           id: data.get(#id, or: $value.id),
           projectId: data.get(#projectId, or: $value.projectId),
@@ -296,7 +315,10 @@ class _ProjectBeneficiarySearchModelCopyWithImpl<$R, $Out>
           tenantId: data.get(#tenantId, or: $value.tenantId),
           dateOfRegistration:
               data.get(#dateOfRegistration, or: $value.dateOfRegistration),
-          boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
+          boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode),
+          additionalFields:
+              data.get(#additionalFields, or: $value.additionalFields),
+          auditDetails: data.get(#auditDetails, or: $value.auditDetails));
 
   @override
   ProjectBeneficiarySearchModelCopyWith<$R2, ProjectBeneficiarySearchModel,
@@ -314,10 +336,6 @@ class ProjectBeneficiaryModelMapper
     if (_instance == null) {
       MapperContainer.globals
           .use(_instance = ProjectBeneficiaryModelMapper._());
-      EntityModelMapper.ensureInitialized().addSubMapper(_instance!);
-      ProjectBeneficiaryAdditionalFieldsMapper.ensureInitialized();
-      AuditDetailsMapper.ensureInitialized();
-      ClientAuditDetailsMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -618,8 +636,6 @@ class ProjectBeneficiaryAdditionalFieldsMapper
     if (_instance == null) {
       MapperContainer.globals
           .use(_instance = ProjectBeneficiaryAdditionalFieldsMapper._());
-      AdditionalFieldsMapper.ensureInitialized().addSubMapper(_instance!);
-      AdditionalFieldMapper.ensureInitialized();
     }
     return _instance!;
   }

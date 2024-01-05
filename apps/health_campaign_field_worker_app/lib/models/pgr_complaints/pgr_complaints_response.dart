@@ -10,6 +10,8 @@ class PgrServiceCreateResponseModel extends EntityModel with PgrServiceCreateRes
 
   const PgrServiceCreateResponseModel({
     @MappableField(key: 'ServiceWrappers') this.serviceWrappers = const [],
+    super.auditDetails,
+    super.isDeleted  = false,
   }) : super();
 }
 
@@ -21,6 +23,8 @@ class PgrComplaintResponseModel extends EntityModel with PgrComplaintResponseMod
   const PgrComplaintResponseModel({
     required this.service,
     this.workflow,
+    super.auditDetails,
+        super.isDeleted  = false,
   }) : super();
 }
 
@@ -36,8 +40,7 @@ class PgrComplainantResponseModel extends EntityModel with PgrComplainantRespons
   final String? tenantId;
   final String? uuid;
   final bool? active;
-  @override
-  final bool? isDeleted;
+
   final int? rowVersion;
 
   const PgrComplainantResponseModel({
@@ -51,9 +54,9 @@ class PgrComplainantResponseModel extends EntityModel with PgrComplainantRespons
     this.tenantId,
     this.uuid,
     this.active = true,
-    this.isDeleted = false,
     this.rowVersion = 1,
     super.auditDetails,
+        super.isDeleted  = false,
   }) : super();
 }
 
@@ -69,8 +72,7 @@ class PgrServiceResponseModel extends EntityModel with PgrServiceResponseModelMa
   final String? accountId;
   final PgrServiceApplicationStatus? applicationStatus;
   final String? source;
-  @override
-  final bool? isDeleted;
+
   final int? rowVersion;
 
   const PgrServiceResponseModel({
@@ -84,8 +86,8 @@ class PgrServiceResponseModel extends EntityModel with PgrServiceResponseModelMa
     this.applicationStatus,
     this.source,
     this.user,
-    this.isDeleted = false,
     this.rowVersion = 1,
     super.auditDetails,
+        super.isDeleted  = false,
   }) : super();
 }

@@ -15,7 +15,6 @@ class ServiceDefinitionSearchModelMapper
     if (_instance == null) {
       MapperContainer.globals
           .use(_instance = ServiceDefinitionSearchModelMapper._());
-      EntitySearchModelMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
   }
@@ -39,16 +38,15 @@ class ServiceDefinitionSearchModelMapper
       v.boundaryCode;
   static const Field<ServiceDefinitionSearchModel, String> _f$boundaryCode =
       Field('boundaryCode', _$boundaryCode, opt: true);
-  static AuditDetails? _$auditDetails(ServiceDefinitionSearchModel v) =>
-      v.auditDetails;
-  static const Field<ServiceDefinitionSearchModel, AuditDetails>
-      _f$auditDetails =
-      Field('auditDetails', _$auditDetails, mode: FieldMode.member);
   static AdditionalFields? _$additionalFields(ServiceDefinitionSearchModel v) =>
       v.additionalFields;
   static const Field<ServiceDefinitionSearchModel, AdditionalFields>
       _f$additionalFields =
-      Field('additionalFields', _$additionalFields, mode: FieldMode.member);
+      Field('additionalFields', _$additionalFields, opt: true);
+  static AuditDetails? _$auditDetails(ServiceDefinitionSearchModel v) =>
+      v.auditDetails;
+  static const Field<ServiceDefinitionSearchModel, AuditDetails>
+      _f$auditDetails = Field('auditDetails', _$auditDetails, opt: true);
 
   @override
   final MappableFields<ServiceDefinitionSearchModel> fields = const {
@@ -57,8 +55,8 @@ class ServiceDefinitionSearchModelMapper
     #code: _f$code,
     #isActive: _f$isActive,
     #boundaryCode: _f$boundaryCode,
-    #auditDetails: _f$auditDetails,
     #additionalFields: _f$additionalFields,
+    #auditDetails: _f$auditDetails,
   };
   @override
   final bool ignoreNull = true;
@@ -77,7 +75,9 @@ class ServiceDefinitionSearchModelMapper
         tenantId: data.dec(_f$tenantId),
         code: data.dec(_f$code),
         isActive: data.dec(_f$isActive),
-        boundaryCode: data.dec(_f$boundaryCode));
+        boundaryCode: data.dec(_f$boundaryCode),
+        additionalFields: data.dec(_f$additionalFields),
+        auditDetails: data.dec(_f$auditDetails));
   }
 
   @override
@@ -143,12 +143,19 @@ abstract class ServiceDefinitionSearchModelCopyWith<
     $Out> implements EntitySearchModelCopyWith<$R, $In, $Out> {
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get code;
   @override
+  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
+      get additionalFields;
+  @override
+  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
+  @override
   $R call(
       {String? id,
       String? tenantId,
       List<String>? code,
       bool? isActive,
-      String? boundaryCode});
+      String? boundaryCode,
+      AdditionalFields? additionalFields,
+      AuditDetails? auditDetails});
   ServiceDefinitionSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -171,18 +178,29 @@ class _ServiceDefinitionSearchModelCopyWithImpl<$R, $Out>
               (v, t) => ObjectCopyWith(v, $identity, t), (v) => call(code: v))
           : null;
   @override
+  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
+      get additionalFields => $value.additionalFields?.copyWith
+          .$chain((v) => call(additionalFields: v));
+  @override
+  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
+      $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
+  @override
   $R call(
           {Object? id = $none,
           Object? tenantId = $none,
           Object? code = $none,
           Object? isActive = $none,
-          Object? boundaryCode = $none}) =>
+          Object? boundaryCode = $none,
+          Object? additionalFields = $none,
+          Object? auditDetails = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
         if (tenantId != $none) #tenantId: tenantId,
         if (code != $none) #code: code,
         if (isActive != $none) #isActive: isActive,
-        if (boundaryCode != $none) #boundaryCode: boundaryCode
+        if (boundaryCode != $none) #boundaryCode: boundaryCode,
+        if (additionalFields != $none) #additionalFields: additionalFields,
+        if (auditDetails != $none) #auditDetails: auditDetails
       }));
   @override
   ServiceDefinitionSearchModel $make(CopyWithData data) =>
@@ -191,7 +209,10 @@ class _ServiceDefinitionSearchModelCopyWithImpl<$R, $Out>
           tenantId: data.get(#tenantId, or: $value.tenantId),
           code: data.get(#code, or: $value.code),
           isActive: data.get(#isActive, or: $value.isActive),
-          boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
+          boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode),
+          additionalFields:
+              data.get(#additionalFields, or: $value.additionalFields),
+          auditDetails: data.get(#auditDetails, or: $value.auditDetails));
 
   @override
   ServiceDefinitionSearchModelCopyWith<$R2, ServiceDefinitionSearchModel, $Out2>
@@ -207,11 +228,6 @@ class ServiceDefinitionModelMapper
   static ServiceDefinitionModelMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = ServiceDefinitionModelMapper._());
-      EntityModelMapper.ensureInitialized().addSubMapper(_instance!);
-      ServiceDefinitionAdditionalFieldsMapper.ensureInitialized();
-      AttributesModelMapper.ensureInitialized();
-      AuditDetailsMapper.ensureInitialized();
-      ClientAuditDetailsMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -478,8 +494,6 @@ class ServiceDefinitionAdditionalFieldsMapper
     if (_instance == null) {
       MapperContainer.globals
           .use(_instance = ServiceDefinitionAdditionalFieldsMapper._());
-      AdditionalFieldsMapper.ensureInitialized().addSubMapper(_instance!);
-      AdditionalFieldMapper.ensureInitialized();
     }
     return _instance!;
   }

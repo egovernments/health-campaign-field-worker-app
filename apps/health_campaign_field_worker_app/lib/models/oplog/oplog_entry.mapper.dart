@@ -145,9 +145,6 @@ class OpLogEntryMapper extends ClassMapperBase<OpLogEntry> {
   static OpLogEntryMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = OpLogEntryMapper._());
-      DataOperationMapper.ensureInitialized();
-      AdditionalIdMapper.ensureInitialized();
-      EntityModelMapper.ensureInitialized();
     }
     return _instance!;
   }
