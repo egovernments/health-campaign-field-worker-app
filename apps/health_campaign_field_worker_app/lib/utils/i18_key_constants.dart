@@ -1787,4 +1787,5 @@ class ReferBeneficiary {
   String get referredByTeamCodeLabel => 'REFERRED_BY_TEAM_CODE_LABEL';
   String get selectCycle => 'REFERRAL_SELECT_CYCLE';
   String get createReferralLabel => 'CREATE_REFERRAL_LABEL';
+  String get noChecklistFound => 'NO_CHECKLISTS_FOUND';
 }

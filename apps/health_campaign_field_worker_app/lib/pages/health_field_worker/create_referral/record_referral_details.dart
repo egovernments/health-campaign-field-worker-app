@@ -1,5 +1,6 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_radio_button_list.dart';
+import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -150,6 +151,17 @@ class _RecordReferralDetailsPageState
                                         );
                                       } else if (!form.valid) {
                                         return;
+                                      } else if (value
+                                          .serviceDefinitionList.isEmpty) {
+                                        DigitToast.show(
+                                          context,
+                                          options: DigitToastOptions(
+                                            i18.referBeneficiary
+                                                .noChecklistFound,
+                                            true,
+                                            DigitTheme.instance.mobileTheme,
+                                          ),
+                                        );
                                       } else {
                                         final hfState = BlocProvider.of<
                                             RecordHFReferralBloc>(
