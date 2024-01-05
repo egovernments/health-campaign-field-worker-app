@@ -1163,10 +1163,10 @@ class HotReload extends StatelessWidget {
                         ),
                         textEditingController: TextEditingController(),
                         items: [
-                          'apple',
-                          'banana',
-                          'orange',
-                          'grapes',
+                          'first',
+                          'second',
+                          'third',
+                          'four',
                         ]
                             .asMap()
                             .entries
@@ -1202,7 +1202,7 @@ class HotReload extends StatelessWidget {
                         textEditingController: TextEditingController(),
                         dropdownType: DropdownType.nestedSelect,
                         items: const [ DropdownItem<String>(
-                          value: 'apple',
+                          value: 'first',
                           type: 'group B',
                           child: Padding(
                             padding: EdgeInsets.only(
@@ -1214,7 +1214,7 @@ class HotReload extends StatelessWidget {
                           ),
                         ),
                           DropdownItem<String>(
-                            value: 'grapes',
+                            value: 'second',
                             type: 'group A',
                             child: Padding(
                               padding: EdgeInsets.only(
@@ -1226,7 +1226,7 @@ class HotReload extends StatelessWidget {
                             ),
                           ),
                           DropdownItem<String>(
-                            value: 'banana',
+                            value: 'third',
                             type: 'group B',
                             child: Padding(
                               padding: EdgeInsets.only(
@@ -1238,7 +1238,7 @@ class HotReload extends StatelessWidget {
                             ),
                           ),
                           DropdownItem<String>(
-                            value: 'papaya',
+                            value: 'fourth',
                             type: 'group A',
                             child: Padding(
                               padding: EdgeInsets.only(
@@ -1250,7 +1250,7 @@ class HotReload extends StatelessWidget {
                             ),
                           ),
                           DropdownItem<String>(
-                            value: 'pine apple',
+                            value: 'fifth',
                             type: 'group B',
                             child: Padding(
                               padding: EdgeInsets.only(
@@ -1262,7 +1262,7 @@ class HotReload extends StatelessWidget {
                             ),
                           ),
                           DropdownItem<String>(
-                            value: 'watermelon',
+                            value: 'six',
                             type: 'group A',
                             child: Padding(
                               padding: EdgeInsets.only(
@@ -1293,10 +1293,10 @@ class HotReload extends StatelessWidget {
                         ),
                         textEditingController: TextEditingController(),
                         items: [
-                          'apple',
-                          'banana',
-                          'orange',
-                          'grapes',
+                          'first',
+                          'second',
+                          'third',
+                          'fourth',
                         ]
                             .asMap()
                             .entries
@@ -1331,10 +1331,10 @@ class HotReload extends StatelessWidget {
                         textIcon: Icons.article,
                         textEditingController: TextEditingController(),
                         items: [
-                          'apple',
-                          'banana',
-                          'orange',
-                          'grapes',
+                          'first',
+                          'second',
+                          'third',
+                          'fourth',
                         ]
                             .asMap()
                             .entries
@@ -1371,10 +1371,10 @@ class HotReload extends StatelessWidget {
                         dropdownType: DropdownType.profileSelect,
 
                         items: [
-                          'apple',
-                          'banana',
-                          'orange',
-                          'grapes',
+                          'first',
+                          'second',
+                          'third',
+                          'fourth',
                         ]
                             .asMap()
                             .entries
@@ -1383,7 +1383,7 @@ class HotReload extends StatelessWidget {
                             value: item.value,
                             description: 'description for ${item.value} one',
                             profileImage: const NetworkImage(
-                              'https://images.unsplash.com/photo-1608848461950-0fe51dfc41cb?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8fA%3D%3D',
+                              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzBXNuO6PezhC18aYH_2cYtS0I7KbxoKYdwA&usqp=CAU',
                             ),
                             child: Padding(
                               padding:  const EdgeInsets.only(left: 0, top: 0,),
@@ -1413,13 +1413,13 @@ class HotReload extends StatelessWidget {
                                 List<DropdownListItem> selectedOptions) {},
                             options: const [
                               DropdownListItem(
-                                  value: 1, label: 'firstddddddddddddd'),
+                                  value: 1, label: 'first'),
                               DropdownListItem(
-                                  value: 2, label: 'seconddddddddddddddddd'),
+                                  value: 2, label: 'second'),
                               DropdownListItem(
-                                  value: 3, label: 'thiraaaaaaaaaaaad'),
-                              DropdownListItem(value: 4, label: 'foussssssssr'),
-                              DropdownListItem(value: 5, label: 'fivssssssssssse'),
+                                  value: 3, label: 'third'),
+                              DropdownListItem(value: 4, label: 'four'),
+                              DropdownListItem(value: 5, label: 'five'),
                             ],
                             selectionType: SelectionType.multiSelect,
                             // chipConfig: const ChipConfig(wrapType: WrapType.wrap),
@@ -1439,18 +1439,18 @@ class HotReload extends StatelessWidget {
                                 List<DropdownListItem> selectedOptions) {},
                             options: const [
                               DropdownListItem(value: 1,
-                                label: 'firstddddddddddddd',
-                                type: 'aaaaa',),
+                                label: 'first',
+                                type: 'Type A',),
                               DropdownListItem(value: 2,
-                                label: 'seconddddddddddddddddd',
-                                type: 'aaaaa',),
+                                label: 'second',
+                                type: 'Type A',),
                               DropdownListItem(value: 3,
-                                label: 'thiraaaaaaaaaaaad',
-                                type: 'bbbbb',),
+                                label: 'third',
+                                type: 'Type B',),
                               DropdownListItem(
-                                value: 4, label: 'foussssssssr', type: 'aaaaa',),
+                                value: 4, label: 'four', type: 'Type A',),
                               DropdownListItem(
-                                value: 5, label: 'fivssssssssssse', type: 'bbbbb',),
+                                value: 5, label: 'five', type: 'Type B',),
                             ],
                             selectionType: SelectionType.nestedMultiSelect,
 
@@ -1468,11 +1468,11 @@ class HotReload extends StatelessWidget {
                           child: MultiSelectDropDown<int>(
                             onOptionSelected: (List<DropdownListItem> selectedOptions) {},
                             options:  const [
-                              DropdownListItem(value: 1, label: 'firstddddddddddddd', description: 'ddddddddddddddddddddd',),
-                              DropdownListItem(value: 2, label: 'seconddddddddddddddddd', description: 'ddddddddddddddddddddd',),
-                              DropdownListItem(value: 3, label: 'thiraaaaaaaaaaaad', description: 'ddddddddddddddddddddd',),
-                              DropdownListItem(value: 4, label: 'foussssssssr', description: 'ddddddddddddddddddddd',),
-                              DropdownListItem(value: 5, label: 'fivssssssssssse', description: 'ddddddddddddddddddddd',),
+                              DropdownListItem(value: 1, label: 'first', description: 'this is first',),
+                              DropdownListItem(value: 2, label: 'second', description: 'this is second',),
+                              DropdownListItem(value: 3, label: 'third', description: 'this is third',),
+                              DropdownListItem(value: 4, label: 'four', description: 'this is fourth',),
+                              DropdownListItem(value: 5, label: 'five', description: 'this is fifth',),
                             ],
                             selectionType: SelectionType.multiSelect,
 
@@ -1491,11 +1491,11 @@ class HotReload extends StatelessWidget {
                           child: MultiSelectDropDown<int>(
                             onOptionSelected: (List<DropdownListItem> selectedOptions) {},
                             options:  const [
-                              DropdownListItem(value: 1, label: 'firstddddddddddddd', description: 'ddddddddddddddddddddd',),
-                              DropdownListItem(value: 2, label: 'seconddddddddddddddddd', description: 'ddddddddddddddddddddd',),
-                              DropdownListItem(value: 3, label: 'thiraaaaaaaaaaaad', description: 'ddddddddddddddddddddd',),
-                              DropdownListItem(value: 4, label: 'foussssssssr', description: 'ddddddddddddddddddddd',),
-                              DropdownListItem(value: 5, label: 'fivssssssssssse', description: 'ddddddddddddddddddddd',),
+                              DropdownListItem(value: 1, label: 'first', description: 'this is first',),
+                              DropdownListItem(value: 2, label: 'second', description: 'this is second',),
+                              DropdownListItem(value: 3, label: 'third', description: 'this is third',),
+                              DropdownListItem(value: 4, label: 'four', description: 'this is fourth',),
+                              DropdownListItem(value: 5, label: 'five', description: 'this is fifth',),
                             ],
                             selectionType: SelectionType.multiSelect,
                             textIcon: Icons.article,

@@ -55,6 +55,7 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
   bool _isOpen = false;
   int _currentIndex = -1;
   String _nestedSelected = '';
+  int _nestedIndex = -1;
   late AnimationController _animationController;
   late Animation<double> _expandAnimation;
   late Animation<double> _rotateAnimation;
@@ -152,8 +153,9 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
   }
 
   void _filterItems(String input) {
+
     List<DropdownItem<String>> newFilteredItems = widget.items
-        .where((item) => item.value.toLowerCase().contains(input.toLowerCase()))
+        .where((item) => item.value.trim().toLowerCase().contains(input.trim().toLowerCase()) || (item.description!=null && item.description!.trim().toLowerCase().contains(input.trim().toLowerCase())))
         .toList();
 
     if (!listEquals(newFilteredItems, _lastFilteredItems)) {
@@ -380,6 +382,7 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
   List<Widget> _buildGroupedItems() {
     List<Widget> groupedItems = [];
     Set<String?> uniqueTypes = filteredItems.map((item) => item.type).toSet();
+    print(uniqueTypes.length);
 
     for (String? type in uniqueTypes) {
       if (type != null) {
@@ -402,7 +405,7 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
 
         // Add items of the current type
         List<DropdownItem<String>> typeItems =
-            widget.items.where((item) => item.type == type).toList();
+            filteredItems.where((item) => item.type == type).toList();
 
         for (DropdownItem<String> item in typeItems) {
           groupedItems.add(
@@ -419,7 +422,10 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
                         });
                       },
                       onTap: () {
-                        _nestedSelected = '$type,${item.value}';
+                        setState((){
+                          _nestedSelected = '$type,${item.value}';
+                          _nestedIndex = 1;
+                        });
                         widget.onChange(item.value, type);
                         _toggleDropdown();
                       },
@@ -503,6 +509,7 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
     } else {
       setState(() {
         _currentIndex = -1; // Reset the index when opening the dropdown
+        _nestedIndex =-1;
         _overlayEntry = _createOverlayEntry();
       });
       Overlay.of(context).insert(_overlayEntry!);
@@ -513,7 +520,8 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
       setState(() {
         widget.textEditingController.text = filteredItems[_currentIndex].value;
       });
-    } else if (widget.dropdownType == DropdownType.nestedSelect) {
+    }
+    if (widget.dropdownType == DropdownType.nestedSelect && _nestedIndex!=-1) {
       setState(() {
         widget.textEditingController.text = _nestedSelected;
       });

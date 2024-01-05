@@ -181,7 +181,7 @@ void main() {
                           value: item.value,
                           description: 'description for ${item.value} one',
                               profileImage: const NetworkImage(
-                                'https://images.unsplash.com/photo-1608848461950-0fe51dfc41cb?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8fA%3D%3D',
+                                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzBXNuO6PezhC18aYH_2cYtS0I7KbxoKYdwA&usqp=CAU',
                               ),
                           child: Padding(
                             padding:  const EdgeInsets.only(left: 0, top: 0,),
