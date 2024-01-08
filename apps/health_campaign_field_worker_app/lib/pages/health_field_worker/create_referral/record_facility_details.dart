@@ -4,16 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-import '../../../blocs/facility/facility.dart';
 import '../../../blocs/hf_referrals/record_referral.dart';
+import '../../../blocs/project_facility/project_facility.dart';
 import '../../../models/data_model.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
 import '../../../widgets/header/back_navigation_help_header.dart';
-import '../../../widgets/inventory/no_facilities_assigned_dialog.dart';
 import '../../../widgets/localized.dart';
-import '../../inventory/facility_selection.dart';
+import '../../inventory/project_facility_selection.dart';
 
 class ReferralFacilityPage extends LocalizedStatefulWidget {
   final bool isEditing;
@@ -47,16 +46,16 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
     final theme = Theme.of(context);
     // final router = context.router;
 
-    return BlocConsumer<FacilityBloc, FacilityState>(
+    return BlocConsumer<ProjectFacilityBloc, ProjectFacilityState>(
       listener: (context, state) {
         state.whenOrNull(
-          empty: () => NoFacilitiesAssignedDialog.show(context),
+          empty: () => false,
         );
       },
       builder: (ctx, facilityState) {
         return facilityState.maybeWhen(
           orElse: () => const SizedBox.shrink(),
-          fetched: (facilities, _) {
+          fetched: (facilities) {
             final projectFacilities = facilities
                 .where((e) => e.id != 'N/A' && e.id != 'Delivery Team')
                 .toList();
@@ -97,7 +96,7 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
                                   } else {
                                     final evaluationFacility = form
                                         .control(_evaluationFacilityKey)
-                                        .value as FacilityModel;
+                                        .value as ProjectFacilityModel;
                                     final dateOfEvaluation = form
                                         .control(_dateOfEvaluationKey)
                                         .value as DateTime;
@@ -199,9 +198,10 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
                                             final parent = context.router
                                                 .parent() as StackRouter;
                                             final facility = await parent
-                                                .push<FacilityModel>(
-                                              FacilitySelectionRoute(
-                                                facilities: projectFacilities,
+                                                .push<ProjectFacilityModel>(
+                                              ProjectFacilitySelectionRoute(
+                                                projectFacilities:
+                                                    projectFacilities,
                                               ),
                                             );
 
@@ -216,7 +216,8 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
                                       child: DigitTextFormField(
                                         hideKeyboard: true,
                                         readOnly: viewOnly,
-                                        valueAccessor: FacilityValueAccessor(
+                                        valueAccessor:
+                                            ProjectFacilityValueAccessor(
                                           projectFacilities,
                                         ),
                                         label: localizations.translate(
@@ -243,8 +244,8 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
                                                     .parent() as StackRouter;
                                                 final facility = await parent
                                                     .push<FacilityModel>(
-                                                  FacilitySelectionRoute(
-                                                    facilities:
+                                                  ProjectFacilitySelectionRoute(
+                                                    projectFacilities:
                                                         projectFacilities,
                                                   ),
                                                 );
@@ -301,7 +302,7 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
 
   FormGroup buildForm(
     RecordHFReferralState referralState,
-    List<FacilityModel> facilities,
+    List<ProjectFacilityModel> facilities,
   ) {
     final dateOfEvaluation = referralState.mapOrNull(
       create: (value) => value.viewOnly
@@ -344,12 +345,13 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
         //   Validators.required,
         // ],
       ),
-      _evaluationFacilityKey: FormControl<FacilityModel>(
+      _evaluationFacilityKey: FormControl<ProjectFacilityModel>(
         value: referralState.mapOrNull(
           create: (value) => value.viewOnly
               ? facilities
                   .where(
-                      (e) => e.id == value.hfReferralModel?.projectFacilityId)
+                    (e) => e.id == value.hfReferralModel?.projectFacilityId,
+                  )
                   .first
               : null,
         ),
