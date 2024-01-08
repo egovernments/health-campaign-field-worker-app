@@ -25,8 +25,8 @@ class _HouseholdAcknowledgementPageState
     extends LocalizedState<HouseholdAcknowledgementPage> {
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => false,
+    return PopScope(
+      canPop: false,
       child: Scaffold(
         body: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
           builder: (context, householdState) {

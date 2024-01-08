@@ -87,19 +87,17 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
         .toList()
         .isNotEmpty;
 
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      onPopInvoked: (didPop) {
         final stockState = context.read<RecordStockBloc>().state;
         if (stockState.primaryId != null) {
           context.read<ScannerBloc>().add(
-                ScannerEvent.handleScanner(
-                  [],
-                  [stockState.primaryId.toString()],
-                ),
-              );
+            ScannerEvent.handleScanner(
+              [],
+              [stockState.primaryId.toString()],
+            ),
+          );
         }
-
-        return true;
       },
       child: Scaffold(
         body: BlocBuilder<LocationBloc, LocationState>(

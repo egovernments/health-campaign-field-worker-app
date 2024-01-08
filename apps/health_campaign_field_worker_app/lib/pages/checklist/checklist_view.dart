@@ -52,8 +52,8 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return WillPopScope(
-      onWillPop: () => _onBackPressed(context),
+    return PopScope(
+      onPopInvoked: (didPop) => _onBackPressed(context),
       child: Scaffold(
         body: ScrollableContent(
           header: const Column(children: [

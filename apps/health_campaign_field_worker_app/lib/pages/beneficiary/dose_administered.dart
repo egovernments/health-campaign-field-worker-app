@@ -64,10 +64,8 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
     ];
 
     return ProductVariantBlocWrapper(
-      child: WillPopScope(
-        onWillPop: () async {
-          return false;
-        },
+      child: PopScope(
+        canPop: false,
         child: Scaffold(
           body: ReactiveFormBuilder(
             form: () => buildForm(context),

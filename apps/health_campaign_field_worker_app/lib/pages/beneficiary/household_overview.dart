@@ -46,13 +46,12 @@ class _HouseholdOverviewPageState
     final theme = Theme.of(context);
     final beneficiaryType = context.beneficiaryType;
 
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      onPopInvoked: (didPop) async {
         context
             .read<SearchHouseholdsBloc>()
             .add(const SearchHouseholdsClearEvent());
-
-        return true;
+        Navigator.of(context).pop();
       },
       child: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
         builder: (ctx, state) {
