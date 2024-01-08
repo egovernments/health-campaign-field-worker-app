@@ -119,6 +119,8 @@ class Common {
 
   String get maxCharsRequired => 'MAX_CHARS_ALLOWED';
 
+  String get maxValue => 'MAX_VALUE_ALLOWED';
+
   String get noResultsFound => 'NO_RESULTS_FOUND';
 
   String get coreCommonSyncInProgress => 'CORE_COMMON_SYNC_IN_PROGRESS';
@@ -126,12 +128,13 @@ class Common {
   String get facilitySearchHeaderLabel => 'FACILITY_SEARCH_HEADER_LABEL';
 
   String get coreCommonDownload => 'CORE_COMMON_DOWNLOAD';
-  
+
   String get coreCommonDownloadFailed => 'CORE_COMMON_DOWNLOAD_FAILED';
 
   String get noMatchFound => 'CORE_COMMON_NO_MATCH_FOUND';
 
   String get scanBales => 'CORE_COMMON_SCAN_BALES';
+  String get ageInMonths => 'AGE_IN_MONTHS_LABEL';
 }
 
 class HomeShowcase {
@@ -147,6 +150,10 @@ class HomeShowcase {
 
   String get distributorFileComplaint {
     return 'DISTRIBUTOR_HOME_SHOWCASE_FILE_COMPLAINT';
+  }
+
+  String get beneficiaryReferral {
+    return 'HF_HOME_SHOWCASE_BENEFICIARY_LABEL';
   }
 
   String get distributorSyncData {
@@ -848,6 +855,7 @@ class Home {
 
   String get deleteAllLabel => 'HOME_DELETE_ALL_LABEL';
   String get db => 'HOME_DB_LABEL';
+  String get beneficiaryReferralLabel => 'HOME_BENEFICIARY_REFERRAL_LABEL';
 }
 
 class SearchBeneficiary {
@@ -1757,6 +1765,8 @@ class ReferBeneficiary {
   const ReferBeneficiary();
 
   String get dateOfReferralLabel => 'REFER_BENEFICIARY_DATE_OF_REFERRAL_LABEL';
+  String get dateOfEvaluationLabel =>
+      'REFER_BENEFICIARY_DATE_OF_EVALUATION_LABEL';
   String get administrationUnitFormLabel => 'ADMINISTRATION_UNIT_FORM_LABEL';
   String get referredByLabel => 'REFERRED_BY_FORM_LABEL';
   String get referredToLabel => 'REFERRED_TO_FORM_LABEL';
@@ -1764,4 +1774,18 @@ class ReferBeneficiary {
   String get referralComments => 'REFERRAL_COMMENTS';
   String get referralDetails => 'REFERRAL_DETAILS_HEADER';
   String get facilityValidationMessage => 'PLEASE_ENTER_VALID_FACILITY';
+  String get facilityDetails => 'FACILITY_DETAILS_HEADER';
+  String get evaluationFacilityLabel => 'EVALUATION_FACILITY_LABEL';
+  String get nameOfHealthFacilityCoordinatorLabel =>
+      'NAME_OF_HEALTH_FACILITY_COORDINATOR';
+  String get healthFacilityCoordinatorLabel => 'NAME_OF_HF_COORDINATOR_LABEL';
+  String get nameOfTheChildLabel => 'REFERRAL_NAME_OF_CHILD_LABEL';
+  String get beneficiaryIdLabel => 'REFERRAL_BENEFICIARY_ID_LABEL';
+  String get referralCodeLabel => 'REFERRAL_CODE_LABEL';
+  String get reasonForReferralHeader => 'REASON_FOR_REFERRAL_HEADER';
+  String get searchReferralsHeader => 'SEARCH_REFERRALS_HEADER';
+  String get referredByTeamCodeLabel => 'REFERRED_BY_TEAM_CODE_LABEL';
+  String get selectCycle => 'REFERRAL_SELECT_CYCLE';
+  String get createReferralLabel => 'CREATE_REFERRAL_LABEL';
+  String get noChecklistFound => 'NO_CHECKLISTS_FOUND';
 }

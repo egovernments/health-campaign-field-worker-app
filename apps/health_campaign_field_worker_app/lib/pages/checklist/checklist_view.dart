@@ -17,8 +17,10 @@ import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 
 class ChecklistViewPage extends LocalizedStatefulWidget {
+  final String? referralClientRefId;
   const ChecklistViewPage({
     Key? key,
+    this.referralClientRefId,
     super.appLocalizations,
   }) : super(key: key);
 
@@ -52,55 +54,238 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
+    bool isHealthFacilityWorker = context.loggedInUserRoles
+        .where((role) => role.code == RolesType.healthFacilityWorker.toValue())
+        .toList()
+        .isNotEmpty;
+
     return WillPopScope(
-      onWillPop: () => _onBackPressed(context),
+      onWillPop: isHealthFacilityWorker && widget.referralClientRefId != null
+          ? () async => false
+          : () async => _onBackPressed(context),
       child: Scaffold(
-        body: ScrollableContent(
-          header: const Column(children: [
-            BackNavigationHelpHeaderWidget(),
-          ]),
-          children: [
-            BlocBuilder<ServiceDefinitionBloc, ServiceDefinitionState>(
-              builder: (context, state) {
-                state.mapOrNull(
-                  serviceDefinitionFetch: (value) {
-                    selectedServiceDefinition = value.selectedServiceDefinition;
-                    initialAttributes =
-                        value.selectedServiceDefinition?.attributes;
-                    if (!isControllersInitialized) {
-                      initialAttributes?.forEach((e) {
-                        controller.add(TextEditingController());
-                        additionalController.add(TextEditingController());
-                      });
+        body: BlocBuilder<ServiceDefinitionBloc, ServiceDefinitionState>(
+          builder: (context, state) {
+            state.mapOrNull(
+              serviceDefinitionFetch: (value) {
+                selectedServiceDefinition = value.selectedServiceDefinition;
+                initialAttributes = value.selectedServiceDefinition?.attributes;
+                if (!isControllersInitialized) {
+                  initialAttributes?.forEach((e) {
+                    controller.add(TextEditingController());
+                    additionalController.add(TextEditingController());
+                  });
 
-                      // Set the flag to true after initializing controllers
-                      isControllersInitialized = true;
-                    }
-                  },
-                );
+                  // Set the flag to true after initializing controllers
+                  isControllersInitialized = true;
+                }
+              },
+            );
 
-                return state.maybeMap(
-                  orElse: () => Text(state.runtimeType.toString()),
-                  serviceDefinitionFetch: (value) {
-                    return Form(
+            return state.maybeMap(
+              orElse: () => Text(state.runtimeType.toString()),
+              serviceDefinitionFetch: (value) {
+                return ScrollableContent(
+                  header: Column(children: [
+                    if (!(isHealthFacilityWorker &&
+                        widget.referralClientRefId != null))
+                      const BackNavigationHelpHeaderWidget(),
+                  ]),
+                  enableFixedButton: true,
+                  footer: DigitCard(
+                    margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
+                    padding:
+                        const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
+                    child: DigitElevatedButton(
+                      onPressed: () async {
+                        final router = context.router;
+                        submitTriggered = true;
+
+                        context.read<ServiceBloc>().add(
+                              const ServiceChecklistEvent(
+                                value: '',
+                                submitTriggered: true,
+                              ),
+                            );
+                        final isValid =
+                            checklistFormKey.currentState?.validate();
+                        if (!isValid!) {
+                          return;
+                        }
+                        final itemsAttributes = initialAttributes;
+
+                        for (int i = 0; i < controller.length; i++) {
+                          if (itemsAttributes?[i].required == true &&
+                              ((itemsAttributes?[i].dataType ==
+                                          'SingleValueList' &&
+                                      visibleChecklistIndexes
+                                          .any((e) => e == i) &&
+                                      (controller[i].text == '')) ||
+                                  (itemsAttributes?[i].dataType !=
+                                          'SingleValueList' &&
+                                      (controller[i].text == '')))) {
+                            return;
+                          }
+                        }
+
+                        final shouldSubmit = await DigitDialog.show(
+                          context,
+                          options: DigitDialogOptions(
+                            titleText: localizations.translate(
+                              i18.checklist.checklistDialogLabel,
+                            ),
+                            content: Text(localizations.translate(
+                              i18.checklist.checklistDialogDescription,
+                            )),
+                            primaryAction: DigitDialogActions(
+                              label: localizations.translate(
+                                i18.checklist.checklistDialogPrimaryAction,
+                              ),
+                              action: (ctx) {
+                                final referenceId = IdGen.i.identifier;
+                                List<ServiceAttributesModel> attributes = [];
+                                for (int i = 0; i < controller.length; i++) {
+                                  final attribute = initialAttributes;
+                                  attributes.add(ServiceAttributesModel(
+                                    auditDetails: AuditDetails(
+                                      createdBy: context.loggedInUserUuid,
+                                      createdTime:
+                                          context.millisecondsSinceEpoch(),
+                                    ),
+                                    attributeCode: '${attribute?[i].code}',
+                                    dataType: attribute?[i].dataType,
+                                    clientReferenceId: IdGen.i.identifier,
+                                    referenceId: isHealthFacilityWorker &&
+                                            widget.referralClientRefId != null
+                                        ? widget.referralClientRefId
+                                        : referenceId,
+                                    value: attribute?[i].dataType !=
+                                            'SingleValueList'
+                                        ? controller[i]
+                                                .text
+                                                .toString()
+                                                .trim()
+                                                .isNotEmpty
+                                            ? controller[i].text.toString()
+                                            : null
+                                        : visibleChecklistIndexes.contains(i)
+                                            ? controller[i].text.toString()
+                                            : i18.checklist.notSelectedKey,
+                                    rowVersion: 1,
+                                    tenantId: attribute?[i].tenantId,
+                                    additionalDetails: ((attribute?[i]
+                                                        .values
+                                                        ?.length ==
+                                                    2 ||
+                                                attribute?[i].values?.length ==
+                                                    3) &&
+                                            controller[i].text ==
+                                                attribute?[i].values?[1].trim())
+                                        ? additionalController[i]
+                                                .text
+                                                .toString()
+                                                .isEmpty
+                                            ? null
+                                            : additionalController[i]
+                                                .text
+                                                .toString()
+                                        : null,
+                                  ));
+                                }
+
+                                context.read<ServiceBloc>().add(
+                                      ServiceCreateEvent(
+                                        serviceModel: ServiceModel(
+                                          createdAt: DigitDateUtils
+                                              .getDateFromTimestamp(
+                                            DateTime.now()
+                                                .toLocal()
+                                                .millisecondsSinceEpoch,
+                                            dateFormat: "dd/MM/yyyy hh:mm a",
+                                          ),
+                                          tenantId: value
+                                              .selectedServiceDefinition!
+                                              .tenantId,
+                                          clientId: isHealthFacilityWorker &&
+                                                  widget.referralClientRefId !=
+                                                      null
+                                              ? widget.referralClientRefId
+                                                  .toString()
+                                              : referenceId,
+                                          serviceDefId: value
+                                              .selectedServiceDefinition?.id,
+                                          attributes: attributes,
+                                          rowVersion: 1,
+                                          accountId: context.projectId,
+                                          auditDetails: AuditDetails(
+                                            createdBy: context.loggedInUserUuid,
+                                            createdTime: DateTime.now()
+                                                .millisecondsSinceEpoch,
+                                          ),
+                                          clientAuditDetails:
+                                              ClientAuditDetails(
+                                            createdBy: context.loggedInUserUuid,
+                                            createdTime: context
+                                                .millisecondsSinceEpoch(),
+                                            lastModifiedBy:
+                                                context.loggedInUserUuid,
+                                            lastModifiedTime: context
+                                                .millisecondsSinceEpoch(),
+                                          ),
+                                          additionalDetails:
+                                              context.boundary.code,
+                                        ),
+                                      ),
+                                    );
+
+                                Navigator.of(
+                                  context,
+                                  rootNavigator: true,
+                                ).pop(true);
+                              },
+                            ),
+                            secondaryAction: DigitDialogActions(
+                              label: localizations.translate(
+                                i18.checklist.checklistDialogSecondaryAction,
+                              ),
+                              action: (context) {
+                                Navigator.of(
+                                  context,
+                                  rootNavigator: true,
+                                ).pop(false);
+                              },
+                            ),
+                          ),
+                        );
+                        if (shouldSubmit ?? false) {
+                          if (isHealthFacilityWorker &&
+                              widget.referralClientRefId != null) {
+                            router.navigate(SearchReferralsRoute());
+                          } else {
+                            router.navigate(ChecklistRoute());
+                          }
+                          router.push(AcknowledgementRoute());
+                        }
+                      },
+                      child: Text(
+                        localizations.translate(i18.common.coreCommonSubmit),
+                      ),
+                    ),
+                  ),
+                  children: [
+                    Form(
                       key: checklistFormKey, //assigning key to form
                       child: DigitCard(
                         child: Column(children: [
                           Padding(
                             padding: const EdgeInsets.only(bottom: 8),
                             child: Text(
-                              localizations.translate(
+                              '${localizations.translate(
                                 value.selectedServiceDefinition!.code
                                     .toString(),
-                              ),
+                              )} ${localizations.translate(i18.checklist.checklist)}',
                               style: theme.textTheme.displayMedium,
                               textAlign: TextAlign.left,
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              localizations.translate(i18.checklist.checklist),
                             ),
                           ),
                           ...initialAttributes!.map((
@@ -253,181 +438,14 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                           const SizedBox(
                             height: 15,
                           ),
-                          DigitElevatedButton(
-                            onPressed: () async {
-                              final router = context.router;
-                              submitTriggered = true;
-
-                              context.read<ServiceBloc>().add(
-                                    const ServiceChecklistEvent(
-                                      value: '',
-                                      submitTriggered: true,
-                                    ),
-                                  );
-                              final isValid =
-                                  checklistFormKey.currentState?.validate();
-                              if (!isValid!) {
-                                return;
-                              }
-                              final itemsAttributes = initialAttributes;
-
-                              for (int i = 0; i < controller.length; i++) {
-                                if (itemsAttributes?[i].required == true &&
-                                    ((itemsAttributes?[i].dataType ==
-                                                'SingleValueList' &&
-                                            visibleChecklistIndexes
-                                                .any((e) => e == i) &&
-                                            (controller[i].text == '')) ||
-                                        (itemsAttributes?[i].dataType !=
-                                                'SingleValueList' &&
-                                            (controller[i].text == '')))) {
-                                  return;
-                                }
-                              }
-
-                              final shouldSubmit = await DigitDialog.show(
-                                context,
-                                options: DigitDialogOptions(
-                                  titleText: localizations.translate(
-                                    i18.checklist.checklistDialogLabel,
-                                  ),
-                                  content: Text(localizations.translate(
-                                    i18.checklist.checklistDialogDescription,
-                                  )),
-                                  primaryAction: DigitDialogActions(
-                                    label: localizations.translate(i18.checklist
-                                        .checklistDialogPrimaryAction),
-                                    action: (ctx) {
-                                      final referenceId = IdGen.i.identifier;
-                                      List<ServiceAttributesModel> attributes =
-                                          [];
-                                      for (int i = 0;
-                                          i < controller.length;
-                                          i++) {
-                                        final attribute = initialAttributes;
-                                        attributes.add(ServiceAttributesModel(
-                                          auditDetails: AuditDetails(
-                                            createdBy: context.loggedInUserUuid,
-                                            createdTime: context
-                                                .millisecondsSinceEpoch(),
-                                          ),
-                                          attributeCode:
-                                              '${attribute?[i].code}',
-                                          dataType: attribute?[i].dataType,
-                                          clientReferenceId: IdGen.i.identifier,
-                                          referenceId: referenceId,
-                                          value: attribute?[i].dataType !=
-                                                  'SingleValueList'
-                                              ? controller[i]
-                                                      .text
-                                                      .toString()
-                                                      .trim()
-                                                      .isNotEmpty
-                                                  ? controller[i]
-                                                      .text
-                                                      .toString()
-                                                  : null
-                                              : visibleChecklistIndexes
-                                                      .contains(i)
-                                                  ? controller[i]
-                                                      .text
-                                                      .toString()
-                                                  : i18
-                                                      .checklist.notSelectedKey,
-                                          rowVersion: 1,
-                                          tenantId: attribute?[i].tenantId,
-                                          additionalDetails:
-                                              ((attribute?[i].values?.length ==
-                                                              2 ||
-                                                          attribute?[i]
-                                                                  .values
-                                                                  ?.length ==
-                                                              3) &&
-                                                      controller[i].text ==
-                                                          attribute?[i]
-                                                              .values?[1]
-                                                              .trim())
-                                                  ? additionalController[i]
-                                                          .text
-                                                          .toString()
-                                                          .isEmpty
-                                                      ? null
-                                                      : additionalController[i]
-                                                          .text
-                                                          .toString()
-                                                  : null,
-                                        ));
-                                      }
-
-                                      context.read<ServiceBloc>().add(
-                                            ServiceCreateEvent(
-                                              serviceModel: ServiceModel(
-                                                createdAt: DigitDateUtils
-                                                    .getDateFromTimestamp(
-                                                  DateTime.now()
-                                                      .toLocal()
-                                                      .millisecondsSinceEpoch,
-                                                  dateFormat:
-                                                      "dd/MM/yyyy hh:mm a",
-                                                ),
-                                                tenantId: value
-                                                    .selectedServiceDefinition!
-                                                    .tenantId,
-                                                clientId: referenceId,
-                                                serviceDefId: value
-                                                    .selectedServiceDefinition
-                                                    ?.id,
-                                                attributes: attributes,
-                                                rowVersion: 1,
-                                                accountId: context.projectId,
-                                                auditDetails: AuditDetails(
-                                                  createdBy:
-                                                      context.loggedInUserUuid,
-                                                  createdTime: DateTime.now()
-                                                      .millisecondsSinceEpoch,
-                                                ),
-                                                additionalDetails:
-                                                    context.boundary.code,
-                                              ),
-                                            ),
-                                          );
-
-                                      Navigator.of(
-                                        context,
-                                        rootNavigator: true,
-                                      ).pop(true);
-                                    },
-                                  ),
-                                  secondaryAction: DigitDialogActions(
-                                    label: localizations.translate(i18.checklist
-                                        .checklistDialogSecondaryAction),
-                                    action: (context) {
-                                      Navigator.of(
-                                        context,
-                                        rootNavigator: true,
-                                      ).pop(false);
-                                    },
-                                  ),
-                                ),
-                              );
-                              if (shouldSubmit ?? false) {
-                                router.navigate(ChecklistRoute());
-                                router.push(AcknowledgementRoute());
-                              }
-                            },
-                            child: Text(
-                              localizations
-                                  .translate(i18.common.coreCommonSubmit),
-                            ),
-                          ),
                         ]),
                       ),
-                    );
-                  },
+                    ),
+                  ],
                 );
               },
-            ),
-          ],
+            );
+          },
         ),
       ),
     );
@@ -510,12 +528,15 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                         if (excludedIndexes.isNotEmpty) {
                           for (int i = 0; i < excludedIndexes.length; i++) {
                             // Clear excluded child controllers
-                            controller[excludedIndexes[i]].value =
-                                TextEditingController.fromValue(
-                              const TextEditingValue(
-                                text: '',
-                              ),
-                            ).value;
+                            if (item.dataType != 'String' &&
+                                item.dataType != 'Number') {
+                              controller[excludedIndexes[i]].value =
+                                  TextEditingController.fromValue(
+                                const TextEditingValue(
+                                  text: '',
+                                ),
+                              ).value;
+                            }
                           }
                         }
 
@@ -601,31 +622,34 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
         ],
       );
     } else if (item.dataType == 'String') {
-      return DigitTextField(
-        onChange: (value) {
-          checklistFormKey.currentState?.validate();
-        },
-        isRequired: false,
-        controller: controller[index],
-        inputFormatter: [
-          FilteringTextInputFormatter.allow(RegExp(
-            "[a-zA-Z0-9]",
-          )),
-        ],
-        validator: (value) {
-          if (((value == null || value == '') && item.required == true)) {
-            return localizations.translate("${item.code}_REQUIRED");
-          }
-          if (item.regex != null) {
-            return (RegExp(item.regex!).hasMatch(value!))
-                ? null
-                : localizations.translate("${item.code}_REGEX");
-          }
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: DigitTextField(
+          onChange: (value) {
+            checklistFormKey.currentState?.validate();
+          },
+          isRequired: item.required ?? true,
+          controller: controller[index],
+          inputFormatter: [
+            FilteringTextInputFormatter.allow(RegExp(
+              "[a-zA-Z0-9 ]",
+            )),
+          ],
+          validator: (value) {
+            if (((value == null || value == '') && item.required == true)) {
+              return localizations.translate("${item.code}_REQUIRED");
+            }
+            if (item.regex != null) {
+              return (RegExp(item.regex!).hasMatch(value!))
+                  ? null
+                  : localizations.translate("${item.code}_REGEX");
+            }
 
-          return null;
-        },
-        label: localizations.translate(
-          '${selectedServiceDefinition?.code}.${item.code}',
+            return null;
+          },
+          label: localizations.translate(
+            '${selectedServiceDefinition?.code}.${item.code}',
+          ),
         ),
       );
     } else if (item.dataType == 'Number') {

@@ -103,6 +103,9 @@ class MainApplicationState extends State<MainApplication>
                       .read<NetworkManager>()
                       .repository<ProjectBeneficiaryModel,
                           ProjectBeneficiarySearchModel>(ctx),
+                  hfReferralDataRepository: ctx
+                      .read<NetworkManager>()
+                      .repository<HFReferralModel, HFReferralSearchModel>(ctx),
                 ),
               ),
               BlocProvider(

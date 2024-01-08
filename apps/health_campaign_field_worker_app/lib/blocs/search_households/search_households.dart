@@ -289,11 +289,6 @@ class SearchHouseholdsBloc
           ? househHoldIds
           : individualClientReferenceIds,
     );
-    householdMembers.removeWhere((ele) => projectBeneficiaries.any((p) => p
-        .beneficiaryClientReferenceId!
-        .contains(beneficiaryType == BeneficiaryType.individual
-            ? ele.individualClientReferenceId.toString()
-            : ele.householdClientReferenceId.toString())));
 
     List<SideEffectModel> sideEffects = [];
     List<ReferralModel> referrals = [];
@@ -438,9 +433,8 @@ class SearchHouseholdsBloc
       null,
     );
 
-    final househHoldIds = beneficiaryType != BeneficiaryType.individual
-        ? householdMembers.map((e) => e.householdClientReferenceId!).toList()
-        : null;
+    final househHoldIds =
+        householdMembers.map((e) => e.householdClientReferenceId!).toList();
 
     final List<HouseholdModel> houseHolds = await household.search(
       HouseholdSearchModel(
@@ -453,11 +447,6 @@ class SearchHouseholdsBloc
           ? househHoldIds
           : individualClientReferenceIds,
     );
-    householdMembers.removeWhere((ele) => projectBeneficiaries.any((p) => p
-        .beneficiaryClientReferenceId!
-        .contains(beneficiaryType == BeneficiaryType.individual
-            ? ele.individualClientReferenceId.toString()
-            : ele.householdClientReferenceId.toString())));
     // Search for individual results based on the search text only.
 
     List<SideEffectModel> sideEffects = [];

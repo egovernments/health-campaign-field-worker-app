@@ -12,6 +12,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../blocs/auth/auth.dart';
 import '../blocs/search_households/search_households.dart';
+import '../blocs/search_referrals/search_referrals.dart';
 import '../blocs/sync/sync.dart';
 import '../data/data_repository.dart';
 import '../data/local_store/secure_store/secure_store.dart';
@@ -380,6 +381,18 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
+      i18.home.beneficiaryReferralLabel:
+          homeShowcaseData.beneficiaryReferral.buildWith(
+        child: HomeItemCard(
+          icon: Icons.supervised_user_circle_rounded,
+          label: i18.home.beneficiaryReferralLabel,
+          onPressed: () async {
+            final searchBloc = context.read<SearchReferralsBloc>();
+            searchBloc.add(const SearchReferralsClearEvent());
+            await context.router.push(SearchReferralsRoute());
+          },
+        ),
+      ),
       i18.home.viewReportsLabel: homeShowcaseData.inventoryReport.buildWith(
         child: HomeItemCard(
           icon: Icons.announcement,
@@ -421,6 +434,8 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.showcaseKey,
       i18.home.viewReportsLabel: homeShowcaseData.inventoryReport.showcaseKey,
       i18.home.db: homeShowcaseData.inventoryReport.showcaseKey,
+      i18.home.beneficiaryReferralLabel:
+          homeShowcaseData.hfBeneficiaryReferral.showcaseKey,
     };
 
     final homeItemsLabel = <String>[
@@ -432,6 +447,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.syncDataLabel,
       i18.home.viewReportsLabel,
       i18.home.db,
+      i18.home.beneficiaryReferralLabel,
     ];
 
     final List<String> filteredLabels = homeItemsLabel
@@ -486,6 +502,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                         StockReconciliationSearchModel>>(),
                 context.read<
                     LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+                context.read<
+                    LocalRepository<HFReferralModel, HFReferralSearchModel>>(),
               ],
               remoteRepositories: [
                 context.read<
@@ -511,6 +529,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                         StockReconciliationSearchModel>>(),
                 context.read<
                     RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+                context.read<
+                    RemoteRepository<HFReferralModel, HFReferralSearchModel>>(),
               ],
             ),
           );

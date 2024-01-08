@@ -67,15 +67,24 @@ class DigitRadioButtonList<T> extends StatelessWidget {
             children: options.map(
               (data) {
                 return ReactiveRadioListTile<T>(
+                  activeColor: isEnabled == false
+                      ? const DigitColors().cloudGray
+                      : DigitTheme.instance.colorScheme.secondary,
                   formControlName: formControlName,
                   contentPadding: contentPadding ?? const EdgeInsets.all(0),
-                  title: Text(valueMapper(data)),
+                  title: Text(
+                    valueMapper(data),
+                    style: TextStyle(
+                        color: isEnabled == false
+                            ? const DigitColors().hintGrey
+                            : const DigitColors().woodsmokeBlack),
+                  ),
                   value: data,
                   visualDensity: visualDensity ??
                       const VisualDensity(
                           horizontal: VisualDensity.minimumDensity,
                           vertical: VisualDensity.minimumDensity),
-                  onChanged: (isEnabled ?? true)
+                  onChanged: (isEnabled == true)
                       ? (control) {
                           final value = control.value;
                           if (value == null) return;

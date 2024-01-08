@@ -10,6 +10,7 @@ class DigitReactiveSearchDropdown<T> extends StatefulWidget {
   final FormGroup form;
   final String formControlName;
   final bool isRequired;
+  final bool enabled;
   final String Function(T value) valueMapper;
   final String? validationMessage;
   final EdgeInsets? padding;
@@ -28,6 +29,7 @@ class DigitReactiveSearchDropdown<T> extends StatefulWidget {
     this.padding,
     this.onSelected,
     this.emptyText = 'No Matches Found',
+    this.enabled = true,
   }) : super(key: key);
 
   @override
@@ -57,11 +59,16 @@ class _DigitReactiveSearchDropdownState<T>
           SearchDropdownFormField<T>(
             form: widget.form,
             controller: controller,
+            enabled: widget.enabled,
             formControlName: widget.formControlName,
             emptyText: widget.emptyText,
             displayItemFn: (dynamic str) => Text(
               str != null ? widget.valueMapper(str) : '',
-              style: const TextStyle(fontSize: 14),
+              style: TextStyle(
+                  fontSize: 14,
+                  color: !widget.enabled
+                      ? const DigitColors().hintGrey
+                      : const DigitColors().woodsmokeBlack),
             ),
             findFn: (dynamic str) async => widget.menuItems,
             filterFn: (dynamic item, str) => widget
@@ -100,22 +107,26 @@ class _DigitReactiveSearchDropdownState<T>
               tileColor: focused
                   ? DigitTheme.instance.colorScheme.surface
                   : Colors.transparent,
-              onTap: () {
-                widget.form.control(widget.formControlName).value = item;
-                onTap();
-                if (widget.onSelected != null) {
-                  widget.onSelected!(item);
-                }
-              },
+              onTap: !widget.enabled
+                  ? null
+                  : () {
+                      widget.form.control(widget.formControlName).value = item;
+                      onTap();
+                      if (widget.onSelected != null) {
+                        widget.onSelected!(item);
+                      }
+                    },
             ),
-            onFieldTap: () {
-              widget.form.control(widget.formControlName).value = null;
-              if (widget.isRequired) {
-                widget.form
-                    .control(widget.formControlName)
-                    .setErrors({'': true});
-              }
-            },
+            onFieldTap: !widget.enabled
+                ? null
+                : () {
+                    widget.form.control(widget.formControlName).value = null;
+                    if (widget.isRequired) {
+                      widget.form
+                          .control(widget.formControlName)
+                          .setErrors({'': true});
+                    }
+                  },
           ),
           ReactiveFormConsumer(
             builder: (context, form, child) {
