@@ -206,6 +206,180 @@ class _AuditDetailsCopyWithImpl<$R, $Out>
       _AuditDetailsCopyWithImpl($value, $cast, t);
 }
 
+class AdditionalFieldsMapper extends ClassMapperBase<AdditionalFields> {
+  AdditionalFieldsMapper._();
+
+  static AdditionalFieldsMapper? _instance;
+  static AdditionalFieldsMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = AdditionalFieldsMapper._());
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'AdditionalFields';
+
+  static String _$schema(AdditionalFields v) => v.schema;
+  static const Field<AdditionalFields, String> _f$schema =
+      Field('schema', _$schema);
+  static int _$version(AdditionalFields v) => v.version;
+  static const Field<AdditionalFields, int> _f$version =
+      Field('version', _$version);
+  static List<AdditionalField> _$fields(AdditionalFields v) => v.fields;
+  static const Field<AdditionalFields, List<AdditionalField>> _f$fields =
+      Field('fields', _$fields, opt: true, def: const []);
+
+  @override
+  final MappableFields<AdditionalFields> fields = const {
+    #schema: _f$schema,
+    #version: _f$version,
+    #fields: _f$fields,
+  };
+
+  static AdditionalFields _instantiate(DecodingData data) {
+    throw MapperException.missingConstructor('AdditionalFields');
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static AdditionalFields fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<AdditionalFields>(map);
+  }
+
+  static AdditionalFields fromJson(String json) {
+    return ensureInitialized().decodeJson<AdditionalFields>(json);
+  }
+}
+
+mixin AdditionalFieldsMappable {
+  String toJson();
+  Map<String, dynamic> toMap();
+  AdditionalFieldsCopyWith<AdditionalFields, AdditionalFields, AdditionalFields>
+      get copyWith;
+}
+
+abstract class AdditionalFieldsCopyWith<$R, $In extends AdditionalFields, $Out>
+    implements ClassCopyWith<$R, $In, $Out> {
+  ListCopyWith<$R, AdditionalField,
+      AdditionalFieldCopyWith<$R, AdditionalField, AdditionalField>> get fields;
+  $R call({String? schema, int? version, List<AdditionalField>? fields});
+  AdditionalFieldsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
+      Then<$Out2, $R2> t);
+}
+
+class AdditionalFieldMapper extends ClassMapperBase<AdditionalField> {
+  AdditionalFieldMapper._();
+
+  static AdditionalFieldMapper? _instance;
+  static AdditionalFieldMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = AdditionalFieldMapper._());
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'AdditionalField';
+
+  static String _$key(AdditionalField v) => v.key;
+  static const Field<AdditionalField, String> _f$key = Field('key', _$key);
+  static dynamic _$value(AdditionalField v) => v.value;
+  static const Field<AdditionalField, dynamic> _f$value =
+      Field('value', _$value);
+
+  @override
+  final MappableFields<AdditionalField> fields = const {
+    #key: _f$key,
+    #value: _f$value,
+  };
+
+  static AdditionalField _instantiate(DecodingData data) {
+    return AdditionalField(data.dec(_f$key), data.dec(_f$value));
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static AdditionalField fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<AdditionalField>(map);
+  }
+
+  static AdditionalField fromJson(String json) {
+    return ensureInitialized().decodeJson<AdditionalField>(json);
+  }
+}
+
+mixin AdditionalFieldMappable {
+  String toJson() {
+    return AdditionalFieldMapper.ensureInitialized()
+        .encodeJson<AdditionalField>(this as AdditionalField);
+  }
+
+  Map<String, dynamic> toMap() {
+    return AdditionalFieldMapper.ensureInitialized()
+        .encodeMap<AdditionalField>(this as AdditionalField);
+  }
+
+  AdditionalFieldCopyWith<AdditionalField, AdditionalField, AdditionalField>
+      get copyWith => _AdditionalFieldCopyWithImpl(
+          this as AdditionalField, $identity, $identity);
+  @override
+  String toString() {
+    return AdditionalFieldMapper.ensureInitialized()
+        .stringifyValue(this as AdditionalField);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            AdditionalFieldMapper.ensureInitialized()
+                .isValueEqual(this as AdditionalField, other));
+  }
+
+  @override
+  int get hashCode {
+    return AdditionalFieldMapper.ensureInitialized()
+        .hashValue(this as AdditionalField);
+  }
+}
+
+extension AdditionalFieldValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, AdditionalField, $Out> {
+  AdditionalFieldCopyWith<$R, AdditionalField, $Out> get $asAdditionalField =>
+      $base.as((v, t, t2) => _AdditionalFieldCopyWithImpl(v, t, t2));
+}
+
+abstract class AdditionalFieldCopyWith<$R, $In extends AdditionalField, $Out>
+    implements ClassCopyWith<$R, $In, $Out> {
+  $R call({String? key, dynamic value});
+  AdditionalFieldCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
+      Then<$Out2, $R2> t);
+}
+
+class _AdditionalFieldCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, AdditionalField, $Out>
+    implements AdditionalFieldCopyWith<$R, AdditionalField, $Out> {
+  _AdditionalFieldCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<AdditionalField> $mapper =
+      AdditionalFieldMapper.ensureInitialized();
+  @override
+  $R call({String? key, Object? value = $none}) => $apply(FieldCopyWithData(
+      {if (key != null) #key: key, if (value != $none) #value: value}));
+  @override
+  AdditionalField $make(CopyWithData data) => AdditionalField(
+      data.get(#key, or: $value.key), data.get(#value, or: $value.value));
+
+  @override
+  AdditionalFieldCopyWith<$R2, AdditionalField, $Out2> $chain<$R2, $Out2>(
+          Then<$Out2, $R2> t) =>
+      _AdditionalFieldCopyWithImpl($value, $cast, t);
+}
+
 class ClientAuditDetailsMapper extends ClassMapperBase<ClientAuditDetails> {
   ClientAuditDetailsMapper._();
 
@@ -417,178 +591,4 @@ abstract class EntitySearchModelCopyWith<$R, $In extends EntitySearchModel,
       AdditionalFields? additionalFields});
   EntitySearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
-}
-
-class AdditionalFieldsMapper extends ClassMapperBase<AdditionalFields> {
-  AdditionalFieldsMapper._();
-
-  static AdditionalFieldsMapper? _instance;
-  static AdditionalFieldsMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = AdditionalFieldsMapper._());
-    }
-    return _instance!;
-  }
-
-  @override
-  final String id = 'AdditionalFields';
-
-  static String _$schema(AdditionalFields v) => v.schema;
-  static const Field<AdditionalFields, String> _f$schema =
-      Field('schema', _$schema);
-  static int _$version(AdditionalFields v) => v.version;
-  static const Field<AdditionalFields, int> _f$version =
-      Field('version', _$version);
-  static List<AdditionalField> _$fields(AdditionalFields v) => v.fields;
-  static const Field<AdditionalFields, List<AdditionalField>> _f$fields =
-      Field('fields', _$fields, opt: true, def: const []);
-
-  @override
-  final MappableFields<AdditionalFields> fields = const {
-    #schema: _f$schema,
-    #version: _f$version,
-    #fields: _f$fields,
-  };
-
-  static AdditionalFields _instantiate(DecodingData data) {
-    throw MapperException.missingConstructor('AdditionalFields');
-  }
-
-  @override
-  final Function instantiate = _instantiate;
-
-  static AdditionalFields fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<AdditionalFields>(map);
-  }
-
-  static AdditionalFields fromJson(String json) {
-    return ensureInitialized().decodeJson<AdditionalFields>(json);
-  }
-}
-
-mixin AdditionalFieldsMappable {
-  String toJson();
-  Map<String, dynamic> toMap();
-  AdditionalFieldsCopyWith<AdditionalFields, AdditionalFields, AdditionalFields>
-      get copyWith;
-}
-
-abstract class AdditionalFieldsCopyWith<$R, $In extends AdditionalFields, $Out>
-    implements ClassCopyWith<$R, $In, $Out> {
-  ListCopyWith<$R, AdditionalField,
-      AdditionalFieldCopyWith<$R, AdditionalField, AdditionalField>> get fields;
-  $R call({String? schema, int? version, List<AdditionalField>? fields});
-  AdditionalFieldsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
-      Then<$Out2, $R2> t);
-}
-
-class AdditionalFieldMapper extends ClassMapperBase<AdditionalField> {
-  AdditionalFieldMapper._();
-
-  static AdditionalFieldMapper? _instance;
-  static AdditionalFieldMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = AdditionalFieldMapper._());
-    }
-    return _instance!;
-  }
-
-  @override
-  final String id = 'AdditionalField';
-
-  static String _$key(AdditionalField v) => v.key;
-  static const Field<AdditionalField, String> _f$key = Field('key', _$key);
-  static dynamic _$value(AdditionalField v) => v.value;
-  static const Field<AdditionalField, dynamic> _f$value =
-      Field('value', _$value);
-
-  @override
-  final MappableFields<AdditionalField> fields = const {
-    #key: _f$key,
-    #value: _f$value,
-  };
-
-  static AdditionalField _instantiate(DecodingData data) {
-    return AdditionalField(data.dec(_f$key), data.dec(_f$value));
-  }
-
-  @override
-  final Function instantiate = _instantiate;
-
-  static AdditionalField fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<AdditionalField>(map);
-  }
-
-  static AdditionalField fromJson(String json) {
-    return ensureInitialized().decodeJson<AdditionalField>(json);
-  }
-}
-
-mixin AdditionalFieldMappable {
-  String toJson() {
-    return AdditionalFieldMapper.ensureInitialized()
-        .encodeJson<AdditionalField>(this as AdditionalField);
-  }
-
-  Map<String, dynamic> toMap() {
-    return AdditionalFieldMapper.ensureInitialized()
-        .encodeMap<AdditionalField>(this as AdditionalField);
-  }
-
-  AdditionalFieldCopyWith<AdditionalField, AdditionalField, AdditionalField>
-      get copyWith => _AdditionalFieldCopyWithImpl(
-          this as AdditionalField, $identity, $identity);
-  @override
-  String toString() {
-    return AdditionalFieldMapper.ensureInitialized()
-        .stringifyValue(this as AdditionalField);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            AdditionalFieldMapper.ensureInitialized()
-                .isValueEqual(this as AdditionalField, other));
-  }
-
-  @override
-  int get hashCode {
-    return AdditionalFieldMapper.ensureInitialized()
-        .hashValue(this as AdditionalField);
-  }
-}
-
-extension AdditionalFieldValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, AdditionalField, $Out> {
-  AdditionalFieldCopyWith<$R, AdditionalField, $Out> get $asAdditionalField =>
-      $base.as((v, t, t2) => _AdditionalFieldCopyWithImpl(v, t, t2));
-}
-
-abstract class AdditionalFieldCopyWith<$R, $In extends AdditionalField, $Out>
-    implements ClassCopyWith<$R, $In, $Out> {
-  $R call({String? key, dynamic value});
-  AdditionalFieldCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
-      Then<$Out2, $R2> t);
-}
-
-class _AdditionalFieldCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, AdditionalField, $Out>
-    implements AdditionalFieldCopyWith<$R, AdditionalField, $Out> {
-  _AdditionalFieldCopyWithImpl(super.value, super.then, super.then2);
-
-  @override
-  late final ClassMapperBase<AdditionalField> $mapper =
-      AdditionalFieldMapper.ensureInitialized();
-  @override
-  $R call({String? key, Object? value = $none}) => $apply(FieldCopyWithData(
-      {if (key != null) #key: key, if (value != $none) #value: value}));
-  @override
-  AdditionalField $make(CopyWithData data) => AdditionalField(
-      data.get(#key, or: $value.key), data.get(#value, or: $value.value));
-
-  @override
-  AdditionalFieldCopyWith<$R2, AdditionalField, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _AdditionalFieldCopyWithImpl($value, $cast, t);
 }

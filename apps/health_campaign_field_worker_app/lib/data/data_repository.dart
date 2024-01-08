@@ -363,7 +363,7 @@ abstract class RemoteRepository<D extends EntityModel,
   }
 
   List<Map<String, dynamic>> _getMap(List<EntityModel> entities) {
-    return entities.map((e) => EntityModelMapper.fromMap(e.toMap()).toMap()).toList();
+return entities.map((e) => MapperContainer.globals.toMap(e)).toList();
   }
 
   FutureOr<T> executeFuture<T>({

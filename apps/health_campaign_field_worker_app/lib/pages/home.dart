@@ -361,21 +361,23 @@ class _HomePageState extends LocalizedState<HomePage> {
               icon: Icons.sync_alt,
               label: i18.home.syncDataLabel,
               onPressed: () async {
-                if (snapshot.data?['enablesManualSync'] == true) {
-                  if (context.mounted) _attemptSyncUp(context);
-                } else {
-                  if (context.mounted) {
-                    DigitToast.show(
-                      context,
-                      options: DigitToastOptions(
-                        localizations
-                            .translate(i18.common.coreCommonSyncInProgress),
-                        false,
-                        Theme.of(context),
-                      ),
-                    );
-                  }
-                }
+                // TODO [Need to revert this]
+                // if (snapshot.data?['enablesManualSync'] == true) {
+                //   if (context.mounted)
+                   _attemptSyncUp(context);
+                // } else {
+                //   if (context.mounted) {
+                //     DigitToast.show(
+                //       context,
+                //       options: DigitToastOptions(
+                //         localizations
+                //             .translate(i18.common.coreCommonSyncInProgress),
+                //         false,
+                //         Theme.of(context),
+                //       ),
+                //     );
+                //   }
+                // }
               },
             );
           },

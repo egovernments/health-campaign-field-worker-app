@@ -48,6 +48,10 @@ Future<void> initializeService(dio, isar) async {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
+flutterLocalNotificationsPlugin
+    .resolvePlatformSpecificImplementation<
+    AndroidFlutterLocalNotificationsPlugin>()
+    ?.requestExactAlarmsPermission();
   flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>()

@@ -129,8 +129,9 @@ abstract class OpLogManager<T extends EntityModel> {
     return oplogs.map((e) => OpLogEntry.fromOpLog<T>(e)).toList();
   }
 
-  Future<void> put(OpLogEntry<T> entry) async {
+  Future<void> put(OpLogEntry<dynamic> entry) async {
     await isar.writeTxn(() async {
+
       await isar.opLogs.put(entry
           .copyWith(
             clientReferenceId: getClientReferenceId(entry.entity),
@@ -153,7 +154,7 @@ abstract class OpLogManager<T extends EntityModel> {
     if (nonRecoverableError == true && id != null && entry != null) {
       final oplog = await isar.opLogs.filter().idEqualTo(id).findFirst();
       if (oplog == null) return;
-      final fetchedEntry = OpLogEntry.fromOpLog<T>(oplog);
+      final OpLogEntry<T>  fetchedEntry = OpLogEntry.fromOpLog<T>(oplog);
       await isar.writeTxn(() async {
         await isar.opLogs.put(fetchedEntry
             .copyWith(
@@ -165,20 +166,20 @@ abstract class OpLogManager<T extends EntityModel> {
             .oplog);
       });
     } else if (entry != null) {
-      // await put(entry.copyWith(syncedUp: true, syncedUpOn: DateTime.now()));
+      await put(entry.copyWith(syncedUp: true, syncedUpOn: DateTime.now()),);
     } else if (id != null) {
       OpLog? oplog;
 
       oplog = await isar.opLogs.get(id);
       if (oplog == null) return;
-      final fetchedEntry = OpLogEntry.fromOpLog<T>(oplog);
+      final OpLogEntry<T> fetchedEntry = OpLogEntry.fromOpLog<T>(oplog);
 
-      // await put(
-      //   fetchedEntry.copyWith(
-      //     syncedUp: true,
-      //     syncedUpOn: DateTime.now(),
-      //   ),
-      // );
+      await put(
+        fetchedEntry.copyWith(
+          syncedUp: true,
+          syncedUpOn: DateTime.now(),
+        ) as OpLogEntry<T>,
+      );
     } else if (clientReferenceId != null) {
       final oplog = await isar.opLogs
           .filter()
@@ -189,12 +190,12 @@ abstract class OpLogManager<T extends EntityModel> {
 
       final fetchedEntry = OpLogEntry.fromOpLog<T>(oplog);
 
-      // await put(
-      //   fetchedEntry.copyWith(
-      //     syncedUp: true,
-      //     syncedUpOn: DateTime.now(),
-      //   ),
-      // );
+      await put(
+        fetchedEntry.copyWith(
+          syncedUp: true,
+          syncedUpOn: DateTime.now(),
+        ) as OpLogEntry<T>,
+      );
     } else {
       throw AppException('Invalid arguments');
     }

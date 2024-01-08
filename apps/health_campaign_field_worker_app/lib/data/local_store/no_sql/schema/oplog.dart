@@ -11,7 +11,46 @@ class OpLog {
   late String entityString;
 
   @ignore
-  T getEntity<T extends EntityModel>() => MapperContainer.globals.fromJson<T>(entityString);
+  getEntity<T extends EntityModel>() {
+
+   switch (entityType.name) {
+            case "household":
+              final entity = HouseholdModelMapper.fromJson(entityString);
+           return entity;
+
+            case "householdMember":
+              final entity =  HouseholdMemberModelMapper.fromJson(entityString);
+                   
+             return entity;
+     
+            case "individual":
+              final entity =  IndividualModelMapper.fromJson(entityString);
+                return entity;
+            case "projectBeneficiary":
+              final entity =
+                      ProjectBeneficiaryModelMapper.fromJson(entityString);
+                return entity;
+  
+            case "task":
+              final entity =  TaskModelMapper.fromJson(entityString);
+                return entity;
+     
+            case "SideEffect":
+              final entity =  SideEffectModelMapper.fromJson(entityString);
+                   return entity;
+     
+            case "Referral":
+              final entity = ReferralModelMapper.fromJson(entityString);
+           
+             return entity;
+            default:
+              final entity =  EntityModelMapper.fromJson(entityString);
+             
+             return entity;
+          }
+        
+
+  }
 
   void entity<T extends EntityModel>(T entity) {
     entityString = entity.toJson();

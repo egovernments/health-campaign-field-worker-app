@@ -2,6 +2,9 @@
 library models;
 
 import 'package:dart_mappable/dart_mappable.dart';
+import '../data/local_store/sql_store/tables/individual.dart';
+import 'data_model.dart';
+import 'entities/household.dart';
 import 'entities/project_staff.dart';
 import 'pgr_complaints/pgr_address.dart';
 import 'pgr_complaints/pgr_complaints.dart';
@@ -72,7 +75,8 @@ abstract class DataModel {
 }
 
 @MappableClass(includeSubClasses: [
-  BoundaryModel
+  BoundaryModel, HouseholdModel,
+  IndividualModel,
 ])
 abstract class EntityModel extends DataModel with EntityModelMappable {
   final AuditDetails? auditDetails;
