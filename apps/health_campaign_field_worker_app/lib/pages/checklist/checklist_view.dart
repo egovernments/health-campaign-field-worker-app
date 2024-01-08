@@ -457,6 +457,10 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
     ServiceDefinitionModel? selectedServiceDefinition,
     BuildContext context,
   ) {
+    bool isHealthFacilityWorker = context.loggedInUserRoles
+        .where((role) => role.code == RolesType.healthFacilityWorker.toValue())
+        .toList()
+        .isNotEmpty;
     final theme = Theme.of(context);
     /* Check the data type of the attribute*/
     if (item.dataType == 'SingleValueList') {
@@ -558,7 +562,9 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
               ),
               BlocBuilder<ServiceBloc, ServiceState>(
                 builder: (context, state) {
-                  return (controller[index].text == item.values?[1].trim())
+                  return (controller[index].text == item.values?[1].trim() &&
+                          !(isHealthFacilityWorker &&
+                              widget.referralClientRefId != null))
                       ? Padding(
                           padding: const EdgeInsets.only(
                             left: 4.0,
