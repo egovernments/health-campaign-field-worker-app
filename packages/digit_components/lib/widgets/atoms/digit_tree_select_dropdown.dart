@@ -2,11 +2,12 @@ library multiselect_dropdown;
 
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/models/digit_row_card/digit_row_card_model.dart';
 import 'package:digit_components/widgets/atoms/digit_checkbox_icon.dart';
 import 'package:digit_components/widgets/atoms/digit_multiselect_dropdown.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+import '../../enum/app_enums.dart';
 
 typedef OnOptionSelected<T> = void Function(List<TreeNode> selectedOptions);
 
@@ -819,12 +820,12 @@ class _TreeNodeWidgetState extends State<TreeNodeWidget> {
                     });
                   },
                   child: _areAllChildrenSelected(widget.currentOption)
-                      ? DigitCheckboxIcon(
+                      ? const DigitCheckboxIcon(
                           state: CheckboxState.checked,
                         )
                       : _isAnyChildSelected(widget.currentOption)
-                          ? DigitCheckboxIcon(state: CheckboxState.intermediate)
-                          : DigitCheckboxIcon(state: CheckboxState.unchecked),
+                          ? const DigitCheckboxIcon(state: CheckboxState.intermediate)
+                          : const DigitCheckboxIcon(state: CheckboxState.unchecked),
                 ),
               const SizedBox(
                 width: 4,

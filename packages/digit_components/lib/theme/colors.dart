@@ -27,4 +27,5 @@ class DigitColors {
   Color get pacificBlue => const Color(0xFF0BABDE);
   Color get hintGrey => const Color.fromRGBO(80, 90, 95, 1);
   Color get orangeBG  => const Color.fromRGBO(255, 250, 247, 1);
+  Color get transaparent => const Color.fromRGBO(0, 0, 0, 0);
 }

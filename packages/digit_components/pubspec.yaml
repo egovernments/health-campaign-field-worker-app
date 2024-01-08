@@ -33,6 +33,7 @@ dependencies:
   intl: ^0.18.0
   geolocator: ^10.1.0
   collection: ^1.15.0
+  gap: ^2.0.1
 
 dev_dependencies:
   flutter_test:

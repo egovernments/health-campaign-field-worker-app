@@ -1,38 +1,101 @@
+import 'package:digit_components/constants/BaseFormInputConstants.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../../theme/colors.dart';
+import 'package:gap/gap.dart';
+import 'dart:io';
+import '../../constants/AppView.dart';
 import '../../utils/validators/validator.dart';
 
+/// `BaseDigitFormInput` is a base class for different form input fields. It provides a set of customizable
+/// parameters and common functionality for building various types of input fields within a form.
 class BaseDigitFormInput extends StatefulWidget {
+  /// Text editing controller for the input field.
   final TextEditingController controller;
+
+  /// Determines if the input field is read-only.
   final bool readOnly;
+
+  /// Indicates whether the input field is disabled.
   final bool isDisabled;
+
+  /// Label displayed above the input field.
   final String? label;
+
+  /// Indicates whether additional information (tooltip) is available.
   final bool? info;
+
+  /// Additional information text for tooltip.
   final String? infoText;
+
+  /// Indicates whether to show character count.
   final bool charCount;
+
+  /// Inner label (hint) for the input field.
   final String? innerLabel;
+
+  /// Help text displayed below the input field.
   final String? helpText;
+
+  /// Icon to be displayed as a suffix in the input field.
   final IconData? suffix;
+
+  /// Determines when the tooltip should be triggered.
   final TooltipTriggerMode triggerMode;
+
+  /// Determines whether the tooltip should appear below the input field.
   final bool preferToolTipBelow;
+
+  /// Icon to be displayed as a suffix in the input field.
   final IconData? suffixIcon;
+
+  /// Icon to be displayed as a prefix in the input field.
   final IconData? prefixIcon;
+
+  /// Callback function triggered on validation error.
   final void Function(String?)? onError;
+
+  /// Callback function triggered on suffix icon tap.
   final void Function()? onSuffixTap;
+
+  /// Minimum number of lines for the input field.
   final int minLine;
+
+  /// Maximum number of lines for the input field.
   final int maxLine;
-  final TextInputType keyboardType;
-  final TextAlign textAlign;
-  final String? initialValue;
+
+  /// Preferred height of the input field.
   final double height;
+
+  /// Preferred width of the input field.
   final double width;
+
+  /// List of validation rules to be applied.
   final List<Validator>? validations;
+
+  /// Callback function triggered on input value change.
   final void Function(String)? onChange;
+
+  /// Step value (used for specific input types like numbers).
   final int step;
+
+  /// Minimum allowed value (used for specific input types like numbers).
   final int minValue;
+
+  /// Maximum allowed value (used for specific input types like numbers).
   final int maxValue;
+
+  /// Determines whether the cursor should be visible in the input field.
   final bool showCurser;
+
+  /// Initial value for the input field.
+  final String? initialValue;
+
+  /// Keyboard type for the input field.
+  final TextInputType keyboardType;
+
+  /// Text alignment within the input field.
+  final TextAlign textAlign;
 
   const BaseDigitFormInput(
       {Key? key,
@@ -42,7 +105,7 @@ class BaseDigitFormInput extends StatefulWidget {
       this.initialValue,
       this.label,
       this.info,
-        this.infoText,
+      this.infoText,
       this.suffix,
       this.charCount = false,
       this.innerLabel,
@@ -55,15 +118,15 @@ class BaseDigitFormInput extends StatefulWidget {
       this.onSuffixTap,
       this.minLine = 1,
       this.maxLine = 1,
-      this.height = 40,
-        this.step = 1,
-        this.minValue = 0,
-        this.maxValue = 100,
-        this.showCurser = true,
-      this.width = 380,
-        this.onChange,
+      this.height = BaseConstants.defaultHeight,
+      this.step = 1,
+      this.minValue = 0,
+      this.maxValue = 100,
+      this.showCurser = true,
+      this.width = BaseConstants.defaultWidth,
+      this.onChange,
       this.keyboardType = TextInputType.text,
-        this.validations,
+      this.validations,
       this.textAlign = TextAlign.start})
       : super(key: key);
 
@@ -81,19 +144,18 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
 
   void onFocusChange() {
     if (!myFocusNode.hasFocus) {
-      // If the focus is lost, perform validation
+      /// If the focus is lost, perform validation
       setState(() {
         _errorMessage = customValidator?.call(widget.controller.text);
         _hasError = _errorMessage != null;
       });
 
-      // Call the provided onError function if there is an error
+      /// Call the provided onError function if there is an error
       if (_hasError) {
         widget.onError?.call(_errorMessage);
       }
     }
   }
-
 
   @override
   void initState() {
@@ -126,7 +188,6 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
       _hasError = validationError != null;
     });
 
-
     return validationError;
   }
 
@@ -137,19 +198,17 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
   }
 
   void onSuffixIconClick({void Function()? customFunction}) {
-    // Call the provided function if it's not null
+    /// Call the provided function if it's not null
     customFunction?.call();
   }
 
   void onPrefixIconClick({void Function()? customFunction}) {
-    // Call the provided function if it's not null
+    /// Call the provided function if it's not null
     customFunction?.call();
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     int? getValidatorValue(List<Validator>? validators, ValidatorType type) {
       for (var validator in validators!) {
         if (validator?.type == type) {
@@ -158,15 +217,17 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
       }
       return null;
     }
+
     int? maxLengthValue = widget.charCount
         ? (widget.validations != null
-        ? getValidatorValue(widget.validations, ValidatorType.maxLength) ?? 64
-        : 64)
+            ? getValidatorValue(widget.validations, ValidatorType.maxLength) ??
+                64
+            : 64)
         : null;
 
-    // Responsive width based on screen size
-    double inputWidth = MediaQuery.of(context).size.width < 600 ? 340 : 600;
-
+    double inputWidth = AppView.isMobileView(MediaQuery.of(context).size.width)
+        ? BaseConstants.mobileInputWidth
+        : BaseConstants.desktopInputWidth;
 
     return Container(
       width: inputWidth,
@@ -178,10 +239,8 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
               if (widget?.label != null)
                 Text(
                   widget!.label!,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                    fontFamily: 'Roboto',
+                  style: DigitTheme.instance.mobileTheme.textTheme.bodyLarge
+                      ?.copyWith(
                     color: const DigitColors().woodsmokeBlack,
                   ),
                 ),
@@ -197,8 +256,8 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
                 )
             ],
           ),
-          const SizedBox(
-            height: 4,
+          const Gap(
+            kPadding / 2,
           ),
           TextFormField(
             focusNode: myFocusNode,
@@ -214,19 +273,32 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
             maxLength: maxLengthValue,
             showCursor: widget.showCurser,
             decoration: InputDecoration(
-              // isDense: true,
               counterText: '',
-              hoverColor: Colors.transparent,
-
-              constraints: widget.minLine>1 ? const BoxConstraints(maxWidth: 600, maxHeight: 100, minHeight: 40): const BoxConstraints(maxWidth: 600, maxHeight: 40, minHeight: 40),
-              contentPadding: widget.minLine>1 ?
-              const EdgeInsets.only(top: 12, bottom: 12, left: 12, right: 12):
-                  const EdgeInsets.only(top: 4, bottom: 4, left: 12, right: 12),
+              hoverColor: const DigitColors().transaparent,
+              constraints: inputWidth == BaseConstants.mobileInputWidth
+                  ? BoxConstraints(
+                      maxHeight: widget.minLine > 1 ? BaseConstants.inputMaxHeight : BaseConstants.inputMinHeight,
+                      minHeight: BaseConstants.inputMinHeight,
+                      minWidth: BaseConstants.mobileInputMinWidth,
+                    )
+                  : BoxConstraints(
+                      maxHeight: widget.minLine > 1 ? BaseConstants.inputMaxHeight : BaseConstants.inputMinHeight,
+                      minHeight: BaseConstants.inputMinHeight,
+                      minWidth: BaseConstants.desktopInputMinWidth,
+                    ),
+              contentPadding: widget.minLine > 1
+                  ? const EdgeInsets.all(
+                      12,
+                    )
+                  : const EdgeInsets.symmetric(
+                      vertical: kPadding/2,
+                      horizontal: 12,
+                    ),
               hintText: widget.innerLabel,
               filled: true,
               fillColor: widget.readOnly
                   ? const DigitColors().seaShellGray
-                  : Colors.transparent,
+                  : const DigitColors().transaparent,
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                   color: _hasError
@@ -236,16 +308,8 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
                 ),
                 borderRadius: BorderRadius.zero,
               ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                    color: const DigitColors().burningOrange, width: 1.0),
-                borderRadius: BorderRadius.zero,
-              ),
-              disabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                    color: const DigitColors().cloudGray, width: 1.0),
-                borderRadius: BorderRadius.zero,
-              ),
+              focusedBorder: BaseConstants.focusedBorder,
+              disabledBorder:BaseConstants.disabledBorder,
               prefixIconConstraints: widget.prefixIcon != null
                   ? const BoxConstraints(
                       maxWidth: 48,
@@ -266,7 +330,10 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
                       child: Container(
                         height: 38,
                         width: 40,
-                        margin: const EdgeInsets.only(left: kPadding, right: 1,),
+                        margin: const EdgeInsets.only(
+                          left: kPadding,
+                          right: 1,
+                        ),
                         decoration: BoxDecoration(
                           color: const DigitColors().seaShellGray,
                           border: Border(
@@ -283,7 +350,7 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
                         ),
                         child: Icon(
                           widget.suffixIcon!,
-                          size: 20,
+                          size: BaseConstants.suffixIconSize,
                           color: widget.isDisabled
                               ? const DigitColors().cloudGray
                               : const DigitColors().davyGray,
@@ -295,11 +362,13 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
                           onTap: widget.readOnly ? null : onSuffixIconClick,
                           child: Padding(
                             padding: const EdgeInsets.only(
-                              right: 8,
-                            ), // Set padding to 0
+                              right: kPadding,
+                            ),
                             child: Icon(
-                              isVisible==true ? Icons.visibility_off : widget.suffix,
-                              size: 24,
+                              isVisible == true
+                                  ? Icons.visibility_off
+                                  : widget.suffix,
+                              size: BaseConstants.suffixIconSize,
                             ),
                           ),
                         )
@@ -313,9 +382,12 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
                       child: Container(
                         height: 38,
                         width: 40,
-                        margin: const EdgeInsets.only(right: kPadding, left: 1,),
+                        margin: const EdgeInsets.only(
+                          right: kPadding,
+                          left: 1,
+                        ),
                         decoration: BoxDecoration(
-                          color : const DigitColors().seaShellGray,
+                          color: const DigitColors().seaShellGray,
                           border: Border(
                             right: BorderSide(
                               color: widget.isDisabled
@@ -330,7 +402,7 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
                         ),
                         child: Icon(
                           widget.prefixIcon!,
-                          size: 20,
+                          size: BaseConstants.suffixIconSize,
                           color: widget.isDisabled
                               ? const DigitColors().cloudGray
                               : const DigitColors().davyGray,
@@ -344,13 +416,12 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
                 _value = value;
               });
               widget.onChange?.call(value);
-
             },
           ),
-          const SizedBox(
-            height: 4,
+          const Gap(
+            kPadding / 2,
           ),
-          if (widget.helpText != null || widget.charCount != null)
+          if (widget.helpText != null || widget.charCount != null || _hasError)
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -361,14 +432,13 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
                             Icon(
                               Icons.info,
                               color: const DigitColors().lavaRed,
-                              size: 16,
+                              size: BaseConstants.errorIconSize,
                             ),
                             Text(
                               _errorMessage!,
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                                fontFamily: 'Roboto',
+                              style: DigitTheme
+                                  .instance.mobileTheme.textTheme.bodyMedium
+                                  ?.copyWith(
                                 color: const DigitColors().lavaRed,
                               ),
                             ),
@@ -376,20 +446,18 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
                         )
                       : Text(
                           widget.helpText!,
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Roboto',
+                          style: DigitTheme
+                              .instance.mobileTheme.textTheme.bodyMedium
+                              ?.copyWith(
                             color: const DigitColors().davyGray,
                           ),
                         ),
-
-                  if (widget.helpText == null && _hasError == false)
-                    const Spacer(),
-                if (widget.charCount ==true)
-                Text(
-                  '${widget.controller.text.length ?? 0}/$maxLengthValue',
-                ),
+                if (widget.helpText == null && _hasError == false)
+                  const Spacer(),
+                if (widget.charCount == true)
+                  Text(
+                    '${widget.controller.text.length ?? 0}/$maxLengthValue',
+                  ),
               ],
             ),
         ],

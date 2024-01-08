@@ -2,10 +2,10 @@ library multiselect_dropdown;
 
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/models/digit_row_card/digit_row_card_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../../enum/app_enums.dart';
 import 'digit_checkbox_icon.dart';
 
 typedef OnOptionSelected<T> = void Function(

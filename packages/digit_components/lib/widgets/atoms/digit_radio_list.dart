@@ -1,49 +1,99 @@
+import 'package:digit_components/constants/RadioConstants.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
+
+import '../../constants/AppView.dart';
+import '../../models/RadioButtonModel.dart';
+
+/// `DigitRadioList` is a widget for rendering a list of radio buttons.
+///
+/// This widget provides options for radio buttons, handling hover effects, and a disabled state.
+///
+/// Example usage:
+/// ```dart
+/// DigitRadioList(
+///   radioButtons: [
+///     RadioButtonModel(code: 'option1', name: 'Option 1'),
+///     RadioButtonModel(code: 'option2', name: 'Option 2'),
+///   ],
+///   onChanged: (selectedValue) {
+///     // Handle radio button selection
+///   },
+///   groupValue: 'option1', // can be passed same to select value initially
+///   isDisabled: false,
+/// )
+/// ```
 
 class DigitRadioList extends StatefulWidget {
+  /// List of RadioButtonModel objects representing the radio buttons
   final List<RadioButtonModel> radioButtons;
-  final void Function(String selectedValue)onChanged;
+
+  /// Callback function to be called when a radio button is selected
+  final void Function(String selectedValue) onChanged;
+
+  /// Currently selected value in the radio button group
   String groupValue;
+
+  /// Flag to indicate if the radio buttons are disabled
   final bool isDisabled;
 
+  /// container padding
+  final EdgeInsetsGeometry containerPadding;
+
+  /// radio button width
+  final double radioWidth;
+
+  /// radio button height
+  final double radioHeight;
+
+  /// Constructor for the DigitRadioList widget
   DigitRadioList({
     Key? key,
     required this.radioButtons,
     required this.onChanged,
     this.groupValue = '',
     this.isDisabled = false,
+    this.containerPadding = RadioConstant.defaultPadding,
+    this.radioWidth = RadioConstant.radioWidth,
+    this.radioHeight = RadioConstant.radioHeight,
   }) : super(key: key);
 
+  /// Create the state for the widget
   @override
   _DigitRadioListState createState() => _DigitRadioListState();
 }
 
+/// State class for the DigitRadioList widget
 class _DigitRadioListState extends State<DigitRadioList> {
+  /// List to track whether each radio button is being hovered over
   late List<bool> isHoveredList;
 
+  /// Initialize the state
   @override
   void initState() {
     super.initState();
+    /// Initialize the hover list with false values
     isHoveredList = List.generate(widget.radioButtons.length, (index) => false);
   }
 
+  /// Build the widget based on screen width
   @override
   Widget build(BuildContext context) {
-        if (MediaQuery.of(context).size.width< 720) {
-          // If the width is less than 600 (e.g., phone), display in a column
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: _buildRadioButtons(),
-          );
-        } else {
-          // If the width is 600 or more (e.g., larger screens), display in a row
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: _buildRadioButtons(),
-          );
-        }
-
+    if (AppView.isMobileView(MediaQuery.of(context).size.width)) {
+      /// Mobile view layout
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: _buildRadioButtons(),
+      );
+    } else {
+      /// Tablet or desktop view layout
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: _buildRadioButtons(),
+      );
+    }
   }
 
   List<Widget> _buildRadioButtons() {
@@ -51,7 +101,7 @@ class _DigitRadioListState extends State<DigitRadioList> {
           (button) {
         final index = widget.radioButtons.indexOf(button);
         return Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: widget.containerPadding,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -71,6 +121,7 @@ class _DigitRadioListState extends State<DigitRadioList> {
                       ? null
                       : () {
                     setState(() {
+                      /// Update the selected value and call the onChanged callback
                       widget.groupValue == button.code ? widget.groupValue = '' : widget.groupValue = button.code;
                     });
                     widget.onChanged!(widget.groupValue);
@@ -79,9 +130,9 @@ class _DigitRadioListState extends State<DigitRadioList> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(4.0),
-                        width: 24, // Set width as needed
-                        height: 24,
+                        padding: const EdgeInsets.all(kPadding/2),
+                        width: widget.radioWidth,
+                        height: widget.radioHeight,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
@@ -93,7 +144,7 @@ class _DigitRadioListState extends State<DigitRadioList> {
                                 : const DigitColors().davyGray,
                             width: 1.0,
                           ),
-                          color: Colors.transparent,
+                          color: const DigitColors().transaparent,
                         ),
                         child: widget.groupValue == button.code
                             ? Container(
@@ -106,18 +157,16 @@ class _DigitRadioListState extends State<DigitRadioList> {
                         )
                             : null,
                       ),
-                      const SizedBox(
-                        width: 8,
+                      const Gap(
+                        kPadding,
                       ),
                       Align(
                         alignment: Alignment.center,
                         child: Text(
                           button.name,
-                          style: TextStyle(
+                          style: DigitTheme.instance.mobileTheme.textTheme.bodyLarge?.copyWith(
                             color: widget.isDisabled ? const DigitColors().cloudGray : const DigitColors().woodsmokeBlack,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                              fontFamily: 'Roboto'),
+                          ),
                         ),
                       ),
                     ],
@@ -133,12 +182,3 @@ class _DigitRadioListState extends State<DigitRadioList> {
 
 }
 
-class RadioButtonModel {
-  final String code;
-  final String name;
-
-  RadioButtonModel({
-    required this.code,
-    required this.name,
-  });
-}

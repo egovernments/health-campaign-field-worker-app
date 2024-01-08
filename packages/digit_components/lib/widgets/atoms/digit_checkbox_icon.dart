@@ -1,75 +1,87 @@
+import 'package:digit_components/constants/DigitCheckboxConstants.dart';
 import 'package:flutter/material.dart';
+import '../../enum/app_enums.dart';
 
-import '../../theme/colors.dart';
-
+/// `DigitCheckboxIcon` is a widget that represents the visual appearance of a checkbox.
+///
+/// It supports three states: unchecked, intermediate, and checked. The appearance can be customized
+/// based on the state, disabled status, and color.
 class DigitCheckboxIcon extends StatelessWidget {
+  /// Represents the current state of the checkbox.
   final CheckboxState state;
+
+  /// Indicates whether the checkbox is disabled or not.
   final bool isDisabled;
+
+  /// Custom color for the checkbox. If not provided, default colors will be used based on the state and disabled status.
   final Color? color;
 
-  DigitCheckboxIcon({required this.state, this.isDisabled = false, this.color});
+  /// Creates a `DigitCheckboxIcon` widget with the given parameters.
+  const DigitCheckboxIcon({super.key,
+    required this.state,
+    this.isDisabled = false,
+    this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
     return _buildCheckbox();
   }
 
+  /// Builds the checkbox widget based on its state.
   Widget _buildCheckbox() {
     switch (state) {
       case CheckboxState.unchecked:
         return Container(
-          width: 24.0,
-          height: 24.0,
+          width: CheckboxConstants.containerSize,
+          height: CheckboxConstants.containerSize,
           decoration: BoxDecoration(
             border: Border.all(
-              color: color ?? (isDisabled ? const DigitColors().cloudGray : const DigitColors().davyGray),
-              width: 2.0,
+              color: CheckboxConstants.uncheckedBorderColor(isDisabled: isDisabled, customColor: color),
+              width: CheckboxConstants.borderWidth,
             ),
             borderRadius: BorderRadius.zero,
           ),
         );
       case CheckboxState.intermediate:
         return Container(
-            width: 24.0,
-            height: 24.0,
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: color ?? (isDisabled ? const DigitColors().cloudGray : const DigitColors().burningOrange),
-                width: 2.0,
-              ),
-              borderRadius: BorderRadius.zero,
+          width: CheckboxConstants.containerSize,
+          height: CheckboxConstants.containerSize,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: CheckboxConstants.intermediateBorderColor(isDisabled: isDisabled, customColor: color),
+              width: CheckboxConstants.borderWidth,
             ),
-            child: Center(
-              child: Icon(
-                Icons.square,
-                size: 16.0,
-                color: color ?? (isDisabled ? const DigitColors().cloudGray : const DigitColors().burningOrange),
-              ),
-            ));
+            borderRadius: BorderRadius.zero,
+          ),
+          child: Center(
+            child: Icon(
+              Icons.square,
+              size: CheckboxConstants.iconSize,
+              color: CheckboxConstants.iconColor(isDisabled: isDisabled, customColor: color),
+            ),
+          ),
+        );
       case CheckboxState.checked:
         return Container(
-            width: 24.0,
-            height: 24.0,
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: color ?? (isDisabled ? const DigitColors().cloudGray : const DigitColors().burningOrange),
-                width: 2.0,
-              ),
-              borderRadius: BorderRadius.zero,
+          width: CheckboxConstants.containerSize,
+          height: CheckboxConstants.containerSize,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: CheckboxConstants.checkedBorderColor(isDisabled: isDisabled, customColor: color),
+              width: CheckboxConstants.borderWidth,
             ),
-            child: Center(
-              child: Icon(
-                Icons.check,
-                size: 16.0,
-                color: color ?? (isDisabled ? const DigitColors().cloudGray : const DigitColors().burningOrange),
-              ),
-            ));
+            borderRadius: BorderRadius.zero,
+          ),
+          child: Center(
+            child: Icon(
+              Icons.check,
+              size: CheckboxConstants.iconSize,
+              color: CheckboxConstants.iconColor(isDisabled: isDisabled, customColor: color),
+            ),
+          ),
+        );
     }
   }
 }
 
-enum CheckboxState {
-  unchecked,
-  intermediate,
-  checked,
-}

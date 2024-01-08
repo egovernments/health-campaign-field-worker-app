@@ -1,4 +1,6 @@
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/enum/app_enums.dart';
+import 'package:digit_components/models/RadioButtonModel.dart';
 import 'package:digit_components/utils/validators/validator.dart';
 import 'package:digit_components/widgets/atoms/digit_base_form_input.dart';
 import 'package:digit_components/widgets/atoms/digit_button.dart';
@@ -53,8 +55,7 @@ void main() {
       home: Scaffold(
         body: ScrollableContent(
           children: [
-            DigitCard(
-              child: Padding(
+             Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -497,7 +498,7 @@ void main() {
                     const SizedBox(
                       height: 16,
                     ),
-                    CustomButton(
+                    DigitButton(
                       prefixIcon: Icons.add,
                       label: 'Primary Button',
                       onPressed: () {
@@ -507,7 +508,7 @@ void main() {
                       type: ButtonType.primary,
                     ),
                     const SizedBox(height: 16),
-                    CustomButton(
+                    DigitButton(
                       label: 'Secondary Button',
                       onPressed: () {
                         // Add your secondary button logic here
@@ -516,7 +517,7 @@ void main() {
                       type: ButtonType.secondary,
                     ),
                     const SizedBox(height: 16),
-                    CustomButton(
+                    DigitButton(
                       label: 'Link',
                       onPressed: () {
                         // Add your secondary button logic here
@@ -525,7 +526,7 @@ void main() {
                       type: ButtonType.link,
                     ),
                     const SizedBox(height: 16),
-                    CustomButton(
+                    DigitButton(
                       label: 'tertiary Button',
                       onPressed: () {
                         // Add your secondary button logic here
@@ -533,7 +534,7 @@ void main() {
                       },
                       type: ButtonType.tertiary,
                     ),
-                    CustomButton(
+                    DigitButton(
                       prefixIcon: Icons.add,
                       label: 'Primary Button',
                       onPressed: () {
@@ -543,7 +544,7 @@ void main() {
                       isDisabled: true,
                     ),
                     const SizedBox(height: 16),
-                    CustomButton(
+                    DigitButton(
                       label: 'Secondary Button',
                       onPressed: () {
                         print('Secondary button pressed');
@@ -552,7 +553,7 @@ void main() {
                       type: ButtonType.secondary,
                     ),
                     const SizedBox(height: 16),
-                    CustomButton(
+                    DigitButton(
                       label: 'Link',
                       onPressed: () {
                         print('link pressed');
@@ -561,7 +562,7 @@ void main() {
                       type: ButtonType.link,
                     ),
                     const SizedBox(height: 16),
-                    CustomButton(
+                    DigitButton(
                       label: 'tertiary Button',
                       onPressed: () {
                         print('tertiary button pressed');
@@ -614,7 +615,6 @@ void main() {
                   ],
                 ),
               ),
-            ),
           ],
         ),
       ),
