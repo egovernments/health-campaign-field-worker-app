@@ -29,6 +29,10 @@ class BaseDigitFormInput extends StatefulWidget {
   final double width;
   final List<Validator>? validations;
   final void Function(String)? onChange;
+  final int step;
+  final int minValue;
+  final int maxValue;
+  final bool showCurser;
 
   const BaseDigitFormInput(
       {Key? key,
@@ -52,6 +56,10 @@ class BaseDigitFormInput extends StatefulWidget {
       this.minLine = 1,
       this.maxLine = 1,
       this.height = 40,
+        this.step = 1,
+        this.minValue = 0,
+        this.maxValue = 100,
+        this.showCurser = true,
       this.width = 380,
         this.onChange,
       this.keyboardType = TextInputType.text,
@@ -204,6 +212,7 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
             keyboardType: widget.keyboardType,
             textAlign: widget.textAlign,
             maxLength: maxLengthValue,
+            showCursor: widget.showCurser,
             decoration: InputDecoration(
               // isDense: true,
               counterText: '',

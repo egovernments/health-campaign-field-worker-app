@@ -4,6 +4,9 @@ import '../../utils/validators/validator.dart';
 import 'digit_base_form_input.dart';
 
 class DigitNumericFormInput extends BaseDigitFormInput {
+
+
+
   DigitNumericFormInput({
     Key? key,
     required TextEditingController controller,
@@ -25,6 +28,9 @@ class DigitNumericFormInput extends BaseDigitFormInput {
     TextAlign textAlign = TextAlign.center,
     final List<Validator>? validations,
     final void Function(String)? onChange,
+    final int step = 5,
+    final int minValue = 0,
+    final int maxValue = 100,
   }) : super(
     key: key,
     controller: controller,
@@ -46,6 +52,10 @@ class DigitNumericFormInput extends BaseDigitFormInput {
     initialValue: initialValue,
     validations: validations,
     onChange: onChange,
+    step: step,
+    maxValue: maxValue,
+    minValue: minValue,
+    showCurser: false,
   );
 
   @override
@@ -57,9 +67,11 @@ class _DigitNumericFormInputState extends BaseDigitFormInputState {
   @override
   void onPrefixIconClick({void Function()? customFunction}) {
     setState(() {
-      // Subtract 1 from the input value when the prefix icon is clicked
+      // Subtract step from the input value when the prefix icon is clicked
       int currentValue = int.tryParse(widget.controller.text) ?? 0;
-      widget.controller.text = (currentValue - 1).toString();
+      if((currentValue - widget.step)>=widget.minValue){
+        widget.controller.text = (currentValue - widget.step).toString();
+      }
     });
 
   }
@@ -67,9 +79,11 @@ class _DigitNumericFormInputState extends BaseDigitFormInputState {
   @override
   void onSuffixIconClick({void Function()? customFunction}) {
     setState(() {
-      // Add 1 to the input value when the suffix icon is clicked
+      // Add step to the input value when the suffix icon is clicked
       int currentValue = int.tryParse(widget.controller.text) ?? 0;
-      widget.controller.text = (currentValue + 1).toString();
+      if((currentValue + widget.step)<=widget.maxValue){
+        widget.controller.text = (currentValue + widget.step).toString();
+      }
     });
   }
 

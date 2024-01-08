@@ -102,49 +102,6 @@ class HotReload extends StatelessWidget {
                       ),
                 ),
                 WidgetbookUseCase(
-                  name: 'filled',
-                  builder: (context) =>
-                      Center(
-                        child: Container(
-                          height: 100,
-                          child: DigitTextFormInput(
-                            label: context.knobs.string(
-                              label: 'Title',
-                              initialValue: '',
-                            ),
-                            initialValue: 'sdfjsdjf',
-                            helpText: context.knobs.string(
-                              label: 'help text',
-                              initialValue: '',
-                            ),
-                            charCount: context.knobs.boolean(
-                              label: 'char count',
-                              initialValue: false,
-                            ),
-                            innerLabel: context.knobs.string(
-                              label: 'inner label',
-                              initialValue: '',
-                            ),
-                            info: context.knobs.boolean(
-                              label: 'info',
-                              initialValue: false,
-                            ),
-                            infoText: context.knobs.string(
-                              label: 'infoText',
-                              initialValue: 'this is info',
-                            ),
-                            controller: TextEditingController(),
-                            validations: [
-                              Validator(ValidatorType.maxLength, 10,
-                                  errorMessage: 'Maximum length is 10.'),
-                              Validator(ValidatorType.pattern, r'^[a-zA-Z0-9]+$',
-                                  errorMessage: 'Invalid format.'),
-                            ],
-                          ),
-                        ),
-                      ),
-                ),
-                WidgetbookUseCase(
                   name: 'disabled',
                   builder: (context) =>
                       Center(
@@ -718,6 +675,13 @@ class HotReload extends StatelessWidget {
                           height: 100,
                           child: DigitNumericFormInput(
                             controller: TextEditingController(),
+                            step: context.knobs.doubleOrNull.slider(
+                              label: 'step',
+                              min: 0,
+                              initialValue: 1,
+                              max: 10,
+                              divisions: 10,
+                            )?.toInt() ?? 0,
                             label: context.knobs.string(
                               label: 'Title',
                               initialValue: '',
@@ -1207,7 +1171,7 @@ class HotReload extends StatelessWidget {
                           child: Padding(
                             padding: EdgeInsets.only(
                               left: 10, top: 12, bottom: 12,),
-                            child: Text('apple', style: TextStyle(
+                            child: Text('first', style: TextStyle(
                               fontFamily: 'Roboto',
                               fontWeight: FontWeight.w400,
                               fontSize: 14,),),
@@ -1219,7 +1183,7 @@ class HotReload extends StatelessWidget {
                             child: Padding(
                               padding: EdgeInsets.only(
                                 left: 10, top: 12, bottom: 12,),
-                              child: Text('grapes', style: TextStyle(
+                              child: Text('second', style: TextStyle(
                                 fontFamily: 'Roboto',
                                 fontWeight: FontWeight.w400,
                                 fontSize: 14,),),
@@ -1231,7 +1195,7 @@ class HotReload extends StatelessWidget {
                             child: Padding(
                               padding: EdgeInsets.only(
                                 left: 10, top: 12, bottom: 12,),
-                              child: Text('banana', style: TextStyle(
+                              child: Text('third', style: TextStyle(
                                 fontFamily: 'Roboto',
                                 fontWeight: FontWeight.w400,
                                 fontSize: 14,),),
@@ -1243,7 +1207,7 @@ class HotReload extends StatelessWidget {
                             child: Padding(
                               padding: EdgeInsets.only(
                                 left: 10, top: 12, bottom: 12,),
-                              child: Text('papaya', style: TextStyle(
+                              child: Text('fourth', style: TextStyle(
                                 fontFamily: 'Roboto',
                                 fontWeight: FontWeight.w400,
                                 fontSize: 14,),),
@@ -1255,7 +1219,7 @@ class HotReload extends StatelessWidget {
                             child: Padding(
                               padding: EdgeInsets.only(
                                 left: 10, top: 12, bottom: 12,),
-                              child: Text('pine apple', style: TextStyle(
+                              child: Text('fifth', style: TextStyle(
                                 fontFamily: 'Roboto',
                                 fontWeight: FontWeight.w400,
                                 fontSize: 14,),),
@@ -1267,7 +1231,7 @@ class HotReload extends StatelessWidget {
                             child: Padding(
                               padding: EdgeInsets.only(
                                 left: 10, top: 12, bottom: 12,),
-                              child: Text('watermelon', style: TextStyle(
+                              child: Text('six', style: TextStyle(
                                 fontFamily: 'Roboto',
                                 fontWeight: FontWeight.w400,
                                 fontSize: 14,),),
