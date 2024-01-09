@@ -168,11 +168,10 @@ void onStart(ServiceInstance service) async {
                 'userId': userRequestModel!.uuid,
                 'batchSize': configuredBatchSize,
               });
-
               flutterLocalNotificationsPlugin.show(
                 888,
                 'Auto Sync',
-                'Speed : ${speedArray.firstOrNull ?? ''}Mb/ps - BatchSize : $configuredBatchSize',
+                'Speed : ${speedArray.first}Mb/ps - BatchSize : $configuredBatchSize',
                 const NotificationDetails(
                   android: AndroidNotificationDetails(
                     "my_foreground",

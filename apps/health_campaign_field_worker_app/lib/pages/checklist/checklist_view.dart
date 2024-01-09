@@ -173,7 +173,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                                 .trim()
                                                 .isNotEmpty
                                             ? controller[i].text.toString()
-                                            : null
+                                            : ''
                                         : visibleChecklistIndexes.contains(i)
                                             ? controller[i].text.toString()
                                             : i18.checklist.notSelectedKey,
@@ -526,7 +526,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                           final childIndex =
                               initialAttributes?.indexOf(matchingChildItem);
                           if (childIndex != null) {
-                            controller[childIndex].clear();
+                            // controller[childIndex].clear();
                             visibleChecklistIndexes
                                 .removeWhere((v) => v == childIndex);
                           }
@@ -539,17 +539,17 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                             text: value!,
                           ),
                         ).value;
+
                         if (excludedIndexes.isNotEmpty) {
                           for (int i = 0; i < excludedIndexes.length; i++) {
                             // Clear excluded child controllers
-                            if (item.dataType != 'String' &&
-                                item.dataType != 'Number') {
-                              controller[excludedIndexes[i]].value =
-                                  TextEditingController.fromValue(
-                                const TextEditingValue(
-                                  text: '',
-                                ),
-                              ).value;
+                            if (item.dataType != 'SingleValueList') {
+                              // controller[excludedIndexes[i]].value =
+                              //     TextEditingController.fromValue(
+                              //   const TextEditingValue(
+                              //     text: '',
+                              //   ),
+                              // ).value;
                             }
                           }
                         }

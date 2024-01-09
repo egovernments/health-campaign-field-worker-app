@@ -154,7 +154,9 @@ class _ChecklistPreviewPageState extends LocalizedState<ChecklistPreviewPage> {
                                         ...(value2.attributes ?? [])
                                             .where((a) =>
                                                 a.value !=
-                                                i18.checklist.notSelectedKey)
+                                                    i18.checklist
+                                                        .notSelectedKey &&
+                                                a.value != '')
                                             .map(
                                               (e) => Padding(
                                                 padding:

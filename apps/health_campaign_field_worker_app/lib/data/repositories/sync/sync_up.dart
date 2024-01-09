@@ -102,6 +102,12 @@ class PerformSyncUp {
                 );
               }
 
+              if (updatedEntity is HFReferralModel) {
+                updatedEntity = updatedEntity.copyWith(
+                  id: serverGeneratedId,
+                );
+              }
+
               return updatedEntity;
             }
 
