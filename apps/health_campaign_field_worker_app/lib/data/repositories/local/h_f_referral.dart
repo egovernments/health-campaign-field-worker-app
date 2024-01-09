@@ -30,8 +30,12 @@ class HFReferralLocalRepository
                 query.name!,
               ),
             if (query.beneficiaryId != null)
-              sql.hFReferral.beneficiaryId.contains(
+              sql.hFReferral.beneficiaryId.equals(
                 query.beneficiaryId!,
+              ),
+            if (query.projectId != null)
+              sql.hFReferral.projectId.contains(
+                query.projectId!,
               ),
             if (userId != null)
               sql.hFReferral.auditCreatedBy.equals(
@@ -211,6 +215,33 @@ class HFReferralLocalRepository
         mode: InsertMode.insertOrReplace,
       );
     });
+  }
+
+  @override
+  FutureOr<void> update(
+    HFReferralModel entity, {
+    bool createOpLog = true,
+  }) async {
+    final referralCompanion = entity.companion.copyWith(
+      name: entity.additionalFields?.fields
+          .where(
+            (h) => h.key == AdditionalFieldsType.nameOfReferral.toValue(),
+          )
+          .first
+          .value,
+    );
+
+    await sql.batch((batch) {
+      batch.update(
+        sql.hFReferral,
+        referralCompanion,
+        where: (table) => table.clientReferenceId.equals(
+          entity.clientReferenceId,
+        ),
+      );
+    });
+
+    await super.update(entity, createOpLog: createOpLog);
   }
 
   @override

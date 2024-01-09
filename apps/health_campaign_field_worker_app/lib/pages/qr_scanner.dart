@@ -446,14 +446,24 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                           final bloc = context.read<SearchHouseholdsBloc>();
                           final scannerState =
                               context.read<ScannerBloc>().state;
+                          final hfBloc = context.read<SearchReferralsBloc>();
 
                           if (scannerState.qrcodes.isNotEmpty || manualcode) {
-                            bloc.add(SearchHouseholdsEvent.searchByTag(
-                              tag: manualcode
-                                  ? _resourceController.value.text
-                                  : scannerState.qrcodes.first,
-                              projectId: context.projectId,
-                            ));
+                            if (isHealthFacilityWorker) {
+                              hfBloc.add(SearchReferralsEvent.searchByTag(
+                                tag: manualcode
+                                    ? _resourceController.value.text
+                                    : scannerState.qrcodes.first,
+                                projectId: context.projectId,
+                              ));
+                            } else {
+                              bloc.add(SearchHouseholdsEvent.searchByTag(
+                                tag: manualcode
+                                    ? _resourceController.value.text
+                                    : scannerState.qrcodes.first,
+                                projectId: context.projectId,
+                              ));
+                            }
                           }
                           context.router.pop();
                         }

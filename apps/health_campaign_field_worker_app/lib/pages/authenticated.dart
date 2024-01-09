@@ -14,6 +14,7 @@ import '../blocs/localization/app_localization.dart';
 import '../blocs/search_households/project_beneficiaries_downsync.dart';
 import '../blocs/search_households/search_households.dart';
 import '../blocs/search_referrals/search_referrals.dart';
+import '../blocs/service/service.dart';
 import '../blocs/sync/sync.dart';
 import '../data/data_repository.dart';
 import '../data/local_store/no_sql/schema/oplog.dart';
@@ -272,6 +273,13 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                           hfReferralDataRepository: context.repository<
                               HFReferralModel, HFReferralSearchModel>(),
                         )..add(const SearchReferralsClearEvent()),
+                      ),
+                      BlocProvider(
+                        create: (_) => ServiceBloc(
+                          const ServiceEmptyState(),
+                          serviceDataRepository: context
+                              .repository<ServiceModel, ServiceSearchModel>(),
+                        ),
                       ),
                     ],
                     child: AutoRouter(

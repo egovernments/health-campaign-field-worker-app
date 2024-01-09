@@ -4,17 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../blocs/localization/app_localization.dart';
-import '../../models/entities/facility.dart';
+import '../../models/data_model.dart';
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/header/back_navigation_help_header.dart';
 
-class FacilitySelectionPage extends StatelessWidget {
-  final List<FacilityModel> facilities;
+class ProjectFacilitySelectionPage extends StatelessWidget {
+  final List<ProjectFacilityModel> projectFacilities;
 
-  const FacilitySelectionPage({
+  const ProjectFacilitySelectionPage({
     Key? key,
-    required this.facilities,
+    required this.projectFacilities,
   }) : super(key: key);
 
   static const _facilityName = 'facilityKey';
@@ -36,15 +36,21 @@ class FacilitySelectionPage extends StatelessWidget {
           backgroundColor: Colors.white,
           body: ReactiveFormConsumer(
             builder: (context, form, _) {
-              final filteredFacilities = facilities.where((element) {
-                final query = form.control(_facilityName).value as String?;
-                if (query == null || query.isEmpty) return true;
-                if (element.id.toLowerCase().contains(query.toLowerCase())) {
-                  return true;
-                }
+              final filteredProjectFacilities =
+                  (projectFacilities ?? []).isNotEmpty
+                      ? projectFacilities.where((element) {
+                          final query =
+                              form.control(_facilityName).value as String?;
+                          if (query == null || query.isEmpty) return true;
+                          if (element.id
+                              .toLowerCase()
+                              .contains(query.toLowerCase())) {
+                            return true;
+                          }
 
-                return false;
-              });
+                          return false;
+                        })
+                      : null;
 
               return ScrollableContent(
                 backgroundColor: Colors.white,
@@ -68,7 +74,7 @@ class FacilitySelectionPage extends StatelessWidget {
                                 alignment: Alignment.topLeft,
                                 child: Text(
                                   localizations.translate(
-                                    i18.common.facilitySearchHeaderLabel,
+                                    i18.common.projectFacilitySearchHeaderLabel,
                                   ),
                                   style: theme.textTheme.displayMedium,
                                   textAlign: TextAlign.left,
@@ -91,7 +97,8 @@ class FacilitySelectionPage extends StatelessWidget {
                   SliverList(
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
-                        final facility = filteredFacilities.elementAt(index);
+                        final projectFacility =
+                            filteredProjectFacilities?.elementAt(index);
 
                         return Container(
                           color: Colors.white,
@@ -102,7 +109,10 @@ class FacilitySelectionPage extends StatelessWidget {
                               color: DigitTheme.instance.colors.alabasterWhite,
                               border: Border(
                                 top: index == 0 ? borderSide : BorderSide.none,
-                                bottom: index == filteredFacilities.length - 1
+                                bottom: (filteredProjectFacilities != null &&
+                                        index ==
+                                            filteredProjectFacilities.length -
+                                                1)
                                     ? borderSide
                                     : BorderSide.none,
                                 left: borderSide,
@@ -111,7 +121,7 @@ class FacilitySelectionPage extends StatelessWidget {
                             ),
                             child: InkWell(
                               onTap: () {
-                                context.router.pop(facility);
+                                context.router.pop(projectFacility);
                               },
                               child: Container(
                                 margin: const EdgeInsets.only(
@@ -136,14 +146,18 @@ class FacilitySelectionPage extends StatelessWidget {
                                     bottom: kPadding * 2,
                                     top: kPadding * 2,
                                   ),
-                                  child: Text(facility.id),
+                                  child: Text(projectFacility != null
+                                      ? projectFacility.id
+                                      : ''),
                                 ),
                               ),
                             ),
                           ),
                         );
                       },
-                      childCount: filteredFacilities.length,
+                      childCount: filteredProjectFacilities != null
+                          ? filteredProjectFacilities.length
+                          : 0,
                     ),
                   ),
                 ],
@@ -158,26 +172,26 @@ class FacilitySelectionPage extends StatelessWidget {
   FormGroup _form() {
     return fb.group({
       _facilityName: FormControl<String>(),
-      _selectedFacility: FormControl<FacilityModel>(
+      _selectedFacility: FormControl<ProjectFacilityModel>(
         validators: [Validators.required],
       ),
     });
   }
 }
 
-class FacilityValueAccessor
-    extends ControlValueAccessor<FacilityModel, String> {
-  final List<FacilityModel> models;
+class ProjectFacilityValueAccessor
+    extends ControlValueAccessor<ProjectFacilityModel, String> {
+  final List<ProjectFacilityModel> models;
 
-  FacilityValueAccessor(this.models);
+  ProjectFacilityValueAccessor(this.models);
 
   @override
-  String? modelToViewValue(FacilityModel? modelValue) {
+  String? modelToViewValue(ProjectFacilityModel? modelValue) {
     return modelValue?.id;
   }
 
   @override
-  FacilityModel? viewToModelValue(String? viewValue) {
+  ProjectFacilityModel? viewToModelValue(String? viewValue) {
     return models.firstWhereOrNull((element) => element.id == viewValue);
   }
 }

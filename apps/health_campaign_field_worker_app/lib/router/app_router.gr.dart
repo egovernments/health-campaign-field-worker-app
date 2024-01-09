@@ -250,6 +250,16 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    ProjectFacilitySelectionRoute.name: (routeData) {
+      final args = routeData.argsAs<ProjectFacilitySelectionRouteArgs>();
+      return MaterialPageX<ProjectFacilityModel>(
+        routeData: routeData,
+        child: ProjectFacilitySelectionPage(
+          key: args.key,
+          projectFacilities: args.projectFacilities,
+        ),
+      );
+    },
     InventoryReportSelectionRoute.name: (routeData) {
       final args = routeData.argsAs<InventoryReportSelectionRouteArgs>(
           orElse: () => const InventoryReportSelectionRouteArgs());
@@ -952,6 +962,11 @@ class _$AppRouter extends RootStackRouter {
             RouteConfig(
               FacilitySelectionRoute.name,
               path: 'select-facilities',
+              parent: AuthenticatedRouteWrapper.name,
+            ),
+            RouteConfig(
+              ProjectFacilitySelectionRoute.name,
+              path: 'select-project-facilities',
               parent: AuthenticatedRouteWrapper.name,
             ),
             RouteConfig(
@@ -1793,6 +1808,41 @@ class FacilitySelectionRouteArgs {
   @override
   String toString() {
     return 'FacilitySelectionRouteArgs{key: $key, facilities: $facilities}';
+  }
+}
+
+/// generated route for
+/// [ProjectFacilitySelectionPage]
+class ProjectFacilitySelectionRoute
+    extends PageRouteInfo<ProjectFacilitySelectionRouteArgs> {
+  ProjectFacilitySelectionRoute({
+    Key? key,
+    required List<ProjectFacilityModel> projectFacilities,
+  }) : super(
+          ProjectFacilitySelectionRoute.name,
+          path: 'select-project-facilities',
+          args: ProjectFacilitySelectionRouteArgs(
+            key: key,
+            projectFacilities: projectFacilities,
+          ),
+        );
+
+  static const String name = 'ProjectFacilitySelectionRoute';
+}
+
+class ProjectFacilitySelectionRouteArgs {
+  const ProjectFacilitySelectionRouteArgs({
+    this.key,
+    required this.projectFacilities,
+  });
+
+  final Key? key;
+
+  final List<ProjectFacilityModel> projectFacilities;
+
+  @override
+  String toString() {
+    return 'ProjectFacilitySelectionRouteArgs{key: $key, projectFacilities: $projectFacilities}';
   }
 }
 
