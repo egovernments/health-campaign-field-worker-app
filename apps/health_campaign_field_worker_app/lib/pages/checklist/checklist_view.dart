@@ -73,7 +73,10 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                 if (!isControllersInitialized) {
                   initialAttributes?.forEach((e) {
                     controller.add(TextEditingController());
-                    additionalController.add(TextEditingController());
+                    if (!(isHealthFacilityWorker &&
+                        widget.referralClientRefId != null)) {
+                      additionalController.add(TextEditingController());
+                    }
                   });
 
                   // Set the flag to true after initializing controllers
@@ -123,7 +126,10 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                       (controller[i].text == '')) ||
                                   (itemsAttributes?[i].dataType !=
                                           'SingleValueList' &&
-                                      (controller[i].text == '')))) {
+                                      (controller[i].text == '' &&
+                                          !(isHealthFacilityWorker &&
+                                              widget.referralClientRefId !=
+                                                  null))))) {
                             return;
                           }
                         }
@@ -167,29 +173,33 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                                 .trim()
                                                 .isNotEmpty
                                             ? controller[i].text.toString()
-                                            : null
+                                            : ''
                                         : visibleChecklistIndexes.contains(i)
                                             ? controller[i].text.toString()
                                             : i18.checklist.notSelectedKey,
                                     rowVersion: 1,
                                     tenantId: attribute?[i].tenantId,
-                                    additionalDetails: ((attribute?[i]
-                                                        .values
-                                                        ?.length ==
-                                                    2 ||
-                                                attribute?[i].values?.length ==
-                                                    3) &&
-                                            controller[i].text ==
-                                                attribute?[i].values?[1].trim())
-                                        ? additionalController[i]
-                                                .text
-                                                .toString()
-                                                .isEmpty
-                                            ? null
-                                            : additionalController[i]
-                                                .text
-                                                .toString()
-                                        : null,
+                                    additionalDetails: isHealthFacilityWorker &&
+                                            widget.referralClientRefId != null
+                                        ? null
+                                        : ((attribute?[i].values?.length == 2 ||
+                                                    attribute?[i]
+                                                            .values
+                                                            ?.length ==
+                                                        3) &&
+                                                controller[i].text ==
+                                                    attribute?[i]
+                                                        .values?[1]
+                                                        .trim())
+                                            ? additionalController[i]
+                                                    .text
+                                                    .toString()
+                                                    .isEmpty
+                                                ? null
+                                                : additionalController[i]
+                                                    .text
+                                                    .toString()
+                                            : null,
                                   ));
                                 }
 
@@ -457,6 +467,10 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
     ServiceDefinitionModel? selectedServiceDefinition,
     BuildContext context,
   ) {
+    bool isHealthFacilityWorker = context.loggedInUserRoles
+        .where((role) => role.code == RolesType.healthFacilityWorker.toValue())
+        .toList()
+        .isNotEmpty;
     final theme = Theme.of(context);
     /* Check the data type of the attribute*/
     if (item.dataType == 'SingleValueList') {
@@ -512,7 +526,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                           final childIndex =
                               initialAttributes?.indexOf(matchingChildItem);
                           if (childIndex != null) {
-                            controller[childIndex].clear();
+                            // controller[childIndex].clear();
                             visibleChecklistIndexes
                                 .removeWhere((v) => v == childIndex);
                           }
@@ -525,17 +539,17 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                             text: value!,
                           ),
                         ).value;
+
                         if (excludedIndexes.isNotEmpty) {
                           for (int i = 0; i < excludedIndexes.length; i++) {
                             // Clear excluded child controllers
-                            if (item.dataType != 'String' &&
-                                item.dataType != 'Number') {
-                              controller[excludedIndexes[i]].value =
-                                  TextEditingController.fromValue(
-                                const TextEditingValue(
-                                  text: '',
-                                ),
-                              ).value;
+                            if (item.dataType != 'SingleValueList') {
+                              // controller[excludedIndexes[i]].value =
+                              //     TextEditingController.fromValue(
+                              //   const TextEditingValue(
+                              //     text: '',
+                              //   ),
+                              // ).value;
                             }
                           }
                         }
@@ -558,7 +572,9 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
               ),
               BlocBuilder<ServiceBloc, ServiceState>(
                 builder: (context, state) {
-                  return (controller[index].text == item.values?[1].trim())
+                  return (controller[index].text == item.values?[1].trim() &&
+                          !(isHealthFacilityWorker &&
+                              widget.referralClientRefId != null))
                       ? Padding(
                           padding: const EdgeInsets.only(
                             left: 4.0,
