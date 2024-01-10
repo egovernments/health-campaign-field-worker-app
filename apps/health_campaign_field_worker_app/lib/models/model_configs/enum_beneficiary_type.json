@@ -8,6 +8,10 @@
       {
         "name": "household",
         "value": "HOUSEHOLD"
+      },
+      {
+        "name": "product",
+        "value": "PRODUCT"
       }
     ],
     "isEnum": true

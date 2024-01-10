@@ -71,11 +71,6 @@
       "name": "targets",
       "type": "target",
       "isList": true
-    },
-    {
-      "name": "documents",
-      "type": "document",
-      "isList": true
     }
   ],
   "dateTimeAttributes": [

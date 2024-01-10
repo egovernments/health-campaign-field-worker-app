@@ -480,10 +480,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       if (rowversionList.firstOrNull?.version != serverVersion ||
           boundaryRefetched) {
         boundaries = await boundaryRemoteRepository.search(
-          BoundarySearchModel(
-            boundaryType: event.model.address?.boundaryType,
-            code: event.model.address?.boundary,
-          ),
+          BoundarySearchModel(),
         );
         await boundaryLocalRepository.bulkCreate(boundaries);
         await localSecureStore.setSelectedProject(event.model);
@@ -513,10 +510,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         );
         if (boundaries.isEmpty) {
           boundaries = await boundaryRemoteRepository.search(
-            BoundarySearchModel(
-              boundaryType: event.model.address?.boundaryType,
-              code: event.model.address?.boundary,
-            ),
+            BoundarySearchModel(),
           );
         }
         await boundaryLocalRepository.bulkCreate(boundaries);

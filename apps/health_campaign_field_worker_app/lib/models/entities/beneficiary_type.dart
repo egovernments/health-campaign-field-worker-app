@@ -5,5 +5,6 @@ import 'package:dart_mappable/dart_mappable.dart';
 enum BeneficiaryType {
   @MappableValue("INDIVIDUAL") individual,
   @MappableValue("HOUSEHOLD") household,
+  @MappableValue("PRODUCT") product,
   ;
 }

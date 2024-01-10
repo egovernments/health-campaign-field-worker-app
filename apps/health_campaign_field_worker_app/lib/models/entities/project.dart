@@ -91,7 +91,6 @@ class ProjectModel extends EntityModel {
   final int? rowVersion;
   final AddressModel? address;
   final List<TargetModel>? targets;
-  final List<DocumentModel>? documents;
   final DateTime? startDateTime;
   final DateTime? endDateTime;
   final ProjectAdditionalFields? additionalFields;
@@ -114,7 +113,6 @@ class ProjectModel extends EntityModel {
     this.rowVersion,
     this.address,
     this.targets,
-    this.documents,
     int? startDate,
     int? endDate,
     super.auditDetails,super.clientAuditDetails,
