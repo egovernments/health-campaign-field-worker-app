@@ -4,42 +4,43 @@ import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
+import 'package:gap/gap.dart';
 import '../../enum/app_enums.dart';
+import '../../models/DropdownModels.dart';
+import '../../models/chipModel.dart';
+import '../helper_widget/selection_chip.dart';
 import 'digit_checkbox_icon.dart';
 
 typedef OnOptionSelected<T> = void Function(
-    List<DropdownListItem<T>> selectedOptions);
+    List<DropdownItem> selectedOptions);
 
 class MultiSelectDropDown<int> extends StatefulWidget {
-  // selection type of the dropdown
+  /// selection type of the dropdown
   final SelectionType selectionType;
-  final ChipPosition chipPosition;
   final IconData? textIcon;
 
-  // Options
-  final List<DropdownListItem<int>> options;
-  final List<DropdownListItem<int>> selectedOptions;
+  /// Options
+  final List<DropdownItem> options;
+  final List<DropdownItem> selectedOptions;
   final OnOptionSelected<int>? onOptionSelected;
 
-  // selected option
+  /// selected option
   final Icon? selectedOptionIcon;
   final Color? selectedOptionTextColor;
   final Color? selectedOptionBackgroundColor;
-  final Widget Function(BuildContext, DropdownListItem<int>)?
+  final Widget Function(BuildContext, DropdownItem)?
       selectedItemBuilder;
 
-  // chip configuration
-  final bool showChipInSingleSelectMode;
+  /// chip configuration
   final ChipConfig chipConfig;
 
-  // options configuration
+  /// options configuration
   final Color? optionsBackgroundColor;
   final TextStyle? optionTextStyle;
   final Widget? optionSeparator;
   final bool alwaysShowOptionIcon;
 
-  // dropdownfield configuration
+  /// dropdownfield configuration
   final Color? backgroundColor;
   final Icon? suffixIcon;
   final Decoration? inputDecoration;
@@ -66,7 +67,6 @@ class MultiSelectDropDown<int> extends StatefulWidget {
     required this.options,
     this.selectedOptionTextColor,
     this.chipConfig = const ChipConfig(),
-    this.chipPosition = ChipPosition.outside,
     this.selectionType = SelectionType.multiSelect,
     this.selectedOptions = const [],
     this.alwaysShowOptionIcon = false,
@@ -75,7 +75,6 @@ class MultiSelectDropDown<int> extends StatefulWidget {
     this.selectedOptionBackgroundColor,
     this.optionsBackgroundColor,
     this.backgroundColor = Colors.white,
-    this.showChipInSingleSelectMode = false,
     this.suffixIcon = const Icon(Icons.arrow_drop_down),
     this.selectedItemBuilder,
     this.optionSeparator,
@@ -90,7 +89,8 @@ class MultiSelectDropDown<int> extends StatefulWidget {
     this.showClearIcon = true,
     this.maxItems,
     this.focusNode,
-    this.controller, this.textIcon,
+    this.controller,
+    this.textIcon,
   }) : super(key: key);
 
   @override
@@ -100,13 +100,10 @@ class MultiSelectDropDown<int> extends StatefulWidget {
 
 class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
   /// Options list that is used to display the options.
-  final List<DropdownListItem<T>> _options = [];
+  final List<DropdownItem> _options = [];
 
   /// Selected options list that is used to display the selected options.
-  final List<DropdownListItem<T>> _selectedOptions = [];
-
-  /// Disabled options list that is used to display the disabled options.
-  final List<DropdownListItem<T>> _disabledOptions = [];
+  final List<DropdownItem> _selectedOptions = [];
 
   /// The controller for the dropdown.
   OverlayState? _overlayState;
@@ -186,25 +183,25 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
       _controller = null;
     }
 
-    // If the options are changed externally, then the options are updated.
+    /// If the options are changed externally, then the options are updated.
     if (listEquals(widget.options, oldWidget.options) == false) {
       _options.clear();
       _options.addAll(widget.options);
 
-      // If the controller is not null, then the options are updated in the controller.
+      /// If the controller is not null, then the options are updated in the controller.
       if (_controller != null) {
         _controller!.setOptions(_options);
       }
     }
 
-    // If the selected options are changed externally, then the selected options are updated.
+    /// If the selected options are changed externally, then the selected options are updated.
     if (listEquals(widget.selectedOptions, oldWidget.selectedOptions) ==
         false) {
       _selectedOptions.clear();
       _selectedOptions.addAll(widget.options
           .where((element) => widget.selectedOptions.contains(element)));
 
-      // If the controller is not null, then the selected options are updated in the controller.
+      /// If the controller is not null, then the selected options are updated in the controller.
       if (_controller != null) {
         _controller!.setSelectedOptions(_selectedOptions);
       }
@@ -237,10 +234,9 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
             skipTraversal: true,
             focusNode: _focusNode,
             child: InkWell(
-              splashColor: Colors.transparent,
-              // Set splashColor to transparent
-              highlightColor: Colors.transparent,
-              hoverColor: Colors.transparent,
+              splashColor: const DigitColors().transaparent,
+              highlightColor: const DigitColors().transaparent,
+              hoverColor: const DigitColors().transaparent,
               onTap: _toggleFocus,
               child: StatefulBuilder(builder: (context, setState) {
                 return Container(
@@ -369,8 +365,8 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
     final size = values[0] as Size;
 
     return OverlayEntry(builder: (context) {
-      List<DropdownListItem<T>> options = widget.options;
-      List<DropdownListItem<T>> selectedOptions = [..._selectedOptions];
+      List<DropdownItem> options = widget.options;
+      List<DropdownItem> selectedOptions = [..._selectedOptions];
 
       return StatefulBuilder(builder: ((context, dropdownState) {
         return Stack(
@@ -390,21 +386,22 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
               followerAnchor: Alignment.topLeft,
               offset: Offset.zero,
               child: Material(
-                  borderRadius: BorderRadius.zero,
-                  // elevation: 4,
-                  shadowColor: null,
-                  child: Container(
-                    // constraints: BoxConstraints.loose(Size(size.width, 250)),
-                    width: size.width,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        widget.selectionType == SelectionType.nestedMultiSelect
-                            ? _buildNestedOptions(values, options, selectedOptions, dropdownState)
-                            : _buildFlatOptions(values, options, selectedOptions, dropdownState),
-                      ],
-                    ),
-                  )),
+                borderRadius: BorderRadius.zero,
+                shadowColor: null,
+                child: Container(
+                  width: size.width,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      widget.selectionType == SelectionType.nestedMultiSelect
+                          ? _buildNestedOptions(
+                              values, options, selectedOptions, dropdownState)
+                          : _buildFlatOptions(
+                              values, options, selectedOptions, dropdownState),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ],
         );
@@ -413,25 +410,24 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
   }
 
   Widget _buildFlatOptions(
-  List<dynamic>values,
-      List<DropdownListItem<T>> options,
-      List<DropdownListItem<T>> selectedOptions,
+      List<dynamic> values,
+      List<DropdownItem> options,
+      List<DropdownItem> selectedOptions,
       StateSetter dropdownState) {
     return ConstrainedBox(
       constraints: BoxConstraints(
-        maxHeight: values[1]-30,
+        maxHeight: values[1] - 30,
       ),
       child: ListView.separated(
         separatorBuilder: (_, __) =>
-        widget.optionSeparator ?? const SizedBox(height: 0),
+            widget.optionSeparator ?? const SizedBox(height: 0),
         shrinkWrap: true,
         padding: EdgeInsets.zero,
         itemCount: options.length,
         itemBuilder: (context, index) {
           final option = options[index];
-          bool isSelected = selectedOptions.any((item) =>
-          item.value == option.value &&
-              item.label == option.label);
+          bool isSelected = selectedOptions.any(
+              (item) => item.code == option.code && item.name == option.name);
           Color backgroundColor = index % 2 == 0
               ? const DigitColors().white
               : const DigitColors().alabasterWhite;
@@ -448,16 +444,16 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
   }
 
   Widget _buildNestedOptions(
-      List<dynamic>values,
-      List<DropdownListItem<T>> options,
-      List<DropdownListItem<T>> selectedOptions,
+      List<dynamic> values,
+      List<DropdownItem> options,
+      List<DropdownItem> selectedOptions,
       StateSetter dropdownState) {
-    // Group options by type
+    /// Group options by type
     final groupedOptions = groupBy(options, (option) => option.type);
 
     return ConstrainedBox(
       constraints: BoxConstraints(
-        maxHeight: values[1]-30,
+        maxHeight: values[1] - 30,
       ),
       child: ListView.builder(
         shrinkWrap: true,
@@ -469,23 +465,20 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (type != null) Container(
-                padding: const EdgeInsets.all(10),
-                color: const DigitColors().alabasterWhite,
-                child: Text(
-                  type,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 16,
-                    fontFamily: 'Roboto',
-                    color: const DigitColors().davyGray,
+              if (type != null)
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  color: const DigitColors().alabasterWhite,
+                  child: Text(
+                    type,
+                    style: DigitTheme.instance.mobileTheme.textTheme.headlineSmall?.copyWith(
+                      color: const DigitColors().davyGray,
+                    ),
                   ),
                 ),
-              ),
               ...typeOptions.map((option) {
                 bool isSelected = selectedOptions.any((item) =>
-                item.value == option.value &&
-                    item.label == option.label);
+                    item.code == option.code && item.name == option.name);
                 Color backgroundColor = options.indexOf(option) % 2 == 0
                     ? const DigitColors().white
                     : const DigitColors().alabasterWhite;
@@ -506,11 +499,11 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
   }
 
   Column _buildOption(
-      DropdownListItem<T> option,
+      DropdownItem option,
       bool isSelected,
       StateSetter dropdownState,
       Color backgroundColor,
-      List<DropdownListItem<T>> selectedOptions) {
+      List<DropdownItem> selectedOptions) {
     return Column(
       children: [
         ListTile(
@@ -521,32 +514,45 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                   state: CheckboxState.checked,
                   color: const DigitColors().white,
                 ),
-              if (!isSelected) DigitCheckboxIcon(state: CheckboxState.unchecked),
-              const SizedBox(
-                width: 10,
+              if (!isSelected)
+                const DigitCheckboxIcon(state: CheckboxState.unchecked),
+              const Gap(
+                10,
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
-                      if(widget.textIcon!=null)Icon(widget.textIcon, size: 20, color: isSelected ? const DigitColors().white : const DigitColors().davyGray,),
-                      if(widget.textIcon!=null) const SizedBox(width: 4,),
+                      if (widget.textIcon != null)
+                        Icon(
+                          widget.textIcon,
+                          size: 20,
+                          color: isSelected
+                              ? const DigitColors().white
+                              : const DigitColors().davyGray,
+                        ),
+                      if (widget.textIcon != null)
+                        const Gap(
+                          kPadding / 2,
+                        ),
                       Text(
-                        option.label,
-                        style: const TextStyle(
-                            fontFamily: 'Roboto',
-                            fontWeight: FontWeight.w700,
-                            fontSize: 16),
+                        option.name,
+                        style: DigitTheme
+                            .instance.mobileTheme.textTheme.headlineSmall,
                       ),
                     ],
                   ),
-                  if(option.description!=null)Text(option.description!,style: TextStyle(
-                    fontSize: 12,
-                    color: isSelected ? const DigitColors().white : const DigitColors().davyGray,
-                    fontWeight: FontWeight.w400,
-                    fontFamily: 'Roboto',
-                  ),),
+                  if (option.description != null)
+                    Text(
+                      option.description!,
+                      style: DigitTheme.instance.mobileTheme.textTheme.bodySmall
+                          ?.copyWith(
+                        color: isSelected
+                            ? const DigitColors().white
+                            : const DigitColors().davyGray,
+                      ),
+                    ),
                 ],
               ),
             ],
@@ -555,9 +561,12 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
           selectedColor: const DigitColors().white,
           selected: isSelected,
           autofocus: true,
-          tileColor: widget.selectionType==SelectionType.nestedMultiSelect  ? const DigitColors().white :backgroundColor,
+          tileColor: widget.selectionType == SelectionType.nestedMultiSelect
+              ? const DigitColors().white
+              : backgroundColor,
           selectedTileColor: const DigitColors().burningOrange,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
           onTap: () {
             if (isSelected) {
               dropdownState(() {
@@ -566,10 +575,6 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
               setState(() {
                 _selectedOptions.remove(option);
               });
-              bool isSelected1 = selectedOptions.any((item) =>
-              item.value == option.value &&
-                  item.label == option.label);
-              print(isSelected1);
             } else {
               dropdownState(() {
                 selectedOptions.add(option);
@@ -586,10 +591,14 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
             widget.onOptionSelected?.call(_selectedOptions);
           },
         ),
-        Container(height: 2,
+        Container(
+          height: 2,
           color: const DigitColors().quillGray,
           width: MediaQuery.of(context).size.width,
-          margin: EdgeInsets.only(left: 10, right: 10,),
+          margin: const EdgeInsets.only(
+            left: 10,
+            right: 10,
+          ),
         )
       ],
     );
@@ -626,28 +635,30 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
           return chip;
         }),
         if (_selectedOptions
-            .isNotEmpty) // Display "Clear All" only if there are selected options
+            .isNotEmpty) /// Display "Clear All" only if there are selected options
           InkWell(
             onTap: () => clear(),
             child: Chip(
-              backgroundColor: DigitColors().white,
+              backgroundColor: const DigitColors().white,
               shape: RoundedRectangleBorder(
-                side: BorderSide(color: DigitColors().burningOrange, ),
+                side: BorderSide(
+                  color: const DigitColors().burningOrange,
+                ),
                 borderRadius: BorderRadius.circular(50),
               ),
-              padding: EdgeInsets.only(left: 8, top: 0, right: 8, bottom: 0),
-              labelPadding: EdgeInsets.only(top: 2, bottom: 2),
+              padding:
+                  const EdgeInsets.only(left: 8, top: 0, right: 8, bottom: 0),
+              labelPadding: const EdgeInsets.only(top: 2, bottom: 2),
               label: Text('Clear All',
                   style: TextStyle(color: const DigitColors().burningOrange)),
             ),
-
           ),
       ],
     );
   }
 
-  /// Buid the selected item chip.
-  Widget _buildChip(DropdownListItem<T> item, ChipConfig chipConfig) {
+  /// Build the selected item chip.
+  Widget _buildChip(DropdownItem item, ChipConfig chipConfig) {
     return SelectionChip<T>(
       item: item,
       selectionType: widget.selectionType,
@@ -668,10 +679,10 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
 
   /// handle the controller change.
   void _handleControllerChange() {
-    // if the controller is null, return.
+    /// if the controller is null, return.
     if (_controller == null || _controller?.isDisposed == true) return;
 
-    // if current options are not equal to the controller's options, update the state.
+    /// if current options are not equal to the controller's options, update the state.
     if (_options != _controller!.value._options) {
       setState(() {
         _options.clear();
@@ -679,7 +690,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
       });
     }
 
-    // if current selected options are not equal to the controller's selected options, update the state.
+    /// if current selected options are not equal to the controller's selected options, update the state.
     if (_selectedOptions != _controller!.value._selectedOptions) {
       setState(() {
         _selectedOptions.clear();
@@ -703,9 +714,9 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
 /// This is just base class. The implementation of this class is in the MultiSelectController class.
 /// The implementation of this class is hidden from the user.
 class _MultiSelectController<T> {
-  final List<DropdownListItem<T>> _disabledOptions = [];
-  final List<DropdownListItem<T>> _options = [];
-  final List<DropdownListItem<T>> _selectedOptions = [];
+
+  final List<DropdownItem> _options = [];
+  final List<DropdownItem> _selectedOptions = [];
   bool _isDropdownOpen = false;
 }
 
@@ -734,23 +745,15 @@ class MultiSelectController<T>
 
   /// clear specific selected option
   /// [MultiSelectController] is used to clear specific selected option.
-  void clearSelection(DropdownListItem<T> option) {
+  void clearSelection(DropdownItem option) {
     if (!value._selectedOptions.contains(option)) return;
-
-    if (value._disabledOptions.contains(option)) {
-      throw Exception('Cannot clear selection of a disabled option');
-    }
     value._selectedOptions.remove(option);
     notifyListeners();
   }
 
   /// select the options
   /// [MultiSelectController] is used to select the options.
-  void setSelectedOptions(List<DropdownListItem<T>> options) {
-    if (options.any((element) => value._disabledOptions.contains(element))) {
-      throw Exception('Cannot select disabled options');
-    }
-
+  void setSelectedOptions(List<DropdownItem> options) {
     if (options.any((element) => !value._options.contains(element))) {
       throw Exception('Cannot select options that are not in the options list');
     }
@@ -762,10 +765,7 @@ class MultiSelectController<T>
 
   /// add selected option
   /// [MultiSelectController] is used to add selected option.
-  void addSelectedOption(DropdownListItem<T> option) {
-    if (value._disabledOptions.contains(option)) {
-      throw Exception('Cannot select disabled option');
-    }
+  void addSelectedOption(DropdownItem option) {
 
     if (!value._options.contains(option)) {
       throw Exception('Cannot select option that is not in the options list');
@@ -777,25 +777,17 @@ class MultiSelectController<T>
 
   /// set options
   /// [MultiSelectController] is used to set options.
-  void setOptions(List<DropdownListItem<T>> options) {
+  void setOptions(List<DropdownItem> options) {
     value._options.clear();
     value._options.addAll(options);
     notifyListeners();
   }
 
-  /// get disabled options
-  List<DropdownListItem<T>> get disabledOptions => value._disabledOptions;
-
-  /// get enabled options
-  List<DropdownListItem<T>> get enabledOptions => value._options
-      .where((element) => !value._disabledOptions.contains(element))
-      .toList();
-
   /// get options
-  List<DropdownListItem<T>> get options => value._options;
+  List<DropdownItem> get options => value._options;
 
   /// get selected options
-  List<DropdownListItem<T>> get selectedOptions => value._selectedOptions;
+  List<DropdownItem> get selectedOptions => value._selectedOptions;
 
   /// get is dropdown open
   bool get isDropdownOpen => value._isDropdownOpen;
@@ -814,111 +806,5 @@ class MultiSelectController<T>
     if (!value._isDropdownOpen) return;
     value._isDropdownOpen = false;
     notifyListeners();
-  }
-}
-
-enum SelectionType {
-  multiSelect,
-  nestedMultiSelect,
-}
-
-enum ChipPosition {
-  inside,
-  outside,
-}
-
-class DropdownListItem<T> extends StatelessWidget {
-  final String label;
-  final int value;
-  final String? type;
-  final String? description;
-
-  const DropdownListItem({Key? key, required this.value, required this.label, this.type, this.description})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return DropdownListItem<int>(
-      label: label,
-      value: value,
-      type: type,
-      description: description,
-    );
-  }
-}
-
-class ChipConfig {
-  final Icon? deleteIcon;
-
-  final Color deleteIconColor;
-  final Color labelColor;
-  final Color? backgroundColor;
-
-  final TextStyle? labelStyle;
-  final EdgeInsets padding;
-  final EdgeInsets labelPadding;
-
-  final double radius;
-  final double spacing;
-  final double runSpacing;
-
-  final Widget? separator;
-
-  final bool autoScroll;
-
-  const ChipConfig({
-    this.deleteIcon,
-    this.deleteIconColor = Colors.white,
-    this.backgroundColor,
-    this.padding = const EdgeInsets.only(left: 12, top: 0, right: 4, bottom: 0),
-    this.radius = 50,
-    this.spacing = 8,
-    this.runSpacing = 8,
-    this.separator,
-    this.labelColor = Colors.white,
-    this.labelStyle,
-    this.labelPadding = EdgeInsets.zero,
-    this.autoScroll = false,
-  });
-}
-
-class SelectionChip<T> extends StatelessWidget {
-  final SelectionType selectionType;
-  final ChipConfig chipConfig;
-  final Function(DropdownListItem<T>) onItemDelete;
-  final DropdownListItem<T> item;
-
-  const SelectionChip({
-    Key? key,
-    required this.chipConfig,
-    required this.item,
-    required this.onItemDelete,
-    required this.selectionType,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-
-      return Chip(
-        padding: chipConfig.padding,
-        label: selectionType==SelectionType.nestedMultiSelect ? Text('${item.type}: ${item.label}') : Text(item.label) ,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(50),
-        ),
-        deleteIcon: Icon(
-          Icons.cancel,
-          color: const DigitColors().davyGray,
-        ),
-        deleteIconColor: chipConfig.deleteIconColor,
-        labelPadding: const EdgeInsets.only(top: 4, bottom: 4),
-        backgroundColor: const DigitColors().quillGray,
-        labelStyle: chipConfig.labelStyle ??
-            TextStyle(
-              color: const DigitColors().woodsmokeBlack,
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-            ),
-        onDeleted: () => onItemDelete(item),
-      );
   }
 }

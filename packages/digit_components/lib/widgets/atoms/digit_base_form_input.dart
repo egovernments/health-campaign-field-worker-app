@@ -1,9 +1,7 @@
 import 'package:digit_components/constants/BaseFormInputConstants.dart';
 import 'package:digit_components/digit_components.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'dart:io';
 import '../../constants/AppView.dart';
 import '../../utils/validators/validator.dart';
 
@@ -56,7 +54,7 @@ class BaseDigitFormInput extends StatefulWidget {
   final void Function(String?)? onError;
 
   /// Callback function triggered on suffix icon tap.
-  final void Function()? onSuffixTap;
+  final void Function(String)? onSuffixTap;
 
   /// Minimum number of lines for the input field.
   final int minLine;

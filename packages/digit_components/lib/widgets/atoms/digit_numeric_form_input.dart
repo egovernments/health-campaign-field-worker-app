@@ -3,11 +3,30 @@ import 'package:flutter/material.dart';
 import '../../utils/validators/validator.dart';
 import 'digit_base_form_input.dart';
 
+/// `DigitNumericFormInput` is a customizable formfield widget that extends the baseforminput.
+///
+/// Example usage:
+/// ```dart
+/// DigitNumericFormInput(
+/// controller: _textController,
+/// label: 'Username',
+/// innerLabel: 'Enter a numeric value',
+/// charCount: true,
+/// helpText: 'This is a simple example of DigitNumericFormInput',
+/// validations: [
+/// // Example validation: Required field
+/// Validator(ValidatorType.required),
+/// ],
+/// onChange: (value) {
+/// print(value);
+/// },
+/// ),
+
 class DigitNumericFormInput extends BaseDigitFormInput {
 
 
 
-  DigitNumericFormInput({
+  const DigitNumericFormInput({
     Key? key,
     required TextEditingController controller,
     String? label,

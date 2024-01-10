@@ -1,3 +1,4 @@
+import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
 import '../../theme/colors.dart';
@@ -63,15 +64,12 @@ class _DigitToggleState extends State<DigitToggle> {
               child: Text(
                 widget.label,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: DigitTheme.instance.mobileTheme.textTheme.bodyMedium?.copyWith(
                   color: (isHovered && !widget.isSelected)
                       ? const DigitColors().burningOrange
                       : widget.isSelected
                       ? const DigitColors().white
                       : const DigitColors().cloudGray,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                  fontFamily: 'Roboto',
                 ),
               ),
             ),

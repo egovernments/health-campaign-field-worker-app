@@ -1,10 +1,27 @@
 import 'package:flutter/material.dart';
-
+import '../../utils/time_utils.dart';
 import '../../utils/validators/validator.dart';
 import 'digit_base_form_input.dart';
 
+/// `DigitTextFormInput` is a customizable textformfield widget that extends the baseforminput
+///
+/// This widget extends the baseforminput
+///
+/// Example usage:
+/// ```dart
+/// DigitTimeFormInput(
+/// controller: _textController,
+/// label: 'Time Picker',
+/// innerLabel: 'click on the icon to select a time',
+/// charCount: true,
+/// helpText: 'This is a simple example of DigitTimeFormInput',
+/// onChange: (value) {
+/// print(value);
+/// },
+/// ),
+
 class DigitTimeFormInput extends BaseDigitFormInput {
-  DigitTimeFormInput({
+  const DigitTimeFormInput({
     Key? key,
     required TextEditingController controller,
     String? label,
@@ -46,17 +63,7 @@ class DigitTimeFormInput extends BaseDigitFormInput {
   _DigitTimeFormInputState createState() => _DigitTimeFormInputState();
 }
 
-String _formatTime(TimeOfDay time) {
-  // Format the time as hh:mm am/pm
-  int hour = time.hourOfPeriod;
-  int minute = time.minute;
-  String period = time.period == DayPeriod.am ? 'AM' : 'PM';
 
-  String hourString = (hour % 12).toString().padLeft(2, '0');
-  String minuteString = minute.toString().padLeft(2, '0');
-
-  return '$hourString:$minuteString $period';
-}
 
 class _DigitTimeFormInputState extends BaseDigitFormInputState {
 
@@ -76,14 +83,14 @@ class _DigitTimeFormInputState extends BaseDigitFormInputState {
     if (selectedTime != null) {
 
       setState(() {
-        widget.controller.text = _formatTime(selectedTime);
+        widget.controller.text = formatTime(selectedTime);
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    // You can customize the appearance or behavior specific to the TextFormInput here
+    /// You can customize the appearance or behavior specific to the TextFormInput here
     return super.build(context);
   }
 }

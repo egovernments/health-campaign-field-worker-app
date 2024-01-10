@@ -3,9 +3,24 @@ import 'package:flutter/material.dart';
 import '../../utils/validators/validator.dart';
 import 'digit_base_form_input.dart';
 
+/// `DigitPasswordFormInput` is a customizable formfield widget that extends the baseforminput.
+///
+/// Example usage:
+/// ```dart
+/// DigitPasswordFormInput(
+/// controller: _textController,
+/// label: 'Username',
+/// innerLabel: 'Please enter a valid password',
+/// charCount: true,
+/// helpText: 'This is a simple example of DigitPasswordFormInput',
+/// onChange: (value) {
+/// print(value);
+/// },
+/// ),
+
 class DigitPasswordFormInput extends BaseDigitFormInput {
 
-  DigitPasswordFormInput({
+  const DigitPasswordFormInput({
     Key? key,
     required TextEditingController controller,
     String? label,
@@ -21,7 +36,7 @@ class DigitPasswordFormInput extends BaseDigitFormInput {
     bool preferToolTipBelow = false,
     IconData suffix = Icons.visibility,
     void Function(String?)? onError,
-    void Function()? onSuffixTap,
+    void Function(String)? onSuffixTap,
     final List<Validator>? validations,
     final void Function(String)? onChange,
   }) : super(
@@ -71,6 +86,7 @@ class _DigitPasswordFormInputState extends BaseDigitFormInputState {
   void onSuffixIconClick({void Function()? customFunction}) {
     toggleObsecureText();
   }
+  @override
   Widget build(BuildContext context) {
     // You can customize the appearance or behavior specific to the TextFormInput here
     return super.build(context);

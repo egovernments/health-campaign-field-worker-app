@@ -1,10 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
+import '../../blocs/LocationBloc.dart';
 import '../../utils/validators/validator.dart';
 import 'digit_base_form_input.dart';
 
+/// DigitLocationFormInput` is a customizable formfield widget that  extends the baseforminput.
+///
+/// Example usage:
+/// ```dart
+/// DigitLocationFormInput(
+/// controller: _textController,
+/// label: 'Username',
+/// innerLabel: 'Click on the icon to add your current location',
+/// charCount: true,
+/// helpText: 'This is a simple example of DigitLocationFormInput',
+/// onChange: (value) {
+/// print(value);
+/// },
+/// ),
+
 class DigitLocationFormInput extends BaseDigitFormInput {
-  DigitLocationFormInput({
+  const DigitLocationFormInput({
     Key? key,
     required TextEditingController controller,
     String? label,
@@ -48,26 +63,12 @@ class DigitLocationFormInput extends BaseDigitFormInput {
 
 class _DigitLocationFormInputState extends BaseDigitFormInputState {
 
+  LocationBloc locationBloc = LocationBloc();
+
   @override
   void onSuffixIconClick({void Function()? customFunction}) async{
 
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      // Request location permission
-      permission = await Geolocator.requestPermission();
-    }
-
-    if (permission == LocationPermission.whileInUse ||
-        permission == LocationPermission.always) {
-      // Get the current position
-      Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      );
-
-      // Update the text field with the current location's latitude and longitude
-      String location = "${position.latitude}, ${position.longitude}";
-      widget.controller.text = location;
-    }
+    await locationBloc.getCurrentLocation(widget.controller);
   }
 
   @override

@@ -1,20 +1,26 @@
+import 'package:digit_components/constants/DropdownConstants.dart';
+import 'package:digit_components/digit_components.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-import '../../theme/colors.dart';
+import 'package:gap/gap.dart';
+import '../../constants/AppView.dart';
+import '../../enum/app_enums.dart';
+import '../../models/DropdownModels.dart';
 
 class DigitDropdown<T> extends StatefulWidget {
-  /// the child widget for the button, this will be ignored if text is supplied
-  final Widget child;
   final TextEditingController textEditingController;
 
-  /// onChange is called when the selected option is changed.;
-  /// It will pass back the value and the index of the option.
+  /// onChange is called when the selected option is changed
+  /// It will pass back the value and the index of the option (can be different for different case).
   final void Function(String, String) onChange;
 
   /// list of DropdownItems
-  final List<DropdownItem<String>> items;
+  final List<DropdownItem> items;
+
+  /// style for dropdown... can be used to customize the dropdown style
   final DropdownStyle dropdownStyle;
+
+  /// used for text with icon
   final IconData? textIcon;
 
   /// dropdownButtonStyles passes styles to OutlineButton.styleFrom()
@@ -22,25 +28,23 @@ class DigitDropdown<T> extends StatefulWidget {
 
   /// dropdown button icon defaults to caret
   final Icon? icon;
-  final bool hideIcon;
+
   final DropdownType dropdownType;
 
-  /// if true the dropdown icon will as a leading icon, default to false
-  final bool leadingIcon;
+  /// text to shown, when no options is available....... even while searching if no options matches
+  final String emptyItemText;
 
   const DigitDropdown({
     Key? key,
-    this.hideIcon = false,
-    required this.child,
     required this.items,
     this.dropdownStyle = const DropdownStyle(),
     this.dropdownButtonStyle = const DropdownButtonStyle(),
     this.icon,
     this.textIcon,
-    this.leadingIcon = false,
     required this.onChange,
-    this.dropdownType = DropdownType.singleSelect,
+    this.dropdownType = DropdownType.defaultSelect,
     required this.textEditingController,
+    this.emptyItemText = "No Options available",
   }) : super(key: key);
 
   @override
@@ -59,8 +63,8 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
   late AnimationController _animationController;
   late Animation<double> _expandAnimation;
   late Animation<double> _rotateAnimation;
-  late List<DropdownItem<String>> filteredItems;
-  late List<DropdownItem<String>> _lastFilteredItems;
+  late List<DropdownItem> filteredItems;
+  late List<DropdownItem> _lastFilteredItems;
   late List<bool> itemHoverStates;
 
   @override
@@ -71,7 +75,7 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
     _lastFilteredItems = List.from(widget.items);
     itemHoverStates = List.generate(widget.items.length, (index) => false);
     _animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 200));
+        vsync: this, duration: DropdownConstants.animationDuration);
     _expandAnimation = CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeInOut,
@@ -86,7 +90,8 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
   void dispose() {
     _focusNode.removeListener(_onFocusChange);
     _focusNode.dispose();
-    // ...
+
+    /// ...
     super.dispose();
   }
 
@@ -100,10 +105,13 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
   Widget build(BuildContext context) {
     var style = widget.dropdownButtonStyle;
 
-    // Responsive width based on screen size
-    double dropdownWidth = MediaQuery.of(context).size.width < 600 ? 340 : 600;
+    /// Responsive width based on screen size
+    double dropdownWidth =
+        AppView.isMobileView(MediaQuery.of(context).size.width)
+            ? DropdownConstants.mobileInputWidth
+            : DropdownConstants.desktopInputWidth;
 
-    // link the overlay to the button
+    /// link the overlay to the button
     return CompositedTransformTarget(
       link: this._layerLink,
       child: SizedBox(
@@ -152,10 +160,19 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
     );
   }
 
+  /// fucntion to filteritems based on the input
   void _filterItems(String input) {
-
-    List<DropdownItem<String>> newFilteredItems = widget.items
-        .where((item) => item.value.trim().toLowerCase().contains(input.trim().toLowerCase()) || (item.description!=null && item.description!.trim().toLowerCase().contains(input.trim().toLowerCase())))
+    List<DropdownItem> newFilteredItems = widget.items
+        .where((item) =>
+            item.name
+                .trim()
+                .toLowerCase()
+                .contains(input.trim().toLowerCase()) ||
+            (item.description != null &&
+                item.description!
+                    .trim()
+                    .toLowerCase()
+                    .contains(input.trim().toLowerCase())))
         .toList();
 
     if (!listEquals(newFilteredItems, _lastFilteredItems)) {
@@ -165,6 +182,7 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
     }
   }
 
+  /// update the overlay when overlay needs to build again
   void _updateOverlay() {
     if (_isOpen && _overlayEntry != null) {
       _overlayEntry!.remove();
@@ -173,13 +191,13 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
     }
   }
 
+  ///overlay for dropdown
   OverlayEntry _createOverlayEntry() {
-    // find the size and position of the current widget
+    /// find the size and position of the current widget
     RenderBox? renderBox = context?.findRenderObject() as RenderBox?;
-    OverlayEntry? _overlayEntry;
 
     if (renderBox == null) {
-      // Handle the case where renderBox is null (e.g., widget not yet laid out)
+      /// Handle the case where renderBox is null (e.g., widget not yet laid out)
       return OverlayEntry(builder: (context) => const SizedBox.shrink());
     }
     var size = renderBox.size;
@@ -187,13 +205,14 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
     var offset = renderBox.localToGlobal(Offset.zero);
     var topOffset = offset.dy + size.height;
     OverlayEntry overlayEntry = OverlayEntry(
-      // full screen GestureDetector to register when a
-      // user has clicked away from the dropdown
+      /// full screen GestureDetector to register when a
+      /// user has clicked away from the dropdown
       builder: (context) => GestureDetector(
         onTap: () => _toggleDropdown(close: true),
         behavior: HitTestBehavior.translucent,
-        // full screen container to register taps anywhere and close drop down
-        child: Container(
+
+        /// full screen SizedBox to register taps anywhere and close drop down
+        child: SizedBox(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           child: Stack(
@@ -208,8 +227,7 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
                   showWhenUnlinked: false,
                   child: Material(
                     elevation: widget.dropdownStyle.elevation ?? 0,
-                    borderRadius:
-                        widget.dropdownStyle.borderRadius ?? BorderRadius.zero,
+                    borderRadius: widget.dropdownStyle.borderRadius,
                     color: widget.dropdownStyle.color,
                     clipBehavior: Clip.none,
                     child: SizeTransition(
@@ -236,9 +254,10 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
     return overlayEntry;
   }
 
+  /// build the dropdown based on the type
   Widget _buildDropdownListView() {
     switch (widget.dropdownType) {
-      case DropdownType.singleSelect:
+      case DropdownType.defaultSelect:
         return SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           child: _buildListView(),
@@ -269,8 +288,8 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
               return StatefulBuilder(
                 builder: (context, setState) {
                   return InkWell(
-                    splashColor: Colors.transparent,
-                    hoverColor: Colors.transparent,
+                    splashColor: const DigitColors().transaparent,
+                    hoverColor: const DigitColors().transaparent,
                     onHover: (hover) {
                       setState(() {
                         itemHoverStates[item.key] = hover;
@@ -278,7 +297,7 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
                     },
                     onTap: () {
                       setState(() => _currentIndex = item.key);
-                      widget.onChange(item.value.value, 'selected');
+                      widget.onChange(item.value.name, 'selected');
                       _toggleDropdown();
                     },
                     child: Container(
@@ -294,24 +313,31 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
                       ),
                       padding: EdgeInsets.zero,
                       child: Padding(
-                        padding: widget.dropdownType==DropdownType.singleSelect && item.value.description == null ? const EdgeInsets.only(left: 10, top: 16,bottom: 16):const EdgeInsets.only(left: 10, top: 8,bottom: 8),
+                        padding:
+                            widget.dropdownType == DropdownType.defaultSelect &&
+                                    item.value.description == null
+                                ? DropdownConstants.defaultPadding
+                                : DropdownConstants.nestedItemPadding,
                         child: Row(
                           children: [
                             if (widget.dropdownType ==
                                 DropdownType.profileSelect)
                               SizedBox(
-                                height: 32,
-                                width: 32,
+                                height: DropdownConstants.defaultProfileSize,
+                                width: DropdownConstants.defaultProfileSize,
                                 child: CircleAvatar(
-                                  radius: 72,
-                                  // This radius is the radius of the picture in the circle avatar itself.
+                                  radius: DropdownConstants.defaultImageRadius,
+
+                                  /// This radius is the radius of the picture in the circle avatar itself.
                                   backgroundImage: item.value.profileImage,
                                   backgroundColor: const DigitColors().davyGray,
-
                                 ),
                               ),
                             if (widget.dropdownType ==
-                                DropdownType.profileSelect) const SizedBox(width: 6,),
+                                DropdownType.profileSelect)
+                              const Gap(
+                                6,
+                              ),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -320,34 +346,32 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
                                     if (widget.textIcon != null)
                                       Icon(
                                         widget.textIcon,
-                                        size: 20,
+                                        size: DropdownConstants.textIconSize,
                                         color: const DigitColors().davyGray,
                                       ),
                                     if (widget.textIcon != null)
-                                      const SizedBox(
-                                        width: 4,
+                                      const Gap(
+                                        kPadding/2,
                                       ),
                                     widget.textIcon != null
                                         ? Text(
-                                            item.value.value,
-                                            style: TextStyle(
-                                                fontFamily: 'Roboto',
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 16,
-                                                color: const DigitColors()
-                                                    .davyGray),
+                                            item.value.name,
+                                            style: DigitTheme.instance
+                                                .mobileTheme.textTheme.bodyLarge
+                                                ?.copyWith(
+                                                    color: const DigitColors()
+                                                        .davyGray),
                                           )
-                                        : item.value,
+                                        : Text(item.value.name),
                                   ],
                                 ),
                                 if (item.value.description != null)
                                   Text(
                                     item.value.description!,
-                                    style: TextStyle(
-                                      fontSize: 12,
+                                    style: DigitTheme.instance.mobileTheme
+                                        .textTheme.bodySmall
+                                        ?.copyWith(
                                       color: const DigitColors().davyGray,
-                                      fontWeight: FontWeight.w400,
-                                      fontFamily: 'Roboto',
                                     ),
                                   ),
                               ],
@@ -361,10 +385,10 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
               );
             }).toList()
           : [
-              const Center(
+              Center(
                 child: Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text("No Options available"),
+                  padding: DropdownConstants.noItemAvailablePadding,
+                  child: Text(widget.emptyItemText),
                 ),
               ),
             ],
@@ -382,51 +406,46 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
   List<Widget> _buildGroupedItems() {
     List<Widget> groupedItems = [];
     Set<String?> uniqueTypes = filteredItems.map((item) => item.type).toSet();
-    print(uniqueTypes.length);
 
     for (String? type in uniqueTypes) {
       if (type != null) {
-        // Add a header for the type
+        /// header for the type
         groupedItems.add(
           Container(
             padding: const EdgeInsets.all(10),
             color: const DigitColors().alabasterWhite,
-            child: Text(
-              type,
-              style: TextStyle(
-                fontWeight: FontWeight.w700,
-                fontSize: 16,
-                fontFamily: 'Roboto',
-                color: const DigitColors().davyGray,
-              ),
-            ),
+            child: Text(type,
+                style: DigitTheme.instance.mobileTheme.textTheme.bodyLarge
+                    ?.copyWith(
+                  color: const DigitColors().davyGray,
+                )),
           ),
         );
 
-        // Add items of the current type
-        List<DropdownItem<String>> typeItems =
+        /// items of the current type
+        List<DropdownItem> typeItems =
             filteredItems.where((item) => item.type == type).toList();
 
-        for (DropdownItem<String> item in typeItems) {
+        for (DropdownItem item in typeItems) {
           groupedItems.add(
             StatefulBuilder(
               builder: (context, setState) {
                 return Column(
                   children: [
                     InkWell(
-                      splashColor: Colors.transparent,
-                      hoverColor: Colors.transparent,
+                      splashColor: const DigitColors().transaparent,
+                      hoverColor: const DigitColors().transaparent,
                       onHover: (hover) {
                         setState(() {
                           itemHoverStates[typeItems.indexOf(item)] = hover;
                         });
                       },
                       onTap: () {
-                        setState((){
-                          _nestedSelected = '$type,${item.value}';
+                        setState(() {
+                          _nestedSelected = '$type,${item.name}';
                           _nestedIndex = 1;
                         });
-                        widget.onChange(item.value, type);
+                        widget.onChange(item.name, type);
                         _toggleDropdown();
                       },
                       child: Container(
@@ -445,7 +464,19 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            item.child,
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                left: 10,
+                                top: 12,
+                                bottom: 12,
+                              ),
+                              child: Text(
+                                item.name,
+                                style: DigitTheme.instance.mobileTheme.textTheme.bodyLarge?.copyWith(
+                                    color: const DigitColors().davyGray,
+                                ),
+                              ),
+                            ),
                             if (item.description != null)
                               Padding(
                                 padding: const EdgeInsets.only(
@@ -454,11 +485,10 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
                                 ),
                                 child: Text(
                                   item.description!,
-                                  style: TextStyle(
-                                    fontSize: 12,
+                                  style: DigitTheme
+                                      .instance.mobileTheme.textTheme.bodySmall
+                                      ?.copyWith(
                                     color: const DigitColors().davyGray,
-                                    fontWeight: FontWeight.w400,
-                                    fontFamily: 'Roboto',
                                   ),
                                 ),
                               ),
@@ -466,15 +496,18 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
                         ),
                       ),
                     ),
+
+                    /// Divider after each option
                     Container(
                       height: 2,
                       color: const DigitColors().quillGray,
                       width: MediaQuery.of(context).size.width,
-                      margin: const EdgeInsets.only(
-                        left: 10,
-                        right: 10,
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 10,
                       ),
-                    ) // Divider after each option
+                    )
+
+                    /// Divider after each option
                   ],
                 );
               },
@@ -484,13 +517,13 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
       }
     }
 
-    // Add a message if no options are available
+    /// Add a message if no options are available
     if (groupedItems.isEmpty) {
       groupedItems.add(
-        const Center(
+        Center(
           child: Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text("No Options available"),
+            padding: DropdownConstants.noItemAvailablePadding,
+            child: Text(widget.emptyItemText),
           ),
         ),
       );
@@ -499,6 +532,7 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
     return groupedItems;
   }
 
+  /// function to make change when the dropdown is opening or closing.... we will reset and set the value inside this
   void _toggleDropdown({bool close = false}) async {
     if (_isOpen || close) {
       await _animationController.reverse();
@@ -508,8 +542,12 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
       });
     } else {
       setState(() {
-        _currentIndex = -1; // Reset the index when opening the dropdown
-        _nestedIndex =-1;
+        _currentIndex = -1;
+
+        /// Reset the index when opening the dropdown
+        _nestedIndex = -1;
+
+        /// Reset the index when opening the dropdown
         _overlayEntry = _createOverlayEntry();
       });
       Overlay.of(context).insert(_overlayEntry!);
@@ -518,90 +556,14 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
     }
     if (_currentIndex != -1) {
       setState(() {
-        widget.textEditingController.text = filteredItems[_currentIndex].value;
+        widget.textEditingController.text = filteredItems[_currentIndex].name;
       });
     }
-    if (widget.dropdownType == DropdownType.nestedSelect && _nestedIndex!=-1) {
+    if (widget.dropdownType == DropdownType.nestedSelect &&
+        _nestedIndex != -1) {
       setState(() {
         widget.textEditingController.text = _nestedSelected;
       });
     }
   }
-}
-
-/// DropdownItem is just a wrapper for each child in the dropdown list.\n
-/// It holds the value of the item.
-class DropdownItem<String> extends StatelessWidget {
-  final String value;
-  final String? type;
-  final Widget child;
-  final String? description;
-  final NetworkImage? profileImage;
-
-  const DropdownItem(
-      {Key? key,
-      required this.value,
-      this.type,
-      required this.child,
-      this.description, this.profileImage})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return child;
-  }
-}
-
-class DropdownButtonStyle {
-  final MainAxisAlignment? mainAxisAlignment;
-  final ShapeBorder? shape;
-  final double elevation;
-  final Color backgroundColor;
-  final EdgeInsets? padding;
-  final BoxConstraints? constraints;
-  final double? width;
-  final double? height;
-  final Color primaryColor;
-
-  const DropdownButtonStyle({
-    this.mainAxisAlignment,
-    this.backgroundColor = Colors.white,
-    this.primaryColor = Colors.black87,
-    this.constraints,
-    this.height = 40,
-    this.width,
-    this.elevation = 1,
-    this.padding,
-    this.shape,
-  });
-}
-
-class DropdownStyle {
-  final BorderRadius borderRadius;
-  final double? elevation;
-  final Color? color;
-  final EdgeInsets? padding;
-  final BoxConstraints? constraints;
-
-  /// position of the top left of the dropdown relative to the top left of the button
-  final Offset? offset;
-
-  ///button width must be set for this to take effect
-  final double? width;
-
-  const DropdownStyle({
-    this.constraints,
-    this.offset,
-    this.width,
-    this.elevation,
-    this.color,
-    this.padding,
-    this.borderRadius = BorderRadius.zero,
-  });
-}
-
-enum DropdownType {
-  singleSelect,
-  nestedSelect,
-  profileSelect,
 }

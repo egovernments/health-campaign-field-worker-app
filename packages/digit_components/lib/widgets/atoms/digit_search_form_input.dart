@@ -3,8 +3,26 @@ import 'package:flutter/material.dart';
 import '../../utils/validators/validator.dart';
 import 'digit_base_form_input.dart';
 
+/// `DigitSearchFormInput` is a customizable formfield widget that extends the baseforminput.
+///
+/// Example usage:
+/// ```dart
+/// DigitSearchFormInput(
+/// controller: _textController,
+/// label: 'Search',
+/// innerLabel: 'Enter your username',
+/// charCount: true,
+/// helpText: 'This is a simple example of DigitSearchFormInput',
+/// onChange: (value) {
+/// print(value);
+/// },
+/// onSuffixTap(){
+///
+/// }
+/// ),
+
 class DigitSearchFormInput extends BaseDigitFormInput {
-  DigitSearchFormInput({
+  const DigitSearchFormInput({
     Key? key,
     required TextEditingController controller,
     String? label,
@@ -19,7 +37,7 @@ class DigitSearchFormInput extends BaseDigitFormInput {
     bool preferToolTipBelow = false,
     IconData suffix = Icons.search,
     void Function(String?)? onError,
-    void Function()? onSuffixTap,
+    void Function(String)? onSuffixTap,
     final List<Validator>? validations,
     final void Function(String)? onChange,
   }) : super(
@@ -52,7 +70,7 @@ class _DigitSearchFormInputState extends BaseDigitFormInputState {
   @override
   void onSuffixIconClick({void Function()? customFunction}) {
     // Use the onTap function directly
-    widget.onSuffixTap?.call();
+    widget.onSuffixTap?.call(widget.controller.text);
   }
   Widget build(BuildContext context) {
     // You can customize the appearance or behavior specific to the TextFormInput here

@@ -2,7 +2,6 @@ library digit_components;
 
 // import 'package:google_fonts/google_fonts.dart';
 
-export 'blocs/location/location.dart';
 export 'theme/theme.dart';
 export 'widgets/widgets.dart';
 

@@ -1,11 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-
+import '../../blocs/DateSelection.dart';
 import '../../utils/validators/validator.dart';
 import 'digit_base_form_input.dart';
 
+/// `DigitDateFormInput` is a customizable formfield widget that  extends the baseforminput.
+///
+/// Example usage:
+/// ```dart
+/// DigitDateFormInput(
+/// controller: _textController,
+/// label: 'Username',
+/// innerLabel: 'click on the icon to choose a date',
+/// charCount: true,
+/// helpText: 'This is a simple example of DigitDateFormInput',
+/// onChange: (value) {
+/// print(value);
+/// },
+/// ),
+
 class DigitDateFormInput extends BaseDigitFormInput {
-  DigitDateFormInput({
+  const DigitDateFormInput({
     Key? key,
     required TextEditingController controller,
     String? label,
@@ -48,29 +62,23 @@ class DigitDateFormInput extends BaseDigitFormInput {
 }
 
 class _DigitDateFormInputState extends BaseDigitFormInputState {
+
+  DateSelectionBloc dateSelectionBloc = DateSelectionBloc();
+
   @override
   void onSuffixIconClick({void Function()? customFunction}) async {
-    // Show a date picker and update the controller's value
+    /// Show a date picker and update the controller's value
 
-    DateTime? selectedDate = await showDatePicker(
+
+    await dateSelectionBloc.selectDate(
       context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
+      controller: widget.controller,
     );
-    if (selectedDate != null) {
-
-      String formattedDate = DateFormat('dd/MM/yyyy').format(selectedDate.toLocal());
-
-      setState(() {
-        widget.controller.text = formattedDate;
-      });
-    }
   }
 
   @override
   Widget build(BuildContext context) {
-    // You can customize the appearance or behavior specific to the TextFormInput here
+    /// You can customize the appearance or behavior specific to the TextFormInput here
     return super.build(context);
   }
 }

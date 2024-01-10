@@ -7,6 +7,26 @@ enum ButtonType {
 }
 
 
+/// Enum representing different types of single select dropdowns.
+enum DropdownType {
+  defaultSelect,
+  nestedSelect,
+  profileSelect,
+}
+
+/// Enum representing different types of multi select dropdowns.
+enum SelectionType {
+  multiSelect,
+  nestedMultiSelect,
+}
+
+/// Enum representing different types of multi select dropdowns.
+enum TreeSelectionType {
+  singleSelect,
+  MultiSelect,
+}
+
+
 
 /// Enum representing the possible states of the checkbox.
 enum CheckboxState {

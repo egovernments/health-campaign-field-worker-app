@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
-
+import '../../models/toggleButtonModel.dart';
 import 'digit_toggle.dart';
 
 class DigitToggleList extends StatefulWidget {
   final List<ToggleButtonModel> toggleButtons;
   final void Function(List<bool> selectedValues) onChanged;
+  final EdgeInsets? contentPadding;
 
-  DigitToggleList({
+  const DigitToggleList({
     Key? key,
     required this.toggleButtons,
     required this.onChanged,
+    this.contentPadding,
   }) : super(key: key);
 
   @override
@@ -27,16 +29,16 @@ class _DigitToggleListState extends State<DigitToggleList> {
             (button) {
           final index = widget.toggleButtons.indexOf(button);
           return Padding(
-            padding: const EdgeInsets.only(bottom: 8),
+            padding: widget.contentPadding ?? const EdgeInsets.only(bottom: 8),
             child: DigitToggle(
               onChanged: (isSelected) {
                 setState(() {
                   if (isSelected) {
                     if (selectedIndex != null && selectedIndex == index) {
-                      // Clicked on the already selected item, unselect it
+                      /// Clicked on the already selected item, unselect it
                       selectedIndex = null;
                     } else {
-                      // Unselect the previously selected item
+                      /// Unselect the previously selected item
                       if (selectedIndex != null) {
                         widget.toggleButtons[selectedIndex!].onSelected?.call();
                       }
@@ -47,7 +49,7 @@ class _DigitToggleListState extends State<DigitToggleList> {
                   }
                 });
 
-                // Check if the button is selected and has a callback
+                /// Check if the button is selected and has a callback
                 if (isSelected && button.onSelected != null) {
                   button.onSelected!();
                 }
@@ -62,14 +64,3 @@ class _DigitToggleListState extends State<DigitToggleList> {
   }
 }
 
-class ToggleButtonModel {
-  final String name;
-  final String key;
-  final void Function()? onSelected; // Callback function when the button is selected
-
-  ToggleButtonModel({
-    required this.name,
-    required this.key,
-    this.onSelected,
-  });
-}
