@@ -77,7 +77,7 @@ class _DigitPasswordFormInputState extends BaseDigitFormInputState {
 
   @override
   void toggleObsecureText() {
-    // Call the base class implementation
+    /// Call the base class implementation
     super.toggleObsecureText();
 
   }
@@ -88,7 +88,7 @@ class _DigitPasswordFormInputState extends BaseDigitFormInputState {
   }
   @override
   Widget build(BuildContext context) {
-    // You can customize the appearance or behavior specific to the TextFormInput here
+    /// You can customize the appearance or behavior specific to the TextFormInput here
     return super.build(context);
   }
 }

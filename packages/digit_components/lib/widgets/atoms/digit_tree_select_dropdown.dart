@@ -23,12 +23,6 @@ class TreeSelectDropDown<int> extends StatefulWidget {
   final List<TreeNode> selectedOptions;
   final OnOptionSelected<int>? onOptionSelected;
 
-  /// selected option
-  final Icon? selectedOptionIcon;
-  final Color? selectedOptionTextColor;
-  final Color? selectedOptionBackgroundColor;
-  final Widget Function(BuildContext, TreeNode)? selectedItemBuilder;
-
   final ChipConfig chipConfig;
 
   /// options configuration
@@ -38,18 +32,8 @@ class TreeSelectDropDown<int> extends StatefulWidget {
   final bool alwaysShowOptionIcon;
 
   /// dropdownfield configuration
-  final Color? backgroundColor;
   final Icon? suffixIcon;
   final Decoration? inputDecoration;
-  final double? borderRadius;
-  final BorderRadiusGeometry? radiusGeometry;
-  final Color? borderColor;
-  final Color? focusedBorderColor;
-  final double? borderWidth;
-  final double? focusedBorderWidth;
-  final EdgeInsets? padding;
-  final bool showClearIcon;
-  final int? maxItems;
 
   /// focus node
   final FocusNode? focusNode;
@@ -62,29 +46,15 @@ class TreeSelectDropDown<int> extends StatefulWidget {
     Key? key,
     required this.onOptionSelected,
     required this.options,
-    this.selectedOptionTextColor,
     this.treeSelectionType = TreeSelectionType.MultiSelect,
     this.selectedOptions = const [],
     this.alwaysShowOptionIcon = false,
     this.optionTextStyle,
     this.chipConfig = const ChipConfig(),
-    this.selectedOptionIcon = const Icon(Icons.check),
-    this.selectedOptionBackgroundColor,
     this.optionsBackgroundColor,
-    this.backgroundColor = Colors.white,
     this.suffixIcon = const Icon(Icons.arrow_drop_down),
-    this.selectedItemBuilder,
     this.optionSeparator,
     this.inputDecoration,
-    this.padding,
-    this.focusedBorderColor = Colors.black54,
-    this.borderColor = Colors.grey,
-    this.borderWidth = 0.4,
-    this.focusedBorderWidth = 0.4,
-    this.borderRadius = 12.0,
-    this.radiusGeometry,
-    this.showClearIcon = true,
-    this.maxItems,
     this.focusNode,
     this.controller,
   }) : super(key: key);
@@ -298,9 +268,7 @@ class _TreeSelectDropDownState<T> extends State<TreeSelectDropDown<T>> {
           final index = entry.key;
           final item = entry.value;
 
-          Widget chip = widget.selectedItemBuilder != null
-              ? widget.selectedItemBuilder!(context, item)
-              : _buildChip(item, widget.chipConfig);
+          Widget chip = _buildChip(item, widget.chipConfig);
 
           return chip;
         }),

@@ -28,8 +28,6 @@ class MultiSelectDropDown<int> extends StatefulWidget {
   final Icon? selectedOptionIcon;
   final Color? selectedOptionTextColor;
   final Color? selectedOptionBackgroundColor;
-  final Widget Function(BuildContext, DropdownItem)?
-      selectedItemBuilder;
 
   /// chip configuration
   final ChipConfig chipConfig;
@@ -37,22 +35,11 @@ class MultiSelectDropDown<int> extends StatefulWidget {
   /// options configuration
   final Color? optionsBackgroundColor;
   final TextStyle? optionTextStyle;
-  final Widget? optionSeparator;
   final bool alwaysShowOptionIcon;
 
   /// dropdownfield configuration
   final Color? backgroundColor;
   final Icon? suffixIcon;
-  final Decoration? inputDecoration;
-  final double? borderRadius;
-  final BorderRadiusGeometry? radiusGeometry;
-  final Color? borderColor;
-  final Color? focusedBorderColor;
-  final double? borderWidth;
-  final double? focusedBorderWidth;
-  final EdgeInsets? padding;
-  final bool showClearIcon;
-  final int? maxItems;
 
   /// focus node
   final FocusNode? focusNode;
@@ -76,18 +63,6 @@ class MultiSelectDropDown<int> extends StatefulWidget {
     this.optionsBackgroundColor,
     this.backgroundColor = Colors.white,
     this.suffixIcon = const Icon(Icons.arrow_drop_down),
-    this.selectedItemBuilder,
-    this.optionSeparator,
-    this.inputDecoration,
-    this.padding,
-    this.focusedBorderColor = Colors.black54,
-    this.borderColor = Colors.grey,
-    this.borderWidth = 0.4,
-    this.focusedBorderWidth = 0.4,
-    this.borderRadius = 12.0,
-    this.radiusGeometry,
-    this.showClearIcon = true,
-    this.maxItems,
     this.focusNode,
     this.controller,
     this.textIcon,
@@ -420,7 +395,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
       ),
       child: ListView.separated(
         separatorBuilder: (_, __) =>
-            widget.optionSeparator ?? const SizedBox(height: 0),
+            const SizedBox(height: 0),
         shrinkWrap: true,
         padding: EdgeInsets.zero,
         itemCount: options.length,
@@ -507,6 +482,9 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
     return Column(
       children: [
         ListTile(
+          splashColor: const DigitColors().transaparent,
+          focusColor: DigitColors().transaparent,
+          hoverColor: DigitColors().transaparent,
           title: Row(
             children: [
               if (isSelected)
@@ -539,7 +517,11 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                       Text(
                         option.name,
                         style: DigitTheme
-                            .instance.mobileTheme.textTheme.headlineSmall,
+                            .instance.mobileTheme.textTheme.headlineSmall?.copyWith(
+                          color: isSelected
+                              ? const DigitColors().white
+                              : const DigitColors().davyGray,
+                        ),
                       ),
                     ],
                   ),
@@ -628,9 +610,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
           final index = entry.key;
           final item = entry.value;
 
-          Widget chip = widget.selectedItemBuilder != null
-              ? widget.selectedItemBuilder!(context, item)
-              : _buildChip(item, widget.chipConfig);
+          Widget chip = _buildChip(item, widget.chipConfig);
 
           return chip;
         }),
