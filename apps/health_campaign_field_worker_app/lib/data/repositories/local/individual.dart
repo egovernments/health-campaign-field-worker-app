@@ -41,7 +41,7 @@ class IndividualLocalRepository
         ),
       ],
     );
-    final r = await selectQuery.get();
+
 
     final results = await (selectQuery
       ..where(
@@ -347,7 +347,11 @@ class IndividualLocalRepository
       }) async {
     final individualCompanion = entity.companion;
 
-    final nameCompanion = entity.name?.companion;
+    final nameCompanion = entity.name?.copyWith(individualClientReferenceId: entity.clientReferenceId,
+    auditDetails: entity.auditDetails,
+    clientAuditDetails: entity.clientAuditDetails,
+    ).companion;
+
     final addressCompanions = entity.address?.map((e) {
       return e
           .copyWith(
@@ -359,7 +363,7 @@ class IndividualLocalRepository
         [];
 
     final identifierCompanions = entity.identifiers?.map((e) {
-      return e.companion;
+      return e.copyWith(clientAuditDetails: entity.clientAuditDetails).companion;
     }).toList() ??
         [];
 
