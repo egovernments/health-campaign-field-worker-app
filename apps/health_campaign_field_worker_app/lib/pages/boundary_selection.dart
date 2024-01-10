@@ -70,8 +70,8 @@ class _BoundarySelectionPageState
         .toList()
         .isNotEmpty;
 
-    return WillPopScope(
-      onWillPop: () async => shouldPop,
+    return PopScope(
+      canPop: shouldPop,
       child: BlocBuilder<BoundaryBloc, BoundaryState>(
         builder: (context, state) {
           final selectedBoundary = state.selectedBoundaryMap.entries

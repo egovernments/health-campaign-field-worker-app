@@ -68,7 +68,7 @@ class UserModel extends EntityModel with UserModelMappable {
   final int? createdBy;
   final String? lastModifiedBy;
   final String? tenantId;
-  final List<String>? uuid;
+  final String? uuid;
   final String? createdDate;
   final bool? nonRecoverableError;
   final int? rowVersion;
