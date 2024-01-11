@@ -336,7 +336,6 @@ void main() {
                       DropdownItem(code: '5', name: 'fivssssssssssse'),
                     ],
                     selectionType: SelectionType.multiSelect,
-                    textIcon: Icons.article,
                   ),
                   MultiSelectDropDown<int>(
                     onOptionSelected:
@@ -369,7 +368,6 @@ void main() {
                       ),
                     ],
                     selectionType: SelectionType.multiSelect,
-                    textIcon: Icons.article,
                   ),
                   const SizedBox(
                     height: 16,
