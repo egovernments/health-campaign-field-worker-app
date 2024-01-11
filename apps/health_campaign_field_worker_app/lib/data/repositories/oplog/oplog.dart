@@ -210,7 +210,11 @@ abstract class OpLogManager<T extends EntityModel> {
         .clientReferenceIdEqualTo(model.clientReferenceId)
         .findAll();
 
-    for (final oplog in opLogs) {
+    for (final oplog in opLogs
+        .where(
+          (element) => element.entityType.name != DataModelType.service.name,
+        )
+        .toList()) {
       final entry = OpLogEntry.fromOpLog<T>(oplog);
 
       OpLogEntry updatedEntry = entry.copyWith(

@@ -671,7 +671,7 @@ class _RecordReferralDetailsPageState
                                                               AdditionalFieldsType
                                                                   .age
                                                                   .toValue(),
-                                                              age,
+                                                              '0$age',
                                                             ),
                                                           if (gender != null &&
                                                               gender
@@ -1036,10 +1036,10 @@ class _RecordReferralDetailsPageState
       _ageKey: FormControl<int>(
         value: referralState.mapOrNull(
           create: (value) => value.viewOnly
-              ? value.hfReferralModel?.additionalFields?.fields
+              ? int.parse(value.hfReferralModel?.additionalFields?.fields
                   .where((e) => e.key == AdditionalFieldsType.age.toValue())
                   .first
-                  .value
+                  .value)
               : null,
         ),
         disabled: referralState.mapOrNull(
