@@ -47,7 +47,7 @@ void main() {
           home: Scaffold(
             body: DigitSearchFormInput(
               controller: TextEditingController(),
-              onSuffixTap: () {
+              onSuffixTap: (value) {
                 onTapCalled = true;
               },
             ),
@@ -69,7 +69,7 @@ void main() {
             body: DigitSearchFormInput(
               controller: TextEditingController(),
               readOnly: true,
-              onSuffixTap: () {
+              onSuffixTap: (value) {
                 onTapCalled = true;
               },
             ),

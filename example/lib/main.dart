@@ -55,6 +55,7 @@ final List<TreeNode> Nodes = [
 ];
 
 final TreeSelectController<int> _controller = TreeSelectController();
+final controller = MultiSelectController<int>();
 
 void main() {
   runApp(
@@ -156,9 +157,6 @@ void main() {
                           errorMessage:
                               'Password must be at least 6 characters.'),
                     ],
-                    // onSuffixTap: (){print('tapppppppppp');},
-                    // suffixIcon: Icons.currency_rupee_sharp,
-                    // prefixIcon: Icons.currency_rupee,
                   ),
                   const SizedBox(
                     height: 8,
@@ -168,10 +166,6 @@ void main() {
                       print(value),
                       print(index),
                     },
-                    dropdownStyle: const DropdownStyle(
-                      elevation: 6,
-                      padding: EdgeInsets.all(5),
-                    ),
                     textEditingController: TextEditingController(),
                     textIcon: Icons.article,
                     dropdownType: DropdownType.profileSelect,
@@ -202,10 +196,6 @@ void main() {
                       print(value),
                       print(index),
                     },
-                    dropdownStyle: const DropdownStyle(
-                      elevation: 6,
-                      padding: EdgeInsets.all(5),
-                    ),
                     textEditingController: TextEditingController(),
                     textIcon: Icons.article,
                     items: [
@@ -230,10 +220,6 @@ void main() {
                       print(value),
                       print(index),
                     },
-                    dropdownStyle: const DropdownStyle(
-                      elevation: 6,
-                      padding: EdgeInsets.all(5),
-                    ),
                     textEditingController: TextEditingController(),
                     items: [
                       'apple',
@@ -254,15 +240,11 @@ void main() {
                   const SizedBox(
                     height: 16,
                   ),
-                  dropdown.DigitDropdown<int>(
+                  DigitDropdown(
                     onChange: (String value, String type) => {
                       print(value),
                       print(type),
                     },
-                    dropdownStyle: const DropdownStyle(
-                      elevation: 6,
-                      padding: EdgeInsets.all(5),
-                    ),
                     textEditingController: TextEditingController(),
                     dropdownType: DropdownType.nestedSelect,
                     items: const [
@@ -312,7 +294,6 @@ void main() {
                     treeSelectionType: TreeSelectionType.MultiSelect,
                     // chipConfig: const ChipConfig(wrapType: WrapType.wrap),
                     controller: _controller,
-                    optionTextStyle: const TextStyle(fontSize: 16),
                   ),
                   SizedBox(
                     height: 16,
@@ -326,8 +307,6 @@ void main() {
                     },
                     options: Nodes,
                     treeSelectionType: TreeSelectionType.singleSelect,
-                    // chipConfig: const ChipConfig(wrapType: WrapType.wrap),
-                    optionTextStyle: const TextStyle(fontSize: 16),
                   ),
                   const SizedBox(
                     height: 16,
@@ -344,8 +323,6 @@ void main() {
                       DropdownItem(code: '5', name: 'fivssssssssssse'),
                     ],
                     selectionType: SelectionType.multiSelect,
-                    // chipConfig: const ChipConfig(wrapType: WrapType.wrap),
-                    optionTextStyle: const TextStyle(fontSize: 16),
                   ),
                   MultiSelectDropDown<int>(
                     onOptionSelected:
@@ -360,8 +337,6 @@ void main() {
                     ],
                     selectionType: SelectionType.multiSelect,
                     textIcon: Icons.article,
-                    // chipConfig: const ChipConfig(wrapType: WrapType.wrap),
-                    optionTextStyle: const TextStyle(fontSize: 16),
                   ),
                   MultiSelectDropDown<int>(
                     onOptionSelected:
@@ -395,8 +370,6 @@ void main() {
                     ],
                     selectionType: SelectionType.multiSelect,
                     textIcon: Icons.article,
-                    // chipConfig: const ChipConfig(wrapType: WrapType.wrap),
-                    optionTextStyle: const TextStyle(fontSize: 16),
                   ),
                   const SizedBox(
                     height: 16,
@@ -432,7 +405,6 @@ void main() {
                       ),
                     ],
                     selectionType: SelectionType.nestedMultiSelect,
-                    optionTextStyle: const TextStyle(fontSize: 16),
                   ),
                   const SizedBox(
                     height: 8,
@@ -606,10 +578,6 @@ void main() {
                       print(value),
                       print(index),
                     },
-                    dropdownStyle: const DropdownStyle(
-                      elevation: 6,
-                      padding: EdgeInsets.all(5),
-                    ),
                     textEditingController: TextEditingController(),
                     items: [
                       'apple',

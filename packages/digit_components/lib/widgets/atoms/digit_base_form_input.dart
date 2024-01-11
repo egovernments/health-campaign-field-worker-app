@@ -1,8 +1,9 @@
-import 'package:digit_components/constants/BaseFormInputConstants.dart';
+
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import '../../constants/AppView.dart';
+import '../../constants/app_constants.dart';
 import '../../utils/validators/validator.dart';
 
 /// `BaseDigitFormInput` is a base class for different form input fields. It provides a set of customizable
@@ -116,12 +117,12 @@ class BaseDigitFormInput extends StatefulWidget {
       this.onSuffixTap,
       this.minLine = 1,
       this.maxLine = 1,
-      this.height = BaseConstants.defaultHeight,
+      this.height = Default.height,
       this.step = 1,
       this.minValue = 0,
       this.maxValue = 100,
       this.showCurser = true,
-      this.width = BaseConstants.defaultWidth,
+      this.width = Default.mobileInputWidth,
       this.onChange,
       this.keyboardType = TextInputType.text,
       this.validations,
@@ -224,10 +225,10 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
         : null;
 
     double inputWidth = AppView.isMobileView(MediaQuery.of(context).size.width)
-        ? BaseConstants.mobileInputWidth
-        : BaseConstants.desktopInputWidth;
+        ? Default.mobileInputWidth
+        : Default.desktopInputWidth;
 
-    return Container(
+    return SizedBox(
       width: inputWidth,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -273,7 +274,7 @@ class BaseDigitFormInputState extends State<BaseDigitFormInput> {
             decoration: InputDecoration(
               counterText: '',
               hoverColor: const DigitColors().transaparent,
-              constraints: inputWidth == BaseConstants.mobileInputWidth
+              constraints: inputWidth == Default.mobileInputWidth
                   ? BoxConstraints(
                       maxHeight: widget.minLine > 1 ? BaseConstants.inputMaxHeight : BaseConstants.inputMinHeight,
                       minHeight: BaseConstants.inputMinHeight,

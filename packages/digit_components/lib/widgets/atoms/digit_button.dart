@@ -21,7 +21,7 @@
 /// ```
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
-import '../../constants/DigitButtonConstants.dart';
+import '../../constants/app_constants.dart';
 import '../../enum/app_enums.dart';
 
 class DigitButton extends StatefulWidget {

@@ -82,12 +82,6 @@ void main() {
           fontWeight: FontWeight.w400,
         ),
         _DesignSpecification(
-          title: 'Caption M',
-          fontSize: 16,
-          color: light,
-          fontWeight: FontWeight.w400,
-        ),
-        _DesignSpecification(
           title: 'Link',
           fontSize: 16,
           color: normal,

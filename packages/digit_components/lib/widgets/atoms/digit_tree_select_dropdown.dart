@@ -5,12 +5,41 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import '../../constants/AppView.dart';
-import '../../constants/DropdownConstants.dart';
+import '../../constants/app_constants.dart';
 import '../../enum/app_enums.dart';
 import '../../models/TreeModel.dart';
 import '../../models/chipModel.dart';
 import '../helper_widget/selection_chip.dart';
 import '../helper_widget/tree_node_widget.dart';
+
+/// The TreeSelectDropDown component is a Flutter dropdown widget with tree-like structure, allowing the selection of multiple or single options
+/// It initializes the options, selected options, and other configurations.
+/// It supports the integration of a TreeSelectController for programmatically controlling the dropdown.
+/// It provides customization options for the appearance of the dropdown, chips, and other elements.
+///
+/// Example usage:
+/// ```dart
+///
+/// TreeSelectDropDown<int>(
+///             // Provide the list of options
+///             options: options,
+///             // Provide the initially selected options
+///             selectedOptions: selectedOptions,
+///             // Define the callback function when options are selected/deselected
+///             onOptionSelected: (List<TreeNode> selectedItems) {
+///               // Handle the selected items
+///               setState(() {
+///                 selectedOptions = selectedItems;
+///               });
+///             },
+///             // Customize the appearance of chips
+///             chipConfig: ChipConfig(),
+///             // Customize the suffix icon (dropdown arrow)
+///             suffixIcon: Icon(Icons.arrow_drop_down),
+///             // Customize the selection type (multiSelect or singleSelect)
+///             treeSelectionType: TreeSelectionType.multiSelect,
+///           ),
+///
 
 typedef OnOptionSelected<T> = void Function(List<TreeNode> selectedOptions);
 
@@ -24,12 +53,6 @@ class TreeSelectDropDown<int> extends StatefulWidget {
   final OnOptionSelected<int>? onOptionSelected;
 
   final ChipConfig chipConfig;
-
-  /// options configuration
-  final Color? optionsBackgroundColor;
-  final TextStyle? optionTextStyle;
-  final Widget? optionSeparator;
-  final bool alwaysShowOptionIcon;
 
   /// dropdownfield configuration
   final Icon? suffixIcon;
@@ -48,12 +71,8 @@ class TreeSelectDropDown<int> extends StatefulWidget {
     required this.options,
     this.treeSelectionType = TreeSelectionType.MultiSelect,
     this.selectedOptions = const [],
-    this.alwaysShowOptionIcon = false,
-    this.optionTextStyle,
     this.chipConfig = const ChipConfig(),
-    this.optionsBackgroundColor,
     this.suffixIcon = const Icon(Icons.arrow_drop_down),
-    this.optionSeparator,
     this.inputDecoration,
     this.focusNode,
     this.controller,
@@ -121,7 +140,6 @@ class _TreeSelectDropDownState<T> extends State<TreeSelectDropDown<T>> {
     if (_focusNode.hasFocus && mounted) {
       _overlayEntry = _buildOverlayEntry();
       Overlay.of(context).insert(_overlayEntry!);
-      // return;
     }
 
     if (_focusNode.hasFocus == false && _overlayEntry != null) {
@@ -192,8 +210,8 @@ class _TreeSelectDropDownState<T> extends State<TreeSelectDropDown<T>> {
 
     ///calculate the dropdown width based on the view
     double dropdownWidth = AppView.isMobileView(MediaQuery.of(context).size.width)
-        ? DropdownConstants.mobileInputWidth
-        : DropdownConstants.desktopInputWidth;
+        ? Default.mobileInputWidth
+        : Default.desktopInputWidth;
     return Column(
       children: [
         CompositedTransformTarget(
@@ -209,14 +227,14 @@ class _TreeSelectDropDownState<T> extends State<TreeSelectDropDown<T>> {
               onTap: _toggleFocus,
               child: StatefulBuilder(builder: (context, setState) {
                 return Container(
-                  height: 40,
+                  height: Default.height,
                   width: dropdownWidth,
                   constraints: const BoxConstraints(
-                    minWidth: 340,
-                    minHeight: 40,
+                    minWidth: Default.mobileInputWidth,
+                    minHeight: Default.height,
                   ),
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 8.0, vertical: 0),
+                      const EdgeInsets.symmetric(horizontal: kPadding,),
                   decoration: _getContainerDecoration(),
                   child: Row(
                     children: [
@@ -230,7 +248,7 @@ class _TreeSelectDropDownState<T> extends State<TreeSelectDropDown<T>> {
                       ),
                       AnimatedRotation(
                         turns: _selectionMode ? 0.5 : 0,
-                        duration: const Duration(milliseconds: 200),
+                        duration: DropdownConstants.animationDuration,
                         child: widget.suffixIcon,
                       ),
                     ],
@@ -285,8 +303,8 @@ class _TreeSelectDropDownState<T> extends State<TreeSelectDropDown<T>> {
                 borderRadius: BorderRadius.circular(50),
               ),
               padding:
-                  const EdgeInsets.only(left: 8, top: 0, right: 8, bottom: 0),
-              labelPadding: const EdgeInsets.only(top: 2, bottom: 2),
+                  const EdgeInsets.symmetric(horizontal: kPadding,),
+              labelPadding: const EdgeInsets.symmetric(vertical: kPadding/4),
               label: Text('Clear All',
                   style: TextStyle(color: const DigitColors().burningOrange)),
             ),
@@ -401,7 +419,6 @@ class _TreeSelectDropDownState<T> extends State<TreeSelectDropDown<T>> {
               offset: Offset.zero,
               child: Material(
                 borderRadius: BorderRadius.zero,
-                // elevation: 4,
                 shadowColor: null,
                 clipBehavior: Clip.none,
                 child: SingleChildScrollView(
@@ -433,7 +450,7 @@ class _TreeSelectDropDownState<T> extends State<TreeSelectDropDown<T>> {
       ),
       child: ListView.separated(
         separatorBuilder: (_, __) =>
-            widget.optionSeparator ?? const SizedBox(height: 0),
+            const SizedBox(height: 0),
         shrinkWrap: true,
         padding: EdgeInsets.zero,
         itemCount: options.length,

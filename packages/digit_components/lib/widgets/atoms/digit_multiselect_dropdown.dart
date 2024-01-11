@@ -5,11 +5,46 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import '../../constants/AppView.dart';
+import '../../constants/app_constants.dart';
 import '../../enum/app_enums.dart';
 import '../../models/DropdownModels.dart';
 import '../../models/chipModel.dart';
 import '../helper_widget/selection_chip.dart';
 import 'digit_checkbox_icon.dart';
+
+
+///the MultiSelectDropDown component is used to create a multi-select dropdown with a list of options.
+///The onOptionSelected callback is used to handle the selected items,
+/// and the appearance of the dropdown, chips,
+/// and other elements can be customized using various properties.
+///
+/// Example usage:
+/// ```dart
+/// MultiSelectDropDown(
+///             // Provide the list of options
+///             options: options,
+///             // Provide the initially selected options
+///             selectedOptions: selectedOptions,
+///             // Define the callback function when options are selected/deselected
+///             onOptionSelected: (List<DropdownItem> selectedItems) {
+///               // Handle the selected items
+///               setState(() {
+///                 selectedOptions = selectedItems;
+///               });
+///             },
+///             // Customize the appearance of chips
+///             chipConfig: ChipConfig(
+///               labelStyle: TextStyle(color: Colors.white),
+///               backgroundColor: Colors.blue,
+///               deleteIconColor: Colors.white,
+///             ),
+///             // Customize the suffix icon (dropdown arrow)
+///             suffixIcon: Icon(Icons.arrow_drop_down),
+///             // Customize the selection type (multiSelect or singleSelect)
+///             selectionType: SelectionType.multiSelect,
+///           ),
+///
 
 typedef OnOptionSelected<T> = void Function(
     List<DropdownItem> selectedOptions);
@@ -17,28 +52,16 @@ typedef OnOptionSelected<T> = void Function(
 class MultiSelectDropDown<int> extends StatefulWidget {
   /// selection type of the dropdown
   final SelectionType selectionType;
-  final IconData? textIcon;
 
   /// Options
   final List<DropdownItem> options;
   final List<DropdownItem> selectedOptions;
   final OnOptionSelected<int>? onOptionSelected;
 
-  /// selected option
-  final Icon? selectedOptionIcon;
-  final Color? selectedOptionTextColor;
-  final Color? selectedOptionBackgroundColor;
-
   /// chip configuration
   final ChipConfig chipConfig;
 
-  /// options configuration
-  final Color? optionsBackgroundColor;
-  final TextStyle? optionTextStyle;
-  final bool alwaysShowOptionIcon;
-
   /// dropdownfield configuration
-  final Color? backgroundColor;
   final Icon? suffixIcon;
 
   /// focus node
@@ -52,20 +75,12 @@ class MultiSelectDropDown<int> extends StatefulWidget {
     Key? key,
     required this.onOptionSelected,
     required this.options,
-    this.selectedOptionTextColor,
     this.chipConfig = const ChipConfig(),
     this.selectionType = SelectionType.multiSelect,
     this.selectedOptions = const [],
-    this.alwaysShowOptionIcon = false,
-    this.optionTextStyle,
-    this.selectedOptionIcon = const Icon(Icons.check),
-    this.selectedOptionBackgroundColor,
-    this.optionsBackgroundColor,
-    this.backgroundColor = Colors.white,
     this.suffixIcon = const Icon(Icons.arrow_drop_down),
     this.focusNode,
     this.controller,
-    this.textIcon,
   }) : super(key: key);
 
   @override
@@ -199,7 +214,9 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
 
   @override
   Widget build(BuildContext context) {
-    double dropdownWidth = MediaQuery.of(context).size.width < 600 ? 340 : 600;
+    double dropdownWidth = AppView.isMobileView(MediaQuery.of(context).size.width)
+        ? Default.mobileInputWidth
+        : Default.desktopInputWidth;
     return Column(
       children: [
         CompositedTransformTarget(
@@ -215,14 +232,14 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
               onTap: _toggleFocus,
               child: StatefulBuilder(builder: (context, setState) {
                 return Container(
-                  height: 40,
+                  height: Default.height,
                   width: dropdownWidth,
                   constraints: const BoxConstraints(
-                    minWidth: 340,
-                    minHeight: 40,
+                    minWidth: Default.mobileInputWidth,
+                    minHeight: Default.height,
                   ),
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 8.0, vertical: 0),
+                      const EdgeInsets.symmetric(horizontal: kPadding,),
                   decoration: _getContainerDecoration(),
                   child: Row(
                     children: [
@@ -233,7 +250,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                       ),
                       AnimatedRotation(
                         turns: _selectionMode ? 0.5 : 0,
-                        duration: const Duration(milliseconds: 200),
+                        duration: DropdownConstants.animationDuration,
                         child: widget.suffixIcon,
                       ),
                     ],
@@ -243,12 +260,11 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
             ),
           ),
         ),
-        const SizedBox(
-          height: 8,
+        const Gap(
+          kPadding,
         ),
         if (_anyItemSelected)
           SizedBox(
-            // height: 40,
             width: dropdownWidth,
             child: _getContainerContent(),
           )
@@ -275,8 +291,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
       borderRadius: BorderRadius.zero,
       border: _selectionMode
           ? Border.all(
-              color: const DigitColors().burningOrange ??
-                  const DigitColors().burningOrange,
+              color: const DigitColors().burningOrange,
               width: 1,
             )
           : Border.all(
@@ -307,17 +322,6 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
     super.dispose();
   }
 
-  /// Util method to map with index.
-  Iterable<E> mapIndexed<E, F>(
-      Iterable<F> items, E Function(int index, F item) f) sync* {
-    var index = 0;
-
-    for (final item in items) {
-      yield f(index, item);
-      index = index + 1;
-    }
-  }
-
   /// Handle the focus change on tap outside of the dropdown.
   void _onOutSideTap() {
     _focusNode.unfocus();
@@ -334,9 +338,9 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
 
   /// Create the overlay entry for the dropdown.
   OverlayEntry _buildOverlayEntry() {
-    // Calculate the offset and the size of the dropdown button
+    /// Calculate the offset and the size of the dropdown button
     final values = _calculateOffsetSize();
-    // Get the size from the first item in the values list
+    /// Get the size from the first item in the values list
     final size = values[0] as Size;
 
     return OverlayEntry(builder: (context) {
@@ -363,7 +367,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
               child: Material(
                 borderRadius: BorderRadius.zero,
                 shadowColor: null,
-                child: Container(
+                child: SizedBox(
                   width: size.width,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -483,8 +487,8 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
       children: [
         ListTile(
           splashColor: const DigitColors().transaparent,
-          focusColor: DigitColors().transaparent,
-          hoverColor: DigitColors().transaparent,
+          focusColor: const DigitColors().transaparent,
+          hoverColor: const DigitColors().transaparent,
           title: Row(
             children: [
               if (isSelected)
@@ -502,15 +506,15 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                 children: [
                   Row(
                     children: [
-                      if (widget.textIcon != null)
+                      if (option.textIcon != null)
                         Icon(
-                          widget.textIcon,
-                          size: 20,
+                          option.textIcon,
+                          size: DropdownConstants.textIconSize,
                           color: isSelected
                               ? const DigitColors().white
                               : const DigitColors().davyGray,
                         ),
-                      if (widget.textIcon != null)
+                      if (option.textIcon != null)
                         const Gap(
                           kPadding / 2,
                         ),
@@ -548,7 +552,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
               : backgroundColor,
           selectedTileColor: const DigitColors().burningOrange,
           contentPadding:
-              const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+              const EdgeInsets.symmetric(horizontal: 10),
           onTap: () {
             if (isSelected) {
               dropdownState(() {
@@ -627,7 +631,7 @@ class _MultiSelectDropDownState<T> extends State<MultiSelectDropDown<T>> {
                 borderRadius: BorderRadius.circular(50),
               ),
               padding:
-                  const EdgeInsets.only(left: 8, top: 0, right: 8, bottom: 0),
+                  const EdgeInsets.symmetric(horizontal: kPadding),
               labelPadding: const EdgeInsets.only(top: 2, bottom: 2),
               label: Text('Clear All',
                   style: TextStyle(color: const DigitColors().burningOrange)),

@@ -1,3 +1,4 @@
+import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
 class ScrollableContent extends StatelessWidget {
@@ -43,7 +44,7 @@ class ScrollableContent extends StatelessWidget {
                   ),
                 ),
                 if (footer != null) ...[
-                  const SizedBox(height: 16),
+                  const SizedBox(height: kPadding*2),
                   footer!,
                 ],
               ],

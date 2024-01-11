@@ -1,11 +1,37 @@
-import 'package:digit_components/constants/DropdownConstants.dart';
+
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import '../../constants/AppView.dart';
+import '../../constants/app_constants.dart';
 import '../../enum/app_enums.dart';
 import '../../models/DropdownModels.dart';
+
+///The DigitDropdownExample widget is a stateful widget that initializes a TextEditingController and a list of DropdownItem objects.
+///The DigitDropdown component is then used with the provided parameters,
+///and the onChange callback is used to handle the selected value.
+///
+/// Example usage:
+/// ```dart
+/// DigitDropdown(
+///       // Pass the TextEditingController
+///       textEditingController: _textEditingController,
+///
+///       // Pass the list of DropdownItems
+///       items: _dropdownItems,
+///
+///       // Callback function when an option is selected
+///       onChange: (value, index) {
+///         print('Selected: $value'); // Handle the selected value here
+///       },
+///
+///       // Optional parameters can be customized as needed
+///       icon: Icon(Icons.arrow_drop_down),
+///       dropdownType: DropdownType.defaultSelect,
+///      emptyItemText: 'No Options available',
+///    )
+///
 
 class DigitDropdown<T> extends StatefulWidget {
   final TextEditingController textEditingController;
@@ -17,14 +43,8 @@ class DigitDropdown<T> extends StatefulWidget {
   /// list of DropdownItems
   final List<DropdownItem> items;
 
-  /// style for dropdown... can be used to customize the dropdown style
-  final DropdownStyle dropdownStyle;
-
   /// used for text with icon
   final IconData? textIcon;
-
-  /// dropdownButtonStyles passes styles to OutlineButton.styleFrom()
-  final DropdownButtonStyle dropdownButtonStyle;
 
   /// dropdown button icon defaults to caret
   final Icon? icon;
@@ -37,8 +57,6 @@ class DigitDropdown<T> extends StatefulWidget {
   const DigitDropdown({
     Key? key,
     required this.items,
-    this.dropdownStyle = const DropdownStyle(),
-    this.dropdownButtonStyle = const DropdownButtonStyle(),
     this.icon,
     this.textIcon,
     required this.onChange,
@@ -91,6 +109,9 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
     _focusNode.removeListener(_onFocusChange);
     _focusNode.dispose();
 
+
+    // Dispose the AnimationController
+    _animationController.dispose();
     /// ...
     super.dispose();
   }
@@ -103,20 +124,19 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
 
   @override
   Widget build(BuildContext context) {
-    var style = widget.dropdownButtonStyle;
 
     /// Responsive width based on screen size
     double dropdownWidth =
         AppView.isMobileView(MediaQuery.of(context).size.width)
-            ? DropdownConstants.mobileInputWidth
-            : DropdownConstants.desktopInputWidth;
+            ? Default.mobileInputWidth
+            : Default.desktopInputWidth;
 
     /// link the overlay to the button
     return CompositedTransformTarget(
       link: this._layerLink,
       child: SizedBox(
-        width: style.width ?? dropdownWidth,
-        height: style.height,
+        width: dropdownWidth,
+        height: Default.height,
         child: TextField(
           onTap: () {
             _toggleDropdown();
@@ -145,7 +165,7 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
                   color: const DigitColors().burningOrange, width: 1.0),
               borderRadius: BorderRadius.zero,
             ),
-            contentPadding: style.padding ??
+            contentPadding:
                 const EdgeInsets.only(
                   left: 8,
                 ),
@@ -160,7 +180,7 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
     );
   }
 
-  /// fucntion to filteritems based on the input
+  /// function to filter items based on the input
   void _filterItems(String input) {
     List<DropdownItem> newFilteredItems = widget.items
         .where((item) =>
@@ -220,21 +240,21 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
               Positioned(
                 left: offset.dx,
                 top: topOffset,
-                width: widget.dropdownStyle.width ?? size.width,
+                width: size.width,
                 child: CompositedTransformFollower(
-                  offset: widget.dropdownStyle.offset ?? Offset(0, size.height),
+                  offset: Offset(0, size.height),
                   link: this._layerLink,
                   showWhenUnlinked: false,
                   child: Material(
-                    elevation: widget.dropdownStyle.elevation ?? 0,
-                    borderRadius: widget.dropdownStyle.borderRadius,
-                    color: widget.dropdownStyle.color,
+                    elevation: 0,
+                    borderRadius: BorderRadius.zero,
+                    color: const DigitColors().white,
                     clipBehavior: Clip.none,
                     child: SizeTransition(
                       axisAlignment: 1,
                       sizeFactor: _expandAnimation,
                       child: ConstrainedBox(
-                        constraints: widget.dropdownStyle.constraints ??
+                        constraints:
                             BoxConstraints(
                               maxHeight: MediaQuery.of(context).size.height -
                                   topOffset -
@@ -327,7 +347,6 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
                                 width: DropdownConstants.defaultProfileSize,
                                 child: CircleAvatar(
                                   radius: DropdownConstants.defaultImageRadius,
-
                                   /// This radius is the radius of the picture in the circle avatar itself.
                                   backgroundImage: item.value.profileImage,
                                   backgroundColor: const DigitColors().davyGray,
@@ -343,18 +362,17 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
                               children: [
                                 Row(
                                   children: [
-                                    if (widget.textIcon != null)
+                                    if (item.value.textIcon != null)
                                       Icon(
-                                        widget.textIcon,
+                                        item.value.textIcon,
                                         size: DropdownConstants.textIconSize,
                                         color: const DigitColors().davyGray,
                                       ),
-                                    if (widget.textIcon != null)
+                                    if (item.value.textIcon != null)
                                       const Gap(
                                         kPadding/2,
                                       ),
-                                    widget.textIcon != null
-                                        ? Text(
+                                    Text(
                                             item.value.name,
                                             style: DigitTheme.instance
                                                 .mobileTheme.textTheme.bodyLarge
@@ -362,7 +380,6 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
                                                     color: const DigitColors()
                                                         .davyGray),
                                           )
-                                        : Text(item.value.name),
                                   ],
                                 ),
                                 if (item.value.description != null)
@@ -412,10 +429,10 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
         /// header for the type
         groupedItems.add(
           Container(
-            padding: const EdgeInsets.all(10),
+            padding: DropdownConstants.nestedItemHeaderPadding,
             color: const DigitColors().alabasterWhite,
             child: Text(type,
-                style: DigitTheme.instance.mobileTheme.textTheme.bodyLarge
+                style: DigitTheme.instance.mobileTheme.textTheme.headlineSmall
                     ?.copyWith(
                   color: const DigitColors().davyGray,
                 )),
@@ -461,38 +478,70 @@ class _DigitDropdownState<T> extends State<DigitDropdown<T>>
                               : const DigitColors().white,
                         ),
                         padding: EdgeInsets.zero,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                left: 10,
-                                top: 12,
-                                bottom: 12,
-                              ),
-                              child: Text(
-                                item.name,
-                                style: DigitTheme.instance.mobileTheme.textTheme.bodyLarge?.copyWith(
-                                    color: const DigitColors().davyGray,
-                                ),
-                              ),
-                            ),
-                            if (item.description != null)
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 10,
-                                  bottom: 8,
-                                ),
-                                child: Text(
-                                  item.description!,
-                                  style: DigitTheme
-                                      .instance.mobileTheme.textTheme.bodySmall
-                                      ?.copyWith(
-                                    color: const DigitColors().davyGray,
+                        child: Padding(
+                          padding:
+                          widget.dropdownType == DropdownType.defaultSelect &&
+                              item.description == null
+                              ? DropdownConstants.defaultPadding
+                              : DropdownConstants.nestedItemPadding,
+                          child: Row(
+                            children: [
+                              if (widget.dropdownType ==
+                                  DropdownType.profileSelect)
+                                SizedBox(
+                                  height: DropdownConstants.defaultProfileSize,
+                                  width: DropdownConstants.defaultProfileSize,
+                                  child: CircleAvatar(
+                                    radius: DropdownConstants.defaultImageRadius,
+
+                                    /// This radius is the radius of the picture in the circle avatar itself.
+                                    backgroundImage: item.profileImage,
+                                    backgroundColor: const DigitColors().davyGray,
                                   ),
                                 ),
+                              if (widget.dropdownType ==
+                                  DropdownType.profileSelect)
+                                const Gap(
+                                  6,
+                                ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      if (item.textIcon != null)
+                                        Icon(
+                                          item.textIcon,
+                                          size: DropdownConstants.textIconSize,
+                                          color: const DigitColors().davyGray,
+                                        ),
+                                      if (item.textIcon != null)
+                                        const Gap(
+                                          kPadding/2,
+                                        ),
+                                      Text(
+                                        item.name,
+                                        style: DigitTheme.instance
+                                            .mobileTheme.textTheme.bodyLarge
+                                            ?.copyWith(
+                                            color: const DigitColors()
+                                                .davyGray),
+                                      )
+                                    ],
+                                  ),
+                                  if (item.description != null)
+                                    Text(
+                                      item  .description!,
+                                      style: DigitTheme.instance.mobileTheme
+                                          .textTheme.bodySmall
+                                          ?.copyWith(
+                                        color: const DigitColors().davyGray,
+                                      ),
+                                    ),
+                                ],
                               ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),

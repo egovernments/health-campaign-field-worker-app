@@ -68,10 +68,10 @@ class _DigitPasswordFormInputState extends BaseDigitFormInputState {
 
   @override
   void initState() {
-    // Call the initState method of the base class
+    /// Call the initState method of the base class
     super.initState();
 
-    // Set the initial value of isVisible to true
+    /// Set the initial value of isVisible to true
     isVisible = true;
   }
 

@@ -1,8 +1,9 @@
-import 'package:digit_components/constants/DigitCheckboxConstants.dart';
+
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_checkbox_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import '../../constants/app_constants.dart';
 import '../../enum/app_enums.dart';
 
 /// `DigitCheckbox` is a checkbox component with a label and optional icon customization.

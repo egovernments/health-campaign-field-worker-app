@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-
 import '../../utils/validators/validator.dart';
 import 'digit_base_form_input.dart';
 
-/// `DigitSearchFormInput` is a customizable formfield widget that extends the baseforminput.
+/// `DigitSearchFormInput` is a customizable form-field widget that extends the baseforminput.
 ///
 /// Example usage:
 /// ```dart
@@ -69,11 +68,13 @@ class _DigitSearchFormInputState extends BaseDigitFormInputState {
 
   @override
   void onSuffixIconClick({void Function()? customFunction}) {
-    // Use the onTap function directly
+    /// Use the onTap function directly
     widget.onSuffixTap?.call(widget.controller.text);
   }
+
+  @override
   Widget build(BuildContext context) {
-    // You can customize the appearance or behavior specific to the TextFormInput here
+    /// You can customize the appearance or behavior specific to the TextFormInput here
     return super.build(context);
   }
 }

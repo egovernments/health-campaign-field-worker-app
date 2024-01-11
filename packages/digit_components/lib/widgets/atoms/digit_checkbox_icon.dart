@@ -1,5 +1,6 @@
-import 'package:digit_components/constants/DigitCheckboxConstants.dart';
+
 import 'package:flutter/material.dart';
+import '../../constants/app_constants.dart';
 import '../../enum/app_enums.dart';
 
 /// `DigitCheckboxIcon` is a widget that represents the visual appearance of a checkbox.
