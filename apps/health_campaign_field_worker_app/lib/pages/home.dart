@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:attendance_management/blocs/attendance_abstract.dart';
 import 'package:attendance_management/widgets/attendance_acknowledgement.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
@@ -12,6 +13,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../blocs/auth/auth.dart';
+import '../blocs/hcm_attendance_bloc.dart';
 import '../blocs/search_households/search_households.dart';
 import '../blocs/search_referrals/search_referrals.dart';
 import '../blocs/sync/sync.dart';
@@ -412,8 +414,9 @@ class _HomePageState extends LocalizedState<HomePage> {
           onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => AttendanceAcknowledgementPage(label: 'From HCM APP',
-
+                builder: (context) => AttendanceAcknowledgementPage(
+                  label: 'Navigating From HCM APP',
+                  attendanceDependencies: HCMAttendanceBloc(),
                 ),
               ),
             );

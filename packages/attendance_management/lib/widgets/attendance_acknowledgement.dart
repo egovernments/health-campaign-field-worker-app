@@ -8,8 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../widgets/localized.dart';
+import '../blocs/attendance_abstract.dart';
 
 class AttendanceAcknowledgementPage extends LocalizedStatefulWidget {
+  final AttendanceDependencies attendanceDependencies;
   final String label;
   final String? subLabel;
   final String? description;
@@ -26,6 +28,7 @@ class AttendanceAcknowledgementPage extends LocalizedStatefulWidget {
   AttendanceAcknowledgementPage({
     super.key,
     super.appLocalizations,
+    required this.attendanceDependencies,
     required this.label,
     this.subLabel,
     this.description,
@@ -49,7 +52,19 @@ class AttendanceAcknowledgementPage extends LocalizedStatefulWidget {
 
 class _AttendanceAcknowledgementPageState
     extends State<AttendanceAcknowledgementPage> {
-  AttendanceTestBloc _attendanceTestBloc = AttendanceTestBloc();
+  late AttendanceTestBloc _attendanceTestBloc;
+  final AttendanceTestBloc _attendanceTestBloc2 = AttendanceTestBloc();
+
+  @override
+  void initState() {
+    _attendanceTestBloc = widget.attendanceDependencies.getAttendanceTestBloc(
+      'id4',
+      (newData) {
+        registerLocalEvent(newData);
+      },
+    );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,112 +72,126 @@ class _AttendanceAcknowledgementPageState
 
     return Scaffold(
       body: BlocProvider<AttendanceTestBloc>(
-        create: (context) => _attendanceTestBloc..add(FetchRegister('id4')),
-        child: BlocListener<AttendanceTestBloc, RegisterStates>(
-          listener: (context, state) {
-            if (state is RegisterLoaded) {
-              print('Attendance Package Loaded ${state.registers}');
-            }
-          },
-          child: ScrollableContent(
-            children: [
-              DigitCard(
-                padding: EdgeInsets.zero,
-                child: Column(children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: kPadding * 2,
-                      vertical: kPadding * 4,
-                    ),
-                    constraints: BoxConstraints(
-                      minWidth: MediaQuery.of(context).size.width,
-                      minHeight: MediaQuery.of(context).size.height / 3,
-                    ),
-                    color: widget.color,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          textAlign: TextAlign.center,
-                          widget.label,
-                          style: TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.w400,
-                            color: theme.colorScheme.onPrimary,
+        create: (context) => _attendanceTestBloc2,
+        child: BlocListener<AttendanceTestBloc, AttendanceStates>(
+          listener: (context, state) {},
+          child: BlocBuilder<AttendanceTestBloc, AttendanceStates>(
+            builder: (context, state) {
+              if (state is RegisterLoaded) {
+                return ScrollableContent(
+                  children: [
+                    DigitCard(
+                      padding: EdgeInsets.zero,
+                      child: Column(children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: kPadding * 2,
+                            vertical: kPadding * 4,
+                          ),
+                          constraints: BoxConstraints(
+                            minWidth: MediaQuery.of(context).size.width,
+                            minHeight: MediaQuery.of(context).size.height / 3,
+                          ),
+                          color: widget.color,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                textAlign: TextAlign.center,
+                                state.registers,
+                                style: TextStyle(
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.w400,
+                                  color: theme.colorScheme.onPrimary,
+                                ),
+                              ),
+                              Padding(
+                                padding: DigitTheme.instance.containerMargin,
+                                child: Icon(
+                                  widget.icon,
+                                  size: 32,
+                                  color: theme.colorScheme.onPrimary,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         Padding(
                           padding: DigitTheme.instance.containerMargin,
-                          child: Icon(
-                            widget.icon,
-                            size: 32,
-                            color: theme.colorScheme.onPrimary,
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: widget.descriptionWidget ??
+                                Text(
+                                  widget.description ?? '',
+                                  style: theme.textTheme.bodyMedium,
+                                ),
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: DigitTheme.instance.containerMargin,
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: widget.descriptionWidget ??
-                          Text(
-                            widget.description ?? '',
-                            style: theme.textTheme.bodyMedium,
-                          ),
-                    ),
-                  ),
-                  if (widget.enableBackToSearch)
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(
-                        kPadding,
-                        kPadding,
-                        kPadding,
-                        kPadding * 2,
-                      ),
-                      child: Column(
-                        children: [
-                          Column(
-                            children: [
-                              DigitElevatedButton(
-                                onPressed: () {
-
-                                },
-                                child: Text(widget.actionLabel ?? ''),
-                              ),
-                              const SizedBox(
-                                height: kPadding,
-                              ),
-                              DigitOutLineButton(
-                                buttonStyle: OutlinedButton.styleFrom(
-                                  backgroundColor: Colors.white,
-                                  side: BorderSide(
-                                    width: 1.0,
-                                    color: Theme.of(context).colorScheme.secondary,
-                                  ),
-                                  minimumSize: Size(
-                                    MediaQuery.of(context).size.width / 1,
-                                    50,
-                                  ),
-                                  shape: null,
+                        if (widget.enableBackToSearch)
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(
+                              kPadding,
+                              kPadding,
+                              kPadding,
+                              kPadding * 2,
+                            ),
+                            child: Column(
+                              children: [
+                                Column(
+                                  children: [
+                                    DigitElevatedButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text(widget.actionLabel ?? ''),
+                                    ),
+                                    const SizedBox(
+                                      height: kPadding,
+                                    ),
+                                    DigitOutLineButton(
+                                      buttonStyle: OutlinedButton.styleFrom(
+                                        backgroundColor: Colors.white,
+                                        side: BorderSide(
+                                          width: 1.0,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .secondary,
+                                        ),
+                                        minimumSize: Size(
+                                          MediaQuery.of(context).size.width / 1,
+                                          50,
+                                        ),
+                                        shape: null,
+                                      ),
+                                      label: "Attendance",
+                                      onPressed: () {},
+                                    ),
+                                  ],
                                 ),
-                                label: "Attendance",
-                                onPressed: () {
-
-                                },
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ],
-                      ),
+                      ]),
                     ),
-                ]),
-              ),
-            ],
+                  ],
+                );
+              }
+
+              return Center(
+                  child: Column(
+                children: [
+                  const CircularProgressIndicator(),
+                  Text("Loading... ${widget.label}"),
+                ],
+              ));
+            },
           ),
         ),
       ),
     );
+  }
+
+  void registerLocalEvent(String newData) {
+    _attendanceTestBloc2.add(LoadHCMData(newData));
   }
 }
