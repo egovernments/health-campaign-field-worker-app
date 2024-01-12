@@ -849,6 +849,17 @@ class _RecordReferralDetailsPageState
                                                         '')
                                                     .toString(),
                                               ),
+                                          'min': (_) => localizations
+                                              .translate(
+                                                i18.common.minValue,
+                                              )
+                                              .replaceAll(
+                                                '{}',
+                                                (context.selectedProjectType
+                                                            ?.validMinAge ??
+                                                        '')
+                                                    .toString(),
+                                              ),
                                         },
                                       ),
                                       BlocBuilder<AppInitializationBloc,
@@ -1046,11 +1057,15 @@ class _RecordReferralDetailsPageState
               create: (value) => value.viewOnly,
             ) ??
             false,
-        validators: (context.selectedProjectType?.validMaxAge != null)
+        validators: (context.selectedProjectType?.validMaxAge != null &&
+                context.selectedProjectType?.validMinAge != null)
             ? [
                 Validators.required,
                 Validators.max<int>(
                   context.selectedProjectType?.validMaxAge ?? 60,
+                ),
+                Validators.min<int>(
+                  context.selectedProjectType?.validMinAge ?? 3,
                 ),
               ]
             : [Validators.required],
