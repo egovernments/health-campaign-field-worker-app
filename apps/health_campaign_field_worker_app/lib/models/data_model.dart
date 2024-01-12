@@ -7,6 +7,8 @@ export 'entities/additional_fields_type.dart';
 export 'entities/address.dart';
 export 'entities/address_type.dart';
 export 'entities/attributes.dart';
+export 'entities/attendance_register.dart';
+export 'entities/attendee.dart';
 export 'entities/beneficiary_type.dart';
 export 'entities/blood_group.dart';
 export 'entities/boundary.dart';
@@ -41,6 +43,7 @@ export 'entities/side_effect.dart';
 export 'entities/status.dart';
 export 'entities/stock.dart';
 export 'entities/stock_reconciliation.dart';
+export 'entities/staff.dart';
 export 'entities/target.dart';
 export 'entities/task.dart';
 export 'entities/task_resource.dart';
@@ -177,4 +180,5 @@ enum DataModelType {
   downsync,
   downsyncCriteria,
   hFReferral,
+  attendanceRegister
 }

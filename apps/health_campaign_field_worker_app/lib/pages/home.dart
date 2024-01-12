@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:attendance_management/widgets/attendance_acknowledgement.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
@@ -411,8 +412,8 @@ class _HomePageState extends LocalizedState<HomePage> {
           onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => DriftDbViewer(
-                  context.read<LocalSqlDataStore>(),
+                builder: (context) => AttendanceAcknowledgementPage(label: 'From HCM APP',
+
                 ),
               ),
             );

@@ -1,7 +1,8 @@
 library attendance_management;
 
-/// A Calculator.
-class Calculator {
-  /// Returns [value] plus 1.
-  int addOne(int value) => value + 1;
-}
+export 'models/attendance_register.dart';
+export 'models/attendee.dart';
+export 'models/staff.dart';
+export 'blocs/app_localization.dart';
+
+

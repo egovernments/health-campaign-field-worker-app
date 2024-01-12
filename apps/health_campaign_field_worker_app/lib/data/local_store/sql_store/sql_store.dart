@@ -14,6 +14,8 @@ import '../../../models/entities/transaction_reason.dart';
 import '../../../models/entities/transaction_type.dart';
 import '../../../models/pgr_complaints/pgr_complaints.dart';
 import 'tables/address.dart';
+import 'tables/attendance_register.dart';
+import 'tables/attendee.dart';
 import 'tables/attributes.dart';
 import 'tables/boundary.dart';
 import 'tables/document.dart';
@@ -43,6 +45,7 @@ import 'tables/service_definition.dart';
 import 'tables/side_effect.dart';
 import 'tables/stock.dart';
 import 'tables/stock_reconciliation.dart';
+import 'tables/staff.dart';
 import 'tables/target.dart';
 import 'tables/task.dart';
 import 'tables/task_resource.dart';
@@ -53,6 +56,8 @@ part 'sql_store.g.dart';
 
 @DriftDatabase(tables: [
   Address,
+  AttendanceRegister,
+  Attendee,
   Name,
   Boundary,
   Document,
@@ -80,6 +85,7 @@ part 'sql_store.g.dart';
   Service,
   ServiceAttributes,
   ServiceDefinition,
+  Staff,
   Attributes,
   Locality,
   PgrService,

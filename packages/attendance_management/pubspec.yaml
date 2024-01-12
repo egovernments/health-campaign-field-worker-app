@@ -10,11 +10,20 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  digit_components: ^0.0.1
+  flutter_bloc: ^8.1.1
+  dart_mappable: ^1.2.0
+  drift: ^1.7.1
+  equatable: ^2.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
+  dart_mappable_builder: ^1.2.1
+
+dependency_overrides:
+  intl: ^0.18.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

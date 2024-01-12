@@ -1,0 +1,33 @@
+{
+  "name": "Attendee",
+  "attributes": [
+    {
+      "name": "id",
+      "type": "String",
+      "includeForQuery": true,
+      "nullable": true
+    },
+    {
+      "name": "tenantId",
+      "type": "String"
+    },
+    {
+      "name": "registerId",
+      "type": "String"
+    },
+    {
+      "name": "individualId",
+      "type": "String"
+    },
+    {
+      "name": "enrollmentDate",
+      "type": "int",
+      "nullable": true
+    },
+    {
+      "name": "denrollmentDate",
+      "type": "int",
+      "nullable": true
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "name": "attendanceRegister",
+  "entity-name": "Attendance",
+  "createRepository": true,
+  "isEnum": false,
+  "attributes": [
+    {
+      "name": "id",
+      "type": "String",
+      "includeForQuery": true,
+      "nullable": true
+    },
+    {
+      "name": "tenantId",
+      "type": "String"
+    },
+    {
+      "name": "registerNumber",
+      "type": "String"
+    },
+    {
+      "name": "name",
+      "type": "String"
+    },
+    {
+      "name": "referenceId",
+      "type": "String"
+    },
+    {
+      "name": "serviceCode",
+      "type": "String"
+    },
+    {
+      "name": "status",
+      "type": "String"
+    }
+  ],
+  "customAttributes": [
+    {
+      "name": "staff",
+      "type": "Staff",
+      "isList": true,
+      "isEnum": false,
+      "includeForQuery": true,
+      "includeForEntity": true,
+      "includeForTable": false,
+      "nullable": true
+    },
+    {
+      "name": "attendees",
+      "type": "Attendee",
+      "isList": true,
+      "isEnum": false,
+      "includeForQuery": true,
+      "includeForEntity": true,
+      "includeForTable": false,
+      "nullable": true
+    }
+  ],
+  "dateTimeAttributes": [
+    {
+      "name": "startDate",
+      "type": "DateTime",
+      "nullable": true
+    },
+    {
+      "name": "endDate",
+      "type": "DateTime",
+      "nullable": true
+    }
+  ]
+}
+
+
+

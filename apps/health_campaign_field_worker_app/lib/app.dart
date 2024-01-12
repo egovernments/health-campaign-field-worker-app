@@ -1,3 +1,4 @@
+import 'package:attendance_management/blocs/attendance_test_bloc.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:location/location.dart';
 import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
 import 'blocs/boundary/boundary.dart';
+import 'blocs/hcm_attendance_bloc.dart';
 import 'blocs/localization/app_localization.dart';
 import 'blocs/localization/localization.dart';
 import 'blocs/project/project.dart';
@@ -70,6 +72,12 @@ class MainApplicationState extends State<MainApplication>
           sql: widget.sql,
           child: MultiBlocProvider(
             providers: [
+              BlocProvider(
+                create: (_) {
+                  return HCMAttendanceBloc()..add(LoadAttendancePackage());
+                },
+                lazy: false,
+              ),
               BlocProvider(
                 create: (_) {
                   return LocationBloc(location: Location())
