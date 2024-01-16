@@ -1,12 +1,10 @@
 import 'dart:async';
 
-import 'package:attendance_management/blocs/attendance_abstract.dart';
 import 'package:attendance_management/widgets/attendance_acknowledgement.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
-import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,7 +17,6 @@ import '../blocs/search_referrals/search_referrals.dart';
 import '../blocs/sync/sync.dart';
 import '../data/data_repository.dart';
 import '../data/local_store/secure_store/secure_store.dart';
-import '../data/local_store/sql_store/sql_store.dart';
 import '../models/data_model.dart';
 import '../router/app_router.dart';
 import '../utils/debound.dart';
@@ -423,6 +420,13 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
+      i18.home.manageAttendanceLabel: HomeItemCard(
+        icon: Icons.table_chart,
+        label: i18.home.manageAttendanceLabel,
+        onPressed: () {
+          context.router.push(ManageAttendanceRoute());
+        },
+      ),
     };
 
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
@@ -452,6 +456,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.viewReportsLabel,
       i18.home.db,
       i18.home.beneficiaryReferralLabel,
+      i18.home.manageAttendanceLabel,
     ];
 
     final List<String> filteredLabels = homeItemsLabel
@@ -460,7 +465,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .map((e) => e.displayName)
                 .toList()
                 .contains(element) ||
-            element == i18.home.db)
+            element == i18.home.db ||
+            element == i18.home.manageAttendanceLabel)
         .toList();
 
     final showcaseKeys =
