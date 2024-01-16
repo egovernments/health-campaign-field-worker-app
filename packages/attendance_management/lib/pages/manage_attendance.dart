@@ -66,7 +66,7 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
         list.add(RegisterCard(
           data: projectList[i] as Map<String, dynamic>,
           regisId: 'WR/2023-24/HCM-12345',
-          tenatId: 'mz',
+          tenantId: 'mz',
           show: true,
           startDate: DateTime.fromMillisecondsSinceEpoch(
             1704868822000,
@@ -122,7 +122,7 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
 
 class RegisterCard extends StatelessWidget {
   final Map<String, dynamic> data;
-  final String tenatId;
+  final String tenantId;
   final String regisId;
   final bool show;
   final DateTime startDate;
@@ -131,7 +131,7 @@ class RegisterCard extends StatelessWidget {
   const RegisterCard({
     super.key,
     required this.data,
-    required this.tenatId,
+    required this.tenantId,
     required this.regisId,
     this.show = false,
     required this.startDate,

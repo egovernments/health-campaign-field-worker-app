@@ -5,13 +5,14 @@ import 'package:drift/drift.dart';
 import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
 
+
 @MappableClass(ignoreNull: true)
 class AttendanceRegisterSearchModel extends EntitySearchModel {
   final String? id;
   final List<String>? clientReferenceId;
   final List<StaffSearchModel>? staff;
   final List<AttendeeSearchModel>? attendees;
-  
+
   AttendanceRegisterSearchModel({
     this.id,
     this.clientReferenceId,
