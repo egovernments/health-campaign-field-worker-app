@@ -53,7 +53,7 @@ class AttendanceAcknowledgementPage extends LocalizedStatefulWidget {
 class _AttendanceAcknowledgementPageState
     extends State<AttendanceAcknowledgementPage> {
   late AttendanceTestBloc _attendanceTestBloc;
-  final AttendanceTestBloc _attendanceTestBloc2 = AttendanceTestBloc();
+  late AttendanceTestBloc _attendanceTestBloc2;
 
   @override
   void initState() {
@@ -98,7 +98,7 @@ class _AttendanceAcknowledgementPageState
                             children: [
                               Text(
                                 textAlign: TextAlign.center,
-                                state.registers,
+                                state.id,
                                 style: TextStyle(
                                   fontSize: 32,
                                   fontWeight: FontWeight.w400,
@@ -192,6 +192,6 @@ class _AttendanceAcknowledgementPageState
   }
 
   void registerLocalEvent(String newData) {
-    _attendanceTestBloc2.add(LoadHCMData(newData));
+    _attendanceTestBloc2.add(LoadAttendanceRegisterData(newData));
   }
 }

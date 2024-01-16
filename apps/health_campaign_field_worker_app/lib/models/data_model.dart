@@ -7,8 +7,6 @@ export 'entities/additional_fields_type.dart';
 export 'entities/address.dart';
 export 'entities/address_type.dart';
 export 'entities/attributes.dart';
-export 'entities/attendance_register.dart';
-export 'entities/attendee.dart';
 export 'entities/beneficiary_type.dart';
 export 'entities/blood_group.dart';
 export 'entities/boundary.dart';
@@ -43,7 +41,6 @@ export 'entities/side_effect.dart';
 export 'entities/status.dart';
 export 'entities/stock.dart';
 export 'entities/stock_reconciliation.dart';
-export 'entities/staff.dart';
 export 'entities/target.dart';
 export 'entities/task.dart';
 export 'entities/task_resource.dart';
@@ -54,6 +51,7 @@ export 'oplog/oplog_entry.dart';
 export 'pgr_complaints/pgr_address.dart';
 export 'pgr_complaints/pgr_complaints.dart';
 export 'pgr_complaints/pgr_complaints_response.dart';
+export 'entities/hcm_attendance_model.dart';
 
 abstract class DataModel {
   final String? boundaryCode;
@@ -180,5 +178,5 @@ enum DataModelType {
   downsync,
   downsyncCriteria,
   hFReferral,
-  attendanceRegister
+  hcmAttendance,
 }
