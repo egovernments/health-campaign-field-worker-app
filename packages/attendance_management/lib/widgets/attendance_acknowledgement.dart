@@ -52,17 +52,10 @@ class AttendanceAcknowledgementPage extends LocalizedStatefulWidget {
 
 class _AttendanceAcknowledgementPageState
     extends State<AttendanceAcknowledgementPage> {
-  late AttendanceTestBloc _attendanceTestBloc;
-  late AttendanceTestBloc _attendanceTestBloc2;
+  final AttendanceTestBloc _attendanceTestBloc = AttendanceTestBloc(const RegisterLoading());
 
   @override
   void initState() {
-    _attendanceTestBloc = widget.attendanceDependencies.getAttendanceTestBloc(
-      'id4',
-      (newData) {
-        registerLocalEvent(newData);
-      },
-    );
     super.initState();
   }
 
@@ -72,7 +65,8 @@ class _AttendanceAcknowledgementPageState
 
     return Scaffold(
       body: BlocProvider<AttendanceTestBloc>(
-        create: (context) => _attendanceTestBloc2,
+        create: (context) =>
+            _attendanceTestBloc..add(AttendanceEvents.initial(widget.attendanceDependencies)),
         child: BlocListener<AttendanceTestBloc, AttendanceStates>(
           listener: (context, state) {},
           child: BlocBuilder<AttendanceTestBloc, AttendanceStates>(
@@ -189,9 +183,5 @@ class _AttendanceAcknowledgementPageState
         ),
       ),
     );
-  }
-
-  void registerLocalEvent(String newData) {
-    _attendanceTestBloc2.add(LoadAttendanceRegisterData(newData));
   }
 }
