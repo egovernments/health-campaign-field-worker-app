@@ -1,9 +1,9 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
-export "FLUTTER_ROOT=/home/naveen-gloify/snap/flutter/common/flutter"
-export "FLUTTER_APPLICATION_PATH=/home/naveen-gloify/StudioProjects/health-campaign-field-worker-app/packages/attendance_management"
+export "FLUTTER_ROOT=C:\src\flutter"
+export "FLUTTER_APPLICATION_PATH=C:\Users\egov-\Documents\eGov Projects\health-campaign-field-worker-app\packages\attendance_management"
 export "COCOAPODS_PARALLEL_CODE_SIGN=true"
-export "FLUTTER_TARGET=lib/main.dart"
+export "FLUTTER_TARGET=lib\main.dart"
 export "FLUTTER_BUILD_DIR=build"
 export "FLUTTER_BUILD_NAME=0.0.1"
 export "FLUTTER_BUILD_NUMBER=0.0.1"
