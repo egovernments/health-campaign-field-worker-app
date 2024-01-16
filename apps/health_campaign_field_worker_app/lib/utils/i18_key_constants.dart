@@ -858,6 +858,7 @@ class Home {
   String get deleteAllLabel => 'HOME_DELETE_ALL_LABEL';
   String get db => 'HOME_DB_LABEL';
   String get beneficiaryReferralLabel => 'HOME_BENEFICIARY_REFERRAL_LABEL';
+  String get manageAttendanceLabel => 'HOME_MANAGE_ATTENDANCE_LABEL';
 }
 
 class SearchBeneficiary {
