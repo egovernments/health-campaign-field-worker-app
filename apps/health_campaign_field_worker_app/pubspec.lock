@@ -565,14 +565,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.5.2+1"
-  equatable:
-    dependency: "direct main"
-    description:
-      name: equatable
-      sha256: c2b87cb7756efdf69892005af546c56c0b5037f54d2a88269b4f347a505e3ca2
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.5"
   expandable:
     dependency: "direct main"
     description:
@@ -944,14 +936,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.2.0"
-  get_it:
-    dependency: transitive
-    description:
-      name: get_it
-      sha256: d0b88dc35a7f97fd91fec0cf8f165abd97a57977968d8fc02ba0bc92e14ba07e
-      url: "https://pub.dev"
-    source: hosted
-    version: "7.6.6"
   glob:
     dependency: transitive
     description:
@@ -1056,14 +1040,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.3.0"
-  injectable:
-    dependency: "direct main"
-    description:
-      name: injectable
-      sha256: cd3c422e13270c81f64ab73c80406b2b2ed563fe59d0ff2093eb7eee63d0bbeb
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.3.2"
   intl:
     dependency: "direct main"
     description:
