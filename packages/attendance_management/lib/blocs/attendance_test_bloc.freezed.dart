@@ -16,42 +16,44 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$AttendanceEvents {
-  String get id => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
+    required TResult Function(AttendanceDependencies attendanceDependencies)
+        initial,
     required TResult Function(String id) loadHCMData,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(AttendanceDependencies attendanceDependencies)? initial,
     TResult? Function(String id)? loadHCMData,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
+    TResult Function(AttendanceDependencies attendanceDependencies)? initial,
     TResult Function(String id)? loadHCMData,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
+    required TResult Function(InitialAttendance value) initial,
     required TResult Function(LoadAttendanceRegisterData value) loadHCMData,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(InitialAttendance value)? initial,
     TResult? Function(LoadAttendanceRegisterData value)? loadHCMData,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
+    TResult Function(InitialAttendance value)? initial,
     TResult Function(LoadAttendanceRegisterData value)? loadHCMData,
     required TResult orElse(),
   }) =>
-      throw _privateConstructorUsedError;
-
-  @JsonKey(ignore: true)
-  $AttendanceEventsCopyWith<AttendanceEvents> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -60,8 +62,6 @@ abstract class $AttendanceEventsCopyWith<$Res> {
   factory $AttendanceEventsCopyWith(
           AttendanceEvents value, $Res Function(AttendanceEvents) then) =
       _$AttendanceEventsCopyWithImpl<$Res, AttendanceEvents>;
-  @useResult
-  $Res call({String id});
 }
 
 /// @nodoc
@@ -73,29 +73,151 @@ class _$AttendanceEventsCopyWithImpl<$Res, $Val extends AttendanceEvents>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+}
+
+/// @nodoc
+abstract class _$$InitialAttendanceCopyWith<$Res> {
+  factory _$$InitialAttendanceCopyWith(
+          _$InitialAttendance value, $Res Function(_$InitialAttendance) then) =
+      __$$InitialAttendanceCopyWithImpl<$Res>;
+  @useResult
+  $Res call({AttendanceDependencies attendanceDependencies});
+}
+
+/// @nodoc
+class __$$InitialAttendanceCopyWithImpl<$Res>
+    extends _$AttendanceEventsCopyWithImpl<$Res, _$InitialAttendance>
+    implements _$$InitialAttendanceCopyWith<$Res> {
+  __$$InitialAttendanceCopyWithImpl(
+      _$InitialAttendance _value, $Res Function(_$InitialAttendance) _then)
+      : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
+    Object? attendanceDependencies = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
+    return _then(_$InitialAttendance(
+      null == attendanceDependencies
+          ? _value.attendanceDependencies
+          : attendanceDependencies // ignore: cast_nullable_to_non_nullable
+              as AttendanceDependencies,
+    ));
   }
 }
 
 /// @nodoc
-abstract class _$$LoadAttendanceRegisterDataCopyWith<$Res>
-    implements $AttendanceEventsCopyWith<$Res> {
+
+class _$InitialAttendance implements InitialAttendance {
+  const _$InitialAttendance(this.attendanceDependencies);
+
+  @override
+  final AttendanceDependencies attendanceDependencies;
+
+  @override
+  String toString() {
+    return 'AttendanceEvents.initial(attendanceDependencies: $attendanceDependencies)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$InitialAttendance &&
+            (identical(other.attendanceDependencies, attendanceDependencies) ||
+                other.attendanceDependencies == attendanceDependencies));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, attendanceDependencies);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$InitialAttendanceCopyWith<_$InitialAttendance> get copyWith =>
+      __$$InitialAttendanceCopyWithImpl<_$InitialAttendance>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(AttendanceDependencies attendanceDependencies)
+        initial,
+    required TResult Function(String id) loadHCMData,
+  }) {
+    return initial(attendanceDependencies);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(AttendanceDependencies attendanceDependencies)? initial,
+    TResult? Function(String id)? loadHCMData,
+  }) {
+    return initial?.call(attendanceDependencies);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(AttendanceDependencies attendanceDependencies)? initial,
+    TResult Function(String id)? loadHCMData,
+    required TResult orElse(),
+  }) {
+    if (initial != null) {
+      return initial(attendanceDependencies);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(InitialAttendance value) initial,
+    required TResult Function(LoadAttendanceRegisterData value) loadHCMData,
+  }) {
+    return initial(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(InitialAttendance value)? initial,
+    TResult? Function(LoadAttendanceRegisterData value)? loadHCMData,
+  }) {
+    return initial?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(InitialAttendance value)? initial,
+    TResult Function(LoadAttendanceRegisterData value)? loadHCMData,
+    required TResult orElse(),
+  }) {
+    if (initial != null) {
+      return initial(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class InitialAttendance implements AttendanceEvents {
+  const factory InitialAttendance(
+          final AttendanceDependencies attendanceDependencies) =
+      _$InitialAttendance;
+
+  AttendanceDependencies get attendanceDependencies;
+  @JsonKey(ignore: true)
+  _$$InitialAttendanceCopyWith<_$InitialAttendance> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$LoadAttendanceRegisterDataCopyWith<$Res> {
   factory _$$LoadAttendanceRegisterDataCopyWith(
           _$LoadAttendanceRegisterData value,
           $Res Function(_$LoadAttendanceRegisterData) then) =
       __$$LoadAttendanceRegisterDataCopyWithImpl<$Res>;
-  @override
   @useResult
   $Res call({String id});
 }
@@ -157,6 +279,8 @@ class _$LoadAttendanceRegisterData implements LoadAttendanceRegisterData {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
+    required TResult Function(AttendanceDependencies attendanceDependencies)
+        initial,
     required TResult Function(String id) loadHCMData,
   }) {
     return loadHCMData(id);
@@ -165,6 +289,7 @@ class _$LoadAttendanceRegisterData implements LoadAttendanceRegisterData {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(AttendanceDependencies attendanceDependencies)? initial,
     TResult? Function(String id)? loadHCMData,
   }) {
     return loadHCMData?.call(id);
@@ -173,6 +298,7 @@ class _$LoadAttendanceRegisterData implements LoadAttendanceRegisterData {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
+    TResult Function(AttendanceDependencies attendanceDependencies)? initial,
     TResult Function(String id)? loadHCMData,
     required TResult orElse(),
   }) {
@@ -185,6 +311,7 @@ class _$LoadAttendanceRegisterData implements LoadAttendanceRegisterData {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
+    required TResult Function(InitialAttendance value) initial,
     required TResult Function(LoadAttendanceRegisterData value) loadHCMData,
   }) {
     return loadHCMData(this);
@@ -193,6 +320,7 @@ class _$LoadAttendanceRegisterData implements LoadAttendanceRegisterData {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(InitialAttendance value)? initial,
     TResult? Function(LoadAttendanceRegisterData value)? loadHCMData,
   }) {
     return loadHCMData?.call(this);
@@ -201,6 +329,7 @@ class _$LoadAttendanceRegisterData implements LoadAttendanceRegisterData {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
+    TResult Function(InitialAttendance value)? initial,
     TResult Function(LoadAttendanceRegisterData value)? loadHCMData,
     required TResult orElse(),
   }) {
@@ -215,9 +344,7 @@ abstract class LoadAttendanceRegisterData implements AttendanceEvents {
   const factory LoadAttendanceRegisterData(final String id) =
       _$LoadAttendanceRegisterData;
 
-  @override
   String get id;
-  @override
   @JsonKey(ignore: true)
   _$$LoadAttendanceRegisterDataCopyWith<_$LoadAttendanceRegisterData>
       get copyWith => throw _privateConstructorUsedError;
