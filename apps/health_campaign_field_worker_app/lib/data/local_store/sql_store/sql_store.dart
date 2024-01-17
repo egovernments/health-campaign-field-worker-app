@@ -15,6 +15,8 @@ import '../../../models/entities/transaction_type.dart';
 import '../../../models/pgr_complaints/pgr_complaints.dart';
 import 'tables/address.dart';
 import 'tables/attributes.dart';
+import 'tables/attendance_register.dart';
+import 'tables/attendee.dart';
 import 'tables/boundary.dart';
 import 'tables/document.dart';
 import 'tables/downsync.dart';
@@ -53,6 +55,8 @@ part 'sql_store.g.dart';
 
 @DriftDatabase(tables: [
   Address,
+  AttendanceRegister,
+  Attendee,
   Name,
   Boundary,
   Document,
