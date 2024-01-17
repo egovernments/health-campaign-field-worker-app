@@ -21,10 +21,9 @@ class AttendanceRegister extends Table
   IntColumn get clientModifiedTime => integer().nullable()();
   TextColumn get auditModifiedBy => text().nullable()();
   IntColumn get auditModifiedTime => integer().nullable()();
-  TextColumn get clientReferenceId => text()();
   BoolColumn get isDeleted => boolean().nullable().withDefault(const Constant(false))();
   IntColumn get rowVersion => integer().nullable()();
 
   @override
-  Set<Column> get primaryKey => { auditCreatedBy, clientReferenceId,  };
+  Set<Column> get primaryKey => { id, auditCreatedBy,  };
 }

@@ -227,6 +227,12 @@ class MainApplicationState extends State<MainApplication>
                             projectResourceRemoteRepository: ctx.read<
                                 RemoteRepository<ProjectResourceModel,
                                     ProjectResourceSearchModel>>(),
+                            attendanceLocalRepository: ctx.read<
+                                LocalRepository<HCMAttendanceRegisterModel,
+                                    HCMAttendanceSearchModel>>(),
+                            attendanceRemoteRepository: ctx.read<
+                                RemoteRepository<HCMAttendanceRegisterModel,
+                                    HCMAttendanceSearchModel>>(),
                           ),
                         ),
                       ],

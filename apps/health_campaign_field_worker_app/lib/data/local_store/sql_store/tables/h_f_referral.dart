@@ -2,7 +2,6 @@
 
 import 'package:drift/drift.dart';
 
-
 class HFReferral extends Table {
   TextColumn get id => text().nullable()();
   TextColumn get tenantId => text().nullable()();
@@ -15,7 +14,8 @@ class HFReferral extends Table {
   TextColumn get nationalLevelId => text().nullable()();
   TextColumn get symptom => text().nullable()();
   TextColumn get auditCreatedBy => text().nullable()();
-  BoolColumn get nonRecoverableError => boolean().nullable().withDefault(const Constant(false))();
+  BoolColumn get nonRecoverableError =>
+      boolean().nullable().withDefault(const Constant(false))();
   IntColumn get auditCreatedTime => integer().nullable()();
   IntColumn get clientCreatedTime => integer().nullable()();
   TextColumn get clientModifiedBy => text().nullable()();
@@ -24,11 +24,15 @@ class HFReferral extends Table {
   TextColumn get auditModifiedBy => text().nullable()();
   IntColumn get auditModifiedTime => integer().nullable()();
   TextColumn get clientReferenceId => text()();
-  BoolColumn get isDeleted => boolean().nullable().withDefault(const Constant(false))();
+  BoolColumn get isDeleted =>
+      boolean().nullable().withDefault(const Constant(false))();
   IntColumn get rowVersion => integer().nullable()();
-  
+
   TextColumn get additionalFields => text().nullable()();
 
   @override
-  Set<Column> get primaryKey => { auditCreatedBy, clientReferenceId,  };
+  Set<Column> get primaryKey => {
+        auditCreatedBy,
+        clientReferenceId,
+      };
 }
