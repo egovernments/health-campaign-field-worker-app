@@ -1373,6 +1373,1384 @@ class $AddressTable extends Address with TableInfo<$AddressTable, Addres> {
       const EnumIndexConverter<AddressType>(AddressType.values);
 }
 
+class AttendanceRegisterData extends DataClass
+    implements Insertable<AttendanceRegisterData> {
+  final String? id;
+  final String tenantId;
+  final String registerNumber;
+  final String name;
+  final String referenceId;
+  final String serviceCode;
+  final String status;
+  final DateTime? startDate;
+  final DateTime? endDate;
+  final String? additionalFields;
+  final String? auditCreatedBy;
+  final bool? nonRecoverableError;
+  final int? auditCreatedTime;
+  final int? clientCreatedTime;
+  final String? clientModifiedBy;
+  final String? clientCreatedBy;
+  final int? clientModifiedTime;
+  final String? auditModifiedBy;
+  final int? auditModifiedTime;
+  final String clientReferenceId;
+  final bool? isDeleted;
+  final int? rowVersion;
+  AttendanceRegisterData(
+      {this.id,
+      required this.tenantId,
+      required this.registerNumber,
+      required this.name,
+      required this.referenceId,
+      required this.serviceCode,
+      required this.status,
+      this.startDate,
+      this.endDate,
+      this.additionalFields,
+      this.auditCreatedBy,
+      this.nonRecoverableError,
+      this.auditCreatedTime,
+      this.clientCreatedTime,
+      this.clientModifiedBy,
+      this.clientCreatedBy,
+      this.clientModifiedTime,
+      this.auditModifiedBy,
+      this.auditModifiedTime,
+      required this.clientReferenceId,
+      this.isDeleted,
+      this.rowVersion});
+  factory AttendanceRegisterData.fromData(Map<String, dynamic> data,
+      {String? prefix}) {
+    final effectivePrefix = prefix ?? '';
+    return AttendanceRegisterData(
+      id: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}id']),
+      tenantId: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}tenant_id'])!,
+      registerNumber: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}register_number'])!,
+      name: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}name'])!,
+      referenceId: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}reference_id'])!,
+      serviceCode: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}service_code'])!,
+      status: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}status'])!,
+      startDate: const DateTimeType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}start_date']),
+      endDate: const DateTimeType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}end_date']),
+      additionalFields: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}additional_fields']),
+      auditCreatedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}audit_created_by']),
+      nonRecoverableError: const BoolType().mapFromDatabaseResponse(
+          data['${effectivePrefix}non_recoverable_error']),
+      auditCreatedTime: const IntType().mapFromDatabaseResponse(
+          data['${effectivePrefix}audit_created_time']),
+      clientCreatedTime: const IntType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_created_time']),
+      clientModifiedBy: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_modified_by']),
+      clientCreatedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}client_created_by']),
+      clientModifiedTime: const IntType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_modified_time']),
+      auditModifiedBy: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}audit_modified_by']),
+      auditModifiedTime: const IntType().mapFromDatabaseResponse(
+          data['${effectivePrefix}audit_modified_time']),
+      clientReferenceId: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}client_reference_id'])!,
+      isDeleted: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}is_deleted']),
+      rowVersion: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}row_version']),
+    );
+  }
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (!nullToAbsent || id != null) {
+      map['id'] = Variable<String?>(id);
+    }
+    map['tenant_id'] = Variable<String>(tenantId);
+    map['register_number'] = Variable<String>(registerNumber);
+    map['name'] = Variable<String>(name);
+    map['reference_id'] = Variable<String>(referenceId);
+    map['service_code'] = Variable<String>(serviceCode);
+    map['status'] = Variable<String>(status);
+    if (!nullToAbsent || startDate != null) {
+      map['start_date'] = Variable<DateTime?>(startDate);
+    }
+    if (!nullToAbsent || endDate != null) {
+      map['end_date'] = Variable<DateTime?>(endDate);
+    }
+    if (!nullToAbsent || additionalFields != null) {
+      map['additional_fields'] = Variable<String?>(additionalFields);
+    }
+    if (!nullToAbsent || auditCreatedBy != null) {
+      map['audit_created_by'] = Variable<String?>(auditCreatedBy);
+    }
+    if (!nullToAbsent || nonRecoverableError != null) {
+      map['non_recoverable_error'] = Variable<bool?>(nonRecoverableError);
+    }
+    if (!nullToAbsent || auditCreatedTime != null) {
+      map['audit_created_time'] = Variable<int?>(auditCreatedTime);
+    }
+    if (!nullToAbsent || clientCreatedTime != null) {
+      map['client_created_time'] = Variable<int?>(clientCreatedTime);
+    }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy);
+    }
+    if (!nullToAbsent || clientModifiedTime != null) {
+      map['client_modified_time'] = Variable<int?>(clientModifiedTime);
+    }
+    if (!nullToAbsent || auditModifiedBy != null) {
+      map['audit_modified_by'] = Variable<String?>(auditModifiedBy);
+    }
+    if (!nullToAbsent || auditModifiedTime != null) {
+      map['audit_modified_time'] = Variable<int?>(auditModifiedTime);
+    }
+    map['client_reference_id'] = Variable<String>(clientReferenceId);
+    if (!nullToAbsent || isDeleted != null) {
+      map['is_deleted'] = Variable<bool?>(isDeleted);
+    }
+    if (!nullToAbsent || rowVersion != null) {
+      map['row_version'] = Variable<int?>(rowVersion);
+    }
+    return map;
+  }
+
+  AttendanceRegisterCompanion toCompanion(bool nullToAbsent) {
+    return AttendanceRegisterCompanion(
+      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      tenantId: Value(tenantId),
+      registerNumber: Value(registerNumber),
+      name: Value(name),
+      referenceId: Value(referenceId),
+      serviceCode: Value(serviceCode),
+      status: Value(status),
+      startDate: startDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(startDate),
+      endDate: endDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(endDate),
+      additionalFields: additionalFields == null && nullToAbsent
+          ? const Value.absent()
+          : Value(additionalFields),
+      auditCreatedBy: auditCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditCreatedBy),
+      nonRecoverableError: nonRecoverableError == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nonRecoverableError),
+      auditCreatedTime: auditCreatedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditCreatedTime),
+      clientCreatedTime: clientCreatedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedTime),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
+      clientModifiedTime: clientModifiedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedTime),
+      auditModifiedBy: auditModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditModifiedBy),
+      auditModifiedTime: auditModifiedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditModifiedTime),
+      clientReferenceId: Value(clientReferenceId),
+      isDeleted: isDeleted == null && nullToAbsent
+          ? const Value.absent()
+          : Value(isDeleted),
+      rowVersion: rowVersion == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rowVersion),
+    );
+  }
+
+  factory AttendanceRegisterData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return AttendanceRegisterData(
+      id: serializer.fromJson<String?>(json['id']),
+      tenantId: serializer.fromJson<String>(json['tenantId']),
+      registerNumber: serializer.fromJson<String>(json['registerNumber']),
+      name: serializer.fromJson<String>(json['name']),
+      referenceId: serializer.fromJson<String>(json['referenceId']),
+      serviceCode: serializer.fromJson<String>(json['serviceCode']),
+      status: serializer.fromJson<String>(json['status']),
+      startDate: serializer.fromJson<DateTime?>(json['startDate']),
+      endDate: serializer.fromJson<DateTime?>(json['endDate']),
+      additionalFields: serializer.fromJson<String?>(json['additionalFields']),
+      auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
+      nonRecoverableError:
+          serializer.fromJson<bool?>(json['nonRecoverableError']),
+      auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
+      clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
+      clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
+      auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
+      auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
+      clientReferenceId: serializer.fromJson<String>(json['clientReferenceId']),
+      isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
+      rowVersion: serializer.fromJson<int?>(json['rowVersion']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String?>(id),
+      'tenantId': serializer.toJson<String>(tenantId),
+      'registerNumber': serializer.toJson<String>(registerNumber),
+      'name': serializer.toJson<String>(name),
+      'referenceId': serializer.toJson<String>(referenceId),
+      'serviceCode': serializer.toJson<String>(serviceCode),
+      'status': serializer.toJson<String>(status),
+      'startDate': serializer.toJson<DateTime?>(startDate),
+      'endDate': serializer.toJson<DateTime?>(endDate),
+      'additionalFields': serializer.toJson<String?>(additionalFields),
+      'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
+      'nonRecoverableError': serializer.toJson<bool?>(nonRecoverableError),
+      'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
+      'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
+      'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
+      'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
+      'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
+      'clientReferenceId': serializer.toJson<String>(clientReferenceId),
+      'isDeleted': serializer.toJson<bool?>(isDeleted),
+      'rowVersion': serializer.toJson<int?>(rowVersion),
+    };
+  }
+
+  AttendanceRegisterData copyWith(
+          {String? id,
+          String? tenantId,
+          String? registerNumber,
+          String? name,
+          String? referenceId,
+          String? serviceCode,
+          String? status,
+          DateTime? startDate,
+          DateTime? endDate,
+          String? additionalFields,
+          String? auditCreatedBy,
+          bool? nonRecoverableError,
+          int? auditCreatedTime,
+          int? clientCreatedTime,
+          String? clientModifiedBy,
+          String? clientCreatedBy,
+          int? clientModifiedTime,
+          String? auditModifiedBy,
+          int? auditModifiedTime,
+          String? clientReferenceId,
+          bool? isDeleted,
+          int? rowVersion}) =>
+      AttendanceRegisterData(
+        id: id ?? this.id,
+        tenantId: tenantId ?? this.tenantId,
+        registerNumber: registerNumber ?? this.registerNumber,
+        name: name ?? this.name,
+        referenceId: referenceId ?? this.referenceId,
+        serviceCode: serviceCode ?? this.serviceCode,
+        status: status ?? this.status,
+        startDate: startDate ?? this.startDate,
+        endDate: endDate ?? this.endDate,
+        additionalFields: additionalFields ?? this.additionalFields,
+        auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
+        nonRecoverableError: nonRecoverableError ?? this.nonRecoverableError,
+        auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
+        clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+        clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+        clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
+        clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
+        auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
+        auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
+        clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+        isDeleted: isDeleted ?? this.isDeleted,
+        rowVersion: rowVersion ?? this.rowVersion,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('AttendanceRegisterData(')
+          ..write('id: $id, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('registerNumber: $registerNumber, ')
+          ..write('name: $name, ')
+          ..write('referenceId: $referenceId, ')
+          ..write('serviceCode: $serviceCode, ')
+          ..write('status: $status, ')
+          ..write('startDate: $startDate, ')
+          ..write('endDate: $endDate, ')
+          ..write('additionalFields: $additionalFields, ')
+          ..write('auditCreatedBy: $auditCreatedBy, ')
+          ..write('nonRecoverableError: $nonRecoverableError, ')
+          ..write('auditCreatedTime: $auditCreatedTime, ')
+          ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
+          ..write('clientModifiedTime: $clientModifiedTime, ')
+          ..write('auditModifiedBy: $auditModifiedBy, ')
+          ..write('auditModifiedTime: $auditModifiedTime, ')
+          ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('rowVersion: $rowVersion')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+        id,
+        tenantId,
+        registerNumber,
+        name,
+        referenceId,
+        serviceCode,
+        status,
+        startDate,
+        endDate,
+        additionalFields,
+        auditCreatedBy,
+        nonRecoverableError,
+        auditCreatedTime,
+        clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
+        clientModifiedTime,
+        auditModifiedBy,
+        auditModifiedTime,
+        clientReferenceId,
+        isDeleted,
+        rowVersion
+      ]);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is AttendanceRegisterData &&
+          other.id == this.id &&
+          other.tenantId == this.tenantId &&
+          other.registerNumber == this.registerNumber &&
+          other.name == this.name &&
+          other.referenceId == this.referenceId &&
+          other.serviceCode == this.serviceCode &&
+          other.status == this.status &&
+          other.startDate == this.startDate &&
+          other.endDate == this.endDate &&
+          other.additionalFields == this.additionalFields &&
+          other.auditCreatedBy == this.auditCreatedBy &&
+          other.nonRecoverableError == this.nonRecoverableError &&
+          other.auditCreatedTime == this.auditCreatedTime &&
+          other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientCreatedBy == this.clientCreatedBy &&
+          other.clientModifiedTime == this.clientModifiedTime &&
+          other.auditModifiedBy == this.auditModifiedBy &&
+          other.auditModifiedTime == this.auditModifiedTime &&
+          other.clientReferenceId == this.clientReferenceId &&
+          other.isDeleted == this.isDeleted &&
+          other.rowVersion == this.rowVersion);
+}
+
+class AttendanceRegisterCompanion
+    extends UpdateCompanion<AttendanceRegisterData> {
+  final Value<String?> id;
+  final Value<String> tenantId;
+  final Value<String> registerNumber;
+  final Value<String> name;
+  final Value<String> referenceId;
+  final Value<String> serviceCode;
+  final Value<String> status;
+  final Value<DateTime?> startDate;
+  final Value<DateTime?> endDate;
+  final Value<String?> additionalFields;
+  final Value<String?> auditCreatedBy;
+  final Value<bool?> nonRecoverableError;
+  final Value<int?> auditCreatedTime;
+  final Value<int?> clientCreatedTime;
+  final Value<String?> clientModifiedBy;
+  final Value<String?> clientCreatedBy;
+  final Value<int?> clientModifiedTime;
+  final Value<String?> auditModifiedBy;
+  final Value<int?> auditModifiedTime;
+  final Value<String> clientReferenceId;
+  final Value<bool?> isDeleted;
+  final Value<int?> rowVersion;
+  const AttendanceRegisterCompanion({
+    this.id = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.registerNumber = const Value.absent(),
+    this.name = const Value.absent(),
+    this.referenceId = const Value.absent(),
+    this.serviceCode = const Value.absent(),
+    this.status = const Value.absent(),
+    this.startDate = const Value.absent(),
+    this.endDate = const Value.absent(),
+    this.additionalFields = const Value.absent(),
+    this.auditCreatedBy = const Value.absent(),
+    this.nonRecoverableError = const Value.absent(),
+    this.auditCreatedTime = const Value.absent(),
+    this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
+    this.clientModifiedTime = const Value.absent(),
+    this.auditModifiedBy = const Value.absent(),
+    this.auditModifiedTime = const Value.absent(),
+    this.clientReferenceId = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.rowVersion = const Value.absent(),
+  });
+  AttendanceRegisterCompanion.insert({
+    this.id = const Value.absent(),
+    required String tenantId,
+    required String registerNumber,
+    required String name,
+    required String referenceId,
+    required String serviceCode,
+    required String status,
+    this.startDate = const Value.absent(),
+    this.endDate = const Value.absent(),
+    this.additionalFields = const Value.absent(),
+    this.auditCreatedBy = const Value.absent(),
+    this.nonRecoverableError = const Value.absent(),
+    this.auditCreatedTime = const Value.absent(),
+    this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
+    this.clientModifiedTime = const Value.absent(),
+    this.auditModifiedBy = const Value.absent(),
+    this.auditModifiedTime = const Value.absent(),
+    required String clientReferenceId,
+    this.isDeleted = const Value.absent(),
+    this.rowVersion = const Value.absent(),
+  })  : tenantId = Value(tenantId),
+        registerNumber = Value(registerNumber),
+        name = Value(name),
+        referenceId = Value(referenceId),
+        serviceCode = Value(serviceCode),
+        status = Value(status),
+        clientReferenceId = Value(clientReferenceId);
+  static Insertable<AttendanceRegisterData> custom({
+    Expression<String?>? id,
+    Expression<String>? tenantId,
+    Expression<String>? registerNumber,
+    Expression<String>? name,
+    Expression<String>? referenceId,
+    Expression<String>? serviceCode,
+    Expression<String>? status,
+    Expression<DateTime?>? startDate,
+    Expression<DateTime?>? endDate,
+    Expression<String?>? additionalFields,
+    Expression<String?>? auditCreatedBy,
+    Expression<bool?>? nonRecoverableError,
+    Expression<int?>? auditCreatedTime,
+    Expression<int?>? clientCreatedTime,
+    Expression<String?>? clientModifiedBy,
+    Expression<String?>? clientCreatedBy,
+    Expression<int?>? clientModifiedTime,
+    Expression<String?>? auditModifiedBy,
+    Expression<int?>? auditModifiedTime,
+    Expression<String>? clientReferenceId,
+    Expression<bool?>? isDeleted,
+    Expression<int?>? rowVersion,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (tenantId != null) 'tenant_id': tenantId,
+      if (registerNumber != null) 'register_number': registerNumber,
+      if (name != null) 'name': name,
+      if (referenceId != null) 'reference_id': referenceId,
+      if (serviceCode != null) 'service_code': serviceCode,
+      if (status != null) 'status': status,
+      if (startDate != null) 'start_date': startDate,
+      if (endDate != null) 'end_date': endDate,
+      if (additionalFields != null) 'additional_fields': additionalFields,
+      if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
+      if (nonRecoverableError != null)
+        'non_recoverable_error': nonRecoverableError,
+      if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
+      if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
+      if (clientModifiedTime != null)
+        'client_modified_time': clientModifiedTime,
+      if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
+      if (auditModifiedTime != null) 'audit_modified_time': auditModifiedTime,
+      if (clientReferenceId != null) 'client_reference_id': clientReferenceId,
+      if (isDeleted != null) 'is_deleted': isDeleted,
+      if (rowVersion != null) 'row_version': rowVersion,
+    });
+  }
+
+  AttendanceRegisterCompanion copyWith(
+      {Value<String?>? id,
+      Value<String>? tenantId,
+      Value<String>? registerNumber,
+      Value<String>? name,
+      Value<String>? referenceId,
+      Value<String>? serviceCode,
+      Value<String>? status,
+      Value<DateTime?>? startDate,
+      Value<DateTime?>? endDate,
+      Value<String?>? additionalFields,
+      Value<String?>? auditCreatedBy,
+      Value<bool?>? nonRecoverableError,
+      Value<int?>? auditCreatedTime,
+      Value<int?>? clientCreatedTime,
+      Value<String?>? clientModifiedBy,
+      Value<String?>? clientCreatedBy,
+      Value<int?>? clientModifiedTime,
+      Value<String?>? auditModifiedBy,
+      Value<int?>? auditModifiedTime,
+      Value<String>? clientReferenceId,
+      Value<bool?>? isDeleted,
+      Value<int?>? rowVersion}) {
+    return AttendanceRegisterCompanion(
+      id: id ?? this.id,
+      tenantId: tenantId ?? this.tenantId,
+      registerNumber: registerNumber ?? this.registerNumber,
+      name: name ?? this.name,
+      referenceId: referenceId ?? this.referenceId,
+      serviceCode: serviceCode ?? this.serviceCode,
+      status: status ?? this.status,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+      additionalFields: additionalFields ?? this.additionalFields,
+      auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
+      nonRecoverableError: nonRecoverableError ?? this.nonRecoverableError,
+      auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
+      clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
+      clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
+      auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
+      auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
+      clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+      isDeleted: isDeleted ?? this.isDeleted,
+      rowVersion: rowVersion ?? this.rowVersion,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String?>(id.value);
+    }
+    if (tenantId.present) {
+      map['tenant_id'] = Variable<String>(tenantId.value);
+    }
+    if (registerNumber.present) {
+      map['register_number'] = Variable<String>(registerNumber.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (referenceId.present) {
+      map['reference_id'] = Variable<String>(referenceId.value);
+    }
+    if (serviceCode.present) {
+      map['service_code'] = Variable<String>(serviceCode.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
+    if (startDate.present) {
+      map['start_date'] = Variable<DateTime?>(startDate.value);
+    }
+    if (endDate.present) {
+      map['end_date'] = Variable<DateTime?>(endDate.value);
+    }
+    if (additionalFields.present) {
+      map['additional_fields'] = Variable<String?>(additionalFields.value);
+    }
+    if (auditCreatedBy.present) {
+      map['audit_created_by'] = Variable<String?>(auditCreatedBy.value);
+    }
+    if (nonRecoverableError.present) {
+      map['non_recoverable_error'] = Variable<bool?>(nonRecoverableError.value);
+    }
+    if (auditCreatedTime.present) {
+      map['audit_created_time'] = Variable<int?>(auditCreatedTime.value);
+    }
+    if (clientCreatedTime.present) {
+      map['client_created_time'] = Variable<int?>(clientCreatedTime.value);
+    }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String?>(clientModifiedBy.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String?>(clientCreatedBy.value);
+    }
+    if (clientModifiedTime.present) {
+      map['client_modified_time'] = Variable<int?>(clientModifiedTime.value);
+    }
+    if (auditModifiedBy.present) {
+      map['audit_modified_by'] = Variable<String?>(auditModifiedBy.value);
+    }
+    if (auditModifiedTime.present) {
+      map['audit_modified_time'] = Variable<int?>(auditModifiedTime.value);
+    }
+    if (clientReferenceId.present) {
+      map['client_reference_id'] = Variable<String>(clientReferenceId.value);
+    }
+    if (isDeleted.present) {
+      map['is_deleted'] = Variable<bool?>(isDeleted.value);
+    }
+    if (rowVersion.present) {
+      map['row_version'] = Variable<int?>(rowVersion.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AttendanceRegisterCompanion(')
+          ..write('id: $id, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('registerNumber: $registerNumber, ')
+          ..write('name: $name, ')
+          ..write('referenceId: $referenceId, ')
+          ..write('serviceCode: $serviceCode, ')
+          ..write('status: $status, ')
+          ..write('startDate: $startDate, ')
+          ..write('endDate: $endDate, ')
+          ..write('additionalFields: $additionalFields, ')
+          ..write('auditCreatedBy: $auditCreatedBy, ')
+          ..write('nonRecoverableError: $nonRecoverableError, ')
+          ..write('auditCreatedTime: $auditCreatedTime, ')
+          ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
+          ..write('clientModifiedTime: $clientModifiedTime, ')
+          ..write('auditModifiedBy: $auditModifiedBy, ')
+          ..write('auditModifiedTime: $auditModifiedTime, ')
+          ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('rowVersion: $rowVersion')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $AttendanceRegisterTable extends AttendanceRegister
+    with TableInfo<$AttendanceRegisterTable, AttendanceRegisterData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $AttendanceRegisterTable(this.attachedDatabase, [this._alias]);
+  final VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
+      'id', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _tenantIdMeta = const VerificationMeta('tenantId');
+  @override
+  late final GeneratedColumn<String?> tenantId = GeneratedColumn<String?>(
+      'tenant_id', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _registerNumberMeta =
+      const VerificationMeta('registerNumber');
+  @override
+  late final GeneratedColumn<String?> registerNumber = GeneratedColumn<String?>(
+      'register_number', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String?> name = GeneratedColumn<String?>(
+      'name', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _referenceIdMeta =
+      const VerificationMeta('referenceId');
+  @override
+  late final GeneratedColumn<String?> referenceId = GeneratedColumn<String?>(
+      'reference_id', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _serviceCodeMeta =
+      const VerificationMeta('serviceCode');
+  @override
+  late final GeneratedColumn<String?> serviceCode = GeneratedColumn<String?>(
+      'service_code', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<String?> status = GeneratedColumn<String?>(
+      'status', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _startDateMeta = const VerificationMeta('startDate');
+  @override
+  late final GeneratedColumn<DateTime?> startDate = GeneratedColumn<DateTime?>(
+      'start_date', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _endDateMeta = const VerificationMeta('endDate');
+  @override
+  late final GeneratedColumn<DateTime?> endDate = GeneratedColumn<DateTime?>(
+      'end_date', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _additionalFieldsMeta =
+      const VerificationMeta('additionalFields');
+  @override
+  late final GeneratedColumn<String?> additionalFields =
+      GeneratedColumn<String?>('additional_fields', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _auditCreatedByMeta =
+      const VerificationMeta('auditCreatedBy');
+  @override
+  late final GeneratedColumn<String?> auditCreatedBy = GeneratedColumn<String?>(
+      'audit_created_by', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _nonRecoverableErrorMeta =
+      const VerificationMeta('nonRecoverableError');
+  @override
+  late final GeneratedColumn<bool?> nonRecoverableError =
+      GeneratedColumn<bool?>('non_recoverable_error', aliasedName, true,
+          type: const BoolType(),
+          requiredDuringInsert: false,
+          defaultConstraints: 'CHECK (non_recoverable_error IN (0, 1))',
+          defaultValue: const Constant(false));
+  final VerificationMeta _auditCreatedTimeMeta =
+      const VerificationMeta('auditCreatedTime');
+  @override
+  late final GeneratedColumn<int?> auditCreatedTime = GeneratedColumn<int?>(
+      'audit_created_time', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _clientCreatedTimeMeta =
+      const VerificationMeta('clientCreatedTime');
+  @override
+  late final GeneratedColumn<int?> clientCreatedTime = GeneratedColumn<int?>(
+      'client_created_time', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String?> clientModifiedBy =
+      GeneratedColumn<String?>('client_modified_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String?> clientCreatedBy =
+      GeneratedColumn<String?>('client_created_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _clientModifiedTimeMeta =
+      const VerificationMeta('clientModifiedTime');
+  @override
+  late final GeneratedColumn<int?> clientModifiedTime = GeneratedColumn<int?>(
+      'client_modified_time', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _auditModifiedByMeta =
+      const VerificationMeta('auditModifiedBy');
+  @override
+  late final GeneratedColumn<String?> auditModifiedBy =
+      GeneratedColumn<String?>('audit_modified_by', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _auditModifiedTimeMeta =
+      const VerificationMeta('auditModifiedTime');
+  @override
+  late final GeneratedColumn<int?> auditModifiedTime = GeneratedColumn<int?>(
+      'audit_modified_time', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _clientReferenceIdMeta =
+      const VerificationMeta('clientReferenceId');
+  @override
+  late final GeneratedColumn<String?> clientReferenceId =
+      GeneratedColumn<String?>('client_reference_id', aliasedName, false,
+          type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _isDeletedMeta = const VerificationMeta('isDeleted');
+  @override
+  late final GeneratedColumn<bool?> isDeleted = GeneratedColumn<bool?>(
+      'is_deleted', aliasedName, true,
+      type: const BoolType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (is_deleted IN (0, 1))',
+      defaultValue: const Constant(false));
+  final VerificationMeta _rowVersionMeta = const VerificationMeta('rowVersion');
+  @override
+  late final GeneratedColumn<int?> rowVersion = GeneratedColumn<int?>(
+      'row_version', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        tenantId,
+        registerNumber,
+        name,
+        referenceId,
+        serviceCode,
+        status,
+        startDate,
+        endDate,
+        additionalFields,
+        auditCreatedBy,
+        nonRecoverableError,
+        auditCreatedTime,
+        clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
+        clientModifiedTime,
+        auditModifiedBy,
+        auditModifiedTime,
+        clientReferenceId,
+        isDeleted,
+        rowVersion
+      ];
+  @override
+  String get aliasedName => _alias ?? 'attendance_register';
+  @override
+  String get actualTableName => 'attendance_register';
+  @override
+  VerificationContext validateIntegrity(
+      Insertable<AttendanceRegisterData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('tenant_id')) {
+      context.handle(_tenantIdMeta,
+          tenantId.isAcceptableOrUnknown(data['tenant_id']!, _tenantIdMeta));
+    } else if (isInserting) {
+      context.missing(_tenantIdMeta);
+    }
+    if (data.containsKey('register_number')) {
+      context.handle(
+          _registerNumberMeta,
+          registerNumber.isAcceptableOrUnknown(
+              data['register_number']!, _registerNumberMeta));
+    } else if (isInserting) {
+      context.missing(_registerNumberMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('reference_id')) {
+      context.handle(
+          _referenceIdMeta,
+          referenceId.isAcceptableOrUnknown(
+              data['reference_id']!, _referenceIdMeta));
+    } else if (isInserting) {
+      context.missing(_referenceIdMeta);
+    }
+    if (data.containsKey('service_code')) {
+      context.handle(
+          _serviceCodeMeta,
+          serviceCode.isAcceptableOrUnknown(
+              data['service_code']!, _serviceCodeMeta));
+    } else if (isInserting) {
+      context.missing(_serviceCodeMeta);
+    }
+    if (data.containsKey('status')) {
+      context.handle(_statusMeta,
+          status.isAcceptableOrUnknown(data['status']!, _statusMeta));
+    } else if (isInserting) {
+      context.missing(_statusMeta);
+    }
+    if (data.containsKey('start_date')) {
+      context.handle(_startDateMeta,
+          startDate.isAcceptableOrUnknown(data['start_date']!, _startDateMeta));
+    }
+    if (data.containsKey('end_date')) {
+      context.handle(_endDateMeta,
+          endDate.isAcceptableOrUnknown(data['end_date']!, _endDateMeta));
+    }
+    if (data.containsKey('additional_fields')) {
+      context.handle(
+          _additionalFieldsMeta,
+          additionalFields.isAcceptableOrUnknown(
+              data['additional_fields']!, _additionalFieldsMeta));
+    }
+    if (data.containsKey('audit_created_by')) {
+      context.handle(
+          _auditCreatedByMeta,
+          auditCreatedBy.isAcceptableOrUnknown(
+              data['audit_created_by']!, _auditCreatedByMeta));
+    }
+    if (data.containsKey('non_recoverable_error')) {
+      context.handle(
+          _nonRecoverableErrorMeta,
+          nonRecoverableError.isAcceptableOrUnknown(
+              data['non_recoverable_error']!, _nonRecoverableErrorMeta));
+    }
+    if (data.containsKey('audit_created_time')) {
+      context.handle(
+          _auditCreatedTimeMeta,
+          auditCreatedTime.isAcceptableOrUnknown(
+              data['audit_created_time']!, _auditCreatedTimeMeta));
+    }
+    if (data.containsKey('client_created_time')) {
+      context.handle(
+          _clientCreatedTimeMeta,
+          clientCreatedTime.isAcceptableOrUnknown(
+              data['client_created_time']!, _clientCreatedTimeMeta));
+    }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
+    }
+    if (data.containsKey('client_modified_time')) {
+      context.handle(
+          _clientModifiedTimeMeta,
+          clientModifiedTime.isAcceptableOrUnknown(
+              data['client_modified_time']!, _clientModifiedTimeMeta));
+    }
+    if (data.containsKey('audit_modified_by')) {
+      context.handle(
+          _auditModifiedByMeta,
+          auditModifiedBy.isAcceptableOrUnknown(
+              data['audit_modified_by']!, _auditModifiedByMeta));
+    }
+    if (data.containsKey('audit_modified_time')) {
+      context.handle(
+          _auditModifiedTimeMeta,
+          auditModifiedTime.isAcceptableOrUnknown(
+              data['audit_modified_time']!, _auditModifiedTimeMeta));
+    }
+    if (data.containsKey('client_reference_id')) {
+      context.handle(
+          _clientReferenceIdMeta,
+          clientReferenceId.isAcceptableOrUnknown(
+              data['client_reference_id']!, _clientReferenceIdMeta));
+    } else if (isInserting) {
+      context.missing(_clientReferenceIdMeta);
+    }
+    if (data.containsKey('is_deleted')) {
+      context.handle(_isDeletedMeta,
+          isDeleted.isAcceptableOrUnknown(data['is_deleted']!, _isDeletedMeta));
+    }
+    if (data.containsKey('row_version')) {
+      context.handle(
+          _rowVersionMeta,
+          rowVersion.isAcceptableOrUnknown(
+              data['row_version']!, _rowVersionMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {auditCreatedBy, clientReferenceId};
+  @override
+  AttendanceRegisterData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    return AttendanceRegisterData.fromData(data,
+        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  }
+
+  @override
+  $AttendanceRegisterTable createAlias(String alias) {
+    return $AttendanceRegisterTable(attachedDatabase, alias);
+  }
+}
+
+class AttendeeData extends DataClass implements Insertable<AttendeeData> {
+  final String? id;
+  final String tenantId;
+  final String registerId;
+  final String individualId;
+  final int? enrollmentDate;
+  final int? denrollmentDate;
+  final String? additionalFields;
+  AttendeeData(
+      {this.id,
+      required this.tenantId,
+      required this.registerId,
+      required this.individualId,
+      this.enrollmentDate,
+      this.denrollmentDate,
+      this.additionalFields});
+  factory AttendeeData.fromData(Map<String, dynamic> data, {String? prefix}) {
+    final effectivePrefix = prefix ?? '';
+    return AttendeeData(
+      id: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}id']),
+      tenantId: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}tenant_id'])!,
+      registerId: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}register_id'])!,
+      individualId: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}individual_id'])!,
+      enrollmentDate: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}enrollment_date']),
+      denrollmentDate: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}denrollment_date']),
+      additionalFields: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}additional_fields']),
+    );
+  }
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (!nullToAbsent || id != null) {
+      map['id'] = Variable<String?>(id);
+    }
+    map['tenant_id'] = Variable<String>(tenantId);
+    map['register_id'] = Variable<String>(registerId);
+    map['individual_id'] = Variable<String>(individualId);
+    if (!nullToAbsent || enrollmentDate != null) {
+      map['enrollment_date'] = Variable<int?>(enrollmentDate);
+    }
+    if (!nullToAbsent || denrollmentDate != null) {
+      map['denrollment_date'] = Variable<int?>(denrollmentDate);
+    }
+    if (!nullToAbsent || additionalFields != null) {
+      map['additional_fields'] = Variable<String?>(additionalFields);
+    }
+    return map;
+  }
+
+  AttendeeCompanion toCompanion(bool nullToAbsent) {
+    return AttendeeCompanion(
+      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      tenantId: Value(tenantId),
+      registerId: Value(registerId),
+      individualId: Value(individualId),
+      enrollmentDate: enrollmentDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(enrollmentDate),
+      denrollmentDate: denrollmentDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(denrollmentDate),
+      additionalFields: additionalFields == null && nullToAbsent
+          ? const Value.absent()
+          : Value(additionalFields),
+    );
+  }
+
+  factory AttendeeData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return AttendeeData(
+      id: serializer.fromJson<String?>(json['id']),
+      tenantId: serializer.fromJson<String>(json['tenantId']),
+      registerId: serializer.fromJson<String>(json['registerId']),
+      individualId: serializer.fromJson<String>(json['individualId']),
+      enrollmentDate: serializer.fromJson<int?>(json['enrollmentDate']),
+      denrollmentDate: serializer.fromJson<int?>(json['denrollmentDate']),
+      additionalFields: serializer.fromJson<String?>(json['additionalFields']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String?>(id),
+      'tenantId': serializer.toJson<String>(tenantId),
+      'registerId': serializer.toJson<String>(registerId),
+      'individualId': serializer.toJson<String>(individualId),
+      'enrollmentDate': serializer.toJson<int?>(enrollmentDate),
+      'denrollmentDate': serializer.toJson<int?>(denrollmentDate),
+      'additionalFields': serializer.toJson<String?>(additionalFields),
+    };
+  }
+
+  AttendeeData copyWith(
+          {String? id,
+          String? tenantId,
+          String? registerId,
+          String? individualId,
+          int? enrollmentDate,
+          int? denrollmentDate,
+          String? additionalFields}) =>
+      AttendeeData(
+        id: id ?? this.id,
+        tenantId: tenantId ?? this.tenantId,
+        registerId: registerId ?? this.registerId,
+        individualId: individualId ?? this.individualId,
+        enrollmentDate: enrollmentDate ?? this.enrollmentDate,
+        denrollmentDate: denrollmentDate ?? this.denrollmentDate,
+        additionalFields: additionalFields ?? this.additionalFields,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('AttendeeData(')
+          ..write('id: $id, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('registerId: $registerId, ')
+          ..write('individualId: $individualId, ')
+          ..write('enrollmentDate: $enrollmentDate, ')
+          ..write('denrollmentDate: $denrollmentDate, ')
+          ..write('additionalFields: $additionalFields')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, tenantId, registerId, individualId,
+      enrollmentDate, denrollmentDate, additionalFields);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is AttendeeData &&
+          other.id == this.id &&
+          other.tenantId == this.tenantId &&
+          other.registerId == this.registerId &&
+          other.individualId == this.individualId &&
+          other.enrollmentDate == this.enrollmentDate &&
+          other.denrollmentDate == this.denrollmentDate &&
+          other.additionalFields == this.additionalFields);
+}
+
+class AttendeeCompanion extends UpdateCompanion<AttendeeData> {
+  final Value<String?> id;
+  final Value<String> tenantId;
+  final Value<String> registerId;
+  final Value<String> individualId;
+  final Value<int?> enrollmentDate;
+  final Value<int?> denrollmentDate;
+  final Value<String?> additionalFields;
+  const AttendeeCompanion({
+    this.id = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.registerId = const Value.absent(),
+    this.individualId = const Value.absent(),
+    this.enrollmentDate = const Value.absent(),
+    this.denrollmentDate = const Value.absent(),
+    this.additionalFields = const Value.absent(),
+  });
+  AttendeeCompanion.insert({
+    this.id = const Value.absent(),
+    required String tenantId,
+    required String registerId,
+    required String individualId,
+    this.enrollmentDate = const Value.absent(),
+    this.denrollmentDate = const Value.absent(),
+    this.additionalFields = const Value.absent(),
+  })  : tenantId = Value(tenantId),
+        registerId = Value(registerId),
+        individualId = Value(individualId);
+  static Insertable<AttendeeData> custom({
+    Expression<String?>? id,
+    Expression<String>? tenantId,
+    Expression<String>? registerId,
+    Expression<String>? individualId,
+    Expression<int?>? enrollmentDate,
+    Expression<int?>? denrollmentDate,
+    Expression<String?>? additionalFields,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (tenantId != null) 'tenant_id': tenantId,
+      if (registerId != null) 'register_id': registerId,
+      if (individualId != null) 'individual_id': individualId,
+      if (enrollmentDate != null) 'enrollment_date': enrollmentDate,
+      if (denrollmentDate != null) 'denrollment_date': denrollmentDate,
+      if (additionalFields != null) 'additional_fields': additionalFields,
+    });
+  }
+
+  AttendeeCompanion copyWith(
+      {Value<String?>? id,
+      Value<String>? tenantId,
+      Value<String>? registerId,
+      Value<String>? individualId,
+      Value<int?>? enrollmentDate,
+      Value<int?>? denrollmentDate,
+      Value<String?>? additionalFields}) {
+    return AttendeeCompanion(
+      id: id ?? this.id,
+      tenantId: tenantId ?? this.tenantId,
+      registerId: registerId ?? this.registerId,
+      individualId: individualId ?? this.individualId,
+      enrollmentDate: enrollmentDate ?? this.enrollmentDate,
+      denrollmentDate: denrollmentDate ?? this.denrollmentDate,
+      additionalFields: additionalFields ?? this.additionalFields,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String?>(id.value);
+    }
+    if (tenantId.present) {
+      map['tenant_id'] = Variable<String>(tenantId.value);
+    }
+    if (registerId.present) {
+      map['register_id'] = Variable<String>(registerId.value);
+    }
+    if (individualId.present) {
+      map['individual_id'] = Variable<String>(individualId.value);
+    }
+    if (enrollmentDate.present) {
+      map['enrollment_date'] = Variable<int?>(enrollmentDate.value);
+    }
+    if (denrollmentDate.present) {
+      map['denrollment_date'] = Variable<int?>(denrollmentDate.value);
+    }
+    if (additionalFields.present) {
+      map['additional_fields'] = Variable<String?>(additionalFields.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AttendeeCompanion(')
+          ..write('id: $id, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('registerId: $registerId, ')
+          ..write('individualId: $individualId, ')
+          ..write('enrollmentDate: $enrollmentDate, ')
+          ..write('denrollmentDate: $denrollmentDate, ')
+          ..write('additionalFields: $additionalFields')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $AttendeeTable extends Attendee
+    with TableInfo<$AttendeeTable, AttendeeData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $AttendeeTable(this.attachedDatabase, [this._alias]);
+  final VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
+      'id', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _tenantIdMeta = const VerificationMeta('tenantId');
+  @override
+  late final GeneratedColumn<String?> tenantId = GeneratedColumn<String?>(
+      'tenant_id', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _registerIdMeta = const VerificationMeta('registerId');
+  @override
+  late final GeneratedColumn<String?> registerId = GeneratedColumn<String?>(
+      'register_id', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _individualIdMeta =
+      const VerificationMeta('individualId');
+  @override
+  late final GeneratedColumn<String?> individualId = GeneratedColumn<String?>(
+      'individual_id', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _enrollmentDateMeta =
+      const VerificationMeta('enrollmentDate');
+  @override
+  late final GeneratedColumn<int?> enrollmentDate = GeneratedColumn<int?>(
+      'enrollment_date', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _denrollmentDateMeta =
+      const VerificationMeta('denrollmentDate');
+  @override
+  late final GeneratedColumn<int?> denrollmentDate = GeneratedColumn<int?>(
+      'denrollment_date', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _additionalFieldsMeta =
+      const VerificationMeta('additionalFields');
+  @override
+  late final GeneratedColumn<String?> additionalFields =
+      GeneratedColumn<String?>('additional_fields', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        tenantId,
+        registerId,
+        individualId,
+        enrollmentDate,
+        denrollmentDate,
+        additionalFields
+      ];
+  @override
+  String get aliasedName => _alias ?? 'attendee';
+  @override
+  String get actualTableName => 'attendee';
+  @override
+  VerificationContext validateIntegrity(Insertable<AttendeeData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('tenant_id')) {
+      context.handle(_tenantIdMeta,
+          tenantId.isAcceptableOrUnknown(data['tenant_id']!, _tenantIdMeta));
+    } else if (isInserting) {
+      context.missing(_tenantIdMeta);
+    }
+    if (data.containsKey('register_id')) {
+      context.handle(
+          _registerIdMeta,
+          registerId.isAcceptableOrUnknown(
+              data['register_id']!, _registerIdMeta));
+    } else if (isInserting) {
+      context.missing(_registerIdMeta);
+    }
+    if (data.containsKey('individual_id')) {
+      context.handle(
+          _individualIdMeta,
+          individualId.isAcceptableOrUnknown(
+              data['individual_id']!, _individualIdMeta));
+    } else if (isInserting) {
+      context.missing(_individualIdMeta);
+    }
+    if (data.containsKey('enrollment_date')) {
+      context.handle(
+          _enrollmentDateMeta,
+          enrollmentDate.isAcceptableOrUnknown(
+              data['enrollment_date']!, _enrollmentDateMeta));
+    }
+    if (data.containsKey('denrollment_date')) {
+      context.handle(
+          _denrollmentDateMeta,
+          denrollmentDate.isAcceptableOrUnknown(
+              data['denrollment_date']!, _denrollmentDateMeta));
+    }
+    if (data.containsKey('additional_fields')) {
+      context.handle(
+          _additionalFieldsMeta,
+          additionalFields.isAcceptableOrUnknown(
+              data['additional_fields']!, _additionalFieldsMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  AttendeeData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    return AttendeeData.fromData(data,
+        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  }
+
+  @override
+  $AttendeeTable createAlias(String alias) {
+    return $AttendeeTable(attachedDatabase, alias);
+  }
+}
+
 class NameData extends DataClass implements Insertable<NameData> {
   final String? id;
   final String? individualClientReferenceId;
@@ -34037,6 +35415,9 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
   _$LocalSqlDataStore(QueryExecutor e)
       : super(SqlTypeSystem.defaultInstance, e);
   late final $AddressTable address = $AddressTable(this);
+  late final $AttendanceRegisterTable attendanceRegister =
+      $AttendanceRegisterTable(this);
+  late final $AttendeeTable attendee = $AttendeeTable(this);
   late final $NameTable name = $NameTable(this);
   late final $BoundaryTable boundary = $BoundaryTable(this);
   late final $DocumentTable document = $DocumentTable(this);
@@ -34086,6 +35467,8 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
         address,
+        attendanceRegister,
+        attendee,
         name,
         boundary,
         document,
