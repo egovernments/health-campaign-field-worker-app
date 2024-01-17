@@ -30,7 +30,7 @@ class AttendanceRegisterSearchModel {
 class AttendancePackageRegisterModel {
   static const schemaName = 'AttendanceRegister';
 
-  final String? id;
+  final String id;
   final String? tenantId;
   final String? registerNumber;
   final String? name;
@@ -38,7 +38,6 @@ class AttendancePackageRegisterModel {
   final String? serviceCode;
   final String? status;
   final bool? nonRecoverableError;
-  final String clientReferenceId;
   final int? rowVersion;
   final List<StaffModel>? staff;
   final List<AttendeeModel>? attendees;
@@ -48,7 +47,7 @@ class AttendancePackageRegisterModel {
 
   AttendancePackageRegisterModel({
     this.additionalFields,
-    this.id,
+    required this.id,
     this.tenantId,
     this.registerNumber,
     this.name,
@@ -56,7 +55,6 @@ class AttendancePackageRegisterModel {
     this.serviceCode,
     this.status,
     this.nonRecoverableError = false,
-    required this.clientReferenceId,
     this.rowVersion,
     this.staff,
     this.attendees,

@@ -1394,7 +1394,6 @@ class AttendanceRegisterData extends DataClass
   final int? clientModifiedTime;
   final String? auditModifiedBy;
   final int? auditModifiedTime;
-  final String clientReferenceId;
   final bool? isDeleted;
   final int? rowVersion;
   AttendanceRegisterData(
@@ -1417,7 +1416,6 @@ class AttendanceRegisterData extends DataClass
       this.clientModifiedTime,
       this.auditModifiedBy,
       this.auditModifiedTime,
-      required this.clientReferenceId,
       this.isDeleted,
       this.rowVersion});
   factory AttendanceRegisterData.fromData(Map<String, dynamic> data,
@@ -1462,8 +1460,6 @@ class AttendanceRegisterData extends DataClass
           .mapFromDatabaseResponse(data['${effectivePrefix}audit_modified_by']),
       auditModifiedTime: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}audit_modified_time']),
-      clientReferenceId: const StringType().mapFromDatabaseResponse(
-          data['${effectivePrefix}client_reference_id'])!,
       isDeleted: const BoolType()
           .mapFromDatabaseResponse(data['${effectivePrefix}is_deleted']),
       rowVersion: const IntType()
@@ -1518,7 +1514,6 @@ class AttendanceRegisterData extends DataClass
     if (!nullToAbsent || auditModifiedTime != null) {
       map['audit_modified_time'] = Variable<int?>(auditModifiedTime);
     }
-    map['client_reference_id'] = Variable<String>(clientReferenceId);
     if (!nullToAbsent || isDeleted != null) {
       map['is_deleted'] = Variable<bool?>(isDeleted);
     }
@@ -1573,7 +1568,6 @@ class AttendanceRegisterData extends DataClass
       auditModifiedTime: auditModifiedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(auditModifiedTime),
-      clientReferenceId: Value(clientReferenceId),
       isDeleted: isDeleted == null && nullToAbsent
           ? const Value.absent()
           : Value(isDeleted),
@@ -1607,7 +1601,6 @@ class AttendanceRegisterData extends DataClass
       clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
       auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
       auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
-      clientReferenceId: serializer.fromJson<String>(json['clientReferenceId']),
       isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
       rowVersion: serializer.fromJson<int?>(json['rowVersion']),
     );
@@ -1635,7 +1628,6 @@ class AttendanceRegisterData extends DataClass
       'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
       'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
       'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
-      'clientReferenceId': serializer.toJson<String>(clientReferenceId),
       'isDeleted': serializer.toJson<bool?>(isDeleted),
       'rowVersion': serializer.toJson<int?>(rowVersion),
     };
@@ -1661,7 +1653,6 @@ class AttendanceRegisterData extends DataClass
           int? clientModifiedTime,
           String? auditModifiedBy,
           int? auditModifiedTime,
-          String? clientReferenceId,
           bool? isDeleted,
           int? rowVersion}) =>
       AttendanceRegisterData(
@@ -1684,7 +1675,6 @@ class AttendanceRegisterData extends DataClass
         clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
         auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
         auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
-        clientReferenceId: clientReferenceId ?? this.clientReferenceId,
         isDeleted: isDeleted ?? this.isDeleted,
         rowVersion: rowVersion ?? this.rowVersion,
       );
@@ -1710,7 +1700,6 @@ class AttendanceRegisterData extends DataClass
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
-          ..write('clientReferenceId: $clientReferenceId, ')
           ..write('isDeleted: $isDeleted, ')
           ..write('rowVersion: $rowVersion')
           ..write(')'))
@@ -1738,7 +1727,6 @@ class AttendanceRegisterData extends DataClass
         clientModifiedTime,
         auditModifiedBy,
         auditModifiedTime,
-        clientReferenceId,
         isDeleted,
         rowVersion
       ]);
@@ -1765,7 +1753,6 @@ class AttendanceRegisterData extends DataClass
           other.clientModifiedTime == this.clientModifiedTime &&
           other.auditModifiedBy == this.auditModifiedBy &&
           other.auditModifiedTime == this.auditModifiedTime &&
-          other.clientReferenceId == this.clientReferenceId &&
           other.isDeleted == this.isDeleted &&
           other.rowVersion == this.rowVersion);
 }
@@ -1791,7 +1778,6 @@ class AttendanceRegisterCompanion
   final Value<int?> clientModifiedTime;
   final Value<String?> auditModifiedBy;
   final Value<int?> auditModifiedTime;
-  final Value<String> clientReferenceId;
   final Value<bool?> isDeleted;
   final Value<int?> rowVersion;
   const AttendanceRegisterCompanion({
@@ -1814,7 +1800,6 @@ class AttendanceRegisterCompanion
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
-    this.clientReferenceId = const Value.absent(),
     this.isDeleted = const Value.absent(),
     this.rowVersion = const Value.absent(),
   });
@@ -1838,7 +1823,6 @@ class AttendanceRegisterCompanion
     this.clientModifiedTime = const Value.absent(),
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
-    required String clientReferenceId,
     this.isDeleted = const Value.absent(),
     this.rowVersion = const Value.absent(),
   })  : tenantId = Value(tenantId),
@@ -1846,8 +1830,7 @@ class AttendanceRegisterCompanion
         name = Value(name),
         referenceId = Value(referenceId),
         serviceCode = Value(serviceCode),
-        status = Value(status),
-        clientReferenceId = Value(clientReferenceId);
+        status = Value(status);
   static Insertable<AttendanceRegisterData> custom({
     Expression<String?>? id,
     Expression<String>? tenantId,
@@ -1868,7 +1851,6 @@ class AttendanceRegisterCompanion
     Expression<int?>? clientModifiedTime,
     Expression<String?>? auditModifiedBy,
     Expression<int?>? auditModifiedTime,
-    Expression<String>? clientReferenceId,
     Expression<bool?>? isDeleted,
     Expression<int?>? rowVersion,
   }) {
@@ -1894,7 +1876,6 @@ class AttendanceRegisterCompanion
         'client_modified_time': clientModifiedTime,
       if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
       if (auditModifiedTime != null) 'audit_modified_time': auditModifiedTime,
-      if (clientReferenceId != null) 'client_reference_id': clientReferenceId,
       if (isDeleted != null) 'is_deleted': isDeleted,
       if (rowVersion != null) 'row_version': rowVersion,
     });
@@ -1920,7 +1901,6 @@ class AttendanceRegisterCompanion
       Value<int?>? clientModifiedTime,
       Value<String?>? auditModifiedBy,
       Value<int?>? auditModifiedTime,
-      Value<String>? clientReferenceId,
       Value<bool?>? isDeleted,
       Value<int?>? rowVersion}) {
     return AttendanceRegisterCompanion(
@@ -1943,7 +1923,6 @@ class AttendanceRegisterCompanion
       clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
       auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
       auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
-      clientReferenceId: clientReferenceId ?? this.clientReferenceId,
       isDeleted: isDeleted ?? this.isDeleted,
       rowVersion: rowVersion ?? this.rowVersion,
     );
@@ -2009,9 +1988,6 @@ class AttendanceRegisterCompanion
     if (auditModifiedTime.present) {
       map['audit_modified_time'] = Variable<int?>(auditModifiedTime.value);
     }
-    if (clientReferenceId.present) {
-      map['client_reference_id'] = Variable<String>(clientReferenceId.value);
-    }
     if (isDeleted.present) {
       map['is_deleted'] = Variable<bool?>(isDeleted.value);
     }
@@ -2043,7 +2019,6 @@ class AttendanceRegisterCompanion
           ..write('clientModifiedTime: $clientModifiedTime, ')
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
-          ..write('clientReferenceId: $clientReferenceId, ')
           ..write('isDeleted: $isDeleted, ')
           ..write('rowVersion: $rowVersion')
           ..write(')'))
@@ -2168,12 +2143,6 @@ class $AttendanceRegisterTable extends AttendanceRegister
   late final GeneratedColumn<int?> auditModifiedTime = GeneratedColumn<int?>(
       'audit_modified_time', aliasedName, true,
       type: const IntType(), requiredDuringInsert: false);
-  final VerificationMeta _clientReferenceIdMeta =
-      const VerificationMeta('clientReferenceId');
-  @override
-  late final GeneratedColumn<String?> clientReferenceId =
-      GeneratedColumn<String?>('client_reference_id', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _isDeletedMeta = const VerificationMeta('isDeleted');
   @override
   late final GeneratedColumn<bool?> isDeleted = GeneratedColumn<bool?>(
@@ -2208,7 +2177,6 @@ class $AttendanceRegisterTable extends AttendanceRegister
         clientModifiedTime,
         auditModifiedBy,
         auditModifiedTime,
-        clientReferenceId,
         isDeleted,
         rowVersion
       ];
@@ -2335,14 +2303,6 @@ class $AttendanceRegisterTable extends AttendanceRegister
           auditModifiedTime.isAcceptableOrUnknown(
               data['audit_modified_time']!, _auditModifiedTimeMeta));
     }
-    if (data.containsKey('client_reference_id')) {
-      context.handle(
-          _clientReferenceIdMeta,
-          clientReferenceId.isAcceptableOrUnknown(
-              data['client_reference_id']!, _clientReferenceIdMeta));
-    } else if (isInserting) {
-      context.missing(_clientReferenceIdMeta);
-    }
     if (data.containsKey('is_deleted')) {
       context.handle(_isDeletedMeta,
           isDeleted.isAcceptableOrUnknown(data['is_deleted']!, _isDeletedMeta));
@@ -2357,7 +2317,7 @@ class $AttendanceRegisterTable extends AttendanceRegister
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {auditCreatedBy, clientReferenceId};
+  Set<GeneratedColumn> get $primaryKey => {id, auditCreatedBy};
   @override
   AttendanceRegisterData map(Map<String, dynamic> data, {String? tablePrefix}) {
     return AttendanceRegisterData.fromData(data,

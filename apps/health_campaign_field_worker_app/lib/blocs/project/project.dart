@@ -2,6 +2,8 @@
 import 'dart:async';
 import 'dart:core';
 
+import 'package:attendance_management/models/attendance_register.dart';
+import 'package:attendance_management/models/staff.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -42,6 +44,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       projectRemoteRepository;
   final LocalRepository<ProjectModel, ProjectSearchModel>
       projectLocalRepository;
+
+  final RemoteRepository<HCMAttendanceRegisterModel, HCMAttendanceSearchModel>
+      attendanceRemoteRepository;
+  final LocalRepository<HCMAttendanceRegisterModel, HCMAttendanceSearchModel>
+      attendanceLocalRepository;
 
   /// Project Facility Repositories
   final RemoteRepository<ProjectFacilityModel, ProjectFacilitySearchModel>
@@ -98,6 +105,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     required this.productVariantLocalRepository,
     required this.productVariantRemoteRepository,
     required this.mdmsRepository,
+    required this.attendanceLocalRepository,
+    required this.attendanceRemoteRepository,
   })  : localSecureStore = localSecureStore ?? LocalSecureStore.instance,
         super(const ProjectState()) {
     on(_handleProjectInit);
@@ -179,6 +188,12 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
       List<ProjectModel> staffProjects;
       try {
+        final attendanceRegisters =
+            await attendanceRemoteRepository.search(HCMAttendanceSearchModel(
+          attendanceSearchRegister: AttendanceRegisterSearchModel(staff: [
+            StaffSearchModel(staffId: [projectStaff.userId.toString()])
+          ]),
+        ));
         staffProjects = await projectRemoteRepository.search(
           ProjectSearchModel(
             id: projectStaff.projectId,
