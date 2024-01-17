@@ -58,7 +58,7 @@ class AttendanceLocalRepository extends LocalRepository<
 
     await sql.batch((batch) async {
       batch.insertAll(
-        sql.hFReferral,
+        sql.attendanceRegister,
         referralCompanions,
         mode: InsertMode.insertOrReplace,
       );

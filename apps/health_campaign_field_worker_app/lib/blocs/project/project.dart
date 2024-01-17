@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:core';
 
 import 'package:attendance_management/models/attendance_register.dart';
-import 'package:attendance_management/models/staff.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -190,10 +189,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       try {
         final attendanceRegisters =
             await attendanceRemoteRepository.search(HCMAttendanceSearchModel(
-          attendanceSearchRegister: AttendanceRegisterSearchModel(staff: [
-            StaffSearchModel(staffId: [projectStaff.userId.toString()])
-          ]),
+          attendanceSearchRegister: AttendanceRegisterSearchModel(),
         ));
+        await attendanceLocalRepository.bulkCreate(attendanceRegisters);
         staffProjects = await projectRemoteRepository.search(
           ProjectSearchModel(
             id: projectStaff.projectId,

@@ -16,6 +16,7 @@ import '../data/local_store/sql_store/sql_store.dart';
 import '../data/repositories/local/boundary.dart';
 import '../data/repositories/local/facility.dart';
 import '../data/repositories/local/h_f_referral.dart';
+import '../data/repositories/local/hcm_attendance.dart';
 import '../data/repositories/local/household.dart';
 import '../data/repositories/local/houshold_member.dart';
 import '../data/repositories/local/individual.dart';
@@ -37,6 +38,7 @@ import '../data/repositories/oplog/oplog.dart';
 import '../data/repositories/remote/boundary.dart';
 import '../data/repositories/remote/facility.dart';
 import '../data/repositories/remote/h_f_referral.dart';
+import '../data/repositories/remote/hcm_attendance.dart';
 import '../data/repositories/remote/household.dart';
 import '../data/repositories/remote/household_member.dart';
 import '../data/repositories/remote/individual.dart';
@@ -158,6 +160,10 @@ class Constants {
         sql,
         HFReferralOpLogManager(isar),
       ),
+      AttendanceLocalRepository(
+        sql,
+        AttendanceOpLogManager(isar),
+      ),
     ];
   }
 
@@ -229,6 +235,7 @@ class Constants {
           ReferralRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.hFReferral)
           HFReferralRemoteRepository(dio, actionMap: actions),
+        AttendanceRemoteRepository(dio, actionMap: actions),
       ]);
     }
 

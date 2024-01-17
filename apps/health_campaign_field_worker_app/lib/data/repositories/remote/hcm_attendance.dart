@@ -2,7 +2,8 @@
 
 import 'dart:async';
 
-import 'package:attendance_management/models/attendance_register.dart';
+import 'package:attendance_management/models/attendance_register.mapper.g.dart'
+    as att;
 import 'package:dio/dio.dart';
 
 import '../../../models/data_model.dart';
@@ -30,12 +31,12 @@ class AttendanceRemoteRepository extends RemoteRepository<
     response = await executeFuture(
       future: () async {
         return await dio.post(
-          searchPath,
+          '/health-attendance/v1/_search',
           queryParameters: {
             'offset': 0,
             'limit': 100,
             'tenantId': envConfig.variables.tenantId,
-            ...query.toMap(),
+            // ...query.toMap(),
           },
           data: {},
         );
@@ -81,7 +82,7 @@ class AttendanceRemoteRepository extends RemoteRepository<
 
     return entityList
         .map((e) => HCMAttendanceRegisterModel(
-              attendanceRegister: e as AttendancePackageRegisterModel,
+              attendanceRegister: att.Mapper.fromMap(e),
             ))
         .toList();
   }

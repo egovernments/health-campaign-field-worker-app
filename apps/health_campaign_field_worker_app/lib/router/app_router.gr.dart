@@ -106,17 +106,6 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    ManageAttendanceRoute.name: (routeData) {
-      final args = routeData.argsAs<ManageAttendanceRouteArgs>(
-          orElse: () => const ManageAttendanceRouteArgs());
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: ManageAttendancePage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-        ),
-      );
-    },
     BeneficiariesReportRoute.name: (routeData) {
       return MaterialPageX<dynamic>(
         routeData: routeData,
@@ -753,11 +742,6 @@ class _$AppRouter extends RootStackRouter {
               parent: AuthenticatedRouteWrapper.name,
             ),
             RouteConfig(
-              ManageAttendanceRoute.name,
-              path: 'manage-attendance',
-              parent: AuthenticatedRouteWrapper.name,
-            ),
-            RouteConfig(
               BeneficiariesReportRoute.name,
               path: 'beneficiary-downsync-report',
               parent: AuthenticatedRouteWrapper.name,
@@ -1352,40 +1336,6 @@ class QRScannerRouteArgs {
   @override
   String toString() {
     return 'QRScannerRouteArgs{key: $key, appLocalizations: $appLocalizations, quantity: $quantity, isGS1code: $isGS1code, sinlgleValue: $sinlgleValue, isEditEnabled: $isEditEnabled}';
-  }
-}
-
-/// generated route for
-/// [ManageAttendancePage]
-class ManageAttendanceRoute extends PageRouteInfo<ManageAttendanceRouteArgs> {
-  ManageAttendanceRoute({
-    Key? key,
-    AttendanceAppLocalizations? appLocalizations,
-  }) : super(
-          ManageAttendanceRoute.name,
-          path: 'manage-attendance',
-          args: ManageAttendanceRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-          ),
-        );
-
-  static const String name = 'ManageAttendanceRoute';
-}
-
-class ManageAttendanceRouteArgs {
-  const ManageAttendanceRouteArgs({
-    this.key,
-    this.appLocalizations,
-  });
-
-  final Key? key;
-
-  final AttendanceAppLocalizations? appLocalizations;
-
-  @override
-  String toString() {
-    return 'ManageAttendanceRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 

@@ -54,8 +54,9 @@ class UserRequestModel with _$UserRequestModel {
 
 @freezed
 class UserRoleModel with _$UserRoleModel {
+  //{TODO: Need to make it optional
   const factory UserRoleModel({
-    required String name,
+    @Default('') String? name,
     required String code,
     String? tenantId,
   }) = _UserRoleModel;

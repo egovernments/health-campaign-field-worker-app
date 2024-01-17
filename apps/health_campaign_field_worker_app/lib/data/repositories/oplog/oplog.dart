@@ -616,6 +616,34 @@ class HFReferralOpLogManager extends OpLogManager<HFReferralModel> {
       entity.nonRecoverableError;
 }
 
+class AttendanceOpLogManager extends OpLogManager<HCMAttendanceRegisterModel> {
+  AttendanceOpLogManager(super.isar);
+
+  @override
+  HCMAttendanceRegisterModel applyServerGeneratedIdToEntity(
+    HCMAttendanceRegisterModel entity,
+    String serverGeneratedId,
+    int rowVersion,
+  ) =>
+      throw UnimplementedError();
+
+  @override
+  String getClientReferenceId(HCMAttendanceRegisterModel entity) =>
+      throw UnimplementedError();
+
+  @override
+  String? getServerGeneratedId(HCMAttendanceRegisterModel entity) =>
+      throw UnimplementedError();
+
+  @override
+  int? getRowVersion(HCMAttendanceRegisterModel entity) =>
+      throw UnimplementedError();
+
+  @override
+  bool? getNonRecoverableError(HCMAttendanceRegisterModel entity) =>
+      throw UnimplementedError();
+}
+
 class ProjectStaffOpLogManager extends OpLogManager<ProjectStaffModel> {
   ProjectStaffOpLogManager(super.isar);
 

@@ -82,40 +82,40 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
     return Scaffold(
       body: SingleChildScrollView(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  "Manage Attendance ${projectList.length})",
-                  style: DigitTheme.instance.mobileTheme.textTheme.headlineLarge
-                      ?.apply(color: const DigitColors().black),
-                  textAlign: TextAlign.left,
-                ),
-              ),
-              empty
-                  ? const Center(
-                child: Card(
-                  child: SizedBox(
-                    height: 60,
-                    width: 200,
-                    child: Center(child: Text("No Data Found")),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              "Manage Attendance ${projectList.length})",
+              style: DigitTheme.instance.mobileTheme.textTheme.headlineLarge
+                  ?.apply(color: const DigitColors().black),
+              textAlign: TextAlign.left,
+            ),
+          ),
+          empty
+              ? const Center(
+                  child: Card(
+                    child: SizedBox(
+                      height: 60,
+                      width: 200,
+                      child: Center(child: Text("No Data Found")),
+                    ),
                   ),
-                ),
-              )
-                  : const SizedBox.shrink(),
-              ...list,
-              const SizedBox(
-                height: 16.0,
-              ),
-              const Align(
-                alignment: Alignment.bottomCenter,
-                child: PoweredByDigit(
-                  version: '1.2.0',
-                ),
-              ),
-            ],
-          )),
+                )
+              : const SizedBox.shrink(),
+          ...list,
+          const SizedBox(
+            height: 16.0,
+          ),
+          const Align(
+            alignment: Alignment.bottomCenter,
+            child: PoweredByDigit(
+              version: '1.2.0',
+            ),
+          ),
+        ],
+      )),
     );
   }
 }
@@ -150,15 +150,15 @@ class RegisterCard extends StatelessWidget {
           ),
           show
               ? DigitElevatedButton(
-            child: Text(
-              ((s.isAfter(startDate) || s.isAtSameMomentAs(startDate)) &&
-                  (s.isBefore(endDate) ||
-                      s.isAtSameMomentAs(endDate)))
-                  ? 'Mark Attendance'
-                  : 'View Attendance',
-            ),
-            onPressed: () {},
-          )
+                  child: Text(
+                    ((s.isAfter(startDate) || s.isAtSameMomentAs(startDate)) &&
+                            (s.isBefore(endDate) ||
+                                s.isAtSameMomentAs(endDate)))
+                        ? 'Mark Attendance'
+                        : 'View Attendance',
+                  ),
+                  onPressed: () {},
+                )
               : const SizedBox.shrink(),
         ],
       ),

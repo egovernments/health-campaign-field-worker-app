@@ -1,28 +1,19 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
-import 'attendee.dart';
-import 'staff.dart';
-
 @MappableClass(ignoreNull: true)
 class AttendanceRegisterSearchModel {
   final String? id;
   final List<String>? clientReferenceId;
-  final List<StaffSearchModel>? staff;
-  final List<AttendeeSearchModel>? attendees;
 
   AttendanceRegisterSearchModel({
     this.id,
     this.clientReferenceId,
-    this.staff,
-    this.attendees,
   }) : super();
 
   @MappableConstructor()
   AttendanceRegisterSearchModel.ignoreDeleted({
     this.id,
     this.clientReferenceId,
-    this.staff,
-    this.attendees,
   });
 }
 
@@ -39,8 +30,6 @@ class AttendancePackageRegisterModel {
   final String? status;
   final bool? nonRecoverableError;
   final int? rowVersion;
-  final List<StaffModel>? staff;
-  final List<AttendeeModel>? attendees;
   final DateTime? startDateTime;
   final DateTime? endDateTime;
   final AttendanceRegisterAdditionalFields? additionalFields;
@@ -56,8 +45,6 @@ class AttendancePackageRegisterModel {
     this.status,
     this.nonRecoverableError = false,
     this.rowVersion,
-    this.staff,
-    this.attendees,
     int? startDate,
     int? endDate,
   })  : startDateTime = startDate == null

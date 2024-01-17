@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:attendance_management/pages/manage_attendance.dart';
 import 'package:attendance_management/widgets/attendance_acknowledgement.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
@@ -424,7 +425,11 @@ class _HomePageState extends LocalizedState<HomePage> {
         icon: Icons.table_chart,
         label: i18.home.manageAttendanceLabel,
         onPressed: () {
-          context.router.push(ManageAttendanceRoute());
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const ManageAttendancePage()),
+          );
         },
       ),
     };
