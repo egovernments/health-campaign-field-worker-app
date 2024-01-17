@@ -6,19 +6,17 @@ class HCMAttendanceBloc extends AttendanceDependencies {
 
   @override
   AttendanceTestBloc getAttendanceTestBloc(
-    String id,
     Function(String newData) processNewData,
   ) {
     AppLogger.instance
-        .info('HCMAttendanceBloc $id', title: 'HCMAttendanceBloc');
+        .info('HCMAttendanceBloc', title: 'HCMAttendanceBloc');
     _onDataReceived = processNewData;
-    onDataReceived(id);
+    onDataReceived(); //TODO: rename method name as per choice and make this call to assign api response to _onDataReceived which is referenced in attendance_test_bloc.dart
 
-    return AttendanceTestBloc();
+    return AttendanceTestBloc(const AttendanceStates.registerLoading());
   }
 
-  void onDataReceived(String id) async {
-    await Future.delayed(const Duration(seconds: 2));
-    _onDataReceived('99');
+  void onDataReceived() async {
+    _onDataReceived('99'); //TODO: replace string with actual data type
   }
 }

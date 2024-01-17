@@ -27,7 +27,7 @@ class AttendanceRegisterSearchModel {
 }
 
 @MappableClass(ignoreNull: true)
-class AttendanceRegisterModel {
+class AttendancePackageRegisterModel {
   static const schemaName = 'AttendanceRegister';
 
   final String? id;
@@ -46,7 +46,7 @@ class AttendanceRegisterModel {
   final DateTime? endDateTime;
   final AttendanceRegisterAdditionalFields? additionalFields;
 
-  AttendanceRegisterModel({
+  AttendancePackageRegisterModel({
     this.additionalFields,
     this.id,
     this.tenantId,

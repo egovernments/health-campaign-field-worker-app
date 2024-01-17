@@ -1,3 +1,6 @@
+import 'package:attendance_management/models/attendance_register.dart';
+import 'package:attendance_management/models/attendee.dart';
+import 'package:attendance_management/models/staff.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:dart_mappable/internals.dart';
 
@@ -5,8 +8,6 @@ import 'data_model.dart';
 import 'entities/additional_fields_type.dart';
 import 'entities/address.dart';
 import 'entities/address_type.dart';
-import 'entities/attendance_register.dart';
-import 'entities/attendee.dart';
 import 'entities/attributes.dart';
 import 'entities/beneficiary_type.dart';
 import 'entities/blood_group.dart';
@@ -17,6 +18,7 @@ import 'entities/downsync.dart';
 import 'entities/facility.dart';
 import 'entities/gender.dart';
 import 'entities/h_f_referral.dart';
+import 'entities/hcm_attendance_model.dart';
 import 'entities/household.dart';
 import 'entities/household_member.dart';
 import 'entities/identifier.dart';
@@ -39,7 +41,6 @@ import 'entities/service.dart';
 import 'entities/service_attributes.dart';
 import 'entities/service_definition.dart';
 import 'entities/side_effect.dart';
-import 'entities/staff.dart';
 import 'entities/status.dart';
 import 'entities/stock.dart';
 import 'entities/stock_reconciliation.dart';
@@ -72,12 +73,6 @@ var _mappers = <BaseMapper>{
   AttributesSearchModelMapper._(),
   AttributesModelMapper._(),
   AttributesAdditionalFieldsMapper._(),
-  AttendanceRegisterSearchModelMapper._(),
-  AttendanceRegisterModelMapper._(),
-  AttendanceRegisterAdditionalFieldsMapper._(),
-  AttendeeSearchModelMapper._(),
-  AttendeeModelMapper._(),
-  AttendeeAdditionalFieldsMapper._(),
   BoundarySearchModelMapper._(),
   BoundaryModelMapper._(),
   DocumentSearchModelMapper._(),
@@ -158,9 +153,6 @@ var _mappers = <BaseMapper>{
   StockReconciliationSearchModelMapper._(),
   StockReconciliationModelMapper._(),
   StockReconciliationAdditionalFieldsMapper._(),
-  StaffSearchModelMapper._(),
-  StaffModelMapper._(),
-  StaffAdditionalFieldsMapper._(),
   TargetSearchModelMapper._(),
   TargetModelMapper._(),
   TargetAdditionalFieldsMapper._(),
@@ -190,6 +182,18 @@ var _mappers = <BaseMapper>{
   PgrComplaintResponseModelMapper._(),
   PgrComplainantResponseModelMapper._(),
   PgrServiceResponseModelMapper._(),
+  HCMAttendanceSearchModelMapper._(),
+  HCMAttendanceRegisterModelMapper._(),
+  HCMAttendanceAdditionalModelMapper._(),
+  AttendanceRegisterSearchModelMapper._(),
+  AttendancePackageRegisterModelMapper._(),
+  AttendanceRegisterAdditionalFieldsMapper._(),
+  AttendeeSearchModelMapper._(),
+  AttendeeModelMapper._(),
+  AttendeeAdditionalFieldsMapper._(),
+  StaffSearchModelMapper._(),
+  StaffModelMapper._(),
+  StaffAdditionalFieldsMapper._(),
   // enum mappers
   AdditionalFieldsTypeMapper._(),
   AddressTypeMapper._(),
@@ -222,8 +226,6 @@ class EntityModelMapper extends BaseMapper<EntityModel> {
   dynamic encode(EntityModel v) {
     if (v is AddressModel) { return AddressModelMapper._().encode(v); }
     else if (v is AttributesModel) { return AttributesModelMapper._().encode(v); }
-    else if (v is AttendanceRegisterModel) { return AttendanceRegisterModelMapper._().encode(v); }
-    else if (v is AttendeeModel) { return AttendeeModelMapper._().encode(v); }
     else if (v is BoundaryModel) { return BoundaryModelMapper._().encode(v); }
     else if (v is DocumentModel) { return DocumentModelMapper._().encode(v); }
     else if (v is DownsyncModel) { return DownsyncModelMapper._().encode(v); }
@@ -251,7 +253,6 @@ class EntityModelMapper extends BaseMapper<EntityModel> {
     else if (v is SideEffectModel) { return SideEffectModelMapper._().encode(v); }
     else if (v is StockModel) { return StockModelMapper._().encode(v); }
     else if (v is StockReconciliationModel) { return StockReconciliationModelMapper._().encode(v); }
-    else if (v is StaffModel) { return StaffModelMapper._().encode(v); }
     else if (v is TargetModel) { return TargetModelMapper._().encode(v); }
     else if (v is TaskModel) { return TaskModelMapper._().encode(v); }
     else if (v is TaskResourceModel) { return TaskResourceModelMapper._().encode(v); }
@@ -266,6 +267,7 @@ class EntityModelMapper extends BaseMapper<EntityModel> {
     else if (v is PgrComplaintResponseModel) { return PgrComplaintResponseModelMapper._().encode(v); }
     else if (v is PgrComplainantResponseModel) { return PgrComplainantResponseModelMapper._().encode(v); }
     else if (v is PgrServiceResponseModel) { return PgrServiceResponseModelMapper._().encode(v); }
+    else if (v is HCMAttendanceRegisterModel) { return HCMAttendanceRegisterModelMapper._().encode(v); }
     else { return toMap(v); }
   }
   Map<String, dynamic> toMap(EntityModel e) => {'auditDetails': Mapper.i.$enc(e.auditDetails, 'auditDetails'), 'clientAuditDetails': Mapper.i.$enc(e.clientAuditDetails, 'clientAuditDetails'), 'isDeleted': Mapper.i.$enc(e.isDeleted, 'isDeleted')};
@@ -320,8 +322,6 @@ class EntitySearchModelMapper extends BaseMapper<EntitySearchModel> {
   dynamic encode(EntitySearchModel v) {
     if (v is AddressSearchModel) { return AddressSearchModelMapper._().encode(v); }
     else if (v is AttributesSearchModel) { return AttributesSearchModelMapper._().encode(v); }
-    else if (v is AttendanceRegisterSearchModel) { return AttendanceRegisterSearchModelMapper._().encode(v); }
-    else if (v is AttendeeSearchModel) { return AttendeeSearchModelMapper._().encode(v); }
     else if (v is BoundarySearchModel) { return BoundarySearchModelMapper._().encode(v); }
     else if (v is DocumentSearchModel) { return DocumentSearchModelMapper._().encode(v); }
     else if (v is DownsyncSearchModel) { return DownsyncSearchModelMapper._().encode(v); }
@@ -349,12 +349,12 @@ class EntitySearchModelMapper extends BaseMapper<EntitySearchModel> {
     else if (v is SideEffectSearchModel) { return SideEffectSearchModelMapper._().encode(v); }
     else if (v is StockSearchModel) { return StockSearchModelMapper._().encode(v); }
     else if (v is StockReconciliationSearchModel) { return StockReconciliationSearchModelMapper._().encode(v); }
-    else if (v is StaffSearchModel) { return StaffSearchModelMapper._().encode(v); }
     else if (v is TargetSearchModel) { return TargetSearchModelMapper._().encode(v); }
     else if (v is TaskSearchModel) { return TaskSearchModelMapper._().encode(v); }
     else if (v is TaskResourceSearchModel) { return TaskResourceSearchModelMapper._().encode(v); }
     else if (v is UserSearchModel) { return UserSearchModelMapper._().encode(v); }
     else if (v is PgrServiceSearchModel) { return PgrServiceSearchModelMapper._().encode(v); }
+    else if (v is HCMAttendanceSearchModel) { return HCMAttendanceSearchModelMapper._().encode(v); }
     else { return toMap(v); }
   }
   Map<String, dynamic> toMap(EntitySearchModel e) => {if (Mapper.i.$enc(e.boundaryCode, 'boundaryCode') != null) 'boundaryCode': Mapper.i.$enc(e.boundaryCode, 'boundaryCode'), if (Mapper.i.$enc(e.auditDetails, 'auditDetails') != null) 'auditDetails': Mapper.i.$enc(e.auditDetails, 'auditDetails'), if (Mapper.i.$enc(e.additionalFields, 'additionalFields') != null) 'additionalFields': Mapper.i.$enc(e.additionalFields, 'additionalFields')};
@@ -382,8 +382,6 @@ class AdditionalFieldsMapper extends BaseMapper<AdditionalFields> {
   dynamic encode(AdditionalFields v) {
     if (v is AddressAdditionalFields) { return AddressAdditionalFieldsMapper._().encode(v); }
     else if (v is AttributesAdditionalFields) { return AttributesAdditionalFieldsMapper._().encode(v); }
-    else if (v is AttendanceRegisterAdditionalFields) { return AttendanceRegisterAdditionalFieldsMapper._().encode(v); }
-    else if (v is AttendeeAdditionalFields) { return AttendeeAdditionalFieldsMapper._().encode(v); }
     else if (v is DocumentAdditionalFields) { return DocumentAdditionalFieldsMapper._().encode(v); }
     else if (v is DownsyncAdditionalFields) { return DownsyncAdditionalFieldsMapper._().encode(v); }
     else if (v is FacilityAdditionalFields) { return FacilityAdditionalFieldsMapper._().encode(v); }
@@ -410,11 +408,11 @@ class AdditionalFieldsMapper extends BaseMapper<AdditionalFields> {
     else if (v is SideEffectAdditionalFields) { return SideEffectAdditionalFieldsMapper._().encode(v); }
     else if (v is StockAdditionalFields) { return StockAdditionalFieldsMapper._().encode(v); }
     else if (v is StockReconciliationAdditionalFields) { return StockReconciliationAdditionalFieldsMapper._().encode(v); }
-    else if (v is StaffAdditionalFields) { return StaffAdditionalFieldsMapper._().encode(v); }
     else if (v is TargetAdditionalFields) { return TargetAdditionalFieldsMapper._().encode(v); }
     else if (v is TaskAdditionalFields) { return TaskAdditionalFieldsMapper._().encode(v); }
     else if (v is TaskResourceAdditionalFields) { return TaskResourceAdditionalFieldsMapper._().encode(v); }
     else if (v is UserAdditionalFields) { return UserAdditionalFieldsMapper._().encode(v); }
+    else if (v is HCMAttendanceAdditionalModel) { return HCMAttendanceAdditionalModelMapper._().encode(v); }
     else { return toMap(v); }
   }
   Map<String, dynamic> toMap(AdditionalFields a) => {'schema': Mapper.i.$enc(a.schema, 'schema'), 'version': Mapper.i.$enc(a.version, 'version'), 'fields': Mapper.i.$enc(a.fields, 'fields')};
@@ -771,246 +769,6 @@ class _AttributesAdditionalFieldsCopyWithImpl<$R> extends BaseCopyWith<Attribute
 
   @override ListCopyWith<$R, AdditionalField, AdditionalFieldCopyWith<$R>> get fields => ListCopyWith($value.fields, (v, t) => AdditionalFieldCopyWith(v, t), (v) => call(fields: v));
   @override $R call({String? schema, int? version, List<AdditionalField>? fields}) => $then(AttributesAdditionalFields(schema: schema ?? $value.schema, version: version ?? $value.version, fields: fields ?? $value.fields));
-}
-
-class AttendanceRegisterSearchModelMapper extends BaseMapper<AttendanceRegisterSearchModel> {
-  AttendanceRegisterSearchModelMapper._();
-
-  @override Function get decoder => decode;
-  AttendanceRegisterSearchModel decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  AttendanceRegisterSearchModel fromMap(Map<String, dynamic> map) => AttendanceRegisterSearchModel.ignoreDeleted(id: Mapper.i.$getOpt(map, 'id'), clientReferenceId: Mapper.i.$getOpt(map, 'clientReferenceId'), staff: Mapper.i.$getOpt(map, 'staff'), attendees: Mapper.i.$getOpt(map, 'attendees'), boundaryCode: Mapper.i.$getOpt(map, 'boundaryCode'));
-
-  @override Function get encoder => (AttendanceRegisterSearchModel v) => encode(v);
-  dynamic encode(AttendanceRegisterSearchModel v) => toMap(v);
-  Map<String, dynamic> toMap(AttendanceRegisterSearchModel a) => {if (Mapper.i.$enc(a.id, 'id') != null) 'id': Mapper.i.$enc(a.id, 'id'), if (Mapper.i.$enc(a.clientReferenceId, 'clientReferenceId') != null) 'clientReferenceId': Mapper.i.$enc(a.clientReferenceId, 'clientReferenceId'), if (Mapper.i.$enc(a.staff, 'staff') != null) 'staff': Mapper.i.$enc(a.staff, 'staff'), if (Mapper.i.$enc(a.attendees, 'attendees') != null) 'attendees': Mapper.i.$enc(a.attendees, 'attendees'), if (Mapper.i.$enc(a.boundaryCode, 'boundaryCode') != null) 'boundaryCode': Mapper.i.$enc(a.boundaryCode, 'boundaryCode')};
-
-  @override String stringify(AttendanceRegisterSearchModel self) => 'AttendanceRegisterSearchModel(boundaryCode: ${Mapper.asString(self.boundaryCode)}, isDeleted: ${Mapper.asString(self.isDeleted)}, auditDetails: ${Mapper.asString(self.auditDetails)}, additionalFields: ${Mapper.asString(self.additionalFields)}, id: ${Mapper.asString(self.id)}, clientReferenceId: ${Mapper.asString(self.clientReferenceId)}, staff: ${Mapper.asString(self.staff)}, attendees: ${Mapper.asString(self.attendees)})';
-  @override int hash(AttendanceRegisterSearchModel self) => Mapper.hash(self.boundaryCode) ^ Mapper.hash(self.isDeleted) ^ Mapper.hash(self.auditDetails) ^ Mapper.hash(self.additionalFields) ^ Mapper.hash(self.id) ^ Mapper.hash(self.clientReferenceId) ^ Mapper.hash(self.staff) ^ Mapper.hash(self.attendees);
-  @override bool equals(AttendanceRegisterSearchModel self, AttendanceRegisterSearchModel other) => Mapper.isEqual(self.boundaryCode, other.boundaryCode) && Mapper.isEqual(self.isDeleted, other.isDeleted) && Mapper.isEqual(self.auditDetails, other.auditDetails) && Mapper.isEqual(self.additionalFields, other.additionalFields) && Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.clientReferenceId, other.clientReferenceId) && Mapper.isEqual(self.staff, other.staff) && Mapper.isEqual(self.attendees, other.attendees);
-
-  @override Function get typeFactory => (f) => f<AttendanceRegisterSearchModel>();
-}
-
-extension AttendanceRegisterSearchModelMapperExtension  on AttendanceRegisterSearchModel {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-  AttendanceRegisterSearchModelCopyWith<AttendanceRegisterSearchModel> get copyWith => AttendanceRegisterSearchModelCopyWith(this, $identity);
-}
-
-abstract class AttendanceRegisterSearchModelCopyWith<$R> {
-  factory AttendanceRegisterSearchModelCopyWith(AttendanceRegisterSearchModel value, Then<AttendanceRegisterSearchModel, $R> then) = _AttendanceRegisterSearchModelCopyWithImpl<$R>;
-  ListCopyWith<$R, StaffSearchModel, StaffSearchModelCopyWith<$R>>? get staff;
-  ListCopyWith<$R, AttendeeSearchModel, AttendeeSearchModelCopyWith<$R>>? get attendees;
-  $R call({String? id, List<String>? clientReferenceId, List<StaffSearchModel>? staff, List<AttendeeSearchModel>? attendees, String? boundaryCode});
-  $R apply(AttendanceRegisterSearchModel Function(AttendanceRegisterSearchModel) transform);
-}
-
-class _AttendanceRegisterSearchModelCopyWithImpl<$R> extends BaseCopyWith<AttendanceRegisterSearchModel, $R> implements AttendanceRegisterSearchModelCopyWith<$R> {
-  _AttendanceRegisterSearchModelCopyWithImpl(AttendanceRegisterSearchModel value, Then<AttendanceRegisterSearchModel, $R> then) : super(value, then);
-
-  @override ListCopyWith<$R, StaffSearchModel, StaffSearchModelCopyWith<$R>>? get staff => $value.staff != null ? ListCopyWith($value.staff!, (v, t) => StaffSearchModelCopyWith(v, t), (v) => call(staff: v)) : null;
-  @override ListCopyWith<$R, AttendeeSearchModel, AttendeeSearchModelCopyWith<$R>>? get attendees => $value.attendees != null ? ListCopyWith($value.attendees!, (v, t) => AttendeeSearchModelCopyWith(v, t), (v) => call(attendees: v)) : null;
-  @override $R call({Object? id = $none, Object? clientReferenceId = $none, Object? staff = $none, Object? attendees = $none, Object? boundaryCode = $none}) => $then(AttendanceRegisterSearchModel.ignoreDeleted(id: or(id, $value.id), clientReferenceId: or(clientReferenceId, $value.clientReferenceId), staff: or(staff, $value.staff), attendees: or(attendees, $value.attendees), boundaryCode: or(boundaryCode, $value.boundaryCode)));
-}
-
-class AttendanceRegisterModelMapper extends BaseMapper<AttendanceRegisterModel> {
-  AttendanceRegisterModelMapper._();
-
-  @override Function get decoder => decode;
-  AttendanceRegisterModel decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  AttendanceRegisterModel fromMap(Map<String, dynamic> map) => AttendanceRegisterModel(additionalFields: Mapper.i.$getOpt(map, 'additionalFields'), id: Mapper.i.$getOpt(map, 'id'), tenantId: Mapper.i.$getOpt(map, 'tenantId'), registerNumber: Mapper.i.$getOpt(map, 'registerNumber'), name: Mapper.i.$getOpt(map, 'name'), referenceId: Mapper.i.$getOpt(map, 'referenceId'), serviceCode: Mapper.i.$getOpt(map, 'serviceCode'), status: Mapper.i.$getOpt(map, 'status'), nonRecoverableError: Mapper.i.$getOpt(map, 'nonRecoverableError') ?? false, clientReferenceId: Mapper.i.$get(map, 'clientReferenceId'), rowVersion: Mapper.i.$getOpt(map, 'rowVersion'), staff: Mapper.i.$getOpt(map, 'staff'), attendees: Mapper.i.$getOpt(map, 'attendees'), startDate: Mapper.i.$getOpt(map, 'startDate'), endDate: Mapper.i.$getOpt(map, 'endDate'), auditDetails: Mapper.i.$getOpt(map, 'auditDetails'), clientAuditDetails: Mapper.i.$getOpt(map, 'clientAuditDetails'), isDeleted: Mapper.i.$getOpt(map, 'isDeleted') ?? false);
-
-  @override Function get encoder => (AttendanceRegisterModel v) => encode(v);
-  dynamic encode(AttendanceRegisterModel v) => toMap(v);
-  Map<String, dynamic> toMap(AttendanceRegisterModel a) => {if (Mapper.i.$enc(a.additionalFields, 'additionalFields') != null) 'additionalFields': Mapper.i.$enc(a.additionalFields, 'additionalFields'), if (Mapper.i.$enc(a.id, 'id') != null) 'id': Mapper.i.$enc(a.id, 'id'), if (Mapper.i.$enc(a.tenantId, 'tenantId') != null) 'tenantId': Mapper.i.$enc(a.tenantId, 'tenantId'), if (Mapper.i.$enc(a.registerNumber, 'registerNumber') != null) 'registerNumber': Mapper.i.$enc(a.registerNumber, 'registerNumber'), if (Mapper.i.$enc(a.name, 'name') != null) 'name': Mapper.i.$enc(a.name, 'name'), if (Mapper.i.$enc(a.referenceId, 'referenceId') != null) 'referenceId': Mapper.i.$enc(a.referenceId, 'referenceId'), if (Mapper.i.$enc(a.serviceCode, 'serviceCode') != null) 'serviceCode': Mapper.i.$enc(a.serviceCode, 'serviceCode'), if (Mapper.i.$enc(a.status, 'status') != null) 'status': Mapper.i.$enc(a.status, 'status'), if (Mapper.i.$enc(a.nonRecoverableError, 'nonRecoverableError') != null) 'nonRecoverableError': Mapper.i.$enc(a.nonRecoverableError, 'nonRecoverableError'), 'clientReferenceId': Mapper.i.$enc(a.clientReferenceId, 'clientReferenceId'), if (Mapper.i.$enc(a.rowVersion, 'rowVersion') != null) 'rowVersion': Mapper.i.$enc(a.rowVersion, 'rowVersion'), if (Mapper.i.$enc(a.staff, 'staff') != null) 'staff': Mapper.i.$enc(a.staff, 'staff'), if (Mapper.i.$enc(a.attendees, 'attendees') != null) 'attendees': Mapper.i.$enc(a.attendees, 'attendees'), if (Mapper.i.$enc(a.startDate, 'startDate') != null) 'startDate': Mapper.i.$enc(a.startDate, 'startDate'), if (Mapper.i.$enc(a.endDate, 'endDate') != null) 'endDate': Mapper.i.$enc(a.endDate, 'endDate'), if (Mapper.i.$enc(a.auditDetails, 'auditDetails') != null) 'auditDetails': Mapper.i.$enc(a.auditDetails, 'auditDetails'), if (Mapper.i.$enc(a.clientAuditDetails, 'clientAuditDetails') != null) 'clientAuditDetails': Mapper.i.$enc(a.clientAuditDetails, 'clientAuditDetails'), if (Mapper.i.$enc(a.isDeleted, 'isDeleted') != null) 'isDeleted': Mapper.i.$enc(a.isDeleted, 'isDeleted')};
-
-  @override String stringify(AttendanceRegisterModel self) => 'AttendanceRegisterModel(boundaryCode: ${Mapper.asString(self.boundaryCode)}, isDeleted: ${Mapper.asString(self.isDeleted)}, auditDetails: ${Mapper.asString(self.auditDetails)}, clientAuditDetails: ${Mapper.asString(self.clientAuditDetails)}, id: ${Mapper.asString(self.id)}, tenantId: ${Mapper.asString(self.tenantId)}, registerNumber: ${Mapper.asString(self.registerNumber)}, name: ${Mapper.asString(self.name)}, referenceId: ${Mapper.asString(self.referenceId)}, serviceCode: ${Mapper.asString(self.serviceCode)}, status: ${Mapper.asString(self.status)}, nonRecoverableError: ${Mapper.asString(self.nonRecoverableError)}, clientReferenceId: ${Mapper.asString(self.clientReferenceId)}, rowVersion: ${Mapper.asString(self.rowVersion)}, staff: ${Mapper.asString(self.staff)}, attendees: ${Mapper.asString(self.attendees)}, startDateTime: ${Mapper.asString(self.startDateTime)}, endDateTime: ${Mapper.asString(self.endDateTime)}, additionalFields: ${Mapper.asString(self.additionalFields)})';
-  @override int hash(AttendanceRegisterModel self) => Mapper.hash(self.boundaryCode) ^ Mapper.hash(self.isDeleted) ^ Mapper.hash(self.auditDetails) ^ Mapper.hash(self.clientAuditDetails) ^ Mapper.hash(self.id) ^ Mapper.hash(self.tenantId) ^ Mapper.hash(self.registerNumber) ^ Mapper.hash(self.name) ^ Mapper.hash(self.referenceId) ^ Mapper.hash(self.serviceCode) ^ Mapper.hash(self.status) ^ Mapper.hash(self.nonRecoverableError) ^ Mapper.hash(self.clientReferenceId) ^ Mapper.hash(self.rowVersion) ^ Mapper.hash(self.staff) ^ Mapper.hash(self.attendees) ^ Mapper.hash(self.startDateTime) ^ Mapper.hash(self.endDateTime) ^ Mapper.hash(self.additionalFields);
-  @override bool equals(AttendanceRegisterModel self, AttendanceRegisterModel other) => Mapper.isEqual(self.boundaryCode, other.boundaryCode) && Mapper.isEqual(self.isDeleted, other.isDeleted) && Mapper.isEqual(self.auditDetails, other.auditDetails) && Mapper.isEqual(self.clientAuditDetails, other.clientAuditDetails) && Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.tenantId, other.tenantId) && Mapper.isEqual(self.registerNumber, other.registerNumber) && Mapper.isEqual(self.name, other.name) && Mapper.isEqual(self.referenceId, other.referenceId) && Mapper.isEqual(self.serviceCode, other.serviceCode) && Mapper.isEqual(self.status, other.status) && Mapper.isEqual(self.nonRecoverableError, other.nonRecoverableError) && Mapper.isEqual(self.clientReferenceId, other.clientReferenceId) && Mapper.isEqual(self.rowVersion, other.rowVersion) && Mapper.isEqual(self.staff, other.staff) && Mapper.isEqual(self.attendees, other.attendees) && Mapper.isEqual(self.startDateTime, other.startDateTime) && Mapper.isEqual(self.endDateTime, other.endDateTime) && Mapper.isEqual(self.additionalFields, other.additionalFields);
-
-  @override Function get typeFactory => (f) => f<AttendanceRegisterModel>();
-}
-
-extension AttendanceRegisterModelMapperExtension  on AttendanceRegisterModel {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-  AttendanceRegisterModelCopyWith<AttendanceRegisterModel> get copyWith => AttendanceRegisterModelCopyWith(this, $identity);
-}
-
-abstract class AttendanceRegisterModelCopyWith<$R> {
-  factory AttendanceRegisterModelCopyWith(AttendanceRegisterModel value, Then<AttendanceRegisterModel, $R> then) = _AttendanceRegisterModelCopyWithImpl<$R>;
-  AttendanceRegisterAdditionalFieldsCopyWith<$R>? get additionalFields;
-  ListCopyWith<$R, StaffModel, StaffModelCopyWith<$R>>? get staff;
-  ListCopyWith<$R, AttendeeModel, AttendeeModelCopyWith<$R>>? get attendees;
-  AuditDetailsCopyWith<$R>? get auditDetails;
-  ClientAuditDetailsCopyWith<$R>? get clientAuditDetails;
-  $R call({AttendanceRegisterAdditionalFields? additionalFields, String? id, String? tenantId, String? registerNumber, String? name, String? referenceId, String? serviceCode, String? status, bool? nonRecoverableError, String? clientReferenceId, int? rowVersion, List<StaffModel>? staff, List<AttendeeModel>? attendees, int? startDate, int? endDate, AuditDetails? auditDetails, ClientAuditDetails? clientAuditDetails, bool? isDeleted});
-  $R apply(AttendanceRegisterModel Function(AttendanceRegisterModel) transform);
-}
-
-class _AttendanceRegisterModelCopyWithImpl<$R> extends BaseCopyWith<AttendanceRegisterModel, $R> implements AttendanceRegisterModelCopyWith<$R> {
-  _AttendanceRegisterModelCopyWithImpl(AttendanceRegisterModel value, Then<AttendanceRegisterModel, $R> then) : super(value, then);
-
-  @override AttendanceRegisterAdditionalFieldsCopyWith<$R>? get additionalFields => $value.additionalFields != null ? AttendanceRegisterAdditionalFieldsCopyWith($value.additionalFields!, (v) => call(additionalFields: v)) : null;
-  @override ListCopyWith<$R, StaffModel, StaffModelCopyWith<$R>>? get staff => $value.staff != null ? ListCopyWith($value.staff!, (v, t) => StaffModelCopyWith(v, t), (v) => call(staff: v)) : null;
-  @override ListCopyWith<$R, AttendeeModel, AttendeeModelCopyWith<$R>>? get attendees => $value.attendees != null ? ListCopyWith($value.attendees!, (v, t) => AttendeeModelCopyWith(v, t), (v) => call(attendees: v)) : null;
-  @override AuditDetailsCopyWith<$R>? get auditDetails => $value.auditDetails != null ? AuditDetailsCopyWith($value.auditDetails!, (v) => call(auditDetails: v)) : null;
-  @override ClientAuditDetailsCopyWith<$R>? get clientAuditDetails => $value.clientAuditDetails != null ? ClientAuditDetailsCopyWith($value.clientAuditDetails!, (v) => call(clientAuditDetails: v)) : null;
-  @override $R call({Object? additionalFields = $none, Object? id = $none, Object? tenantId = $none, Object? registerNumber = $none, Object? name = $none, Object? referenceId = $none, Object? serviceCode = $none, Object? status = $none, Object? nonRecoverableError = $none, String? clientReferenceId, Object? rowVersion = $none, Object? staff = $none, Object? attendees = $none, Object? startDate = $none, Object? endDate = $none, Object? auditDetails = $none, Object? clientAuditDetails = $none, Object? isDeleted = $none}) => $then(AttendanceRegisterModel(additionalFields: or(additionalFields, $value.additionalFields), id: or(id, $value.id), tenantId: or(tenantId, $value.tenantId), registerNumber: or(registerNumber, $value.registerNumber), name: or(name, $value.name), referenceId: or(referenceId, $value.referenceId), serviceCode: or(serviceCode, $value.serviceCode), status: or(status, $value.status), nonRecoverableError: or(nonRecoverableError, $value.nonRecoverableError), clientReferenceId: clientReferenceId ?? $value.clientReferenceId, rowVersion: or(rowVersion, $value.rowVersion), staff: or(staff, $value.staff), attendees: or(attendees, $value.attendees), startDate: or(startDate, $value.startDate), endDate: or(endDate, $value.endDate), auditDetails: or(auditDetails, $value.auditDetails), clientAuditDetails: or(clientAuditDetails, $value.clientAuditDetails), isDeleted: or(isDeleted, $value.isDeleted)));
-}
-
-class AttendanceRegisterAdditionalFieldsMapper extends BaseMapper<AttendanceRegisterAdditionalFields> {
-  AttendanceRegisterAdditionalFieldsMapper._();
-
-  @override Function get decoder => decode;
-  AttendanceRegisterAdditionalFields decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  AttendanceRegisterAdditionalFields fromMap(Map<String, dynamic> map) => AttendanceRegisterAdditionalFields(schema: Mapper.i.$getOpt(map, 'schema') ?? 'AttendanceRegister', version: Mapper.i.$get(map, 'version'), fields: Mapper.i.$getOpt(map, 'fields') ?? const []);
-
-  @override Function get encoder => (AttendanceRegisterAdditionalFields v) => encode(v);
-  dynamic encode(AttendanceRegisterAdditionalFields v) => toMap(v);
-  Map<String, dynamic> toMap(AttendanceRegisterAdditionalFields a) => {'schema': Mapper.i.$enc(a.schema, 'schema'), 'version': Mapper.i.$enc(a.version, 'version'), 'fields': Mapper.i.$enc(a.fields, 'fields')};
-
-  @override String stringify(AttendanceRegisterAdditionalFields self) => 'AttendanceRegisterAdditionalFields(schema: ${Mapper.asString(self.schema)}, version: ${Mapper.asString(self.version)}, fields: ${Mapper.asString(self.fields)})';
-  @override int hash(AttendanceRegisterAdditionalFields self) => Mapper.hash(self.schema) ^ Mapper.hash(self.version) ^ Mapper.hash(self.fields);
-  @override bool equals(AttendanceRegisterAdditionalFields self, AttendanceRegisterAdditionalFields other) => Mapper.isEqual(self.schema, other.schema) && Mapper.isEqual(self.version, other.version) && Mapper.isEqual(self.fields, other.fields);
-
-  @override Function get typeFactory => (f) => f<AttendanceRegisterAdditionalFields>();
-}
-
-extension AttendanceRegisterAdditionalFieldsMapperExtension  on AttendanceRegisterAdditionalFields {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-  AttendanceRegisterAdditionalFieldsCopyWith<AttendanceRegisterAdditionalFields> get copyWith => AttendanceRegisterAdditionalFieldsCopyWith(this, $identity);
-}
-
-abstract class AttendanceRegisterAdditionalFieldsCopyWith<$R> {
-  factory AttendanceRegisterAdditionalFieldsCopyWith(AttendanceRegisterAdditionalFields value, Then<AttendanceRegisterAdditionalFields, $R> then) = _AttendanceRegisterAdditionalFieldsCopyWithImpl<$R>;
-  ListCopyWith<$R, AdditionalField, AdditionalFieldCopyWith<$R>> get fields;
-  $R call({String? schema, int? version, List<AdditionalField>? fields});
-  $R apply(AttendanceRegisterAdditionalFields Function(AttendanceRegisterAdditionalFields) transform);
-}
-
-class _AttendanceRegisterAdditionalFieldsCopyWithImpl<$R> extends BaseCopyWith<AttendanceRegisterAdditionalFields, $R> implements AttendanceRegisterAdditionalFieldsCopyWith<$R> {
-  _AttendanceRegisterAdditionalFieldsCopyWithImpl(AttendanceRegisterAdditionalFields value, Then<AttendanceRegisterAdditionalFields, $R> then) : super(value, then);
-
-  @override ListCopyWith<$R, AdditionalField, AdditionalFieldCopyWith<$R>> get fields => ListCopyWith($value.fields, (v, t) => AdditionalFieldCopyWith(v, t), (v) => call(fields: v));
-  @override $R call({String? schema, int? version, List<AdditionalField>? fields}) => $then(AttendanceRegisterAdditionalFields(schema: schema ?? $value.schema, version: version ?? $value.version, fields: fields ?? $value.fields));
-}
-
-class AttendeeSearchModelMapper extends BaseMapper<AttendeeSearchModel> {
-  AttendeeSearchModelMapper._();
-
-  @override Function get decoder => decode;
-  AttendeeSearchModel decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  AttendeeSearchModel fromMap(Map<String, dynamic> map) => AttendeeSearchModel.ignoreDeleted(id: Mapper.i.$getOpt(map, 'id'), clientReferenceId: Mapper.i.$getOpt(map, 'clientReferenceId'), boundaryCode: Mapper.i.$getOpt(map, 'boundaryCode'));
-
-  @override Function get encoder => (AttendeeSearchModel v) => encode(v);
-  dynamic encode(AttendeeSearchModel v) => toMap(v);
-  Map<String, dynamic> toMap(AttendeeSearchModel a) => {if (Mapper.i.$enc(a.id, 'id') != null) 'id': Mapper.i.$enc(a.id, 'id'), if (Mapper.i.$enc(a.clientReferenceId, 'clientReferenceId') != null) 'clientReferenceId': Mapper.i.$enc(a.clientReferenceId, 'clientReferenceId'), if (Mapper.i.$enc(a.boundaryCode, 'boundaryCode') != null) 'boundaryCode': Mapper.i.$enc(a.boundaryCode, 'boundaryCode')};
-
-  @override String stringify(AttendeeSearchModel self) => 'AttendeeSearchModel(boundaryCode: ${Mapper.asString(self.boundaryCode)}, isDeleted: ${Mapper.asString(self.isDeleted)}, auditDetails: ${Mapper.asString(self.auditDetails)}, additionalFields: ${Mapper.asString(self.additionalFields)}, id: ${Mapper.asString(self.id)}, clientReferenceId: ${Mapper.asString(self.clientReferenceId)})';
-  @override int hash(AttendeeSearchModel self) => Mapper.hash(self.boundaryCode) ^ Mapper.hash(self.isDeleted) ^ Mapper.hash(self.auditDetails) ^ Mapper.hash(self.additionalFields) ^ Mapper.hash(self.id) ^ Mapper.hash(self.clientReferenceId);
-  @override bool equals(AttendeeSearchModel self, AttendeeSearchModel other) => Mapper.isEqual(self.boundaryCode, other.boundaryCode) && Mapper.isEqual(self.isDeleted, other.isDeleted) && Mapper.isEqual(self.auditDetails, other.auditDetails) && Mapper.isEqual(self.additionalFields, other.additionalFields) && Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.clientReferenceId, other.clientReferenceId);
-
-  @override Function get typeFactory => (f) => f<AttendeeSearchModel>();
-}
-
-extension AttendeeSearchModelMapperExtension  on AttendeeSearchModel {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-  AttendeeSearchModelCopyWith<AttendeeSearchModel> get copyWith => AttendeeSearchModelCopyWith(this, $identity);
-}
-
-abstract class AttendeeSearchModelCopyWith<$R> {
-  factory AttendeeSearchModelCopyWith(AttendeeSearchModel value, Then<AttendeeSearchModel, $R> then) = _AttendeeSearchModelCopyWithImpl<$R>;
-  $R call({String? id, List<String>? clientReferenceId, String? boundaryCode});
-  $R apply(AttendeeSearchModel Function(AttendeeSearchModel) transform);
-}
-
-class _AttendeeSearchModelCopyWithImpl<$R> extends BaseCopyWith<AttendeeSearchModel, $R> implements AttendeeSearchModelCopyWith<$R> {
-  _AttendeeSearchModelCopyWithImpl(AttendeeSearchModel value, Then<AttendeeSearchModel, $R> then) : super(value, then);
-
-  @override $R call({Object? id = $none, Object? clientReferenceId = $none, Object? boundaryCode = $none}) => $then(AttendeeSearchModel.ignoreDeleted(id: or(id, $value.id), clientReferenceId: or(clientReferenceId, $value.clientReferenceId), boundaryCode: or(boundaryCode, $value.boundaryCode)));
-}
-
-class AttendeeModelMapper extends BaseMapper<AttendeeModel> {
-  AttendeeModelMapper._();
-
-  @override Function get decoder => decode;
-  AttendeeModel decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  AttendeeModel fromMap(Map<String, dynamic> map) => AttendeeModel(additionalFields: Mapper.i.$getOpt(map, 'additionalFields'), id: Mapper.i.$getOpt(map, 'id'), tenantId: Mapper.i.$getOpt(map, 'tenantId'), registerId: Mapper.i.$getOpt(map, 'registerId'), individualId: Mapper.i.$getOpt(map, 'individualId'), enrollmentDate: Mapper.i.$getOpt(map, 'enrollmentDate'), denrollmentDate: Mapper.i.$getOpt(map, 'denrollmentDate'), nonRecoverableError: Mapper.i.$getOpt(map, 'nonRecoverableError') ?? false, clientReferenceId: Mapper.i.$get(map, 'clientReferenceId'), rowVersion: Mapper.i.$getOpt(map, 'rowVersion'), auditDetails: Mapper.i.$getOpt(map, 'auditDetails'), clientAuditDetails: Mapper.i.$getOpt(map, 'clientAuditDetails'), isDeleted: Mapper.i.$getOpt(map, 'isDeleted') ?? false);
-
-  @override Function get encoder => (AttendeeModel v) => encode(v);
-  dynamic encode(AttendeeModel v) => toMap(v);
-  Map<String, dynamic> toMap(AttendeeModel a) => {if (Mapper.i.$enc(a.additionalFields, 'additionalFields') != null) 'additionalFields': Mapper.i.$enc(a.additionalFields, 'additionalFields'), if (Mapper.i.$enc(a.id, 'id') != null) 'id': Mapper.i.$enc(a.id, 'id'), if (Mapper.i.$enc(a.tenantId, 'tenantId') != null) 'tenantId': Mapper.i.$enc(a.tenantId, 'tenantId'), if (Mapper.i.$enc(a.registerId, 'registerId') != null) 'registerId': Mapper.i.$enc(a.registerId, 'registerId'), if (Mapper.i.$enc(a.individualId, 'individualId') != null) 'individualId': Mapper.i.$enc(a.individualId, 'individualId'), if (Mapper.i.$enc(a.enrollmentDate, 'enrollmentDate') != null) 'enrollmentDate': Mapper.i.$enc(a.enrollmentDate, 'enrollmentDate'), if (Mapper.i.$enc(a.denrollmentDate, 'denrollmentDate') != null) 'denrollmentDate': Mapper.i.$enc(a.denrollmentDate, 'denrollmentDate'), if (Mapper.i.$enc(a.nonRecoverableError, 'nonRecoverableError') != null) 'nonRecoverableError': Mapper.i.$enc(a.nonRecoverableError, 'nonRecoverableError'), 'clientReferenceId': Mapper.i.$enc(a.clientReferenceId, 'clientReferenceId'), if (Mapper.i.$enc(a.rowVersion, 'rowVersion') != null) 'rowVersion': Mapper.i.$enc(a.rowVersion, 'rowVersion'), if (Mapper.i.$enc(a.auditDetails, 'auditDetails') != null) 'auditDetails': Mapper.i.$enc(a.auditDetails, 'auditDetails'), if (Mapper.i.$enc(a.clientAuditDetails, 'clientAuditDetails') != null) 'clientAuditDetails': Mapper.i.$enc(a.clientAuditDetails, 'clientAuditDetails'), if (Mapper.i.$enc(a.isDeleted, 'isDeleted') != null) 'isDeleted': Mapper.i.$enc(a.isDeleted, 'isDeleted')};
-
-  @override String stringify(AttendeeModel self) => 'AttendeeModel(boundaryCode: ${Mapper.asString(self.boundaryCode)}, isDeleted: ${Mapper.asString(self.isDeleted)}, auditDetails: ${Mapper.asString(self.auditDetails)}, clientAuditDetails: ${Mapper.asString(self.clientAuditDetails)}, id: ${Mapper.asString(self.id)}, tenantId: ${Mapper.asString(self.tenantId)}, registerId: ${Mapper.asString(self.registerId)}, individualId: ${Mapper.asString(self.individualId)}, enrollmentDate: ${Mapper.asString(self.enrollmentDate)}, denrollmentDate: ${Mapper.asString(self.denrollmentDate)}, nonRecoverableError: ${Mapper.asString(self.nonRecoverableError)}, clientReferenceId: ${Mapper.asString(self.clientReferenceId)}, rowVersion: ${Mapper.asString(self.rowVersion)}, additionalFields: ${Mapper.asString(self.additionalFields)})';
-  @override int hash(AttendeeModel self) => Mapper.hash(self.boundaryCode) ^ Mapper.hash(self.isDeleted) ^ Mapper.hash(self.auditDetails) ^ Mapper.hash(self.clientAuditDetails) ^ Mapper.hash(self.id) ^ Mapper.hash(self.tenantId) ^ Mapper.hash(self.registerId) ^ Mapper.hash(self.individualId) ^ Mapper.hash(self.enrollmentDate) ^ Mapper.hash(self.denrollmentDate) ^ Mapper.hash(self.nonRecoverableError) ^ Mapper.hash(self.clientReferenceId) ^ Mapper.hash(self.rowVersion) ^ Mapper.hash(self.additionalFields);
-  @override bool equals(AttendeeModel self, AttendeeModel other) => Mapper.isEqual(self.boundaryCode, other.boundaryCode) && Mapper.isEqual(self.isDeleted, other.isDeleted) && Mapper.isEqual(self.auditDetails, other.auditDetails) && Mapper.isEqual(self.clientAuditDetails, other.clientAuditDetails) && Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.tenantId, other.tenantId) && Mapper.isEqual(self.registerId, other.registerId) && Mapper.isEqual(self.individualId, other.individualId) && Mapper.isEqual(self.enrollmentDate, other.enrollmentDate) && Mapper.isEqual(self.denrollmentDate, other.denrollmentDate) && Mapper.isEqual(self.nonRecoverableError, other.nonRecoverableError) && Mapper.isEqual(self.clientReferenceId, other.clientReferenceId) && Mapper.isEqual(self.rowVersion, other.rowVersion) && Mapper.isEqual(self.additionalFields, other.additionalFields);
-
-  @override Function get typeFactory => (f) => f<AttendeeModel>();
-}
-
-extension AttendeeModelMapperExtension  on AttendeeModel {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-  AttendeeModelCopyWith<AttendeeModel> get copyWith => AttendeeModelCopyWith(this, $identity);
-}
-
-abstract class AttendeeModelCopyWith<$R> {
-  factory AttendeeModelCopyWith(AttendeeModel value, Then<AttendeeModel, $R> then) = _AttendeeModelCopyWithImpl<$R>;
-  AttendeeAdditionalFieldsCopyWith<$R>? get additionalFields;
-  AuditDetailsCopyWith<$R>? get auditDetails;
-  ClientAuditDetailsCopyWith<$R>? get clientAuditDetails;
-  $R call({AttendeeAdditionalFields? additionalFields, String? id, String? tenantId, String? registerId, String? individualId, int? enrollmentDate, int? denrollmentDate, bool? nonRecoverableError, String? clientReferenceId, int? rowVersion, AuditDetails? auditDetails, ClientAuditDetails? clientAuditDetails, bool? isDeleted});
-  $R apply(AttendeeModel Function(AttendeeModel) transform);
-}
-
-class _AttendeeModelCopyWithImpl<$R> extends BaseCopyWith<AttendeeModel, $R> implements AttendeeModelCopyWith<$R> {
-  _AttendeeModelCopyWithImpl(AttendeeModel value, Then<AttendeeModel, $R> then) : super(value, then);
-
-  @override AttendeeAdditionalFieldsCopyWith<$R>? get additionalFields => $value.additionalFields != null ? AttendeeAdditionalFieldsCopyWith($value.additionalFields!, (v) => call(additionalFields: v)) : null;
-  @override AuditDetailsCopyWith<$R>? get auditDetails => $value.auditDetails != null ? AuditDetailsCopyWith($value.auditDetails!, (v) => call(auditDetails: v)) : null;
-  @override ClientAuditDetailsCopyWith<$R>? get clientAuditDetails => $value.clientAuditDetails != null ? ClientAuditDetailsCopyWith($value.clientAuditDetails!, (v) => call(clientAuditDetails: v)) : null;
-  @override $R call({Object? additionalFields = $none, Object? id = $none, Object? tenantId = $none, Object? registerId = $none, Object? individualId = $none, Object? enrollmentDate = $none, Object? denrollmentDate = $none, Object? nonRecoverableError = $none, String? clientReferenceId, Object? rowVersion = $none, Object? auditDetails = $none, Object? clientAuditDetails = $none, Object? isDeleted = $none}) => $then(AttendeeModel(additionalFields: or(additionalFields, $value.additionalFields), id: or(id, $value.id), tenantId: or(tenantId, $value.tenantId), registerId: or(registerId, $value.registerId), individualId: or(individualId, $value.individualId), enrollmentDate: or(enrollmentDate, $value.enrollmentDate), denrollmentDate: or(denrollmentDate, $value.denrollmentDate), nonRecoverableError: or(nonRecoverableError, $value.nonRecoverableError), clientReferenceId: clientReferenceId ?? $value.clientReferenceId, rowVersion: or(rowVersion, $value.rowVersion), auditDetails: or(auditDetails, $value.auditDetails), clientAuditDetails: or(clientAuditDetails, $value.clientAuditDetails), isDeleted: or(isDeleted, $value.isDeleted)));
-}
-
-class AttendeeAdditionalFieldsMapper extends BaseMapper<AttendeeAdditionalFields> {
-  AttendeeAdditionalFieldsMapper._();
-
-  @override Function get decoder => decode;
-  AttendeeAdditionalFields decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  AttendeeAdditionalFields fromMap(Map<String, dynamic> map) => AttendeeAdditionalFields(schema: Mapper.i.$getOpt(map, 'schema') ?? 'Attendee', version: Mapper.i.$get(map, 'version'), fields: Mapper.i.$getOpt(map, 'fields') ?? const []);
-
-  @override Function get encoder => (AttendeeAdditionalFields v) => encode(v);
-  dynamic encode(AttendeeAdditionalFields v) => toMap(v);
-  Map<String, dynamic> toMap(AttendeeAdditionalFields a) => {'schema': Mapper.i.$enc(a.schema, 'schema'), 'version': Mapper.i.$enc(a.version, 'version'), 'fields': Mapper.i.$enc(a.fields, 'fields')};
-
-  @override String stringify(AttendeeAdditionalFields self) => 'AttendeeAdditionalFields(schema: ${Mapper.asString(self.schema)}, version: ${Mapper.asString(self.version)}, fields: ${Mapper.asString(self.fields)})';
-  @override int hash(AttendeeAdditionalFields self) => Mapper.hash(self.schema) ^ Mapper.hash(self.version) ^ Mapper.hash(self.fields);
-  @override bool equals(AttendeeAdditionalFields self, AttendeeAdditionalFields other) => Mapper.isEqual(self.schema, other.schema) && Mapper.isEqual(self.version, other.version) && Mapper.isEqual(self.fields, other.fields);
-
-  @override Function get typeFactory => (f) => f<AttendeeAdditionalFields>();
-}
-
-extension AttendeeAdditionalFieldsMapperExtension  on AttendeeAdditionalFields {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-  AttendeeAdditionalFieldsCopyWith<AttendeeAdditionalFields> get copyWith => AttendeeAdditionalFieldsCopyWith(this, $identity);
-}
-
-abstract class AttendeeAdditionalFieldsCopyWith<$R> {
-  factory AttendeeAdditionalFieldsCopyWith(AttendeeAdditionalFields value, Then<AttendeeAdditionalFields, $R> then) = _AttendeeAdditionalFieldsCopyWithImpl<$R>;
-  ListCopyWith<$R, AdditionalField, AdditionalFieldCopyWith<$R>> get fields;
-  $R call({String? schema, int? version, List<AdditionalField>? fields});
-  $R apply(AttendeeAdditionalFields Function(AttendeeAdditionalFields) transform);
-}
-
-class _AttendeeAdditionalFieldsCopyWithImpl<$R> extends BaseCopyWith<AttendeeAdditionalFields, $R> implements AttendeeAdditionalFieldsCopyWith<$R> {
-  _AttendeeAdditionalFieldsCopyWithImpl(AttendeeAdditionalFields value, Then<AttendeeAdditionalFields, $R> then) : super(value, then);
-
-  @override ListCopyWith<$R, AdditionalField, AdditionalFieldCopyWith<$R>> get fields => ListCopyWith($value.fields, (v, t) => AdditionalFieldCopyWith(v, t), (v) => call(fields: v));
-  @override $R call({String? schema, int? version, List<AdditionalField>? fields}) => $then(AttendeeAdditionalFields(schema: schema ?? $value.schema, version: version ?? $value.version, fields: fields ?? $value.fields));
 }
 
 class BoundarySearchModelMapper extends BaseMapper<BoundarySearchModel> {
@@ -4133,122 +3891,6 @@ class _StockReconciliationAdditionalFieldsCopyWithImpl<$R> extends BaseCopyWith<
   @override $R call({String? schema, int? version, List<AdditionalField>? fields}) => $then(StockReconciliationAdditionalFields(schema: schema ?? $value.schema, version: version ?? $value.version, fields: fields ?? $value.fields));
 }
 
-class StaffSearchModelMapper extends BaseMapper<StaffSearchModel> {
-  StaffSearchModelMapper._();
-
-  @override Function get decoder => decode;
-  StaffSearchModel decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  StaffSearchModel fromMap(Map<String, dynamic> map) => StaffSearchModel.ignoreDeleted(id: Mapper.i.$getOpt(map, 'id'), clientReferenceId: Mapper.i.$getOpt(map, 'clientReferenceId'), boundaryCode: Mapper.i.$getOpt(map, 'boundaryCode'));
-
-  @override Function get encoder => (StaffSearchModel v) => encode(v);
-  dynamic encode(StaffSearchModel v) => toMap(v);
-  Map<String, dynamic> toMap(StaffSearchModel s) => {if (Mapper.i.$enc(s.id, 'id') != null) 'id': Mapper.i.$enc(s.id, 'id'), if (Mapper.i.$enc(s.clientReferenceId, 'clientReferenceId') != null) 'clientReferenceId': Mapper.i.$enc(s.clientReferenceId, 'clientReferenceId'), if (Mapper.i.$enc(s.boundaryCode, 'boundaryCode') != null) 'boundaryCode': Mapper.i.$enc(s.boundaryCode, 'boundaryCode')};
-
-  @override String stringify(StaffSearchModel self) => 'StaffSearchModel(boundaryCode: ${Mapper.asString(self.boundaryCode)}, isDeleted: ${Mapper.asString(self.isDeleted)}, auditDetails: ${Mapper.asString(self.auditDetails)}, additionalFields: ${Mapper.asString(self.additionalFields)}, id: ${Mapper.asString(self.id)}, clientReferenceId: ${Mapper.asString(self.clientReferenceId)})';
-  @override int hash(StaffSearchModel self) => Mapper.hash(self.boundaryCode) ^ Mapper.hash(self.isDeleted) ^ Mapper.hash(self.auditDetails) ^ Mapper.hash(self.additionalFields) ^ Mapper.hash(self.id) ^ Mapper.hash(self.clientReferenceId);
-  @override bool equals(StaffSearchModel self, StaffSearchModel other) => Mapper.isEqual(self.boundaryCode, other.boundaryCode) && Mapper.isEqual(self.isDeleted, other.isDeleted) && Mapper.isEqual(self.auditDetails, other.auditDetails) && Mapper.isEqual(self.additionalFields, other.additionalFields) && Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.clientReferenceId, other.clientReferenceId);
-
-  @override Function get typeFactory => (f) => f<StaffSearchModel>();
-}
-
-extension StaffSearchModelMapperExtension  on StaffSearchModel {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-  StaffSearchModelCopyWith<StaffSearchModel> get copyWith => StaffSearchModelCopyWith(this, $identity);
-}
-
-abstract class StaffSearchModelCopyWith<$R> {
-  factory StaffSearchModelCopyWith(StaffSearchModel value, Then<StaffSearchModel, $R> then) = _StaffSearchModelCopyWithImpl<$R>;
-  $R call({String? id, List<String>? clientReferenceId, String? boundaryCode});
-  $R apply(StaffSearchModel Function(StaffSearchModel) transform);
-}
-
-class _StaffSearchModelCopyWithImpl<$R> extends BaseCopyWith<StaffSearchModel, $R> implements StaffSearchModelCopyWith<$R> {
-  _StaffSearchModelCopyWithImpl(StaffSearchModel value, Then<StaffSearchModel, $R> then) : super(value, then);
-
-  @override $R call({Object? id = $none, Object? clientReferenceId = $none, Object? boundaryCode = $none}) => $then(StaffSearchModel.ignoreDeleted(id: or(id, $value.id), clientReferenceId: or(clientReferenceId, $value.clientReferenceId), boundaryCode: or(boundaryCode, $value.boundaryCode)));
-}
-
-class StaffModelMapper extends BaseMapper<StaffModel> {
-  StaffModelMapper._();
-
-  @override Function get decoder => decode;
-  StaffModel decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  StaffModel fromMap(Map<String, dynamic> map) => StaffModel(additionalFields: Mapper.i.$getOpt(map, 'additionalFields'), id: Mapper.i.$getOpt(map, 'id'), tenantId: Mapper.i.$getOpt(map, 'tenantId'), registerId: Mapper.i.$getOpt(map, 'registerId'), userId: Mapper.i.$getOpt(map, 'userId'), enrollmentDate: Mapper.i.$getOpt(map, 'enrollmentDate'), denrollmentDate: Mapper.i.$getOpt(map, 'denrollmentDate'), nonRecoverableError: Mapper.i.$getOpt(map, 'nonRecoverableError') ?? false, clientReferenceId: Mapper.i.$get(map, 'clientReferenceId'), rowVersion: Mapper.i.$getOpt(map, 'rowVersion'), auditDetails: Mapper.i.$getOpt(map, 'auditDetails'), clientAuditDetails: Mapper.i.$getOpt(map, 'clientAuditDetails'), isDeleted: Mapper.i.$getOpt(map, 'isDeleted') ?? false);
-
-  @override Function get encoder => (StaffModel v) => encode(v);
-  dynamic encode(StaffModel v) => toMap(v);
-  Map<String, dynamic> toMap(StaffModel s) => {if (Mapper.i.$enc(s.additionalFields, 'additionalFields') != null) 'additionalFields': Mapper.i.$enc(s.additionalFields, 'additionalFields'), if (Mapper.i.$enc(s.id, 'id') != null) 'id': Mapper.i.$enc(s.id, 'id'), if (Mapper.i.$enc(s.tenantId, 'tenantId') != null) 'tenantId': Mapper.i.$enc(s.tenantId, 'tenantId'), if (Mapper.i.$enc(s.registerId, 'registerId') != null) 'registerId': Mapper.i.$enc(s.registerId, 'registerId'), if (Mapper.i.$enc(s.userId, 'userId') != null) 'userId': Mapper.i.$enc(s.userId, 'userId'), if (Mapper.i.$enc(s.enrollmentDate, 'enrollmentDate') != null) 'enrollmentDate': Mapper.i.$enc(s.enrollmentDate, 'enrollmentDate'), if (Mapper.i.$enc(s.denrollmentDate, 'denrollmentDate') != null) 'denrollmentDate': Mapper.i.$enc(s.denrollmentDate, 'denrollmentDate'), if (Mapper.i.$enc(s.nonRecoverableError, 'nonRecoverableError') != null) 'nonRecoverableError': Mapper.i.$enc(s.nonRecoverableError, 'nonRecoverableError'), 'clientReferenceId': Mapper.i.$enc(s.clientReferenceId, 'clientReferenceId'), if (Mapper.i.$enc(s.rowVersion, 'rowVersion') != null) 'rowVersion': Mapper.i.$enc(s.rowVersion, 'rowVersion'), if (Mapper.i.$enc(s.auditDetails, 'auditDetails') != null) 'auditDetails': Mapper.i.$enc(s.auditDetails, 'auditDetails'), if (Mapper.i.$enc(s.clientAuditDetails, 'clientAuditDetails') != null) 'clientAuditDetails': Mapper.i.$enc(s.clientAuditDetails, 'clientAuditDetails'), if (Mapper.i.$enc(s.isDeleted, 'isDeleted') != null) 'isDeleted': Mapper.i.$enc(s.isDeleted, 'isDeleted')};
-
-  @override String stringify(StaffModel self) => 'StaffModel(boundaryCode: ${Mapper.asString(self.boundaryCode)}, isDeleted: ${Mapper.asString(self.isDeleted)}, auditDetails: ${Mapper.asString(self.auditDetails)}, clientAuditDetails: ${Mapper.asString(self.clientAuditDetails)}, id: ${Mapper.asString(self.id)}, tenantId: ${Mapper.asString(self.tenantId)}, registerId: ${Mapper.asString(self.registerId)}, userId: ${Mapper.asString(self.userId)}, enrollmentDate: ${Mapper.asString(self.enrollmentDate)}, denrollmentDate: ${Mapper.asString(self.denrollmentDate)}, nonRecoverableError: ${Mapper.asString(self.nonRecoverableError)}, clientReferenceId: ${Mapper.asString(self.clientReferenceId)}, rowVersion: ${Mapper.asString(self.rowVersion)}, additionalFields: ${Mapper.asString(self.additionalFields)})';
-  @override int hash(StaffModel self) => Mapper.hash(self.boundaryCode) ^ Mapper.hash(self.isDeleted) ^ Mapper.hash(self.auditDetails) ^ Mapper.hash(self.clientAuditDetails) ^ Mapper.hash(self.id) ^ Mapper.hash(self.tenantId) ^ Mapper.hash(self.registerId) ^ Mapper.hash(self.userId) ^ Mapper.hash(self.enrollmentDate) ^ Mapper.hash(self.denrollmentDate) ^ Mapper.hash(self.nonRecoverableError) ^ Mapper.hash(self.clientReferenceId) ^ Mapper.hash(self.rowVersion) ^ Mapper.hash(self.additionalFields);
-  @override bool equals(StaffModel self, StaffModel other) => Mapper.isEqual(self.boundaryCode, other.boundaryCode) && Mapper.isEqual(self.isDeleted, other.isDeleted) && Mapper.isEqual(self.auditDetails, other.auditDetails) && Mapper.isEqual(self.clientAuditDetails, other.clientAuditDetails) && Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.tenantId, other.tenantId) && Mapper.isEqual(self.registerId, other.registerId) && Mapper.isEqual(self.userId, other.userId) && Mapper.isEqual(self.enrollmentDate, other.enrollmentDate) && Mapper.isEqual(self.denrollmentDate, other.denrollmentDate) && Mapper.isEqual(self.nonRecoverableError, other.nonRecoverableError) && Mapper.isEqual(self.clientReferenceId, other.clientReferenceId) && Mapper.isEqual(self.rowVersion, other.rowVersion) && Mapper.isEqual(self.additionalFields, other.additionalFields);
-
-  @override Function get typeFactory => (f) => f<StaffModel>();
-}
-
-extension StaffModelMapperExtension  on StaffModel {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-  StaffModelCopyWith<StaffModel> get copyWith => StaffModelCopyWith(this, $identity);
-}
-
-abstract class StaffModelCopyWith<$R> {
-  factory StaffModelCopyWith(StaffModel value, Then<StaffModel, $R> then) = _StaffModelCopyWithImpl<$R>;
-  StaffAdditionalFieldsCopyWith<$R>? get additionalFields;
-  AuditDetailsCopyWith<$R>? get auditDetails;
-  ClientAuditDetailsCopyWith<$R>? get clientAuditDetails;
-  $R call({StaffAdditionalFields? additionalFields, String? id, String? tenantId, String? registerId, String? userId, int? enrollmentDate, int? denrollmentDate, bool? nonRecoverableError, String? clientReferenceId, int? rowVersion, AuditDetails? auditDetails, ClientAuditDetails? clientAuditDetails, bool? isDeleted});
-  $R apply(StaffModel Function(StaffModel) transform);
-}
-
-class _StaffModelCopyWithImpl<$R> extends BaseCopyWith<StaffModel, $R> implements StaffModelCopyWith<$R> {
-  _StaffModelCopyWithImpl(StaffModel value, Then<StaffModel, $R> then) : super(value, then);
-
-  @override StaffAdditionalFieldsCopyWith<$R>? get additionalFields => $value.additionalFields != null ? StaffAdditionalFieldsCopyWith($value.additionalFields!, (v) => call(additionalFields: v)) : null;
-  @override AuditDetailsCopyWith<$R>? get auditDetails => $value.auditDetails != null ? AuditDetailsCopyWith($value.auditDetails!, (v) => call(auditDetails: v)) : null;
-  @override ClientAuditDetailsCopyWith<$R>? get clientAuditDetails => $value.clientAuditDetails != null ? ClientAuditDetailsCopyWith($value.clientAuditDetails!, (v) => call(clientAuditDetails: v)) : null;
-  @override $R call({Object? additionalFields = $none, Object? id = $none, Object? tenantId = $none, Object? registerId = $none, Object? userId = $none, Object? enrollmentDate = $none, Object? denrollmentDate = $none, Object? nonRecoverableError = $none, String? clientReferenceId, Object? rowVersion = $none, Object? auditDetails = $none, Object? clientAuditDetails = $none, Object? isDeleted = $none}) => $then(StaffModel(additionalFields: or(additionalFields, $value.additionalFields), id: or(id, $value.id), tenantId: or(tenantId, $value.tenantId), registerId: or(registerId, $value.registerId), userId: or(userId, $value.userId), enrollmentDate: or(enrollmentDate, $value.enrollmentDate), denrollmentDate: or(denrollmentDate, $value.denrollmentDate), nonRecoverableError: or(nonRecoverableError, $value.nonRecoverableError), clientReferenceId: clientReferenceId ?? $value.clientReferenceId, rowVersion: or(rowVersion, $value.rowVersion), auditDetails: or(auditDetails, $value.auditDetails), clientAuditDetails: or(clientAuditDetails, $value.clientAuditDetails), isDeleted: or(isDeleted, $value.isDeleted)));
-}
-
-class StaffAdditionalFieldsMapper extends BaseMapper<StaffAdditionalFields> {
-  StaffAdditionalFieldsMapper._();
-
-  @override Function get decoder => decode;
-  StaffAdditionalFields decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  StaffAdditionalFields fromMap(Map<String, dynamic> map) => StaffAdditionalFields(schema: Mapper.i.$getOpt(map, 'schema') ?? 'Staff', version: Mapper.i.$get(map, 'version'), fields: Mapper.i.$getOpt(map, 'fields') ?? const []);
-
-  @override Function get encoder => (StaffAdditionalFields v) => encode(v);
-  dynamic encode(StaffAdditionalFields v) => toMap(v);
-  Map<String, dynamic> toMap(StaffAdditionalFields s) => {'schema': Mapper.i.$enc(s.schema, 'schema'), 'version': Mapper.i.$enc(s.version, 'version'), 'fields': Mapper.i.$enc(s.fields, 'fields')};
-
-  @override String stringify(StaffAdditionalFields self) => 'StaffAdditionalFields(schema: ${Mapper.asString(self.schema)}, version: ${Mapper.asString(self.version)}, fields: ${Mapper.asString(self.fields)})';
-  @override int hash(StaffAdditionalFields self) => Mapper.hash(self.schema) ^ Mapper.hash(self.version) ^ Mapper.hash(self.fields);
-  @override bool equals(StaffAdditionalFields self, StaffAdditionalFields other) => Mapper.isEqual(self.schema, other.schema) && Mapper.isEqual(self.version, other.version) && Mapper.isEqual(self.fields, other.fields);
-
-  @override Function get typeFactory => (f) => f<StaffAdditionalFields>();
-}
-
-extension StaffAdditionalFieldsMapperExtension  on StaffAdditionalFields {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-  StaffAdditionalFieldsCopyWith<StaffAdditionalFields> get copyWith => StaffAdditionalFieldsCopyWith(this, $identity);
-}
-
-abstract class StaffAdditionalFieldsCopyWith<$R> {
-  factory StaffAdditionalFieldsCopyWith(StaffAdditionalFields value, Then<StaffAdditionalFields, $R> then) = _StaffAdditionalFieldsCopyWithImpl<$R>;
-  ListCopyWith<$R, AdditionalField, AdditionalFieldCopyWith<$R>> get fields;
-  $R call({String? schema, int? version, List<AdditionalField>? fields});
-  $R apply(StaffAdditionalFields Function(StaffAdditionalFields) transform);
-}
-
-class _StaffAdditionalFieldsCopyWithImpl<$R> extends BaseCopyWith<StaffAdditionalFields, $R> implements StaffAdditionalFieldsCopyWith<$R> {
-  _StaffAdditionalFieldsCopyWithImpl(StaffAdditionalFields value, Then<StaffAdditionalFields, $R> then) : super(value, then);
-
-  @override ListCopyWith<$R, AdditionalField, AdditionalFieldCopyWith<$R>> get fields => ListCopyWith($value.fields, (v, t) => AdditionalFieldCopyWith(v, t), (v) => call(fields: v));
-  @override $R call({String? schema, int? version, List<AdditionalField>? fields}) => $then(StaffAdditionalFields(schema: schema ?? $value.schema, version: version ?? $value.version, fields: fields ?? $value.fields));
-}
-
 class TargetSearchModelMapper extends BaseMapper<TargetSearchModel> {
   TargetSearchModelMapper._();
 
@@ -5363,6 +5005,462 @@ class _PgrServiceResponseModelCopyWithImpl<$R> extends BaseCopyWith<PgrServiceRe
   @override PgrComplainantResponseModelCopyWith<$R>? get user => $value.user != null ? PgrComplainantResponseModelCopyWith($value.user!, (v) => call(user: v)) : null;
   @override AuditDetailsCopyWith<$R>? get auditDetails => $value.auditDetails != null ? AuditDetailsCopyWith($value.auditDetails!, (v) => call(auditDetails: v)) : null;
   @override $R call({Object? active = $none, Object? id = $none, Object? tenantId = $none, Object? serviceCode = $none, Object? serviceRequestId = $none, Object? description = $none, Object? accountId = $none, Object? applicationStatus = $none, Object? source = $none, Object? user = $none, Object? isDeleted = $none, Object? rowVersion = $none, Object? auditDetails = $none}) => $then(PgrServiceResponseModel(active: or(active, $value.active), id: or(id, $value.id), tenantId: or(tenantId, $value.tenantId), serviceCode: or(serviceCode, $value.serviceCode), serviceRequestId: or(serviceRequestId, $value.serviceRequestId), description: or(description, $value.description), accountId: or(accountId, $value.accountId), applicationStatus: or(applicationStatus, $value.applicationStatus), source: or(source, $value.source), user: or(user, $value.user), isDeleted: or(isDeleted, $value.isDeleted), rowVersion: or(rowVersion, $value.rowVersion), auditDetails: or(auditDetails, $value.auditDetails)));
+}
+
+class HCMAttendanceSearchModelMapper extends BaseMapper<HCMAttendanceSearchModel> {
+  HCMAttendanceSearchModelMapper._();
+
+  @override Function get decoder => decode;
+  HCMAttendanceSearchModel decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  HCMAttendanceSearchModel fromMap(Map<String, dynamic> map) => HCMAttendanceSearchModel(attendanceSearchRegister: Mapper.i.$get(map, 'attendanceSearchRegister'), boundaryCode: Mapper.i.$getOpt(map, 'boundaryCode'), isDeleted: Mapper.i.$getOpt(map, 'isDeleted') ?? false);
+
+  @override Function get encoder => (HCMAttendanceSearchModel v) => encode(v);
+  dynamic encode(HCMAttendanceSearchModel v) => toMap(v);
+  Map<String, dynamic> toMap(HCMAttendanceSearchModel h) => {'attendanceSearchRegister': Mapper.i.$enc(h.attendanceSearchRegister, 'attendanceSearchRegister'), if (Mapper.i.$enc(h.boundaryCode, 'boundaryCode') != null) 'boundaryCode': Mapper.i.$enc(h.boundaryCode, 'boundaryCode'), if (Mapper.i.$enc(h.isDeleted, 'isDeleted') != null) 'isDeleted': Mapper.i.$enc(h.isDeleted, 'isDeleted')};
+
+  @override String stringify(HCMAttendanceSearchModel self) => 'HCMAttendanceSearchModel(boundaryCode: ${Mapper.asString(self.boundaryCode)}, isDeleted: ${Mapper.asString(self.isDeleted)}, auditDetails: ${Mapper.asString(self.auditDetails)}, additionalFields: ${Mapper.asString(self.additionalFields)}, attendanceSearchRegister: ${Mapper.asString(self.attendanceSearchRegister)})';
+  @override int hash(HCMAttendanceSearchModel self) => Mapper.hash(self.boundaryCode) ^ Mapper.hash(self.isDeleted) ^ Mapper.hash(self.auditDetails) ^ Mapper.hash(self.additionalFields) ^ Mapper.hash(self.attendanceSearchRegister);
+  @override bool equals(HCMAttendanceSearchModel self, HCMAttendanceSearchModel other) => Mapper.isEqual(self.boundaryCode, other.boundaryCode) && Mapper.isEqual(self.isDeleted, other.isDeleted) && Mapper.isEqual(self.auditDetails, other.auditDetails) && Mapper.isEqual(self.additionalFields, other.additionalFields) && Mapper.isEqual(self.attendanceSearchRegister, other.attendanceSearchRegister);
+
+  @override Function get typeFactory => (f) => f<HCMAttendanceSearchModel>();
+}
+
+extension HCMAttendanceSearchModelMapperExtension  on HCMAttendanceSearchModel {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  HCMAttendanceSearchModelCopyWith<HCMAttendanceSearchModel> get copyWith => HCMAttendanceSearchModelCopyWith(this, $identity);
+}
+
+abstract class HCMAttendanceSearchModelCopyWith<$R> {
+  factory HCMAttendanceSearchModelCopyWith(HCMAttendanceSearchModel value, Then<HCMAttendanceSearchModel, $R> then) = _HCMAttendanceSearchModelCopyWithImpl<$R>;
+  AttendanceRegisterSearchModelCopyWith<$R> get attendanceSearchRegister;
+  $R call({AttendanceRegisterSearchModel? attendanceSearchRegister, String? boundaryCode, bool? isDeleted});
+  $R apply(HCMAttendanceSearchModel Function(HCMAttendanceSearchModel) transform);
+}
+
+class _HCMAttendanceSearchModelCopyWithImpl<$R> extends BaseCopyWith<HCMAttendanceSearchModel, $R> implements HCMAttendanceSearchModelCopyWith<$R> {
+  _HCMAttendanceSearchModelCopyWithImpl(HCMAttendanceSearchModel value, Then<HCMAttendanceSearchModel, $R> then) : super(value, then);
+
+  @override AttendanceRegisterSearchModelCopyWith<$R> get attendanceSearchRegister => AttendanceRegisterSearchModelCopyWith($value.attendanceSearchRegister, (v) => call(attendanceSearchRegister: v));
+  @override $R call({AttendanceRegisterSearchModel? attendanceSearchRegister, Object? boundaryCode = $none, Object? isDeleted = $none}) => $then(HCMAttendanceSearchModel(attendanceSearchRegister: attendanceSearchRegister ?? $value.attendanceSearchRegister, boundaryCode: or(boundaryCode, $value.boundaryCode), isDeleted: or(isDeleted, $value.isDeleted)));
+}
+
+class HCMAttendanceRegisterModelMapper extends BaseMapper<HCMAttendanceRegisterModel> {
+  HCMAttendanceRegisterModelMapper._();
+
+  @override Function get decoder => decode;
+  HCMAttendanceRegisterModel decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  HCMAttendanceRegisterModel fromMap(Map<String, dynamic> map) => HCMAttendanceRegisterModel(attendanceRegister: Mapper.i.$get(map, 'attendanceRegister'), auditDetails: Mapper.i.$getOpt(map, 'auditDetails'), clientAuditDetails: Mapper.i.$getOpt(map, 'clientAuditDetails'), isDeleted: Mapper.i.$getOpt(map, 'isDeleted') ?? false);
+
+  @override Function get encoder => (HCMAttendanceRegisterModel v) => encode(v);
+  dynamic encode(HCMAttendanceRegisterModel v) => toMap(v);
+  Map<String, dynamic> toMap(HCMAttendanceRegisterModel h) => {'attendanceRegister': Mapper.i.$enc(h.attendanceRegister, 'attendanceRegister'), if (Mapper.i.$enc(h.auditDetails, 'auditDetails') != null) 'auditDetails': Mapper.i.$enc(h.auditDetails, 'auditDetails'), if (Mapper.i.$enc(h.clientAuditDetails, 'clientAuditDetails') != null) 'clientAuditDetails': Mapper.i.$enc(h.clientAuditDetails, 'clientAuditDetails'), if (Mapper.i.$enc(h.isDeleted, 'isDeleted') != null) 'isDeleted': Mapper.i.$enc(h.isDeleted, 'isDeleted')};
+
+  @override String stringify(HCMAttendanceRegisterModel self) => 'HCMAttendanceRegisterModel(boundaryCode: ${Mapper.asString(self.boundaryCode)}, isDeleted: ${Mapper.asString(self.isDeleted)}, auditDetails: ${Mapper.asString(self.auditDetails)}, clientAuditDetails: ${Mapper.asString(self.clientAuditDetails)}, attendanceRegister: ${Mapper.asString(self.attendanceRegister)})';
+  @override int hash(HCMAttendanceRegisterModel self) => Mapper.hash(self.boundaryCode) ^ Mapper.hash(self.isDeleted) ^ Mapper.hash(self.auditDetails) ^ Mapper.hash(self.clientAuditDetails) ^ Mapper.hash(self.attendanceRegister);
+  @override bool equals(HCMAttendanceRegisterModel self, HCMAttendanceRegisterModel other) => Mapper.isEqual(self.boundaryCode, other.boundaryCode) && Mapper.isEqual(self.isDeleted, other.isDeleted) && Mapper.isEqual(self.auditDetails, other.auditDetails) && Mapper.isEqual(self.clientAuditDetails, other.clientAuditDetails) && Mapper.isEqual(self.attendanceRegister, other.attendanceRegister);
+
+  @override Function get typeFactory => (f) => f<HCMAttendanceRegisterModel>();
+}
+
+extension HCMAttendanceRegisterModelMapperExtension  on HCMAttendanceRegisterModel {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  HCMAttendanceRegisterModelCopyWith<HCMAttendanceRegisterModel> get copyWith => HCMAttendanceRegisterModelCopyWith(this, $identity);
+}
+
+abstract class HCMAttendanceRegisterModelCopyWith<$R> {
+  factory HCMAttendanceRegisterModelCopyWith(HCMAttendanceRegisterModel value, Then<HCMAttendanceRegisterModel, $R> then) = _HCMAttendanceRegisterModelCopyWithImpl<$R>;
+  AttendancePackageRegisterModelCopyWith<$R> get attendanceRegister;
+  AuditDetailsCopyWith<$R>? get auditDetails;
+  ClientAuditDetailsCopyWith<$R>? get clientAuditDetails;
+  $R call({AttendancePackageRegisterModel? attendanceRegister, AuditDetails? auditDetails, ClientAuditDetails? clientAuditDetails, bool? isDeleted});
+  $R apply(HCMAttendanceRegisterModel Function(HCMAttendanceRegisterModel) transform);
+}
+
+class _HCMAttendanceRegisterModelCopyWithImpl<$R> extends BaseCopyWith<HCMAttendanceRegisterModel, $R> implements HCMAttendanceRegisterModelCopyWith<$R> {
+  _HCMAttendanceRegisterModelCopyWithImpl(HCMAttendanceRegisterModel value, Then<HCMAttendanceRegisterModel, $R> then) : super(value, then);
+
+  @override AttendancePackageRegisterModelCopyWith<$R> get attendanceRegister => AttendancePackageRegisterModelCopyWith($value.attendanceRegister, (v) => call(attendanceRegister: v));
+  @override AuditDetailsCopyWith<$R>? get auditDetails => $value.auditDetails != null ? AuditDetailsCopyWith($value.auditDetails!, (v) => call(auditDetails: v)) : null;
+  @override ClientAuditDetailsCopyWith<$R>? get clientAuditDetails => $value.clientAuditDetails != null ? ClientAuditDetailsCopyWith($value.clientAuditDetails!, (v) => call(clientAuditDetails: v)) : null;
+  @override $R call({AttendancePackageRegisterModel? attendanceRegister, Object? auditDetails = $none, Object? clientAuditDetails = $none, Object? isDeleted = $none}) => $then(HCMAttendanceRegisterModel(attendanceRegister: attendanceRegister ?? $value.attendanceRegister, auditDetails: or(auditDetails, $value.auditDetails), clientAuditDetails: or(clientAuditDetails, $value.clientAuditDetails), isDeleted: or(isDeleted, $value.isDeleted)));
+}
+
+class HCMAttendanceAdditionalModelMapper extends BaseMapper<HCMAttendanceAdditionalModel> {
+  HCMAttendanceAdditionalModelMapper._();
+
+  @override Function get decoder => decode;
+  HCMAttendanceAdditionalModel decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  HCMAttendanceAdditionalModel fromMap(Map<String, dynamic> map) => HCMAttendanceAdditionalModel(attendanceAdditionalFields: Mapper.i.$get(map, 'attendanceAdditionalFields'), schema: Mapper.i.$getOpt(map, 'schema') ?? 'AttendanceRegister', version: Mapper.i.$get(map, 'version'));
+
+  @override Function get encoder => (HCMAttendanceAdditionalModel v) => encode(v);
+  dynamic encode(HCMAttendanceAdditionalModel v) => toMap(v);
+  Map<String, dynamic> toMap(HCMAttendanceAdditionalModel h) => {'attendanceAdditionalFields': Mapper.i.$enc(h.attendanceAdditionalFields, 'attendanceAdditionalFields'), 'schema': Mapper.i.$enc(h.schema, 'schema'), 'version': Mapper.i.$enc(h.version, 'version')};
+
+  @override String stringify(HCMAttendanceAdditionalModel self) => 'HCMAttendanceAdditionalModel(schema: ${Mapper.asString(self.schema)}, version: ${Mapper.asString(self.version)}, fields: ${Mapper.asString(self.fields)}, attendanceAdditionalFields: ${Mapper.asString(self.attendanceAdditionalFields)})';
+  @override int hash(HCMAttendanceAdditionalModel self) => Mapper.hash(self.schema) ^ Mapper.hash(self.version) ^ Mapper.hash(self.fields) ^ Mapper.hash(self.attendanceAdditionalFields);
+  @override bool equals(HCMAttendanceAdditionalModel self, HCMAttendanceAdditionalModel other) => Mapper.isEqual(self.schema, other.schema) && Mapper.isEqual(self.version, other.version) && Mapper.isEqual(self.fields, other.fields) && Mapper.isEqual(self.attendanceAdditionalFields, other.attendanceAdditionalFields);
+
+  @override Function get typeFactory => (f) => f<HCMAttendanceAdditionalModel>();
+}
+
+extension HCMAttendanceAdditionalModelMapperExtension  on HCMAttendanceAdditionalModel {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  HCMAttendanceAdditionalModelCopyWith<HCMAttendanceAdditionalModel> get copyWith => HCMAttendanceAdditionalModelCopyWith(this, $identity);
+}
+
+abstract class HCMAttendanceAdditionalModelCopyWith<$R> {
+  factory HCMAttendanceAdditionalModelCopyWith(HCMAttendanceAdditionalModel value, Then<HCMAttendanceAdditionalModel, $R> then) = _HCMAttendanceAdditionalModelCopyWithImpl<$R>;
+  AttendanceRegisterAdditionalFieldsCopyWith<$R> get attendanceAdditionalFields;
+  $R call({AttendanceRegisterAdditionalFields? attendanceAdditionalFields, String? schema, int? version});
+  $R apply(HCMAttendanceAdditionalModel Function(HCMAttendanceAdditionalModel) transform);
+}
+
+class _HCMAttendanceAdditionalModelCopyWithImpl<$R> extends BaseCopyWith<HCMAttendanceAdditionalModel, $R> implements HCMAttendanceAdditionalModelCopyWith<$R> {
+  _HCMAttendanceAdditionalModelCopyWithImpl(HCMAttendanceAdditionalModel value, Then<HCMAttendanceAdditionalModel, $R> then) : super(value, then);
+
+  @override AttendanceRegisterAdditionalFieldsCopyWith<$R> get attendanceAdditionalFields => AttendanceRegisterAdditionalFieldsCopyWith($value.attendanceAdditionalFields, (v) => call(attendanceAdditionalFields: v));
+  @override $R call({AttendanceRegisterAdditionalFields? attendanceAdditionalFields, String? schema, int? version}) => $then(HCMAttendanceAdditionalModel(attendanceAdditionalFields: attendanceAdditionalFields ?? $value.attendanceAdditionalFields, schema: schema ?? $value.schema, version: version ?? $value.version));
+}
+
+class AttendanceRegisterSearchModelMapper extends BaseMapper<AttendanceRegisterSearchModel> {
+  AttendanceRegisterSearchModelMapper._();
+
+  @override Function get decoder => decode;
+  AttendanceRegisterSearchModel decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  AttendanceRegisterSearchModel fromMap(Map<String, dynamic> map) => AttendanceRegisterSearchModel.ignoreDeleted(id: Mapper.i.$getOpt(map, 'id'), clientReferenceId: Mapper.i.$getOpt(map, 'clientReferenceId'), staff: Mapper.i.$getOpt(map, 'staff'), attendees: Mapper.i.$getOpt(map, 'attendees'));
+
+  @override Function get encoder => (AttendanceRegisterSearchModel v) => encode(v);
+  dynamic encode(AttendanceRegisterSearchModel v) => toMap(v);
+  Map<String, dynamic> toMap(AttendanceRegisterSearchModel a) => {if (Mapper.i.$enc(a.id, 'id') != null) 'id': Mapper.i.$enc(a.id, 'id'), if (Mapper.i.$enc(a.clientReferenceId, 'clientReferenceId') != null) 'clientReferenceId': Mapper.i.$enc(a.clientReferenceId, 'clientReferenceId'), if (Mapper.i.$enc(a.staff, 'staff') != null) 'staff': Mapper.i.$enc(a.staff, 'staff'), if (Mapper.i.$enc(a.attendees, 'attendees') != null) 'attendees': Mapper.i.$enc(a.attendees, 'attendees')};
+
+  @override String stringify(AttendanceRegisterSearchModel self) => 'AttendanceRegisterSearchModel(id: ${Mapper.asString(self.id)}, clientReferenceId: ${Mapper.asString(self.clientReferenceId)}, staff: ${Mapper.asString(self.staff)}, attendees: ${Mapper.asString(self.attendees)})';
+  @override int hash(AttendanceRegisterSearchModel self) => Mapper.hash(self.id) ^ Mapper.hash(self.clientReferenceId) ^ Mapper.hash(self.staff) ^ Mapper.hash(self.attendees);
+  @override bool equals(AttendanceRegisterSearchModel self, AttendanceRegisterSearchModel other) => Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.clientReferenceId, other.clientReferenceId) && Mapper.isEqual(self.staff, other.staff) && Mapper.isEqual(self.attendees, other.attendees);
+
+  @override Function get typeFactory => (f) => f<AttendanceRegisterSearchModel>();
+}
+
+extension AttendanceRegisterSearchModelMapperExtension  on AttendanceRegisterSearchModel {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  AttendanceRegisterSearchModelCopyWith<AttendanceRegisterSearchModel> get copyWith => AttendanceRegisterSearchModelCopyWith(this, $identity);
+}
+
+abstract class AttendanceRegisterSearchModelCopyWith<$R> {
+  factory AttendanceRegisterSearchModelCopyWith(AttendanceRegisterSearchModel value, Then<AttendanceRegisterSearchModel, $R> then) = _AttendanceRegisterSearchModelCopyWithImpl<$R>;
+  ListCopyWith<$R, StaffSearchModel, StaffSearchModelCopyWith<$R>>? get staff;
+  ListCopyWith<$R, AttendeeSearchModel, AttendeeSearchModelCopyWith<$R>>? get attendees;
+  $R call({String? id, List<String>? clientReferenceId, List<StaffSearchModel>? staff, List<AttendeeSearchModel>? attendees});
+  $R apply(AttendanceRegisterSearchModel Function(AttendanceRegisterSearchModel) transform);
+}
+
+class _AttendanceRegisterSearchModelCopyWithImpl<$R> extends BaseCopyWith<AttendanceRegisterSearchModel, $R> implements AttendanceRegisterSearchModelCopyWith<$R> {
+  _AttendanceRegisterSearchModelCopyWithImpl(AttendanceRegisterSearchModel value, Then<AttendanceRegisterSearchModel, $R> then) : super(value, then);
+
+  @override ListCopyWith<$R, StaffSearchModel, StaffSearchModelCopyWith<$R>>? get staff => $value.staff != null ? ListCopyWith($value.staff!, (v, t) => StaffSearchModelCopyWith(v, t), (v) => call(staff: v)) : null;
+  @override ListCopyWith<$R, AttendeeSearchModel, AttendeeSearchModelCopyWith<$R>>? get attendees => $value.attendees != null ? ListCopyWith($value.attendees!, (v, t) => AttendeeSearchModelCopyWith(v, t), (v) => call(attendees: v)) : null;
+  @override $R call({Object? id = $none, Object? clientReferenceId = $none, Object? staff = $none, Object? attendees = $none}) => $then(AttendanceRegisterSearchModel.ignoreDeleted(id: or(id, $value.id), clientReferenceId: or(clientReferenceId, $value.clientReferenceId), staff: or(staff, $value.staff), attendees: or(attendees, $value.attendees)));
+}
+
+class AttendancePackageRegisterModelMapper extends BaseMapper<AttendancePackageRegisterModel> {
+  AttendancePackageRegisterModelMapper._();
+
+  @override Function get decoder => decode;
+  AttendancePackageRegisterModel decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  AttendancePackageRegisterModel fromMap(Map<String, dynamic> map) => AttendancePackageRegisterModel(additionalFields: Mapper.i.$getOpt(map, 'additionalFields'), id: Mapper.i.$getOpt(map, 'id'), tenantId: Mapper.i.$getOpt(map, 'tenantId'), registerNumber: Mapper.i.$getOpt(map, 'registerNumber'), name: Mapper.i.$getOpt(map, 'name'), referenceId: Mapper.i.$getOpt(map, 'referenceId'), serviceCode: Mapper.i.$getOpt(map, 'serviceCode'), status: Mapper.i.$getOpt(map, 'status'), nonRecoverableError: Mapper.i.$getOpt(map, 'nonRecoverableError') ?? false, clientReferenceId: Mapper.i.$get(map, 'clientReferenceId'), rowVersion: Mapper.i.$getOpt(map, 'rowVersion'), staff: Mapper.i.$getOpt(map, 'staff'), attendees: Mapper.i.$getOpt(map, 'attendees'), startDate: Mapper.i.$getOpt(map, 'startDate'), endDate: Mapper.i.$getOpt(map, 'endDate'));
+
+  @override Function get encoder => (AttendancePackageRegisterModel v) => encode(v);
+  dynamic encode(AttendancePackageRegisterModel v) => toMap(v);
+  Map<String, dynamic> toMap(AttendancePackageRegisterModel a) => {if (Mapper.i.$enc(a.additionalFields, 'additionalFields') != null) 'additionalFields': Mapper.i.$enc(a.additionalFields, 'additionalFields'), if (Mapper.i.$enc(a.id, 'id') != null) 'id': Mapper.i.$enc(a.id, 'id'), if (Mapper.i.$enc(a.tenantId, 'tenantId') != null) 'tenantId': Mapper.i.$enc(a.tenantId, 'tenantId'), if (Mapper.i.$enc(a.registerNumber, 'registerNumber') != null) 'registerNumber': Mapper.i.$enc(a.registerNumber, 'registerNumber'), if (Mapper.i.$enc(a.name, 'name') != null) 'name': Mapper.i.$enc(a.name, 'name'), if (Mapper.i.$enc(a.referenceId, 'referenceId') != null) 'referenceId': Mapper.i.$enc(a.referenceId, 'referenceId'), if (Mapper.i.$enc(a.serviceCode, 'serviceCode') != null) 'serviceCode': Mapper.i.$enc(a.serviceCode, 'serviceCode'), if (Mapper.i.$enc(a.status, 'status') != null) 'status': Mapper.i.$enc(a.status, 'status'), if (Mapper.i.$enc(a.nonRecoverableError, 'nonRecoverableError') != null) 'nonRecoverableError': Mapper.i.$enc(a.nonRecoverableError, 'nonRecoverableError'), 'clientReferenceId': Mapper.i.$enc(a.clientReferenceId, 'clientReferenceId'), if (Mapper.i.$enc(a.rowVersion, 'rowVersion') != null) 'rowVersion': Mapper.i.$enc(a.rowVersion, 'rowVersion'), if (Mapper.i.$enc(a.staff, 'staff') != null) 'staff': Mapper.i.$enc(a.staff, 'staff'), if (Mapper.i.$enc(a.attendees, 'attendees') != null) 'attendees': Mapper.i.$enc(a.attendees, 'attendees'), if (Mapper.i.$enc(a.startDate, 'startDate') != null) 'startDate': Mapper.i.$enc(a.startDate, 'startDate'), if (Mapper.i.$enc(a.endDate, 'endDate') != null) 'endDate': Mapper.i.$enc(a.endDate, 'endDate')};
+
+  @override String stringify(AttendancePackageRegisterModel self) => 'AttendancePackageRegisterModel(id: ${Mapper.asString(self.id)}, tenantId: ${Mapper.asString(self.tenantId)}, registerNumber: ${Mapper.asString(self.registerNumber)}, name: ${Mapper.asString(self.name)}, referenceId: ${Mapper.asString(self.referenceId)}, serviceCode: ${Mapper.asString(self.serviceCode)}, status: ${Mapper.asString(self.status)}, nonRecoverableError: ${Mapper.asString(self.nonRecoverableError)}, clientReferenceId: ${Mapper.asString(self.clientReferenceId)}, rowVersion: ${Mapper.asString(self.rowVersion)}, staff: ${Mapper.asString(self.staff)}, attendees: ${Mapper.asString(self.attendees)}, startDateTime: ${Mapper.asString(self.startDateTime)}, endDateTime: ${Mapper.asString(self.endDateTime)}, additionalFields: ${Mapper.asString(self.additionalFields)})';
+  @override int hash(AttendancePackageRegisterModel self) => Mapper.hash(self.id) ^ Mapper.hash(self.tenantId) ^ Mapper.hash(self.registerNumber) ^ Mapper.hash(self.name) ^ Mapper.hash(self.referenceId) ^ Mapper.hash(self.serviceCode) ^ Mapper.hash(self.status) ^ Mapper.hash(self.nonRecoverableError) ^ Mapper.hash(self.clientReferenceId) ^ Mapper.hash(self.rowVersion) ^ Mapper.hash(self.staff) ^ Mapper.hash(self.attendees) ^ Mapper.hash(self.startDateTime) ^ Mapper.hash(self.endDateTime) ^ Mapper.hash(self.additionalFields);
+  @override bool equals(AttendancePackageRegisterModel self, AttendancePackageRegisterModel other) => Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.tenantId, other.tenantId) && Mapper.isEqual(self.registerNumber, other.registerNumber) && Mapper.isEqual(self.name, other.name) && Mapper.isEqual(self.referenceId, other.referenceId) && Mapper.isEqual(self.serviceCode, other.serviceCode) && Mapper.isEqual(self.status, other.status) && Mapper.isEqual(self.nonRecoverableError, other.nonRecoverableError) && Mapper.isEqual(self.clientReferenceId, other.clientReferenceId) && Mapper.isEqual(self.rowVersion, other.rowVersion) && Mapper.isEqual(self.staff, other.staff) && Mapper.isEqual(self.attendees, other.attendees) && Mapper.isEqual(self.startDateTime, other.startDateTime) && Mapper.isEqual(self.endDateTime, other.endDateTime) && Mapper.isEqual(self.additionalFields, other.additionalFields);
+
+  @override Function get typeFactory => (f) => f<AttendancePackageRegisterModel>();
+}
+
+extension AttendancePackageRegisterModelMapperExtension  on AttendancePackageRegisterModel {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  AttendancePackageRegisterModelCopyWith<AttendancePackageRegisterModel> get copyWith => AttendancePackageRegisterModelCopyWith(this, $identity);
+}
+
+abstract class AttendancePackageRegisterModelCopyWith<$R> {
+  factory AttendancePackageRegisterModelCopyWith(AttendancePackageRegisterModel value, Then<AttendancePackageRegisterModel, $R> then) = _AttendancePackageRegisterModelCopyWithImpl<$R>;
+  AttendanceRegisterAdditionalFieldsCopyWith<$R>? get additionalFields;
+  ListCopyWith<$R, StaffModel, StaffModelCopyWith<$R>>? get staff;
+  ListCopyWith<$R, AttendeeModel, AttendeeModelCopyWith<$R>>? get attendees;
+  $R call({AttendanceRegisterAdditionalFields? additionalFields, String? id, String? tenantId, String? registerNumber, String? name, String? referenceId, String? serviceCode, String? status, bool? nonRecoverableError, String? clientReferenceId, int? rowVersion, List<StaffModel>? staff, List<AttendeeModel>? attendees, int? startDate, int? endDate});
+  $R apply(AttendancePackageRegisterModel Function(AttendancePackageRegisterModel) transform);
+}
+
+class _AttendancePackageRegisterModelCopyWithImpl<$R> extends BaseCopyWith<AttendancePackageRegisterModel, $R> implements AttendancePackageRegisterModelCopyWith<$R> {
+  _AttendancePackageRegisterModelCopyWithImpl(AttendancePackageRegisterModel value, Then<AttendancePackageRegisterModel, $R> then) : super(value, then);
+
+  @override AttendanceRegisterAdditionalFieldsCopyWith<$R>? get additionalFields => $value.additionalFields != null ? AttendanceRegisterAdditionalFieldsCopyWith($value.additionalFields!, (v) => call(additionalFields: v)) : null;
+  @override ListCopyWith<$R, StaffModel, StaffModelCopyWith<$R>>? get staff => $value.staff != null ? ListCopyWith($value.staff!, (v, t) => StaffModelCopyWith(v, t), (v) => call(staff: v)) : null;
+  @override ListCopyWith<$R, AttendeeModel, AttendeeModelCopyWith<$R>>? get attendees => $value.attendees != null ? ListCopyWith($value.attendees!, (v, t) => AttendeeModelCopyWith(v, t), (v) => call(attendees: v)) : null;
+  @override $R call({Object? additionalFields = $none, Object? id = $none, Object? tenantId = $none, Object? registerNumber = $none, Object? name = $none, Object? referenceId = $none, Object? serviceCode = $none, Object? status = $none, Object? nonRecoverableError = $none, String? clientReferenceId, Object? rowVersion = $none, Object? staff = $none, Object? attendees = $none, Object? startDate = $none, Object? endDate = $none}) => $then(AttendancePackageRegisterModel(additionalFields: or(additionalFields, $value.additionalFields), id: or(id, $value.id), tenantId: or(tenantId, $value.tenantId), registerNumber: or(registerNumber, $value.registerNumber), name: or(name, $value.name), referenceId: or(referenceId, $value.referenceId), serviceCode: or(serviceCode, $value.serviceCode), status: or(status, $value.status), nonRecoverableError: or(nonRecoverableError, $value.nonRecoverableError), clientReferenceId: clientReferenceId ?? $value.clientReferenceId, rowVersion: or(rowVersion, $value.rowVersion), staff: or(staff, $value.staff), attendees: or(attendees, $value.attendees), startDate: or(startDate, $value.startDate), endDate: or(endDate, $value.endDate)));
+}
+
+class AttendanceRegisterAdditionalFieldsMapper extends BaseMapper<AttendanceRegisterAdditionalFields> {
+  AttendanceRegisterAdditionalFieldsMapper._();
+
+  @override Function get decoder => decode;
+  AttendanceRegisterAdditionalFields decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  AttendanceRegisterAdditionalFields fromMap(Map<String, dynamic> map) => AttendanceRegisterAdditionalFields(description: Mapper.i.$get(map, 'description'));
+
+  @override Function get encoder => (AttendanceRegisterAdditionalFields v) => encode(v);
+  dynamic encode(AttendanceRegisterAdditionalFields v) => toMap(v);
+  Map<String, dynamic> toMap(AttendanceRegisterAdditionalFields a) => {'description': Mapper.i.$enc(a.description, 'description')};
+
+  @override String stringify(AttendanceRegisterAdditionalFields self) => 'AttendanceRegisterAdditionalFields(description: ${Mapper.asString(self.description)})';
+  @override int hash(AttendanceRegisterAdditionalFields self) => Mapper.hash(self.description);
+  @override bool equals(AttendanceRegisterAdditionalFields self, AttendanceRegisterAdditionalFields other) => Mapper.isEqual(self.description, other.description);
+
+  @override Function get typeFactory => (f) => f<AttendanceRegisterAdditionalFields>();
+}
+
+extension AttendanceRegisterAdditionalFieldsMapperExtension  on AttendanceRegisterAdditionalFields {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  AttendanceRegisterAdditionalFieldsCopyWith<AttendanceRegisterAdditionalFields> get copyWith => AttendanceRegisterAdditionalFieldsCopyWith(this, $identity);
+}
+
+abstract class AttendanceRegisterAdditionalFieldsCopyWith<$R> {
+  factory AttendanceRegisterAdditionalFieldsCopyWith(AttendanceRegisterAdditionalFields value, Then<AttendanceRegisterAdditionalFields, $R> then) = _AttendanceRegisterAdditionalFieldsCopyWithImpl<$R>;
+  $R call({Map<String, dynamic>? description});
+  $R apply(AttendanceRegisterAdditionalFields Function(AttendanceRegisterAdditionalFields) transform);
+}
+
+class _AttendanceRegisterAdditionalFieldsCopyWithImpl<$R> extends BaseCopyWith<AttendanceRegisterAdditionalFields, $R> implements AttendanceRegisterAdditionalFieldsCopyWith<$R> {
+  _AttendanceRegisterAdditionalFieldsCopyWithImpl(AttendanceRegisterAdditionalFields value, Then<AttendanceRegisterAdditionalFields, $R> then) : super(value, then);
+
+  @override $R call({Map<String, dynamic>? description}) => $then(AttendanceRegisterAdditionalFields(description: description ?? $value.description));
+}
+
+class AttendeeSearchModelMapper extends BaseMapper<AttendeeSearchModel> {
+  AttendeeSearchModelMapper._();
+
+  @override Function get decoder => decode;
+  AttendeeSearchModel decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  AttendeeSearchModel fromMap(Map<String, dynamic> map) => AttendeeSearchModel.ignoreDeleted(id: Mapper.i.$getOpt(map, 'id'), clientReferenceId: Mapper.i.$getOpt(map, 'clientReferenceId'));
+
+  @override Function get encoder => (AttendeeSearchModel v) => encode(v);
+  dynamic encode(AttendeeSearchModel v) => toMap(v);
+  Map<String, dynamic> toMap(AttendeeSearchModel a) => {if (Mapper.i.$enc(a.id, 'id') != null) 'id': Mapper.i.$enc(a.id, 'id'), if (Mapper.i.$enc(a.clientReferenceId, 'clientReferenceId') != null) 'clientReferenceId': Mapper.i.$enc(a.clientReferenceId, 'clientReferenceId')};
+
+  @override String stringify(AttendeeSearchModel self) => 'AttendeeSearchModel(id: ${Mapper.asString(self.id)}, clientReferenceId: ${Mapper.asString(self.clientReferenceId)})';
+  @override int hash(AttendeeSearchModel self) => Mapper.hash(self.id) ^ Mapper.hash(self.clientReferenceId);
+  @override bool equals(AttendeeSearchModel self, AttendeeSearchModel other) => Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.clientReferenceId, other.clientReferenceId);
+
+  @override Function get typeFactory => (f) => f<AttendeeSearchModel>();
+}
+
+extension AttendeeSearchModelMapperExtension  on AttendeeSearchModel {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  AttendeeSearchModelCopyWith<AttendeeSearchModel> get copyWith => AttendeeSearchModelCopyWith(this, $identity);
+}
+
+abstract class AttendeeSearchModelCopyWith<$R> {
+  factory AttendeeSearchModelCopyWith(AttendeeSearchModel value, Then<AttendeeSearchModel, $R> then) = _AttendeeSearchModelCopyWithImpl<$R>;
+  $R call({String? id, List<String>? clientReferenceId});
+  $R apply(AttendeeSearchModel Function(AttendeeSearchModel) transform);
+}
+
+class _AttendeeSearchModelCopyWithImpl<$R> extends BaseCopyWith<AttendeeSearchModel, $R> implements AttendeeSearchModelCopyWith<$R> {
+  _AttendeeSearchModelCopyWithImpl(AttendeeSearchModel value, Then<AttendeeSearchModel, $R> then) : super(value, then);
+
+  @override $R call({Object? id = $none, Object? clientReferenceId = $none}) => $then(AttendeeSearchModel.ignoreDeleted(id: or(id, $value.id), clientReferenceId: or(clientReferenceId, $value.clientReferenceId)));
+}
+
+class AttendeeModelMapper extends BaseMapper<AttendeeModel> {
+  AttendeeModelMapper._();
+
+  @override Function get decoder => decode;
+  AttendeeModel decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  AttendeeModel fromMap(Map<String, dynamic> map) => AttendeeModel(additionalFields: Mapper.i.$getOpt(map, 'additionalFields'), id: Mapper.i.$getOpt(map, 'id'), tenantId: Mapper.i.$getOpt(map, 'tenantId'), registerId: Mapper.i.$getOpt(map, 'registerId'), individualId: Mapper.i.$getOpt(map, 'individualId'), enrollmentDate: Mapper.i.$getOpt(map, 'enrollmentDate'), denrollmentDate: Mapper.i.$getOpt(map, 'denrollmentDate'), nonRecoverableError: Mapper.i.$getOpt(map, 'nonRecoverableError') ?? false, clientReferenceId: Mapper.i.$get(map, 'clientReferenceId'), rowVersion: Mapper.i.$getOpt(map, 'rowVersion'));
+
+  @override Function get encoder => (AttendeeModel v) => encode(v);
+  dynamic encode(AttendeeModel v) => toMap(v);
+  Map<String, dynamic> toMap(AttendeeModel a) => {if (Mapper.i.$enc(a.additionalFields, 'additionalFields') != null) 'additionalFields': Mapper.i.$enc(a.additionalFields, 'additionalFields'), if (Mapper.i.$enc(a.id, 'id') != null) 'id': Mapper.i.$enc(a.id, 'id'), if (Mapper.i.$enc(a.tenantId, 'tenantId') != null) 'tenantId': Mapper.i.$enc(a.tenantId, 'tenantId'), if (Mapper.i.$enc(a.registerId, 'registerId') != null) 'registerId': Mapper.i.$enc(a.registerId, 'registerId'), if (Mapper.i.$enc(a.individualId, 'individualId') != null) 'individualId': Mapper.i.$enc(a.individualId, 'individualId'), if (Mapper.i.$enc(a.enrollmentDate, 'enrollmentDate') != null) 'enrollmentDate': Mapper.i.$enc(a.enrollmentDate, 'enrollmentDate'), if (Mapper.i.$enc(a.denrollmentDate, 'denrollmentDate') != null) 'denrollmentDate': Mapper.i.$enc(a.denrollmentDate, 'denrollmentDate'), if (Mapper.i.$enc(a.nonRecoverableError, 'nonRecoverableError') != null) 'nonRecoverableError': Mapper.i.$enc(a.nonRecoverableError, 'nonRecoverableError'), 'clientReferenceId': Mapper.i.$enc(a.clientReferenceId, 'clientReferenceId'), if (Mapper.i.$enc(a.rowVersion, 'rowVersion') != null) 'rowVersion': Mapper.i.$enc(a.rowVersion, 'rowVersion')};
+
+  @override String stringify(AttendeeModel self) => 'AttendeeModel(id: ${Mapper.asString(self.id)}, tenantId: ${Mapper.asString(self.tenantId)}, registerId: ${Mapper.asString(self.registerId)}, individualId: ${Mapper.asString(self.individualId)}, enrollmentDate: ${Mapper.asString(self.enrollmentDate)}, denrollmentDate: ${Mapper.asString(self.denrollmentDate)}, nonRecoverableError: ${Mapper.asString(self.nonRecoverableError)}, clientReferenceId: ${Mapper.asString(self.clientReferenceId)}, rowVersion: ${Mapper.asString(self.rowVersion)}, additionalFields: ${Mapper.asString(self.additionalFields)})';
+  @override int hash(AttendeeModel self) => Mapper.hash(self.id) ^ Mapper.hash(self.tenantId) ^ Mapper.hash(self.registerId) ^ Mapper.hash(self.individualId) ^ Mapper.hash(self.enrollmentDate) ^ Mapper.hash(self.denrollmentDate) ^ Mapper.hash(self.nonRecoverableError) ^ Mapper.hash(self.clientReferenceId) ^ Mapper.hash(self.rowVersion) ^ Mapper.hash(self.additionalFields);
+  @override bool equals(AttendeeModel self, AttendeeModel other) => Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.tenantId, other.tenantId) && Mapper.isEqual(self.registerId, other.registerId) && Mapper.isEqual(self.individualId, other.individualId) && Mapper.isEqual(self.enrollmentDate, other.enrollmentDate) && Mapper.isEqual(self.denrollmentDate, other.denrollmentDate) && Mapper.isEqual(self.nonRecoverableError, other.nonRecoverableError) && Mapper.isEqual(self.clientReferenceId, other.clientReferenceId) && Mapper.isEqual(self.rowVersion, other.rowVersion) && Mapper.isEqual(self.additionalFields, other.additionalFields);
+
+  @override Function get typeFactory => (f) => f<AttendeeModel>();
+}
+
+extension AttendeeModelMapperExtension  on AttendeeModel {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  AttendeeModelCopyWith<AttendeeModel> get copyWith => AttendeeModelCopyWith(this, $identity);
+}
+
+abstract class AttendeeModelCopyWith<$R> {
+  factory AttendeeModelCopyWith(AttendeeModel value, Then<AttendeeModel, $R> then) = _AttendeeModelCopyWithImpl<$R>;
+  AttendeeAdditionalFieldsCopyWith<$R>? get additionalFields;
+  $R call({AttendeeAdditionalFields? additionalFields, String? id, String? tenantId, String? registerId, String? individualId, int? enrollmentDate, int? denrollmentDate, bool? nonRecoverableError, String? clientReferenceId, int? rowVersion});
+  $R apply(AttendeeModel Function(AttendeeModel) transform);
+}
+
+class _AttendeeModelCopyWithImpl<$R> extends BaseCopyWith<AttendeeModel, $R> implements AttendeeModelCopyWith<$R> {
+  _AttendeeModelCopyWithImpl(AttendeeModel value, Then<AttendeeModel, $R> then) : super(value, then);
+
+  @override AttendeeAdditionalFieldsCopyWith<$R>? get additionalFields => $value.additionalFields != null ? AttendeeAdditionalFieldsCopyWith($value.additionalFields!, (v) => call(additionalFields: v)) : null;
+  @override $R call({Object? additionalFields = $none, Object? id = $none, Object? tenantId = $none, Object? registerId = $none, Object? individualId = $none, Object? enrollmentDate = $none, Object? denrollmentDate = $none, Object? nonRecoverableError = $none, String? clientReferenceId, Object? rowVersion = $none}) => $then(AttendeeModel(additionalFields: or(additionalFields, $value.additionalFields), id: or(id, $value.id), tenantId: or(tenantId, $value.tenantId), registerId: or(registerId, $value.registerId), individualId: or(individualId, $value.individualId), enrollmentDate: or(enrollmentDate, $value.enrollmentDate), denrollmentDate: or(denrollmentDate, $value.denrollmentDate), nonRecoverableError: or(nonRecoverableError, $value.nonRecoverableError), clientReferenceId: clientReferenceId ?? $value.clientReferenceId, rowVersion: or(rowVersion, $value.rowVersion)));
+}
+
+class AttendeeAdditionalFieldsMapper extends BaseMapper<AttendeeAdditionalFields> {
+  AttendeeAdditionalFieldsMapper._();
+
+  @override Function get decoder => decode;
+  AttendeeAdditionalFields decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  AttendeeAdditionalFields fromMap(Map<String, dynamic> map) => AttendeeAdditionalFields();
+
+  @override Function get encoder => (AttendeeAdditionalFields v) => encode(v);
+  dynamic encode(AttendeeAdditionalFields v) => toMap(v);
+  Map<String, dynamic> toMap(AttendeeAdditionalFields a) => {};
+
+  @override String stringify(AttendeeAdditionalFields self) => 'AttendeeAdditionalFields()';
+  @override int hash(AttendeeAdditionalFields self) => 0;
+  @override bool equals(AttendeeAdditionalFields self, AttendeeAdditionalFields other) => true;
+
+  @override Function get typeFactory => (f) => f<AttendeeAdditionalFields>();
+}
+
+extension AttendeeAdditionalFieldsMapperExtension  on AttendeeAdditionalFields {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  AttendeeAdditionalFieldsCopyWith<AttendeeAdditionalFields> get copyWith => AttendeeAdditionalFieldsCopyWith(this, $identity);
+}
+
+abstract class AttendeeAdditionalFieldsCopyWith<$R> {
+  factory AttendeeAdditionalFieldsCopyWith(AttendeeAdditionalFields value, Then<AttendeeAdditionalFields, $R> then) = _AttendeeAdditionalFieldsCopyWithImpl<$R>;
+  $R call();
+  $R apply(AttendeeAdditionalFields Function(AttendeeAdditionalFields) transform);
+}
+
+class _AttendeeAdditionalFieldsCopyWithImpl<$R> extends BaseCopyWith<AttendeeAdditionalFields, $R> implements AttendeeAdditionalFieldsCopyWith<$R> {
+  _AttendeeAdditionalFieldsCopyWithImpl(AttendeeAdditionalFields value, Then<AttendeeAdditionalFields, $R> then) : super(value, then);
+
+  @override $R call() => $then(AttendeeAdditionalFields());
+}
+
+class StaffSearchModelMapper extends BaseMapper<StaffSearchModel> {
+  StaffSearchModelMapper._();
+
+  @override Function get decoder => decode;
+  StaffSearchModel decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  StaffSearchModel fromMap(Map<String, dynamic> map) => StaffSearchModel.ignoreDeleted(id: Mapper.i.$getOpt(map, 'id'), clientReferenceId: Mapper.i.$getOpt(map, 'clientReferenceId'));
+
+  @override Function get encoder => (StaffSearchModel v) => encode(v);
+  dynamic encode(StaffSearchModel v) => toMap(v);
+  Map<String, dynamic> toMap(StaffSearchModel s) => {if (Mapper.i.$enc(s.id, 'id') != null) 'id': Mapper.i.$enc(s.id, 'id'), if (Mapper.i.$enc(s.clientReferenceId, 'clientReferenceId') != null) 'clientReferenceId': Mapper.i.$enc(s.clientReferenceId, 'clientReferenceId')};
+
+  @override String stringify(StaffSearchModel self) => 'StaffSearchModel(id: ${Mapper.asString(self.id)}, clientReferenceId: ${Mapper.asString(self.clientReferenceId)})';
+  @override int hash(StaffSearchModel self) => Mapper.hash(self.id) ^ Mapper.hash(self.clientReferenceId);
+  @override bool equals(StaffSearchModel self, StaffSearchModel other) => Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.clientReferenceId, other.clientReferenceId);
+
+  @override Function get typeFactory => (f) => f<StaffSearchModel>();
+}
+
+extension StaffSearchModelMapperExtension  on StaffSearchModel {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  StaffSearchModelCopyWith<StaffSearchModel> get copyWith => StaffSearchModelCopyWith(this, $identity);
+}
+
+abstract class StaffSearchModelCopyWith<$R> {
+  factory StaffSearchModelCopyWith(StaffSearchModel value, Then<StaffSearchModel, $R> then) = _StaffSearchModelCopyWithImpl<$R>;
+  $R call({String? id, List<String>? clientReferenceId});
+  $R apply(StaffSearchModel Function(StaffSearchModel) transform);
+}
+
+class _StaffSearchModelCopyWithImpl<$R> extends BaseCopyWith<StaffSearchModel, $R> implements StaffSearchModelCopyWith<$R> {
+  _StaffSearchModelCopyWithImpl(StaffSearchModel value, Then<StaffSearchModel, $R> then) : super(value, then);
+
+  @override $R call({Object? id = $none, Object? clientReferenceId = $none}) => $then(StaffSearchModel.ignoreDeleted(id: or(id, $value.id), clientReferenceId: or(clientReferenceId, $value.clientReferenceId)));
+}
+
+class StaffModelMapper extends BaseMapper<StaffModel> {
+  StaffModelMapper._();
+
+  @override Function get decoder => decode;
+  StaffModel decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  StaffModel fromMap(Map<String, dynamic> map) => StaffModel(additionalFields: Mapper.i.$getOpt(map, 'additionalFields'), id: Mapper.i.$getOpt(map, 'id'), tenantId: Mapper.i.$getOpt(map, 'tenantId'), registerId: Mapper.i.$getOpt(map, 'registerId'), userId: Mapper.i.$getOpt(map, 'userId'), enrollmentDate: Mapper.i.$getOpt(map, 'enrollmentDate'), denrollmentDate: Mapper.i.$getOpt(map, 'denrollmentDate'), nonRecoverableError: Mapper.i.$getOpt(map, 'nonRecoverableError') ?? false, clientReferenceId: Mapper.i.$get(map, 'clientReferenceId'), rowVersion: Mapper.i.$getOpt(map, 'rowVersion'));
+
+  @override Function get encoder => (StaffModel v) => encode(v);
+  dynamic encode(StaffModel v) => toMap(v);
+  Map<String, dynamic> toMap(StaffModel s) => {if (Mapper.i.$enc(s.additionalFields, 'additionalFields') != null) 'additionalFields': Mapper.i.$enc(s.additionalFields, 'additionalFields'), if (Mapper.i.$enc(s.id, 'id') != null) 'id': Mapper.i.$enc(s.id, 'id'), if (Mapper.i.$enc(s.tenantId, 'tenantId') != null) 'tenantId': Mapper.i.$enc(s.tenantId, 'tenantId'), if (Mapper.i.$enc(s.registerId, 'registerId') != null) 'registerId': Mapper.i.$enc(s.registerId, 'registerId'), if (Mapper.i.$enc(s.userId, 'userId') != null) 'userId': Mapper.i.$enc(s.userId, 'userId'), if (Mapper.i.$enc(s.enrollmentDate, 'enrollmentDate') != null) 'enrollmentDate': Mapper.i.$enc(s.enrollmentDate, 'enrollmentDate'), if (Mapper.i.$enc(s.denrollmentDate, 'denrollmentDate') != null) 'denrollmentDate': Mapper.i.$enc(s.denrollmentDate, 'denrollmentDate'), if (Mapper.i.$enc(s.nonRecoverableError, 'nonRecoverableError') != null) 'nonRecoverableError': Mapper.i.$enc(s.nonRecoverableError, 'nonRecoverableError'), 'clientReferenceId': Mapper.i.$enc(s.clientReferenceId, 'clientReferenceId'), if (Mapper.i.$enc(s.rowVersion, 'rowVersion') != null) 'rowVersion': Mapper.i.$enc(s.rowVersion, 'rowVersion')};
+
+  @override String stringify(StaffModel self) => 'StaffModel(id: ${Mapper.asString(self.id)}, tenantId: ${Mapper.asString(self.tenantId)}, registerId: ${Mapper.asString(self.registerId)}, userId: ${Mapper.asString(self.userId)}, enrollmentDate: ${Mapper.asString(self.enrollmentDate)}, denrollmentDate: ${Mapper.asString(self.denrollmentDate)}, nonRecoverableError: ${Mapper.asString(self.nonRecoverableError)}, clientReferenceId: ${Mapper.asString(self.clientReferenceId)}, rowVersion: ${Mapper.asString(self.rowVersion)}, additionalFields: ${Mapper.asString(self.additionalFields)})';
+  @override int hash(StaffModel self) => Mapper.hash(self.id) ^ Mapper.hash(self.tenantId) ^ Mapper.hash(self.registerId) ^ Mapper.hash(self.userId) ^ Mapper.hash(self.enrollmentDate) ^ Mapper.hash(self.denrollmentDate) ^ Mapper.hash(self.nonRecoverableError) ^ Mapper.hash(self.clientReferenceId) ^ Mapper.hash(self.rowVersion) ^ Mapper.hash(self.additionalFields);
+  @override bool equals(StaffModel self, StaffModel other) => Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.tenantId, other.tenantId) && Mapper.isEqual(self.registerId, other.registerId) && Mapper.isEqual(self.userId, other.userId) && Mapper.isEqual(self.enrollmentDate, other.enrollmentDate) && Mapper.isEqual(self.denrollmentDate, other.denrollmentDate) && Mapper.isEqual(self.nonRecoverableError, other.nonRecoverableError) && Mapper.isEqual(self.clientReferenceId, other.clientReferenceId) && Mapper.isEqual(self.rowVersion, other.rowVersion) && Mapper.isEqual(self.additionalFields, other.additionalFields);
+
+  @override Function get typeFactory => (f) => f<StaffModel>();
+}
+
+extension StaffModelMapperExtension  on StaffModel {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  StaffModelCopyWith<StaffModel> get copyWith => StaffModelCopyWith(this, $identity);
+}
+
+abstract class StaffModelCopyWith<$R> {
+  factory StaffModelCopyWith(StaffModel value, Then<StaffModel, $R> then) = _StaffModelCopyWithImpl<$R>;
+  StaffAdditionalFieldsCopyWith<$R>? get additionalFields;
+  $R call({StaffAdditionalFields? additionalFields, String? id, String? tenantId, String? registerId, String? userId, int? enrollmentDate, int? denrollmentDate, bool? nonRecoverableError, String? clientReferenceId, int? rowVersion});
+  $R apply(StaffModel Function(StaffModel) transform);
+}
+
+class _StaffModelCopyWithImpl<$R> extends BaseCopyWith<StaffModel, $R> implements StaffModelCopyWith<$R> {
+  _StaffModelCopyWithImpl(StaffModel value, Then<StaffModel, $R> then) : super(value, then);
+
+  @override StaffAdditionalFieldsCopyWith<$R>? get additionalFields => $value.additionalFields != null ? StaffAdditionalFieldsCopyWith($value.additionalFields!, (v) => call(additionalFields: v)) : null;
+  @override $R call({Object? additionalFields = $none, Object? id = $none, Object? tenantId = $none, Object? registerId = $none, Object? userId = $none, Object? enrollmentDate = $none, Object? denrollmentDate = $none, Object? nonRecoverableError = $none, String? clientReferenceId, Object? rowVersion = $none}) => $then(StaffModel(additionalFields: or(additionalFields, $value.additionalFields), id: or(id, $value.id), tenantId: or(tenantId, $value.tenantId), registerId: or(registerId, $value.registerId), userId: or(userId, $value.userId), enrollmentDate: or(enrollmentDate, $value.enrollmentDate), denrollmentDate: or(denrollmentDate, $value.denrollmentDate), nonRecoverableError: or(nonRecoverableError, $value.nonRecoverableError), clientReferenceId: clientReferenceId ?? $value.clientReferenceId, rowVersion: or(rowVersion, $value.rowVersion)));
+}
+
+class StaffAdditionalFieldsMapper extends BaseMapper<StaffAdditionalFields> {
+  StaffAdditionalFieldsMapper._();
+
+  @override Function get decoder => decode;
+  StaffAdditionalFields decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  StaffAdditionalFields fromMap(Map<String, dynamic> map) => StaffAdditionalFields();
+
+  @override Function get encoder => (StaffAdditionalFields v) => encode(v);
+  dynamic encode(StaffAdditionalFields v) => toMap(v);
+  Map<String, dynamic> toMap(StaffAdditionalFields s) => {};
+
+  @override String stringify(StaffAdditionalFields self) => 'StaffAdditionalFields()';
+  @override int hash(StaffAdditionalFields self) => 0;
+  @override bool equals(StaffAdditionalFields self, StaffAdditionalFields other) => true;
+
+  @override Function get typeFactory => (f) => f<StaffAdditionalFields>();
+}
+
+extension StaffAdditionalFieldsMapperExtension  on StaffAdditionalFields {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  StaffAdditionalFieldsCopyWith<StaffAdditionalFields> get copyWith => StaffAdditionalFieldsCopyWith(this, $identity);
+}
+
+abstract class StaffAdditionalFieldsCopyWith<$R> {
+  factory StaffAdditionalFieldsCopyWith(StaffAdditionalFields value, Then<StaffAdditionalFields, $R> then) = _StaffAdditionalFieldsCopyWithImpl<$R>;
+  $R call();
+  $R apply(StaffAdditionalFields Function(StaffAdditionalFields) transform);
+}
+
+class _StaffAdditionalFieldsCopyWithImpl<$R> extends BaseCopyWith<StaffAdditionalFields, $R> implements StaffAdditionalFieldsCopyWith<$R> {
+  _StaffAdditionalFieldsCopyWithImpl(StaffAdditionalFields value, Then<StaffAdditionalFields, $R> then) : super(value, then);
+
+  @override $R call() => $then(StaffAdditionalFields());
 }
 
 
