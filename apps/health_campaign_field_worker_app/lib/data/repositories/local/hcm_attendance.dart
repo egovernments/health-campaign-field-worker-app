@@ -29,6 +29,8 @@ class AttendanceLocalRepository extends LocalRepository<
           return HCMAttendanceRegisterModel(
             attendanceRegister: AttendancePackageRegisterModel(
               id: register.id.toString(),
+              attendees: [],
+              staff: [],
             ),
           );
         })

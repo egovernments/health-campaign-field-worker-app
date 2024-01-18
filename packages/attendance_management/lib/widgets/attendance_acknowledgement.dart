@@ -1,4 +1,4 @@
-import 'package:attendance_management/blocs/attendance_test_bloc.dart';
+import 'package:attendance_management/blocs/attendance_bloc.dart';
 import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_components/widgets/digit_card.dart';
 import 'package:digit_components/widgets/digit_elevated_button.dart';
@@ -8,10 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../widgets/localized.dart';
-import '../blocs/attendance_abstract.dart';
+import '../blocs/attendance_listeners.dart';
 
 class AttendanceAcknowledgementPage extends LocalizedStatefulWidget {
-  final AttendanceDependencies attendanceDependencies;
+  final AttendanceListeners attendanceDependencies;
   final String label;
   final String? subLabel;
   final String? description;
@@ -52,7 +52,8 @@ class AttendanceAcknowledgementPage extends LocalizedStatefulWidget {
 
 class _AttendanceAcknowledgementPageState
     extends State<AttendanceAcknowledgementPage> {
-  final AttendanceTestBloc _attendanceTestBloc = AttendanceTestBloc(const RegisterLoading());
+  final AttendanceBloc _attendanceTestBloc =
+      AttendanceBloc(const RegisterLoading());
 
   @override
   void initState() {
@@ -64,12 +65,12 @@ class _AttendanceAcknowledgementPageState
     final theme = Theme.of(context);
 
     return Scaffold(
-      body: BlocProvider<AttendanceTestBloc>(
-        create: (context) =>
-            _attendanceTestBloc..add(AttendanceEvents.initial(widget.attendanceDependencies)),
-        child: BlocListener<AttendanceTestBloc, AttendanceStates>(
+      body: BlocProvider<AttendanceBloc>(
+        create: (context) => _attendanceTestBloc
+          ..add(AttendanceEvents.initial(widget.attendanceDependencies)),
+        child: BlocListener<AttendanceBloc, AttendanceStates>(
           listener: (context, state) {},
-          child: BlocBuilder<AttendanceTestBloc, AttendanceStates>(
+          child: BlocBuilder<AttendanceBloc, AttendanceStates>(
             builder: (context, state) {
               if (state is RegisterLoaded) {
                 return ScrollableContent(
@@ -92,7 +93,7 @@ class _AttendanceAcknowledgementPageState
                             children: [
                               Text(
                                 textAlign: TextAlign.center,
-                                state.id,
+                                state.registers[0].name ?? '',
                                 style: TextStyle(
                                   fontSize: 32,
                                   fontWeight: FontWeight.w400,

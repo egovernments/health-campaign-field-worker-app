@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
-part of 'attendance_test_bloc.dart';
+part of 'attendance_bloc.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -18,40 +18,45 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$AttendanceEvents {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(AttendanceDependencies attendanceDependencies)
+    required TResult Function(AttendanceListeners attendanceDependencies)
         initial,
-    required TResult Function(String id) loadHCMData,
+    required TResult Function(List<AttendancePackageRegisterModel> registers)
+        loadAttendanceRegisters,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(AttendanceDependencies attendanceDependencies)? initial,
-    TResult? Function(String id)? loadHCMData,
+    TResult? Function(AttendanceListeners attendanceDependencies)? initial,
+    TResult? Function(List<AttendancePackageRegisterModel> registers)?
+        loadAttendanceRegisters,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(AttendanceDependencies attendanceDependencies)? initial,
-    TResult Function(String id)? loadHCMData,
+    TResult Function(AttendanceListeners attendanceDependencies)? initial,
+    TResult Function(List<AttendancePackageRegisterModel> registers)?
+        loadAttendanceRegisters,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(InitialAttendance value) initial,
-    required TResult Function(LoadAttendanceRegisterData value) loadHCMData,
+    required TResult Function(LoadAttendanceRegisterData value)
+        loadAttendanceRegisters,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(InitialAttendance value)? initial,
-    TResult? Function(LoadAttendanceRegisterData value)? loadHCMData,
+    TResult? Function(LoadAttendanceRegisterData value)?
+        loadAttendanceRegisters,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(InitialAttendance value)? initial,
-    TResult Function(LoadAttendanceRegisterData value)? loadHCMData,
+    TResult Function(LoadAttendanceRegisterData value)? loadAttendanceRegisters,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -81,7 +86,7 @@ abstract class _$$InitialAttendanceCopyWith<$Res> {
           _$InitialAttendance value, $Res Function(_$InitialAttendance) then) =
       __$$InitialAttendanceCopyWithImpl<$Res>;
   @useResult
-  $Res call({AttendanceDependencies attendanceDependencies});
+  $Res call({AttendanceListeners attendanceDependencies});
 }
 
 /// @nodoc
@@ -101,7 +106,7 @@ class __$$InitialAttendanceCopyWithImpl<$Res>
       null == attendanceDependencies
           ? _value.attendanceDependencies
           : attendanceDependencies // ignore: cast_nullable_to_non_nullable
-              as AttendanceDependencies,
+              as AttendanceListeners,
     ));
   }
 }
@@ -112,7 +117,7 @@ class _$InitialAttendance implements InitialAttendance {
   const _$InitialAttendance(this.attendanceDependencies);
 
   @override
-  final AttendanceDependencies attendanceDependencies;
+  final AttendanceListeners attendanceDependencies;
 
   @override
   String toString() {
@@ -140,9 +145,10 @@ class _$InitialAttendance implements InitialAttendance {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(AttendanceDependencies attendanceDependencies)
+    required TResult Function(AttendanceListeners attendanceDependencies)
         initial,
-    required TResult Function(String id) loadHCMData,
+    required TResult Function(List<AttendancePackageRegisterModel> registers)
+        loadAttendanceRegisters,
   }) {
     return initial(attendanceDependencies);
   }
@@ -150,8 +156,9 @@ class _$InitialAttendance implements InitialAttendance {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(AttendanceDependencies attendanceDependencies)? initial,
-    TResult? Function(String id)? loadHCMData,
+    TResult? Function(AttendanceListeners attendanceDependencies)? initial,
+    TResult? Function(List<AttendancePackageRegisterModel> registers)?
+        loadAttendanceRegisters,
   }) {
     return initial?.call(attendanceDependencies);
   }
@@ -159,8 +166,9 @@ class _$InitialAttendance implements InitialAttendance {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(AttendanceDependencies attendanceDependencies)? initial,
-    TResult Function(String id)? loadHCMData,
+    TResult Function(AttendanceListeners attendanceDependencies)? initial,
+    TResult Function(List<AttendancePackageRegisterModel> registers)?
+        loadAttendanceRegisters,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -173,7 +181,8 @@ class _$InitialAttendance implements InitialAttendance {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(InitialAttendance value) initial,
-    required TResult Function(LoadAttendanceRegisterData value) loadHCMData,
+    required TResult Function(LoadAttendanceRegisterData value)
+        loadAttendanceRegisters,
   }) {
     return initial(this);
   }
@@ -182,7 +191,8 @@ class _$InitialAttendance implements InitialAttendance {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(InitialAttendance value)? initial,
-    TResult? Function(LoadAttendanceRegisterData value)? loadHCMData,
+    TResult? Function(LoadAttendanceRegisterData value)?
+        loadAttendanceRegisters,
   }) {
     return initial?.call(this);
   }
@@ -191,7 +201,7 @@ class _$InitialAttendance implements InitialAttendance {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(InitialAttendance value)? initial,
-    TResult Function(LoadAttendanceRegisterData value)? loadHCMData,
+    TResult Function(LoadAttendanceRegisterData value)? loadAttendanceRegisters,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -203,10 +213,9 @@ class _$InitialAttendance implements InitialAttendance {
 
 abstract class InitialAttendance implements AttendanceEvents {
   const factory InitialAttendance(
-          final AttendanceDependencies attendanceDependencies) =
-      _$InitialAttendance;
+      final AttendanceListeners attendanceDependencies) = _$InitialAttendance;
 
-  AttendanceDependencies get attendanceDependencies;
+  AttendanceListeners get attendanceDependencies;
   @JsonKey(ignore: true)
   _$$InitialAttendanceCopyWith<_$InitialAttendance> get copyWith =>
       throw _privateConstructorUsedError;
@@ -219,7 +228,7 @@ abstract class _$$LoadAttendanceRegisterDataCopyWith<$Res> {
           $Res Function(_$LoadAttendanceRegisterData) then) =
       __$$LoadAttendanceRegisterDataCopyWithImpl<$Res>;
   @useResult
-  $Res call({String id});
+  $Res call({List<AttendancePackageRegisterModel> registers});
 }
 
 /// @nodoc
@@ -234,13 +243,13 @@ class __$$LoadAttendanceRegisterDataCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
+    Object? registers = null,
   }) {
     return _then(_$LoadAttendanceRegisterData(
-      null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
+      null == registers
+          ? _value._registers
+          : registers // ignore: cast_nullable_to_non_nullable
+              as List<AttendancePackageRegisterModel>,
     ));
   }
 }
@@ -248,14 +257,20 @@ class __$$LoadAttendanceRegisterDataCopyWithImpl<$Res>
 /// @nodoc
 
 class _$LoadAttendanceRegisterData implements LoadAttendanceRegisterData {
-  const _$LoadAttendanceRegisterData(this.id);
+  const _$LoadAttendanceRegisterData(
+      final List<AttendancePackageRegisterModel> registers)
+      : _registers = registers;
 
+  final List<AttendancePackageRegisterModel> _registers;
   @override
-  final String id;
+  List<AttendancePackageRegisterModel> get registers {
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_registers);
+  }
 
   @override
   String toString() {
-    return 'AttendanceEvents.loadHCMData(id: $id)';
+    return 'AttendanceEvents.loadAttendanceRegisters(registers: $registers)';
   }
 
   @override
@@ -263,11 +278,13 @@ class _$LoadAttendanceRegisterData implements LoadAttendanceRegisterData {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$LoadAttendanceRegisterData &&
-            (identical(other.id, id) || other.id == id));
+            const DeepCollectionEquality()
+                .equals(other._registers, _registers));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, id);
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(_registers));
 
   @JsonKey(ignore: true)
   @override
@@ -279,31 +296,34 @@ class _$LoadAttendanceRegisterData implements LoadAttendanceRegisterData {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(AttendanceDependencies attendanceDependencies)
+    required TResult Function(AttendanceListeners attendanceDependencies)
         initial,
-    required TResult Function(String id) loadHCMData,
+    required TResult Function(List<AttendancePackageRegisterModel> registers)
+        loadAttendanceRegisters,
   }) {
-    return loadHCMData(id);
+    return loadAttendanceRegisters(registers);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(AttendanceDependencies attendanceDependencies)? initial,
-    TResult? Function(String id)? loadHCMData,
+    TResult? Function(AttendanceListeners attendanceDependencies)? initial,
+    TResult? Function(List<AttendancePackageRegisterModel> registers)?
+        loadAttendanceRegisters,
   }) {
-    return loadHCMData?.call(id);
+    return loadAttendanceRegisters?.call(registers);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(AttendanceDependencies attendanceDependencies)? initial,
-    TResult Function(String id)? loadHCMData,
+    TResult Function(AttendanceListeners attendanceDependencies)? initial,
+    TResult Function(List<AttendancePackageRegisterModel> registers)?
+        loadAttendanceRegisters,
     required TResult orElse(),
   }) {
-    if (loadHCMData != null) {
-      return loadHCMData(id);
+    if (loadAttendanceRegisters != null) {
+      return loadAttendanceRegisters(registers);
     }
     return orElse();
   }
@@ -312,39 +332,42 @@ class _$LoadAttendanceRegisterData implements LoadAttendanceRegisterData {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(InitialAttendance value) initial,
-    required TResult Function(LoadAttendanceRegisterData value) loadHCMData,
+    required TResult Function(LoadAttendanceRegisterData value)
+        loadAttendanceRegisters,
   }) {
-    return loadHCMData(this);
+    return loadAttendanceRegisters(this);
   }
 
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(InitialAttendance value)? initial,
-    TResult? Function(LoadAttendanceRegisterData value)? loadHCMData,
+    TResult? Function(LoadAttendanceRegisterData value)?
+        loadAttendanceRegisters,
   }) {
-    return loadHCMData?.call(this);
+    return loadAttendanceRegisters?.call(this);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(InitialAttendance value)? initial,
-    TResult Function(LoadAttendanceRegisterData value)? loadHCMData,
+    TResult Function(LoadAttendanceRegisterData value)? loadAttendanceRegisters,
     required TResult orElse(),
   }) {
-    if (loadHCMData != null) {
-      return loadHCMData(this);
+    if (loadAttendanceRegisters != null) {
+      return loadAttendanceRegisters(this);
     }
     return orElse();
   }
 }
 
 abstract class LoadAttendanceRegisterData implements AttendanceEvents {
-  const factory LoadAttendanceRegisterData(final String id) =
+  const factory LoadAttendanceRegisterData(
+          final List<AttendancePackageRegisterModel> registers) =
       _$LoadAttendanceRegisterData;
 
-  String get id;
+  List<AttendancePackageRegisterModel> get registers;
   @JsonKey(ignore: true)
   _$$LoadAttendanceRegisterDataCopyWith<_$LoadAttendanceRegisterData>
       get copyWith => throw _privateConstructorUsedError;
@@ -355,19 +378,22 @@ mixin _$AttendanceStates {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() registerLoading,
-    required TResult Function(String id) registerLoaded,
+    required TResult Function(List<AttendancePackageRegisterModel> registers)
+        registerLoaded,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? registerLoading,
-    TResult? Function(String id)? registerLoaded,
+    TResult? Function(List<AttendancePackageRegisterModel> registers)?
+        registerLoaded,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? registerLoading,
-    TResult Function(String id)? registerLoaded,
+    TResult Function(List<AttendancePackageRegisterModel> registers)?
+        registerLoaded,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -449,7 +475,8 @@ class _$RegisterLoading implements RegisterLoading {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() registerLoading,
-    required TResult Function(String id) registerLoaded,
+    required TResult Function(List<AttendancePackageRegisterModel> registers)
+        registerLoaded,
   }) {
     return registerLoading();
   }
@@ -458,7 +485,8 @@ class _$RegisterLoading implements RegisterLoading {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? registerLoading,
-    TResult? Function(String id)? registerLoaded,
+    TResult? Function(List<AttendancePackageRegisterModel> registers)?
+        registerLoaded,
   }) {
     return registerLoading?.call();
   }
@@ -467,7 +495,8 @@ class _$RegisterLoading implements RegisterLoading {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? registerLoading,
-    TResult Function(String id)? registerLoaded,
+    TResult Function(List<AttendancePackageRegisterModel> registers)?
+        registerLoaded,
     required TResult orElse(),
   }) {
     if (registerLoading != null) {
@@ -518,7 +547,7 @@ abstract class _$$RegisterLoadedCopyWith<$Res> {
           _$RegisterLoaded value, $Res Function(_$RegisterLoaded) then) =
       __$$RegisterLoadedCopyWithImpl<$Res>;
   @useResult
-  $Res call({String id});
+  $Res call({List<AttendancePackageRegisterModel> registers});
 }
 
 /// @nodoc
@@ -532,13 +561,13 @@ class __$$RegisterLoadedCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
+    Object? registers = null,
   }) {
     return _then(_$RegisterLoaded(
-      null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
+      null == registers
+          ? _value._registers
+          : registers // ignore: cast_nullable_to_non_nullable
+              as List<AttendancePackageRegisterModel>,
     ));
   }
 }
@@ -546,14 +575,19 @@ class __$$RegisterLoadedCopyWithImpl<$Res>
 /// @nodoc
 
 class _$RegisterLoaded implements RegisterLoaded {
-  const _$RegisterLoaded(this.id);
+  const _$RegisterLoaded(final List<AttendancePackageRegisterModel> registers)
+      : _registers = registers;
 
+  final List<AttendancePackageRegisterModel> _registers;
   @override
-  final String id;
+  List<AttendancePackageRegisterModel> get registers {
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_registers);
+  }
 
   @override
   String toString() {
-    return 'AttendanceStates.registerLoaded(id: $id)';
+    return 'AttendanceStates.registerLoaded(registers: $registers)';
   }
 
   @override
@@ -561,11 +595,13 @@ class _$RegisterLoaded implements RegisterLoaded {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$RegisterLoaded &&
-            (identical(other.id, id) || other.id == id));
+            const DeepCollectionEquality()
+                .equals(other._registers, _registers));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, id);
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(_registers));
 
   @JsonKey(ignore: true)
   @override
@@ -577,29 +613,32 @@ class _$RegisterLoaded implements RegisterLoaded {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() registerLoading,
-    required TResult Function(String id) registerLoaded,
+    required TResult Function(List<AttendancePackageRegisterModel> registers)
+        registerLoaded,
   }) {
-    return registerLoaded(id);
+    return registerLoaded(registers);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? registerLoading,
-    TResult? Function(String id)? registerLoaded,
+    TResult? Function(List<AttendancePackageRegisterModel> registers)?
+        registerLoaded,
   }) {
-    return registerLoaded?.call(id);
+    return registerLoaded?.call(registers);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? registerLoading,
-    TResult Function(String id)? registerLoaded,
+    TResult Function(List<AttendancePackageRegisterModel> registers)?
+        registerLoaded,
     required TResult orElse(),
   }) {
     if (registerLoaded != null) {
-      return registerLoaded(id);
+      return registerLoaded(registers);
     }
     return orElse();
   }
@@ -637,9 +676,10 @@ class _$RegisterLoaded implements RegisterLoaded {
 }
 
 abstract class RegisterLoaded implements AttendanceStates {
-  const factory RegisterLoaded(final String id) = _$RegisterLoaded;
+  const factory RegisterLoaded(
+      final List<AttendancePackageRegisterModel> registers) = _$RegisterLoaded;
 
-  String get id;
+  List<AttendancePackageRegisterModel> get registers;
   @JsonKey(ignore: true)
   _$$RegisterLoadedCopyWith<_$RegisterLoaded> get copyWith =>
       throw _privateConstructorUsedError;

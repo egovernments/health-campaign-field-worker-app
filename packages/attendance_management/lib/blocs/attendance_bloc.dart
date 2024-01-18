@@ -2,10 +2,10 @@ import 'package:attendance_management/attendance_management.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'attendance_test_bloc.freezed.dart';
+part 'attendance_bloc.freezed.dart';
 
-class AttendanceTestBloc extends Bloc<AttendanceEvents, AttendanceStates> {
-  AttendanceTestBloc(super.initialState) {
+class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
+  AttendanceBloc(super.initialState) {
     on(_onInitial);
     on(_onLoadAttendanceRegisterData);
   }
@@ -15,8 +15,8 @@ class AttendanceTestBloc extends Bloc<AttendanceEvents, AttendanceStates> {
     Emitter<AttendanceStates> emit,
   ) async {
     emit(const RegisterLoading());
-    event.attendanceDependencies.getAttendanceTestBloc((newData) async {
-      emit(RegisterLoaded(newData));
+    event.attendanceDependencies.getAttendanceRegisters((registers) async {
+      add(LoadAttendanceRegisterData(registers));
     });
   }
 
@@ -24,20 +24,19 @@ class AttendanceTestBloc extends Bloc<AttendanceEvents, AttendanceStates> {
     LoadAttendanceRegisterData event,
     Emitter<AttendanceStates> emit,
   ) async {
-
-    emit(RegisterLoaded(event.id));
+    emit(RegisterLoaded(event.registers));
   }
 }
 
 @freezed
 class AttendanceEvents with _$AttendanceEvents {
   const factory AttendanceEvents.initial(
-      AttendanceDependencies attendanceDependencies) = InitialAttendance;
-  const factory AttendanceEvents.loadHCMData(String id) = LoadAttendanceRegisterData;
+      AttendanceListeners attendanceDependencies) = InitialAttendance;
+  const factory AttendanceEvents.loadAttendanceRegisters(List<AttendancePackageRegisterModel> registers) = LoadAttendanceRegisterData;
 }
 
 @freezed
 class AttendanceStates with _$AttendanceStates {
   const factory AttendanceStates.registerLoading() = RegisterLoading;
-  const factory AttendanceStates.registerLoaded(String id) = RegisterLoaded;
+  const factory AttendanceStates.registerLoaded(List<AttendancePackageRegisterModel> registers) = RegisterLoaded;
 }

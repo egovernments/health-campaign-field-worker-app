@@ -1,4 +1,25 @@
+import 'package:attendance_management/attendance_management.dart';
 import 'package:dart_mappable/dart_mappable.dart';
+
+import 'attendance_audit.dart';
+
+@MappableClass()
+class RegisterAuditDetails extends AttendanceAuditDetails {
+  final String? registerId;
+
+  const RegisterAuditDetails({
+    required String createdBy,
+    required int createdTime,
+    String? lastModifiedBy,
+    int? lastModifiedTime,
+    this.registerId,
+  }) : super(
+          createdBy: createdBy,
+          createdTime: createdTime,
+          lastModifiedBy: lastModifiedBy,
+          lastModifiedTime: lastModifiedTime,
+        );
+}
 
 @MappableClass(ignoreNull: true)
 class AttendanceRegisterSearchModel {
@@ -32,6 +53,8 @@ class AttendancePackageRegisterModel {
   final int? rowVersion;
   final DateTime? startDateTime;
   final DateTime? endDateTime;
+  final List<AttendeeModel> attendees;
+  final List<StaffModel> staff;
   final AttendanceRegisterAdditionalFields? additionalFields;
 
   AttendancePackageRegisterModel({
@@ -47,6 +70,8 @@ class AttendancePackageRegisterModel {
     this.rowVersion,
     int? startDate,
     int? endDate,
+    required this.attendees,
+    required this.staff,
   })  : startDateTime = startDate == null
             ? null
             : DateTime.fromMillisecondsSinceEpoch(startDate),
