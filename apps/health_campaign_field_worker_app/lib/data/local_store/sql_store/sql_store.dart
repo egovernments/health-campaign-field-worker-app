@@ -37,6 +37,7 @@ import 'tables/project_facility.dart';
 import 'tables/project_product_variant.dart';
 import 'tables/project_resource.dart';
 import 'tables/project_staff.dart';
+import 'tables/staff.dart';
 import 'tables/project_type.dart';
 import 'tables/referral.dart';
 import 'tables/service.dart';
@@ -84,6 +85,7 @@ part 'sql_store.g.dart';
   Service,
   ServiceAttributes,
   ServiceDefinition,
+  Staff,
   Attributes,
   Locality,
   PgrService,

@@ -1382,8 +1382,8 @@ class AttendanceRegisterData extends DataClass
   final String referenceId;
   final String serviceCode;
   final String status;
-  final DateTime? startDate;
-  final DateTime? endDate;
+  final int? startDate;
+  final int? endDate;
   final String? additionalFields;
   final String? auditCreatedBy;
   final bool? nonRecoverableError;
@@ -1436,9 +1436,9 @@ class AttendanceRegisterData extends DataClass
           .mapFromDatabaseResponse(data['${effectivePrefix}service_code'])!,
       status: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}status'])!,
-      startDate: const DateTimeType()
+      startDate: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}start_date']),
-      endDate: const DateTimeType()
+      endDate: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}end_date']),
       additionalFields: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}additional_fields']),
@@ -1479,10 +1479,10 @@ class AttendanceRegisterData extends DataClass
     map['service_code'] = Variable<String>(serviceCode);
     map['status'] = Variable<String>(status);
     if (!nullToAbsent || startDate != null) {
-      map['start_date'] = Variable<DateTime?>(startDate);
+      map['start_date'] = Variable<int?>(startDate);
     }
     if (!nullToAbsent || endDate != null) {
-      map['end_date'] = Variable<DateTime?>(endDate);
+      map['end_date'] = Variable<int?>(endDate);
     }
     if (!nullToAbsent || additionalFields != null) {
       map['additional_fields'] = Variable<String?>(additionalFields);
@@ -1588,8 +1588,8 @@ class AttendanceRegisterData extends DataClass
       referenceId: serializer.fromJson<String>(json['referenceId']),
       serviceCode: serializer.fromJson<String>(json['serviceCode']),
       status: serializer.fromJson<String>(json['status']),
-      startDate: serializer.fromJson<DateTime?>(json['startDate']),
-      endDate: serializer.fromJson<DateTime?>(json['endDate']),
+      startDate: serializer.fromJson<int?>(json['startDate']),
+      endDate: serializer.fromJson<int?>(json['endDate']),
       additionalFields: serializer.fromJson<String?>(json['additionalFields']),
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       nonRecoverableError:
@@ -1616,8 +1616,8 @@ class AttendanceRegisterData extends DataClass
       'referenceId': serializer.toJson<String>(referenceId),
       'serviceCode': serializer.toJson<String>(serviceCode),
       'status': serializer.toJson<String>(status),
-      'startDate': serializer.toJson<DateTime?>(startDate),
-      'endDate': serializer.toJson<DateTime?>(endDate),
+      'startDate': serializer.toJson<int?>(startDate),
+      'endDate': serializer.toJson<int?>(endDate),
       'additionalFields': serializer.toJson<String?>(additionalFields),
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'nonRecoverableError': serializer.toJson<bool?>(nonRecoverableError),
@@ -1641,8 +1641,8 @@ class AttendanceRegisterData extends DataClass
           String? referenceId,
           String? serviceCode,
           String? status,
-          DateTime? startDate,
-          DateTime? endDate,
+          int? startDate,
+          int? endDate,
           String? additionalFields,
           String? auditCreatedBy,
           bool? nonRecoverableError,
@@ -1766,8 +1766,8 @@ class AttendanceRegisterCompanion
   final Value<String> referenceId;
   final Value<String> serviceCode;
   final Value<String> status;
-  final Value<DateTime?> startDate;
-  final Value<DateTime?> endDate;
+  final Value<int?> startDate;
+  final Value<int?> endDate;
   final Value<String?> additionalFields;
   final Value<String?> auditCreatedBy;
   final Value<bool?> nonRecoverableError;
@@ -1839,8 +1839,8 @@ class AttendanceRegisterCompanion
     Expression<String>? referenceId,
     Expression<String>? serviceCode,
     Expression<String>? status,
-    Expression<DateTime?>? startDate,
-    Expression<DateTime?>? endDate,
+    Expression<int?>? startDate,
+    Expression<int?>? endDate,
     Expression<String?>? additionalFields,
     Expression<String?>? auditCreatedBy,
     Expression<bool?>? nonRecoverableError,
@@ -1889,8 +1889,8 @@ class AttendanceRegisterCompanion
       Value<String>? referenceId,
       Value<String>? serviceCode,
       Value<String>? status,
-      Value<DateTime?>? startDate,
-      Value<DateTime?>? endDate,
+      Value<int?>? startDate,
+      Value<int?>? endDate,
       Value<String?>? additionalFields,
       Value<String?>? auditCreatedBy,
       Value<bool?>? nonRecoverableError,
@@ -1953,10 +1953,10 @@ class AttendanceRegisterCompanion
       map['status'] = Variable<String>(status.value);
     }
     if (startDate.present) {
-      map['start_date'] = Variable<DateTime?>(startDate.value);
+      map['start_date'] = Variable<int?>(startDate.value);
     }
     if (endDate.present) {
-      map['end_date'] = Variable<DateTime?>(endDate.value);
+      map['end_date'] = Variable<int?>(endDate.value);
     }
     if (additionalFields.present) {
       map['additional_fields'] = Variable<String?>(additionalFields.value);
@@ -2072,12 +2072,12 @@ class $AttendanceRegisterTable extends AttendanceRegister
       type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _startDateMeta = const VerificationMeta('startDate');
   @override
-  late final GeneratedColumn<DateTime?> startDate = GeneratedColumn<DateTime?>(
+  late final GeneratedColumn<int?> startDate = GeneratedColumn<int?>(
       'start_date', aliasedName, true,
       type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _endDateMeta = const VerificationMeta('endDate');
   @override
-  late final GeneratedColumn<DateTime?> endDate = GeneratedColumn<DateTime?>(
+  late final GeneratedColumn<int?> endDate = GeneratedColumn<int?>(
       'end_date', aliasedName, true,
       type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _additionalFieldsMeta =
@@ -27271,6 +27271,337 @@ class $ServiceDefinitionTable extends ServiceDefinition
   }
 }
 
+class StaffData extends DataClass implements Insertable<StaffData> {
+  final String? id;
+  final String tenantId;
+  final String registerId;
+  final String userId;
+  final int? enrollmentDate;
+  final int? denrollmentDate;
+  StaffData(
+      {this.id,
+      required this.tenantId,
+      required this.registerId,
+      required this.userId,
+      this.enrollmentDate,
+      this.denrollmentDate});
+  factory StaffData.fromData(Map<String, dynamic> data, {String? prefix}) {
+    final effectivePrefix = prefix ?? '';
+    return StaffData(
+      id: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}id']),
+      tenantId: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}tenant_id'])!,
+      registerId: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}register_id'])!,
+      userId: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}user_id'])!,
+      enrollmentDate: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}enrollment_date']),
+      denrollmentDate: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}denrollment_date']),
+    );
+  }
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (!nullToAbsent || id != null) {
+      map['id'] = Variable<String?>(id);
+    }
+    map['tenant_id'] = Variable<String>(tenantId);
+    map['register_id'] = Variable<String>(registerId);
+    map['user_id'] = Variable<String>(userId);
+    if (!nullToAbsent || enrollmentDate != null) {
+      map['enrollment_date'] = Variable<int?>(enrollmentDate);
+    }
+    if (!nullToAbsent || denrollmentDate != null) {
+      map['denrollment_date'] = Variable<int?>(denrollmentDate);
+    }
+    return map;
+  }
+
+  StaffCompanion toCompanion(bool nullToAbsent) {
+    return StaffCompanion(
+      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      tenantId: Value(tenantId),
+      registerId: Value(registerId),
+      userId: Value(userId),
+      enrollmentDate: enrollmentDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(enrollmentDate),
+      denrollmentDate: denrollmentDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(denrollmentDate),
+    );
+  }
+
+  factory StaffData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return StaffData(
+      id: serializer.fromJson<String?>(json['id']),
+      tenantId: serializer.fromJson<String>(json['tenantId']),
+      registerId: serializer.fromJson<String>(json['registerId']),
+      userId: serializer.fromJson<String>(json['userId']),
+      enrollmentDate: serializer.fromJson<int?>(json['enrollmentDate']),
+      denrollmentDate: serializer.fromJson<int?>(json['denrollmentDate']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String?>(id),
+      'tenantId': serializer.toJson<String>(tenantId),
+      'registerId': serializer.toJson<String>(registerId),
+      'userId': serializer.toJson<String>(userId),
+      'enrollmentDate': serializer.toJson<int?>(enrollmentDate),
+      'denrollmentDate': serializer.toJson<int?>(denrollmentDate),
+    };
+  }
+
+  StaffData copyWith(
+          {String? id,
+          String? tenantId,
+          String? registerId,
+          String? userId,
+          int? enrollmentDate,
+          int? denrollmentDate}) =>
+      StaffData(
+        id: id ?? this.id,
+        tenantId: tenantId ?? this.tenantId,
+        registerId: registerId ?? this.registerId,
+        userId: userId ?? this.userId,
+        enrollmentDate: enrollmentDate ?? this.enrollmentDate,
+        denrollmentDate: denrollmentDate ?? this.denrollmentDate,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('StaffData(')
+          ..write('id: $id, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('registerId: $registerId, ')
+          ..write('userId: $userId, ')
+          ..write('enrollmentDate: $enrollmentDate, ')
+          ..write('denrollmentDate: $denrollmentDate')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      id, tenantId, registerId, userId, enrollmentDate, denrollmentDate);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is StaffData &&
+          other.id == this.id &&
+          other.tenantId == this.tenantId &&
+          other.registerId == this.registerId &&
+          other.userId == this.userId &&
+          other.enrollmentDate == this.enrollmentDate &&
+          other.denrollmentDate == this.denrollmentDate);
+}
+
+class StaffCompanion extends UpdateCompanion<StaffData> {
+  final Value<String?> id;
+  final Value<String> tenantId;
+  final Value<String> registerId;
+  final Value<String> userId;
+  final Value<int?> enrollmentDate;
+  final Value<int?> denrollmentDate;
+  const StaffCompanion({
+    this.id = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.registerId = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.enrollmentDate = const Value.absent(),
+    this.denrollmentDate = const Value.absent(),
+  });
+  StaffCompanion.insert({
+    this.id = const Value.absent(),
+    required String tenantId,
+    required String registerId,
+    required String userId,
+    this.enrollmentDate = const Value.absent(),
+    this.denrollmentDate = const Value.absent(),
+  })  : tenantId = Value(tenantId),
+        registerId = Value(registerId),
+        userId = Value(userId);
+  static Insertable<StaffData> custom({
+    Expression<String?>? id,
+    Expression<String>? tenantId,
+    Expression<String>? registerId,
+    Expression<String>? userId,
+    Expression<int?>? enrollmentDate,
+    Expression<int?>? denrollmentDate,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (tenantId != null) 'tenant_id': tenantId,
+      if (registerId != null) 'register_id': registerId,
+      if (userId != null) 'user_id': userId,
+      if (enrollmentDate != null) 'enrollment_date': enrollmentDate,
+      if (denrollmentDate != null) 'denrollment_date': denrollmentDate,
+    });
+  }
+
+  StaffCompanion copyWith(
+      {Value<String?>? id,
+      Value<String>? tenantId,
+      Value<String>? registerId,
+      Value<String>? userId,
+      Value<int?>? enrollmentDate,
+      Value<int?>? denrollmentDate}) {
+    return StaffCompanion(
+      id: id ?? this.id,
+      tenantId: tenantId ?? this.tenantId,
+      registerId: registerId ?? this.registerId,
+      userId: userId ?? this.userId,
+      enrollmentDate: enrollmentDate ?? this.enrollmentDate,
+      denrollmentDate: denrollmentDate ?? this.denrollmentDate,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String?>(id.value);
+    }
+    if (tenantId.present) {
+      map['tenant_id'] = Variable<String>(tenantId.value);
+    }
+    if (registerId.present) {
+      map['register_id'] = Variable<String>(registerId.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (enrollmentDate.present) {
+      map['enrollment_date'] = Variable<int?>(enrollmentDate.value);
+    }
+    if (denrollmentDate.present) {
+      map['denrollment_date'] = Variable<int?>(denrollmentDate.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('StaffCompanion(')
+          ..write('id: $id, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('registerId: $registerId, ')
+          ..write('userId: $userId, ')
+          ..write('enrollmentDate: $enrollmentDate, ')
+          ..write('denrollmentDate: $denrollmentDate')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $StaffTable extends Staff with TableInfo<$StaffTable, StaffData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $StaffTable(this.attachedDatabase, [this._alias]);
+  final VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
+      'id', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _tenantIdMeta = const VerificationMeta('tenantId');
+  @override
+  late final GeneratedColumn<String?> tenantId = GeneratedColumn<String?>(
+      'tenant_id', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _registerIdMeta = const VerificationMeta('registerId');
+  @override
+  late final GeneratedColumn<String?> registerId = GeneratedColumn<String?>(
+      'register_id', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String?> userId = GeneratedColumn<String?>(
+      'user_id', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _enrollmentDateMeta =
+      const VerificationMeta('enrollmentDate');
+  @override
+  late final GeneratedColumn<int?> enrollmentDate = GeneratedColumn<int?>(
+      'enrollment_date', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _denrollmentDateMeta =
+      const VerificationMeta('denrollmentDate');
+  @override
+  late final GeneratedColumn<int?> denrollmentDate = GeneratedColumn<int?>(
+      'denrollment_date', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, tenantId, registerId, userId, enrollmentDate, denrollmentDate];
+  @override
+  String get aliasedName => _alias ?? 'staff';
+  @override
+  String get actualTableName => 'staff';
+  @override
+  VerificationContext validateIntegrity(Insertable<StaffData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('tenant_id')) {
+      context.handle(_tenantIdMeta,
+          tenantId.isAcceptableOrUnknown(data['tenant_id']!, _tenantIdMeta));
+    } else if (isInserting) {
+      context.missing(_tenantIdMeta);
+    }
+    if (data.containsKey('register_id')) {
+      context.handle(
+          _registerIdMeta,
+          registerId.isAcceptableOrUnknown(
+              data['register_id']!, _registerIdMeta));
+    } else if (isInserting) {
+      context.missing(_registerIdMeta);
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(_userIdMeta,
+          userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta));
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('enrollment_date')) {
+      context.handle(
+          _enrollmentDateMeta,
+          enrollmentDate.isAcceptableOrUnknown(
+              data['enrollment_date']!, _enrollmentDateMeta));
+    }
+    if (data.containsKey('denrollment_date')) {
+      context.handle(
+          _denrollmentDateMeta,
+          denrollmentDate.isAcceptableOrUnknown(
+              data['denrollment_date']!, _denrollmentDateMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  StaffData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    return StaffData.fromData(data,
+        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  }
+
+  @override
+  $StaffTable createAlias(String alias) {
+    return $StaffTable(attachedDatabase, alias);
+  }
+}
+
 class Attribute extends DataClass implements Insertable<Attribute> {
   final String? id;
   final String? dataType;
@@ -35413,6 +35744,7 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
       $ServiceAttributesTable(this);
   late final $ServiceDefinitionTable serviceDefinition =
       $ServiceDefinitionTable(this);
+  late final $StaffTable staff = $StaffTable(this);
   late final $AttributesTable attributes = $AttributesTable(this);
   late final $LocalityTable locality = $LocalityTable(this);
   late final $PgrServiceTable pgrService = $PgrServiceTable(this);
@@ -35456,6 +35788,7 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
         service,
         serviceAttributes,
         serviceDefinition,
+        staff,
         attributes,
         locality,
         pgrService,

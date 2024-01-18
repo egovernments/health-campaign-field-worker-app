@@ -53,8 +53,8 @@ class AttendancePackageRegisterModel {
   final String? status;
   final bool? nonRecoverableError;
   final int? rowVersion;
-  final DateTime? startDateTime;
-  final DateTime? endDateTime;
+  final int? startDateTime;
+  final int? endDateTime;
   final List<AttendeeModel> attendees;
   final List<StaffModel> staff;
   final AttendanceRegisterAdditionalFields? additionalFields;
@@ -70,21 +70,11 @@ class AttendancePackageRegisterModel {
     this.status,
     this.nonRecoverableError = false,
     this.rowVersion,
-    int? startDate,
-    int? endDate,
+    this.startDateTime,
+    this.endDateTime,
     required this.attendees,
     required this.staff,
-  })  : startDateTime = startDate == null
-            ? null
-            : DateTime.fromMillisecondsSinceEpoch(startDate),
-        endDateTime = endDate == null
-            ? null
-            : DateTime.fromMillisecondsSinceEpoch(endDate),
-        super();
-
-  int? get startDate => startDateTime?.millisecondsSinceEpoch;
-
-  int? get endDate => endDateTime?.millisecondsSinceEpoch;
+  }) : super();
 }
 
 @MappableClass(ignoreNull: true)

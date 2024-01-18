@@ -106,8 +106,12 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
                 regisId: attendanceRegisters[i].id,
                 tenatId: attendanceRegisters[i].tenantId!,
                 show: true,
-                startDate: attendanceRegisters[i].startDateTime!,
-                endDate: attendanceRegisters[i].endDateTime!,
+                startDate: DateTime.fromMillisecondsSinceEpoch(
+                  attendanceRegisters[i].startDateTime!,
+                ),
+                endDate: DateTime.fromMillisecondsSinceEpoch(
+                  attendanceRegisters[i].endDateTime!,
+                )
               ));
             }
           }

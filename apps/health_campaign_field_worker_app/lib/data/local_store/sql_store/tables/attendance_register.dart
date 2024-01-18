@@ -9,8 +9,8 @@ class AttendanceRegister extends Table
   TextColumn get referenceId => text()();
   TextColumn get serviceCode => text()();
   TextColumn get status => text()();
-  DateTimeColumn get startDate => dateTime().nullable()();
-  DateTimeColumn get endDate => dateTime().nullable()();
+  IntColumn get startDate => integer().nullable()();
+  IntColumn get endDate => integer().nullable()();
   TextColumn get additionalFields => text().nullable()();
   TextColumn get auditCreatedBy => text().nullable()();
   BoolColumn get nonRecoverableError => boolean().nullable().withDefault(const Constant(false))();
