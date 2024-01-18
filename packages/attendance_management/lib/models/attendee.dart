@@ -1,5 +1,7 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
+import 'attendee.mapper.g.dart';
+
 @MappableClass(ignoreNull: true)
 class AttendeeSearchModel {
   final String? id;

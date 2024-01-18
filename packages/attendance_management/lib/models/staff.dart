@@ -1,4 +1,5 @@
 import 'package:dart_mappable/dart_mappable.dart';
+import 'staff.mapper.g.dart';
 
 @MappableClass(ignoreNull: true)
 class StaffSearchModel {
