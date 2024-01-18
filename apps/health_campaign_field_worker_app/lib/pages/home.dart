@@ -428,7 +428,10 @@ class _HomePageState extends LocalizedState<HomePage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => const ManageAttendancePage()),
+              builder: (context) => ManageAttendancePage(
+                attendanceListeners: HCMAttendanceBloc(),
+              ),
+            ),
           );
         },
       ),
