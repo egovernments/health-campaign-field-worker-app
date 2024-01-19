@@ -227,6 +227,8 @@ class Constants {
           SideEffectRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.referral)
           ReferralRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.downsync)
+          DownsyncRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.hFReferral)
           HFReferralRemoteRepository(dio, actionMap: actions),
       ]);
