@@ -15,9 +15,9 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
     Emitter<AttendanceStates> emit,
   ) async {
     emit(const RegisterLoading());
-    event.attendanceDependencies.getAttendanceRegisters((registers) async {
-      add(LoadAttendanceRegisterData(registers));
-    });
+    AttendanceSingleton().getAttendanceRegisters(
+        (attendancePackageRegisterModel) =>
+            add(LoadAttendanceRegisterData(attendancePackageRegisterModel)));
   }
 
   void _onLoadAttendanceRegisterData(
@@ -30,13 +30,15 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
 
 @freezed
 class AttendanceEvents with _$AttendanceEvents {
-  const factory AttendanceEvents.initial(
-      AttendanceListeners attendanceDependencies) = InitialAttendance;
-  const factory AttendanceEvents.loadAttendanceRegisters(List<AttendancePackageRegisterModel> registers) = LoadAttendanceRegisterData;
+  const factory AttendanceEvents.initial() = InitialAttendance;
+  const factory AttendanceEvents.loadAttendanceRegisters(
+          List<AttendancePackageRegisterModel> registers) =
+      LoadAttendanceRegisterData;
 }
 
 @freezed
 class AttendanceStates with _$AttendanceStates {
   const factory AttendanceStates.registerLoading() = RegisterLoading;
-  const factory AttendanceStates.registerLoaded(List<AttendancePackageRegisterModel> registers) = RegisterLoaded;
+  const factory AttendanceStates.registerLoaded(
+      List<AttendancePackageRegisterModel> registers) = RegisterLoaded;
 }

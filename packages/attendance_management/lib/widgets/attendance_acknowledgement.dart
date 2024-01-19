@@ -8,10 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../widgets/localized.dart';
-import '../blocs/attendance_listeners.dart';
 
 class AttendanceAcknowledgementPage extends LocalizedStatefulWidget {
-  final AttendanceListeners attendanceDependencies;
   final String label;
   final String? subLabel;
   final String? description;
@@ -28,7 +26,6 @@ class AttendanceAcknowledgementPage extends LocalizedStatefulWidget {
   AttendanceAcknowledgementPage({
     super.key,
     super.appLocalizations,
-    required this.attendanceDependencies,
     required this.label,
     this.subLabel,
     this.description,
@@ -66,8 +63,8 @@ class _AttendanceAcknowledgementPageState
 
     return Scaffold(
       body: BlocProvider<AttendanceBloc>(
-        create: (context) => _attendanceTestBloc
-          ..add(AttendanceEvents.initial(widget.attendanceDependencies)),
+        create: (context) =>
+            _attendanceTestBloc..add(const AttendanceEvents.initial()),
         child: BlocListener<AttendanceBloc, AttendanceStates>(
           listener: (context, state) {},
           child: BlocBuilder<AttendanceBloc, AttendanceStates>(

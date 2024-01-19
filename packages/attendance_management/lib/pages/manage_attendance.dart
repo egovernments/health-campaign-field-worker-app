@@ -24,26 +24,6 @@ class ManageAttendancePage extends LocalizedStatefulWidget {
 }
 
 class _ManageAttendancePageState extends State<ManageAttendancePage> {
-  List<Map<String, dynamic>> projectList = [
-    {
-      'Campaign Type': 'LLIN Bangalore',
-      'Event Type': 'Training',
-      'Staff Count': 15,
-      'Start Date': '10 Feb 2023',
-      'End Date': '25 Feb 2023',
-      'Status': 'Active',
-      'Attendance Completion': '2/3 days'
-    },
-    {
-      'Campaign Type': 'LLIN Mangalore',
-      'Event Type': 'Training',
-      'Staff Count': 20,
-      'Start Date': '10 Feb 2023',
-      'End Date': '25 Feb 2023',
-      'Status': 'Active',
-      'Attendance Completion': '0/3 days'
-    }
-  ];
   List<AttendancePackageRegisterModel> attendanceRegisters = [];
 
   bool empty = false;
@@ -51,44 +31,21 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
 
   @override
   void initState() {
+    AttendanceSingleton().setAttendanceListeners(widget.attendanceListeners);
     super.initState();
   }
 
   @override
   void dispose() {
-    projectList.clear();
-    // attendanceRegisters.clear();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     var list = <Widget>[];
-    //
-    // if (projectList.isEmpty) {
-    //   list = [];
-    //   empty = true;
-    // } else {
-    //   for (int i = 0; i < projectList.length; i++) {
-    //     list.add(RegisterCard(
-    //       data: projectList[i] as Map<String, dynamic>,
-    //       regisId: 'WR/2023-24/HCM-12345',
-    //       tenatId: 'mz',
-    //       show: true,
-    //       startDate: DateTime.fromMillisecondsSinceEpoch(
-    //         1704868822000,
-    //       ),
-    //       endDate: DateTime.fromMillisecondsSinceEpoch(
-    //         1706164822000,
-    //       ),
-    //     ));
-    //   }
-    //
-    //   empty = false;
-    // }
     return BlocProvider<AttendanceBloc>(
-      create: (context) => attendanceBloc
-        ..add(AttendanceEvents.initial(widget.attendanceListeners)),
+      create: (context) =>
+          attendanceBloc..add(const AttendanceEvents.initial()),
       child: BlocListener<AttendanceBloc, AttendanceStates>(
         listener: (ctx, states) {
           if (states is RegisterLoaded) {
@@ -111,7 +68,7 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
                     'Attendance Completion': 'N/A'
                   },
                   regisId: register.id,
-                  tenatId: register.tenantId!,
+                  tenantId: register.tenantId!,
                   show: true,
                   startDate: DateTime.fromMillisecondsSinceEpoch(
                     register.startDate!,
@@ -132,7 +89,7 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
-                    "Manage Attendance ${projectList.length})",
+                    "Manage Attendance",
                     style: DigitTheme
                         .instance.mobileTheme.textTheme.headlineLarge
                         ?.apply(color: const DigitColors().black),
@@ -178,7 +135,7 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
 
 class RegisterCard extends StatelessWidget {
   final Map<String, dynamic> data;
-  final String tenatId;
+  final String tenantId;
   final String regisId;
   final bool show;
   final DateTime startDate;
@@ -187,7 +144,7 @@ class RegisterCard extends StatelessWidget {
   const RegisterCard({
     super.key,
     required this.data,
-    required this.tenatId,
+    required this.tenantId,
     required this.regisId,
     this.show = false,
     required this.startDate,

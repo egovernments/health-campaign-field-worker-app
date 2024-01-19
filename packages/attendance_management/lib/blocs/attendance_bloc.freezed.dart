@@ -18,22 +18,21 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$AttendanceEvents {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(AttendanceListeners attendanceDependencies)
-        initial,
+    required TResult Function() initial,
     required TResult Function(List<AttendancePackageRegisterModel> registers)
         loadAttendanceRegisters,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(AttendanceListeners attendanceDependencies)? initial,
+    TResult? Function()? initial,
     TResult? Function(List<AttendancePackageRegisterModel> registers)?
         loadAttendanceRegisters,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(AttendanceListeners attendanceDependencies)? initial,
+    TResult Function()? initial,
     TResult Function(List<AttendancePackageRegisterModel> registers)?
         loadAttendanceRegisters,
     required TResult orElse(),
@@ -85,8 +84,6 @@ abstract class _$$InitialAttendanceCopyWith<$Res> {
   factory _$$InitialAttendanceCopyWith(
           _$InitialAttendance value, $Res Function(_$InitialAttendance) then) =
       __$$InitialAttendanceCopyWithImpl<$Res>;
-  @useResult
-  $Res call({AttendanceListeners attendanceDependencies});
 }
 
 /// @nodoc
@@ -96,83 +93,57 @@ class __$$InitialAttendanceCopyWithImpl<$Res>
   __$$InitialAttendanceCopyWithImpl(
       _$InitialAttendance _value, $Res Function(_$InitialAttendance) _then)
       : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? attendanceDependencies = null,
-  }) {
-    return _then(_$InitialAttendance(
-      null == attendanceDependencies
-          ? _value.attendanceDependencies
-          : attendanceDependencies // ignore: cast_nullable_to_non_nullable
-              as AttendanceListeners,
-    ));
-  }
 }
 
 /// @nodoc
 
 class _$InitialAttendance implements InitialAttendance {
-  const _$InitialAttendance(this.attendanceDependencies);
-
-  @override
-  final AttendanceListeners attendanceDependencies;
+  const _$InitialAttendance();
 
   @override
   String toString() {
-    return 'AttendanceEvents.initial(attendanceDependencies: $attendanceDependencies)';
+    return 'AttendanceEvents.initial()';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$InitialAttendance &&
-            (identical(other.attendanceDependencies, attendanceDependencies) ||
-                other.attendanceDependencies == attendanceDependencies));
+        (other.runtimeType == runtimeType && other is _$InitialAttendance);
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, attendanceDependencies);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$InitialAttendanceCopyWith<_$InitialAttendance> get copyWith =>
-      __$$InitialAttendanceCopyWithImpl<_$InitialAttendance>(this, _$identity);
+  int get hashCode => runtimeType.hashCode;
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(AttendanceListeners attendanceDependencies)
-        initial,
+    required TResult Function() initial,
     required TResult Function(List<AttendancePackageRegisterModel> registers)
         loadAttendanceRegisters,
   }) {
-    return initial(attendanceDependencies);
+    return initial();
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(AttendanceListeners attendanceDependencies)? initial,
+    TResult? Function()? initial,
     TResult? Function(List<AttendancePackageRegisterModel> registers)?
         loadAttendanceRegisters,
   }) {
-    return initial?.call(attendanceDependencies);
+    return initial?.call();
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(AttendanceListeners attendanceDependencies)? initial,
+    TResult Function()? initial,
     TResult Function(List<AttendancePackageRegisterModel> registers)?
         loadAttendanceRegisters,
     required TResult orElse(),
   }) {
     if (initial != null) {
-      return initial(attendanceDependencies);
+      return initial();
     }
     return orElse();
   }
@@ -212,13 +183,7 @@ class _$InitialAttendance implements InitialAttendance {
 }
 
 abstract class InitialAttendance implements AttendanceEvents {
-  const factory InitialAttendance(
-      final AttendanceListeners attendanceDependencies) = _$InitialAttendance;
-
-  AttendanceListeners get attendanceDependencies;
-  @JsonKey(ignore: true)
-  _$$InitialAttendanceCopyWith<_$InitialAttendance> get copyWith =>
-      throw _privateConstructorUsedError;
+  const factory InitialAttendance() = _$InitialAttendance;
 }
 
 /// @nodoc
@@ -296,8 +261,7 @@ class _$LoadAttendanceRegisterData implements LoadAttendanceRegisterData {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(AttendanceListeners attendanceDependencies)
-        initial,
+    required TResult Function() initial,
     required TResult Function(List<AttendancePackageRegisterModel> registers)
         loadAttendanceRegisters,
   }) {
@@ -307,7 +271,7 @@ class _$LoadAttendanceRegisterData implements LoadAttendanceRegisterData {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(AttendanceListeners attendanceDependencies)? initial,
+    TResult? Function()? initial,
     TResult? Function(List<AttendancePackageRegisterModel> registers)?
         loadAttendanceRegisters,
   }) {
@@ -317,7 +281,7 @@ class _$LoadAttendanceRegisterData implements LoadAttendanceRegisterData {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(AttendanceListeners attendanceDependencies)? initial,
+    TResult Function()? initial,
     TResult Function(List<AttendancePackageRegisterModel> registers)?
         loadAttendanceRegisters,
     required TResult orElse(),
