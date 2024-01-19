@@ -430,6 +430,7 @@ class _HomePageState extends LocalizedState<HomePage> {
             MaterialPageRoute(
               builder: (context) => ManageAttendancePage(
                 attendanceListeners: HCMAttendanceBloc(
+                  userId: context.loggedInUserUuid,
                   attendanceLocalRepository: context.read<
                       LocalRepository<HCMAttendanceRegisterModel,
                           HCMAttendanceSearchModel>>(),

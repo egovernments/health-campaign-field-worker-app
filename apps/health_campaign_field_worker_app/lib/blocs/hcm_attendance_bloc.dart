@@ -6,8 +6,10 @@ import '../models/entities/hcm_attendance_model.dart';
 class HCMAttendanceBloc extends AttendanceListeners {
   final LocalRepository<HCMAttendanceRegisterModel, HCMAttendanceSearchModel>
       attendanceLocalRepository;
+  final String? userId;
   HCMAttendanceBloc({
     required this.attendanceLocalRepository,
+    this.userId,
   });
   late Function(List<AttendancePackageRegisterModel> registers) _onDataReceived;
 
@@ -23,7 +25,7 @@ class HCMAttendanceBloc extends AttendanceListeners {
 
   void onDataReceived() async {
     final registers = await attendanceLocalRepository.search(
-      HCMAttendanceSearchModel(),
+      HCMAttendanceSearchModel(staffId: userId),
     );
     final attendanceRegisters =
         registers.map((e) => e.attendanceRegister).toList();

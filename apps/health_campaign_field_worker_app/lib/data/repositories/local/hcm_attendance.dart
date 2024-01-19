@@ -20,9 +20,29 @@ class AttendanceLocalRepository extends LocalRepository<
     HCMAttendanceSearchModel query, [
     String? userId,
   ]) async {
-    final selectQuery = sql.select(sql.attendanceRegister).join([]);
+    final selectQuery = sql.select(sql.attendanceRegister).join([
+      leftOuterJoin(
+        sql.staff,
+        sql.staff.registerId.equalsExp(
+          sql.attendanceRegister.id,
+        ),
+      ),
+      leftOuterJoin(
+        sql.attendee,
+        sql.attendee.registerId.equalsExp(
+          sql.attendanceRegister.id,
+        ),
+      ),
+    ]);
 
-    final results = await (selectQuery..where(buildAnd([]))).get();
+    final results = await (selectQuery
+          ..where(buildAnd([
+            if (query.staffId != null)
+              sql.staff.registerId.equals(
+                sql.attendanceRegister.id.toString(),
+              ),
+          ])))
+        .get();
 
     return results
         .map((e) {

@@ -31,12 +31,12 @@ class AttendanceRemoteRepository extends RemoteRepository<
     response = await executeFuture(
       future: () async {
         return await dio.post(
-          '/health-attendance/v1/_search',
+          searchPath,
           queryParameters: {
             'offset': 0,
             'limit': 100,
             'tenantId': envConfig.variables.tenantId,
-            // ...query.toMap(),
+            ...query.toMap(),
           },
           data: {},
         );
