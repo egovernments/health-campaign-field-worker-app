@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:attendance_management/attendance_management.dart';
+import 'package:attendance_management/models/attendance_audit.dart';
 import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
 
@@ -31,6 +32,18 @@ class AttendanceLocalRepository extends LocalRepository<
               id: register.id.toString(),
               attendees: [],
               staff: [],
+              name: register.name,
+              registerNumber: register.registerNumber,
+              tenantId: register.tenantId,
+              referenceId: register.referenceId,
+              serviceCode: register.serviceCode,
+              status: register.status,
+              startDate: register.startDate,
+              endDate: register.endDate,
+              auditDetails: AttendanceAuditDetails(
+                createdBy: register.auditCreatedBy ?? '',
+                createdTime: register.auditCreatedTime ?? 0,
+              ),
             ),
           );
         })
@@ -56,12 +69,12 @@ class AttendanceLocalRepository extends LocalRepository<
   FutureOr<void> bulkCreate(
     List<HCMAttendanceRegisterModel> entities,
   ) async {
-    final referralCompanions = entities.map((e) => e.companion).toList();
+    final registerCompanions = entities.map((e) => e.companion).toList();
 
     await sql.batch((batch) async {
       batch.insertAll(
         sql.attendanceRegister,
-        referralCompanions,
+        registerCompanions,
         mode: InsertMode.insertOrReplace,
       );
     });

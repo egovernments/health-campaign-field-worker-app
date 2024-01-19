@@ -1,52 +1,47 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
-import 'attendee.mapper.g.dart';
-
 @MappableClass(ignoreNull: true)
 class AttendeeSearchModel {
   final String? id;
-  final List<String>? clientReferenceId;
-  
+  final String? registerId;
+
   AttendeeSearchModel({
     this.id,
-    this.clientReferenceId
-  }):  super();
+    this.registerId,
+  }) : super();
 
   @MappableConstructor()
   AttendeeSearchModel.ignoreDeleted({
     this.id,
-    this.clientReferenceId,
+    this.registerId,
   });
 }
 
 @MappableClass(ignoreNull: true)
 class AttendeeModel {
-
   static const schemaName = 'Attendee';
 
-  final String? id;
+  final String id;
   final String? tenantId;
   final String? registerId;
   final String? individualId;
   final int? enrollmentDate;
   final int? denrollmentDate;
   final bool? nonRecoverableError;
-  final String clientReferenceId;
   final int? rowVersion;
   final AttendeeAdditionalFields? additionalFields;
 
-  AttendeeModel({
-    this.additionalFields,
-    this.id,
-    this.tenantId,
-    this.registerId,
-    this.individualId,
-    this.enrollmentDate,
-    this.denrollmentDate,
-    this.nonRecoverableError = false,
-    required this.clientReferenceId,
-    this.rowVersion
-  }): super();
+  AttendeeModel(
+      {this.additionalFields,
+      required this.id,
+      this.tenantId,
+      this.registerId,
+      this.individualId,
+      this.enrollmentDate,
+      this.denrollmentDate,
+      this.nonRecoverableError = false,
+      this.rowVersion})
+      : super();
 }
 
 @MappableClass(ignoreNull: true)

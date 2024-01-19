@@ -158,6 +158,10 @@ class HomeShowcase {
     return 'HF_HOME_SHOWCASE_BENEFICIARY_LABEL';
   }
 
+  String get manageAttendance {
+    return 'HF_HOME_SHOWCASE_MANAGE_ATTENDANCE';
+  }
+
   String get distributorSyncData {
     return 'DISTRIBUTOR_HOME_SHOWCASE_SYNC_DATA';
   }

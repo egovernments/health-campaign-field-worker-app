@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:attendance_management/pages/manage_attendance.dart';
-import 'package:attendance_management/widgets/attendance_acknowledgement.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
+import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,6 +18,7 @@ import '../blocs/search_referrals/search_referrals.dart';
 import '../blocs/sync/sync.dart';
 import '../data/data_repository.dart';
 import '../data/local_store/secure_store/secure_store.dart';
+import '../data/local_store/sql_store/sql_store.dart';
 import '../models/data_model.dart';
 import '../router/app_router.dart';
 import '../utils/debound.dart';
@@ -412,9 +413,8 @@ class _HomePageState extends LocalizedState<HomePage> {
           onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => AttendanceAcknowledgementPage(
-                  label: 'Navigating From HCM APP',
-                  attendanceDependencies: HCMAttendanceBloc(),
+                builder: (context) => DriftDbViewer(
+                  context.read<LocalSqlDataStore>(),
                 ),
               ),
             );
@@ -429,7 +429,11 @@ class _HomePageState extends LocalizedState<HomePage> {
             context,
             MaterialPageRoute(
               builder: (context) => ManageAttendancePage(
-                attendanceListeners: HCMAttendanceBloc(),
+                attendanceListeners: HCMAttendanceBloc(
+                  attendanceLocalRepository: context.read<
+                      LocalRepository<HCMAttendanceRegisterModel,
+                          HCMAttendanceSearchModel>>(),
+                ),
               ),
             ),
           );
@@ -452,6 +456,8 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.db: homeShowcaseData.inventoryReport.showcaseKey,
       i18.home.beneficiaryReferralLabel:
           homeShowcaseData.hfBeneficiaryReferral.showcaseKey,
+      i18.home.manageAttendanceLabel:
+          homeShowcaseData.attendanceRegister.showcaseKey,
     };
 
     final homeItemsLabel = <String>[

@@ -3,8 +3,6 @@ import 'package:dart_mappable/dart_mappable.dart';
 
 import 'attendance_audit.dart';
 
-import 'attendance_register.mapper.g.dart';
-
 @MappableClass()
 class RegisterAuditDetails extends AttendanceAuditDetails {
   final String? registerId;
@@ -53,11 +51,12 @@ class AttendancePackageRegisterModel {
   final String? status;
   final bool? nonRecoverableError;
   final int? rowVersion;
-  final int? startDateTime;
-  final int? endDateTime;
-  final List<AttendeeModel> attendees;
-  final List<StaffModel> staff;
+  final int? startDate;
+  final int? endDate;
+  final List<AttendeeModel>? attendees;
+  final List<StaffModel>? staff;
   final AttendanceRegisterAdditionalFields? additionalFields;
+  final AttendanceAuditDetails? auditDetails;
 
   AttendancePackageRegisterModel({
     this.additionalFields,
@@ -70,10 +69,11 @@ class AttendancePackageRegisterModel {
     this.status,
     this.nonRecoverableError = false,
     this.rowVersion,
-    this.startDateTime,
-    this.endDateTime,
-    required this.attendees,
-    required this.staff,
+    this.startDate,
+    this.endDate,
+    this.attendees,
+    this.staff,
+    this.auditDetails,
   }) : super();
 }
 

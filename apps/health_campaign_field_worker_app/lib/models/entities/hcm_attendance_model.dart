@@ -35,17 +35,20 @@ class HCMAttendanceRegisterModel extends EntityModel {
         referenceId: Value(attendanceRegister.referenceId!),
         serviceCode: Value(attendanceRegister.serviceCode!),
         status: Value(attendanceRegister.status!),
-        startDate: Value(attendanceRegister.startDateTime),
-        endDate: Value(attendanceRegister.endDateTime),
+        startDate: Value(attendanceRegister.startDate),
+        endDate: Value(attendanceRegister.endDate),
         nonRecoverableError: Value(attendanceRegister.nonRecoverableError),
-        auditCreatedBy: Value(auditDetails?.createdBy),
-        auditCreatedTime: Value(auditDetails?.createdTime),
-        auditModifiedBy: Value(auditDetails?.lastModifiedBy),
-        clientCreatedTime: Value(clientAuditDetails?.createdTime),
-        clientModifiedTime: Value(clientAuditDetails?.lastModifiedTime),
-        clientCreatedBy: Value(clientAuditDetails?.createdBy),
-        clientModifiedBy: Value(clientAuditDetails?.lastModifiedBy),
-        auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+        auditCreatedBy: Value(attendanceRegister.auditDetails?.createdBy),
+        auditCreatedTime: Value(attendanceRegister.auditDetails?.createdTime),
+        auditModifiedBy: Value(attendanceRegister.auditDetails?.lastModifiedBy),
+        clientCreatedTime: Value(attendanceRegister.auditDetails?.createdTime),
+        clientModifiedTime:
+            Value(attendanceRegister.auditDetails?.lastModifiedTime),
+        clientCreatedBy: Value(attendanceRegister.auditDetails?.createdBy),
+        clientModifiedBy:
+            Value(attendanceRegister.auditDetails?.lastModifiedBy),
+        auditModifiedTime:
+            Value(attendanceRegister.auditDetails?.lastModifiedTime),
         isDeleted: Value(isDeleted),
         rowVersion: Value(attendanceRegister.rowVersion),
       );
@@ -55,8 +58,9 @@ class HCMAttendanceRegisterModel extends EntityModel {
 class HCMAttendanceAdditionalModel extends AdditionalFields {
   final AttendanceRegisterAdditionalFields attendanceAdditionalFields;
 
-  HCMAttendanceAdditionalModel(
-      {required this.attendanceAdditionalFields,
-      super.schema = 'AttendanceRegister',
-      required super.version,});
+  HCMAttendanceAdditionalModel({
+    required this.attendanceAdditionalFields,
+    super.schema = 'AttendanceRegister',
+    required super.version,
+  });
 }

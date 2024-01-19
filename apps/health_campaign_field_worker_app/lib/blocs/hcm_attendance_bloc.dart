@@ -1,6 +1,14 @@
 import 'package:attendance_management/attendance_management.dart';
 
+import '../data/data_repository.dart';
+import '../models/entities/hcm_attendance_model.dart';
+
 class HCMAttendanceBloc extends AttendanceListeners {
+  final LocalRepository<HCMAttendanceRegisterModel, HCMAttendanceSearchModel>
+      attendanceLocalRepository;
+  HCMAttendanceBloc({
+    required this.attendanceLocalRepository,
+  });
   late Function(List<AttendancePackageRegisterModel> registers) _onDataReceived;
 
   @override
@@ -14,20 +22,15 @@ class HCMAttendanceBloc extends AttendanceListeners {
   }
 
   void onDataReceived() async {
-    await Future.delayed(const Duration(seconds: 1));
-    _onDataReceived([
-      AttendancePackageRegisterModel(
-        id: '1',
-        name: 'LLIN Bangalore',
-        attendees: [],
-        staff: [],
+    final registers = await attendanceLocalRepository.search(
+      HCMAttendanceSearchModel(
+        attendanceSearchRegister: AttendanceRegisterSearchModel(),
       ),
-      AttendancePackageRegisterModel(
-        id: '2',
-        name: 'LLIN Mangalore',
-        attendees: [],
-        staff: [],
-      ),
-    ]);
+    );
+    final attendanceRegisters =
+        registers.map((e) => e.attendanceRegister).toList();
+    _onDataReceived(
+      attendanceRegisters,
+    );
   }
 }

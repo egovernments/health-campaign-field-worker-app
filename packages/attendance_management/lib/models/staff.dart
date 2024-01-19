@@ -1,17 +1,16 @@
 import 'package:dart_mappable/dart_mappable.dart';
-import 'staff.mapper.g.dart';
 
 @MappableClass(ignoreNull: true)
 class StaffSearchModel {
   final String? id;
-  final List<String>? staffId;
+  final List<String>? userId;
 
-  StaffSearchModel({this.id, this.staffId}) : super();
+  StaffSearchModel({this.id, this.userId}) : super();
 
   @MappableConstructor()
   StaffSearchModel.ignoreDeleted({
     this.id,
-    this.staffId,
+    this.userId,
   });
 }
 
@@ -26,7 +25,6 @@ class StaffModel {
   final int? enrollmentDate;
   final int? denrollmentDate;
   final bool? nonRecoverableError;
-  final String clientReferenceId;
   final int? rowVersion;
   final StaffAdditionalFields? additionalFields;
 
@@ -39,7 +37,6 @@ class StaffModel {
       this.enrollmentDate,
       this.denrollmentDate,
       this.nonRecoverableError = false,
-      required this.clientReferenceId,
       this.rowVersion})
       : super();
 }

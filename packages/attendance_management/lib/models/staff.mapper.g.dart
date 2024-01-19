@@ -23,15 +23,15 @@ class StaffSearchModelMapper extends BaseMapper<StaffSearchModel> {
 
   @override Function get decoder => decode;
   StaffSearchModel decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  StaffSearchModel fromMap(Map<String, dynamic> map) => StaffSearchModel.ignoreDeleted(id: Mapper.i.$getOpt(map, 'id'), staffId: Mapper.i.$getOpt(map, 'staffId'));
+  StaffSearchModel fromMap(Map<String, dynamic> map) => StaffSearchModel.ignoreDeleted(id: Mapper.i.$getOpt(map, 'id'), userId: Mapper.i.$getOpt(map, 'userId'));
 
   @override Function get encoder => (StaffSearchModel v) => encode(v);
   dynamic encode(StaffSearchModel v) => toMap(v);
-  Map<String, dynamic> toMap(StaffSearchModel s) => {if (Mapper.i.$enc(s.id, 'id') != null) 'id': Mapper.i.$enc(s.id, 'id'), if (Mapper.i.$enc(s.staffId, 'staffId') != null) 'staffId': Mapper.i.$enc(s.staffId, 'staffId')};
+  Map<String, dynamic> toMap(StaffSearchModel s) => {if (Mapper.i.$enc(s.id, 'id') != null) 'id': Mapper.i.$enc(s.id, 'id'), if (Mapper.i.$enc(s.userId, 'userId') != null) 'userId': Mapper.i.$enc(s.userId, 'userId')};
 
-  @override String stringify(StaffSearchModel self) => 'StaffSearchModel(id: ${Mapper.asString(self.id)}, staffId: ${Mapper.asString(self.staffId)})';
-  @override int hash(StaffSearchModel self) => Mapper.hash(self.id) ^ Mapper.hash(self.staffId);
-  @override bool equals(StaffSearchModel self, StaffSearchModel other) => Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.staffId, other.staffId);
+  @override String stringify(StaffSearchModel self) => 'StaffSearchModel(id: ${Mapper.asString(self.id)}, userId: ${Mapper.asString(self.userId)})';
+  @override int hash(StaffSearchModel self) => Mapper.hash(self.id) ^ Mapper.hash(self.userId);
+  @override bool equals(StaffSearchModel self, StaffSearchModel other) => Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.userId, other.userId);
 
   @override Function get typeFactory => (f) => f<StaffSearchModel>();
 }
@@ -44,14 +44,14 @@ extension StaffSearchModelMapperExtension  on StaffSearchModel {
 
 abstract class StaffSearchModelCopyWith<$R> {
   factory StaffSearchModelCopyWith(StaffSearchModel value, Then<StaffSearchModel, $R> then) = _StaffSearchModelCopyWithImpl<$R>;
-  $R call({String? id, List<String>? staffId});
+  $R call({String? id, List<String>? userId});
   $R apply(StaffSearchModel Function(StaffSearchModel) transform);
 }
 
 class _StaffSearchModelCopyWithImpl<$R> extends BaseCopyWith<StaffSearchModel, $R> implements StaffSearchModelCopyWith<$R> {
   _StaffSearchModelCopyWithImpl(StaffSearchModel value, Then<StaffSearchModel, $R> then) : super(value, then);
 
-  @override $R call({Object? id = $none, Object? staffId = $none}) => $then(StaffSearchModel.ignoreDeleted(id: or(id, $value.id), staffId: or(staffId, $value.staffId)));
+  @override $R call({Object? id = $none, Object? userId = $none}) => $then(StaffSearchModel.ignoreDeleted(id: or(id, $value.id), userId: or(userId, $value.userId)));
 }
 
 class StaffModelMapper extends BaseMapper<StaffModel> {
@@ -59,15 +59,15 @@ class StaffModelMapper extends BaseMapper<StaffModel> {
 
   @override Function get decoder => decode;
   StaffModel decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  StaffModel fromMap(Map<String, dynamic> map) => StaffModel(additionalFields: Mapper.i.$getOpt(map, 'additionalFields'), id: Mapper.i.$getOpt(map, 'id'), tenantId: Mapper.i.$getOpt(map, 'tenantId'), registerId: Mapper.i.$getOpt(map, 'registerId'), userId: Mapper.i.$getOpt(map, 'userId'), enrollmentDate: Mapper.i.$getOpt(map, 'enrollmentDate'), denrollmentDate: Mapper.i.$getOpt(map, 'denrollmentDate'), nonRecoverableError: Mapper.i.$getOpt(map, 'nonRecoverableError') ?? false, clientReferenceId: Mapper.i.$get(map, 'clientReferenceId'), rowVersion: Mapper.i.$getOpt(map, 'rowVersion'));
+  StaffModel fromMap(Map<String, dynamic> map) => StaffModel(additionalFields: Mapper.i.$getOpt(map, 'additionalFields'), id: Mapper.i.$getOpt(map, 'id'), tenantId: Mapper.i.$getOpt(map, 'tenantId'), registerId: Mapper.i.$getOpt(map, 'registerId'), userId: Mapper.i.$getOpt(map, 'userId'), enrollmentDate: Mapper.i.$getOpt(map, 'enrollmentDate'), denrollmentDate: Mapper.i.$getOpt(map, 'denrollmentDate'), nonRecoverableError: Mapper.i.$getOpt(map, 'nonRecoverableError') ?? false, rowVersion: Mapper.i.$getOpt(map, 'rowVersion'));
 
   @override Function get encoder => (StaffModel v) => encode(v);
   dynamic encode(StaffModel v) => toMap(v);
-  Map<String, dynamic> toMap(StaffModel s) => {if (Mapper.i.$enc(s.additionalFields, 'additionalFields') != null) 'additionalFields': Mapper.i.$enc(s.additionalFields, 'additionalFields'), if (Mapper.i.$enc(s.id, 'id') != null) 'id': Mapper.i.$enc(s.id, 'id'), if (Mapper.i.$enc(s.tenantId, 'tenantId') != null) 'tenantId': Mapper.i.$enc(s.tenantId, 'tenantId'), if (Mapper.i.$enc(s.registerId, 'registerId') != null) 'registerId': Mapper.i.$enc(s.registerId, 'registerId'), if (Mapper.i.$enc(s.userId, 'userId') != null) 'userId': Mapper.i.$enc(s.userId, 'userId'), if (Mapper.i.$enc(s.enrollmentDate, 'enrollmentDate') != null) 'enrollmentDate': Mapper.i.$enc(s.enrollmentDate, 'enrollmentDate'), if (Mapper.i.$enc(s.denrollmentDate, 'denrollmentDate') != null) 'denrollmentDate': Mapper.i.$enc(s.denrollmentDate, 'denrollmentDate'), if (Mapper.i.$enc(s.nonRecoverableError, 'nonRecoverableError') != null) 'nonRecoverableError': Mapper.i.$enc(s.nonRecoverableError, 'nonRecoverableError'), 'clientReferenceId': Mapper.i.$enc(s.clientReferenceId, 'clientReferenceId'), if (Mapper.i.$enc(s.rowVersion, 'rowVersion') != null) 'rowVersion': Mapper.i.$enc(s.rowVersion, 'rowVersion')};
+  Map<String, dynamic> toMap(StaffModel s) => {if (Mapper.i.$enc(s.additionalFields, 'additionalFields') != null) 'additionalFields': Mapper.i.$enc(s.additionalFields, 'additionalFields'), if (Mapper.i.$enc(s.id, 'id') != null) 'id': Mapper.i.$enc(s.id, 'id'), if (Mapper.i.$enc(s.tenantId, 'tenantId') != null) 'tenantId': Mapper.i.$enc(s.tenantId, 'tenantId'), if (Mapper.i.$enc(s.registerId, 'registerId') != null) 'registerId': Mapper.i.$enc(s.registerId, 'registerId'), if (Mapper.i.$enc(s.userId, 'userId') != null) 'userId': Mapper.i.$enc(s.userId, 'userId'), if (Mapper.i.$enc(s.enrollmentDate, 'enrollmentDate') != null) 'enrollmentDate': Mapper.i.$enc(s.enrollmentDate, 'enrollmentDate'), if (Mapper.i.$enc(s.denrollmentDate, 'denrollmentDate') != null) 'denrollmentDate': Mapper.i.$enc(s.denrollmentDate, 'denrollmentDate'), if (Mapper.i.$enc(s.nonRecoverableError, 'nonRecoverableError') != null) 'nonRecoverableError': Mapper.i.$enc(s.nonRecoverableError, 'nonRecoverableError'), if (Mapper.i.$enc(s.rowVersion, 'rowVersion') != null) 'rowVersion': Mapper.i.$enc(s.rowVersion, 'rowVersion')};
 
-  @override String stringify(StaffModel self) => 'StaffModel(id: ${Mapper.asString(self.id)}, tenantId: ${Mapper.asString(self.tenantId)}, registerId: ${Mapper.asString(self.registerId)}, userId: ${Mapper.asString(self.userId)}, enrollmentDate: ${Mapper.asString(self.enrollmentDate)}, denrollmentDate: ${Mapper.asString(self.denrollmentDate)}, nonRecoverableError: ${Mapper.asString(self.nonRecoverableError)}, clientReferenceId: ${Mapper.asString(self.clientReferenceId)}, rowVersion: ${Mapper.asString(self.rowVersion)}, additionalFields: ${Mapper.asString(self.additionalFields)})';
-  @override int hash(StaffModel self) => Mapper.hash(self.id) ^ Mapper.hash(self.tenantId) ^ Mapper.hash(self.registerId) ^ Mapper.hash(self.userId) ^ Mapper.hash(self.enrollmentDate) ^ Mapper.hash(self.denrollmentDate) ^ Mapper.hash(self.nonRecoverableError) ^ Mapper.hash(self.clientReferenceId) ^ Mapper.hash(self.rowVersion) ^ Mapper.hash(self.additionalFields);
-  @override bool equals(StaffModel self, StaffModel other) => Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.tenantId, other.tenantId) && Mapper.isEqual(self.registerId, other.registerId) && Mapper.isEqual(self.userId, other.userId) && Mapper.isEqual(self.enrollmentDate, other.enrollmentDate) && Mapper.isEqual(self.denrollmentDate, other.denrollmentDate) && Mapper.isEqual(self.nonRecoverableError, other.nonRecoverableError) && Mapper.isEqual(self.clientReferenceId, other.clientReferenceId) && Mapper.isEqual(self.rowVersion, other.rowVersion) && Mapper.isEqual(self.additionalFields, other.additionalFields);
+  @override String stringify(StaffModel self) => 'StaffModel(id: ${Mapper.asString(self.id)}, tenantId: ${Mapper.asString(self.tenantId)}, registerId: ${Mapper.asString(self.registerId)}, userId: ${Mapper.asString(self.userId)}, enrollmentDate: ${Mapper.asString(self.enrollmentDate)}, denrollmentDate: ${Mapper.asString(self.denrollmentDate)}, nonRecoverableError: ${Mapper.asString(self.nonRecoverableError)}, rowVersion: ${Mapper.asString(self.rowVersion)}, additionalFields: ${Mapper.asString(self.additionalFields)})';
+  @override int hash(StaffModel self) => Mapper.hash(self.id) ^ Mapper.hash(self.tenantId) ^ Mapper.hash(self.registerId) ^ Mapper.hash(self.userId) ^ Mapper.hash(self.enrollmentDate) ^ Mapper.hash(self.denrollmentDate) ^ Mapper.hash(self.nonRecoverableError) ^ Mapper.hash(self.rowVersion) ^ Mapper.hash(self.additionalFields);
+  @override bool equals(StaffModel self, StaffModel other) => Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.tenantId, other.tenantId) && Mapper.isEqual(self.registerId, other.registerId) && Mapper.isEqual(self.userId, other.userId) && Mapper.isEqual(self.enrollmentDate, other.enrollmentDate) && Mapper.isEqual(self.denrollmentDate, other.denrollmentDate) && Mapper.isEqual(self.nonRecoverableError, other.nonRecoverableError) && Mapper.isEqual(self.rowVersion, other.rowVersion) && Mapper.isEqual(self.additionalFields, other.additionalFields);
 
   @override Function get typeFactory => (f) => f<StaffModel>();
 }
@@ -81,7 +81,7 @@ extension StaffModelMapperExtension  on StaffModel {
 abstract class StaffModelCopyWith<$R> {
   factory StaffModelCopyWith(StaffModel value, Then<StaffModel, $R> then) = _StaffModelCopyWithImpl<$R>;
   StaffAdditionalFieldsCopyWith<$R>? get additionalFields;
-  $R call({StaffAdditionalFields? additionalFields, String? id, String? tenantId, String? registerId, String? userId, int? enrollmentDate, int? denrollmentDate, bool? nonRecoverableError, String? clientReferenceId, int? rowVersion});
+  $R call({StaffAdditionalFields? additionalFields, String? id, String? tenantId, String? registerId, String? userId, int? enrollmentDate, int? denrollmentDate, bool? nonRecoverableError, int? rowVersion});
   $R apply(StaffModel Function(StaffModel) transform);
 }
 
@@ -89,7 +89,7 @@ class _StaffModelCopyWithImpl<$R> extends BaseCopyWith<StaffModel, $R> implement
   _StaffModelCopyWithImpl(StaffModel value, Then<StaffModel, $R> then) : super(value, then);
 
   @override StaffAdditionalFieldsCopyWith<$R>? get additionalFields => $value.additionalFields != null ? StaffAdditionalFieldsCopyWith($value.additionalFields!, (v) => call(additionalFields: v)) : null;
-  @override $R call({Object? additionalFields = $none, Object? id = $none, Object? tenantId = $none, Object? registerId = $none, Object? userId = $none, Object? enrollmentDate = $none, Object? denrollmentDate = $none, Object? nonRecoverableError = $none, String? clientReferenceId, Object? rowVersion = $none}) => $then(StaffModel(additionalFields: or(additionalFields, $value.additionalFields), id: or(id, $value.id), tenantId: or(tenantId, $value.tenantId), registerId: or(registerId, $value.registerId), userId: or(userId, $value.userId), enrollmentDate: or(enrollmentDate, $value.enrollmentDate), denrollmentDate: or(denrollmentDate, $value.denrollmentDate), nonRecoverableError: or(nonRecoverableError, $value.nonRecoverableError), clientReferenceId: clientReferenceId ?? $value.clientReferenceId, rowVersion: or(rowVersion, $value.rowVersion)));
+  @override $R call({Object? additionalFields = $none, Object? id = $none, Object? tenantId = $none, Object? registerId = $none, Object? userId = $none, Object? enrollmentDate = $none, Object? denrollmentDate = $none, Object? nonRecoverableError = $none, Object? rowVersion = $none}) => $then(StaffModel(additionalFields: or(additionalFields, $value.additionalFields), id: or(id, $value.id), tenantId: or(tenantId, $value.tenantId), registerId: or(registerId, $value.registerId), userId: or(userId, $value.userId), enrollmentDate: or(enrollmentDate, $value.enrollmentDate), denrollmentDate: or(denrollmentDate, $value.denrollmentDate), nonRecoverableError: or(nonRecoverableError, $value.nonRecoverableError), rowVersion: or(rowVersion, $value.rowVersion)));
 }
 
 class StaffAdditionalFieldsMapper extends BaseMapper<StaffAdditionalFields> {
