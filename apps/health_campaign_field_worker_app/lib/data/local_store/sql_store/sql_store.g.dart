@@ -2698,7 +2698,7 @@ class $AttendeeTable extends Attendee
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id};
+  Set<GeneratedColumn> get $primaryKey => {id, registerId};
   @override
   AttendeeData map(Map<String, dynamic> data, {String? tablePrefix}) {
     return AttendeeData.fromData(data,
@@ -27589,7 +27589,7 @@ class $StaffTable extends Staff with TableInfo<$StaffTable, StaffData> {
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id};
+  Set<GeneratedColumn> get $primaryKey => {id, registerId};
   @override
   StaffData map(Map<String, dynamic> data, {String? tablePrefix}) {
     return StaffData.fromData(data,

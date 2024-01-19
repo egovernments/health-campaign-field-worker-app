@@ -22,23 +22,6 @@ class RegisterAuditDetails extends AttendanceAuditDetails {
 }
 
 @MappableClass(ignoreNull: true)
-class AttendanceRegisterSearchModel {
-  final String? id;
-  final List<String>? clientReferenceId;
-
-  AttendanceRegisterSearchModel({
-    this.id,
-    this.clientReferenceId,
-  }) : super();
-
-  @MappableConstructor()
-  AttendanceRegisterSearchModel.ignoreDeleted({
-    this.id,
-    this.clientReferenceId,
-  });
-}
-
-@MappableClass(ignoreNull: true)
 class AttendancePackageRegisterModel {
   static const schemaName = 'AttendanceRegister';
 
@@ -55,11 +38,11 @@ class AttendancePackageRegisterModel {
   final int? endDate;
   final List<AttendeeModel>? attendees;
   final List<StaffModel>? staff;
-  final AttendanceRegisterAdditionalFields? additionalFields;
+  final Map<String, dynamic>? additionalDetails;
   final AttendanceAuditDetails? auditDetails;
 
   AttendancePackageRegisterModel({
-    this.additionalFields,
+    this.additionalDetails,
     required this.id,
     this.tenantId,
     this.registerNumber,

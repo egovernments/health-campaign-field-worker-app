@@ -8,5 +8,5 @@ class Staff extends Table {
   IntColumn get enrollmentDate => integer().nullable()();
   IntColumn get denrollmentDate => integer().nullable()();
   @override
-  Set<Column> get primaryKey => { id };
+  Set<Column> get primaryKey => {id, registerId};
 }

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/models/attendance_audit.dart';
@@ -8,6 +9,7 @@ import 'package:drift/drift.dart';
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
+import '../../local_store/sql_store/sql_store.dart';
 
 class AttendanceLocalRepository extends LocalRepository<
     HCMAttendanceRegisterModel, HCMAttendanceSearchModel> {
@@ -25,13 +27,37 @@ class AttendanceLocalRepository extends LocalRepository<
     return results
         .map((e) {
           final register = e.readTableOrNull(sql.attendanceRegister);
+          final staffs = e.readTableOrNull(sql.staff);
+          final attendees = e.readTableOrNull(sql.attendee);
           if (register == null) return null;
 
           return HCMAttendanceRegisterModel(
             attendanceRegister: AttendancePackageRegisterModel(
               id: register.id.toString(),
-              attendees: [],
-              staff: [],
+              attendees: attendees == null
+                  ? null
+                  : [
+                      AttendeeModel(
+                        id: attendees.id.toString(),
+                        registerId: attendees.registerId,
+                        tenantId: attendees.tenantId,
+                        individualId: attendees.individualId,
+                        enrollmentDate: attendees.enrollmentDate,
+                        denrollmentDate: attendees.denrollmentDate,
+                      ),
+                    ],
+              staff: staffs == null
+                  ? null
+                  : [
+                      StaffModel(
+                        id: staffs.id,
+                        registerId: staffs.registerId,
+                        tenantId: register.tenantId,
+                        userId: staffs.userId,
+                        enrollmentDate: staffs.enrollmentDate,
+                        denrollmentDate: staffs.denrollmentDate,
+                      ),
+                    ],
               name: register.name,
               registerNumber: register.registerNumber,
               tenantId: register.tenantId,
@@ -40,6 +66,8 @@ class AttendanceLocalRepository extends LocalRepository<
               status: register.status,
               startDate: register.startDate,
               endDate: register.endDate,
+              additionalDetails:
+                  jsonDecode(register.additionalFields.toString()),
               auditDetails: AttendanceAuditDetails(
                 createdBy: register.auditCreatedBy ?? '',
                 createdTime: register.auditCreatedTime ?? 0,
@@ -71,15 +99,60 @@ class AttendanceLocalRepository extends LocalRepository<
   ) async {
     final registerCompanions = entities.map((e) => e.companion).toList();
 
+    final staffList = entities
+        .map((e) => e.attendanceRegister.staff?.map((a) {
+              return StaffCompanion(
+                id: Value(a.id),
+                tenantId: Value(a.tenantId.toString()),
+                userId: Value(a.userId.toString()),
+                registerId: Value(a.registerId.toString()),
+                enrollmentDate: Value(a.enrollmentDate),
+                denrollmentDate: Value(a.denrollmentDate),
+              );
+            }).toList())
+        .toList();
+
+    final staffCompanions = staffList.expand((e) => [e?[0]]).toList();
+
+    final attendeeList = entities
+        .map((e) => e.attendanceRegister.attendees?.map((a) {
+              return AttendeeCompanion(
+                id: Value(a.id),
+                tenantId: Value(a.tenantId.toString()),
+                registerId: Value(a.registerId.toString()),
+                enrollmentDate: Value(a.enrollmentDate),
+                denrollmentDate: Value(a.denrollmentDate),
+              );
+            }).toList())
+        .toList();
+
+    final attendeeCompanions = attendeeList.expand((e) => [e?[0]]).toList();
+
     await sql.batch((batch) async {
       batch.insertAll(
         sql.attendanceRegister,
         registerCompanions,
         mode: InsertMode.insertOrReplace,
       );
+
+      if (staffCompanions.isNotEmpty) {
+        batch.insertAll(
+          sql.staff,
+          staffCompanions.whereNotNull().toList(),
+          mode: InsertMode.insertOrReplace,
+        );
+      }
+
+      if (attendeeCompanions.isNotEmpty) {
+        batch.insertAll(
+          sql.attendee,
+          attendeeCompanions.whereNotNull().toList(),
+          mode: InsertMode.insertOrReplace,
+        );
+      }
     });
   }
 
   @override
-  DataModelType get type => DataModelType.hcmAttendance;
+  DataModelType get type => DataModelType.attendanceRegister;
 }

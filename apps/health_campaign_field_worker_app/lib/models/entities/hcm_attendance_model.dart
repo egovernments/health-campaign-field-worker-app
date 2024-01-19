@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:attendance_management/models/attendance_register.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:drift/drift.dart';
@@ -7,17 +9,37 @@ import '../data_model.dart';
 
 @MappableClass(ignoreNull: true)
 class HCMAttendanceSearchModel extends EntitySearchModel {
-  final AttendanceRegisterSearchModel attendanceSearchRegister;
+  final String? id;
+  final String? staffId;
+  final String? registerNumber;
+  final String? status;
+  final String? referenceId;
+  final String? serviceCode;
 
   HCMAttendanceSearchModel({
-    required this.attendanceSearchRegister,
-    super.boundaryCode,
+    this.id,
+    this.staffId,
+    this.registerNumber,
+    this.status,
+    this.serviceCode,
+    this.referenceId,
     super.isDeleted,
   }) : super();
+
+  @MappableConstructor()
+  HCMAttendanceSearchModel.ignoreDeleted({
+    this.id,
+    this.staffId,
+    this.registerNumber,
+    this.status,
+    this.referenceId,
+    this.serviceCode,
+  });
 }
 
 @MappableClass(ignoreNull: true)
 class HCMAttendanceRegisterModel extends EntityModel {
+  static const schemaName = 'AttendanceRegister';
   final AttendancePackageRegisterModel attendanceRegister;
 
   HCMAttendanceRegisterModel({
@@ -51,6 +73,8 @@ class HCMAttendanceRegisterModel extends EntityModel {
             Value(attendanceRegister.auditDetails?.lastModifiedTime),
         isDeleted: Value(isDeleted),
         rowVersion: Value(attendanceRegister.rowVersion),
+        additionalFields:
+            Value(json.encode(attendanceRegister.additionalDetails)),
       );
 }
 

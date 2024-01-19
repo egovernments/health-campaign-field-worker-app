@@ -23,9 +23,7 @@ class HCMAttendanceBloc extends AttendanceListeners {
 
   void onDataReceived() async {
     final registers = await attendanceLocalRepository.search(
-      HCMAttendanceSearchModel(
-        attendanceSearchRegister: AttendanceRegisterSearchModel(),
-      ),
+      HCMAttendanceSearchModel(),
     );
     final attendanceRegisters =
         registers.map((e) => e.attendanceRegister).toList();

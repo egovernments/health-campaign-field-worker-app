@@ -88,5 +88,5 @@ class AttendanceRemoteRepository extends RemoteRepository<
   }
 
   @override
-  DataModelType get type => DataModelType.hcmAttendance;
+  DataModelType get type => DataModelType.attendanceRegister;
 }

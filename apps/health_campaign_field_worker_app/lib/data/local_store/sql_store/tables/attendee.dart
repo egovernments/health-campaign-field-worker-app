@@ -9,5 +9,8 @@ class Attendee extends Table {
   IntColumn get denrollmentDate => integer().nullable()();
   TextColumn get additionalFields => text().nullable()();
   @override
-  Set<Column> get primaryKey => { id };
+  Set<Column> get primaryKey => {
+        id,
+        registerId,
+      };
 }
