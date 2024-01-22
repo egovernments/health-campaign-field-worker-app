@@ -77,6 +77,8 @@ abstract class DataModel {
 @MappableClass(includeSubClasses: [
   BoundaryModel, HouseholdModel,
   IndividualModel,
+  NameModel,
+  
 ])
 abstract class EntityModel extends DataModel with EntityModelMappable {
   final AuditDetails? auditDetails;

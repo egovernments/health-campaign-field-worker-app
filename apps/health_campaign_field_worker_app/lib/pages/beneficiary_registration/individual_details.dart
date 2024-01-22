@@ -505,7 +505,7 @@ class _IndividualDetailsPageState
                                         DigitDateUtils.calculateAge(value);
                                     if ((age.years == 0 && age.months == 0) ||
                                         age.months > 11 ||
-                                        (age.years >= 150 && age.months > 0)) {
+                                        (age.years >= 124 && age.months > 0)) {
                                       formControl.setErrors({'': true});
                                     } else {
                                       formControl.removeError('');

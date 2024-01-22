@@ -46,8 +46,19 @@ class BoundaryLocalRepository
 
   @override
   FutureOr<List<BoundaryModel>> search(BoundarySearchModel query) async {
-    final selectQuery = sql.select(sql.boundary).join([]);
-    final results = await (selectQuery
+    final r  = await sql.customSelect(
+  "SELECT COUNT (*) "
+      " FROM Boundary",
+ 
+  
+    ).get();
+// print(r.first.data);
+
+    final selectQuery = sql.select(sql.boundary,
+    distinct: true,
+    ).join([]);
+
+(selectQuery
           ..where(buildAnd([
             if (query.code != null)
               sql.boundary.materializedPath.like('%${query.code}%'),
@@ -55,8 +66,10 @@ class BoundaryLocalRepository
             sql.boundary.materializedPath.isNotIn(['']),
             sql.boundary.code.isNotNull(),
             sql.boundary.code.isNotIn(['']),
-          ])))
-        .get();
+       
+          ])));
+
+          final results = await selectQuery.get();
 
     final queriedBoundaries = results.map((e) {
       final data = e.readTable(sql.boundary);
