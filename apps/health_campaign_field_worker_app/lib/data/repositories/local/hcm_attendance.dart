@@ -38,8 +38,8 @@ class AttendanceLocalRepository extends LocalRepository<
     final results = await (selectQuery
           ..where(buildAnd([
             if (query.staffId != null)
-              sql.staff.registerId.equals(
-                sql.attendanceRegister.id.toString(),
+              sql.staff.registerId.equalsExp(
+                sql.attendanceRegister.id,
               ),
           ])))
         .get();
