@@ -12,7 +12,7 @@ abstract class AttendanceAppLocalizations {
 
   static final _localizedStrings = [];
 
-  String attendanceTranslate(String localizedValues) {
+  String translate(String localizedValues) {
     if (_localizedStrings.isEmpty) {
       return localizedValues;
     } else {

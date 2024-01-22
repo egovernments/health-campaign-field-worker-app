@@ -1,13 +1,25 @@
 import 'package:attendance_management/attendance_management.dart';
+import 'package:digit_components/utils/app_logger.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'attendance_bloc.freezed.dart';
 
+typedef AttendanceSearchEmitter = Emitter<AttendanceStates>;
+
 class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
   AttendanceBloc(super.initialState) {
     on(_onInitial);
     on(_onLoadAttendanceRegisterData);
+    on(_onLoadLocalization);
+  }
+
+  void _onLoadLocalization(
+    LoadLocalization event,
+    Emitter<AttendanceStates> emit,
+  ) async {
+    AppLogger.instance.info('Attendance Locale codes: $event.codes');
+    AttendanceSingleton().loadLocalization(event.codes);
   }
 
   void _onInitial(
@@ -30,6 +42,8 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
 
 @freezed
 class AttendanceEvents with _$AttendanceEvents {
+  const factory AttendanceEvents.loadLocalization(List codes) =
+      LoadLocalization;
   const factory AttendanceEvents.initial() = InitialAttendance;
   const factory AttendanceEvents.loadAttendanceRegisters(
           List<AttendancePackageRegisterModel> registers) =

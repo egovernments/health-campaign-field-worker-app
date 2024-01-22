@@ -5,6 +5,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
 import '../../data/local_store/app_shared_preferences.dart';
 import '../../data/repositories/remote/localization.dart';
+import '../hcm_attendance_bloc.dart';
 import 'app_localization.dart';
 
 part 'localization.freezed.dart';
@@ -40,6 +41,7 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
 
       final List codes = event.locale.split('_');
       await _loadLocale(codes);
+      HCMAttendanceBloc().loadLocalization(codes);
     } catch (error) {
       rethrow;
     } finally {

@@ -2,6 +2,7 @@ import 'package:attendance_management/attendance_management.dart';
 import 'package:digit_components/theme/colors.dart';
 import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_components/utils/date_utils.dart';
+import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_card.dart';
 import 'package:digit_components/widgets/digit_elevated_button.dart';
 import 'package:digit_components/widgets/molecules/digit_table_card.dart';
@@ -54,9 +55,9 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
               final register = attendanceRegisters[i];
               list.add(RegisterCard(
                   data: {
-                    'Campaign Type': register.name,
-                    'Event Type': register.serviceCode,
-                    'Staff Count': 15,
+                    'Campaign Type': register.additionalDetails?['campaignName'],
+                    'Event Type': register.additionalDetails?['eventType'],
+                    'Staff Count': register.staff?.length ?? 0,
                     'Start Date': register.startDate != null
                         ? DigitDateUtils.getDateFromTimestamp(
                             register.startDate!)
@@ -170,7 +171,16 @@ class RegisterCard extends StatelessWidget {
                         ? 'Mark Attendance'
                         : 'View Attendance',
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    DigitToast.show(
+                      context,
+                      options: DigitToastOptions(
+                        'No Attendee registered for this register',
+                        true,
+                        DigitTheme.instance.mobileTheme,
+                      ),
+                    );
+                  },
                 )
               : const SizedBox.shrink(),
         ],
