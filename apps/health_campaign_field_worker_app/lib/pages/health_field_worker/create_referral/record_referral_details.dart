@@ -671,7 +671,7 @@ class _RecordReferralDetailsPageState
                                                               AdditionalFieldsType
                                                                   .age
                                                                   .toValue(),
-                                                              age,
+                                                              '0$age',
                                                             ),
                                                           if (gender != null &&
                                                               gender
@@ -846,6 +846,17 @@ class _RecordReferralDetailsPageState
                                                 '{}',
                                                 (context.selectedProjectType
                                                             ?.validMaxAge ??
+                                                        '')
+                                                    .toString(),
+                                              ),
+                                          'min': (_) => localizations
+                                              .translate(
+                                                i18.common.minValue,
+                                              )
+                                              .replaceAll(
+                                                '{}',
+                                                (context.selectedProjectType
+                                                            ?.validMinAge ??
                                                         '')
                                                     .toString(),
                                               ),
@@ -1036,21 +1047,25 @@ class _RecordReferralDetailsPageState
       _ageKey: FormControl<int>(
         value: referralState.mapOrNull(
           create: (value) => value.viewOnly
-              ? value.hfReferralModel?.additionalFields?.fields
+              ? int.parse(value.hfReferralModel?.additionalFields?.fields
                   .where((e) => e.key == AdditionalFieldsType.age.toValue())
                   .first
-                  .value
+                  .value)
               : null,
         ),
         disabled: referralState.mapOrNull(
               create: (value) => value.viewOnly,
             ) ??
             false,
-        validators: (context.selectedProjectType?.validMaxAge != null)
+        validators: (context.selectedProjectType?.validMaxAge != null &&
+                context.selectedProjectType?.validMinAge != null)
             ? [
                 Validators.required,
                 Validators.max<int>(
                   context.selectedProjectType?.validMaxAge ?? 60,
+                ),
+                Validators.min<int>(
+                  context.selectedProjectType?.validMinAge ?? 3,
                 ),
               ]
             : [Validators.required],

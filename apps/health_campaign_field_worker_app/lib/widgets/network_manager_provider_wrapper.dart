@@ -511,14 +511,14 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
               actionMap: actions,
             ),
           ),
-        // if (value == DataModelType.downsync)
-        RepositoryProvider<
-            RemoteRepository<DownsyncModel, DownsyncSearchModel>>(
-          create: (_) => DownsyncRemoteRepository(
-            dio,
-            actionMap: actions,
+        if (value == DataModelType.downsync)
+          RepositoryProvider<
+              RemoteRepository<DownsyncModel, DownsyncSearchModel>>(
+            create: (_) => DownsyncRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
           ),
-        ),
         RepositoryProvider<
             RemoteRepository<HFReferralModel, HFReferralSearchModel>>(
           create: (_) => HFReferralRemoteRepository(

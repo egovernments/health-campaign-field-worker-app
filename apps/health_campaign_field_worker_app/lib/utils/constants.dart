@@ -36,6 +36,7 @@ import '../data/repositories/local/stock_reconciliation.dart';
 import '../data/repositories/local/task.dart';
 import '../data/repositories/oplog/oplog.dart';
 import '../data/repositories/remote/boundary.dart';
+import '../data/repositories/remote/downsync.dart';
 import '../data/repositories/remote/facility.dart';
 import '../data/repositories/remote/h_f_referral.dart';
 import '../data/repositories/remote/hcm_attendance.dart';
@@ -233,6 +234,8 @@ class Constants {
           SideEffectRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.referral)
           ReferralRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.downsync)
+          DownsyncRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.hFReferral)
           HFReferralRemoteRepository(dio, actionMap: actions),
         AttendanceRemoteRepository(dio, actionMap: actions),

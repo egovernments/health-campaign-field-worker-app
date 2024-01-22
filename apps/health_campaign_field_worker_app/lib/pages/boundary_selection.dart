@@ -590,6 +590,7 @@ class _BoundarySelectionPageState
       // Check if the form control value is null
       if (formControl.value == null) {
         formControl.setErrors({'': true});
+
         // Return true if any form control has a null value
         return true;
       }
