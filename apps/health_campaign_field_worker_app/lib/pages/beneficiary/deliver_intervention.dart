@@ -11,6 +11,7 @@ import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
 import '../../blocs/product_variant/product_variant.dart';
 import '../../blocs/project/project.dart';
+import '../../blocs/scanner/scanner.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../models/data_model.dart';
 import '../../models/project_type/project_type_model.dart';
@@ -146,9 +147,17 @@ class _DeliverInterventionPageState
                                       builder: (context, state) {
                                         return DigitCard(
                                           margin: const EdgeInsets.fromLTRB(
-                                              0, kPadding, 0, 0),
+                                            0,
+                                            kPadding,
+                                            0,
+                                            0,
+                                          ),
                                           padding: const EdgeInsets.fromLTRB(
-                                              kPadding, 0, kPadding, 0),
+                                            kPadding,
+                                            0,
+                                            kPadding,
+                                            0,
+                                          ),
                                           child: ValueListenableBuilder(
                                             valueListenable: clickedStatus,
                                             builder:
@@ -561,6 +570,153 @@ class _DeliverInterventionPageState
                                                     );
                                                   },
                                                 ),
+                                                if (context.beneficiaryType ==
+                                                    BeneficiaryType.household)
+                                                  BlocBuilder<ScannerBloc,
+                                                      ScannerState>(
+                                                    builder: (
+                                                      context,
+                                                      scanState,
+                                                    ) =>
+                                                        scanState.barcodes
+                                                                .isNotEmpty
+                                                            ? Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                children: [
+                                                                  SizedBox(
+                                                                    width: MediaQuery.of(context)
+                                                                            .size
+                                                                            .width /
+                                                                        3,
+                                                                    child: Text(
+                                                                      localizations
+                                                                          .translate(
+                                                                        i18.deliverIntervention
+                                                                            .voucherCode,
+                                                                      ),
+                                                                      style: theme
+                                                                          .textTheme
+                                                                          .headlineSmall,
+                                                                    ),
+                                                                  ),
+                                                                  Flexible(
+                                                                    child: Text(
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      scanState
+                                                                              .barcodes
+                                                                              .isNotEmpty
+                                                                          ? scanState
+                                                                              .barcodes
+                                                                              .map((e) => e.elements.values.first.rawData)
+                                                                              .toList()
+                                                                              .toString()
+                                                                          : '',
+                                                                    ),
+                                                                  ),
+                                                                  Padding(
+                                                                    padding:
+                                                                        const EdgeInsets
+                                                                            .only(
+                                                                      bottom:
+                                                                          kPadding *
+                                                                              2,
+                                                                    ),
+                                                                    child:
+                                                                        IconButton(
+                                                                      color: theme
+                                                                          .colorScheme
+                                                                          .secondary,
+                                                                      icon: const Icon(
+                                                                          Icons
+                                                                              .edit),
+                                                                      onPressed:
+                                                                          () {
+                                                                        // TODO : [Need to handle the Scanner event];
+                                                                        // context.read<ScannerBloc>().add(ScannerScanEvent())
+                                                                        context
+                                                                            .router
+                                                                            .push(
+                                                                          QRScannerRoute(
+                                                                            quantity: (((form.control(
+                                                                                          _quantityDistributedKey,
+                                                                                        ) as FormArray)
+                                                                                            .controls
+                                                                                            .first
+                                                                                            .value as int?) ??
+                                                                                        0) >
+                                                                                    3
+                                                                                ? 3
+                                                                                : (form.control(
+                                                                                    _quantityDistributedKey,
+                                                                                  ) as FormArray)
+                                                                                    .controls
+                                                                                    .first
+                                                                                    .value,
+                                                                            isGS1code:
+                                                                                true,
+                                                                            sinlgleValue:
+                                                                                false,
+                                                                            isEditEnabled:
+                                                                                true,
+                                                                          ),
+                                                                        );
+                                                                      },
+                                                                    ),
+                                                                  ),
+                                                                ],
+
+                                                                // ignore: no-empty-block
+                                                              )
+                                                            : DigitOutlineIconButton(
+                                                                buttonStyle:
+                                                                    OutlinedButton
+                                                                        .styleFrom(
+                                                                  shape:
+                                                                      const RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius
+                                                                            .zero,
+                                                                  ),
+                                                                ),
+                                                                onPressed: () {
+                                                                  context.router
+                                                                      .push(
+                                                                    QRScannerRoute(
+                                                                      quantity: (((form.control(
+                                                                                    _quantityDistributedKey,
+                                                                                  ) as FormArray)
+                                                                                      .controls
+                                                                                      .first
+                                                                                      .value as int?) ??
+                                                                                  0) >
+                                                                              3
+                                                                          ? 3
+                                                                          : (form.control(
+                                                                              _quantityDistributedKey,
+                                                                            ) as FormArray)
+                                                                              .controls
+                                                                              .first
+                                                                              .value,
+                                                                      isGS1code:
+                                                                          true,
+                                                                      sinlgleValue:
+                                                                          false,
+                                                                    ),
+                                                                  );
+                                                                },
+                                                                icon: Icons
+                                                                    .qr_code,
+                                                                label: localizations
+                                                                    .translate(
+                                                                  i18.common
+                                                                      .scanBales,
+                                                                ),
+                                                              ),
+                                                  ),
                                               ],
                                             ),
                                           ),
@@ -618,6 +774,10 @@ class _DeliverInterventionPageState
       ),
     );
 
+    final scanBloc = context.read<ScannerBloc>().state;
+    final barcodes = scanBloc.barcodes.isNotEmpty
+        ? scanBloc.barcodes.map((e) => e.elements.values.first.rawData).toList()
+        : null;
     // Extract productvariantList from the form
     final productvariantList =
         ((form.control(_resourceDeliveredKey) as FormArray).value
@@ -680,6 +840,11 @@ class _DeliverInterventionPageState
             AdditionalFieldsType.deliveryStrategy.toValue(),
             deliveryStrategy,
           ),
+          if (barcodes != null)
+            AdditionalField(
+              'barCodes',
+              barcodes,
+            ),
         ],
       ),
     );

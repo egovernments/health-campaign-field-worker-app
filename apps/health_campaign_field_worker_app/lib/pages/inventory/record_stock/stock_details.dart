@@ -42,6 +42,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
   static const _commentsKey = 'comments';
   static const _deliveryTeamKey = 'deliveryTeam';
   bool deliveryTeamSelected = false;
+  bool scannedBale = false;
 
   FormGroup _form(StockRecordEntryType stockType) {
     return fb.group({
@@ -380,6 +381,14 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                               break;
                                           }
 
+                                          final barcodes =
+                                              scannerState.barcodes.isNotEmpty
+                                                  ? scannerState.barcodes
+                                                      .map((e) => e.elements
+                                                          .values.first.rawData)
+                                                      .toList()
+                                                  : null;
+
                                           final stockModel = StockModel(
                                             clientReferenceId:
                                                 IdGen.i.identifier,
@@ -466,6 +475,11 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                           'lng',
                                                           lng,
                                                         ),
+                                                        if (barcodes != null)
+                                                          AdditionalField(
+                                                            'barCodes',
+                                                            barcodes,
+                                                          ),
                                                       ],
                                                     ],
                                                   )
@@ -781,7 +795,8 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                             onChanged: (value) {
                                               setState(() {
                                                 form.control(
-                                                    _typeOfTransportKey,);
+                                                  _typeOfTransportKey,
+                                                );
                                               });
                                             },
                                             initialValue: transportTypeOptions
@@ -813,25 +828,96 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                     maxLines: 3,
                                     formControlName: _commentsKey,
                                   ),
+                                  BlocBuilder<ScannerBloc, ScannerState>(
+                                    builder: (context, scanState) => scanState
+                                                .barcodes.isNotEmpty &&
+                                            scannedBale
+                                        ? Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              SizedBox(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    3,
+                                                child: Text(
+                                                  localizations.translate(
+                                                    i18.deliverIntervention
+                                                        .voucherCode,
+                                                  ),
+                                                  style: theme
+                                                      .textTheme.headlineSmall,
+                                                ),
+                                              ),
+                                              Flexible(
+                                                child: Text(
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  scanState.barcodes.isNotEmpty
+                                                      ? scanState.barcodes
+                                                          .map((e) => e
+                                                              .elements
+                                                              .values
+                                                              .first
+                                                              .rawData)
+                                                          .toList()
+                                                          .toString()
+                                                      : '',
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                  bottom: kPadding * 2,
+                                                ),
+                                                child: IconButton(
+                                                  color: theme
+                                                      .colorScheme.secondary,
+                                                  icon: const Icon(Icons.edit),
+                                                  onPressed: () {
+                                                    // TODO : [Need to handle the Scanner event];
+                                                    // context.read<ScannerBloc>().add(ScannerScanEvent())
+                                                    context.router
+                                                        .push(QRScannerRoute(
+                                                      quantity: 5,
+                                                      isGS1code: true,
+                                                      sinlgleValue: false,
+                                                      isEditEnabled: true,
+                                                    ));
+                                                    setState(() {
+                                                      scannedBale = true;
+                                                    });
+                                                  },
+                                                ),
+                                              ),
+                                            ],
 
-                                  DigitOutlineIconButton(
-                                    buttonStyle: OutlinedButton.styleFrom(
-                                      shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.zero,
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      context.router.push(QRScannerRoute(
-                                        quantity: 5,
-                                        isGS1code: true,
-                                        sinlgleValue: false,
-                                      ));
-                                    },
-                                    icon: Icons.qr_code,
-                                    label: localizations.translate(
-                                      i18.common
-                                          .scanBales,
-                                    ),
+                                            // ignore: no-empty-block
+                                          )
+                                        : DigitOutlineIconButton(
+                                            buttonStyle:
+                                                OutlinedButton.styleFrom(
+                                              shape:
+                                                  const RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.zero,
+                                              ),
+                                            ),
+                                            onPressed: () {
+                                              context.router
+                                                  .push(QRScannerRoute(
+                                                quantity: 5,
+                                                isGS1code: true,
+                                                sinlgleValue: false,
+                                              ));
+                                              setState(() {
+                                                scannedBale = true;
+                                              });
+                                            },
+                                            icon: Icons.qr_code,
+                                            label: localizations.translate(
+                                              i18.common.scanBales,
+                                            ),
+                                          ),
                                   ),
                                 ],
                               ),
