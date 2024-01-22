@@ -46,30 +46,39 @@ class BoundaryLocalRepository
 
   @override
   FutureOr<List<BoundaryModel>> search(BoundarySearchModel query) async {
-    final r  = await sql.customSelect(
-  "SELECT COUNT (*) "
-      " FROM Boundary",
- 
-  
-    ).get();
-// print(r.first.data);
+    final selectQuery = sql
+        .select(
+      sql.boundary,
+      distinct: true,
+    )
+        .join([]);
 
-    final selectQuery = sql.select(sql.boundary,
-    distinct: true,
-    ).join([]);
+    final sQuery = sql.selectOnly(sql.boundary)
+      ..addColumns([sql.boundary.boundaryNum, sql.boundary.boundaryNum.max()]);
 
-(selectQuery
-          ..where(buildAnd([
-            if (query.code != null)
-              sql.boundary.materializedPath.like('%${query.code}%'),
-            sql.boundary.materializedPath.isNotNull(),
-            sql.boundary.materializedPath.isNotIn(['']),
-            sql.boundary.code.isNotNull(),
-            sql.boundary.code.isNotIn(['']),
-       
-          ])));
+    final result = await sQuery.getSingle();
+    final r = result.read(sql.boundary.boundaryNum);
 
-          final results = await selectQuery.get();
+    if (query.isSingle == true) {
+      (selectQuery
+            ..where(buildAnd([
+              sql.boundary.boundaryNum.isSmallerOrEqualValue(r!),
+            ])))
+          .limit(r);
+
+    } else {
+      (selectQuery
+        ..where(buildAnd([
+          if (query.code != null)
+            sql.boundary.materializedPath.like('%${query.code}%'),
+          sql.boundary.materializedPath.isNotNull(),
+          if (query.boundaryNum != null) sql.boundary.boundaryNum.equals(query.boundaryNum!),
+          sql.boundary.materializedPath.isNotIn(['']),
+          sql.boundary.code.isNotNull(),
+          sql.boundary.code.isNotIn(['']),
+        ])));
+    }
+    final results = await selectQuery.get();
 
     final queriedBoundaries = results.map((e) {
       final data = e.readTable(sql.boundary);

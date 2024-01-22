@@ -141,12 +141,21 @@ class _BoundarySelectionPageState
                                             'No Value';
                                       },
                                       onSelected: (value) {
-                                        if (value == null) return;
+                                              if (value == null) return;
+                                        value as BoundaryModel;
+                    
+                                            context.read<BoundaryBloc>().add(
+                                              BoundarySearchEvent(
+                                        boundaryNum: (value).boundaryNum! + 1,
+                                         code:  (value).code!,
+                                              ),
+                                            );
 
                                         context.read<BoundaryBloc>().add(
                                               BoundarySelectEvent(
                                                 label: label,
                                                 selectedBoundary: value,
+                                                
                                               ),
                                             );
                                         formControls[label]?.updateValue(value);

@@ -522,8 +522,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               code: event.model.address?.boundary,
             ),
           );
-        }
         await boundaryLocalRepository.bulkCreate(boundaries);
+        }
+
         await localSecureStore.setSelectedProject(event.model);
         await localSecureStore.setSelectedProjectType(reqProjectType);
       }
