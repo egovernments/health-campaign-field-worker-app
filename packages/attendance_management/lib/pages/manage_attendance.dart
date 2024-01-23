@@ -227,13 +227,13 @@ class RegisterCard extends StatelessWidget {
                     //     ),
                     //   );
                     // } else {
-                    context.read<DateSessionBloc>().add(
-                        LoadSelectedRegisterData(
-                            registers: registers, registerID: registerId));
-                    await Navigator.of(context).push(
+                    Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) =>
-                            const AttendanceDateSessionSelectionPage(),
+                            AttendanceDateSessionSelectionPage(
+                          registers: registers,
+                          registerID: registerId,
+                        ),
                       ),
                     );
                     // }

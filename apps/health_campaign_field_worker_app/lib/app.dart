@@ -340,10 +340,9 @@ class MainApplicationState extends State<MainApplication>
               selectedLocale.toString(),
             )
             .findAll();
-
-    print(localizationList);
+    AppLogger.instance.info('localizationList: ${localizationList[0]}');
     if (localizationList.isNotEmpty) {
-      return localizationValues.addAll(localizationList.first.localization!);
+      localizationValues.addAll(localizationList.first.localization!);
     }
 
     return localizationValues;

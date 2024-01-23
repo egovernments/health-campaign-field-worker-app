@@ -43,9 +43,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
                       },
                       icon: const Icon(Icons.arrow_left_sharp),
                       label: Text(
-                        AttendanceLocalization.of(context).translate(
-                          i18.common.coreCommonBack,
-                        ),
+                        i18.common.coreCommonBack,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -61,8 +59,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
               child: Row(
                 children: <Widget>[
                   Text(
-                    AttendanceLocalization.of(context)
-                        .translate(i18.common.coreCommonHelp),
+                    i18.common.coreCommonHelp,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const Icon(

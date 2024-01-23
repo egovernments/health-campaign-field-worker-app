@@ -26,15 +26,11 @@ class AttendanceLocalization {
     AppLogger.instance.info('attendance locale in delegate: ${locale.languageCode}_${locale.countryCode}');
     _localizedStrings.clear();
     final r =  await localizedStrings;
-    print(r);
+    AppLogger.instance.info('attendance locale in delegate: $r');
     for (var element in await localizedStrings) {
       if (element.locale == '${locale.languageCode}_${locale.countryCode}') {
         _localizedStrings.add(element);
       }
-    }
-
-    if (_localizedStrings.isEmpty) {
-      _localizedStrings.addAll(await localizedStrings);
     }
 
     return true;

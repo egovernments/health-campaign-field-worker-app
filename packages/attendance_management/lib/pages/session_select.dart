@@ -7,11 +7,16 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/localized.dart';
+import '../models/attendance_register.dart';
 import '../utils/date_util_attendance.dart';
 import '../widgets/back_navigation_help_header.dart';
 
 class AttendanceDateSessionSelectionPage extends LocalizedStatefulWidget {
+  final List<AttendancePackageRegisterModel> registers;
+  final String registerID;
   const AttendanceDateSessionSelectionPage({
+    required this.registers,
+    required this.registerID,
     super.key,
     super.appLocalizations,
   });
@@ -51,7 +56,13 @@ class _AttendanceDateSessionSelectionPageState
 
     return Scaffold(
         body: BlocProvider<DateSessionBloc>(
-      create: (context) => sessionBloc,
+      create: (context) => sessionBloc
+        ..add(
+          LoadSelectedRegisterData(
+            registers: widget.registers,
+            registerID: widget.registerID,
+          ),
+        ),
       child: BlocBuilder<DateSessionBloc, DateSessionStates>(
           builder: (ctx, registerState) {
         return registerState.maybeWhen(
