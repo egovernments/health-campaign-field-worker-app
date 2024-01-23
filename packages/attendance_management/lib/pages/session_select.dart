@@ -87,11 +87,9 @@ class _AttendanceDateSessionSelectionPageState
                         padding:
                             const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
                         child: DigitElevatedButton(
-                          child: Text(
-                            localizations.translate(
-                              i18.attendance.viewAttendance,
-                            )
-                          ),
+                          child: Text(localizations.translate(
+                            i18.attendance.viewAttendance,
+                          )),
                           onPressed: () {
                             if (form.control(_sessionRadio).value == null) {
                               form.control(_sessionRadio).setErrors({'': true});
@@ -154,8 +152,12 @@ class _AttendanceDateSessionSelectionPageState
                                         selectedRegister!.startDate!)
                                     : null,
                                 end: selectedRegister?.endDate != null
-                                    ? DateTime.fromMillisecondsSinceEpoch(
-                                        selectedRegister!.endDate!)
+                                    ? selectedRegister!.endDate! <
+                                            DateTime.now()
+                                                .millisecondsSinceEpoch
+                                        ? DateTime.fromMillisecondsSinceEpoch(
+                                            selectedRegister.endDate!)
+                                        : DateTime.now()
                                     : null,
                                 label: i18.attendance.dateOfSession,
                                 formControlName: _dateOfSession,
