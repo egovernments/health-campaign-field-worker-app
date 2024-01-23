@@ -1,23 +1,23 @@
 import 'package:attendance_management/attendance_management.dart';
-import 'package:digit_components/theme/colors.dart';
-import 'package:digit_components/theme/digit_theme.dart';
+import 'package:attendance_management/widgets/attendance_acknowledgement.dart';
+import 'package:digit_components/digit_components.dart';
+import '../../utils/i18_key_constants.dart' as i18;
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
-import 'package:digit_components/widgets/digit_card.dart';
-import 'package:digit_components/widgets/digit_elevated_button.dart';
-import 'package:digit_components/widgets/molecules/digit_table_card.dart';
-import 'package:digit_components/widgets/powered_by_digit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../widgets/localized.dart';
+import '../widgets/localized.dart';
 
 class ManageAttendancePage extends LocalizedStatefulWidget {
   final AttendanceListeners attendanceListeners;
+  final String projectId;
+  final String userId;
   const ManageAttendancePage({
     required this.attendanceListeners,
+    required this.projectId,
+    required this.userId,
     super.key,
-    super.appLocalizations,
   });
 
   @override
@@ -29,10 +29,17 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
 
   bool empty = false;
   AttendanceBloc attendanceBloc = AttendanceBloc(const RegisterLoading());
+  List<Widget> list = [];
 
   @override
   void initState() {
-    AttendanceSingleton().setAttendanceListeners(widget.attendanceListeners);
+    AttendanceSingleton().setAttendanceListeners(
+        attendanceListeners: widget.attendanceListeners,
+        projectId: widget.projectId,
+        userId: widget.userId);
+    AttendanceSingleton().onHcmLocalizationChanged((locales) {
+      AppLogger.instance.info('attendance locales: $locales');
+    });
     super.initState();
   }
 
@@ -43,7 +50,6 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
 
   @override
   Widget build(BuildContext context) {
-    var list = <Widget>[];
     return BlocProvider<AttendanceBloc>(
       create: (context) =>
           attendanceBloc..add(const AttendanceEvents.initial()),
@@ -55,7 +61,8 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
               final register = attendanceRegisters[i];
               list.add(RegisterCard(
                   data: {
-                    'Campaign Type': register.additionalDetails?['campaignName'],
+                    'Campaign Type':
+                        register.additionalDetails?['campaignName'],
                     'Event Type': register.additionalDetails?['eventType'],
                     'Staff Count': register.staff?.length ?? 0,
                     'Start Date': register.startDate != null
@@ -115,6 +122,18 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
                       ...list,
                     ],
                   ),
+                  registerLoading: () => const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                  registerError: (message) => Center(
+                    child: Card(
+                      child: SizedBox(
+                        height: 60,
+                        width: 200,
+                        child: Center(child: Text(message)),
+                      ),
+                    ),
+                  ),
                 ),
                 const SizedBox(
                   height: 16.0,
@@ -172,14 +191,17 @@ class RegisterCard extends StatelessWidget {
                         : 'View Attendance',
                   ),
                   onPressed: () {
-                    DigitToast.show(
-                      context,
-                      options: DigitToastOptions(
-                        'No Attendee registered for this register',
-                        true,
-                        DigitTheme.instance.mobileTheme,
-                      ),
-                    );
+                    // DigitToast.show(
+                    //   context,
+                    //   options: DigitToastOptions(
+                    //     'No Attendee registered for this register',
+                    //     true,
+                    //     DigitTheme.instance.mobileTheme,
+                    //   ),
+                    // );
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) =>
+                            AttendanceAcknowledgementPage(label: 'Success')));
                   },
                 )
               : const SizedBox.shrink(),

@@ -512,6 +512,8 @@ mixin _$AttendanceStates {
     required TResult Function() registerLoading,
     required TResult Function(List<AttendancePackageRegisterModel> registers)
         registerLoaded,
+    required TResult Function(String message) registerError,
+    required TResult Function() localizationLoaded,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -519,6 +521,8 @@ mixin _$AttendanceStates {
     TResult? Function()? registerLoading,
     TResult? Function(List<AttendancePackageRegisterModel> registers)?
         registerLoaded,
+    TResult? Function(String message)? registerError,
+    TResult? Function()? localizationLoaded,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -526,6 +530,8 @@ mixin _$AttendanceStates {
     TResult Function()? registerLoading,
     TResult Function(List<AttendancePackageRegisterModel> registers)?
         registerLoaded,
+    TResult Function(String message)? registerError,
+    TResult Function()? localizationLoaded,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -533,18 +539,24 @@ mixin _$AttendanceStates {
   TResult map<TResult extends Object?>({
     required TResult Function(RegisterLoading value) registerLoading,
     required TResult Function(RegisterLoaded value) registerLoaded,
+    required TResult Function(RegisterError value) registerError,
+    required TResult Function(LocalizationLoaded value) localizationLoaded,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(RegisterLoading value)? registerLoading,
     TResult? Function(RegisterLoaded value)? registerLoaded,
+    TResult? Function(RegisterError value)? registerError,
+    TResult? Function(LocalizationLoaded value)? localizationLoaded,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(RegisterLoading value)? registerLoading,
     TResult Function(RegisterLoaded value)? registerLoaded,
+    TResult Function(RegisterError value)? registerError,
+    TResult Function(LocalizationLoaded value)? localizationLoaded,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -609,6 +621,8 @@ class _$RegisterLoading implements RegisterLoading {
     required TResult Function() registerLoading,
     required TResult Function(List<AttendancePackageRegisterModel> registers)
         registerLoaded,
+    required TResult Function(String message) registerError,
+    required TResult Function() localizationLoaded,
   }) {
     return registerLoading();
   }
@@ -619,6 +633,8 @@ class _$RegisterLoading implements RegisterLoading {
     TResult? Function()? registerLoading,
     TResult? Function(List<AttendancePackageRegisterModel> registers)?
         registerLoaded,
+    TResult? Function(String message)? registerError,
+    TResult? Function()? localizationLoaded,
   }) {
     return registerLoading?.call();
   }
@@ -629,6 +645,8 @@ class _$RegisterLoading implements RegisterLoading {
     TResult Function()? registerLoading,
     TResult Function(List<AttendancePackageRegisterModel> registers)?
         registerLoaded,
+    TResult Function(String message)? registerError,
+    TResult Function()? localizationLoaded,
     required TResult orElse(),
   }) {
     if (registerLoading != null) {
@@ -642,6 +660,8 @@ class _$RegisterLoading implements RegisterLoading {
   TResult map<TResult extends Object?>({
     required TResult Function(RegisterLoading value) registerLoading,
     required TResult Function(RegisterLoaded value) registerLoaded,
+    required TResult Function(RegisterError value) registerError,
+    required TResult Function(LocalizationLoaded value) localizationLoaded,
   }) {
     return registerLoading(this);
   }
@@ -651,6 +671,8 @@ class _$RegisterLoading implements RegisterLoading {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(RegisterLoading value)? registerLoading,
     TResult? Function(RegisterLoaded value)? registerLoaded,
+    TResult? Function(RegisterError value)? registerError,
+    TResult? Function(LocalizationLoaded value)? localizationLoaded,
   }) {
     return registerLoading?.call(this);
   }
@@ -660,6 +682,8 @@ class _$RegisterLoading implements RegisterLoading {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(RegisterLoading value)? registerLoading,
     TResult Function(RegisterLoaded value)? registerLoaded,
+    TResult Function(RegisterError value)? registerError,
+    TResult Function(LocalizationLoaded value)? localizationLoaded,
     required TResult orElse(),
   }) {
     if (registerLoading != null) {
@@ -747,6 +771,8 @@ class _$RegisterLoaded implements RegisterLoaded {
     required TResult Function() registerLoading,
     required TResult Function(List<AttendancePackageRegisterModel> registers)
         registerLoaded,
+    required TResult Function(String message) registerError,
+    required TResult Function() localizationLoaded,
   }) {
     return registerLoaded(registers);
   }
@@ -757,6 +783,8 @@ class _$RegisterLoaded implements RegisterLoaded {
     TResult? Function()? registerLoading,
     TResult? Function(List<AttendancePackageRegisterModel> registers)?
         registerLoaded,
+    TResult? Function(String message)? registerError,
+    TResult? Function()? localizationLoaded,
   }) {
     return registerLoaded?.call(registers);
   }
@@ -767,6 +795,8 @@ class _$RegisterLoaded implements RegisterLoaded {
     TResult Function()? registerLoading,
     TResult Function(List<AttendancePackageRegisterModel> registers)?
         registerLoaded,
+    TResult Function(String message)? registerError,
+    TResult Function()? localizationLoaded,
     required TResult orElse(),
   }) {
     if (registerLoaded != null) {
@@ -780,6 +810,8 @@ class _$RegisterLoaded implements RegisterLoaded {
   TResult map<TResult extends Object?>({
     required TResult Function(RegisterLoading value) registerLoading,
     required TResult Function(RegisterLoaded value) registerLoaded,
+    required TResult Function(RegisterError value) registerError,
+    required TResult Function(LocalizationLoaded value) localizationLoaded,
   }) {
     return registerLoaded(this);
   }
@@ -789,6 +821,8 @@ class _$RegisterLoaded implements RegisterLoaded {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(RegisterLoading value)? registerLoading,
     TResult? Function(RegisterLoaded value)? registerLoaded,
+    TResult? Function(RegisterError value)? registerError,
+    TResult? Function(LocalizationLoaded value)? localizationLoaded,
   }) {
     return registerLoaded?.call(this);
   }
@@ -798,6 +832,8 @@ class _$RegisterLoaded implements RegisterLoaded {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(RegisterLoading value)? registerLoading,
     TResult Function(RegisterLoaded value)? registerLoaded,
+    TResult Function(RegisterError value)? registerError,
+    TResult Function(LocalizationLoaded value)? localizationLoaded,
     required TResult orElse(),
   }) {
     if (registerLoaded != null) {
@@ -815,4 +851,269 @@ abstract class RegisterLoaded implements AttendanceStates {
   @JsonKey(ignore: true)
   _$$RegisterLoadedCopyWith<_$RegisterLoaded> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$RegisterErrorCopyWith<$Res> {
+  factory _$$RegisterErrorCopyWith(
+          _$RegisterError value, $Res Function(_$RegisterError) then) =
+      __$$RegisterErrorCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String message});
+}
+
+/// @nodoc
+class __$$RegisterErrorCopyWithImpl<$Res>
+    extends _$AttendanceStatesCopyWithImpl<$Res, _$RegisterError>
+    implements _$$RegisterErrorCopyWith<$Res> {
+  __$$RegisterErrorCopyWithImpl(
+      _$RegisterError _value, $Res Function(_$RegisterError) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? message = null,
+  }) {
+    return _then(_$RegisterError(
+      null == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$RegisterError implements RegisterError {
+  const _$RegisterError(this.message);
+
+  @override
+  final String message;
+
+  @override
+  String toString() {
+    return 'AttendanceStates.registerError(message: $message)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$RegisterError &&
+            (identical(other.message, message) || other.message == message));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, message);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$RegisterErrorCopyWith<_$RegisterError> get copyWith =>
+      __$$RegisterErrorCopyWithImpl<_$RegisterError>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() registerLoading,
+    required TResult Function(List<AttendancePackageRegisterModel> registers)
+        registerLoaded,
+    required TResult Function(String message) registerError,
+    required TResult Function() localizationLoaded,
+  }) {
+    return registerError(message);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? registerLoading,
+    TResult? Function(List<AttendancePackageRegisterModel> registers)?
+        registerLoaded,
+    TResult? Function(String message)? registerError,
+    TResult? Function()? localizationLoaded,
+  }) {
+    return registerError?.call(message);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? registerLoading,
+    TResult Function(List<AttendancePackageRegisterModel> registers)?
+        registerLoaded,
+    TResult Function(String message)? registerError,
+    TResult Function()? localizationLoaded,
+    required TResult orElse(),
+  }) {
+    if (registerError != null) {
+      return registerError(message);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(RegisterLoading value) registerLoading,
+    required TResult Function(RegisterLoaded value) registerLoaded,
+    required TResult Function(RegisterError value) registerError,
+    required TResult Function(LocalizationLoaded value) localizationLoaded,
+  }) {
+    return registerError(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(RegisterLoading value)? registerLoading,
+    TResult? Function(RegisterLoaded value)? registerLoaded,
+    TResult? Function(RegisterError value)? registerError,
+    TResult? Function(LocalizationLoaded value)? localizationLoaded,
+  }) {
+    return registerError?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(RegisterLoading value)? registerLoading,
+    TResult Function(RegisterLoaded value)? registerLoaded,
+    TResult Function(RegisterError value)? registerError,
+    TResult Function(LocalizationLoaded value)? localizationLoaded,
+    required TResult orElse(),
+  }) {
+    if (registerError != null) {
+      return registerError(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class RegisterError implements AttendanceStates {
+  const factory RegisterError(final String message) = _$RegisterError;
+
+  String get message;
+  @JsonKey(ignore: true)
+  _$$RegisterErrorCopyWith<_$RegisterError> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$LocalizationLoadedCopyWith<$Res> {
+  factory _$$LocalizationLoadedCopyWith(_$LocalizationLoaded value,
+          $Res Function(_$LocalizationLoaded) then) =
+      __$$LocalizationLoadedCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$LocalizationLoadedCopyWithImpl<$Res>
+    extends _$AttendanceStatesCopyWithImpl<$Res, _$LocalizationLoaded>
+    implements _$$LocalizationLoadedCopyWith<$Res> {
+  __$$LocalizationLoadedCopyWithImpl(
+      _$LocalizationLoaded _value, $Res Function(_$LocalizationLoaded) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$LocalizationLoaded implements LocalizationLoaded {
+  const _$LocalizationLoaded();
+
+  @override
+  String toString() {
+    return 'AttendanceStates.localizationLoaded()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$LocalizationLoaded);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() registerLoading,
+    required TResult Function(List<AttendancePackageRegisterModel> registers)
+        registerLoaded,
+    required TResult Function(String message) registerError,
+    required TResult Function() localizationLoaded,
+  }) {
+    return localizationLoaded();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? registerLoading,
+    TResult? Function(List<AttendancePackageRegisterModel> registers)?
+        registerLoaded,
+    TResult? Function(String message)? registerError,
+    TResult? Function()? localizationLoaded,
+  }) {
+    return localizationLoaded?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? registerLoading,
+    TResult Function(List<AttendancePackageRegisterModel> registers)?
+        registerLoaded,
+    TResult Function(String message)? registerError,
+    TResult Function()? localizationLoaded,
+    required TResult orElse(),
+  }) {
+    if (localizationLoaded != null) {
+      return localizationLoaded();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(RegisterLoading value) registerLoading,
+    required TResult Function(RegisterLoaded value) registerLoaded,
+    required TResult Function(RegisterError value) registerError,
+    required TResult Function(LocalizationLoaded value) localizationLoaded,
+  }) {
+    return localizationLoaded(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(RegisterLoading value)? registerLoading,
+    TResult? Function(RegisterLoaded value)? registerLoaded,
+    TResult? Function(RegisterError value)? registerError,
+    TResult? Function(LocalizationLoaded value)? localizationLoaded,
+  }) {
+    return localizationLoaded?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(RegisterLoading value)? registerLoading,
+    TResult Function(RegisterLoaded value)? registerLoaded,
+    TResult Function(RegisterError value)? registerError,
+    TResult Function(LocalizationLoaded value)? localizationLoaded,
+    required TResult orElse(),
+  }) {
+    if (localizationLoaded != null) {
+      return localizationLoaded(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class LocalizationLoaded implements AttendanceStates {
+  const factory LocalizationLoaded() = _$LocalizationLoaded;
 }

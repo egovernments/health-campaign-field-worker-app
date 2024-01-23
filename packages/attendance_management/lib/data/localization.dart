@@ -1,4 +1,4 @@
-class Localization {
+class AttendanceLocale {
   late String code;
 
   late String message;

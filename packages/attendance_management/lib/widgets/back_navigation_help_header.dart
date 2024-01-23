@@ -30,7 +30,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
           Expanded(
             child: Row(
               children: [
-                if (context.router.canPop() && showBackNavigation)
+                if (showBackNavigation)
                   Flexible(
                     child: TextButton.icon(
                       style: TextButton.styleFrom(
@@ -38,30 +38,13 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
                         padding: EdgeInsets.zero,
                       ),
                       onPressed: () {
-                        context.router.pop();
+                        Navigator.of(context).pop();
                         handleBack != null ? handleBack!() : null;
                       },
                       icon: const Icon(Icons.arrow_left_sharp),
                       label: Text(
-                        AttendanceAppLocalizations.of(context).translate(
+                        AttendanceLocalization.of(context).translate(
                           i18.common.coreCommonBack,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ),
-                SizedBox(width: showBackNavigation ? 16 : 0),
-                if (showLogoutCTA)
-                  Flexible(
-                    child: TextButton.icon(
-                      style: TextButton.styleFrom(padding: EdgeInsets.zero),
-                      onPressed: () {
-
-                      },
-                      icon: const Icon(Icons.logout_outlined),
-                      label: Text(
-                        AttendanceAppLocalizations.of(context).translate(
-                          i18.common.coreCommonLogout,
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -78,7 +61,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
               child: Row(
                 children: <Widget>[
                   Text(
-                    AttendanceAppLocalizations.of(context)
+                    AttendanceLocalization.of(context)
                         .translate(i18.common.coreCommonHelp),
                     overflow: TextOverflow.ellipsis,
                   ),

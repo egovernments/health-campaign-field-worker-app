@@ -13,8 +13,10 @@ class HCMAttendanceBloc extends AttendanceListeners {
     this.userId,
   });
 
-  late Function(List<AttendancePackageRegisterModel> registers) _registersLoaded;
-  late List _localeCodes;
+  late Function(List<AttendancePackageRegisterModel> registers)
+      _registersLoaded;
+
+  late Function(List<dynamic> locales) _localeChanged;
 
   @override
   void getAttendanceRegisters(
@@ -38,8 +40,8 @@ class HCMAttendanceBloc extends AttendanceListeners {
   }
 
   @override
-  void loadLocalization(List codes) {
-    _localeCodes = codes;
-    AppLogger.instance.info('HCM Attendance Locale codes: $codes');
+  void onHcmLocalizationChanged(
+      Function(List<dynamic> locales) localizedStrings,) {
+    _localeChanged = localizedStrings;
   }
 }
