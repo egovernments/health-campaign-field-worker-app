@@ -12,6 +12,7 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
     on(_onInitial);
     on(_onLoadAttendanceRegisterData);
     on(_onLoadLocalization);
+    on(_onLoadSelectedRegisterData);
   }
 
   void _onLoadLocalization(
@@ -36,7 +37,21 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
     LoadAttendanceRegisterData event,
     Emitter<AttendanceStates> emit,
   ) async {
-    emit(RegisterLoaded(event.registers));
+    emit(RegisterLoaded(
+      registers: event.registers,
+    ));
+  }
+
+  void _onLoadSelectedRegisterData(
+    LoadSelectedAttendanceRegisterData event,
+    Emitter<AttendanceStates> emit,
+  ) async {
+    emit(const RegisterLoading());
+    final selectedRegister =
+        await event.registers.where((e) => e.id == event.registerID).first;
+    emit(SelectedRegisterLoaded(
+      selectedRegister: selectedRegister,
+    ));
   }
 }
 
@@ -48,11 +63,18 @@ class AttendanceEvents with _$AttendanceEvents {
   const factory AttendanceEvents.loadAttendanceRegisters(
           List<AttendancePackageRegisterModel> registers) =
       LoadAttendanceRegisterData;
+  const factory AttendanceEvents.loadSelectedRegister(
+      {required final List<AttendancePackageRegisterModel> registers,
+      required final String registerID}) = LoadSelectedAttendanceRegisterData;
 }
 
 @freezed
 class AttendanceStates with _$AttendanceStates {
   const factory AttendanceStates.registerLoading() = RegisterLoading;
-  const factory AttendanceStates.registerLoaded(
-      List<AttendancePackageRegisterModel> registers) = RegisterLoaded;
+  const factory AttendanceStates.registerLoaded({
+    required final List<AttendancePackageRegisterModel> registers,
+  }) = RegisterLoaded;
+  const factory AttendanceStates.selectedRegisterLoaded({
+    final AttendancePackageRegisterModel? selectedRegister,
+  }) = SelectedRegisterLoaded;
 }

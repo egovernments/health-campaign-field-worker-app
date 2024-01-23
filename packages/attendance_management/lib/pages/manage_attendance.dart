@@ -1,8 +1,9 @@
 import 'package:attendance_management/attendance_management.dart';
+import 'package:attendance_management/blocs/date_session_bloc.dart';
+import 'package:attendance_management/pages/session_select.dart';
 import 'package:digit_components/theme/colors.dart';
 import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_components/utils/date_utils.dart';
-import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_card.dart';
 import 'package:digit_components/widgets/digit_elevated_button.dart';
 import 'package:digit_components/widgets/molecules/digit_table_card.dart';
@@ -26,9 +27,11 @@ class ManageAttendancePage extends LocalizedStatefulWidget {
 
 class _ManageAttendancePageState extends State<ManageAttendancePage> {
   List<AttendancePackageRegisterModel> attendanceRegisters = [];
+  var list = <Widget>[];
 
   bool empty = false;
   AttendanceBloc attendanceBloc = AttendanceBloc(const RegisterLoading());
+  DateSessionBloc sessionBloc = DateSessionBloc(const DateSessionLoading());
 
   @override
   void initState() {
@@ -43,91 +46,106 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
 
   @override
   Widget build(BuildContext context) {
-    var list = <Widget>[];
     return BlocProvider<AttendanceBloc>(
       create: (context) =>
           attendanceBloc..add(const AttendanceEvents.initial()),
-      child: BlocListener<AttendanceBloc, AttendanceStates>(
-        listener: (ctx, states) {
-          if (states is RegisterLoaded) {
-            attendanceRegisters = states.registers;
-            for (int i = 0; i < attendanceRegisters.length; i++) {
-              final register = attendanceRegisters[i];
-              list.add(RegisterCard(
-                  data: {
-                    'Campaign Type': register.additionalDetails?['campaignName'],
-                    'Event Type': register.additionalDetails?['eventType'],
-                    'Staff Count': register.staff?.length ?? 0,
-                    'Start Date': register.startDate != null
-                        ? DigitDateUtils.getDateFromTimestamp(
-                            register.startDate!)
-                        : 'N/A',
-                    'End Date': register.endDate != null
-                        ? DigitDateUtils.getDateFromTimestamp(register.endDate!)
-                        : 'N/A',
-                    'Status': register.status,
-                    'Attendance Completion': 'N/A'
-                  },
-                  regisId: register.id,
-                  tenantId: register.tenantId!,
-                  show: true,
-                  startDate: DateTime.fromMillisecondsSinceEpoch(
-                    register.startDate!,
-                  ),
-                  endDate: DateTime.fromMillisecondsSinceEpoch(
-                    register.endDate!,
-                  )));
+      child: BlocProvider<DateSessionBloc>(
+        create: (context) => sessionBloc,
+        child: BlocListener<AttendanceBloc, AttendanceStates>(
+          listener: (ctx, states) {
+            if (states is RegisterLoaded) {
+              attendanceRegisters = states.registers;
+              for (int i = 0; i < attendanceRegisters.length; i++) {
+                final register = attendanceRegisters[i];
+                list.add(RegisterCard(
+                    data: {
+                      'Campaign Type':
+                          register.additionalDetails?['campaignName'],
+                      'Event Type': register.additionalDetails?['eventType'],
+                      'Staff Count': register.staff?.length ?? 0,
+                      'Start Date': register.startDate != null
+                          ? DigitDateUtils.getDateFromTimestamp(
+                              register.startDate!)
+                          : 'N/A',
+                      'End Date': register.endDate != null
+                          ? DigitDateUtils.getDateFromTimestamp(
+                              register.endDate!)
+                          : 'N/A',
+                      'Status': register.status,
+                      'Attendance Completion': 'N/A'
+                    },
+                    registers: attendanceRegisters,
+                    noOfAttendees: register.attendees?.length ?? 0,
+                    registerId: register.id,
+                    tenantId: register.tenantId ?? 'N/A',
+                    show: register.startDate != null &&
+                        register.endDate != null &&
+                        attendanceRegisters.isNotEmpty,
+                    startDate: register.startDate != null
+                        ? DateTime.fromMillisecondsSinceEpoch(
+                            register.startDate!,
+                          )
+                        : null,
+                    endDate: register.startDate != null
+                        ? DateTime.fromMillisecondsSinceEpoch(
+                            register.endDate!,
+                          )
+                        : null));
+              }
             }
-          }
-        },
-        child: Scaffold(
-          body: SingleChildScrollView(child:
-              BlocBuilder<AttendanceBloc, AttendanceStates>(
-                  builder: (context, blocState) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    "Manage Attendance",
-                    style: DigitTheme
-                        .instance.mobileTheme.textTheme.headlineLarge
-                        ?.apply(color: const DigitColors().black),
-                    textAlign: TextAlign.left,
+          },
+          child: Scaffold(
+            body: SingleChildScrollView(child:
+                BlocBuilder<AttendanceBloc, AttendanceStates>(
+                    builder: (context, blocState) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      "Manage Attendance",
+                      style: DigitTheme
+                          .instance.mobileTheme.textTheme.headlineLarge
+                          ?.apply(color: const DigitColors().black),
+                      textAlign: TextAlign.left,
+                    ),
                   ),
-                ),
-                empty
-                    ? const Center(
-                        child: Card(
-                          child: SizedBox(
-                            height: 60,
-                            width: 200,
-                            child: Center(child: Text("No Data Found")),
+                  empty
+                      ? const Center(
+                          child: Card(
+                            child: SizedBox(
+                              height: 60,
+                              width: 200,
+                              child: Center(child: Text("No Data Found")),
+                            ),
                           ),
-                        ),
-                      )
-                    : const SizedBox.shrink(),
-                blocState.maybeWhen(
-                  orElse: () => const SizedBox.shrink(),
-                  registerLoaded: (registers) => Column(
-                    children: [
-                      ...list,
-                    ],
+                        )
+                      : const SizedBox.shrink(),
+                  blocState.maybeWhen(
+                    orElse: () => const SizedBox.shrink(),
+                    registerLoaded: (
+                      registers,
+                    ) =>
+                        Column(
+                      children: [
+                        ...list,
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(
-                  height: 16.0,
-                ),
-                const Align(
-                  alignment: Alignment.bottomCenter,
-                  child: PoweredByDigit(
-                    version: '1.2.0',
+                  const SizedBox(
+                    height: 16.0,
                   ),
-                ),
-              ],
-            );
-          })),
+                  const Align(
+                    alignment: Alignment.bottomCenter,
+                    child: PoweredByDigit(
+                      version: '1.2.0',
+                    ),
+                  ),
+                ],
+              );
+            })),
+          ),
         ),
       ),
     );
@@ -137,19 +155,23 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
 class RegisterCard extends StatelessWidget {
   final Map<String, dynamic> data;
   final String tenantId;
-  final String regisId;
+  final String registerId;
   final bool show;
-  final DateTime startDate;
-  final DateTime endDate;
+  final DateTime? startDate;
+  final DateTime? endDate;
+  final int noOfAttendees;
+  final List<AttendancePackageRegisterModel> registers;
 
   const RegisterCard({
     super.key,
     required this.data,
     required this.tenantId,
-    required this.regisId,
+    required this.registerId,
     this.show = false,
-    required this.startDate,
-    required this.endDate,
+    this.startDate,
+    this.endDate,
+    this.noOfAttendees = 0,
+    required this.registers,
   });
 
   @override
@@ -165,21 +187,34 @@ class RegisterCard extends StatelessWidget {
           show
               ? DigitElevatedButton(
                   child: Text(
-                    ((s.isAfter(startDate) || s.isAtSameMomentAs(startDate)) &&
-                            (s.isBefore(endDate) ||
-                                s.isAtSameMomentAs(endDate)))
+                    ((s.isAfter(startDate!) ||
+                                s.isAtSameMomentAs(startDate!)) &&
+                            (s.isBefore(endDate!) ||
+                                s.isAtSameMomentAs(endDate!)))
                         ? 'Mark Attendance'
                         : 'View Attendance',
                   ),
-                  onPressed: () {
-                    DigitToast.show(
-                      context,
-                      options: DigitToastOptions(
-                        'No Attendee registered for this register',
-                        true,
-                        DigitTheme.instance.mobileTheme,
+                  onPressed: () async {
+                    // if (noOfAttendees == 0) {
+                    //   DigitToast.show(
+                    //     context,
+                    //     options: DigitToastOptions(
+                    //       'No Attendee registered for this register',
+                    //       true,
+                    //       DigitTheme.instance.mobileTheme,
+                    //     ),
+                    //   );
+                    // } else {
+                    context.read<DateSessionBloc>().add(
+                        LoadSelectedRegisterData(
+                            registers: registers, registerID: registerId));
+                    await Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            const AttendanceDateSessionSelectionPage(),
                       ),
                     );
+                    // }
                   },
                 )
               : const SizedBox.shrink(),

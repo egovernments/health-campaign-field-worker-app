@@ -269,10 +269,10 @@ class DateFormats {
 class AttendanceDateTimeManagement {
   static int getMillisecondEpoch(
     DateTime k,
-    dynamic sessioncode,
+    dynamic sessionCode,
     String entryTime,
   ) {
-    if (sessioncode == "0") {
+    if (sessionCode == "0") {
       if (entryTime == "entryTime") {
         DateTime nineAM = DateTime(k.year, k.month, k.day, 9);
 

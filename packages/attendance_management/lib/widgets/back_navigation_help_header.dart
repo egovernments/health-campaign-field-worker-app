@@ -30,7 +30,9 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
           Expanded(
             child: Row(
               children: [
-                if (context.router.canPop() && showBackNavigation)
+                if (
+                    // context.router.canPop() &&
+                    showBackNavigation)
                   Flexible(
                     child: TextButton.icon(
                       style: TextButton.styleFrom(
@@ -38,7 +40,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
                         padding: EdgeInsets.zero,
                       ),
                       onPressed: () {
-                        context.router.pop();
+                        // context.router.pop();
                         handleBack != null ? handleBack!() : null;
                       },
                       icon: const Icon(Icons.arrow_left_sharp),
@@ -55,9 +57,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
                   Flexible(
                     child: TextButton.icon(
                       style: TextButton.styleFrom(padding: EdgeInsets.zero),
-                      onPressed: () {
-
-                      },
+                      onPressed: () {},
                       icon: const Icon(Icons.logout_outlined),
                       label: Text(
                         AttendanceAppLocalizations.of(context).translate(

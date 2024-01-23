@@ -22,6 +22,9 @@ mixin _$AttendanceEvents {
     required TResult Function() initial,
     required TResult Function(List<AttendancePackageRegisterModel> registers)
         loadAttendanceRegisters,
+    required TResult Function(
+            List<AttendancePackageRegisterModel> registers, String registerID)
+        loadSelectedRegister,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -30,6 +33,9 @@ mixin _$AttendanceEvents {
     TResult? Function()? initial,
     TResult? Function(List<AttendancePackageRegisterModel> registers)?
         loadAttendanceRegisters,
+    TResult? Function(
+            List<AttendancePackageRegisterModel> registers, String registerID)?
+        loadSelectedRegister,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -38,6 +44,9 @@ mixin _$AttendanceEvents {
     TResult Function()? initial,
     TResult Function(List<AttendancePackageRegisterModel> registers)?
         loadAttendanceRegisters,
+    TResult Function(
+            List<AttendancePackageRegisterModel> registers, String registerID)?
+        loadSelectedRegister,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -47,6 +56,8 @@ mixin _$AttendanceEvents {
     required TResult Function(InitialAttendance value) initial,
     required TResult Function(LoadAttendanceRegisterData value)
         loadAttendanceRegisters,
+    required TResult Function(LoadSelectedAttendanceRegisterData value)
+        loadSelectedRegister,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -55,6 +66,8 @@ mixin _$AttendanceEvents {
     TResult? Function(InitialAttendance value)? initial,
     TResult? Function(LoadAttendanceRegisterData value)?
         loadAttendanceRegisters,
+    TResult? Function(LoadSelectedAttendanceRegisterData value)?
+        loadSelectedRegister,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -62,6 +75,8 @@ mixin _$AttendanceEvents {
     TResult Function(LoadLocalization value)? loadLocalization,
     TResult Function(InitialAttendance value)? initial,
     TResult Function(LoadAttendanceRegisterData value)? loadAttendanceRegisters,
+    TResult Function(LoadSelectedAttendanceRegisterData value)?
+        loadSelectedRegister,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -158,6 +173,9 @@ class _$LoadLocalization implements LoadLocalization {
     required TResult Function() initial,
     required TResult Function(List<AttendancePackageRegisterModel> registers)
         loadAttendanceRegisters,
+    required TResult Function(
+            List<AttendancePackageRegisterModel> registers, String registerID)
+        loadSelectedRegister,
   }) {
     return loadLocalization(codes);
   }
@@ -169,6 +187,9 @@ class _$LoadLocalization implements LoadLocalization {
     TResult? Function()? initial,
     TResult? Function(List<AttendancePackageRegisterModel> registers)?
         loadAttendanceRegisters,
+    TResult? Function(
+            List<AttendancePackageRegisterModel> registers, String registerID)?
+        loadSelectedRegister,
   }) {
     return loadLocalization?.call(codes);
   }
@@ -180,6 +201,9 @@ class _$LoadLocalization implements LoadLocalization {
     TResult Function()? initial,
     TResult Function(List<AttendancePackageRegisterModel> registers)?
         loadAttendanceRegisters,
+    TResult Function(
+            List<AttendancePackageRegisterModel> registers, String registerID)?
+        loadSelectedRegister,
     required TResult orElse(),
   }) {
     if (loadLocalization != null) {
@@ -195,6 +219,8 @@ class _$LoadLocalization implements LoadLocalization {
     required TResult Function(InitialAttendance value) initial,
     required TResult Function(LoadAttendanceRegisterData value)
         loadAttendanceRegisters,
+    required TResult Function(LoadSelectedAttendanceRegisterData value)
+        loadSelectedRegister,
   }) {
     return loadLocalization(this);
   }
@@ -206,6 +232,8 @@ class _$LoadLocalization implements LoadLocalization {
     TResult? Function(InitialAttendance value)? initial,
     TResult? Function(LoadAttendanceRegisterData value)?
         loadAttendanceRegisters,
+    TResult? Function(LoadSelectedAttendanceRegisterData value)?
+        loadSelectedRegister,
   }) {
     return loadLocalization?.call(this);
   }
@@ -216,6 +244,8 @@ class _$LoadLocalization implements LoadLocalization {
     TResult Function(LoadLocalization value)? loadLocalization,
     TResult Function(InitialAttendance value)? initial,
     TResult Function(LoadAttendanceRegisterData value)? loadAttendanceRegisters,
+    TResult Function(LoadSelectedAttendanceRegisterData value)?
+        loadSelectedRegister,
     required TResult orElse(),
   }) {
     if (loadLocalization != null) {
@@ -277,6 +307,9 @@ class _$InitialAttendance implements InitialAttendance {
     required TResult Function() initial,
     required TResult Function(List<AttendancePackageRegisterModel> registers)
         loadAttendanceRegisters,
+    required TResult Function(
+            List<AttendancePackageRegisterModel> registers, String registerID)
+        loadSelectedRegister,
   }) {
     return initial();
   }
@@ -288,6 +321,9 @@ class _$InitialAttendance implements InitialAttendance {
     TResult? Function()? initial,
     TResult? Function(List<AttendancePackageRegisterModel> registers)?
         loadAttendanceRegisters,
+    TResult? Function(
+            List<AttendancePackageRegisterModel> registers, String registerID)?
+        loadSelectedRegister,
   }) {
     return initial?.call();
   }
@@ -299,6 +335,9 @@ class _$InitialAttendance implements InitialAttendance {
     TResult Function()? initial,
     TResult Function(List<AttendancePackageRegisterModel> registers)?
         loadAttendanceRegisters,
+    TResult Function(
+            List<AttendancePackageRegisterModel> registers, String registerID)?
+        loadSelectedRegister,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -314,6 +353,8 @@ class _$InitialAttendance implements InitialAttendance {
     required TResult Function(InitialAttendance value) initial,
     required TResult Function(LoadAttendanceRegisterData value)
         loadAttendanceRegisters,
+    required TResult Function(LoadSelectedAttendanceRegisterData value)
+        loadSelectedRegister,
   }) {
     return initial(this);
   }
@@ -325,6 +366,8 @@ class _$InitialAttendance implements InitialAttendance {
     TResult? Function(InitialAttendance value)? initial,
     TResult? Function(LoadAttendanceRegisterData value)?
         loadAttendanceRegisters,
+    TResult? Function(LoadSelectedAttendanceRegisterData value)?
+        loadSelectedRegister,
   }) {
     return initial?.call(this);
   }
@@ -335,6 +378,8 @@ class _$InitialAttendance implements InitialAttendance {
     TResult Function(LoadLocalization value)? loadLocalization,
     TResult Function(InitialAttendance value)? initial,
     TResult Function(LoadAttendanceRegisterData value)? loadAttendanceRegisters,
+    TResult Function(LoadSelectedAttendanceRegisterData value)?
+        loadSelectedRegister,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -427,6 +472,9 @@ class _$LoadAttendanceRegisterData implements LoadAttendanceRegisterData {
     required TResult Function() initial,
     required TResult Function(List<AttendancePackageRegisterModel> registers)
         loadAttendanceRegisters,
+    required TResult Function(
+            List<AttendancePackageRegisterModel> registers, String registerID)
+        loadSelectedRegister,
   }) {
     return loadAttendanceRegisters(registers);
   }
@@ -438,6 +486,9 @@ class _$LoadAttendanceRegisterData implements LoadAttendanceRegisterData {
     TResult? Function()? initial,
     TResult? Function(List<AttendancePackageRegisterModel> registers)?
         loadAttendanceRegisters,
+    TResult? Function(
+            List<AttendancePackageRegisterModel> registers, String registerID)?
+        loadSelectedRegister,
   }) {
     return loadAttendanceRegisters?.call(registers);
   }
@@ -449,6 +500,9 @@ class _$LoadAttendanceRegisterData implements LoadAttendanceRegisterData {
     TResult Function()? initial,
     TResult Function(List<AttendancePackageRegisterModel> registers)?
         loadAttendanceRegisters,
+    TResult Function(
+            List<AttendancePackageRegisterModel> registers, String registerID)?
+        loadSelectedRegister,
     required TResult orElse(),
   }) {
     if (loadAttendanceRegisters != null) {
@@ -464,6 +518,8 @@ class _$LoadAttendanceRegisterData implements LoadAttendanceRegisterData {
     required TResult Function(InitialAttendance value) initial,
     required TResult Function(LoadAttendanceRegisterData value)
         loadAttendanceRegisters,
+    required TResult Function(LoadSelectedAttendanceRegisterData value)
+        loadSelectedRegister,
   }) {
     return loadAttendanceRegisters(this);
   }
@@ -475,6 +531,8 @@ class _$LoadAttendanceRegisterData implements LoadAttendanceRegisterData {
     TResult? Function(InitialAttendance value)? initial,
     TResult? Function(LoadAttendanceRegisterData value)?
         loadAttendanceRegisters,
+    TResult? Function(LoadSelectedAttendanceRegisterData value)?
+        loadSelectedRegister,
   }) {
     return loadAttendanceRegisters?.call(this);
   }
@@ -485,6 +543,8 @@ class _$LoadAttendanceRegisterData implements LoadAttendanceRegisterData {
     TResult Function(LoadLocalization value)? loadLocalization,
     TResult Function(InitialAttendance value)? initial,
     TResult Function(LoadAttendanceRegisterData value)? loadAttendanceRegisters,
+    TResult Function(LoadSelectedAttendanceRegisterData value)?
+        loadSelectedRegister,
     required TResult orElse(),
   }) {
     if (loadAttendanceRegisters != null) {
@@ -506,12 +566,203 @@ abstract class LoadAttendanceRegisterData implements AttendanceEvents {
 }
 
 /// @nodoc
+abstract class _$$LoadSelectedAttendanceRegisterDataCopyWith<$Res> {
+  factory _$$LoadSelectedAttendanceRegisterDataCopyWith(
+          _$LoadSelectedAttendanceRegisterData value,
+          $Res Function(_$LoadSelectedAttendanceRegisterData) then) =
+      __$$LoadSelectedAttendanceRegisterDataCopyWithImpl<$Res>;
+  @useResult
+  $Res call(
+      {List<AttendancePackageRegisterModel> registers, String registerID});
+}
+
+/// @nodoc
+class __$$LoadSelectedAttendanceRegisterDataCopyWithImpl<$Res>
+    extends _$AttendanceEventsCopyWithImpl<$Res,
+        _$LoadSelectedAttendanceRegisterData>
+    implements _$$LoadSelectedAttendanceRegisterDataCopyWith<$Res> {
+  __$$LoadSelectedAttendanceRegisterDataCopyWithImpl(
+      _$LoadSelectedAttendanceRegisterData _value,
+      $Res Function(_$LoadSelectedAttendanceRegisterData) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? registers = null,
+    Object? registerID = null,
+  }) {
+    return _then(_$LoadSelectedAttendanceRegisterData(
+      registers: null == registers
+          ? _value._registers
+          : registers // ignore: cast_nullable_to_non_nullable
+              as List<AttendancePackageRegisterModel>,
+      registerID: null == registerID
+          ? _value.registerID
+          : registerID // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$LoadSelectedAttendanceRegisterData
+    implements LoadSelectedAttendanceRegisterData {
+  const _$LoadSelectedAttendanceRegisterData(
+      {required final List<AttendancePackageRegisterModel> registers,
+      required this.registerID})
+      : _registers = registers;
+
+  final List<AttendancePackageRegisterModel> _registers;
+  @override
+  List<AttendancePackageRegisterModel> get registers {
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_registers);
+  }
+
+  @override
+  final String registerID;
+
+  @override
+  String toString() {
+    return 'AttendanceEvents.loadSelectedRegister(registers: $registers, registerID: $registerID)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$LoadSelectedAttendanceRegisterData &&
+            const DeepCollectionEquality()
+                .equals(other._registers, _registers) &&
+            (identical(other.registerID, registerID) ||
+                other.registerID == registerID));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType, const DeepCollectionEquality().hash(_registers), registerID);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$LoadSelectedAttendanceRegisterDataCopyWith<
+          _$LoadSelectedAttendanceRegisterData>
+      get copyWith => __$$LoadSelectedAttendanceRegisterDataCopyWithImpl<
+          _$LoadSelectedAttendanceRegisterData>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(List<dynamic> codes) loadLocalization,
+    required TResult Function() initial,
+    required TResult Function(List<AttendancePackageRegisterModel> registers)
+        loadAttendanceRegisters,
+    required TResult Function(
+            List<AttendancePackageRegisterModel> registers, String registerID)
+        loadSelectedRegister,
+  }) {
+    return loadSelectedRegister(registers, registerID);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(List<dynamic> codes)? loadLocalization,
+    TResult? Function()? initial,
+    TResult? Function(List<AttendancePackageRegisterModel> registers)?
+        loadAttendanceRegisters,
+    TResult? Function(
+            List<AttendancePackageRegisterModel> registers, String registerID)?
+        loadSelectedRegister,
+  }) {
+    return loadSelectedRegister?.call(registers, registerID);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(List<dynamic> codes)? loadLocalization,
+    TResult Function()? initial,
+    TResult Function(List<AttendancePackageRegisterModel> registers)?
+        loadAttendanceRegisters,
+    TResult Function(
+            List<AttendancePackageRegisterModel> registers, String registerID)?
+        loadSelectedRegister,
+    required TResult orElse(),
+  }) {
+    if (loadSelectedRegister != null) {
+      return loadSelectedRegister(registers, registerID);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(LoadLocalization value) loadLocalization,
+    required TResult Function(InitialAttendance value) initial,
+    required TResult Function(LoadAttendanceRegisterData value)
+        loadAttendanceRegisters,
+    required TResult Function(LoadSelectedAttendanceRegisterData value)
+        loadSelectedRegister,
+  }) {
+    return loadSelectedRegister(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(LoadLocalization value)? loadLocalization,
+    TResult? Function(InitialAttendance value)? initial,
+    TResult? Function(LoadAttendanceRegisterData value)?
+        loadAttendanceRegisters,
+    TResult? Function(LoadSelectedAttendanceRegisterData value)?
+        loadSelectedRegister,
+  }) {
+    return loadSelectedRegister?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(LoadLocalization value)? loadLocalization,
+    TResult Function(InitialAttendance value)? initial,
+    TResult Function(LoadAttendanceRegisterData value)? loadAttendanceRegisters,
+    TResult Function(LoadSelectedAttendanceRegisterData value)?
+        loadSelectedRegister,
+    required TResult orElse(),
+  }) {
+    if (loadSelectedRegister != null) {
+      return loadSelectedRegister(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class LoadSelectedAttendanceRegisterData implements AttendanceEvents {
+  const factory LoadSelectedAttendanceRegisterData(
+      {required final List<AttendancePackageRegisterModel> registers,
+      required final String registerID}) = _$LoadSelectedAttendanceRegisterData;
+
+  List<AttendancePackageRegisterModel> get registers;
+  String get registerID;
+  @JsonKey(ignore: true)
+  _$$LoadSelectedAttendanceRegisterDataCopyWith<
+          _$LoadSelectedAttendanceRegisterData>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
 mixin _$AttendanceStates {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() registerLoading,
     required TResult Function(List<AttendancePackageRegisterModel> registers)
         registerLoaded,
+    required TResult Function(AttendancePackageRegisterModel? selectedRegister)
+        selectedRegisterLoaded,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -519,6 +770,8 @@ mixin _$AttendanceStates {
     TResult? Function()? registerLoading,
     TResult? Function(List<AttendancePackageRegisterModel> registers)?
         registerLoaded,
+    TResult? Function(AttendancePackageRegisterModel? selectedRegister)?
+        selectedRegisterLoaded,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -526,6 +779,8 @@ mixin _$AttendanceStates {
     TResult Function()? registerLoading,
     TResult Function(List<AttendancePackageRegisterModel> registers)?
         registerLoaded,
+    TResult Function(AttendancePackageRegisterModel? selectedRegister)?
+        selectedRegisterLoaded,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -533,18 +788,22 @@ mixin _$AttendanceStates {
   TResult map<TResult extends Object?>({
     required TResult Function(RegisterLoading value) registerLoading,
     required TResult Function(RegisterLoaded value) registerLoaded,
+    required TResult Function(SelectedRegisterLoaded value)
+        selectedRegisterLoaded,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(RegisterLoading value)? registerLoading,
     TResult? Function(RegisterLoaded value)? registerLoaded,
+    TResult? Function(SelectedRegisterLoaded value)? selectedRegisterLoaded,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(RegisterLoading value)? registerLoading,
     TResult Function(RegisterLoaded value)? registerLoaded,
+    TResult Function(SelectedRegisterLoaded value)? selectedRegisterLoaded,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -609,6 +868,8 @@ class _$RegisterLoading implements RegisterLoading {
     required TResult Function() registerLoading,
     required TResult Function(List<AttendancePackageRegisterModel> registers)
         registerLoaded,
+    required TResult Function(AttendancePackageRegisterModel? selectedRegister)
+        selectedRegisterLoaded,
   }) {
     return registerLoading();
   }
@@ -619,6 +880,8 @@ class _$RegisterLoading implements RegisterLoading {
     TResult? Function()? registerLoading,
     TResult? Function(List<AttendancePackageRegisterModel> registers)?
         registerLoaded,
+    TResult? Function(AttendancePackageRegisterModel? selectedRegister)?
+        selectedRegisterLoaded,
   }) {
     return registerLoading?.call();
   }
@@ -629,6 +892,8 @@ class _$RegisterLoading implements RegisterLoading {
     TResult Function()? registerLoading,
     TResult Function(List<AttendancePackageRegisterModel> registers)?
         registerLoaded,
+    TResult Function(AttendancePackageRegisterModel? selectedRegister)?
+        selectedRegisterLoaded,
     required TResult orElse(),
   }) {
     if (registerLoading != null) {
@@ -642,6 +907,8 @@ class _$RegisterLoading implements RegisterLoading {
   TResult map<TResult extends Object?>({
     required TResult Function(RegisterLoading value) registerLoading,
     required TResult Function(RegisterLoaded value) registerLoaded,
+    required TResult Function(SelectedRegisterLoaded value)
+        selectedRegisterLoaded,
   }) {
     return registerLoading(this);
   }
@@ -651,6 +918,7 @@ class _$RegisterLoading implements RegisterLoading {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(RegisterLoading value)? registerLoading,
     TResult? Function(RegisterLoaded value)? registerLoaded,
+    TResult? Function(SelectedRegisterLoaded value)? selectedRegisterLoaded,
   }) {
     return registerLoading?.call(this);
   }
@@ -660,6 +928,7 @@ class _$RegisterLoading implements RegisterLoading {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(RegisterLoading value)? registerLoading,
     TResult Function(RegisterLoaded value)? registerLoaded,
+    TResult Function(SelectedRegisterLoaded value)? selectedRegisterLoaded,
     required TResult orElse(),
   }) {
     if (registerLoading != null) {
@@ -696,7 +965,7 @@ class __$$RegisterLoadedCopyWithImpl<$Res>
     Object? registers = null,
   }) {
     return _then(_$RegisterLoaded(
-      null == registers
+      registers: null == registers
           ? _value._registers
           : registers // ignore: cast_nullable_to_non_nullable
               as List<AttendancePackageRegisterModel>,
@@ -707,7 +976,8 @@ class __$$RegisterLoadedCopyWithImpl<$Res>
 /// @nodoc
 
 class _$RegisterLoaded implements RegisterLoaded {
-  const _$RegisterLoaded(final List<AttendancePackageRegisterModel> registers)
+  const _$RegisterLoaded(
+      {required final List<AttendancePackageRegisterModel> registers})
       : _registers = registers;
 
   final List<AttendancePackageRegisterModel> _registers;
@@ -747,6 +1017,8 @@ class _$RegisterLoaded implements RegisterLoaded {
     required TResult Function() registerLoading,
     required TResult Function(List<AttendancePackageRegisterModel> registers)
         registerLoaded,
+    required TResult Function(AttendancePackageRegisterModel? selectedRegister)
+        selectedRegisterLoaded,
   }) {
     return registerLoaded(registers);
   }
@@ -757,6 +1029,8 @@ class _$RegisterLoaded implements RegisterLoaded {
     TResult? Function()? registerLoading,
     TResult? Function(List<AttendancePackageRegisterModel> registers)?
         registerLoaded,
+    TResult? Function(AttendancePackageRegisterModel? selectedRegister)?
+        selectedRegisterLoaded,
   }) {
     return registerLoaded?.call(registers);
   }
@@ -767,6 +1041,8 @@ class _$RegisterLoaded implements RegisterLoaded {
     TResult Function()? registerLoading,
     TResult Function(List<AttendancePackageRegisterModel> registers)?
         registerLoaded,
+    TResult Function(AttendancePackageRegisterModel? selectedRegister)?
+        selectedRegisterLoaded,
     required TResult orElse(),
   }) {
     if (registerLoaded != null) {
@@ -780,6 +1056,8 @@ class _$RegisterLoaded implements RegisterLoaded {
   TResult map<TResult extends Object?>({
     required TResult Function(RegisterLoading value) registerLoading,
     required TResult Function(RegisterLoaded value) registerLoaded,
+    required TResult Function(SelectedRegisterLoaded value)
+        selectedRegisterLoaded,
   }) {
     return registerLoaded(this);
   }
@@ -789,6 +1067,7 @@ class _$RegisterLoaded implements RegisterLoaded {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(RegisterLoading value)? registerLoading,
     TResult? Function(RegisterLoaded value)? registerLoaded,
+    TResult? Function(SelectedRegisterLoaded value)? selectedRegisterLoaded,
   }) {
     return registerLoaded?.call(this);
   }
@@ -798,6 +1077,7 @@ class _$RegisterLoaded implements RegisterLoaded {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(RegisterLoading value)? registerLoading,
     TResult Function(RegisterLoaded value)? registerLoaded,
+    TResult Function(SelectedRegisterLoaded value)? selectedRegisterLoaded,
     required TResult orElse(),
   }) {
     if (registerLoaded != null) {
@@ -809,10 +1089,161 @@ class _$RegisterLoaded implements RegisterLoaded {
 
 abstract class RegisterLoaded implements AttendanceStates {
   const factory RegisterLoaded(
-      final List<AttendancePackageRegisterModel> registers) = _$RegisterLoaded;
+          {required final List<AttendancePackageRegisterModel> registers}) =
+      _$RegisterLoaded;
 
   List<AttendancePackageRegisterModel> get registers;
   @JsonKey(ignore: true)
   _$$RegisterLoadedCopyWith<_$RegisterLoaded> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$SelectedRegisterLoadedCopyWith<$Res> {
+  factory _$$SelectedRegisterLoadedCopyWith(_$SelectedRegisterLoaded value,
+          $Res Function(_$SelectedRegisterLoaded) then) =
+      __$$SelectedRegisterLoadedCopyWithImpl<$Res>;
+  @useResult
+  $Res call({AttendancePackageRegisterModel? selectedRegister});
+}
+
+/// @nodoc
+class __$$SelectedRegisterLoadedCopyWithImpl<$Res>
+    extends _$AttendanceStatesCopyWithImpl<$Res, _$SelectedRegisterLoaded>
+    implements _$$SelectedRegisterLoadedCopyWith<$Res> {
+  __$$SelectedRegisterLoadedCopyWithImpl(_$SelectedRegisterLoaded _value,
+      $Res Function(_$SelectedRegisterLoaded) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? selectedRegister = freezed,
+  }) {
+    return _then(_$SelectedRegisterLoaded(
+      selectedRegister: freezed == selectedRegister
+          ? _value.selectedRegister
+          : selectedRegister // ignore: cast_nullable_to_non_nullable
+              as AttendancePackageRegisterModel?,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$SelectedRegisterLoaded implements SelectedRegisterLoaded {
+  const _$SelectedRegisterLoaded({this.selectedRegister});
+
+  @override
+  final AttendancePackageRegisterModel? selectedRegister;
+
+  @override
+  String toString() {
+    return 'AttendanceStates.selectedRegisterLoaded(selectedRegister: $selectedRegister)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$SelectedRegisterLoaded &&
+            (identical(other.selectedRegister, selectedRegister) ||
+                other.selectedRegister == selectedRegister));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, selectedRegister);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$SelectedRegisterLoadedCopyWith<_$SelectedRegisterLoaded> get copyWith =>
+      __$$SelectedRegisterLoadedCopyWithImpl<_$SelectedRegisterLoaded>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() registerLoading,
+    required TResult Function(List<AttendancePackageRegisterModel> registers)
+        registerLoaded,
+    required TResult Function(AttendancePackageRegisterModel? selectedRegister)
+        selectedRegisterLoaded,
+  }) {
+    return selectedRegisterLoaded(selectedRegister);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? registerLoading,
+    TResult? Function(List<AttendancePackageRegisterModel> registers)?
+        registerLoaded,
+    TResult? Function(AttendancePackageRegisterModel? selectedRegister)?
+        selectedRegisterLoaded,
+  }) {
+    return selectedRegisterLoaded?.call(selectedRegister);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? registerLoading,
+    TResult Function(List<AttendancePackageRegisterModel> registers)?
+        registerLoaded,
+    TResult Function(AttendancePackageRegisterModel? selectedRegister)?
+        selectedRegisterLoaded,
+    required TResult orElse(),
+  }) {
+    if (selectedRegisterLoaded != null) {
+      return selectedRegisterLoaded(selectedRegister);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(RegisterLoading value) registerLoading,
+    required TResult Function(RegisterLoaded value) registerLoaded,
+    required TResult Function(SelectedRegisterLoaded value)
+        selectedRegisterLoaded,
+  }) {
+    return selectedRegisterLoaded(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(RegisterLoading value)? registerLoading,
+    TResult? Function(RegisterLoaded value)? registerLoaded,
+    TResult? Function(SelectedRegisterLoaded value)? selectedRegisterLoaded,
+  }) {
+    return selectedRegisterLoaded?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(RegisterLoading value)? registerLoading,
+    TResult Function(RegisterLoaded value)? registerLoaded,
+    TResult Function(SelectedRegisterLoaded value)? selectedRegisterLoaded,
+    required TResult orElse(),
+  }) {
+    if (selectedRegisterLoaded != null) {
+      return selectedRegisterLoaded(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class SelectedRegisterLoaded implements AttendanceStates {
+  const factory SelectedRegisterLoaded(
+          {final AttendancePackageRegisterModel? selectedRegister}) =
+      _$SelectedRegisterLoaded;
+
+  AttendancePackageRegisterModel? get selectedRegister;
+  @JsonKey(ignore: true)
+  _$$SelectedRegisterLoadedCopyWith<_$SelectedRegisterLoaded> get copyWith =>
       throw _privateConstructorUsedError;
 }
