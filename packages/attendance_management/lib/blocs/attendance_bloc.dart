@@ -20,7 +20,6 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
     Emitter<AttendanceStates> emit,
   ) async {
     AppLogger.instance.info('Attendance Locale codes: $event.codes');
-    AttendanceSingleton().loadLocalization(event.codes);
   }
 
   void _onInitial(
@@ -31,6 +30,9 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
     AttendanceSingleton().getAttendanceRegisters(
         (attendancePackageRegisterModel) =>
             add(LoadAttendanceRegisterData(attendancePackageRegisterModel)));
+    AttendanceSingleton().onHcmLocalizationChanged((codes) {
+      AppLogger.instance.info('Attendance Locale codes: $codes');
+    });
   }
 
   void _onLoadAttendanceRegisterData(
@@ -77,4 +79,7 @@ class AttendanceStates with _$AttendanceStates {
   const factory AttendanceStates.selectedRegisterLoaded({
     final AttendancePackageRegisterModel? selectedRegister,
   }) = SelectedRegisterLoaded;
+
+  const factory AttendanceStates.registerError(String message) = RegisterError;
+  const factory AttendanceStates.localizationLoaded() = LocalizationLoaded;
 }

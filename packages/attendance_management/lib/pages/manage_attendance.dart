@@ -3,6 +3,7 @@ import 'package:attendance_management/blocs/date_session_bloc.dart';
 import 'package:attendance_management/pages/session_select.dart';
 import 'package:digit_components/theme/colors.dart';
 import 'package:digit_components/theme/digit_theme.dart';
+import 'package:digit_components/utils/app_logger.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/digit_card.dart';
 import 'package:digit_components/widgets/digit_elevated_button.dart';
@@ -11,14 +12,17 @@ import 'package:digit_components/widgets/powered_by_digit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../widgets/localized.dart';
+import '../widgets/localized.dart';
 
 class ManageAttendancePage extends LocalizedStatefulWidget {
   final AttendanceListeners attendanceListeners;
+  final String projectId;
+  final String userId;
   const ManageAttendancePage({
     required this.attendanceListeners,
+    required this.projectId,
+    required this.userId,
     super.key,
-    super.appLocalizations,
   });
 
   @override
@@ -35,7 +39,13 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
 
   @override
   void initState() {
-    AttendanceSingleton().setAttendanceListeners(widget.attendanceListeners);
+    AttendanceSingleton().setAttendanceListeners(
+        attendanceListeners: widget.attendanceListeners,
+        projectId: widget.projectId,
+        userId: widget.userId);
+    AttendanceSingleton().onHcmLocalizationChanged((locales) {
+      AppLogger.instance.info('attendance locales: $locales');
+    });
     super.initState();
   }
 
@@ -131,6 +141,18 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
                       children: [
                         ...list,
                       ],
+                    ),
+                    registerLoading: () => const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                    registerError: (message) => Center(
+                      child: Card(
+                        child: SizedBox(
+                          height: 60,
+                          width: 200,
+                          child: Center(child: Text(message)),
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(

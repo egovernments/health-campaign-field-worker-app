@@ -1,3 +1,6 @@
+import 'package:attendance_management/blocs/app_localization.dart'
+    as attendance_localization;
+import 'package:attendance_management/data/localization.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +19,7 @@ import 'blocs/scanner/scanner.dart';
 import 'blocs/user/user.dart';
 import 'data/data_repository.dart';
 import 'data/local_store/app_shared_preferences.dart';
+import 'data/local_store/no_sql/schema/localization.dart';
 import 'data/local_store/sql_store/sql_store.dart';
 import 'data/network_manager.dart';
 import 'data/repositories/remote/localization.dart';
@@ -241,6 +245,7 @@ class MainApplicationState extends State<MainApplication>
                           final selectedLocale =
                               AppSharedPreferences().getSelectedLocale;
 
+
                           return MaterialApp.router(
                             debugShowCheckedModeBanner: false,
                             builder: (context, child) {
@@ -282,6 +287,12 @@ class MainApplicationState extends State<MainApplication>
                               GlobalWidgetsLocalizations.delegate,
                               GlobalCupertinoLocalizations.delegate,
                               GlobalMaterialLocalizations.delegate,
+                              attendance_localization.AttendanceLocalization
+                                  .getDelegate(
+                                getLocalizationString(
+                                    widget.isar, selectedLocale),
+                                appConfig.languages!,
+                              ),
                             ],
                             locale: languages != null
                                 ? Locale(
@@ -317,5 +328,24 @@ class MainApplicationState extends State<MainApplication>
         ),
       ),
     );
+  }
+
+  getLocalizationString(Isar isar, String selectedLocale) async {
+    List<dynamic> localizationValues = [];
+
+    final List<LocalizationWrapper> localizationList =
+        await isar.localizationWrappers
+            .filter()
+            .localeEqualTo(
+              selectedLocale.toString(),
+            )
+            .findAll();
+
+    print(localizationList);
+    if (localizationList.isNotEmpty) {
+      return localizationValues.addAll(localizationList.first.localization!);
+    }
+
+    return localizationValues;
   }
 }

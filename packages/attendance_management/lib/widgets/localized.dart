@@ -1,10 +1,10 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 import '../blocs/app_localization.dart';
 
 
 abstract class LocalizedStatefulWidget extends StatefulWidget {
-  final AttendanceAppLocalizations? appLocalizations;
+  final AttendanceLocalization? appLocalizations;
 
   const LocalizedStatefulWidget({
     super.key,
@@ -14,11 +14,11 @@ abstract class LocalizedStatefulWidget extends StatefulWidget {
 
 abstract class LocalizedState<T extends LocalizedStatefulWidget>
     extends State<T> {
-  late AttendanceAppLocalizations _localizations;
+  late AttendanceLocalization _localizations;
 
-  AttendanceAppLocalizations get localizations => _localizations;
+  AttendanceLocalization get localizations => _localizations;
 
-  set localizations(AttendanceAppLocalizations localizations) {
+  set localizations(AttendanceLocalization localizations) {
     if (mounted) {
       setState(() {
         _localizations = localizations;
@@ -29,7 +29,7 @@ abstract class LocalizedState<T extends LocalizedStatefulWidget>
   @override
   @mustCallSuper
   void didChangeDependencies() {
-    _localizations = widget.appLocalizations ?? AttendanceAppLocalizations.of(context);
+    _localizations = widget.appLocalizations ?? AttendanceLocalization.of(context);
     super.didChangeDependencies();
   }
 }

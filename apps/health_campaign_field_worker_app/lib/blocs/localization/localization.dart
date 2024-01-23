@@ -41,7 +41,6 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
 
       final List codes = event.locale.split('_');
       await _loadLocale(codes);
-      HCMAttendanceBloc().loadLocalization(codes);
     } catch (error) {
       rethrow;
     } finally {

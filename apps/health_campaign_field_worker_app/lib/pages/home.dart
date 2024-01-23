@@ -435,6 +435,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                       LocalRepository<HCMAttendanceRegisterModel,
                           HCMAttendanceSearchModel>>(),
                 ),
+                projectId: context.projectId,
+                userId: context.loggedInUserUuid,
               ),
             ),
           );
