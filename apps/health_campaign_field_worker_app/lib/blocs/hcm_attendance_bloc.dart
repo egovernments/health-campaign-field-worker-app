@@ -16,8 +16,6 @@ class HCMAttendanceBloc extends AttendanceListeners {
   late Function(List<AttendancePackageRegisterModel> registers)
       _registersLoaded;
 
-  late Function(List<dynamic> locales) _localeChanged;
-
   @override
   void getAttendanceRegisters(
     Function(List<AttendancePackageRegisterModel> registers)
@@ -37,11 +35,5 @@ class HCMAttendanceBloc extends AttendanceListeners {
     _registersLoaded(
       attendanceRegisters!,
     );
-  }
-
-  @override
-  void onHcmLocalizationChanged(
-      Function(List<dynamic> locales) localizedStrings,) {
-    _localeChanged = localizedStrings;
   }
 }

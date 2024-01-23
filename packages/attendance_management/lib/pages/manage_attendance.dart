@@ -44,9 +44,6 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
         attendanceListeners: widget.attendanceListeners,
         projectId: widget.projectId,
         userId: widget.userId);
-    AttendanceSingleton().onHcmLocalizationChanged((locales) {
-      AppLogger.instance.info('attendance locales: $locales');
-    });
     super.initState();
   }
 
