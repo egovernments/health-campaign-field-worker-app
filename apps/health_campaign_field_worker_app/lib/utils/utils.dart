@@ -7,6 +7,7 @@ import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/theme/digit_theme.dart';
+import 'package:digit_components/utils/app_logger.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_dialog.dart';
@@ -15,11 +16,13 @@ import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:isar/isar.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:uuid/uuid.dart';
 
 import '../blocs/search_households/project_beneficiaries_downsync.dart';
 import '../blocs/search_households/search_households.dart';
+import '../data/local_store/no_sql/schema/localization.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../models/data_model.dart';
 import '../models/project_type/project_type_model.dart';
@@ -655,4 +658,22 @@ dynamic getValueByKey(List<Map<String, dynamic>> data, String key) {
   }
 
   return null; // Key not found
+}
+
+getLocalizationString(Isar isar, String selectedLocale) async {
+  List<dynamic> localizationValues = [];
+
+  final List<LocalizationWrapper> localizationList =
+  await isar.localizationWrappers
+      .filter()
+      .localeEqualTo(
+    selectedLocale.toString(),
+  )
+      .findAll();
+  AppLogger.instance.info('localizationList: ${localizationList}');
+  if (localizationList.isNotEmpty) {
+    localizationValues.addAll(localizationList.first.localization!);
+  }
+
+  return localizationValues;
 }

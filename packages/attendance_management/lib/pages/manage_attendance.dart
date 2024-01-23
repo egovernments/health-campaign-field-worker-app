@@ -12,6 +12,7 @@ import 'package:digit_components/widgets/powered_by_digit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../utils/i18_key_constants.dart' as i18;
 import '../widgets/localized.dart';
 
 class ManageAttendancePage extends LocalizedStatefulWidget {
@@ -114,7 +115,8 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Text(
-                      "Manage Attendance",
+                      AttendanceLocalization.of(context)!
+                          .translate(i18.attendance.attendanceRegistarLabel)!,
                       style: DigitTheme
                           .instance.mobileTheme.textTheme.headlineLarge
                           ?.apply(color: const DigitColors().black),
@@ -213,8 +215,10 @@ class RegisterCard extends StatelessWidget {
                                 s.isAtSameMomentAs(startDate!)) &&
                             (s.isBefore(endDate!) ||
                                 s.isAtSameMomentAs(endDate!)))
-                        ? 'Mark Attendance'
-                        : 'View Attendance',
+                        ? AttendanceLocalization.of(context)!
+                            .translate(i18.attendance.markAttendance)!
+                        : AttendanceLocalization.of(context)!
+                            .translate(i18.attendance.viewAttendance)!,
                   ),
                   onPressed: () async {
                     // if (noOfAttendees == 0) {

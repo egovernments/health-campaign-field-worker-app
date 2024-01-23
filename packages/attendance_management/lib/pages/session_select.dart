@@ -7,6 +7,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/localized.dart';
+import '../blocs/app_localization.dart';
 import '../models/attendance_register.dart';
 import '../utils/date_util_attendance.dart';
 import '../widgets/back_navigation_help_header.dart';
@@ -52,7 +53,7 @@ class _AttendanceDateSessionSelectionPageState
 
   @override
   Widget build(BuildContext context) {
-    // final localizations = AttendanceAppLocalizations.of(context);
+    final localizations = AttendanceLocalization.of(context);
 
     return Scaffold(
         body: BlocProvider<DateSessionBloc>(
@@ -87,7 +88,9 @@ class _AttendanceDateSessionSelectionPageState
                             const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
                         child: DigitElevatedButton(
                           child: Text(
-                            i18.attendance.viewAttendance,
+                            localizations.translate(
+                              i18.attendance.viewAttendance,
+                            )
                           ),
                           onPressed: () {
                             if (form.control(_sessionRadio).value == null) {

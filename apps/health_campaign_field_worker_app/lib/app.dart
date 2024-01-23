@@ -329,22 +329,4 @@ class MainApplicationState extends State<MainApplication>
       ),
     );
   }
-
-  getLocalizationString(Isar isar, String selectedLocale) async {
-    List<dynamic> localizationValues = [];
-
-    final List<LocalizationWrapper> localizationList =
-        await isar.localizationWrappers
-            .filter()
-            .localeEqualTo(
-              selectedLocale.toString(),
-            )
-            .findAll();
-    AppLogger.instance.info('localizationList: ${localizationList[0]}');
-    if (localizationList.isNotEmpty) {
-      localizationValues.addAll(localizationList.first.localization!);
-    }
-
-    return localizationValues;
-  }
 }
