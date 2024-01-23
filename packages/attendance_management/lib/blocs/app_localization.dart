@@ -1,7 +1,6 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
-import '../data/localization.dart';
 import 'attendance_localization_delegate.dart';
 
 class AttendanceLocalization {

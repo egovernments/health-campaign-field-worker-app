@@ -6,8 +6,6 @@ abstract class AttendanceListeners {
               List<AttendancePackageRegisterModel>
                   attendancePackageRegisterModel)
           attendanceRegisters);
-
-  void onHcmLocalizationChanged(Function(List<dynamic> locales) localizedStrings);
 }
 
 class AttendanceSingleton {
@@ -22,8 +20,6 @@ class AttendanceSingleton {
   AttendanceListeners? _attendanceListeners;
   String _projectId = '';
   String _userId = '';
-
-  List<String> _localeCodes = [];
 
   void setAttendanceListeners(
       {required AttendanceListeners attendanceListeners,
@@ -43,9 +39,5 @@ class AttendanceSingleton {
                   attendancePackageRegisterModel)
           attendanceRegisters) {
     _attendanceListeners?.getAttendanceRegisters(attendanceRegisters);
-  }
-
-  void onHcmLocalizationChanged(Function(List<dynamic> locales) localizedStrings) {
-    _attendanceListeners?.onHcmLocalizationChanged(localizedStrings);
   }
 }

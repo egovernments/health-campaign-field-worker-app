@@ -11,15 +11,7 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
   AttendanceBloc(super.initialState) {
     on(_onInitial);
     on(_onLoadAttendanceRegisterData);
-    on(_onLoadLocalization);
     on(_onLoadSelectedRegisterData);
-  }
-
-  void _onLoadLocalization(
-    LoadLocalization event,
-    Emitter<AttendanceStates> emit,
-  ) async {
-    AppLogger.instance.info('Attendance Locale codes: $event.codes');
   }
 
   void _onInitial(
@@ -30,9 +22,6 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
     AttendanceSingleton().getAttendanceRegisters(
         (attendancePackageRegisterModel) =>
             add(LoadAttendanceRegisterData(attendancePackageRegisterModel)));
-    AttendanceSingleton().onHcmLocalizationChanged((codes) {
-      AppLogger.instance.info('Attendance Locale codes: $codes');
-    });
   }
 
   void _onLoadAttendanceRegisterData(
@@ -59,8 +48,6 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
 
 @freezed
 class AttendanceEvents with _$AttendanceEvents {
-  const factory AttendanceEvents.loadLocalization(List codes) =
-      LoadLocalization;
   const factory AttendanceEvents.initial() = InitialAttendance;
   const factory AttendanceEvents.loadAttendanceRegisters(
           List<AttendancePackageRegisterModel> registers) =
@@ -81,5 +68,4 @@ class AttendanceStates with _$AttendanceStates {
   }) = SelectedRegisterLoaded;
 
   const factory AttendanceStates.registerError(String message) = RegisterError;
-  const factory AttendanceStates.localizationLoaded() = LocalizationLoaded;
 }
