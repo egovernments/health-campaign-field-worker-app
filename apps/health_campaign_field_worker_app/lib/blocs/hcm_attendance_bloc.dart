@@ -36,4 +36,22 @@ class HCMAttendanceBloc extends AttendanceListeners {
       attendanceRegisters!,
     );
   }
+
+  @override
+  void searchAttendanceLog(SearchAttendanceLog individualAttendanceLogSearch) {
+    // TODO: implement searchAttendanceLog
+  }
+
+  @override
+  void markIndividualAttendance(MarkIndividualAttendance markIndividualAttendance) {
+    // TODO: implement markIndividualAttendance
+  }
+
+  @override
+  void submitAttendanceDetails(
+      SubmitAttendanceDetails submitAttendanceDetails,) {
+    // TODO: implement markIndividualAttendance
+    AppLogger.instance.info(submitAttendanceDetails.individualId);
+    submitAttendanceDetails.onMarked('Attendance Submitted');
+  }
 }

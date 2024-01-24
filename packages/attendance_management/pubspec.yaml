@@ -34,7 +34,6 @@ dependencies:
   flutter_focus_watcher: ^2.0.0
   dart_mappable: ^1.2.0
   drift: ^1.7.1
-  equatable: ^2.0.0
 
 dev_dependencies:
   flutter_test:
