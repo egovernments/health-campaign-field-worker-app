@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
+import '../widgets/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
 
 class ManageAttendancePage extends LocalizedStatefulWidget {
@@ -109,6 +110,10 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  const BackNavigationHelpHeaderWidget(
+                    showHelp: false,
+                    showLogoutCTA: false,
+                  ),
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Text(
