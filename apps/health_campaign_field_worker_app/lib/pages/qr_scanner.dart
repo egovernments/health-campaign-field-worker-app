@@ -95,9 +95,8 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                       left: kPadding,
                       child: SizedBox(
                         // [TODO: Localization need to be added]
-                        child: GestureDetector(
+                        child: InkWell(
                           onTap: () async {
-                            controller?.toggleFlash();
                             var status = await controller?.getFlashStatus();
                             if (status != null) {
                               setState(() {
@@ -549,16 +548,12 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
           }
         } else {
           if (bloc.state.qrcodes.contains(barcodes.first.displayValue)) {
-            Future.delayed(const Duration(seconds: 10));
             await handleError(
               i18.deliverIntervention.resourceAlreadyScanned,
             );
-            Future.delayed(const Duration(seconds: 3));
-
             return;
           } else {
             await storeCode(barcodes.first.displayValue.toString());
-            Future.delayed(const Duration(seconds: 3));
           }
         }
       }
@@ -600,9 +595,6 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
         ),
       );
     }
-    Future.delayed(
-      const Duration(seconds: 1),
-    );
   }
 
   Future storeCode(
@@ -625,6 +617,9 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
       bloc.state.barcodes,
       codes,
     ));
+    await Future.delayed(
+      const Duration(seconds: 5),
+    );
 
     return;
   }
@@ -636,7 +631,7 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
     final bloc = context.read<ScannerBloc>();
 
     player.play(AssetSource("audio/add.wav"));
-    Future.delayed(const Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 3));
 
     result = List.from(bloc.state.barcodes);
     result.removeDuplicates(
@@ -648,7 +643,7 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
     setState(() {
       result = result;
     });
-    Future.delayed(
+    await Future.delayed(
       const Duration(seconds: 5),
     );
 
