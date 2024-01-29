@@ -46,7 +46,7 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
   String? _text;
   var _cameraLensDirection = CameraLensDirection.back;
   AudioPlayer player = AudioPlayer();
-  QRViewController? controller;
+  QRViewController? controller; //[TODO: need to remove this since we are using Camera View]
   List<GS1Barcode> result = [];
   List<String> codes = [];
   bool manualcode = false;
@@ -101,10 +101,11 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                       top: kPadding * 2,
                       left: kPadding,
                       child: SizedBox(
-                        // [TODO: Localization need to be added]
+                        // [TODO: remove qrview controller and add flash manually]
                         child: InkWell(
                           onTap: () async {
                             var status = await controller?.getFlashStatus();
+                            AppLogger.instance.info('flash status $status');
                             if (status != null) {
                               setState(() {
                                 flashstatus = status;
