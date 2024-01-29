@@ -48,6 +48,7 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
   AudioPlayer player = AudioPlayer();
   CameraController? _cameraController;
   static List<CameraDescription> _cameras = [];
+  int _cameraIndex = -1;
   List<GS1Barcode> result = [];
   List<String> codes = [];
   bool manualcode = false;
@@ -726,16 +727,21 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
     return input.length > 20 ? '${input.substring(0, 20)}...' : input;
   }
 
-  void initializeCameras() {
+  void initializeCameras() async {
     if (_cameras.isEmpty) {
-      setState(() async {
-        _cameras = await availableCameras();
-      });
+      _cameras = await availableCameras();
     }
+    for (var i = 0; i < _cameras.length; i++) {
+      if (_cameras[i].lensDirection == _cameraLensDirection) {
+        setState(() {
+          _cameraIndex = i;
+        });
+        break;
+      }
+    }
+    var camera = _cameras[_cameraIndex];
     _cameraController = CameraController(
-      _cameras
-          .where((element) => element.lensDirection == _cameraLensDirection)
-          .first,
+      camera,
       // Set to ResolutionPreset.high. Do NOT set it to ResolutionPreset.max because for some phones does NOT work.
       ResolutionPreset.high,
       enableAudio: false,
