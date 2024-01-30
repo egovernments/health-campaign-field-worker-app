@@ -530,21 +530,21 @@ mixin _$DateSessionStates {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() dateSessionLoading,
-    required TResult Function(AttendancePackageRegisterModel? selectedRegister)
+    required TResult Function(AttendancePackageRegisterModel selectedRegister)
         dateSessionLoaded,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? dateSessionLoading,
-    TResult? Function(AttendancePackageRegisterModel? selectedRegister)?
+    TResult? Function(AttendancePackageRegisterModel selectedRegister)?
         dateSessionLoaded,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? dateSessionLoading,
-    TResult Function(AttendancePackageRegisterModel? selectedRegister)?
+    TResult Function(AttendancePackageRegisterModel selectedRegister)?
         dateSessionLoaded,
     required TResult orElse(),
   }) =>
@@ -627,7 +627,7 @@ class _$DateSessionLoading implements DateSessionLoading {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() dateSessionLoading,
-    required TResult Function(AttendancePackageRegisterModel? selectedRegister)
+    required TResult Function(AttendancePackageRegisterModel selectedRegister)
         dateSessionLoaded,
   }) {
     return dateSessionLoading();
@@ -637,7 +637,7 @@ class _$DateSessionLoading implements DateSessionLoading {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? dateSessionLoading,
-    TResult? Function(AttendancePackageRegisterModel? selectedRegister)?
+    TResult? Function(AttendancePackageRegisterModel selectedRegister)?
         dateSessionLoaded,
   }) {
     return dateSessionLoading?.call();
@@ -647,7 +647,7 @@ class _$DateSessionLoading implements DateSessionLoading {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? dateSessionLoading,
-    TResult Function(AttendancePackageRegisterModel? selectedRegister)?
+    TResult Function(AttendancePackageRegisterModel selectedRegister)?
         dateSessionLoaded,
     required TResult orElse(),
   }) {
@@ -699,7 +699,7 @@ abstract class _$$DateSessionLoadedCopyWith<$Res> {
           _$DateSessionLoaded value, $Res Function(_$DateSessionLoaded) then) =
       __$$DateSessionLoadedCopyWithImpl<$Res>;
   @useResult
-  $Res call({AttendancePackageRegisterModel? selectedRegister});
+  $Res call({AttendancePackageRegisterModel selectedRegister});
 }
 
 /// @nodoc
@@ -713,13 +713,13 @@ class __$$DateSessionLoadedCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? selectedRegister = freezed,
+    Object? selectedRegister = null,
   }) {
     return _then(_$DateSessionLoaded(
-      selectedRegister: freezed == selectedRegister
+      selectedRegister: null == selectedRegister
           ? _value.selectedRegister
           : selectedRegister // ignore: cast_nullable_to_non_nullable
-              as AttendancePackageRegisterModel?,
+              as AttendancePackageRegisterModel,
     ));
   }
 }
@@ -727,10 +727,10 @@ class __$$DateSessionLoadedCopyWithImpl<$Res>
 /// @nodoc
 
 class _$DateSessionLoaded implements DateSessionLoaded {
-  const _$DateSessionLoaded({this.selectedRegister});
+  const _$DateSessionLoaded({required this.selectedRegister});
 
   @override
-  final AttendancePackageRegisterModel? selectedRegister;
+  final AttendancePackageRegisterModel selectedRegister;
 
   @override
   String toString() {
@@ -759,7 +759,7 @@ class _$DateSessionLoaded implements DateSessionLoaded {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() dateSessionLoading,
-    required TResult Function(AttendancePackageRegisterModel? selectedRegister)
+    required TResult Function(AttendancePackageRegisterModel selectedRegister)
         dateSessionLoaded,
   }) {
     return dateSessionLoaded(selectedRegister);
@@ -769,7 +769,7 @@ class _$DateSessionLoaded implements DateSessionLoaded {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? dateSessionLoading,
-    TResult? Function(AttendancePackageRegisterModel? selectedRegister)?
+    TResult? Function(AttendancePackageRegisterModel selectedRegister)?
         dateSessionLoaded,
   }) {
     return dateSessionLoaded?.call(selectedRegister);
@@ -779,7 +779,7 @@ class _$DateSessionLoaded implements DateSessionLoaded {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? dateSessionLoading,
-    TResult Function(AttendancePackageRegisterModel? selectedRegister)?
+    TResult Function(AttendancePackageRegisterModel selectedRegister)?
         dateSessionLoaded,
     required TResult orElse(),
   }) {
@@ -823,10 +823,10 @@ class _$DateSessionLoaded implements DateSessionLoaded {
 
 abstract class DateSessionLoaded implements DateSessionStates {
   const factory DateSessionLoaded(
-          {final AttendancePackageRegisterModel? selectedRegister}) =
+          {required final AttendancePackageRegisterModel selectedRegister}) =
       _$DateSessionLoaded;
 
-  AttendancePackageRegisterModel? get selectedRegister;
+  AttendancePackageRegisterModel get selectedRegister;
   @JsonKey(ignore: true)
   _$$DateSessionLoadedCopyWith<_$DateSessionLoaded> get copyWith =>
       throw _privateConstructorUsedError;

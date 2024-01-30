@@ -45,6 +45,6 @@ class DateSessionEvents with _$DateSessionEvents {
 class DateSessionStates with _$DateSessionStates {
   const factory DateSessionStates.dateSessionLoading() = DateSessionLoading;
   const factory DateSessionStates.dateSessionLoaded({
-    final AttendancePackageRegisterModel? selectedRegister,
+    required final AttendancePackageRegisterModel selectedRegister,
   }) = DateSessionLoaded;
 }

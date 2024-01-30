@@ -1,0 +1,159 @@
+import 'package:dart_mappable/dart_mappable.dart';
+import 'package:dart_mappable/internals.dart';
+
+import 'attendance_log.dart';
+
+
+// === ALL STATICALLY REGISTERED MAPPERS ===
+
+var _mappers = <BaseMapper>{
+  // class mappers
+  AttendanceLogSearchModelMapper._(),
+  AttendanceLogModelMapper._(),
+  // enum mappers
+  // custom mappers
+};
+
+
+// === GENERATED CLASS MAPPERS AND EXTENSIONS ===
+
+class AttendanceLogSearchModelMapper extends BaseMapper<AttendanceLogSearchModel> {
+  AttendanceLogSearchModelMapper._();
+
+  @override Function get decoder => decode;
+  AttendanceLogSearchModel decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  AttendanceLogSearchModel fromMap(Map<String, dynamic> map) => AttendanceLogSearchModel.ignoreDeleted(id: Mapper.i.$getOpt(map, 'id'), registerId: Mapper.i.$getOpt(map, 'registerId'));
+
+  @override Function get encoder => (AttendanceLogSearchModel v) => encode(v);
+  dynamic encode(AttendanceLogSearchModel v) => toMap(v);
+  Map<String, dynamic> toMap(AttendanceLogSearchModel a) => {if (Mapper.i.$enc(a.id, 'id') != null) 'id': Mapper.i.$enc(a.id, 'id'), if (Mapper.i.$enc(a.registerId, 'registerId') != null) 'registerId': Mapper.i.$enc(a.registerId, 'registerId')};
+
+  @override String stringify(AttendanceLogSearchModel self) => 'AttendanceLogSearchModel(id: ${Mapper.asString(self.id)}, registerId: ${Mapper.asString(self.registerId)})';
+  @override int hash(AttendanceLogSearchModel self) => Mapper.hash(self.id) ^ Mapper.hash(self.registerId);
+  @override bool equals(AttendanceLogSearchModel self, AttendanceLogSearchModel other) => Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.registerId, other.registerId);
+
+  @override Function get typeFactory => (f) => f<AttendanceLogSearchModel>();
+}
+
+extension AttendanceLogSearchModelMapperExtension  on AttendanceLogSearchModel {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  AttendanceLogSearchModelCopyWith<AttendanceLogSearchModel> get copyWith => AttendanceLogSearchModelCopyWith(this, $identity);
+}
+
+abstract class AttendanceLogSearchModelCopyWith<$R> {
+  factory AttendanceLogSearchModelCopyWith(AttendanceLogSearchModel value, Then<AttendanceLogSearchModel, $R> then) = _AttendanceLogSearchModelCopyWithImpl<$R>;
+  $R call({String? id, String? registerId});
+  $R apply(AttendanceLogSearchModel Function(AttendanceLogSearchModel) transform);
+}
+
+class _AttendanceLogSearchModelCopyWithImpl<$R> extends BaseCopyWith<AttendanceLogSearchModel, $R> implements AttendanceLogSearchModelCopyWith<$R> {
+  _AttendanceLogSearchModelCopyWithImpl(AttendanceLogSearchModel value, Then<AttendanceLogSearchModel, $R> then) : super(value, then);
+
+  @override $R call({Object? id = $none, Object? registerId = $none}) => $then(AttendanceLogSearchModel.ignoreDeleted(id: or(id, $value.id), registerId: or(registerId, $value.registerId)));
+}
+
+class AttendanceLogModelMapper extends BaseMapper<AttendanceLogModel> {
+  AttendanceLogModelMapper._();
+
+  @override Function get decoder => decode;
+  AttendanceLogModel decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  AttendanceLogModel fromMap(Map<String, dynamic> map) => AttendanceLogModel(id: Mapper.i.$get(map, 'id'), tenantId: Mapper.i.$getOpt(map, 'tenantId'), registerId: Mapper.i.$getOpt(map, 'registerId'), individualId: Mapper.i.$getOpt(map, 'individualId'), nonRecoverableError: Mapper.i.$getOpt(map, 'nonRecoverableError') ?? false, rowVersion: Mapper.i.$getOpt(map, 'rowVersion'), status: Mapper.i.$getOpt(map, 'status') ?? -1);
+
+  @override Function get encoder => (AttendanceLogModel v) => encode(v);
+  dynamic encode(AttendanceLogModel v) => toMap(v);
+  Map<String, dynamic> toMap(AttendanceLogModel a) => {'id': Mapper.i.$enc(a.id, 'id'), if (Mapper.i.$enc(a.tenantId, 'tenantId') != null) 'tenantId': Mapper.i.$enc(a.tenantId, 'tenantId'), if (Mapper.i.$enc(a.registerId, 'registerId') != null) 'registerId': Mapper.i.$enc(a.registerId, 'registerId'), if (Mapper.i.$enc(a.individualId, 'individualId') != null) 'individualId': Mapper.i.$enc(a.individualId, 'individualId'), if (Mapper.i.$enc(a.nonRecoverableError, 'nonRecoverableError') != null) 'nonRecoverableError': Mapper.i.$enc(a.nonRecoverableError, 'nonRecoverableError'), if (Mapper.i.$enc(a.rowVersion, 'rowVersion') != null) 'rowVersion': Mapper.i.$enc(a.rowVersion, 'rowVersion'), if (Mapper.i.$enc(a.status, 'status') != null) 'status': Mapper.i.$enc(a.status, 'status')};
+
+  @override String stringify(AttendanceLogModel self) => 'AttendanceLogModel(id: ${Mapper.asString(self.id)}, tenantId: ${Mapper.asString(self.tenantId)}, registerId: ${Mapper.asString(self.registerId)}, individualId: ${Mapper.asString(self.individualId)}, nonRecoverableError: ${Mapper.asString(self.nonRecoverableError)}, rowVersion: ${Mapper.asString(self.rowVersion)}, status: ${Mapper.asString(self.status)})';
+  @override int hash(AttendanceLogModel self) => Mapper.hash(self.id) ^ Mapper.hash(self.tenantId) ^ Mapper.hash(self.registerId) ^ Mapper.hash(self.individualId) ^ Mapper.hash(self.nonRecoverableError) ^ Mapper.hash(self.rowVersion) ^ Mapper.hash(self.status);
+  @override bool equals(AttendanceLogModel self, AttendanceLogModel other) => Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.tenantId, other.tenantId) && Mapper.isEqual(self.registerId, other.registerId) && Mapper.isEqual(self.individualId, other.individualId) && Mapper.isEqual(self.nonRecoverableError, other.nonRecoverableError) && Mapper.isEqual(self.rowVersion, other.rowVersion) && Mapper.isEqual(self.status, other.status);
+
+  @override Function get typeFactory => (f) => f<AttendanceLogModel>();
+}
+
+extension AttendanceLogModelMapperExtension  on AttendanceLogModel {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  AttendanceLogModelCopyWith<AttendanceLogModel> get copyWith => AttendanceLogModelCopyWith(this, $identity);
+}
+
+abstract class AttendanceLogModelCopyWith<$R> {
+  factory AttendanceLogModelCopyWith(AttendanceLogModel value, Then<AttendanceLogModel, $R> then) = _AttendanceLogModelCopyWithImpl<$R>;
+  $R call({String? id, String? tenantId, String? registerId, String? individualId, bool? nonRecoverableError, int? rowVersion, int? status});
+  $R apply(AttendanceLogModel Function(AttendanceLogModel) transform);
+}
+
+class _AttendanceLogModelCopyWithImpl<$R> extends BaseCopyWith<AttendanceLogModel, $R> implements AttendanceLogModelCopyWith<$R> {
+  _AttendanceLogModelCopyWithImpl(AttendanceLogModel value, Then<AttendanceLogModel, $R> then) : super(value, then);
+
+  @override $R call({String? id, Object? tenantId = $none, Object? registerId = $none, Object? individualId = $none, Object? nonRecoverableError = $none, Object? rowVersion = $none, Object? status = $none}) => $then(AttendanceLogModel(id: id ?? $value.id, tenantId: or(tenantId, $value.tenantId), registerId: or(registerId, $value.registerId), individualId: or(individualId, $value.individualId), nonRecoverableError: or(nonRecoverableError, $value.nonRecoverableError), rowVersion: or(rowVersion, $value.rowVersion), status: or(status, $value.status)));
+}
+
+
+// === GENERATED ENUM MAPPERS AND EXTENSIONS ===
+
+
+
+
+// === GENERATED UTILITY CODE ===
+
+class Mapper {
+  Mapper._();
+
+  static MapperContainer i = MapperContainer(_mappers);
+
+  static T fromValue<T>(dynamic value) => i.fromValue<T>(value);
+  static T fromMap<T>(Map<String, dynamic> map) => i.fromMap<T>(map);
+  static T fromIterable<T>(Iterable<dynamic> iterable) => i.fromIterable<T>(iterable);
+  static T fromJson<T>(String json) => i.fromJson<T>(json);
+
+  static dynamic toValue(dynamic value) => i.toValue(value);
+  static Map<String, dynamic> toMap(dynamic object) => i.toMap(object);
+  static Iterable<dynamic> toIterable(dynamic object) => i.toIterable(object);
+  static String toJson(dynamic object) => i.toJson(object);
+
+  static bool isEqual(dynamic value, Object? other) => i.isEqual(value, other);
+  static int hash(dynamic value) => i.hash(value);
+  static String asString(dynamic value) => i.asString(value);
+
+  static void use<T>(BaseMapper<T> mapper) => i.use<T>(mapper);
+  static BaseMapper<T>? unuse<T>() => i.unuse<T>();
+  static void useAll(List<BaseMapper> mappers) => i.useAll(mappers);
+
+  static BaseMapper<T>? get<T>([Type? type]) => i.get<T>(type);
+  static List<BaseMapper> getAll() => i.getAll();
+}
+
+mixin Mappable implements MappableMixin {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+
+  @override
+  String toString() {
+    return _guard(() => Mapper.asString(this), super.toString);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            _guard(() => Mapper.isEqual(this, other), () => super == other));
+  }
+
+  @override
+  int get hashCode {
+    return _guard(() => Mapper.hash(this), () => super.hashCode);
+  }
+
+  T _guard<T>(T Function() fn, T Function() fallback) {
+    try {
+      return fn();
+    } on MapperException catch (e) {
+      if (e.isUnsupportedOrUnallowed()) {
+        return fallback();
+      } else {
+        rethrow;
+      }
+    }
+  }
+}

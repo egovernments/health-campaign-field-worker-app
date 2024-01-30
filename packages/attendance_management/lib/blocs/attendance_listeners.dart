@@ -12,7 +12,9 @@ abstract class AttendanceListeners {
   void markIndividualAttendance(
       MarkIndividualAttendance markIndividualAttendance);
 
-  void submitAttendanceDetails(SubmitAttendanceDetails submitAttendanceDetails);
+  void submitAttendanceDetails(
+    SubmitAttendanceDetails attendanceLogs,
+  );
 }
 
 class AttendanceSingleton {
@@ -52,9 +54,8 @@ class AttendanceSingleton {
     _attendanceListeners?.searchAttendanceLog(searchAttendanceLog);
   }
 
-  void submitAttendanceDetails(
-      SubmitAttendanceDetails submitAttendanceDetails) {
-    _attendanceListeners?.submitAttendanceDetails(submitAttendanceDetails);
+  void submitAttendanceDetails(SubmitAttendanceDetails attendanceLogs) {
+    _attendanceListeners?.submitAttendanceDetails(attendanceLogs);
   }
 
   void markIndividualAttendance(
@@ -69,8 +70,7 @@ class SearchAttendanceLog {
   final int entryTime;
   final int exitTime;
   final int currentDate;
-  final String projectId;
-  final List<String> attendeeId;
+  final List<AttendeeModel> attendees;
   final int offset;
   final int limit;
   final Function(dynamic individualSearchResponse) onLogLoaded;
@@ -81,8 +81,7 @@ class SearchAttendanceLog {
     required this.entryTime,
     required this.exitTime,
     required this.currentDate,
-    required this.projectId,
-    required this.attendeeId,
+    required this.attendees,
     required this.offset,
     required this.limit,
     required this.onLogLoaded,
@@ -110,17 +109,11 @@ class MarkIndividualAttendance {
 }
 
 class SubmitAttendanceDetails {
-  final String individualId;
-  final String registrarId;
-  final String status;
-  final String tableId;
-  final Function(String message) onMarked;
+  final List<AttendanceLogModel> attendanceLogs;
+  final Function(bool message) onMarked;
 
   SubmitAttendanceDetails({
-    required this.individualId,
-    required this.registrarId,
-    required this.status,
-    required this.tableId,
+    required this.attendanceLogs,
     required this.onMarked,
   });
 }

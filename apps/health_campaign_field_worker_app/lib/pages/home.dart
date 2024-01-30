@@ -434,6 +434,12 @@ class _HomePageState extends LocalizedState<HomePage> {
                   attendanceLocalRepository: context.read<
                       LocalRepository<HCMAttendanceRegisterModel,
                           HCMAttendanceSearchModel>>(),
+                  individualLocalRepository: context.read<
+                      LocalRepository<IndividualModel,
+                          IndividualSearchModel>>(),
+                  attendanceLogLocalRepository: context.read<
+                      LocalRepository<HCMAttendanceLogModel,
+                          HCMAttendanceLogSearchModel>>(),
                 ),
                 projectId: context.projectId,
                 userId: context.loggedInUserUuid,

@@ -17,6 +17,7 @@ export 'entities/facility.dart';
 export 'entities/gender.dart';
 export 'entities/h_f_referral.dart';
 export 'entities/hcm_attendance_model.dart';
+export 'entities/hcm_attendee_model.dart';
 export 'entities/household.dart';
 export 'entities/household_member.dart';
 export 'entities/identifier.dart';
@@ -179,4 +180,5 @@ enum DataModelType {
   downsyncCriteria,
   hFReferral,
   attendanceRegister,
+  attendance,
 }

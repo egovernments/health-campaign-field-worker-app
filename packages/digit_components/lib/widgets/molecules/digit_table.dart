@@ -88,7 +88,7 @@ class DigitTable extends StatelessWidget {
   }
 
   Widget _generateColumnRow(BuildContext context, int index, String input,
-      {TextStyle? style}) {
+      {Widget? buttonWidget, TextStyle? style}) {
     return Container(
       width: columnWidth,
       height: tableData[index].tableRow.first.label.length > 28
@@ -104,12 +104,14 @@ class DigitTable extends StatelessWidget {
       child: Row(
         children: <Widget>[
           Expanded(
-            child: Text(
-              (input),
-              style: style,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
+            child: input.isNotEmpty
+                ? Text(
+                    (input),
+                    style: style,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  )
+                : buttonWidget ?? const Text(''),
           )
         ],
       ),
@@ -121,8 +123,11 @@ class DigitTable extends StatelessWidget {
     var data = tableData[index];
     var list = <Widget>[];
     for (int i = 1; i < data.tableRow.length; i++) {
-      list.add(_generateColumnRow(context, index, data.tableRow[i].label,
-          style: data.tableRow[i].style));
+      list.add(
+        _generateColumnRow(context, index, data.tableRow[i].label,
+            buttonWidget: data.tableRow[i].widget,
+            style: data.tableRow[i].style),
+      );
     }
 
     return Container(

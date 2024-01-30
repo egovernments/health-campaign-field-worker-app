@@ -41,9 +41,11 @@ class HCMAttendanceSearchModel extends EntitySearchModel {
 class HCMAttendanceRegisterModel extends EntityModel {
   static const schemaName = 'AttendanceRegister';
   final AttendancePackageRegisterModel attendanceRegister;
+  final List<IndividualModel>? individualList;
 
   HCMAttendanceRegisterModel({
     required this.attendanceRegister,
+    this.individualList,
     super.auditDetails,
     super.clientAuditDetails,
     super.isDeleted = false,

@@ -14,14 +14,16 @@ import '../../../models/entities/transaction_reason.dart';
 import '../../../models/entities/transaction_type.dart';
 import '../../../models/pgr_complaints/pgr_complaints.dart';
 import 'tables/address.dart';
-import 'tables/attributes.dart';
+import 'tables/attendance_logs.dart';
 import 'tables/attendance_register.dart';
 import 'tables/attendee.dart';
+import 'tables/attributes.dart';
 import 'tables/boundary.dart';
 import 'tables/document.dart';
 import 'tables/downsync.dart';
 import 'tables/downsync_criteria.dart';
 import 'tables/facility.dart';
+import 'tables/h_f_referral.dart';
 import 'tables/household.dart';
 import 'tables/household_member.dart';
 import 'tables/identifier.dart';
@@ -37,26 +39,26 @@ import 'tables/project_facility.dart';
 import 'tables/project_product_variant.dart';
 import 'tables/project_resource.dart';
 import 'tables/project_staff.dart';
-import 'tables/staff.dart';
 import 'tables/project_type.dart';
 import 'tables/referral.dart';
 import 'tables/service.dart';
 import 'tables/service_attributes.dart';
 import 'tables/service_definition.dart';
 import 'tables/side_effect.dart';
+import 'tables/staff.dart';
 import 'tables/stock.dart';
 import 'tables/stock_reconciliation.dart';
 import 'tables/target.dart';
 import 'tables/task.dart';
 import 'tables/task_resource.dart';
 import 'tables/user.dart';
-import 'tables/h_f_referral.dart';
 
 part 'sql_store.g.dart';
 
 @DriftDatabase(tables: [
   Address,
   AttendanceRegister,
+  Attendance,
   Attendee,
   Name,
   Boundary,

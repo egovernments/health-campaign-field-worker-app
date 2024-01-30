@@ -1,6 +1,5 @@
 import 'package:attendance_management/blocs/app_localization.dart'
     as attendance_localization;
-import 'package:attendance_management/data/localization.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +18,6 @@ import 'blocs/scanner/scanner.dart';
 import 'blocs/user/user.dart';
 import 'data/data_repository.dart';
 import 'data/local_store/app_shared_preferences.dart';
-import 'data/local_store/no_sql/schema/localization.dart';
 import 'data/local_store/sql_store/sql_store.dart';
 import 'data/network_manager.dart';
 import 'data/repositories/remote/localization.dart';
@@ -237,6 +235,12 @@ class MainApplicationState extends State<MainApplication>
                             attendanceRemoteRepository: ctx.read<
                                 RemoteRepository<HCMAttendanceRegisterModel,
                                     HCMAttendanceSearchModel>>(),
+                            individualLocalRepository: ctx.read<
+                                LocalRepository<IndividualModel,
+                                    IndividualSearchModel>>(),
+                            individualRemoteRepository: ctx.read<
+                                RemoteRepository<IndividualModel,
+                                    IndividualSearchModel>>(),
                           ),
                         ),
                       ],
@@ -244,7 +248,6 @@ class MainApplicationState extends State<MainApplication>
                         builder: (context, langState) {
                           final selectedLocale =
                               AppSharedPreferences().getSelectedLocale;
-
 
                           return MaterialApp.router(
                             debugShowCheckedModeBanner: false,

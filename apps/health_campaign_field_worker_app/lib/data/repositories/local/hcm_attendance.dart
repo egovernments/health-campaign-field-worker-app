@@ -37,6 +37,10 @@ class AttendanceLocalRepository extends LocalRepository<
 
     final results = await (selectQuery
           ..where(buildAnd([
+            if (query.id != null)
+              sql.attendanceRegister.id.equals(
+                query.id!,
+              ),
             if (query.staffId != null)
               sql.staff.registerId.equalsExp(
                 sql.attendanceRegister.id,
@@ -138,6 +142,7 @@ class AttendanceLocalRepository extends LocalRepository<
         .map((e) => e.attendanceRegister.attendees?.map((a) {
               return AttendeeCompanion(
                 id: Value(a.id),
+                individualId: Value(a.individualId.toString()),
                 tenantId: Value(a.tenantId.toString()),
                 registerId: Value(a.registerId.toString()),
                 enrollmentDate: Value(a.enrollmentDate),

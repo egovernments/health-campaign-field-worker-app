@@ -47,6 +47,10 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       attendanceRemoteRepository;
   final LocalRepository<HCMAttendanceRegisterModel, HCMAttendanceSearchModel>
       attendanceLocalRepository;
+  final RemoteRepository<IndividualModel, IndividualSearchModel>
+      individualRemoteRepository;
+  final LocalRepository<IndividualModel, IndividualSearchModel>
+      individualLocalRepository;
 
   /// Project Facility Repositories
   final RemoteRepository<ProjectFacilityModel, ProjectFacilitySearchModel>
@@ -105,6 +109,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     required this.mdmsRepository,
     required this.attendanceLocalRepository,
     required this.attendanceRemoteRepository,
+    required this.individualLocalRepository,
+    required this.individualRemoteRepository,
   })  : localSecureStore = localSecureStore ?? LocalSecureStore.instance,
         super(const ProjectState()) {
     on(_handleProjectInit);
@@ -189,6 +195,29 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         final attendanceRegisters = await attendanceRemoteRepository
             .search(HCMAttendanceSearchModel(staffId: projectStaff.userId));
         await attendanceLocalRepository.bulkCreate(attendanceRegisters);
+
+        for (final register in attendanceRegisters) {
+          if (register.attendanceRegister.attendees != null &&
+              (register.attendanceRegister.attendees ?? []).isNotEmpty) {
+            try {
+              final individuals = await individualRemoteRepository.search(
+                IndividualSearchModel(
+                  id: register.attendanceRegister.attendees!
+                      .map((e) => e.individualId!)
+                      .toList(),
+                ),
+              );
+              await individualLocalRepository.bulkCreate(individuals);
+            } catch (_) {
+              emit(state.copyWith(
+                loading: false,
+                syncError: ProjectSyncErrorType.project,
+              ));
+
+              return;
+            }
+          }
+        }
         staffProjects = await projectRemoteRepository.search(
           ProjectSearchModel(
             id: projectStaff.projectId,

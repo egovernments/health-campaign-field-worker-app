@@ -1,11 +1,14 @@
 import 'package:drift/drift.dart';
 
-class Attendee extends Table {
+class Attendance extends Table {
   TextColumn get id => text().nullable()();
+  TextColumn get clientReferenceId => text().nullable()();
   TextColumn get tenantId => text()();
   TextColumn get registerId => text()();
   TextColumn get individualId => text()();
+  IntColumn get time => integer().nullable()();
   IntColumn get status => integer().nullable()();
+  TextColumn get type => text().nullable()();
   BoolColumn get nonRecoverableError =>
       boolean().nullable().withDefault(const Constant(false))();
   IntColumn get auditCreatedTime => integer().nullable()();
@@ -16,15 +19,15 @@ class Attendee extends Table {
   TextColumn get auditCreatedBy => text().nullable()();
   TextColumn get auditModifiedBy => text().nullable()();
   IntColumn get auditModifiedTime => integer().nullable()();
-  IntColumn get enrollmentDate => integer().nullable()();
-  IntColumn get denrollmentDate => integer().nullable()();
   BoolColumn get isDeleted =>
       boolean().nullable().withDefault(const Constant(false))();
   IntColumn get rowVersion => integer().nullable()();
-  TextColumn get additionalFields => text().nullable()();
   @override
   Set<Column> get primaryKey => {
-        id,
+        clientReferenceId,
         registerId,
+        individualId,
+        tenantId,
+        type,
       };
 }
