@@ -172,7 +172,7 @@ class HCMAttendanceBloc extends AttendanceListeners {
 
   @override
   void callSyncMethod() {
-    print('calling sync');
+  SyncRefreshEvent(userId.toString());
     //[TODO: trigger sync event in sync bloc]
   }
 }
