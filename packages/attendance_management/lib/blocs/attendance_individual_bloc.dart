@@ -37,13 +37,13 @@ class AttendanceIndividualBloc
     emit(const AttendanceIndividualState.loading());
 
     try {
-      AttendanceSingleton().searchAttendanceLog(
-          SearchAttendanceLog(
+      AttendanceSingleton().searchAttendanceLog(SearchAttendanceLog(
           registerId: event.registerId,
-              tenantId: event.tenantId,
-              entryTime: event.entryTime,
-              exitTime: event.exitTime,
-              currentDate: event.currentDate, onLogLoaded: onLogLoaded));
+          tenantId: event.tenantId,
+          entryTime: event.entryTime,
+          exitTime: event.exitTime,
+          currentDate: event.currentDate,
+          onLogLoaded: (logResponse) => print(logResponse)));
       emit(AttendanceIndividualState.loaded(
         attendanceCollectionModel: event.attendees,
       ));
