@@ -17,6 +17,8 @@ abstract class AttendanceListeners {
   void submitAttendanceDetails(
     SubmitAttendanceDetails attendanceLogs,
   );
+
+  void callSyncMethod();
 }
 
 class AttendanceSingleton {
@@ -63,6 +65,10 @@ class AttendanceSingleton {
   void markIndividualAttendance(
       MarkIndividualAttendance markIndividualAttendance) {
     _attendanceListeners?.markIndividualAttendance(markIndividualAttendance);
+  }
+
+  void callSync() {
+    _attendanceListeners?.callSyncMethod();
   }
 }
 

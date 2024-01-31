@@ -6,6 +6,7 @@ import 'package:collection/collection.dart';
 import '../data/data_repository.dart';
 import '../models/data_model.dart';
 import '../utils/utils.dart';
+import 'sync/sync.dart';
 
 class HCMAttendanceBloc extends AttendanceListeners {
   final LocalRepository<HCMAttendanceRegisterModel, HCMAttendanceSearchModel>?
@@ -167,5 +168,11 @@ class HCMAttendanceBloc extends AttendanceListeners {
             (log.value.first.time != log.value.last.time),
       );
     }
+  }
+
+  @override
+  void callSyncMethod() {
+    print('calling sync');
+    //[TODO: trigger sync event in sync bloc]
   }
 }
