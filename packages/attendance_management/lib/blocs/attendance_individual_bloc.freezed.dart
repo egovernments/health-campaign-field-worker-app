@@ -16,8 +16,6 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$AttendanceIndividualEvent {
-  int get entryTime => throw _privateConstructorUsedError;
-  int get exitTime => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
@@ -35,6 +33,7 @@ mixin _$AttendanceIndividualEvent {
         individualAttendanceMark,
     required TResult Function(int entryTime, int exitTime, bool? createOplog)
         saveAsDraft,
+    required TResult Function(String name) searchAttendees,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -54,6 +53,7 @@ mixin _$AttendanceIndividualEvent {
         individualAttendanceMark,
     TResult? Function(int entryTime, int exitTime, bool? createOplog)?
         saveAsDraft,
+    TResult? Function(String name)? searchAttendees,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -73,6 +73,7 @@ mixin _$AttendanceIndividualEvent {
         individualAttendanceMark,
     TResult Function(int entryTime, int exitTime, bool? createOplog)?
         saveAsDraft,
+    TResult Function(String name)? searchAttendees,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -83,6 +84,7 @@ mixin _$AttendanceIndividualEvent {
     required TResult Function(AttendanceMarkEvent value)
         individualAttendanceMark,
     required TResult Function(SaveAsDraftEvent value) saveAsDraft,
+    required TResult Function(SearchAttendeesEvent value) searchAttendees,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -91,6 +93,7 @@ mixin _$AttendanceIndividualEvent {
         individualAttendanceLogSearch,
     TResult? Function(AttendanceMarkEvent value)? individualAttendanceMark,
     TResult? Function(SaveAsDraftEvent value)? saveAsDraft,
+    TResult? Function(SearchAttendeesEvent value)? searchAttendees,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -99,12 +102,9 @@ mixin _$AttendanceIndividualEvent {
         individualAttendanceLogSearch,
     TResult Function(AttendanceMarkEvent value)? individualAttendanceMark,
     TResult Function(SaveAsDraftEvent value)? saveAsDraft,
+    TResult Function(SearchAttendeesEvent value)? searchAttendees,
     required TResult orElse(),
   }) =>
-      throw _privateConstructorUsedError;
-
-  @JsonKey(ignore: true)
-  $AttendanceIndividualEventCopyWith<AttendanceIndividualEvent> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -113,8 +113,6 @@ abstract class $AttendanceIndividualEventCopyWith<$Res> {
   factory $AttendanceIndividualEventCopyWith(AttendanceIndividualEvent value,
           $Res Function(AttendanceIndividualEvent) then) =
       _$AttendanceIndividualEventCopyWithImpl<$Res, AttendanceIndividualEvent>;
-  @useResult
-  $Res call({int entryTime, int exitTime});
 }
 
 /// @nodoc
@@ -127,34 +125,14 @@ class _$AttendanceIndividualEventCopyWithImpl<$Res,
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? entryTime = null,
-    Object? exitTime = null,
-  }) {
-    return _then(_value.copyWith(
-      entryTime: null == entryTime
-          ? _value.entryTime
-          : entryTime // ignore: cast_nullable_to_non_nullable
-              as int,
-      exitTime: null == exitTime
-          ? _value.exitTime
-          : exitTime // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
-  }
 }
 
 /// @nodoc
-abstract class _$$AttendanceIndividualLogSearchEventCopyWith<$Res>
-    implements $AttendanceIndividualEventCopyWith<$Res> {
+abstract class _$$AttendanceIndividualLogSearchEventCopyWith<$Res> {
   factory _$$AttendanceIndividualLogSearchEventCopyWith(
           _$AttendanceIndividualLogSearchEvent value,
           $Res Function(_$AttendanceIndividualLogSearchEvent) then) =
       __$$AttendanceIndividualLogSearchEventCopyWithImpl<$Res>;
-  @override
   @useResult
   $Res call(
       {String registerId,
@@ -327,6 +305,7 @@ class _$AttendanceIndividualLogSearchEvent
         individualAttendanceMark,
     required TResult Function(int entryTime, int exitTime, bool? createOplog)
         saveAsDraft,
+    required TResult Function(String name) searchAttendees,
   }) {
     return individualAttendanceLogSearch(registerId, tenantId, entryTime,
         exitTime, currentDate, attendees, offset, limit);
@@ -350,6 +329,7 @@ class _$AttendanceIndividualLogSearchEvent
         individualAttendanceMark,
     TResult? Function(int entryTime, int exitTime, bool? createOplog)?
         saveAsDraft,
+    TResult? Function(String name)? searchAttendees,
   }) {
     return individualAttendanceLogSearch?.call(registerId, tenantId, entryTime,
         exitTime, currentDate, attendees, offset, limit);
@@ -373,6 +353,7 @@ class _$AttendanceIndividualLogSearchEvent
         individualAttendanceMark,
     TResult Function(int entryTime, int exitTime, bool? createOplog)?
         saveAsDraft,
+    TResult Function(String name)? searchAttendees,
     required TResult orElse(),
   }) {
     if (individualAttendanceLogSearch != null) {
@@ -390,6 +371,7 @@ class _$AttendanceIndividualLogSearchEvent
     required TResult Function(AttendanceMarkEvent value)
         individualAttendanceMark,
     required TResult Function(SaveAsDraftEvent value) saveAsDraft,
+    required TResult Function(SearchAttendeesEvent value) searchAttendees,
   }) {
     return individualAttendanceLogSearch(this);
   }
@@ -401,6 +383,7 @@ class _$AttendanceIndividualLogSearchEvent
         individualAttendanceLogSearch,
     TResult? Function(AttendanceMarkEvent value)? individualAttendanceMark,
     TResult? Function(SaveAsDraftEvent value)? saveAsDraft,
+    TResult? Function(SearchAttendeesEvent value)? searchAttendees,
   }) {
     return individualAttendanceLogSearch?.call(this);
   }
@@ -412,6 +395,7 @@ class _$AttendanceIndividualLogSearchEvent
         individualAttendanceLogSearch,
     TResult Function(AttendanceMarkEvent value)? individualAttendanceMark,
     TResult Function(SaveAsDraftEvent value)? saveAsDraft,
+    TResult Function(SearchAttendeesEvent value)? searchAttendees,
     required TResult orElse(),
   }) {
     if (individualAttendanceLogSearch != null) {
@@ -435,15 +419,12 @@ abstract class AttendanceIndividualLogSearchEvent
 
   String get registerId;
   String get tenantId;
-  @override
   int get entryTime;
-  @override
   int get exitTime;
   int get currentDate;
   List<AttendeeModel> get attendees;
   int get offset;
   int get limit;
-  @override
   @JsonKey(ignore: true)
   _$$AttendanceIndividualLogSearchEventCopyWith<
           _$AttendanceIndividualLogSearchEvent>
@@ -451,12 +432,10 @@ abstract class AttendanceIndividualLogSearchEvent
 }
 
 /// @nodoc
-abstract class _$$AttendanceMarkEventCopyWith<$Res>
-    implements $AttendanceIndividualEventCopyWith<$Res> {
+abstract class _$$AttendanceMarkEventCopyWith<$Res> {
   factory _$$AttendanceMarkEventCopyWith(_$AttendanceMarkEvent value,
           $Res Function(_$AttendanceMarkEvent) then) =
       __$$AttendanceMarkEventCopyWithImpl<$Res>;
-  @override
   @useResult
   $Res call(
       {int entryTime,
@@ -579,6 +558,7 @@ class _$AttendanceMarkEvent implements AttendanceMarkEvent {
         individualAttendanceMark,
     required TResult Function(int entryTime, int exitTime, bool? createOplog)
         saveAsDraft,
+    required TResult Function(String name) searchAttendees,
   }) {
     return individualAttendanceMark(
         entryTime, exitTime, status, individualId, registerId);
@@ -602,6 +582,7 @@ class _$AttendanceMarkEvent implements AttendanceMarkEvent {
         individualAttendanceMark,
     TResult? Function(int entryTime, int exitTime, bool? createOplog)?
         saveAsDraft,
+    TResult? Function(String name)? searchAttendees,
   }) {
     return individualAttendanceMark?.call(
         entryTime, exitTime, status, individualId, registerId);
@@ -625,6 +606,7 @@ class _$AttendanceMarkEvent implements AttendanceMarkEvent {
         individualAttendanceMark,
     TResult Function(int entryTime, int exitTime, bool? createOplog)?
         saveAsDraft,
+    TResult Function(String name)? searchAttendees,
     required TResult orElse(),
   }) {
     if (individualAttendanceMark != null) {
@@ -642,6 +624,7 @@ class _$AttendanceMarkEvent implements AttendanceMarkEvent {
     required TResult Function(AttendanceMarkEvent value)
         individualAttendanceMark,
     required TResult Function(SaveAsDraftEvent value) saveAsDraft,
+    required TResult Function(SearchAttendeesEvent value) searchAttendees,
   }) {
     return individualAttendanceMark(this);
   }
@@ -653,6 +636,7 @@ class _$AttendanceMarkEvent implements AttendanceMarkEvent {
         individualAttendanceLogSearch,
     TResult? Function(AttendanceMarkEvent value)? individualAttendanceMark,
     TResult? Function(SaveAsDraftEvent value)? saveAsDraft,
+    TResult? Function(SearchAttendeesEvent value)? searchAttendees,
   }) {
     return individualAttendanceMark?.call(this);
   }
@@ -664,6 +648,7 @@ class _$AttendanceMarkEvent implements AttendanceMarkEvent {
         individualAttendanceLogSearch,
     TResult Function(AttendanceMarkEvent value)? individualAttendanceMark,
     TResult Function(SaveAsDraftEvent value)? saveAsDraft,
+    TResult Function(SearchAttendeesEvent value)? searchAttendees,
     required TResult orElse(),
   }) {
     if (individualAttendanceMark != null) {
@@ -681,26 +666,21 @@ abstract class AttendanceMarkEvent implements AttendanceIndividualEvent {
       required final String individualId,
       required final String registerId}) = _$AttendanceMarkEvent;
 
-  @override
   int get entryTime;
-  @override
   int get exitTime;
   dynamic get status;
   String get individualId;
   String get registerId;
-  @override
   @JsonKey(ignore: true)
   _$$AttendanceMarkEventCopyWith<_$AttendanceMarkEvent> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$SaveAsDraftEventCopyWith<$Res>
-    implements $AttendanceIndividualEventCopyWith<$Res> {
+abstract class _$$SaveAsDraftEventCopyWith<$Res> {
   factory _$$SaveAsDraftEventCopyWith(
           _$SaveAsDraftEvent value, $Res Function(_$SaveAsDraftEvent) then) =
       __$$SaveAsDraftEventCopyWithImpl<$Res>;
-  @override
   @useResult
   $Res call({int entryTime, int exitTime, bool? createOplog});
 }
@@ -799,6 +779,7 @@ class _$SaveAsDraftEvent implements SaveAsDraftEvent {
         individualAttendanceMark,
     required TResult Function(int entryTime, int exitTime, bool? createOplog)
         saveAsDraft,
+    required TResult Function(String name) searchAttendees,
   }) {
     return saveAsDraft(entryTime, exitTime, createOplog);
   }
@@ -821,6 +802,7 @@ class _$SaveAsDraftEvent implements SaveAsDraftEvent {
         individualAttendanceMark,
     TResult? Function(int entryTime, int exitTime, bool? createOplog)?
         saveAsDraft,
+    TResult? Function(String name)? searchAttendees,
   }) {
     return saveAsDraft?.call(entryTime, exitTime, createOplog);
   }
@@ -843,6 +825,7 @@ class _$SaveAsDraftEvent implements SaveAsDraftEvent {
         individualAttendanceMark,
     TResult Function(int entryTime, int exitTime, bool? createOplog)?
         saveAsDraft,
+    TResult Function(String name)? searchAttendees,
     required TResult orElse(),
   }) {
     if (saveAsDraft != null) {
@@ -859,6 +842,7 @@ class _$SaveAsDraftEvent implements SaveAsDraftEvent {
     required TResult Function(AttendanceMarkEvent value)
         individualAttendanceMark,
     required TResult Function(SaveAsDraftEvent value) saveAsDraft,
+    required TResult Function(SearchAttendeesEvent value) searchAttendees,
   }) {
     return saveAsDraft(this);
   }
@@ -870,6 +854,7 @@ class _$SaveAsDraftEvent implements SaveAsDraftEvent {
         individualAttendanceLogSearch,
     TResult? Function(AttendanceMarkEvent value)? individualAttendanceMark,
     TResult? Function(SaveAsDraftEvent value)? saveAsDraft,
+    TResult? Function(SearchAttendeesEvent value)? searchAttendees,
   }) {
     return saveAsDraft?.call(this);
   }
@@ -881,6 +866,7 @@ class _$SaveAsDraftEvent implements SaveAsDraftEvent {
         individualAttendanceLogSearch,
     TResult Function(AttendanceMarkEvent value)? individualAttendanceMark,
     TResult Function(SaveAsDraftEvent value)? saveAsDraft,
+    TResult Function(SearchAttendeesEvent value)? searchAttendees,
     required TResult orElse(),
   }) {
     if (saveAsDraft != null) {
@@ -896,14 +882,199 @@ abstract class SaveAsDraftEvent implements AttendanceIndividualEvent {
       required final int exitTime,
       final bool? createOplog}) = _$SaveAsDraftEvent;
 
-  @override
   int get entryTime;
-  @override
   int get exitTime;
   bool? get createOplog;
-  @override
   @JsonKey(ignore: true)
   _$$SaveAsDraftEventCopyWith<_$SaveAsDraftEvent> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$SearchAttendeesEventCopyWith<$Res> {
+  factory _$$SearchAttendeesEventCopyWith(_$SearchAttendeesEvent value,
+          $Res Function(_$SearchAttendeesEvent) then) =
+      __$$SearchAttendeesEventCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String name});
+}
+
+/// @nodoc
+class __$$SearchAttendeesEventCopyWithImpl<$Res>
+    extends _$AttendanceIndividualEventCopyWithImpl<$Res,
+        _$SearchAttendeesEvent>
+    implements _$$SearchAttendeesEventCopyWith<$Res> {
+  __$$SearchAttendeesEventCopyWithImpl(_$SearchAttendeesEvent _value,
+      $Res Function(_$SearchAttendeesEvent) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+  }) {
+    return _then(_$SearchAttendeesEvent(
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$SearchAttendeesEvent implements SearchAttendeesEvent {
+  const _$SearchAttendeesEvent({required this.name});
+
+  @override
+  final String name;
+
+  @override
+  String toString() {
+    return 'AttendanceIndividualEvent.searchAttendees(name: $name)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$SearchAttendeesEvent &&
+            (identical(other.name, name) || other.name == name));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, name);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$SearchAttendeesEventCopyWith<_$SearchAttendeesEvent> get copyWith =>
+      __$$SearchAttendeesEventCopyWithImpl<_$SearchAttendeesEvent>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(
+            String registerId,
+            String tenantId,
+            int entryTime,
+            int exitTime,
+            int currentDate,
+            List<AttendeeModel> attendees,
+            int offset,
+            int limit)
+        individualAttendanceLogSearch,
+    required TResult Function(int entryTime, int exitTime, dynamic status,
+            String individualId, String registerId)
+        individualAttendanceMark,
+    required TResult Function(int entryTime, int exitTime, bool? createOplog)
+        saveAsDraft,
+    required TResult Function(String name) searchAttendees,
+  }) {
+    return searchAttendees(name);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(
+            String registerId,
+            String tenantId,
+            int entryTime,
+            int exitTime,
+            int currentDate,
+            List<AttendeeModel> attendees,
+            int offset,
+            int limit)?
+        individualAttendanceLogSearch,
+    TResult? Function(int entryTime, int exitTime, dynamic status,
+            String individualId, String registerId)?
+        individualAttendanceMark,
+    TResult? Function(int entryTime, int exitTime, bool? createOplog)?
+        saveAsDraft,
+    TResult? Function(String name)? searchAttendees,
+  }) {
+    return searchAttendees?.call(name);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(
+            String registerId,
+            String tenantId,
+            int entryTime,
+            int exitTime,
+            int currentDate,
+            List<AttendeeModel> attendees,
+            int offset,
+            int limit)?
+        individualAttendanceLogSearch,
+    TResult Function(int entryTime, int exitTime, dynamic status,
+            String individualId, String registerId)?
+        individualAttendanceMark,
+    TResult Function(int entryTime, int exitTime, bool? createOplog)?
+        saveAsDraft,
+    TResult Function(String name)? searchAttendees,
+    required TResult orElse(),
+  }) {
+    if (searchAttendees != null) {
+      return searchAttendees(name);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(AttendanceIndividualLogSearchEvent value)
+        individualAttendanceLogSearch,
+    required TResult Function(AttendanceMarkEvent value)
+        individualAttendanceMark,
+    required TResult Function(SaveAsDraftEvent value) saveAsDraft,
+    required TResult Function(SearchAttendeesEvent value) searchAttendees,
+  }) {
+    return searchAttendees(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(AttendanceIndividualLogSearchEvent value)?
+        individualAttendanceLogSearch,
+    TResult? Function(AttendanceMarkEvent value)? individualAttendanceMark,
+    TResult? Function(SaveAsDraftEvent value)? saveAsDraft,
+    TResult? Function(SearchAttendeesEvent value)? searchAttendees,
+  }) {
+    return searchAttendees?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(AttendanceIndividualLogSearchEvent value)?
+        individualAttendanceLogSearch,
+    TResult Function(AttendanceMarkEvent value)? individualAttendanceMark,
+    TResult Function(SaveAsDraftEvent value)? saveAsDraft,
+    TResult Function(SearchAttendeesEvent value)? searchAttendees,
+    required TResult orElse(),
+  }) {
+    if (searchAttendees != null) {
+      return searchAttendees(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class SearchAttendeesEvent implements AttendanceIndividualEvent {
+  const factory SearchAttendeesEvent({required final String name}) =
+      _$SearchAttendeesEvent;
+
+  String get name;
+  @JsonKey(ignore: true)
+  _$$SearchAttendeesEventCopyWith<_$SearchAttendeesEvent> get copyWith =>
       throw _privateConstructorUsedError;
 }
 

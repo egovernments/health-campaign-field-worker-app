@@ -129,6 +129,7 @@ class HCMAttendanceBloc extends AttendanceListeners {
     // TODO: implement submitAttendanceDetails
     final hcmAttendanceLogs = attendanceLogs.attendanceLogs
         .map((e) => HCMAttendanceLogModel(
+              rowVersion: 1,
               registerId: e.registerId,
               individualId: e.individualId,
               type: e.type,
@@ -137,6 +138,18 @@ class HCMAttendanceBloc extends AttendanceListeners {
               tenantId: e.tenantId,
               clientReferenceId: IdGen.i.identifier,
               uploadToServer: attendanceLogs.createOplog,
+              clientAuditDetails: ClientAuditDetails(
+                createdBy: userId.toString(),
+                createdTime: DateTime.now().millisecondsSinceEpoch,
+                lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+                lastModifiedBy: userId.toString(),
+              ),
+              auditDetails: AuditDetails(
+                createdBy: userId.toString(),
+                createdTime: DateTime.now().millisecondsSinceEpoch,
+                lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+                lastModifiedBy: userId.toString(),
+              ),
             ))
         .toList();
     final groupedIndividuals =

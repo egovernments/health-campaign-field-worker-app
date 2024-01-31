@@ -657,23 +657,21 @@ class AttendanceLogOpLogManager extends OpLogManager<HCMAttendanceLogModel> {
     String serverGeneratedId,
     int rowVersion,
   ) =>
-      throw UnimplementedError();
+      entity.copyWith(id: serverGeneratedId, rowVersion: rowVersion);
 
   @override
   String getClientReferenceId(HCMAttendanceLogModel entity) =>
-      throw UnimplementedError();
+      entity.clientReferenceId.toString();
 
   @override
-  String? getServerGeneratedId(HCMAttendanceLogModel entity) =>
-      throw UnimplementedError();
+  String? getServerGeneratedId(HCMAttendanceLogModel entity) => entity.id;
 
   @override
-  int? getRowVersion(HCMAttendanceLogModel entity) =>
-      throw UnimplementedError();
+  int? getRowVersion(HCMAttendanceLogModel entity) => entity.rowVersion;
 
   @override
   bool? getNonRecoverableError(HCMAttendanceLogModel entity) =>
-      throw UnimplementedError();
+      entity.nonRecoverableError;
 }
 
 class ProjectStaffOpLogManager extends OpLogManager<ProjectStaffModel> {
