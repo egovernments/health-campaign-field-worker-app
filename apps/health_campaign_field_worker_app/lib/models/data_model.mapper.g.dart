@@ -20,8 +20,8 @@ import 'entities/downsync.dart';
 import 'entities/facility.dart';
 import 'entities/gender.dart';
 import 'entities/h_f_referral.dart';
-import 'entities/hcm_attendance_model.dart';
 import 'entities/hcm_attendance_log_model.dart';
+import 'entities/hcm_attendance_model.dart';
 import 'entities/household.dart';
 import 'entities/household_member.dart';
 import 'entities/identifier.dart';
@@ -90,11 +90,11 @@ var _mappers = <BaseMapper>{
   HFReferralSearchModelMapper._(),
   HFReferralModelMapper._(),
   HFReferralAdditionalFieldsMapper._(),
+  HCMAttendanceLogSearchModelMapper._(),
+  HCMAttendanceLogModelMapper._(),
   HCMAttendanceSearchModelMapper._(),
   HCMAttendanceRegisterModelMapper._(),
   HCMAttendanceAdditionalModelMapper._(),
-  HCMAttendanceLogSearchModelMapper._(),
-  HCMAttendanceLogModelMapper._(),
   HouseholdSearchModelMapper._(),
   HouseholdModelMapper._(),
   HouseholdAdditionalFieldsMapper._(),
@@ -239,8 +239,8 @@ class EntityModelMapper extends BaseMapper<EntityModel> {
     else if (v is DownsyncModel) { return DownsyncModelMapper._().encode(v); }
     else if (v is FacilityModel) { return FacilityModelMapper._().encode(v); }
     else if (v is HFReferralModel) { return HFReferralModelMapper._().encode(v); }
-    else if (v is HCMAttendanceRegisterModel) { return HCMAttendanceRegisterModelMapper._().encode(v); }
     else if (v is HCMAttendanceLogModel) { return HCMAttendanceLogModelMapper._().encode(v); }
+    else if (v is HCMAttendanceRegisterModel) { return HCMAttendanceRegisterModelMapper._().encode(v); }
     else if (v is HouseholdModel) { return HouseholdModelMapper._().encode(v); }
     else if (v is HouseholdMemberModel) { return HouseholdMemberModelMapper._().encode(v); }
     else if (v is IdentifierModel) { return IdentifierModelMapper._().encode(v); }
@@ -336,8 +336,8 @@ class EntitySearchModelMapper extends BaseMapper<EntitySearchModel> {
     else if (v is DownsyncSearchModel) { return DownsyncSearchModelMapper._().encode(v); }
     else if (v is FacilitySearchModel) { return FacilitySearchModelMapper._().encode(v); }
     else if (v is HFReferralSearchModel) { return HFReferralSearchModelMapper._().encode(v); }
-    else if (v is HCMAttendanceSearchModel) { return HCMAttendanceSearchModelMapper._().encode(v); }
     else if (v is HCMAttendanceLogSearchModel) { return HCMAttendanceLogSearchModelMapper._().encode(v); }
+    else if (v is HCMAttendanceSearchModel) { return HCMAttendanceSearchModelMapper._().encode(v); }
     else if (v is HouseholdSearchModel) { return HouseholdSearchModelMapper._().encode(v); }
     else if (v is HouseholdMemberSearchModel) { return HouseholdMemberSearchModelMapper._().encode(v); }
     else if (v is IdentifierSearchModel) { return IdentifierSearchModelMapper._().encode(v); }
@@ -1323,6 +1323,82 @@ class _HFReferralAdditionalFieldsCopyWithImpl<$R> extends BaseCopyWith<HFReferra
   @override $R call({String? schema, int? version, List<AdditionalField>? fields}) => $then(HFReferralAdditionalFields(schema: schema ?? $value.schema, version: version ?? $value.version, fields: fields ?? $value.fields));
 }
 
+class HCMAttendanceLogSearchModelMapper extends BaseMapper<HCMAttendanceLogSearchModel> {
+  HCMAttendanceLogSearchModelMapper._();
+
+  @override Function get decoder => decode;
+  HCMAttendanceLogSearchModel decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  HCMAttendanceLogSearchModel fromMap(Map<String, dynamic> map) => HCMAttendanceLogSearchModel.ignoreDeleted(id: Mapper.i.$getOpt(map, 'id'), registerId: Mapper.i.$getOpt(map, 'registerId'), individualId: Mapper.i.$getOpt(map, 'individualId'), status: Mapper.i.$getOpt(map, 'status'), type: Mapper.i.$getOpt(map, 'type'), tenantId: Mapper.i.$getOpt(map, 'tenantId'), time: Mapper.i.$getOpt(map, 'time'), entryTime: Mapper.i.$getOpt(map, 'entryTime'), exitTime: Mapper.i.$getOpt(map, 'exitTime'), clientReferenceId: Mapper.i.$getOpt(map, 'clientReferenceId'));
+
+  @override Function get encoder => (HCMAttendanceLogSearchModel v) => encode(v);
+  dynamic encode(HCMAttendanceLogSearchModel v) => toMap(v);
+  Map<String, dynamic> toMap(HCMAttendanceLogSearchModel h) => {if (Mapper.i.$enc(h.id, 'id') != null) 'id': Mapper.i.$enc(h.id, 'id'), if (Mapper.i.$enc(h.registerId, 'registerId') != null) 'registerId': Mapper.i.$enc(h.registerId, 'registerId'), if (Mapper.i.$enc(h.individualId, 'individualId') != null) 'individualId': Mapper.i.$enc(h.individualId, 'individualId'), if (Mapper.i.$enc(h.status, 'status') != null) 'status': Mapper.i.$enc(h.status, 'status'), if (Mapper.i.$enc(h.type, 'type') != null) 'type': Mapper.i.$enc(h.type, 'type'), if (Mapper.i.$enc(h.tenantId, 'tenantId') != null) 'tenantId': Mapper.i.$enc(h.tenantId, 'tenantId'), if (Mapper.i.$enc(h.time, 'time') != null) 'time': Mapper.i.$enc(h.time, 'time'), if (Mapper.i.$enc(h.entryTime, 'entryTime') != null) 'entryTime': Mapper.i.$enc(h.entryTime, 'entryTime'), if (Mapper.i.$enc(h.exitTime, 'exitTime') != null) 'exitTime': Mapper.i.$enc(h.exitTime, 'exitTime'), if (Mapper.i.$enc(h.clientReferenceId, 'clientReferenceId') != null) 'clientReferenceId': Mapper.i.$enc(h.clientReferenceId, 'clientReferenceId')};
+
+  @override String stringify(HCMAttendanceLogSearchModel self) => 'HCMAttendanceLogSearchModel(boundaryCode: ${Mapper.asString(self.boundaryCode)}, isDeleted: ${Mapper.asString(self.isDeleted)}, auditDetails: ${Mapper.asString(self.auditDetails)}, additionalFields: ${Mapper.asString(self.additionalFields)}, id: ${Mapper.asString(self.id)}, tenantId: ${Mapper.asString(self.tenantId)}, registerId: ${Mapper.asString(self.registerId)}, individualId: ${Mapper.asString(self.individualId)}, time: ${Mapper.asString(self.time)}, entryTime: ${Mapper.asString(self.entryTime)}, exitTime: ${Mapper.asString(self.exitTime)}, type: ${Mapper.asString(self.type)}, status: ${Mapper.asString(self.status)}, clientReferenceId: ${Mapper.asString(self.clientReferenceId)})';
+  @override int hash(HCMAttendanceLogSearchModel self) => Mapper.hash(self.boundaryCode) ^ Mapper.hash(self.isDeleted) ^ Mapper.hash(self.auditDetails) ^ Mapper.hash(self.additionalFields) ^ Mapper.hash(self.id) ^ Mapper.hash(self.tenantId) ^ Mapper.hash(self.registerId) ^ Mapper.hash(self.individualId) ^ Mapper.hash(self.time) ^ Mapper.hash(self.entryTime) ^ Mapper.hash(self.exitTime) ^ Mapper.hash(self.type) ^ Mapper.hash(self.status) ^ Mapper.hash(self.clientReferenceId);
+  @override bool equals(HCMAttendanceLogSearchModel self, HCMAttendanceLogSearchModel other) => Mapper.isEqual(self.boundaryCode, other.boundaryCode) && Mapper.isEqual(self.isDeleted, other.isDeleted) && Mapper.isEqual(self.auditDetails, other.auditDetails) && Mapper.isEqual(self.additionalFields, other.additionalFields) && Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.tenantId, other.tenantId) && Mapper.isEqual(self.registerId, other.registerId) && Mapper.isEqual(self.individualId, other.individualId) && Mapper.isEqual(self.time, other.time) && Mapper.isEqual(self.entryTime, other.entryTime) && Mapper.isEqual(self.exitTime, other.exitTime) && Mapper.isEqual(self.type, other.type) && Mapper.isEqual(self.status, other.status) && Mapper.isEqual(self.clientReferenceId, other.clientReferenceId);
+
+  @override Function get typeFactory => (f) => f<HCMAttendanceLogSearchModel>();
+}
+
+extension HCMAttendanceLogSearchModelMapperExtension  on HCMAttendanceLogSearchModel {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  HCMAttendanceLogSearchModelCopyWith<HCMAttendanceLogSearchModel> get copyWith => HCMAttendanceLogSearchModelCopyWith(this, $identity);
+}
+
+abstract class HCMAttendanceLogSearchModelCopyWith<$R> {
+  factory HCMAttendanceLogSearchModelCopyWith(HCMAttendanceLogSearchModel value, Then<HCMAttendanceLogSearchModel, $R> then) = _HCMAttendanceLogSearchModelCopyWithImpl<$R>;
+  $R call({String? id, String? registerId, String? individualId, String? status, String? type, String? tenantId, int? time, int? entryTime, int? exitTime, List<String>? clientReferenceId});
+  $R apply(HCMAttendanceLogSearchModel Function(HCMAttendanceLogSearchModel) transform);
+}
+
+class _HCMAttendanceLogSearchModelCopyWithImpl<$R> extends BaseCopyWith<HCMAttendanceLogSearchModel, $R> implements HCMAttendanceLogSearchModelCopyWith<$R> {
+  _HCMAttendanceLogSearchModelCopyWithImpl(HCMAttendanceLogSearchModel value, Then<HCMAttendanceLogSearchModel, $R> then) : super(value, then);
+
+  @override $R call({Object? id = $none, Object? registerId = $none, Object? individualId = $none, Object? status = $none, Object? type = $none, Object? tenantId = $none, Object? time = $none, Object? entryTime = $none, Object? exitTime = $none, Object? clientReferenceId = $none}) => $then(HCMAttendanceLogSearchModel.ignoreDeleted(id: or(id, $value.id), registerId: or(registerId, $value.registerId), individualId: or(individualId, $value.individualId), status: or(status, $value.status), type: or(type, $value.type), tenantId: or(tenantId, $value.tenantId), time: or(time, $value.time), entryTime: or(entryTime, $value.entryTime), exitTime: or(exitTime, $value.exitTime), clientReferenceId: or(clientReferenceId, $value.clientReferenceId)));
+}
+
+class HCMAttendanceLogModelMapper extends BaseMapper<HCMAttendanceLogModel> {
+  HCMAttendanceLogModelMapper._();
+
+  @override Function get decoder => decode;
+  HCMAttendanceLogModel decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
+  HCMAttendanceLogModel fromMap(Map<String, dynamic> map) => HCMAttendanceLogModel(id: Mapper.i.$getOpt(map, 'id'), registerId: Mapper.i.$getOpt(map, 'registerId'), individualId: Mapper.i.$getOpt(map, 'individualId'), status: Mapper.i.$getOpt(map, 'status'), type: Mapper.i.$getOpt(map, 'type'), tenantId: Mapper.i.$getOpt(map, 'tenantId'), time: Mapper.i.$getOpt(map, 'time'), clientReferenceId: Mapper.i.$getOpt(map, 'clientReferenceId'), name: Mapper.i.$getOpt(map, 'name'), rowVersion: Mapper.i.$getOpt(map, 'rowVersion'), nonRecoverableError: Mapper.i.$getOpt(map, 'nonRecoverableError') ?? false, uploadToServer: Mapper.i.$getOpt(map, 'uploadToServer') ?? false, auditDetails: Mapper.i.$getOpt(map, 'auditDetails'), clientAuditDetails: Mapper.i.$getOpt(map, 'clientAuditDetails'), isDeleted: Mapper.i.$getOpt(map, 'isDeleted') ?? false);
+
+  @override Function get encoder => (HCMAttendanceLogModel v) => encode(v);
+  dynamic encode(HCMAttendanceLogModel v) => toMap(v);
+  Map<String, dynamic> toMap(HCMAttendanceLogModel h) => {if (Mapper.i.$enc(h.id, 'id') != null) 'id': Mapper.i.$enc(h.id, 'id'), if (Mapper.i.$enc(h.registerId, 'registerId') != null) 'registerId': Mapper.i.$enc(h.registerId, 'registerId'), if (Mapper.i.$enc(h.individualId, 'individualId') != null) 'individualId': Mapper.i.$enc(h.individualId, 'individualId'), if (Mapper.i.$enc(h.status, 'status') != null) 'status': Mapper.i.$enc(h.status, 'status'), if (Mapper.i.$enc(h.type, 'type') != null) 'type': Mapper.i.$enc(h.type, 'type'), if (Mapper.i.$enc(h.tenantId, 'tenantId') != null) 'tenantId': Mapper.i.$enc(h.tenantId, 'tenantId'), if (Mapper.i.$enc(h.time, 'time') != null) 'time': Mapper.i.$enc(h.time, 'time'), if (Mapper.i.$enc(h.clientReferenceId, 'clientReferenceId') != null) 'clientReferenceId': Mapper.i.$enc(h.clientReferenceId, 'clientReferenceId'), if (Mapper.i.$enc(h.name, 'name') != null) 'name': Mapper.i.$enc(h.name, 'name'), if (Mapper.i.$enc(h.rowVersion, 'rowVersion') != null) 'rowVersion': Mapper.i.$enc(h.rowVersion, 'rowVersion'), if (Mapper.i.$enc(h.nonRecoverableError, 'nonRecoverableError') != null) 'nonRecoverableError': Mapper.i.$enc(h.nonRecoverableError, 'nonRecoverableError'), if (Mapper.i.$enc(h.uploadToServer, 'uploadToServer') != null) 'uploadToServer': Mapper.i.$enc(h.uploadToServer, 'uploadToServer'), if (Mapper.i.$enc(h.auditDetails, 'auditDetails') != null) 'auditDetails': Mapper.i.$enc(h.auditDetails, 'auditDetails'), if (Mapper.i.$enc(h.clientAuditDetails, 'clientAuditDetails') != null) 'clientAuditDetails': Mapper.i.$enc(h.clientAuditDetails, 'clientAuditDetails'), if (Mapper.i.$enc(h.isDeleted, 'isDeleted') != null) 'isDeleted': Mapper.i.$enc(h.isDeleted, 'isDeleted')};
+
+  @override String stringify(HCMAttendanceLogModel self) => 'HCMAttendanceLogModel(boundaryCode: ${Mapper.asString(self.boundaryCode)}, isDeleted: ${Mapper.asString(self.isDeleted)}, auditDetails: ${Mapper.asString(self.auditDetails)}, clientAuditDetails: ${Mapper.asString(self.clientAuditDetails)}, id: ${Mapper.asString(self.id)}, tenantId: ${Mapper.asString(self.tenantId)}, registerId: ${Mapper.asString(self.registerId)}, name: ${Mapper.asString(self.name)}, individualId: ${Mapper.asString(self.individualId)}, time: ${Mapper.asString(self.time)}, nonRecoverableError: ${Mapper.asString(self.nonRecoverableError)}, type: ${Mapper.asString(self.type)}, status: ${Mapper.asString(self.status)}, rowVersion: ${Mapper.asString(self.rowVersion)}, clientReferenceId: ${Mapper.asString(self.clientReferenceId)}, uploadToServer: ${Mapper.asString(self.uploadToServer)})';
+  @override int hash(HCMAttendanceLogModel self) => Mapper.hash(self.boundaryCode) ^ Mapper.hash(self.isDeleted) ^ Mapper.hash(self.auditDetails) ^ Mapper.hash(self.clientAuditDetails) ^ Mapper.hash(self.id) ^ Mapper.hash(self.tenantId) ^ Mapper.hash(self.registerId) ^ Mapper.hash(self.name) ^ Mapper.hash(self.individualId) ^ Mapper.hash(self.time) ^ Mapper.hash(self.nonRecoverableError) ^ Mapper.hash(self.type) ^ Mapper.hash(self.status) ^ Mapper.hash(self.rowVersion) ^ Mapper.hash(self.clientReferenceId) ^ Mapper.hash(self.uploadToServer);
+  @override bool equals(HCMAttendanceLogModel self, HCMAttendanceLogModel other) => Mapper.isEqual(self.boundaryCode, other.boundaryCode) && Mapper.isEqual(self.isDeleted, other.isDeleted) && Mapper.isEqual(self.auditDetails, other.auditDetails) && Mapper.isEqual(self.clientAuditDetails, other.clientAuditDetails) && Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.tenantId, other.tenantId) && Mapper.isEqual(self.registerId, other.registerId) && Mapper.isEqual(self.name, other.name) && Mapper.isEqual(self.individualId, other.individualId) && Mapper.isEqual(self.time, other.time) && Mapper.isEqual(self.nonRecoverableError, other.nonRecoverableError) && Mapper.isEqual(self.type, other.type) && Mapper.isEqual(self.status, other.status) && Mapper.isEqual(self.rowVersion, other.rowVersion) && Mapper.isEqual(self.clientReferenceId, other.clientReferenceId) && Mapper.isEqual(self.uploadToServer, other.uploadToServer);
+
+  @override Function get typeFactory => (f) => f<HCMAttendanceLogModel>();
+}
+
+extension HCMAttendanceLogModelMapperExtension  on HCMAttendanceLogModel {
+  String toJson() => Mapper.toJson(this);
+  Map<String, dynamic> toMap() => Mapper.toMap(this);
+  HCMAttendanceLogModelCopyWith<HCMAttendanceLogModel> get copyWith => HCMAttendanceLogModelCopyWith(this, $identity);
+}
+
+abstract class HCMAttendanceLogModelCopyWith<$R> {
+  factory HCMAttendanceLogModelCopyWith(HCMAttendanceLogModel value, Then<HCMAttendanceLogModel, $R> then) = _HCMAttendanceLogModelCopyWithImpl<$R>;
+  AuditDetailsCopyWith<$R>? get auditDetails;
+  ClientAuditDetailsCopyWith<$R>? get clientAuditDetails;
+  $R call({String? id, String? registerId, String? individualId, String? status, String? type, String? tenantId, int? time, String? clientReferenceId, String? name, int? rowVersion, bool? nonRecoverableError, bool? uploadToServer, AuditDetails? auditDetails, ClientAuditDetails? clientAuditDetails, bool? isDeleted});
+  $R apply(HCMAttendanceLogModel Function(HCMAttendanceLogModel) transform);
+}
+
+class _HCMAttendanceLogModelCopyWithImpl<$R> extends BaseCopyWith<HCMAttendanceLogModel, $R> implements HCMAttendanceLogModelCopyWith<$R> {
+  _HCMAttendanceLogModelCopyWithImpl(HCMAttendanceLogModel value, Then<HCMAttendanceLogModel, $R> then) : super(value, then);
+
+  @override AuditDetailsCopyWith<$R>? get auditDetails => $value.auditDetails != null ? AuditDetailsCopyWith($value.auditDetails!, (v) => call(auditDetails: v)) : null;
+  @override ClientAuditDetailsCopyWith<$R>? get clientAuditDetails => $value.clientAuditDetails != null ? ClientAuditDetailsCopyWith($value.clientAuditDetails!, (v) => call(clientAuditDetails: v)) : null;
+  @override $R call({Object? id = $none, Object? registerId = $none, Object? individualId = $none, Object? status = $none, Object? type = $none, Object? tenantId = $none, Object? time = $none, Object? clientReferenceId = $none, Object? name = $none, Object? rowVersion = $none, Object? nonRecoverableError = $none, Object? uploadToServer = $none, Object? auditDetails = $none, Object? clientAuditDetails = $none, Object? isDeleted = $none}) => $then(HCMAttendanceLogModel(id: or(id, $value.id), registerId: or(registerId, $value.registerId), individualId: or(individualId, $value.individualId), status: or(status, $value.status), type: or(type, $value.type), tenantId: or(tenantId, $value.tenantId), time: or(time, $value.time), clientReferenceId: or(clientReferenceId, $value.clientReferenceId), name: or(name, $value.name), rowVersion: or(rowVersion, $value.rowVersion), nonRecoverableError: or(nonRecoverableError, $value.nonRecoverableError), uploadToServer: or(uploadToServer, $value.uploadToServer), auditDetails: or(auditDetails, $value.auditDetails), clientAuditDetails: or(clientAuditDetails, $value.clientAuditDetails), isDeleted: or(isDeleted, $value.isDeleted)));
+}
+
 class HCMAttendanceSearchModelMapper extends BaseMapper<HCMAttendanceSearchModel> {
   HCMAttendanceSearchModelMapper._();
 
@@ -1439,82 +1515,6 @@ class _HCMAttendanceAdditionalModelCopyWithImpl<$R> extends BaseCopyWith<HCMAtte
 
   @override AttendanceRegisterAdditionalFieldsCopyWith<$R> get attendanceAdditionalFields => AttendanceRegisterAdditionalFieldsCopyWith($value.attendanceAdditionalFields, (v) => call(attendanceAdditionalFields: v));
   @override $R call({AttendanceRegisterAdditionalFields? attendanceAdditionalFields, String? schema, int? version}) => $then(HCMAttendanceAdditionalModel(attendanceAdditionalFields: attendanceAdditionalFields ?? $value.attendanceAdditionalFields, schema: schema ?? $value.schema, version: version ?? $value.version));
-}
-
-class HCMAttendanceLogSearchModelMapper extends BaseMapper<HCMAttendanceLogSearchModel> {
-  HCMAttendanceLogSearchModelMapper._();
-
-  @override Function get decoder => decode;
-  HCMAttendanceLogSearchModel decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  HCMAttendanceLogSearchModel fromMap(Map<String, dynamic> map) => HCMAttendanceLogSearchModel.ignoreDeleted(id: Mapper.i.$getOpt(map, 'id'), registerId: Mapper.i.$getOpt(map, 'registerId'), individualId: Mapper.i.$getOpt(map, 'individualId'), status: Mapper.i.$getOpt(map, 'status'), type: Mapper.i.$getOpt(map, 'type'), tenantId: Mapper.i.$getOpt(map, 'tenantId'), time: Mapper.i.$getOpt(map, 'time'), entryTime: Mapper.i.$getOpt(map, 'entryTime'), exitTime: Mapper.i.$getOpt(map, 'exitTime'), clientReferenceId: Mapper.i.$getOpt(map, 'clientReferenceId'));
-
-  @override Function get encoder => (HCMAttendanceLogSearchModel v) => encode(v);
-  dynamic encode(HCMAttendanceLogSearchModel v) => toMap(v);
-  Map<String, dynamic> toMap(HCMAttendanceLogSearchModel h) => {if (Mapper.i.$enc(h.id, 'id') != null) 'id': Mapper.i.$enc(h.id, 'id'), if (Mapper.i.$enc(h.registerId, 'registerId') != null) 'registerId': Mapper.i.$enc(h.registerId, 'registerId'), if (Mapper.i.$enc(h.individualId, 'individualId') != null) 'individualId': Mapper.i.$enc(h.individualId, 'individualId'), if (Mapper.i.$enc(h.status, 'status') != null) 'status': Mapper.i.$enc(h.status, 'status'), if (Mapper.i.$enc(h.type, 'type') != null) 'type': Mapper.i.$enc(h.type, 'type'), if (Mapper.i.$enc(h.tenantId, 'tenantId') != null) 'tenantId': Mapper.i.$enc(h.tenantId, 'tenantId'), if (Mapper.i.$enc(h.time, 'time') != null) 'time': Mapper.i.$enc(h.time, 'time'), if (Mapper.i.$enc(h.entryTime, 'entryTime') != null) 'entryTime': Mapper.i.$enc(h.entryTime, 'entryTime'), if (Mapper.i.$enc(h.exitTime, 'exitTime') != null) 'exitTime': Mapper.i.$enc(h.exitTime, 'exitTime'), if (Mapper.i.$enc(h.clientReferenceId, 'clientReferenceId') != null) 'clientReferenceId': Mapper.i.$enc(h.clientReferenceId, 'clientReferenceId')};
-
-  @override String stringify(HCMAttendanceLogSearchModel self) => 'HCMAttendanceLogSearchModel(boundaryCode: ${Mapper.asString(self.boundaryCode)}, isDeleted: ${Mapper.asString(self.isDeleted)}, auditDetails: ${Mapper.asString(self.auditDetails)}, additionalFields: ${Mapper.asString(self.additionalFields)}, id: ${Mapper.asString(self.id)}, tenantId: ${Mapper.asString(self.tenantId)}, registerId: ${Mapper.asString(self.registerId)}, individualId: ${Mapper.asString(self.individualId)}, time: ${Mapper.asString(self.time)}, entryTime: ${Mapper.asString(self.entryTime)}, exitTime: ${Mapper.asString(self.exitTime)}, type: ${Mapper.asString(self.type)}, status: ${Mapper.asString(self.status)}, clientReferenceId: ${Mapper.asString(self.clientReferenceId)})';
-  @override int hash(HCMAttendanceLogSearchModel self) => Mapper.hash(self.boundaryCode) ^ Mapper.hash(self.isDeleted) ^ Mapper.hash(self.auditDetails) ^ Mapper.hash(self.additionalFields) ^ Mapper.hash(self.id) ^ Mapper.hash(self.tenantId) ^ Mapper.hash(self.registerId) ^ Mapper.hash(self.individualId) ^ Mapper.hash(self.time) ^ Mapper.hash(self.entryTime) ^ Mapper.hash(self.exitTime) ^ Mapper.hash(self.type) ^ Mapper.hash(self.status) ^ Mapper.hash(self.clientReferenceId);
-  @override bool equals(HCMAttendanceLogSearchModel self, HCMAttendanceLogSearchModel other) => Mapper.isEqual(self.boundaryCode, other.boundaryCode) && Mapper.isEqual(self.isDeleted, other.isDeleted) && Mapper.isEqual(self.auditDetails, other.auditDetails) && Mapper.isEqual(self.additionalFields, other.additionalFields) && Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.tenantId, other.tenantId) && Mapper.isEqual(self.registerId, other.registerId) && Mapper.isEqual(self.individualId, other.individualId) && Mapper.isEqual(self.time, other.time) && Mapper.isEqual(self.entryTime, other.entryTime) && Mapper.isEqual(self.exitTime, other.exitTime) && Mapper.isEqual(self.type, other.type) && Mapper.isEqual(self.status, other.status) && Mapper.isEqual(self.clientReferenceId, other.clientReferenceId);
-
-  @override Function get typeFactory => (f) => f<HCMAttendanceLogSearchModel>();
-}
-
-extension HCMAttendanceLogSearchModelMapperExtension  on HCMAttendanceLogSearchModel {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-  HCMAttendanceLogSearchModelCopyWith<HCMAttendanceLogSearchModel> get copyWith => HCMAttendanceLogSearchModelCopyWith(this, $identity);
-}
-
-abstract class HCMAttendanceLogSearchModelCopyWith<$R> {
-  factory HCMAttendanceLogSearchModelCopyWith(HCMAttendanceLogSearchModel value, Then<HCMAttendanceLogSearchModel, $R> then) = _HCMAttendanceLogSearchModelCopyWithImpl<$R>;
-  $R call({String? id, String? registerId, String? individualId, String? status, String? type, String? tenantId, int? time, int? entryTime, int? exitTime, List<String>? clientReferenceId});
-  $R apply(HCMAttendanceLogSearchModel Function(HCMAttendanceLogSearchModel) transform);
-}
-
-class _HCMAttendanceLogSearchModelCopyWithImpl<$R> extends BaseCopyWith<HCMAttendanceLogSearchModel, $R> implements HCMAttendanceLogSearchModelCopyWith<$R> {
-  _HCMAttendanceLogSearchModelCopyWithImpl(HCMAttendanceLogSearchModel value, Then<HCMAttendanceLogSearchModel, $R> then) : super(value, then);
-
-  @override $R call({Object? id = $none, Object? registerId = $none, Object? individualId = $none, Object? status = $none, Object? type = $none, Object? tenantId = $none, Object? time = $none, Object? entryTime = $none, Object? exitTime = $none, Object? clientReferenceId = $none}) => $then(HCMAttendanceLogSearchModel.ignoreDeleted(id: or(id, $value.id), registerId: or(registerId, $value.registerId), individualId: or(individualId, $value.individualId), status: or(status, $value.status), type: or(type, $value.type), tenantId: or(tenantId, $value.tenantId), time: or(time, $value.time), entryTime: or(entryTime, $value.entryTime), exitTime: or(exitTime, $value.exitTime), clientReferenceId: or(clientReferenceId, $value.clientReferenceId)));
-}
-
-class HCMAttendanceLogModelMapper extends BaseMapper<HCMAttendanceLogModel> {
-  HCMAttendanceLogModelMapper._();
-
-  @override Function get decoder => decode;
-  HCMAttendanceLogModel decode(dynamic v) => checked(v, (Map<String, dynamic> map) => fromMap(map));
-  HCMAttendanceLogModel fromMap(Map<String, dynamic> map) => HCMAttendanceLogModel(id: Mapper.i.$getOpt(map, 'id'), registerId: Mapper.i.$getOpt(map, 'registerId'), individualId: Mapper.i.$getOpt(map, 'individualId'), status: Mapper.i.$getOpt(map, 'status'), type: Mapper.i.$getOpt(map, 'type'), tenantId: Mapper.i.$getOpt(map, 'tenantId'), time: Mapper.i.$getOpt(map, 'time'), clientReferenceId: Mapper.i.$getOpt(map, 'clientReferenceId'), name: Mapper.i.$getOpt(map, 'name'), rowVersion: Mapper.i.$getOpt(map, 'rowVersion'), nonRecoverableError: Mapper.i.$getOpt(map, 'nonRecoverableError') ?? false, uploadToServer: Mapper.i.$getOpt(map, 'uploadToServer') ?? false, auditDetails: Mapper.i.$getOpt(map, 'auditDetails'), clientAuditDetails: Mapper.i.$getOpt(map, 'clientAuditDetails'), isDeleted: Mapper.i.$getOpt(map, 'isDeleted') ?? false);
-
-  @override Function get encoder => (HCMAttendanceLogModel v) => encode(v);
-  dynamic encode(HCMAttendanceLogModel v) => toMap(v);
-  Map<String, dynamic> toMap(HCMAttendanceLogModel h) => {if (Mapper.i.$enc(h.id, 'id') != null) 'id': Mapper.i.$enc(h.id, 'id'), if (Mapper.i.$enc(h.registerId, 'registerId') != null) 'registerId': Mapper.i.$enc(h.registerId, 'registerId'), if (Mapper.i.$enc(h.individualId, 'individualId') != null) 'individualId': Mapper.i.$enc(h.individualId, 'individualId'), if (Mapper.i.$enc(h.status, 'status') != null) 'status': Mapper.i.$enc(h.status, 'status'), if (Mapper.i.$enc(h.type, 'type') != null) 'type': Mapper.i.$enc(h.type, 'type'), if (Mapper.i.$enc(h.tenantId, 'tenantId') != null) 'tenantId': Mapper.i.$enc(h.tenantId, 'tenantId'), if (Mapper.i.$enc(h.time, 'time') != null) 'time': Mapper.i.$enc(h.time, 'time'), if (Mapper.i.$enc(h.clientReferenceId, 'clientReferenceId') != null) 'clientReferenceId': Mapper.i.$enc(h.clientReferenceId, 'clientReferenceId'), if (Mapper.i.$enc(h.name, 'name') != null) 'name': Mapper.i.$enc(h.name, 'name'), if (Mapper.i.$enc(h.rowVersion, 'rowVersion') != null) 'rowVersion': Mapper.i.$enc(h.rowVersion, 'rowVersion'), if (Mapper.i.$enc(h.nonRecoverableError, 'nonRecoverableError') != null) 'nonRecoverableError': Mapper.i.$enc(h.nonRecoverableError, 'nonRecoverableError'), if (Mapper.i.$enc(h.uploadToServer, 'uploadToServer') != null) 'uploadToServer': Mapper.i.$enc(h.uploadToServer, 'uploadToServer'), if (Mapper.i.$enc(h.auditDetails, 'auditDetails') != null) 'auditDetails': Mapper.i.$enc(h.auditDetails, 'auditDetails'), if (Mapper.i.$enc(h.clientAuditDetails, 'clientAuditDetails') != null) 'clientAuditDetails': Mapper.i.$enc(h.clientAuditDetails, 'clientAuditDetails'), if (Mapper.i.$enc(h.isDeleted, 'isDeleted') != null) 'isDeleted': Mapper.i.$enc(h.isDeleted, 'isDeleted')};
-
-  @override String stringify(HCMAttendanceLogModel self) => 'HCMAttendanceLogModel(boundaryCode: ${Mapper.asString(self.boundaryCode)}, isDeleted: ${Mapper.asString(self.isDeleted)}, auditDetails: ${Mapper.asString(self.auditDetails)}, clientAuditDetails: ${Mapper.asString(self.clientAuditDetails)}, id: ${Mapper.asString(self.id)}, tenantId: ${Mapper.asString(self.tenantId)}, registerId: ${Mapper.asString(self.registerId)}, name: ${Mapper.asString(self.name)}, individualId: ${Mapper.asString(self.individualId)}, time: ${Mapper.asString(self.time)}, nonRecoverableError: ${Mapper.asString(self.nonRecoverableError)}, type: ${Mapper.asString(self.type)}, status: ${Mapper.asString(self.status)}, rowVersion: ${Mapper.asString(self.rowVersion)}, clientReferenceId: ${Mapper.asString(self.clientReferenceId)}, uploadToServer: ${Mapper.asString(self.uploadToServer)})';
-  @override int hash(HCMAttendanceLogModel self) => Mapper.hash(self.boundaryCode) ^ Mapper.hash(self.isDeleted) ^ Mapper.hash(self.auditDetails) ^ Mapper.hash(self.clientAuditDetails) ^ Mapper.hash(self.id) ^ Mapper.hash(self.tenantId) ^ Mapper.hash(self.registerId) ^ Mapper.hash(self.name) ^ Mapper.hash(self.individualId) ^ Mapper.hash(self.time) ^ Mapper.hash(self.nonRecoverableError) ^ Mapper.hash(self.type) ^ Mapper.hash(self.status) ^ Mapper.hash(self.rowVersion) ^ Mapper.hash(self.clientReferenceId) ^ Mapper.hash(self.uploadToServer);
-  @override bool equals(HCMAttendanceLogModel self, HCMAttendanceLogModel other) => Mapper.isEqual(self.boundaryCode, other.boundaryCode) && Mapper.isEqual(self.isDeleted, other.isDeleted) && Mapper.isEqual(self.auditDetails, other.auditDetails) && Mapper.isEqual(self.clientAuditDetails, other.clientAuditDetails) && Mapper.isEqual(self.id, other.id) && Mapper.isEqual(self.tenantId, other.tenantId) && Mapper.isEqual(self.registerId, other.registerId) && Mapper.isEqual(self.name, other.name) && Mapper.isEqual(self.individualId, other.individualId) && Mapper.isEqual(self.time, other.time) && Mapper.isEqual(self.nonRecoverableError, other.nonRecoverableError) && Mapper.isEqual(self.type, other.type) && Mapper.isEqual(self.status, other.status) && Mapper.isEqual(self.rowVersion, other.rowVersion) && Mapper.isEqual(self.clientReferenceId, other.clientReferenceId) && Mapper.isEqual(self.uploadToServer, other.uploadToServer);
-
-  @override Function get typeFactory => (f) => f<HCMAttendanceLogModel>();
-}
-
-extension HCMAttendanceLogModelMapperExtension  on HCMAttendanceLogModel {
-  String toJson() => Mapper.toJson(this);
-  Map<String, dynamic> toMap() => Mapper.toMap(this);
-  HCMAttendanceLogModelCopyWith<HCMAttendanceLogModel> get copyWith => HCMAttendanceLogModelCopyWith(this, $identity);
-}
-
-abstract class HCMAttendanceLogModelCopyWith<$R> {
-  factory HCMAttendanceLogModelCopyWith(HCMAttendanceLogModel value, Then<HCMAttendanceLogModel, $R> then) = _HCMAttendanceLogModelCopyWithImpl<$R>;
-  AuditDetailsCopyWith<$R>? get auditDetails;
-  ClientAuditDetailsCopyWith<$R>? get clientAuditDetails;
-  $R call({String? id, String? registerId, String? individualId, String? status, String? type, String? tenantId, int? time, String? clientReferenceId, String? name, int? rowVersion, bool? nonRecoverableError, bool? uploadToServer, AuditDetails? auditDetails, ClientAuditDetails? clientAuditDetails, bool? isDeleted});
-  $R apply(HCMAttendanceLogModel Function(HCMAttendanceLogModel) transform);
-}
-
-class _HCMAttendanceLogModelCopyWithImpl<$R> extends BaseCopyWith<HCMAttendanceLogModel, $R> implements HCMAttendanceLogModelCopyWith<$R> {
-  _HCMAttendanceLogModelCopyWithImpl(HCMAttendanceLogModel value, Then<HCMAttendanceLogModel, $R> then) : super(value, then);
-
-  @override AuditDetailsCopyWith<$R>? get auditDetails => $value.auditDetails != null ? AuditDetailsCopyWith($value.auditDetails!, (v) => call(auditDetails: v)) : null;
-  @override ClientAuditDetailsCopyWith<$R>? get clientAuditDetails => $value.clientAuditDetails != null ? ClientAuditDetailsCopyWith($value.clientAuditDetails!, (v) => call(clientAuditDetails: v)) : null;
-  @override $R call({Object? id = $none, Object? registerId = $none, Object? individualId = $none, Object? status = $none, Object? type = $none, Object? tenantId = $none, Object? time = $none, Object? clientReferenceId = $none, Object? name = $none, Object? rowVersion = $none, Object? nonRecoverableError = $none, Object? uploadToServer = $none, Object? auditDetails = $none, Object? clientAuditDetails = $none, Object? isDeleted = $none}) => $then(HCMAttendanceLogModel(id: or(id, $value.id), registerId: or(registerId, $value.registerId), individualId: or(individualId, $value.individualId), status: or(status, $value.status), type: or(type, $value.type), tenantId: or(tenantId, $value.tenantId), time: or(time, $value.time), clientReferenceId: or(clientReferenceId, $value.clientReferenceId), name: or(name, $value.name), rowVersion: or(rowVersion, $value.rowVersion), nonRecoverableError: or(nonRecoverableError, $value.nonRecoverableError), uploadToServer: or(uploadToServer, $value.uploadToServer), auditDetails: or(auditDetails, $value.auditDetails), clientAuditDetails: or(clientAuditDetails, $value.clientAuditDetails), isDeleted: or(isDeleted, $value.isDeleted)));
 }
 
 class HouseholdSearchModelMapper extends BaseMapper<HouseholdSearchModel> {
