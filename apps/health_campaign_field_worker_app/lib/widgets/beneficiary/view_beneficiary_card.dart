@@ -120,18 +120,23 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                     taskdata.last.clientReferenceId)
                 .toList()
             : null;
-        final ageInYears = DigitDateUtils.calculateAge(
-          DigitDateUtils.getFormattedDateToDateTime(
-                e.dateOfBirth!,
+  
+    final ageInYears = DigitDateUtils.calculateAge(
+      householdMember.headOfHousehold.dateOfBirth != null
+          ? DigitDateUtils.getFormattedDateToDateTime(
+                householdMember.headOfHousehold.dateOfBirth!,
               ) ??
-              DateTime.now(),
-        ).years;
-        final ageInMonths = DigitDateUtils.calculateAge(
-          DigitDateUtils.getFormattedDateToDateTime(
-                e.dateOfBirth!,
+              DateTime.now()
+          : DateTime.now(),
+    ).years;
+    final ageInMonths = DigitDateUtils.calculateAge(
+      householdMember.headOfHousehold.dateOfBirth != null
+          ? DigitDateUtils.getFormattedDateToDateTime(
+                householdMember.headOfHousehold.dateOfBirth!,
               ) ??
-              DateTime.now(),
-        ).months;
+              DateTime.now()
+          : DateTime.now(),
+    ).months;
 
         final isNotEligible = !checkEligibilityForAgeAndSideEffect(
           DigitDOBAge(
@@ -220,17 +225,22 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
       },
     ).toList();
 
+
     final ageInYears = DigitDateUtils.calculateAge(
-      DigitDateUtils.getFormattedDateToDateTime(
-            householdMember.headOfHousehold.dateOfBirth!,
-          ) ??
-          DateTime.now(),
+      householdMember.headOfHousehold.dateOfBirth != null
+          ? DigitDateUtils.getFormattedDateToDateTime(
+                householdMember.headOfHousehold.dateOfBirth!,
+              ) ??
+              DateTime.now()
+          : DateTime.now(),
     ).years;
     final ageInMonths = DigitDateUtils.calculateAge(
-      DigitDateUtils.getFormattedDateToDateTime(
-            householdMember.headOfHousehold.dateOfBirth!,
-          ) ??
-          DateTime.now(),
+      householdMember.headOfHousehold.dateOfBirth != null
+          ? DigitDateUtils.getFormattedDateToDateTime(
+                householdMember.headOfHousehold.dateOfBirth!,
+              ) ??
+              DateTime.now()
+          : DateTime.now(),
     ).months;
 
     final isNotEligible = !checkEligibilityForAgeAndSideEffect(

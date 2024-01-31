@@ -8,6 +8,8 @@ import '../../data/local_store/sql_store/sql_store.dart';
 @MappableClass(ignoreNull: true)
 class HouseholdMemberSearchModel extends EntitySearchModel {
   final String? id;
+  final List<String>? individualClientReferenceIds;
+  final List<String>? householdClientReferenceIds;
   final String? householdId;
   final String? householdClientReferenceId;
   final String? individualId;
@@ -18,6 +20,8 @@ class HouseholdMemberSearchModel extends EntitySearchModel {
   
   HouseholdMemberSearchModel({
     this.id,
+    this.individualClientReferenceIds,
+    this.householdClientReferenceIds,
     this.householdId,
     this.householdClientReferenceId,
     this.individualId,
@@ -32,6 +36,8 @@ class HouseholdMemberSearchModel extends EntitySearchModel {
   @MappableConstructor()
   HouseholdMemberSearchModel.ignoreDeleted({
     this.id,
+    this.individualClientReferenceIds,
+    this.householdClientReferenceIds,
     this.householdId,
     this.householdClientReferenceId,
     this.individualId,

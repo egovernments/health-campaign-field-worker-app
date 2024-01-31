@@ -10,6 +10,8 @@ class AddressSearchModel extends EntitySearchModel {
   final String? id;
   final double? latitude;
   final double? longitude;
+  final int? limit;
+  final int? offset;
   final double? maxRadius;
   final String? tenantId;
   
@@ -17,6 +19,8 @@ class AddressSearchModel extends EntitySearchModel {
     this.id,
     this.latitude,
     this.longitude,
+    this.limit,
+    this.offset,
     this.maxRadius,
     this.tenantId,
     super.boundaryCode,
@@ -28,6 +32,8 @@ class AddressSearchModel extends EntitySearchModel {
     this.id,
     this.latitude,
     this.longitude,
+    this.limit,
+    this.offset,
     this.maxRadius,
     this.tenantId,
     super.boundaryCode,
