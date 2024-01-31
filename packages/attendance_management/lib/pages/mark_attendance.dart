@@ -544,11 +544,13 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                             label: 'Attendance Registered Successfully',
                             actionLabel: 'Go to Home',
                             action: () {
+                              AttendanceSingleton().callSync();
                               Navigator.popUntil(
                                   context, (route) => route.isFirst);
                             },
                             secondaryLabel: 'Go to Attendance Registers',
                             secondaryAction: () {
+                              AttendanceSingleton().callSync();
                               Navigator.of(context).pop();
                               Navigator.of(context).pop();
                               Navigator.of(context).pop();

@@ -45,28 +45,8 @@ class AttendanceIndividualBloc
           entryTime: event.entryTime,
           exitTime: event.exitTime,
           currentDate: event.currentDate,
-          onLogLoaded: (logResponse) {
-            attendees = event.attendees.map((e) {
-              final entryLogList = logResponse
-                  .where((l) =>
-                      l.individualId == e.individualId && l.type == 'ENTRY')
-                  .toList();
-              final exitLogList = logResponse
-                  .where((l) =>
-                      l.individualId == e.individualId && l.type == 'EXIT')
-                  .toList();
-
-              return e.copyWith(
-                  status: (entryLogList.isEmpty || exitLogList.isEmpty)
-                      ? -1
-                      : entryLogList.first.time == exitLogList.first.time
-                          ? 0
-                          : 1);
-            }).toList();
-          }));
-      emit(AttendanceIndividualState.loaded(
-        attendanceCollectionModel: event.attendees,
-      ));
+          onLogLoaded: (logResponse) =>
+              checkResponse(logResponse, attendees, event)));
       // }
     } catch (ex) {
       String? error = ex as String;
@@ -255,6 +235,31 @@ class AttendanceIndividualBloc
         }
       },
     );
+  }
+
+  checkResponse(
+      List<AttendanceLogModel> logResponse,
+      List<AttendeeModel> attendees,
+      AttendanceIndividualLogSearchEvent event) async {
+    attendees = event.attendees.map((e) {
+      final entryLogList = logResponse
+          .where((l) => l.individualId == e.individualId && l.type == 'ENTRY')
+          .toList();
+      final exitLogList = logResponse
+          .where((l) => l.individualId == e.individualId && l.type == 'EXIT')
+          .toList();
+
+      return e.copyWith(
+          status: (entryLogList.isEmpty || exitLogList.isEmpty)
+              ? -1
+              : entryLogList.first.time == exitLogList.first.time
+                  ? 0
+                  : 1);
+    }).toList();
+
+    emit(AttendanceIndividualState.loaded(
+      attendanceCollectionModel: attendees,
+    ));
   }
 }
 
