@@ -329,6 +329,8 @@ class EntityPlurals {
         return 'user';
       case 'AttendanceRegister':
         return 'attendanceRegister';
+      case 'Attendance':
+        return 'attendance';
       default:
         return '${entity}s';
     }
