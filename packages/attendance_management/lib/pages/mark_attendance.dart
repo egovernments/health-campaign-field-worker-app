@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:attendance_management/attendance_management.dart';
+import 'package:attendance_management/widgets/attendance_acknowledgement.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_table_model.dart';
+import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -66,7 +68,9 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     var localizations = AttendanceLocalization.of(context);
+
     return BlocProvider<AttendanceIndividualBloc>(
         create: (context) => individualLogBloc
           ..add(
@@ -135,12 +139,10 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                     ),
                                   ),
                                   onPressed: () {
-                                    individualLogBloc.add(SaveAsDraftEvent(
-                                      entryTime: widget.entryTime,
-                                      exitTime: widget.exitTime,
-                                    ));
+                                    checkIfAllAttendeesMarked(
+                                        state, localizations, theme, 'Draft');
                                   },
-                                  icon: Icons.qr_code,
+                                  icon: Icons.drafts_outlined,
                                   label: localizations.translate(
                                     'Save as Draft',
                                   ),
@@ -149,14 +151,8 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                   onPressed: (widget.dateTime.day ==
                                           DateTime.now().day)
                                       ? () {
-                                          FocusManager.instance.primaryFocus
-                                              ?.unfocus();
-                                          individualLogBloc
-                                              .add(SaveAsDraftEvent(
-                                            entryTime: widget.entryTime,
-                                            exitTime: widget.exitTime,
-                                            createOplog: true,
-                                          ));
+                                          checkIfAllAttendeesMarked(state,
+                                              localizations, theme, 'Submit');
                                         }
                                       : () {
                                           // context.router.pop();
@@ -490,6 +486,74 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
         );
       },
     );
+  }
+
+  void checkIfAllAttendeesMarked(AttendanceIndividualState state,
+      AttendanceLocalization localizations, ThemeData theme, String type) {
+    state.maybeWhen(
+        orElse: () {},
+        loaded: (
+          attendanceSearchModelList,
+          attendanceCollectionModel,
+          offsetData,
+          currentOffset,
+          countData,
+          limitData,
+          flag,
+        ) {
+          for (var element in attendanceCollectionModel!) {
+            if (element.status == null || element.status == -1) {
+              DigitToast.show(
+                context,
+                options: DigitToastOptions(
+                  localizations.translate('Mark Attendance for individuals'),
+                  true,
+                  theme,
+                ),
+              );
+              return;
+            } else {
+              if (type == "Draft") {
+                individualLogBloc.add(SaveAsDraftEvent(
+                  entryTime: widget.entryTime,
+                  exitTime: widget.exitTime,
+                ));
+                DigitToast.show(
+                  context,
+                  options: DigitToastOptions(
+                    localizations.translate('Data saved as draft'),
+                    false,
+                    theme,
+                  ),
+                );
+              } else {
+                FocusManager.instance.primaryFocus?.unfocus();
+                individualLogBloc.add(SaveAsDraftEvent(
+                  entryTime: widget.entryTime,
+                  exitTime: widget.exitTime,
+                  createOplog: true,
+                ));
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (context) => AttendanceAcknowledgementPage(
+                            label: 'Attendance Registered Successfully',
+                            actionLabel: 'Go to Home',
+                            action: () {
+                              Navigator.popUntil(
+                                  context, (route) => route.isFirst);
+                            },
+                            secondaryLabel: 'Go to Attendance Registers',
+                            secondaryAction: () {
+                              Navigator.of(context).pop();
+                              Navigator.of(context).pop();
+                              Navigator.of(context).pop();
+                            },
+                          )),
+                );
+              }
+            }
+          }
+        });
   }
 
   // Future<dynamic> markConfirmationDialog(
