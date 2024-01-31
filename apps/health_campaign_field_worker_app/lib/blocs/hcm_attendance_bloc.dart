@@ -111,6 +111,7 @@ class HCMAttendanceBloc extends AttendanceListeners {
               time: a.time,
               individualId: a.individualId,
               id: a.id,
+              type: a.type,
             ))
         .toList();
     searchAttendanceLog.onLogLoaded(filteredLogs ?? []);

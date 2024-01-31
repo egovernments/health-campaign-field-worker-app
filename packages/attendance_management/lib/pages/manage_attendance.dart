@@ -110,9 +110,12 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const BackNavigationHelpHeaderWidget(
+                  BackNavigationHelpHeaderWidget(
                     showHelp: false,
                     showLogoutCTA: false,
+                    handleBack: () {
+                      AttendanceSingleton().callSync();
+                    },
                   ),
                   Padding(
                     padding: const EdgeInsets.all(16.0),

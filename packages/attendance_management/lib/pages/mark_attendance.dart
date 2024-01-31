@@ -173,8 +173,11 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                       ),
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      header: const BackNavigationHelpHeaderWidget(
+                      header: BackNavigationHelpHeaderWidget(
                         showHelp: false,
+                        handleBack: () {
+                          AttendanceSingleton().callSync();
+                        },
                       ),
                       children: [
                         Padding(
@@ -257,7 +260,9 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                 color: DigitTheme.instance.colorScheme.error,
                               ),
                               Text(
-                              localizations.translate(   "${i18.attendance.somethingWentWrong}!!!",),
+                                localizations.translate(
+                                  "${i18.attendance.somethingWentWrong}!!!",
+                                ),
                                 style: DigitTheme.instance.mobileTheme.textTheme
                                     .headlineMedium,
                                 textAlign: TextAlign.center,
