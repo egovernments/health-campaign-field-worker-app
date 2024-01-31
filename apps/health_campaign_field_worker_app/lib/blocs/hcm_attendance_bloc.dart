@@ -2,6 +2,8 @@ import 'package:attendance_management/blocs/attendance_listeners.dart';
 import 'package:attendance_management/models/attendance_log.dart';
 import 'package:attendance_management/models/attendance_register.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../data/data_repository.dart';
 import '../models/data_model.dart';
@@ -16,11 +18,13 @@ class HCMAttendanceBloc extends AttendanceListeners {
   final LocalRepository<HCMAttendanceLogModel, HCMAttendanceLogSearchModel>?
       attendanceLogLocalRepository;
   final String? userId;
+  BuildContext context;
   HCMAttendanceBloc({
     this.attendanceLocalRepository,
     this.individualLocalRepository,
     this.attendanceLogLocalRepository,
     this.userId,
+    required this.context
   });
 
   late Function(List<AttendancePackageRegisterModel> registers)
@@ -173,7 +177,8 @@ class HCMAttendanceBloc extends AttendanceListeners {
 
   @override
   void callSyncMethod() {
-  SyncRefreshEvent(userId.toString());
-    //[TODO: trigger sync event in sync bloc]
+    context
+        .read<SyncBloc>()
+        .add(SyncRefreshEvent(userId!));
   }
 }
