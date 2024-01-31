@@ -52,7 +52,7 @@ class AttendanceLogRemoteRepository extends RemoteRepository<
     }
 
     if (!responseMap.containsKey(
-      (isSearchResponsePlural || entityName == 'ServiceDefinition')
+      (isSearchResponsePlural || entityName == 'Attendance')
           ? entityNamePlural
           : EntityPlurals.getPluralForEntityName(entityName),
     )) {
@@ -64,7 +64,7 @@ class AttendanceLogRemoteRepository extends RemoteRepository<
     }
 
     final entityResponse = await responseMap[
-        (isSearchResponsePlural || entityName == 'ServiceDefinition')
+        (isSearchResponsePlural || entityName == 'Attendance')
             ? entityNamePlural
             : EntityPlurals.getPluralForEntityName(entityName)];
 

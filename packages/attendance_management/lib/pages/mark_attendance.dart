@@ -257,7 +257,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                 color: DigitTheme.instance.colorScheme.error,
                               ),
                               Text(
-                                "${i18.attendance.somethingWentWrong}!!!",
+                              localizations.translate(   "${i18.attendance.somethingWentWrong}!!!",),
                                 style: DigitTheme.instance.mobileTheme.textTheme
                                     .headlineMedium,
                                 textAlign: TextAlign.center,

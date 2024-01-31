@@ -166,7 +166,7 @@ class _AttendanceDateSessionSelectionPageState
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        i18.attendance.selectSession,
+                                       localizations.translate( i18.attendance.selectSession,),
                                         style: DigitTheme.instance.mobileTheme
                                             .textTheme.headlineLarge,
                                       ),
@@ -187,7 +187,7 @@ class _AttendanceDateSessionSelectionPageState
                                                             .endDate!)
                                                 : DateTime.now()
                                             : null,
-                                        label: i18.attendance.dateOfSession,
+                                        label:localizations.translate(  i18.attendance.dateOfSession,),
                                         formControlName: _dateOfSession,
                                         cancelText: "Cancel",
                                         confirmText: "Select date",
