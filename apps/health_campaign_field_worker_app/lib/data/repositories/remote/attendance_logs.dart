@@ -84,5 +84,5 @@ class AttendanceLogRemoteRepository extends RemoteRepository<
   }
 
   @override
-  DataModelType get type => DataModelType.attendanceRegister;
+  DataModelType get type => DataModelType.attendance;
 }
