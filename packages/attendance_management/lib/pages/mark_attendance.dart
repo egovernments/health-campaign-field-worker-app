@@ -44,17 +44,17 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
   @override
   void initState() {
     controller = TextEditingController();
-    controller.addListener(searchByName);
+    // controller.addListener(searchByName);
     super.initState();
   }
 
-  void searchByName() {
-    if (_debounce?.isActive ?? false) _debounce?.cancel();
-    _debounce = Timer(const Duration(milliseconds: 500), () {
-      if (controller.text.length > 2) {
-      } else if (controller.text.isEmpty) {}
-    });
-  }
+  // void searchByName() {
+  //   if (_debounce?.isActive ?? false) _debounce?.cancel();
+  //   _debounce = Timer(const Duration(milliseconds: 500), () {
+  //     if (controller.text.length > 2) {
+  //     } else if (controller.text.isEmpty) {}
+  //   });
+  // }
 
   @override
   void dispose() {
@@ -211,11 +211,16 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              DigitTextField(
+                              DigitSearchBar(
                                 controller: controller,
-                                label: '',
-                                prefixIcon: const Icon(Icons.search),
-                                isFilled: true,
+                                hintText: 'Search By Name',
+                                textCapitalization: TextCapitalization.words,
+                                onChanged: (value) {
+                                  if (value.length >= 2) {
+                                    individualLogBloc.add(SearchAttendeesEvent(
+                                        name: value.trim()));
+                                  }
+                                },
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 8.0),

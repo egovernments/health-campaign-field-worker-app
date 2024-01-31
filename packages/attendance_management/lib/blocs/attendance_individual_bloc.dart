@@ -19,7 +19,7 @@ class AttendanceIndividualBloc
     on<AttendanceMarkEvent>(_onIndividualAttendanceMark);
     on<SaveAsDraftEvent>(_onSaveAsDraft);
     // on<UploadAttendanceEvent>(_onUploadAttendanceToServer);
-    // on<SearchAttendeesEvent>(_onSearchAttendeeByName);
+    on<SearchAttendeesEvent>(_onSearchAttendeeByName);
     // on<DisposeAttendanceIndividualEvent>(_onDispose);
   }
 
@@ -236,27 +236,26 @@ class AttendanceIndividualBloc
   //   );
   // }
 
-  // FutureOr<void> _onSearchAttendeeByName(
-  //   SearchAttendeesEvent event,
-  //   AttendanceIndividualEmitter emit,
-  // ) {
-  //   state.maybeMap(
-  //     orElse: () {},
-  //     loaded: (value) {
-  //       if (event.name.isNotEmpty) {
-  //         final List<AttendeeCollectionModel> result = value
-  //             .attendanceCollectionModel!
-  //             .where((item) =>
-  //                 item.name!.toLowerCase().contains(event.name.toLowerCase()))
-  //             .toList();
-  //
-  //         emit(value.copyWith(attendanceSearchModelList: result));
-  //       } else {
-  //         emit(value.copyWith(attendanceSearchModelList: []));
-  //       }
-  //     },
-  //   );
-  // }
+  FutureOr<void> _onSearchAttendeeByName(
+    SearchAttendeesEvent event,
+    AttendanceIndividualEmitter emit,
+  ) {
+    state.maybeMap(
+      orElse: () {},
+      loaded: (value) {
+        if (event.name.isNotEmpty) {
+          final List<AttendeeModel> result = value.attendanceCollectionModel!
+              .where((item) =>
+                  item.name!.toLowerCase().contains(event.name.toLowerCase()))
+              .toList();
+
+          emit(value.copyWith(attendanceSearchModelList: result));
+        } else {
+          emit(value.copyWith(attendanceSearchModelList: []));
+        }
+      },
+    );
+  }
 }
 
 @freezed
@@ -295,14 +294,9 @@ class AttendanceIndividualEvent with _$AttendanceIndividualEvent {
   //   required String projectId,
   // }) = UploadAttendanceEvent;
   //
-  // const factory AttendanceIndividualEvent.searchAttendees({
-  //   required int entryTime,
-  //   required int exitTime,
-  //   required String name,
-  //   required String tenantId,
-  //   required String registarId,
-  //   required String projectId,
-  // }) = SearchAttendeesEvent;
+  const factory AttendanceIndividualEvent.searchAttendees({
+    required String name,
+  }) = SearchAttendeesEvent;
   //
   // const factory AttendanceIndividualEvent.dispose() =
   //     DisposeAttendanceIndividualEvent;
