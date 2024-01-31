@@ -21,21 +21,27 @@ class AttendanceLogSearchModel {
 class AttendanceLogModel {
   static const schemaName = 'Attendee';
 
-  final String id;
+  final String? id;
   final String? tenantId;
   final String? registerId;
   final String? individualId;
+  final int? time;
   final bool? nonRecoverableError;
   final int? rowVersion;
-  final int? status;
+  final String? status;
+  final String? type;
+  final String? clientReferenceId;
 
   AttendanceLogModel({
-    required this.id,
+    this.id,
     this.tenantId,
     this.registerId,
     this.individualId,
     this.nonRecoverableError = false,
     this.rowVersion,
-    this.status = -1,
+    this.type,
+    this.time,
+    this.status,
+    this.clientReferenceId,
   }) : super();
 }

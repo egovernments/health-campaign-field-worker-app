@@ -648,6 +648,34 @@ class AttendanceOpLogManager extends OpLogManager<HCMAttendanceRegisterModel> {
       throw UnimplementedError();
 }
 
+class AttendanceLogOpLogManager extends OpLogManager<HCMAttendanceLogModel> {
+  AttendanceLogOpLogManager(super.isar);
+
+  @override
+  HCMAttendanceLogModel applyServerGeneratedIdToEntity(
+    HCMAttendanceLogModel entity,
+    String serverGeneratedId,
+    int rowVersion,
+  ) =>
+      throw UnimplementedError();
+
+  @override
+  String getClientReferenceId(HCMAttendanceLogModel entity) =>
+      throw UnimplementedError();
+
+  @override
+  String? getServerGeneratedId(HCMAttendanceLogModel entity) =>
+      throw UnimplementedError();
+
+  @override
+  int? getRowVersion(HCMAttendanceLogModel entity) =>
+      throw UnimplementedError();
+
+  @override
+  bool? getNonRecoverableError(HCMAttendanceLogModel entity) =>
+      throw UnimplementedError();
+}
+
 class ProjectStaffOpLogManager extends OpLogManager<ProjectStaffModel> {
   ProjectStaffOpLogManager(super.isar);
 

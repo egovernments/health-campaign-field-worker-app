@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:attendance_management/attendance_management.dart';
+import 'package:attendance_management/models/attendance_log.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -36,95 +37,13 @@ class AttendanceIndividualBloc
     emit(const AttendanceIndividualState.loading());
 
     try {
-      // if (event. .isEmpty) {
-      //   if (event.attendeeId.isEmpty) {
-      //     throw "Atleast one attendee should be there";
-      //   } else {
-      //     AttendanceMarkIndividualModel a =
-      //         await attendanceRegisterRepository.fetchAttendees(
-      //       attendeeids: event.attendeeId,
-      //       limit: 1000,
-      //       offset: 0,
-      //       tenantId: event.tenantId,
-      //     );
-      //
-      //     List<AbsentAttendee> wq = a.attendanceRegister!.map(
-      //       (e) {
-      //         final absentAttendee = AbsentAttendee()
-      //           ..name = e.name!.givenName ?? ""
-      //           ..entryTime = event.entryTime
-      //           ..exitTime = event.exitTime
-      //           ..eventStartDate = event.eventStartDate
-      //           ..eventEndDate = event.eventEndDate
-      //           ..individualId = e.id!
-      //           ..projectId = event.projectId
-      //           ..status = -1
-      //           ..currentDate = event.currentDate
-      //           ..registerId = event.registerId
-      //           ..tenantId = event.tenantId
-      //           ..userName = e.userDetails!.username ?? ""
-      //           ..uploadToServer = false;
-      //
-      //         return absentAttendee;
-      //       },
-      //     ).toList();
-      //
-      //     await attendanceRegisterRepository.storeAbsentAttendee(wq);
-      //
-      //     List<AttendeeCollectionModel> emitData = wq.map((e) {
-      //       AttendeeCollectionModel s = AttendeeCollectionModel(
-      //         entryTime: e.entryTime,
-      //         name: e.name,
-      //         individualId: e.individualId,
-      //         exitTime: e.exitTime,
-      //         eventStartDate: e.eventStartDate,
-      //         eventEndDate: e.eventEndDate,
-      //         status: e.status,
-      //         id: e.id,
-      //         registerId: event.registerId,
-      //         userName: e.userName,
-      //         uploadToServer: e.uploadToServer,
-      //       );
-      //
-      //       return s;
-      //     }).toList();
-      //     emitData.sort((a, b) => a.name!.compareTo(b.name!));
-      //     await Future.delayed(const Duration(milliseconds: 800));
-      //     emit(
-      //       _AttendanceRowModelLoaded(
-      //         attendanceCollectionModel: emitData,
-      //         attendanceSearchModelList: [],
-      //         countData: emitData.length,
-      //         limitData: event.limit,
-      //         offsetData: event.offset,
-      //         currentOffset: emitData.length,
-      //       ),
-      //     );
-      //   }
-      // } else {
-      //   int counter = 0;
-      //   List<AttendeeCollectionModel> emitData = filterData.map((e) {
-      //     if (e.status == -1) {
-      //       counter = counter + 1;
-      //     }
-      //     AttendeeCollectionModel s = AttendeeCollectionModel(
-      //       id: e.id,
-      //       entryTime: e.entryTime,
-      //       name: e.name,
-      //       individualId: e.individualId,
-      //       exitTime: e.exitTime,
-      //       eventStartDate: e.eventStartDate,
-      //       eventEndDate: e.eventEndDate,
-      //       status: e.status,
-      //       registerId: event.registerId,
-      //       userName: e.userName,
-      //       uploadToServer: e.uploadToServer,
-      //     );
-      //
-      //     return s;
-      //   }).toList();
-      //   emitData.sort((a, b) => a.name!.compareTo(b.name!));
-      //   await Future.delayed(const Duration(milliseconds: 800));
+      AttendanceSingleton().searchAttendanceLog(
+          SearchAttendanceLog(
+          registerId: event.registerId,
+              tenantId: event.tenantId,
+              entryTime: event.entryTime,
+              exitTime: event.exitTime,
+              currentDate: event.currentDate, onLogLoaded: onLogLoaded));
       emit(AttendanceIndividualState.loaded(
         attendanceCollectionModel: event.attendees,
       ));
@@ -189,12 +108,34 @@ class AttendanceIndividualBloc
     SaveAsDraftEvent event,
     AttendanceIndividualEmitter emit,
   ) async {
+    final List<AttendanceLogModel> list = [];
     await state.maybeMap(
       loaded: (value) async {
         if (value.attendanceCollectionModel != null) {
-          AttendanceSingleton().submitAttendanceDetails(SubmitAttendanceDetails(
-              attendanceLogs: value.attendanceCollectionModel!,
-              onMarked: (val) => false));
+          value.attendanceCollectionModel?.forEach((e) {
+            list.addAll([
+              AttendanceLogModel(
+                  individualId: e.individualId,
+                  registerId: e.registerId,
+                  tenantId: e.tenantId,
+                  type: 'ENTRY',
+                  status: e.status == 0 ? 'INACTIVE' : 'ACTIVE',
+                  time: event.entryTime),
+              AttendanceLogModel(
+                  individualId: e.individualId,
+                  registerId: e.registerId,
+                  tenantId: e.tenantId,
+                  type: 'EXIT',
+                  status: e.status == 0 ? 'INACTIVE' : 'ACTIVE',
+                  time: e.status == 0 ? event.entryTime : event.exitTime)
+            ]);
+          });
+          AttendanceSingleton().submitAttendanceDetails(
+            SubmitAttendanceDetails(
+                attendanceLogs: list,
+                onMarked: (val) => false,
+                createOplog: event.createOplog),
+          );
         }
         emit(value.copyWith(
           attendanceSearchModelList: value.attendanceSearchModelList,
@@ -320,7 +261,9 @@ class AttendanceIndividualEvent with _$AttendanceIndividualEvent {
     // required int eventEndDate,
   }) = AttendanceMarkEvent;
   const factory AttendanceIndividualEvent.saveAsDraft({
-    required List<AttendeeModel> attendanceLogs,
+    required int entryTime,
+    required int exitTime,
+    @Default(false) bool? createOplog,
   }) = SaveAsDraftEvent;
   //
   // const factory AttendanceIndividualEvent.uploadAttendance({

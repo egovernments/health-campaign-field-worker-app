@@ -134,7 +134,12 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                       borderRadius: BorderRadius.zero,
                                     ),
                                   ),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    individualLogBloc.add(SaveAsDraftEvent(
+                                      entryTime: widget.entryTime,
+                                      exitTime: widget.exitTime,
+                                    ));
+                                  },
                                   icon: Icons.qr_code,
                                   label: localizations.translate(
                                     'Save as Draft',
@@ -146,17 +151,12 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                       ? () {
                                           FocusManager.instance.primaryFocus
                                               ?.unfocus();
-                                          if (currentOffset == 0) {
-                                            // markConfirmationDialog(
-                                            //   context.read<MarkAttendanceBloc>(),
-                                            //   localizations,
-                                            // );
-                                          } else {
-                                            // showWarningDialog(
-                                            //   context,
-                                            //   localizations,
-                                            // );
-                                          }
+                                          individualLogBloc
+                                              .add(SaveAsDraftEvent(
+                                            entryTime: widget.entryTime,
+                                            exitTime: widget.exitTime,
+                                            createOplog: true,
+                                          ));
                                         }
                                       : () {
                                           // context.router.pop();

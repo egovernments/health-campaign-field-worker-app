@@ -11,6 +11,8 @@ class HCMAttendanceLogSearchModel extends EntitySearchModel {
   final String? registerId;
   final String? individualId;
   final int? time;
+  final int? entryTime;
+  final int? exitTime;
   final String? type;
   final String? status;
   final List<String>? clientReferenceId;
@@ -23,6 +25,8 @@ class HCMAttendanceLogSearchModel extends EntitySearchModel {
     this.type,
     this.tenantId,
     this.time,
+    this.entryTime,
+    this.exitTime,
     this.clientReferenceId,
     super.isDeleted,
   }) : super();
@@ -36,6 +40,8 @@ class HCMAttendanceLogSearchModel extends EntitySearchModel {
     this.type,
     this.tenantId,
     this.time,
+    this.entryTime,
+    this.exitTime,
     this.clientReferenceId,
   });
 }
@@ -51,15 +57,16 @@ class HCMAttendanceLogModel extends EntityModel {
   final int? time;
   final bool? nonRecoverableError;
   final String? type;
-  final int? status;
+  final String? status;
   final int? rowVersion;
   final String? clientReferenceId;
+  final bool? uploadToServer;
 
   HCMAttendanceLogModel({
     this.id,
     this.registerId,
     this.individualId,
-    this.status = -1,
+    this.status,
     this.type,
     this.tenantId,
     this.time,
@@ -67,6 +74,7 @@ class HCMAttendanceLogModel extends EntityModel {
     this.name,
     this.rowVersion,
     this.nonRecoverableError = false,
+    this.uploadToServer = false,
     super.auditDetails,
     super.clientAuditDetails,
     super.isDeleted = false,
@@ -74,10 +82,14 @@ class HCMAttendanceLogModel extends EntityModel {
 
   AttendanceCompanion get companion => AttendanceCompanion(
         id: Value(id),
+        clientReferenceId: Value(clientReferenceId),
         tenantId: Value(tenantId!),
         registerId: Value(registerId!),
         status: Value(status!),
         time: Value(time),
+        type: Value(type),
+        uploadToServer: Value(uploadToServer),
+        individualId: Value(individualId!),
         nonRecoverableError: Value(nonRecoverableError),
         auditCreatedBy: Value(auditDetails?.createdBy),
         auditCreatedTime: Value(auditDetails?.createdTime),

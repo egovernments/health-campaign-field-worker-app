@@ -16,13 +16,17 @@ class AttendanceLogsLocalRepository extends LocalRepository<
     HCMAttendanceLogSearchModel query, [
     String? userId,
   ]) async {
-    final selectQuery = sql.select(sql.attendanceRegister).join([]);
+    final selectQuery = sql.select(sql.attendance).join([]);
 
     final results = await (selectQuery
           ..where(buildAnd([
             if (query.individualId != null)
-              sql.attendee.individualId.equals(
+              sql.attendance.individualId.equals(
                 query.individualId,
+              ),
+            if (query.registerId != null)
+              sql.attendance.registerId.equals(
+                query.registerId,
               ),
           ])))
         .get();
@@ -57,6 +61,25 @@ class AttendanceLogsLocalRepository extends LocalRepository<
         .whereNotNull()
         .where((element) => element.isDeleted != true)
         .toList();
+  }
+
+  @override
+  FutureOr<void> create(
+    HCMAttendanceLogModel entity, {
+    bool createOpLog = false,
+    DataOperation dataOperation = DataOperation.create,
+  }) async {
+    final logCompanion = entity.companion;
+
+    await sql.batch((batch) async {
+      batch.insert(
+        sql.attendance,
+        logCompanion,
+        mode: InsertMode.insertOrReplace,
+      );
+    });
+
+    await super.create(entity, createOpLog: createOpLog);
   }
 
   @override

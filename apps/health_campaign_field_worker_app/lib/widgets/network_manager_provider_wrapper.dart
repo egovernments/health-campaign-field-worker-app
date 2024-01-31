@@ -14,6 +14,7 @@ import '../blocs/app_initialization/app_initialization.dart';
 import '../data/data_repository.dart';
 import '../data/local_store/sql_store/sql_store.dart';
 import '../data/network_manager.dart';
+import '../data/repositories/local/attendance_logs.dart';
 import '../data/repositories/local/boundary.dart';
 import '../data/repositories/local/downsync.dart';
 import '../data/repositories/local/facility.dart';
@@ -295,6 +296,13 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         create: (_) => AttendanceLocalRepository(
           sql,
           AttendanceOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<
+          LocalRepository<HCMAttendanceLogModel, HCMAttendanceLogSearchModel>>(
+        create: (_) => AttendanceLogsLocalRepository(
+          sql,
+          AttendanceLogOpLogManager(isar),
         ),
       ),
     ];

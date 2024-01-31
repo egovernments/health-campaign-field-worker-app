@@ -21,7 +21,7 @@ class AttendeeSearchModel {
 class AttendeeModel {
   static const schemaName = 'Attendee';
 
-  final String id;
+  final String? id;
   final String? tenantId;
   final String? registerId;
   final String? individualId;
@@ -37,7 +37,7 @@ class AttendeeModel {
 
   AttendeeModel({
     this.additionalFields,
-    required this.id,
+    this.id,
     this.tenantId,
     this.registerId,
     this.individualId,

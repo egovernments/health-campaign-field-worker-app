@@ -1,5 +1,7 @@
 import 'package:attendance_management/attendance_management.dart';
 
+import '../models/attendance_log.dart';
+
 abstract class AttendanceListeners {
   void getAttendanceRegisters(
       Function(
@@ -7,7 +9,7 @@ abstract class AttendanceListeners {
                   attendancePackageRegisterModel)
           attendanceRegisters);
 
-  void searchAttendanceLog(SearchAttendanceLog individualAttendanceLogSearch);
+  void searchAttendanceLog(SearchAttendanceLog searchAttendanceLog);
 
   void markIndividualAttendance(
       MarkIndividualAttendance markIndividualAttendance);
@@ -70,10 +72,7 @@ class SearchAttendanceLog {
   final int entryTime;
   final int exitTime;
   final int currentDate;
-  final List<AttendeeModel> attendees;
-  final int offset;
-  final int limit;
-  final Function(dynamic individualSearchResponse) onLogLoaded;
+  final Function(List<AttendanceLogModel> logResponse) onLogLoaded;
 
   SearchAttendanceLog({
     required this.registerId,
@@ -81,9 +80,6 @@ class SearchAttendanceLog {
     required this.entryTime,
     required this.exitTime,
     required this.currentDate,
-    required this.attendees,
-    required this.offset,
-    required this.limit,
     required this.onLogLoaded,
   });
 }
@@ -111,9 +107,11 @@ class MarkIndividualAttendance {
 class SubmitAttendanceDetails {
   final List<AttendanceLogModel> attendanceLogs;
   final Function(bool message) onMarked;
+  final bool? createOplog;
 
   SubmitAttendanceDetails({
     required this.attendanceLogs,
     required this.onMarked,
+    this.createOplog = false,
   });
 }

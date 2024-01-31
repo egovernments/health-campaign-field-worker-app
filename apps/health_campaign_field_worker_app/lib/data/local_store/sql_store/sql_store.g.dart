@@ -2337,7 +2337,7 @@ class AttendanceData extends DataClass implements Insertable<AttendanceData> {
   final String registerId;
   final String individualId;
   final int? time;
-  final int? status;
+  final String? status;
   final String? type;
   final bool? nonRecoverableError;
   final int? auditCreatedTime;
@@ -2350,6 +2350,7 @@ class AttendanceData extends DataClass implements Insertable<AttendanceData> {
   final int? auditModifiedTime;
   final bool? isDeleted;
   final int? rowVersion;
+  final bool? uploadToServer;
   AttendanceData(
       {this.id,
       this.clientReferenceId,
@@ -2369,7 +2370,8 @@ class AttendanceData extends DataClass implements Insertable<AttendanceData> {
       this.auditModifiedBy,
       this.auditModifiedTime,
       this.isDeleted,
-      this.rowVersion});
+      this.rowVersion,
+      this.uploadToServer});
   factory AttendanceData.fromData(Map<String, dynamic> data, {String? prefix}) {
     final effectivePrefix = prefix ?? '';
     return AttendanceData(
@@ -2385,7 +2387,7 @@ class AttendanceData extends DataClass implements Insertable<AttendanceData> {
           .mapFromDatabaseResponse(data['${effectivePrefix}individual_id'])!,
       time: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}time']),
-      status: const IntType()
+      status: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}status']),
       type: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}type']),
@@ -2411,6 +2413,8 @@ class AttendanceData extends DataClass implements Insertable<AttendanceData> {
           .mapFromDatabaseResponse(data['${effectivePrefix}is_deleted']),
       rowVersion: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}row_version']),
+      uploadToServer: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}upload_to_server']),
     );
   }
   @override
@@ -2429,7 +2433,7 @@ class AttendanceData extends DataClass implements Insertable<AttendanceData> {
       map['time'] = Variable<int?>(time);
     }
     if (!nullToAbsent || status != null) {
-      map['status'] = Variable<int?>(status);
+      map['status'] = Variable<String?>(status);
     }
     if (!nullToAbsent || type != null) {
       map['type'] = Variable<String?>(type);
@@ -2466,6 +2470,9 @@ class AttendanceData extends DataClass implements Insertable<AttendanceData> {
     }
     if (!nullToAbsent || rowVersion != null) {
       map['row_version'] = Variable<int?>(rowVersion);
+    }
+    if (!nullToAbsent || uploadToServer != null) {
+      map['upload_to_server'] = Variable<bool?>(uploadToServer);
     }
     return map;
   }
@@ -2516,6 +2523,9 @@ class AttendanceData extends DataClass implements Insertable<AttendanceData> {
       rowVersion: rowVersion == null && nullToAbsent
           ? const Value.absent()
           : Value(rowVersion),
+      uploadToServer: uploadToServer == null && nullToAbsent
+          ? const Value.absent()
+          : Value(uploadToServer),
     );
   }
 
@@ -2530,7 +2540,7 @@ class AttendanceData extends DataClass implements Insertable<AttendanceData> {
       registerId: serializer.fromJson<String>(json['registerId']),
       individualId: serializer.fromJson<String>(json['individualId']),
       time: serializer.fromJson<int?>(json['time']),
-      status: serializer.fromJson<int?>(json['status']),
+      status: serializer.fromJson<String?>(json['status']),
       type: serializer.fromJson<String?>(json['type']),
       nonRecoverableError:
           serializer.fromJson<bool?>(json['nonRecoverableError']),
@@ -2544,6 +2554,7 @@ class AttendanceData extends DataClass implements Insertable<AttendanceData> {
       auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
       isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
       rowVersion: serializer.fromJson<int?>(json['rowVersion']),
+      uploadToServer: serializer.fromJson<bool?>(json['uploadToServer']),
     );
   }
   @override
@@ -2556,7 +2567,7 @@ class AttendanceData extends DataClass implements Insertable<AttendanceData> {
       'registerId': serializer.toJson<String>(registerId),
       'individualId': serializer.toJson<String>(individualId),
       'time': serializer.toJson<int?>(time),
-      'status': serializer.toJson<int?>(status),
+      'status': serializer.toJson<String?>(status),
       'type': serializer.toJson<String?>(type),
       'nonRecoverableError': serializer.toJson<bool?>(nonRecoverableError),
       'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
@@ -2569,6 +2580,7 @@ class AttendanceData extends DataClass implements Insertable<AttendanceData> {
       'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
       'isDeleted': serializer.toJson<bool?>(isDeleted),
       'rowVersion': serializer.toJson<int?>(rowVersion),
+      'uploadToServer': serializer.toJson<bool?>(uploadToServer),
     };
   }
 
@@ -2579,7 +2591,7 @@ class AttendanceData extends DataClass implements Insertable<AttendanceData> {
           String? registerId,
           String? individualId,
           int? time,
-          int? status,
+          String? status,
           String? type,
           bool? nonRecoverableError,
           int? auditCreatedTime,
@@ -2591,7 +2603,8 @@ class AttendanceData extends DataClass implements Insertable<AttendanceData> {
           String? auditModifiedBy,
           int? auditModifiedTime,
           bool? isDeleted,
-          int? rowVersion}) =>
+          int? rowVersion,
+          bool? uploadToServer}) =>
       AttendanceData(
         id: id ?? this.id,
         clientReferenceId: clientReferenceId ?? this.clientReferenceId,
@@ -2612,6 +2625,7 @@ class AttendanceData extends DataClass implements Insertable<AttendanceData> {
         auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
         isDeleted: isDeleted ?? this.isDeleted,
         rowVersion: rowVersion ?? this.rowVersion,
+        uploadToServer: uploadToServer ?? this.uploadToServer,
       );
   @override
   String toString() {
@@ -2634,7 +2648,8 @@ class AttendanceData extends DataClass implements Insertable<AttendanceData> {
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
           ..write('isDeleted: $isDeleted, ')
-          ..write('rowVersion: $rowVersion')
+          ..write('rowVersion: $rowVersion, ')
+          ..write('uploadToServer: $uploadToServer')
           ..write(')'))
         .toString();
   }
@@ -2659,7 +2674,8 @@ class AttendanceData extends DataClass implements Insertable<AttendanceData> {
       auditModifiedBy,
       auditModifiedTime,
       isDeleted,
-      rowVersion);
+      rowVersion,
+      uploadToServer);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -2682,7 +2698,8 @@ class AttendanceData extends DataClass implements Insertable<AttendanceData> {
           other.auditModifiedBy == this.auditModifiedBy &&
           other.auditModifiedTime == this.auditModifiedTime &&
           other.isDeleted == this.isDeleted &&
-          other.rowVersion == this.rowVersion);
+          other.rowVersion == this.rowVersion &&
+          other.uploadToServer == this.uploadToServer);
 }
 
 class AttendanceCompanion extends UpdateCompanion<AttendanceData> {
@@ -2692,7 +2709,7 @@ class AttendanceCompanion extends UpdateCompanion<AttendanceData> {
   final Value<String> registerId;
   final Value<String> individualId;
   final Value<int?> time;
-  final Value<int?> status;
+  final Value<String?> status;
   final Value<String?> type;
   final Value<bool?> nonRecoverableError;
   final Value<int?> auditCreatedTime;
@@ -2705,6 +2722,7 @@ class AttendanceCompanion extends UpdateCompanion<AttendanceData> {
   final Value<int?> auditModifiedTime;
   final Value<bool?> isDeleted;
   final Value<int?> rowVersion;
+  final Value<bool?> uploadToServer;
   const AttendanceCompanion({
     this.id = const Value.absent(),
     this.clientReferenceId = const Value.absent(),
@@ -2725,6 +2743,7 @@ class AttendanceCompanion extends UpdateCompanion<AttendanceData> {
     this.auditModifiedTime = const Value.absent(),
     this.isDeleted = const Value.absent(),
     this.rowVersion = const Value.absent(),
+    this.uploadToServer = const Value.absent(),
   });
   AttendanceCompanion.insert({
     this.id = const Value.absent(),
@@ -2746,6 +2765,7 @@ class AttendanceCompanion extends UpdateCompanion<AttendanceData> {
     this.auditModifiedTime = const Value.absent(),
     this.isDeleted = const Value.absent(),
     this.rowVersion = const Value.absent(),
+    this.uploadToServer = const Value.absent(),
   })  : tenantId = Value(tenantId),
         registerId = Value(registerId),
         individualId = Value(individualId);
@@ -2756,7 +2776,7 @@ class AttendanceCompanion extends UpdateCompanion<AttendanceData> {
     Expression<String>? registerId,
     Expression<String>? individualId,
     Expression<int?>? time,
-    Expression<int?>? status,
+    Expression<String?>? status,
     Expression<String?>? type,
     Expression<bool?>? nonRecoverableError,
     Expression<int?>? auditCreatedTime,
@@ -2769,6 +2789,7 @@ class AttendanceCompanion extends UpdateCompanion<AttendanceData> {
     Expression<int?>? auditModifiedTime,
     Expression<bool?>? isDeleted,
     Expression<int?>? rowVersion,
+    Expression<bool?>? uploadToServer,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -2792,6 +2813,7 @@ class AttendanceCompanion extends UpdateCompanion<AttendanceData> {
       if (auditModifiedTime != null) 'audit_modified_time': auditModifiedTime,
       if (isDeleted != null) 'is_deleted': isDeleted,
       if (rowVersion != null) 'row_version': rowVersion,
+      if (uploadToServer != null) 'upload_to_server': uploadToServer,
     });
   }
 
@@ -2802,7 +2824,7 @@ class AttendanceCompanion extends UpdateCompanion<AttendanceData> {
       Value<String>? registerId,
       Value<String>? individualId,
       Value<int?>? time,
-      Value<int?>? status,
+      Value<String?>? status,
       Value<String?>? type,
       Value<bool?>? nonRecoverableError,
       Value<int?>? auditCreatedTime,
@@ -2814,7 +2836,8 @@ class AttendanceCompanion extends UpdateCompanion<AttendanceData> {
       Value<String?>? auditModifiedBy,
       Value<int?>? auditModifiedTime,
       Value<bool?>? isDeleted,
-      Value<int?>? rowVersion}) {
+      Value<int?>? rowVersion,
+      Value<bool?>? uploadToServer}) {
     return AttendanceCompanion(
       id: id ?? this.id,
       clientReferenceId: clientReferenceId ?? this.clientReferenceId,
@@ -2835,6 +2858,7 @@ class AttendanceCompanion extends UpdateCompanion<AttendanceData> {
       auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
       isDeleted: isDeleted ?? this.isDeleted,
       rowVersion: rowVersion ?? this.rowVersion,
+      uploadToServer: uploadToServer ?? this.uploadToServer,
     );
   }
 
@@ -2860,7 +2884,7 @@ class AttendanceCompanion extends UpdateCompanion<AttendanceData> {
       map['time'] = Variable<int?>(time.value);
     }
     if (status.present) {
-      map['status'] = Variable<int?>(status.value);
+      map['status'] = Variable<String?>(status.value);
     }
     if (type.present) {
       map['type'] = Variable<String?>(type.value);
@@ -2898,6 +2922,9 @@ class AttendanceCompanion extends UpdateCompanion<AttendanceData> {
     if (rowVersion.present) {
       map['row_version'] = Variable<int?>(rowVersion.value);
     }
+    if (uploadToServer.present) {
+      map['upload_to_server'] = Variable<bool?>(uploadToServer.value);
+    }
     return map;
   }
 
@@ -2922,7 +2949,8 @@ class AttendanceCompanion extends UpdateCompanion<AttendanceData> {
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
           ..write('isDeleted: $isDeleted, ')
-          ..write('rowVersion: $rowVersion')
+          ..write('rowVersion: $rowVersion, ')
+          ..write('uploadToServer: $uploadToServer')
           ..write(')'))
         .toString();
   }
@@ -2968,9 +2996,9 @@ class $AttendanceTable extends Attendance
       type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _statusMeta = const VerificationMeta('status');
   @override
-  late final GeneratedColumn<int?> status = GeneratedColumn<int?>(
+  late final GeneratedColumn<String?> status = GeneratedColumn<String?>(
       'status', aliasedName, true,
-      type: const IntType(), requiredDuringInsert: false);
+      type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _typeMeta = const VerificationMeta('type');
   @override
   late final GeneratedColumn<String?> type = GeneratedColumn<String?>(
@@ -3046,6 +3074,15 @@ class $AttendanceTable extends Attendance
   late final GeneratedColumn<int?> rowVersion = GeneratedColumn<int?>(
       'row_version', aliasedName, true,
       type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _uploadToServerMeta =
+      const VerificationMeta('uploadToServer');
+  @override
+  late final GeneratedColumn<bool?> uploadToServer = GeneratedColumn<bool?>(
+      'upload_to_server', aliasedName, true,
+      type: const BoolType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (upload_to_server IN (0, 1))',
+      defaultValue: const Constant(false));
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -3066,7 +3103,8 @@ class $AttendanceTable extends Attendance
         auditModifiedBy,
         auditModifiedTime,
         isDeleted,
-        rowVersion
+        rowVersion,
+        uploadToServer
       ];
   @override
   String get aliasedName => _alias ?? 'attendance';
@@ -3184,12 +3222,18 @@ class $AttendanceTable extends Attendance
           rowVersion.isAcceptableOrUnknown(
               data['row_version']!, _rowVersionMeta));
     }
+    if (data.containsKey('upload_to_server')) {
+      context.handle(
+          _uploadToServerMeta,
+          uploadToServer.isAcceptableOrUnknown(
+              data['upload_to_server']!, _uploadToServerMeta));
+    }
     return context;
   }
 
   @override
   Set<GeneratedColumn> get $primaryKey =>
-      {clientReferenceId, registerId, individualId, tenantId, type};
+      {registerId, individualId, tenantId, type};
   @override
   AttendanceData map(Map<String, dynamic> data, {String? tablePrefix}) {
     return AttendanceData.fromData(data,

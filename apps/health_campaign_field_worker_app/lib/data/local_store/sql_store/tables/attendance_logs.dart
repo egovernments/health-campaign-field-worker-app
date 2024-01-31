@@ -7,7 +7,7 @@ class Attendance extends Table {
   TextColumn get registerId => text()();
   TextColumn get individualId => text()();
   IntColumn get time => integer().nullable()();
-  IntColumn get status => integer().nullable()();
+  TextColumn get status => text().nullable()();
   TextColumn get type => text().nullable()();
   BoolColumn get nonRecoverableError =>
       boolean().nullable().withDefault(const Constant(false))();
@@ -22,9 +22,10 @@ class Attendance extends Table {
   BoolColumn get isDeleted =>
       boolean().nullable().withDefault(const Constant(false))();
   IntColumn get rowVersion => integer().nullable()();
+  BoolColumn get uploadToServer =>
+      boolean().nullable().withDefault(const Constant(false))();
   @override
   Set<Column> get primaryKey => {
-        clientReferenceId,
         registerId,
         individualId,
         tenantId,
