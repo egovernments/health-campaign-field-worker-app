@@ -425,6 +425,9 @@ class _HomePageState extends LocalizedState<HomePage> {
         icon: Icons.table_chart,
         label: i18.home.manageAttendanceLabel,
         onPressed: () {
+          context
+              .read<SyncBloc>()
+              .add(SyncRefreshEvent(context.loggedInUserUuid));
           Navigator.push(
             context,
             MaterialPageRoute(

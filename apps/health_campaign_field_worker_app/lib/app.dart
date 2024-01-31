@@ -293,7 +293,7 @@ class MainApplicationState extends State<MainApplication>
                               attendance_localization.AttendanceLocalization
                                   .getDelegate(
                                 getLocalizationString(
-                                    widget.isar, selectedLocale),
+                                    widget.isar, selectedLocale,),
                                 appConfig.languages!,
                               ),
                             ],
