@@ -37,13 +37,33 @@ class AttendanceIndividualBloc
     emit(const AttendanceIndividualState.loading());
 
     try {
+      bool attendanceSubmitted = false;
+      List<AttendeeModel> attendees = [];
       AttendanceSingleton().searchAttendanceLog(SearchAttendanceLog(
           registerId: event.registerId,
           tenantId: event.tenantId,
           entryTime: event.entryTime,
           exitTime: event.exitTime,
           currentDate: event.currentDate,
-          onLogLoaded: (logResponse) => print(logResponse)));
+          onLogLoaded: (logResponse) {
+            attendees = event.attendees.map((e) {
+              final entryLogList = logResponse
+                  .where((l) =>
+                      l.individualId == e.individualId && l.type == 'ENTRY')
+                  .toList();
+              final exitLogList = logResponse
+                  .where((l) =>
+                      l.individualId == e.individualId && l.type == 'EXIT')
+                  .toList();
+
+              return e.copyWith(
+                  status: (entryLogList.isEmpty || exitLogList.isEmpty)
+                      ? -1
+                      : entryLogList.first.time == exitLogList.first.time
+                          ? 0
+                          : 1);
+            }).toList();
+          }));
       emit(AttendanceIndividualState.loaded(
         attendanceCollectionModel: event.attendees,
       ));

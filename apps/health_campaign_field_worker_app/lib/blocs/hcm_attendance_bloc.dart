@@ -95,7 +95,8 @@ class HCMAttendanceBloc extends AttendanceListeners {
           final logDay = DateTime(logTime.year, logTime.month, logTime.day)
               .millisecondsSinceEpoch;
           final currentTime = DateTime.fromMillisecondsSinceEpoch(
-              searchAttendanceLog.currentDate);
+            searchAttendanceLog.currentDate,
+          );
           final currentDay =
               DateTime(currentTime.year, currentTime.month, currentTime.day)
                   .millisecondsSinceEpoch;

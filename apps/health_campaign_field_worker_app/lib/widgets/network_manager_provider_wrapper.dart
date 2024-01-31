@@ -38,6 +38,7 @@ import '../data/repositories/local/stock.dart';
 import '../data/repositories/local/stock_reconciliation.dart';
 import '../data/repositories/local/task.dart';
 import '../data/repositories/oplog/oplog.dart';
+import '../data/repositories/remote/attendance_logs.dart';
 import '../data/repositories/remote/auth.dart';
 import '../data/repositories/remote/boundary.dart';
 import '../data/repositories/remote/downsync.dart';
@@ -527,21 +528,32 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
               actionMap: actions,
             ),
           ),
-        RepositoryProvider<
-            RemoteRepository<HFReferralModel, HFReferralSearchModel>>(
-          create: (_) => HFReferralRemoteRepository(
-            dio,
-            actionMap: actions,
+        if (value == DataModelType.hFReferral)
+          RepositoryProvider<
+              RemoteRepository<HFReferralModel, HFReferralSearchModel>>(
+            create: (_) => HFReferralRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
           ),
-        ),
-        RepositoryProvider<
-            RemoteRepository<HCMAttendanceRegisterModel,
-                HCMAttendanceSearchModel>>(
-          create: (_) => AttendanceRemoteRepository(
-            dio,
-            actionMap: actions,
+        if (value == DataModelType.attendanceRegister)
+          RepositoryProvider<
+              RemoteRepository<HCMAttendanceRegisterModel,
+                  HCMAttendanceSearchModel>>(
+            create: (_) => AttendanceRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
           ),
-        ),
+        if (value == DataModelType.attendance)
+          RepositoryProvider<
+              RemoteRepository<HCMAttendanceLogModel,
+                  HCMAttendanceLogSearchModel>>(
+            create: (_) => AttendanceLogRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
       ]);
     }
 

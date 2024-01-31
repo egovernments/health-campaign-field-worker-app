@@ -21,7 +21,7 @@ import 'entities/facility.dart';
 import 'entities/gender.dart';
 import 'entities/h_f_referral.dart';
 import 'entities/hcm_attendance_model.dart';
-import 'entities/hcm_attendee_model.dart';
+import 'entities/hcm_attendance_log_model.dart';
 import 'entities/household.dart';
 import 'entities/household_member.dart';
 import 'entities/identifier.dart';
