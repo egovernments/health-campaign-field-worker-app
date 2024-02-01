@@ -64,10 +64,8 @@ class AttendanceIndividualBloc
   ) async {
     await state.maybeMap(
       loaded: (value) async {
-        List<AttendeeModel> searchList = [];
+        List<AttendeeModel>? searchList;
         int status = 0;
-        value.attendanceCollectionModel;
-
         List<AttendeeModel> updatedList =
             value.attendanceCollectionModel!.map((e) {
           if (e.individualId == event.individualId) {
@@ -78,12 +76,14 @@ class AttendanceIndividualBloc
             } else {
               status = 1;
             }
+            return e.copyWith(status: status);
           }
-          return e.copyWith(status: status);
+          return e;
         }).toList();
 
-        if (value.attendanceSearchModelList.isNotEmpty) {
-          searchList = value.attendanceSearchModelList.map((e) {
+        if (value.attendanceSearchModelList != null &&
+            (value.attendanceSearchModelList ?? []).isNotEmpty) {
+          searchList = value.attendanceSearchModelList!.map((e) {
             if (e.individualId == event.individualId) {
               if (e.status == -1) {
                 status = 1;
@@ -92,8 +92,9 @@ class AttendanceIndividualBloc
               } else {
                 status = 1;
               }
+              return e.copyWith(status: status);
             }
-            return e.copyWith(status: status);
+            return e;
           }).toList();
         }
 
@@ -116,30 +117,32 @@ class AttendanceIndividualBloc
       loaded: (value) async {
         if (value.attendanceCollectionModel != null) {
           value.attendanceCollectionModel?.forEach((e) {
-            list.addAll([
-              AttendanceLogModel(
-                individualId: e.individualId,
-                registerId: e.registerId,
-                tenantId: e.tenantId,
-                type: EnumValues.entry.toValue(),
-                status: e.status == 0
-                    ? EnumValues.inactive.toValue()
-                    : EnumValues.active.toValue(),
-                time: event.entryTime,
-                uploadToServer: event.createOplog,
-              ),
-              AttendanceLogModel(
-                individualId: e.individualId,
-                registerId: e.registerId,
-                tenantId: e.tenantId,
-                type: EnumValues.exit.toValue(),
-                status: e.status == 0
-                    ? EnumValues.inactive.toValue()
-                    : EnumValues.active.toValue(),
-                time: e.status == 0 ? event.entryTime : event.exitTime,
-                uploadToServer: event.createOplog,
-              )
-            ]);
+            if (e.status != -1) {
+              list.addAll([
+                AttendanceLogModel(
+                  individualId: e.individualId,
+                  registerId: e.registerId,
+                  tenantId: e.tenantId,
+                  type: EnumValues.entry.toValue(),
+                  status: e.status == 0
+                      ? EnumValues.inactive.toValue()
+                      : EnumValues.active.toValue(),
+                  time: event.entryTime,
+                  uploadToServer: (event.createOplog ?? false),
+                ),
+                AttendanceLogModel(
+                  individualId: e.individualId,
+                  registerId: e.registerId,
+                  tenantId: e.tenantId,
+                  type: EnumValues.exit.toValue(),
+                  status: e.status == 0
+                      ? EnumValues.inactive.toValue()
+                      : EnumValues.active.toValue(),
+                  time: e.status == 0 ? event.entryTime : event.exitTime,
+                  uploadToServer: (event.createOplog ?? false),
+                )
+              ]);
+            }
           });
           AttendanceSingleton().submitAttendanceDetails(
             SubmitAttendanceDetails(
@@ -242,7 +245,7 @@ class AttendanceIndividualBloc
 
           emit(value.copyWith(attendanceSearchModelList: result));
         } else {
-          emit(value.copyWith(attendanceSearchModelList: []));
+          emit(value.copyWith(attendanceSearchModelList: null));
         }
       },
     );
@@ -333,7 +336,7 @@ class AttendanceIndividualState with _$AttendanceIndividualState {
   const factory AttendanceIndividualState.initial() = _Initial;
   const factory AttendanceIndividualState.loading() = _Loading;
   factory AttendanceIndividualState.loaded({
-    @Default([]) List<AttendeeModel> attendanceSearchModelList,
+    List<AttendeeModel>? attendanceSearchModelList,
     List<AttendeeModel>? attendanceCollectionModel,
     @Default(0) int offsetData,
     @Default(0) int currentOffset,

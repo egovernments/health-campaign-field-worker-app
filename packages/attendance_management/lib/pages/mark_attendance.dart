@@ -119,7 +119,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                   ) {
                     List<TableDataRow> tableData = [];
 
-                    tableData = attendanceSearchModelList.isNotEmpty
+                    tableData = attendanceSearchModelList != null
                         ? getAttendanceData(attendanceSearchModelList, viewOnly)
                         : getAttendanceData(
                             attendanceCollectionModel!, viewOnly);
@@ -469,62 +469,59 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
           limitData,
           flag,
         ) {
-          for (var element in attendanceCollectionModel!) {
-            if (element.status == null || element.status == -1) {
+          if (((attendanceCollectionModel ?? [])
+                      .any((a) => a.status == -1 || a.status == null) &&
+                  type != EnumValues.draft.toValue()) ||
+              ((attendanceCollectionModel ?? [])
+                      .every((a) => a.status == -1 || a.status == null) &&
+                  type == EnumValues.draft.toValue())) {
+            DigitToast.show(
+              context,
+              options: DigitToastOptions(
+                localizations
+                    .translate(i18.attendance.pleaseMarkAttForIndividuals),
+                true,
+                theme,
+              ),
+            );
+          } else {
+            individualLogBloc.add(SaveAsDraftEvent(
+              entryTime: widget.entryTime,
+              exitTime: widget.exitTime,
+              createOplog: type != EnumValues.draft.toValue(),
+            ));
+            if (type == EnumValues.draft.toValue()) {
               DigitToast.show(
                 context,
                 options: DigitToastOptions(
-                  localizations
-                      .translate(i18.attendance.pleaseMarkAttForIndividuals),
-                  true,
+                  localizations.translate(i18.attendance.draftSavedMessage),
+                  false,
                   theme,
                 ),
               );
-              return;
             } else {
-              if (type == EnumValues.draft.toValue()) {
-                individualLogBloc.add(SaveAsDraftEvent(
-                  entryTime: widget.entryTime,
-                  exitTime: widget.exitTime,
-                ));
-                DigitToast.show(
-                  context,
-                  options: DigitToastOptions(
-                    localizations.translate(i18.attendance.draftSavedMessage),
-                    false,
-                    theme,
-                  ),
-                );
-              } else {
-                FocusManager.instance.primaryFocus?.unfocus();
-                individualLogBloc.add(SaveAsDraftEvent(
-                  entryTime: widget.entryTime,
-                  exitTime: widget.exitTime,
-                  createOplog: true,
-                ));
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                      builder: (context) => AttendanceAcknowledgementPage(
-                            label: localizations.translate(
-                                i18.attendance.attendanceSubmittedSuccessMsg),
-                            actionLabel:
-                                localizations.translate(i18.attendance.goHome),
-                            action: () {
-                              AttendanceSingleton().callSync();
-                              Navigator.popUntil(
-                                  context, (route) => route.isFirst);
-                            },
-                            secondaryLabel: localizations.translate(
-                                i18.attendance.goToAttendanceRegisters),
-                            secondaryAction: () {
-                              AttendanceSingleton().callSync();
-                              Navigator.of(context).pop();
-                              Navigator.of(context).pop();
-                              Navigator.of(context).pop();
-                            },
-                          )),
-                );
-              }
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                    builder: (context) => AttendanceAcknowledgementPage(
+                          label: localizations.translate(
+                              i18.attendance.attendanceSubmittedSuccessMsg),
+                          actionLabel:
+                              localizations.translate(i18.attendance.goHome),
+                          action: () {
+                            AttendanceSingleton().callSync();
+                            Navigator.popUntil(
+                                context, (route) => route.isFirst);
+                          },
+                          secondaryLabel: localizations.translate(
+                              i18.attendance.goToAttendanceRegisters),
+                          secondaryAction: () {
+                            AttendanceSingleton().callSync();
+                            Navigator.of(context).pop();
+                            Navigator.of(context).pop();
+                            Navigator.of(context).pop();
+                          },
+                        )),
+              );
             }
           }
         });

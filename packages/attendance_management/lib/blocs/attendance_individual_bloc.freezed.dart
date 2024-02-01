@@ -1085,7 +1085,7 @@ mixin _$AttendanceIndividualState {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(
-            List<AttendeeModel> attendanceSearchModelList,
+            List<AttendeeModel>? attendanceSearchModelList,
             List<AttendeeModel>? attendanceCollectionModel,
             int offsetData,
             int currentOffset,
@@ -1101,7 +1101,7 @@ mixin _$AttendanceIndividualState {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(
-            List<AttendeeModel> attendanceSearchModelList,
+            List<AttendeeModel>? attendanceSearchModelList,
             List<AttendeeModel>? attendanceCollectionModel,
             int offsetData,
             int currentOffset,
@@ -1117,7 +1117,7 @@ mixin _$AttendanceIndividualState {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(
-            List<AttendeeModel> attendanceSearchModelList,
+            List<AttendeeModel>? attendanceSearchModelList,
             List<AttendeeModel>? attendanceCollectionModel,
             int offsetData,
             int currentOffset,
@@ -1215,7 +1215,7 @@ class _$_Initial extends _Initial {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(
-            List<AttendeeModel> attendanceSearchModelList,
+            List<AttendeeModel>? attendanceSearchModelList,
             List<AttendeeModel>? attendanceCollectionModel,
             int offsetData,
             int currentOffset,
@@ -1234,7 +1234,7 @@ class _$_Initial extends _Initial {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(
-            List<AttendeeModel> attendanceSearchModelList,
+            List<AttendeeModel>? attendanceSearchModelList,
             List<AttendeeModel>? attendanceCollectionModel,
             int offsetData,
             int currentOffset,
@@ -1253,7 +1253,7 @@ class _$_Initial extends _Initial {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(
-            List<AttendeeModel> attendanceSearchModelList,
+            List<AttendeeModel>? attendanceSearchModelList,
             List<AttendeeModel>? attendanceCollectionModel,
             int offsetData,
             int currentOffset,
@@ -1353,7 +1353,7 @@ class _$_Loading extends _Loading {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(
-            List<AttendeeModel> attendanceSearchModelList,
+            List<AttendeeModel>? attendanceSearchModelList,
             List<AttendeeModel>? attendanceCollectionModel,
             int offsetData,
             int currentOffset,
@@ -1372,7 +1372,7 @@ class _$_Loading extends _Loading {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(
-            List<AttendeeModel> attendanceSearchModelList,
+            List<AttendeeModel>? attendanceSearchModelList,
             List<AttendeeModel>? attendanceCollectionModel,
             int offsetData,
             int currentOffset,
@@ -1391,7 +1391,7 @@ class _$_Loading extends _Loading {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(
-            List<AttendeeModel> attendanceSearchModelList,
+            List<AttendeeModel>? attendanceSearchModelList,
             List<AttendeeModel>? attendanceCollectionModel,
             int offsetData,
             int currentOffset,
@@ -1459,7 +1459,7 @@ abstract class _$$_AttendanceRowModelLoadedCopyWith<$Res> {
       __$$_AttendanceRowModelLoadedCopyWithImpl<$Res>;
   @useResult
   $Res call(
-      {List<AttendeeModel> attendanceSearchModelList,
+      {List<AttendeeModel>? attendanceSearchModelList,
       List<AttendeeModel>? attendanceCollectionModel,
       int offsetData,
       int currentOffset,
@@ -1480,7 +1480,7 @@ class __$$_AttendanceRowModelLoadedCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? attendanceSearchModelList = null,
+    Object? attendanceSearchModelList = freezed,
     Object? attendanceCollectionModel = freezed,
     Object? offsetData = null,
     Object? currentOffset = null,
@@ -1489,10 +1489,10 @@ class __$$_AttendanceRowModelLoadedCopyWithImpl<$Res>
     Object? viewOnly = null,
   }) {
     return _then(_$_AttendanceRowModelLoaded(
-      attendanceSearchModelList: null == attendanceSearchModelList
+      attendanceSearchModelList: freezed == attendanceSearchModelList
           ? _value._attendanceSearchModelList
           : attendanceSearchModelList // ignore: cast_nullable_to_non_nullable
-              as List<AttendeeModel>,
+              as List<AttendeeModel>?,
       attendanceCollectionModel: freezed == attendanceCollectionModel
           ? _value._attendanceCollectionModel
           : attendanceCollectionModel // ignore: cast_nullable_to_non_nullable
@@ -1525,7 +1525,7 @@ class __$$_AttendanceRowModelLoadedCopyWithImpl<$Res>
 
 class _$_AttendanceRowModelLoaded extends _AttendanceRowModelLoaded {
   _$_AttendanceRowModelLoaded(
-      {final List<AttendeeModel> attendanceSearchModelList = const [],
+      {final List<AttendeeModel>? attendanceSearchModelList,
       final List<AttendeeModel>? attendanceCollectionModel,
       this.offsetData = 0,
       this.currentOffset = 0,
@@ -1536,12 +1536,13 @@ class _$_AttendanceRowModelLoaded extends _AttendanceRowModelLoaded {
         _attendanceCollectionModel = attendanceCollectionModel,
         super._();
 
-  final List<AttendeeModel> _attendanceSearchModelList;
+  final List<AttendeeModel>? _attendanceSearchModelList;
   @override
-  @JsonKey()
-  List<AttendeeModel> get attendanceSearchModelList {
+  List<AttendeeModel>? get attendanceSearchModelList {
+    final value = _attendanceSearchModelList;
+    if (value == null) return null;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_attendanceSearchModelList);
+    return EqualUnmodifiableListView(value);
   }
 
   final List<AttendeeModel>? _attendanceCollectionModel;
@@ -1619,7 +1620,7 @@ class _$_AttendanceRowModelLoaded extends _AttendanceRowModelLoaded {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(
-            List<AttendeeModel> attendanceSearchModelList,
+            List<AttendeeModel>? attendanceSearchModelList,
             List<AttendeeModel>? attendanceCollectionModel,
             int offsetData,
             int currentOffset,
@@ -1639,7 +1640,7 @@ class _$_AttendanceRowModelLoaded extends _AttendanceRowModelLoaded {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(
-            List<AttendeeModel> attendanceSearchModelList,
+            List<AttendeeModel>? attendanceSearchModelList,
             List<AttendeeModel>? attendanceCollectionModel,
             int offsetData,
             int currentOffset,
@@ -1659,7 +1660,7 @@ class _$_AttendanceRowModelLoaded extends _AttendanceRowModelLoaded {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(
-            List<AttendeeModel> attendanceSearchModelList,
+            List<AttendeeModel>? attendanceSearchModelList,
             List<AttendeeModel>? attendanceCollectionModel,
             int offsetData,
             int currentOffset,
@@ -1717,7 +1718,7 @@ class _$_AttendanceRowModelLoaded extends _AttendanceRowModelLoaded {
 
 abstract class _AttendanceRowModelLoaded extends AttendanceIndividualState {
   factory _AttendanceRowModelLoaded(
-      {final List<AttendeeModel> attendanceSearchModelList,
+      {final List<AttendeeModel>? attendanceSearchModelList,
       final List<AttendeeModel>? attendanceCollectionModel,
       final int offsetData,
       final int currentOffset,
@@ -1726,7 +1727,7 @@ abstract class _AttendanceRowModelLoaded extends AttendanceIndividualState {
       final bool viewOnly}) = _$_AttendanceRowModelLoaded;
   _AttendanceRowModelLoaded._() : super._();
 
-  List<AttendeeModel> get attendanceSearchModelList;
+  List<AttendeeModel>? get attendanceSearchModelList;
   List<AttendeeModel>? get attendanceCollectionModel;
   int get offsetData;
   int get currentOffset;
@@ -1803,7 +1804,7 @@ class _$_Error extends _Error {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(
-            List<AttendeeModel> attendanceSearchModelList,
+            List<AttendeeModel>? attendanceSearchModelList,
             List<AttendeeModel>? attendanceCollectionModel,
             int offsetData,
             int currentOffset,
@@ -1822,7 +1823,7 @@ class _$_Error extends _Error {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(
-            List<AttendeeModel> attendanceSearchModelList,
+            List<AttendeeModel>? attendanceSearchModelList,
             List<AttendeeModel>? attendanceCollectionModel,
             int offsetData,
             int currentOffset,
@@ -1841,7 +1842,7 @@ class _$_Error extends _Error {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(
-            List<AttendeeModel> attendanceSearchModelList,
+            List<AttendeeModel>? attendanceSearchModelList,
             List<AttendeeModel>? attendanceCollectionModel,
             int offsetData,
             int currentOffset,
