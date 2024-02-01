@@ -241,14 +241,18 @@ class _AttendanceDateSessionSelectionPageState
                                     ],
                                   ),
                                 ),
-                                DigitInfoCard(
-                                  title: localizations.translate(
-                                    'Missed Attendance!',
-                                  ),
-                                  description: localizations.translate(
-                                    getMissedDays(),
-                                  ),
-                                ),
+                                if (showInfoCard(selectedRegister,
+                                    form.control(_dateOfSession).value))
+                                  DigitInfoCard(
+                                    title: localizations.translate(
+                                      'Missed Attendance!',
+                                    ),
+                                    description: localizations.translate(
+                                      getMissedDays(),
+                                    ),
+                                  )
+                                else
+                                  const SizedBox(),
                               ],
                             );
                           },
@@ -266,13 +270,15 @@ class _AttendanceDateSessionSelectionPageState
   }
 
   String getMissedDays() {
+    missedDays = ""; // Clear the missedDays string
+    DateTime currentDate = DateTime.now();
     for (var element in widget.registers) {
       if (element.id == widget.registerID) {
         if (element.attendanceLog != null) {
           for (var element in element.attendanceLog!) {
             element.forEach((key, value) {
-              if (value == false) {
-                missedDays += "${key.day}/${key.month}/${key.year}, /n";
+              if (value == false && key.isBefore(currentDate)) {
+                missedDays += "${key.day}/${key.month}/${key.year}, \n";
               }
             });
           }
@@ -297,6 +303,25 @@ class _AttendanceDateSessionSelectionPageState
       }
     }
 
+    return false;
+  }
+
+  bool showInfoCard(
+      AttendancePackageRegisterModel selectedRegister, DateTime selectedDate) {
+    if (selectedRegister.attendanceLog != null) {
+      for (var log in selectedRegister.attendanceLog!) {
+        for (var entry in log.entries) {
+          final logDate = entry.key;
+          final isAttendanceMarked = entry.value;
+
+          // Check if the logDate is one day before the selectedDate and the attendance is not marked
+          if (selectedDate.difference(logDate).inDays == 1 &&
+              !isAttendanceMarked) {
+            return true;
+          }
+        }
+      }
+    }
     return false;
   }
 }

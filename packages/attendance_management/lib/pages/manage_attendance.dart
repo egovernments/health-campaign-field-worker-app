@@ -120,7 +120,7 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
                   AttendanceSingleton().callSync();
                 },
               ),
-              footer: (list.length < 2)
+              footer: (list.length == 1)
                   ? PoweredByDigit(
                       version: AttendanceSingleton().appVersion,
                     )
