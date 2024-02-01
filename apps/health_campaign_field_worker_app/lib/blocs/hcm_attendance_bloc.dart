@@ -2,7 +2,6 @@ import 'package:attendance_management/blocs/attendance_listeners.dart';
 import 'package:attendance_management/models/attendance_log.dart';
 import 'package:attendance_management/models/attendance_register.dart';
 import 'package:collection/collection.dart';
-import 'package:digit_components/utils/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -89,9 +88,10 @@ class HCMAttendanceBloc extends AttendanceListeners {
             .toList();
 
         return e.attendanceRegister.copyWith(
-            attendees: attendeeList,
-            attendanceLog: list,
-            completedDays: completedDaysCount,);
+          attendees: attendeeList,
+          attendanceLog: list,
+          completedDays: completedDaysCount,
+        );
       }));
 
       _registersLoaded(
@@ -200,8 +200,11 @@ class HCMAttendanceBloc extends AttendanceListeners {
     context.read<SyncBloc>().add(SyncRefreshEvent(userId!));
   }
 
-  List<Map<DateTime, bool>> generateDateList(int startMillis, int endMillis,
-      List<HCMAttendanceLogModel> completedLogs,) {
+  List<Map<DateTime, bool>> generateDateList(
+    int startMillis,
+    int endMillis,
+    List<HCMAttendanceLogModel> completedLogs,
+  ) {
     List<Map<DateTime, bool>> dateList = [];
 
     // Convert milliseconds to DateTime objects

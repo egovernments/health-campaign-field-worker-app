@@ -25,6 +25,8 @@ class Common {
 
   String get corecommonRequired => 'CORE_COMMON_REQUIRED';
 
+  String get searchByName => 'CORE_COMMON_SEARCH_BY_NAME';
+
   String get coreCommonReasonRequired => 'CORE_COMMON_REASON_REQUIRED';
 
   String get corecommonclose => 'CORE_COMMON_CLOSE';
@@ -110,11 +112,37 @@ class AcknowledgementSuccess {
   String get dataDownloadedSuccessLabel => 'DATA_DOWNLOADED_SUCCESS_LABEL';
 }
 
-
 class Attendance {
   const Attendance();
 
   String get viewAttendanceLabel => 'HOME_VIEW_ATTENDANCE_LABEL';
+
+  String get campaignNameLabel => 'CAMPAIGN_NAME_LABEL';
+
+  String get eventTypeLabel => 'EVENT_TYPE_LABEL';
+
+  String get staffCountLabel => 'STAFF_COUNT_LABEL';
+
+  String get startDateLabel => 'START_DATE_LABEL';
+
+  String get endDateLabel => 'END_DATE_LABEL';
+
+  String get statusLabel => 'STATUS_LABEL';
+
+  String get attendanceCompletionLabel => 'ATTENDANCE_COMPLETION_LABEL';
+
+  String get noAttendeesEnrolledMessage =>
+      'NO_ATTENDEES_ENROLLED_TO_THE_REGISTER';
+
+  String get saveAndMarkLaterLabel => 'SAVE_AND_MARK_LATER_LABEL';
+
+  String get pleaseMarkAttForIndividuals =>
+      'PLZ_MARK_ATTENDANCE_FOR_INDIVIDUALS';
+
+  String get draftSavedMessage => 'DRAFT_SAVED_MESSAGE';
+
+  String get attendanceSubmittedSuccessMsg =>
+      'ATTENDANCE_SUBMITTED_SUCCESS_MSG';
 
   String get selectSession => 'SESSION_SELECTION_HEADER';
 
@@ -151,6 +179,16 @@ class Attendance {
   String get confirmationDescNote => "CONFIRMATION_DESCRIPTION_NOTE";
 
   String get goBackButton => "GO_BACK_BUTTON";
+
+  String get goHome => "GO_TO_HOME";
+
+  String get morningSession => "MORNING_SESSION";
+
+  String get eveningSession => "EVENING_SESSION";
+
+  String get goToAttendanceRegisters => "GO_TO_ATTENDANCE_REGISTERS";
+
+  String get plzSelectSession => "PLZ_SELECT_THE_SESSION";
 
   String get checkAttendanceMark => "CHECK_ATTENDANCE_MARK";
 
