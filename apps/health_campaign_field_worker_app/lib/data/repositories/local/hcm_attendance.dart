@@ -42,66 +42,94 @@ class AttendanceLocalRepository extends LocalRepository<
                 query.id!,
               ),
             if (query.staffId != null)
-              sql.staff.registerId.equalsExp(
-                sql.attendanceRegister.id,
+              sql.attendanceRegister.id.equalsExp(
+                sql.staff.registerId,
+              ),
+            if (query.referenceId != null)
+              sql.attendanceRegister.referenceId.equals(
+                query.referenceId,
               ),
           ])))
         .get();
 
-    return results
-        .map((e) {
-          final register = e.readTableOrNull(sql.attendanceRegister);
-          final staffs = e.readTableOrNull(sql.staff);
-          final attendees = e.readTableOrNull(sql.attendee);
-          if (register == null) return null;
+    final registerMap = <String, HCMAttendanceRegisterModel>{};
 
-          return HCMAttendanceRegisterModel(
-            attendanceRegister: AttendancePackageRegisterModel(
-              id: register.id.toString(),
-              attendees: attendees == null
-                  ? null
-                  : [
-                      AttendeeModel(
-                        id: attendees.id.toString(),
-                        registerId: attendees.registerId,
-                        tenantId: attendees.tenantId,
-                        individualId: attendees.individualId,
-                        enrollmentDate: attendees.enrollmentDate,
-                        denrollmentDate: attendees.denrollmentDate,
-                      ),
-                    ],
-              staff: staffs == null
-                  ? null
-                  : [
-                      StaffModel(
-                        id: staffs.id,
-                        registerId: staffs.registerId,
-                        tenantId: register.tenantId,
-                        userId: staffs.userId,
-                        enrollmentDate: staffs.enrollmentDate,
-                        denrollmentDate: staffs.denrollmentDate,
-                      ),
-                    ],
-              name: register.name,
-              registerNumber: register.registerNumber,
-              tenantId: register.tenantId,
-              referenceId: register.referenceId,
-              serviceCode: register.serviceCode,
-              status: register.status,
-              startDate: register.startDate,
-              endDate: register.endDate,
-              additionalDetails:
-                  jsonDecode(register.additionalFields.toString()),
-              auditDetails: AttendanceAuditDetails(
-                createdBy: register.auditCreatedBy ?? '',
-                createdTime: register.auditCreatedTime ?? 0,
+    for (final e in results) {
+      final register = e.readTableOrNull(sql.attendanceRegister);
+      final staffs = e.readTableOrNull(sql.staff);
+      final attendees = e.readTableOrNull(sql.attendee);
+      if (register == null) continue;
+
+      if (registerMap.containsKey(register.id)) {
+        registerMap[register.id]!.attendanceRegister.attendees?.add(
+              AttendeeModel(
+                id: attendees?.id.toString(),
+                registerId: attendees?.registerId,
+                tenantId: attendees?.tenantId,
+                individualId: attendees?.individualId,
+                enrollmentDate: attendees?.enrollmentDate,
+                denrollmentDate: attendees?.denrollmentDate,
               ),
+            );
+
+        registerMap[register.id]!.attendanceRegister.staff?.add(
+              StaffModel(
+                id: staffs?.id,
+                registerId: staffs?.registerId,
+                tenantId: register.tenantId,
+                userId: staffs?.userId,
+                enrollmentDate: staffs?.enrollmentDate,
+                denrollmentDate: staffs?.denrollmentDate,
+              ),
+            );
+      } else {
+        registerMap[register.id.toString()] = HCMAttendanceRegisterModel(
+          attendanceRegister: AttendancePackageRegisterModel(
+            id: register.id.toString(),
+            attendees: attendees == null
+                ? null
+                : [
+                    AttendeeModel(
+                      id: attendees.id.toString(),
+                      registerId: attendees.registerId,
+                      tenantId: attendees.tenantId,
+                      individualId: attendees.individualId,
+                      enrollmentDate: attendees.enrollmentDate,
+                      denrollmentDate: attendees.denrollmentDate,
+                    ),
+                  ],
+            staff: staffs == null
+                ? null
+                : [
+                    StaffModel(
+                      id: staffs.id,
+                      registerId: staffs.registerId,
+                      tenantId: register.tenantId,
+                      userId: staffs.userId,
+                      enrollmentDate: staffs.enrollmentDate,
+                      denrollmentDate: staffs.denrollmentDate,
+                    ),
+                  ],
+            name: register.name,
+            registerNumber: register.registerNumber,
+            tenantId: register.tenantId,
+            referenceId: register.referenceId,
+            serviceCode: register.serviceCode,
+            status: register.status,
+            startDate: register.startDate,
+            endDate: register.endDate,
+            additionalDetails: jsonDecode(register.additionalFields.toString()),
+            auditDetails: AttendanceAuditDetails(
+              createdBy: register.auditCreatedBy ?? '',
+              createdTime: register.auditCreatedTime ?? 0,
             ),
-          );
-        })
-        .whereNotNull()
-        .where((element) => element.isDeleted != true)
-        .toList();
+          ),
+        );
+      }
+    }
+    final uniqueTasks = registerMap.values.toList();
+
+    return uniqueTasks.where((element) => element.isDeleted != true).toList();
   }
 
   @override
@@ -151,7 +179,10 @@ class AttendanceLocalRepository extends LocalRepository<
             }).toList())
         .toList();
 
-    final attendeeCompanions = attendeeList.expand((e) => [e?[0]]).toList();
+    final attendeeCompanions = attendeeList
+        .expand((e) => e ?? [])
+        .cast<Insertable<AttendeeData>>()
+        .toList();
 
     await sql.batch((batch) async {
       batch.insertAll(
@@ -171,7 +202,7 @@ class AttendanceLocalRepository extends LocalRepository<
       if (attendeeCompanions.isNotEmpty) {
         batch.insertAll(
           sql.attendee,
-          attendeeCompanions.whereNotNull().toList(),
+          attendeeCompanions,
           mode: InsertMode.insertOrReplace,
         );
       }

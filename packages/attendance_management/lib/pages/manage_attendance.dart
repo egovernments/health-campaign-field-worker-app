@@ -70,8 +70,9 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
                 list.add(RegisterCard(
                     data: {
                       t.translate(i18.attendance.campaignNameLabel):
-                          register.additionalDetails?[
-                              EnumValues.campaignName.toValue()],
+                          register.name,
+                      // register.additionalDetails?[
+                      //     EnumValues.campaignName.toValue()],
                       t.translate(i18.attendance.eventTypeLabel): register
                           .additionalDetails?[EnumValues.eventType.toValue()],
                       t.translate(i18.attendance.staffCountLabel):
