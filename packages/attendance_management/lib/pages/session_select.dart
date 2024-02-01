@@ -109,33 +109,51 @@ class _AttendanceDateSessionSelectionPageState
                                       DateTime s =
                                           form.control(_dateOfSession).value;
 
-                                      final entryTime =
-                                          AttendanceDateTimeManagement
+                                      final entryTime = selectedRegister
+                                                      .additionalDetails?[
+                                                  'sessions'] ==
+                                              2
+                                          ? AttendanceDateTimeManagement
                                               .getMillisecondEpoch(
-                                        s,
-                                        form.control(_sessionRadio).value !=
-                                                null
-                                            ? form
-                                                .control(_sessionRadio)
-                                                .value
-                                                .key
-                                            : 0,
-                                        "entryTime",
-                                      );
+                                              s,
+                                              form
+                                                          .control(
+                                                              _sessionRadio)
+                                                          .value !=
+                                                      null
+                                                  ? form
+                                                      .control(_sessionRadio)
+                                                      .value
+                                                      .key
+                                                  : 0,
+                                              "entryTime",
+                                            )
+                                          : (DateTime(s.year, s.month, s.day, 9)
+                                                  .millisecondsSinceEpoch) /
+                                              1000;
 
-                                      final exitTime =
-                                          AttendanceDateTimeManagement
+                                      final exitTime = selectedRegister
+                                                      .additionalDetails?[
+                                                  'sessions'] ==
+                                              2
+                                          ? AttendanceDateTimeManagement
                                               .getMillisecondEpoch(
-                                        s,
-                                        form.control(_sessionRadio).value !=
-                                                null
-                                            ? form
-                                                .control(_sessionRadio)
-                                                .value
-                                                .key
-                                            : 1,
-                                        "exitTime",
-                                      );
+                                              s,
+                                              form
+                                                          .control(
+                                                              _sessionRadio)
+                                                          .value !=
+                                                      null
+                                                  ? form
+                                                      .control(_sessionRadio)
+                                                      .value
+                                                      .key
+                                                  : 1,
+                                              "exitTime",
+                                            )
+                                          : (DateTime(s.year, s.month, s.day, 6)
+                                                  .millisecondsSinceEpoch) /
+                                              1000;
 
                                       Navigator.of(context).push(
                                         MaterialPageRoute(
