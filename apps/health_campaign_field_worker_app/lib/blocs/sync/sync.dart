@@ -39,8 +39,6 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
     int? length = event.count;
     emit(const SyncState.loading());
     try {
-      print('USER----------');
-      print(event.createdBy);
       length ??= (await isar.opLogs
                   .filter()
                   .createdByEqualTo(event.createdBy)
@@ -85,7 +83,8 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
               case DataModelType.sideEffect:
               case DataModelType.referral:
               case DataModelType.hFReferral:
-              case DataModelType.attendance:
+                //{TODO: Need to uncomment below code once attendance log down sync implemented
+                // case DataModelType.attendance:
                 return true;
               default:
                 return false;
