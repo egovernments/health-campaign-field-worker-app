@@ -670,7 +670,6 @@ getLocalizationString(Isar isar, String selectedLocale) async {
     selectedLocale.toString(),
   )
       .findAll();
-  AppLogger.instance.info('localizationList: ${localizationList}');
   if (localizationList.isNotEmpty) {
     localizationValues.addAll(localizationList.first.localization!);
   }

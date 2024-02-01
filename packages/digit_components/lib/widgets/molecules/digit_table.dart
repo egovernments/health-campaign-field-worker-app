@@ -12,6 +12,8 @@ class DigitTable extends StatelessWidget {
   final double? height;
   final int? selectedIndex;
   final ScrollPhysics? scrollPhysics;
+  final bool? centerTitle;
+  final bool? centerData;
   const DigitTable({
     Key? key,
     required this.headerList,
@@ -21,6 +23,8 @@ class DigitTable extends StatelessWidget {
     this.selectedIndex,
     this.scrollPhysics,
     this.columnRowFixedHeight = 52.0,
+    this.centerTitle,
+    this.centerData,
   }) : super(key: key);
 
   List<Widget>? _getTitleWidget(ThemeData theme) {
@@ -65,7 +69,7 @@ class DigitTable extends StatelessWidget {
       height: 54,
       color: !isBorderRequired ? surfaceColor : null,
       padding: const EdgeInsets.only(left: 17, right: 5, top: 6, bottom: 6),
-      alignment: Alignment.centerLeft,
+      alignment: centerTitle! ? Alignment.center : Alignment.centerLeft,
       child: isAscending != null
           ? Wrap(
               crossAxisAlignment: WrapCrossAlignment.center,
@@ -95,24 +99,29 @@ class DigitTable extends StatelessWidget {
           ? columnRowIncreasedHeight(index)
           : columnRowFixedHeight,
       padding: const EdgeInsets.only(left: 17, right: 5, top: 6, bottom: 6),
-      alignment: Alignment.centerLeft,
+      alignment: centerData! ? Alignment.center : Alignment.centerLeft,
       color: index == selectedIndex
           ? DigitTheme.instance.colorScheme.tertiary
           : index % 2 == 0
               ? DigitTheme.instance.colorScheme.background
               : DigitTheme.instance.colorScheme.surface,
       child: Row(
+        mainAxisAlignment:
+            centerData! ? MainAxisAlignment.center : MainAxisAlignment.start,
         children: <Widget>[
-          Expanded(
-            child: input.isNotEmpty
-                ? Text(
+          input.isNotEmpty
+              ? Expanded(
+                  child: Text(
                     (input),
                     style: style,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                  )
-                : buttonWidget ?? const Text(''),
-          )
+                  ),
+                )
+              : Align(
+                  alignment:
+                      centerData! ? Alignment.center : Alignment.centerLeft,
+                  child: buttonWidget ?? const Text(''))
         ],
       ),
     );
@@ -163,11 +172,12 @@ class DigitTable extends StatelessWidget {
             ? columnRowIncreasedHeight(index)
             : columnRowFixedHeight,
         padding: const EdgeInsets.only(left: 17, right: 5, top: 6, bottom: 6),
-        alignment: Alignment.centerLeft,
+        alignment: centerTitle! ? Alignment.center : Alignment.centerLeft,
         child: Text(
             tableData[index].tableRow.first.label.toString().length > 28
                 ? '${tableData[index].tableRow.first.label.substring(0, 25)}...'
                 : tableData[index].tableRow.first.label.toString(),
+            textAlign: centerTitle! ? TextAlign.center : TextAlign.left,
             style: tableData[index].tableRow.first.style),
       ),
     );

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../data/localization.dart';
 import 'app_localization.dart';
 
 class AttendanceLocalizationDelegate

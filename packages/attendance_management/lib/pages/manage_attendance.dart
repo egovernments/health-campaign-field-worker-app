@@ -1,6 +1,7 @@
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/blocs/date_session_bloc.dart';
 import 'package:attendance_management/pages/session_select.dart';
+import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/theme/colors.dart';
 import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_components/utils/app_logger.dart';
@@ -104,76 +105,74 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
             }
           },
           child: Scaffold(
-            body: SingleChildScrollView(child:
+            body: ScrollableContent(
+              header: BackNavigationHelpHeaderWidget(
+                showHelp: false,
+                showLogoutCTA: false,
+                handleBack: () {
+                  AttendanceSingleton().callSync();
+                },
+              ),
+              footer: const PoweredByDigit(
+                version: '1.2.0',
+              ),
+              children: [
                 BlocBuilder<AttendanceBloc, AttendanceStates>(
-                    builder: (context, blocState) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  BackNavigationHelpHeaderWidget(
-                    showHelp: false,
-                    showLogoutCTA: false,
-                    handleBack: () {
-                      AttendanceSingleton().callSync();
-                    },
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(
-                      AttendanceLocalization.of(context)!
-                          .translate(i18.attendance.attendanceRegistarLabel)!,
-                      style: DigitTheme
-                          .instance.mobileTheme.textTheme.headlineLarge
-                          ?.apply(color: const DigitColors().black),
-                      textAlign: TextAlign.left,
-                    ),
-                  ),
-                  empty
-                      ? const Center(
-                          child: Card(
-                            child: SizedBox(
-                              height: 60,
-                              width: 200,
-                              child: Center(child: Text("No Data Found")),
+                  builder: (context, blocState) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(
+                            AttendanceLocalization.of(context)!.translate(
+                                i18.attendance.attendanceRegistarLabel)!,
+                            style: DigitTheme
+                                .instance.mobileTheme.textTheme.headlineLarge
+                                ?.apply(color: const DigitColors().black),
+                            textAlign: TextAlign.left,
+                          ),
+                        ),
+                        empty
+                            ? const Center(
+                                child: Card(
+                                  child: SizedBox(
+                                    height: 60,
+                                    width: 200,
+                                    child: Center(child: Text("No Data Found")),
+                                  ),
+                                ),
+                              )
+                            : const SizedBox.shrink(),
+                        blocState.maybeWhen(
+                          orElse: () => const SizedBox.shrink(),
+                          registerLoaded: (
+                            registers,
+                          ) =>
+                              Column(
+                            children: [
+                              ...list,
+                            ],
+                          ),
+                          registerLoading: () => const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                          registerError: (message) => Center(
+                            child: Card(
+                              child: SizedBox(
+                                height: 60,
+                                width: 200,
+                                child: Center(child: Text(message)),
+                              ),
                             ),
                           ),
-                        )
-                      : const SizedBox.shrink(),
-                  blocState.maybeWhen(
-                    orElse: () => const SizedBox.shrink(),
-                    registerLoaded: (
-                      registers,
-                    ) =>
-                        Column(
-                      children: [
-                        ...list,
-                      ],
-                    ),
-                    registerLoading: () => const Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                    registerError: (message) => Center(
-                      child: Card(
-                        child: SizedBox(
-                          height: 60,
-                          width: 200,
-                          child: Center(child: Text(message)),
                         ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 16.0,
-                  ),
-                  const Align(
-                    alignment: Alignment.bottomCenter,
-                    child: PoweredByDigit(
-                      version: '1.2.0',
-                    ),
-                  ),
-                ],
-              );
-            })),
+                      ],
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -233,6 +233,8 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                   columnWidth: 130,
                                   scrollPhysics:
                                       const NeverScrollableScrollPhysics(),
+                                  centerData: true,
+                                  centerTitle: true,
                                 ),
                               ),
                             ],
