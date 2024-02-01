@@ -19,12 +19,13 @@ class HCMAttendanceBloc extends AttendanceListeners {
       attendanceLogLocalRepository;
   final String? userId;
   BuildContext context;
-  HCMAttendanceBloc(
-      {this.attendanceLocalRepository,
-      this.individualLocalRepository,
-      this.attendanceLogLocalRepository,
-      this.userId,
-      required this.context});
+  HCMAttendanceBloc({
+    this.attendanceLocalRepository,
+    this.individualLocalRepository,
+    this.attendanceLogLocalRepository,
+    this.userId,
+    required this.context,
+  });
 
   late Function(List<AttendancePackageRegisterModel> registers)
       _registersLoaded;
@@ -209,6 +210,7 @@ class HCMAttendanceBloc extends AttendanceListeners {
 
     // Convert milliseconds to DateTime objects
     DateTime startDate = DateTime.fromMillisecondsSinceEpoch(startMillis);
+
     endMillis = endMillis < DateTime.now().millisecondsSinceEpoch
         ? DateTime.now().millisecondsSinceEpoch
         : endMillis;
