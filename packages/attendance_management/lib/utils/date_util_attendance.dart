@@ -294,7 +294,7 @@ class AttendanceDateTimeManagement {
 
         return millisecondsSinceEpoch;
       } else {
-        DateTime nineAM = DateTime(k.year, k.month, k.day, 6);
+        DateTime nineAM = DateTime(k.year, k.month, k.day, 18);
 
         int millisecondsSinceEpoch = nineAM.millisecondsSinceEpoch;
 

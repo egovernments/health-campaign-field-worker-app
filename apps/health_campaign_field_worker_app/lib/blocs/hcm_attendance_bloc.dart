@@ -2,6 +2,7 @@ import 'package:attendance_management/blocs/attendance_listeners.dart';
 import 'package:attendance_management/models/attendance_log.dart';
 import 'package:attendance_management/models/attendance_register.dart';
 import 'package:collection/collection.dart';
+import 'package:digit_components/utils/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -48,6 +49,22 @@ class HCMAttendanceBloc extends AttendanceListeners {
     if (registers != null) {
       final List<AttendancePackageRegisterModel> attendanceRegisters =
           await Future.wait(registers.map((e) async {
+        final registerCompletedLogs =
+            await attendanceLogLocalRepository?.search(
+          HCMAttendanceLogSearchModel(
+            registerId: e.attendanceRegister.id,
+            uploadToServer: true,
+          ),
+        );
+
+        var list = generateDateList(
+          e.attendanceRegister.startDate!,
+          e.attendanceRegister.endDate!,
+          registerCompletedLogs ?? [],
+        );
+
+        var completedDaysCount = list.length ~/ 2;
+
         final individualList = await individualLocalRepository?.search(
           IndividualSearchModel(
             id: e.attendanceRegister.attendees!
@@ -71,7 +88,10 @@ class HCMAttendanceBloc extends AttendanceListeners {
             )
             .toList();
 
-        return e.attendanceRegister.copyWith(attendees: attendeeList);
+        return e.attendanceRegister.copyWith(
+            attendees: attendeeList,
+            attendanceLog: list,
+            completedDays: completedDaysCount);
       }));
 
       _registersLoaded(
@@ -178,5 +198,47 @@ class HCMAttendanceBloc extends AttendanceListeners {
   @override
   void callSyncMethod() {
     context.read<SyncBloc>().add(SyncRefreshEvent(userId!));
+  }
+
+  List<Map<DateTime, bool>> generateDateList(int startMillis, int endMillis,
+      List<HCMAttendanceLogModel> completedLogs) {
+    List<Map<DateTime, bool>> dateList = [];
+
+    // Convert milliseconds to DateTime objects
+    DateTime startDate = DateTime.fromMillisecondsSinceEpoch(startMillis);
+    endMillis = endMillis < DateTime.now().millisecondsSinceEpoch
+        ? DateTime.now().millisecondsSinceEpoch
+        : endMillis;
+    DateTime endDate = DateTime.fromMillisecondsSinceEpoch(endMillis);
+    // Iterate over each date and add to the list with value set to true
+    for (DateTime date = startDate;
+        date.isBefore(endDate);
+        date = date.add(Duration(days: 1))) {
+      dateList.add({
+        date: completedLogs.any((element) {
+          final elementTime =
+              DateTime.fromMillisecondsSinceEpoch(date.millisecondsSinceEpoch);
+
+          final morningLogTime = DateTime(
+            elementTime.year,
+            elementTime.month,
+            elementTime.day,
+            9,
+          ).millisecondsSinceEpoch;
+
+          final eveningLogTime = DateTime(
+            elementTime.year,
+            elementTime.month,
+            elementTime.day,
+            18,
+          ).millisecondsSinceEpoch;
+
+          return (element.time == morningLogTime && element.type == "ENTRY") ||
+              (element.time == eveningLogTime && element.type == "EXIT");
+        }),
+      });
+    }
+
+    return dateList;
   }
 }

@@ -28,6 +28,10 @@ class AttendanceLogsLocalRepository extends LocalRepository<
               sql.attendance.registerId.equals(
                 query.registerId,
               ),
+            if (query.uploadToServer != null)
+              sql.attendance.uploadToServer.equals(
+                query.uploadToServer,
+              ),
           ])))
         .get();
 

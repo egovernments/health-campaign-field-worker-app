@@ -193,7 +193,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       List<ProjectModel> staffProjects;
       try {
         final attendanceRegisters = await attendanceRemoteRepository
-            .search(HCMAttendanceSearchModel(staffId: projectStaff.userId));
+            .search(HCMAttendanceSearchModel(staffId: projectStaff.userId, referenceId: projectStaff.projectId));
         await attendanceLocalRepository.bulkCreate(attendanceRegisters);
 
         for (final register in attendanceRegisters) {

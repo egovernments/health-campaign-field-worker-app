@@ -40,6 +40,8 @@ class AttendancePackageRegisterModel {
   final List<StaffModel>? staff;
   final Map<String, dynamic>? additionalDetails;
   final AttendanceAuditDetails? auditDetails;
+  final int? completedDays;
+  final List<Map<DateTime, bool>>? attendanceLog;
 
   AttendancePackageRegisterModel({
     this.additionalDetails,
@@ -57,6 +59,8 @@ class AttendancePackageRegisterModel {
     this.attendees,
     this.staff,
     this.auditDetails,
+    this.completedDays = 0,
+    this.attendanceLog = const [],
   }) : super();
 }
 

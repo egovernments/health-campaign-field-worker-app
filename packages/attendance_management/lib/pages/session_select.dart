@@ -151,7 +151,7 @@ class _AttendanceDateSessionSelectionPageState
                                                   : 1,
                                               "exitTime",
                                             )
-                                          : (DateTime(s.year, s.month, s.day, 6)
+                                          : (DateTime(s.year, s.month, s.day, 18)
                                                   .millisecondsSinceEpoch) ~/
                                               1000;
 

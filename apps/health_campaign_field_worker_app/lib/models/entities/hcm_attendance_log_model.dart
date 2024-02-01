@@ -16,6 +16,7 @@ class HCMAttendanceLogSearchModel extends EntitySearchModel {
   final String? type;
   final String? status;
   final List<String>? clientReferenceId;
+  final bool? uploadToServer;
 
   HCMAttendanceLogSearchModel({
     this.id,
@@ -28,6 +29,7 @@ class HCMAttendanceLogSearchModel extends EntitySearchModel {
     this.entryTime,
     this.exitTime,
     this.clientReferenceId,
+    this.uploadToServer,
     super.isDeleted,
   }) : super();
 
@@ -43,6 +45,7 @@ class HCMAttendanceLogSearchModel extends EntitySearchModel {
     this.entryTime,
     this.exitTime,
     this.clientReferenceId,
+    this.uploadToServer,
   });
 }
 
