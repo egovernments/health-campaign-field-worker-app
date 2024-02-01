@@ -1,13 +1,13 @@
-import 'package:attendance_management/blocs/attendance_bloc.dart';
 import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_components/widgets/digit_card.dart';
 import 'package:digit_components/widgets/digit_elevated_button.dart';
 import 'package:digit_components/widgets/digit_outline_button.dart';
 import 'package:digit_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
-import '../../utils/i18_key_constants.dart' as i18;
+
 import '../../../widgets/localized.dart';
 import '../blocs/app_localization.dart';
+import '../utils/i18_key_constants.dart' as i18;
 
 class AttendanceAcknowledgementPage extends LocalizedStatefulWidget {
   final String label;
@@ -80,8 +80,8 @@ class _AttendanceAcknowledgementPageState
                 children: [
                   Text(
                     textAlign: TextAlign.center,
-                    localizations!.translate(
-                      'Attendance Submitted Successfully',
+                    localizations.translate(
+                      i18.attendance.attendanceSubmittedSuccessMsg,
                     ),
                     style: TextStyle(
                       fontSize: 32,

@@ -2,8 +2,11 @@ import 'dart:async';
 
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/models/attendance_log.dart';
+import 'package:attendance_management/models/enum_values.mapper.g.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+import '../models/enum_values.dart';
 
 part 'attendance_individual_bloc.freezed.dart';
 
@@ -118,8 +121,10 @@ class AttendanceIndividualBloc
                 individualId: e.individualId,
                 registerId: e.registerId,
                 tenantId: e.tenantId,
-                type: 'ENTRY',
-                status: e.status == 0 ? 'INACTIVE' : 'ACTIVE',
+                type: EnumValues.entry.toValue(),
+                status: e.status == 0
+                    ? EnumValues.inactive.toValue()
+                    : EnumValues.active.toValue(),
                 time: event.entryTime,
                 uploadToServer: event.createOplog,
               ),
@@ -127,8 +132,10 @@ class AttendanceIndividualBloc
                 individualId: e.individualId,
                 registerId: e.registerId,
                 tenantId: e.tenantId,
-                type: 'EXIT',
-                status: e.status == 0 ? 'INACTIVE' : 'ACTIVE',
+                type: EnumValues.exit.toValue(),
+                status: e.status == 0
+                    ? EnumValues.inactive.toValue()
+                    : EnumValues.active.toValue(),
                 time: e.status == 0 ? event.entryTime : event.exitTime,
                 uploadToServer: event.createOplog,
               )
@@ -250,13 +257,13 @@ class AttendanceIndividualBloc
       final entryLogList = logResponse
           .where((l) =>
               l.individualId == e.individualId &&
-              l.type == 'ENTRY' &&
+              l.type == EnumValues.entry.toValue() &&
               l.time == event.entryTime)
           .toList();
       final exitLogList = logResponse
           .where((l) =>
               l.individualId == e.individualId &&
-              l.type == 'EXIT' &&
+              l.type == EnumValues.exit.toValue() &&
               (l.time == event.exitTime || l.time == event.entryTime))
           .toList();
       uploadToServer =

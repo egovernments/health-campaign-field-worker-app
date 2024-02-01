@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:attendance_management/attendance_management.dart';
+import 'package:attendance_management/models/enum_values.mapper.g.dart';
 import 'package:attendance_management/widgets/attendance_acknowledgement.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_table_model.dart';
@@ -12,6 +13,7 @@ import 'package:intl/intl.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/localized.dart';
 import '../blocs/attendance_individual_bloc.dart';
+import '../models/enum_values.dart';
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/circular_button.dart';
 
@@ -142,12 +144,15 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                           ),
                                         ),
                                         onPressed: () {
-                                          checkIfAllAttendeesMarked(state,
-                                              localizations, theme, 'Draft');
+                                          checkIfAllAttendeesMarked(
+                                              state,
+                                              localizations,
+                                              theme,
+                                              EnumValues.draft.toValue());
                                         },
                                         icon: Icons.drafts_outlined,
                                         label: localizations.translate(
-                                          'Save as Draft',
+                                          i18.attendance.saveAndMarkLaterLabel,
                                         ),
                                       ),
                                       DigitElevatedButton(
@@ -157,7 +162,8 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                                     state,
                                                     localizations,
                                                     theme,
-                                                    'Submit');
+                                                    EnumValues.submit
+                                                        .toValue());
                                               }
                                             : () {
                                                 // context.router.pop();
@@ -165,7 +171,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                         child: Text(
                                           localizations.translate(
                                             (!viewOnly)
-                                                ? 'Submit'
+                                                ? i18.common.coreCommonSubmit
                                                 : i18.attendance.closeButton,
                                           ),
                                         ),
@@ -216,7 +222,8 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                             children: [
                               DigitSearchBar(
                                 controller: controller,
-                                hintText: 'Search By Name',
+                                hintText: localizations
+                                    .translate(i18.common.searchByName),
                                 textCapitalization: TextCapitalization.words,
                                 onChanged: (value) {
                                   if (value.length >= 2) {
@@ -250,62 +257,6 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                   loading: () {
                     return Center(
                       child: Loaders.circularLoader(context),
-                    );
-                  },
-                  error: (error) {
-                    return Center(
-                      child: Card(
-                        child: SizedBox(
-                          height: 120,
-                          width: 200,
-                          child: Column(
-                            children: [
-                              Icon(
-                                Icons.error_outline_outlined,
-                                size: 40,
-                                color: DigitTheme.instance.colorScheme.error,
-                              ),
-                              Text(
-                                localizations.translate(
-                                  "${i18.attendance.somethingWentWrong}!!!",
-                                ),
-                                style: DigitTheme.instance.mobileTheme.textTheme
-                                    .headlineMedium,
-                                textAlign: TextAlign.center,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: SizedBox(
-                                  width: 80,
-                                  height: 40,
-                                  child: DigitElevatedButton(
-                                    child: Text(i18.attendance.retry),
-                                    onPressed: () {
-                                      // context
-                                      //     .read<AttendanceIndividualBloc>()
-                                      //     .add(
-                                      //       AttendanceIndividualLogSearchEvent(
-                                      //         attendeeId:
-                                      //             widget.attendeeIds,
-                                      //         limit: 10,
-                                      //         offset: 0,
-                                      //         currentDate: widget.dateTime
-                                      //             .millisecondsSinceEpoch,
-                                      //         entryTime: widget.entryTime,
-                                      //         exitTime: widget.exitTime,
-                                      //         projectId: context.projectId,
-                                      //         registerId: widget.registerId,
-                                      //         tenantId: widget.tenantId,
-                                      //       ),
-                                      //     );
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
                     );
                   },
                 );
@@ -416,7 +367,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
             individualLogBloc.add(
               AttendanceMarkEvent(
                 individualId: tableDataModel.individualId!,
-                registerId: tableDataModel!.registerId!,
+                registerId: tableDataModel.registerId!,
                 status: tableDataModel.status,
               ),
             );
@@ -523,14 +474,15 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
               DigitToast.show(
                 context,
                 options: DigitToastOptions(
-                  localizations.translate('Mark Attendance for individuals'),
+                  localizations
+                      .translate(i18.attendance.pleaseMarkAttForIndividuals),
                   true,
                   theme,
                 ),
               );
               return;
             } else {
-              if (type == "Draft") {
+              if (type == EnumValues.draft.toValue()) {
                 individualLogBloc.add(SaveAsDraftEvent(
                   entryTime: widget.entryTime,
                   exitTime: widget.exitTime,
@@ -538,7 +490,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                 DigitToast.show(
                   context,
                   options: DigitToastOptions(
-                    localizations.translate('Data saved as draft'),
+                    localizations.translate(i18.attendance.draftSavedMessage),
                     false,
                     theme,
                   ),
@@ -553,14 +505,17 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                       builder: (context) => AttendanceAcknowledgementPage(
-                            label: 'Attendance Registered Successfully',
-                            actionLabel: 'Go to Home',
+                            label: localizations.translate(
+                                i18.attendance.attendanceSubmittedSuccessMsg),
+                            actionLabel:
+                                localizations.translate(i18.attendance.goHome),
                             action: () {
                               AttendanceSingleton().callSync();
                               Navigator.popUntil(
                                   context, (route) => route.isFirst);
                             },
-                            secondaryLabel: 'Go to Attendance Registers',
+                            secondaryLabel: localizations.translate(
+                                i18.attendance.goToAttendanceRegisters),
                             secondaryAction: () {
                               AttendanceSingleton().callSync();
                               Navigator.of(context).pop();

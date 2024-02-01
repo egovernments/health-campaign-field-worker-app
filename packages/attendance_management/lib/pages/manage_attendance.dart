@@ -1,19 +1,15 @@
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/blocs/date_session_bloc.dart';
+import 'package:attendance_management/models/enum_values.mapper.g.dart';
 import 'package:attendance_management/pages/session_select.dart';
 import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/theme/colors.dart';
-import 'package:digit_components/theme/digit_theme.dart';
-import 'package:digit_components/utils/app_logger.dart';
 import 'package:digit_components/utils/date_utils.dart';
-import 'package:digit_components/widgets/digit_card.dart';
-import 'package:digit_components/widgets/digit_elevated_button.dart';
-import 'package:digit_components/widgets/molecules/digit_table_card.dart';
-import 'package:digit_components/widgets/powered_by_digit.dart';
+import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
+import '../models/enum_values.dart';
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
 
@@ -59,6 +55,7 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
 
   @override
   Widget build(BuildContext context) {
+    var t = AttendanceLocalization.of(context);
     return BlocProvider<AttendanceBloc>(
       create: (context) =>
           attendanceBloc..add(const AttendanceEvents.initial()),
@@ -72,20 +69,27 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
                 final register = attendanceRegisters[i];
                 list.add(RegisterCard(
                     data: {
-                      'Campaign Type':
-                          register.additionalDetails?['campaignName'],
-                      'Event Type': register.additionalDetails?['eventType'],
-                      'Staff Count': register.staff?.length ?? 0,
-                      'Start Date': register.startDate != null
-                          ? DigitDateUtils.getDateFromTimestamp(
-                              register.startDate!)
-                          : 'N/A',
-                      'End Date': register.endDate != null
-                          ? DigitDateUtils.getDateFromTimestamp(
-                              register.endDate!)
-                          : 'N/A',
-                      'Status': register.status,
-                      'Attendance Completion': 'N/A'
+                      t.translate(i18.attendance.campaignNameLabel):
+                          register.additionalDetails?[
+                              EnumValues.campaignName.toValue()],
+                      t.translate(i18.attendance.eventTypeLabel): register
+                          .additionalDetails?[EnumValues.eventType.toValue()],
+                      t.translate(i18.attendance.staffCountLabel):
+                          register.attendees?.length ?? 0,
+                      t.translate(i18.attendance.startDateLabel):
+                          register.startDate != null
+                              ? DigitDateUtils.getDateFromTimestamp(
+                                  register.startDate!)
+                              : 'N/A',
+                      t.translate(i18.attendance.endDateLabel):
+                          register.endDate != null
+                              ? DigitDateUtils.getDateFromTimestamp(
+                                  register.endDate!)
+                              : 'N/A',
+                      t.translate(i18.attendance.statusLabel):
+                          t.translate(register.status.toString()),
+                      t.translate(i18.attendance.attendanceCompletionLabel):
+                          'N/A'
                     },
                     registers: attendanceRegisters,
                     noOfAttendees: register.attendees?.length ?? 0,
@@ -116,9 +120,11 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
                   AttendanceSingleton().callSync();
                 },
               ),
-              footer: PoweredByDigit(
-                version: AttendanceSingleton().appVersion,
-              ),
+              footer: (list.length < 2)
+                  ? PoweredByDigit(
+                      version: AttendanceSingleton().appVersion,
+                    )
+                  : const SizedBox.shrink(),
               children: [
                 BlocBuilder<AttendanceBloc, AttendanceStates>(
                   builder: (context, blocState) {
@@ -128,8 +134,8 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
                         Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Text(
-                            AttendanceLocalization.of(context)!.translate(
-                                i18.attendance.attendanceRegistarLabel)!,
+                            AttendanceLocalization.of(context).translate(
+                                i18.attendance.attendanceRegistarLabel),
                             style: DigitTheme
                                 .instance.mobileTheme.textTheme.headlineLarge
                                 ?.apply(color: const DigitColors().black),
@@ -137,12 +143,13 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
                           ),
                         ),
                         empty
-                            ? const Center(
+                            ? Center(
                                 child: Card(
                                   child: SizedBox(
                                     height: 60,
                                     width: 200,
-                                    child: Center(child: Text("No Data Found")),
+                                    child: Center(
+                                        child: Text(i18.common.noResultsFound)),
                                   ),
                                 ),
                               )
@@ -155,6 +162,9 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
                               Column(
                             children: [
                               ...list,
+                              if (list.length > 1)
+                                PoweredByDigit(
+                                    version: AttendanceSingleton().appVersion),
                             ],
                           ),
                           registerLoading: () => const Center(
@@ -208,6 +218,7 @@ class RegisterCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     DateTime s = DateTime.now();
+    var t = AttendanceLocalization.of(context);
 
     return DigitCard(
       child: Column(
@@ -222,32 +233,33 @@ class RegisterCard extends StatelessWidget {
                                 s.isAtSameMomentAs(startDate!)) &&
                             (s.isBefore(endDate!) ||
                                 s.isAtSameMomentAs(endDate!)))
-                        ? AttendanceLocalization.of(context)!
-                            .translate(i18.attendance.markAttendance)!
-                        : AttendanceLocalization.of(context)!
-                            .translate(i18.attendance.viewAttendance)!,
+                        ? AttendanceLocalization.of(context)
+                            .translate(i18.attendance.markAttendance)
+                        : AttendanceLocalization.of(context)
+                            .translate(i18.attendance.viewAttendance),
                   ),
                   onPressed: () async {
-                    // if (noOfAttendees == 0) {
-                    //   DigitToast.show(
-                    //     context,
-                    //     options: DigitToastOptions(
-                    //       'No Attendee registered for this register',
-                    //       true,
-                    //       DigitTheme.instance.mobileTheme,
-                    //     ),
-                    //   );
-                    // } else {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            AttendanceDateSessionSelectionPage(
-                          registers: registers,
-                          registerID: registerId,
+                    if (noOfAttendees == 0) {
+                      DigitToast.show(
+                        context,
+                        options: DigitToastOptions(
+                          t.translate(
+                              i18.attendance.noAttendeesEnrolledMessage),
+                          true,
+                          DigitTheme.instance.mobileTheme,
                         ),
-                      ),
-                    );
-                    // }
+                      );
+                    } else {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              AttendanceDateSessionSelectionPage(
+                            registers: registers,
+                            registerID: registerId,
+                          ),
+                        ),
+                      );
+                    }
                   },
                 )
               : const SizedBox.shrink(),
