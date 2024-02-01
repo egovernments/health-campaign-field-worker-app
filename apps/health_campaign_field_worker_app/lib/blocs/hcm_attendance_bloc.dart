@@ -91,7 +91,7 @@ class HCMAttendanceBloc extends AttendanceListeners {
         return e.attendanceRegister.copyWith(
             attendees: attendeeList,
             attendanceLog: list,
-            completedDays: completedDaysCount);
+            completedDays: completedDaysCount,);
       }));
 
       _registersLoaded(
@@ -201,7 +201,7 @@ class HCMAttendanceBloc extends AttendanceListeners {
   }
 
   List<Map<DateTime, bool>> generateDateList(int startMillis, int endMillis,
-      List<HCMAttendanceLogModel> completedLogs) {
+      List<HCMAttendanceLogModel> completedLogs,) {
     List<Map<DateTime, bool>> dateList = [];
 
     // Convert milliseconds to DateTime objects
@@ -213,7 +213,7 @@ class HCMAttendanceBloc extends AttendanceListeners {
     // Iterate over each date and add to the list with value set to true
     for (DateTime date = startDate;
         date.isBefore(endDate);
-        date = date.add(Duration(days: 1))) {
+        date = date.add(const Duration(days: 1))) {
       dateList.add({
         date: completedLogs.any((element) {
           final elementTime =

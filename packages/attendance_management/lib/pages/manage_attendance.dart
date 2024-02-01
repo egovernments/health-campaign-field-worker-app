@@ -21,10 +21,12 @@ class ManageAttendancePage extends LocalizedStatefulWidget {
   final AttendanceListeners attendanceListeners;
   final String projectId;
   final String userId;
+  final String appVersion;
   const ManageAttendancePage({
     required this.attendanceListeners,
     required this.projectId,
     required this.userId,
+    required this.appVersion,
     super.key,
   });
 
@@ -45,7 +47,8 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
     AttendanceSingleton().setAttendanceListeners(
         attendanceListeners: widget.attendanceListeners,
         projectId: widget.projectId,
-        userId: widget.userId);
+        userId: widget.userId,
+        appVersion: widget.appVersion);
     super.initState();
   }
 
@@ -113,8 +116,8 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
                   AttendanceSingleton().callSync();
                 },
               ),
-              footer: const PoweredByDigit(
-                version: '1.2.0',
+              footer: PoweredByDigit(
+                version: AttendanceSingleton().appVersion,
               ),
               children: [
                 BlocBuilder<AttendanceBloc, AttendanceStates>(

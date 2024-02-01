@@ -33,18 +33,22 @@ class AttendanceSingleton {
   AttendanceListeners? _attendanceListeners;
   String _projectId = '';
   String _userId = '';
+  String _appVersion = '';
 
   void setAttendanceListeners(
       {required AttendanceListeners attendanceListeners,
       required String projectId,
-      required String userId}) {
+      required String userId,
+      required String appVersion}) {
     _attendanceListeners = attendanceListeners;
     _projectId = projectId;
     _userId = userId;
+    _appVersion = appVersion;
   }
 
   get projectId => _projectId;
   get userId => _userId;
+  get appVersion => _appVersion;
 
   void getAttendanceRegisters(
       Function(

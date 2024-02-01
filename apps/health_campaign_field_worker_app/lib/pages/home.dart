@@ -444,6 +444,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                 ),
                 projectId: context.projectId,
                 userId: context.loggedInUserUuid,
+                appVersion: Constants().version,
               ),
             ),
           );

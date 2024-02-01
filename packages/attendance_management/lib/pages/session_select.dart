@@ -34,6 +34,7 @@ class _AttendanceDateSessionSelectionPageState
   static const _dateOfSession = 'dateOfSession';
   static const _sessionRadio = 'sessionRadio';
   List<String> attendeeList = [];
+  String missedDays = "";
   DateSessionBloc sessionBloc = DateSessionBloc(const DateSessionLoading());
   AttendanceIndividualBloc individualLogBloc = AttendanceIndividualBloc();
 
@@ -151,7 +152,8 @@ class _AttendanceDateSessionSelectionPageState
                                                   : 1,
                                               "exitTime",
                                             )
-                                          : (DateTime(s.year, s.month, s.day, 18)
+                                          : (DateTime(s.year, s.month, s.day,
+                                                      18)
                                                   .millisecondsSinceEpoch) ~/
                                               1000;
 
@@ -238,6 +240,14 @@ class _AttendanceDateSessionSelectionPageState
                                     ],
                                   ),
                                 ),
+                                DigitInfoCard(
+                                  title: localizations.translate(
+                                    'Missed Attendance!',
+                                  ),
+                                  description: localizations.translate(
+                                    getMissedDays(),
+                                  ),
+                                ),
                               ],
                             );
                           },
@@ -252,6 +262,23 @@ class _AttendanceDateSessionSelectionPageState
           FormControl<DateTime>(value: DateTime.now(), validators: []),
       _sessionRadio: FormControl<KeyValue>(value: null),
     });
+  }
+
+  String getMissedDays() {
+    for (var element in widget.registers) {
+      if (element.id == widget.registerID) {
+        if (element.attendanceLog != null) {
+          for (var element in element.attendanceLog!) {
+            element.forEach((key, value) {
+              if (value == false) {
+                missedDays += "${key.day}/${key.month}/${key.year}, /n";
+              }
+            });
+          }
+        }
+      }
+    }
+    return "${missedDays}Please ensure you mark attendance for the missing days";
   }
 }
 
