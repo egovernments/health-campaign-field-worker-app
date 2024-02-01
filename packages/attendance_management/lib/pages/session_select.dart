@@ -129,7 +129,7 @@ class _AttendanceDateSessionSelectionPageState
                                               "entryTime",
                                             )
                                           : (DateTime(s.year, s.month, s.day, 9)
-                                                  .millisecondsSinceEpoch) /
+                                                  .millisecondsSinceEpoch) ~/
                                               1000;
 
                                       final exitTime = selectedRegister
@@ -152,7 +152,7 @@ class _AttendanceDateSessionSelectionPageState
                                               "exitTime",
                                             )
                                           : (DateTime(s.year, s.month, s.day, 6)
-                                                  .millisecondsSinceEpoch) /
+                                                  .millisecondsSinceEpoch) ~/
                                               1000;
 
                                       Navigator.of(context).push(
