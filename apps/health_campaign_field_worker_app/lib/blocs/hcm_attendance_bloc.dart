@@ -19,13 +19,12 @@ class HCMAttendanceBloc extends AttendanceListeners {
       attendanceLogLocalRepository;
   final String? userId;
   BuildContext context;
-  HCMAttendanceBloc({
-    this.attendanceLocalRepository,
-    this.individualLocalRepository,
-    this.attendanceLogLocalRepository,
-    this.userId,
-    required this.context
-  });
+  HCMAttendanceBloc(
+      {this.attendanceLocalRepository,
+      this.individualLocalRepository,
+      this.attendanceLogLocalRepository,
+      this.userId,
+      required this.context});
 
   late Function(List<AttendancePackageRegisterModel> registers)
       _registersLoaded;
@@ -116,6 +115,7 @@ class HCMAttendanceBloc extends AttendanceListeners {
               individualId: a.individualId,
               id: a.id,
               type: a.type,
+              uploadToServer: a.uploadToServer,
             ))
         .toList();
     searchAttendanceLog.onLogLoaded(filteredLogs ?? []);
@@ -177,8 +177,6 @@ class HCMAttendanceBloc extends AttendanceListeners {
 
   @override
   void callSyncMethod() {
-    context
-        .read<SyncBloc>()
-        .add(SyncRefreshEvent(userId!));
+    context.read<SyncBloc>().add(SyncRefreshEvent(userId!));
   }
 }

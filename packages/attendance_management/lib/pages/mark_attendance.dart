@@ -78,7 +78,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
               attendees: widget.attendees.isNotEmpty ? widget.attendees : [],
               limit: 10,
               offset: 0,
-              currentDate: DateTime.now().millisecondsSinceEpoch,
+              currentDate: widget.dateTime.millisecondsSinceEpoch,
               entryTime: widget.entryTime,
               exitTime: widget.exitTime,
               registerId: widget.registerId,
@@ -113,64 +113,68 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                     currentOffset,
                     countData,
                     limitData,
-                    flag,
+                    viewOnly,
                   ) {
                     List<TableDataRow> tableData = [];
 
                     tableData = attendanceSearchModelList.isNotEmpty
-                        ? getAttendanceData(attendanceSearchModelList)
-                        : getAttendanceData(attendanceCollectionModel!);
+                        ? getAttendanceData(attendanceSearchModelList, viewOnly)
+                        : getAttendanceData(
+                            attendanceCollectionModel!, viewOnly);
 
                     return ScrollableContent(
                       enableFixedButton: true,
-                      footer: SizedBox(
-                        height: 150,
-                        child: Card(
-                          margin: const EdgeInsets.all(0),
-                          child: Container(
-                            padding: const EdgeInsets.fromLTRB(
-                                kPadding, 0, kPadding, 0),
-                            child: Column(
-                              children: [
-                                DigitOutlineIconButton(
-                                  buttonStyle: OutlinedButton.styleFrom(
-                                    shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.zero,
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    checkIfAllAttendeesMarked(
-                                        state, localizations, theme, 'Draft');
-                                  },
-                                  icon: Icons.drafts_outlined,
-                                  label: localizations.translate(
-                                    'Save as Draft',
-                                  ),
-                                ),
-                                DigitElevatedButton(
-                                  onPressed: (widget.dateTime.day ==
-                                          DateTime.now().day)
-                                      ? () {
+                      footer: viewOnly
+                          ? const SizedBox.shrink()
+                          : SizedBox(
+                              height: 150,
+                              child: Card(
+                                margin: const EdgeInsets.all(0),
+                                child: Container(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      kPadding, 0, kPadding, 0),
+                                  child: Column(
+                                    children: [
+                                      DigitOutlineIconButton(
+                                        buttonStyle: OutlinedButton.styleFrom(
+                                          shape: const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.zero,
+                                          ),
+                                        ),
+                                        onPressed: () {
                                           checkIfAllAttendeesMarked(state,
-                                              localizations, theme, 'Submit');
-                                        }
-                                      : () {
-                                          // context.router.pop();
+                                              localizations, theme, 'Draft');
                                         },
-                                  child: Text(
-                                    localizations.translate(
-                                      (widget.dateTime.day ==
-                                              DateTime.now().day)
-                                          ? 'Submit'
-                                          : i18.attendance.closeButton,
-                                    ),
+                                        icon: Icons.drafts_outlined,
+                                        label: localizations.translate(
+                                          'Save as Draft',
+                                        ),
+                                      ),
+                                      DigitElevatedButton(
+                                        onPressed: !viewOnly
+                                            ? () {
+                                                checkIfAllAttendeesMarked(
+                                                    state,
+                                                    localizations,
+                                                    theme,
+                                                    'Submit');
+                                              }
+                                            : () {
+                                                // context.router.pop();
+                                              },
+                                        child: Text(
+                                          localizations.translate(
+                                            (!viewOnly)
+                                                ? 'Submit'
+                                                : i18.attendance.closeButton,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       header: BackNavigationHelpHeaderWidget(
@@ -385,11 +389,14 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
     );
   }
 
-  List<TableDataRow> getAttendanceData(List<AttendeeModel>? list) {
-    return list!.map((e) => getAttendanceRow(e)).toList();
+  List<TableDataRow> getAttendanceData(
+    List<AttendeeModel>? list,
+    bool viewOnly,
+  ) {
+    return list!.map((e) => getAttendanceRow(e, viewOnly)).toList();
   }
 
-  TableDataRow getAttendanceRow(AttendeeModel tableDataModel) {
+  TableDataRow getAttendanceRow(AttendeeModel tableDataModel, bool viewOnly) {
     return TableDataRow([
       TableData(
         tableDataModel.name.toString(),
@@ -401,21 +408,19 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
         widget: CircularButton(
           icon: Icons.circle_rounded,
           size: 15,
-          viewOnly: false,
+          viewOnly: viewOnly,
           color: const Color.fromRGBO(0, 100, 0, 1),
           index: double.parse(tableDataModel.status.toString()) ?? -1,
           isNotGreyed: false,
-          onTap: (widget.dateTime.day == DateTime.now().day)
-              ? () {
-                  individualLogBloc.add(
-                    AttendanceMarkEvent(
-                      individualId: tableDataModel.individualId!,
-                      registerId: tableDataModel!.registerId!,
-                      status: tableDataModel.status,
-                    ),
-                  );
-                }
-              : null,
+          onTap: () {
+            individualLogBloc.add(
+              AttendanceMarkEvent(
+                individualId: tableDataModel.individualId!,
+                registerId: tableDataModel!.registerId!,
+                status: tableDataModel.status,
+              ),
+            );
+          },
         ),
       ),
       TableData(

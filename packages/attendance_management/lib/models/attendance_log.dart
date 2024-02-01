@@ -31,6 +31,7 @@ class AttendanceLogModel {
   final String? status;
   final String? type;
   final String? clientReferenceId;
+  final bool? uploadToServer;
 
   AttendanceLogModel({
     this.id,
@@ -43,5 +44,6 @@ class AttendanceLogModel {
     this.time,
     this.status,
     this.clientReferenceId,
+    this.uploadToServer = false,
   }) : super();
 }

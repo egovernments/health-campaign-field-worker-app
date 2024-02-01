@@ -44,6 +44,7 @@ class AttendanceLogsLocalRepository extends LocalRepository<
             clientReferenceId: attendeeLog.clientReferenceId,
             time: attendeeLog.time,
             type: attendeeLog.type,
+            uploadToServer: attendeeLog.uploadToServer,
             auditDetails: AuditDetails(
               createdTime: attendeeLog.auditCreatedTime!,
               createdBy: attendeeLog.auditCreatedBy!,

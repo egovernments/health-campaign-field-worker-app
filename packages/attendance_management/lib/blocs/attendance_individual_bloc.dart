@@ -115,19 +115,23 @@ class AttendanceIndividualBloc
           value.attendanceCollectionModel?.forEach((e) {
             list.addAll([
               AttendanceLogModel(
-                  individualId: e.individualId,
-                  registerId: e.registerId,
-                  tenantId: e.tenantId,
-                  type: 'ENTRY',
-                  status: e.status == 0 ? 'INACTIVE' : 'ACTIVE',
-                  time: event.entryTime),
+                individualId: e.individualId,
+                registerId: e.registerId,
+                tenantId: e.tenantId,
+                type: 'ENTRY',
+                status: e.status == 0 ? 'INACTIVE' : 'ACTIVE',
+                time: event.entryTime,
+                uploadToServer: event.createOplog,
+              ),
               AttendanceLogModel(
-                  individualId: e.individualId,
-                  registerId: e.registerId,
-                  tenantId: e.tenantId,
-                  type: 'EXIT',
-                  status: e.status == 0 ? 'INACTIVE' : 'ACTIVE',
-                  time: e.status == 0 ? event.entryTime : event.exitTime)
+                individualId: e.individualId,
+                registerId: e.registerId,
+                tenantId: e.tenantId,
+                type: 'EXIT',
+                status: e.status == 0 ? 'INACTIVE' : 'ACTIVE',
+                time: e.status == 0 ? event.entryTime : event.exitTime,
+                uploadToServer: event.createOplog,
+              )
             ]);
           });
           AttendanceSingleton().submitAttendanceDetails(
@@ -241,25 +245,33 @@ class AttendanceIndividualBloc
       List<AttendanceLogModel> logResponse,
       List<AttendeeModel> attendees,
       AttendanceIndividualLogSearchEvent event) async {
+    bool uploadToServer = false;
     attendees = event.attendees.map((e) {
       final entryLogList = logResponse
-          .where((l) => l.individualId == e.individualId && l.type == 'ENTRY')
+          .where((l) =>
+              l.individualId == e.individualId &&
+              l.type == 'ENTRY' &&
+              l.time == event.entryTime)
           .toList();
       final exitLogList = logResponse
-          .where((l) => l.individualId == e.individualId && l.type == 'EXIT')
+          .where((l) =>
+              l.individualId == e.individualId &&
+              l.type == 'EXIT' &&
+              (l.time == event.exitTime || l.time == event.entryTime))
           .toList();
+      uploadToServer =
+          entryLogList.any((entry) => entry.uploadToServer == true);
 
       return e.copyWith(
           status: (entryLogList.isEmpty || exitLogList.isEmpty)
               ? -1
-              : entryLogList.first.time == exitLogList.first.time
+              : entryLogList.last.time == exitLogList.last.time
                   ? 0
                   : 1);
     }).toList();
 
     emit(AttendanceIndividualState.loaded(
-      attendanceCollectionModel: attendees,
-    ));
+        attendanceCollectionModel: attendees, viewOnly: uploadToServer));
   }
 }
 
@@ -320,7 +332,7 @@ class AttendanceIndividualState with _$AttendanceIndividualState {
     @Default(0) int currentOffset,
     @Default(0) int countData,
     @Default(10) int limitData,
-    @Default(false) bool flag,
+    @Default(false) bool viewOnly,
   }) = _AttendanceRowModelLoaded;
   const factory AttendanceIndividualState.error(String? error) = _Error;
 }

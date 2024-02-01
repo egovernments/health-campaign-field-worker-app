@@ -1091,7 +1091,7 @@ mixin _$AttendanceIndividualState {
             int currentOffset,
             int countData,
             int limitData,
-            bool flag)
+            bool viewOnly)
         loaded,
     required TResult Function(String? error) error,
   }) =>
@@ -1107,7 +1107,7 @@ mixin _$AttendanceIndividualState {
             int currentOffset,
             int countData,
             int limitData,
-            bool flag)?
+            bool viewOnly)?
         loaded,
     TResult? Function(String? error)? error,
   }) =>
@@ -1123,7 +1123,7 @@ mixin _$AttendanceIndividualState {
             int currentOffset,
             int countData,
             int limitData,
-            bool flag)?
+            bool viewOnly)?
         loaded,
     TResult Function(String? error)? error,
     required TResult orElse(),
@@ -1221,7 +1221,7 @@ class _$_Initial extends _Initial {
             int currentOffset,
             int countData,
             int limitData,
-            bool flag)
+            bool viewOnly)
         loaded,
     required TResult Function(String? error) error,
   }) {
@@ -1240,7 +1240,7 @@ class _$_Initial extends _Initial {
             int currentOffset,
             int countData,
             int limitData,
-            bool flag)?
+            bool viewOnly)?
         loaded,
     TResult? Function(String? error)? error,
   }) {
@@ -1259,7 +1259,7 @@ class _$_Initial extends _Initial {
             int currentOffset,
             int countData,
             int limitData,
-            bool flag)?
+            bool viewOnly)?
         loaded,
     TResult Function(String? error)? error,
     required TResult orElse(),
@@ -1359,7 +1359,7 @@ class _$_Loading extends _Loading {
             int currentOffset,
             int countData,
             int limitData,
-            bool flag)
+            bool viewOnly)
         loaded,
     required TResult Function(String? error) error,
   }) {
@@ -1378,7 +1378,7 @@ class _$_Loading extends _Loading {
             int currentOffset,
             int countData,
             int limitData,
-            bool flag)?
+            bool viewOnly)?
         loaded,
     TResult? Function(String? error)? error,
   }) {
@@ -1397,7 +1397,7 @@ class _$_Loading extends _Loading {
             int currentOffset,
             int countData,
             int limitData,
-            bool flag)?
+            bool viewOnly)?
         loaded,
     TResult Function(String? error)? error,
     required TResult orElse(),
@@ -1465,7 +1465,7 @@ abstract class _$$_AttendanceRowModelLoadedCopyWith<$Res> {
       int currentOffset,
       int countData,
       int limitData,
-      bool flag});
+      bool viewOnly});
 }
 
 /// @nodoc
@@ -1486,7 +1486,7 @@ class __$$_AttendanceRowModelLoadedCopyWithImpl<$Res>
     Object? currentOffset = null,
     Object? countData = null,
     Object? limitData = null,
-    Object? flag = null,
+    Object? viewOnly = null,
   }) {
     return _then(_$_AttendanceRowModelLoaded(
       attendanceSearchModelList: null == attendanceSearchModelList
@@ -1513,9 +1513,9 @@ class __$$_AttendanceRowModelLoadedCopyWithImpl<$Res>
           ? _value.limitData
           : limitData // ignore: cast_nullable_to_non_nullable
               as int,
-      flag: null == flag
-          ? _value.flag
-          : flag // ignore: cast_nullable_to_non_nullable
+      viewOnly: null == viewOnly
+          ? _value.viewOnly
+          : viewOnly // ignore: cast_nullable_to_non_nullable
               as bool,
     ));
   }
@@ -1531,7 +1531,7 @@ class _$_AttendanceRowModelLoaded extends _AttendanceRowModelLoaded {
       this.currentOffset = 0,
       this.countData = 0,
       this.limitData = 10,
-      this.flag = false})
+      this.viewOnly = false})
       : _attendanceSearchModelList = attendanceSearchModelList,
         _attendanceCollectionModel = attendanceCollectionModel,
         super._();
@@ -1567,11 +1567,11 @@ class _$_AttendanceRowModelLoaded extends _AttendanceRowModelLoaded {
   final int limitData;
   @override
   @JsonKey()
-  final bool flag;
+  final bool viewOnly;
 
   @override
   String toString() {
-    return 'AttendanceIndividualState.loaded(attendanceSearchModelList: $attendanceSearchModelList, attendanceCollectionModel: $attendanceCollectionModel, offsetData: $offsetData, currentOffset: $currentOffset, countData: $countData, limitData: $limitData, flag: $flag)';
+    return 'AttendanceIndividualState.loaded(attendanceSearchModelList: $attendanceSearchModelList, attendanceCollectionModel: $attendanceCollectionModel, offsetData: $offsetData, currentOffset: $currentOffset, countData: $countData, limitData: $limitData, viewOnly: $viewOnly)';
   }
 
   @override
@@ -1591,7 +1591,8 @@ class _$_AttendanceRowModelLoaded extends _AttendanceRowModelLoaded {
                 other.countData == countData) &&
             (identical(other.limitData, limitData) ||
                 other.limitData == limitData) &&
-            (identical(other.flag, flag) || other.flag == flag));
+            (identical(other.viewOnly, viewOnly) ||
+                other.viewOnly == viewOnly));
   }
 
   @override
@@ -1603,7 +1604,7 @@ class _$_AttendanceRowModelLoaded extends _AttendanceRowModelLoaded {
       currentOffset,
       countData,
       limitData,
-      flag);
+      viewOnly);
 
   @JsonKey(ignore: true)
   @override
@@ -1624,12 +1625,12 @@ class _$_AttendanceRowModelLoaded extends _AttendanceRowModelLoaded {
             int currentOffset,
             int countData,
             int limitData,
-            bool flag)
+            bool viewOnly)
         loaded,
     required TResult Function(String? error) error,
   }) {
     return loaded(attendanceSearchModelList, attendanceCollectionModel,
-        offsetData, currentOffset, countData, limitData, flag);
+        offsetData, currentOffset, countData, limitData, viewOnly);
   }
 
   @override
@@ -1644,12 +1645,12 @@ class _$_AttendanceRowModelLoaded extends _AttendanceRowModelLoaded {
             int currentOffset,
             int countData,
             int limitData,
-            bool flag)?
+            bool viewOnly)?
         loaded,
     TResult? Function(String? error)? error,
   }) {
     return loaded?.call(attendanceSearchModelList, attendanceCollectionModel,
-        offsetData, currentOffset, countData, limitData, flag);
+        offsetData, currentOffset, countData, limitData, viewOnly);
   }
 
   @override
@@ -1664,14 +1665,14 @@ class _$_AttendanceRowModelLoaded extends _AttendanceRowModelLoaded {
             int currentOffset,
             int countData,
             int limitData,
-            bool flag)?
+            bool viewOnly)?
         loaded,
     TResult Function(String? error)? error,
     required TResult orElse(),
   }) {
     if (loaded != null) {
       return loaded(attendanceSearchModelList, attendanceCollectionModel,
-          offsetData, currentOffset, countData, limitData, flag);
+          offsetData, currentOffset, countData, limitData, viewOnly);
     }
     return orElse();
   }
@@ -1722,7 +1723,7 @@ abstract class _AttendanceRowModelLoaded extends AttendanceIndividualState {
       final int currentOffset,
       final int countData,
       final int limitData,
-      final bool flag}) = _$_AttendanceRowModelLoaded;
+      final bool viewOnly}) = _$_AttendanceRowModelLoaded;
   _AttendanceRowModelLoaded._() : super._();
 
   List<AttendeeModel> get attendanceSearchModelList;
@@ -1731,7 +1732,7 @@ abstract class _AttendanceRowModelLoaded extends AttendanceIndividualState {
   int get currentOffset;
   int get countData;
   int get limitData;
-  bool get flag;
+  bool get viewOnly;
   @JsonKey(ignore: true)
   _$$_AttendanceRowModelLoadedCopyWith<_$_AttendanceRowModelLoaded>
       get copyWith => throw _privateConstructorUsedError;
@@ -1808,7 +1809,7 @@ class _$_Error extends _Error {
             int currentOffset,
             int countData,
             int limitData,
-            bool flag)
+            bool viewOnly)
         loaded,
     required TResult Function(String? error) error,
   }) {
@@ -1827,7 +1828,7 @@ class _$_Error extends _Error {
             int currentOffset,
             int countData,
             int limitData,
-            bool flag)?
+            bool viewOnly)?
         loaded,
     TResult? Function(String? error)? error,
   }) {
@@ -1846,7 +1847,7 @@ class _$_Error extends _Error {
             int currentOffset,
             int countData,
             int limitData,
-            bool flag)?
+            bool viewOnly)?
         loaded,
     TResult Function(String? error)? error,
     required TResult orElse(),

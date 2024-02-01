@@ -3233,7 +3233,7 @@ class $AttendanceTable extends Attendance
 
   @override
   Set<GeneratedColumn> get $primaryKey =>
-      {registerId, individualId, tenantId, type};
+      {registerId, individualId, tenantId, type, time};
   @override
   AttendanceData map(Map<String, dynamic> data, {String? tablePrefix}) {
     return AttendanceData.fromData(data,

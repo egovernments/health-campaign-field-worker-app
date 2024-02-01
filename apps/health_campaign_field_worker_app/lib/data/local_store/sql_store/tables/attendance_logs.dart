@@ -30,5 +30,6 @@ class Attendance extends Table {
         individualId,
         tenantId,
         type,
+        time,
       };
 }

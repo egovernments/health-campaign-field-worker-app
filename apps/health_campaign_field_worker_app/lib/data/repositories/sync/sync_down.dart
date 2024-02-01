@@ -37,7 +37,12 @@ class PerformSyncDown {
     pendingSyncEntries.sort((a, b) => a.createdAt.compareTo(b.createdAt));
 
     final groupedEntries = pendingSyncEntries
-        .where((element) => element.type != DataModelType.service)
+        .where((element) =>
+            element.type != DataModelType.service
+
+            ///[TODO: Need to remove attendance check once down sync of attendance logs implemented
+            &&
+            element.type != DataModelType.attendance)
         .toList()
         .groupListsBy(
           (element) => element.type,

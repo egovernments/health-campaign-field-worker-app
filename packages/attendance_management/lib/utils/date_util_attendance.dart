@@ -272,7 +272,7 @@ class AttendanceDateTimeManagement {
     dynamic sessionCode,
     String entryTime,
   ) {
-    if (sessionCode == "0") {
+    if (sessionCode == 0) {
       if (entryTime == "entryTime") {
         DateTime nineAM = DateTime(k.year, k.month, k.day, 9);
 
@@ -280,7 +280,7 @@ class AttendanceDateTimeManagement {
 
         return millisecondsSinceEpoch;
       } else {
-        DateTime nineAM = DateTime(k.year, k.month, k.day, 12);
+        DateTime nineAM = DateTime(k.year, k.month, k.day, 11, 58);
 
         int millisecondsSinceEpoch = nineAM.millisecondsSinceEpoch;
 
@@ -288,7 +288,7 @@ class AttendanceDateTimeManagement {
       }
     } else {
       if (entryTime == "entryTime") {
-        DateTime nineAM = DateTime(k.year, k.month, k.day, 12);
+        DateTime nineAM = DateTime(k.year, k.month, k.day, 12, 5);
 
         int millisecondsSinceEpoch = nineAM.millisecondsSinceEpoch;
 

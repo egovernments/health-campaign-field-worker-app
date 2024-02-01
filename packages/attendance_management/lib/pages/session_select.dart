@@ -119,7 +119,7 @@ class _AttendanceDateSessionSelectionPageState
                                                 .control(_sessionRadio)
                                                 .value
                                                 .key
-                                            : "0",
+                                            : 0,
                                         "entryTime",
                                       );
 
@@ -133,8 +133,8 @@ class _AttendanceDateSessionSelectionPageState
                                                 .control(_sessionRadio)
                                                 .value
                                                 .key
-                                            : "1",
-                                        "exitType",
+                                            : 1,
+                                        "exitTime",
                                       );
 
                                       Navigator.of(context).push(
@@ -146,7 +146,7 @@ class _AttendanceDateSessionSelectionPageState
                                                     null
                                                 ? selectedRegister.attendees!
                                                 : [],
-                                            dateTime: DateTime.now(),
+                                            dateTime: s,
                                             entryTime: entryTime,
                                             exitTime: exitTime,
                                             registerId: selectedRegister.id,
@@ -166,7 +166,9 @@ class _AttendanceDateSessionSelectionPageState
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                       localizations.translate( i18.attendance.selectSession,),
+                                        localizations.translate(
+                                          i18.attendance.selectSession,
+                                        ),
                                         style: DigitTheme.instance.mobileTheme
                                             .textTheme.headlineLarge,
                                       ),
@@ -187,7 +189,9 @@ class _AttendanceDateSessionSelectionPageState
                                                             .endDate!)
                                                 : DateTime.now()
                                             : null,
-                                        label:localizations.translate(  i18.attendance.dateOfSession,),
+                                        label: localizations.translate(
+                                          i18.attendance.dateOfSession,
+                                        ),
                                         formControlName: _dateOfSession,
                                         cancelText: "Cancel",
                                         confirmText: "Select date",
