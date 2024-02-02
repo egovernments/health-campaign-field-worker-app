@@ -221,31 +221,39 @@ class HCMAttendanceBloc extends AttendanceListeners {
     for (DateTime date = startDate;
         date.isBefore(endDate);
         date = date.add(const Duration(days: 1))) {
+      bool hasMorningLog = hasLogWithType(completedLogs, date, "ENTRY");
+      bool hasEveningLog = hasLogWithType(completedLogs, date, "EXIT");
       dateList.add({
-        date: completedLogs.any((element) {
-          final elementTime =
-              DateTime.fromMillisecondsSinceEpoch(date.millisecondsSinceEpoch);
+        date: hasMorningLog && hasEveningLog,
+      });
+    }
 
-          final morningLogTime = DateTime(
+    return dateList;
+  }
+
+  bool hasLogWithType(
+    List<HCMAttendanceLogModel> logs,
+    DateTime date,
+    String type,
+  ) {
+    final elementTime =
+        DateTime.fromMillisecondsSinceEpoch(date.millisecondsSinceEpoch);
+
+    final logTime = type == 'ENTRY'
+        ? DateTime(
             elementTime.year,
             elementTime.month,
             elementTime.day,
             9,
-          ).millisecondsSinceEpoch;
-
-          final eveningLogTime = DateTime(
+          ).millisecondsSinceEpoch
+        : DateTime(
             elementTime.year,
             elementTime.month,
             elementTime.day,
             18,
           ).millisecondsSinceEpoch;
 
-          return (element.time == morningLogTime && element.type == "ENTRY") ||
-              (element.time == eveningLogTime && element.type == "EXIT");
-        }),
-      });
-    }
-
-    return dateList;
+    return logs
+        .any((element) => element.time == logTime && element.type == type);
   }
 }

@@ -10,6 +10,7 @@ class DigitSearchBar extends StatelessWidget {
   final double? borderRadius;
   final ValueChanged<String>? onChanged;
   final TextCapitalization textCapitalization;
+  final Widget? icon;
 
   const DigitSearchBar({
     super.key,
@@ -21,6 +22,7 @@ class DigitSearchBar extends StatelessWidget {
     this.borderRadius,
     this.onChanged,
     this.textCapitalization = TextCapitalization.none,
+    this.icon,
   });
 
   @override
@@ -34,20 +36,25 @@ class DigitSearchBar extends StatelessWidget {
       ),
       margin: margin,
       child: Padding(
-        padding: const EdgeInsets.all(kPadding),
+        padding: padding ?? const EdgeInsets.all(kPadding),
         child: TextField(
           controller: controller,
           onChanged: onChanged,
           textCapitalization: textCapitalization,
           decoration: InputDecoration(
+            icon: icon ??
+                const Icon(
+                  Icons.search,
+                  size: 24,
+                ),
             border: InputBorder.none,
             hintText: hintText ?? 'Enter the field details',
             filled: true,
             fillColor: theme.cardColor,
             contentPadding: contentPadding ??
                 const EdgeInsets.only(
-                  left: 14.0,
-                  bottom: 6.0,
+                  left: 16.0,
+                  bottom: 8.0,
                   top: 8.0,
                 ),
             focusedBorder: OutlineInputBorder(

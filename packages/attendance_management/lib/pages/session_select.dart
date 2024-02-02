@@ -228,16 +228,10 @@ class _AttendanceDateSessionSelectionPageState
                                                 1),
                                           ],
                                           valueMapper: (value) {
-                                            return value.label;
+                                            return localizations
+                                                .translate(value.label);
                                           },
                                         ),
-                                      // temporarily commented
-                                      // CustomInfoCard(
-                                      //   title:
-                                      //       " ${localizations.translate(i18.attendance.missedAttendanceInfo)}",
-                                      //   description:
-                                      //       " ${localizations.translate(i18.attendance.missedAttendanceDesc)}",
-                                      // ),
                                     ],
                                   ),
                                 ),
@@ -245,10 +239,10 @@ class _AttendanceDateSessionSelectionPageState
                                     form.control(_dateOfSession).value))
                                   DigitInfoCard(
                                     title: localizations.translate(
-                                      'Missed Attendance!',
+                                      i18.attendance.missedAttendanceHeader,
                                     ),
                                     description: localizations.translate(
-                                      getMissedDays(),
+                                      getMissedDays(context),
                                     ),
                                   )
                                 else
@@ -269,9 +263,10 @@ class _AttendanceDateSessionSelectionPageState
     });
   }
 
-  String getMissedDays() {
+  String getMissedDays(BuildContext context) {
     missedDays = ""; // Clear the missedDays string
-    DateTime currentDate = DateTime.now();
+    DateTime nowTime = DateTime.now();
+    DateTime currentDate = DateTime(nowTime.year, nowTime.month, nowTime.day);
     for (var element in widget.registers) {
       if (element.id == widget.registerID) {
         if (element.attendanceLog != null) {
@@ -285,7 +280,7 @@ class _AttendanceDateSessionSelectionPageState
         }
       }
     }
-    return "${missedDays}Please ensure you mark attendance for the missing days";
+    return "$missedDays${AttendanceLocalization.of(context).translate(i18.attendance.missedAttendanceDescription)}";
   }
 
   isAttendanceCompleted(DateTime selectedDate) {

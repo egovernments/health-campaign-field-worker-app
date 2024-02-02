@@ -237,7 +237,7 @@ class AttendanceIndividualBloc
     state.maybeMap(
       orElse: () {},
       loaded: (value) {
-        if (event.name.isNotEmpty) {
+        if (event.name.isNotEmpty && event.name.trim().length >= 2) {
           final List<AttendeeModel> result = value.attendanceCollectionModel!
               .where((item) =>
                   item.name!.toLowerCase().contains(event.name.toLowerCase()))

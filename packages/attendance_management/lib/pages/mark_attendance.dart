@@ -16,6 +16,7 @@ import '../blocs/attendance_individual_bloc.dart';
 import '../models/enum_values.dart';
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/circular_button.dart';
+import '../widgets/no_result_card.dart';
 
 class MarkAttendancePage extends LocalizedStatefulWidget {
   final List<AttendeeModel> attendees;
@@ -48,17 +49,21 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
   @override
   void initState() {
     controller = TextEditingController();
-    // controller.addListener(searchByName);
+    controller.addListener(searchByName);
     super.initState();
   }
 
-  // void searchByName() {
-  //   if (_debounce?.isActive ?? false) _debounce?.cancel();
-  //   _debounce = Timer(const Duration(milliseconds: 500), () {
-  //     if (controller.text.length > 2) {
-  //     } else if (controller.text.isEmpty) {}
-  //   });
-  // }
+  void searchByName() {
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      if (controller.text.length >= 2) {
+        individualLogBloc
+            .add(SearchAttendeesEvent(name: controller.text.trim()));
+      } else if (controller.text.length < 2) {
+        individualLogBloc.add(const SearchAttendeesEvent(name: ''));
+      }
+    });
+  }
 
   @override
   void dispose() {
@@ -220,33 +225,44 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
+                              // DigitTextField(
+                              //   hintText: "Search by Name",
+                              //   controller: controller,
+                              //   label: '',
+                              //   prefixIcon: const Icon(Icons.search),
+                              //   isFilled: true,
+                              // ),
                               DigitSearchBar(
                                 controller: controller,
                                 hintText: localizations
                                     .translate(i18.common.searchByName),
+                                borderRadius: 0,
+                                margin: const EdgeInsets.all(0),
                                 textCapitalization: TextCapitalization.words,
-                                onChanged: (value) {
-                                  if (value.length >= 2) {
-                                    individualLogBloc.add(SearchAttendeesEvent(
-                                        name: value.trim()));
-                                  }
-                                },
                               ),
+
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 8.0),
-                                child: DigitTable(
-                                  height: (100.0 + (tableData.length * 53.0)),
-                                  headerList: headerList(
-                                    widget.dateTime,
-                                    localizations,
-                                  ),
-                                  tableData: tableData,
-                                  columnWidth: 130,
-                                  scrollPhysics:
-                                      const NeverScrollableScrollPhysics(),
-                                  centerData: true,
-                                  centerTitle: true,
-                                ),
+                                child: tableData.isNotEmpty
+                                    ? DigitTable(
+                                        height: (tableData.length + 1) * 57.5,
+                                        headerList: headerList(
+                                          widget.dateTime,
+                                          localizations,
+                                        ),
+                                        tableData: tableData,
+                                        columnWidth: 130,
+                                        scrollPhysics:
+                                            const NeverScrollableScrollPhysics(),
+                                        centerData: true,
+                                        centerTitle: true,
+                                      )
+                                    : NoResultCard(
+                                        align: Alignment.center,
+                                        label: localizations.translate(
+                                          i18.common.noResultsFound,
+                                        ),
+                                      ),
                               ),
                             ],
                           ),

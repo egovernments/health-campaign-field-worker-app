@@ -32,6 +32,7 @@ dependencies:
   easy_stepper: ^0.5.2+1
   intl: ^0.18.0
   flutter_focus_watcher: ^2.0.0
+  flutter_svg: ^2.0.8
   dart_mappable: ^1.2.0
   drift: ^1.7.1
 
@@ -48,6 +49,7 @@ dev_dependencies:
 flutter:
   assets:
     - assets/images/
+    - assets/icons/svg/
   fonts:
     - family: Roboto
       fonts:

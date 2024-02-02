@@ -180,7 +180,7 @@ class Attendance {
 
   String get goBackButton => "GO_BACK_BUTTON";
 
-  String get goHome => "GO_TO_HOME";
+  String get goHome => "GO_TO_HOME_SCREEN";
 
   String get morningSession => "MORNING_SESSION";
 
@@ -201,4 +201,8 @@ class Attendance {
   String get pleaseTryAgain => "PLEASE_TRY_AGAIN";
 
   String get retry => "CORE_COMMON_NULL";
+
+  String get missedAttendanceHeader => "MISSED_ATTENDANCE_HEADER";
+
+  String get missedAttendanceDescription => "MISSED_ATTENDANCE_DESCRIPTION";
 }

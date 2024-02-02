@@ -12,6 +12,7 @@ import '../../utils/i18_key_constants.dart' as i18;
 import '../models/enum_values.dart';
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
+import '../widgets/no_result_card.dart';
 
 class ManageAttendancePage extends LocalizedStatefulWidget {
   final AttendanceListeners attendanceListeners;
@@ -143,18 +144,6 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
                             textAlign: TextAlign.left,
                           ),
                         ),
-                        empty
-                            ? Center(
-                                child: Card(
-                                  child: SizedBox(
-                                    height: 60,
-                                    width: 200,
-                                    child: Center(
-                                        child: Text(i18.common.noResultsFound)),
-                                  ),
-                                ),
-                              )
-                            : const SizedBox.shrink(),
                         blocState.maybeWhen(
                           orElse: () => const SizedBox.shrink(),
                           registerLoaded: (
@@ -162,6 +151,13 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
                           ) =>
                               Column(
                             children: [
+                              if (list.isEmpty)
+                                NoResultCard(
+                                  align: Alignment.center,
+                                  label: t.translate(
+                                    i18.common.noResultsFound,
+                                  ),
+                                ),
                               ...list,
                               if (list.length > 1)
                                 PoweredByDigit(
