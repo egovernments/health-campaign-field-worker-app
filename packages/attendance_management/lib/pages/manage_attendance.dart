@@ -65,10 +65,12 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
         child: BlocListener<AttendanceBloc, AttendanceStates>(
           listener: (ctx, states) {
             if (states is RegisterLoaded) {
+              list.clear();
               attendanceRegisters = states.registers;
               for (int i = 0; i < attendanceRegisters.length; i++) {
                 final register = attendanceRegisters[i];
                 list.add(RegisterCard(
+                    attendanceBloc: attendanceBloc,
                     data: {
                       t.translate(i18.attendance.campaignNameLabel):
                           register.name,
@@ -207,6 +209,7 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
 }
 
 class RegisterCard extends StatelessWidget {
+  final AttendanceBloc attendanceBloc;
   final Map<String, dynamic> data;
   final String tenantId;
   final String registerId;
@@ -219,6 +222,7 @@ class RegisterCard extends StatelessWidget {
   const RegisterCard({
     super.key,
     required this.data,
+    required this.attendanceBloc,
     required this.tenantId,
     required this.registerId,
     this.show = false,
@@ -263,7 +267,7 @@ class RegisterCard extends StatelessWidget {
                         ),
                       );
                     } else {
-                      Navigator.of(context).push(
+                      await Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) =>
                               AttendanceDateSessionSelectionPage(
@@ -272,6 +276,16 @@ class RegisterCard extends StatelessWidget {
                           ),
                         ),
                       );
+                      attendanceBloc.add(const AttendanceEvents.initial());
+                      // Navigator.of(context).push(
+                      //   MaterialPageRoute(
+                      //     builder: (context) =>
+                      //         AttendanceDateSessionSelectionPage(
+                      //       registers: registers,
+                      //       registerID: registerId,
+                      //     ),
+                      //   ),
+                      // );
                     }
                   },
                 )

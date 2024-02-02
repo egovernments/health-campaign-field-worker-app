@@ -516,6 +516,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                 ),
               );
             } else {
+              Navigator.of(context).pop(true);
               Navigator.of(context).push(
                 MaterialPageRoute(
                     builder: (context) => AttendanceAcknowledgementPage(
@@ -533,8 +534,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                           secondaryAction: () {
                             AttendanceSingleton().callSync();
                             Navigator.of(context).pop();
-                            Navigator.of(context).pop();
-                            Navigator.of(context).pop();
+                            Navigator.of(context).pop(true);
                           },
                         )),
               );
