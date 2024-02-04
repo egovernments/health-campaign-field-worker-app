@@ -64,7 +64,7 @@ class _SearchBeneficiaryPageState
             body: NotificationListener<ScrollNotification>(
               onNotification: (scrollNotification) {
                 if (scrollNotification is ScrollUpdateNotification) {
-                  final metrics = scrollNotification.metrics;              
+                  final metrics = scrollNotification.metrics;
                   if (metrics.atEdge &&
                       isProximityEnabled &&
                       searchController.text == '') {
@@ -296,7 +296,9 @@ class _SearchBeneficiaryPageState
 
                                       scannerbloc.add(
                                         const ScannerEvent.handleScanner(
-                                            [], [],),
+                                          [],
+                                          [],
+                                        ),
                                       );
 
                                       final bloc =

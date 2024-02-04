@@ -155,7 +155,11 @@ class SideBar extends StatelessWidget {
                                   return DigitRowCardModel(
                                     label: e.label,
                                     value: e.value,
-                                    isSelected: languages[index].value == AppSharedPreferences().getSelectedLocale ? true : false,
+                                    isSelected: languages[index].value ==
+                                            AppSharedPreferences()
+                                                .getSelectedLocale
+                                        ? true
+                                        : false,
                                   );
                                 }).toList(),
                                 width: (MediaQuery.of(context).size.width *

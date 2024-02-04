@@ -21,6 +21,7 @@ class PerformSyncDown {
     const individualIdentifierIdKey = 'individualIdentifierId';
     const householdAddressIdKey = 'householdAddressId';
     const individualAddressIdKey = 'individualAddressId';
+    final nameOfReferralKey = AdditionalFieldsType.nameOfReferral.toValue();
 
     if (configuration.persistenceConfig ==
         PersistenceConfiguration.onlineOnly) {
@@ -36,7 +37,12 @@ class PerformSyncDown {
     pendingSyncEntries.sort((a, b) => a.createdAt.compareTo(b.createdAt));
 
     final groupedEntries = pendingSyncEntries
-        .where((element) => element.type != DataModelType.service)
+        .where((element) =>
+            element.type != DataModelType.service
+
+            ///[TODO: Need to remove attendance check once down sync of attendance logs implemented
+            &&
+            element.type != DataModelType.attendance)
         .toList()
         .groupListsBy(
           (element) => element.type,
@@ -444,6 +450,53 @@ class PerformSyncDown {
                 if (markAsNonRecoverable) {
                   await local.update(
                     taskModel.copyWith(
+                      nonRecoverableError: true,
+                    ),
+                    createOpLog: false,
+                  );
+                }
+              }
+            }
+
+            break;
+          case DataModelType.hFReferral:
+            responseEntities = await remote.search(HFReferralSearchModel(
+              clientReferenceId: entities
+                  .whereType<HFReferralModel>()
+                  .map((e) => e.clientReferenceId)
+                  .whereNotNull()
+                  .toList(),
+              isDeleted: true,
+            ));
+
+            for (var element in operationGroupedEntity.value) {
+              if (element.id == null) return;
+              final entity = element.entity as HFReferralModel;
+              final responseEntity = responseEntities
+                  .whereType<HFReferralModel>()
+                  .firstWhereOrNull(
+                    (e) => e.clientReferenceId == entity.clientReferenceId,
+                  );
+
+              final serverGeneratedId = responseEntity?.id;
+              final rowVersion = responseEntity?.rowVersion;
+              if (serverGeneratedId != null) {
+                await local.opLogManager.updateServerGeneratedIds(
+                  model: UpdateServerGeneratedIdModel(
+                    clientReferenceId: entity.clientReferenceId,
+                    serverGeneratedId: serverGeneratedId,
+                    nonRecoverableError: entity.nonRecoverableError,
+                    dataOperation: element.operation,
+                    rowVersion: rowVersion,
+                  ),
+                );
+              } else {
+                final bool markAsNonRecoverable = await local.opLogManager
+                    .updateSyncDownRetry(entity.clientReferenceId);
+
+                if (markAsNonRecoverable) {
+                  await local.update(
+                    entity.copyWith(
                       nonRecoverableError: true,
                     ),
                     createOpLog: false,

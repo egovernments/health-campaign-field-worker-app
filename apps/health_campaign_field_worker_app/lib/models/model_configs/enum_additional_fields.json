@@ -28,6 +28,34 @@
     {
       "name": "ReferralComments",
       "value": "referralComments"
+    },
+    {
+      "name": "Cycle",
+      "value": "cycle"
+    },
+    {
+      "name": "HFCoordinator",
+      "value": "hfCoordinator"
+    },
+    {
+      "name": "ReferredBy",
+      "value": "referredBy"
+    },
+    {
+      "name": "DateOfEvaluation",
+      "value": "dateOfEvaluation"
+    },
+    {
+      "name": "NameOfReferral",
+      "value": "nameOfReferral"
+    },
+    {
+      "name": "Gender",
+      "value": "gender"
+    },
+    {
+      "name": "Age",
+      "value": "age"
     }
   ],
   "isEnum": true

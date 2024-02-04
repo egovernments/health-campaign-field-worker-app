@@ -38,6 +38,10 @@ class _HomePageShowcaseData {
     messageLocalizationKey: i18.homeShowcase.distributorFileComplaint,
   );
 
+  final beneficiaryReferral = ShowcaseItemBuilder(
+    messageLocalizationKey: i18.homeShowcase.beneficiaryReferral,
+  );
+
   final distributorSyncData = ShowcaseItemBuilder(
     messageLocalizationKey: i18.homeShowcase.distributorSyncData,
   );
@@ -81,6 +85,13 @@ class _HomePageShowcaseData {
 
   final inventoryReport = ShowcaseItemBuilder(
     messageLocalizationKey: i18.homeShowcase.inventoryReport,
+  );
+  final hfBeneficiaryReferral = ShowcaseItemBuilder(
+    messageLocalizationKey: i18.homeShowcase.beneficiaryReferral,
+  );
+
+  final attendanceRegister = ShowcaseItemBuilder(
+    messageLocalizationKey: i18.homeShowcase.manageAttendance,
   );
 
   final deleteAll = ShowcaseItemBuilder(

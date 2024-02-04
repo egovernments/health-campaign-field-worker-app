@@ -13,6 +13,8 @@ import '../blocs/household_details/household_details.dart';
 import '../blocs/localization/app_localization.dart';
 import '../blocs/search_households/project_beneficiaries_downsync.dart';
 import '../blocs/search_households/search_households.dart';
+import '../blocs/search_referrals/search_referrals.dart';
+import '../blocs/service/service.dart';
 import '../blocs/sync/sync.dart';
 import '../data/data_repository.dart';
 import '../data/local_store/no_sql/schema/oplog.dart';
@@ -69,11 +71,10 @@ class AuthenticatedPageWrapper extends StatelessWidget {
 
                                   return GestureDetector(
                                     onTap: () {
-                                      ctx.router.popUntilRouteWithName(
-                                        AuthenticatedRouteWrapper.name,
-                                      );
-                                      ctx.router
-                                          .navigate(BoundarySelectionRoute());
+                                      ctx.router.replaceAll([
+                                        HomeRoute(),
+                                        BoundarySelectionRoute(),
+                                      ]);
                                     },
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
@@ -86,7 +87,8 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                                           ),
                                         ),
                                         const Icon(
-                                            Icons.arrow_drop_down_outlined),
+                                          Icons.arrow_drop_down_outlined,
+                                        ),
                                       ],
                                     ),
                                   );
@@ -169,6 +171,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                                         case DataModelType.complaints:
                                         case DataModelType.sideEffect:
                                         case DataModelType.referral:
+                                        case DataModelType.hFReferral:
                                           return true;
                                         default:
                                           return false;
@@ -204,6 +207,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                                         case DataModelType.complaints:
                                         case DataModelType.sideEffect:
                                         case DataModelType.referral:
+                                        case DataModelType.hFReferral:
                                           return true;
                                         default:
                                           return false;
@@ -230,8 +234,9 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                         create: (ctx) => BeneficiaryDownSyncBloc(
                           //{TODO: Need to get the bandwidth path from config
                           bandwidthCheckRepository: BandwidthCheckRepository(
-                              DioClient().dio,
-                              bandwidthPath: '/project/check/bandwidth'),
+                            DioClient().dio,
+                            bandwidthPath: '/project/check/bandwidth',
+                          ),
                           householdLocalRepository: ctx.read<
                               LocalRepository<HouseholdModel,
                                   HouseholdSearchModel>>(),
@@ -259,6 +264,22 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                               LocalRepository<DownsyncModel,
                                   DownsyncSearchModel>>(),
                           networkManager: ctx.read(),
+                        ),
+                      ),
+                      BlocProvider(
+                        create: (_) => SearchReferralsBloc(
+                          userUid: context.loggedInUserUuid,
+                          projectId: context.projectId,
+                          beneficiaryType: context.beneficiaryType,
+                          hfReferralDataRepository: context.repository<
+                              HFReferralModel, HFReferralSearchModel>(),
+                        )..add(const SearchReferralsClearEvent()),
+                      ),
+                      BlocProvider(
+                        create: (_) => ServiceBloc(
+                          const ServiceEmptyState(),
+                          serviceDataRepository: context
+                              .repository<ServiceModel, ServiceSearchModel>(),
                         ),
                       ),
                     ],

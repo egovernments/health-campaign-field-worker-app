@@ -22,6 +22,10 @@ class ReferralLocalRepository
             sql.referral.id.equals(
               query.id!,
             ),
+          if (query.projectBeneficiaryClientReferenceId != null)
+            sql.referral.projectBeneficiaryClientReferenceId.isIn(
+              query.projectBeneficiaryClientReferenceId!,
+            ),
         ]),
       );
 

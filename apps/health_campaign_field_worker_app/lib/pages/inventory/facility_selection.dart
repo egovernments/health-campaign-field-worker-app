@@ -75,14 +75,12 @@ class FacilitySelectionPage extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            DigitTextFormField(
-                              suffix: const Padding(
+                            const DigitTextFormField(
+                              suffix: Padding(
                                 padding: EdgeInsets.all(8.0),
                                 child: Icon(Icons.search),
                               ),
-                              label: localizations.translate(
-                                i18.common.facilitySearchHeaderLabel,
-                              ),
+                              label: '',
                               formControlName: _facilityName,
                             ),
                           ],

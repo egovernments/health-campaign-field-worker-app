@@ -41,9 +41,15 @@ import '../pages/complaints/registration/complaints_details.dart';
 import '../pages/complaints/registration/complaints_location.dart';
 import '../pages/complaints/registration/complaints_registration_wrapper.dart';
 import '../pages/complaints_acknowledgement.dart';
+import '../pages/health_field_worker/create_referral/create_hf_referral_wrapper.dart';
+import '../pages/health_field_worker/create_referral/reason_checklist_preview.dart';
+import '../pages/health_field_worker/create_referral/record_facility_details.dart';
+import '../pages/health_field_worker/create_referral/record_reason_checklist.dart';
+import '../pages/health_field_worker/create_referral/record_referral_details.dart';
 import '../pages/home.dart';
 import '../pages/inventory/facility_selection.dart';
 import '../pages/inventory/manage_stocks.dart';
+import '../pages/inventory/project_facility_selection.dart';
 import '../pages/inventory/record_stock/record_stock_wrapper.dart';
 import '../pages/inventory/record_stock/stock_details.dart';
 import '../pages/inventory/record_stock/warehouse_details.dart';
@@ -59,6 +65,7 @@ import '../pages/qr_scanner.dart';
 import '../pages/reason_for_deletion.dart';
 import '../pages/reports/beneficiary/beneficaries_report.dart';
 import '../pages/search_beneficiary.dart';
+import '../pages/search_referrals.dart';
 import '../pages/unauthenticated.dart';
 
 export 'package:auto_route/auto_route.dart';
@@ -89,6 +96,7 @@ part 'app_router.gr.dart';
         AutoRoute(page: UserQRDetailsPage, path: 'user-qr-code'),
         AutoRoute(page: SearchBeneficiaryPage, path: 'search-beneficiary'),
         AutoRoute(page: QRScannerPage, path: 'scanner'),
+        // AutoRoute(page: ManageAttendancePage, path: 'manage-attendance'),
         AutoRoute(
           page: BeneficiariesReportPage,
           path: 'beneficiary-downsync-report',
@@ -189,11 +197,39 @@ part 'app_router.gr.dart';
             AutoRoute(page: StockDetailsPage, path: 'details'),
           ],
         ),
+        AutoRoute(page: SearchReferralsPage, path: 'search-referrals'),
+        AutoRoute(
+          page: HFCreateReferralWrapperPage,
+          path: 'hf-referral',
+          children: [
+            AutoRoute(
+              page: ReferralFacilityPage,
+              path: 'facility-details',
+              initial: true,
+            ),
+            AutoRoute(
+              page: RecordReferralDetailsPage,
+              path: 'referral-details',
+            ),
+            AutoRoute(
+              page: ReferralReasonChecklistPage,
+              path: 'referral-reason',
+            ),
+            AutoRoute(
+              page: ReferralReasonCheckListPreviewPage,
+              path: 'referral-reason-view',
+            ),
+          ],
+        ),
         AutoRoute(page: ManageStocksPage, path: 'manage-stocks'),
         AutoRoute(page: StockReconciliationPage, path: 'stock-reconciliation'),
         AutoRoute<FacilityModel>(
           page: FacilitySelectionPage,
           path: 'select-facilities',
+        ),
+        AutoRoute<ProjectFacilityModel>(
+          page: ProjectFacilitySelectionPage,
+          path: 'select-project-facilities',
         ),
         AutoRoute(
           page: InventoryReportSelectionPage,

@@ -16,9 +16,9 @@ class IndividualLocalRepository
 
   @override
   FutureOr<List<IndividualModel>> search(
-      IndividualSearchModel query, [
-        String? userId,
-      ]) async {
+    IndividualSearchModel query, [
+    String? userId,
+  ]) async {
     final selectQuery = sql.select(sql.individual).join(
       [
         leftOuterJoin(
@@ -41,7 +41,7 @@ class IndividualLocalRepository
         ),
       ],
     );
-
+    final r = await selectQuery.get();
 
     final results = await (selectQuery
       ..where(
@@ -93,136 +93,137 @@ class IndividualLocalRepository
       final address = e.readTableOrNull(sql.address);
       final identifier = e.readTableOrNull(sql.identifier);
 
-      return IndividualModel(
-        id: individual.id,
-        tenantId: individual.tenantId,
-        clientReferenceId: individual.clientReferenceId,
-        dateOfBirth: individual.dateOfBirth,
-        mobileNumber: individual.mobileNumber,
-        isDeleted: individual.isDeleted,
-        rowVersion: individual.rowVersion,
-        clientAuditDetails: (individual.clientCreatedBy != null &&
-            individual.clientCreatedTime != null)
-            ? ClientAuditDetails(
-          createdBy: individual.clientCreatedBy!,
-          createdTime: individual.clientCreatedTime!,
-          lastModifiedBy: individual.clientModifiedBy,
-          lastModifiedTime: individual.clientModifiedTime,
-        )
-            : null,
-        auditDetails: (individual.auditCreatedBy != null &&
-            individual.auditCreatedTime != null)
-            ? AuditDetails(
-          createdBy: individual.auditCreatedBy!,
-          createdTime: individual.auditCreatedTime!,
-          lastModifiedBy: individual.auditModifiedBy,
-          lastModifiedTime: individual.auditModifiedTime,
-        )
-            : null,
-        name: name == null
-            ? null
-            : NameModel(
-          id: name.id,
-          individualClientReferenceId: individual.clientReferenceId,
-          familyName: name.familyName,
-          givenName: name.givenName,
-          otherNames: name.otherNames,
-          rowVersion: name.rowVersion,
-          tenantId: name.tenantId,
-          auditDetails: (name.auditCreatedBy != null &&
-              name.auditCreatedTime != null)
-              ? AuditDetails(
-            createdBy: name.auditCreatedBy!,
-            createdTime: name.auditCreatedTime!,
-            lastModifiedBy: name.auditModifiedBy,
-            lastModifiedTime: name.auditModifiedTime,
-          )
-              : null,
-          clientAuditDetails: (name.clientCreatedBy != null &&
-              name.clientCreatedTime != null)
-              ? ClientAuditDetails(
-            createdBy: name.clientCreatedBy!,
-            createdTime: name.clientCreatedTime!,
-            lastModifiedBy: name.clientModifiedBy,
-            lastModifiedTime: name.clientModifiedTime,
-          )
-              : null,
-        ),
-        bloodGroup: individual.bloodGroup,
-        address: [
-          address == null
-              ? null
-              : AddressModel(
-            id: address.id,
-            relatedClientReferenceId: individual.clientReferenceId,
-            tenantId: address.tenantId,
-            doorNo: address.doorNo,
-            latitude: address.latitude,
-            longitude: address.longitude,
-            landmark: address.landmark,
-            locationAccuracy: address.locationAccuracy,
-            addressLine1: address.addressLine1,
-            addressLine2: address.addressLine2,
-            city: address.city,
-            pincode: address.pincode,
-            type: address.type,
-            locality: address.localityBoundaryCode != null
-                ? LocalityModel(
-              code: address.localityBoundaryCode!,
-              name: address.localityBoundaryName,
-            )
-                : null,
-            rowVersion: address.rowVersion,
-            auditDetails: (address.auditCreatedBy != null &&
-                address.auditCreatedTime != null)
-                ? AuditDetails(
-              createdBy: address.auditCreatedBy!,
-              createdTime: address.auditCreatedTime!,
-              lastModifiedBy: address.auditModifiedBy,
-              lastModifiedTime: address.auditModifiedTime,
-            )
-                : null,
-            clientAuditDetails: (address.clientCreatedBy != null &&
-                address.clientCreatedTime != null)
+          return IndividualModel(
+            id: individual.id,
+            tenantId: individual.tenantId,
+            individualId: individual.individualId,
+            clientReferenceId: individual.clientReferenceId,
+            dateOfBirth: individual.dateOfBirth,
+            mobileNumber: individual.mobileNumber,
+            isDeleted: individual.isDeleted,
+            rowVersion: individual.rowVersion,
+            clientAuditDetails: (individual.clientCreatedBy != null &&
+                    individual.clientCreatedTime != null)
                 ? ClientAuditDetails(
-              createdBy: address.clientCreatedBy!,
-              createdTime: address.clientCreatedTime!,
-              lastModifiedBy: address.clientModifiedBy,
-              lastModifiedTime: address.clientModifiedTime,
-            )
+                    createdBy: individual.clientCreatedBy!,
+                    createdTime: individual.clientCreatedTime!,
+                    lastModifiedBy: individual.clientModifiedBy,
+                    lastModifiedTime: individual.clientModifiedTime,
+                  )
                 : null,
-          ),
-        ].whereNotNull().toList(),
-        gender: individual.gender,
-        identifiers: [
-          if (identifier != null)
-            IdentifierModel(
-              id: identifier.id,
-              clientReferenceId: individual.clientReferenceId,
-              identifierType: identifier.identifierType,
-              identifierId: identifier.identifierId,
-              rowVersion: identifier.rowVersion,
-              tenantId: identifier.tenantId,
-              auditDetails: AuditDetails(
-                createdBy: identifier.auditCreatedBy!,
-                createdTime: identifier.auditCreatedTime!,
-                lastModifiedBy: identifier.auditModifiedBy,
-                lastModifiedTime: identifier.auditModifiedTime,
-              ),
-            ),
-        ],
-      );
-    })
+            auditDetails: (individual.auditCreatedBy != null &&
+                    individual.auditCreatedTime != null)
+                ? AuditDetails(
+                    createdBy: individual.auditCreatedBy!,
+                    createdTime: individual.auditCreatedTime!,
+                    lastModifiedBy: individual.auditModifiedBy,
+                    lastModifiedTime: individual.auditModifiedTime,
+                  )
+                : null,
+            name: name == null
+                ? null
+                : NameModel(
+                    id: name.id,
+                    individualClientReferenceId: individual.clientReferenceId,
+                    familyName: name.familyName,
+                    givenName: name.givenName,
+                    otherNames: name.otherNames,
+                    rowVersion: name.rowVersion,
+                    tenantId: name.tenantId,
+                    auditDetails: (name.auditCreatedBy != null &&
+                            name.auditCreatedTime != null)
+                        ? AuditDetails(
+                            createdBy: name.auditCreatedBy!,
+                            createdTime: name.auditCreatedTime!,
+                            lastModifiedBy: name.auditModifiedBy,
+                            lastModifiedTime: name.auditModifiedTime,
+                          )
+                        : null,
+                    clientAuditDetails: (name.clientCreatedBy != null &&
+                            name.clientCreatedTime != null)
+                        ? ClientAuditDetails(
+                            createdBy: name.clientCreatedBy!,
+                            createdTime: name.clientCreatedTime!,
+                            lastModifiedBy: name.clientModifiedBy,
+                            lastModifiedTime: name.clientModifiedTime,
+                          )
+                        : null,
+                  ),
+            bloodGroup: individual.bloodGroup,
+            address: [
+              address == null
+                  ? null
+                  : AddressModel(
+                      id: address.id,
+                      relatedClientReferenceId: individual.clientReferenceId,
+                      tenantId: address.tenantId,
+                      doorNo: address.doorNo,
+                      latitude: address.latitude,
+                      longitude: address.longitude,
+                      landmark: address.landmark,
+                      locationAccuracy: address.locationAccuracy,
+                      addressLine1: address.addressLine1,
+                      addressLine2: address.addressLine2,
+                      city: address.city,
+                      pincode: address.pincode,
+                      type: address.type,
+                      locality: address.localityBoundaryCode != null
+                          ? LocalityModel(
+                              code: address.localityBoundaryCode!,
+                              name: address.localityBoundaryName,
+                            )
+                          : null,
+                      rowVersion: address.rowVersion,
+                      auditDetails: (address.auditCreatedBy != null &&
+                              address.auditCreatedTime != null)
+                          ? AuditDetails(
+                              createdBy: address.auditCreatedBy!,
+                              createdTime: address.auditCreatedTime!,
+                              lastModifiedBy: address.auditModifiedBy,
+                              lastModifiedTime: address.auditModifiedTime,
+                            )
+                          : null,
+                      clientAuditDetails: (address.clientCreatedBy != null &&
+                              address.clientCreatedTime != null)
+                          ? ClientAuditDetails(
+                              createdBy: address.clientCreatedBy!,
+                              createdTime: address.clientCreatedTime!,
+                              lastModifiedBy: address.clientModifiedBy,
+                              lastModifiedTime: address.clientModifiedTime,
+                            )
+                          : null,
+                    ),
+            ].whereNotNull().toList(),
+            gender: individual.gender,
+            identifiers: [
+              if (identifier != null)
+                IdentifierModel(
+                  id: identifier.id,
+                  clientReferenceId: individual.clientReferenceId,
+                  identifierType: identifier.identifierType,
+                  identifierId: identifier.identifierId,
+                  rowVersion: identifier.rowVersion,
+                  tenantId: identifier.tenantId,
+                  auditDetails: AuditDetails(
+                    createdBy: identifier.auditCreatedBy!,
+                    createdTime: identifier.auditCreatedTime!,
+                    lastModifiedBy: identifier.auditModifiedBy,
+                    lastModifiedTime: identifier.auditModifiedTime,
+                  ),
+                ),
+            ],
+          );
+        })
         .where((element) => element.isDeleted != true)
         .toList();
   }
 
   @override
   FutureOr<void> create(
-      IndividualModel entity, {
-        bool createOpLog = true,
-        DataOperation dataOperation = DataOperation.create,
-      }) async {
+    IndividualModel entity, {
+    bool createOpLog = true,
+    DataOperation dataOperation = DataOperation.create,
+  }) async {
     final addresses = entity.address;
     final identifiers = entity.identifiers;
 
@@ -269,48 +270,48 @@ class IndividualLocalRepository
 
   @override
   FutureOr<void> bulkCreate(
-      List<IndividualModel> entities,
-      ) async {
+    List<IndividualModel> entities,
+  ) async {
     final individualCompanions = entities.map((e) => e.companion).toList();
 
     final identifiersList = entities
         .map((e) => e.identifiers?.map((a) {
-      return a
-          .copyWith(
-        clientReferenceId: e.clientReferenceId,
-        clientAuditDetails: e.clientAuditDetails,
-        auditDetails: e.auditDetails,
-      )
-          .companion;
-    }).toList())
+              return a
+                  .copyWith(
+                    clientReferenceId: e.clientReferenceId,
+                    clientAuditDetails: e.clientAuditDetails,
+                    auditDetails: e.auditDetails,
+                  )
+                  .companion;
+            }).toList())
         .toList();
 
     final identifierCompanions =
-    identifiersList.expand((e) => [e?[0]]).toList();
+        identifiersList.expand((e) => [e?[0]]).toList();
 
     await sql.batch((batch) async {
       final addressList = entities
           .map((e) =>
-      e.address?.map((a) {
-        return a
-            .copyWith(
-          relatedClientReferenceId: e.clientReferenceId,
-          clientAuditDetails: e.clientAuditDetails,
-          auditDetails: e.auditDetails,
-        )
-            .companion;
-      }).toList() ??
-          [])
+              e.address?.map((a) {
+                return a
+                    .copyWith(
+                      relatedClientReferenceId: e.clientReferenceId,
+                      clientAuditDetails: e.clientAuditDetails,
+                      auditDetails: e.auditDetails,
+                    )
+                    .companion;
+              }).toList() ??
+              [])
           .toList();
       final addressCompanions = addressList.expand((e) => [e[0]]).toList();
       final nameCompanions = entities.map((e) {
         if (e.name != null) {
           return e.name!
               .copyWith(
-            individualClientReferenceId: e.clientReferenceId,
-            clientAuditDetails: e.clientAuditDetails,
-            auditDetails: e.auditDetails,
-          )
+                individualClientReferenceId: e.clientReferenceId,
+                clientAuditDetails: e.clientAuditDetails,
+                auditDetails: e.auditDetails,
+              )
               .companion;
         }
       }).toList();
@@ -342,9 +343,9 @@ class IndividualLocalRepository
 
   @override
   FutureOr<void> update(
-      IndividualModel entity, {
-        bool createOpLog = true,
-      }) async {
+    IndividualModel entity, {
+    bool createOpLog = true,
+  }) async {
     final individualCompanion = entity.companion;
 
     final nameCompanion = entity.name?.copyWith(individualClientReferenceId: entity.clientReferenceId,
@@ -353,13 +354,13 @@ class IndividualLocalRepository
     ).companion;
 
     final addressCompanions = entity.address?.map((e) {
-      return e
-          .copyWith(
-        relatedClientReferenceId: entity.clientReferenceId,
-        clientAuditDetails: entity.clientAuditDetails,
-      )
-          .companion;
-    }).toList() ??
+          return e
+              .copyWith(
+                relatedClientReferenceId: entity.clientReferenceId,
+                clientAuditDetails: entity.clientAuditDetails,
+              )
+              .companion;
+        }).toList() ??
         [];
 
     final identifierCompanions = entity.identifiers?.map((e) {
@@ -395,9 +396,9 @@ class IndividualLocalRepository
 
   @override
   FutureOr<void> delete(
-      IndividualModel entity, {
-        bool createOpLog = true,
-      }) async {
+    IndividualModel entity, {
+    bool createOpLog = true,
+  }) async {
     final updated = entity.copyWith(
       isDeleted: true,
       rowVersion: entity.rowVersion,

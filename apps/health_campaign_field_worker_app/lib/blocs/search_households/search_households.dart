@@ -57,7 +57,7 @@ class SearchHouseholdsBloc
     on(_handleSearchByTag);
   }
 
-// This function is been used in Individual details screen. 
+// This function is been used in Individual details screen.
   Future<void> _handleSearchByHousehold(
     SearchHouseholdsByHouseholdsEvent event,
     SearchHouseholdsEmitter emit,
@@ -290,11 +290,6 @@ class SearchHouseholdsBloc
           ? househHoldIds
           : individualClientReferenceIds,
     );
-    // householdMembers.removeWhere((ele) => projectBeneficiaries.any((p) => p
-    //     .beneficiaryClientReferenceId!
-    //     .contains(beneficiaryType == BeneficiaryType.individual
-    //         ? ele.individualClientReferenceId.toString()
-    //         : ele.householdClientReferenceId.toString())));
 
     List<SideEffectModel> sideEffects = [];
     List<ReferralModel> referrals = [];
@@ -473,7 +468,6 @@ class SearchHouseholdsBloc
 
     // Search for individual results based on the search text only.
 
-
     if (projectBeneficiaries.isNotEmpty) {
       // Search for tasks and side effects based on project beneficiaries.
       tasks = await fetchTaskbyProjectBeneficiary(projectBeneficiaries);
@@ -510,8 +504,7 @@ class SearchHouseholdsBloc
           .where((element) => beneficiaryType == BeneficiaryType.individual
               ? individualClientReferenceIds
                   .contains(element.beneficiaryClientReferenceId)
-              : (househHoldIds)
-                  .contains(element.beneficiaryClientReferenceId))
+              : (househHoldIds).contains(element.beneficiaryClientReferenceId))
           .toList();
       // Find the head of household from the individuals.
       final head = individualMembersList.firstWhereOrNull(

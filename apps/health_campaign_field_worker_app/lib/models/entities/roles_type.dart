@@ -6,5 +6,6 @@ part 'roles_type.mapper.dart';
 enum RolesType {
   @MappableValue("WAREHOUSE_MANAGER") warehouseManager,
   @MappableValue("DISTRIBUTOR") distributor,
+  @MappableValue("HEALTH_FACILITY_WORKER") healthFacilityWorker,
   ;
 }
