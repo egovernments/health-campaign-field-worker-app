@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'date_session_bloc.dart';
 
@@ -88,20 +88,20 @@ class _$DateSessionEventsCopyWithImpl<$Res, $Val extends DateSessionEvents>
 }
 
 /// @nodoc
-abstract class _$$LoadLocalizationCopyWith<$Res> {
-  factory _$$LoadLocalizationCopyWith(
-          _$LoadLocalization value, $Res Function(_$LoadLocalization) then) =
-      __$$LoadLocalizationCopyWithImpl<$Res>;
+abstract class _$$LoadLocalizationImplCopyWith<$Res> {
+  factory _$$LoadLocalizationImplCopyWith(_$LoadLocalizationImpl value,
+          $Res Function(_$LoadLocalizationImpl) then) =
+      __$$LoadLocalizationImplCopyWithImpl<$Res>;
   @useResult
   $Res call({List<dynamic> codes});
 }
 
 /// @nodoc
-class __$$LoadLocalizationCopyWithImpl<$Res>
-    extends _$DateSessionEventsCopyWithImpl<$Res, _$LoadLocalization>
-    implements _$$LoadLocalizationCopyWith<$Res> {
-  __$$LoadLocalizationCopyWithImpl(
-      _$LoadLocalization _value, $Res Function(_$LoadLocalization) _then)
+class __$$LoadLocalizationImplCopyWithImpl<$Res>
+    extends _$DateSessionEventsCopyWithImpl<$Res, _$LoadLocalizationImpl>
+    implements _$$LoadLocalizationImplCopyWith<$Res> {
+  __$$LoadLocalizationImplCopyWithImpl(_$LoadLocalizationImpl _value,
+      $Res Function(_$LoadLocalizationImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -109,7 +109,7 @@ class __$$LoadLocalizationCopyWithImpl<$Res>
   $Res call({
     Object? codes = null,
   }) {
-    return _then(_$LoadLocalization(
+    return _then(_$LoadLocalizationImpl(
       null == codes
           ? _value._codes
           : codes // ignore: cast_nullable_to_non_nullable
@@ -120,12 +120,13 @@ class __$$LoadLocalizationCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$LoadLocalization implements LoadLocalization {
-  const _$LoadLocalization(final List<dynamic> codes) : _codes = codes;
+class _$LoadLocalizationImpl implements LoadLocalization {
+  const _$LoadLocalizationImpl(final List<dynamic> codes) : _codes = codes;
 
   final List<dynamic> _codes;
   @override
   List<dynamic> get codes {
+    if (_codes is EqualUnmodifiableListView) return _codes;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_codes);
   }
@@ -136,10 +137,10 @@ class _$LoadLocalization implements LoadLocalization {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$LoadLocalization &&
+            other is _$LoadLocalizationImpl &&
             const DeepCollectionEquality().equals(other._codes, _codes));
   }
 
@@ -150,8 +151,9 @@ class _$LoadLocalization implements LoadLocalization {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$LoadLocalizationCopyWith<_$LoadLocalization> get copyWith =>
-      __$$LoadLocalizationCopyWithImpl<_$LoadLocalization>(this, _$identity);
+  _$$LoadLocalizationImplCopyWith<_$LoadLocalizationImpl> get copyWith =>
+      __$$LoadLocalizationImplCopyWithImpl<_$LoadLocalizationImpl>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -231,34 +233,34 @@ class _$LoadLocalization implements LoadLocalization {
 
 abstract class LoadLocalization implements DateSessionEvents {
   const factory LoadLocalization(final List<dynamic> codes) =
-      _$LoadLocalization;
+      _$LoadLocalizationImpl;
 
   List<dynamic> get codes;
   @JsonKey(ignore: true)
-  _$$LoadLocalizationCopyWith<_$LoadLocalization> get copyWith =>
+  _$$LoadLocalizationImplCopyWith<_$LoadLocalizationImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$InitialDateSessionCopyWith<$Res> {
-  factory _$$InitialDateSessionCopyWith(_$InitialDateSession value,
-          $Res Function(_$InitialDateSession) then) =
-      __$$InitialDateSessionCopyWithImpl<$Res>;
+abstract class _$$InitialDateSessionImplCopyWith<$Res> {
+  factory _$$InitialDateSessionImplCopyWith(_$InitialDateSessionImpl value,
+          $Res Function(_$InitialDateSessionImpl) then) =
+      __$$InitialDateSessionImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$InitialDateSessionCopyWithImpl<$Res>
-    extends _$DateSessionEventsCopyWithImpl<$Res, _$InitialDateSession>
-    implements _$$InitialDateSessionCopyWith<$Res> {
-  __$$InitialDateSessionCopyWithImpl(
-      _$InitialDateSession _value, $Res Function(_$InitialDateSession) _then)
+class __$$InitialDateSessionImplCopyWithImpl<$Res>
+    extends _$DateSessionEventsCopyWithImpl<$Res, _$InitialDateSessionImpl>
+    implements _$$InitialDateSessionImplCopyWith<$Res> {
+  __$$InitialDateSessionImplCopyWithImpl(_$InitialDateSessionImpl _value,
+      $Res Function(_$InitialDateSessionImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$InitialDateSession implements InitialDateSession {
-  const _$InitialDateSession();
+class _$InitialDateSessionImpl implements InitialDateSession {
+  const _$InitialDateSessionImpl();
 
   @override
   String toString() {
@@ -266,9 +268,9 @@ class _$InitialDateSession implements InitialDateSession {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$InitialDateSession);
+        (other.runtimeType == runtimeType && other is _$InitialDateSessionImpl);
   }
 
   @override
@@ -351,25 +353,28 @@ class _$InitialDateSession implements InitialDateSession {
 }
 
 abstract class InitialDateSession implements DateSessionEvents {
-  const factory InitialDateSession() = _$InitialDateSession;
+  const factory InitialDateSession() = _$InitialDateSessionImpl;
 }
 
 /// @nodoc
-abstract class _$$LoadSelectedRegisterDataCopyWith<$Res> {
-  factory _$$LoadSelectedRegisterDataCopyWith(_$LoadSelectedRegisterData value,
-          $Res Function(_$LoadSelectedRegisterData) then) =
-      __$$LoadSelectedRegisterDataCopyWithImpl<$Res>;
+abstract class _$$LoadSelectedRegisterDataImplCopyWith<$Res> {
+  factory _$$LoadSelectedRegisterDataImplCopyWith(
+          _$LoadSelectedRegisterDataImpl value,
+          $Res Function(_$LoadSelectedRegisterDataImpl) then) =
+      __$$LoadSelectedRegisterDataImplCopyWithImpl<$Res>;
   @useResult
   $Res call(
       {List<AttendancePackageRegisterModel> registers, String registerID});
 }
 
 /// @nodoc
-class __$$LoadSelectedRegisterDataCopyWithImpl<$Res>
-    extends _$DateSessionEventsCopyWithImpl<$Res, _$LoadSelectedRegisterData>
-    implements _$$LoadSelectedRegisterDataCopyWith<$Res> {
-  __$$LoadSelectedRegisterDataCopyWithImpl(_$LoadSelectedRegisterData _value,
-      $Res Function(_$LoadSelectedRegisterData) _then)
+class __$$LoadSelectedRegisterDataImplCopyWithImpl<$Res>
+    extends _$DateSessionEventsCopyWithImpl<$Res,
+        _$LoadSelectedRegisterDataImpl>
+    implements _$$LoadSelectedRegisterDataImplCopyWith<$Res> {
+  __$$LoadSelectedRegisterDataImplCopyWithImpl(
+      _$LoadSelectedRegisterDataImpl _value,
+      $Res Function(_$LoadSelectedRegisterDataImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -378,7 +383,7 @@ class __$$LoadSelectedRegisterDataCopyWithImpl<$Res>
     Object? registers = null,
     Object? registerID = null,
   }) {
-    return _then(_$LoadSelectedRegisterData(
+    return _then(_$LoadSelectedRegisterDataImpl(
       registers: null == registers
           ? _value._registers
           : registers // ignore: cast_nullable_to_non_nullable
@@ -393,8 +398,8 @@ class __$$LoadSelectedRegisterDataCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$LoadSelectedRegisterData implements LoadSelectedRegisterData {
-  const _$LoadSelectedRegisterData(
+class _$LoadSelectedRegisterDataImpl implements LoadSelectedRegisterData {
+  const _$LoadSelectedRegisterDataImpl(
       {required final List<AttendancePackageRegisterModel> registers,
       required this.registerID})
       : _registers = registers;
@@ -402,6 +407,7 @@ class _$LoadSelectedRegisterData implements LoadSelectedRegisterData {
   final List<AttendancePackageRegisterModel> _registers;
   @override
   List<AttendancePackageRegisterModel> get registers {
+    if (_registers is EqualUnmodifiableListView) return _registers;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_registers);
   }
@@ -415,10 +421,10 @@ class _$LoadSelectedRegisterData implements LoadSelectedRegisterData {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$LoadSelectedRegisterData &&
+            other is _$LoadSelectedRegisterDataImpl &&
             const DeepCollectionEquality()
                 .equals(other._registers, _registers) &&
             (identical(other.registerID, registerID) ||
@@ -432,10 +438,9 @@ class _$LoadSelectedRegisterData implements LoadSelectedRegisterData {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$LoadSelectedRegisterDataCopyWith<_$LoadSelectedRegisterData>
-      get copyWith =>
-          __$$LoadSelectedRegisterDataCopyWithImpl<_$LoadSelectedRegisterData>(
-              this, _$identity);
+  _$$LoadSelectedRegisterDataImplCopyWith<_$LoadSelectedRegisterDataImpl>
+      get copyWith => __$$LoadSelectedRegisterDataImplCopyWithImpl<
+          _$LoadSelectedRegisterDataImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -516,12 +521,12 @@ class _$LoadSelectedRegisterData implements LoadSelectedRegisterData {
 abstract class LoadSelectedRegisterData implements DateSessionEvents {
   const factory LoadSelectedRegisterData(
       {required final List<AttendancePackageRegisterModel> registers,
-      required final String registerID}) = _$LoadSelectedRegisterData;
+      required final String registerID}) = _$LoadSelectedRegisterDataImpl;
 
   List<AttendancePackageRegisterModel> get registers;
   String get registerID;
   @JsonKey(ignore: true)
-  _$$LoadSelectedRegisterDataCopyWith<_$LoadSelectedRegisterData>
+  _$$LoadSelectedRegisterDataImplCopyWith<_$LoadSelectedRegisterDataImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -589,25 +594,25 @@ class _$DateSessionStatesCopyWithImpl<$Res, $Val extends DateSessionStates>
 }
 
 /// @nodoc
-abstract class _$$DateSessionLoadingCopyWith<$Res> {
-  factory _$$DateSessionLoadingCopyWith(_$DateSessionLoading value,
-          $Res Function(_$DateSessionLoading) then) =
-      __$$DateSessionLoadingCopyWithImpl<$Res>;
+abstract class _$$DateSessionLoadingImplCopyWith<$Res> {
+  factory _$$DateSessionLoadingImplCopyWith(_$DateSessionLoadingImpl value,
+          $Res Function(_$DateSessionLoadingImpl) then) =
+      __$$DateSessionLoadingImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$DateSessionLoadingCopyWithImpl<$Res>
-    extends _$DateSessionStatesCopyWithImpl<$Res, _$DateSessionLoading>
-    implements _$$DateSessionLoadingCopyWith<$Res> {
-  __$$DateSessionLoadingCopyWithImpl(
-      _$DateSessionLoading _value, $Res Function(_$DateSessionLoading) _then)
+class __$$DateSessionLoadingImplCopyWithImpl<$Res>
+    extends _$DateSessionStatesCopyWithImpl<$Res, _$DateSessionLoadingImpl>
+    implements _$$DateSessionLoadingImplCopyWith<$Res> {
+  __$$DateSessionLoadingImplCopyWithImpl(_$DateSessionLoadingImpl _value,
+      $Res Function(_$DateSessionLoadingImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$DateSessionLoading implements DateSessionLoading {
-  const _$DateSessionLoading();
+class _$DateSessionLoadingImpl implements DateSessionLoading {
+  const _$DateSessionLoadingImpl();
 
   @override
   String toString() {
@@ -615,9 +620,9 @@ class _$DateSessionLoading implements DateSessionLoading {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$DateSessionLoading);
+        (other.runtimeType == runtimeType && other is _$DateSessionLoadingImpl);
   }
 
   @override
@@ -690,24 +695,24 @@ class _$DateSessionLoading implements DateSessionLoading {
 }
 
 abstract class DateSessionLoading implements DateSessionStates {
-  const factory DateSessionLoading() = _$DateSessionLoading;
+  const factory DateSessionLoading() = _$DateSessionLoadingImpl;
 }
 
 /// @nodoc
-abstract class _$$DateSessionLoadedCopyWith<$Res> {
-  factory _$$DateSessionLoadedCopyWith(
-          _$DateSessionLoaded value, $Res Function(_$DateSessionLoaded) then) =
-      __$$DateSessionLoadedCopyWithImpl<$Res>;
+abstract class _$$DateSessionLoadedImplCopyWith<$Res> {
+  factory _$$DateSessionLoadedImplCopyWith(_$DateSessionLoadedImpl value,
+          $Res Function(_$DateSessionLoadedImpl) then) =
+      __$$DateSessionLoadedImplCopyWithImpl<$Res>;
   @useResult
   $Res call({AttendancePackageRegisterModel selectedRegister});
 }
 
 /// @nodoc
-class __$$DateSessionLoadedCopyWithImpl<$Res>
-    extends _$DateSessionStatesCopyWithImpl<$Res, _$DateSessionLoaded>
-    implements _$$DateSessionLoadedCopyWith<$Res> {
-  __$$DateSessionLoadedCopyWithImpl(
-      _$DateSessionLoaded _value, $Res Function(_$DateSessionLoaded) _then)
+class __$$DateSessionLoadedImplCopyWithImpl<$Res>
+    extends _$DateSessionStatesCopyWithImpl<$Res, _$DateSessionLoadedImpl>
+    implements _$$DateSessionLoadedImplCopyWith<$Res> {
+  __$$DateSessionLoadedImplCopyWithImpl(_$DateSessionLoadedImpl _value,
+      $Res Function(_$DateSessionLoadedImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -715,7 +720,7 @@ class __$$DateSessionLoadedCopyWithImpl<$Res>
   $Res call({
     Object? selectedRegister = null,
   }) {
-    return _then(_$DateSessionLoaded(
+    return _then(_$DateSessionLoadedImpl(
       selectedRegister: null == selectedRegister
           ? _value.selectedRegister
           : selectedRegister // ignore: cast_nullable_to_non_nullable
@@ -726,8 +731,8 @@ class __$$DateSessionLoadedCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$DateSessionLoaded implements DateSessionLoaded {
-  const _$DateSessionLoaded({required this.selectedRegister});
+class _$DateSessionLoadedImpl implements DateSessionLoaded {
+  const _$DateSessionLoadedImpl({required this.selectedRegister});
 
   @override
   final AttendancePackageRegisterModel selectedRegister;
@@ -738,10 +743,10 @@ class _$DateSessionLoaded implements DateSessionLoaded {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$DateSessionLoaded &&
+            other is _$DateSessionLoadedImpl &&
             (identical(other.selectedRegister, selectedRegister) ||
                 other.selectedRegister == selectedRegister));
   }
@@ -752,8 +757,9 @@ class _$DateSessionLoaded implements DateSessionLoaded {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$DateSessionLoadedCopyWith<_$DateSessionLoaded> get copyWith =>
-      __$$DateSessionLoadedCopyWithImpl<_$DateSessionLoaded>(this, _$identity);
+  _$$DateSessionLoadedImplCopyWith<_$DateSessionLoadedImpl> get copyWith =>
+      __$$DateSessionLoadedImplCopyWithImpl<_$DateSessionLoadedImpl>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -824,10 +830,10 @@ class _$DateSessionLoaded implements DateSessionLoaded {
 abstract class DateSessionLoaded implements DateSessionStates {
   const factory DateSessionLoaded(
           {required final AttendancePackageRegisterModel selectedRegister}) =
-      _$DateSessionLoaded;
+      _$DateSessionLoadedImpl;
 
   AttendancePackageRegisterModel get selectedRegister;
   @JsonKey(ignore: true)
-  _$$DateSessionLoadedCopyWith<_$DateSessionLoaded> get copyWith =>
+  _$$DateSessionLoadedImplCopyWith<_$DateSessionLoadedImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

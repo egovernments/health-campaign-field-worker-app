@@ -1,7 +1,9 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
+part 'attendee.mapper.dart';
+
 @MappableClass(ignoreNull: true)
-class AttendeeSearchModel {
+class AttendeeSearchModel with AttendeeSearchModelMappable {
   final String? id;
   final String? registerId;
 
@@ -18,7 +20,7 @@ class AttendeeSearchModel {
 }
 
 @MappableClass(ignoreNull: true)
-class AttendeeModel {
+class AttendeeModel with AttendeeModelMappable {
   static const schemaName = 'Attendee';
 
   final String? id;
@@ -53,6 +55,6 @@ class AttendeeModel {
 }
 
 @MappableClass(ignoreNull: true)
-class AttendeeAdditionalFields {
+class AttendeeAdditionalFields with AttendeeAdditionalFieldsMappable {
   AttendeeAdditionalFields();
 }

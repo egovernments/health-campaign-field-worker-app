@@ -3,6 +3,8 @@ home="$PWD"
 dart pub global activate mason_cli
 dart pub global activate melos
 
+cd ..
+
 melos run generate-hooks
 
 mason add digit_entity --path ./mason_templates/digit_entity -g

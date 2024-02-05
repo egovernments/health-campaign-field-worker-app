@@ -7,8 +7,10 @@ import 'package:drift/drift.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
 import '../data_model.dart';
 
+part 'hcm_attendance_model.mapper.dart';
+
 @MappableClass(ignoreNull: true)
-class HCMAttendanceSearchModel extends EntitySearchModel {
+class HCMAttendanceSearchModel extends EntitySearchModel with HCMAttendanceSearchModelMappable {
   final String? id;
   final String? staffId;
   final String? registerNumber;
@@ -38,7 +40,7 @@ class HCMAttendanceSearchModel extends EntitySearchModel {
 }
 
 @MappableClass(ignoreNull: true)
-class HCMAttendanceRegisterModel extends EntityModel {
+class HCMAttendanceRegisterModel extends EntityModel with HCMAttendanceRegisterModelMappable {
   static const schemaName = 'AttendanceRegister';
   final AttendancePackageRegisterModel attendanceRegister;
   final List<IndividualModel>? individualList;
@@ -81,7 +83,7 @@ class HCMAttendanceRegisterModel extends EntityModel {
 }
 
 @MappableClass(ignoreNull: true)
-class HCMAttendanceAdditionalModel extends AdditionalFields {
+class HCMAttendanceAdditionalModel extends AdditionalFields with HCMAttendanceAdditionalModelMappable {
   final AttendanceRegisterAdditionalFields attendanceAdditionalFields;
 
   HCMAttendanceAdditionalModel({

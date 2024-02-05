@@ -79,7 +79,7 @@ class AttendanceLogRemoteRepository extends RemoteRepository<
     final entityList = entityResponse.whereType<Map<String, dynamic>>();
 
     return entityList
-        .map((e) => Mapper.fromMap<HCMAttendanceLogModel>(e))
+        .map((e) => HCMAttendanceLogModelMapper.fromMap(e))
         .toList();
   }
 

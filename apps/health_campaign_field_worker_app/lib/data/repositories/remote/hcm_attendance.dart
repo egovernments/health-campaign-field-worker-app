@@ -2,8 +2,7 @@
 
 import 'dart:async';
 
-import 'package:attendance_management/models/attendance_register.mapper.g.dart'
-    as att;
+import 'package:attendance_management/models/attendance_register.dart';
 import 'package:dio/dio.dart';
 
 import '../../../models/data_model.dart';
@@ -82,7 +81,7 @@ class AttendanceRemoteRepository extends RemoteRepository<
 
     return entityList
         .map((e) => HCMAttendanceRegisterModel(
-              attendanceRegister: att.Mapper.fromMap(e),
+              attendanceRegister: AttendancePackageRegisterModelMapper.fromMap(e),
             ))
         .toList();
   }

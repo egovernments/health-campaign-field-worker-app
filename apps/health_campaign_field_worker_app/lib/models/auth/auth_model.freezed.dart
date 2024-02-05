@@ -889,7 +889,7 @@ UserRoleModel _$UserRoleModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$UserRoleModel {
-  String get name => throw _privateConstructorUsedError;
+  String? get name => throw _privateConstructorUsedError;
   String get code => throw _privateConstructorUsedError;
   String? get tenantId => throw _privateConstructorUsedError;
 
@@ -905,7 +905,7 @@ abstract class $UserRoleModelCopyWith<$Res> {
           UserRoleModel value, $Res Function(UserRoleModel) then) =
       _$UserRoleModelCopyWithImpl<$Res, UserRoleModel>;
   @useResult
-  $Res call({String name, String code, String? tenantId});
+  $Res call({String? name, String code, String? tenantId});
 }
 
 /// @nodoc
@@ -921,15 +921,15 @@ class _$UserRoleModelCopyWithImpl<$Res, $Val extends UserRoleModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? name = null,
+    Object? name = freezed,
     Object? code = null,
     Object? tenantId = freezed,
   }) {
     return _then(_value.copyWith(
-      name: null == name
+      name: freezed == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       code: null == code
           ? _value.code
           : code // ignore: cast_nullable_to_non_nullable
@@ -950,7 +950,7 @@ abstract class _$$UserRoleModelImplCopyWith<$Res>
       __$$UserRoleModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String name, String code, String? tenantId});
+  $Res call({String? name, String code, String? tenantId});
 }
 
 /// @nodoc
@@ -964,15 +964,15 @@ class __$$UserRoleModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? name = null,
+    Object? name = freezed,
     Object? code = null,
     Object? tenantId = freezed,
   }) {
     return _then(_$UserRoleModelImpl(
-      name: null == name
+      name: freezed == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       code: null == code
           ? _value.code
           : code // ignore: cast_nullable_to_non_nullable
@@ -989,13 +989,14 @@ class __$$UserRoleModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$UserRoleModelImpl implements _UserRoleModel {
   const _$UserRoleModelImpl(
-      {required this.name, required this.code, this.tenantId});
+      {this.name = '', required this.code, this.tenantId});
 
   factory _$UserRoleModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserRoleModelImplFromJson(json);
 
   @override
-  final String name;
+  @JsonKey()
+  final String? name;
   @override
   final String code;
   @override
@@ -1037,7 +1038,7 @@ class _$UserRoleModelImpl implements _UserRoleModel {
 
 abstract class _UserRoleModel implements UserRoleModel {
   const factory _UserRoleModel(
-      {required final String name,
+      {final String? name,
       required final String code,
       final String? tenantId}) = _$UserRoleModelImpl;
 
@@ -1045,7 +1046,7 @@ abstract class _UserRoleModel implements UserRoleModel {
       _$UserRoleModelImpl.fromJson;
 
   @override
-  String get name;
+  String? get name;
   @override
   String get code;
   @override

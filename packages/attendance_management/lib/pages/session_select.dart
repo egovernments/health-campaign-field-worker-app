@@ -1,6 +1,5 @@
 import 'package:attendance_management/blocs/date_session_bloc.dart';
 import 'package:attendance_management/models/enum_values.dart';
-import 'package:attendance_management/models/enum_values.mapper.g.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/digit_radio_button_list.dart';

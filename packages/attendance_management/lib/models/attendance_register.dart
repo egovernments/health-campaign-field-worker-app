@@ -3,8 +3,10 @@ import 'package:dart_mappable/dart_mappable.dart';
 
 import 'attendance_audit.dart';
 
+part 'attendance_register.mapper.dart';
+
 @MappableClass()
-class RegisterAuditDetails extends AttendanceAuditDetails {
+class RegisterAuditDetails extends AttendanceAuditDetails with RegisterAuditDetailsMappable {
   final String? registerId;
 
   const RegisterAuditDetails({
@@ -22,7 +24,7 @@ class RegisterAuditDetails extends AttendanceAuditDetails {
 }
 
 @MappableClass(ignoreNull: true)
-class AttendancePackageRegisterModel {
+class AttendancePackageRegisterModel with AttendancePackageRegisterModelMappable {
   static const schemaName = 'AttendanceRegister';
 
   final String id;
@@ -65,7 +67,7 @@ class AttendancePackageRegisterModel {
 }
 
 @MappableClass(ignoreNull: true)
-class AttendanceRegisterAdditionalFields {
+class AttendanceRegisterAdditionalFields with AttendanceRegisterAdditionalFieldsMappable {
   final Map<String, dynamic> description;
   AttendanceRegisterAdditionalFields({
     required this.description,

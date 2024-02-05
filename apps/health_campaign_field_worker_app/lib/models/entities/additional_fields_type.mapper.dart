@@ -39,6 +39,20 @@ class AdditionalFieldsTypeMapper extends EnumMapper<AdditionalFieldsType> {
         return AdditionalFieldsType.dateOfDelivery;
       case "referralComments":
         return AdditionalFieldsType.referralComments;
+      case "cycle":
+        return AdditionalFieldsType.cycle;
+      case "hfCoordinator":
+        return AdditionalFieldsType.hFCoordinator;
+      case "referredBy":
+        return AdditionalFieldsType.referredBy;
+      case "dateOfEvaluation":
+        return AdditionalFieldsType.dateOfEvaluation;
+      case "nameOfReferral":
+        return AdditionalFieldsType.nameOfReferral;
+      case "gender":
+        return AdditionalFieldsType.gender;
+      case "age":
+        return AdditionalFieldsType.age;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -61,6 +75,20 @@ class AdditionalFieldsTypeMapper extends EnumMapper<AdditionalFieldsType> {
         return "dateOfDelivery";
       case AdditionalFieldsType.referralComments:
         return "referralComments";
+      case AdditionalFieldsType.cycle:
+        return "cycle";
+      case AdditionalFieldsType.hFCoordinator:
+        return "hfCoordinator";
+      case AdditionalFieldsType.referredBy:
+        return "referredBy";
+      case AdditionalFieldsType.dateOfEvaluation:
+        return "dateOfEvaluation";
+      case AdditionalFieldsType.nameOfReferral:
+        return "nameOfReferral";
+      case AdditionalFieldsType.gender:
+        return "gender";
+      case AdditionalFieldsType.age:
+        return "age";
     }
   }
 }

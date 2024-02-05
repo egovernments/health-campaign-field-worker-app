@@ -18,21 +18,25 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$ScannerEvent {
   List<GS1Barcode> get barcode => throw _privateConstructorUsedError;
   List<String> get qrcode => throw _privateConstructorUsedError;
+  bool get isReferral => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(List<GS1Barcode> barcode, List<String> qrcode)
+    required TResult Function(
+            List<GS1Barcode> barcode, List<String> qrcode, bool isReferral)
         handleScanner,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(List<GS1Barcode> barcode, List<String> qrcode)?
+    TResult? Function(
+            List<GS1Barcode> barcode, List<String> qrcode, bool isReferral)?
         handleScanner,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(List<GS1Barcode> barcode, List<String> qrcode)?
+    TResult Function(
+            List<GS1Barcode> barcode, List<String> qrcode, bool isReferral)?
         handleScanner,
     required TResult orElse(),
   }) =>
@@ -65,7 +69,7 @@ abstract class $ScannerEventCopyWith<$Res> {
           ScannerEvent value, $Res Function(ScannerEvent) then) =
       _$ScannerEventCopyWithImpl<$Res, ScannerEvent>;
   @useResult
-  $Res call({List<GS1Barcode> barcode, List<String> qrcode});
+  $Res call({List<GS1Barcode> barcode, List<String> qrcode, bool isReferral});
 }
 
 /// @nodoc
@@ -83,6 +87,7 @@ class _$ScannerEventCopyWithImpl<$Res, $Val extends ScannerEvent>
   $Res call({
     Object? barcode = null,
     Object? qrcode = null,
+    Object? isReferral = null,
   }) {
     return _then(_value.copyWith(
       barcode: null == barcode
@@ -93,6 +98,10 @@ class _$ScannerEventCopyWithImpl<$Res, $Val extends ScannerEvent>
           ? _value.qrcode
           : qrcode // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      isReferral: null == isReferral
+          ? _value.isReferral
+          : isReferral // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -105,7 +114,7 @@ abstract class _$$ScannerScanEventImplCopyWith<$Res>
       __$$ScannerScanEventImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<GS1Barcode> barcode, List<String> qrcode});
+  $Res call({List<GS1Barcode> barcode, List<String> qrcode, bool isReferral});
 }
 
 /// @nodoc
@@ -121,6 +130,7 @@ class __$$ScannerScanEventImplCopyWithImpl<$Res>
   $Res call({
     Object? barcode = null,
     Object? qrcode = null,
+    Object? isReferral = null,
   }) {
     return _then(_$ScannerScanEventImpl(
       null == barcode
@@ -131,6 +141,10 @@ class __$$ScannerScanEventImplCopyWithImpl<$Res>
           ? _value._qrcode
           : qrcode // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      isReferral: null == isReferral
+          ? _value.isReferral
+          : isReferral // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -139,7 +153,8 @@ class __$$ScannerScanEventImplCopyWithImpl<$Res>
 
 class _$ScannerScanEventImpl implements ScannerScanEvent {
   const _$ScannerScanEventImpl(
-      final List<GS1Barcode> barcode, final List<String> qrcode)
+      final List<GS1Barcode> barcode, final List<String> qrcode,
+      {this.isReferral = false})
       : _barcode = barcode,
         _qrcode = qrcode;
 
@@ -160,8 +175,12 @@ class _$ScannerScanEventImpl implements ScannerScanEvent {
   }
 
   @override
+  @JsonKey()
+  final bool isReferral;
+
+  @override
   String toString() {
-    return 'ScannerEvent.handleScanner(barcode: $barcode, qrcode: $qrcode)';
+    return 'ScannerEvent.handleScanner(barcode: $barcode, qrcode: $qrcode, isReferral: $isReferral)';
   }
 
   @override
@@ -170,14 +189,17 @@ class _$ScannerScanEventImpl implements ScannerScanEvent {
         (other.runtimeType == runtimeType &&
             other is _$ScannerScanEventImpl &&
             const DeepCollectionEquality().equals(other._barcode, _barcode) &&
-            const DeepCollectionEquality().equals(other._qrcode, _qrcode));
+            const DeepCollectionEquality().equals(other._qrcode, _qrcode) &&
+            (identical(other.isReferral, isReferral) ||
+                other.isReferral == isReferral));
   }
 
   @override
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(_barcode),
-      const DeepCollectionEquality().hash(_qrcode));
+      const DeepCollectionEquality().hash(_qrcode),
+      isReferral);
 
   @JsonKey(ignore: true)
   @override
@@ -189,30 +211,33 @@ class _$ScannerScanEventImpl implements ScannerScanEvent {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(List<GS1Barcode> barcode, List<String> qrcode)
+    required TResult Function(
+            List<GS1Barcode> barcode, List<String> qrcode, bool isReferral)
         handleScanner,
   }) {
-    return handleScanner(barcode, qrcode);
+    return handleScanner(barcode, qrcode, isReferral);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(List<GS1Barcode> barcode, List<String> qrcode)?
+    TResult? Function(
+            List<GS1Barcode> barcode, List<String> qrcode, bool isReferral)?
         handleScanner,
   }) {
-    return handleScanner?.call(barcode, qrcode);
+    return handleScanner?.call(barcode, qrcode, isReferral);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(List<GS1Barcode> barcode, List<String> qrcode)?
+    TResult Function(
+            List<GS1Barcode> barcode, List<String> qrcode, bool isReferral)?
         handleScanner,
     required TResult orElse(),
   }) {
     if (handleScanner != null) {
-      return handleScanner(barcode, qrcode);
+      return handleScanner(barcode, qrcode, isReferral);
     }
     return orElse();
   }
@@ -248,13 +273,15 @@ class _$ScannerScanEventImpl implements ScannerScanEvent {
 
 abstract class ScannerScanEvent implements ScannerEvent {
   const factory ScannerScanEvent(
-          final List<GS1Barcode> barcode, final List<String> qrcode) =
-      _$ScannerScanEventImpl;
+      final List<GS1Barcode> barcode, final List<String> qrcode,
+      {final bool isReferral}) = _$ScannerScanEventImpl;
 
   @override
   List<GS1Barcode> get barcode;
   @override
   List<String> get qrcode;
+  @override
+  bool get isReferral;
   @override
   @JsonKey(ignore: true)
   _$$ScannerScanEventImplCopyWith<_$ScannerScanEventImpl> get copyWith =>

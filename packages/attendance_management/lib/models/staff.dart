@@ -1,7 +1,9 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
+part 'staff.mapper.dart';
+
 @MappableClass(ignoreNull: true)
-class StaffSearchModel {
+class StaffSearchModel with StaffSearchModelMappable {
   final String? id;
   final List<String>? userId;
 
@@ -15,7 +17,7 @@ class StaffSearchModel {
 }
 
 @MappableClass(ignoreNull: true)
-class StaffModel {
+class StaffModel with StaffModelMappable {
   static const schemaName = 'Staff';
 
   final String? id;
@@ -42,6 +44,6 @@ class StaffModel {
 }
 
 @MappableClass(ignoreNull: true)
-class StaffAdditionalFields {
+class StaffAdditionalFields with StaffAdditionalFieldsMappable {
   StaffAdditionalFields();
 }

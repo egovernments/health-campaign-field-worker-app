@@ -47,7 +47,7 @@ class AttendanceLocalRepository extends LocalRepository<
               ),
             if (query.referenceId != null)
               sql.attendanceRegister.referenceId.equals(
-                query.referenceId,
+                query.referenceId!,
               ),
           ])))
         .get();

@@ -103,7 +103,7 @@ class ServiceLocalRepository
               ),
             if (query.clientId != null)
               sql.service.clientId.equals(
-                query.clientId,
+                query.clientId!,
               ),
           ])))
         .get();

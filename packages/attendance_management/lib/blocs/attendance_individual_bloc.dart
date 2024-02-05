@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/models/attendance_log.dart';
-import 'package:attendance_management/models/enum_values.mapper.g.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 

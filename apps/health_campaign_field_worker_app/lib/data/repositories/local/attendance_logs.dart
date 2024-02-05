@@ -22,15 +22,15 @@ class AttendanceLogsLocalRepository extends LocalRepository<
           ..where(buildAnd([
             if (query.individualId != null)
               sql.attendance.individualId.equals(
-                query.individualId,
+                query.individualId!,
               ),
             if (query.registerId != null)
               sql.attendance.registerId.equals(
-                query.registerId,
+                query.registerId!,
               ),
             if (query.uploadToServer != null)
               sql.attendance.uploadToServer.equals(
-                query.uploadToServer,
+                query.uploadToServer!,
               ),
           ])))
         .get();

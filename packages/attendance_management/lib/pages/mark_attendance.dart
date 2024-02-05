@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:attendance_management/attendance_management.dart';
-import 'package:attendance_management/models/enum_values.mapper.g.dart';
 import 'package:attendance_management/widgets/attendance_acknowledgement.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_table_model.dart';

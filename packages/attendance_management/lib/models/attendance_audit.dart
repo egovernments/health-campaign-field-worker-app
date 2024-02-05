@@ -1,7 +1,9 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
+part 'attendance_audit.mapper.dart';
+
 @MappableClass()
-class AttendanceAuditDetails {
+class AttendanceAuditDetails with AttendanceAuditDetailsMappable {
   final String createdBy;
   final String lastModifiedBy;
   final int createdTime;

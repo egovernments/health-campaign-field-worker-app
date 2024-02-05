@@ -51,7 +51,7 @@ class IndividualLocalRepository
               query.clientReferenceId!,
             ),
           if (query.id != null)
-            sql.individual.id.equals(
+            sql.individual.id.isIn(
               query.id!,
             ),
           if (query.tenantId != null)

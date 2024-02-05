@@ -4,8 +4,10 @@ import 'package:drift/drift.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
 import '../data_model.dart';
 
+part 'hcm_attendance_log_model.mapper.dart';
+
 @MappableClass(ignoreNull: true)
-class HCMAttendanceLogSearchModel extends EntitySearchModel {
+class HCMAttendanceLogSearchModel extends EntitySearchModel with HCMAttendanceLogSearchModelMappable {
   final String? id;
   final String? tenantId;
   final String? registerId;
@@ -50,7 +52,7 @@ class HCMAttendanceLogSearchModel extends EntitySearchModel {
 }
 
 @MappableClass(ignoreNull: true)
-class HCMAttendanceLogModel extends EntityModel {
+class HCMAttendanceLogModel extends EntityModel with HCMAttendanceLogModelMappable {
   static const schemaName = 'Attendance';
   final String? id;
   final String? tenantId;
