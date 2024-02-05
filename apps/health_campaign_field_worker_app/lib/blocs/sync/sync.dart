@@ -83,8 +83,7 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
               case DataModelType.sideEffect:
               case DataModelType.referral:
               case DataModelType.hFReferral:
-                //{TODO: Need to uncomment below code once attendance log down sync implemented
-                // case DataModelType.attendance:
+              case DataModelType.attendance:
                 return true;
               default:
                 return false;

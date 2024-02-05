@@ -69,13 +69,21 @@ class HCMAttendanceBloc extends AttendanceListeners {
 
         final individualList = await individualLocalRepository?.search(
           IndividualSearchModel(
-            id: e.attendanceRegister.attendees!
+            id: e.attendanceRegister.attendees
+                ?.where((att) => (att.denrollmentDate == null ||
+                    (att.denrollmentDate ??
+                            DateTime.now().millisecondsSinceEpoch) >=
+                        DateTime.now().millisecondsSinceEpoch))
                 .map((a) => a.individualId!)
                 .toList(),
           ),
         );
         final attendeeList = e.attendanceRegister.attendees
-            ?.map(
+            ?.where((att) => (att.denrollmentDate == null ||
+                (att.denrollmentDate ??
+                        DateTime.now().millisecondsSinceEpoch) >=
+                    DateTime.now().millisecondsSinceEpoch))
+            .map(
               (a) => a.copyWith(
                 name: individualList
                     ?.where((i) => i.id == a.individualId)
@@ -142,13 +150,6 @@ class HCMAttendanceBloc extends AttendanceListeners {
             ))
         .toList();
     searchAttendanceLog.onLogLoaded(filteredLogs ?? []);
-  }
-
-  @override
-  void markIndividualAttendance(
-    MarkIndividualAttendance markIndividualAttendance,
-  ) {
-    // TODO: implement markIndividualAttendance
   }
 
   @override

@@ -31,8 +31,6 @@ class AttendanceLogRemoteRepository extends RemoteRepository<
         return await dio.post(
           searchPath,
           queryParameters: {
-            'offset': 0,
-            'limit': 100,
             'tenantId': envConfig.variables.tenantId,
             ...query.toMap(),
           },

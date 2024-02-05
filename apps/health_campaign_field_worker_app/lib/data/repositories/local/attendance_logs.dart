@@ -91,7 +91,11 @@ class AttendanceLogsLocalRepository extends LocalRepository<
   FutureOr<void> bulkCreate(
     List<HCMAttendanceLogModel> entities,
   ) async {
-    final logsCompanions = entities.map((e) => e.companion).toList();
+    final logsCompanions = entities
+        .map((e) => e.companion.copyWith(
+              uploadToServer: const Value(true),
+            ))
+        .toList();
 
     await sql.batch((batch) async {
       batch.insertAll(

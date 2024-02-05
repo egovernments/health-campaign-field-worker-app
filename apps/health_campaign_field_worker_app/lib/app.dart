@@ -241,6 +241,13 @@ class MainApplicationState extends State<MainApplication>
                             individualRemoteRepository: ctx.read<
                                 RemoteRepository<IndividualModel,
                                     IndividualSearchModel>>(),
+                            attendanceLogLocalRepository: ctx.read<
+                                LocalRepository<HCMAttendanceLogModel,
+                                    HCMAttendanceLogSearchModel>>(),
+                            attendanceLogRemoteRepository: ctx.read<
+                                RemoteRepository<HCMAttendanceLogModel,
+                                    HCMAttendanceLogSearchModel>>(),
+                            context: context,
                           ),
                         ),
                       ],
@@ -293,7 +300,9 @@ class MainApplicationState extends State<MainApplication>
                               attendance_localization.AttendanceLocalization
                                   .getDelegate(
                                 getLocalizationString(
-                                    widget.isar, selectedLocale,),
+                                  widget.isar,
+                                  selectedLocale,
+                                ),
                                 appConfig.languages!,
                               ),
                             ],
