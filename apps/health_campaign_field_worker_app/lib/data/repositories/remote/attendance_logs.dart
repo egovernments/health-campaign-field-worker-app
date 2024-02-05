@@ -50,9 +50,7 @@ class AttendanceLogRemoteRepository extends RemoteRepository<
     }
 
     if (!responseMap.containsKey(
-      (isSearchResponsePlural || entityName == 'Attendance')
-          ? entityNamePlural
-          : EntityPlurals.getPluralForEntityName(entityName),
+      EntityPlurals.getPluralForEntityName(entityName),
     )) {
       throw InvalidApiResponseException(
         data: query.toMap(),
@@ -61,10 +59,8 @@ class AttendanceLogRemoteRepository extends RemoteRepository<
       );
     }
 
-    final entityResponse = await responseMap[
-        (isSearchResponsePlural || entityName == 'Attendance')
-            ? entityNamePlural
-            : EntityPlurals.getPluralForEntityName(entityName)];
+    final entityResponse =
+        await responseMap[EntityPlurals.getPluralForEntityName(entityName)];
 
     if (entityResponse is! List) {
       throw InvalidApiResponseException(
