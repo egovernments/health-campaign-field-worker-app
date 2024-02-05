@@ -2,18 +2,7 @@
 library models;
 
 import 'package:dart_mappable/dart_mappable.dart';
-import '../data/local_store/sql_store/tables/individual.dart';
 import 'data_model.dart';
-import 'entities/household.dart';
-import 'entities/project_staff.dart';
-import 'pgr_complaints/pgr_address.dart';
-import 'pgr_complaints/pgr_complaints.dart';
-import 'pgr_complaints/pgr_complaints_response.dart';
-
-import 'entities/address.dart';
-import 'entities/boundary.dart';
-import 'entities/locality.dart';
-
 export 'entities/additional_fields_type.dart';
 export 'entities/address.dart';
 export 'entities/address_type.dart';
@@ -81,7 +70,6 @@ abstract class DataModel {
   BoundaryModel, HouseholdModel,
   IndividualModel,
   NameModel,
-  
 ])
 abstract class EntityModel extends DataModel with EntityModelMappable {
   final AuditDetails? auditDetails;
@@ -93,8 +81,11 @@ abstract class EntityModel extends DataModel with EntityModelMappable {
   });
 }
 
-@MappableClass(ignoreNull: true, includeSubClasses: [
+  @MappableClass(ignoreNull: true, includeSubClasses: [
   AddressSearchModel,
+  HFReferralSearchModel,
+  HCMAttendanceLogSearchModel,
+  HCMAttendanceSearchModel,
 
 ])
 abstract class EntitySearchModel extends DataModel
@@ -118,7 +109,7 @@ abstract class EntitySearchModel extends DataModel
 }
 
 @MappableClass(
-    includeSubClasses: [AddressAdditionalFields],)
+    includeSubClasses: [AddressAdditionalFields, HCMAttendanceAdditionalModel],)
 abstract class AdditionalFields with AdditionalFieldsMappable {
   final String schema;
   final int version;

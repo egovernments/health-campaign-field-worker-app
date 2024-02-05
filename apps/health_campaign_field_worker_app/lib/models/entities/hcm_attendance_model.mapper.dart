@@ -188,6 +188,175 @@ class _HCMAttendanceSearchModelCopyWithImpl<$R, $Out>
           _HCMAttendanceSearchModelCopyWithImpl($value, $cast, t);
 }
 
+class HCMAttendanceAdditionalModelMapper
+    extends ClassMapperBase<HCMAttendanceAdditionalModel> {
+  HCMAttendanceAdditionalModelMapper._();
+
+  static HCMAttendanceAdditionalModelMapper? _instance;
+  static HCMAttendanceAdditionalModelMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals
+          .use(_instance = HCMAttendanceAdditionalModelMapper._());
+      AdditionalFieldsMapper.ensureInitialized();
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'HCMAttendanceAdditionalModel';
+
+  static AttendanceRegisterAdditionalFields _$attendanceAdditionalFields(
+          HCMAttendanceAdditionalModel v) =>
+      v.attendanceAdditionalFields;
+  static const Field<HCMAttendanceAdditionalModel,
+          AttendanceRegisterAdditionalFields> _f$attendanceAdditionalFields =
+      Field('attendanceAdditionalFields', _$attendanceAdditionalFields);
+  static String _$schema(HCMAttendanceAdditionalModel v) => v.schema;
+  static const Field<HCMAttendanceAdditionalModel, String> _f$schema =
+      Field('schema', _$schema, opt: true, def: 'AttendanceRegister');
+  static int _$version(HCMAttendanceAdditionalModel v) => v.version;
+  static const Field<HCMAttendanceAdditionalModel, int> _f$version =
+      Field('version', _$version);
+  static List<AdditionalField> _$fields(HCMAttendanceAdditionalModel v) =>
+      v.fields;
+  static const Field<HCMAttendanceAdditionalModel, List<AdditionalField>>
+      _f$fields = Field('fields', _$fields, mode: FieldMode.member);
+
+  @override
+  final MappableFields<HCMAttendanceAdditionalModel> fields = const {
+    #attendanceAdditionalFields: _f$attendanceAdditionalFields,
+    #schema: _f$schema,
+    #version: _f$version,
+    #fields: _f$fields,
+  };
+  @override
+  final bool ignoreNull = true;
+
+  static HCMAttendanceAdditionalModel _instantiate(DecodingData data) {
+    return HCMAttendanceAdditionalModel(
+        attendanceAdditionalFields: data.dec(_f$attendanceAdditionalFields),
+        schema: data.dec(_f$schema),
+        version: data.dec(_f$version));
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static HCMAttendanceAdditionalModel fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<HCMAttendanceAdditionalModel>(map);
+  }
+
+  static HCMAttendanceAdditionalModel fromJson(String json) {
+    return ensureInitialized().decodeJson<HCMAttendanceAdditionalModel>(json);
+  }
+}
+
+mixin HCMAttendanceAdditionalModelMappable {
+  String toJson() {
+    return HCMAttendanceAdditionalModelMapper.ensureInitialized()
+        .encodeJson<HCMAttendanceAdditionalModel>(
+            this as HCMAttendanceAdditionalModel);
+  }
+
+  Map<String, dynamic> toMap() {
+    return HCMAttendanceAdditionalModelMapper.ensureInitialized()
+        .encodeMap<HCMAttendanceAdditionalModel>(
+            this as HCMAttendanceAdditionalModel);
+  }
+
+  HCMAttendanceAdditionalModelCopyWith<HCMAttendanceAdditionalModel,
+          HCMAttendanceAdditionalModel, HCMAttendanceAdditionalModel>
+      get copyWith => _HCMAttendanceAdditionalModelCopyWithImpl(
+          this as HCMAttendanceAdditionalModel, $identity, $identity);
+  @override
+  String toString() {
+    return HCMAttendanceAdditionalModelMapper.ensureInitialized()
+        .stringifyValue(this as HCMAttendanceAdditionalModel);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            HCMAttendanceAdditionalModelMapper.ensureInitialized()
+                .isValueEqual(this as HCMAttendanceAdditionalModel, other));
+  }
+
+  @override
+  int get hashCode {
+    return HCMAttendanceAdditionalModelMapper.ensureInitialized()
+        .hashValue(this as HCMAttendanceAdditionalModel);
+  }
+}
+
+extension HCMAttendanceAdditionalModelValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, HCMAttendanceAdditionalModel, $Out> {
+  HCMAttendanceAdditionalModelCopyWith<$R, HCMAttendanceAdditionalModel, $Out>
+      get $asHCMAttendanceAdditionalModel => $base.as(
+          (v, t, t2) => _HCMAttendanceAdditionalModelCopyWithImpl(v, t, t2));
+}
+
+abstract class HCMAttendanceAdditionalModelCopyWith<
+    $R,
+    $In extends HCMAttendanceAdditionalModel,
+    $Out> implements AdditionalFieldsCopyWith<$R, $In, $Out> {
+  AttendanceRegisterAdditionalFieldsCopyWith<
+      $R,
+      AttendanceRegisterAdditionalFields,
+      AttendanceRegisterAdditionalFields> get attendanceAdditionalFields;
+  @override
+  $R call(
+      {AttendanceRegisterAdditionalFields? attendanceAdditionalFields,
+      String? schema,
+      int? version});
+  HCMAttendanceAdditionalModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
+      Then<$Out2, $R2> t);
+}
+
+class _HCMAttendanceAdditionalModelCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, HCMAttendanceAdditionalModel, $Out>
+    implements
+        HCMAttendanceAdditionalModelCopyWith<$R, HCMAttendanceAdditionalModel,
+            $Out> {
+  _HCMAttendanceAdditionalModelCopyWithImpl(
+      super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<HCMAttendanceAdditionalModel> $mapper =
+      HCMAttendanceAdditionalModelMapper.ensureInitialized();
+  @override
+  AttendanceRegisterAdditionalFieldsCopyWith<
+          $R,
+          AttendanceRegisterAdditionalFields,
+          AttendanceRegisterAdditionalFields>
+      get attendanceAdditionalFields =>
+          $value.attendanceAdditionalFields.copyWith
+              .$chain((v) => call(attendanceAdditionalFields: v));
+  @override
+  $R call(
+          {AttendanceRegisterAdditionalFields? attendanceAdditionalFields,
+          String? schema,
+          int? version}) =>
+      $apply(FieldCopyWithData({
+        if (attendanceAdditionalFields != null)
+          #attendanceAdditionalFields: attendanceAdditionalFields,
+        if (schema != null) #schema: schema,
+        if (version != null) #version: version
+      }));
+  @override
+  HCMAttendanceAdditionalModel $make(CopyWithData data) =>
+      HCMAttendanceAdditionalModel(
+          attendanceAdditionalFields: data.get(#attendanceAdditionalFields,
+              or: $value.attendanceAdditionalFields),
+          schema: data.get(#schema, or: $value.schema),
+          version: data.get(#version, or: $value.version));
+
+  @override
+  HCMAttendanceAdditionalModelCopyWith<$R2, HCMAttendanceAdditionalModel, $Out2>
+      $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+          _HCMAttendanceAdditionalModelCopyWithImpl($value, $cast, t);
+}
+
 class HCMAttendanceRegisterModelMapper
     extends ClassMapperBase<HCMAttendanceRegisterModel> {
   HCMAttendanceRegisterModelMapper._();
@@ -391,173 +560,4 @@ class _HCMAttendanceRegisterModelCopyWithImpl<$R, $Out>
   HCMAttendanceRegisterModelCopyWith<$R2, HCMAttendanceRegisterModel, $Out2>
       $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
           _HCMAttendanceRegisterModelCopyWithImpl($value, $cast, t);
-}
-
-class HCMAttendanceAdditionalModelMapper
-    extends ClassMapperBase<HCMAttendanceAdditionalModel> {
-  HCMAttendanceAdditionalModelMapper._();
-
-  static HCMAttendanceAdditionalModelMapper? _instance;
-  static HCMAttendanceAdditionalModelMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals
-          .use(_instance = HCMAttendanceAdditionalModelMapper._());
-      AdditionalFieldsMapper.ensureInitialized();
-    }
-    return _instance!;
-  }
-
-  @override
-  final String id = 'HCMAttendanceAdditionalModel';
-
-  static AttendanceRegisterAdditionalFields _$attendanceAdditionalFields(
-          HCMAttendanceAdditionalModel v) =>
-      v.attendanceAdditionalFields;
-  static const Field<HCMAttendanceAdditionalModel,
-          AttendanceRegisterAdditionalFields> _f$attendanceAdditionalFields =
-      Field('attendanceAdditionalFields', _$attendanceAdditionalFields);
-  static String _$schema(HCMAttendanceAdditionalModel v) => v.schema;
-  static const Field<HCMAttendanceAdditionalModel, String> _f$schema =
-      Field('schema', _$schema, opt: true, def: 'AttendanceRegister');
-  static int _$version(HCMAttendanceAdditionalModel v) => v.version;
-  static const Field<HCMAttendanceAdditionalModel, int> _f$version =
-      Field('version', _$version);
-  static List<AdditionalField> _$fields(HCMAttendanceAdditionalModel v) =>
-      v.fields;
-  static const Field<HCMAttendanceAdditionalModel, List<AdditionalField>>
-      _f$fields = Field('fields', _$fields, mode: FieldMode.member);
-
-  @override
-  final MappableFields<HCMAttendanceAdditionalModel> fields = const {
-    #attendanceAdditionalFields: _f$attendanceAdditionalFields,
-    #schema: _f$schema,
-    #version: _f$version,
-    #fields: _f$fields,
-  };
-  @override
-  final bool ignoreNull = true;
-
-  static HCMAttendanceAdditionalModel _instantiate(DecodingData data) {
-    return HCMAttendanceAdditionalModel(
-        attendanceAdditionalFields: data.dec(_f$attendanceAdditionalFields),
-        schema: data.dec(_f$schema),
-        version: data.dec(_f$version));
-  }
-
-  @override
-  final Function instantiate = _instantiate;
-
-  static HCMAttendanceAdditionalModel fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<HCMAttendanceAdditionalModel>(map);
-  }
-
-  static HCMAttendanceAdditionalModel fromJson(String json) {
-    return ensureInitialized().decodeJson<HCMAttendanceAdditionalModel>(json);
-  }
-}
-
-mixin HCMAttendanceAdditionalModelMappable {
-  String toJson() {
-    return HCMAttendanceAdditionalModelMapper.ensureInitialized()
-        .encodeJson<HCMAttendanceAdditionalModel>(
-            this as HCMAttendanceAdditionalModel);
-  }
-
-  Map<String, dynamic> toMap() {
-    return HCMAttendanceAdditionalModelMapper.ensureInitialized()
-        .encodeMap<HCMAttendanceAdditionalModel>(
-            this as HCMAttendanceAdditionalModel);
-  }
-
-  HCMAttendanceAdditionalModelCopyWith<HCMAttendanceAdditionalModel,
-          HCMAttendanceAdditionalModel, HCMAttendanceAdditionalModel>
-      get copyWith => _HCMAttendanceAdditionalModelCopyWithImpl(
-          this as HCMAttendanceAdditionalModel, $identity, $identity);
-  @override
-  String toString() {
-    return HCMAttendanceAdditionalModelMapper.ensureInitialized()
-        .stringifyValue(this as HCMAttendanceAdditionalModel);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            HCMAttendanceAdditionalModelMapper.ensureInitialized()
-                .isValueEqual(this as HCMAttendanceAdditionalModel, other));
-  }
-
-  @override
-  int get hashCode {
-    return HCMAttendanceAdditionalModelMapper.ensureInitialized()
-        .hashValue(this as HCMAttendanceAdditionalModel);
-  }
-}
-
-extension HCMAttendanceAdditionalModelValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, HCMAttendanceAdditionalModel, $Out> {
-  HCMAttendanceAdditionalModelCopyWith<$R, HCMAttendanceAdditionalModel, $Out>
-      get $asHCMAttendanceAdditionalModel => $base.as(
-          (v, t, t2) => _HCMAttendanceAdditionalModelCopyWithImpl(v, t, t2));
-}
-
-abstract class HCMAttendanceAdditionalModelCopyWith<
-    $R,
-    $In extends HCMAttendanceAdditionalModel,
-    $Out> implements AdditionalFieldsCopyWith<$R, $In, $Out> {
-  AttendanceRegisterAdditionalFieldsCopyWith<
-      $R,
-      AttendanceRegisterAdditionalFields,
-      AttendanceRegisterAdditionalFields> get attendanceAdditionalFields;
-  @override
-  $R call(
-      {AttendanceRegisterAdditionalFields? attendanceAdditionalFields,
-      String? schema,
-      int? version});
-  HCMAttendanceAdditionalModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
-      Then<$Out2, $R2> t);
-}
-
-class _HCMAttendanceAdditionalModelCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, HCMAttendanceAdditionalModel, $Out>
-    implements
-        HCMAttendanceAdditionalModelCopyWith<$R, HCMAttendanceAdditionalModel,
-            $Out> {
-  _HCMAttendanceAdditionalModelCopyWithImpl(
-      super.value, super.then, super.then2);
-
-  @override
-  late final ClassMapperBase<HCMAttendanceAdditionalModel> $mapper =
-      HCMAttendanceAdditionalModelMapper.ensureInitialized();
-  @override
-  AttendanceRegisterAdditionalFieldsCopyWith<
-          $R,
-          AttendanceRegisterAdditionalFields,
-          AttendanceRegisterAdditionalFields>
-      get attendanceAdditionalFields =>
-          $value.attendanceAdditionalFields.copyWith
-              .$chain((v) => call(attendanceAdditionalFields: v));
-  @override
-  $R call(
-          {AttendanceRegisterAdditionalFields? attendanceAdditionalFields,
-          String? schema,
-          int? version}) =>
-      $apply(FieldCopyWithData({
-        if (attendanceAdditionalFields != null)
-          #attendanceAdditionalFields: attendanceAdditionalFields,
-        if (schema != null) #schema: schema,
-        if (version != null) #version: version
-      }));
-  @override
-  HCMAttendanceAdditionalModel $make(CopyWithData data) =>
-      HCMAttendanceAdditionalModel(
-          attendanceAdditionalFields: data.get(#attendanceAdditionalFields,
-              or: $value.attendanceAdditionalFields),
-          schema: data.get(#schema, or: $value.schema),
-          version: data.get(#version, or: $value.version));
-
-  @override
-  HCMAttendanceAdditionalModelCopyWith<$R2, HCMAttendanceAdditionalModel, $Out2>
-      $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-          _HCMAttendanceAdditionalModelCopyWithImpl($value, $cast, t);
 }
