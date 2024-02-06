@@ -26,8 +26,6 @@ class AttendanceLogModel {
   final String? registerId;
   final String? individualId;
   final int? time;
-  final bool? nonRecoverableError;
-  final int? rowVersion;
   final String? status;
   final String? type;
   final String? clientReferenceId;
@@ -38,8 +36,6 @@ class AttendanceLogModel {
     this.tenantId,
     this.registerId,
     this.individualId,
-    this.nonRecoverableError = false,
-    this.rowVersion,
     this.type,
     this.time,
     this.status,

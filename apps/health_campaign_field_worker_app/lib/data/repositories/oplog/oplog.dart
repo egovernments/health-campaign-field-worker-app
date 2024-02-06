@@ -657,14 +657,20 @@ class AttendanceLogOpLogManager extends OpLogManager<HCMAttendanceLogModel> {
     String serverGeneratedId,
     int rowVersion,
   ) =>
-      entity.copyWith(id: serverGeneratedId, rowVersion: rowVersion);
+      entity.copyWith(
+        attendanceLog: entity.attendanceLog?.copyWith(
+          id: serverGeneratedId,
+        ),
+        rowVersion: rowVersion,
+      );
 
   @override
   String getClientReferenceId(HCMAttendanceLogModel entity) =>
-      entity.clientReferenceId.toString();
+      entity.attendanceLog!.clientReferenceId.toString();
 
   @override
-  String? getServerGeneratedId(HCMAttendanceLogModel entity) => entity.id;
+  String? getServerGeneratedId(HCMAttendanceLogModel entity) =>
+      entity.attendanceLog?.id;
 
   @override
   int? getRowVersion(HCMAttendanceLogModel entity) => entity.rowVersion;

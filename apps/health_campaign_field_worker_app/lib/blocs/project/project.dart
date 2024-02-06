@@ -203,7 +203,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       try {
         if (context.loggedInUserRoles
             .where(
-                (role) => role.code == RolesType.districtSupervisor.toValue())
+              (role) => role.code == RolesType.districtSupervisor.toValue(),
+            )
             .toList()
             .isNotEmpty) {
           final attendanceRegisters = await attendanceRemoteRepository.search(
@@ -218,9 +219,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             if (register.attendanceRegister.attendees != null &&
                 (register.attendanceRegister.attendees ?? []).isNotEmpty) {
               try {
-                // final logs = await attendanceLogRemoteRepository.search(
-                //     HCMAttendanceLogSearchModel(
-                //         registerId: register.attendanceRegister.id));
                 final individuals = await individualRemoteRepository.search(
                   IndividualSearchModel(
                     id: register.attendanceRegister.attendees!
@@ -229,6 +227,108 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                   ),
                 );
                 await individualLocalRepository.bulkCreate(individuals);
+                final List<HCMAttendanceLogModel> logList = [];
+                final logs = await attendanceLogRemoteRepository.search(
+                  HCMAttendanceLogSearchModel(
+                    registerId: register.attendanceRegister.id,
+                  ),
+                );
+                //TODO:[ Need to uncomment it once client Audit details, clientReferenceId, starts persisting]
+                // final attendanceLogs =
+                //     register.attendanceRegister.attendees?.map((att) {
+                //   final entryLog = logs
+                //       .where((l) =>
+                //           l.attendanceLog?.individualId == att.individualId &&
+                //           l.attendanceLog?.type == 'ENTRY')
+                //       .first;
+                //   final exitLog = logs
+                //       .where((l) =>
+                //           l.attendanceLog?.individualId == att.individualId &&
+                //           l.attendanceLog?.type == 'EXIT')
+                //       .first;
+                //   logList.addAll(
+                //     [
+                //       HCMAttendanceLogModel(
+                //         attendanceLog: AttendanceLogModel(
+                //           id: entryLog.attendanceLog?.id,
+                //           registerId: entryLog.attendanceLog?.registerId,
+                //           individualId: att.individualId,
+                //           status: entryLog.attendanceLog?.status ?? 'INACTIVE',
+                //           type: 'ENTRY',
+                //           tenantId: entryLog.attendanceLog?.tenantId,
+                //           time: entryLog.attendanceLog?.time,
+                //           clientReferenceId:
+                //               entryLog.attendanceLog?.clientReferenceId,
+                //           uploadToServer: true,
+                //         ),
+                //         rowVersion: 1,
+                //         auditDetails: AuditDetails(
+                //           createdBy: register
+                //                   .attendanceRegister.auditDetails?.createdBy ??
+                //               '',
+                //           createdTime: register.attendanceRegister.auditDetails
+                //                   ?.createdTime ??
+                //               DateTime.now().millisecondsSinceEpoch,
+                //           lastModifiedBy: register
+                //               .attendanceRegister.auditDetails?.lastModifiedBy,
+                //           lastModifiedTime: register.attendanceRegister
+                //               .auditDetails?.lastModifiedTime,
+                //         ),
+                //         clientAuditDetails: ClientAuditDetails(
+                //           createdBy: register
+                //                   .attendanceRegister.auditDetails?.createdBy ??
+                //               '',
+                //           createdTime: register.attendanceRegister.auditDetails
+                //                   ?.createdTime ??
+                //               DateTime.now().millisecondsSinceEpoch,
+                //           lastModifiedBy: register
+                //               .attendanceRegister.auditDetails?.lastModifiedBy,
+                //           lastModifiedTime: register.attendanceRegister
+                //               .auditDetails?.lastModifiedTime,
+                //         ),
+                //       ),
+                //       HCMAttendanceLogModel(
+                //         attendanceLog: AttendanceLogModel(
+                //           id: exitLog.attendanceLog?.id,
+                //           registerId: exitLog.attendanceLog?.registerId,
+                //           individualId: att.individualId,
+                //           status: exitLog.attendanceLog?.status ?? 'INACTIVE',
+                //           type: 'EXIT',
+                //           tenantId: exitLog.attendanceLog?.tenantId,
+                //           time: exitLog.attendanceLog?.time,
+                //           clientReferenceId: exitLog.attendanceLog?.clientReferenceId,
+                //           uploadToServer: true,
+                //         ),
+                //         rowVersion: 1,
+                //         auditDetails: AuditDetails(
+                //           createdBy: register
+                //                   .attendanceRegister.auditDetails?.createdBy ??
+                //               '',
+                //           createdTime: register.attendanceRegister.auditDetails
+                //                   ?.createdTime ??
+                //               DateTime.now().millisecondsSinceEpoch,
+                //           lastModifiedBy: register
+                //               .attendanceRegister.auditDetails?.lastModifiedBy,
+                //           lastModifiedTime: register.attendanceRegister
+                //               .auditDetails?.lastModifiedTime,
+                //         ),
+                //         clientAuditDetails: ClientAuditDetails(
+                //           createdBy: register
+                //                   .attendanceRegister.auditDetails?.createdBy ??
+                //               '',
+                //           createdTime: register.attendanceRegister.auditDetails
+                //                   ?.createdTime ??
+                //               DateTime.now().millisecondsSinceEpoch,
+                //           lastModifiedBy: register
+                //               .attendanceRegister.auditDetails?.lastModifiedBy,
+                //           lastModifiedTime: register.attendanceRegister
+                //               .auditDetails?.lastModifiedTime,
+                //         ),
+                //       ),
+                //     ],
+                //   );
+                // });
+                // await attendanceLogLocalRepository.bulkCreate(logList);
               } catch (_) {
                 emit(state.copyWith(
                   loading: false,

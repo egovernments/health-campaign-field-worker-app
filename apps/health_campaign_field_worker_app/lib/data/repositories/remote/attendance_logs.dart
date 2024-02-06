@@ -2,6 +2,8 @@
 
 import 'dart:async';
 
+import 'package:attendance_management/models/attendance_register.mapper.g.dart'
+    as att;
 import 'package:dio/dio.dart';
 
 import '../../../models/data_model.dart';
@@ -73,8 +75,42 @@ class AttendanceLogRemoteRepository extends RemoteRepository<
     final entityList = entityResponse.whereType<Map<String, dynamic>>();
 
     return entityList
-        .map((e) => Mapper.fromMap<HCMAttendanceLogModel>(e))
+        .map((e) => HCMAttendanceLogModel(
+              attendanceLog: att.Mapper.fromMap(e),
+            ))
         .toList();
+    ;
+  }
+
+  @override
+  FutureOr<Response> bulkCreate(List<EntityModel> entities) async {
+    final attendanceLogMapEntities =
+        entities.map((e) => Mapper.toMap(e)).toList();
+    List<Map<String, dynamic>> transformedLogs = [];
+
+    for (var log in attendanceLogMapEntities) {
+      var attendanceLog = log["attendanceLog"] as Map<String, dynamic>;
+      var transformedLog = {
+        ...attendanceLog,
+        "auditDetails": log["auditDetails"],
+        "clientAuditDetails": log["clientAuditDetails"],
+      };
+      transformedLogs.add(transformedLog);
+    }
+
+    return executeFuture(
+      future: () async {
+        return await dio.post(
+          bulkCreatePath,
+          options: Options(headers: {
+            "content-type": 'application/json',
+          }),
+          data: {
+            EntityPlurals.getPluralForEntityName(entityName): transformedLogs,
+          },
+        );
+      },
+    );
   }
 
   @override

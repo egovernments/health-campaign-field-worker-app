@@ -506,7 +506,7 @@ class PerformSyncDown {
             responseEntities = await remote.search(HCMAttendanceLogSearchModel(
               clientReferenceId: entities
                   .whereType<HCMAttendanceLogModel>()
-                  .map((e) => e.clientReferenceId!)
+                  .map((e) => e.attendanceLog?.clientReferenceId!)
                   .whereNotNull()
                   .toList(),
               isDeleted: true,
@@ -518,15 +518,18 @@ class PerformSyncDown {
               final responseEntity = responseEntities
                   .whereType<HCMAttendanceLogModel>()
                   .firstWhereOrNull(
-                    (e) => e.clientReferenceId == entity.clientReferenceId,
+                    (e) =>
+                        e.attendanceLog?.clientReferenceId ==
+                        entity.attendanceLog?.clientReferenceId,
                   );
 
-              final serverGeneratedId = responseEntity?.id;
+              final serverGeneratedId = responseEntity?.attendanceLog?.id;
               final rowVersion = responseEntity?.rowVersion;
               if (serverGeneratedId != null) {
                 await local.opLogManager.updateServerGeneratedIds(
                   model: UpdateServerGeneratedIdModel(
-                    clientReferenceId: entity.clientReferenceId.toString(),
+                    clientReferenceId:
+                        entity.attendanceLog!.clientReferenceId.toString(),
                     serverGeneratedId: serverGeneratedId,
                     nonRecoverableError: entity.nonRecoverableError,
                     dataOperation: element.operation,
@@ -534,8 +537,10 @@ class PerformSyncDown {
                   ),
                 );
               } else {
-                final bool markAsNonRecoverable = await local.opLogManager
-                    .updateSyncDownRetry(entity.clientReferenceId.toString());
+                final bool markAsNonRecoverable =
+                    await local.opLogManager.updateSyncDownRetry(
+                  entity.attendanceLog!.clientReferenceId.toString(),
+                );
 
                 if (markAsNonRecoverable) {
                   await local.update(

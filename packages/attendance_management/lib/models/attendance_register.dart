@@ -1,7 +1,8 @@
-import 'package:attendance_management/attendance_management.dart';
+import 'package:attendance_management/models/staff.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import 'attendance_audit.dart';
+import 'attendee.dart';
 
 @MappableClass()
 class RegisterAuditDetails extends AttendanceAuditDetails {
