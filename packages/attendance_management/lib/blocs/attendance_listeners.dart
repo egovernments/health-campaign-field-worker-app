@@ -11,9 +11,6 @@ abstract class AttendanceListeners {
 
   void searchAttendanceLog(SearchAttendanceLog searchAttendanceLog);
 
-  void markIndividualAttendance(
-      MarkIndividualAttendance markIndividualAttendance);
-
   void submitAttendanceDetails(
     SubmitAttendanceDetails attendanceLogs,
   );
@@ -66,11 +63,6 @@ class AttendanceSingleton {
     _attendanceListeners?.submitAttendanceDetails(attendanceLogs);
   }
 
-  void markIndividualAttendance(
-      MarkIndividualAttendance markIndividualAttendance) {
-    _attendanceListeners?.markIndividualAttendance(markIndividualAttendance);
-  }
-
   void callSync() {
     _attendanceListeners?.callSyncMethod();
   }
@@ -91,26 +83,6 @@ class SearchAttendanceLog {
     required this.exitTime,
     required this.currentDate,
     required this.onLogLoaded,
-  });
-}
-
-class MarkIndividualAttendance {
-  final int entryTime;
-  final int exitTime;
-  final String status;
-  final String individualId;
-  final String registerId;
-  final String id;
-  final Function(String message) onMarked;
-
-  MarkIndividualAttendance({
-    required this.entryTime,
-    required this.exitTime,
-    required this.status,
-    required this.individualId,
-    required this.registerId,
-    required this.id,
-    required this.onMarked,
   });
 }
 

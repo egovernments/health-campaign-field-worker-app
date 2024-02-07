@@ -32,8 +32,6 @@ class AttendanceRemoteRepository extends RemoteRepository<
         return await dio.post(
           searchPath,
           queryParameters: {
-            'offset': 0,
-            'limit': 100,
             'tenantId': envConfig.variables.tenantId,
             ...query.toMap(),
           },
@@ -53,9 +51,7 @@ class AttendanceRemoteRepository extends RemoteRepository<
     }
 
     if (!responseMap.containsKey(
-      (isSearchResponsePlural || entityName == 'ServiceDefinition')
-          ? entityNamePlural
-          : EntityPlurals.getPluralForEntityName(entityName),
+      EntityPlurals.getPluralForEntityName(entityName),
     )) {
       throw InvalidApiResponseException(
         data: query.toMap(),
@@ -64,10 +60,8 @@ class AttendanceRemoteRepository extends RemoteRepository<
       );
     }
 
-    final entityResponse = await responseMap[
-        (isSearchResponsePlural || entityName == 'ServiceDefinition')
-            ? entityNamePlural
-            : EntityPlurals.getPluralForEntityName(entityName)];
+    final entityResponse =
+        await responseMap[EntityPlurals.getPluralForEntityName(entityName)];
 
     if (entityResponse is! List) {
       throw InvalidApiResponseException(

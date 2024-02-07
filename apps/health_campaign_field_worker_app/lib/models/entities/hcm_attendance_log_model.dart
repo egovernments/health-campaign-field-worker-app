@@ -1,3 +1,4 @@
+import 'package:attendance_management/models/attendance_log.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:drift/drift.dart';
 
@@ -54,47 +55,29 @@ class HCMAttendanceLogSearchModel extends EntitySearchModel with HCMAttendanceLo
 @MappableClass(ignoreNull: true)
 class HCMAttendanceLogModel extends EntityModel with HCMAttendanceLogModelMappable {
   static const schemaName = 'Attendance';
-  final String? id;
-  final String? tenantId;
-  final String? registerId;
-  final String? name;
-  final String? individualId;
-  final int? time;
+  final AttendanceLogModel? attendanceLog;
   final bool? nonRecoverableError;
-  final String? type;
-  final String? status;
   final int? rowVersion;
-  final String? clientReferenceId;
-  final bool? uploadToServer;
 
   HCMAttendanceLogModel({
-    this.id,
-    this.registerId,
-    this.individualId,
-    this.status,
-    this.type,
-    this.tenantId,
-    this.time,
-    this.clientReferenceId,
-    this.name,
-    this.rowVersion,
+    this.attendanceLog,
     this.nonRecoverableError = false,
-    this.uploadToServer = false,
+    this.rowVersion,
     super.auditDetails,
     super.clientAuditDetails,
     super.isDeleted = false,
   }) : super();
 
   AttendanceCompanion get companion => AttendanceCompanion(
-        id: Value(id),
-        clientReferenceId: Value(clientReferenceId),
-        tenantId: Value(tenantId!),
-        registerId: Value(registerId!),
-        status: Value(status!),
-        time: Value(time),
-        type: Value(type),
-        uploadToServer: Value(uploadToServer),
-        individualId: Value(individualId!),
+        id: Value(attendanceLog?.id),
+        clientReferenceId: Value(attendanceLog?.clientReferenceId),
+        tenantId: Value(attendanceLog!.tenantId!),
+        registerId: Value(attendanceLog!.registerId!),
+        status: Value(attendanceLog?.status!),
+        time: Value(attendanceLog?.time),
+        type: Value(attendanceLog?.type),
+        uploadToServer: Value(attendanceLog?.uploadToServer),
+        individualId: Value(attendanceLog!.individualId!),
         nonRecoverableError: Value(nonRecoverableError),
         auditCreatedBy: Value(auditDetails?.createdBy),
         auditCreatedTime: Value(auditDetails?.createdTime),

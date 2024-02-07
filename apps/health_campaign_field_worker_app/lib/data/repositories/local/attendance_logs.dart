@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:attendance_management/attendance_management.dart';
 import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
 
@@ -41,14 +42,16 @@ class AttendanceLogsLocalRepository extends LocalRepository<
           if (attendeeLog == null) return null;
 
           return HCMAttendanceLogModel(
-            id: attendeeLog.id,
-            registerId: attendeeLog.registerId,
-            individualId: attendeeLog.individualId,
-            status: attendeeLog.status,
-            clientReferenceId: attendeeLog.clientReferenceId,
-            time: attendeeLog.time,
-            type: attendeeLog.type,
-            uploadToServer: attendeeLog.uploadToServer,
+            attendanceLog: AttendanceLogModel(
+              id: attendeeLog.id,
+              registerId: attendeeLog.registerId,
+              individualId: attendeeLog.individualId,
+              status: attendeeLog.status,
+              clientReferenceId: attendeeLog.clientReferenceId,
+              time: attendeeLog.time,
+              type: attendeeLog.type,
+              uploadToServer: attendeeLog.uploadToServer,
+            ),
             auditDetails: AuditDetails(
               createdTime: attendeeLog.auditCreatedTime!,
               createdBy: attendeeLog.auditCreatedBy!,
@@ -91,7 +94,11 @@ class AttendanceLogsLocalRepository extends LocalRepository<
   FutureOr<void> bulkCreate(
     List<HCMAttendanceLogModel> entities,
   ) async {
-    final logsCompanions = entities.map((e) => e.companion).toList();
+    final logsCompanions = entities
+        .map((e) => e.companion.copyWith(
+              uploadToServer: const Value(true),
+            ))
+        .toList();
 
     await sql.batch((batch) async {
       batch.insertAll(

@@ -31,8 +31,6 @@ class AttendanceLogRemoteRepository extends RemoteRepository<
         return await dio.post(
           searchPath,
           queryParameters: {
-            'offset': 0,
-            'limit': 100,
             'tenantId': envConfig.variables.tenantId,
             ...query.toMap(),
           },
@@ -52,9 +50,7 @@ class AttendanceLogRemoteRepository extends RemoteRepository<
     }
 
     if (!responseMap.containsKey(
-      (isSearchResponsePlural || entityName == 'Attendance')
-          ? entityNamePlural
-          : EntityPlurals.getPluralForEntityName(entityName),
+      EntityPlurals.getPluralForEntityName(entityName),
     )) {
       throw InvalidApiResponseException(
         data: query.toMap(),
@@ -63,10 +59,8 @@ class AttendanceLogRemoteRepository extends RemoteRepository<
       );
     }
 
-    final entityResponse = await responseMap[
-        (isSearchResponsePlural || entityName == 'Attendance')
-            ? entityNamePlural
-            : EntityPlurals.getPluralForEntityName(entityName)];
+    final entityResponse =
+        await responseMap[EntityPlurals.getPluralForEntityName(entityName)];
 
     if (entityResponse is! List) {
       throw InvalidApiResponseException(
@@ -81,6 +75,38 @@ class AttendanceLogRemoteRepository extends RemoteRepository<
     return entityList
         .map((e) => HCMAttendanceLogModelMapper.fromMap(e))
         .toList();
+    ;
+  }
+
+  @override
+  FutureOr<Response> bulkCreate(List<EntityModel> entities) async {
+    final attendanceLogMapEntities =
+        entities.map((e) => Mapper.toMap(e)).toList();
+    List<Map<String, dynamic>> transformedLogs = [];
+
+    for (var log in attendanceLogMapEntities) {
+      var attendanceLog = log["attendanceLog"] as Map<String, dynamic>;
+      var transformedLog = {
+        ...attendanceLog,
+        "auditDetails": log["auditDetails"],
+        "clientAuditDetails": log["clientAuditDetails"],
+      };
+      transformedLogs.add(transformedLog);
+    }
+
+    return executeFuture(
+      future: () async {
+        return await dio.post(
+          bulkCreatePath,
+          options: Options(headers: {
+            "content-type": 'application/json',
+          }),
+          data: {
+            EntityPlurals.getPluralForEntityName(entityName): transformedLogs,
+          },
+        );
+      },
+    );
   }
 
   @override

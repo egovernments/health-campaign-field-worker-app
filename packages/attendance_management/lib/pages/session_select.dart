@@ -102,74 +102,88 @@ class _AttendanceDateSessionSelectionPageState
                                           : i18.attendance.markAttendance,
                                     )),
                                     onPressed: () {
-                                      DateTime s =
-                                          form.control(_dateOfSession).value;
+                                      if (form.control(_sessionRadio).value ==
+                                          null) {
+                                        form
+                                            .control(_sessionRadio)
+                                            .setErrors({'': true});
+                                      }
+                                      form.markAllAsTouched();
 
-                                      final entryTime = selectedRegister
-                                                      .additionalDetails?[
-                                                  'sessions'] ==
-                                              2
-                                          ? AttendanceDateTimeManagement
-                                              .getMillisecondEpoch(
-                                              s,
-                                              form
-                                                          .control(
-                                                              _sessionRadio)
-                                                          .value !=
+                                      if (!form.valid)
+                                        return;
+                                      else {
+                                        DateTime s =
+                                            form.control(_dateOfSession).value;
+
+                                        final entryTime = selectedRegister
+                                                        .additionalDetails?[
+                                                    'sessions'] ==
+                                                2
+                                            ? AttendanceDateTimeManagement
+                                                .getMillisecondEpoch(
+                                                s,
+                                                form
+                                                            .control(
+                                                                _sessionRadio)
+                                                            .value !=
+                                                        null
+                                                    ? form
+                                                        .control(_sessionRadio)
+                                                        .value
+                                                        .key
+                                                    : 0,
+                                                "entryTime",
+                                              )
+                                            : (DateTime(s.year, s.month, s.day,
+                                                        9)
+                                                    .millisecondsSinceEpoch) ~/
+                                                1000;
+
+                                        final exitTime = selectedRegister
+                                                        .additionalDetails?[
+                                                    'sessions'] ==
+                                                2
+                                            ? AttendanceDateTimeManagement
+                                                .getMillisecondEpoch(
+                                                s,
+                                                form
+                                                            .control(
+                                                                _sessionRadio)
+                                                            .value !=
+                                                        null
+                                                    ? form
+                                                        .control(_sessionRadio)
+                                                        .value
+                                                        .key
+                                                    : 1,
+                                                "exitTime",
+                                              )
+                                            : (DateTime(s.year, s.month, s.day,
+                                                        18)
+                                                    .millisecondsSinceEpoch) ~/
+                                                1000;
+
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                MarkAttendancePage(
+                                              attendees: selectedRegister
+                                                          .attendees !=
                                                       null
-                                                  ? form
-                                                      .control(_sessionRadio)
-                                                      .value
-                                                      .key
-                                                  : 0,
-                                              "entryTime",
-                                            )
-                                          : (DateTime(s.year, s.month, s.day, 9)
-                                                  .millisecondsSinceEpoch) ~/
-                                              1000;
-
-                                      final exitTime = selectedRegister
-                                                      .additionalDetails?[
-                                                  'sessions'] ==
-                                              2
-                                          ? AttendanceDateTimeManagement
-                                              .getMillisecondEpoch(
-                                              s,
-                                              form
-                                                          .control(
-                                                              _sessionRadio)
-                                                          .value !=
-                                                      null
-                                                  ? form
-                                                      .control(_sessionRadio)
-                                                      .value
-                                                      .key
-                                                  : 1,
-                                              "exitTime",
-                                            )
-                                          : (DateTime(s.year, s.month, s.day,
-                                                      18)
-                                                  .millisecondsSinceEpoch) ~/
-                                              1000;
-
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              MarkAttendancePage(
-                                            attendees: selectedRegister
-                                                        .attendees !=
-                                                    null
-                                                ? selectedRegister.attendees!
-                                                : [],
-                                            dateTime: s,
-                                            entryTime: entryTime,
-                                            exitTime: exitTime,
-                                            registerId: selectedRegister.id,
-                                            tenantId: selectedRegister.tenantId
-                                                .toString(),
+                                                  ? selectedRegister.attendees!
+                                                  : [],
+                                              dateTime: s,
+                                              entryTime: entryTime,
+                                              exitTime: exitTime,
+                                              registerId: selectedRegister.id,
+                                              tenantId: selectedRegister
+                                                  .tenantId
+                                                  .toString(),
+                                            ),
                                           ),
-                                        ),
-                                      );
+                                        );
+                                      }
                                     },
                                   )),
                               children: [
@@ -215,6 +229,7 @@ class _AttendanceDateSessionSelectionPageState
                                               EnumValues.sessions.toValue()] ==
                                           2)
                                         DigitRadioButtonList<KeyValue>(
+                                          isRequired: true,
                                           errorMessage: localizations.translate(
                                               i18.attendance.plzSelectSession),
                                           formControlName: _sessionRadio,

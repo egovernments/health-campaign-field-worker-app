@@ -37,12 +37,7 @@ class PerformSyncDown {
     pendingSyncEntries.sort((a, b) => a.createdAt.compareTo(b.createdAt));
 
     final groupedEntries = pendingSyncEntries
-        .where((element) =>
-            element.type != DataModelType.service
-
-            ///[TODO: Need to remove attendance check once down sync of attendance logs implemented
-            &&
-            element.type != DataModelType.attendance)
+        .where((element) => element.type != DataModelType.service)
         .toList()
         .groupListsBy(
           (element) => element.type,
@@ -493,6 +488,59 @@ class PerformSyncDown {
               } else {
                 final bool markAsNonRecoverable = await local.opLogManager
                     .updateSyncDownRetry(entity.clientReferenceId);
+
+                if (markAsNonRecoverable) {
+                  await local.update(
+                    entity.copyWith(
+                      nonRecoverableError: true,
+                    ),
+                    createOpLog: false,
+                  );
+                }
+              }
+            }
+
+            break;
+
+          case DataModelType.attendance:
+            responseEntities = await remote.search(HCMAttendanceLogSearchModel(
+              clientReferenceId: entities
+                  .whereType<HCMAttendanceLogModel>()
+                  .map((e) => e.attendanceLog?.clientReferenceId!)
+                  .whereNotNull()
+                  .toList(),
+              isDeleted: true,
+            ));
+
+            for (var element in operationGroupedEntity.value) {
+              if (element.id == null) return;
+              final entity = element.entity as HCMAttendanceLogModel;
+              final responseEntity = responseEntities
+                  .whereType<HCMAttendanceLogModel>()
+                  .firstWhereOrNull(
+                    (e) =>
+                        e.attendanceLog?.clientReferenceId ==
+                        entity.attendanceLog?.clientReferenceId,
+                  );
+
+              final serverGeneratedId = responseEntity?.attendanceLog?.id;
+              final rowVersion = responseEntity?.rowVersion;
+              if (serverGeneratedId != null) {
+                await local.opLogManager.updateServerGeneratedIds(
+                  model: UpdateServerGeneratedIdModel(
+                    clientReferenceId:
+                        entity.attendanceLog!.clientReferenceId.toString(),
+                    serverGeneratedId: serverGeneratedId,
+                    nonRecoverableError: entity.nonRecoverableError,
+                    dataOperation: element.operation,
+                    rowVersion: rowVersion,
+                  ),
+                );
+              } else {
+                final bool markAsNonRecoverable =
+                    await local.opLogManager.updateSyncDownRetry(
+                  entity.attendanceLog!.clientReferenceId.toString(),
+                );
 
                 if (markAsNonRecoverable) {
                   await local.update(

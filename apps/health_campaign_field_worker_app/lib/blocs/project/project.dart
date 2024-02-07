@@ -4,6 +4,7 @@ import 'dart:core';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
@@ -49,6 +50,10 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       attendanceLocalRepository;
   final RemoteRepository<IndividualModel, IndividualSearchModel>
       individualRemoteRepository;
+  final LocalRepository<HCMAttendanceLogModel, HCMAttendanceLogSearchModel>
+      attendanceLogLocalRepository;
+  final RemoteRepository<HCMAttendanceLogModel, HCMAttendanceLogSearchModel>
+      attendanceLogRemoteRepository;
   final LocalRepository<IndividualModel, IndividualSearchModel>
       individualLocalRepository;
 
@@ -86,6 +91,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       productVariantRemoteRepository;
   final LocalRepository<ProductVariantModel, ProductVariantSearchModel>
       productVariantLocalRepository;
+  BuildContext context;
 
   ProjectBloc({
     LocalSecureStore? localSecureStore,
@@ -111,6 +117,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     required this.attendanceRemoteRepository,
     required this.individualLocalRepository,
     required this.individualRemoteRepository,
+    required this.attendanceLogLocalRepository,
+    required this.attendanceLogRemoteRepository,
+    required this.context,
   })  : localSecureStore = localSecureStore ?? LocalSecureStore.instance,
         super(const ProjectState()) {
     on(_handleProjectInit);
@@ -196,29 +205,142 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
       List<ProjectModel> staffProjects;
       try {
-        final attendanceRegisters = await attendanceRemoteRepository
-            .search(HCMAttendanceSearchModel(staffId: projectStaff.userId, referenceId: projectStaff.projectId));
-        await attendanceLocalRepository.bulkCreate(attendanceRegisters);
+        if (context.loggedInUserRoles
+            .where(
+              (role) => role.code == RolesType.districtSupervisor.toValue(),
+            )
+            .toList()
+            .isNotEmpty) {
+          final attendanceRegisters = await attendanceRemoteRepository.search(
+            HCMAttendanceSearchModel(
+              staffId: projectStaff.userId,
+              referenceId: projectStaff.projectId,
+            ),
+          );
+          await attendanceLocalRepository.bulkCreate(attendanceRegisters);
 
-        for (final register in attendanceRegisters) {
-          if (register.attendanceRegister.attendees != null &&
-              (register.attendanceRegister.attendees ?? []).isNotEmpty) {
-            try {
-              final individuals = await individualRemoteRepository.search(
-                IndividualSearchModel(
-                  id: register.attendanceRegister.attendees!
-                      .map((e) => e.individualId!)
-                      .toList(),
-                ),
-              );
-              await individualLocalRepository.bulkCreate(individuals);
-            } catch (_) {
-              emit(state.copyWith(
-                loading: false,
-                syncError: ProjectSyncErrorType.project,
-              ));
+          for (final register in attendanceRegisters) {
+            if (register.attendanceRegister.attendees != null &&
+                (register.attendanceRegister.attendees ?? []).isNotEmpty) {
+              try {
+                final individuals = await individualRemoteRepository.search(
+                  IndividualSearchModel(
+                    id: register.attendanceRegister.attendees!
+                        .map((e) => e.individualId!)
+                        .toList(),
+                  ),
+                );
+                await individualLocalRepository.bulkCreate(individuals);
+                final List<HCMAttendanceLogModel> logList = [];
+                final logs = await attendanceLogRemoteRepository.search(
+                  HCMAttendanceLogSearchModel(
+                    registerId: register.attendanceRegister.id,
+                  ),
+                );
+                //TODO:[ Need to uncomment it once client Audit details, clientReferenceId, starts persisting]
+                // final attendanceLogs =
+                //     register.attendanceRegister.attendees?.map((att) {
+                //   final entryLog = logs
+                //       .where((l) =>
+                //           l.attendanceLog?.individualId == att.individualId &&
+                //           l.attendanceLog?.type == 'ENTRY')
+                //       .first;
+                //   final exitLog = logs
+                //       .where((l) =>
+                //           l.attendanceLog?.individualId == att.individualId &&
+                //           l.attendanceLog?.type == 'EXIT')
+                //       .first;
+                //   logList.addAll(
+                //     [
+                //       HCMAttendanceLogModel(
+                //         attendanceLog: AttendanceLogModel(
+                //           id: entryLog.attendanceLog?.id,
+                //           registerId: entryLog.attendanceLog?.registerId,
+                //           individualId: att.individualId,
+                //           status: entryLog.attendanceLog?.status ?? 'INACTIVE',
+                //           type: 'ENTRY',
+                //           tenantId: entryLog.attendanceLog?.tenantId,
+                //           time: entryLog.attendanceLog?.time,
+                //           clientReferenceId:
+                //               entryLog.attendanceLog?.clientReferenceId,
+                //           uploadToServer: true,
+                //         ),
+                //         rowVersion: 1,
+                //         auditDetails: AuditDetails(
+                //           createdBy: register
+                //                   .attendanceRegister.auditDetails?.createdBy ??
+                //               '',
+                //           createdTime: register.attendanceRegister.auditDetails
+                //                   ?.createdTime ??
+                //               DateTime.now().millisecondsSinceEpoch,
+                //           lastModifiedBy: register
+                //               .attendanceRegister.auditDetails?.lastModifiedBy,
+                //           lastModifiedTime: register.attendanceRegister
+                //               .auditDetails?.lastModifiedTime,
+                //         ),
+                //         clientAuditDetails: ClientAuditDetails(
+                //           createdBy: register
+                //                   .attendanceRegister.auditDetails?.createdBy ??
+                //               '',
+                //           createdTime: register.attendanceRegister.auditDetails
+                //                   ?.createdTime ??
+                //               DateTime.now().millisecondsSinceEpoch,
+                //           lastModifiedBy: register
+                //               .attendanceRegister.auditDetails?.lastModifiedBy,
+                //           lastModifiedTime: register.attendanceRegister
+                //               .auditDetails?.lastModifiedTime,
+                //         ),
+                //       ),
+                //       HCMAttendanceLogModel(
+                //         attendanceLog: AttendanceLogModel(
+                //           id: exitLog.attendanceLog?.id,
+                //           registerId: exitLog.attendanceLog?.registerId,
+                //           individualId: att.individualId,
+                //           status: exitLog.attendanceLog?.status ?? 'INACTIVE',
+                //           type: 'EXIT',
+                //           tenantId: exitLog.attendanceLog?.tenantId,
+                //           time: exitLog.attendanceLog?.time,
+                //           clientReferenceId: exitLog.attendanceLog?.clientReferenceId,
+                //           uploadToServer: true,
+                //         ),
+                //         rowVersion: 1,
+                //         auditDetails: AuditDetails(
+                //           createdBy: register
+                //                   .attendanceRegister.auditDetails?.createdBy ??
+                //               '',
+                //           createdTime: register.attendanceRegister.auditDetails
+                //                   ?.createdTime ??
+                //               DateTime.now().millisecondsSinceEpoch,
+                //           lastModifiedBy: register
+                //               .attendanceRegister.auditDetails?.lastModifiedBy,
+                //           lastModifiedTime: register.attendanceRegister
+                //               .auditDetails?.lastModifiedTime,
+                //         ),
+                //         clientAuditDetails: ClientAuditDetails(
+                //           createdBy: register
+                //                   .attendanceRegister.auditDetails?.createdBy ??
+                //               '',
+                //           createdTime: register.attendanceRegister.auditDetails
+                //                   ?.createdTime ??
+                //               DateTime.now().millisecondsSinceEpoch,
+                //           lastModifiedBy: register
+                //               .attendanceRegister.auditDetails?.lastModifiedBy,
+                //           lastModifiedTime: register.attendanceRegister
+                //               .auditDetails?.lastModifiedTime,
+                //         ),
+                //       ),
+                //     ],
+                //   );
+                // });
+                // await attendanceLogLocalRepository.bulkCreate(logList);
+              } catch (_) {
+                emit(state.copyWith(
+                  loading: false,
+                  syncError: ProjectSyncErrorType.project,
+                ));
 
-              return;
+                return;
+              }
             }
           }
         }
