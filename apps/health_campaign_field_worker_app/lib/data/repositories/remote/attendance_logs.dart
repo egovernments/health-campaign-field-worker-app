@@ -80,8 +80,7 @@ class AttendanceLogRemoteRepository extends RemoteRepository<
 
   @override
   FutureOr<Response> bulkCreate(List<EntityModel> entities) async {
-    final attendanceLogMapEntities =
-        entities.map((e) => Mapper.toMap(e)).toList();
+    final attendanceLogMapEntities = entities.map((e) => e.toMap()).toList();
     List<Map<String, dynamic>> transformedLogs = [];
 
     for (var log in attendanceLogMapEntities) {

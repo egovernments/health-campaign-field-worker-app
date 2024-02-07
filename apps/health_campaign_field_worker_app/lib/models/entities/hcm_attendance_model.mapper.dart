@@ -42,15 +42,15 @@ class HCMAttendanceSearchModelMapper
   static String? _$serviceCode(HCMAttendanceSearchModel v) => v.serviceCode;
   static const Field<HCMAttendanceSearchModel, String> _f$serviceCode =
       Field('serviceCode', _$serviceCode, opt: true);
-  static AuditDetails? _$auditDetails(HCMAttendanceSearchModel v) =>
-      v.auditDetails;
-  static const Field<HCMAttendanceSearchModel, AuditDetails> _f$auditDetails =
-      Field('auditDetails', _$auditDetails, mode: FieldMode.member);
   static AdditionalFields? _$additionalFields(HCMAttendanceSearchModel v) =>
       v.additionalFields;
   static const Field<HCMAttendanceSearchModel, AdditionalFields>
       _f$additionalFields =
-      Field('additionalFields', _$additionalFields, mode: FieldMode.member);
+      Field('additionalFields', _$additionalFields, opt: true);
+  static AuditDetails? _$auditDetails(HCMAttendanceSearchModel v) =>
+      v.auditDetails;
+  static const Field<HCMAttendanceSearchModel, AuditDetails> _f$auditDetails =
+      Field('auditDetails', _$auditDetails, opt: true);
 
   @override
   final MappableFields<HCMAttendanceSearchModel> fields = const {
@@ -60,8 +60,8 @@ class HCMAttendanceSearchModelMapper
     #status: _f$status,
     #referenceId: _f$referenceId,
     #serviceCode: _f$serviceCode,
-    #auditDetails: _f$auditDetails,
     #additionalFields: _f$additionalFields,
+    #auditDetails: _f$auditDetails,
   };
   @override
   final bool ignoreNull = true;
@@ -73,7 +73,9 @@ class HCMAttendanceSearchModelMapper
         registerNumber: data.dec(_f$registerNumber),
         status: data.dec(_f$status),
         referenceId: data.dec(_f$referenceId),
-        serviceCode: data.dec(_f$serviceCode));
+        serviceCode: data.dec(_f$serviceCode),
+        additionalFields: data.dec(_f$additionalFields),
+        auditDetails: data.dec(_f$auditDetails));
   }
 
   @override
@@ -136,13 +138,20 @@ abstract class HCMAttendanceSearchModelCopyWith<
     $In extends HCMAttendanceSearchModel,
     $Out> implements EntitySearchModelCopyWith<$R, $In, $Out> {
   @override
+  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
+      get additionalFields;
+  @override
+  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
+  @override
   $R call(
       {String? id,
       String? staffId,
       String? registerNumber,
       String? status,
       String? referenceId,
-      String? serviceCode});
+      String? serviceCode,
+      AdditionalFields? additionalFields,
+      AuditDetails? auditDetails});
   HCMAttendanceSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -157,20 +166,31 @@ class _HCMAttendanceSearchModelCopyWithImpl<$R, $Out>
   late final ClassMapperBase<HCMAttendanceSearchModel> $mapper =
       HCMAttendanceSearchModelMapper.ensureInitialized();
   @override
+  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
+      get additionalFields => $value.additionalFields?.copyWith
+          .$chain((v) => call(additionalFields: v));
+  @override
+  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
+      $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
+  @override
   $R call(
           {Object? id = $none,
           Object? staffId = $none,
           Object? registerNumber = $none,
           Object? status = $none,
           Object? referenceId = $none,
-          Object? serviceCode = $none}) =>
+          Object? serviceCode = $none,
+          Object? additionalFields = $none,
+          Object? auditDetails = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
         if (staffId != $none) #staffId: staffId,
         if (registerNumber != $none) #registerNumber: registerNumber,
         if (status != $none) #status: status,
         if (referenceId != $none) #referenceId: referenceId,
-        if (serviceCode != $none) #serviceCode: serviceCode
+        if (serviceCode != $none) #serviceCode: serviceCode,
+        if (additionalFields != $none) #additionalFields: additionalFields,
+        if (auditDetails != $none) #auditDetails: auditDetails
       }));
   @override
   HCMAttendanceSearchModel $make(CopyWithData data) =>
@@ -180,7 +200,10 @@ class _HCMAttendanceSearchModelCopyWithImpl<$R, $Out>
           registerNumber: data.get(#registerNumber, or: $value.registerNumber),
           status: data.get(#status, or: $value.status),
           referenceId: data.get(#referenceId, or: $value.referenceId),
-          serviceCode: data.get(#serviceCode, or: $value.serviceCode));
+          serviceCode: data.get(#serviceCode, or: $value.serviceCode),
+          additionalFields:
+              data.get(#additionalFields, or: $value.additionalFields),
+          auditDetails: data.get(#auditDetails, or: $value.auditDetails));
 
   @override
   HCMAttendanceSearchModelCopyWith<$R2, HCMAttendanceSearchModel, $Out2>

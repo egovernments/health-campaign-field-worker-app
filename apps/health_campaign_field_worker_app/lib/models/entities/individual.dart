@@ -4,6 +4,7 @@ import 'package:drift/drift.dart';
 
 import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
+import 'name_model_converter.dart';
 
 part 'individual.mapper.dart';
 
@@ -44,7 +45,7 @@ class IndividualSearchModel extends EntitySearchModel with IndividualSearchModel
   }):  super(isDeleted: false);
 }
 
-@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault, includeCustomMappers: [NameModelConverter()])
 class IndividualModel extends EntityModel with IndividualModelMappable {
 
   static const schemaName = 'Individual';

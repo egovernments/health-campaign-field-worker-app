@@ -159,14 +159,6 @@ class AttendanceLogModelMapper extends ClassMapperBase<AttendanceLogModel> {
   static String? _$individualId(AttendanceLogModel v) => v.individualId;
   static const Field<AttendanceLogModel, String> _f$individualId =
       Field('individualId', _$individualId, opt: true);
-  static bool? _$nonRecoverableError(AttendanceLogModel v) =>
-      v.nonRecoverableError;
-  static const Field<AttendanceLogModel, bool> _f$nonRecoverableError = Field(
-      'nonRecoverableError', _$nonRecoverableError,
-      opt: true, def: false);
-  static int? _$rowVersion(AttendanceLogModel v) => v.rowVersion;
-  static const Field<AttendanceLogModel, int> _f$rowVersion =
-      Field('rowVersion', _$rowVersion, opt: true);
   static String? _$type(AttendanceLogModel v) => v.type;
   static const Field<AttendanceLogModel, String> _f$type =
       Field('type', _$type, opt: true);
@@ -190,8 +182,6 @@ class AttendanceLogModelMapper extends ClassMapperBase<AttendanceLogModel> {
     #tenantId: _f$tenantId,
     #registerId: _f$registerId,
     #individualId: _f$individualId,
-    #nonRecoverableError: _f$nonRecoverableError,
-    #rowVersion: _f$rowVersion,
     #type: _f$type,
     #time: _f$time,
     #status: _f$status,
@@ -207,8 +197,6 @@ class AttendanceLogModelMapper extends ClassMapperBase<AttendanceLogModel> {
         tenantId: data.dec(_f$tenantId),
         registerId: data.dec(_f$registerId),
         individualId: data.dec(_f$individualId),
-        nonRecoverableError: data.dec(_f$nonRecoverableError),
-        rowVersion: data.dec(_f$rowVersion),
         type: data.dec(_f$type),
         time: data.dec(_f$time),
         status: data.dec(_f$status),
@@ -278,8 +266,6 @@ abstract class AttendanceLogModelCopyWith<$R, $In extends AttendanceLogModel,
       String? tenantId,
       String? registerId,
       String? individualId,
-      bool? nonRecoverableError,
-      int? rowVersion,
       String? type,
       int? time,
       String? status,
@@ -303,8 +289,6 @@ class _AttendanceLogModelCopyWithImpl<$R, $Out>
           Object? tenantId = $none,
           Object? registerId = $none,
           Object? individualId = $none,
-          Object? nonRecoverableError = $none,
-          Object? rowVersion = $none,
           Object? type = $none,
           Object? time = $none,
           Object? status = $none,
@@ -315,9 +299,6 @@ class _AttendanceLogModelCopyWithImpl<$R, $Out>
         if (tenantId != $none) #tenantId: tenantId,
         if (registerId != $none) #registerId: registerId,
         if (individualId != $none) #individualId: individualId,
-        if (nonRecoverableError != $none)
-          #nonRecoverableError: nonRecoverableError,
-        if (rowVersion != $none) #rowVersion: rowVersion,
         if (type != $none) #type: type,
         if (time != $none) #time: time,
         if (status != $none) #status: status,
@@ -330,9 +311,6 @@ class _AttendanceLogModelCopyWithImpl<$R, $Out>
       tenantId: data.get(#tenantId, or: $value.tenantId),
       registerId: data.get(#registerId, or: $value.registerId),
       individualId: data.get(#individualId, or: $value.individualId),
-      nonRecoverableError:
-          data.get(#nonRecoverableError, or: $value.nonRecoverableError),
-      rowVersion: data.get(#rowVersion, or: $value.rowVersion),
       type: data.get(#type, or: $value.type),
       time: data.get(#time, or: $value.time),
       status: data.get(#status, or: $value.status),

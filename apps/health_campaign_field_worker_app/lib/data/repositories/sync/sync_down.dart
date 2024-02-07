@@ -506,7 +506,7 @@ class PerformSyncDown {
             responseEntities = await remote.search(HCMAttendanceLogSearchModel(
               clientReferenceId: entities
                   .whereType<HCMAttendanceLogModel>()
-                  .map((e) => e.attendanceLog?.clientReferenceId!)
+                  .map((e) => e.attendance?.clientReferenceId!)
                   .whereNotNull()
                   .toList(),
               isDeleted: true,
@@ -519,17 +519,17 @@ class PerformSyncDown {
                   .whereType<HCMAttendanceLogModel>()
                   .firstWhereOrNull(
                     (e) =>
-                        e.attendanceLog?.clientReferenceId ==
-                        entity.attendanceLog?.clientReferenceId,
+                        e.attendance?.clientReferenceId ==
+                        entity.attendance?.clientReferenceId,
                   );
 
-              final serverGeneratedId = responseEntity?.attendanceLog?.id;
+              final serverGeneratedId = responseEntity?.attendance?.id;
               final rowVersion = responseEntity?.rowVersion;
               if (serverGeneratedId != null) {
                 await local.opLogManager.updateServerGeneratedIds(
                   model: UpdateServerGeneratedIdModel(
                     clientReferenceId:
-                        entity.attendanceLog!.clientReferenceId.toString(),
+                        entity.attendance!.clientReferenceId.toString(),
                     serverGeneratedId: serverGeneratedId,
                     nonRecoverableError: entity.nonRecoverableError,
                     dataOperation: element.operation,
@@ -539,7 +539,7 @@ class PerformSyncDown {
               } else {
                 final bool markAsNonRecoverable =
                     await local.opLogManager.updateSyncDownRetry(
-                  entity.attendanceLog!.clientReferenceId.toString(),
+                  entity.attendance!.clientReferenceId.toString(),
                 );
 
                 if (markAsNonRecoverable) {

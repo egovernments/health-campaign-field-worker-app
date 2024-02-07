@@ -279,6 +279,7 @@ class IndividualModelMapper extends SubClassMapperBase<IndividualModel> {
   static IndividualModelMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = IndividualModelMapper._());
+      MapperContainer.globals.useAll([NameModelConverter()]);
     }
     return _instance!;
   }

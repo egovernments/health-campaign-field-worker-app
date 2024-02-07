@@ -1,3 +1,4 @@
+import 'package:attendance_management/models/attendance_log.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:isar/isar.dart';
 
@@ -35,13 +36,17 @@ class OpLog {
               final entity =  TaskModelMapper.fromJson(entityString);
                 return entity;
      
-            case "SideEffect":
+            case "sideEffect":
               final entity =  SideEffectModelMapper.fromJson(entityString);
                    return entity;
      
-            case "Referral":
+            case "referral":
               final entity = ReferralModelMapper.fromJson(entityString);
            
+             return entity;
+            case "attendance":
+              final entity =  HCMAttendanceLogModelMapper.fromJson(entityString);
+
              return entity;
             default:
               final entity =  EntityModelMapper.fromJson(entityString);

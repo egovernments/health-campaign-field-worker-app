@@ -36,7 +36,9 @@ class HCMAttendanceSearchModel extends EntitySearchModel with HCMAttendanceSearc
     this.status,
     this.referenceId,
     this.serviceCode,
-  });
+    super.additionalFields,
+    super.auditDetails,
+  }) : super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true)

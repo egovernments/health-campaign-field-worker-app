@@ -2,7 +2,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 
 part 'attendance_log.mapper.dart';
 
-@MappableClass(ignoreNull: true)
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault,)
 class AttendanceLogSearchModel with AttendanceLogSearchModelMappable {
   final String? id;
   final String? registerId;
@@ -19,9 +19,8 @@ class AttendanceLogSearchModel with AttendanceLogSearchModelMappable {
   });
 }
 
-@MappableClass(ignoreNull: true)
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault,)
 class AttendanceLogModel with AttendanceLogModelMappable {
-  static const schemaName = 'Attendee';
 
   final String? id;
   final String? tenantId;

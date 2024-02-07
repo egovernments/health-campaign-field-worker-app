@@ -1,4 +1,6 @@
-@MappableLib(generateInitializerForScope: InitializerScope.package,)
+@MappableLib(
+  generateInitializerForScope: InitializerScope.package,
+)
 library models;
 
 import 'package:dart_mappable/dart_mappable.dart';
@@ -53,6 +55,7 @@ export 'oplog/oplog_entry.dart';
 export 'pgr_complaints/pgr_address.dart';
 export 'pgr_complaints/pgr_complaints.dart';
 export 'pgr_complaints/pgr_complaints_response.dart';
+export 'package:attendance_management/models/attendance_log.dart';
 
 part 'data_model.mapper.dart';
 
@@ -67,9 +70,12 @@ abstract class DataModel {
 }
 
 @MappableClass(includeSubClasses: [
-  BoundaryModel, HouseholdModel,
+  BoundaryModel,
+  HouseholdModel,
   IndividualModel,
   NameModel,
+  HCMAttendanceLogModel,
+  HCMAttendanceRegisterModel,
 ])
 abstract class EntityModel extends DataModel with EntityModelMappable {
   final AuditDetails? auditDetails;
@@ -81,7 +87,7 @@ abstract class EntityModel extends DataModel with EntityModelMappable {
   });
 }
 
-  @MappableClass(ignoreNull: true, includeSubClasses: [
+@MappableClass(ignoreNull: true, includeSubClasses: [
   AddressSearchModel,
   HFReferralSearchModel,
   HCMAttendanceLogSearchModel,
@@ -109,7 +115,8 @@ abstract class EntitySearchModel extends DataModel
 }
 
 @MappableClass(
-    includeSubClasses: [AddressAdditionalFields, HCMAttendanceAdditionalModel],)
+  includeSubClasses: [AddressAdditionalFields, HCMAttendanceAdditionalModel],
+)
 abstract class AdditionalFields with AdditionalFieldsMappable {
   final String schema;
   final int version;

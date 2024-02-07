@@ -42,7 +42,7 @@ class AttendanceLogsLocalRepository extends LocalRepository<
           if (attendeeLog == null) return null;
 
           return HCMAttendanceLogModel(
-            attendanceLog: AttendanceLogModel(
+            attendance: AttendanceLogModel(
               id: attendeeLog.id,
               registerId: attendeeLog.registerId,
               individualId: attendeeLog.individualId,

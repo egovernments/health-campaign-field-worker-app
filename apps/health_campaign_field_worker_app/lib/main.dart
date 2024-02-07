@@ -33,7 +33,6 @@ initializeMappers();
 
   Bloc.observer = AppBlocObserver();
   await AppSharedPreferences().init();
-
   if (AppSharedPreferences().isFirstLaunch) {
     AppLogger.instance.info('App Launched First Time', title: 'main');
     await AppSharedPreferences().appLaunchedFirstTime();

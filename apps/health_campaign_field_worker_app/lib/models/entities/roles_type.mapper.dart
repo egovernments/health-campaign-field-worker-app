@@ -31,6 +31,12 @@ class RolesTypeMapper extends EnumMapper<RolesType> {
         return RolesType.distributor;
       case "HEALTH_FACILITY_WORKER":
         return RolesType.healthFacilityWorker;
+      case "DISTRICT_SUPERVISOR":
+        return RolesType.districtSupervisor;
+      case "FIELD_SUPERVISOR":
+        return RolesType.fieldSupervisor;
+      case "SUPERUSER":
+        return RolesType.superuser;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -45,6 +51,12 @@ class RolesTypeMapper extends EnumMapper<RolesType> {
         return "DISTRIBUTOR";
       case RolesType.healthFacilityWorker:
         return "HEALTH_FACILITY_WORKER";
+      case RolesType.districtSupervisor:
+        return "DISTRICT_SUPERVISOR";
+      case RolesType.fieldSupervisor:
+        return "FIELD_SUPERVISOR";
+      case RolesType.superuser:
+        return "SUPERUSER";
     }
   }
 }

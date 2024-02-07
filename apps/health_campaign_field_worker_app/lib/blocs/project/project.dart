@@ -231,12 +231,12 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                   ),
                 );
                 await individualLocalRepository.bulkCreate(individuals);
-                final List<HCMAttendanceLogModel> logList = [];
-                final logs = await attendanceLogRemoteRepository.search(
-                  HCMAttendanceLogSearchModel(
-                    registerId: register.attendanceRegister.id,
-                  ),
-                );
+                // final List<HCMAttendanceLogModel> logList = [];
+                // final logs = await attendanceLogRemoteRepository.search(
+                //   HCMAttendanceLogSearchModel(
+                //     registerId: register.attendanceRegister.id,
+                //   ),
+                // );
                 //TODO:[ Need to uncomment it once client Audit details, clientReferenceId, starts persisting]
                 // final attendanceLogs =
                 //     register.attendanceRegister.attendees?.map((att) {

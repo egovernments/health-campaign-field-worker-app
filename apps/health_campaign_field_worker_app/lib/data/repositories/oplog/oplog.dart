@@ -166,7 +166,9 @@ abstract class OpLogManager<T extends EntityModel> {
             .oplog);
       });
     } else if (entry != null) {
-      await put(entry.copyWith(syncedUp: true, syncedUpOn: DateTime.now()),);
+      await put(
+        entry.copyWith(syncedUp: true, syncedUpOn: DateTime.now()),
+      );
     } else if (id != null) {
       OpLog? oplog;
 
@@ -659,7 +661,7 @@ class AttendanceLogOpLogManager extends OpLogManager<HCMAttendanceLogModel> {
     int rowVersion,
   ) =>
       entity.copyWith(
-        attendanceLog: entity.attendanceLog?.copyWith(
+        attendance: entity.attendance?.copyWith(
           id: serverGeneratedId,
         ),
         rowVersion: rowVersion,
@@ -667,11 +669,11 @@ class AttendanceLogOpLogManager extends OpLogManager<HCMAttendanceLogModel> {
 
   @override
   String getClientReferenceId(HCMAttendanceLogModel entity) =>
-      entity.attendanceLog!.clientReferenceId.toString();
+      entity.attendance!.clientReferenceId.toString();
 
   @override
   String? getServerGeneratedId(HCMAttendanceLogModel entity) =>
-      entity.attendanceLog?.id;
+      entity.attendance?.id;
 
   @override
   int? getRowVersion(HCMAttendanceLogModel entity) => entity.rowVersion;

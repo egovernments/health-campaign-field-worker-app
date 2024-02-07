@@ -60,16 +60,15 @@ class HCMAttendanceLogSearchModelMapper
       v.uploadToServer;
   static const Field<HCMAttendanceLogSearchModel, bool> _f$uploadToServer =
       Field('uploadToServer', _$uploadToServer, opt: true);
-  static AuditDetails? _$auditDetails(HCMAttendanceLogSearchModel v) =>
-      v.auditDetails;
-  static const Field<HCMAttendanceLogSearchModel, AuditDetails>
-      _f$auditDetails =
-      Field('auditDetails', _$auditDetails, mode: FieldMode.member);
   static AdditionalFields? _$additionalFields(HCMAttendanceLogSearchModel v) =>
       v.additionalFields;
   static const Field<HCMAttendanceLogSearchModel, AdditionalFields>
       _f$additionalFields =
-      Field('additionalFields', _$additionalFields, mode: FieldMode.member);
+      Field('additionalFields', _$additionalFields, opt: true);
+  static AuditDetails? _$auditDetails(HCMAttendanceLogSearchModel v) =>
+      v.auditDetails;
+  static const Field<HCMAttendanceLogSearchModel, AuditDetails>
+      _f$auditDetails = Field('auditDetails', _$auditDetails, opt: true);
 
   @override
   final MappableFields<HCMAttendanceLogSearchModel> fields = const {
@@ -84,8 +83,8 @@ class HCMAttendanceLogSearchModelMapper
     #exitTime: _f$exitTime,
     #clientReferenceId: _f$clientReferenceId,
     #uploadToServer: _f$uploadToServer,
-    #auditDetails: _f$auditDetails,
     #additionalFields: _f$additionalFields,
+    #auditDetails: _f$auditDetails,
   };
   @override
   final bool ignoreNull = true;
@@ -102,7 +101,9 @@ class HCMAttendanceLogSearchModelMapper
         entryTime: data.dec(_f$entryTime),
         exitTime: data.dec(_f$exitTime),
         clientReferenceId: data.dec(_f$clientReferenceId),
-        uploadToServer: data.dec(_f$uploadToServer));
+        uploadToServer: data.dec(_f$uploadToServer),
+        additionalFields: data.dec(_f$additionalFields),
+        auditDetails: data.dec(_f$auditDetails));
   }
 
   @override
@@ -169,6 +170,11 @@ abstract class HCMAttendanceLogSearchModelCopyWith<
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get clientReferenceId;
   @override
+  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
+      get additionalFields;
+  @override
+  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
+  @override
   $R call(
       {String? id,
       String? registerId,
@@ -180,7 +186,9 @@ abstract class HCMAttendanceLogSearchModelCopyWith<
       int? entryTime,
       int? exitTime,
       List<String>? clientReferenceId,
-      bool? uploadToServer});
+      bool? uploadToServer,
+      AdditionalFields? additionalFields,
+      AuditDetails? auditDetails});
   HCMAttendanceLogSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -205,6 +213,13 @@ class _HCMAttendanceLogSearchModelCopyWithImpl<$R, $Out>
               (v) => call(clientReferenceId: v))
           : null;
   @override
+  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
+      get additionalFields => $value.additionalFields?.copyWith
+          .$chain((v) => call(additionalFields: v));
+  @override
+  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
+      $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
+  @override
   $R call(
           {Object? id = $none,
           Object? registerId = $none,
@@ -216,7 +231,9 @@ class _HCMAttendanceLogSearchModelCopyWithImpl<$R, $Out>
           Object? entryTime = $none,
           Object? exitTime = $none,
           Object? clientReferenceId = $none,
-          Object? uploadToServer = $none}) =>
+          Object? uploadToServer = $none,
+          Object? additionalFields = $none,
+          Object? auditDetails = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
         if (registerId != $none) #registerId: registerId,
@@ -228,7 +245,9 @@ class _HCMAttendanceLogSearchModelCopyWithImpl<$R, $Out>
         if (entryTime != $none) #entryTime: entryTime,
         if (exitTime != $none) #exitTime: exitTime,
         if (clientReferenceId != $none) #clientReferenceId: clientReferenceId,
-        if (uploadToServer != $none) #uploadToServer: uploadToServer
+        if (uploadToServer != $none) #uploadToServer: uploadToServer,
+        if (additionalFields != $none) #additionalFields: additionalFields,
+        if (auditDetails != $none) #auditDetails: auditDetails
       }));
   @override
   HCMAttendanceLogSearchModel $make(CopyWithData data) =>
@@ -244,7 +263,10 @@ class _HCMAttendanceLogSearchModelCopyWithImpl<$R, $Out>
           exitTime: data.get(#exitTime, or: $value.exitTime),
           clientReferenceId:
               data.get(#clientReferenceId, or: $value.clientReferenceId),
-          uploadToServer: data.get(#uploadToServer, or: $value.uploadToServer));
+          uploadToServer: data.get(#uploadToServer, or: $value.uploadToServer),
+          additionalFields:
+              data.get(#additionalFields, or: $value.additionalFields),
+          auditDetails: data.get(#auditDetails, or: $value.auditDetails));
 
   @override
   HCMAttendanceLogSearchModelCopyWith<$R2, HCMAttendanceLogSearchModel, $Out2>
@@ -253,14 +275,13 @@ class _HCMAttendanceLogSearchModelCopyWithImpl<$R, $Out>
 }
 
 class HCMAttendanceLogModelMapper
-    extends ClassMapperBase<HCMAttendanceLogModel> {
+    extends SubClassMapperBase<HCMAttendanceLogModel> {
   HCMAttendanceLogModelMapper._();
 
   static HCMAttendanceLogModelMapper? _instance;
   static HCMAttendanceLogModelMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = HCMAttendanceLogModelMapper._());
-      EntityModelMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -268,45 +289,18 @@ class HCMAttendanceLogModelMapper
   @override
   final String id = 'HCMAttendanceLogModel';
 
-  static String? _$id(HCMAttendanceLogModel v) => v.id;
-  static const Field<HCMAttendanceLogModel, String> _f$id =
-      Field('id', _$id, opt: true);
-  static String? _$registerId(HCMAttendanceLogModel v) => v.registerId;
-  static const Field<HCMAttendanceLogModel, String> _f$registerId =
-      Field('registerId', _$registerId, opt: true);
-  static String? _$individualId(HCMAttendanceLogModel v) => v.individualId;
-  static const Field<HCMAttendanceLogModel, String> _f$individualId =
-      Field('individualId', _$individualId, opt: true);
-  static String? _$status(HCMAttendanceLogModel v) => v.status;
-  static const Field<HCMAttendanceLogModel, String> _f$status =
-      Field('status', _$status, opt: true);
-  static String? _$type(HCMAttendanceLogModel v) => v.type;
-  static const Field<HCMAttendanceLogModel, String> _f$type =
-      Field('type', _$type, opt: true);
-  static String? _$tenantId(HCMAttendanceLogModel v) => v.tenantId;
-  static const Field<HCMAttendanceLogModel, String> _f$tenantId =
-      Field('tenantId', _$tenantId, opt: true);
-  static int? _$time(HCMAttendanceLogModel v) => v.time;
-  static const Field<HCMAttendanceLogModel, int> _f$time =
-      Field('time', _$time, opt: true);
-  static String? _$clientReferenceId(HCMAttendanceLogModel v) =>
-      v.clientReferenceId;
-  static const Field<HCMAttendanceLogModel, String> _f$clientReferenceId =
-      Field('clientReferenceId', _$clientReferenceId, opt: true);
-  static String? _$name(HCMAttendanceLogModel v) => v.name;
-  static const Field<HCMAttendanceLogModel, String> _f$name =
-      Field('name', _$name, opt: true);
-  static int? _$rowVersion(HCMAttendanceLogModel v) => v.rowVersion;
-  static const Field<HCMAttendanceLogModel, int> _f$rowVersion =
-      Field('rowVersion', _$rowVersion, opt: true);
+  static AttendanceLogModel? _$attendance(HCMAttendanceLogModel v) =>
+      v.attendance;
+  static const Field<HCMAttendanceLogModel, AttendanceLogModel> _f$attendance =
+      Field('attendance', _$attendance, opt: true);
   static bool? _$nonRecoverableError(HCMAttendanceLogModel v) =>
       v.nonRecoverableError;
   static const Field<HCMAttendanceLogModel, bool> _f$nonRecoverableError =
       Field('nonRecoverableError', _$nonRecoverableError,
           opt: true, def: false);
-  static bool? _$uploadToServer(HCMAttendanceLogModel v) => v.uploadToServer;
-  static const Field<HCMAttendanceLogModel, bool> _f$uploadToServer =
-      Field('uploadToServer', _$uploadToServer, opt: true, def: false);
+  static int? _$rowVersion(HCMAttendanceLogModel v) => v.rowVersion;
+  static const Field<HCMAttendanceLogModel, int> _f$rowVersion =
+      Field('rowVersion', _$rowVersion, opt: true);
   static AuditDetails? _$auditDetails(HCMAttendanceLogModel v) =>
       v.auditDetails;
   static const Field<HCMAttendanceLogModel, AuditDetails> _f$auditDetails =
@@ -322,18 +316,9 @@ class HCMAttendanceLogModelMapper
 
   @override
   final MappableFields<HCMAttendanceLogModel> fields = const {
-    #id: _f$id,
-    #registerId: _f$registerId,
-    #individualId: _f$individualId,
-    #status: _f$status,
-    #type: _f$type,
-    #tenantId: _f$tenantId,
-    #time: _f$time,
-    #clientReferenceId: _f$clientReferenceId,
-    #name: _f$name,
-    #rowVersion: _f$rowVersion,
+    #attendance: _f$attendance,
     #nonRecoverableError: _f$nonRecoverableError,
-    #uploadToServer: _f$uploadToServer,
+    #rowVersion: _f$rowVersion,
     #auditDetails: _f$auditDetails,
     #clientAuditDetails: _f$clientAuditDetails,
     #isDeleted: _f$isDeleted,
@@ -341,20 +326,19 @@ class HCMAttendanceLogModelMapper
   @override
   final bool ignoreNull = true;
 
+  @override
+  final String discriminatorKey = 'type';
+  @override
+  final dynamic discriminatorValue = MappableClass.useAsDefault;
+  @override
+  late final ClassMapperBase superMapper =
+      EntityModelMapper.ensureInitialized();
+
   static HCMAttendanceLogModel _instantiate(DecodingData data) {
     return HCMAttendanceLogModel(
-        id: data.dec(_f$id),
-        registerId: data.dec(_f$registerId),
-        individualId: data.dec(_f$individualId),
-        status: data.dec(_f$status),
-        type: data.dec(_f$type),
-        tenantId: data.dec(_f$tenantId),
-        time: data.dec(_f$time),
-        clientReferenceId: data.dec(_f$clientReferenceId),
-        name: data.dec(_f$name),
-        rowVersion: data.dec(_f$rowVersion),
+        attendance: data.dec(_f$attendance),
         nonRecoverableError: data.dec(_f$nonRecoverableError),
-        uploadToServer: data.dec(_f$uploadToServer),
+        rowVersion: data.dec(_f$rowVersion),
         auditDetails: data.dec(_f$auditDetails),
         clientAuditDetails: data.dec(_f$clientAuditDetails),
         isDeleted: data.dec(_f$isDeleted));
@@ -419,6 +403,8 @@ abstract class HCMAttendanceLogModelCopyWith<
     $R,
     $In extends HCMAttendanceLogModel,
     $Out> implements EntityModelCopyWith<$R, $In, $Out> {
+  AttendanceLogModelCopyWith<$R, AttendanceLogModel, AttendanceLogModel>?
+      get attendance;
   @override
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
   @override
@@ -426,18 +412,9 @@ abstract class HCMAttendanceLogModelCopyWith<
       get clientAuditDetails;
   @override
   $R call(
-      {String? id,
-      String? registerId,
-      String? individualId,
-      String? status,
-      String? type,
-      String? tenantId,
-      int? time,
-      String? clientReferenceId,
-      String? name,
-      int? rowVersion,
+      {AttendanceLogModel? attendance,
       bool? nonRecoverableError,
-      bool? uploadToServer,
+      int? rowVersion,
       AuditDetails? auditDetails,
       ClientAuditDetails? clientAuditDetails,
       bool? isDeleted});
@@ -454,6 +431,10 @@ class _HCMAttendanceLogModelCopyWithImpl<$R, $Out>
   late final ClassMapperBase<HCMAttendanceLogModel> $mapper =
       HCMAttendanceLogModelMapper.ensureInitialized();
   @override
+  AttendanceLogModelCopyWith<$R, AttendanceLogModel, AttendanceLogModel>?
+      get attendance =>
+          $value.attendance?.copyWith.$chain((v) => call(attendance: v));
+  @override
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
       $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
   @override
@@ -462,35 +443,17 @@ class _HCMAttendanceLogModelCopyWithImpl<$R, $Out>
           .$chain((v) => call(clientAuditDetails: v));
   @override
   $R call(
-          {Object? id = $none,
-          Object? registerId = $none,
-          Object? individualId = $none,
-          Object? status = $none,
-          Object? type = $none,
-          Object? tenantId = $none,
-          Object? time = $none,
-          Object? clientReferenceId = $none,
-          Object? name = $none,
-          Object? rowVersion = $none,
+          {Object? attendance = $none,
           Object? nonRecoverableError = $none,
-          Object? uploadToServer = $none,
+          Object? rowVersion = $none,
           Object? auditDetails = $none,
           Object? clientAuditDetails = $none,
           Object? isDeleted = $none}) =>
       $apply(FieldCopyWithData({
-        if (id != $none) #id: id,
-        if (registerId != $none) #registerId: registerId,
-        if (individualId != $none) #individualId: individualId,
-        if (status != $none) #status: status,
-        if (type != $none) #type: type,
-        if (tenantId != $none) #tenantId: tenantId,
-        if (time != $none) #time: time,
-        if (clientReferenceId != $none) #clientReferenceId: clientReferenceId,
-        if (name != $none) #name: name,
-        if (rowVersion != $none) #rowVersion: rowVersion,
+        if (attendance != $none) #attendance: attendance,
         if (nonRecoverableError != $none)
           #nonRecoverableError: nonRecoverableError,
-        if (uploadToServer != $none) #uploadToServer: uploadToServer,
+        if (rowVersion != $none) #rowVersion: rowVersion,
         if (auditDetails != $none) #auditDetails: auditDetails,
         if (clientAuditDetails != $none)
           #clientAuditDetails: clientAuditDetails,
@@ -498,20 +461,10 @@ class _HCMAttendanceLogModelCopyWithImpl<$R, $Out>
       }));
   @override
   HCMAttendanceLogModel $make(CopyWithData data) => HCMAttendanceLogModel(
-      id: data.get(#id, or: $value.id),
-      registerId: data.get(#registerId, or: $value.registerId),
-      individualId: data.get(#individualId, or: $value.individualId),
-      status: data.get(#status, or: $value.status),
-      type: data.get(#type, or: $value.type),
-      tenantId: data.get(#tenantId, or: $value.tenantId),
-      time: data.get(#time, or: $value.time),
-      clientReferenceId:
-          data.get(#clientReferenceId, or: $value.clientReferenceId),
-      name: data.get(#name, or: $value.name),
-      rowVersion: data.get(#rowVersion, or: $value.rowVersion),
+      attendance: data.get(#attendance, or: $value.attendance),
       nonRecoverableError:
           data.get(#nonRecoverableError, or: $value.nonRecoverableError),
-      uploadToServer: data.get(#uploadToServer, or: $value.uploadToServer),
+      rowVersion: data.get(#rowVersion, or: $value.rowVersion),
       auditDetails: data.get(#auditDetails, or: $value.auditDetails),
       clientAuditDetails:
           data.get(#clientAuditDetails, or: $value.clientAuditDetails),
