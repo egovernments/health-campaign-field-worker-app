@@ -137,7 +137,7 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                         ),
                         // [TODO : Need move to constants]
                         Positioned(
-                          top: MediaQuery.of(context).size.width / 8,
+                          top: MediaQuery.of(context).size.width / 7.5,
                           left: MediaQuery.of(context).size.width / 2.6,
                           width: 250,
                           height: 250,
@@ -158,8 +158,8 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                         ),
                         Positioned(
                           top: MediaQuery.of(context).size.height / 2.4,
-                          left: MediaQuery.of(context).size.width / 4,
-                          width: 250,
+                          left: MediaQuery.of(context).size.width / 5,
+                          width: 300,
                           height: 250,
                           child: SizedBox(
                             width: 150,
@@ -178,9 +178,10 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                             ),
                           ),
                         ),
+
                         Positioned(
-                          top: MediaQuery.of(context).size.height / 2.0,
-                          left: MediaQuery.of(context).size.width / 6,
+                          top: MediaQuery.of(context).size.height / 2.2,
+                          left: MediaQuery.of(context).size.width / 5,
                           width: 250,
                           height: 50,
                           child: SizedBox(
