@@ -5,6 +5,7 @@ import 'package:collection/collection.dart';
 import './remote_type.dart';
 import '../../../models/bandwidth/bandwidth_model.dart';
 import '../../../models/data_model.dart';
+import '../../../utils/environment_config.dart';
 import '../../data_repository.dart';
 import '../../network_manager.dart';
 import '../oplog/oplog.dart';
@@ -37,9 +38,7 @@ class PerformSyncDown {
     pendingSyncEntries.sort((a, b) => a.createdAt.compareTo(b.createdAt));
 
     final groupedEntries = pendingSyncEntries
-        .where((element) =>
-            element.type != DataModelType.service &&
-            element.type != DataModelType.attendance)
+        .where((element) => element.type != DataModelType.service)
         .toList()
         .groupListsBy(
           (element) => element.type,
@@ -512,6 +511,7 @@ class PerformSyncDown {
                   .whereNotNull()
                   .toList(),
               isDeleted: true,
+              tenantId: envConfig.variables.tenantId,
             ));
 
             for (var element in operationGroupedEntity.value) {
