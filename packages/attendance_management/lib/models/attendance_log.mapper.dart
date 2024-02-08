@@ -175,6 +175,9 @@ class AttendanceLogModelMapper extends ClassMapperBase<AttendanceLogModel> {
   static bool? _$uploadToServer(AttendanceLogModel v) => v.uploadToServer;
   static const Field<AttendanceLogModel, bool> _f$uploadToServer =
       Field('uploadToServer', _$uploadToServer, opt: true, def: false);
+  static List<String>? _$documentIds(AttendanceLogModel v) => v.documentIds;
+  static const Field<AttendanceLogModel, List<String>> _f$documentIds =
+      Field('documentIds', _$documentIds, opt: true, def: const []);
 
   @override
   final MappableFields<AttendanceLogModel> fields = const {
@@ -187,6 +190,7 @@ class AttendanceLogModelMapper extends ClassMapperBase<AttendanceLogModel> {
     #status: _f$status,
     #clientReferenceId: _f$clientReferenceId,
     #uploadToServer: _f$uploadToServer,
+    #documentIds: _f$documentIds,
   };
   @override
   final bool ignoreNull = true;
@@ -201,7 +205,8 @@ class AttendanceLogModelMapper extends ClassMapperBase<AttendanceLogModel> {
         time: data.dec(_f$time),
         status: data.dec(_f$status),
         clientReferenceId: data.dec(_f$clientReferenceId),
-        uploadToServer: data.dec(_f$uploadToServer));
+        uploadToServer: data.dec(_f$uploadToServer),
+        documentIds: data.dec(_f$documentIds));
   }
 
   @override
@@ -261,6 +266,7 @@ extension AttendanceLogModelValueCopy<$R, $Out>
 
 abstract class AttendanceLogModelCopyWith<$R, $In extends AttendanceLogModel,
     $Out> implements ClassCopyWith<$R, $In, $Out> {
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get documentIds;
   $R call(
       {String? id,
       String? tenantId,
@@ -270,7 +276,8 @@ abstract class AttendanceLogModelCopyWith<$R, $In extends AttendanceLogModel,
       int? time,
       String? status,
       String? clientReferenceId,
-      bool? uploadToServer});
+      bool? uploadToServer,
+      List<String>? documentIds});
   AttendanceLogModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -284,6 +291,14 @@ class _AttendanceLogModelCopyWithImpl<$R, $Out>
   late final ClassMapperBase<AttendanceLogModel> $mapper =
       AttendanceLogModelMapper.ensureInitialized();
   @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get documentIds => $value.documentIds != null
+          ? ListCopyWith(
+              $value.documentIds!,
+              (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(documentIds: v))
+          : null;
+  @override
   $R call(
           {Object? id = $none,
           Object? tenantId = $none,
@@ -293,7 +308,8 @@ class _AttendanceLogModelCopyWithImpl<$R, $Out>
           Object? time = $none,
           Object? status = $none,
           Object? clientReferenceId = $none,
-          Object? uploadToServer = $none}) =>
+          Object? uploadToServer = $none,
+          Object? documentIds = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
         if (tenantId != $none) #tenantId: tenantId,
@@ -303,7 +319,8 @@ class _AttendanceLogModelCopyWithImpl<$R, $Out>
         if (time != $none) #time: time,
         if (status != $none) #status: status,
         if (clientReferenceId != $none) #clientReferenceId: clientReferenceId,
-        if (uploadToServer != $none) #uploadToServer: uploadToServer
+        if (uploadToServer != $none) #uploadToServer: uploadToServer,
+        if (documentIds != $none) #documentIds: documentIds
       }));
   @override
   AttendanceLogModel $make(CopyWithData data) => AttendanceLogModel(
@@ -316,7 +333,8 @@ class _AttendanceLogModelCopyWithImpl<$R, $Out>
       status: data.get(#status, or: $value.status),
       clientReferenceId:
           data.get(#clientReferenceId, or: $value.clientReferenceId),
-      uploadToServer: data.get(#uploadToServer, or: $value.uploadToServer));
+      uploadToServer: data.get(#uploadToServer, or: $value.uploadToServer),
+      documentIds: data.get(#documentIds, or: $value.documentIds));
 
   @override
   AttendanceLogModelCopyWith<$R2, AttendanceLogModel, $Out2> $chain<$R2, $Out2>(

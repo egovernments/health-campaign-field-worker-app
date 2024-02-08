@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:attendance_management/attendance_management.dart';
-import 'package:attendance_management/models/attendance_log.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -255,6 +254,7 @@ class AttendanceIndividualBloc
       List<AttendeeModel> attendees,
       AttendanceIndividualLogSearchEvent event) async {
     bool uploadToServer = false;
+    bool anyLogPresent = false;
     attendees = event.attendees.map((e) {
       final entryLogList = logResponse
           .where((l) =>
@@ -270,17 +270,28 @@ class AttendanceIndividualBloc
           .toList();
       uploadToServer =
           entryLogList.any((entry) => entry.uploadToServer == true);
+      anyLogPresent = logResponse
+          .where((l) =>
+              (l.time == event.entryTime || l.time == event.exitTime) &&
+              l.registerId == e.registerId)
+          .toList()
+          .any((log) => log.uploadToServer == true);
 
       return e.copyWith(
-          status: (entryLogList.isEmpty || exitLogList.isEmpty)
+          status: ((entryLogList.isEmpty || exitLogList.isEmpty) &&
+                  anyLogPresent != true)
               ? -1
-              : entryLogList.last.time == exitLogList.last.time
+              : (entryLogList.isNotEmpty &&
+                          exitLogList.isNotEmpty &&
+                          entryLogList.last.time == exitLogList.last.time) ||
+                      ((entryLogList.isEmpty || exitLogList.isEmpty) &&
+                          anyLogPresent == true)
                   ? 0
                   : 1);
     }).toList();
 
     emit(AttendanceIndividualState.loaded(
-        attendanceCollectionModel: attendees, viewOnly: uploadToServer));
+        attendanceCollectionModel: attendees, viewOnly: anyLogPresent));
   }
 }
 

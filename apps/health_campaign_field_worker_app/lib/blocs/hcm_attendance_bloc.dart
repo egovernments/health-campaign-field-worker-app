@@ -1,5 +1,4 @@
 import 'package:attendance_management/blocs/attendance_listeners.dart';
-import 'package:attendance_management/models/attendance_log.dart';
 import 'package:attendance_management/models/attendance_register.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -210,15 +209,35 @@ class HCMAttendanceBloc extends AttendanceListeners {
     List<Map<DateTime, bool>> dateList = [];
 
     // Convert milliseconds to DateTime objects
-    DateTime startDate = DateTime.fromMillisecondsSinceEpoch(startMillis);
+    DateTime startTime = DateTime.fromMillisecondsSinceEpoch(startMillis);
 
-    endMillis = endMillis < DateTime.now().millisecondsSinceEpoch
-        ? DateTime.now().millisecondsSinceEpoch
+    DateTime startDate = DateTime(
+      startTime.year,
+      startTime.month,
+      startTime.day,
+    );
+
+    DateTime nowTime = DateTime.now();
+    DateTime today = DateTime(
+      nowTime.year,
+      nowTime.month,
+      nowTime.day,
+      23,
+      59,
+    );
+    endMillis = endMillis < today.millisecondsSinceEpoch
+        ? today.millisecondsSinceEpoch
         : endMillis;
-    DateTime endDate = DateTime.fromMillisecondsSinceEpoch(endMillis);
+    DateTime endTime = DateTime.fromMillisecondsSinceEpoch(endMillis);
+
+    DateTime endDateStartTime = DateTime(
+      endTime.year,
+      endTime.month,
+      endTime.day,
+    );
     // Iterate over each date and add to the list with value set to true
     for (DateTime date = startDate;
-        date.isBefore(endDate);
+        date.isBefore(endDateStartTime);
         date = date.add(const Duration(days: 1))) {
       bool hasMorningLog = hasLogWithType(completedLogs, date, "ENTRY");
       bool hasEveningLog = hasLogWithType(completedLogs, date, "EXIT");

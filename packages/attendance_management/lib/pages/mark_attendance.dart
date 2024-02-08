@@ -24,6 +24,7 @@ class MarkAttendancePage extends LocalizedStatefulWidget {
   final DateTime dateTime;
   final int entryTime;
   final int exitTime;
+  final int? session;
   const MarkAttendancePage({
     required this.exitTime,
     required this.entryTime,
@@ -31,6 +32,7 @@ class MarkAttendancePage extends LocalizedStatefulWidget {
     required this.attendees,
     required this.registerId,
     required this.tenantId,
+    this.session,
     super.key,
     super.appLocalizations,
   });
@@ -212,9 +214,11 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                           child: SizedBox(
                             width: MediaQuery.of(context).size.width,
                             child: Text(
-                              DateFormat("dd MMMM yyyy")
-                                  .format(widget.dateTime)
-                                  .toString(),
+                              '${DateFormat("dd MMMM yyyy").format(widget.dateTime)} - ${widget.session != null ? widget.session == 0 ? localizations.translate(
+                                  i18.attendance.morningSession,
+                                ) : localizations.translate(
+                                  i18.attendance.eveningSession,
+                                ) : ''}',
                               style: DigitTheme.instance.mobileTheme.textTheme
                                   .headlineMedium,
                             ),

@@ -280,23 +280,23 @@ class AttendanceDateTimeManagement {
 
         return millisecondsSinceEpoch;
       } else {
-        DateTime nineAM = DateTime(k.year, k.month, k.day, 11, 58);
+        DateTime twelvePM = DateTime(k.year, k.month, k.day, 11, 58);
 
-        int millisecondsSinceEpoch = nineAM.millisecondsSinceEpoch;
+        int millisecondsSinceEpoch = twelvePM.millisecondsSinceEpoch;
 
         return millisecondsSinceEpoch;
       }
     } else {
       if (entryTime == "entryTime") {
-        DateTime nineAM = DateTime(k.year, k.month, k.day, 12, 5);
+        DateTime twelvePM = DateTime(k.year, k.month, k.day, 12, 5);
 
-        int millisecondsSinceEpoch = nineAM.millisecondsSinceEpoch;
+        int millisecondsSinceEpoch = twelvePM.millisecondsSinceEpoch;
 
         return millisecondsSinceEpoch;
       } else {
-        DateTime nineAM = DateTime(k.year, k.month, k.day, 18);
+        DateTime sixPM = DateTime(k.year, k.month, k.day, 18);
 
-        int millisecondsSinceEpoch = nineAM.millisecondsSinceEpoch;
+        int millisecondsSinceEpoch = sixPM.millisecondsSinceEpoch;
 
         return millisecondsSinceEpoch;
       }

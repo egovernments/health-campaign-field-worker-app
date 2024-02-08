@@ -167,10 +167,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       projectStaffList = await projectStaffRemoteRepository.search(
         ProjectStaffSearchModel(staffId: uuid),
       );
-      AppLogger.instance.info(
-        'projectStaff Result: $projectStaffList',
-        title: 'Selected Project ProjectBloc',
-      );
     } catch (error) {
       emit(
         state.copyWith(
@@ -231,108 +227,12 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                   ),
                 );
                 await individualLocalRepository.bulkCreate(individuals);
-                // final List<HCMAttendanceLogModel> logList = [];
-                // final logs = await attendanceLogRemoteRepository.search(
-                //   HCMAttendanceLogSearchModel(
-                //     registerId: register.attendanceRegister.id,
-                //   ),
-                // );
-                //TODO:[ Need to uncomment it once client Audit details, clientReferenceId, starts persisting]
-                // final attendanceLogs =
-                //     register.attendanceRegister.attendees?.map((att) {
-                //   final entryLog = logs
-                //       .where((l) =>
-                //           l.attendanceLog?.individualId == att.individualId &&
-                //           l.attendanceLog?.type == 'ENTRY')
-                //       .first;
-                //   final exitLog = logs
-                //       .where((l) =>
-                //           l.attendanceLog?.individualId == att.individualId &&
-                //           l.attendanceLog?.type == 'EXIT')
-                //       .first;
-                //   logList.addAll(
-                //     [
-                //       HCMAttendanceLogModel(
-                //         attendanceLog: AttendanceLogModel(
-                //           id: entryLog.attendanceLog?.id,
-                //           registerId: entryLog.attendanceLog?.registerId,
-                //           individualId: att.individualId,
-                //           status: entryLog.attendanceLog?.status ?? 'INACTIVE',
-                //           type: 'ENTRY',
-                //           tenantId: entryLog.attendanceLog?.tenantId,
-                //           time: entryLog.attendanceLog?.time,
-                //           clientReferenceId:
-                //               entryLog.attendanceLog?.clientReferenceId,
-                //           uploadToServer: true,
-                //         ),
-                //         rowVersion: 1,
-                //         auditDetails: AuditDetails(
-                //           createdBy: register
-                //                   .attendanceRegister.auditDetails?.createdBy ??
-                //               '',
-                //           createdTime: register.attendanceRegister.auditDetails
-                //                   ?.createdTime ??
-                //               DateTime.now().millisecondsSinceEpoch,
-                //           lastModifiedBy: register
-                //               .attendanceRegister.auditDetails?.lastModifiedBy,
-                //           lastModifiedTime: register.attendanceRegister
-                //               .auditDetails?.lastModifiedTime,
-                //         ),
-                //         clientAuditDetails: ClientAuditDetails(
-                //           createdBy: register
-                //                   .attendanceRegister.auditDetails?.createdBy ??
-                //               '',
-                //           createdTime: register.attendanceRegister.auditDetails
-                //                   ?.createdTime ??
-                //               DateTime.now().millisecondsSinceEpoch,
-                //           lastModifiedBy: register
-                //               .attendanceRegister.auditDetails?.lastModifiedBy,
-                //           lastModifiedTime: register.attendanceRegister
-                //               .auditDetails?.lastModifiedTime,
-                //         ),
-                //       ),
-                //       HCMAttendanceLogModel(
-                //         attendanceLog: AttendanceLogModel(
-                //           id: exitLog.attendanceLog?.id,
-                //           registerId: exitLog.attendanceLog?.registerId,
-                //           individualId: att.individualId,
-                //           status: exitLog.attendanceLog?.status ?? 'INACTIVE',
-                //           type: 'EXIT',
-                //           tenantId: exitLog.attendanceLog?.tenantId,
-                //           time: exitLog.attendanceLog?.time,
-                //           clientReferenceId: exitLog.attendanceLog?.clientReferenceId,
-                //           uploadToServer: true,
-                //         ),
-                //         rowVersion: 1,
-                //         auditDetails: AuditDetails(
-                //           createdBy: register
-                //                   .attendanceRegister.auditDetails?.createdBy ??
-                //               '',
-                //           createdTime: register.attendanceRegister.auditDetails
-                //                   ?.createdTime ??
-                //               DateTime.now().millisecondsSinceEpoch,
-                //           lastModifiedBy: register
-                //               .attendanceRegister.auditDetails?.lastModifiedBy,
-                //           lastModifiedTime: register.attendanceRegister
-                //               .auditDetails?.lastModifiedTime,
-                //         ),
-                //         clientAuditDetails: ClientAuditDetails(
-                //           createdBy: register
-                //                   .attendanceRegister.auditDetails?.createdBy ??
-                //               '',
-                //           createdTime: register.attendanceRegister.auditDetails
-                //                   ?.createdTime ??
-                //               DateTime.now().millisecondsSinceEpoch,
-                //           lastModifiedBy: register
-                //               .attendanceRegister.auditDetails?.lastModifiedBy,
-                //           lastModifiedTime: register.attendanceRegister
-                //               .auditDetails?.lastModifiedTime,
-                //         ),
-                //       ),
-                //     ],
-                //   );
-                // });
-                // await attendanceLogLocalRepository.bulkCreate(logList);
+                final logs = await attendanceLogRemoteRepository.search(
+                  HCMAttendanceLogSearchModel(
+                    registerId: register.attendanceRegister.id,
+                  ),
+                );
+                await attendanceLogLocalRepository.bulkCreate(logs);
               } catch (_) {
                 emit(state.copyWith(
                   loading: false,
@@ -683,9 +583,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               code: event.model.address?.boundary,
             ),
           );
-        await boundaryLocalRepository.bulkCreate(boundaries);
         }
-
+        await boundaryLocalRepository.bulkCreate(boundaries);
         await localSecureStore.setSelectedProject(event.model);
         await localSecureStore.setSelectedProjectType(reqProjectType);
       }

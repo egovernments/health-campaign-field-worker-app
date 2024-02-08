@@ -113,6 +113,9 @@ class _AttendanceDateSessionSelectionPageState
                                       if (!form.valid)
                                         return;
                                       else {
+                                        final session = form
+                                            .control(_sessionRadio)
+                                            .value as KeyValue?;
                                         DateTime s =
                                             form.control(_dateOfSession).value;
 
@@ -174,6 +177,7 @@ class _AttendanceDateSessionSelectionPageState
                                                   ? selectedRegister.attendees!
                                                   : [],
                                               dateTime: s,
+                                              session: session?.key,
                                               entryTime: entryTime,
                                               exitTime: exitTime,
                                               registerId: selectedRegister.id,
@@ -324,9 +328,11 @@ class _AttendanceDateSessionSelectionPageState
           final isAttendanceMarked = entry.value;
 
           // Check if the logDate is one day before the selectedDate and the attendance is not marked
-          if (selectedDate.difference(logDate).inDays == 1 &&
+          if (selectedDate.difference(logDate).inDays >= 1 &&
               !isAttendanceMarked) {
             return true;
+          } else {
+            return false;
           }
         }
       }

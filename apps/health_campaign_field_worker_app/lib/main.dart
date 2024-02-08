@@ -28,7 +28,7 @@ int i = 0;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-initializeMappers();
+  initializeMappers();
   final info = await PackageInfo.fromPlatform();
 
   Bloc.observer = AppBlocObserver();

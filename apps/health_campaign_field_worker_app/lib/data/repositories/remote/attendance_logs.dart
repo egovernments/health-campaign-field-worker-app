@@ -73,9 +73,12 @@ class AttendanceLogRemoteRepository extends RemoteRepository<
     final entityList = entityResponse.whereType<Map<String, dynamic>>();
 
     return entityList
-        .map((e) => HCMAttendanceLogModelMapper.fromMap(e))
+        .map((e) => HCMAttendanceLogModel(
+              attendance: AttendanceLogModelMapper.fromMap(e),
+              auditDetails: AuditDetailsMapper.fromMap(e['auditDetails']),
+              clientAuditDetails: ClientAuditDetailsMapper.fromMap(e['clientAuditDetails']),
+    ))
         .toList();
-    ;
   }
 
   @override
@@ -84,11 +87,11 @@ class AttendanceLogRemoteRepository extends RemoteRepository<
     List<Map<String, dynamic>> transformedLogs = [];
 
     for (var log in attendanceLogMapEntities) {
-      var attendanceLog = log["attendanceLog"] as Map<String, dynamic>;
+      var attendanceLog = log["attendance"] as Map<String, dynamic>;
       var transformedLog = {
         ...attendanceLog,
         "auditDetails": log["auditDetails"],
-        "clientAuditDetails": log["clientAuditDetails"],
+        "clientAuditDetails": log ["clientAuditDetails"],
       };
       transformedLogs.add(transformedLog);
     }
