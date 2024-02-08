@@ -506,7 +506,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                   ),
                   secondaryAction: DigitDialogActions(
                     label: localizations.translate(
-                      i18.common.coreCommonCancel,
+                      i18.common.coreCommonGoback,
                     ),
                     action: (context) => Navigator.of(
                       context,
