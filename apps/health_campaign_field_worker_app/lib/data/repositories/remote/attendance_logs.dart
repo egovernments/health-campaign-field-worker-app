@@ -33,11 +33,22 @@ class AttendanceLogRemoteRepository extends RemoteRepository<
       future: () async {
         return await dio.post(
           searchPath,
-          queryParameters: {
-            'tenantId': envConfig.variables.tenantId,
-            ...query.toMap(),
-          },
-          data: {},
+          queryParameters: query.clientReferenceId != null &&
+                  (query.clientReferenceId ?? []).isNotEmpty
+              ? {
+                  'tenantId': envConfig.variables.tenantId,
+                }
+              : {
+                  'tenantId': envConfig.variables.tenantId,
+                  ...query.toMap(),
+                },
+          data: query.clientReferenceId != null &&
+                  (query.clientReferenceId ?? []).isNotEmpty
+              ? {
+                  EntityPlurals.getPluralForEntityName(entityName):
+                      query.toMap(),
+                }
+              : {},
         );
       },
     );

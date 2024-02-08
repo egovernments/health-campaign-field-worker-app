@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/models/enum_values.mapper.g.dart';
-import 'package:attendance_management/widgets/attendance_acknowledgement.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_table_model.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
@@ -14,6 +13,7 @@ import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/localized.dart';
 import '../blocs/attendance_individual_bloc.dart';
 import '../models/enum_values.dart';
+import '../widgets/attendance_acknowledgement.dart';
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/circular_button.dart';
 import '../widgets/no_result_card.dart';
@@ -155,7 +155,8 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                               state,
                                               localizations,
                                               theme,
-                                              EnumValues.draft.toValue());
+                                              EnumValues.draft.toValue(),
+                                              context);
                                         },
                                         icon: Icons.drafts_outlined,
                                         label: localizations.translate(
@@ -169,8 +170,8 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                                     state,
                                                     localizations,
                                                     theme,
-                                                    EnumValues.submit
-                                                        .toValue());
+                                                    EnumValues.submit.toValue(),
+                                                    context);
                                               }
                                             : () {
                                                 // context.router.pop();
@@ -191,7 +192,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       header: BackNavigationHelpHeaderWidget(
-                        showHelp: false,
+                        showHelp: true,
                         handleBack: () {
                           AttendanceSingleton().callSync();
                         },
@@ -220,8 +221,11 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                 ) : localizations.translate(
                                   i18.attendance.eveningSession,
                                 ) : ''}',
-                              style: DigitTheme.instance.mobileTheme.textTheme
-                                  .headlineMedium,
+                              style: DigitTheme
+                                  .instance.mobileTheme.textTheme.headlineSmall
+                                  ?.copyWith(
+                                fontSize: 16,
+                              ),
                             ),
                           ),
                         ),
@@ -249,7 +253,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                 padding: const EdgeInsets.only(bottom: 8.0),
                                 child: tableData.isNotEmpty
                                     ? DigitTable(
-                                        height: (tableData.length + 1) * 57.5,
+                                        height: (tableData.length) * 59,
                                         headerList: headerList(
                                           widget.dateTime,
                                           localizations,
@@ -284,80 +288,6 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
             )),
           ),
         ));
-  }
-
-  Future<dynamic> showErrorDialog(BuildContext context, dynamic k, bool retry) {
-    return showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) {
-        return Dialog(
-          child: SizedBox(
-            height: 200,
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.error_outline_outlined,
-                    size: 40,
-                    color: DigitTheme.instance.colorScheme.error,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      top: 8.0,
-                      bottom: 8.0,
-                    ),
-                    child: Text(
-                      "${i18.attendance.somethingWentWrong} \n ${i18.attendance.pleaseTryAgain}!!",
-                      style: DigitTheme
-                          .instance.mobileTheme.textTheme.headlineMedium,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 100,
-                    height: 40,
-                    child: DigitElevatedButton(
-                      onPressed: retry
-                          ? () {
-                              Navigator.of(context).pop();
-                              // context.read<AttendanceIndividualBloc>().add(
-                              //       AttendanceIndividualLogSearchEvent(
-                              //         attendeeId: widget.attendeeIds,
-                              //         limit: 10,
-                              //         offset: 0,
-                              //         currentDate: widget
-                              //             .dateTime.millisecondsSinceEpoch,
-                              //         entryTime: widget.entryTime,
-                              //         exitTime: widget.exitTime,
-                              //         projectId: context.projectId,
-                              //         registerId: widget.registerId,
-                              //         tenantId: widget.tenantId,
-                              //       ),
-                              //     );
-                            }
-                          : () {
-                              Navigator.of(context).pop();
-                            },
-                      child: Text(
-                        k.translate(
-                          retry
-                              ? i18.attendance.retryButton
-                              : i18.attendance.closeButton,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
   }
 
   List<TableDataRow> getAttendanceData(
@@ -476,8 +406,12 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
     );
   }
 
-  void checkIfAllAttendeesMarked(AttendanceIndividualState state,
-      AttendanceLocalization localizations, ThemeData theme, String type) {
+  void checkIfAllAttendeesMarked(
+      AttendanceIndividualState state,
+      AttendanceLocalization localizations,
+      ThemeData theme,
+      String type,
+      BuildContext context) {
     state.maybeWhen(
         orElse: () {},
         loaded: (
@@ -488,7 +422,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
           countData,
           limitData,
           flag,
-        ) {
+        ) async {
           if (((attendanceCollectionModel ?? [])
                       .any((a) => a.status == -1 || a.status == null) &&
                   type != EnumValues.draft.toValue()) ||
@@ -505,12 +439,12 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
               ),
             );
           } else {
-            individualLogBloc.add(SaveAsDraftEvent(
-              entryTime: widget.entryTime,
-              exitTime: widget.exitTime,
-              createOplog: type != EnumValues.draft.toValue(),
-            ));
             if (type == EnumValues.draft.toValue()) {
+              individualLogBloc.add(SaveAsDraftEvent(
+                entryTime: widget.entryTime,
+                exitTime: widget.exitTime,
+                createOplog: type != EnumValues.draft.toValue(),
+              ));
               DigitToast.show(
                 context,
                 options: DigitToastOptions(
@@ -520,27 +454,66 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                 ),
               );
             } else {
-              Navigator.of(context).pop(true);
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                    builder: (context) => AttendanceAcknowledgementPage(
-                          label: localizations.translate(
-                              i18.attendance.attendanceSubmittedSuccessMsg),
-                          actionLabel:
-                              localizations.translate(i18.attendance.goHome),
-                          action: () {
-                            AttendanceSingleton().callSync();
-                            Navigator.popUntil(
-                                context, (route) => route.isFirst);
-                          },
-                          secondaryLabel: localizations.translate(
-                              i18.attendance.goToAttendanceRegisters),
-                          secondaryAction: () {
-                            AttendanceSingleton().callSync();
-                            Navigator.of(context).pop();
-                            Navigator.of(context).pop(true);
-                          },
-                        )),
+              DigitDialog.show<bool>(
+                context,
+                options: DigitDialogOptions(
+                  titleText: localizations.translate(
+                    i18.attendance.confirmationLabel,
+                  ),
+                  contentText: '${localizations.translate(
+                    i18.attendance.confirmationDesc,
+                  )} \n\n${localizations.translate(
+                    i18.attendance.confirmationDescNote,
+                  )} ',
+                  primaryAction: DigitDialogActions(
+                    label: localizations.translate(
+                      i18.attendance.proceed,
+                    ),
+                    action: (context) {
+                      // individualLogBloc.add(SaveAsDraftEvent(
+                      //   entryTime: widget.entryTime,
+                      //   exitTime: widget.exitTime,
+                      //   createOplog: type != EnumValues.draft.toValue(),
+                      // ));
+                      Navigator.of(
+                        context,
+                        rootNavigator: true,
+                      ).pop(false); // Dismiss the dialog
+
+                      // Navigator.of(context).pop(true);
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => AttendanceAcknowledgementPage(
+                                  label: localizations.translate(i18.attendance
+                                      .attendanceSubmittedSuccessMsg),
+                                  actionLabel: localizations
+                                      .translate(i18.attendance.goHome),
+                                  action: () {
+                                    AttendanceSingleton().callSync();
+                                    Navigator.popUntil(
+                                        context, (route) => route.isFirst);
+                                  },
+                                  secondaryLabel: localizations.translate(
+                                      i18.attendance.goToAttendanceRegisters),
+                                  secondaryAction: () {
+                                    AttendanceSingleton().callSync();
+                                    // Navigator.of(context).pop();
+                                    Navigator.of(context).pop(true);
+                                  },
+                                )),
+                      );
+                    },
+                  ),
+                  secondaryAction: DigitDialogActions(
+                    label: localizations.translate(
+                      i18.common.coreCommonCancel,
+                    ),
+                    action: (context) => Navigator.of(
+                      context,
+                      rootNavigator: true,
+                    ).pop(false),
+                  ),
+                ),
               );
             }
           }
