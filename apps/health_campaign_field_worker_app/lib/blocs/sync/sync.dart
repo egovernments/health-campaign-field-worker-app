@@ -83,7 +83,9 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
               case DataModelType.sideEffect:
               case DataModelType.referral:
               case DataModelType.hFReferral:
-              case DataModelType.attendance:
+
+                /// [TODO: Need to uncomment once clientReferenceID changes done to log service]
+                // case DataModelType.attendance:
                 return true;
               default:
                 return false;

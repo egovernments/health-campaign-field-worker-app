@@ -4,6 +4,8 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'attendance_audit.dart';
 import 'attendee.dart';
 
+export 'attendance_log.dart';
+
 @MappableClass()
 class RegisterAuditDetails extends AttendanceAuditDetails {
   final String? registerId;
