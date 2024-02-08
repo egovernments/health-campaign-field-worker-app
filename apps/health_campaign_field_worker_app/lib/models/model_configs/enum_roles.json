@@ -12,6 +12,18 @@
     {
       "name": "Health Facility Worker",
       "value": "HEALTH_FACILITY_WORKER"
+    },
+    {
+      "name": "District Supervisor",
+      "value": "DISTRICT_SUPERVISOR"
+    },
+    {
+      "name": "Field Supervisor",
+      "value": "FIELD_SUPERVISOR"
+    },
+    {
+      "name": "Superuser",
+      "value": "SUPERUSER"
     }
   ],
   "isEnum": true

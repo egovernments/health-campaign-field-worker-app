@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:attendance_management/pages/manage_attendance.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
@@ -11,6 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../blocs/auth/auth.dart';
+import '../blocs/hcm_attendance_bloc.dart';
 import '../blocs/search_households/search_households.dart';
 import '../blocs/search_referrals/search_referrals.dart';
 import '../blocs/sync/sync.dart';
@@ -419,6 +421,36 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
+      i18.home.manageAttendanceLabel: HomeItemCard(
+        icon: Icons.table_chart,
+        label: i18.home.manageAttendanceLabel,
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ManageAttendancePage(
+                attendanceListeners: HCMAttendanceBloc(
+                  userId: context.loggedInUserUuid,
+                  projectId: context.projectId,
+                  attendanceLocalRepository: context.read<
+                      LocalRepository<HCMAttendanceRegisterModel,
+                          HCMAttendanceSearchModel>>(),
+                  individualLocalRepository: context.read<
+                      LocalRepository<IndividualModel,
+                          IndividualSearchModel>>(),
+                  attendanceLogLocalRepository: context.read<
+                      LocalRepository<HCMAttendanceLogModel,
+                          HCMAttendanceLogSearchModel>>(),
+                  context: context,
+                ),
+                projectId: context.projectId,
+                userId: context.loggedInUserUuid,
+                appVersion: Constants().version,
+              ),
+            ),
+          );
+        },
+      ),
     };
 
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
@@ -436,6 +468,8 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.db: homeShowcaseData.inventoryReport.showcaseKey,
       i18.home.beneficiaryReferralLabel:
           homeShowcaseData.hfBeneficiaryReferral.showcaseKey,
+      i18.home.manageAttendanceLabel:
+          homeShowcaseData.attendanceRegister.showcaseKey,
     };
 
     final homeItemsLabel = <String>[
@@ -448,6 +482,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.viewReportsLabel,
       i18.home.db,
       i18.home.beneficiaryReferralLabel,
+      i18.home.manageAttendanceLabel,
     ];
 
     final List<String> filteredLabels = homeItemsLabel

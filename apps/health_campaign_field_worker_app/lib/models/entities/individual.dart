@@ -7,7 +7,7 @@ import '../../data/local_store/sql_store/sql_store.dart';
 
 @MappableClass(ignoreNull: true)
 class IndividualSearchModel extends EntitySearchModel {
-  final String? id;
+  final List<String>? id;
   final String? dateOfBirth;
   final List<String>? clientReferenceId;
   final String? tenantId;
@@ -46,6 +46,7 @@ class IndividualModel extends EntityModel {
   static const schemaName = 'Individual';
 
   final String? id;
+  final String? individualId;
   final String? userId;
   final String? dateOfBirth;
   final String? mobileNumber;
@@ -68,6 +69,7 @@ class IndividualModel extends EntityModel {
   IndividualModel({
     this.additionalFields,
     this.id,
+    this.individualId,
     this.userId,
     this.dateOfBirth,
     this.mobileNumber,
@@ -102,6 +104,7 @@ class IndividualModel extends EntityModel {
       additionalFields: Value(additionalFields?.toJson()),
       isDeleted: Value(isDeleted),
       id: Value(id),
+      individualId: Value(individualId),
       userId: Value(userId),
       dateOfBirth: Value(dateOfBirth),
       mobileNumber: Value(mobileNumber),

@@ -79,7 +79,7 @@ Map<String, dynamic> _$$_UserRequestModelToJson(_$_UserRequestModel instance) =>
 
 _$_UserRoleModel _$$_UserRoleModelFromJson(Map<String, dynamic> json) =>
     _$_UserRoleModel(
-      name: json['name'] as String,
+      name: json['name'] as String? ?? '',
       code: json['code'] as String,
       tenantId: json['tenantId'] as String?,
     );

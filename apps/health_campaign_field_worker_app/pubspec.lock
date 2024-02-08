@@ -65,6 +65,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.11.0"
+  attendance_management:
+    dependency: "direct main"
+    description:
+      path: "../../packages/attendance_management"
+      relative: true
+    source: path
+    version: "0.0.1"
   audioplayers:
     dependency: "direct main"
     description:
@@ -1133,10 +1140,10 @@ packages:
     dependency: transitive
     description:
       name: logging
-      sha256: "04094f2eb032cbb06c6f6e8d3607edcfcb0455e2bb6cbc010cb01171dcb64e6d"
+      sha256: c0bbfe94d46aedf9b8b3e695cf3bd48c8e14b35e3b2c639e0aa7755d589ba946
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.1"
+    version: "1.1.0"
   lottie:
     dependency: transitive
     description:
