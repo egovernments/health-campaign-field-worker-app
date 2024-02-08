@@ -84,7 +84,7 @@ class _AttendanceDateSessionSelectionPageState
                           builder: (context, form, child) {
                             return ScrollableContent(
                               header: const BackNavigationHelpHeaderWidget(
-                                showHelp: false,
+                                showHelp: true,
                                 showLogoutCTA: false,
                               ),
                               enableFixedButton: true,
@@ -233,6 +233,17 @@ class _AttendanceDateSessionSelectionPageState
                                               EnumValues.sessions.toValue()] ==
                                           2)
                                         DigitRadioButtonList<KeyValue>(
+                                          labelText: localizations.translate(i18
+                                              .attendance.sessionDescForRadio),
+                                          labelStyle: DigitTheme
+                                              .instance
+                                              .mobileTheme
+                                              .textTheme
+                                              .headlineSmall
+                                              ?.copyWith(
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 16,
+                                          ),
                                           isRequired: true,
                                           errorMessage: localizations.translate(
                                               i18.attendance.plzSelectSession),

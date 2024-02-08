@@ -163,6 +163,9 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
                               if (list.length > 1)
                                 PoweredByDigit(
                                     version: AttendanceSingleton().appVersion),
+                              const SizedBox(
+                                height: 16,
+                              ),
                             ],
                           ),
                           registerLoading: () => const Center(

@@ -161,6 +161,7 @@ class DigitDialogOptions {
             child: Text(
               titleText!,
               textAlign: TextAlign.left,
+              style: DigitTheme.instance.mobileTheme.textTheme.headlineMedium,
             ),
           ),
         ],
