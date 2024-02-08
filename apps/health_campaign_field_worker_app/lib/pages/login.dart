@@ -182,6 +182,9 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                           ),
                         ),
                       ),
+                      const Text(
+                        'Welcome to DIGIT HCM ! Need assistance? Contact our team at (email id)  or (phone number)',
+                      ),
                     ],
                   ),
                 );

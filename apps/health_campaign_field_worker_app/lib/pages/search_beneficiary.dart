@@ -187,6 +187,8 @@ class _SearchBeneficiaryPageState
                                                           .latitude!;
                                                       long = locationState
                                                           .longitude!;
+                                                          offset=0;
+                                                          limit=50;
                                                     });
 
                                                     if (locationState
