@@ -134,11 +134,9 @@ class MainApplicationState extends State<MainApplication>
                     final appConfig = appConfigState.appConfiguration;
 
                     final localizationModulesList = appConfig.backendInterface;
-                    final firstLanguage = appConfig.languages?.last.value;
+                    var firstLanguage;
+                    firstLanguage = appConfig.languages?.last.value;
                     final languages = appConfig.languages;
-
-                    var defaultLocale = Locale('en', appConfig.tenantId!.toUpperCase());
-
 
                     return MultiBlocProvider(
                       providers: [
@@ -235,7 +233,7 @@ class MainApplicationState extends State<MainApplication>
                         builder: (context, langState) {
                           final selectedLocale =
                               AppSharedPreferences().getSelectedLocale ??
-                                  defaultLocale.toString();
+                                  firstLanguage;
 
                           return MaterialApp.router(
                             debugShowCheckedModeBanner: false,
@@ -267,9 +265,9 @@ class MainApplicationState extends State<MainApplication>
 
                                     return results.isNotEmpty
                                         ? Locale(results.first, results.last)
-                                        : defaultLocale;
+                                        : firstLanguage;
                                   })
-                                : [defaultLocale],
+                                : [firstLanguage],
                             localizationsDelegates: [
                               AppLocalizations.getDelegate(
                                 appConfig,
@@ -284,7 +282,7 @@ class MainApplicationState extends State<MainApplication>
                                     selectedLocale!.split("_").first,
                                     selectedLocale.split("_").last,
                                   )
-                                : defaultLocale,
+                                : firstLanguage,
                             theme: DigitTheme.instance.mobileTheme,
                             routeInformationParser:
                                 widget.appRouter.defaultRouteParser(),

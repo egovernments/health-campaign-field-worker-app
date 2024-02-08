@@ -99,8 +99,9 @@ class LanguageSelectionPage extends StatelessWidget {
 
   getSelectedLanguage(AppInitialized state, int index) {
     final selectedLanguage = AppSharedPreferences().getSelectedLocale ??
-        'en_${state.appConfiguration.tenantId?.toUpperCase()}';
-    final isSelected = state.appConfiguration.languages![index].value == selectedLanguage;
+        state.appConfiguration.languages!.last.value;
+    final isSelected =
+        state.appConfiguration.languages![index].value == selectedLanguage;
 
     return isSelected;
   }
