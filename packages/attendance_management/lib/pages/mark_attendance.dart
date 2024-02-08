@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/models/enum_values.mapper.g.dart';
+import 'package:attendance_management/widgets/attendance_acknowledgement.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_table_model.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
@@ -13,7 +14,6 @@ import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/localized.dart';
 import '../blocs/attendance_individual_bloc.dart';
 import '../models/enum_values.dart';
-import '../widgets/attendance_acknowledgement.dart';
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/circular_button.dart';
 import '../widgets/no_result_card.dart';
@@ -155,8 +155,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                               state,
                                               localizations,
                                               theme,
-                                              EnumValues.draft.toValue(),
-                                              context);
+                                              EnumValues.draft.toValue());
                                         },
                                         icon: Icons.drafts_outlined,
                                         label: localizations.translate(
@@ -170,8 +169,8 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                                     state,
                                                     localizations,
                                                     theme,
-                                                    EnumValues.submit.toValue(),
-                                                    context);
+                                                    EnumValues.submit
+                                                        .toValue());
                                               }
                                             : () {
                                                 // context.router.pop();
@@ -406,12 +405,8 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
     );
   }
 
-  void checkIfAllAttendeesMarked(
-      AttendanceIndividualState state,
-      AttendanceLocalization localizations,
-      ThemeData theme,
-      String type,
-      BuildContext context) {
+  void checkIfAllAttendeesMarked(AttendanceIndividualState state,
+      AttendanceLocalization localizations, ThemeData theme, String type) {
     state.maybeWhen(
         orElse: () {},
         loaded: (
@@ -439,12 +434,12 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
               ),
             );
           } else {
+            individualLogBloc.add(SaveAsDraftEvent(
+              entryTime: widget.entryTime,
+              exitTime: widget.exitTime,
+              createOplog: type != EnumValues.draft.toValue(),
+            ));
             if (type == EnumValues.draft.toValue()) {
-              individualLogBloc.add(SaveAsDraftEvent(
-                entryTime: widget.entryTime,
-                exitTime: widget.exitTime,
-                createOplog: type != EnumValues.draft.toValue(),
-              ));
               DigitToast.show(
                 context,
                 options: DigitToastOptions(
@@ -454,66 +449,27 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                 ),
               );
             } else {
-              DigitDialog.show<bool>(
-                context,
-                options: DigitDialogOptions(
-                  titleText: localizations.translate(
-                    i18.attendance.confirmationLabel,
-                  ),
-                  contentText: '${localizations.translate(
-                    i18.attendance.confirmationDesc,
-                  )} \n\n${localizations.translate(
-                    i18.attendance.confirmationDescNote,
-                  )} ',
-                  primaryAction: DigitDialogActions(
-                    label: localizations.translate(
-                      i18.attendance.proceed,
-                    ),
-                    action: (context) {
-                      // individualLogBloc.add(SaveAsDraftEvent(
-                      //   entryTime: widget.entryTime,
-                      //   exitTime: widget.exitTime,
-                      //   createOplog: type != EnumValues.draft.toValue(),
-                      // ));
-                      Navigator.of(
-                        context,
-                        rootNavigator: true,
-                      ).pop(false); // Dismiss the dialog
-
-                      // Navigator.of(context).pop(true);
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (context) => AttendanceAcknowledgementPage(
-                                  label: localizations.translate(i18.attendance
-                                      .attendanceSubmittedSuccessMsg),
-                                  actionLabel: localizations
-                                      .translate(i18.attendance.goHome),
-                                  action: () {
-                                    AttendanceSingleton().callSync();
-                                    Navigator.popUntil(
-                                        context, (route) => route.isFirst);
-                                  },
-                                  secondaryLabel: localizations.translate(
-                                      i18.attendance.goToAttendanceRegisters),
-                                  secondaryAction: () {
-                                    AttendanceSingleton().callSync();
-                                    // Navigator.of(context).pop();
-                                    Navigator.of(context).pop(true);
-                                  },
-                                )),
-                      );
-                    },
-                  ),
-                  secondaryAction: DigitDialogActions(
-                    label: localizations.translate(
-                      i18.common.coreCommonGoback,
-                    ),
-                    action: (context) => Navigator.of(
-                      context,
-                      rootNavigator: true,
-                    ).pop(false),
-                  ),
-                ),
+              Navigator.of(context).pop(true);
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                    builder: (context) => AttendanceAcknowledgementPage(
+                          label: localizations.translate(
+                              i18.attendance.attendanceSubmittedSuccessMsg),
+                          actionLabel:
+                              localizations.translate(i18.attendance.goHome),
+                          action: () {
+                            AttendanceSingleton().callSync();
+                            Navigator.popUntil(
+                                context, (route) => route.isFirst);
+                          },
+                          secondaryLabel: localizations.translate(
+                              i18.attendance.goToAttendanceRegisters),
+                          secondaryAction: () {
+                            AttendanceSingleton().callSync();
+                            Navigator.of(context).pop();
+                            Navigator.of(context).pop(true);
+                          },
+                        )),
               );
             }
           }
