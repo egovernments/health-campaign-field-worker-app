@@ -158,6 +158,8 @@ class Attendance {
 
   String get viewAttendance => 'BUTTON_VIEW_ATTENDANCE';
 
+  String get openRegister => 'ATTENDANCE_OPEN_REGISTER';
+
   String get markAttendance => 'BUTTON_MARK_ATTENDANCE';
 
   String get tableHeaderName => 'TABLE_HEADER_NAME';

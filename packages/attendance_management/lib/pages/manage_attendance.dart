@@ -249,14 +249,8 @@ class RegisterCard extends StatelessWidget {
           show
               ? DigitElevatedButton(
                   child: Text(
-                    ((s.isAfter(startDate!) ||
-                                s.isAtSameMomentAs(startDate!)) &&
-                            (s.isBefore(endDate!) ||
-                                s.isAtSameMomentAs(endDate!)))
-                        ? AttendanceLocalization.of(context)
-                            .translate(i18.attendance.markAttendance)
-                        : AttendanceLocalization.of(context)
-                            .translate(i18.attendance.viewAttendance),
+                    AttendanceLocalization.of(context)
+                        .translate(i18.attendance.openRegister),
                   ),
                   onPressed: () async {
                     if (noOfAttendees == 0) {
