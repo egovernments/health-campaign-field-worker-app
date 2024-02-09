@@ -146,6 +146,8 @@ class Attendance {
 
   String get selectSession => 'SESSION_SELECTION_HEADER';
 
+  String get sessionRadioLabel => 'SESSION_SELECT_RADIO_LABEL';
+
   String get dateOfSession => 'SESSION_DATE_OF_SESSION';
 
   String get sessionDescForRadio => 'SESSION_RADIO_INFO';

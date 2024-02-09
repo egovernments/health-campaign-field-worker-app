@@ -191,7 +191,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       header: BackNavigationHelpHeaderWidget(
-                        showHelp: false,
+                        showHelp: true,
                         handleBack: () {
                           AttendanceSingleton().callSync();
                         },
@@ -220,8 +220,11 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                 ) : localizations.translate(
                                   i18.attendance.eveningSession,
                                 ) : ''}',
-                              style: DigitTheme.instance.mobileTheme.textTheme
-                                  .headlineMedium,
+                              style: DigitTheme
+                                  .instance.mobileTheme.textTheme.headlineSmall
+                                  ?.copyWith(
+                                fontSize: 16,
+                              ),
                             ),
                           ),
                         ),
@@ -249,7 +252,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                 padding: const EdgeInsets.only(bottom: 8.0),
                                 child: tableData.isNotEmpty
                                     ? DigitTable(
-                                        height: (tableData.length + 1) * 57.5,
+                                        height: (tableData.length) * 59,
                                         headerList: headerList(
                                           widget.dateTime,
                                           localizations,
@@ -284,80 +287,6 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
             )),
           ),
         ));
-  }
-
-  Future<dynamic> showErrorDialog(BuildContext context, dynamic k, bool retry) {
-    return showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) {
-        return Dialog(
-          child: SizedBox(
-            height: 200,
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.error_outline_outlined,
-                    size: 40,
-                    color: DigitTheme.instance.colorScheme.error,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      top: 8.0,
-                      bottom: 8.0,
-                    ),
-                    child: Text(
-                      "${i18.attendance.somethingWentWrong} \n ${i18.attendance.pleaseTryAgain}!!",
-                      style: DigitTheme
-                          .instance.mobileTheme.textTheme.headlineMedium,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 100,
-                    height: 40,
-                    child: DigitElevatedButton(
-                      onPressed: retry
-                          ? () {
-                              Navigator.of(context).pop();
-                              // context.read<AttendanceIndividualBloc>().add(
-                              //       AttendanceIndividualLogSearchEvent(
-                              //         attendeeId: widget.attendeeIds,
-                              //         limit: 10,
-                              //         offset: 0,
-                              //         currentDate: widget
-                              //             .dateTime.millisecondsSinceEpoch,
-                              //         entryTime: widget.entryTime,
-                              //         exitTime: widget.exitTime,
-                              //         projectId: context.projectId,
-                              //         registerId: widget.registerId,
-                              //         tenantId: widget.tenantId,
-                              //       ),
-                              //     );
-                            }
-                          : () {
-                              Navigator.of(context).pop();
-                            },
-                      child: Text(
-                        k.translate(
-                          retry
-                              ? i18.attendance.retryButton
-                              : i18.attendance.closeButton,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
   }
 
   List<TableDataRow> getAttendanceData(
@@ -488,7 +417,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
           countData,
           limitData,
           flag,
-        ) {
+        ) async {
           if (((attendanceCollectionModel ?? [])
                       .any((a) => a.status == -1 || a.status == null) &&
                   type != EnumValues.draft.toValue()) ||

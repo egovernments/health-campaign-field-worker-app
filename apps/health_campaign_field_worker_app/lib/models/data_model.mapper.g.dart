@@ -3073,7 +3073,7 @@ extension ProjectStaffSearchModelMapperExtension  on ProjectStaffSearchModel {
 
 abstract class ProjectStaffSearchModelCopyWith<$R> {
   factory ProjectStaffSearchModelCopyWith(ProjectStaffSearchModel value, Then<ProjectStaffSearchModel, $R> then) = _ProjectStaffSearchModelCopyWithImpl<$R>;
-  $R call({String? id, String? staffId, String? userId, String? projectId, String? tenantId, int? startDate, int? endDate, String? boundaryCode});
+  $R call({String? id, List<String>? staffId, String? userId, String? projectId, String? tenantId, int? startDate, int? endDate, String? boundaryCode});
   $R apply(ProjectStaffSearchModel Function(ProjectStaffSearchModel) transform);
 }
 

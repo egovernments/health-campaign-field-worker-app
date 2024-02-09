@@ -8,7 +8,7 @@ import '../../data/local_store/sql_store/sql_store.dart';
 @MappableClass(ignoreNull: true)
 class ProjectStaffSearchModel extends EntitySearchModel {
   final String? id;
-  final String? staffId;
+  final List<String>? staffId;
   final String? userId;
   final String? projectId;
   final String? tenantId;
