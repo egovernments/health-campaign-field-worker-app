@@ -23,8 +23,8 @@ class DigitTable extends StatelessWidget {
     this.selectedIndex,
     this.scrollPhysics,
     this.columnRowFixedHeight = 52.0,
-    this.centerTitle,
-    this.centerData,
+    this.centerTitle = false,
+    this.centerData = false,
   }) : super(key: key);
 
   List<Widget>? _getTitleWidget(ThemeData theme) {
@@ -69,7 +69,8 @@ class DigitTable extends StatelessWidget {
       height: 54,
       color: !isBorderRequired ? surfaceColor : null,
       padding: const EdgeInsets.only(left: 17, right: 5, top: 6, bottom: 6),
-      alignment: centerTitle! ? Alignment.center : Alignment.centerLeft,
+      alignment:
+          (centerTitle ?? false) ? Alignment.center : Alignment.centerLeft,
       child: isAscending != null
           ? Wrap(
               crossAxisAlignment: WrapCrossAlignment.center,
@@ -99,15 +100,17 @@ class DigitTable extends StatelessWidget {
           ? columnRowIncreasedHeight(index)
           : columnRowFixedHeight,
       padding: const EdgeInsets.only(left: 17, right: 5, top: 6, bottom: 6),
-      alignment: centerData! ? Alignment.center : Alignment.centerLeft,
+      alignment:
+          (centerData ?? false) ? Alignment.center : Alignment.centerLeft,
       color: index == selectedIndex
           ? DigitTheme.instance.colorScheme.tertiary
           : index % 2 == 0
               ? DigitTheme.instance.colorScheme.background
               : DigitTheme.instance.colorScheme.surface,
       child: Row(
-        mainAxisAlignment:
-            centerData! ? MainAxisAlignment.center : MainAxisAlignment.start,
+        mainAxisAlignment: (centerData ?? false)
+            ? MainAxisAlignment.center
+            : MainAxisAlignment.start,
         children: <Widget>[
           input.isNotEmpty
               ? Expanded(

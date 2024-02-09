@@ -90,12 +90,12 @@ class _HouseholdOverviewPageState
                                       Status.administeredSuccess.toValue()
                                   ? DigitOutLineButton(
                                       label: localizations.translate(
-                                        i18.memberCard
-                                            .deliverDetailsUpdateLabel,
+                                        i18.memberCard.deliverDetailsViewLabel,
                                       ),
                                       onPressed: () async {
-                                        await context.router
-                                            .push(DeliverInterventionRoute());
+                                        await context.router.push(
+                                            DeliverInterventionRoute(
+                                                isEditing: true));
                                       },
                                     )
                                   : DigitElevatedButton(

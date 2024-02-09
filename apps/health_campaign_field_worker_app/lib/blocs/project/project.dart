@@ -227,12 +227,12 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                   ),
                 );
                 await individualLocalRepository.bulkCreate(individuals);
-                final logs = await attendanceLogRemoteRepository.search(
-                  HCMAttendanceLogSearchModel(
-                    registerId: register.attendanceRegister.id,
-                  ),
-                );
-                await attendanceLogLocalRepository.bulkCreate(logs);
+                // final logs = await attendanceLogRemoteRepository.search(
+                //   HCMAttendanceLogSearchModel(
+                //     registerId: register.attendanceRegister.id,
+                //   ),
+                // );
+                // await attendanceLogLocalRepository.bulkCreate(logs);
               } catch (_) {
                 emit(state.copyWith(
                   loading: false,

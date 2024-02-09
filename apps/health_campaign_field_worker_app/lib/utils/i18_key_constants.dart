@@ -1143,6 +1143,9 @@ class MemberCard {
   String get deliverDetailsUpdateLabel =>
       'MEMBER_CARD_DELIVER_DETAILS_UPDATE_LABEL';
 
+  String get deliverDetailsViewLabel =>
+      'MEMBER_CARD_DELIVER_DETAILS_VIEW_LABEL';
+
   String get deliverDetailsYearText => 'MEMBER_CARD_DELIVER_DETAILS_YEAR_TEXT';
 
   String get editDetails => 'MEMBER_CARD_EDIT_DETAILS';
