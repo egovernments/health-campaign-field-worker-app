@@ -568,4 +568,51 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
   //     },
   //   );
   // }
+
+  // void showOverlay(BuildContext context) {
+  //   // Initialize overlayEntry
+  //   overlayEntry = OverlayEntry(
+  //     builder: (BuildContext context) => Stack(
+  //       children: [
+  //         Positioned.fill(
+  //           child: Container(
+  //             color: Colors.black.withOpacity(0.75),
+  //           ),
+  //         ),
+  //         Center(
+  //           child: Material(
+  //             color: Colors.white.withOpacity(0.25),
+  //             child: Container(
+  //               width: MediaQuery.of(context).size.width / 1.25,
+  //               height: MediaQuery.of(context).size.height / 2.25,
+  //               color: Colors.white.withOpacity(1),
+  //               child: Column(
+  //                 mainAxisAlignment: MainAxisAlignment.center,
+  //                 children: [
+  //                   const Text(
+  //                     'Custom Overlay Content',
+  //                     style: TextStyle(color: Colors.white, fontSize: 20),
+  //                   ),
+  //                   const SizedBox(height: 20),
+  //                   ElevatedButton(
+  //                     onPressed: () {
+  //                       if (overlayEntry != null) {
+  //                         // Remove the overlay when the button is pressed
+  //                         overlayEntry?.remove();
+  //                       }
+  //                     },
+  //                     child: const Text('Close Overlay'),
+  //                   ),
+  //                 ],
+  //               ),
+  //             ),
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  //
+  //   // Insert overlayEntry into the overlay stack
+  //   Overlay.of(context).insert(overlayEntry!);
+  // }
 }

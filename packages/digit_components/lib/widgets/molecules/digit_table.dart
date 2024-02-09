@@ -23,8 +23,8 @@ class DigitTable extends StatelessWidget {
     this.selectedIndex,
     this.scrollPhysics,
     this.columnRowFixedHeight = 52.0,
-    this.centerTitle,
-    this.centerData,
+    this.centerTitle = false,
+    this.centerData = false,
   }) : super(key: key);
 
   List<Widget>? _getTitleWidget(ThemeData theme) {
