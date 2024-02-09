@@ -160,7 +160,7 @@ class _RecordPastDeliveryDetailsPageState
                           label: localizations.translate(
                             i18.common.coreCommonYes,
                           ),
-                          action: (ctx) {
+                          action: (ctx) async {
                             router.pop();
                             final event =
                                 context.read<DeliverInterventionBloc>();
@@ -195,18 +195,20 @@ class _RecordPastDeliveryDetailsPageState
                               ));
                             }
                             context.router.popUntilRouteWithName(
-                              SearchBeneficiaryRoute.name,
+                              HouseholdOverviewRoute.name,
                             );
-                            bloc.add(HouseholdOverviewReloadEvent(
-                              projectId: context.projectId,
-                              projectBeneficiaryType: context.beneficiaryType,
-                            ));
                             Navigator.of(ctx).pop();
-                            router.push(
+                            final response = await router.push(
                               SideEffectsRoute(
                                 tasks: [(futureTaskList ?? []).last],
                               ),
                             );
+                            if (response == null) {
+                              bloc.add(HouseholdOverviewReloadEvent(
+                                projectId: context.projectId,
+                                projectBeneficiaryType: context.beneficiaryType,
+                              ));
+                            }
                           },
                         ),
                       ),
