@@ -136,8 +136,10 @@ class FacilitySelectionPage extends StatelessWidget {
                                     bottom: kPadding * 2,
                                     top: kPadding * 2,
                                   ),
-                                  child: Text(localizations
-                                      .translate('FAC_${facility.id}')),
+                                  child: Text(
+                                    localizations
+                                        .translate('FAC_${facility.id}'),
+                                  ),
                                 ),
                               ),
                             ),
