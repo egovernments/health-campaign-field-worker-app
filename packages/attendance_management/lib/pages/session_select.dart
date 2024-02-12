@@ -340,26 +340,23 @@ class _AttendanceDateSessionSelectionPageState
     return false;
   }
 
-  bool showInfoCard(
-      AttendancePackageRegisterModel selectedRegister, DateTime selectedDate) {
+  bool showInfoCard(AttendancePackageRegisterModel selectedRegister, DateTime selectedDate) {
     if (selectedRegister.attendanceLog != null) {
       for (var log in selectedRegister.attendanceLog!) {
         for (var entry in log.entries) {
           final logDate = entry.key;
           final isAttendanceMarked = entry.value;
 
-          // Check if the logDate is one day before the selectedDate and the attendance is not marked
-          if (selectedDate.difference(logDate).inDays >= 1 &&
-              !isAttendanceMarked) {
+          // Check if the logDate is before the selectedDate and the attendance is not marked
+          if (logDate.isBefore(selectedDate) && !isAttendanceMarked) {
             return true;
-          } else {
-            return false;
           }
         }
       }
     }
     return false;
   }
+
 }
 
 class KeyValue {
