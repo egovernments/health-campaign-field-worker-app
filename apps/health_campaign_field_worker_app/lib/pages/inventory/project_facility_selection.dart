@@ -147,7 +147,9 @@ class ProjectFacilitySelectionPage extends StatelessWidget {
                                     top: kPadding * 2,
                                   ),
                                   child: Text(projectFacility != null
-                                      ? projectFacility.id
+                                      ? localizations.translate(
+                                          'PJ_FAC_${projectFacility.id}',
+                                        )
                                       : ''),
                                 ),
                               ),
