@@ -47,6 +47,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
   Timer? _debounce;
   late TextEditingController controller;
   AttendanceIndividualBloc individualLogBloc = AttendanceIndividualBloc();
+  OverlayEntry? overlayEntry;
 
   @override
   void initState() {
@@ -71,7 +72,9 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
   void dispose() {
     _debounce?.cancel();
     controller.dispose();
-
+    if (overlayEntry != null) {
+      overlayEntry?.remove();
+    }
     super.dispose();
   }
 
@@ -98,7 +101,11 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
           ),
         child: WillPopScope(
           onWillPop: () async {
-            return true;
+            if (overlayEntry != null) {
+              overlayEntry?.remove();
+            }
+
+            return false;
           },
           child: GestureDetector(
             onTap: () {
@@ -252,7 +259,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                 padding: const EdgeInsets.only(bottom: 8.0),
                                 child: tableData.isNotEmpty
                                     ? DigitTable(
-                                        height: (tableData.length) * 59,
+                                        height: (tableData.length + 1) * 56.5,
                                         headerList: headerList(
                                           widget.dateTime,
                                           localizations,
@@ -434,12 +441,12 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
               ),
             );
           } else {
-            individualLogBloc.add(SaveAsDraftEvent(
-              entryTime: widget.entryTime,
-              exitTime: widget.exitTime,
-              createOplog: type != EnumValues.draft.toValue(),
-            ));
             if (type == EnumValues.draft.toValue()) {
+              individualLogBloc.add(SaveAsDraftEvent(
+                entryTime: widget.entryTime,
+                exitTime: widget.exitTime,
+                createOplog: type != EnumValues.draft.toValue(),
+              ));
               DigitToast.show(
                 context,
                 options: DigitToastOptions(
@@ -449,170 +456,165 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                 ),
               );
             } else {
-              Navigator.of(context).pop(true);
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                    builder: (context) => AttendanceAcknowledgementPage(
-                          label: localizations.translate(
-                              i18.attendance.attendanceSubmittedSuccessMsg),
-                          actionLabel:
-                              localizations.translate(i18.attendance.goHome),
-                          action: () {
-                            AttendanceSingleton().callSync();
-                            Navigator.popUntil(
-                                context, (route) => route.isFirst);
-                          },
-                          secondaryLabel: localizations.translate(
-                              i18.attendance.goToAttendanceRegisters),
-                          secondaryAction: () {
-                            AttendanceSingleton().callSync();
-                            Navigator.of(context).pop();
-                            Navigator.of(context).pop(true);
-                          },
-                        )),
+              showOverlay(
+                context,
+                overlayEntry,
+                DigitDialogOptions(
+                  titleText: localizations.translate(
+                    i18.attendance.confirmationLabel,
+                  ),
+                  contentText:
+                      '${localizations.translate(i18.attendance.confirmationDesc)} \n\n${localizations.translate(i18.attendance.confirmationDescNote)}',
+                  primaryAction: DigitDialogActions(
+                    label: localizations.translate(
+                      i18.attendance.proceed,
+                    ),
+                    action: (context) {
+                      if (overlayEntry != null) {
+                        overlayEntry?.remove();
+                      }
+                      individualLogBloc.add(SaveAsDraftEvent(
+                        entryTime: widget.entryTime,
+                        exitTime: widget.exitTime,
+                        createOplog: type != EnumValues.draft.toValue(),
+                      ));
+                      Navigator.of(context).pop(true);
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => AttendanceAcknowledgementPage(
+                                  label: localizations.translate(i18.attendance
+                                      .attendanceSubmittedSuccessMsg),
+                                  actionLabel: localizations
+                                      .translate(i18.attendance.goHome),
+                                  action: () {
+                                    AttendanceSingleton().callSync();
+                                    Navigator.popUntil(
+                                        context, (route) => route.isFirst);
+                                  },
+                                  secondaryLabel: localizations.translate(
+                                      i18.attendance.goToAttendanceRegisters),
+                                  secondaryAction: () {
+                                    AttendanceSingleton().callSync();
+                                    Navigator.of(context).pop();
+                                    Navigator.of(context).pop(true);
+                                  },
+                                )),
+                      );
+                    },
+                  ),
+                  secondaryAction: DigitDialogActions(
+                    label: localizations.translate(i18.common.coreCommonGoback),
+                    action: (context) {
+                      if (overlayEntry != null) {
+                        // Remove the overlay when the button is pressed
+                        overlayEntry?.remove();
+                      }
+                    },
+                  ),
+                ),
               );
             }
           }
         });
   }
 
-  // Future<dynamic> markConfirmationDialog(
-  //   MarkAttendanceBloc data,
-  //   dynamic k,
-  // ) async {
-  //   return showDialog(
-  //     barrierDismissible: false,
-  //     context: context,
-  //     builder: (context) {
-  //       return Dialog(
-  //         child: Card(
-  //           child: SizedBox(
-  //             height: 250,
-  //             child: Column(
-  //               mainAxisAlignment: MainAxisAlignment.start,
-  //               crossAxisAlignment: CrossAxisAlignment.center,
-  //               children: [
-  //                 Padding(
-  //                   padding: const EdgeInsets.only(
-  //                     top: 4.0,
-  //                     bottom: 8.0,
-  //                   ),
-  //                   child: Text(
-  //                     k.translate(i18.attendance.confirmationLabel),
-  //                     style: DigitTheme
-  //                         .instance.mobileTheme.textTheme.headlineMedium,
-  //                     textAlign: TextAlign.left,
-  //                   ),
-  //                 ),
-  //                 Padding(
-  //                   padding: const EdgeInsets.only(
-  //                     top: 4.0,
-  //                     bottom: 4.0,
-  //                   ),
-  //                   child: Text(
-  //                     k.translate(i18.attendance.confirmationDesc),
-  //                     // "The Attendance details for the Session have been pre-populated.Please confirm before submitting.",
-  //                     style:
-  //                         DigitTheme.instance.mobileTheme.textTheme.bodyMedium,
-  //                     textAlign: TextAlign.left,
-  //                   ),
-  //                 ),
-  //                 Padding(
-  //                   padding: const EdgeInsets.only(
-  //                     top: 4.0,
-  //                     bottom: 8.0,
-  //                   ),
-  //                   child: Text(
-  //                     k.translate(i18.attendance.confirmationDescNote),
-  //                     // "Note: You can not edit attendance details for the past days",
-  //                     style:
-  //                         DigitTheme.instance.mobileTheme.textTheme.bodyMedium,
-  //                     textAlign: TextAlign.left,
-  //                   ),
-  //                 ),
-  //                 SizedBox(
-  //                   width: 100,
-  //                   height: 40,
-  //                   child: DigitElevatedButton(
-  //                     child: Text(
-  //                       k.translate(i18.attendance.proceed),
-  //                     ),
-  //                     onPressed: () {
-  //                       Navigator.of(context).pop();
-  //                       data.add(
-  //                         UploadAttendanceMarkEvent(
-  //                           entryTime: widget.entryTime,
-  //                           exitTime: widget.exitTime,
-  //                           projectId: context.projectId,
-  //                           registarId: widget.registerId,
-  //                           status: 1,
-  //                           tenantId: widget.tenantId,
-  //                         ),
-  //                       );
-  //                     },
-  //                   ),
-  //                 ),
-  //                 TextButton(
-  //                   onPressed: () {
-  //                     Navigator.of(context).pop();
-  //                   },
-  //                   child: Text(
-  //                     k.translate(i18.attendance.goBackButton),
-  //                   ),
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
+  void showOverlay(BuildContext context, OverlayEntry? overlayEntry,
+      DigitDialogOptions digitDialogOptions) {
+    // Initialize overlayEntry
+    overlayEntry = OverlayEntry(
+      builder: (BuildContext context) => Stack(
+        children: [
+          Positioned.fill(
+            child: Container(
+              color: Colors.black.withOpacity(0.75),
+            ),
+          ),
+          Center(
+            child: Material(
+              color: Colors.white.withOpacity(0.25),
+              child: Container(
+                width: MediaQuery.of(context).size.width / 1.25,
+                height: MediaQuery.of(context).size.height / 2.25,
+                color: Colors.white.withOpacity(1),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: digitDialogOptions.dialogPadding != null
+                          ? digitDialogOptions.dialogPadding!
+                          : const EdgeInsets.all(kPadding),
+                      child: digitDialogOptions.title != null
+                          ? digitDialogOptions.title!
+                          : Row(
+                              children: [
+                                if (digitDialogOptions.titleIcon != null) ...[
+                                  digitDialogOptions.titleIcon!,
+                                  const SizedBox(width: 8),
+                                ],
+                                Expanded(
+                                  child: Text(
+                                    digitDialogOptions.titleText ?? '',
+                                    textAlign: TextAlign.left,
+                                    style: DigitTheme.instance.mobileTheme
+                                        .textTheme.headlineMedium,
+                                  ),
+                                ),
+                              ],
+                            ),
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: Padding(
+                        padding: const EdgeInsets.all(kPadding),
+                        child: digitDialogOptions.content ??
+                            Text(
+                              digitDialogOptions.contentText ?? '',
+                              textAlign: TextAlign.left,
+                              style: DigitTheme
+                                  .instance.mobileTheme.textTheme.bodyMedium,
+                            ),
+                      ),
+                    ),
+                    const SizedBox(height: kPadding),
+                    if (digitDialogOptions.primaryAction != null)
+                      Padding(
+                        padding: const EdgeInsets.all(kPadding),
+                        child: DigitElevatedButton(
+                          onPressed: () {
+                            if (overlayEntry != null) {
+                              // Remove the overlay when the button is pressed
+                              overlayEntry.remove();
+                            }
+                            digitDialogOptions.primaryAction?.action
+                                ?.call(context);
+                          },
+                          child: Center(
+                              child: Text(
+                                  digitDialogOptions.primaryAction!.label)),
+                        ),
+                      ),
+                    if (digitDialogOptions.secondaryAction != null)
+                      TextButton(
+                        onPressed: () {
+                          if (overlayEntry != null) {
+                            // Remove the overlay when the button is pressed
+                            overlayEntry.remove();
+                          }
+                        },
+                        child: Center(
+                            child: Text(
+                                digitDialogOptions.secondaryAction!.label)),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
 
-  // void showOverlay(BuildContext context) {
-  //   // Initialize overlayEntry
-  //   overlayEntry = OverlayEntry(
-  //     builder: (BuildContext context) => Stack(
-  //       children: [
-  //         Positioned.fill(
-  //           child: Container(
-  //             color: Colors.black.withOpacity(0.75),
-  //           ),
-  //         ),
-  //         Center(
-  //           child: Material(
-  //             color: Colors.white.withOpacity(0.25),
-  //             child: Container(
-  //               width: MediaQuery.of(context).size.width / 1.25,
-  //               height: MediaQuery.of(context).size.height / 2.25,
-  //               color: Colors.white.withOpacity(1),
-  //               child: Column(
-  //                 mainAxisAlignment: MainAxisAlignment.center,
-  //                 children: [
-  //                   const Text(
-  //                     'Custom Overlay Content',
-  //                     style: TextStyle(color: Colors.white, fontSize: 20),
-  //                   ),
-  //                   const SizedBox(height: 20),
-  //                   ElevatedButton(
-  //                     onPressed: () {
-  //                       if (overlayEntry != null) {
-  //                         // Remove the overlay when the button is pressed
-  //                         overlayEntry?.remove();
-  //                       }
-  //                     },
-  //                     child: const Text('Close Overlay'),
-  //                   ),
-  //                 ],
-  //               ),
-  //             ),
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  //
-  //   // Insert overlayEntry into the overlay stack
-  //   Overlay.of(context).insert(overlayEntry!);
-  // }
+    // Insert overlayEntry into the overlay stack
+    Overlay.of(context).insert(overlayEntry);
+  }
 }
