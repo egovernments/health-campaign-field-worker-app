@@ -134,6 +134,8 @@ class Attendance {
   String get noAttendeesEnrolledMessage =>
       'NO_ATTENDEES_ENROLLED_TO_THE_REGISTER';
 
+  String get registerNotStarted => 'REGISTER_NOT_STARTED_MSG';
+
   String get saveAndMarkLaterLabel => 'SAVE_AND_MARK_LATER_LABEL';
 
   String get pleaseMarkAttForIndividuals =>

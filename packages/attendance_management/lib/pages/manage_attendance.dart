@@ -263,6 +263,17 @@ class RegisterCard extends StatelessWidget {
                           DigitTheme.instance.mobileTheme,
                         ),
                       );
+                    } else if (startDate != null &&
+                        startDate!.millisecondsSinceEpoch >
+                            DateTime.now().millisecondsSinceEpoch) {
+                      DigitToast.show(
+                        context,
+                        options: DigitToastOptions(
+                          t.translate(i18.attendance.registerNotStarted),
+                          true,
+                          DigitTheme.instance.mobileTheme,
+                        ),
+                      );
                     } else {
                       await Navigator.of(context).push(
                         MaterialPageRoute(
@@ -274,15 +285,6 @@ class RegisterCard extends StatelessWidget {
                         ),
                       );
                       attendanceBloc.add(const AttendanceEvents.initial());
-                      // Navigator.of(context).push(
-                      //   MaterialPageRoute(
-                      //     builder: (context) =>
-                      //         AttendanceDateSessionSelectionPage(
-                      //       registers: registers,
-                      //       registerID: registerId,
-                      //     ),
-                      //   ),
-                      // );
                     }
                   },
                 )

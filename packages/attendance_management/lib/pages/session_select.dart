@@ -313,7 +313,7 @@ class _AttendanceDateSessionSelectionPageState
           for (var element in element.attendanceLog!) {
             element.forEach((key, value) {
               if (value == false && key.isBefore(currentDate)) {
-                missedDays += "${key.day}/${key.month}/${key.year}, \n";
+                missedDays += "${key.day}/${key.month}/${key.year} \n";
               }
             });
           }
@@ -350,11 +350,8 @@ class _AttendanceDateSessionSelectionPageState
           final isAttendanceMarked = entry.value;
 
           // Check if the logDate is one day before the selectedDate and the attendance is not marked
-          if (selectedDate.difference(logDate).inDays >= 1 &&
-              !isAttendanceMarked) {
+          if (logDate.isBefore(selectedDate) && !isAttendanceMarked) {
             return true;
-          } else {
-            return false;
           }
         }
       }
