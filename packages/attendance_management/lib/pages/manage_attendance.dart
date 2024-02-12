@@ -91,9 +91,14 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
                                   register.endDate!)
                               : 'N/A',
                       t.translate(i18.attendance.statusLabel):
-                          t.translate(register.status.toString()),
+                          register.endDate != null &&
+                                  register.endDate! >
+                                      DateTime.now().millisecondsSinceEpoch
+                              ? t.translate(register.status.toString())
+                              : t.translate(i18.common.inactive),
                       t.translate(i18.attendance.attendanceCompletionLabel):
-                          calculateCompletedDays(attendanceRegisters) ?? 'N/A',
+                          calculateCompletedDays(attendanceRegisters[i]) ??
+                              'N/A',
                     },
                     registers: attendanceRegisters,
                     noOfAttendees: register.attendees?.length ?? 0,
@@ -101,7 +106,9 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
                     tenantId: register.tenantId ?? 'N/A',
                     show: register.startDate != null &&
                         register.endDate != null &&
-                        attendanceRegisters.isNotEmpty,
+                        attendanceRegisters.isNotEmpty &&
+                        register.endDate! >
+                            DateTime.now().millisecondsSinceEpoch,
                     startDate: register.startDate != null
                         ? DateTime.fromMillisecondsSinceEpoch(
                             register.startDate!,
@@ -194,16 +201,13 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
     );
   }
 
-  calculateCompletedDays(
-      List<AttendancePackageRegisterModel> attendanceRegisters) {
+  calculateCompletedDays(AttendancePackageRegisterModel attendanceRegister) {
     var completedDays = 0;
     var totalDays = 0;
-    for (var att in attendanceRegisters) {
-      totalDays = att.attendanceLog!.length;
-      for (var element in att.attendanceLog!) {
-        if (element.containsValue(true)) {
-          completedDays++;
-        }
+    totalDays = attendanceRegister.attendanceLog!.length;
+    for (var element in attendanceRegister.attendanceLog!) {
+      if (element.containsValue(true)) {
+        completedDays++;
       }
     }
 

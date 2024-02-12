@@ -95,6 +95,8 @@ class Common {
 
   String get scanBales => 'CORE_COMMON_SCAN_BALES';
   String get ageInMonths => 'AGE_IN_MONTHS_LABEL';
+
+  String get inactive => 'INACTIVE';
 }
 
 class AcknowledgementSuccess {
