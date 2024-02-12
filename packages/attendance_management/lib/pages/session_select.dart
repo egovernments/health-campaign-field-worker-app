@@ -346,17 +346,18 @@ class _AttendanceDateSessionSelectionPageState
         for (var entry in log.entries) {
           final logDate = entry.key;
           final isAttendanceMarked = entry.value;
-
-          // Check if the logDate is before the selectedDate and the attendance is not marked
-          if (logDate.isBefore(selectedDate) && !isAttendanceMarked) {
-            return true;
+          if (logDate.isBefore(selectedDate) || logDate.isAtSameMomentAs(selectedDate)) {
+            if (!isAttendanceMarked) {
+              return true; // If attendance is not marked for any date before or on selectedDate, return true
+            }
+          } else {
+            return false; // If attendance is marked for all dates before selectedDate, return false
           }
         }
       }
     }
-    return false;
+    return false; // Return false if attendanceLog is null or all logs are marked
   }
-
 }
 
 class KeyValue {
