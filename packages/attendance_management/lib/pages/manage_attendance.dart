@@ -92,7 +92,7 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
                       t.translate(i18.attendance.statusLabel):
                           t.translate(register.status.toString()),
                       t.translate(i18.attendance.attendanceCompletionLabel):
-                          calculateCompletedDays(attendanceRegisters) ?? 'N/A',
+                          calculateCompletedDays(attendanceRegisters[i]) ?? 'N/A',
                     },
                     registers: attendanceRegisters,
                     noOfAttendees: register.attendees?.length ?? 0,
@@ -193,18 +193,15 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
     );
   }
 
-  calculateCompletedDays(
-      List<AttendancePackageRegisterModel> attendanceRegisters) {
+  calculateCompletedDays(AttendancePackageRegisterModel attendanceRegister) {
     var completedDays = 0;
     var totalDays = 0;
-    for (var att in attendanceRegisters) {
-      totalDays = att.attendanceLog!.length;
-      for (var element in att.attendanceLog!) {
+      totalDays = attendanceRegister.attendanceLog!.length;
+      for (var element in attendanceRegister.attendanceLog!) {
         if (element.containsValue(true)) {
           completedDays++;
         }
       }
-    }
 
     return '${completedDays.toString()}/${totalDays.toString()}';
   }
