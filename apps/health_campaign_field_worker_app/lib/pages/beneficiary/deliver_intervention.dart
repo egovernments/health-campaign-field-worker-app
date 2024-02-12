@@ -485,6 +485,8 @@ class _DeliverInterventionPageState
                                                               _controllers;
                                                             });
                                                           },
+                                                          viewOnly:
+                                                              widget.isEditing,
                                                         ))
                                                     .toList(),
                                                 Center(

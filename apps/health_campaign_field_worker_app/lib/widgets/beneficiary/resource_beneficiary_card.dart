@@ -13,6 +13,7 @@ class ResourceBeneficiaryCard extends LocalizedStatefulWidget {
   final int cardIndex;
   final FormGroup form;
   final int totalItems;
+  final bool? viewOnly;
 
   const ResourceBeneficiaryCard({
     Key? key,
@@ -21,6 +22,7 @@ class ResourceBeneficiaryCard extends LocalizedStatefulWidget {
     required this.cardIndex,
     required this.form,
     required this.totalItems,
+    this.viewOnly = false,
   }) : super(key: key);
 
   @override
@@ -84,6 +86,7 @@ class _ResourceBeneficiaryCardState
             label: localizations.translate(
               i18.deliverIntervention.quantityDistributedLabel,
             ),
+            viewOnly: widget.viewOnly,
             minimum: 1,
           ),
           SizedBox(

@@ -10,6 +10,7 @@ class DigitIntegerFormPicker extends StatelessWidget {
   final String label;
   final FormGroup form;
   final String formControlName;
+  final bool? viewOnly;
   const DigitIntegerFormPicker({
     super.key,
     this.minimum,
@@ -19,6 +20,7 @@ class DigitIntegerFormPicker extends StatelessWidget {
     this.hint,
     required this.form,
     required this.label,
+    this.viewOnly = false,
   });
 
   @override
@@ -74,7 +76,9 @@ class DigitIntegerFormPicker extends StatelessWidget {
                     top: _borderSide,
                   ),
                   icon: Icons.add,
-                  onPressed: () => form.control(formControlName).value += 1),
+                  onPressed: viewOnly != true
+                      ? () => form.control(formControlName).value += 1
+                      : null),
             ],
           ),
         ));
