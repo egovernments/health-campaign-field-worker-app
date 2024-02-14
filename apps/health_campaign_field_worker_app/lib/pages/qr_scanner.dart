@@ -14,6 +14,7 @@ import '../../utils/utils.dart';
 import '../../widgets/localized.dart';
 import '../blocs/scanner/scanner.dart';
 import '../blocs/search_households/search_households.dart';
+import '../blocs/search_households/tag_by_search.dart';
 import '../blocs/search_referrals/search_referrals.dart';
 import '../models/data_model.dart';
 import '../vision_detector_views/detector_view.dart';
@@ -227,7 +228,7 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                                 result.length < widget.quantity) {
                               buildDialog();
                             } else {
-                              final bloc = context.read<SearchHouseholdsBloc>();
+                              final bloc = context.read<TagSearchBloc>();
                               final hfBloc =
                                   context.read<SearchReferralsBloc>();
 
@@ -443,7 +444,7 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                             result.length < widget.quantity) {
                           buildDialog();
                         } else {
-                          final bloc = context.read<SearchHouseholdsBloc>();
+                          final bloc = context.read<TagSearchBloc>();
                           final scannerState =
                               context.read<ScannerBloc>().state;
                           final hfBloc = context.read<SearchReferralsBloc>();
