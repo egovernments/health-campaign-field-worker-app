@@ -103,8 +103,12 @@ class _AttendanceDateSessionSelectionPageState
                                           : i18.attendance.markAttendance,
                                     )),
                                     onPressed: () async {
-                                      if (form.control(_sessionRadio).value ==
-                                          null) {
+                                      if (selectedRegister.additionalDetails?[
+                                                  EnumValues.sessions
+                                                      .toValue()] ==
+                                              2 &&
+                                          form.control(_sessionRadio).value ==
+                                              null) {
                                         form
                                             .control(_sessionRadio)
                                             .setErrors({'': true});
@@ -123,7 +127,8 @@ class _AttendanceDateSessionSelectionPageState
 
                                           final entryTime = selectedRegister
                                                           .additionalDetails?[
-                                                      'sessions'] ==
+                                                      EnumValues.sessions
+                                                          .toValue()] ==
                                                   2
                                               ? AttendanceDateTimeManagement
                                                   .getMillisecondEpoch(
@@ -141,14 +146,14 @@ class _AttendanceDateSessionSelectionPageState
                                                       : 0,
                                                   "entryTime",
                                                 )
-                                              : (DateTime(s.year, s.month,
-                                                          s.day, 9)
-                                                      .millisecondsSinceEpoch) ~/
-                                                  1000;
+                                              : (DateTime(
+                                                      s.year, s.month, s.day, 9)
+                                                  .millisecondsSinceEpoch);
 
                                           final exitTime = selectedRegister
                                                           .additionalDetails?[
-                                                      'sessions'] ==
+                                                      EnumValues.sessions
+                                                          .toValue()] ==
                                                   2
                                               ? AttendanceDateTimeManagement
                                                   .getMillisecondEpoch(
@@ -167,9 +172,8 @@ class _AttendanceDateSessionSelectionPageState
                                                   "exitTime",
                                                 )
                                               : (DateTime(s.year, s.month,
-                                                          s.day, 18)
-                                                      .millisecondsSinceEpoch) ~/
-                                                  1000;
+                                                      s.day, 18)
+                                                  .millisecondsSinceEpoch);
 
                                           final submit =
                                               await Navigator.of(context).push(
@@ -334,6 +338,8 @@ class _AttendanceDateSessionSelectionPageState
                 DigitDateUtils.getFilteredDate(selectedDate.toString()) &&
             log.values.first == true) {
           return true;
+        } else {
+          return false;
         }
       }
     }

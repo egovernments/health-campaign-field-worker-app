@@ -1,5 +1,4 @@
 import 'package:attendance_management/blocs/attendance_listeners.dart';
-import 'package:attendance_management/models/attendance_log.dart';
 import 'package:attendance_management/models/attendance_register.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -158,41 +157,73 @@ class HCMAttendanceBloc extends AttendanceListeners {
     SubmitAttendanceDetails attendanceLogs,
   ) async {
     // TODO: implement submitAttendanceDetails
-    final hcmAttendanceLogs = attendanceLogs.attendanceLogs
-        .map((e) => HCMAttendanceLogModel(
-              rowVersion: 1,
-              attendanceLog: e.copyWith(clientReferenceId: IdGen.i.identifier),
-              clientAuditDetails: ClientAuditDetails(
-                createdBy: userId.toString(),
-                createdTime: DateTime.now().millisecondsSinceEpoch,
-                lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
-                lastModifiedBy: userId.toString(),
-              ),
-              auditDetails: AuditDetails(
-                createdBy: userId.toString(),
-                createdTime: DateTime.now().millisecondsSinceEpoch,
-                lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
-                lastModifiedBy: userId.toString(),
-              ),
-            ))
-        .toList();
+    final existingLogs = await attendanceLogLocalRepository?.search(
+      HCMAttendanceLogSearchModel(
+        registerId: attendanceLogs.attendanceLogs.first.registerId,
+      ),
+    );
+    final hcmAttendanceLogs = attendanceLogs.attendanceLogs.map(
+      (e) {
+        final existingLog = existingLogs?.where(
+          (ele) =>
+              ele.attendanceLog?.individualId == e.individualId &&
+              ((ele.attendanceLog?.type == 'ENTRY' && e.type == 'ENTRY') ||
+                  (ele.attendanceLog?.type == 'EXIT' && e.type == 'EXIT')),
+        );
+
+        return HCMAttendanceLogModel(
+          rowVersion: 1,
+          attendanceLog: e.copyWith(
+            clientReferenceId: (existingLog ?? []).isNotEmpty
+                ? existingLog?.last.attendanceLog?.clientReferenceId
+                : IdGen.i.identifier,
+          ),
+          clientAuditDetails: ClientAuditDetails(
+            createdBy: userId.toString(),
+            createdTime: DateTime.now().millisecondsSinceEpoch,
+            lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+            lastModifiedBy: userId.toString(),
+          ),
+          auditDetails: AuditDetails(
+            createdBy: userId.toString(),
+            createdTime: DateTime.now().millisecondsSinceEpoch,
+            lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+            lastModifiedBy: userId.toString(),
+          ),
+        );
+      },
+    ).toList();
     final groupedIndividuals = hcmAttendanceLogs
         .groupListsBy((ele) => ele.attendanceLog?.individualId);
 
     for (final log in groupedIndividuals.entries) {
       await attendanceLogLocalRepository?.create(
-        log.value.first,
+        log.value.where((l) => l.attendanceLog?.type == 'ENTRY').last,
         createOpLog: (attendanceLogs.createOplog ?? false) &&
-            (log.value.first.attendanceLog?.time !=
-                log.value.last.attendanceLog?.time),
+            (log.value
+                    .where((l) => l.attendanceLog?.type == 'ENTRY')
+                    .last
+                    .attendanceLog
+                    ?.time !=
+                log.value
+                    .where((l) => l.attendanceLog?.type == 'EXIT')
+                    .last
+                    .attendanceLog
+                    ?.time),
       );
       await attendanceLogLocalRepository?.create(
-        hcmAttendanceLogs
-            .where((l) => l.attendanceLog?.individualId == log.key)
-            .last,
+        log.value.where((l) => l.attendanceLog?.type == 'EXIT').last,
         createOpLog: (attendanceLogs.createOplog ?? false) &&
-            (log.value.first.attendanceLog?.time !=
-                log.value.last.attendanceLog?.time),
+            (log.value
+                    .where((l) => l.attendanceLog?.type == 'ENTRY')
+                    .last
+                    .attendanceLog
+                    ?.time !=
+                log.value
+                    .where((l) => l.attendanceLog?.type == 'EXIT')
+                    .last
+                    .attendanceLog
+                    ?.time),
       );
     }
   }

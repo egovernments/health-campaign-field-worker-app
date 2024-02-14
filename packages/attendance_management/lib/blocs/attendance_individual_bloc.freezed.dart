@@ -26,12 +26,14 @@ mixin _$AttendanceIndividualEvent {
             int currentDate,
             List<AttendeeModel> attendees,
             int offset,
-            int limit)
+            int limit,
+            bool isSingleSession)
         individualAttendanceLogSearch,
     required TResult Function(int entryTime, int exitTime, dynamic status,
-            String individualId, String registerId)
+            bool isSingleSession, String individualId, String registerId)
         individualAttendanceMark,
-    required TResult Function(int entryTime, int exitTime, bool? createOplog)
+    required TResult Function(int entryTime, int exitTime,
+            DateTime selectedDate, bool isSingleSession, bool? createOplog)
         saveAsDraft,
     required TResult Function(String name) searchAttendees,
   }) =>
@@ -46,12 +48,14 @@ mixin _$AttendanceIndividualEvent {
             int currentDate,
             List<AttendeeModel> attendees,
             int offset,
-            int limit)?
+            int limit,
+            bool isSingleSession)?
         individualAttendanceLogSearch,
     TResult? Function(int entryTime, int exitTime, dynamic status,
-            String individualId, String registerId)?
+            bool isSingleSession, String individualId, String registerId)?
         individualAttendanceMark,
-    TResult? Function(int entryTime, int exitTime, bool? createOplog)?
+    TResult? Function(int entryTime, int exitTime, DateTime selectedDate,
+            bool isSingleSession, bool? createOplog)?
         saveAsDraft,
     TResult? Function(String name)? searchAttendees,
   }) =>
@@ -66,12 +70,14 @@ mixin _$AttendanceIndividualEvent {
             int currentDate,
             List<AttendeeModel> attendees,
             int offset,
-            int limit)?
+            int limit,
+            bool isSingleSession)?
         individualAttendanceLogSearch,
     TResult Function(int entryTime, int exitTime, dynamic status,
-            String individualId, String registerId)?
+            bool isSingleSession, String individualId, String registerId)?
         individualAttendanceMark,
-    TResult Function(int entryTime, int exitTime, bool? createOplog)?
+    TResult Function(int entryTime, int exitTime, DateTime selectedDate,
+            bool isSingleSession, bool? createOplog)?
         saveAsDraft,
     TResult Function(String name)? searchAttendees,
     required TResult orElse(),
@@ -142,7 +148,8 @@ abstract class _$$AttendanceIndividualLogSearchEventCopyWith<$Res> {
       int currentDate,
       List<AttendeeModel> attendees,
       int offset,
-      int limit});
+      int limit,
+      bool isSingleSession});
 }
 
 /// @nodoc
@@ -166,6 +173,7 @@ class __$$AttendanceIndividualLogSearchEventCopyWithImpl<$Res>
     Object? attendees = null,
     Object? offset = null,
     Object? limit = null,
+    Object? isSingleSession = null,
   }) {
     return _then(_$AttendanceIndividualLogSearchEvent(
       registerId: null == registerId
@@ -200,6 +208,10 @@ class __$$AttendanceIndividualLogSearchEventCopyWithImpl<$Res>
           ? _value.limit
           : limit // ignore: cast_nullable_to_non_nullable
               as int,
+      isSingleSession: null == isSingleSession
+          ? _value.isSingleSession
+          : isSingleSession // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -216,7 +228,8 @@ class _$AttendanceIndividualLogSearchEvent
       required this.currentDate,
       required final List<AttendeeModel> attendees,
       required this.offset,
-      required this.limit})
+      required this.limit,
+      this.isSingleSession = false})
       : _attendees = attendees;
 
   @override
@@ -240,10 +253,13 @@ class _$AttendanceIndividualLogSearchEvent
   final int offset;
   @override
   final int limit;
+  @override
+  @JsonKey()
+  final bool isSingleSession;
 
   @override
   String toString() {
-    return 'AttendanceIndividualEvent.individualAttendanceLogSearch(registerId: $registerId, tenantId: $tenantId, entryTime: $entryTime, exitTime: $exitTime, currentDate: $currentDate, attendees: $attendees, offset: $offset, limit: $limit)';
+    return 'AttendanceIndividualEvent.individualAttendanceLogSearch(registerId: $registerId, tenantId: $tenantId, entryTime: $entryTime, exitTime: $exitTime, currentDate: $currentDate, attendees: $attendees, offset: $offset, limit: $limit, isSingleSession: $isSingleSession)';
   }
 
   @override
@@ -264,7 +280,9 @@ class _$AttendanceIndividualLogSearchEvent
             const DeepCollectionEquality()
                 .equals(other._attendees, _attendees) &&
             (identical(other.offset, offset) || other.offset == offset) &&
-            (identical(other.limit, limit) || other.limit == limit));
+            (identical(other.limit, limit) || other.limit == limit) &&
+            (identical(other.isSingleSession, isSingleSession) ||
+                other.isSingleSession == isSingleSession));
   }
 
   @override
@@ -277,7 +295,8 @@ class _$AttendanceIndividualLogSearchEvent
       currentDate,
       const DeepCollectionEquality().hash(_attendees),
       offset,
-      limit);
+      limit,
+      isSingleSession);
 
   @JsonKey(ignore: true)
   @override
@@ -298,17 +317,19 @@ class _$AttendanceIndividualLogSearchEvent
             int currentDate,
             List<AttendeeModel> attendees,
             int offset,
-            int limit)
+            int limit,
+            bool isSingleSession)
         individualAttendanceLogSearch,
     required TResult Function(int entryTime, int exitTime, dynamic status,
-            String individualId, String registerId)
+            bool isSingleSession, String individualId, String registerId)
         individualAttendanceMark,
-    required TResult Function(int entryTime, int exitTime, bool? createOplog)
+    required TResult Function(int entryTime, int exitTime,
+            DateTime selectedDate, bool isSingleSession, bool? createOplog)
         saveAsDraft,
     required TResult Function(String name) searchAttendees,
   }) {
     return individualAttendanceLogSearch(registerId, tenantId, entryTime,
-        exitTime, currentDate, attendees, offset, limit);
+        exitTime, currentDate, attendees, offset, limit, isSingleSession);
   }
 
   @override
@@ -322,17 +343,19 @@ class _$AttendanceIndividualLogSearchEvent
             int currentDate,
             List<AttendeeModel> attendees,
             int offset,
-            int limit)?
+            int limit,
+            bool isSingleSession)?
         individualAttendanceLogSearch,
     TResult? Function(int entryTime, int exitTime, dynamic status,
-            String individualId, String registerId)?
+            bool isSingleSession, String individualId, String registerId)?
         individualAttendanceMark,
-    TResult? Function(int entryTime, int exitTime, bool? createOplog)?
+    TResult? Function(int entryTime, int exitTime, DateTime selectedDate,
+            bool isSingleSession, bool? createOplog)?
         saveAsDraft,
     TResult? Function(String name)? searchAttendees,
   }) {
     return individualAttendanceLogSearch?.call(registerId, tenantId, entryTime,
-        exitTime, currentDate, attendees, offset, limit);
+        exitTime, currentDate, attendees, offset, limit, isSingleSession);
   }
 
   @override
@@ -346,19 +369,21 @@ class _$AttendanceIndividualLogSearchEvent
             int currentDate,
             List<AttendeeModel> attendees,
             int offset,
-            int limit)?
+            int limit,
+            bool isSingleSession)?
         individualAttendanceLogSearch,
     TResult Function(int entryTime, int exitTime, dynamic status,
-            String individualId, String registerId)?
+            bool isSingleSession, String individualId, String registerId)?
         individualAttendanceMark,
-    TResult Function(int entryTime, int exitTime, bool? createOplog)?
+    TResult Function(int entryTime, int exitTime, DateTime selectedDate,
+            bool isSingleSession, bool? createOplog)?
         saveAsDraft,
     TResult Function(String name)? searchAttendees,
     required TResult orElse(),
   }) {
     if (individualAttendanceLogSearch != null) {
       return individualAttendanceLogSearch(registerId, tenantId, entryTime,
-          exitTime, currentDate, attendees, offset, limit);
+          exitTime, currentDate, attendees, offset, limit, isSingleSession);
     }
     return orElse();
   }
@@ -415,7 +440,8 @@ abstract class AttendanceIndividualLogSearchEvent
       required final int currentDate,
       required final List<AttendeeModel> attendees,
       required final int offset,
-      required final int limit}) = _$AttendanceIndividualLogSearchEvent;
+      required final int limit,
+      final bool isSingleSession}) = _$AttendanceIndividualLogSearchEvent;
 
   String get registerId;
   String get tenantId;
@@ -425,6 +451,7 @@ abstract class AttendanceIndividualLogSearchEvent
   List<AttendeeModel> get attendees;
   int get offset;
   int get limit;
+  bool get isSingleSession;
   @JsonKey(ignore: true)
   _$$AttendanceIndividualLogSearchEventCopyWith<
           _$AttendanceIndividualLogSearchEvent>
@@ -441,6 +468,7 @@ abstract class _$$AttendanceMarkEventCopyWith<$Res> {
       {int entryTime,
       int exitTime,
       dynamic status,
+      bool isSingleSession,
       String individualId,
       String registerId});
 }
@@ -459,6 +487,7 @@ class __$$AttendanceMarkEventCopyWithImpl<$Res>
     Object? entryTime = null,
     Object? exitTime = null,
     Object? status = null,
+    Object? isSingleSession = null,
     Object? individualId = null,
     Object? registerId = null,
   }) {
@@ -472,6 +501,10 @@ class __$$AttendanceMarkEventCopyWithImpl<$Res>
           : exitTime // ignore: cast_nullable_to_non_nullable
               as int,
       status: null == status ? _value.status : status,
+      isSingleSession: null == isSingleSession
+          ? _value.isSingleSession
+          : isSingleSession // ignore: cast_nullable_to_non_nullable
+              as bool,
       individualId: null == individualId
           ? _value.individualId
           : individualId // ignore: cast_nullable_to_non_nullable
@@ -491,6 +524,7 @@ class _$AttendanceMarkEvent implements AttendanceMarkEvent {
       {this.entryTime = 0,
       this.exitTime = 0,
       this.status = -1,
+      this.isSingleSession = false,
       required this.individualId,
       required this.registerId});
 
@@ -504,13 +538,16 @@ class _$AttendanceMarkEvent implements AttendanceMarkEvent {
   @JsonKey()
   final dynamic status;
   @override
+  @JsonKey()
+  final bool isSingleSession;
+  @override
   final String individualId;
   @override
   final String registerId;
 
   @override
   String toString() {
-    return 'AttendanceIndividualEvent.individualAttendanceMark(entryTime: $entryTime, exitTime: $exitTime, status: $status, individualId: $individualId, registerId: $registerId)';
+    return 'AttendanceIndividualEvent.individualAttendanceMark(entryTime: $entryTime, exitTime: $exitTime, status: $status, isSingleSession: $isSingleSession, individualId: $individualId, registerId: $registerId)';
   }
 
   @override
@@ -523,6 +560,8 @@ class _$AttendanceMarkEvent implements AttendanceMarkEvent {
             (identical(other.exitTime, exitTime) ||
                 other.exitTime == exitTime) &&
             const DeepCollectionEquality().equals(other.status, status) &&
+            (identical(other.isSingleSession, isSingleSession) ||
+                other.isSingleSession == isSingleSession) &&
             (identical(other.individualId, individualId) ||
                 other.individualId == individualId) &&
             (identical(other.registerId, registerId) ||
@@ -530,8 +569,14 @@ class _$AttendanceMarkEvent implements AttendanceMarkEvent {
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, entryTime, exitTime,
-      const DeepCollectionEquality().hash(status), individualId, registerId);
+  int get hashCode => Object.hash(
+      runtimeType,
+      entryTime,
+      exitTime,
+      const DeepCollectionEquality().hash(status),
+      isSingleSession,
+      individualId,
+      registerId);
 
   @JsonKey(ignore: true)
   @override
@@ -551,17 +596,19 @@ class _$AttendanceMarkEvent implements AttendanceMarkEvent {
             int currentDate,
             List<AttendeeModel> attendees,
             int offset,
-            int limit)
+            int limit,
+            bool isSingleSession)
         individualAttendanceLogSearch,
     required TResult Function(int entryTime, int exitTime, dynamic status,
-            String individualId, String registerId)
+            bool isSingleSession, String individualId, String registerId)
         individualAttendanceMark,
-    required TResult Function(int entryTime, int exitTime, bool? createOplog)
+    required TResult Function(int entryTime, int exitTime,
+            DateTime selectedDate, bool isSingleSession, bool? createOplog)
         saveAsDraft,
     required TResult Function(String name) searchAttendees,
   }) {
     return individualAttendanceMark(
-        entryTime, exitTime, status, individualId, registerId);
+        entryTime, exitTime, status, isSingleSession, individualId, registerId);
   }
 
   @override
@@ -575,17 +622,19 @@ class _$AttendanceMarkEvent implements AttendanceMarkEvent {
             int currentDate,
             List<AttendeeModel> attendees,
             int offset,
-            int limit)?
+            int limit,
+            bool isSingleSession)?
         individualAttendanceLogSearch,
     TResult? Function(int entryTime, int exitTime, dynamic status,
-            String individualId, String registerId)?
+            bool isSingleSession, String individualId, String registerId)?
         individualAttendanceMark,
-    TResult? Function(int entryTime, int exitTime, bool? createOplog)?
+    TResult? Function(int entryTime, int exitTime, DateTime selectedDate,
+            bool isSingleSession, bool? createOplog)?
         saveAsDraft,
     TResult? Function(String name)? searchAttendees,
   }) {
     return individualAttendanceMark?.call(
-        entryTime, exitTime, status, individualId, registerId);
+        entryTime, exitTime, status, isSingleSession, individualId, registerId);
   }
 
   @override
@@ -599,19 +648,21 @@ class _$AttendanceMarkEvent implements AttendanceMarkEvent {
             int currentDate,
             List<AttendeeModel> attendees,
             int offset,
-            int limit)?
+            int limit,
+            bool isSingleSession)?
         individualAttendanceLogSearch,
     TResult Function(int entryTime, int exitTime, dynamic status,
-            String individualId, String registerId)?
+            bool isSingleSession, String individualId, String registerId)?
         individualAttendanceMark,
-    TResult Function(int entryTime, int exitTime, bool? createOplog)?
+    TResult Function(int entryTime, int exitTime, DateTime selectedDate,
+            bool isSingleSession, bool? createOplog)?
         saveAsDraft,
     TResult Function(String name)? searchAttendees,
     required TResult orElse(),
   }) {
     if (individualAttendanceMark != null) {
-      return individualAttendanceMark(
-          entryTime, exitTime, status, individualId, registerId);
+      return individualAttendanceMark(entryTime, exitTime, status,
+          isSingleSession, individualId, registerId);
     }
     return orElse();
   }
@@ -663,12 +714,14 @@ abstract class AttendanceMarkEvent implements AttendanceIndividualEvent {
       {final int entryTime,
       final int exitTime,
       final dynamic status,
+      final bool isSingleSession,
       required final String individualId,
       required final String registerId}) = _$AttendanceMarkEvent;
 
   int get entryTime;
   int get exitTime;
   dynamic get status;
+  bool get isSingleSession;
   String get individualId;
   String get registerId;
   @JsonKey(ignore: true)
@@ -682,7 +735,12 @@ abstract class _$$SaveAsDraftEventCopyWith<$Res> {
           _$SaveAsDraftEvent value, $Res Function(_$SaveAsDraftEvent) then) =
       __$$SaveAsDraftEventCopyWithImpl<$Res>;
   @useResult
-  $Res call({int entryTime, int exitTime, bool? createOplog});
+  $Res call(
+      {int entryTime,
+      int exitTime,
+      DateTime selectedDate,
+      bool isSingleSession,
+      bool? createOplog});
 }
 
 /// @nodoc
@@ -698,6 +756,8 @@ class __$$SaveAsDraftEventCopyWithImpl<$Res>
   $Res call({
     Object? entryTime = null,
     Object? exitTime = null,
+    Object? selectedDate = null,
+    Object? isSingleSession = null,
     Object? createOplog = freezed,
   }) {
     return _then(_$SaveAsDraftEvent(
@@ -709,6 +769,14 @@ class __$$SaveAsDraftEventCopyWithImpl<$Res>
           ? _value.exitTime
           : exitTime // ignore: cast_nullable_to_non_nullable
               as int,
+      selectedDate: null == selectedDate
+          ? _value.selectedDate
+          : selectedDate // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      isSingleSession: null == isSingleSession
+          ? _value.isSingleSession
+          : isSingleSession // ignore: cast_nullable_to_non_nullable
+              as bool,
       createOplog: freezed == createOplog
           ? _value.createOplog
           : createOplog // ignore: cast_nullable_to_non_nullable
@@ -723,6 +791,8 @@ class _$SaveAsDraftEvent implements SaveAsDraftEvent {
   const _$SaveAsDraftEvent(
       {required this.entryTime,
       required this.exitTime,
+      required this.selectedDate,
+      this.isSingleSession = false,
       this.createOplog = false});
 
   @override
@@ -730,12 +800,17 @@ class _$SaveAsDraftEvent implements SaveAsDraftEvent {
   @override
   final int exitTime;
   @override
+  final DateTime selectedDate;
+  @override
+  @JsonKey()
+  final bool isSingleSession;
+  @override
   @JsonKey()
   final bool? createOplog;
 
   @override
   String toString() {
-    return 'AttendanceIndividualEvent.saveAsDraft(entryTime: $entryTime, exitTime: $exitTime, createOplog: $createOplog)';
+    return 'AttendanceIndividualEvent.saveAsDraft(entryTime: $entryTime, exitTime: $exitTime, selectedDate: $selectedDate, isSingleSession: $isSingleSession, createOplog: $createOplog)';
   }
 
   @override
@@ -747,13 +822,17 @@ class _$SaveAsDraftEvent implements SaveAsDraftEvent {
                 other.entryTime == entryTime) &&
             (identical(other.exitTime, exitTime) ||
                 other.exitTime == exitTime) &&
+            (identical(other.selectedDate, selectedDate) ||
+                other.selectedDate == selectedDate) &&
+            (identical(other.isSingleSession, isSingleSession) ||
+                other.isSingleSession == isSingleSession) &&
             (identical(other.createOplog, createOplog) ||
                 other.createOplog == createOplog));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, entryTime, exitTime, createOplog);
+  int get hashCode => Object.hash(runtimeType, entryTime, exitTime,
+      selectedDate, isSingleSession, createOplog);
 
   @JsonKey(ignore: true)
   @override
@@ -772,16 +851,19 @@ class _$SaveAsDraftEvent implements SaveAsDraftEvent {
             int currentDate,
             List<AttendeeModel> attendees,
             int offset,
-            int limit)
+            int limit,
+            bool isSingleSession)
         individualAttendanceLogSearch,
     required TResult Function(int entryTime, int exitTime, dynamic status,
-            String individualId, String registerId)
+            bool isSingleSession, String individualId, String registerId)
         individualAttendanceMark,
-    required TResult Function(int entryTime, int exitTime, bool? createOplog)
+    required TResult Function(int entryTime, int exitTime,
+            DateTime selectedDate, bool isSingleSession, bool? createOplog)
         saveAsDraft,
     required TResult Function(String name) searchAttendees,
   }) {
-    return saveAsDraft(entryTime, exitTime, createOplog);
+    return saveAsDraft(
+        entryTime, exitTime, selectedDate, isSingleSession, createOplog);
   }
 
   @override
@@ -795,16 +877,19 @@ class _$SaveAsDraftEvent implements SaveAsDraftEvent {
             int currentDate,
             List<AttendeeModel> attendees,
             int offset,
-            int limit)?
+            int limit,
+            bool isSingleSession)?
         individualAttendanceLogSearch,
     TResult? Function(int entryTime, int exitTime, dynamic status,
-            String individualId, String registerId)?
+            bool isSingleSession, String individualId, String registerId)?
         individualAttendanceMark,
-    TResult? Function(int entryTime, int exitTime, bool? createOplog)?
+    TResult? Function(int entryTime, int exitTime, DateTime selectedDate,
+            bool isSingleSession, bool? createOplog)?
         saveAsDraft,
     TResult? Function(String name)? searchAttendees,
   }) {
-    return saveAsDraft?.call(entryTime, exitTime, createOplog);
+    return saveAsDraft?.call(
+        entryTime, exitTime, selectedDate, isSingleSession, createOplog);
   }
 
   @override
@@ -818,18 +903,21 @@ class _$SaveAsDraftEvent implements SaveAsDraftEvent {
             int currentDate,
             List<AttendeeModel> attendees,
             int offset,
-            int limit)?
+            int limit,
+            bool isSingleSession)?
         individualAttendanceLogSearch,
     TResult Function(int entryTime, int exitTime, dynamic status,
-            String individualId, String registerId)?
+            bool isSingleSession, String individualId, String registerId)?
         individualAttendanceMark,
-    TResult Function(int entryTime, int exitTime, bool? createOplog)?
+    TResult Function(int entryTime, int exitTime, DateTime selectedDate,
+            bool isSingleSession, bool? createOplog)?
         saveAsDraft,
     TResult Function(String name)? searchAttendees,
     required TResult orElse(),
   }) {
     if (saveAsDraft != null) {
-      return saveAsDraft(entryTime, exitTime, createOplog);
+      return saveAsDraft(
+          entryTime, exitTime, selectedDate, isSingleSession, createOplog);
     }
     return orElse();
   }
@@ -880,10 +968,14 @@ abstract class SaveAsDraftEvent implements AttendanceIndividualEvent {
   const factory SaveAsDraftEvent(
       {required final int entryTime,
       required final int exitTime,
+      required final DateTime selectedDate,
+      final bool isSingleSession,
       final bool? createOplog}) = _$SaveAsDraftEvent;
 
   int get entryTime;
   int get exitTime;
+  DateTime get selectedDate;
+  bool get isSingleSession;
   bool? get createOplog;
   @JsonKey(ignore: true)
   _$$SaveAsDraftEventCopyWith<_$SaveAsDraftEvent> get copyWith =>
@@ -964,12 +1056,14 @@ class _$SearchAttendeesEvent implements SearchAttendeesEvent {
             int currentDate,
             List<AttendeeModel> attendees,
             int offset,
-            int limit)
+            int limit,
+            bool isSingleSession)
         individualAttendanceLogSearch,
     required TResult Function(int entryTime, int exitTime, dynamic status,
-            String individualId, String registerId)
+            bool isSingleSession, String individualId, String registerId)
         individualAttendanceMark,
-    required TResult Function(int entryTime, int exitTime, bool? createOplog)
+    required TResult Function(int entryTime, int exitTime,
+            DateTime selectedDate, bool isSingleSession, bool? createOplog)
         saveAsDraft,
     required TResult Function(String name) searchAttendees,
   }) {
@@ -987,12 +1081,14 @@ class _$SearchAttendeesEvent implements SearchAttendeesEvent {
             int currentDate,
             List<AttendeeModel> attendees,
             int offset,
-            int limit)?
+            int limit,
+            bool isSingleSession)?
         individualAttendanceLogSearch,
     TResult? Function(int entryTime, int exitTime, dynamic status,
-            String individualId, String registerId)?
+            bool isSingleSession, String individualId, String registerId)?
         individualAttendanceMark,
-    TResult? Function(int entryTime, int exitTime, bool? createOplog)?
+    TResult? Function(int entryTime, int exitTime, DateTime selectedDate,
+            bool isSingleSession, bool? createOplog)?
         saveAsDraft,
     TResult? Function(String name)? searchAttendees,
   }) {
@@ -1010,12 +1106,14 @@ class _$SearchAttendeesEvent implements SearchAttendeesEvent {
             int currentDate,
             List<AttendeeModel> attendees,
             int offset,
-            int limit)?
+            int limit,
+            bool isSingleSession)?
         individualAttendanceLogSearch,
     TResult Function(int entryTime, int exitTime, dynamic status,
-            String individualId, String registerId)?
+            bool isSingleSession, String individualId, String registerId)?
         individualAttendanceMark,
-    TResult Function(int entryTime, int exitTime, bool? createOplog)?
+    TResult Function(int entryTime, int exitTime, DateTime selectedDate,
+            bool isSingleSession, bool? createOplog)?
         saveAsDraft,
     TResult Function(String name)? searchAttendees,
     required TResult orElse(),

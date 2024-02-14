@@ -64,13 +64,19 @@ class AttendanceIndividualBloc
     await state.maybeMap(
       loaded: (value) async {
         List<AttendeeModel>? searchList;
-        int status = 0;
+        double status = 0;
         List<AttendeeModel> updatedList =
             value.attendanceCollectionModel!.map((e) {
           if (e.individualId == event.individualId) {
             if (e.status == -1) {
               status = 1;
             } else if (e.status == 1) {
+              if (event.isSingleSession) {
+                status = 0.5;
+              } else {
+                status = 0;
+              }
+            } else if (event.isSingleSession && e.status == 0.5) {
               status = 0;
             } else {
               status = 1;
@@ -100,7 +106,6 @@ class AttendanceIndividualBloc
         emit(value.copyWith(
           attendanceSearchModelList: searchList,
           attendanceCollectionModel: updatedList,
-          currentOffset: status,
         ));
       },
       orElse: () {},
@@ -114,6 +119,9 @@ class AttendanceIndividualBloc
     final List<AttendanceLogModel> list = [];
     await state.maybeMap(
       loaded: (value) async {
+        DateTime twelvePM = DateTime(event.selectedDate.year,
+            event.selectedDate.month, event.selectedDate.day, 11, 58);
+        int halfDay = twelvePM.millisecondsSinceEpoch;
         if (value.attendanceCollectionModel != null) {
           value.attendanceCollectionModel?.forEach((e) {
             if (e.status != -1) {
@@ -137,7 +145,11 @@ class AttendanceIndividualBloc
                   status: e.status == 0
                       ? EnumValues.inactive.toValue()
                       : EnumValues.active.toValue(),
-                  time: e.status == 0 ? event.entryTime : event.exitTime,
+                  time: e.status == 0
+                      ? event.entryTime
+                      : e.status == 0.5
+                          ? halfDay
+                          : event.exitTime,
                   uploadToServer: (event.createOplog ?? false),
                 )
               ]);
@@ -145,6 +157,7 @@ class AttendanceIndividualBloc
           });
           AttendanceSingleton().submitAttendanceDetails(
             SubmitAttendanceDetails(
+                attendeeList: value.attendanceCollectionModel ?? [],
                 attendanceLogs: list,
                 onMarked: (val) => false,
                 createOplog: event.createOplog),
@@ -158,76 +171,6 @@ class AttendanceIndividualBloc
       orElse: () {},
     );
   }
-
-  // FutureOr<void> _onUploadAttendanceToServer(
-  //   UploadAttendanceEvent event,
-  //   AttendanceIndividualEmitter emit,
-  // ) async {
-  //   List<Map<String, dynamic>> m = [];
-  //   List<AbsentAttendee> filterData =
-  //       await attendanceRegisterRepository.getAttendeeListFromLocalDB(
-  //     tenantId: event.tenantId,
-  //     entryTime: event.entryTime,
-  //     exitTime: event.exitTime,
-  //     registarId: event.registarId,
-  //   );
-  //   await state.maybeMap(
-  //     orElse: () {},
-  //     loaded: (value) async {
-  //       try {
-  //         emit(value.copyWith(
-  //           flag: true,
-  //         ));
-  //         for (var element in filterData) {
-  //           if (element.status == 1) {
-  //             final entry = {
-  //               "registerId": element.registerId,
-  //               "individualId": element.individualId,
-  //               "tenantId": element.tenantId,
-  //               "time": element.entryTime,
-  //               "type": "ENTRY",
-  //               "status": "ACTIVE",
-  //               "documentIds": [],
-  //               "additionalDetails": {},
-  //             };
-  //
-  //             final exit = {
-  //               "registerId": element.registerId,
-  //               "individualId": element.individualId,
-  //               "tenantId": element.tenantId,
-  //               "time": element.exitTime,
-  //               "type": "EXIT",
-  //               "status": "ACTIVE",
-  //               "documentIds": [],
-  //               "additionalDetails": {},
-  //             };
-  //             m.add(entry);
-  //             m.add(exit);
-  //           }
-  //         }
-  //
-  //         final check = await attendanceRegisterRepository.createAttendanceLog(
-  //           attedeesList: m,
-  //           registartId: event.registarId,
-  //         );
-  //
-  //         if (check) {
-  //           emit(value.copyWith(
-  //             flag: false,
-  //           ));
-  //         }
-  //
-  //         print(m);
-  //       } catch (e) {
-  //         // emit(value.copyWith(
-  //         //   flag: false,
-  //         // ));
-  //         emit(AttendanceIndividualState.error(e.toString()));
-  //       }
-  //     },
-  //     error: (value) {},
-  //   );
-  // }
 
   FutureOr<void> _onSearchAttendeeByName(
     SearchAttendeesEvent event,
@@ -256,6 +199,10 @@ class AttendanceIndividualBloc
       AttendanceIndividualLogSearchEvent event) async {
     bool uploadToServer = false;
     bool anyLogPresent = false;
+    final currentDate = DateTime.fromMillisecondsSinceEpoch(event.currentDate);
+    int twelvePM =
+        DateTime(currentDate.year, currentDate.month, currentDate.day, 11, 58)
+            .millisecondsSinceEpoch;
     attendees = event.attendees.map((e) {
       final entryLogList = logResponse
           .where((l) =>
@@ -267,7 +214,9 @@ class AttendanceIndividualBloc
           .where((l) =>
               l.individualId == e.individualId &&
               l.type == EnumValues.exit.toValue() &&
-              (l.time == event.exitTime || l.time == event.entryTime))
+              (l.time == event.exitTime ||
+                  l.time == event.entryTime ||
+                  l.time == twelvePM))
           .toList();
       uploadToServer =
           entryLogList.any((entry) => entry.uploadToServer == true);
@@ -288,7 +237,12 @@ class AttendanceIndividualBloc
                       ((entryLogList.isEmpty || exitLogList.isEmpty) &&
                           anyLogPresent == true)
                   ? 0
-                  : 1);
+                  : (entryLogList.isNotEmpty &&
+                          exitLogList.isNotEmpty &&
+                          event.isSingleSession == true &&
+                          exitLogList.last.time == twelvePM)
+                      ? 0.5
+                      : 1);
     }).toList();
 
     emit(AttendanceIndividualState.loaded(
@@ -307,11 +261,13 @@ class AttendanceIndividualEvent with _$AttendanceIndividualEvent {
     required List<AttendeeModel> attendees,
     required int offset,
     required int limit,
+    @Default(false) bool isSingleSession,
   }) = AttendanceIndividualLogSearchEvent;
   const factory AttendanceIndividualEvent.individualAttendanceMark({
     @Default(0) int entryTime,
     @Default(0) int exitTime,
     @Default(-1) status,
+    @Default(false) bool isSingleSession,
     required String individualId,
     required String registerId,
     // required int eventStartDate,
@@ -320,6 +276,8 @@ class AttendanceIndividualEvent with _$AttendanceIndividualEvent {
   const factory AttendanceIndividualEvent.saveAsDraft({
     required int entryTime,
     required int exitTime,
+    required DateTime selectedDate,
+    @Default(false) bool isSingleSession,
     @Default(false) bool? createOplog,
   }) = SaveAsDraftEvent;
   //

@@ -357,7 +357,7 @@ extension AttendeeModelMapperExtension  on AttendeeModel {
 abstract class AttendeeModelCopyWith<$R> {
   factory AttendeeModelCopyWith(AttendeeModel value, Then<AttendeeModel, $R> then) = _AttendeeModelCopyWithImpl<$R>;
   AttendeeAdditionalFieldsCopyWith<$R>? get additionalFields;
-  $R call({AttendeeAdditionalFields? additionalFields, String? id, String? tenantId, String? registerId, String? individualId, int? enrollmentDate, int? denrollmentDate, bool? nonRecoverableError, int? rowVersion, String? name, String? identifierID, String? individualNumber, int? status});
+  $R call({AttendeeAdditionalFields? additionalFields, String? id, String? tenantId, String? registerId, String? individualId, int? enrollmentDate, int? denrollmentDate, bool? nonRecoverableError, int? rowVersion, String? name, String? identifierID, String? individualNumber, double? status});
   $R apply(AttendeeModel Function(AttendeeModel) transform);
 }
 
