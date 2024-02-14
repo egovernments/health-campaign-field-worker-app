@@ -1265,6 +1265,9 @@ class DeliverIntervention {
   String get resourceCode => 'RESOURCE_CODE';
 
   String get voucherCode => 'VOUCHER_CODE';
+
+  String get checkForProductVariantsConfig =>
+      'CHECK_FOR_PRODUCT_VARIANTS_CONFIG';
 }
 
 class ProjectSelection {

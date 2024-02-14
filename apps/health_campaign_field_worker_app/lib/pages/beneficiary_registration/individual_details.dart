@@ -48,12 +48,14 @@ class _IndividualDetailsPageState
   bool isDuplicateTag = false;
   static const maxLength = 200;
   final clickedStatus = ValueNotifier<bool>(false);
+  DateTime now = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
     final bloc = context.read<BeneficiaryRegistrationBloc>();
     final router = context.router;
     final theme = Theme.of(context);
+    DateTime before150Years = DateTime(now.year - 150, now.month, now.day);
 
     return Scaffold(
       body: ReactiveFormBuilder(
@@ -100,7 +102,11 @@ class _IndividualDetailsPageState
                       onPressed: isClicked
                           ? null
                           : () async {
-                              if (form.control(_dobKey).value == null) {
+                              final age = DigitDateUtils.calculateAge(
+                                form.control(_dobKey).value as DateTime?,
+                              );
+                              if ((age.years == 0 && age.months == 0) ||
+                                  age.years >= 150 && age.months > 0) {
                                 form.control(_dobKey).setErrors({'': true});
                               }
                               if (form.control(_idTypeKey).value == null) {
@@ -495,6 +501,7 @@ class _IndividualDetailsPageState
                                 yearsAndMonthsErrMsg: localizations.translate(
                                   i18.individualDetails.yearsAndMonthsErrorText,
                                 ),
+                                initialDate: before150Years,
                                 onChangeOfFormControl: (formControl) {
                                   // Handle changes to the control's value here
                                   final value = formControl.value;
@@ -505,7 +512,7 @@ class _IndividualDetailsPageState
                                         DigitDateUtils.calculateAge(value);
                                     if ((age.years == 0 && age.months == 0) ||
                                         age.months > 11 ||
-                                        (age.years >= 150 && age.months > 0)) {
+                                        (age.years >= 150 && age.months >= 0)) {
                                       formControl.setErrors({'': true});
                                     } else {
                                       formControl.removeError('');
