@@ -19,6 +19,7 @@ class HCMAttendanceBloc extends AttendanceListeners {
   final String? userId;
   final String? projectId;
   BuildContext context;
+
   HCMAttendanceBloc({
     this.attendanceLocalRepository,
     this.individualLocalRepository,
@@ -30,6 +31,7 @@ class HCMAttendanceBloc extends AttendanceListeners {
 
   late Function(List<AttendancePackageRegisterModel> registers)
       _registersLoaded;
+
   // late SearchAttendanceLog _attendeesLoaded;
 
   @override
@@ -62,9 +64,13 @@ class HCMAttendanceBloc extends AttendanceListeners {
           e.attendanceRegister.startDate!,
           e.attendanceRegister.endDate!,
           registerCompletedLogs ?? [],
+          e.attendanceRegister.additionalDetails?["sessions"] != 2,
         );
 
-        var completedDaysCount = list.length ~/ 2;
+        var completedDaysCount =
+            e.attendanceRegister.additionalDetails?["sessions"] == 2
+                ? list.length ~/ 2
+                : list.length;
 
         final individualList = await individualLocalRepository?.search(
           IndividualSearchModel(
@@ -164,12 +170,24 @@ class HCMAttendanceBloc extends AttendanceListeners {
     );
     final hcmAttendanceLogs = attendanceLogs.attendanceLogs.map(
       (e) {
+        String? clientReferenceId;
         final existingLog = existingLogs?.where(
-          (ele) =>
-              ele.attendanceLog?.individualId == e.individualId &&
-              ((ele.attendanceLog?.type == 'ENTRY' && e.type == 'ENTRY') ||
-                  (ele.attendanceLog?.type == 'EXIT' && e.type == 'EXIT')),
-        );
+          (ele) {
+            return attendanceLogs.isSingleSession == true
+                ? ele.attendanceLog?.individualId == e.individualId &&
+                    ele.attendanceLog?.registerId == e.registerId &&
+                    ((ele.attendanceLog?.type == 'ENTRY' &&
+                            e.type == 'ENTRY') ||
+                        (ele.attendanceLog?.type == 'EXIT' && e.type == 'EXIT'))
+                : ele.attendanceLog?.individualId == e.individualId &&
+                        ele.attendanceLog?.registerId == e.registerId &&
+                        ele.attendanceLog?.time == e.time &&
+                        ele.attendanceLog?.type == e.type &&
+                        ele.attendanceLog?.clientReferenceId != null
+                    ? true
+                    : false;
+          },
+        ).toList();
 
         return HCMAttendanceLogModel(
           rowVersion: 1,
@@ -237,6 +255,7 @@ class HCMAttendanceBloc extends AttendanceListeners {
     int startMillis,
     int endMillis,
     List<HCMAttendanceLogModel> completedLogs,
+    bool isSingleSession,
   ) {
     List<Map<DateTime, bool>> dateList = [];
 
@@ -274,7 +293,7 @@ class HCMAttendanceBloc extends AttendanceListeners {
       bool hasMorningLog = hasLogWithType(completedLogs, date, "ENTRY");
       bool hasEveningLog = hasLogWithType(completedLogs, date, "EXIT");
       dateList.add({
-        date: hasMorningLog && hasEveningLog,
+        date: isSingleSession ? hasMorningLog : hasMorningLog && hasEveningLog,
       });
     }
 
