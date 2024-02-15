@@ -181,8 +181,8 @@ class AttendeeModelMapper extends ClassMapperBase<AttendeeModel> {
   static String? _$individualNumber(AttendeeModel v) => v.individualNumber;
   static const Field<AttendeeModel, String> _f$individualNumber =
       Field('individualNumber', _$individualNumber, opt: true);
-  static int? _$status(AttendeeModel v) => v.status;
-  static const Field<AttendeeModel, int> _f$status =
+  static double? _$status(AttendeeModel v) => v.status;
+  static const Field<AttendeeModel, double> _f$status =
       Field('status', _$status, opt: true, def: -1);
 
   @override
@@ -291,7 +291,7 @@ abstract class AttendeeModelCopyWith<$R, $In extends AttendeeModel, $Out>
       String? name,
       String? identifierID,
       String? individualNumber,
-      int? status});
+      double? status});
   AttendeeModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 

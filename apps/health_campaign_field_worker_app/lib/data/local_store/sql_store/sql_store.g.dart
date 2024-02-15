@@ -1278,7 +1278,7 @@ class $AttendanceTable extends Attendance
 
   @override
   Set<GeneratedColumn> get $primaryKey =>
-      {registerId, individualId, tenantId, type, time, clientReferenceId};
+      {registerId, individualId, tenantId, type, clientReferenceId};
   @override
   AttendanceData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';

@@ -126,7 +126,7 @@ class HCMAttendanceBloc extends AttendanceListeners {
     final filteredLogs = attendanceLogs
         ?.where((log) {
           final logTime =
-              DateTime.fromMillisecondsSinceEpoch(log.attendanceLog!.time!);
+              DateTime.fromMillisecondsSinceEpoch(log.attendance!.time!);
           final logDay = DateTime(logTime.year, logTime.month, logTime.day)
               .millisecondsSinceEpoch;
           final currentTime = DateTime.fromMillisecondsSinceEpoch(
@@ -139,14 +139,14 @@ class HCMAttendanceBloc extends AttendanceListeners {
           return logDay == currentDay;
         })
         .map((a) => AttendanceLogModel(
-              registerId: a.attendanceLog?.registerId,
-              tenantId: a.attendanceLog?.tenantId,
-              status: a.attendanceLog?.status,
-              time: a.attendanceLog?.time,
-              individualId: a.attendanceLog?.individualId,
-              id: a.attendanceLog?.id,
-              type: a.attendanceLog?.type,
-              uploadToServer: a.attendanceLog?.uploadToServer,
+              registerId: a.attendance?.registerId,
+              tenantId: a.attendance?.tenantId,
+              status: a.attendance?.status,
+              time: a.attendance?.time,
+              individualId: a.attendance?.individualId,
+              id: a.attendance?.id,
+              type: a.attendance?.type,
+              uploadToServer: a.attendance?.uploadToServer,
             ))
         .toList();
     searchAttendanceLog.onLogLoaded(filteredLogs ?? []);
@@ -166,16 +166,16 @@ class HCMAttendanceBloc extends AttendanceListeners {
       (e) {
         final existingLog = existingLogs?.where(
           (ele) =>
-              ele.attendanceLog?.individualId == e.individualId &&
-              ((ele.attendanceLog?.type == 'ENTRY' && e.type == 'ENTRY') ||
-                  (ele.attendanceLog?.type == 'EXIT' && e.type == 'EXIT')),
+              ele.attendance?.individualId == e.individualId &&
+              ((ele.attendance?.type == 'ENTRY' && e.type == 'ENTRY') ||
+                  (ele.attendance?.type == 'EXIT' && e.type == 'EXIT')),
         );
 
         return HCMAttendanceLogModel(
           rowVersion: 1,
-          attendanceLog: e.copyWith(
+          attendance: e.copyWith(
             clientReferenceId: (existingLog ?? []).isNotEmpty
-                ? existingLog?.last.attendanceLog?.clientReferenceId
+                ? existingLog?.last.attendance?.clientReferenceId
                 : IdGen.i.identifier,
           ),
           clientAuditDetails: ClientAuditDetails(
@@ -194,35 +194,35 @@ class HCMAttendanceBloc extends AttendanceListeners {
       },
     ).toList();
     final groupedIndividuals = hcmAttendanceLogs
-        .groupListsBy((ele) => ele.attendanceLog?.individualId);
+        .groupListsBy((ele) => ele.attendance?.individualId);
 
     for (final log in groupedIndividuals.entries) {
       await attendanceLogLocalRepository?.create(
-        log.value.where((l) => l.attendanceLog?.type == 'ENTRY').last,
+        log.value.where((l) => l.attendance?.type == 'ENTRY').last,
         createOpLog: (attendanceLogs.createOplog ?? false) &&
             (log.value
-                    .where((l) => l.attendanceLog?.type == 'ENTRY')
+                    .where((l) => l.attendance?.type == 'ENTRY')
                     .last
-                    .attendanceLog
+                    .attendance
                     ?.time !=
                 log.value
-                    .where((l) => l.attendanceLog?.type == 'EXIT')
+                    .where((l) => l.attendance?.type == 'EXIT')
                     .last
-                    .attendanceLog
+                    .attendance
                     ?.time),
       );
       await attendanceLogLocalRepository?.create(
-        log.value.where((l) => l.attendanceLog?.type == 'EXIT').last,
+        log.value.where((l) => l.attendance?.type == 'EXIT').last,
         createOpLog: (attendanceLogs.createOplog ?? false) &&
             (log.value
-                    .where((l) => l.attendanceLog?.type == 'ENTRY')
+                    .where((l) => l.attendance?.type == 'ENTRY')
                     .last
-                    .attendanceLog
+                    .attendance
                     ?.time !=
                 log.value
-                    .where((l) => l.attendanceLog?.type == 'EXIT')
+                    .where((l) => l.attendance?.type == 'EXIT')
                     .last
-                    .attendanceLog
+                    .attendance
                     ?.time),
       );
     }
@@ -304,7 +304,7 @@ class HCMAttendanceBloc extends AttendanceListeners {
           ).millisecondsSinceEpoch;
 
     return logs.any((element) =>
-        element.attendanceLog?.time == logTime &&
-        element.attendanceLog?.type == type);
+        element.attendance?.time == logTime &&
+        element.attendance?.type == type);
   }
 }
