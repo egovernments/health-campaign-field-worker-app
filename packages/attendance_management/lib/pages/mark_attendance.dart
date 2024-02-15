@@ -13,7 +13,6 @@ import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/localized.dart';
 import '../blocs/attendance_individual_bloc.dart';
 import '../models/enum_values.dart';
-import '../widgets/attendance_acknowledgement.dart';
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/circular_button.dart';
 import '../widgets/no_result_card.dart';
@@ -216,11 +215,11 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                           child: SizedBox(
                             width: MediaQuery.of(context).size.width,
                             child: Text(
-                              '${DateFormat("dd MMMM yyyy").format(widget.dateTime)} - ${widget.session != null ? widget.session == 0 ? localizations.translate(
+                              '${DateFormat("dd MMMM yyyy").format(widget.dateTime)} ${widget.session != null ? widget.session == 0 ? '- ${localizations.translate(
                                   i18.attendance.morningSession,
-                                ) : localizations.translate(
+                                )}' : '- ${localizations.translate(
                                   i18.attendance.eveningSession,
-                                ) : ''}',
+                                )}' : ''}',
                               style: DigitTheme
                                   .instance.mobileTheme.textTheme.headlineSmall
                                   ?.copyWith(
@@ -516,8 +515,8 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
         });
   }
 
-  void showOverlay(BuildContext context,
-      DigitDialogOptions digitDialogOptions) {
+  void showOverlay(
+      BuildContext context, DigitDialogOptions digitDialogOptions) {
     // Initialize overlayEntry
     overlayEntry = OverlayEntry(
       builder: (BuildContext context) => Stack(
