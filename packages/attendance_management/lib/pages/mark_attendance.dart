@@ -72,9 +72,6 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
   void dispose() {
     _debounce?.cancel();
     controller.dispose();
-    if (overlayEntry != null) {
-      overlayEntry?.remove();
-    }
     super.dispose();
   }
 
@@ -98,13 +95,10 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
               tenantId: widget.tenantId.toString(),
             ),
           ),
-        child: WillPopScope(
-          onWillPop: () async {
+        child: PopScope(
+          onPopInvoked: (bool value) {
             if (overlayEntry != null) {
               overlayEntry?.remove();
-              return false;
-            } else {
-              return true;
             }
           },
           child: GestureDetector(
@@ -461,7 +455,6 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
             } else {
               showOverlay(
                 context,
-                overlayEntry,
                 DigitDialogOptions(
                   titleText: localizations.translate(
                     i18.attendance.confirmationLabel,
@@ -523,7 +516,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
         });
   }
 
-  void showOverlay(BuildContext context, OverlayEntry? overlayEntry,
+  void showOverlay(BuildContext context,
       DigitDialogOptions digitDialogOptions) {
     // Initialize overlayEntry
     overlayEntry = OverlayEntry(
@@ -586,10 +579,6 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                         padding: const EdgeInsets.all(kPadding),
                         child: DigitElevatedButton(
                           onPressed: () {
-                            if (overlayEntry != null) {
-                              // Remove the overlay when the button is pressed
-                              overlayEntry.remove();
-                            }
                             digitDialogOptions.primaryAction?.action
                                 ?.call(context);
                           },
@@ -601,10 +590,8 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                     if (digitDialogOptions.secondaryAction != null)
                       TextButton(
                         onPressed: () {
-                          if (overlayEntry != null) {
-                            // Remove the overlay when the button is pressed
-                            overlayEntry.remove();
-                          }
+                          digitDialogOptions.secondaryAction?.action
+                              ?.call(context);
                         },
                         child: Center(
                             child: Text(
@@ -620,6 +607,6 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
     );
 
     // Insert overlayEntry into the overlay stack
-    Overlay.of(context).insert(overlayEntry);
+    Overlay.of(context).insert(overlayEntry!);
   }
 }
