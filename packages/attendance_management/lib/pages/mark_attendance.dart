@@ -96,17 +96,16 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
               exitTime: widget.exitTime,
               registerId: widget.registerId,
               tenantId: widget.tenantId.toString(),
-              // eventEndDate: widget.eventEndTime.millisecondsSinceEpoch,
-              // eventStartDate: widget.eventStartTime.millisecondsSinceEpoch,
             ),
           ),
         child: WillPopScope(
           onWillPop: () async {
             if (overlayEntry != null) {
               overlayEntry?.remove();
+              return false;
+            } else {
+              return true;
             }
-
-            return false;
           },
           child: GestureDetector(
             onTap: () {

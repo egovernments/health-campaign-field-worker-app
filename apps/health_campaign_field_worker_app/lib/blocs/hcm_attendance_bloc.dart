@@ -170,15 +170,17 @@ class HCMAttendanceBloc extends AttendanceListeners {
     );
     final hcmAttendanceLogs = attendanceLogs.attendanceLogs.map(
       (e) {
-        String? clientReferenceId;
         final existingLog = existingLogs?.where(
           (ele) {
             return attendanceLogs.isSingleSession == true
                 ? ele.attendanceLog?.individualId == e.individualId &&
                     ele.attendanceLog?.registerId == e.registerId &&
                     ((ele.attendanceLog?.type == 'ENTRY' &&
-                            e.type == 'ENTRY') ||
-                        (ele.attendanceLog?.type == 'EXIT' && e.type == 'EXIT'))
+                            e.type == 'ENTRY' &&
+                            ele.attendanceLog?.time == e.time) ||
+                        (ele.attendanceLog?.type == 'EXIT' &&
+                            e.type == 'EXIT' &&
+                            ele.attendanceLog?.time == e.time))
                 : ele.attendanceLog?.individualId == e.individualId &&
                         ele.attendanceLog?.registerId == e.registerId &&
                         ele.attendanceLog?.time == e.time &&
