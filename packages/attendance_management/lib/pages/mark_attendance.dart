@@ -13,7 +13,7 @@ import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/localized.dart';
 import '../blocs/attendance_individual_bloc.dart';
 import '../models/enum_values.dart';
-import '../utils/constants.dart';
+import '../widgets/attendance_acknowledgement.dart';
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/circular_button.dart';
 import '../widgets/no_result_card.dart';
@@ -72,8 +72,8 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
   void dispose() {
     _debounce?.cancel();
     controller.dispose();
-    if (confirmationDialogKey.currentState?.mounted != null) {
-      confirmationDialogKey.currentState?.dispose();
+    if (overlayEntry != null) {
+      overlayEntry?.remove();
     }
     super.dispose();
   }
@@ -100,8 +100,8 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
           ),
         child: WillPopScope(
           onWillPop: () async {
-            if (confirmationDialogKey.currentState?.mounted == true) {
-              confirmationDialogKey.currentState?.dispose();
+            if (overlayEntry != null) {
+              overlayEntry?.remove();
               return false;
             } else {
               return true;
@@ -620,6 +620,6 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
     );
 
     // Insert overlayEntry into the overlay stack
-    confirmationDialogKey.currentState?.insert(overlayEntry);
+    Overlay.of(context).insert(overlayEntry);
   }
 }
