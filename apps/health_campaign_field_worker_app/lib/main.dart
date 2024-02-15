@@ -44,7 +44,8 @@ void main() async {
   DigitUi.instance.initThemeComponents();
   await Constants().initialize(info.version);
   _isar = await Constants().isar;
-  await initializeService(_dio, _isar);
+
+  await initializeService(_dio, _isar,);
 
   runApp(MainApplication(
     appRouter: AppRouter(),

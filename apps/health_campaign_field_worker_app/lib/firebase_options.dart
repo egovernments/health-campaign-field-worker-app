@@ -64,6 +64,6 @@ class DefaultFirebaseOptions {
     projectId: 'digit-health-75ed0',
     storageBucket: 'digit-health-75ed0.appspot.com',
     iosClientId: '397617237644-ddc7e9g08v752477td0vpl72it6sfpam.apps.googleusercontent.com',
-    iosBundleId: 'org.egov.salama',
+    iosBundleId: 'org.egov.digit.hcm',
   );
 }

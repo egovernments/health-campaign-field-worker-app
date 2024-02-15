@@ -98,15 +98,22 @@ part 'sql_store.g.dart';
   HFReferral,
 ])
 class LocalSqlDataStore extends _$LocalSqlDataStore {
-  LocalSqlDataStore() : super(_openConnection());
+  LocalSqlDataStore._() : super(_openConnection());
+
+   // Singleton instance variable
+  static final LocalSqlDataStore _instance = LocalSqlDataStore._();
+
+  factory LocalSqlDataStore() => _instance;
 
   @override
   int get schemaVersion => 4;
 
   static LazyDatabase _openConnection() {
+
     return LazyDatabase(() async {
       final dbFolder = await getApplicationDocumentsDirectory();
       final file = File(p.join(dbFolder.path, 'db.sqlite'));
+
 
       return NativeDatabase(file, logStatements: true, setup: (data) {});
     });
