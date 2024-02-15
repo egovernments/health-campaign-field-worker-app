@@ -1,7 +1,5 @@
 home="$PWD"
 
-cd ..
-
 cd apps/health_campaign_field_worker_app/lib || exit
 
 app_root="$PWD"
