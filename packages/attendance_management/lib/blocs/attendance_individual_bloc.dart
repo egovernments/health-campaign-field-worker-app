@@ -145,7 +145,7 @@ class AttendanceIndividualBloc
                       ? EnumValues.inactive.toValue()
                       : EnumValues.active.toValue(),
                   time: e.status == 0
-                      ? event.entryTime
+                      ? event.exitTime
                       : e.status == 0.5
                           ? halfDay
                           : event.exitTime,
@@ -159,7 +159,8 @@ class AttendanceIndividualBloc
                 attendeeList: value.attendanceCollectionModel ?? [],
                 attendanceLogs: list,
                 onMarked: (val) => false,
-                createOplog: event.createOplog),
+                createOplog: event.createOplog,
+                isSingleSession: event.isSingleSession),
           );
         }
         emit(value.copyWith(
@@ -215,7 +216,7 @@ class AttendanceIndividualBloc
               l.type == EnumValues.exit.toValue() &&
               (l.time == event.exitTime ||
                   l.time == event.entryTime ||
-                  l.time == twelvePM))
+                  (event.isSingleSession && l.time == twelvePM)))
           .toList();
       uploadToServer =
           entryLogList.any((entry) => entry.uploadToServer == true);
@@ -232,7 +233,7 @@ class AttendanceIndividualBloc
               ? -1
               : (entryLogList.isNotEmpty &&
                           exitLogList.isNotEmpty &&
-                          entryLogList.last.time == exitLogList.last.time) ||
+                          entryLogList.last.status == 'INACTIVE') ||
                       ((entryLogList.isEmpty || exitLogList.isEmpty) &&
                           anyLogPresent == true)
                   ? 0

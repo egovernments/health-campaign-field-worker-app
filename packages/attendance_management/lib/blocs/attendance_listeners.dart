@@ -89,11 +89,13 @@ class SubmitAttendanceDetails {
   final List<AttendeeModel> attendeeList;
   final Function(bool message) onMarked;
   final bool? createOplog;
+  final bool? isSingleSession;
 
   SubmitAttendanceDetails({
     required this.attendanceLogs,
     required this.attendeeList,
     required this.onMarked,
     this.createOplog = false,
+    this.isSingleSession = false,
   });
 }

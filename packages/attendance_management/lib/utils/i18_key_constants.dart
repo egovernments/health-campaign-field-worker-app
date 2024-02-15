@@ -160,7 +160,7 @@ class Attendance {
 
   String get missedAttendanceDesc => 'MISSED_ATTENDANCE_DESC';
 
-  String get viewAttendance => 'BUTTON_VIEW_ATTENDANCE';
+  String get viewAttendance => 'VIEW_ATTENDANCE';
 
   String get openRegister => 'ATTENDANCE_OPEN_REGISTER';
 
