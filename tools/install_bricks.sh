@@ -23,7 +23,3 @@ echo "$PWD"
 
 melos clean
 melos bootstrap
-
-# run add_attendance_mapper.sh to add import and mapper for attendance
-
-bash add_attendance_mapper.sh
