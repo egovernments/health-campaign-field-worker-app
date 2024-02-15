@@ -1,5 +1,3 @@
-import 'package:attendance_management/models/attendance_log.dart';
-import 'package:dart_mappable/dart_mappable.dart';
 import 'package:isar/isar.dart';
 
 import '../../../../models/data_model.dart';
@@ -48,6 +46,10 @@ class OpLog {
         return entity;
       case "stock":
         final entity = StockModelMapper.fromJson(entityString);
+
+        return entity;
+      case "hFReferral":
+        final entity = HFReferralModelMapper.fromJson(entityString);
 
         return entity;
       default:
