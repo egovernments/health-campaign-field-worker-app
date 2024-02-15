@@ -85,3 +85,14 @@ sed -i ''"$last_mapper_line"'r '"$temp_mappers" "$data_model_file"
 # Remove the temporary files
 rm "$temp_imports"
 rm "$temp_mappers"
+
+
+# for adding import as at.Address in sql_store.g.dart for resolving conflict with Address created inside sql_store.g.dart
+
+cd ../apps/health_campaign_field_worker_app/lib/data/local_store/sql_store || exit
+
+app_root="$PWD"
+
+sql_g_dart_file="$app_root/sql_store.g.dart"
+
+sed -i '0,/class \$AddressTable extends Address/s//class \$AddressTable extends at.Address/' sql_store.g.dart
