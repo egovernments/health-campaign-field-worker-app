@@ -22,7 +22,7 @@ jobs:
       - name: Flutter action
         uses: subosito/flutter-action@v2.8.0
         with:
-          flutter-version: "3.10.5"
+          flutter-version: "3.16.5"
 
       - name: Generate models
         run: ./tools/install_bricks.sh
