@@ -173,19 +173,19 @@ class HCMAttendanceBloc extends AttendanceListeners {
         final existingLog = existingLogs?.where(
           (ele) {
             return attendanceLogs.isSingleSession == true
-                ? ele.attendanceLog?.individualId == e.individualId &&
-                    ele.attendanceLog?.registerId == e.registerId &&
-                    ((ele.attendanceLog?.type == 'ENTRY' &&
+                ? ele.attendance?.individualId == e.individualId &&
+                    ele.attendance?.registerId == e.registerId &&
+                    ((ele.attendance?.type == 'ENTRY' &&
                             e.type == 'ENTRY' &&
-                            ele.attendanceLog?.time == e.time) ||
-                        (ele.attendanceLog?.type == 'EXIT' &&
+                            ele.attendance?.time == e.time) ||
+                        (ele.attendance?.type == 'EXIT' &&
                             e.type == 'EXIT' &&
-                            ele.attendanceLog?.time == e.time))
-                : ele.attendanceLog?.individualId == e.individualId &&
-                        ele.attendanceLog?.registerId == e.registerId &&
-                        ele.attendanceLog?.time == e.time &&
-                        ele.attendanceLog?.type == e.type &&
-                        ele.attendanceLog?.clientReferenceId != null
+                            ele.attendance?.time == e.time))
+                : ele.attendance?.individualId == e.individualId &&
+                        ele.attendance?.registerId == e.registerId &&
+                        ele.attendance?.time == e.time &&
+                        ele.attendance?.type == e.type &&
+                        ele.attendance?.clientReferenceId != null
                     ? true
                     : false;
           },
@@ -193,9 +193,9 @@ class HCMAttendanceBloc extends AttendanceListeners {
 
         return HCMAttendanceLogModel(
           rowVersion: 1,
-          attendanceLog: e.copyWith(
+          attendance: e.copyWith(
             clientReferenceId: (existingLog ?? []).isNotEmpty
-                ? existingLog?.last.attendanceLog?.clientReferenceId
+                ? existingLog?.last.attendance?.clientReferenceId
                 : IdGen.i.identifier,
           ),
           clientAuditDetails: ClientAuditDetails(
