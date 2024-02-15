@@ -91,7 +91,7 @@ rm "$temp_mappers"
 
 ls -la
 
-cd apps/health_campaign_field_worker_app/lib/data/local_store/sql_store/ || exit
+cd data/local_store/sql_store/ || exit
 app_root="$PWD"
 
 ls -la
