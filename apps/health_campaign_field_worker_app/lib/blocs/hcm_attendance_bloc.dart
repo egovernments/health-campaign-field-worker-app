@@ -126,7 +126,7 @@ class HCMAttendanceBloc extends AttendanceListeners {
     final filteredLogs = attendanceLogs
         ?.where((log) {
           final logTime =
-              DateTime.fromMillisecondsSinceEpoch(log.attendance!.time!);
+              DateTime.fromMillisecondsSinceEpoch(log.attendanceLog!.time!);
           final logDay = DateTime(logTime.year, logTime.month, logTime.day)
               .millisecondsSinceEpoch;
           final currentTime = DateTime.fromMillisecondsSinceEpoch(
@@ -139,14 +139,14 @@ class HCMAttendanceBloc extends AttendanceListeners {
           return logDay == currentDay;
         })
         .map((a) => AttendanceLogModel(
-              registerId: a.attendance?.registerId,
-              tenantId: a.attendance?.tenantId,
-              status: a.attendance?.status,
-              time: a.attendance?.time,
-              individualId: a.attendance?.individualId,
-              id: a.attendance?.id,
-              type: a.attendance?.type,
-              uploadToServer: a.attendance?.uploadToServer,
+              registerId: a.attendanceLog?.registerId,
+              tenantId: a.attendanceLog?.tenantId,
+              status: a.attendanceLog?.status,
+              time: a.attendanceLog?.time,
+              individualId: a.attendanceLog?.individualId,
+              id: a.attendanceLog?.id,
+              type: a.attendanceLog?.type,
+              uploadToServer: a.attendanceLog?.uploadToServer,
             ))
         .toList();
     searchAttendanceLog.onLogLoaded(filteredLogs ?? []);
@@ -157,41 +157,73 @@ class HCMAttendanceBloc extends AttendanceListeners {
     SubmitAttendanceDetails attendanceLogs,
   ) async {
     // TODO: implement submitAttendanceDetails
-    final hcmAttendanceLogs = attendanceLogs.attendanceLogs
-        .map((e) => HCMAttendanceLogModel(
-              rowVersion: 1,
-              attendance: e.copyWith(clientReferenceId: IdGen.i.identifier),
-              clientAuditDetails: ClientAuditDetails(
-                createdBy: userId.toString(),
-                createdTime: DateTime.now().millisecondsSinceEpoch,
-                lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
-                lastModifiedBy: userId.toString(),
-              ),
-              auditDetails: AuditDetails(
-                createdBy: userId.toString(),
-                createdTime: DateTime.now().millisecondsSinceEpoch,
-                lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
-                lastModifiedBy: userId.toString(),
-              ),
-            ))
-        .toList();
+    final existingLogs = await attendanceLogLocalRepository?.search(
+      HCMAttendanceLogSearchModel(
+        registerId: attendanceLogs.attendanceLogs.first.registerId,
+      ),
+    );
+    final hcmAttendanceLogs = attendanceLogs.attendanceLogs.map(
+      (e) {
+        final existingLog = existingLogs?.where(
+          (ele) =>
+              ele.attendanceLog?.individualId == e.individualId &&
+              ((ele.attendanceLog?.type == 'ENTRY' && e.type == 'ENTRY') ||
+                  (ele.attendanceLog?.type == 'EXIT' && e.type == 'EXIT')),
+        );
+
+        return HCMAttendanceLogModel(
+          rowVersion: 1,
+          attendanceLog: e.copyWith(
+            clientReferenceId: (existingLog ?? []).isNotEmpty
+                ? existingLog?.last.attendanceLog?.clientReferenceId
+                : IdGen.i.identifier,
+          ),
+          clientAuditDetails: ClientAuditDetails(
+            createdBy: userId.toString(),
+            createdTime: DateTime.now().millisecondsSinceEpoch,
+            lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+            lastModifiedBy: userId.toString(),
+          ),
+          auditDetails: AuditDetails(
+            createdBy: userId.toString(),
+            createdTime: DateTime.now().millisecondsSinceEpoch,
+            lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+            lastModifiedBy: userId.toString(),
+          ),
+        );
+      },
+    ).toList();
     final groupedIndividuals = hcmAttendanceLogs
-        .groupListsBy((ele) => ele.attendance?.individualId);
+        .groupListsBy((ele) => ele.attendanceLog?.individualId);
 
     for (final log in groupedIndividuals.entries) {
       await attendanceLogLocalRepository?.create(
-        log.value.first,
+        log.value.where((l) => l.attendanceLog?.type == 'ENTRY').last,
         createOpLog: (attendanceLogs.createOplog ?? false) &&
-            (log.value.first.attendance?.time !=
-                log.value.last.attendance?.time),
+            (log.value
+                    .where((l) => l.attendanceLog?.type == 'ENTRY')
+                    .last
+                    .attendanceLog
+                    ?.time !=
+                log.value
+                    .where((l) => l.attendanceLog?.type == 'EXIT')
+                    .last
+                    .attendanceLog
+                    ?.time),
       );
       await attendanceLogLocalRepository?.create(
-        hcmAttendanceLogs
-            .where((l) => l.attendance?.individualId == log.key)
-            .last,
+        log.value.where((l) => l.attendanceLog?.type == 'EXIT').last,
         createOpLog: (attendanceLogs.createOplog ?? false) &&
-            (log.value.first.attendance?.time !=
-                log.value.last.attendance?.time),
+            (log.value
+                    .where((l) => l.attendanceLog?.type == 'ENTRY')
+                    .last
+                    .attendanceLog
+                    ?.time !=
+                log.value
+                    .where((l) => l.attendanceLog?.type == 'EXIT')
+                    .last
+                    .attendanceLog
+                    ?.time),
       );
     }
   }
@@ -272,7 +304,7 @@ class HCMAttendanceBloc extends AttendanceListeners {
           ).millisecondsSinceEpoch;
 
     return logs.any((element) =>
-        element.attendance?.time == logTime &&
-        element.attendance?.type == type);
+        element.attendanceLog?.time == logTime &&
+        element.attendanceLog?.type == type);
   }
 }

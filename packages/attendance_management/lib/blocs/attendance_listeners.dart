@@ -1,7 +1,5 @@
 import 'package:attendance_management/attendance_management.dart';
 
-import '../models/attendance_log.dart';
-
 abstract class AttendanceListeners {
   void getAttendanceRegisters(
       Function(
@@ -88,11 +86,13 @@ class SearchAttendanceLog {
 
 class SubmitAttendanceDetails {
   final List<AttendanceLogModel> attendanceLogs;
+  final List<AttendeeModel> attendeeList;
   final Function(bool message) onMarked;
   final bool? createOplog;
 
   SubmitAttendanceDetails({
     required this.attendanceLogs,
+    required this.attendeeList,
     required this.onMarked,
     this.createOplog = false,
   });

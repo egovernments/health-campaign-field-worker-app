@@ -95,6 +95,8 @@ class Common {
 
   String get scanBales => 'CORE_COMMON_SCAN_BALES';
   String get ageInMonths => 'AGE_IN_MONTHS_LABEL';
+
+  String get inactive => 'INACTIVE';
 }
 
 class AcknowledgementSuccess {
@@ -133,6 +135,8 @@ class Attendance {
 
   String get noAttendeesEnrolledMessage =>
       'NO_ATTENDEES_ENROLLED_TO_THE_REGISTER';
+
+  String get registerNotStarted => 'REGISTER_NOT_STARTED_MSG';
 
   String get saveAndMarkLaterLabel => 'SAVE_AND_MARK_LATER_LABEL';
 

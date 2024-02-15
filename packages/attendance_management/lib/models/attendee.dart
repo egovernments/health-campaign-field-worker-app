@@ -32,7 +32,7 @@ class AttendeeModel with AttendeeModelMappable {
   final bool? nonRecoverableError;
   final String? name;
   final int? rowVersion;
-  final int? status;
+  final double? status;
   final String? identifierID;
   final String? individualNumber;
   final AttendeeAdditionalFields? additionalFields;

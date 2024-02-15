@@ -1,5 +1,6 @@
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/blocs/date_session_bloc.dart';
+import 'package:attendance_management/models/enum_values.mapper.g.dart';
 import 'package:attendance_management/pages/session_select.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
@@ -90,9 +91,14 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
                                   register.endDate!)
                               : 'N/A',
                       t.translate(i18.attendance.statusLabel):
-                          t.translate(register.status.toString()),
+                          register.endDate != null &&
+                                  register.endDate! >
+                                      DateTime.now().millisecondsSinceEpoch
+                              ? t.translate(register.status.toString())
+                              : t.translate(i18.common.inactive),
                       t.translate(i18.attendance.attendanceCompletionLabel):
-                          calculateCompletedDays(attendanceRegisters[i]) ?? 'N/A',
+                          calculateCompletedDays(attendanceRegisters[i]) ??
+                              'N/A',
                     },
                     registers: attendanceRegisters,
                     noOfAttendees: register.attendees?.length ?? 0,
@@ -100,7 +106,9 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
                     tenantId: register.tenantId ?? 'N/A',
                     show: register.startDate != null &&
                         register.endDate != null &&
-                        attendanceRegisters.isNotEmpty,
+                        attendanceRegisters.isNotEmpty &&
+                        register.endDate! >
+                            DateTime.now().millisecondsSinceEpoch,
                     startDate: register.startDate != null
                         ? DateTime.fromMillisecondsSinceEpoch(
                             register.startDate!,
@@ -196,12 +204,12 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
   calculateCompletedDays(AttendancePackageRegisterModel attendanceRegister) {
     var completedDays = 0;
     var totalDays = 0;
-      totalDays = attendanceRegister.attendanceLog!.length;
-      for (var element in attendanceRegister.attendanceLog!) {
-        if (element.containsValue(true)) {
-          completedDays++;
-        }
+    totalDays = attendanceRegister.attendanceLog!.length;
+    for (var element in attendanceRegister.attendanceLog!) {
+      if (element.containsValue(true)) {
+        completedDays++;
       }
+    }
 
     return '${completedDays.toString()}/${totalDays.toString()}';
   }
@@ -259,6 +267,17 @@ class RegisterCard extends StatelessWidget {
                           DigitTheme.instance.mobileTheme,
                         ),
                       );
+                    } else if (startDate != null &&
+                        startDate!.millisecondsSinceEpoch >
+                            DateTime.now().millisecondsSinceEpoch) {
+                      DigitToast.show(
+                        context,
+                        options: DigitToastOptions(
+                          t.translate(i18.attendance.registerNotStarted),
+                          true,
+                          DigitTheme.instance.mobileTheme,
+                        ),
+                      );
                     } else {
                       await Navigator.of(context).push(
                         MaterialPageRoute(
@@ -270,15 +289,6 @@ class RegisterCard extends StatelessWidget {
                         ),
                       );
                       attendanceBloc.add(const AttendanceEvents.initial());
-                      // Navigator.of(context).push(
-                      //   MaterialPageRoute(
-                      //     builder: (context) =>
-                      //         AttendanceDateSessionSelectionPage(
-                      //       registers: registers,
-                      //       registerID: registerId,
-                      //     ),
-                      //   ),
-                      // );
                     }
                   },
                 )

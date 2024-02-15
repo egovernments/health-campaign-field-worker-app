@@ -1,5 +1,6 @@
 import 'package:attendance_management/blocs/date_session_bloc.dart';
 import 'package:attendance_management/models/enum_values.dart';
+import 'package:attendance_management/models/enum_values.mapper.g.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/digit_radio_button_list.dart';
@@ -102,8 +103,12 @@ class _AttendanceDateSessionSelectionPageState
                                           : i18.attendance.markAttendance,
                                     )),
                                     onPressed: () async {
-                                      if (form.control(_sessionRadio).value ==
-                                          null) {
+                                      if (selectedRegister.additionalDetails?[
+                                                  EnumValues.sessions
+                                                      .toValue()] ==
+                                              2 &&
+                                          form.control(_sessionRadio).value ==
+                                              null) {
                                         form
                                             .control(_sessionRadio)
                                             .setErrors({'': true});
@@ -122,7 +127,8 @@ class _AttendanceDateSessionSelectionPageState
 
                                           final entryTime = selectedRegister
                                                           .additionalDetails?[
-                                                      'sessions'] ==
+                                                      EnumValues.sessions
+                                                          .toValue()] ==
                                                   2
                                               ? AttendanceDateTimeManagement
                                                   .getMillisecondEpoch(
@@ -140,14 +146,14 @@ class _AttendanceDateSessionSelectionPageState
                                                       : 0,
                                                   "entryTime",
                                                 )
-                                              : (DateTime(s.year, s.month,
-                                                          s.day, 9)
-                                                      .millisecondsSinceEpoch) ~/
-                                                  1000;
+                                              : (DateTime(
+                                                      s.year, s.month, s.day, 9)
+                                                  .millisecondsSinceEpoch);
 
                                           final exitTime = selectedRegister
                                                           .additionalDetails?[
-                                                      'sessions'] ==
+                                                      EnumValues.sessions
+                                                          .toValue()] ==
                                                   2
                                               ? AttendanceDateTimeManagement
                                                   .getMillisecondEpoch(
@@ -166,9 +172,8 @@ class _AttendanceDateSessionSelectionPageState
                                                   "exitTime",
                                                 )
                                               : (DateTime(s.year, s.month,
-                                                          s.day, 18)
-                                                      .millisecondsSinceEpoch) ~/
-                                                  1000;
+                                                      s.day, 18)
+                                                  .millisecondsSinceEpoch);
 
                                           final submit =
                                               await Navigator.of(context).push(
@@ -312,7 +317,7 @@ class _AttendanceDateSessionSelectionPageState
           for (var element in element.attendanceLog!) {
             element.forEach((key, value) {
               if (value == false && key.isBefore(currentDate)) {
-                missedDays += "${key.day}/${key.month}/${key.year}, \n";
+                missedDays += "${key.day}/${key.month}/${key.year} \n";
               }
             });
           }
@@ -333,6 +338,8 @@ class _AttendanceDateSessionSelectionPageState
                 DigitDateUtils.getFilteredDate(selectedDate.toString()) &&
             log.values.first == true) {
           return true;
+        } else {
+          return false;
         }
       }
     }

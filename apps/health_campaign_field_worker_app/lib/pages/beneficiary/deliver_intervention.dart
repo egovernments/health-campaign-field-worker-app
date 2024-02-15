@@ -119,6 +119,19 @@ class _DeliverInterventionPageState
                           : 0;
 
                       final steps = generateSteps(numberOfDoses);
+                      if ((productVariants ?? []).isEmpty) {
+                        DigitToast.show(
+                          context,
+                          options: DigitToastOptions(
+                            localizations.translate(
+                              i18.deliverIntervention
+                                  .checkForProductVariantsConfig,
+                            ),
+                            true,
+                            theme,
+                          ),
+                        );
+                      }
 
                       return BlocBuilder<ProductVariantBloc,
                           ProductVariantState>(

@@ -92,6 +92,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
               offset: 0,
               currentDate: widget.dateTime.millisecondsSinceEpoch,
               entryTime: widget.entryTime,
+              isSingleSession: widget.session == null,
               exitTime: widget.exitTime,
               registerId: widget.registerId,
               tenantId: widget.tenantId.toString(),
@@ -325,6 +326,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                 individualId: tableDataModel.individualId!,
                 registerId: tableDataModel.registerId!,
                 status: tableDataModel.status,
+                isSingleSession: widget.session == null,
               ),
             );
           },
@@ -445,6 +447,8 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
               individualLogBloc.add(SaveAsDraftEvent(
                 entryTime: widget.entryTime,
                 exitTime: widget.exitTime,
+                selectedDate: widget.dateTime,
+                isSingleSession: widget.session == null,
                 createOplog: type != EnumValues.draft.toValue(),
               ));
               DigitToast.show(
@@ -476,6 +480,8 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                       individualLogBloc.add(SaveAsDraftEvent(
                         entryTime: widget.entryTime,
                         exitTime: widget.exitTime,
+                        selectedDate: widget.dateTime,
+                        isSingleSession: widget.session == null,
                         createOplog: type != EnumValues.draft.toValue(),
                       ));
                       Navigator.of(context).pop(true);
