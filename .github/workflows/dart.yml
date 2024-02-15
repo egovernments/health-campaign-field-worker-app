@@ -26,8 +26,6 @@ jobs:
 
       - name: Generate models
         run: ./tools/install_bricks.sh
-      - name: Add Attendance Mappers
-        run: ./tools/add_attendance_mapper.sh
 
       - name: Analyze code
         run: melos run analyze
