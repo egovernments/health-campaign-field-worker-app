@@ -32,6 +32,7 @@ class AttendanceLogModel with AttendanceLogModelMappable {
   final String? clientReferenceId;
   final bool? uploadToServer;
   final List<String>? documentIds;
+  final Map<String, dynamic>? additionalDetails;
 
   AttendanceLogModel({
     this.id,
@@ -44,5 +45,6 @@ class AttendanceLogModel with AttendanceLogModelMappable {
     this.clientReferenceId,
     this.uploadToServer = false,
     this.documentIds = const [],
+    this.additionalDetails,
   }) : super();
 }

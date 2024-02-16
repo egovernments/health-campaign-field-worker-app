@@ -1117,6 +1117,12 @@ class $AttendanceTable extends Attendance
   late final GeneratedColumn<int> rowVersion = GeneratedColumn<int>(
       'row_version', aliasedName, true,
       type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _additionalFieldsMeta =
+      const VerificationMeta('additionalFields');
+  @override
+  late final GeneratedColumn<String> additionalFields = GeneratedColumn<String>(
+      'additional_fields', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _uploadToServerMeta =
       const VerificationMeta('uploadToServer');
   @override
@@ -1148,6 +1154,7 @@ class $AttendanceTable extends Attendance
         auditModifiedTime,
         isDeleted,
         rowVersion,
+        additionalFields,
         uploadToServer
       ];
   @override
@@ -1267,6 +1274,12 @@ class $AttendanceTable extends Attendance
           rowVersion.isAcceptableOrUnknown(
               data['row_version']!, _rowVersionMeta));
     }
+    if (data.containsKey('additional_fields')) {
+      context.handle(
+          _additionalFieldsMeta,
+          additionalFields.isAcceptableOrUnknown(
+              data['additional_fields']!, _additionalFieldsMeta));
+    }
     if (data.containsKey('upload_to_server')) {
       context.handle(
           _uploadToServerMeta,
@@ -1321,6 +1334,8 @@ class $AttendanceTable extends Attendance
           .read(DriftSqlType.bool, data['${effectivePrefix}is_deleted']),
       rowVersion: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}row_version']),
+      additionalFields: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}additional_fields']),
       uploadToServer: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}upload_to_server']),
     );
@@ -1352,6 +1367,7 @@ class AttendanceData extends DataClass implements Insertable<AttendanceData> {
   final int? auditModifiedTime;
   final bool? isDeleted;
   final int? rowVersion;
+  final String? additionalFields;
   final bool? uploadToServer;
   const AttendanceData(
       {this.id,
@@ -1373,6 +1389,7 @@ class AttendanceData extends DataClass implements Insertable<AttendanceData> {
       this.auditModifiedTime,
       this.isDeleted,
       this.rowVersion,
+      this.additionalFields,
       this.uploadToServer});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1428,6 +1445,9 @@ class AttendanceData extends DataClass implements Insertable<AttendanceData> {
     if (!nullToAbsent || rowVersion != null) {
       map['row_version'] = Variable<int>(rowVersion);
     }
+    if (!nullToAbsent || additionalFields != null) {
+      map['additional_fields'] = Variable<String>(additionalFields);
+    }
     if (!nullToAbsent || uploadToServer != null) {
       map['upload_to_server'] = Variable<bool>(uploadToServer);
     }
@@ -1480,6 +1500,9 @@ class AttendanceData extends DataClass implements Insertable<AttendanceData> {
       rowVersion: rowVersion == null && nullToAbsent
           ? const Value.absent()
           : Value(rowVersion),
+      additionalFields: additionalFields == null && nullToAbsent
+          ? const Value.absent()
+          : Value(additionalFields),
       uploadToServer: uploadToServer == null && nullToAbsent
           ? const Value.absent()
           : Value(uploadToServer),
@@ -1511,6 +1534,7 @@ class AttendanceData extends DataClass implements Insertable<AttendanceData> {
       auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
       isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
       rowVersion: serializer.fromJson<int?>(json['rowVersion']),
+      additionalFields: serializer.fromJson<String?>(json['additionalFields']),
       uploadToServer: serializer.fromJson<bool?>(json['uploadToServer']),
     );
   }
@@ -1537,6 +1561,7 @@ class AttendanceData extends DataClass implements Insertable<AttendanceData> {
       'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
       'isDeleted': serializer.toJson<bool?>(isDeleted),
       'rowVersion': serializer.toJson<int?>(rowVersion),
+      'additionalFields': serializer.toJson<String?>(additionalFields),
       'uploadToServer': serializer.toJson<bool?>(uploadToServer),
     };
   }
@@ -1561,6 +1586,7 @@ class AttendanceData extends DataClass implements Insertable<AttendanceData> {
           Value<int?> auditModifiedTime = const Value.absent(),
           Value<bool?> isDeleted = const Value.absent(),
           Value<int?> rowVersion = const Value.absent(),
+          Value<String?> additionalFields = const Value.absent(),
           Value<bool?> uploadToServer = const Value.absent()}) =>
       AttendanceData(
         id: id.present ? id.value : this.id,
@@ -1601,6 +1627,9 @@ class AttendanceData extends DataClass implements Insertable<AttendanceData> {
             : this.auditModifiedTime,
         isDeleted: isDeleted.present ? isDeleted.value : this.isDeleted,
         rowVersion: rowVersion.present ? rowVersion.value : this.rowVersion,
+        additionalFields: additionalFields.present
+            ? additionalFields.value
+            : this.additionalFields,
         uploadToServer:
             uploadToServer.present ? uploadToServer.value : this.uploadToServer,
       );
@@ -1626,33 +1655,36 @@ class AttendanceData extends DataClass implements Insertable<AttendanceData> {
           ..write('auditModifiedTime: $auditModifiedTime, ')
           ..write('isDeleted: $isDeleted, ')
           ..write('rowVersion: $rowVersion, ')
+          ..write('additionalFields: $additionalFields, ')
           ..write('uploadToServer: $uploadToServer')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(
-      id,
-      clientReferenceId,
-      tenantId,
-      registerId,
-      individualId,
-      time,
-      status,
-      type,
-      nonRecoverableError,
-      auditCreatedTime,
-      clientCreatedTime,
-      clientModifiedBy,
-      clientCreatedBy,
-      clientModifiedTime,
-      auditCreatedBy,
-      auditModifiedBy,
-      auditModifiedTime,
-      isDeleted,
-      rowVersion,
-      uploadToServer);
+  int get hashCode => Object.hashAll([
+        id,
+        clientReferenceId,
+        tenantId,
+        registerId,
+        individualId,
+        time,
+        status,
+        type,
+        nonRecoverableError,
+        auditCreatedTime,
+        clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
+        clientModifiedTime,
+        auditCreatedBy,
+        auditModifiedBy,
+        auditModifiedTime,
+        isDeleted,
+        rowVersion,
+        additionalFields,
+        uploadToServer
+      ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1676,6 +1708,7 @@ class AttendanceData extends DataClass implements Insertable<AttendanceData> {
           other.auditModifiedTime == this.auditModifiedTime &&
           other.isDeleted == this.isDeleted &&
           other.rowVersion == this.rowVersion &&
+          other.additionalFields == this.additionalFields &&
           other.uploadToServer == this.uploadToServer);
 }
 
@@ -1699,6 +1732,7 @@ class AttendanceCompanion extends UpdateCompanion<AttendanceData> {
   final Value<int?> auditModifiedTime;
   final Value<bool?> isDeleted;
   final Value<int?> rowVersion;
+  final Value<String?> additionalFields;
   final Value<bool?> uploadToServer;
   final Value<int> rowid;
   const AttendanceCompanion({
@@ -1721,6 +1755,7 @@ class AttendanceCompanion extends UpdateCompanion<AttendanceData> {
     this.auditModifiedTime = const Value.absent(),
     this.isDeleted = const Value.absent(),
     this.rowVersion = const Value.absent(),
+    this.additionalFields = const Value.absent(),
     this.uploadToServer = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -1744,6 +1779,7 @@ class AttendanceCompanion extends UpdateCompanion<AttendanceData> {
     this.auditModifiedTime = const Value.absent(),
     this.isDeleted = const Value.absent(),
     this.rowVersion = const Value.absent(),
+    this.additionalFields = const Value.absent(),
     this.uploadToServer = const Value.absent(),
     this.rowid = const Value.absent(),
   })  : tenantId = Value(tenantId),
@@ -1769,6 +1805,7 @@ class AttendanceCompanion extends UpdateCompanion<AttendanceData> {
     Expression<int>? auditModifiedTime,
     Expression<bool>? isDeleted,
     Expression<int>? rowVersion,
+    Expression<String>? additionalFields,
     Expression<bool>? uploadToServer,
     Expression<int>? rowid,
   }) {
@@ -1794,6 +1831,7 @@ class AttendanceCompanion extends UpdateCompanion<AttendanceData> {
       if (auditModifiedTime != null) 'audit_modified_time': auditModifiedTime,
       if (isDeleted != null) 'is_deleted': isDeleted,
       if (rowVersion != null) 'row_version': rowVersion,
+      if (additionalFields != null) 'additional_fields': additionalFields,
       if (uploadToServer != null) 'upload_to_server': uploadToServer,
       if (rowid != null) 'rowid': rowid,
     });
@@ -1819,6 +1857,7 @@ class AttendanceCompanion extends UpdateCompanion<AttendanceData> {
       Value<int?>? auditModifiedTime,
       Value<bool?>? isDeleted,
       Value<int?>? rowVersion,
+      Value<String?>? additionalFields,
       Value<bool?>? uploadToServer,
       Value<int>? rowid}) {
     return AttendanceCompanion(
@@ -1841,6 +1880,7 @@ class AttendanceCompanion extends UpdateCompanion<AttendanceData> {
       auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
       isDeleted: isDeleted ?? this.isDeleted,
       rowVersion: rowVersion ?? this.rowVersion,
+      additionalFields: additionalFields ?? this.additionalFields,
       uploadToServer: uploadToServer ?? this.uploadToServer,
       rowid: rowid ?? this.rowid,
     );
@@ -1906,6 +1946,9 @@ class AttendanceCompanion extends UpdateCompanion<AttendanceData> {
     if (rowVersion.present) {
       map['row_version'] = Variable<int>(rowVersion.value);
     }
+    if (additionalFields.present) {
+      map['additional_fields'] = Variable<String>(additionalFields.value);
+    }
     if (uploadToServer.present) {
       map['upload_to_server'] = Variable<bool>(uploadToServer.value);
     }
@@ -1937,6 +1980,7 @@ class AttendanceCompanion extends UpdateCompanion<AttendanceData> {
           ..write('auditModifiedTime: $auditModifiedTime, ')
           ..write('isDeleted: $isDeleted, ')
           ..write('rowVersion: $rowVersion, ')
+          ..write('additionalFields: $additionalFields, ')
           ..write('uploadToServer: $uploadToServer, ')
           ..write('rowid: $rowid')
           ..write(')'))

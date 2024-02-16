@@ -32,8 +32,14 @@ mixin _$AttendanceIndividualEvent {
     required TResult Function(int entryTime, int exitTime, dynamic status,
             bool isSingleSession, String individualId, String registerId)
         individualAttendanceMark,
-    required TResult Function(int entryTime, int exitTime,
-            DateTime selectedDate, bool isSingleSession, bool? createOplog)
+    required TResult Function(
+            int entryTime,
+            int exitTime,
+            DateTime selectedDate,
+            bool isSingleSession,
+            bool? createOplog,
+            double? latitude,
+            double? longitude)
         saveAsDraft,
     required TResult Function(String name) searchAttendees,
   }) =>
@@ -54,8 +60,14 @@ mixin _$AttendanceIndividualEvent {
     TResult? Function(int entryTime, int exitTime, dynamic status,
             bool isSingleSession, String individualId, String registerId)?
         individualAttendanceMark,
-    TResult? Function(int entryTime, int exitTime, DateTime selectedDate,
-            bool isSingleSession, bool? createOplog)?
+    TResult? Function(
+            int entryTime,
+            int exitTime,
+            DateTime selectedDate,
+            bool isSingleSession,
+            bool? createOplog,
+            double? latitude,
+            double? longitude)?
         saveAsDraft,
     TResult? Function(String name)? searchAttendees,
   }) =>
@@ -76,8 +88,14 @@ mixin _$AttendanceIndividualEvent {
     TResult Function(int entryTime, int exitTime, dynamic status,
             bool isSingleSession, String individualId, String registerId)?
         individualAttendanceMark,
-    TResult Function(int entryTime, int exitTime, DateTime selectedDate,
-            bool isSingleSession, bool? createOplog)?
+    TResult Function(
+            int entryTime,
+            int exitTime,
+            DateTime selectedDate,
+            bool isSingleSession,
+            bool? createOplog,
+            double? latitude,
+            double? longitude)?
         saveAsDraft,
     TResult Function(String name)? searchAttendees,
     required TResult orElse(),
@@ -324,8 +342,14 @@ class _$AttendanceIndividualLogSearchEventImpl
     required TResult Function(int entryTime, int exitTime, dynamic status,
             bool isSingleSession, String individualId, String registerId)
         individualAttendanceMark,
-    required TResult Function(int entryTime, int exitTime,
-            DateTime selectedDate, bool isSingleSession, bool? createOplog)
+    required TResult Function(
+            int entryTime,
+            int exitTime,
+            DateTime selectedDate,
+            bool isSingleSession,
+            bool? createOplog,
+            double? latitude,
+            double? longitude)
         saveAsDraft,
     required TResult Function(String name) searchAttendees,
   }) {
@@ -350,8 +374,14 @@ class _$AttendanceIndividualLogSearchEventImpl
     TResult? Function(int entryTime, int exitTime, dynamic status,
             bool isSingleSession, String individualId, String registerId)?
         individualAttendanceMark,
-    TResult? Function(int entryTime, int exitTime, DateTime selectedDate,
-            bool isSingleSession, bool? createOplog)?
+    TResult? Function(
+            int entryTime,
+            int exitTime,
+            DateTime selectedDate,
+            bool isSingleSession,
+            bool? createOplog,
+            double? latitude,
+            double? longitude)?
         saveAsDraft,
     TResult? Function(String name)? searchAttendees,
   }) {
@@ -376,8 +406,14 @@ class _$AttendanceIndividualLogSearchEventImpl
     TResult Function(int entryTime, int exitTime, dynamic status,
             bool isSingleSession, String individualId, String registerId)?
         individualAttendanceMark,
-    TResult Function(int entryTime, int exitTime, DateTime selectedDate,
-            bool isSingleSession, bool? createOplog)?
+    TResult Function(
+            int entryTime,
+            int exitTime,
+            DateTime selectedDate,
+            bool isSingleSession,
+            bool? createOplog,
+            double? latitude,
+            double? longitude)?
         saveAsDraft,
     TResult Function(String name)? searchAttendees,
     required TResult orElse(),
@@ -604,8 +640,14 @@ class _$AttendanceMarkEventImpl implements AttendanceMarkEvent {
     required TResult Function(int entryTime, int exitTime, dynamic status,
             bool isSingleSession, String individualId, String registerId)
         individualAttendanceMark,
-    required TResult Function(int entryTime, int exitTime,
-            DateTime selectedDate, bool isSingleSession, bool? createOplog)
+    required TResult Function(
+            int entryTime,
+            int exitTime,
+            DateTime selectedDate,
+            bool isSingleSession,
+            bool? createOplog,
+            double? latitude,
+            double? longitude)
         saveAsDraft,
     required TResult Function(String name) searchAttendees,
   }) {
@@ -630,8 +672,14 @@ class _$AttendanceMarkEventImpl implements AttendanceMarkEvent {
     TResult? Function(int entryTime, int exitTime, dynamic status,
             bool isSingleSession, String individualId, String registerId)?
         individualAttendanceMark,
-    TResult? Function(int entryTime, int exitTime, DateTime selectedDate,
-            bool isSingleSession, bool? createOplog)?
+    TResult? Function(
+            int entryTime,
+            int exitTime,
+            DateTime selectedDate,
+            bool isSingleSession,
+            bool? createOplog,
+            double? latitude,
+            double? longitude)?
         saveAsDraft,
     TResult? Function(String name)? searchAttendees,
   }) {
@@ -656,8 +704,14 @@ class _$AttendanceMarkEventImpl implements AttendanceMarkEvent {
     TResult Function(int entryTime, int exitTime, dynamic status,
             bool isSingleSession, String individualId, String registerId)?
         individualAttendanceMark,
-    TResult Function(int entryTime, int exitTime, DateTime selectedDate,
-            bool isSingleSession, bool? createOplog)?
+    TResult Function(
+            int entryTime,
+            int exitTime,
+            DateTime selectedDate,
+            bool isSingleSession,
+            bool? createOplog,
+            double? latitude,
+            double? longitude)?
         saveAsDraft,
     TResult Function(String name)? searchAttendees,
     required TResult orElse(),
@@ -742,7 +796,9 @@ abstract class _$$SaveAsDraftEventImplCopyWith<$Res> {
       int exitTime,
       DateTime selectedDate,
       bool isSingleSession,
-      bool? createOplog});
+      bool? createOplog,
+      double? latitude,
+      double? longitude});
 }
 
 /// @nodoc
@@ -762,6 +818,8 @@ class __$$SaveAsDraftEventImplCopyWithImpl<$Res>
     Object? selectedDate = null,
     Object? isSingleSession = null,
     Object? createOplog = freezed,
+    Object? latitude = freezed,
+    Object? longitude = freezed,
   }) {
     return _then(_$SaveAsDraftEventImpl(
       entryTime: null == entryTime
@@ -784,6 +842,14 @@ class __$$SaveAsDraftEventImplCopyWithImpl<$Res>
           ? _value.createOplog
           : createOplog // ignore: cast_nullable_to_non_nullable
               as bool?,
+      latitude: freezed == latitude
+          ? _value.latitude
+          : latitude // ignore: cast_nullable_to_non_nullable
+              as double?,
+      longitude: freezed == longitude
+          ? _value.longitude
+          : longitude // ignore: cast_nullable_to_non_nullable
+              as double?,
     ));
   }
 }
@@ -796,7 +862,9 @@ class _$SaveAsDraftEventImpl implements SaveAsDraftEvent {
       required this.exitTime,
       required this.selectedDate,
       this.isSingleSession = false,
-      this.createOplog = false});
+      this.createOplog = false,
+      this.latitude,
+      this.longitude});
 
   @override
   final int entryTime;
@@ -810,10 +878,14 @@ class _$SaveAsDraftEventImpl implements SaveAsDraftEvent {
   @override
   @JsonKey()
   final bool? createOplog;
+  @override
+  final double? latitude;
+  @override
+  final double? longitude;
 
   @override
   String toString() {
-    return 'AttendanceIndividualEvent.saveAsDraft(entryTime: $entryTime, exitTime: $exitTime, selectedDate: $selectedDate, isSingleSession: $isSingleSession, createOplog: $createOplog)';
+    return 'AttendanceIndividualEvent.saveAsDraft(entryTime: $entryTime, exitTime: $exitTime, selectedDate: $selectedDate, isSingleSession: $isSingleSession, createOplog: $createOplog, latitude: $latitude, longitude: $longitude)';
   }
 
   @override
@@ -830,12 +902,16 @@ class _$SaveAsDraftEventImpl implements SaveAsDraftEvent {
             (identical(other.isSingleSession, isSingleSession) ||
                 other.isSingleSession == isSingleSession) &&
             (identical(other.createOplog, createOplog) ||
-                other.createOplog == createOplog));
+                other.createOplog == createOplog) &&
+            (identical(other.latitude, latitude) ||
+                other.latitude == latitude) &&
+            (identical(other.longitude, longitude) ||
+                other.longitude == longitude));
   }
 
   @override
   int get hashCode => Object.hash(runtimeType, entryTime, exitTime,
-      selectedDate, isSingleSession, createOplog);
+      selectedDate, isSingleSession, createOplog, latitude, longitude);
 
   @JsonKey(ignore: true)
   @override
@@ -861,13 +937,19 @@ class _$SaveAsDraftEventImpl implements SaveAsDraftEvent {
     required TResult Function(int entryTime, int exitTime, dynamic status,
             bool isSingleSession, String individualId, String registerId)
         individualAttendanceMark,
-    required TResult Function(int entryTime, int exitTime,
-            DateTime selectedDate, bool isSingleSession, bool? createOplog)
+    required TResult Function(
+            int entryTime,
+            int exitTime,
+            DateTime selectedDate,
+            bool isSingleSession,
+            bool? createOplog,
+            double? latitude,
+            double? longitude)
         saveAsDraft,
     required TResult Function(String name) searchAttendees,
   }) {
-    return saveAsDraft(
-        entryTime, exitTime, selectedDate, isSingleSession, createOplog);
+    return saveAsDraft(entryTime, exitTime, selectedDate, isSingleSession,
+        createOplog, latitude, longitude);
   }
 
   @override
@@ -887,13 +969,19 @@ class _$SaveAsDraftEventImpl implements SaveAsDraftEvent {
     TResult? Function(int entryTime, int exitTime, dynamic status,
             bool isSingleSession, String individualId, String registerId)?
         individualAttendanceMark,
-    TResult? Function(int entryTime, int exitTime, DateTime selectedDate,
-            bool isSingleSession, bool? createOplog)?
+    TResult? Function(
+            int entryTime,
+            int exitTime,
+            DateTime selectedDate,
+            bool isSingleSession,
+            bool? createOplog,
+            double? latitude,
+            double? longitude)?
         saveAsDraft,
     TResult? Function(String name)? searchAttendees,
   }) {
-    return saveAsDraft?.call(
-        entryTime, exitTime, selectedDate, isSingleSession, createOplog);
+    return saveAsDraft?.call(entryTime, exitTime, selectedDate, isSingleSession,
+        createOplog, latitude, longitude);
   }
 
   @override
@@ -913,15 +1001,21 @@ class _$SaveAsDraftEventImpl implements SaveAsDraftEvent {
     TResult Function(int entryTime, int exitTime, dynamic status,
             bool isSingleSession, String individualId, String registerId)?
         individualAttendanceMark,
-    TResult Function(int entryTime, int exitTime, DateTime selectedDate,
-            bool isSingleSession, bool? createOplog)?
+    TResult Function(
+            int entryTime,
+            int exitTime,
+            DateTime selectedDate,
+            bool isSingleSession,
+            bool? createOplog,
+            double? latitude,
+            double? longitude)?
         saveAsDraft,
     TResult Function(String name)? searchAttendees,
     required TResult orElse(),
   }) {
     if (saveAsDraft != null) {
-      return saveAsDraft(
-          entryTime, exitTime, selectedDate, isSingleSession, createOplog);
+      return saveAsDraft(entryTime, exitTime, selectedDate, isSingleSession,
+          createOplog, latitude, longitude);
     }
     return orElse();
   }
@@ -974,13 +1068,17 @@ abstract class SaveAsDraftEvent implements AttendanceIndividualEvent {
       required final int exitTime,
       required final DateTime selectedDate,
       final bool isSingleSession,
-      final bool? createOplog}) = _$SaveAsDraftEventImpl;
+      final bool? createOplog,
+      final double? latitude,
+      final double? longitude}) = _$SaveAsDraftEventImpl;
 
   int get entryTime;
   int get exitTime;
   DateTime get selectedDate;
   bool get isSingleSession;
   bool? get createOplog;
+  double? get latitude;
+  double? get longitude;
   @JsonKey(ignore: true)
   _$$SaveAsDraftEventImplCopyWith<_$SaveAsDraftEventImpl> get copyWith =>
       throw _privateConstructorUsedError;
@@ -1067,8 +1165,14 @@ class _$SearchAttendeesEventImpl implements SearchAttendeesEvent {
     required TResult Function(int entryTime, int exitTime, dynamic status,
             bool isSingleSession, String individualId, String registerId)
         individualAttendanceMark,
-    required TResult Function(int entryTime, int exitTime,
-            DateTime selectedDate, bool isSingleSession, bool? createOplog)
+    required TResult Function(
+            int entryTime,
+            int exitTime,
+            DateTime selectedDate,
+            bool isSingleSession,
+            bool? createOplog,
+            double? latitude,
+            double? longitude)
         saveAsDraft,
     required TResult Function(String name) searchAttendees,
   }) {
@@ -1092,8 +1196,14 @@ class _$SearchAttendeesEventImpl implements SearchAttendeesEvent {
     TResult? Function(int entryTime, int exitTime, dynamic status,
             bool isSingleSession, String individualId, String registerId)?
         individualAttendanceMark,
-    TResult? Function(int entryTime, int exitTime, DateTime selectedDate,
-            bool isSingleSession, bool? createOplog)?
+    TResult? Function(
+            int entryTime,
+            int exitTime,
+            DateTime selectedDate,
+            bool isSingleSession,
+            bool? createOplog,
+            double? latitude,
+            double? longitude)?
         saveAsDraft,
     TResult? Function(String name)? searchAttendees,
   }) {
@@ -1117,8 +1227,14 @@ class _$SearchAttendeesEventImpl implements SearchAttendeesEvent {
     TResult Function(int entryTime, int exitTime, dynamic status,
             bool isSingleSession, String individualId, String registerId)?
         individualAttendanceMark,
-    TResult Function(int entryTime, int exitTime, DateTime selectedDate,
-            bool isSingleSession, bool? createOplog)?
+    TResult Function(
+            int entryTime,
+            int exitTime,
+            DateTime selectedDate,
+            bool isSingleSession,
+            bool? createOplog,
+            double? latitude,
+            double? longitude)?
         saveAsDraft,
     TResult Function(String name)? searchAttendees,
     required TResult orElse(),

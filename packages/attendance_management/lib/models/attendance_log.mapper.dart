@@ -178,6 +178,11 @@ class AttendanceLogModelMapper extends ClassMapperBase<AttendanceLogModel> {
   static List<String>? _$documentIds(AttendanceLogModel v) => v.documentIds;
   static const Field<AttendanceLogModel, List<String>> _f$documentIds =
       Field('documentIds', _$documentIds, opt: true, def: const []);
+  static Map<String, dynamic>? _$additionalDetails(AttendanceLogModel v) =>
+      v.additionalDetails;
+  static const Field<AttendanceLogModel, Map<String, dynamic>>
+      _f$additionalDetails =
+      Field('additionalDetails', _$additionalDetails, opt: true);
 
   @override
   final MappableFields<AttendanceLogModel> fields = const {
@@ -191,6 +196,7 @@ class AttendanceLogModelMapper extends ClassMapperBase<AttendanceLogModel> {
     #clientReferenceId: _f$clientReferenceId,
     #uploadToServer: _f$uploadToServer,
     #documentIds: _f$documentIds,
+    #additionalDetails: _f$additionalDetails,
   };
   @override
   final bool ignoreNull = true;
@@ -206,7 +212,8 @@ class AttendanceLogModelMapper extends ClassMapperBase<AttendanceLogModel> {
         status: data.dec(_f$status),
         clientReferenceId: data.dec(_f$clientReferenceId),
         uploadToServer: data.dec(_f$uploadToServer),
-        documentIds: data.dec(_f$documentIds));
+        documentIds: data.dec(_f$documentIds),
+        additionalDetails: data.dec(_f$additionalDetails));
   }
 
   @override
@@ -267,6 +274,8 @@ extension AttendanceLogModelValueCopy<$R, $Out>
 abstract class AttendanceLogModelCopyWith<$R, $In extends AttendanceLogModel,
     $Out> implements ClassCopyWith<$R, $In, $Out> {
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get documentIds;
+  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>?
+      get additionalDetails;
   $R call(
       {String? id,
       String? tenantId,
@@ -277,7 +286,8 @@ abstract class AttendanceLogModelCopyWith<$R, $In extends AttendanceLogModel,
       String? status,
       String? clientReferenceId,
       bool? uploadToServer,
-      List<String>? documentIds});
+      List<String>? documentIds,
+      Map<String, dynamic>? additionalDetails});
   AttendanceLogModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -299,6 +309,14 @@ class _AttendanceLogModelCopyWithImpl<$R, $Out>
               (v) => call(documentIds: v))
           : null;
   @override
+  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>?
+      get additionalDetails => $value.additionalDetails != null
+          ? MapCopyWith(
+              $value.additionalDetails!,
+              (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(additionalDetails: v))
+          : null;
+  @override
   $R call(
           {Object? id = $none,
           Object? tenantId = $none,
@@ -309,7 +327,8 @@ class _AttendanceLogModelCopyWithImpl<$R, $Out>
           Object? status = $none,
           Object? clientReferenceId = $none,
           Object? uploadToServer = $none,
-          Object? documentIds = $none}) =>
+          Object? documentIds = $none,
+          Object? additionalDetails = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
         if (tenantId != $none) #tenantId: tenantId,
@@ -320,7 +339,8 @@ class _AttendanceLogModelCopyWithImpl<$R, $Out>
         if (status != $none) #status: status,
         if (clientReferenceId != $none) #clientReferenceId: clientReferenceId,
         if (uploadToServer != $none) #uploadToServer: uploadToServer,
-        if (documentIds != $none) #documentIds: documentIds
+        if (documentIds != $none) #documentIds: documentIds,
+        if (additionalDetails != $none) #additionalDetails: additionalDetails
       }));
   @override
   AttendanceLogModel $make(CopyWithData data) => AttendanceLogModel(
@@ -334,7 +354,9 @@ class _AttendanceLogModelCopyWithImpl<$R, $Out>
       clientReferenceId:
           data.get(#clientReferenceId, or: $value.clientReferenceId),
       uploadToServer: data.get(#uploadToServer, or: $value.uploadToServer),
-      documentIds: data.get(#documentIds, or: $value.documentIds));
+      documentIds: data.get(#documentIds, or: $value.documentIds),
+      additionalDetails:
+          data.get(#additionalDetails, or: $value.additionalDetails));
 
   @override
   AttendanceLogModelCopyWith<$R2, AttendanceLogModel, $Out2> $chain<$R2, $Out2>(

@@ -1,6 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
 
-import 'package:attendance_management/attendance_management.dart';
 import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
 
@@ -51,6 +51,8 @@ class AttendanceLogsLocalRepository extends LocalRepository<
               time: attendeeLog.time,
               type: attendeeLog.type,
               uploadToServer: attendeeLog.uploadToServer,
+              additionalDetails:
+                  jsonDecode(attendeeLog.additionalFields.toString()),
             ),
             auditDetails: AuditDetails(
               createdTime: attendeeLog.auditCreatedTime!,

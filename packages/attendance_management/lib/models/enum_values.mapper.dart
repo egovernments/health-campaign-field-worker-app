@@ -49,6 +49,10 @@ class EnumValuesMapper extends EnumMapper<EnumValues> {
         return EnumValues.active;
       case "INACTIVE":
         return EnumValues.inactive;
+      case "latitude":
+        return EnumValues.latitude;
+      case "longitude":
+        return EnumValues.longitude;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -81,6 +85,10 @@ class EnumValuesMapper extends EnumMapper<EnumValues> {
         return "ACTIVE";
       case EnumValues.inactive:
         return "INACTIVE";
+      case EnumValues.latitude:
+        return "latitude";
+      case EnumValues.longitude:
+        return "longitude";
     }
   }
 }

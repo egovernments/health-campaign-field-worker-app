@@ -8,6 +8,7 @@ import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:location/location.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/localized.dart';
@@ -79,214 +80,240 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
     final theme = Theme.of(context);
     var localizations = AttendanceLocalization.of(context);
 
-    return BlocProvider<AttendanceIndividualBloc>(
-        create: (context) => individualLogBloc
-          ..add(
-            AttendanceIndividualLogSearchEvent(
-              attendees: widget.attendees.isNotEmpty ? widget.attendees : [],
-              limit: 10,
-              offset: 0,
-              currentDate: widget.dateTime.millisecondsSinceEpoch,
-              entryTime: widget.entryTime,
-              isSingleSession: widget.session == null,
-              exitTime: widget.exitTime,
-              registerId: widget.registerId,
-              tenantId: widget.tenantId.toString(),
-            ),
-          ),
-        child: PopScope(
-          onPopInvoked: (bool value) {
-            if (overlayEntry != null) {
-              overlayEntry?.remove();
-            }
-          },
-          child: GestureDetector(
-            onTap: () {
-              FocusManager.instance.primaryFocus?.unfocus();
-            },
-            child: Scaffold(
-                body: BlocBuilder<AttendanceIndividualBloc,
-                    AttendanceIndividualState>(
-              buildWhen: (p, c) {
-                return p != c ? true : false;
+    return BlocProvider<LocationBloc>(
+        create: (_) {
+          return LocationBloc(location: Location())
+            ..add(const LoadLocationEvent());
+        },
+        lazy: false,
+        child: BlocProvider<AttendanceIndividualBloc>(
+            create: (context) => individualLogBloc
+              ..add(
+                AttendanceIndividualLogSearchEvent(
+                  attendees:
+                      widget.attendees.isNotEmpty ? widget.attendees : [],
+                  limit: 10,
+                  offset: 0,
+                  currentDate: widget.dateTime.millisecondsSinceEpoch,
+                  entryTime: widget.entryTime,
+                  isSingleSession: widget.session == null,
+                  exitTime: widget.exitTime,
+                  registerId: widget.registerId,
+                  tenantId: widget.tenantId.toString(),
+                ),
+              ),
+            child: PopScope(
+              onPopInvoked: (bool value) {
+                if (overlayEntry != null) {
+                  overlayEntry?.remove();
+                }
               },
-              builder: (context, state) {
-                return state.maybeWhen(
-                  orElse: () {
-                    return const SizedBox.shrink();
-                  },
-                  loaded: (
-                    attendanceSearchModelList,
-                    attendanceCollectionModel,
-                    offsetData,
-                    currentOffset,
-                    countData,
-                    limitData,
-                    viewOnly,
-                  ) {
-                    List<TableDataRow> tableData = [];
+              child: GestureDetector(
+                onTap: () {
+                  FocusManager.instance.primaryFocus?.unfocus();
+                },
+                child: BlocBuilder<LocationBloc, LocationState>(
+                    builder: (context, locationState) {
+                  return Scaffold(
+                      body: BlocBuilder<AttendanceIndividualBloc,
+                          AttendanceIndividualState>(
+                    buildWhen: (p, c) {
+                      return p != c ? true : false;
+                    },
+                    builder: (context, state) {
+                      return state.maybeWhen(
+                        orElse: () {
+                          return const SizedBox.shrink();
+                        },
+                        loaded: (
+                          attendanceSearchModelList,
+                          attendanceCollectionModel,
+                          offsetData,
+                          currentOffset,
+                          countData,
+                          limitData,
+                          viewOnly,
+                        ) {
+                          List<TableDataRow> tableData = [];
 
-                    tableData = attendanceSearchModelList != null
-                        ? getAttendanceData(attendanceSearchModelList, viewOnly)
-                        : getAttendanceData(
-                            attendanceCollectionModel!, viewOnly);
+                          tableData = attendanceSearchModelList != null
+                              ? getAttendanceData(
+                                  attendanceSearchModelList, viewOnly)
+                              : getAttendanceData(
+                                  attendanceCollectionModel!, viewOnly);
 
-                    return ScrollableContent(
-                      enableFixedButton: true,
-                      footer: viewOnly
-                          ? const SizedBox.shrink()
-                          : SizedBox(
-                              height: 150,
-                              child: Card(
-                                margin: const EdgeInsets.all(0),
-                                child: Container(
-                                  padding: const EdgeInsets.fromLTRB(
-                                      kPadding, 0, kPadding, 0),
-                                  child: Column(
-                                    children: [
-                                      DigitOutlineIconButton(
-                                        buttonStyle: OutlinedButton.styleFrom(
-                                          shape: const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.zero,
-                                          ),
-                                        ),
-                                        onPressed: () {
-                                          checkIfAllAttendeesMarked(
-                                              state,
-                                              localizations,
-                                              theme,
-                                              EnumValues.draft.toValue());
-                                        },
-                                        icon: Icons.drafts_outlined,
-                                        label: localizations.translate(
-                                          i18.attendance.saveAndMarkLaterLabel,
-                                        ),
-                                      ),
-                                      DigitElevatedButton(
-                                        onPressed: !viewOnly
-                                            ? () {
+                          return ScrollableContent(
+                            enableFixedButton: true,
+                            footer: viewOnly
+                                ? const SizedBox.shrink()
+                                : SizedBox(
+                                    height: 150,
+                                    child: Card(
+                                      margin: const EdgeInsets.all(0),
+                                      child: Container(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            kPadding, 0, kPadding, 0),
+                                        child: Column(
+                                          children: [
+                                            DigitOutlineIconButton(
+                                              buttonStyle:
+                                                  OutlinedButton.styleFrom(
+                                                shape:
+                                                    const RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.zero,
+                                                ),
+                                              ),
+                                              onPressed: () {
                                                 checkIfAllAttendeesMarked(
-                                                    state,
-                                                    localizations,
-                                                    theme,
-                                                    EnumValues.submit
-                                                        .toValue());
-                                              }
-                                            : () {
-                                                // context.router.pop();
+                                                  state,
+                                                  localizations,
+                                                  theme,
+                                                  EnumValues.draft.toValue(),
+                                                  locationState.latitude,
+                                                  locationState.longitude,
+                                                );
                                               },
-                                        child: Text(
-                                          localizations.translate(
-                                            (!viewOnly)
-                                                ? i18.common.coreCommonSubmit
-                                                : i18.attendance.closeButton,
-                                          ),
+                                              icon: Icons.drafts_outlined,
+                                              label: localizations.translate(
+                                                i18.attendance
+                                                    .saveAndMarkLaterLabel,
+                                              ),
+                                            ),
+                                            DigitElevatedButton(
+                                              onPressed: !viewOnly
+                                                  ? () {
+                                                      checkIfAllAttendeesMarked(
+                                                        state,
+                                                        localizations,
+                                                        theme,
+                                                        EnumValues.submit
+                                                            .toValue(),
+                                                        locationState.latitude,
+                                                        locationState.longitude,
+                                                      );
+                                                    }
+                                                  : () {
+                                                      // context.router.pop();
+                                                    },
+                                              child: Text(
+                                                localizations.translate(
+                                                  (!viewOnly)
+                                                      ? i18.common
+                                                          .coreCommonSubmit
+                                                      : i18.attendance
+                                                          .closeButton,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                    ],
+                                    ),
+                                  ),
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            header: BackNavigationHelpHeaderWidget(
+                              showHelp: true,
+                              handleBack: () {
+                                AttendanceSingleton().callSync();
+                              },
+                            ),
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: SizedBox(
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Text(
+                                    localizations.translate(
+                                      i18.attendance.markAttendanceLabel,
+                                    ),
+                                    style: DigitTheme.instance.mobileTheme
+                                        .textTheme.headlineLarge,
                                   ),
                                 ),
                               ),
-                            ),
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      header: BackNavigationHelpHeaderWidget(
-                        showHelp: true,
-                        handleBack: () {
-                          AttendanceSingleton().callSync();
-                        },
-                      ),
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            child: Text(
-                              localizations.translate(
-                                i18.attendance.markAttendanceLabel,
-                              ),
-                              style: DigitTheme
-                                  .instance.mobileTheme.textTheme.headlineLarge,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            child: Text(
-                              '${DateFormat("dd MMMM yyyy").format(widget.dateTime)} ${widget.session != null ? widget.session == 0 ? '- ${localizations.translate(
-                                  i18.attendance.morningSession,
-                                )}' : '- ${localizations.translate(
-                                  i18.attendance.eveningSession,
-                                )}' : ''}',
-                              style: DigitTheme
-                                  .instance.mobileTheme.textTheme.headlineSmall
-                                  ?.copyWith(
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                        ),
-                        DigitCard(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              // DigitTextField(
-                              //   hintText: "Search by Name",
-                              //   controller: controller,
-                              //   label: '',
-                              //   prefixIcon: const Icon(Icons.search),
-                              //   isFilled: true,
-                              // ),
-                              DigitSearchBar(
-                                controller: controller,
-                                hintText: localizations
-                                    .translate(i18.common.searchByName),
-                                borderRadius: 0,
-                                margin: const EdgeInsets.all(0),
-                                textCapitalization: TextCapitalization.words,
-                              ),
-
                               Padding(
-                                padding: const EdgeInsets.only(bottom: 8.0),
-                                child: tableData.isNotEmpty
-                                    ? DigitTable(
-                                        height: (tableData.length + 1) * 56.5,
-                                        headerList: headerList(
-                                          widget.dateTime,
-                                          localizations,
-                                        ),
-                                        tableData: tableData,
-                                        columnWidth: 130,
-                                        scrollPhysics:
-                                            const NeverScrollableScrollPhysics(),
-                                        centerData: true,
-                                        centerTitle: true,
-                                      )
-                                    : NoResultCard(
-                                        align: Alignment.center,
-                                        label: localizations.translate(
-                                          i18.common.noResultsFound,
-                                        ),
-                                      ),
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: SizedBox(
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Text(
+                                    '${DateFormat("dd MMMM yyyy").format(widget.dateTime)} ${widget.session != null ? widget.session == 0 ? '- ${localizations.translate(
+                                        i18.attendance.morningSession,
+                                      )}' : '- ${localizations.translate(
+                                        i18.attendance.eveningSession,
+                                      )}' : ''}',
+                                    style: DigitTheme.instance.mobileTheme
+                                        .textTheme.headlineSmall
+                                        ?.copyWith(
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              DigitCard(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    // DigitTextField(
+                                    //   hintText: "Search by Name",
+                                    //   controller: controller,
+                                    //   label: '',
+                                    //   prefixIcon: const Icon(Icons.search),
+                                    //   isFilled: true,
+                                    // ),
+                                    DigitSearchBar(
+                                      controller: controller,
+                                      hintText: localizations
+                                          .translate(i18.common.searchByName),
+                                      borderRadius: 0,
+                                      margin: const EdgeInsets.all(0),
+                                      textCapitalization:
+                                          TextCapitalization.words,
+                                    ),
+
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 8.0),
+                                      child: tableData.isNotEmpty
+                                          ? DigitTable(
+                                              height:
+                                                  (tableData.length + 1) * 56.5,
+                                              headerList: headerList(
+                                                widget.dateTime,
+                                                localizations,
+                                              ),
+                                              tableData: tableData,
+                                              columnWidth: 130,
+                                              scrollPhysics:
+                                                  const NeverScrollableScrollPhysics(),
+                                              centerData: true,
+                                              centerTitle: true,
+                                            )
+                                          : NoResultCard(
+                                              align: Alignment.center,
+                                              label: localizations.translate(
+                                                i18.common.noResultsFound,
+                                              ),
+                                            ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                  loading: () {
-                    return Center(
-                      child: Loaders.circularLoader(context),
-                    );
-                  },
-                );
-              },
-            )),
-          ),
-        ));
+                          );
+                        },
+                        loading: () {
+                          return Center(
+                            child: Loaders.circularLoader(context),
+                          );
+                        },
+                      );
+                    },
+                  ));
+                }),
+              ),
+            )));
   }
 
   List<TableDataRow> getAttendanceData(
@@ -406,8 +433,13 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
     );
   }
 
-  void checkIfAllAttendeesMarked(AttendanceIndividualState state,
-      AttendanceLocalization localizations, ThemeData theme, String type) {
+  void checkIfAllAttendeesMarked(
+      AttendanceIndividualState state,
+      AttendanceLocalization localizations,
+      ThemeData theme,
+      String type,
+      double? latitude,
+      double? longitude) {
     state.maybeWhen(
         orElse: () {},
         loaded: (
@@ -442,6 +474,8 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                 selectedDate: widget.dateTime,
                 isSingleSession: widget.session == null,
                 createOplog: type != EnumValues.draft.toValue(),
+                latitude: latitude,
+                longitude: longitude,
               ));
               DigitToast.show(
                 context,
@@ -474,6 +508,8 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                         selectedDate: widget.dateTime,
                         isSingleSession: widget.session == null,
                         createOplog: type != EnumValues.draft.toValue(),
+                        latitude: latitude,
+                        longitude: longitude,
                       ));
                       Navigator.of(context).pop(true);
                       Navigator.of(context).push(

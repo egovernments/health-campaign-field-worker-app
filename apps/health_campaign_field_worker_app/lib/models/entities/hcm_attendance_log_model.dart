@@ -1,4 +1,5 @@
-import 'package:attendance_management/models/attendance_log.dart';
+import 'dart:convert';
+
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:drift/drift.dart';
 
@@ -8,7 +9,8 @@ import '../data_model.dart';
 part 'hcm_attendance_log_model.mapper.dart';
 
 @MappableClass(ignoreNull: true)
-class HCMAttendanceLogSearchModel extends EntitySearchModel with HCMAttendanceLogSearchModelMappable {
+class HCMAttendanceLogSearchModel extends EntitySearchModel
+    with HCMAttendanceLogSearchModelMappable {
   final String? id;
   final String? tenantId;
   final String? registerId;
@@ -54,8 +56,12 @@ class HCMAttendanceLogSearchModel extends EntitySearchModel with HCMAttendanceLo
   }) : super(isDeleted: false);
 }
 
-@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault,)
-class HCMAttendanceLogModel extends EntityModel with HCMAttendanceLogModelMappable {
+@MappableClass(
+  ignoreNull: true,
+  discriminatorValue: MappableClass.useAsDefault,
+)
+class HCMAttendanceLogModel extends EntityModel
+    with HCMAttendanceLogModelMappable {
   static const schemaName = 'AttendanceLog';
   final AttendanceLogModel? attendance;
   final bool? nonRecoverableError;
@@ -91,5 +97,6 @@ class HCMAttendanceLogModel extends EntityModel with HCMAttendanceLogModelMappab
         auditModifiedTime: Value(clientAuditDetails?.lastModifiedTime),
         isDeleted: Value(isDeleted),
         rowVersion: Value(rowVersion),
+        additionalFields: Value(json.encode(attendance?.additionalDetails)),
       );
 }

@@ -126,31 +126,43 @@ class AttendanceIndividualBloc
             if (e.status != -1) {
               list.addAll([
                 AttendanceLogModel(
-                  individualId: e.individualId,
-                  registerId: e.registerId,
-                  tenantId: e.tenantId,
-                  type: EnumValues.entry.toValue(),
-                  status: e.status == 0
-                      ? EnumValues.inactive.toValue()
-                      : EnumValues.active.toValue(),
-                  time: event.entryTime,
-                  uploadToServer: (event.createOplog ?? false),
-                ),
+                    individualId: e.individualId,
+                    registerId: e.registerId,
+                    tenantId: e.tenantId,
+                    type: EnumValues.entry.toValue(),
+                    status: e.status == 0
+                        ? EnumValues.inactive.toValue()
+                        : EnumValues.active.toValue(),
+                    time: event.entryTime,
+                    uploadToServer: (event.createOplog ?? false),
+                    additionalDetails:
+                        event.latitude != null && event.longitude != null
+                            ? {
+                                "latitude": event.latitude,
+                                "longitude": event.longitude,
+                              }
+                            : null),
                 AttendanceLogModel(
-                  individualId: e.individualId,
-                  registerId: e.registerId,
-                  tenantId: e.tenantId,
-                  type: EnumValues.exit.toValue(),
-                  status: e.status == 0
-                      ? EnumValues.inactive.toValue()
-                      : EnumValues.active.toValue(),
-                  time: e.status == 0
-                      ? event.exitTime
-                      : e.status == 0.5
-                          ? halfDay
-                          : event.exitTime,
-                  uploadToServer: (event.createOplog ?? false),
-                )
+                    individualId: e.individualId,
+                    registerId: e.registerId,
+                    tenantId: e.tenantId,
+                    type: EnumValues.exit.toValue(),
+                    status: e.status == 0
+                        ? EnumValues.inactive.toValue()
+                        : EnumValues.active.toValue(),
+                    time: e.status == 0
+                        ? event.exitTime
+                        : e.status == 0.5
+                            ? halfDay
+                            : event.exitTime,
+                    uploadToServer: (event.createOplog ?? false),
+                    additionalDetails:
+                        event.latitude != null && event.longitude != null
+                            ? {
+                                EnumValues.latitude.toValue(): event.latitude,
+                                EnumValues.longitude.toValue(): event.longitude,
+                              }
+                            : null)
               ]);
             }
           });
@@ -279,6 +291,8 @@ class AttendanceIndividualEvent with _$AttendanceIndividualEvent {
     required DateTime selectedDate,
     @Default(false) bool isSingleSession,
     @Default(false) bool? createOplog,
+    double? latitude,
+    double? longitude,
   }) = SaveAsDraftEvent;
   //
   // const factory AttendanceIndividualEvent.uploadAttendance({

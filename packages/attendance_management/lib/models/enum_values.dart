@@ -29,4 +29,8 @@ enum EnumValues {
   active,
   @MappableValue("INACTIVE")
   inactive,
+  @MappableValue("latitude")
+  latitude,
+  @MappableValue("longitude")
+  longitude,
 }
