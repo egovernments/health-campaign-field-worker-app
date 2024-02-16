@@ -46,7 +46,10 @@ class LanguageSelectionPage extends StatelessWidget {
                               return DigitRowCardModel(
                                 label: e.label,
                                 value: e.value,
-                                isSelected: languages[index].value == AppSharedPreferences().getSelectedLocale ? true : false,
+                                isSelected: getSelectedLanguage(
+                                  state,
+                                  index,
+                                ),
                               );
                             }).toList(),
                             onLanguageChange: (value) async {
@@ -92,5 +95,14 @@ class LanguageSelectionPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  getSelectedLanguage(AppInitialized state, int index) {
+    final selectedLanguage = AppSharedPreferences().getSelectedLocale ??
+        state.appConfiguration.languages!.last.value;
+    final isSelected =
+        state.appConfiguration.languages![index].value == selectedLanguage;
+
+    return isSelected;
   }
 }

@@ -119,8 +119,6 @@ class MainApplicationState extends State<MainApplication>
             ],
             child: BlocBuilder<AppInitializationBloc, AppInitializationState>(
               builder: (context, appConfigState) {
-                const defaultLocale = Locale('en', 'IN');
-
                 return BlocBuilder<AuthBloc, AuthState>(
                   builder: (context, authState) {
                     if (appConfigState is! AppInitialized) {
@@ -136,7 +134,8 @@ class MainApplicationState extends State<MainApplication>
                     final appConfig = appConfigState.appConfiguration;
 
                     final localizationModulesList = appConfig.backendInterface;
-                    final firstLanguage = appConfig.languages?.first.value;
+                    var firstLanguage;
+                    firstLanguage = appConfig.languages?.last.value;
                     final languages = appConfig.languages;
 
                     return MultiBlocProvider(
@@ -233,7 +232,8 @@ class MainApplicationState extends State<MainApplication>
                       child: BlocBuilder<LocalizationBloc, LocalizationState>(
                         builder: (context, langState) {
                           final selectedLocale =
-                              AppSharedPreferences().getSelectedLocale;
+                              AppSharedPreferences().getSelectedLocale ??
+                                  firstLanguage;
 
                           return MaterialApp.router(
                             debugShowCheckedModeBanner: false,
@@ -265,9 +265,9 @@ class MainApplicationState extends State<MainApplication>
 
                                     return results.isNotEmpty
                                         ? Locale(results.first, results.last)
-                                        : defaultLocale;
+                                        : firstLanguage;
                                   })
-                                : [defaultLocale],
+                                : [firstLanguage],
                             localizationsDelegates: [
                               AppLocalizations.getDelegate(
                                 appConfig,
@@ -279,10 +279,10 @@ class MainApplicationState extends State<MainApplication>
                             ],
                             locale: languages != null
                                 ? Locale(
-                                    selectedLocale.split("_").first,
+                                    selectedLocale!.split("_").first,
                                     selectedLocale.split("_").last,
                                   )
-                                : defaultLocale,
+                                : firstLanguage,
                             theme: DigitTheme.instance.mobileTheme,
                             routeInformationParser:
                                 widget.appRouter.defaultRouteParser(),
