@@ -13,6 +13,7 @@ import '../blocs/household_details/household_details.dart';
 import '../blocs/localization/app_localization.dart';
 import '../blocs/search_households/project_beneficiaries_downsync.dart';
 import '../blocs/search_households/proximity_search.dart';
+import '../blocs/search_households/search_bloc_common_wrapper.dart';
 import '../blocs/search_households/search_households.dart';
 import '../blocs/search_households/search_member.dart';
 import '../blocs/search_households/tag_by_search.dart';
@@ -132,15 +133,14 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                                 SideEffectModel, SideEffectSearchModel>(),
                             referralDataRepository: context.repository<
                                 ReferralModel, ReferralSearchModel>(),
-                          )..add(const SearchHouseholdsClearEvent());
+                          );
                         },
                       ),
-
                       BlocProvider(
                         create: (context) {
                           final isar = context.read<Isar>();
 
-                          return ProximitySearchBloc(
+                          return SearchMemberBloc(
                             beneficiaryType: context.beneficiaryType,
                             userUid: context.loggedInUserUuid,
                             projectId: context.projectId,
@@ -171,7 +171,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                         create: (context) {
                           final isar = context.read<Isar>();
 
-                          return SearchMemberBloc(
+                          return ProximitySearchBloc(
                             beneficiaryType: context.beneficiaryType,
                             userUid: context.loggedInUserUuid,
                             projectId: context.projectId,
@@ -229,7 +229,19 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                           );
                         },
                       ),
+                      BlocProvider(
+                        create: (context) {
 
+                          return SearchBlocWrapper(
+                            searchHouseholdsBloc:
+                                context.read<SearchHouseholdsBloc>(),
+                            searchMemberBloc: context.read<SearchMemberBloc>(),
+                            proximitySearchBloc:
+                                context.read<ProximitySearchBloc>(),
+                            tagSearchBloc: context.read<TagSearchBloc>(),
+                          );
+                        },
+                      ),
                       BlocProvider(
                         create: (context) {
                           final userId = context.loggedInUserUuid;
