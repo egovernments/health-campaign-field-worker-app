@@ -146,7 +146,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                             footer: viewOnly
                                 ? const SizedBox.shrink()
                                 : SizedBox(
-                                    height: 150,
+                                    height: 140,
                                     child: Card(
                                       margin: const EdgeInsets.all(0),
                                       child: Container(
