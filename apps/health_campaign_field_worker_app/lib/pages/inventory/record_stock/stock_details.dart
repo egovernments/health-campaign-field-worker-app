@@ -586,7 +586,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                   BlocBuilder<FacilityBloc, FacilityState>(
                                     builder: (context, state) {
                                       final facilities = state.whenOrNull(
-                                            fetched: (_, facilities) =>
+                                            fetched: (facilities, _) =>
                                                 facilities,
                                           ) ??
                                           [];
@@ -781,7 +781,8 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                             onChanged: (value) {
                                               setState(() {
                                                 form.control(
-                                                    _typeOfTransportKey,);
+                                                  _typeOfTransportKey,
+                                                );
                                               });
                                             },
                                             initialValue: transportTypeOptions
@@ -813,7 +814,6 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                     maxLines: 3,
                                     formControlName: _commentsKey,
                                   ),
-
                                   DigitOutlineIconButton(
                                     buttonStyle: OutlinedButton.styleFrom(
                                       shape: const RoundedRectangleBorder(
@@ -829,8 +829,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                     },
                                     icon: Icons.qr_code,
                                     label: localizations.translate(
-                                      i18.common
-                                          .scanBales,
+                                      i18.common.scanBales,
                                     ),
                                   ),
                                 ],
