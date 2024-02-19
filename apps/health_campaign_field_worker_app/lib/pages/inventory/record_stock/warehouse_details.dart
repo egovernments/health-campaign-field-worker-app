@@ -202,7 +202,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                                               "Delivery Team"
                                                           ? teamCode ?? ''
                                                           : facility.id,
-                                                      primaryType: isDistributor ||
+                                                      primaryType: (isDistributor && deliveryTeamSelected) ||
                                                               deliveryTeamSelected
                                                           ? "STAFF"
                                                           : "WAREHOUSE",
