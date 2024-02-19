@@ -1268,6 +1268,9 @@ class DeliverIntervention {
   String get resourceCode => 'RESOURCE_CODE';
 
   String get voucherCode => 'VOUCHER_CODE';
+
+  String get quantityDistributionValidation =>
+      'QUANTITY_DISTRIBUTION_VALIDATION';
 }
 
 class ProjectSelection {

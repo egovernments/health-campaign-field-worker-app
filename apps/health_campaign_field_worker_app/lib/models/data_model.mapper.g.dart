@@ -5680,6 +5680,7 @@ class AdditionalFieldsTypeMapper extends EnumMapper<AdditionalFieldsType> {
       case "nameOfReferral": return AdditionalFieldsType.nameOfReferral;
       case "gender": return AdditionalFieldsType.gender;
       case "age": return AdditionalFieldsType.age;
+      case "deliveryComment": return AdditionalFieldsType.deliveryComment;
       default: throw MapperException.unknownEnumValue(value);
     }
   }
@@ -5700,6 +5701,7 @@ class AdditionalFieldsTypeMapper extends EnumMapper<AdditionalFieldsType> {
       case AdditionalFieldsType.nameOfReferral: return "nameOfReferral";
       case AdditionalFieldsType.gender: return "gender";
       case AdditionalFieldsType.age: return "age";
+      case AdditionalFieldsType.deliveryComment: return "deliveryComment";
     }
   }
 }

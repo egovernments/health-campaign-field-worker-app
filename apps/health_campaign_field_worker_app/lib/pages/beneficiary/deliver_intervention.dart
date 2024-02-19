@@ -358,12 +358,27 @@ class _DeliverInterventionPageState
                                                                     }
                                                                   }
                                                                 } else {
+                                                                  var localized = localizations
+                                                                      .translate(i18
+                                                                          .deliverIntervention
+                                                                          .saveScannedResource)
+                                                                      .replaceAll(
+                                                                        '{totalMembers}',
+                                                                        totalHouseHoldMembers
+                                                                            .toString(),
+                                                                      );
+                                                                  localized
+                                                                      .replaceAll(
+                                                                    '{quantity}',
+                                                                    eligibleQuantity
+                                                                        .toString(),
+                                                                  );
                                                                   await DigitToast
                                                                       .show(
                                                                     context,
                                                                     options:
                                                                         DigitToastOptions(
-                                                                      'For $totalHouseHoldMembers members, the quantity that can be distributed is $eligibleQuantity',
+                                                                      localized,
                                                                       true,
                                                                       theme,
                                                                     ),
@@ -787,6 +802,8 @@ class _DeliverInterventionPageState
         ((form.control(_resourceDeliveredKey) as FormArray).value
             as List<ProductVariantModel?>);
 
+    final deliveryComment = form.control(_deliveryCommentKey).value as String?;
+
     // Update the task with information from the form and other context
     task = task.copyWith(
       projectId: context.projectId,
@@ -844,6 +861,11 @@ class _DeliverInterventionPageState
             AdditionalFieldsType.deliveryStrategy.toValue(),
             deliveryStrategy,
           ),
+          if (deliveryComment != null)
+            AdditionalField(
+              AdditionalFieldsType.deliveryComment.toValue(),
+              deliveryStrategy,
+            ),
         ],
       ),
     );
@@ -873,7 +895,19 @@ class _DeliverInterventionPageState
         validators: [],
       ),
       _deliveryCommentKey: FormControl<String>(
-        value: '',
+        value: (bloc.tasks?.last.additionalFields?.fields
+                        .where((a) =>
+                            a.key ==
+                            AdditionalFieldsType.deliveryComment.toValue())
+                        .toList() ??
+                    [])
+                .isNotEmpty
+            ? bloc.tasks?.last.additionalFields?.fields
+                .where((a) =>
+                    a.key == AdditionalFieldsType.deliveryComment.toValue())
+                .first
+                .value
+            : '',
         validators: [],
       ),
       _dateOfAdministrationKey:

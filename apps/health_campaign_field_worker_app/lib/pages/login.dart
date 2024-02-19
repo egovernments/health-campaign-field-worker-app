@@ -182,7 +182,9 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                           ),
                         ),
                       ),
-                     const SizedBox(height: 16,),
+                      const SizedBox(
+                        height: 16,
+                      ),
                       const Text(
                         'Welcome to DIGIT HCM ! Need assistance? Contact our team at partnerships@egov.org.in  or +91 98864 55706',
                       ),
@@ -199,7 +201,7 @@ class _LoginPageState extends LocalizedState<LoginPage> {
 
   FormGroup buildForm() => fb.group(<String, Object>{
         _userId: FormControl<String>(
-          value: 'AMP-USER',
+          value: 'amp-user',
           validators: [Validators.required],
         ),
         _password: FormControl<String>(
