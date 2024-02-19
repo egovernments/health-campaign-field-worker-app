@@ -361,13 +361,13 @@ class _DeliverInterventionPageState
                                                                   var localized = localizations
                                                                       .translate(i18
                                                                           .deliverIntervention
-                                                                          .saveScannedResource)
+                                                                          .quantityDistributionValidation)
                                                                       .replaceAll(
                                                                         '{totalMembers}',
                                                                         totalHouseHoldMembers
                                                                             .toString(),
                                                                       );
-                                                                  localized
+                                                                  localized = localized
                                                                       .replaceAll(
                                                                     '{quantity}',
                                                                     eligibleQuantity
