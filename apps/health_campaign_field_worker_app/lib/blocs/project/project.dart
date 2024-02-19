@@ -207,11 +207,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             )
             .toList()
             .isNotEmpty) {
-          // final individual = await individualRemoteRepository
-          //     .search(IndividualSearchModel(userUuid: projectStaff.userId));
+          final individual = await individualRemoteRepository
+              .search(IndividualSearchModel(userUuid: projectStaff.userId));
           final attendanceRegisters = await attendanceRemoteRepository.search(
             HCMAttendanceSearchModel(
-              staffId: projectStaff.userId,
+              staffId: individual.first.id,
               referenceId: projectStaff.projectId,
             ),
           );
