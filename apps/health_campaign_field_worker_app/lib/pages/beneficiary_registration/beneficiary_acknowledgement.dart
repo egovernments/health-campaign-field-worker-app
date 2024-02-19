@@ -30,6 +30,11 @@ class _BeneficiaryAcknowledgementPageState
     return Scaffold(
       body: DigitAcknowledgement.success(
         action: () {
+          print('Action');
+          context.router.pop();
+        },
+        secondaryAction: () {
+          print('Secondary Action');
           final bloc = context.read<SearchBlocWrapper>();
 
           context.router.popAndPush(
@@ -37,9 +42,6 @@ class _BeneficiaryAcknowledgementPageState
               wrapper: bloc.state.householdMembers.first,
             ),
           );
-        },
-        secondaryAction: () {
-          context.router.pop();
         },
         enableViewHousehold: widget.enableViewHousehold ?? false,
         secondaryLabel: localizations.translate(

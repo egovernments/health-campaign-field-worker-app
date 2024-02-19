@@ -13,6 +13,7 @@ import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/localized.dart';
 import '../blocs/scanner/scanner.dart';
+import '../blocs/search_households/search_bloc_common_wrapper.dart';
 import '../blocs/search_households/search_households.dart';
 import '../blocs/search_households/tag_by_search.dart';
 import '../blocs/search_referrals/search_referrals.dart';
@@ -228,7 +229,7 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                                 result.length < widget.quantity) {
                               buildDialog();
                             } else {
-                              final bloc = context.read<TagSearchBloc>();
+                              final bloc = context.read<SearchBlocWrapper>();
                               final hfBloc =
                                   context.read<SearchReferralsBloc>();
 
@@ -242,7 +243,7 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                                     projectId: context.projectId,
                                   ));
                                 } else {
-                                  bloc.add(SearchHouseholdsEvent.searchByTag(
+                                  bloc.tagSearchBloc.add(SearchHouseholdsEvent.searchByTag(
                                     tag: scannerState.qrcodes.first,
                                     projectId: context.projectId,
                                   ));
@@ -444,7 +445,7 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                             result.length < widget.quantity) {
                           buildDialog();
                         } else {
-                          final bloc = context.read<TagSearchBloc>();
+                          final bloc = context.read<SearchBlocWrapper>();
                           final scannerState =
                               context.read<ScannerBloc>().state;
                           final hfBloc = context.read<SearchReferralsBloc>();
@@ -458,7 +459,7 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                                 projectId: context.projectId,
                               ));
                             } else {
-                              bloc.add(SearchHouseholdsEvent.searchByTag(
+                              bloc.proximitySearchBloc.add(SearchHouseholdsEvent.searchByTag(
                                 tag: manualcode
                                     ? _resourceController.value.text
                                     : scannerState.qrcodes.first,

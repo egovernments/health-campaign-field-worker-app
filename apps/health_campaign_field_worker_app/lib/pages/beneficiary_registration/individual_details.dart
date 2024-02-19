@@ -12,6 +12,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../../blocs/scanner/scanner.dart';
+import '../../blocs/search_households/search_bloc_common_wrapper.dart';
 import '../../blocs/search_households/search_households.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../models/data_model.dart';
@@ -67,7 +68,7 @@ class _IndividualDetailsPageState
                   (router.parent() as StackRouter).pop();
                 } else {
                   (router.parent() as StackRouter).pop();
-                  context.read<SearchHouseholdsBloc>().add(
+                  context.read<SearchBlocWrapper>().searchHouseholdsBloc.add(
                         SearchHouseholdsByHouseholdsEvent(
                           householdModel: value.householdModel,
                           projectId: context.projectId,
