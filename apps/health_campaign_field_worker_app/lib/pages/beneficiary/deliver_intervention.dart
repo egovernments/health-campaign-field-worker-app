@@ -864,7 +864,7 @@ class _DeliverInterventionPageState
           if (deliveryComment != null)
             AdditionalField(
               AdditionalFieldsType.deliveryComment.toValue(),
-              deliveryStrategy,
+              deliveryComment,
             ),
         ],
       ),
