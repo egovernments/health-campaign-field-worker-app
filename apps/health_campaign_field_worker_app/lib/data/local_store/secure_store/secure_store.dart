@@ -12,6 +12,7 @@ class LocalSecureStore {
   static const refreshTokenKey = 'refreshTokenKey';
   static const userObjectKey = 'userObject';
   static const selectedProjectKey = 'selectedProject';
+  static const selectedIndividualKey = 'selectedIndividual';
   static const hasAppRunBeforeKey = 'hasAppRunBefore';
   static const backgroundServiceKey = 'backgroundServiceKey';
   static const boundaryRefetchInKey = 'boundaryRefetchInKey';
@@ -52,6 +53,19 @@ class LocalSecureStore {
 
     try {
       final user = UserRequestModel.fromJson(json.decode(userBody));
+
+      return user;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<String?> get userIndividualId async {
+    final individualId = await storage.read(key: selectedIndividualKey);
+    if (individualId == null) return null;
+
+    try {
+      final user = individualId;
 
       return user;
     } catch (_) {
@@ -137,6 +151,13 @@ class LocalSecureStore {
     await storage.write(
       key: selectedProjectKey,
       value: projectModel.toJson(),
+    );
+  }
+
+  Future<void> setSelectedIndividual(String? individualId) async {
+    await storage.write(
+      key: selectedIndividualKey,
+      value: individualId,
     );
   }
 

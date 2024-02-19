@@ -23,6 +23,11 @@
       "type": "String"
     },
     {
+      "name": "userUuid",
+      "type": "String",
+      "includeForQuery": true
+    },
+    {
       "name": "dateOfBirth",
       "type": "String",
       "includeForQuery": true

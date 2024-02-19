@@ -213,4 +213,8 @@ class Attendance {
   String get missedAttendanceHeader => "MISSED_ATTENDANCE_HEADER";
 
   String get missedAttendanceDescription => "MISSED_ATTENDANCE_DESCRIPTION";
+
+  String get halfDay => 'HALF_DAY';
+  String get present => 'PRESENT';
+  String get absent => 'ABSENT';
 }

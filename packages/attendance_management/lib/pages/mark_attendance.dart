@@ -72,6 +72,9 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
   void dispose() {
     _debounce?.cancel();
     controller.dispose();
+    if (overlayEntry != null && overlayEntry?.mounted == true) {
+      overlayEntry?.remove();
+    }
     super.dispose();
   }
 
@@ -103,11 +106,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                 ),
               ),
             child: PopScope(
-              onPopInvoked: (bool value) {
-                if (overlayEntry != null) {
-                  overlayEntry?.remove();
-                }
-              },
+              canPop: overlayEntry == null,
               child: GestureDetector(
                 onTap: () {
                   FocusManager.instance.primaryFocus?.unfocus();
@@ -229,12 +228,13 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                       i18.attendance.markAttendanceLabel,
                                     ),
                                     style: DigitTheme.instance.mobileTheme
-                                        .textTheme.headlineLarge,
+                                        .textTheme.displayMedium,
                                   ),
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
+                                padding: const EdgeInsets.only(
+                                    left: 8.0, top: 4, bottom: 16),
                                 child: SizedBox(
                                   width: MediaQuery.of(context).size.width,
                                   child: Text(
@@ -251,27 +251,21 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                   ),
                                 ),
                               ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: DigitSearchBar(
+                                  controller: controller,
+                                  hintText: localizations
+                                      .translate(i18.common.searchByName),
+                                  borderRadius: 0,
+                                  margin: const EdgeInsets.all(0),
+                                  textCapitalization: TextCapitalization.words,
+                                ),
+                              ),
                               DigitCard(
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    // DigitTextField(
-                                    //   hintText: "Search by Name",
-                                    //   controller: controller,
-                                    //   label: '',
-                                    //   prefixIcon: const Icon(Icons.search),
-                                    //   isFilled: true,
-                                    // ),
-                                    DigitSearchBar(
-                                      controller: controller,
-                                      hintText: localizations
-                                          .translate(i18.common.searchByName),
-                                      borderRadius: 0,
-                                      margin: const EdgeInsets.all(0),
-                                      textCapitalization:
-                                          TextCapitalization.words,
-                                    ),
-
                                     Padding(
                                       padding:
                                           const EdgeInsets.only(bottom: 8.0),
@@ -284,10 +278,10 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                                 localizations,
                                               ),
                                               tableData: tableData,
-                                              columnWidth: 130,
+                                              columnWidth: 140,
                                               scrollPhysics:
                                                   const NeverScrollableScrollPhysics(),
-                                              centerData: true,
+                                              // centerData: true,
                                               centerTitle: true,
                                             )
                                           : NoResultCard(
@@ -541,6 +535,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                       if (overlayEntry != null) {
                         // Remove the overlay when the button is pressed
                         overlayEntry?.remove();
+                        overlayEntry?.dispose();
                       }
                     },
                   ),

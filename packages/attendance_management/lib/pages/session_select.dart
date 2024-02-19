@@ -224,7 +224,7 @@ class _AttendanceDateSessionSelectionPageState
                                           i18.attendance.selectSession,
                                         ),
                                         style: DigitTheme.instance.mobileTheme
-                                            .textTheme.headlineLarge,
+                                            .textTheme.displayMedium,
                                       ),
                                       DigitDateFormPicker(
                                         start: selectedRegister.startDate !=
@@ -355,14 +355,16 @@ class _AttendanceDateSessionSelectionPageState
     return false;
   }
 
-  bool showInfoCard(AttendancePackageRegisterModel selectedRegister, DateTime selectedDate) {
+  bool showInfoCard(
+      AttendancePackageRegisterModel selectedRegister, DateTime selectedDate) {
     if (selectedRegister.attendanceLog != null) {
       for (var log in selectedRegister.attendanceLog!) {
         for (var entry in log.entries) {
           final logDate = entry.key;
           final isAttendanceMarked = entry.value;
-          if (logDate.isBefore(selectedDate) || logDate.isAtSameMomentAs(selectedDate)) {
-            if(selectedDate != DateTime.now()) {
+          if (logDate.isBefore(selectedDate) ||
+              logDate.isAtSameMomentAs(selectedDate)) {
+            if (selectedDate != DateTime.now()) {
               if (!isAttendanceMarked) {
                 return true; // If attendance is not marked for any date before or on selectedDate, return true
               } else {

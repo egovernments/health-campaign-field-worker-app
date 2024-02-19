@@ -142,12 +142,13 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.all(16.0),
+                          padding:
+                              const EdgeInsets.all(kPadding).copyWith(top: 2),
                           child: Text(
                             AttendanceLocalization.of(context).translate(
                                 i18.attendance.attendanceRegistarLabel),
                             style: DigitTheme
-                                .instance.mobileTheme.textTheme.headlineLarge
+                                .instance.mobileTheme.textTheme.displayMedium
                                 ?.apply(color: const DigitColors().black),
                             textAlign: TextAlign.left,
                           ),

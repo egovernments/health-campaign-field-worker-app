@@ -17,6 +17,7 @@ class HCMAttendanceBloc extends AttendanceListeners {
   final LocalRepository<HCMAttendanceLogModel, HCMAttendanceLogSearchModel>?
       attendanceLogLocalRepository;
   final String? userId;
+  final String? individualId;
   final String? projectId;
   BuildContext context;
 
@@ -24,6 +25,7 @@ class HCMAttendanceBloc extends AttendanceListeners {
     this.attendanceLocalRepository,
     this.individualLocalRepository,
     this.attendanceLogLocalRepository,
+    this.individualId,
     this.userId,
     this.projectId,
     required this.context,
@@ -46,7 +48,7 @@ class HCMAttendanceBloc extends AttendanceListeners {
 
   void onRegistersLoaded() async {
     final registers = await attendanceLocalRepository?.search(
-      HCMAttendanceSearchModel(staffId: userId, referenceId: projectId),
+      HCMAttendanceSearchModel(staffId: individualId, referenceId: projectId),
     );
 
     if (registers != null) {
@@ -213,8 +215,8 @@ class HCMAttendanceBloc extends AttendanceListeners {
         );
       },
     ).toList();
-    final groupedIndividuals = hcmAttendanceLogs
-        .groupListsBy((ele) => ele.attendance?.individualId);
+    final groupedIndividuals =
+        hcmAttendanceLogs.groupListsBy((ele) => ele.attendance?.individualId);
 
     for (final log in groupedIndividuals.entries) {
       await attendanceLogLocalRepository?.create(

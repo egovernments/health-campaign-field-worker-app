@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:attendance_management/pages/manage_attendance.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/material.dart';
@@ -97,7 +96,7 @@ class _HomePageState extends LocalizedState<HomePage> {
     ];
 
     return Scaffold(
-     backgroundColor: DigitTheme.instance.colorScheme.background,
+      backgroundColor: DigitTheme.instance.colorScheme.background,
       body: BlocListener<SyncBloc, SyncState>(
         listener: (context, state) {
           state.maybeWhen(
@@ -367,7 +366,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                 // TODO [Need to revert this]
                 // if (snapshot.data?['enablesManualSync'] == true) {
                 //   if (context.mounted)
-                   _attemptSyncUp(context);
+                _attemptSyncUp(context);
                 // } else {
                 //   if (context.mounted) {
                 //     DigitToast.show(
@@ -445,6 +444,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                       LocalRepository<HCMAttendanceLogModel,
                           HCMAttendanceLogSearchModel>>(),
                   context: context,
+                  individualId: context.loggedInIndividualId,
                 ),
                 projectId: context.projectId,
                 userId: context.loggedInUserUuid,

@@ -44,54 +44,58 @@ class IndividualLocalRepository
     final r = await selectQuery.get();
 
     final results = await (selectQuery
-      ..where(
-        buildAnd([
-          if (query.clientReferenceId != null)
-            sql.individual.clientReferenceId.isIn(
-              query.clientReferenceId!,
-            ),
-          if (query.id != null)
-            sql.individual.id.isIn(
-              query.id!,
-            ),
-          if (query.tenantId != null)
-            sql.individual.tenantId.equals(
-              query.tenantId!,
-            ),
-          if (query.dateOfBirth != null)
-            sql.individual.dateOfBirth.equals(
-              query.dateOfBirth!,
-            ),
-          if (query.gender != null)
-            sql.individual.gender.equals(
-              query.gender!.index,
-            ),
-          if (query.name?.givenName != null)
-            sql.name.givenName.contains(
-              query.name!.givenName!,
-            ),
-          if (query.name?.familyName != null)
-            sql.name.familyName.equals(
-              query.name!.familyName!,
-            ),
-          if (query.name?.otherNames != null)
-            sql.name.otherNames.equals(
-              query.name!.otherNames!,
-            ),
-          if (userId != null)
-            sql.individual.auditCreatedBy.equals(
-              userId,
-            ),
-        ]),
-      ))
+          ..where(
+            buildAnd([
+              if (query.clientReferenceId != null)
+                sql.individual.clientReferenceId.isIn(
+                  query.clientReferenceId!,
+                ),
+              if (query.id != null)
+                sql.individual.id.isIn(
+                  query.id!,
+                ),
+              if (query.tenantId != null)
+                sql.individual.tenantId.equals(
+                  query.tenantId!,
+                ),
+              if (query.userUuid != null)
+                sql.individual.userUuid.equals(
+                  query.userUuid!,
+                ),
+              if (query.dateOfBirth != null)
+                sql.individual.dateOfBirth.equals(
+                  query.dateOfBirth!,
+                ),
+              if (query.gender != null)
+                sql.individual.gender.equals(
+                  query.gender!.index,
+                ),
+              if (query.name?.givenName != null)
+                sql.name.givenName.contains(
+                  query.name!.givenName!,
+                ),
+              if (query.name?.familyName != null)
+                sql.name.familyName.equals(
+                  query.name!.familyName!,
+                ),
+              if (query.name?.otherNames != null)
+                sql.name.otherNames.equals(
+                  query.name!.otherNames!,
+                ),
+              if (userId != null)
+                sql.individual.auditCreatedBy.equals(
+                  userId,
+                ),
+            ]),
+          ))
         .get();
 
     return results
         .map((e) {
-      final individual = e.readTable(sql.individual);
-      final name = e.readTableOrNull(sql.name);
-      final address = e.readTableOrNull(sql.address);
-      final identifier = e.readTableOrNull(sql.identifier);
+          final individual = e.readTable(sql.individual);
+          final name = e.readTableOrNull(sql.name);
+          final address = e.readTableOrNull(sql.address);
+          final identifier = e.readTableOrNull(sql.identifier);
 
           return IndividualModel(
             id: individual.id,
@@ -348,10 +352,13 @@ class IndividualLocalRepository
   }) async {
     final individualCompanion = entity.companion;
 
-    final nameCompanion = entity.name?.copyWith(individualClientReferenceId: entity.clientReferenceId,
-    auditDetails: entity.auditDetails,
-    clientAuditDetails: entity.clientAuditDetails,
-    ).companion;
+    final nameCompanion = entity.name
+        ?.copyWith(
+          individualClientReferenceId: entity.clientReferenceId,
+          auditDetails: entity.auditDetails,
+          clientAuditDetails: entity.clientAuditDetails,
+        )
+        .companion;
 
     final addressCompanions = entity.address?.map((e) {
           return e
@@ -364,8 +371,10 @@ class IndividualLocalRepository
         [];
 
     final identifierCompanions = entity.identifiers?.map((e) {
-      return e.copyWith(clientAuditDetails: entity.clientAuditDetails).companion;
-    }).toList() ??
+          return e
+              .copyWith(clientAuditDetails: entity.clientAuditDetails)
+              .companion;
+        }).toList() ??
         [];
 
     await sql.batch((batch) async {

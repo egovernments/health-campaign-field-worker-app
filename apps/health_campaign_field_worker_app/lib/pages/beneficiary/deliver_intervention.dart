@@ -308,6 +308,10 @@ class _DeliverInterventionPageState
                                                                                 DeliverStrategyType.direct.name,
                                                                             address:
                                                                                 householdMemberWrapper.members.first.address?.first,
+                                                                            latitude:
+                                                                                lat,
+                                                                            longitude:
+                                                                                long,
                                                                           ),
                                                                           false,
                                                                           context
@@ -363,16 +367,17 @@ class _DeliverInterventionPageState
                                                                         );
                                                                       },
                                                                     ).then(
-                                                                        (value) {
-                                                                      context
-                                                                          .router
-                                                                          .popAndPush(
-                                                                        HouseholdAcknowledgementRoute(
-                                                                          enableViewHousehold:
-                                                                              true,
-                                                                        ),
-                                                                      );
-                                                                    });
+                                                                      (value) {
+                                                                        context
+                                                                            .router
+                                                                            .popAndPush(
+                                                                          HouseholdAcknowledgementRoute(
+                                                                            enableViewHousehold:
+                                                                                true,
+                                                                          ),
+                                                                        );
+                                                                      },
+                                                                    );
                                                                   }
                                                                 }
                                                               }

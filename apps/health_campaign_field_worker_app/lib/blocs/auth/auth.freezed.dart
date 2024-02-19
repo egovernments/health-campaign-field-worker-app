@@ -503,8 +503,12 @@ mixin _$AuthState {
   TResult when<TResult extends Object?>({
     required TResult Function() unauthenticated,
     required TResult Function() loading,
-    required TResult Function(String accessToken, String refreshToken,
-            UserRequestModel userModel, RoleActionsWrapperModel actionsWrapper)
+    required TResult Function(
+            String accessToken,
+            String refreshToken,
+            UserRequestModel userModel,
+            RoleActionsWrapperModel actionsWrapper,
+            String? individualId)
         authenticated,
     required TResult Function(String? error) error,
   }) =>
@@ -513,8 +517,12 @@ mixin _$AuthState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? unauthenticated,
     TResult? Function()? loading,
-    TResult? Function(String accessToken, String refreshToken,
-            UserRequestModel userModel, RoleActionsWrapperModel actionsWrapper)?
+    TResult? Function(
+            String accessToken,
+            String refreshToken,
+            UserRequestModel userModel,
+            RoleActionsWrapperModel actionsWrapper,
+            String? individualId)?
         authenticated,
     TResult? Function(String? error)? error,
   }) =>
@@ -523,8 +531,12 @@ mixin _$AuthState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? unauthenticated,
     TResult Function()? loading,
-    TResult Function(String accessToken, String refreshToken,
-            UserRequestModel userModel, RoleActionsWrapperModel actionsWrapper)?
+    TResult Function(
+            String accessToken,
+            String refreshToken,
+            UserRequestModel userModel,
+            RoleActionsWrapperModel actionsWrapper,
+            String? individualId)?
         authenticated,
     TResult Function(String? error)? error,
     required TResult orElse(),
@@ -617,8 +629,12 @@ class _$AuthUnauthenticatedStateImpl implements AuthUnauthenticatedState {
   TResult when<TResult extends Object?>({
     required TResult Function() unauthenticated,
     required TResult Function() loading,
-    required TResult Function(String accessToken, String refreshToken,
-            UserRequestModel userModel, RoleActionsWrapperModel actionsWrapper)
+    required TResult Function(
+            String accessToken,
+            String refreshToken,
+            UserRequestModel userModel,
+            RoleActionsWrapperModel actionsWrapper,
+            String? individualId)
         authenticated,
     required TResult Function(String? error) error,
   }) {
@@ -630,8 +646,12 @@ class _$AuthUnauthenticatedStateImpl implements AuthUnauthenticatedState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? unauthenticated,
     TResult? Function()? loading,
-    TResult? Function(String accessToken, String refreshToken,
-            UserRequestModel userModel, RoleActionsWrapperModel actionsWrapper)?
+    TResult? Function(
+            String accessToken,
+            String refreshToken,
+            UserRequestModel userModel,
+            RoleActionsWrapperModel actionsWrapper,
+            String? individualId)?
         authenticated,
     TResult? Function(String? error)? error,
   }) {
@@ -643,8 +663,12 @@ class _$AuthUnauthenticatedStateImpl implements AuthUnauthenticatedState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? unauthenticated,
     TResult Function()? loading,
-    TResult Function(String accessToken, String refreshToken,
-            UserRequestModel userModel, RoleActionsWrapperModel actionsWrapper)?
+    TResult Function(
+            String accessToken,
+            String refreshToken,
+            UserRequestModel userModel,
+            RoleActionsWrapperModel actionsWrapper,
+            String? individualId)?
         authenticated,
     TResult Function(String? error)? error,
     required TResult orElse(),
@@ -737,8 +761,12 @@ class _$AuthLoadingStateImpl implements AuthLoadingState {
   TResult when<TResult extends Object?>({
     required TResult Function() unauthenticated,
     required TResult Function() loading,
-    required TResult Function(String accessToken, String refreshToken,
-            UserRequestModel userModel, RoleActionsWrapperModel actionsWrapper)
+    required TResult Function(
+            String accessToken,
+            String refreshToken,
+            UserRequestModel userModel,
+            RoleActionsWrapperModel actionsWrapper,
+            String? individualId)
         authenticated,
     required TResult Function(String? error) error,
   }) {
@@ -750,8 +778,12 @@ class _$AuthLoadingStateImpl implements AuthLoadingState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? unauthenticated,
     TResult? Function()? loading,
-    TResult? Function(String accessToken, String refreshToken,
-            UserRequestModel userModel, RoleActionsWrapperModel actionsWrapper)?
+    TResult? Function(
+            String accessToken,
+            String refreshToken,
+            UserRequestModel userModel,
+            RoleActionsWrapperModel actionsWrapper,
+            String? individualId)?
         authenticated,
     TResult? Function(String? error)? error,
   }) {
@@ -763,8 +795,12 @@ class _$AuthLoadingStateImpl implements AuthLoadingState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? unauthenticated,
     TResult Function()? loading,
-    TResult Function(String accessToken, String refreshToken,
-            UserRequestModel userModel, RoleActionsWrapperModel actionsWrapper)?
+    TResult Function(
+            String accessToken,
+            String refreshToken,
+            UserRequestModel userModel,
+            RoleActionsWrapperModel actionsWrapper,
+            String? individualId)?
         authenticated,
     TResult Function(String? error)? error,
     required TResult orElse(),
@@ -828,7 +864,8 @@ abstract class _$$AuthAuthenticatedStateImplCopyWith<$Res> {
       {String accessToken,
       String refreshToken,
       UserRequestModel userModel,
-      RoleActionsWrapperModel actionsWrapper});
+      RoleActionsWrapperModel actionsWrapper,
+      String? individualId});
 
   $UserRequestModelCopyWith<$Res> get userModel;
   $RoleActionsWrapperModelCopyWith<$Res> get actionsWrapper;
@@ -850,6 +887,7 @@ class __$$AuthAuthenticatedStateImplCopyWithImpl<$Res>
     Object? refreshToken = null,
     Object? userModel = null,
     Object? actionsWrapper = null,
+    Object? individualId = freezed,
   }) {
     return _then(_$AuthAuthenticatedStateImpl(
       accessToken: null == accessToken
@@ -868,6 +906,10 @@ class __$$AuthAuthenticatedStateImplCopyWithImpl<$Res>
           ? _value.actionsWrapper
           : actionsWrapper // ignore: cast_nullable_to_non_nullable
               as RoleActionsWrapperModel,
+      individualId: freezed == individualId
+          ? _value.individualId
+          : individualId // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 
@@ -896,7 +938,8 @@ class _$AuthAuthenticatedStateImpl implements AuthAuthenticatedState {
       {required this.accessToken,
       required this.refreshToken,
       required this.userModel,
-      required this.actionsWrapper});
+      required this.actionsWrapper,
+      this.individualId});
 
   @override
   final String accessToken;
@@ -906,10 +949,12 @@ class _$AuthAuthenticatedStateImpl implements AuthAuthenticatedState {
   final UserRequestModel userModel;
   @override
   final RoleActionsWrapperModel actionsWrapper;
+  @override
+  final String? individualId;
 
   @override
   String toString() {
-    return 'AuthState.authenticated(accessToken: $accessToken, refreshToken: $refreshToken, userModel: $userModel, actionsWrapper: $actionsWrapper)';
+    return 'AuthState.authenticated(accessToken: $accessToken, refreshToken: $refreshToken, userModel: $userModel, actionsWrapper: $actionsWrapper, individualId: $individualId)';
   }
 
   @override
@@ -924,12 +969,14 @@ class _$AuthAuthenticatedStateImpl implements AuthAuthenticatedState {
             (identical(other.userModel, userModel) ||
                 other.userModel == userModel) &&
             (identical(other.actionsWrapper, actionsWrapper) ||
-                other.actionsWrapper == actionsWrapper));
+                other.actionsWrapper == actionsWrapper) &&
+            (identical(other.individualId, individualId) ||
+                other.individualId == individualId));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, accessToken, refreshToken, userModel, actionsWrapper);
+  int get hashCode => Object.hash(runtimeType, accessToken, refreshToken,
+      userModel, actionsWrapper, individualId);
 
   @JsonKey(ignore: true)
   @override
@@ -943,12 +990,17 @@ class _$AuthAuthenticatedStateImpl implements AuthAuthenticatedState {
   TResult when<TResult extends Object?>({
     required TResult Function() unauthenticated,
     required TResult Function() loading,
-    required TResult Function(String accessToken, String refreshToken,
-            UserRequestModel userModel, RoleActionsWrapperModel actionsWrapper)
+    required TResult Function(
+            String accessToken,
+            String refreshToken,
+            UserRequestModel userModel,
+            RoleActionsWrapperModel actionsWrapper,
+            String? individualId)
         authenticated,
     required TResult Function(String? error) error,
   }) {
-    return authenticated(accessToken, refreshToken, userModel, actionsWrapper);
+    return authenticated(
+        accessToken, refreshToken, userModel, actionsWrapper, individualId);
   }
 
   @override
@@ -956,13 +1008,17 @@ class _$AuthAuthenticatedStateImpl implements AuthAuthenticatedState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? unauthenticated,
     TResult? Function()? loading,
-    TResult? Function(String accessToken, String refreshToken,
-            UserRequestModel userModel, RoleActionsWrapperModel actionsWrapper)?
+    TResult? Function(
+            String accessToken,
+            String refreshToken,
+            UserRequestModel userModel,
+            RoleActionsWrapperModel actionsWrapper,
+            String? individualId)?
         authenticated,
     TResult? Function(String? error)? error,
   }) {
     return authenticated?.call(
-        accessToken, refreshToken, userModel, actionsWrapper);
+        accessToken, refreshToken, userModel, actionsWrapper, individualId);
   }
 
   @override
@@ -970,15 +1026,19 @@ class _$AuthAuthenticatedStateImpl implements AuthAuthenticatedState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? unauthenticated,
     TResult Function()? loading,
-    TResult Function(String accessToken, String refreshToken,
-            UserRequestModel userModel, RoleActionsWrapperModel actionsWrapper)?
+    TResult Function(
+            String accessToken,
+            String refreshToken,
+            UserRequestModel userModel,
+            RoleActionsWrapperModel actionsWrapper,
+            String? individualId)?
         authenticated,
     TResult Function(String? error)? error,
     required TResult orElse(),
   }) {
     if (authenticated != null) {
       return authenticated(
-          accessToken, refreshToken, userModel, actionsWrapper);
+          accessToken, refreshToken, userModel, actionsWrapper, individualId);
     }
     return orElse();
   }
@@ -1023,16 +1083,17 @@ class _$AuthAuthenticatedStateImpl implements AuthAuthenticatedState {
 
 abstract class AuthAuthenticatedState implements AuthState {
   const factory AuthAuthenticatedState(
-          {required final String accessToken,
-          required final String refreshToken,
-          required final UserRequestModel userModel,
-          required final RoleActionsWrapperModel actionsWrapper}) =
-      _$AuthAuthenticatedStateImpl;
+      {required final String accessToken,
+      required final String refreshToken,
+      required final UserRequestModel userModel,
+      required final RoleActionsWrapperModel actionsWrapper,
+      final String? individualId}) = _$AuthAuthenticatedStateImpl;
 
   String get accessToken;
   String get refreshToken;
   UserRequestModel get userModel;
   RoleActionsWrapperModel get actionsWrapper;
+  String? get individualId;
   @JsonKey(ignore: true)
   _$$AuthAuthenticatedStateImplCopyWith<_$AuthAuthenticatedStateImpl>
       get copyWith => throw _privateConstructorUsedError;
@@ -1105,8 +1166,12 @@ class _$AuthErrorStateImpl implements AuthErrorState {
   TResult when<TResult extends Object?>({
     required TResult Function() unauthenticated,
     required TResult Function() loading,
-    required TResult Function(String accessToken, String refreshToken,
-            UserRequestModel userModel, RoleActionsWrapperModel actionsWrapper)
+    required TResult Function(
+            String accessToken,
+            String refreshToken,
+            UserRequestModel userModel,
+            RoleActionsWrapperModel actionsWrapper,
+            String? individualId)
         authenticated,
     required TResult Function(String? error) error,
   }) {
@@ -1118,8 +1183,12 @@ class _$AuthErrorStateImpl implements AuthErrorState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? unauthenticated,
     TResult? Function()? loading,
-    TResult? Function(String accessToken, String refreshToken,
-            UserRequestModel userModel, RoleActionsWrapperModel actionsWrapper)?
+    TResult? Function(
+            String accessToken,
+            String refreshToken,
+            UserRequestModel userModel,
+            RoleActionsWrapperModel actionsWrapper,
+            String? individualId)?
         authenticated,
     TResult? Function(String? error)? error,
   }) {
@@ -1131,8 +1200,12 @@ class _$AuthErrorStateImpl implements AuthErrorState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? unauthenticated,
     TResult Function()? loading,
-    TResult Function(String accessToken, String refreshToken,
-            UserRequestModel userModel, RoleActionsWrapperModel actionsWrapper)?
+    TResult Function(
+            String accessToken,
+            String refreshToken,
+            UserRequestModel userModel,
+            RoleActionsWrapperModel actionsWrapper,
+            String? individualId)?
         authenticated,
     TResult Function(String? error)? error,
     required TResult orElse(),

@@ -44,6 +44,9 @@ class IndividualSearchModelMapper
       v.identifiers;
   static const Field<IndividualSearchModel, List<IdentifierSearchModel>>
       _f$identifiers = Field('identifiers', _$identifiers, opt: true);
+  static String? _$userUuid(IndividualSearchModel v) => v.userUuid;
+  static const Field<IndividualSearchModel, String> _f$userUuid =
+      Field('userUuid', _$userUuid, opt: true);
   static String? _$boundaryCode(IndividualSearchModel v) => v.boundaryCode;
   static const Field<IndividualSearchModel, String> _f$boundaryCode =
       Field('boundaryCode', _$boundaryCode, opt: true);
@@ -66,6 +69,7 @@ class IndividualSearchModelMapper
     #name: _f$name,
     #gender: _f$gender,
     #identifiers: _f$identifiers,
+    #userUuid: _f$userUuid,
     #boundaryCode: _f$boundaryCode,
     #additionalFields: _f$additionalFields,
     #auditDetails: _f$auditDetails,
@@ -90,6 +94,7 @@ class IndividualSearchModelMapper
         name: data.dec(_f$name),
         gender: data.dec(_f$gender),
         identifiers: data.dec(_f$identifiers),
+        userUuid: data.dec(_f$userUuid),
         boundaryCode: data.dec(_f$boundaryCode),
         additionalFields: data.dec(_f$additionalFields),
         auditDetails: data.dec(_f$auditDetails));
@@ -177,6 +182,7 @@ abstract class IndividualSearchModelCopyWith<
       NameSearchModel? name,
       Gender? gender,
       List<IdentifierSearchModel>? identifiers,
+      String? userUuid,
       String? boundaryCode,
       AdditionalFields? additionalFields,
       AuditDetails? auditDetails});
@@ -234,6 +240,7 @@ class _IndividualSearchModelCopyWithImpl<$R, $Out>
           Object? name = $none,
           Object? gender = $none,
           Object? identifiers = $none,
+          Object? userUuid = $none,
           Object? boundaryCode = $none,
           Object? additionalFields = $none,
           Object? auditDetails = $none}) =>
@@ -245,6 +252,7 @@ class _IndividualSearchModelCopyWithImpl<$R, $Out>
         if (name != $none) #name: name,
         if (gender != $none) #gender: gender,
         if (identifiers != $none) #identifiers: identifiers,
+        if (userUuid != $none) #userUuid: userUuid,
         if (boundaryCode != $none) #boundaryCode: boundaryCode,
         if (additionalFields != $none) #additionalFields: additionalFields,
         if (auditDetails != $none) #auditDetails: auditDetails
@@ -261,6 +269,7 @@ class _IndividualSearchModelCopyWithImpl<$R, $Out>
           name: data.get(#name, or: $value.name),
           gender: data.get(#gender, or: $value.gender),
           identifiers: data.get(#identifiers, or: $value.identifiers),
+          userUuid: data.get(#userUuid, or: $value.userUuid),
           boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode),
           additionalFields:
               data.get(#additionalFields, or: $value.additionalFields),
@@ -301,6 +310,9 @@ class IndividualModelMapper extends SubClassMapperBase<IndividualModel> {
   static String? _$userId(IndividualModel v) => v.userId;
   static const Field<IndividualModel, String> _f$userId =
       Field('userId', _$userId, opt: true);
+  static String? _$userUuid(IndividualModel v) => v.userUuid;
+  static const Field<IndividualModel, String> _f$userUuid =
+      Field('userUuid', _$userUuid, opt: true);
   static String? _$dateOfBirth(IndividualModel v) => v.dateOfBirth;
   static const Field<IndividualModel, String> _f$dateOfBirth =
       Field('dateOfBirth', _$dateOfBirth, opt: true);
@@ -370,6 +382,7 @@ class IndividualModelMapper extends SubClassMapperBase<IndividualModel> {
     #id: _f$id,
     #individualId: _f$individualId,
     #userId: _f$userId,
+    #userUuid: _f$userUuid,
     #dateOfBirth: _f$dateOfBirth,
     #mobileNumber: _f$mobileNumber,
     #altContactNumber: _f$altContactNumber,
@@ -407,6 +420,7 @@ class IndividualModelMapper extends SubClassMapperBase<IndividualModel> {
         id: data.dec(_f$id),
         individualId: data.dec(_f$individualId),
         userId: data.dec(_f$userId),
+        userUuid: data.dec(_f$userUuid),
         dateOfBirth: data.dec(_f$dateOfBirth),
         mobileNumber: data.dec(_f$mobileNumber),
         altContactNumber: data.dec(_f$altContactNumber),
@@ -502,6 +516,7 @@ abstract class IndividualModelCopyWith<$R, $In extends IndividualModel, $Out>
       String? id,
       String? individualId,
       String? userId,
+      String? userUuid,
       String? dateOfBirth,
       String? mobileNumber,
       String? altContactNumber,
@@ -568,6 +583,7 @@ class _IndividualModelCopyWithImpl<$R, $Out>
           Object? id = $none,
           Object? individualId = $none,
           Object? userId = $none,
+          Object? userUuid = $none,
           Object? dateOfBirth = $none,
           Object? mobileNumber = $none,
           Object? altContactNumber = $none,
@@ -592,6 +608,7 @@ class _IndividualModelCopyWithImpl<$R, $Out>
         if (id != $none) #id: id,
         if (individualId != $none) #individualId: individualId,
         if (userId != $none) #userId: userId,
+        if (userUuid != $none) #userUuid: userUuid,
         if (dateOfBirth != $none) #dateOfBirth: dateOfBirth,
         if (mobileNumber != $none) #mobileNumber: mobileNumber,
         if (altContactNumber != $none) #altContactNumber: altContactNumber,
@@ -621,6 +638,7 @@ class _IndividualModelCopyWithImpl<$R, $Out>
       id: data.get(#id, or: $value.id),
       individualId: data.get(#individualId, or: $value.individualId),
       userId: data.get(#userId, or: $value.userId),
+      userUuid: data.get(#userUuid, or: $value.userUuid),
       dateOfBirth: data.get(#dateOfBirth, or: $value.dateOfBirth),
       mobileNumber: data.get(#mobileNumber, or: $value.mobileNumber),
       altContactNumber:

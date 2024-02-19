@@ -10345,6 +10345,12 @@ class $IndividualTable extends Individual
   late final GeneratedColumn<String> userId = GeneratedColumn<String>(
       'user_id', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _userUuidMeta =
+      const VerificationMeta('userUuid');
+  @override
+  late final GeneratedColumn<String> userUuid = GeneratedColumn<String>(
+      'user_uuid', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _dateOfBirthMeta =
       const VerificationMeta('dateOfBirth');
   @override
@@ -10495,6 +10501,7 @@ class $IndividualTable extends Individual
         id,
         individualId,
         userId,
+        userUuid,
         dateOfBirth,
         mobileNumber,
         altContactNumber,
@@ -10541,6 +10548,10 @@ class $IndividualTable extends Individual
     if (data.containsKey('user_id')) {
       context.handle(_userIdMeta,
           userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta));
+    }
+    if (data.containsKey('user_uuid')) {
+      context.handle(_userUuidMeta,
+          userUuid.isAcceptableOrUnknown(data['user_uuid']!, _userUuidMeta));
     }
     if (data.containsKey('date_of_birth')) {
       context.handle(
@@ -10679,6 +10690,8 @@ class $IndividualTable extends Individual
           .read(DriftSqlType.string, data['${effectivePrefix}individual_id']),
       userId: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}user_id']),
+      userUuid: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}user_uuid']),
       dateOfBirth: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}date_of_birth']),
       mobileNumber: attachedDatabase.typeMapping
@@ -10749,6 +10762,7 @@ class IndividualData extends DataClass implements Insertable<IndividualData> {
   final String? id;
   final String? individualId;
   final String? userId;
+  final String? userUuid;
   final String? dateOfBirth;
   final String? mobileNumber;
   final String? altContactNumber;
@@ -10776,6 +10790,7 @@ class IndividualData extends DataClass implements Insertable<IndividualData> {
       {this.id,
       this.individualId,
       this.userId,
+      this.userUuid,
       this.dateOfBirth,
       this.mobileNumber,
       this.altContactNumber,
@@ -10810,6 +10825,9 @@ class IndividualData extends DataClass implements Insertable<IndividualData> {
     }
     if (!nullToAbsent || userId != null) {
       map['user_id'] = Variable<String>(userId);
+    }
+    if (!nullToAbsent || userUuid != null) {
+      map['user_uuid'] = Variable<String>(userUuid);
     }
     if (!nullToAbsent || dateOfBirth != null) {
       map['date_of_birth'] = Variable<String>(dateOfBirth);
@@ -10891,6 +10909,9 @@ class IndividualData extends DataClass implements Insertable<IndividualData> {
           : Value(individualId),
       userId:
           userId == null && nullToAbsent ? const Value.absent() : Value(userId),
+      userUuid: userUuid == null && nullToAbsent
+          ? const Value.absent()
+          : Value(userUuid),
       dateOfBirth: dateOfBirth == null && nullToAbsent
           ? const Value.absent()
           : Value(dateOfBirth),
@@ -10965,6 +10986,7 @@ class IndividualData extends DataClass implements Insertable<IndividualData> {
       id: serializer.fromJson<String?>(json['id']),
       individualId: serializer.fromJson<String?>(json['individualId']),
       userId: serializer.fromJson<String?>(json['userId']),
+      userUuid: serializer.fromJson<String?>(json['userUuid']),
       dateOfBirth: serializer.fromJson<String?>(json['dateOfBirth']),
       mobileNumber: serializer.fromJson<String?>(json['mobileNumber']),
       altContactNumber: serializer.fromJson<String?>(json['altContactNumber']),
@@ -11000,6 +11022,7 @@ class IndividualData extends DataClass implements Insertable<IndividualData> {
       'id': serializer.toJson<String?>(id),
       'individualId': serializer.toJson<String?>(individualId),
       'userId': serializer.toJson<String?>(userId),
+      'userUuid': serializer.toJson<String?>(userUuid),
       'dateOfBirth': serializer.toJson<String?>(dateOfBirth),
       'mobileNumber': serializer.toJson<String?>(mobileNumber),
       'altContactNumber': serializer.toJson<String?>(altContactNumber),
@@ -11032,6 +11055,7 @@ class IndividualData extends DataClass implements Insertable<IndividualData> {
           {Value<String?> id = const Value.absent(),
           Value<String?> individualId = const Value.absent(),
           Value<String?> userId = const Value.absent(),
+          Value<String?> userUuid = const Value.absent(),
           Value<String?> dateOfBirth = const Value.absent(),
           Value<String?> mobileNumber = const Value.absent(),
           Value<String?> altContactNumber = const Value.absent(),
@@ -11060,6 +11084,7 @@ class IndividualData extends DataClass implements Insertable<IndividualData> {
         individualId:
             individualId.present ? individualId.value : this.individualId,
         userId: userId.present ? userId.value : this.userId,
+        userUuid: userUuid.present ? userUuid.value : this.userUuid,
         dateOfBirth: dateOfBirth.present ? dateOfBirth.value : this.dateOfBirth,
         mobileNumber:
             mobileNumber.present ? mobileNumber.value : this.mobileNumber,
@@ -11112,6 +11137,7 @@ class IndividualData extends DataClass implements Insertable<IndividualData> {
           ..write('id: $id, ')
           ..write('individualId: $individualId, ')
           ..write('userId: $userId, ')
+          ..write('userUuid: $userUuid, ')
           ..write('dateOfBirth: $dateOfBirth, ')
           ..write('mobileNumber: $mobileNumber, ')
           ..write('altContactNumber: $altContactNumber, ')
@@ -11144,6 +11170,7 @@ class IndividualData extends DataClass implements Insertable<IndividualData> {
         id,
         individualId,
         userId,
+        userUuid,
         dateOfBirth,
         mobileNumber,
         altContactNumber,
@@ -11175,6 +11202,7 @@ class IndividualData extends DataClass implements Insertable<IndividualData> {
           other.id == this.id &&
           other.individualId == this.individualId &&
           other.userId == this.userId &&
+          other.userUuid == this.userUuid &&
           other.dateOfBirth == this.dateOfBirth &&
           other.mobileNumber == this.mobileNumber &&
           other.altContactNumber == this.altContactNumber &&
@@ -11204,6 +11232,7 @@ class IndividualCompanion extends UpdateCompanion<IndividualData> {
   final Value<String?> id;
   final Value<String?> individualId;
   final Value<String?> userId;
+  final Value<String?> userUuid;
   final Value<String?> dateOfBirth;
   final Value<String?> mobileNumber;
   final Value<String?> altContactNumber;
@@ -11232,6 +11261,7 @@ class IndividualCompanion extends UpdateCompanion<IndividualData> {
     this.id = const Value.absent(),
     this.individualId = const Value.absent(),
     this.userId = const Value.absent(),
+    this.userUuid = const Value.absent(),
     this.dateOfBirth = const Value.absent(),
     this.mobileNumber = const Value.absent(),
     this.altContactNumber = const Value.absent(),
@@ -11261,6 +11291,7 @@ class IndividualCompanion extends UpdateCompanion<IndividualData> {
     this.id = const Value.absent(),
     this.individualId = const Value.absent(),
     this.userId = const Value.absent(),
+    this.userUuid = const Value.absent(),
     this.dateOfBirth = const Value.absent(),
     this.mobileNumber = const Value.absent(),
     this.altContactNumber = const Value.absent(),
@@ -11290,6 +11321,7 @@ class IndividualCompanion extends UpdateCompanion<IndividualData> {
     Expression<String>? id,
     Expression<String>? individualId,
     Expression<String>? userId,
+    Expression<String>? userUuid,
     Expression<String>? dateOfBirth,
     Expression<String>? mobileNumber,
     Expression<String>? altContactNumber,
@@ -11319,6 +11351,7 @@ class IndividualCompanion extends UpdateCompanion<IndividualData> {
       if (id != null) 'id': id,
       if (individualId != null) 'individual_id': individualId,
       if (userId != null) 'user_id': userId,
+      if (userUuid != null) 'user_uuid': userUuid,
       if (dateOfBirth != null) 'date_of_birth': dateOfBirth,
       if (mobileNumber != null) 'mobile_number': mobileNumber,
       if (altContactNumber != null) 'alt_contact_number': altContactNumber,
@@ -11352,6 +11385,7 @@ class IndividualCompanion extends UpdateCompanion<IndividualData> {
       {Value<String?>? id,
       Value<String?>? individualId,
       Value<String?>? userId,
+      Value<String?>? userUuid,
       Value<String?>? dateOfBirth,
       Value<String?>? mobileNumber,
       Value<String?>? altContactNumber,
@@ -11380,6 +11414,7 @@ class IndividualCompanion extends UpdateCompanion<IndividualData> {
       id: id ?? this.id,
       individualId: individualId ?? this.individualId,
       userId: userId ?? this.userId,
+      userUuid: userUuid ?? this.userUuid,
       dateOfBirth: dateOfBirth ?? this.dateOfBirth,
       mobileNumber: mobileNumber ?? this.mobileNumber,
       altContactNumber: altContactNumber ?? this.altContactNumber,
@@ -11418,6 +11453,9 @@ class IndividualCompanion extends UpdateCompanion<IndividualData> {
     }
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
+    }
+    if (userUuid.present) {
+      map['user_uuid'] = Variable<String>(userUuid.value);
     }
     if (dateOfBirth.present) {
       map['date_of_birth'] = Variable<String>(dateOfBirth.value);
@@ -11502,6 +11540,7 @@ class IndividualCompanion extends UpdateCompanion<IndividualData> {
           ..write('id: $id, ')
           ..write('individualId: $individualId, ')
           ..write('userId: $userId, ')
+          ..write('userUuid: $userUuid, ')
           ..write('dateOfBirth: $dateOfBirth, ')
           ..write('mobileNumber: $mobileNumber, ')
           ..write('altContactNumber: $altContactNumber, ')
