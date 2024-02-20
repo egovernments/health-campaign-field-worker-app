@@ -14,8 +14,8 @@ import '../../models/entities/side_effect.dart';
 import '../../models/entities/task.dart';
 import 'search_households.dart';
 
-class SearchMemberBloc extends SearchHouseholdsBloc {
-  SearchMemberBloc({
+class SearchByHeadBloc extends SearchHouseholdsBloc {
+  SearchByHeadBloc({
     required super.userUid,
     required super.projectId,
     required super.individual,

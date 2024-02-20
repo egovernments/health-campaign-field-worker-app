@@ -149,11 +149,18 @@ class _SearchBeneficiaryPageState
                                         TextCapitalization.words,
                                     onChanged: (value) {
                                       if (value.isEmpty) {
-                                        blocWrapper.searchHouseholdsBloc.add(
-                                          const SearchHouseholdsClearEvent(),
+                                        blocWrapper.searchByHeadBloc.add(
+                                          const SearchHouseholdsEvent.clear(),
                                         );
                                       }
-                                      if (isProximityEnabled &&
+                                      if (value.trim().length < 2 &&
+                                          !isProximityEnabled) {
+                                        blocWrapper.searchByHeadBloc.add(
+                                          const SearchHouseholdsEvent.clear(),
+                                        );
+
+                                        return;
+                                      } else if (isProximityEnabled &&
                                           value.trim().length < 2) {
                                         blocWrapper.proximitySearchBloc.add(
                                           SearchHouseholdsEvent
@@ -168,7 +175,7 @@ class _SearchBeneficiaryPageState
                                           ),
                                         );
                                       } else {
-                                        blocWrapper.searchMemberBloc.add(
+                                        blocWrapper.searchByHeadBloc.add(
                                           SearchHouseholdsEvent
                                               .searchByHouseholdHead(
                                             searchText: value,
@@ -231,9 +238,10 @@ class _SearchBeneficiaryPageState
                                                   );
                                                 } else {
                                                   blocWrapper
-                                                      .searchHouseholdsBloc
+                                                      .proximitySearchBloc
                                                       .add(
-                                                    const SearchHouseholdsClearEvent(),
+                                                    const SearchHouseholdsEvent
+                                                        .clear(),
                                                   );
                                                 }
                                               },
@@ -317,7 +325,7 @@ class _SearchBeneficiaryPageState
                                   });
                                   searchController.clear();
 
-                                  blocWrapper.searchMemberBloc.add(
+                                  blocWrapper.searchByHeadBloc.add(
                                     const SearchHouseholdsEvent.clear(),
                                   );
                                 },
@@ -358,7 +366,7 @@ class _SearchBeneficiaryPageState
                                   ),
                                 ));
                                 searchController.clear();
-                                blocWrapper.searchMemberBloc.add(
+                                blocWrapper.searchByHeadBloc.add(
                                   const SearchHouseholdsEvent.clear(),
                                 );
                               }
@@ -376,6 +384,8 @@ class _SearchBeneficiaryPageState
                           ),
                         ),
                         onPressed: () {
+                          blocWrapper.tagSearchBloc
+                              .add(const SearchHouseholdsEvent.clear());
                           context.router.push(QRScannerRoute(
                             quantity: 1,
                             isGS1code: false,

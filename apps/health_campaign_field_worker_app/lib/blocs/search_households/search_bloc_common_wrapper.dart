@@ -5,17 +5,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'tag_by_search.dart';
 import 'proximity_search.dart';
 import 'search_households.dart';
-import 'search_member.dart';
+import 'search_by_head.dart';
 
 class SearchBlocWrapper implements StateStreamableSource<Object?> {
   final SearchHouseholdsBloc searchHouseholdsBloc;
-  final SearchMemberBloc searchMemberBloc;
+  final SearchByHeadBloc searchByHeadBloc;
   final ProximitySearchBloc proximitySearchBloc;
   final TagSearchBloc tagSearchBloc;
 
   SearchBlocWrapper({
     required this.searchHouseholdsBloc,
-    required this.searchMemberBloc,
+    required this.searchByHeadBloc,
     required this.proximitySearchBloc,
     required this.tagSearchBloc,
   });
@@ -23,7 +23,7 @@ class SearchBlocWrapper implements StateStreamableSource<Object?> {
   Stream<SearchHouseholdsState> get stateChanges =>
       StreamGroup.merge<SearchHouseholdsState>([
         searchHouseholdsBloc.stream,
-        searchMemberBloc.stream,
+        searchByHeadBloc.stream,
         proximitySearchBloc.stream,
         tagSearchBloc.stream,
       ]);
@@ -32,7 +32,7 @@ class SearchBlocWrapper implements StateStreamableSource<Object?> {
     if (event is SearchHouseholdsByProximityEvent) {
       proximitySearchBloc.add(event);
     } else if (event is SearchHouseholdsByHouseholdsEvent) {
-      searchMemberBloc.add(event);
+      searchByHeadBloc.add(event);
     } else if (event is SearchHouseholdsByTagEvent) {
       tagSearchBloc.add(event);
     } else {
@@ -49,7 +49,7 @@ class SearchBlocWrapper implements StateStreamableSource<Object?> {
   @override
   FutureOr<void> close() {
     searchHouseholdsBloc.close();
-    searchMemberBloc.close();
+    searchByHeadBloc.close();
     proximitySearchBloc.close();
     tagSearchBloc.close();
   }
@@ -57,7 +57,7 @@ class SearchBlocWrapper implements StateStreamableSource<Object?> {
   @override
   bool get isClosed =>
       searchHouseholdsBloc.isClosed &&
-      searchMemberBloc.isClosed &&
+      searchByHeadBloc.isClosed &&
       proximitySearchBloc.isClosed &&
       tagSearchBloc.isClosed;
 }

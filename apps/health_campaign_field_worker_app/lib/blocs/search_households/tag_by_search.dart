@@ -69,24 +69,23 @@ class TagSearchBloc extends SearchHouseholdsBloc {
                     households.map((e) => e.clientReferenceId).toList(),
               ),
             );
-      final head = hhMembers.firstWhere((element) => element.isHeadOfHousehold);
+
+      final member = hhMembers.first;
 
       final members = await householdMember.search(
         HouseholdMemberSearchModel(
-          householdClientReferenceId: head.householdClientReferenceId,
-          isHeadOfHousehold: true,
+          householdClientReferenceId: member.householdClientReferenceId,
         ),
       );
+      final headMember = members.where((element) => element.isHeadOfHousehold).first;
 
-      final individualList = beneficiaryType == BeneficiaryType.household
-          ? await individual.search(
+      final individualList = await individual.search(
               IndividualSearchModel(
-                clientReferenceId: hhMembers
+                clientReferenceId: members
                     .map((e) => e.individualClientReferenceId!)
                     .toList(),
               ),
-            )
-          : individuals;
+            );
 
       final householdList = await household.search(HouseholdSearchModel(
         clientReferenceId: [members.first.householdClientReferenceId!],
@@ -108,8 +107,8 @@ class TagSearchBloc extends SearchHouseholdsBloc {
 
       containers.add(
         HouseholdMemberWrapper(
-          household: householdList.first,
-          headOfHousehold: individualList.first,
+          household: householdList.firstWhere((element) => element.clientReferenceId == member.householdClientReferenceId) ,
+          headOfHousehold: individualList.firstWhere((element) => headMember.individualClientReferenceId == element.clientReferenceId),
           members: individualList,
           projectBeneficiaries: beneficiaries,
           tasks: tasks.isEmpty ? null : tasks,

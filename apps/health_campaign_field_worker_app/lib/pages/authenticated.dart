@@ -15,7 +15,7 @@ import '../blocs/search_households/project_beneficiaries_downsync.dart';
 import '../blocs/search_households/proximity_search.dart';
 import '../blocs/search_households/search_bloc_common_wrapper.dart';
 import '../blocs/search_households/search_households.dart';
-import '../blocs/search_households/search_member.dart';
+import '../blocs/search_households/search_by_head.dart';
 import '../blocs/search_households/tag_by_search.dart';
 import '../blocs/search_referrals/search_referrals.dart';
 import '../blocs/service/service.dart';
@@ -140,7 +140,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                         create: (context) {
                           final isar = context.read<Isar>();
 
-                          return SearchMemberBloc(
+                          return SearchByHeadBloc(
                             beneficiaryType: context.beneficiaryType,
                             userUid: context.loggedInUserUuid,
                             projectId: context.projectId,
@@ -235,7 +235,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                           return SearchBlocWrapper(
                             searchHouseholdsBloc:
                                 context.read<SearchHouseholdsBloc>(),
-                            searchMemberBloc: context.read<SearchMemberBloc>(),
+                            searchByHeadBloc: context.read<SearchByHeadBloc>(),
                             proximitySearchBloc:
                                 context.read<ProximitySearchBloc>(),
                             tagSearchBloc: context.read<TagSearchBloc>(),
