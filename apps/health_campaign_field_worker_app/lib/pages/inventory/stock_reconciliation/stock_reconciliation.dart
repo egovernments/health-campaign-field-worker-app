@@ -67,6 +67,12 @@ class _StockReconciliationPageState
         )
         .toList()
         .isNotEmpty;
+    bool isWareHouseMgr = context.loggedInUserRoles
+        .where(
+          (role) => role.code == RolesType.warehouseManager.toValue(),
+    )
+        .toList()
+        .isNotEmpty;
 
     return BlocListener<BoundaryBloc, BoundaryState>(
       listener: (context, state) {
@@ -116,7 +122,7 @@ class _StockReconciliationPageState
                   },
                   builder: (context, stockState) {
                     return ReactiveFormBuilder(
-                      form: () => _form(isDistributor),
+                      form: () => _form(isDistributor && !isWareHouseMgr),
                       builder: (ctx, form, child) {
                         return Scaffold(
                           body: ScrollableContent(
@@ -148,7 +154,7 @@ class _StockReconciliationPageState
                                             final bloc = ctx.read<
                                                 StockReconciliationBloc>();
 
-                                            final facilityId = isDistributor
+                                            final facilityId = isDistributor && !isWareHouseMgr
                                                 ? FacilityModel(
                                                     id: context
                                                         .loggedInUserUuid,
@@ -295,7 +301,7 @@ class _StockReconciliationPageState
                                           .textTheme
                                           .displayMedium,
                                     ),
-                                    if (!isDistributor)
+                                    if (!isDistributor && isWareHouseMgr)
                                       BlocConsumer<FacilityBloc, FacilityState>(
                                         listener: (context, state) =>
                                             state.whenOrNull(
@@ -410,7 +416,7 @@ class _StockReconciliationPageState
                                                       StockReconciliationSelectProductEvent(
                                                         value.id,
                                                         isDistributor:
-                                                            isDistributor,
+                                                            isDistributor && !isWareHouseMgr,
                                                       ),
                                                     );
                                               },
