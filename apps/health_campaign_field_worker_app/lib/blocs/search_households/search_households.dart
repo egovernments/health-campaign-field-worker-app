@@ -254,9 +254,16 @@ class SearchHouseholdsBloc
     SearchHouseholdsByProximityEvent event,
     SearchHouseholdsEmitter emit,
   ) async {
+    List<HouseholdModel> householdList = [];
+    List<IndividualModel> individualsList = [];
+    List<HouseholdMemberModel> householdMembersList = [];
+    List<ProjectBeneficiaryModel> projectBeneficiariesList = [];
+    List<TaskModel> taskList = [];
+    List<SideEffectModel> sideEffectsList = [];
+    List<ReferralModel> referralsList = [];
     emit(state.copyWith(loading: true));
     // Fetch individual results based on proximity and other criteria.
-    final List<HouseholdModel> proximityBasedHouseholdsResults =
+    householdList =
         await addressRepository.searchHouseHoldbyAddress(AddressSearchModel(
       latitude: event.latitude,
       longitude: event.longititude,
@@ -264,81 +271,73 @@ class SearchHouseholdsBloc
       offset: event.offset,
       limit: event.limit,
     ));
-
     // Extract individual IDs from proximity-based individual results.
-    final househHoldIds = proximityBasedHouseholdsResults
-        .map((e) => e.clientReferenceId)
-        .toList();
-
-    final List<HouseholdMemberModel> householdMembers =
-        await fetchHouseholdMembersBulk(
+    final householdClientReferenceIds =
+        householdList.map((e) => e.clientReferenceId).toList();
+    householdMembersList = await fetchHouseholdMembersBulk(
       null,
-      househHoldIds,
+      householdClientReferenceIds,
     );
-
-    final List<String> individualClientReferenceIds = householdMembers
+    final List<String> individualClientReferenceIds = householdMembersList
         .map((e) => e.individualClientReferenceId.toString())
         .toList();
-
-    final List<IndividualModel> individuals = await individual.search(
+    individualsList = await individual.search(
       IndividualSearchModel(clientReferenceId: individualClientReferenceIds),
     );
-
-    final projectBeneficiaries = await fetchProjectBeneficiary(
+    projectBeneficiariesList = await fetchProjectBeneficiary(
       beneficiaryType != BeneficiaryType.individual
-          ? househHoldIds
+          ? householdClientReferenceIds
           : individualClientReferenceIds,
     );
-
-    List<SideEffectModel> sideEffects = [];
-    List<ReferralModel> referrals = [];
-    List<TaskModel> tasks = [];
-    if (projectBeneficiaries.isNotEmpty) {
+    if (projectBeneficiariesList.isNotEmpty) {
       // Search for tasks and side effects based on project beneficiaries.
-      tasks = await fetchTaskbyProjectBeneficiary(projectBeneficiaries);
-
-      sideEffects = await sideEffectDataRepository.search(SideEffectSearchModel(
-        taskClientReferenceId: tasks.map((e) => e.clientReferenceId).toList(),
+      taskList = await fetchTaskbyProjectBeneficiary(projectBeneficiariesList);
+      sideEffectsList =
+          await sideEffectDataRepository.search(SideEffectSearchModel(
+        taskClientReferenceId:
+            taskList.map((e) => e.clientReferenceId).toList(),
       ));
-
-      referrals = await referralDataRepository.search(ReferralSearchModel(
+      referralsList = await referralDataRepository.search(ReferralSearchModel(
         projectBeneficiaryClientReferenceId:
-            projectBeneficiaries.map((e) => e.clientReferenceId).toList(),
+            projectBeneficiariesList.map((e) => e.clientReferenceId).toList(),
       ));
     }
-
     // Initialize a list to store household member wrappers.
     final containers = <HouseholdMemberWrapper>[...state.householdMembers];
-
     // Group household members by household client reference ID.
-    final groupedHouseholds = householdMembers
+    final groupedHouseholdsMembers = householdMembersList
         .groupListsBy((element) => element.householdClientReferenceId);
-
     // Iterate through grouped households and retrieve additional data.
-    for (final entry in groupedHouseholds.entries) {
+    for (final entry in groupedHouseholdsMembers.entries) {
+      HouseholdModel filteredHousehold;
+      List<IndividualModel> filteredIndividuals;
+      List<ProjectBeneficiaryModel> filteredBeneficiaries;
+      List<TaskModel> filteredTasks;
       final householdId = entry.key;
-
       if (householdId == null) continue;
-
-      // Search for households based on client reference ID and proximity.
-
-      // Retrieve the first household result.
-      final householdresult = proximityBasedHouseholdsResults
-          .firstWhere((e) => e.clientReferenceId == householdId);
-      // Search for individuals based on proximity, beneficiary type, and search text.
-      final List<String?> membersIds =
-          entry.value.map((e) => e.individualClientReferenceId).toList();
-      final List<IndividualModel> individualMemebrs = individuals
-          .where((element) => membersIds.contains(element.clientReferenceId))
+      filteredHousehold =
+          householdList.firstWhere((e) => e.clientReferenceId == householdId);
+      filteredIndividuals = individualsList
+          .where((element) => entry.value
+              .map((e) => e.individualClientReferenceId)
+              .contains(element.clientReferenceId))
           .toList();
-      final List<ProjectBeneficiaryModel> beneficiaries = projectBeneficiaries
+      filteredBeneficiaries = projectBeneficiariesList
           .where((element) => beneficiaryType == BeneficiaryType.individual
-              ? individualClientReferenceIds
+              ? entry.value
+                  .map((e) => e.individualClientReferenceId)
                   .contains(element.beneficiaryClientReferenceId)
-              : househHoldIds.contains(element.beneficiaryClientReferenceId))
+              : entry.key == element.beneficiaryClientReferenceId)
+          .toList();
+      filteredTasks = taskList
+          .where((element) => filteredBeneficiaries
+              .where((e) =>
+                  e.clientReferenceId ==
+                  element.projectBeneficiaryClientReferenceId)
+              .isNotEmpty)
           .toList();
       // Find the head of household from the individuals.
-      final head = individuals.firstWhereOrNull(
+      final head = filteredIndividuals.firstWhereOrNull(
         (element) =>
             element.clientReferenceId ==
             entry.value
@@ -347,19 +346,20 @@ class SearchHouseholdsBloc
                 )
                 ?.individualClientReferenceId,
       );
-
       if (head == null) continue;
       // Create a container for household members and associated data.
-      if (beneficiaries.isNotEmpty) {
+      if (filteredBeneficiaries.isNotEmpty) {
         containers.add(
           HouseholdMemberWrapper(
-            household: householdresult,
+            household: filteredHousehold,
             headOfHousehold: head,
-            members: individualMemebrs,
-            projectBeneficiaries: beneficiaries,
-            tasks: tasks.isEmpty ? null : tasks,
-            sideEffects: sideEffects.isEmpty ? null : sideEffects,
-            referrals: referrals.isEmpty ? null : referrals,
+            members: filteredIndividuals,
+            projectBeneficiaries: filteredBeneficiaries,
+            tasks: filteredTasks.isEmpty ? null : filteredTasks,
+            sideEffects: sideEffectsList.isEmpty ? null : sideEffectsList,
+            //TODO Need to added the side effects
+            referrals: referralsList.isEmpty ? null : referralsList,
+            //TODO Need to addevid the referrals
           ),
         );
       }
