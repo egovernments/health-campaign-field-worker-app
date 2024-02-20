@@ -528,7 +528,8 @@ void showDownloadDialog(
   required DownloadBeneficiary model,
   required DigitProgressDialogType dialogType,
   bool isPop = true,
-}) {
+  StreamController<double>? downloadProgressController,
+    }) {
   if (isPop) {
     Navigator.of(context, rootNavigator: true).pop();
   }
@@ -627,17 +628,20 @@ void showDownloadDialog(
       DigitDialog.show(
         context,
         options: DigitDialogOptions(
-          title: ProgressIndicatorContainer(
-            label: '',
-            prefixLabel: '',
-            suffixLabel: '${model.prefixLabel}/${model.suffixLabel}' ?? '',
-            value: model.totalCount == 0
-                ? 0
-                : min((model.syncCount ?? 0) / (model.totalCount ?? 1), 1),
-            valueColor: AlwaysStoppedAnimation<Color>(
-              DigitTheme.instance.colorScheme.secondary,
-            ),
-            subLabel: model.title,
+          title: StreamBuilder<double>(
+            stream: downloadProgressController?.stream,
+            builder: (context, snapshot) {
+              return ProgressIndicatorContainer(
+                label: '',
+                prefixLabel: '',
+                suffixLabel: '${(snapshot.data == null ? 0 : snapshot.data! * model.totalCount!.toDouble()).toInt()}/${model.suffixLabel}' ?? '',
+                value: snapshot.data ?? 0,
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  DigitTheme.instance.colorScheme.secondary,
+                ),
+                subLabel: model.title,
+              );
+            },
           ),
         ),
       );
