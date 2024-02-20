@@ -70,7 +70,7 @@ class _StockReconciliationPageState
     bool isWareHouseMgr = context.loggedInUserRoles
         .where(
           (role) => role.code == RolesType.warehouseManager.toValue(),
-    )
+        )
         .toList()
         .isNotEmpty;
 
@@ -154,24 +154,25 @@ class _StockReconciliationPageState
                                             final bloc = ctx.read<
                                                 StockReconciliationBloc>();
 
-                                            final facilityId = isDistributor && !isWareHouseMgr
-                                                ? FacilityModel(
-                                                    id: context
-                                                        .loggedInUserUuid,
-                                                    additionalFields:
-                                                        FacilityAdditionalFields(
-                                                      version: 1,
-                                                      fields: [
-                                                        const AdditionalField(
-                                                          'type',
-                                                          'deliveryTeam',
+                                            final facilityId =
+                                                isDistributor && !isWareHouseMgr
+                                                    ? FacilityModel(
+                                                        id: context
+                                                            .loggedInUserUuid,
+                                                        additionalFields:
+                                                            FacilityAdditionalFields(
+                                                          version: 1,
+                                                          fields: [
+                                                            const AdditionalField(
+                                                              'type',
+                                                              'deliveryTeam',
+                                                            ),
+                                                          ],
                                                         ),
-                                                      ],
-                                                    ),
-                                                  )
-                                                : form
-                                                    .control(_facilityKey)
-                                                    .value as FacilityModel;
+                                                      )
+                                                    : form
+                                                        .control(_facilityKey)
+                                                        .value as FacilityModel;
 
                                             final productVariant = form
                                                 .control(_productVariantKey)
@@ -317,11 +318,11 @@ class _StockReconciliationPageState
                                               ) ??
                                               [];
 
-                                        return InkWell(
-                                          onTap: () async {
-                                            final stockReconciliationBloc =
-                                                context.read<
-                                                    StockReconciliationBloc>();
+                                          return InkWell(
+                                            onTap: () async {
+                                              final stockReconciliationBloc =
+                                                  context.read<
+                                                      StockReconciliationBloc>();
 
                                               final facility = await context
                                                   .router
@@ -416,7 +417,8 @@ class _StockReconciliationPageState
                                                       StockReconciliationSelectProductEvent(
                                                         value.id,
                                                         isDistributor:
-                                                            isDistributor && !isWareHouseMgr,
+                                                            isDistributor &&
+                                                                !isWareHouseMgr,
                                                       ),
                                                     );
                                               },
