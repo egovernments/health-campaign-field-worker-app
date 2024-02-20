@@ -301,7 +301,7 @@ class _StockReconciliationPageState
                                           .textTheme
                                           .displayMedium,
                                     ),
-                                    if (!isDistributor && isWareHouseMgr)
+                                    if (isWareHouseMgr)
                                       BlocConsumer<FacilityBloc, FacilityState>(
                                         listener: (context, state) =>
                                             state.whenOrNull(
