@@ -3,7 +3,8 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_mlkit_commons/google_mlkit_commons.dart';
+import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
+import '../../utils/i18_key_constants.dart' as i18;
 
 import '../widgets/showcase/showcase_wrappers.dart';
 
@@ -55,7 +56,8 @@ class _CameraViewState extends State<CameraView> {
   void _initialize() async {
     _cameras = widget.cameras;
     _cameraIndex = _cameras.indexWhere(
-        (camera) => camera.lensDirection == widget.initialCameraLensDirection);
+      (camera) => camera.lensDirection == widget.initialCameraLensDirection,
+    );
     if (_cameraIndex != -1) {
       _startLiveFeed();
     }
@@ -76,6 +78,7 @@ class _CameraViewState extends State<CameraView> {
     if (_cameras.isEmpty) return Container();
     if (_controller == null) return Container();
     if (_controller?.value.isInitialized == false) return Container();
+
     return Container(
       color: Colors.black,
       child: Stack(
@@ -84,7 +87,7 @@ class _CameraViewState extends State<CameraView> {
           Center(
             child: _changingCameraLens
                 ? Center(
-                    child: const Text('Changing camera lens'),
+                    child: Text(i18.common.changingCameraLens),
                   )
                 : CameraPreview(
                     _controller!,
@@ -111,7 +114,7 @@ class _CameraViewState extends State<CameraView> {
             heroTag: Object(),
             onPressed: () => Navigator.of(context).pop(),
             backgroundColor: Colors.black54,
-            child: Icon(
+            child: const Icon(
               Icons.arrow_back_ios_outlined,
               size: 20,
             ),
@@ -129,7 +132,7 @@ class _CameraViewState extends State<CameraView> {
             heroTag: Object(),
             onPressed: widget.onDetectorViewModeChanged,
             backgroundColor: Colors.black54,
-            child: Icon(
+            child: const Icon(
               Icons.photo_library_outlined,
               size: 25,
             ),
@@ -195,7 +198,7 @@ class _CameraViewState extends State<CameraView> {
                     child: Center(
                       child: Text(
                         '${_currentZoomLevel.toStringAsFixed(1)}x',
-                        style: TextStyle(color: Colors.white),
+                        style: const TextStyle(color: Colors.white),
                       ),
                     ),
                   ),
@@ -227,7 +230,6 @@ class _CameraViewState extends State<CameraView> {
                 ),
               ),
             ),
-            // TODO : Need to add the Scanner Box
           ]),
         ),
       );
@@ -312,14 +314,9 @@ class _CameraViewState extends State<CameraView> {
       var rotationCompensation =
           _orientations[_controller!.value.deviceOrientation];
       if (rotationCompensation == null) return null;
-      if (camera.lensDirection == CameraLensDirection.front) {
-        // front-facing
-        rotationCompensation = (sensorOrientation + rotationCompensation) % 360;
-      } else {
-        // back-facing
-        rotationCompensation =
-            (sensorOrientation - rotationCompensation + 360) % 360;
-      }
+      rotationCompensation = camera.lensDirection == CameraLensDirection.front
+          ? (sensorOrientation + rotationCompensation) % 360
+          : (sensorOrientation - rotationCompensation + 360) % 360;
       rotation = InputImageRotationValue.fromRawValue(rotationCompensation);
       // print('rotationCompensation: $rotationCompensation');
     }

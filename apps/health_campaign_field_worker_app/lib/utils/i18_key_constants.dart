@@ -132,6 +132,8 @@ class Common {
   String get noMatchFound => 'CORE_COMMON_NO_MATCH_FOUND';
 
   String get scanBales => 'CORE_COMMON_SCAN_BALES';
+
+  String get changingCameraLens => 'CHANGING_CAMERA_LENS';
 }
 
 class HomeShowcase {
