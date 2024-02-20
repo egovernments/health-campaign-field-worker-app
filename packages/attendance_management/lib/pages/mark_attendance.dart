@@ -252,7 +252,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                 padding: const EdgeInsets.only(bottom: 8.0),
                                 child: tableData.isNotEmpty
                                     ? DigitTable(
-                                        height: (tableData.length) * 59,
+                                        height: (tableData.length + 1) * 56.5,
                                         headerList: headerList(
                                           widget.dateTime,
                                           localizations,
