@@ -37,4 +37,6 @@ enum AdditionalFieldsType {
   latitude,
   @MappableValue("longitude")
   longitude,
+  @MappableValue("deliveryComment")
+  deliveryComment,
 }

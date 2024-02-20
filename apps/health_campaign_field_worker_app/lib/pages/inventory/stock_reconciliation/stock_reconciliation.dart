@@ -68,6 +68,13 @@ class _StockReconciliationPageState
         .toList()
         .isNotEmpty;
 
+    bool isWareHouseMgr = context.loggedInUserRoles
+        .where(
+          (role) => role.code == RolesType.warehouseManager.toValue(),
+        )
+        .toList()
+        .isNotEmpty;
+
     return BlocListener<BoundaryBloc, BoundaryState>(
       listener: (context, state) {
         if (state.hasSubmitted) {
@@ -116,7 +123,7 @@ class _StockReconciliationPageState
                   },
                   builder: (context, stockState) {
                     return ReactiveFormBuilder(
-                      form: () => _form(isDistributor),
+                      form: () => _form(isDistributor && !isWareHouseMgr),
                       builder: (ctx, form, child) {
                         return Scaffold(
                           body: ScrollableContent(
@@ -148,24 +155,25 @@ class _StockReconciliationPageState
                                             final bloc = ctx.read<
                                                 StockReconciliationBloc>();
 
-                                            final facilityId = isDistributor
-                                                ? FacilityModel(
-                                                    id: context
-                                                        .loggedInUserUuid,
-                                                    additionalFields:
-                                                        FacilityAdditionalFields(
-                                                      version: 1,
-                                                      fields: [
-                                                        const AdditionalField(
-                                                          'type',
-                                                          'deliveryTeam',
+                                            final facilityId =
+                                                isDistributor && !isWareHouseMgr
+                                                    ? FacilityModel(
+                                                        id: context
+                                                            .loggedInUserUuid,
+                                                        additionalFields:
+                                                            FacilityAdditionalFields(
+                                                          version: 1,
+                                                          fields: [
+                                                            const AdditionalField(
+                                                              'type',
+                                                              'deliveryTeam',
+                                                            ),
+                                                          ],
                                                         ),
-                                                      ],
-                                                    ),
-                                                  )
-                                                : form
-                                                    .control(_facilityKey)
-                                                    .value as FacilityModel;
+                                                      )
+                                                    : form
+                                                        .control(_facilityKey)
+                                                        .value as FacilityModel;
 
                                             final productVariant = form
                                                 .control(_productVariantKey)
@@ -295,7 +303,7 @@ class _StockReconciliationPageState
                                           .textTheme
                                           .displayMedium,
                                     ),
-                                    if (!isDistributor)
+                                    if (isWareHouseMgr)
                                       BlocConsumer<FacilityBloc, FacilityState>(
                                         listener: (context, state) =>
                                             state.whenOrNull(
@@ -311,11 +319,11 @@ class _StockReconciliationPageState
                                               ) ??
                                               [];
 
-                                        return InkWell(
-                                          onTap: () async {
-                                            final stockReconciliationBloc =
-                                                context.read<
-                                                    StockReconciliationBloc>();
+                                          return InkWell(
+                                            onTap: () async {
+                                              final stockReconciliationBloc =
+                                                  context.read<
+                                                      StockReconciliationBloc>();
 
                                               final facility = await context
                                                   .router
@@ -410,7 +418,8 @@ class _StockReconciliationPageState
                                                       StockReconciliationSelectProductEvent(
                                                         value.id,
                                                         isDistributor:
-                                                            isDistributor,
+                                                            isDistributor &&
+                                                                !isWareHouseMgr,
                                                       ),
                                                     );
                                               },
