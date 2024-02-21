@@ -65,14 +65,14 @@ class BoundaryLocalRepository
               sql.boundary.boundaryNum.isSmallerOrEqualValue(r!),
             ])))
           .limit(r);
-
     } else {
       (selectQuery
         ..where(buildAnd([
           if (query.code != null)
-            sql.boundary.materializedPath.like('%${query.code}%'),
+            sql.boundary.materializedPath.like('${query.code}%'),
           sql.boundary.materializedPath.isNotNull(),
-          if (query.boundaryNum != null) sql.boundary.boundaryNum.equals(query.boundaryNum!),
+          if (query.boundaryNum != null)
+            sql.boundary.boundaryNum.equals(query.boundaryNum!),
           sql.boundary.materializedPath.isNotIn(['']),
           sql.boundary.code.isNotNull(),
           sql.boundary.code.isNotIn(['']),
