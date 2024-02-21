@@ -220,7 +220,9 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                             ),
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
+                                padding: const EdgeInsets.only(
+                                  left: kPadding * 2,
+                                ),
                                 child: SizedBox(
                                   width: MediaQuery.of(context).size.width,
                                   child: Text(
@@ -234,7 +236,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(
-                                    left: 8.0, top: 4, bottom: 16),
+                                    left: kPadding * 2, top: 4, bottom: 16),
                                 child: SizedBox(
                                   width: MediaQuery.of(context).size.width,
                                   child: Text(
@@ -281,8 +283,6 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                               columnWidth: 140,
                                               scrollPhysics:
                                                   const NeverScrollableScrollPhysics(),
-                                              // centerData: true,
-                                              centerTitle: true,
                                             )
                                           : NoResultCard(
                                               align: Alignment.center,
@@ -377,7 +377,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
       builder: (context) {
         return Dialog(
           child: SizedBox(
-            height: 200,
+            height: MediaQuery.of(context).size.height / 4,
             child: Padding(
               padding: const EdgeInsets.all(12.0),
               child: Column(
@@ -551,6 +551,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
     // Initialize overlayEntry
     overlayEntry = OverlayEntry(
       builder: (BuildContext context) => Stack(
+        fit: StackFit.expand,
         children: [
           Positioned.fill(
             child: Container(
@@ -562,7 +563,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
               color: Colors.white.withOpacity(0.25),
               child: Container(
                 width: MediaQuery.of(context).size.width / 1.25,
-                height: MediaQuery.of(context).size.height / 2.25,
+                height: MediaQuery.of(context).size.height / 2.28,
                 color: Colors.white.withOpacity(1),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,

@@ -46,12 +46,18 @@ class CircularButton extends StatelessWidget {
                       painter: HalfCirclePainter(),
                     ),
                   ),
-                  Text(
-                    AttendanceLocalization.of(context)
-                        .translate(i18.attendance.halfDay),
-                    style: DigitTheme.instance.mobileTheme.textTheme.labelSmall
-                        ?.apply(
-                      color: const Color.fromRGBO(244, 169, 56, 1),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 4.0,
+                    ),
+                    child: Text(
+                      AttendanceLocalization.of(context)
+                          .translate(i18.attendance.halfDay),
+                      style: DigitTheme
+                          .instance.mobileTheme.textTheme.labelSmall
+                          ?.apply(
+                        color: const Color.fromRGBO(244, 169, 56, 1),
+                      ),
                     ),
                   ),
                 ],
@@ -85,16 +91,22 @@ class CircularButton extends StatelessWidget {
                     ),
                   ),
                   if (index != -1)
-                    Text(
-                      AttendanceLocalization.of(context).translate(index == 0.0
-                          ? i18.attendance.absent
-                          : i18.attendance.present),
-                      style: DigitTheme
-                          .instance.mobileTheme.textTheme.labelSmall
-                          ?.apply(
-                        color: index == 0.0
-                            ? const Color.fromRGBO(212, 53, 28, 1)
-                            : const Color.fromRGBO(0, 112, 60, 1),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        left: 4.0,
+                      ),
+                      child: Text(
+                        AttendanceLocalization.of(context).translate(
+                            index == 0.0
+                                ? i18.attendance.absent
+                                : i18.attendance.present),
+                        style: DigitTheme
+                            .instance.mobileTheme.textTheme.labelSmall
+                            ?.apply(
+                          color: index == 0.0
+                              ? const Color.fromRGBO(212, 53, 28, 1)
+                              : const Color.fromRGBO(0, 112, 60, 1),
+                        ),
                       ),
                     ),
                 ],

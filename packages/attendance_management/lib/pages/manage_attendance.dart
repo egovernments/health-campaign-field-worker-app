@@ -142,8 +142,10 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
-                          padding:
-                              const EdgeInsets.all(kPadding).copyWith(top: 2),
+                          padding: const EdgeInsets.all(kPadding).copyWith(
+                            top: 2,
+                            left: kPadding * 2,
+                          ),
                           child: Text(
                             AttendanceLocalization.of(context).translate(
                                 i18.attendance.attendanceRegistarLabel),
@@ -245,6 +247,7 @@ class RegisterCard extends StatelessWidget {
     var t = AttendanceLocalization.of(context);
 
     return DigitCard(
+      padding: const EdgeInsets.all(kPadding),
       child: Column(
         children: [
           DigitTableCard(
