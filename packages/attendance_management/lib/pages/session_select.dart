@@ -315,16 +315,26 @@ class _AttendanceDateSessionSelectionPageState
     });
   }
 
+  // Method to get missed attendance days
   String getMissedDays(BuildContext context) {
-    missedDays = ""; // Clear the missedDays string
+    missedDays = ""; // Initialize the missedDays string
+
+    // Get current date
     DateTime nowTime = DateTime.now();
     DateTime currentDate = DateTime(nowTime.year, nowTime.month, nowTime.day);
+
+    // Iterate through attendance registers
     for (var element in widget.registers) {
+      // Check if the register ID matches
       if (element.id == widget.registerID) {
+        // Check if attendance log exists
         if (element.attendanceLog != null) {
-          for (var element in element.attendanceLog!) {
-            element.forEach((key, value) {
+          // Iterate through attendance log entries
+          for (var entry in element.attendanceLog!) {
+            // Check each entry for missed attendance
+            entry.forEach((key, value) {
               if (value == false && key.isBefore(currentDate)) {
+                // Add missed day to missedDays string
                 missedDays += "${key.day}/${key.month}/${key.year} \n";
               }
             });
@@ -332,6 +342,8 @@ class _AttendanceDateSessionSelectionPageState
         }
       }
     }
+
+    // Return missed attendance days with description
     return "$missedDays${AttendanceLocalization.of(context).translate(i18.attendance.missedAttendanceDescription)}";
   }
 
@@ -357,14 +369,25 @@ class _AttendanceDateSessionSelectionPageState
 
   bool showInfoCard(
       AttendancePackageRegisterModel selectedRegister, DateTime selectedDate) {
+    final selectedFormattedDate = DateTime(
+      selectedDate.year,
+      selectedDate.month,
+      selectedDate.day,
+    );
+    final nowTime = DateTime.now();
+    final todayTime = DateTime(
+      nowTime.year,
+      nowTime.month,
+      nowTime.day,
+    );
     if (selectedRegister.attendanceLog != null) {
       for (var log in selectedRegister.attendanceLog!) {
         for (var entry in log.entries) {
           final logDate = entry.key;
           final isAttendanceMarked = entry.value;
-          if (logDate.isBefore(selectedDate) ||
+          if (logDate.isBefore(selectedFormattedDate) ||
               logDate.isAtSameMomentAs(selectedDate)) {
-            if (selectedDate != DateTime.now()) {
+            if (selectedFormattedDate != todayTime) {
               if (!isAttendanceMarked) {
                 return true; // If attendance is not marked for any date before or on selectedDate, return true
               } else {

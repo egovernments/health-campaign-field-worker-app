@@ -91,7 +91,8 @@ class SideBar extends StatelessWidget {
             icon: Icons.home,
             onPressed: () {
               Navigator.of(context, rootNavigator: true).pop();
-              context.router.replace(HomeRoute());
+              context.router.popUntilRoot();
+              context.router.push(HomeRoute());
             },
           ),
           BlocBuilder<AppInitializationBloc, AppInitializationState>(
