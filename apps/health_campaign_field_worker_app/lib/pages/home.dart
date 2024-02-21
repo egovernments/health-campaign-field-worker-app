@@ -450,6 +450,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                 userId: context.loggedInUserUuid,
                 appVersion: Constants().version,
               ),
+              settings: const RouteSettings(name: '/manage-attendance'),
             ),
           );
         },

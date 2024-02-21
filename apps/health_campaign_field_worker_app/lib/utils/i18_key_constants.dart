@@ -1334,6 +1334,8 @@ class StockDetails {
 
   String get teamCodeRequired => 'STOCK_DETAILS_TEAM_CODE_IS_REQUIRED';
 
+  String get facilityRequired => 'STOCK_DETAILS_FACILITY_IS_REQUIRED';
+
   String get selectTransactingPartyReceivedFromDamaged {
     return 'STOCK_DETAILS_RECEIVED_FROM_DAMAGED';
   }
