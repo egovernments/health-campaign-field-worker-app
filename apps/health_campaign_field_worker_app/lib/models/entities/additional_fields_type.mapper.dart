@@ -59,6 +59,8 @@ class AdditionalFieldsTypeMapper extends EnumMapper<AdditionalFieldsType> {
         return AdditionalFieldsType.latitude;
       case "longitude":
         return AdditionalFieldsType.longitude;
+      case "deliveryComment":
+        return AdditionalFieldsType.deliveryComment;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -101,6 +103,8 @@ class AdditionalFieldsTypeMapper extends EnumMapper<AdditionalFieldsType> {
         return "latitude";
       case AdditionalFieldsType.longitude:
         return "longitude";
+      case AdditionalFieldsType.deliveryComment:
+        return "deliveryComment";
     }
   }
 }
