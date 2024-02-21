@@ -368,40 +368,38 @@ class _AttendanceDateSessionSelectionPageState
   }
 
   bool showInfoCard(
-    AttendancePackageRegisterModel selectedRegister,
-    DateTime selectedDate,
-  ) {
+      AttendancePackageRegisterModel selectedRegister, DateTime selectedDate) {
     final selectedFormattedDate = DateTime(
       selectedDate.year,
       selectedDate.month,
       selectedDate.day,
     );
+    final nowTime = DateTime.now();
     final todayTime = DateTime(
-      DateTime.now().year,
-      DateTime.now().month,
-      DateTime.now().day,
+      nowTime.year,
+      nowTime.month,
+      nowTime.day,
     );
 
-    // Check if attendance log exists and iterate over log entries
+    // Check if attendance log is available
     if (selectedRegister.attendanceLog != null) {
       for (var log in selectedRegister.attendanceLog!) {
         for (var entry in log.entries) {
           final logDate = entry.key;
           final isAttendanceMarked = entry.value;
 
-          // Check if logDate is before or on selectedDate
-          if (logDate.isBefore(selectedFormattedDate) ||
-              logDate.isAtSameMomentAs(selectedFormattedDate)) {
-            // If selected date is not today
+          // If logDate is before or equal to selectedDate
+          if (logDate.isBefore(selectedFormattedDate)) {
+            // If selectedDate is not today
             if (selectedFormattedDate != todayTime) {
               // If attendance is not marked for any date before or on selectedDate
               if (!isAttendanceMarked) {
                 return true;
               }
             }
-            // If selected date is today
+            // If selectedDate is today
             else {
-              // If attendance is not marked for today's date
+              // If today's attendance is not marked, show info card
               if (!isAttendanceMarked) {
                 return true;
               }
@@ -411,7 +409,8 @@ class _AttendanceDateSessionSelectionPageState
       }
     }
 
-    return false; // Return false if attendanceLog is null or all logs are marked
+    // If attendance log is null or all logs are marked
+    return false;
   }
 }
 
