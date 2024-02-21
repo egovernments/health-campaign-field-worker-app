@@ -41,13 +41,13 @@ class ServiceSearchModelMapper extends SubClassMapperBase<ServiceSearchModel> {
   static String? _$boundaryCode(ServiceSearchModel v) => v.boundaryCode;
   static const Field<ServiceSearchModel, String> _f$boundaryCode =
       Field('boundaryCode', _$boundaryCode, opt: true);
+  static AuditDetails? _$auditDetails(ServiceSearchModel v) => v.auditDetails;
+  static const Field<ServiceSearchModel, AuditDetails> _f$auditDetails =
+      Field('auditDetails', _$auditDetails, mode: FieldMode.member);
   static AdditionalFields? _$additionalFields(ServiceSearchModel v) =>
       v.additionalFields;
   static const Field<ServiceSearchModel, AdditionalFields> _f$additionalFields =
-      Field('additionalFields', _$additionalFields, opt: true);
-  static AuditDetails? _$auditDetails(ServiceSearchModel v) => v.auditDetails;
-  static const Field<ServiceSearchModel, AuditDetails> _f$auditDetails =
-      Field('auditDetails', _$auditDetails, opt: true);
+      Field('additionalFields', _$additionalFields, mode: FieldMode.member);
 
   @override
   final MappableFields<ServiceSearchModel> fields = const {
@@ -58,8 +58,8 @@ class ServiceSearchModelMapper extends SubClassMapperBase<ServiceSearchModel> {
     #createdAt: _f$createdAt,
     #tenantId: _f$tenantId,
     #boundaryCode: _f$boundaryCode,
-    #additionalFields: _f$additionalFields,
     #auditDetails: _f$auditDetails,
+    #additionalFields: _f$additionalFields,
   };
   @override
   final bool ignoreNull = true;
@@ -80,9 +80,7 @@ class ServiceSearchModelMapper extends SubClassMapperBase<ServiceSearchModel> {
         accountId: data.dec(_f$accountId),
         createdAt: data.dec(_f$createdAt),
         tenantId: data.dec(_f$tenantId),
-        boundaryCode: data.dec(_f$boundaryCode),
-        additionalFields: data.dec(_f$additionalFields),
-        auditDetails: data.dec(_f$auditDetails));
+        boundaryCode: data.dec(_f$boundaryCode));
   }
 
   @override
@@ -143,11 +141,6 @@ extension ServiceSearchModelValueCopy<$R, $Out>
 abstract class ServiceSearchModelCopyWith<$R, $In extends ServiceSearchModel,
     $Out> implements EntitySearchModelCopyWith<$R, $In, $Out> {
   @override
-  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
-      get additionalFields;
-  @override
-  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
-  @override
   $R call(
       {String? id,
       String? clientId,
@@ -155,9 +148,7 @@ abstract class ServiceSearchModelCopyWith<$R, $In extends ServiceSearchModel,
       String? accountId,
       String? createdAt,
       String? tenantId,
-      String? boundaryCode,
-      AdditionalFields? additionalFields,
-      AuditDetails? auditDetails});
+      String? boundaryCode});
   ServiceSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -171,13 +162,6 @@ class _ServiceSearchModelCopyWithImpl<$R, $Out>
   late final ClassMapperBase<ServiceSearchModel> $mapper =
       ServiceSearchModelMapper.ensureInitialized();
   @override
-  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
-      get additionalFields => $value.additionalFields?.copyWith
-          .$chain((v) => call(additionalFields: v));
-  @override
-  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
-      $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
-  @override
   $R call(
           {Object? id = $none,
           Object? clientId = $none,
@@ -185,9 +169,7 @@ class _ServiceSearchModelCopyWithImpl<$R, $Out>
           Object? accountId = $none,
           Object? createdAt = $none,
           Object? tenantId = $none,
-          Object? boundaryCode = $none,
-          Object? additionalFields = $none,
-          Object? auditDetails = $none}) =>
+          Object? boundaryCode = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
         if (clientId != $none) #clientId: clientId,
@@ -195,9 +177,7 @@ class _ServiceSearchModelCopyWithImpl<$R, $Out>
         if (accountId != $none) #accountId: accountId,
         if (createdAt != $none) #createdAt: createdAt,
         if (tenantId != $none) #tenantId: tenantId,
-        if (boundaryCode != $none) #boundaryCode: boundaryCode,
-        if (additionalFields != $none) #additionalFields: additionalFields,
-        if (auditDetails != $none) #auditDetails: auditDetails
+        if (boundaryCode != $none) #boundaryCode: boundaryCode
       }));
   @override
   ServiceSearchModel $make(CopyWithData data) =>
@@ -208,10 +188,7 @@ class _ServiceSearchModelCopyWithImpl<$R, $Out>
           accountId: data.get(#accountId, or: $value.accountId),
           createdAt: data.get(#createdAt, or: $value.createdAt),
           tenantId: data.get(#tenantId, or: $value.tenantId),
-          boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode),
-          additionalFields:
-              data.get(#additionalFields, or: $value.additionalFields),
-          auditDetails: data.get(#auditDetails, or: $value.auditDetails));
+          boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
 
   @override
   ServiceSearchModelCopyWith<$R2, ServiceSearchModel, $Out2> $chain<$R2, $Out2>(

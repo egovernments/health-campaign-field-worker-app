@@ -57,14 +57,14 @@ class ReferralSearchModelMapper
   static String? _$boundaryCode(ReferralSearchModel v) => v.boundaryCode;
   static const Field<ReferralSearchModel, String> _f$boundaryCode =
       Field('boundaryCode', _$boundaryCode, opt: true);
+  static AuditDetails? _$auditDetails(ReferralSearchModel v) => v.auditDetails;
+  static const Field<ReferralSearchModel, AuditDetails> _f$auditDetails =
+      Field('auditDetails', _$auditDetails, mode: FieldMode.member);
   static AdditionalFields? _$additionalFields(ReferralSearchModel v) =>
       v.additionalFields;
   static const Field<ReferralSearchModel, AdditionalFields>
       _f$additionalFields =
-      Field('additionalFields', _$additionalFields, opt: true);
-  static AuditDetails? _$auditDetails(ReferralSearchModel v) => v.auditDetails;
-  static const Field<ReferralSearchModel, AuditDetails> _f$auditDetails =
-      Field('auditDetails', _$auditDetails, opt: true);
+      Field('additionalFields', _$additionalFields, mode: FieldMode.member);
 
   @override
   final MappableFields<ReferralSearchModel> fields = const {
@@ -79,8 +79,8 @@ class ReferralSearchModelMapper
     #clientReferenceId: _f$clientReferenceId,
     #tenantId: _f$tenantId,
     #boundaryCode: _f$boundaryCode,
-    #additionalFields: _f$additionalFields,
     #auditDetails: _f$auditDetails,
+    #additionalFields: _f$additionalFields,
   };
   @override
   final bool ignoreNull = true;
@@ -105,9 +105,7 @@ class ReferralSearchModelMapper
         reasons: data.dec(_f$reasons),
         clientReferenceId: data.dec(_f$clientReferenceId),
         tenantId: data.dec(_f$tenantId),
-        boundaryCode: data.dec(_f$boundaryCode),
-        additionalFields: data.dec(_f$additionalFields),
-        auditDetails: data.dec(_f$auditDetails));
+        boundaryCode: data.dec(_f$boundaryCode));
   }
 
   @override
@@ -173,11 +171,6 @@ abstract class ReferralSearchModelCopyWith<$R, $In extends ReferralSearchModel,
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get clientReferenceId;
   @override
-  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
-      get additionalFields;
-  @override
-  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
-  @override
   $R call(
       {String? id,
       List<String>? projectBeneficiaryClientReferenceId,
@@ -188,9 +181,7 @@ abstract class ReferralSearchModelCopyWith<$R, $In extends ReferralSearchModel,
       List<String>? reasons,
       List<String>? clientReferenceId,
       String? tenantId,
-      String? boundaryCode,
-      AdditionalFields? additionalFields,
-      AuditDetails? auditDetails});
+      String? boundaryCode});
   ReferralSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -229,13 +220,6 @@ class _ReferralSearchModelCopyWithImpl<$R, $Out>
               (v) => call(clientReferenceId: v))
           : null;
   @override
-  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
-      get additionalFields => $value.additionalFields?.copyWith
-          .$chain((v) => call(additionalFields: v));
-  @override
-  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
-      $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
-  @override
   $R call(
           {Object? id = $none,
           Object? projectBeneficiaryClientReferenceId = $none,
@@ -246,9 +230,7 @@ class _ReferralSearchModelCopyWithImpl<$R, $Out>
           Object? reasons = $none,
           Object? clientReferenceId = $none,
           Object? tenantId = $none,
-          Object? boundaryCode = $none,
-          Object? additionalFields = $none,
-          Object? auditDetails = $none}) =>
+          Object? boundaryCode = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
         if (projectBeneficiaryClientReferenceId != $none)
@@ -261,9 +243,7 @@ class _ReferralSearchModelCopyWithImpl<$R, $Out>
         if (reasons != $none) #reasons: reasons,
         if (clientReferenceId != $none) #clientReferenceId: clientReferenceId,
         if (tenantId != $none) #tenantId: tenantId,
-        if (boundaryCode != $none) #boundaryCode: boundaryCode,
-        if (additionalFields != $none) #additionalFields: additionalFields,
-        if (auditDetails != $none) #auditDetails: auditDetails
+        if (boundaryCode != $none) #boundaryCode: boundaryCode
       }));
   @override
   ReferralSearchModel
@@ -281,10 +261,7 @@ class _ReferralSearchModelCopyWithImpl<$R, $Out>
               clientReferenceId:
                   data.get(#clientReferenceId, or: $value.clientReferenceId),
               tenantId: data.get(#tenantId, or: $value.tenantId),
-              boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode),
-              additionalFields:
-                  data.get(#additionalFields, or: $value.additionalFields),
-              auditDetails: data.get(#auditDetails, or: $value.auditDetails));
+              boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
 
   @override
   ReferralSearchModelCopyWith<$R2, ReferralSearchModel, $Out2>

@@ -48,15 +48,15 @@ class SideEffectSearchModelMapper
   static String? _$boundaryCode(SideEffectSearchModel v) => v.boundaryCode;
   static const Field<SideEffectSearchModel, String> _f$boundaryCode =
       Field('boundaryCode', _$boundaryCode, opt: true);
+  static AuditDetails? _$auditDetails(SideEffectSearchModel v) =>
+      v.auditDetails;
+  static const Field<SideEffectSearchModel, AuditDetails> _f$auditDetails =
+      Field('auditDetails', _$auditDetails, mode: FieldMode.member);
   static AdditionalFields? _$additionalFields(SideEffectSearchModel v) =>
       v.additionalFields;
   static const Field<SideEffectSearchModel, AdditionalFields>
       _f$additionalFields =
-      Field('additionalFields', _$additionalFields, opt: true);
-  static AuditDetails? _$auditDetails(SideEffectSearchModel v) =>
-      v.auditDetails;
-  static const Field<SideEffectSearchModel, AuditDetails> _f$auditDetails =
-      Field('auditDetails', _$auditDetails, opt: true);
+      Field('additionalFields', _$additionalFields, mode: FieldMode.member);
 
   @override
   final MappableFields<SideEffectSearchModel> fields = const {
@@ -68,8 +68,8 @@ class SideEffectSearchModelMapper
     #clientReferenceId: _f$clientReferenceId,
     #tenantId: _f$tenantId,
     #boundaryCode: _f$boundaryCode,
-    #additionalFields: _f$additionalFields,
     #auditDetails: _f$auditDetails,
+    #additionalFields: _f$additionalFields,
   };
   @override
   final bool ignoreNull = true;
@@ -91,9 +91,7 @@ class SideEffectSearchModelMapper
         symptoms: data.dec(_f$symptoms),
         clientReferenceId: data.dec(_f$clientReferenceId),
         tenantId: data.dec(_f$tenantId),
-        boundaryCode: data.dec(_f$boundaryCode),
-        additionalFields: data.dec(_f$additionalFields),
-        auditDetails: data.dec(_f$auditDetails));
+        boundaryCode: data.dec(_f$boundaryCode));
   }
 
   @override
@@ -161,11 +159,6 @@ abstract class SideEffectSearchModelCopyWith<
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get clientReferenceId;
   @override
-  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
-      get additionalFields;
-  @override
-  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
-  @override
   $R call(
       {String? id,
       List<String>? taskClientReferenceId,
@@ -174,9 +167,7 @@ abstract class SideEffectSearchModelCopyWith<
       List<String>? symptoms,
       List<String>? clientReferenceId,
       String? tenantId,
-      String? boundaryCode,
-      AdditionalFields? additionalFields,
-      AuditDetails? auditDetails});
+      String? boundaryCode});
   SideEffectSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -214,13 +205,6 @@ class _SideEffectSearchModelCopyWithImpl<$R, $Out>
               (v) => call(clientReferenceId: v))
           : null;
   @override
-  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
-      get additionalFields => $value.additionalFields?.copyWith
-          .$chain((v) => call(additionalFields: v));
-  @override
-  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
-      $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
-  @override
   $R call(
           {Object? id = $none,
           Object? taskClientReferenceId = $none,
@@ -229,9 +213,7 @@ class _SideEffectSearchModelCopyWithImpl<$R, $Out>
           Object? symptoms = $none,
           Object? clientReferenceId = $none,
           Object? tenantId = $none,
-          Object? boundaryCode = $none,
-          Object? additionalFields = $none,
-          Object? auditDetails = $none}) =>
+          Object? boundaryCode = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
         if (taskClientReferenceId != $none)
@@ -241,27 +223,22 @@ class _SideEffectSearchModelCopyWithImpl<$R, $Out>
         if (symptoms != $none) #symptoms: symptoms,
         if (clientReferenceId != $none) #clientReferenceId: clientReferenceId,
         if (tenantId != $none) #tenantId: tenantId,
-        if (boundaryCode != $none) #boundaryCode: boundaryCode,
-        if (additionalFields != $none) #additionalFields: additionalFields,
-        if (auditDetails != $none) #auditDetails: auditDetails
+        if (boundaryCode != $none) #boundaryCode: boundaryCode
       }));
   @override
-  SideEffectSearchModel $make(CopyWithData data) =>
+  SideEffectSearchModel $make(
+          CopyWithData data) =>
       SideEffectSearchModel.ignoreDeleted(
           id: data.get(#id, or: $value.id),
-          taskClientReferenceId:
-              data.get(#taskClientReferenceId,
-                  or: $value.taskClientReferenceId),
+          taskClientReferenceId: data.get(#taskClientReferenceId,
+              or: $value.taskClientReferenceId),
           projectId: data.get(#projectId, or: $value.projectId),
           reAttempts: data.get(#reAttempts, or: $value.reAttempts),
           symptoms: data.get(#symptoms, or: $value.symptoms),
           clientReferenceId:
               data.get(#clientReferenceId, or: $value.clientReferenceId),
           tenantId: data.get(#tenantId, or: $value.tenantId),
-          boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode),
-          additionalFields:
-              data.get(#additionalFields, or: $value.additionalFields),
-          auditDetails: data.get(#auditDetails, or: $value.auditDetails));
+          boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
 
   @override
   SideEffectSearchModelCopyWith<$R2, SideEffectSearchModel, $Out2>

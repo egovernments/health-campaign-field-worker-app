@@ -26,20 +26,20 @@ class TargetSearchModelMapper extends SubClassMapperBase<TargetSearchModel> {
   static String? _$boundaryCode(TargetSearchModel v) => v.boundaryCode;
   static const Field<TargetSearchModel, String> _f$boundaryCode =
       Field('boundaryCode', _$boundaryCode, opt: true);
+  static AuditDetails? _$auditDetails(TargetSearchModel v) => v.auditDetails;
+  static const Field<TargetSearchModel, AuditDetails> _f$auditDetails =
+      Field('auditDetails', _$auditDetails, mode: FieldMode.member);
   static AdditionalFields? _$additionalFields(TargetSearchModel v) =>
       v.additionalFields;
   static const Field<TargetSearchModel, AdditionalFields> _f$additionalFields =
-      Field('additionalFields', _$additionalFields, opt: true);
-  static AuditDetails? _$auditDetails(TargetSearchModel v) => v.auditDetails;
-  static const Field<TargetSearchModel, AuditDetails> _f$auditDetails =
-      Field('auditDetails', _$auditDetails, opt: true);
+      Field('additionalFields', _$additionalFields, mode: FieldMode.member);
 
   @override
   final MappableFields<TargetSearchModel> fields = const {
     #tenantId: _f$tenantId,
     #boundaryCode: _f$boundaryCode,
-    #additionalFields: _f$additionalFields,
     #auditDetails: _f$auditDetails,
+    #additionalFields: _f$additionalFields,
   };
   @override
   final bool ignoreNull = true;
@@ -55,9 +55,7 @@ class TargetSearchModelMapper extends SubClassMapperBase<TargetSearchModel> {
   static TargetSearchModel _instantiate(DecodingData data) {
     return TargetSearchModel.ignoreDeleted(
         tenantId: data.dec(_f$tenantId),
-        boundaryCode: data.dec(_f$boundaryCode),
-        additionalFields: data.dec(_f$additionalFields),
-        auditDetails: data.dec(_f$auditDetails));
+        boundaryCode: data.dec(_f$boundaryCode));
   }
 
   @override
@@ -118,16 +116,7 @@ extension TargetSearchModelValueCopy<$R, $Out>
 abstract class TargetSearchModelCopyWith<$R, $In extends TargetSearchModel,
     $Out> implements EntitySearchModelCopyWith<$R, $In, $Out> {
   @override
-  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
-      get additionalFields;
-  @override
-  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
-  @override
-  $R call(
-      {String? tenantId,
-      String? boundaryCode,
-      AdditionalFields? additionalFields,
-      AuditDetails? auditDetails});
+  $R call({String? tenantId, String? boundaryCode});
   TargetSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -141,31 +130,15 @@ class _TargetSearchModelCopyWithImpl<$R, $Out>
   late final ClassMapperBase<TargetSearchModel> $mapper =
       TargetSearchModelMapper.ensureInitialized();
   @override
-  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
-      get additionalFields => $value.additionalFields?.copyWith
-          .$chain((v) => call(additionalFields: v));
-  @override
-  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
-      $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
-  @override
-  $R call(
-          {Object? tenantId = $none,
-          Object? boundaryCode = $none,
-          Object? additionalFields = $none,
-          Object? auditDetails = $none}) =>
+  $R call({Object? tenantId = $none, Object? boundaryCode = $none}) =>
       $apply(FieldCopyWithData({
         if (tenantId != $none) #tenantId: tenantId,
-        if (boundaryCode != $none) #boundaryCode: boundaryCode,
-        if (additionalFields != $none) #additionalFields: additionalFields,
-        if (auditDetails != $none) #auditDetails: auditDetails
+        if (boundaryCode != $none) #boundaryCode: boundaryCode
       }));
   @override
   TargetSearchModel $make(CopyWithData data) => TargetSearchModel.ignoreDeleted(
       tenantId: data.get(#tenantId, or: $value.tenantId),
-      boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode),
-      additionalFields:
-          data.get(#additionalFields, or: $value.additionalFields),
-      auditDetails: data.get(#auditDetails, or: $value.auditDetails));
+      boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
 
   @override
   TargetSearchModelCopyWith<$R2, TargetSearchModel, $Out2> $chain<$R2, $Out2>(

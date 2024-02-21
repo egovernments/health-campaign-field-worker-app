@@ -24,8 +24,6 @@ class ServiceAttributesSearchModel extends EntitySearchModel with ServiceAttribu
     this.clientReferenceId,
     this.tenantId,
     super.boundaryCode,
-        super.additionalFields,
-    super.auditDetails,
   }):  super(isDeleted: false);
 }
 

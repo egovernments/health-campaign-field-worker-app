@@ -21,8 +21,6 @@ class TargetSearchModel extends EntitySearchModel with TargetSearchModelMappable
   TargetSearchModel.ignoreDeleted({
     this.tenantId,
     super.boundaryCode,
-        super.additionalFields,
-    super.auditDetails,
   }):  super(isDeleted: false);
 }
 

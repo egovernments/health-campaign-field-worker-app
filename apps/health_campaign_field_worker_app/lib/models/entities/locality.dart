@@ -27,8 +27,6 @@ class LocalitySearchModel extends EntitySearchModel with LocalitySearchModelMapp
     this.name,
     this.tenantId,
     super.boundaryCode,
-        super.additionalFields,
-    super.auditDetails,
   }):  super(isDeleted: false);
 }
 

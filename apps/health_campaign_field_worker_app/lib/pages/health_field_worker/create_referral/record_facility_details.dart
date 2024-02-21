@@ -1,5 +1,6 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
+import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -12,7 +13,6 @@ import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
 import '../../../widgets/header/back_navigation_help_header.dart';
 import '../../../widgets/localized.dart';
-import '../../inventory/project_facility_selection.dart';
 
 class ReferralFacilityPage extends LocalizedStatefulWidget {
   final bool isEditing;
@@ -34,11 +34,24 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
   static const _evaluationFacilityKey = 'evaluationFacility';
   static const _referredByKey = 'referredBy';
   final clickedStatus = ValueNotifier<bool>(false);
+  String? selectedProjectFacilityId;
 
   @override
   void dispose() {
     clickedStatus.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    final referralState = context.read<RecordHFReferralBloc>().state;
+    setState(() {
+      selectedProjectFacilityId = referralState.mapOrNull(
+        create: (value) =>
+            value.viewOnly ? value.hfReferralModel?.projectFacilityId : null,
+      );
+    });
+    super.initState();
   }
 
   @override
@@ -94,33 +107,44 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
                                       RecordReferralDetailsRoute(),
                                     );
                                   } else {
-                                    final evaluationFacility = form
-                                        .control(_evaluationFacilityKey)
-                                        .value as ProjectFacilityModel;
-                                    final dateOfEvaluation = form
-                                        .control(_dateOfEvaluationKey)
-                                        .value as DateTime;
-                                    final hfCoordinator = form
-                                        .control(_hfCoordinatorKey)
-                                        .value as String?;
-                                    final referredByTeam = form
-                                        .control(_referredByKey)
-                                        .value as String?;
+                                    final evaluationFacility =
+                                        selectedProjectFacilityId;
+                                    if (evaluationFacility == null) {
+                                      DigitToast.show(
+                                        context,
+                                        options: DigitToastOptions(
+                                          'Facility is mandatory',
+                                          true,
+                                          theme,
+                                        ),
+                                      );
+                                    } else {
+                                      final dateOfEvaluation = form
+                                          .control(_dateOfEvaluationKey)
+                                          .value as DateTime;
+                                      final hfCoordinator = form
+                                          .control(_hfCoordinatorKey)
+                                          .value as String?;
+                                      final referredByTeam = form
+                                          .control(_referredByKey)
+                                          .value as String?;
 
-                                    final event =
-                                        context.read<RecordHFReferralBloc>();
-                                    event.add(
-                                      RecordHFReferralSaveFacilityDetailsEvent(
-                                        dateOfEvaluation: dateOfEvaluation,
-                                        facilityId: evaluationFacility.id,
-                                        healthFacilityCord: hfCoordinator,
-                                        referredBy: referredByTeam,
-                                      ),
-                                    );
+                                      final event =
+                                          context.read<RecordHFReferralBloc>();
+                                      event.add(
+                                        RecordHFReferralSaveFacilityDetailsEvent(
+                                          dateOfEvaluation: dateOfEvaluation,
+                                          facilityId:
+                                              evaluationFacility.toString(),
+                                          healthFacilityCord: hfCoordinator,
+                                          referredBy: referredByTeam,
+                                        ),
+                                      );
 
-                                    context.router.push(
-                                      RecordReferralDetailsRoute(),
-                                    );
+                                      context.router.push(
+                                        RecordReferralDetailsRoute(),
+                                      );
+                                    }
                                   }
                                 }
                               },
@@ -207,19 +231,21 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
 
                                             if (facility == null) return;
                                             form
-                                                .control(
-                                                  _evaluationFacilityKey,
-                                                )
-                                                .value = facility;
+                                                    .control(
+                                                      _evaluationFacilityKey,
+                                                    )
+                                                    .value =
+                                                localizations.translate(
+                                                    'PJ_FAC_${facility.id}');
+                                            setState(() {
+                                              selectedProjectFacilityId =
+                                                  facility.id;
+                                            });
                                           },
                                     child: IgnorePointer(
                                       child: DigitTextFormField(
                                         hideKeyboard: true,
                                         readOnly: viewOnly,
-                                        valueAccessor:
-                                            ProjectFacilityValueAccessor(
-                                          projectFacilities,
-                                        ),
                                         label: localizations.translate(
                                           i18.referBeneficiary
                                               .evaluationFacilityLabel,
@@ -252,10 +278,17 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
 
                                                 if (facility == null) return;
                                                 form
-                                                    .control(
-                                                      _evaluationFacilityKey,
-                                                    )
-                                                    .value = facility;
+                                                        .control(
+                                                          _evaluationFacilityKey,
+                                                        )
+                                                        .value =
+                                                    localizations.translate(
+                                                  'PJ_FAC_${facility.id}',
+                                                );
+                                                setState(() {
+                                                  selectedProjectFacilityId =
+                                                      facility.id;
+                                                });
                                               },
                                       ),
                                     ),
@@ -266,13 +299,6 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
                                       i18.referBeneficiary
                                           .healthFacilityCoordinatorLabel,
                                     ),
-                                    // validationMessages: {
-                                    //   'required': (_) =>
-                                    //       localizations.translate(
-                                    //         i18.common.corecommonRequired,
-                                    //       ),
-                                    // },
-                                    // isRequired: true,
                                     readOnly: viewOnly,
                                   ),
                                   DigitTextFormField(
@@ -345,14 +371,14 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
         //   Validators.required,
         // ],
       ),
-      _evaluationFacilityKey: FormControl<ProjectFacilityModel>(
+      _evaluationFacilityKey: FormControl<String>(
         value: referralState.mapOrNull(
           create: (value) => value.viewOnly
-              ? facilities
-                  .where(
-                    (e) => e.id == value.hfReferralModel?.projectFacilityId,
-                  )
-                  .first
+              ? localizations.translate(
+                  'PJ_FAC_${facilities.where(
+                        (e) => e.id == value.hfReferralModel?.projectFacilityId,
+                      ).first.id.toString()}',
+                )
               : null,
         ),
         validators: [Validators.required],
