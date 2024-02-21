@@ -674,7 +674,7 @@ class _DeliverInterventionPageState
     final productvariantList =
         ((form.control(_resourceDeliveredKey) as FormArray).value
             as List<ProductVariantModel?>);
-
+    final deliveryComment = form.control(_deliveryCommentKey).value as String?;
     // Update the task with information from the form and other context
     task = task.copyWith(
       projectId: context.projectId,
@@ -742,6 +742,11 @@ class _DeliverInterventionPageState
               AdditionalFieldsType.longitude.toValue(),
               longitude,
             ),
+          if (deliveryComment != null)
+            AdditionalField(
+              AdditionalFieldsType.deliveryComment.toValue(),
+              deliveryComment,
+            ),
         ],
       ),
     );
@@ -771,7 +776,19 @@ class _DeliverInterventionPageState
         validators: [],
       ),
       _deliveryCommentKey: FormControl<String>(
-        value: '',
+        value: (bloc.tasks?.last.additionalFields?.fields
+                        .where((a) =>
+                            a.key ==
+                            AdditionalFieldsType.deliveryComment.toValue())
+                        .toList() ??
+                    [])
+                .isNotEmpty
+            ? bloc.tasks?.last.additionalFields?.fields
+                .where((a) =>
+                    a.key == AdditionalFieldsType.deliveryComment.toValue())
+                .first
+                .value
+            : '',
         validators: [],
       ),
       _dateOfAdministrationKey:

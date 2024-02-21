@@ -67,6 +67,12 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
         )
         .toList()
         .isNotEmpty;
+    bool isWareHouseMgr = context.loggedInUserRoles
+        .where(
+          (role) => role.code == RolesType.warehouseManager.toValue(),
+        )
+        .toList()
+        .isNotEmpty;
 
     return BlocBuilder<ProjectBloc, ProjectState>(
       builder: (ctx, projectState) {
@@ -105,7 +111,9 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                       facilities,
                     );
 
-                    return isDistributor ? teamFacilities : facilities;
+                    return isDistributor && !isWareHouseMgr
+                        ? teamFacilities
+                        : facilities;
                   },
                 ) ??
                 [];
@@ -121,7 +129,8 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                         BlocProvider.of<RecordStockBloc>(context).state;
 
                     return ReactiveFormBuilder(
-                      form: () => buildForm(isDistributor, stockState),
+                      form: () => buildForm(
+                          isDistributor && !isWareHouseMgr, stockState),
                       builder: (context, form, child) {
                         form.control(_teamCodeKey).value =
                             scannerState.qrcodes.isNotEmpty
@@ -211,7 +220,8 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                                       dateOfRecord:
                                                           dateOfRecord,
                                                       facilityModel:
-                                                          isDistributor
+                                                          isDistributor &&
+                                                                  !isWareHouseMgr
                                                               ? FacilityModel(
                                                                   id: teamCode
                                                                       .toString(),
@@ -221,7 +231,9 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                                               "Delivery Team"
                                                           ? teamCode ?? ''
                                                           : facility.id,
-                                                      primaryType: isDistributor ||
+                                                      primaryType: (isDistributor &&
+                                                                  !isWareHouseMgr &&
+                                                                  deliveryTeamSelected) ||
                                                               deliveryTeamSelected
                                                           ? "STAFF"
                                                           : "WAREHOUSE",
@@ -252,7 +264,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
-                                    isDistributor
+                                    isDistributor && !isWareHouseMgr
                                         ? localizations.translate(
                                             i18.stockDetails
                                                 .transactionDetailsLabel,
