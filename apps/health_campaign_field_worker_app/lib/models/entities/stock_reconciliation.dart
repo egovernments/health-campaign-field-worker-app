@@ -39,8 +39,6 @@ class StockReconciliationSearchModel extends EntitySearchModel with StockReconci
     this.clientReferenceId,
     int? dateOfReconciliation,
     super.boundaryCode,
-        super.additionalFields,
-    super.auditDetails,
   }): dateOfReconciliationTime = dateOfReconciliation == null
   ? null
       : DateTime.fromMillisecondsSinceEpoch(dateOfReconciliation),

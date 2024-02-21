@@ -27,8 +27,6 @@ class UserSearchModel extends EntitySearchModel with UserSearchModelMappable {
     this.userName,
     this.uuid,
     super.boundaryCode,
-        super.additionalFields,
-    super.auditDetails,
   }):  super(isDeleted: false);
 }
 
@@ -68,7 +66,7 @@ class UserModel extends EntityModel with UserModelMappable {
   final int? createdBy;
   final String? lastModifiedBy;
   final String? tenantId;
-  final String? uuid;
+  final List<String>? uuid;
   final String? createdDate;
   final bool? nonRecoverableError;
   final int? rowVersion;

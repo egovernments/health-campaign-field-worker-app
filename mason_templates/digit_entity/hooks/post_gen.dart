@@ -8,6 +8,10 @@ import 'lib/models.dart';
 void run(HookContext context) async {
   final variables = context.vars;
 
+  AttributeModelMapper.ensureInitialized();
+  EnumValuesMapper.ensureInitialized();
+  TableReferenceModelMapper.ensureInitialized();
+
   ConfigModel model = ConfigModelMapper.fromMap(variables);
   if (!model.createRepository) {
     final path = p.join(

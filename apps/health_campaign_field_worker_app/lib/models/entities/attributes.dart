@@ -31,7 +31,6 @@ class AttributesSearchModel extends EntitySearchModel with AttributesSearchModel
     this.order,
     super.boundaryCode,
     super.isDeleted,
-    super.additionalFields,
   }):  super();
 
   @MappableConstructor()
@@ -46,8 +45,6 @@ class AttributesSearchModel extends EntitySearchModel with AttributesSearchModel
     this.regex,
     this.order,
     super.boundaryCode,
-    super.additionalFields,
-    super.auditDetails,
   }):  super(isDeleted: false);
 }
 

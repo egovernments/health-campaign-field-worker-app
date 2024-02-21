@@ -45,8 +45,6 @@ class ReferralSearchModel extends EntitySearchModel with ReferralSearchModelMapp
     this.clientReferenceId,
     this.tenantId,
     super.boundaryCode,
-        super.additionalFields,
-    super.auditDetails,
   }):  super(isDeleted: false);
 }
 

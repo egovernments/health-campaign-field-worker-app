@@ -31,22 +31,22 @@ class DocumentSearchModelMapper
   static String? _$boundaryCode(DocumentSearchModel v) => v.boundaryCode;
   static const Field<DocumentSearchModel, String> _f$boundaryCode =
       Field('boundaryCode', _$boundaryCode, opt: true);
+  static AuditDetails? _$auditDetails(DocumentSearchModel v) => v.auditDetails;
+  static const Field<DocumentSearchModel, AuditDetails> _f$auditDetails =
+      Field('auditDetails', _$auditDetails, mode: FieldMode.member);
   static AdditionalFields? _$additionalFields(DocumentSearchModel v) =>
       v.additionalFields;
   static const Field<DocumentSearchModel, AdditionalFields>
       _f$additionalFields =
-      Field('additionalFields', _$additionalFields, opt: true);
-  static AuditDetails? _$auditDetails(DocumentSearchModel v) => v.auditDetails;
-  static const Field<DocumentSearchModel, AuditDetails> _f$auditDetails =
-      Field('auditDetails', _$auditDetails, opt: true);
+      Field('additionalFields', _$additionalFields, mode: FieldMode.member);
 
   @override
   final MappableFields<DocumentSearchModel> fields = const {
     #clientReferenceId: _f$clientReferenceId,
     #tenantId: _f$tenantId,
     #boundaryCode: _f$boundaryCode,
-    #additionalFields: _f$additionalFields,
     #auditDetails: _f$auditDetails,
+    #additionalFields: _f$additionalFields,
   };
   @override
   final bool ignoreNull = true;
@@ -63,9 +63,7 @@ class DocumentSearchModelMapper
     return DocumentSearchModel.ignoreDeleted(
         clientReferenceId: data.dec(_f$clientReferenceId),
         tenantId: data.dec(_f$tenantId),
-        boundaryCode: data.dec(_f$boundaryCode),
-        additionalFields: data.dec(_f$additionalFields),
-        auditDetails: data.dec(_f$auditDetails));
+        boundaryCode: data.dec(_f$boundaryCode));
   }
 
   @override
@@ -128,17 +126,10 @@ abstract class DocumentSearchModelCopyWith<$R, $In extends DocumentSearchModel,
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get clientReferenceId;
   @override
-  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
-      get additionalFields;
-  @override
-  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
-  @override
   $R call(
       {List<String>? clientReferenceId,
       String? tenantId,
-      String? boundaryCode,
-      AdditionalFields? additionalFields,
-      AuditDetails? auditDetails});
+      String? boundaryCode});
   DocumentSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -160,25 +151,14 @@ class _DocumentSearchModelCopyWithImpl<$R, $Out>
               (v) => call(clientReferenceId: v))
           : null;
   @override
-  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
-      get additionalFields => $value.additionalFields?.copyWith
-          .$chain((v) => call(additionalFields: v));
-  @override
-  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
-      $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
-  @override
   $R call(
           {Object? clientReferenceId = $none,
           Object? tenantId = $none,
-          Object? boundaryCode = $none,
-          Object? additionalFields = $none,
-          Object? auditDetails = $none}) =>
+          Object? boundaryCode = $none}) =>
       $apply(FieldCopyWithData({
         if (clientReferenceId != $none) #clientReferenceId: clientReferenceId,
         if (tenantId != $none) #tenantId: tenantId,
-        if (boundaryCode != $none) #boundaryCode: boundaryCode,
-        if (additionalFields != $none) #additionalFields: additionalFields,
-        if (auditDetails != $none) #auditDetails: auditDetails
+        if (boundaryCode != $none) #boundaryCode: boundaryCode
       }));
   @override
   DocumentSearchModel $make(
@@ -187,10 +167,7 @@ class _DocumentSearchModelCopyWithImpl<$R, $Out>
           clientReferenceId:
               data.get(#clientReferenceId, or: $value.clientReferenceId),
           tenantId: data.get(#tenantId, or: $value.tenantId),
-          boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode),
-          additionalFields:
-              data.get(#additionalFields, or: $value.additionalFields),
-          auditDetails: data.get(#auditDetails, or: $value.auditDetails));
+          boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
 
   @override
   DocumentSearchModelCopyWith<$R2, DocumentSearchModel, $Out2>

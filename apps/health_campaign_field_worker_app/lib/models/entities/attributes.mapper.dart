@@ -51,15 +51,15 @@ class AttributesSearchModelMapper
   static String? _$boundaryCode(AttributesSearchModel v) => v.boundaryCode;
   static const Field<AttributesSearchModel, String> _f$boundaryCode =
       Field('boundaryCode', _$boundaryCode, opt: true);
+  static AuditDetails? _$auditDetails(AttributesSearchModel v) =>
+      v.auditDetails;
+  static const Field<AttributesSearchModel, AuditDetails> _f$auditDetails =
+      Field('auditDetails', _$auditDetails, mode: FieldMode.member);
   static AdditionalFields? _$additionalFields(AttributesSearchModel v) =>
       v.additionalFields;
   static const Field<AttributesSearchModel, AdditionalFields>
       _f$additionalFields =
-      Field('additionalFields', _$additionalFields, opt: true);
-  static AuditDetails? _$auditDetails(AttributesSearchModel v) =>
-      v.auditDetails;
-  static const Field<AttributesSearchModel, AuditDetails> _f$auditDetails =
-      Field('auditDetails', _$auditDetails, opt: true);
+      Field('additionalFields', _$additionalFields, mode: FieldMode.member);
 
   @override
   final MappableFields<AttributesSearchModel> fields = const {
@@ -73,8 +73,8 @@ class AttributesSearchModelMapper
     #regex: _f$regex,
     #order: _f$order,
     #boundaryCode: _f$boundaryCode,
-    #additionalFields: _f$additionalFields,
     #auditDetails: _f$auditDetails,
+    #additionalFields: _f$additionalFields,
   };
   @override
   final bool ignoreNull = true;
@@ -98,9 +98,7 @@ class AttributesSearchModelMapper
         required: data.dec(_f$required),
         regex: data.dec(_f$regex),
         order: data.dec(_f$order),
-        boundaryCode: data.dec(_f$boundaryCode),
-        additionalFields: data.dec(_f$additionalFields),
-        auditDetails: data.dec(_f$auditDetails));
+        boundaryCode: data.dec(_f$boundaryCode));
   }
 
   @override
@@ -163,11 +161,6 @@ abstract class AttributesSearchModelCopyWith<
     $In extends AttributesSearchModel,
     $Out> implements EntitySearchModelCopyWith<$R, $In, $Out> {
   @override
-  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
-      get additionalFields;
-  @override
-  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
-  @override
   $R call(
       {String? id,
       String? dataType,
@@ -178,9 +171,7 @@ abstract class AttributesSearchModelCopyWith<
       bool? required,
       String? regex,
       int? order,
-      String? boundaryCode,
-      AdditionalFields? additionalFields,
-      AuditDetails? auditDetails});
+      String? boundaryCode});
   AttributesSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -194,13 +185,6 @@ class _AttributesSearchModelCopyWithImpl<$R, $Out>
   late final ClassMapperBase<AttributesSearchModel> $mapper =
       AttributesSearchModelMapper.ensureInitialized();
   @override
-  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
-      get additionalFields => $value.additionalFields?.copyWith
-          .$chain((v) => call(additionalFields: v));
-  @override
-  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
-      $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
-  @override
   $R call(
           {Object? id = $none,
           Object? dataType = $none,
@@ -211,9 +195,7 @@ class _AttributesSearchModelCopyWithImpl<$R, $Out>
           Object? required = $none,
           Object? regex = $none,
           Object? order = $none,
-          Object? boundaryCode = $none,
-          Object? additionalFields = $none,
-          Object? auditDetails = $none}) =>
+          Object? boundaryCode = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
         if (dataType != $none) #dataType: dataType,
@@ -224,9 +206,7 @@ class _AttributesSearchModelCopyWithImpl<$R, $Out>
         if (required != $none) #required: required,
         if (regex != $none) #regex: regex,
         if (order != $none) #order: order,
-        if (boundaryCode != $none) #boundaryCode: boundaryCode,
-        if (additionalFields != $none) #additionalFields: additionalFields,
-        if (auditDetails != $none) #auditDetails: auditDetails
+        if (boundaryCode != $none) #boundaryCode: boundaryCode
       }));
   @override
   AttributesSearchModel $make(CopyWithData data) =>
@@ -240,10 +220,7 @@ class _AttributesSearchModelCopyWithImpl<$R, $Out>
           required: data.get(#required, or: $value.required),
           regex: data.get(#regex, or: $value.regex),
           order: data.get(#order, or: $value.order),
-          boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode),
-          additionalFields:
-              data.get(#additionalFields, or: $value.additionalFields),
-          auditDetails: data.get(#auditDetails, or: $value.auditDetails));
+          boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
 
   @override
   AttributesSearchModelCopyWith<$R2, AttributesSearchModel, $Out2>

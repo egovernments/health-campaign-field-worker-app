@@ -2,58 +2,52 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:drift/drift.dart';
 
-import '../../data/local_store/sql_store/sql_store.dart';
 import '../data_model.dart';
-import 'name_model_converter.dart';
+import '../../data/local_store/sql_store/sql_store.dart';
 
 part 'individual.mapper.dart';
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class IndividualSearchModel extends EntitySearchModel
-    with IndividualSearchModelMappable {
+class IndividualSearchModel extends EntitySearchModel with IndividualSearchModelMappable {
   final List<String>? id;
+  final String? userUuid;
   final String? dateOfBirth;
   final List<String>? clientReferenceId;
   final String? tenantId;
   final NameSearchModel? name;
   final Gender? gender;
-  final String? userUuid;
   final List<IdentifierSearchModel>? identifiers;
-
+  
   IndividualSearchModel({
     this.id,
+    this.userUuid,
     this.dateOfBirth,
     this.clientReferenceId,
     this.tenantId,
     this.name,
     this.gender,
     this.identifiers,
-    this.userUuid,
     super.boundaryCode,
     super.isDeleted,
-  }) : super();
+  }):  super();
 
   @MappableConstructor()
   IndividualSearchModel.ignoreDeleted({
     this.id,
+    this.userUuid,
     this.dateOfBirth,
     this.clientReferenceId,
     this.tenantId,
     this.name,
     this.gender,
     this.identifiers,
-    this.userUuid,
     super.boundaryCode,
-    super.additionalFields,
-    super.auditDetails,
-  }) : super(isDeleted: false);
+  }):  super(isDeleted: false);
 }
 
-@MappableClass(
-    ignoreNull: true,
-    discriminatorValue: MappableClass.useAsDefault,
-    includeCustomMappers: [NameModelConverter()])
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
 class IndividualModel extends EntityModel with IndividualModelMappable {
+
   static const schemaName = 'Individual';
 
   final String? id;
@@ -100,10 +94,9 @@ class IndividualModel extends EntityModel with IndividualModelMappable {
     this.address,
     this.gender,
     this.identifiers,
-    super.auditDetails,
-    super.clientAuditDetails,
+    super.auditDetails,super.clientAuditDetails,
     super.isDeleted = false,
-  }) : super();
+  }): super();
 
   IndividualCompanion get companion {
     return IndividualCompanion(
@@ -117,10 +110,10 @@ class IndividualModel extends EntityModel with IndividualModelMappable {
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
       isDeleted: Value(isDeleted),
-      userUuid: Value(userUuid),
       id: Value(id),
       individualId: Value(individualId),
       userId: Value(userId),
+      userUuid: Value(userUuid),
       dateOfBirth: Value(dateOfBirth),
       mobileNumber: Value(mobileNumber),
       altContactNumber: Value(altContactNumber),
@@ -134,16 +127,16 @@ class IndividualModel extends EntityModel with IndividualModelMappable {
       rowVersion: Value(rowVersion),
       bloodGroup: Value(bloodGroup),
       gender: Value(gender),
-    );
+      );
   }
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class IndividualAdditionalFields extends AdditionalFields
-    with IndividualAdditionalFieldsMappable {
+class IndividualAdditionalFields extends AdditionalFields with IndividualAdditionalFieldsMappable {
   IndividualAdditionalFields({
     super.schema = 'Individual',
     required super.version,
     super.fields,
   });
 }
+

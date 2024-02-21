@@ -48,8 +48,6 @@ class HouseholdMemberSearchModel extends EntitySearchModel with HouseholdMemberS
     this.clientReferenceId,
     this.tenantId,
     super.boundaryCode,
-        super.additionalFields,
-    super.auditDetails,
   }):  super(isDeleted: false);
 }
 

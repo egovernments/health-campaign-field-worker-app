@@ -1,3 +1,4 @@
+import 'tables/address.dart';
 import 'dart:io';
 
 import 'package:digit_components/digit_components.dart';

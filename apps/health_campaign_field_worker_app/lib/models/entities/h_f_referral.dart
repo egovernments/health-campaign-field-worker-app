@@ -130,3 +130,4 @@ class HFReferralAdditionalFields extends AdditionalFields with HFReferralAdditio
     super.fields,
   });
 }
+

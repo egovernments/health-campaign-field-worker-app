@@ -24,6 +24,9 @@ class IndividualSearchModelMapper
   static List<String>? _$id(IndividualSearchModel v) => v.id;
   static const Field<IndividualSearchModel, List<String>> _f$id =
       Field('id', _$id, opt: true);
+  static String? _$userUuid(IndividualSearchModel v) => v.userUuid;
+  static const Field<IndividualSearchModel, String> _f$userUuid =
+      Field('userUuid', _$userUuid, opt: true);
   static String? _$dateOfBirth(IndividualSearchModel v) => v.dateOfBirth;
   static const Field<IndividualSearchModel, String> _f$dateOfBirth =
       Field('dateOfBirth', _$dateOfBirth, opt: true);
@@ -44,35 +47,32 @@ class IndividualSearchModelMapper
       v.identifiers;
   static const Field<IndividualSearchModel, List<IdentifierSearchModel>>
       _f$identifiers = Field('identifiers', _$identifiers, opt: true);
-  static String? _$userUuid(IndividualSearchModel v) => v.userUuid;
-  static const Field<IndividualSearchModel, String> _f$userUuid =
-      Field('userUuid', _$userUuid, opt: true);
   static String? _$boundaryCode(IndividualSearchModel v) => v.boundaryCode;
   static const Field<IndividualSearchModel, String> _f$boundaryCode =
       Field('boundaryCode', _$boundaryCode, opt: true);
+  static AuditDetails? _$auditDetails(IndividualSearchModel v) =>
+      v.auditDetails;
+  static const Field<IndividualSearchModel, AuditDetails> _f$auditDetails =
+      Field('auditDetails', _$auditDetails, mode: FieldMode.member);
   static AdditionalFields? _$additionalFields(IndividualSearchModel v) =>
       v.additionalFields;
   static const Field<IndividualSearchModel, AdditionalFields>
       _f$additionalFields =
-      Field('additionalFields', _$additionalFields, opt: true);
-  static AuditDetails? _$auditDetails(IndividualSearchModel v) =>
-      v.auditDetails;
-  static const Field<IndividualSearchModel, AuditDetails> _f$auditDetails =
-      Field('auditDetails', _$auditDetails, opt: true);
+      Field('additionalFields', _$additionalFields, mode: FieldMode.member);
 
   @override
   final MappableFields<IndividualSearchModel> fields = const {
     #id: _f$id,
+    #userUuid: _f$userUuid,
     #dateOfBirth: _f$dateOfBirth,
     #clientReferenceId: _f$clientReferenceId,
     #tenantId: _f$tenantId,
     #name: _f$name,
     #gender: _f$gender,
     #identifiers: _f$identifiers,
-    #userUuid: _f$userUuid,
     #boundaryCode: _f$boundaryCode,
-    #additionalFields: _f$additionalFields,
     #auditDetails: _f$auditDetails,
+    #additionalFields: _f$additionalFields,
   };
   @override
   final bool ignoreNull = true;
@@ -88,16 +88,14 @@ class IndividualSearchModelMapper
   static IndividualSearchModel _instantiate(DecodingData data) {
     return IndividualSearchModel.ignoreDeleted(
         id: data.dec(_f$id),
+        userUuid: data.dec(_f$userUuid),
         dateOfBirth: data.dec(_f$dateOfBirth),
         clientReferenceId: data.dec(_f$clientReferenceId),
         tenantId: data.dec(_f$tenantId),
         name: data.dec(_f$name),
         gender: data.dec(_f$gender),
         identifiers: data.dec(_f$identifiers),
-        userUuid: data.dec(_f$userUuid),
-        boundaryCode: data.dec(_f$boundaryCode),
-        additionalFields: data.dec(_f$additionalFields),
-        auditDetails: data.dec(_f$auditDetails));
+        boundaryCode: data.dec(_f$boundaryCode));
   }
 
   @override
@@ -169,23 +167,16 @@ abstract class IndividualSearchModelCopyWith<
       IdentifierSearchModelCopyWith<$R, IdentifierSearchModel,
           IdentifierSearchModel>>? get identifiers;
   @override
-  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
-      get additionalFields;
-  @override
-  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
-  @override
   $R call(
       {List<String>? id,
+      String? userUuid,
       String? dateOfBirth,
       List<String>? clientReferenceId,
       String? tenantId,
       NameSearchModel? name,
       Gender? gender,
       List<IdentifierSearchModel>? identifiers,
-      String? userUuid,
-      String? boundaryCode,
-      AdditionalFields? additionalFields,
-      AuditDetails? auditDetails});
+      String? boundaryCode});
   IndividualSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -225,43 +216,32 @@ class _IndividualSearchModelCopyWithImpl<$R, $Out>
           (v) => call(identifiers: v))
       : null;
   @override
-  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
-      get additionalFields => $value.additionalFields?.copyWith
-          .$chain((v) => call(additionalFields: v));
-  @override
-  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
-      $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
-  @override
   $R call(
           {Object? id = $none,
+          Object? userUuid = $none,
           Object? dateOfBirth = $none,
           Object? clientReferenceId = $none,
           Object? tenantId = $none,
           Object? name = $none,
           Object? gender = $none,
           Object? identifiers = $none,
-          Object? userUuid = $none,
-          Object? boundaryCode = $none,
-          Object? additionalFields = $none,
-          Object? auditDetails = $none}) =>
+          Object? boundaryCode = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
+        if (userUuid != $none) #userUuid: userUuid,
         if (dateOfBirth != $none) #dateOfBirth: dateOfBirth,
         if (clientReferenceId != $none) #clientReferenceId: clientReferenceId,
         if (tenantId != $none) #tenantId: tenantId,
         if (name != $none) #name: name,
         if (gender != $none) #gender: gender,
         if (identifiers != $none) #identifiers: identifiers,
-        if (userUuid != $none) #userUuid: userUuid,
-        if (boundaryCode != $none) #boundaryCode: boundaryCode,
-        if (additionalFields != $none) #additionalFields: additionalFields,
-        if (auditDetails != $none) #auditDetails: auditDetails
+        if (boundaryCode != $none) #boundaryCode: boundaryCode
       }));
   @override
-  IndividualSearchModel $make(
-          CopyWithData data) =>
+  IndividualSearchModel $make(CopyWithData data) =>
       IndividualSearchModel.ignoreDeleted(
           id: data.get(#id, or: $value.id),
+          userUuid: data.get(#userUuid, or: $value.userUuid),
           dateOfBirth: data.get(#dateOfBirth, or: $value.dateOfBirth),
           clientReferenceId:
               data.get(#clientReferenceId, or: $value.clientReferenceId),
@@ -269,11 +249,7 @@ class _IndividualSearchModelCopyWithImpl<$R, $Out>
           name: data.get(#name, or: $value.name),
           gender: data.get(#gender, or: $value.gender),
           identifiers: data.get(#identifiers, or: $value.identifiers),
-          userUuid: data.get(#userUuid, or: $value.userUuid),
-          boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode),
-          additionalFields:
-              data.get(#additionalFields, or: $value.additionalFields),
-          auditDetails: data.get(#auditDetails, or: $value.auditDetails));
+          boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
 
   @override
   IndividualSearchModelCopyWith<$R2, IndividualSearchModel, $Out2>
@@ -288,7 +264,6 @@ class IndividualModelMapper extends SubClassMapperBase<IndividualModel> {
   static IndividualModelMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = IndividualModelMapper._());
-      MapperContainer.globals.useAll([NameModelConverter()]);
     }
     return _instance!;
   }

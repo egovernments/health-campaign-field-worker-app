@@ -34,24 +34,25 @@ class ProjectProductVariantSearchModelMapper
       v.boundaryCode;
   static const Field<ProjectProductVariantSearchModel, String> _f$boundaryCode =
       Field('boundaryCode', _$boundaryCode, opt: true);
+  static AuditDetails? _$auditDetails(ProjectProductVariantSearchModel v) =>
+      v.auditDetails;
+  static const Field<ProjectProductVariantSearchModel, AuditDetails>
+      _f$auditDetails =
+      Field('auditDetails', _$auditDetails, mode: FieldMode.member);
   static AdditionalFields? _$additionalFields(
           ProjectProductVariantSearchModel v) =>
       v.additionalFields;
   static const Field<ProjectProductVariantSearchModel, AdditionalFields>
       _f$additionalFields =
-      Field('additionalFields', _$additionalFields, opt: true);
-  static AuditDetails? _$auditDetails(ProjectProductVariantSearchModel v) =>
-      v.auditDetails;
-  static const Field<ProjectProductVariantSearchModel, AuditDetails>
-      _f$auditDetails = Field('auditDetails', _$auditDetails, opt: true);
+      Field('additionalFields', _$additionalFields, mode: FieldMode.member);
 
   @override
   final MappableFields<ProjectProductVariantSearchModel> fields = const {
     #productVariantId: _f$productVariantId,
     #tenantId: _f$tenantId,
     #boundaryCode: _f$boundaryCode,
-    #additionalFields: _f$additionalFields,
     #auditDetails: _f$auditDetails,
+    #additionalFields: _f$additionalFields,
   };
   @override
   final bool ignoreNull = true;
@@ -68,9 +69,7 @@ class ProjectProductVariantSearchModelMapper
     return ProjectProductVariantSearchModel.ignoreDeleted(
         productVariantId: data.dec(_f$productVariantId),
         tenantId: data.dec(_f$tenantId),
-        boundaryCode: data.dec(_f$boundaryCode),
-        additionalFields: data.dec(_f$additionalFields),
-        auditDetails: data.dec(_f$auditDetails));
+        boundaryCode: data.dec(_f$boundaryCode));
   }
 
   @override
@@ -137,17 +136,7 @@ abstract class ProjectProductVariantSearchModelCopyWith<
     $In extends ProjectProductVariantSearchModel,
     $Out> implements EntitySearchModelCopyWith<$R, $In, $Out> {
   @override
-  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
-      get additionalFields;
-  @override
-  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
-  @override
-  $R call(
-      {String? productVariantId,
-      String? tenantId,
-      String? boundaryCode,
-      AdditionalFields? additionalFields,
-      AuditDetails? auditDetails});
+  $R call({String? productVariantId, String? tenantId, String? boundaryCode});
   ProjectProductVariantSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -164,25 +153,14 @@ class _ProjectProductVariantSearchModelCopyWithImpl<$R, $Out>
   late final ClassMapperBase<ProjectProductVariantSearchModel> $mapper =
       ProjectProductVariantSearchModelMapper.ensureInitialized();
   @override
-  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
-      get additionalFields => $value.additionalFields?.copyWith
-          .$chain((v) => call(additionalFields: v));
-  @override
-  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
-      $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
-  @override
   $R call(
           {Object? productVariantId = $none,
           Object? tenantId = $none,
-          Object? boundaryCode = $none,
-          Object? additionalFields = $none,
-          Object? auditDetails = $none}) =>
+          Object? boundaryCode = $none}) =>
       $apply(FieldCopyWithData({
         if (productVariantId != $none) #productVariantId: productVariantId,
         if (tenantId != $none) #tenantId: tenantId,
-        if (boundaryCode != $none) #boundaryCode: boundaryCode,
-        if (additionalFields != $none) #additionalFields: additionalFields,
-        if (auditDetails != $none) #auditDetails: auditDetails
+        if (boundaryCode != $none) #boundaryCode: boundaryCode
       }));
   @override
   ProjectProductVariantSearchModel $make(CopyWithData data) =>
@@ -190,10 +168,7 @@ class _ProjectProductVariantSearchModelCopyWithImpl<$R, $Out>
           productVariantId:
               data.get(#productVariantId, or: $value.productVariantId),
           tenantId: data.get(#tenantId, or: $value.tenantId),
-          boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode),
-          additionalFields:
-              data.get(#additionalFields, or: $value.additionalFields),
-          auditDetails: data.get(#auditDetails, or: $value.auditDetails));
+          boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
 
   @override
   ProjectProductVariantSearchModelCopyWith<$R2,
