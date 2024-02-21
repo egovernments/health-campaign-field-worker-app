@@ -33,14 +33,14 @@ class LocalitySearchModelMapper
   static String? _$boundaryCode(LocalitySearchModel v) => v.boundaryCode;
   static const Field<LocalitySearchModel, String> _f$boundaryCode =
       Field('boundaryCode', _$boundaryCode, opt: true);
+  static AuditDetails? _$auditDetails(LocalitySearchModel v) => v.auditDetails;
+  static const Field<LocalitySearchModel, AuditDetails> _f$auditDetails =
+      Field('auditDetails', _$auditDetails, mode: FieldMode.member);
   static AdditionalFields? _$additionalFields(LocalitySearchModel v) =>
       v.additionalFields;
   static const Field<LocalitySearchModel, AdditionalFields>
       _f$additionalFields =
-      Field('additionalFields', _$additionalFields, opt: true);
-  static AuditDetails? _$auditDetails(LocalitySearchModel v) => v.auditDetails;
-  static const Field<LocalitySearchModel, AuditDetails> _f$auditDetails =
-      Field('auditDetails', _$auditDetails, opt: true);
+      Field('additionalFields', _$additionalFields, mode: FieldMode.member);
 
   @override
   final MappableFields<LocalitySearchModel> fields = const {
@@ -48,8 +48,8 @@ class LocalitySearchModelMapper
     #name: _f$name,
     #tenantId: _f$tenantId,
     #boundaryCode: _f$boundaryCode,
-    #additionalFields: _f$additionalFields,
     #auditDetails: _f$auditDetails,
+    #additionalFields: _f$additionalFields,
   };
   @override
   final bool ignoreNull = true;
@@ -67,9 +67,7 @@ class LocalitySearchModelMapper
         code: data.dec(_f$code),
         name: data.dec(_f$name),
         tenantId: data.dec(_f$tenantId),
-        boundaryCode: data.dec(_f$boundaryCode),
-        additionalFields: data.dec(_f$additionalFields),
-        auditDetails: data.dec(_f$auditDetails));
+        boundaryCode: data.dec(_f$boundaryCode));
   }
 
   @override
@@ -130,18 +128,7 @@ extension LocalitySearchModelValueCopy<$R, $Out>
 abstract class LocalitySearchModelCopyWith<$R, $In extends LocalitySearchModel,
     $Out> implements EntitySearchModelCopyWith<$R, $In, $Out> {
   @override
-  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
-      get additionalFields;
-  @override
-  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
-  @override
-  $R call(
-      {String? code,
-      String? name,
-      String? tenantId,
-      String? boundaryCode,
-      AdditionalFields? additionalFields,
-      AuditDetails? auditDetails});
+  $R call({String? code, String? name, String? tenantId, String? boundaryCode});
   LocalitySearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -155,39 +142,24 @@ class _LocalitySearchModelCopyWithImpl<$R, $Out>
   late final ClassMapperBase<LocalitySearchModel> $mapper =
       LocalitySearchModelMapper.ensureInitialized();
   @override
-  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
-      get additionalFields => $value.additionalFields?.copyWith
-          .$chain((v) => call(additionalFields: v));
-  @override
-  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
-      $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
-  @override
   $R call(
           {Object? code = $none,
           Object? name = $none,
           Object? tenantId = $none,
-          Object? boundaryCode = $none,
-          Object? additionalFields = $none,
-          Object? auditDetails = $none}) =>
+          Object? boundaryCode = $none}) =>
       $apply(FieldCopyWithData({
         if (code != $none) #code: code,
         if (name != $none) #name: name,
         if (tenantId != $none) #tenantId: tenantId,
-        if (boundaryCode != $none) #boundaryCode: boundaryCode,
-        if (additionalFields != $none) #additionalFields: additionalFields,
-        if (auditDetails != $none) #auditDetails: auditDetails
+        if (boundaryCode != $none) #boundaryCode: boundaryCode
       }));
   @override
-  LocalitySearchModel $make(
-          CopyWithData data) =>
+  LocalitySearchModel $make(CopyWithData data) =>
       LocalitySearchModel.ignoreDeleted(
           code: data.get(#code, or: $value.code),
           name: data.get(#name, or: $value.name),
           tenantId: data.get(#tenantId, or: $value.tenantId),
-          boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode),
-          additionalFields:
-              data.get(#additionalFields, or: $value.additionalFields),
-          auditDetails: data.get(#auditDetails, or: $value.auditDetails));
+          boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
 
   @override
   LocalitySearchModelCopyWith<$R2, LocalitySearchModel, $Out2>

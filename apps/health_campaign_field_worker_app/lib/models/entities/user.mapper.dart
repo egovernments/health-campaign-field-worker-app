@@ -32,13 +32,13 @@ class UserSearchModelMapper extends SubClassMapperBase<UserSearchModel> {
   static String? _$boundaryCode(UserSearchModel v) => v.boundaryCode;
   static const Field<UserSearchModel, String> _f$boundaryCode =
       Field('boundaryCode', _$boundaryCode, opt: true);
+  static AuditDetails? _$auditDetails(UserSearchModel v) => v.auditDetails;
+  static const Field<UserSearchModel, AuditDetails> _f$auditDetails =
+      Field('auditDetails', _$auditDetails, mode: FieldMode.member);
   static AdditionalFields? _$additionalFields(UserSearchModel v) =>
       v.additionalFields;
   static const Field<UserSearchModel, AdditionalFields> _f$additionalFields =
-      Field('additionalFields', _$additionalFields, opt: true);
-  static AuditDetails? _$auditDetails(UserSearchModel v) => v.auditDetails;
-  static const Field<UserSearchModel, AuditDetails> _f$auditDetails =
-      Field('auditDetails', _$auditDetails, opt: true);
+      Field('additionalFields', _$additionalFields, mode: FieldMode.member);
 
   @override
   final MappableFields<UserSearchModel> fields = const {
@@ -46,8 +46,8 @@ class UserSearchModelMapper extends SubClassMapperBase<UserSearchModel> {
     #userName: _f$userName,
     #uuid: _f$uuid,
     #boundaryCode: _f$boundaryCode,
-    #additionalFields: _f$additionalFields,
     #auditDetails: _f$auditDetails,
+    #additionalFields: _f$additionalFields,
   };
   @override
   final bool ignoreNull = true;
@@ -65,9 +65,7 @@ class UserSearchModelMapper extends SubClassMapperBase<UserSearchModel> {
         id: data.dec(_f$id),
         userName: data.dec(_f$userName),
         uuid: data.dec(_f$uuid),
-        boundaryCode: data.dec(_f$boundaryCode),
-        additionalFields: data.dec(_f$additionalFields),
-        auditDetails: data.dec(_f$auditDetails));
+        boundaryCode: data.dec(_f$boundaryCode));
   }
 
   @override
@@ -127,18 +125,8 @@ abstract class UserSearchModelCopyWith<$R, $In extends UserSearchModel, $Out>
     implements EntitySearchModelCopyWith<$R, $In, $Out> {
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get uuid;
   @override
-  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
-      get additionalFields;
-  @override
-  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
-  @override
   $R call(
-      {String? id,
-      String? userName,
-      List<String>? uuid,
-      String? boundaryCode,
-      AdditionalFields? additionalFields,
-      AuditDetails? auditDetails});
+      {String? id, String? userName, List<String>? uuid, String? boundaryCode});
   UserSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -158,37 +146,23 @@ class _UserSearchModelCopyWithImpl<$R, $Out>
               (v, t) => ObjectCopyWith(v, $identity, t), (v) => call(uuid: v))
           : null;
   @override
-  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
-      get additionalFields => $value.additionalFields?.copyWith
-          .$chain((v) => call(additionalFields: v));
-  @override
-  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
-      $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
-  @override
   $R call(
           {Object? id = $none,
           Object? userName = $none,
           Object? uuid = $none,
-          Object? boundaryCode = $none,
-          Object? additionalFields = $none,
-          Object? auditDetails = $none}) =>
+          Object? boundaryCode = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
         if (userName != $none) #userName: userName,
         if (uuid != $none) #uuid: uuid,
-        if (boundaryCode != $none) #boundaryCode: boundaryCode,
-        if (additionalFields != $none) #additionalFields: additionalFields,
-        if (auditDetails != $none) #auditDetails: auditDetails
+        if (boundaryCode != $none) #boundaryCode: boundaryCode
       }));
   @override
   UserSearchModel $make(CopyWithData data) => UserSearchModel.ignoreDeleted(
       id: data.get(#id, or: $value.id),
       userName: data.get(#userName, or: $value.userName),
       uuid: data.get(#uuid, or: $value.uuid),
-      boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode),
-      additionalFields:
-          data.get(#additionalFields, or: $value.additionalFields),
-      auditDetails: data.get(#auditDetails, or: $value.auditDetails));
+      boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
 
   @override
   UserSearchModelCopyWith<$R2, UserSearchModel, $Out2> $chain<$R2, $Out2>(
@@ -308,8 +282,8 @@ class UserModelMapper extends SubClassMapperBase<UserModel> {
   static String? _$tenantId(UserModel v) => v.tenantId;
   static const Field<UserModel, String> _f$tenantId =
       Field('tenantId', _$tenantId, opt: true);
-  static String? _$uuid(UserModel v) => v.uuid;
-  static const Field<UserModel, String> _f$uuid =
+  static List<String>? _$uuid(UserModel v) => v.uuid;
+  static const Field<UserModel, List<String>> _f$uuid =
       Field('uuid', _$uuid, opt: true);
   static String? _$createdDate(UserModel v) => v.createdDate;
   static const Field<UserModel, String> _f$createdDate =
@@ -482,6 +456,7 @@ abstract class UserModelCopyWith<$R, $In extends UserModel, $Out>
     implements EntityModelCopyWith<$R, $In, $Out> {
   UserAdditionalFieldsCopyWith<$R, UserAdditionalFields, UserAdditionalFields>?
       get additionalFields;
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get uuid;
   @override
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
   @override
@@ -521,7 +496,7 @@ abstract class UserModelCopyWith<$R, $In extends UserModel, $Out>
       int? createdBy,
       String? lastModifiedBy,
       String? tenantId,
-      String? uuid,
+      List<String>? uuid,
       String? createdDate,
       bool? nonRecoverableError,
       int? rowVersion,
@@ -543,6 +518,12 @@ class _UserModelCopyWithImpl<$R, $Out>
   UserAdditionalFieldsCopyWith<$R, UserAdditionalFields, UserAdditionalFields>?
       get additionalFields => $value.additionalFields?.copyWith
           .$chain((v) => call(additionalFields: v));
+  @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get uuid =>
+      $value.uuid != null
+          ? ListCopyWith($value.uuid!,
+              (v, t) => ObjectCopyWith(v, $identity, t), (v) => call(uuid: v))
+          : null;
   @override
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
       $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));

@@ -7,7 +7,7 @@
 part of 'project_staff.dart';
 
 class ProjectStaffSearchModelMapper
-    extends ClassMapperBase<ProjectStaffSearchModel> {
+    extends SubClassMapperBase<ProjectStaffSearchModel> {
   ProjectStaffSearchModelMapper._();
 
   static ProjectStaffSearchModelMapper? _instance;
@@ -15,7 +15,6 @@ class ProjectStaffSearchModelMapper
     if (_instance == null) {
       MapperContainer.globals
           .use(_instance = ProjectStaffSearchModelMapper._());
-      EntitySearchModelMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -47,15 +46,15 @@ class ProjectStaffSearchModelMapper
   static String? _$boundaryCode(ProjectStaffSearchModel v) => v.boundaryCode;
   static const Field<ProjectStaffSearchModel, String> _f$boundaryCode =
       Field('boundaryCode', _$boundaryCode, opt: true);
+  static AuditDetails? _$auditDetails(ProjectStaffSearchModel v) =>
+      v.auditDetails;
+  static const Field<ProjectStaffSearchModel, AuditDetails> _f$auditDetails =
+      Field('auditDetails', _$auditDetails, mode: FieldMode.member);
   static AdditionalFields? _$additionalFields(ProjectStaffSearchModel v) =>
       v.additionalFields;
   static const Field<ProjectStaffSearchModel, AdditionalFields>
       _f$additionalFields =
-      Field('additionalFields', _$additionalFields, opt: true);
-  static AuditDetails? _$auditDetails(ProjectStaffSearchModel v) =>
-      v.auditDetails;
-  static const Field<ProjectStaffSearchModel, AuditDetails> _f$auditDetails =
-      Field('auditDetails', _$auditDetails, opt: true);
+      Field('additionalFields', _$additionalFields, mode: FieldMode.member);
   static DateTime? _$startDateTime(ProjectStaffSearchModel v) =>
       v.startDateTime;
   static const Field<ProjectStaffSearchModel, DateTime> _f$startDateTime =
@@ -74,13 +73,21 @@ class ProjectStaffSearchModelMapper
     #startDate: _f$startDate,
     #endDate: _f$endDate,
     #boundaryCode: _f$boundaryCode,
-    #additionalFields: _f$additionalFields,
     #auditDetails: _f$auditDetails,
+    #additionalFields: _f$additionalFields,
     #startDateTime: _f$startDateTime,
     #endDateTime: _f$endDateTime,
   };
   @override
   final bool ignoreNull = true;
+
+  @override
+  final String discriminatorKey = 'type';
+  @override
+  final dynamic discriminatorValue = MappableClass.useAsDefault;
+  @override
+  late final ClassMapperBase superMapper =
+      EntitySearchModelMapper.ensureInitialized();
 
   static ProjectStaffSearchModel _instantiate(DecodingData data) {
     return ProjectStaffSearchModel.ignoreDeleted(
@@ -91,9 +98,7 @@ class ProjectStaffSearchModelMapper
         tenantId: data.dec(_f$tenantId),
         startDate: data.dec(_f$startDate),
         endDate: data.dec(_f$endDate),
-        boundaryCode: data.dec(_f$boundaryCode),
-        additionalFields: data.dec(_f$additionalFields),
-        auditDetails: data.dec(_f$auditDetails));
+        boundaryCode: data.dec(_f$boundaryCode));
   }
 
   @override
@@ -157,11 +162,6 @@ abstract class ProjectStaffSearchModelCopyWith<
     $Out> implements EntitySearchModelCopyWith<$R, $In, $Out> {
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get staffId;
   @override
-  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
-      get additionalFields;
-  @override
-  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
-  @override
   $R call(
       {String? id,
       List<String>? staffId,
@@ -170,9 +170,7 @@ abstract class ProjectStaffSearchModelCopyWith<
       String? tenantId,
       int? startDate,
       int? endDate,
-      String? boundaryCode,
-      AdditionalFields? additionalFields,
-      AuditDetails? auditDetails});
+      String? boundaryCode});
   ProjectStaffSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -195,13 +193,6 @@ class _ProjectStaffSearchModelCopyWithImpl<$R, $Out>
               (v) => call(staffId: v))
           : null;
   @override
-  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
-      get additionalFields => $value.additionalFields?.copyWith
-          .$chain((v) => call(additionalFields: v));
-  @override
-  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
-      $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
-  @override
   $R call(
           {Object? id = $none,
           Object? staffId = $none,
@@ -210,9 +201,7 @@ class _ProjectStaffSearchModelCopyWithImpl<$R, $Out>
           Object? tenantId = $none,
           Object? startDate = $none,
           Object? endDate = $none,
-          Object? boundaryCode = $none,
-          Object? additionalFields = $none,
-          Object? auditDetails = $none}) =>
+          Object? boundaryCode = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
         if (staffId != $none) #staffId: staffId,
@@ -221,9 +210,7 @@ class _ProjectStaffSearchModelCopyWithImpl<$R, $Out>
         if (tenantId != $none) #tenantId: tenantId,
         if (startDate != $none) #startDate: startDate,
         if (endDate != $none) #endDate: endDate,
-        if (boundaryCode != $none) #boundaryCode: boundaryCode,
-        if (additionalFields != $none) #additionalFields: additionalFields,
-        if (auditDetails != $none) #auditDetails: auditDetails
+        if (boundaryCode != $none) #boundaryCode: boundaryCode
       }));
   @override
   ProjectStaffSearchModel $make(CopyWithData data) =>
@@ -235,10 +222,7 @@ class _ProjectStaffSearchModelCopyWithImpl<$R, $Out>
           tenantId: data.get(#tenantId, or: $value.tenantId),
           startDate: data.get(#startDate, or: $value.startDate),
           endDate: data.get(#endDate, or: $value.endDate),
-          boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode),
-          additionalFields:
-              data.get(#additionalFields, or: $value.additionalFields),
-          auditDetails: data.get(#auditDetails, or: $value.auditDetails));
+          boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
 
   @override
   ProjectStaffSearchModelCopyWith<$R2, ProjectStaffSearchModel, $Out2>
@@ -246,14 +230,13 @@ class _ProjectStaffSearchModelCopyWithImpl<$R, $Out>
           _ProjectStaffSearchModelCopyWithImpl($value, $cast, t);
 }
 
-class ProjectStaffModelMapper extends ClassMapperBase<ProjectStaffModel> {
+class ProjectStaffModelMapper extends SubClassMapperBase<ProjectStaffModel> {
   ProjectStaffModelMapper._();
 
   static ProjectStaffModelMapper? _instance;
   static ProjectStaffModelMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = ProjectStaffModelMapper._());
-      EntityModelMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -337,6 +320,14 @@ class ProjectStaffModelMapper extends ClassMapperBase<ProjectStaffModel> {
   };
   @override
   final bool ignoreNull = true;
+
+  @override
+  final String discriminatorKey = 'type';
+  @override
+  final dynamic discriminatorValue = MappableClass.useAsDefault;
+  @override
+  late final ClassMapperBase superMapper =
+      EntityModelMapper.ensureInitialized();
 
   static ProjectStaffModel _instantiate(DecodingData data) {
     return ProjectStaffModel(
@@ -521,7 +512,7 @@ class _ProjectStaffModelCopyWithImpl<$R, $Out>
 }
 
 class ProjectStaffAdditionalFieldsMapper
-    extends ClassMapperBase<ProjectStaffAdditionalFields> {
+    extends SubClassMapperBase<ProjectStaffAdditionalFields> {
   ProjectStaffAdditionalFieldsMapper._();
 
   static ProjectStaffAdditionalFieldsMapper? _instance;
@@ -529,7 +520,6 @@ class ProjectStaffAdditionalFieldsMapper
     if (_instance == null) {
       MapperContainer.globals
           .use(_instance = ProjectStaffAdditionalFieldsMapper._());
-      AdditionalFieldsMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -556,6 +546,14 @@ class ProjectStaffAdditionalFieldsMapper
   };
   @override
   final bool ignoreNull = true;
+
+  @override
+  final String discriminatorKey = 'type';
+  @override
+  final dynamic discriminatorValue = MappableClass.useAsDefault;
+  @override
+  late final ClassMapperBase superMapper =
+      AdditionalFieldsMapper.ensureInitialized();
 
   static ProjectStaffAdditionalFields _instantiate(DecodingData data) {
     return ProjectStaffAdditionalFields(

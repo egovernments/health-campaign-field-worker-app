@@ -89,12 +89,8 @@ rm "$temp_mappers"
 
 # for adding import as at.Address in sql_store.g.dart for resolving conflict with Address created inside sql_store.g.dart
 
-ls -la
-
 cd data/local_store/sql_store/ || exit
 app_root="$PWD"
-
-ls -la
 
 sql_g_dart_file="$app_root/sql_store.g.dart"
 

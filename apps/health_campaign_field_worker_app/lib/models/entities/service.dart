@@ -36,8 +36,6 @@ class ServiceSearchModel extends EntitySearchModel with ServiceSearchModelMappab
     this.createdAt,
     this.tenantId,
     super.boundaryCode,
-        super.additionalFields,
-    super.auditDetails,
   }):  super(isDeleted: false);
 }
 

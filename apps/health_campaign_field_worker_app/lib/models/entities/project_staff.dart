@@ -7,7 +7,7 @@ import '../../data/local_store/sql_store/sql_store.dart';
 
 part 'project_staff.mapper.dart';
 
-@MappableClass(ignoreNull: true)
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
 class ProjectStaffSearchModel extends EntitySearchModel with ProjectStaffSearchModelMappable {
   final String? id;
   final List<String>? staffId;
@@ -45,8 +45,6 @@ class ProjectStaffSearchModel extends EntitySearchModel with ProjectStaffSearchM
     int? startDate,
     int? endDate,
     super.boundaryCode,
-    super.additionalFields,
-    super.auditDetails,
   }): startDateTime = startDate == null
   ? null
       : DateTime.fromMillisecondsSinceEpoch(startDate),
@@ -62,7 +60,7 @@ class ProjectStaffSearchModel extends EntitySearchModel with ProjectStaffSearchM
   
 }
 
-@MappableClass(ignoreNull: true)
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
 class ProjectStaffModel extends EntityModel with ProjectStaffModelMappable {
 
   static const schemaName = 'ProjectStaff';
@@ -133,7 +131,7 @@ class ProjectStaffModel extends EntityModel with ProjectStaffModelMappable {
   }
 }
 
-@MappableClass(ignoreNull: true)
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
 class ProjectStaffAdditionalFields extends AdditionalFields with ProjectStaffAdditionalFieldsMappable {
   ProjectStaffAdditionalFields({
     super.schema = 'ProjectStaff',

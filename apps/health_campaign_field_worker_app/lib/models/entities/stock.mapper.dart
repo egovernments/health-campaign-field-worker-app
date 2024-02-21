@@ -75,13 +75,13 @@ class StockSearchModelMapper extends SubClassMapperBase<StockSearchModel> {
   static String? _$boundaryCode(StockSearchModel v) => v.boundaryCode;
   static const Field<StockSearchModel, String> _f$boundaryCode =
       Field('boundaryCode', _$boundaryCode, opt: true);
+  static AuditDetails? _$auditDetails(StockSearchModel v) => v.auditDetails;
+  static const Field<StockSearchModel, AuditDetails> _f$auditDetails =
+      Field('auditDetails', _$auditDetails, mode: FieldMode.member);
   static AdditionalFields? _$additionalFields(StockSearchModel v) =>
       v.additionalFields;
   static const Field<StockSearchModel, AdditionalFields> _f$additionalFields =
-      Field('additionalFields', _$additionalFields, opt: true);
-  static AuditDetails? _$auditDetails(StockSearchModel v) => v.auditDetails;
-  static const Field<StockSearchModel, AuditDetails> _f$auditDetails =
-      Field('auditDetails', _$auditDetails, opt: true);
+      Field('additionalFields', _$additionalFields, mode: FieldMode.member);
 
   @override
   final MappableFields<StockSearchModel> fields = const {
@@ -101,8 +101,8 @@ class StockSearchModelMapper extends SubClassMapperBase<StockSearchModel> {
     #transactionType: _f$transactionType,
     #transactionReason: _f$transactionReason,
     #boundaryCode: _f$boundaryCode,
-    #additionalFields: _f$additionalFields,
     #auditDetails: _f$auditDetails,
+    #additionalFields: _f$additionalFields,
   };
   @override
   final bool ignoreNull = true;
@@ -132,9 +132,7 @@ class StockSearchModelMapper extends SubClassMapperBase<StockSearchModel> {
         clientReferenceId: data.dec(_f$clientReferenceId),
         transactionType: data.dec(_f$transactionType),
         transactionReason: data.dec(_f$transactionReason),
-        boundaryCode: data.dec(_f$boundaryCode),
-        additionalFields: data.dec(_f$additionalFields),
-        auditDetails: data.dec(_f$auditDetails));
+        boundaryCode: data.dec(_f$boundaryCode));
   }
 
   @override
@@ -202,11 +200,6 @@ abstract class StockSearchModelCopyWith<$R, $In extends StockSearchModel, $Out>
           ObjectCopyWith<$R, TransactionReason, TransactionReason>>?
       get transactionReason;
   @override
-  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
-      get additionalFields;
-  @override
-  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
-  @override
   $R call(
       {String? id,
       String? tenantId,
@@ -223,9 +216,7 @@ abstract class StockSearchModelCopyWith<$R, $In extends StockSearchModel, $Out>
       List<String>? clientReferenceId,
       List<TransactionType>? transactionType,
       List<TransactionReason>? transactionReason,
-      String? boundaryCode,
-      AdditionalFields? additionalFields,
-      AuditDetails? auditDetails});
+      String? boundaryCode});
   StockSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -265,13 +256,6 @@ class _StockSearchModelCopyWithImpl<$R, $Out>
               (v) => call(transactionReason: v))
           : null;
   @override
-  AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
-      get additionalFields => $value.additionalFields?.copyWith
-          .$chain((v) => call(additionalFields: v));
-  @override
-  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
-      $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
-  @override
   $R call(
           {Object? id = $none,
           Object? tenantId = $none,
@@ -288,9 +272,7 @@ class _StockSearchModelCopyWithImpl<$R, $Out>
           Object? clientReferenceId = $none,
           Object? transactionType = $none,
           Object? transactionReason = $none,
-          Object? boundaryCode = $none,
-          Object? additionalFields = $none,
-          Object? auditDetails = $none}) =>
+          Object? boundaryCode = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
         if (tenantId != $none) #tenantId: tenantId,
@@ -309,9 +291,7 @@ class _StockSearchModelCopyWithImpl<$R, $Out>
         if (clientReferenceId != $none) #clientReferenceId: clientReferenceId,
         if (transactionType != $none) #transactionType: transactionType,
         if (transactionReason != $none) #transactionReason: transactionReason,
-        if (boundaryCode != $none) #boundaryCode: boundaryCode,
-        if (additionalFields != $none) #additionalFields: additionalFields,
-        if (auditDetails != $none) #auditDetails: auditDetails
+        if (boundaryCode != $none) #boundaryCode: boundaryCode
       }));
   @override
   StockSearchModel $make(CopyWithData data) => StockSearchModel.ignoreDeleted(
@@ -335,10 +315,7 @@ class _StockSearchModelCopyWithImpl<$R, $Out>
       transactionType: data.get(#transactionType, or: $value.transactionType),
       transactionReason:
           data.get(#transactionReason, or: $value.transactionReason),
-      boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode),
-      additionalFields:
-          data.get(#additionalFields, or: $value.additionalFields),
-      auditDetails: data.get(#auditDetails, or: $value.auditDetails));
+      boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
 
   @override
   StockSearchModelCopyWith<$R2, StockSearchModel, $Out2> $chain<$R2, $Out2>(

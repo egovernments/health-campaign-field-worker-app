@@ -6,6 +6,11 @@ import 'lib/models.dart';
 void run(HookContext context) {
   final variables = context.vars;
 
+  ConfigModelMapper.ensureInitialized();
+  AttributeModelMapper.ensureInitialized();
+  EnumValuesMapper.ensureInitialized();
+  TableReferenceModelMapper.ensureInitialized();
+
   ConfigModel model = ConfigModelMapper.fromMap(variables);
 
   model = model.copyWith.attributes.addAll(

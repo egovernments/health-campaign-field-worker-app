@@ -63,8 +63,6 @@ class StockSearchModel extends EntitySearchModel with StockSearchModelMappable {
     this.transactionType,
     this.transactionReason,
     super.boundaryCode,
-        super.additionalFields,
-    super.auditDetails,
   }):  super(isDeleted: false);
 }
 

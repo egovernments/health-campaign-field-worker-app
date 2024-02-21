@@ -55,11 +55,11 @@ import 'oplog/oplog_entry.dart' as p48;
 import 'pgr_complaints/pgr_address.dart' as p49;
 import 'pgr_complaints/pgr_complaints.dart' as p50;
 import 'pgr_complaints/pgr_complaints_response.dart' as p51;
-import 'package:attendance_management/models/attendance_audit.dart' as p52;
+import 'package:attendance_management/models/attendance_register.dart' as p52;
 import 'package:attendance_management/models/staff.dart' as p53;
-import 'package:attendance_management/models/attendee.dart' as p54;
+import 'package:attendance_management/models/attendance_audit.dart' as p54;
 import 'package:attendance_management/models/attendance_log.dart' as p55;
-import 'package:attendance_management/models/attendance_register.dart' as p56;
+import 'package:attendance_management/models/attendee.dart' as p56;
 
 void initializeMappers() {
   p0.EntityModelMapper.ensureInitialized();
@@ -203,9 +203,9 @@ void initializeMappers() {
   p51.PgrComplaintResponseModelMapper.ensureInitialized();
   p51.PgrComplainantResponseModelMapper.ensureInitialized();
   p51.PgrServiceResponseModelMapper.ensureInitialized();
-p52.AttendanceAuditDetailsMapper.ensureInitialized();
+p52.AttendancePackageRegisterModelMapper.ensureInitialized();
 p53.StaffModelMapper.ensureInitialized();
-p54.AttendeeModelMapper.ensureInitialized();
+p54.AttendanceAuditDetailsMapper.ensureInitialized();
 p55.AttendanceLogModelMapper.ensureInitialized();
-p56.AttendancePackageRegisterModelMapper.ensureInitialized();
+p56.AttendeeModelMapper.ensureInitialized();
 }

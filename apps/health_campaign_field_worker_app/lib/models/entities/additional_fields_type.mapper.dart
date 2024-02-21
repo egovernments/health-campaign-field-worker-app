@@ -53,6 +53,8 @@ class AdditionalFieldsTypeMapper extends EnumMapper<AdditionalFieldsType> {
         return AdditionalFieldsType.gender;
       case "age":
         return AdditionalFieldsType.age;
+      case "deliveryComment":
+        return AdditionalFieldsType.deliveryComment;
       case "latitude":
         return AdditionalFieldsType.latitude;
       case "longitude":
@@ -93,6 +95,8 @@ class AdditionalFieldsTypeMapper extends EnumMapper<AdditionalFieldsType> {
         return "gender";
       case AdditionalFieldsType.age:
         return "age";
+      case AdditionalFieldsType.deliveryComment:
+        return "deliveryComment";
       case AdditionalFieldsType.latitude:
         return "latitude";
       case AdditionalFieldsType.longitude:
