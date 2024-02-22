@@ -12,6 +12,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../blocs/auth/auth.dart';
 import '../blocs/hcm_attendance_bloc.dart';
+import '../blocs/search_households/search_bloc_common_wrapper.dart';
 import '../blocs/search_households/search_households.dart';
 import '../blocs/search_referrals/search_referrals.dart';
 import '../blocs/sync/sync.dart';
@@ -309,11 +310,12 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.all_inbox,
           label: i18.home.beneficiaryLabel,
           onPressed: () async {
-            final searchBloc = context.read<SearchHouseholdsBloc>();
+            final searchBloc = context.read<SearchBlocWrapper>();
             await context.router.push(
               SearchBeneficiaryRoute(),
             );
-            searchBloc.add(const SearchHouseholdsClearEvent());
+            searchBloc.searchHouseholdsBloc
+                .add(const SearchHouseholdsClearEvent());
           },
         ),
       ),
