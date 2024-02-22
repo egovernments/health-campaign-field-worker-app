@@ -56,6 +56,18 @@
     {
       "name": "Age",
       "value": "age"
+    },
+    {
+      "name": "deliveryComment",
+      "value": "deliveryComment"
+    },
+    {
+      "name": "latitude",
+      "value": "latitude"
+    },
+    {
+      "name": "longitude",
+      "value": "longitude"
     }
   ],
   "isEnum": true

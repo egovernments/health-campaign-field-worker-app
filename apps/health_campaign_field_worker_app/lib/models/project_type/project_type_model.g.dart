@@ -6,38 +6,38 @@ part of 'project_type_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_ProjectTypePrimaryWrapper _$$_ProjectTypePrimaryWrapperFromJson(
+_$ProjectTypePrimaryWrapperImpl _$$ProjectTypePrimaryWrapperImplFromJson(
         Map<String, dynamic> json) =>
-    _$_ProjectTypePrimaryWrapper(
+    _$ProjectTypePrimaryWrapperImpl(
       projectTypeWrapper: json['HCM-PROJECT-TYPES'] == null
           ? null
           : ProjectTypesSecondaryModel.fromJson(
               json['HCM-PROJECT-TYPES'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$$_ProjectTypePrimaryWrapperToJson(
-        _$_ProjectTypePrimaryWrapper instance) =>
+Map<String, dynamic> _$$ProjectTypePrimaryWrapperImplToJson(
+        _$ProjectTypePrimaryWrapperImpl instance) =>
     <String, dynamic>{
       'HCM-PROJECT-TYPES': instance.projectTypeWrapper,
     };
 
-_$_ProjectTypesSecondaryModel _$$_ProjectTypesSecondaryModelFromJson(
+_$ProjectTypesSecondaryModelImpl _$$ProjectTypesSecondaryModelImplFromJson(
         Map<String, dynamic> json) =>
-    _$_ProjectTypesSecondaryModel(
+    _$ProjectTypesSecondaryModelImpl(
       projectTypes: (json['projectTypes'] as List<dynamic>?)
               ?.map((e) => ProjectType.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
     );
 
-Map<String, dynamic> _$$_ProjectTypesSecondaryModelToJson(
-        _$_ProjectTypesSecondaryModel instance) =>
+Map<String, dynamic> _$$ProjectTypesSecondaryModelImplToJson(
+        _$ProjectTypesSecondaryModelImpl instance) =>
     <String, dynamic>{
       'projectTypes': instance.projectTypes,
     };
 
-_$_ProjectType _$$_ProjectTypeFromJson(Map<String, dynamic> json) =>
-    _$_ProjectType(
+_$ProjectTypeImpl _$$ProjectTypeImplFromJson(Map<String, dynamic> json) =>
+    _$ProjectTypeImpl(
       id: json['id'] as String,
       code: json['code'] as String,
       name: json['name'] as String,
@@ -54,7 +54,7 @@ _$_ProjectType _$$_ProjectTypeFromJson(Map<String, dynamic> json) =>
       validMaxAge: json['validMaxAge'] as int?,
     );
 
-Map<String, dynamic> _$$_ProjectTypeToJson(_$_ProjectType instance) =>
+Map<String, dynamic> _$$ProjectTypeImplToJson(_$ProjectTypeImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'code': instance.code,
@@ -68,7 +68,7 @@ Map<String, dynamic> _$$_ProjectTypeToJson(_$_ProjectType instance) =>
       'validMaxAge': instance.validMaxAge,
     };
 
-_$_Cycle _$$_CycleFromJson(Map<String, dynamic> json) => _$_Cycle(
+_$CycleImpl _$$CycleImplFromJson(Map<String, dynamic> json) => _$CycleImpl(
       mandatoryWaitSinceLastCycleInDays:
           json['mandatoryWaitSinceLastCycleInDays'] as String?,
       startDate: json['startDate'] as int?,
@@ -79,7 +79,8 @@ _$_Cycle _$$_CycleFromJson(Map<String, dynamic> json) => _$_Cycle(
           .toList(),
     );
 
-Map<String, dynamic> _$$_CycleToJson(_$_Cycle instance) => <String, dynamic>{
+Map<String, dynamic> _$$CycleImplToJson(_$CycleImpl instance) =>
+    <String, dynamic>{
       'mandatoryWaitSinceLastCycleInDays':
           instance.mandatoryWaitSinceLastCycleInDays,
       'startDate': instance.startDate,
@@ -88,8 +89,8 @@ Map<String, dynamic> _$$_CycleToJson(_$_Cycle instance) => <String, dynamic>{
       'deliveries': instance.deliveries,
     };
 
-_$_DeliveryModel _$$_DeliveryModelFromJson(Map<String, dynamic> json) =>
-    _$_DeliveryModel(
+_$DeliveryModelImpl _$$DeliveryModelImplFromJson(Map<String, dynamic> json) =>
+    _$DeliveryModelImpl(
       doseCriteria: (json['doseCriteria'] as List<dynamic>?)
           ?.map((e) => DoseCriteriaModel.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -99,7 +100,7 @@ _$_DeliveryModel _$$_DeliveryModelFromJson(Map<String, dynamic> json) =>
       id: json['id'] as int? ?? 0,
     );
 
-Map<String, dynamic> _$$_DeliveryModelToJson(_$_DeliveryModel instance) =>
+Map<String, dynamic> _$$DeliveryModelImplToJson(_$DeliveryModelImpl instance) =>
     <String, dynamic>{
       'doseCriteria': instance.doseCriteria,
       'mandatoryWaitSinceLastDeliveryInDays':
@@ -108,30 +109,31 @@ Map<String, dynamic> _$$_DeliveryModelToJson(_$_DeliveryModel instance) =>
       'id': instance.id,
     };
 
-_$_DoseCriteriaModel _$$_DoseCriteriaModelFromJson(Map<String, dynamic> json) =>
-    _$_DoseCriteriaModel(
+_$DoseCriteriaModelImpl _$$DoseCriteriaModelImplFromJson(
+        Map<String, dynamic> json) =>
+    _$DoseCriteriaModelImpl(
       condition: json['condition'] as String?,
       productVariants: (json['ProductVariants'] as List<dynamic>?)
           ?.map((e) => ProductVariantsModel.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
-Map<String, dynamic> _$$_DoseCriteriaModelToJson(
-        _$_DoseCriteriaModel instance) =>
+Map<String, dynamic> _$$DoseCriteriaModelImplToJson(
+        _$DoseCriteriaModelImpl instance) =>
     <String, dynamic>{
       'condition': instance.condition,
       'ProductVariants': instance.productVariants,
     };
 
-_$_ProductVariantsModel _$$_ProductVariantsModelFromJson(
+_$ProductVariantsModelImpl _$$ProductVariantsModelImplFromJson(
         Map<String, dynamic> json) =>
-    _$_ProductVariantsModel(
+    _$ProductVariantsModelImpl(
       productVariantId: json['productVariantId'] as String?,
       quantity: json['quantity'] as int?,
     );
 
-Map<String, dynamic> _$$_ProductVariantsModelToJson(
-        _$_ProductVariantsModel instance) =>
+Map<String, dynamic> _$$ProductVariantsModelImplToJson(
+        _$ProductVariantsModelImpl instance) =>
     <String, dynamic>{
       'productVariantId': instance.productVariantId,
       'quantity': instance.quantity,

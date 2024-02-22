@@ -1,3 +1,5 @@
+import 'package:attendance_management/blocs/app_localization.dart'
+    as attendance_localization;
 import 'package:digit_components/digit_components.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -90,6 +92,9 @@ class MainApplicationState extends State<MainApplication>
                 create: (ctx) => AuthBloc(
                   authRepository: ctx.read(),
                   mdmsRepository: MdmsRepository(widget.client),
+                  individualRemoteRepository: ctx.read<
+                      RemoteRepository<IndividualModel,
+                          IndividualSearchModel>>(),
                 )..add(
                     AuthAutoLoginEvent(
                       tenantId: envConfig.variables.tenantId,
@@ -226,6 +231,25 @@ class MainApplicationState extends State<MainApplication>
                             projectResourceRemoteRepository: ctx.read<
                                 RemoteRepository<ProjectResourceModel,
                                     ProjectResourceSearchModel>>(),
+                            attendanceLocalRepository: ctx.read<
+                                LocalRepository<HCMAttendanceRegisterModel,
+                                    HCMAttendanceSearchModel>>(),
+                            attendanceRemoteRepository: ctx.read<
+                                RemoteRepository<HCMAttendanceRegisterModel,
+                                    HCMAttendanceSearchModel>>(),
+                            individualLocalRepository: ctx.read<
+                                LocalRepository<IndividualModel,
+                                    IndividualSearchModel>>(),
+                            individualRemoteRepository: ctx.read<
+                                RemoteRepository<IndividualModel,
+                                    IndividualSearchModel>>(),
+                            attendanceLogLocalRepository: ctx.read<
+                                LocalRepository<HCMAttendanceLogModel,
+                                    HCMAttendanceLogSearchModel>>(),
+                            attendanceLogRemoteRepository: ctx.read<
+                                RemoteRepository<HCMAttendanceLogModel,
+                                    HCMAttendanceLogSearchModel>>(),
+                            context: context,
                           ),
                         ),
                       ],
@@ -276,6 +300,14 @@ class MainApplicationState extends State<MainApplication>
                               GlobalWidgetsLocalizations.delegate,
                               GlobalCupertinoLocalizations.delegate,
                               GlobalMaterialLocalizations.delegate,
+                              attendance_localization.AttendanceLocalization
+                                  .getDelegate(
+                                getLocalizationString(
+                                  widget.isar,
+                                  selectedLocale,
+                                ),
+                                appConfig.languages!,
+                              ),
                             ],
                             locale: languages != null
                                 ? Locale(
@@ -294,7 +326,7 @@ class MainApplicationState extends State<MainApplication>
                                 orElse: () => [
                                   const UnauthenticatedRouteWrapper(),
                                 ],
-                                authenticated: (_, __, ___, ____) => [
+                                authenticated: (_, __, ___, ____, _____) => [
                                   AuthenticatedRouteWrapper(),
                                 ],
                               ),

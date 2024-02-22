@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'bandwidth_model.dart';
 
@@ -68,22 +68,22 @@ class _$BandwidthModelCopyWithImpl<$Res, $Val extends BandwidthModel>
 }
 
 /// @nodoc
-abstract class _$$_BandwidthModelCopyWith<$Res>
+abstract class _$$BandwidthModelImplCopyWith<$Res>
     implements $BandwidthModelCopyWith<$Res> {
-  factory _$$_BandwidthModelCopyWith(
-          _$_BandwidthModel value, $Res Function(_$_BandwidthModel) then) =
-      __$$_BandwidthModelCopyWithImpl<$Res>;
+  factory _$$BandwidthModelImplCopyWith(_$BandwidthModelImpl value,
+          $Res Function(_$BandwidthModelImpl) then) =
+      __$$BandwidthModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String userId, int batchSize});
 }
 
 /// @nodoc
-class __$$_BandwidthModelCopyWithImpl<$Res>
-    extends _$BandwidthModelCopyWithImpl<$Res, _$_BandwidthModel>
-    implements _$$_BandwidthModelCopyWith<$Res> {
-  __$$_BandwidthModelCopyWithImpl(
-      _$_BandwidthModel _value, $Res Function(_$_BandwidthModel) _then)
+class __$$BandwidthModelImplCopyWithImpl<$Res>
+    extends _$BandwidthModelCopyWithImpl<$Res, _$BandwidthModelImpl>
+    implements _$$BandwidthModelImplCopyWith<$Res> {
+  __$$BandwidthModelImplCopyWithImpl(
+      _$BandwidthModelImpl _value, $Res Function(_$BandwidthModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -92,7 +92,7 @@ class __$$_BandwidthModelCopyWithImpl<$Res>
     Object? userId = null,
     Object? batchSize = null,
   }) {
-    return _then(_$_BandwidthModel(
+    return _then(_$BandwidthModelImpl(
       userId: null == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
@@ -107,11 +107,11 @@ class __$$_BandwidthModelCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_BandwidthModel implements _BandwidthModel {
-  const _$_BandwidthModel({required this.userId, required this.batchSize});
+class _$BandwidthModelImpl implements _BandwidthModel {
+  const _$BandwidthModelImpl({required this.userId, required this.batchSize});
 
-  factory _$_BandwidthModel.fromJson(Map<String, dynamic> json) =>
-      _$$_BandwidthModelFromJson(json);
+  factory _$BandwidthModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$BandwidthModelImplFromJson(json);
 
   @override
   final String userId;
@@ -124,10 +124,10 @@ class _$_BandwidthModel implements _BandwidthModel {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_BandwidthModel &&
+            other is _$BandwidthModelImpl &&
             (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.batchSize, batchSize) ||
                 other.batchSize == batchSize));
@@ -140,12 +140,13 @@ class _$_BandwidthModel implements _BandwidthModel {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_BandwidthModelCopyWith<_$_BandwidthModel> get copyWith =>
-      __$$_BandwidthModelCopyWithImpl<_$_BandwidthModel>(this, _$identity);
+  _$$BandwidthModelImplCopyWith<_$BandwidthModelImpl> get copyWith =>
+      __$$BandwidthModelImplCopyWithImpl<_$BandwidthModelImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_BandwidthModelToJson(
+    return _$$BandwidthModelImplToJson(
       this,
     );
   }
@@ -154,10 +155,10 @@ class _$_BandwidthModel implements _BandwidthModel {
 abstract class _BandwidthModel implements BandwidthModel {
   const factory _BandwidthModel(
       {required final String userId,
-      required final int batchSize}) = _$_BandwidthModel;
+      required final int batchSize}) = _$BandwidthModelImpl;
 
   factory _BandwidthModel.fromJson(Map<String, dynamic> json) =
-      _$_BandwidthModel.fromJson;
+      _$BandwidthModelImpl.fromJson;
 
   @override
   String get userId;
@@ -165,6 +166,6 @@ abstract class _BandwidthModel implements BandwidthModel {
   int get batchSize;
   @override
   @JsonKey(ignore: true)
-  _$$_BandwidthModelCopyWith<_$_BandwidthModel> get copyWith =>
+  _$$BandwidthModelImplCopyWith<_$BandwidthModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -96,6 +96,7 @@ part 'app_router.gr.dart';
         AutoRoute(page: UserQRDetailsPage, path: 'user-qr-code'),
         AutoRoute(page: SearchBeneficiaryPage, path: 'search-beneficiary'),
         AutoRoute(page: QRScannerPage, path: 'scanner'),
+        // AutoRoute(page: ManageAttendancePage, path: 'manage-attendance'),
         AutoRoute(
           page: BeneficiariesReportPage,
           path: 'beneficiary-downsync-report',

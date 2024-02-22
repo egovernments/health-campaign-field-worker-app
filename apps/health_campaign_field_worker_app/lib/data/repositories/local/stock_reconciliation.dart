@@ -32,13 +32,13 @@ class StockReconciliationLocalRepository extends LocalRepository<
             buildAnd(
               [
                 if (query.facilityId != null)
-                  sql.stockReconciliation.facilityId.equals(query.facilityId),
+                  sql.stockReconciliation.facilityId.equals(query.facilityId!),
                 if (query.productVariantId != null)
                   sql.stockReconciliation.productVariantId
-                      .equals(query.productVariantId),
+                      .equals(query.productVariantId!),
                 if (query.clientReferenceId != null)
                   sql.stockReconciliation.id.equals(
-                    query.id,
+                    query.id!,
                   ),
                 if (query.productVariantId != null)
                   sql.stockReconciliation.productVariantId.equals(
@@ -74,7 +74,7 @@ class StockReconciliationLocalRepository extends LocalRepository<
         clientReferenceId: data.clientReferenceId,
         additionalFields: data.additionalFields == null
             ? null
-            : Mapper.fromJson<StockReconciliationAdditionalFields>(
+            : StockReconciliationAdditionalFieldsMapper.fromJson(
                 data.additionalFields!,
               ),
         isDeleted: data.isDeleted,

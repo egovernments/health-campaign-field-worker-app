@@ -7,6 +7,7 @@ import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/theme/digit_theme.dart';
+import 'package:digit_components/utils/app_logger.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_dialog.dart';
@@ -15,11 +16,13 @@ import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:isar/isar.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:uuid/uuid.dart';
 
 import '../blocs/search_households/project_beneficiaries_downsync.dart';
 import '../blocs/search_households/search_households.dart';
+import '../data/local_store/no_sql/schema/localization.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../models/data_model.dart';
 import '../models/project_type/project_type_model.dart';
@@ -32,14 +35,14 @@ export 'app_exception.dart';
 export 'constants.dart';
 export 'extensions/extensions.dart';
 
-Expression<bool> buildAnd(Iterable<Expression<bool?>> iterable) {
+Expression<bool> buildAnd(Iterable<Expression<bool>> iterable) {
   if (iterable.isEmpty) return const Constant(true);
   final result = iterable.reduce((value, element) => value & element);
 
   return result.equals(true);
 }
 
-Expression<bool> buildOr(Iterable<Expression<bool?>> iterable) {
+Expression<bool> buildOr(Iterable<Expression<bool>> iterable) {
   if (iterable.isEmpty) return const Constant(true);
   final result = iterable.reduce((value, element) => value | element);
 
@@ -284,7 +287,7 @@ bool checkEligibilityForActiveCycle(
   final pastCycle = (householdWrapper.tasks ?? []).isNotEmpty
       ? householdWrapper.tasks?.last.additionalFields?.fields
               .firstWhereOrNull(
-                (e) => e.key == AdditionalFieldsType.cycleIndex.toValue(),
+                (e) => e.key == AdditionalFieldsType.cycleIndex.name,
               )
               ?.value ??
           '1'
@@ -347,7 +350,7 @@ bool checkIfBeneficiaryRefused(
 ) {
   final isBeneficiaryRefused = (tasks != null &&
       (tasks ?? []).isNotEmpty &&
-      tasks.last.status == Status.beneficiaryRefused.toValue());
+      tasks.last.status == Status.beneficiaryRefused.name);
 
   return isBeneficiaryRefused;
 }
@@ -444,14 +447,14 @@ bool allDosesDelivered(
     if ((tasks ?? []).isNotEmpty) {
       final lastCycle = int.tryParse(tasks?.last.additionalFields?.fields
               .where(
-                (e) => e.key == AdditionalFieldsType.cycleIndex.toValue(),
+                (e) => e.key == AdditionalFieldsType.cycleIndex.name,
               )
               .firstOrNull
               ?.value ??
           '');
       final lastDose = int.tryParse(tasks?.last.additionalFields?.fields
               .where(
-                (e) => e.key == AdditionalFieldsType.doseIndex.toValue(),
+                (e) => e.key == AdditionalFieldsType.doseIndex.name,
               )
               .firstOrNull
               ?.value ??
@@ -460,10 +463,10 @@ bool allDosesDelivered(
           lastDose == selectedCycle.deliveries?.length &&
           lastCycle != null &&
           lastCycle == selectedCycle.id &&
-          tasks?.last.status != Status.delivered.toValue()) {
+          tasks?.last.status != Status.delivered.name) {
         return true;
       } else if (selectedCycle.id == lastCycle &&
-          tasks?.last.status == Status.delivered.toValue()) {
+          tasks?.last.status == Status.delivered.name) {
         return false;
       } else if ((sideEffects ?? []).isNotEmpty) {
         return recordedSideEffect(selectedCycle, tasks?.last, sideEffects);
@@ -659,4 +662,21 @@ dynamic getValueByKey(List<Map<String, dynamic>> data, String key) {
   }
 
   return null; // Key not found
+}
+
+getLocalizationString(Isar isar, String selectedLocale) async {
+  List<dynamic> localizationValues = [];
+
+  final List<LocalizationWrapper> localizationList =
+  await isar.localizationWrappers
+      .filter()
+      .localeEqualTo(
+    selectedLocale.toString(),
+  )
+      .findAll();
+  if (localizationList.isNotEmpty) {
+    localizationValues.addAll(localizationList.first.localization!);
+  }
+
+  return localizationValues;
 }

@@ -127,45 +127,47 @@ class NetworkManager {
           switch (response.keys.elementAt(i)) {
             case "Households":
               final entity = entityList
-                  .map((e) => Mapper.fromJson<HouseholdModel>(jsonEncode(e)))
+                  .map((e) => HouseholdModelMapper.fromJson(jsonEncode(e)))
                   .toList();
               await local.bulkCreate(entity);
             case "HouseholdMembers":
               final entity = entityList
                   .map(
-                    (e) => Mapper.fromJson<HouseholdMemberModel>(jsonEncode(e)),
+                    (e) => HouseholdMemberModelMapper.fromJson(
+                      jsonEncode(e),
+                    ),
                   )
                   .toList();
               await local.bulkCreate(entity);
             case "Individuals":
               final entity = entityList
-                  .map((e) => Mapper.fromJson<IndividualModel>(jsonEncode(e)))
+                  .map((e) => IndividualModelMapper.fromJson(jsonEncode(e)))
                   .toList();
               await local.bulkCreate(entity);
             case "ProjectBeneficiaries":
               final entity = entityList
                   .map((e) =>
-                      Mapper.fromJson<ProjectBeneficiaryModel>(jsonEncode(e)))
+                      ProjectBeneficiaryModelMapper.fromJson(jsonEncode(e)))
                   .toList();
               await local.bulkCreate(entity);
             case "Tasks":
               final entity = entityList
-                  .map((e) => Mapper.fromJson<TaskModel>(jsonEncode(e)))
+                  .map((e) => TaskModelMapper.fromJson(jsonEncode(e)))
                   .toList();
               await local.bulkCreate(entity);
             case "SideEffects":
               final entity = entityList
-                  .map((e) => Mapper.fromJson<SideEffectModel>(jsonEncode(e)))
+                  .map((e) => SideEffectModelMapper.fromJson(jsonEncode(e)))
                   .toList();
               await local.bulkCreate(entity);
             case "Referrals":
               final entity = entityList
-                  .map((e) => Mapper.fromJson<ReferralModel>(jsonEncode(e)))
+                  .map((e) => ReferralModelMapper.fromJson(jsonEncode(e)))
                   .toList();
               await local.bulkCreate(entity);
             default:
               final entity = entityList
-                  .map((e) => Mapper.fromJson<EntityModel>(jsonEncode(e)))
+                  .map((e) => EntityModelMapper.fromJson(jsonEncode(e)))
                   .toList();
               await local.bulkCreate(entity);
           }

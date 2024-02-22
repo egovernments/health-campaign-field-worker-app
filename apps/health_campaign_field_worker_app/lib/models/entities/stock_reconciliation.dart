@@ -5,8 +5,10 @@ import 'package:drift/drift.dart';
 import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
 
-@MappableClass(ignoreNull: true)
-class StockReconciliationSearchModel extends EntitySearchModel {
+part 'stock_reconciliation.mapper.dart';
+
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class StockReconciliationSearchModel extends EntitySearchModel with StockReconciliationSearchModelMappable {
   final String? id;
   final String? tenantId;
   final String? facilityId;
@@ -46,8 +48,8 @@ class StockReconciliationSearchModel extends EntitySearchModel {
   
 }
 
-@MappableClass(ignoreNull: true)
-class StockReconciliationModel extends EntityModel {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class StockReconciliationModel extends EntityModel with StockReconciliationModelMappable {
 
   static const schemaName = 'StockReconciliation';
 
@@ -118,11 +120,12 @@ class StockReconciliationModel extends EntityModel {
   }
 }
 
-@MappableClass(ignoreNull: true)
-class StockReconciliationAdditionalFields extends AdditionalFields {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class StockReconciliationAdditionalFields extends AdditionalFields with StockReconciliationAdditionalFieldsMappable {
   StockReconciliationAdditionalFields({
     super.schema = 'StockReconciliation',
     required super.version,
     super.fields,
   });
 }
+

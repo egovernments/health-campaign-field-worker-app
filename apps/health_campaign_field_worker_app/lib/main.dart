@@ -13,6 +13,8 @@ import 'data/local_store/secure_store/secure_store.dart';
 import 'data/local_store/sql_store/sql_store.dart';
 import 'data/remote_client.dart';
 import 'firebase_options.dart';
+import 'models/data_model.init.dart';
+import 'models/entities/target.dart';
 import 'router/app_router.dart';
 import 'utils/background_service.dart';
 import 'utils/environment_config.dart';
@@ -26,11 +28,11 @@ int i = 0;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  initializeMappers();
   final info = await PackageInfo.fromPlatform();
 
   Bloc.observer = AppBlocObserver();
   await AppSharedPreferences().init();
-
   if (AppSharedPreferences().isFirstLaunch) {
     AppLogger.instance.info('App Launched First Time', title: 'main');
     await AppSharedPreferences().appLaunchedFirstTime();

@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'complaints_registration.dart';
 
@@ -113,23 +113,26 @@ class _$ComplaintsRegistrationEventCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$ComplaintsRegistrationSaveComplaintTypeEventCopyWith<$Res> {
-  factory _$$ComplaintsRegistrationSaveComplaintTypeEventCopyWith(
-          _$ComplaintsRegistrationSaveComplaintTypeEvent value,
-          $Res Function(_$ComplaintsRegistrationSaveComplaintTypeEvent) then) =
-      __$$ComplaintsRegistrationSaveComplaintTypeEventCopyWithImpl<$Res>;
+abstract class _$$ComplaintsRegistrationSaveComplaintTypeEventImplCopyWith<
+    $Res> {
+  factory _$$ComplaintsRegistrationSaveComplaintTypeEventImplCopyWith(
+          _$ComplaintsRegistrationSaveComplaintTypeEventImpl value,
+          $Res Function(_$ComplaintsRegistrationSaveComplaintTypeEventImpl)
+              then) =
+      __$$ComplaintsRegistrationSaveComplaintTypeEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String complaintType, String? otherComplaintDescription});
 }
 
 /// @nodoc
-class __$$ComplaintsRegistrationSaveComplaintTypeEventCopyWithImpl<$Res>
+class __$$ComplaintsRegistrationSaveComplaintTypeEventImplCopyWithImpl<$Res>
     extends _$ComplaintsRegistrationEventCopyWithImpl<$Res,
-        _$ComplaintsRegistrationSaveComplaintTypeEvent>
-    implements _$$ComplaintsRegistrationSaveComplaintTypeEventCopyWith<$Res> {
-  __$$ComplaintsRegistrationSaveComplaintTypeEventCopyWithImpl(
-      _$ComplaintsRegistrationSaveComplaintTypeEvent _value,
-      $Res Function(_$ComplaintsRegistrationSaveComplaintTypeEvent) _then)
+        _$ComplaintsRegistrationSaveComplaintTypeEventImpl>
+    implements
+        _$$ComplaintsRegistrationSaveComplaintTypeEventImplCopyWith<$Res> {
+  __$$ComplaintsRegistrationSaveComplaintTypeEventImplCopyWithImpl(
+      _$ComplaintsRegistrationSaveComplaintTypeEventImpl _value,
+      $Res Function(_$ComplaintsRegistrationSaveComplaintTypeEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -138,7 +141,7 @@ class __$$ComplaintsRegistrationSaveComplaintTypeEventCopyWithImpl<$Res>
     Object? complaintType = null,
     Object? otherComplaintDescription = freezed,
   }) {
-    return _then(_$ComplaintsRegistrationSaveComplaintTypeEvent(
+    return _then(_$ComplaintsRegistrationSaveComplaintTypeEventImpl(
       complaintType: null == complaintType
           ? _value.complaintType
           : complaintType // ignore: cast_nullable_to_non_nullable
@@ -153,9 +156,9 @@ class __$$ComplaintsRegistrationSaveComplaintTypeEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ComplaintsRegistrationSaveComplaintTypeEvent
+class _$ComplaintsRegistrationSaveComplaintTypeEventImpl
     implements ComplaintsRegistrationSaveComplaintTypeEvent {
-  const _$ComplaintsRegistrationSaveComplaintTypeEvent(
+  const _$ComplaintsRegistrationSaveComplaintTypeEventImpl(
       {required this.complaintType, this.otherComplaintDescription});
 
   @override
@@ -169,10 +172,10 @@ class _$ComplaintsRegistrationSaveComplaintTypeEvent
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ComplaintsRegistrationSaveComplaintTypeEvent &&
+            other is _$ComplaintsRegistrationSaveComplaintTypeEventImpl &&
             (identical(other.complaintType, complaintType) ||
                 other.complaintType == complaintType) &&
             (identical(other.otherComplaintDescription,
@@ -187,11 +190,12 @@ class _$ComplaintsRegistrationSaveComplaintTypeEvent
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ComplaintsRegistrationSaveComplaintTypeEventCopyWith<
-          _$ComplaintsRegistrationSaveComplaintTypeEvent>
+  _$$ComplaintsRegistrationSaveComplaintTypeEventImplCopyWith<
+          _$ComplaintsRegistrationSaveComplaintTypeEventImpl>
       get copyWith =>
-          __$$ComplaintsRegistrationSaveComplaintTypeEventCopyWithImpl<
-              _$ComplaintsRegistrationSaveComplaintTypeEvent>(this, _$identity);
+          __$$ComplaintsRegistrationSaveComplaintTypeEventImplCopyWithImpl<
+                  _$ComplaintsRegistrationSaveComplaintTypeEventImpl>(
+              this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -296,34 +300,34 @@ abstract class ComplaintsRegistrationSaveComplaintTypeEvent
   const factory ComplaintsRegistrationSaveComplaintTypeEvent(
           {required final String complaintType,
           final String? otherComplaintDescription}) =
-      _$ComplaintsRegistrationSaveComplaintTypeEvent;
+      _$ComplaintsRegistrationSaveComplaintTypeEventImpl;
 
   String get complaintType;
   String? get otherComplaintDescription;
   @JsonKey(ignore: true)
-  _$$ComplaintsRegistrationSaveComplaintTypeEventCopyWith<
-          _$ComplaintsRegistrationSaveComplaintTypeEvent>
+  _$$ComplaintsRegistrationSaveComplaintTypeEventImplCopyWith<
+          _$ComplaintsRegistrationSaveComplaintTypeEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$ComplaintsRegistrationSaveAddressEventCopyWith<$Res> {
-  factory _$$ComplaintsRegistrationSaveAddressEventCopyWith(
-          _$ComplaintsRegistrationSaveAddressEvent value,
-          $Res Function(_$ComplaintsRegistrationSaveAddressEvent) then) =
-      __$$ComplaintsRegistrationSaveAddressEventCopyWithImpl<$Res>;
+abstract class _$$ComplaintsRegistrationSaveAddressEventImplCopyWith<$Res> {
+  factory _$$ComplaintsRegistrationSaveAddressEventImplCopyWith(
+          _$ComplaintsRegistrationSaveAddressEventImpl value,
+          $Res Function(_$ComplaintsRegistrationSaveAddressEventImpl) then) =
+      __$$ComplaintsRegistrationSaveAddressEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call({PgrAddressModel addressModel});
 }
 
 /// @nodoc
-class __$$ComplaintsRegistrationSaveAddressEventCopyWithImpl<$Res>
+class __$$ComplaintsRegistrationSaveAddressEventImplCopyWithImpl<$Res>
     extends _$ComplaintsRegistrationEventCopyWithImpl<$Res,
-        _$ComplaintsRegistrationSaveAddressEvent>
-    implements _$$ComplaintsRegistrationSaveAddressEventCopyWith<$Res> {
-  __$$ComplaintsRegistrationSaveAddressEventCopyWithImpl(
-      _$ComplaintsRegistrationSaveAddressEvent _value,
-      $Res Function(_$ComplaintsRegistrationSaveAddressEvent) _then)
+        _$ComplaintsRegistrationSaveAddressEventImpl>
+    implements _$$ComplaintsRegistrationSaveAddressEventImplCopyWith<$Res> {
+  __$$ComplaintsRegistrationSaveAddressEventImplCopyWithImpl(
+      _$ComplaintsRegistrationSaveAddressEventImpl _value,
+      $Res Function(_$ComplaintsRegistrationSaveAddressEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -331,7 +335,7 @@ class __$$ComplaintsRegistrationSaveAddressEventCopyWithImpl<$Res>
   $Res call({
     Object? addressModel = null,
   }) {
-    return _then(_$ComplaintsRegistrationSaveAddressEvent(
+    return _then(_$ComplaintsRegistrationSaveAddressEventImpl(
       addressModel: null == addressModel
           ? _value.addressModel
           : addressModel // ignore: cast_nullable_to_non_nullable
@@ -342,9 +346,10 @@ class __$$ComplaintsRegistrationSaveAddressEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ComplaintsRegistrationSaveAddressEvent
+class _$ComplaintsRegistrationSaveAddressEventImpl
     implements ComplaintsRegistrationSaveAddressEvent {
-  const _$ComplaintsRegistrationSaveAddressEvent({required this.addressModel});
+  const _$ComplaintsRegistrationSaveAddressEventImpl(
+      {required this.addressModel});
 
   @override
   final PgrAddressModel addressModel;
@@ -355,10 +360,10 @@ class _$ComplaintsRegistrationSaveAddressEvent
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ComplaintsRegistrationSaveAddressEvent &&
+            other is _$ComplaintsRegistrationSaveAddressEventImpl &&
             (identical(other.addressModel, addressModel) ||
                 other.addressModel == addressModel));
   }
@@ -369,10 +374,11 @@ class _$ComplaintsRegistrationSaveAddressEvent
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ComplaintsRegistrationSaveAddressEventCopyWith<
-          _$ComplaintsRegistrationSaveAddressEvent>
-      get copyWith => __$$ComplaintsRegistrationSaveAddressEventCopyWithImpl<
-          _$ComplaintsRegistrationSaveAddressEvent>(this, _$identity);
+  _$$ComplaintsRegistrationSaveAddressEventImplCopyWith<
+          _$ComplaintsRegistrationSaveAddressEventImpl>
+      get copyWith =>
+          __$$ComplaintsRegistrationSaveAddressEventImplCopyWithImpl<
+              _$ComplaintsRegistrationSaveAddressEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -476,23 +482,23 @@ abstract class ComplaintsRegistrationSaveAddressEvent
     implements ComplaintsRegistrationEvent {
   const factory ComplaintsRegistrationSaveAddressEvent(
           {required final PgrAddressModel addressModel}) =
-      _$ComplaintsRegistrationSaveAddressEvent;
+      _$ComplaintsRegistrationSaveAddressEventImpl;
 
   PgrAddressModel get addressModel;
   @JsonKey(ignore: true)
-  _$$ComplaintsRegistrationSaveAddressEventCopyWith<
-          _$ComplaintsRegistrationSaveAddressEvent>
+  _$$ComplaintsRegistrationSaveAddressEventImplCopyWith<
+          _$ComplaintsRegistrationSaveAddressEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$ComplaintsRegistrationSaveComplaintDetailsEventCopyWith<
+abstract class _$$ComplaintsRegistrationSaveComplaintDetailsEventImplCopyWith<
     $Res> {
-  factory _$$ComplaintsRegistrationSaveComplaintDetailsEventCopyWith(
-          _$ComplaintsRegistrationSaveComplaintDetailsEvent value,
-          $Res Function(_$ComplaintsRegistrationSaveComplaintDetailsEvent)
+  factory _$$ComplaintsRegistrationSaveComplaintDetailsEventImplCopyWith(
+          _$ComplaintsRegistrationSaveComplaintDetailsEventImpl value,
+          $Res Function(_$ComplaintsRegistrationSaveComplaintDetailsEventImpl)
               then) =
-      __$$ComplaintsRegistrationSaveComplaintDetailsEventCopyWithImpl<$Res>;
+      __$$ComplaintsRegistrationSaveComplaintDetailsEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call(
       {ComplaintsDetailsModel complaintsDetailsModel,
@@ -502,14 +508,15 @@ abstract class _$$ComplaintsRegistrationSaveComplaintDetailsEventCopyWith<
 }
 
 /// @nodoc
-class __$$ComplaintsRegistrationSaveComplaintDetailsEventCopyWithImpl<$Res>
+class __$$ComplaintsRegistrationSaveComplaintDetailsEventImplCopyWithImpl<$Res>
     extends _$ComplaintsRegistrationEventCopyWithImpl<$Res,
-        _$ComplaintsRegistrationSaveComplaintDetailsEvent>
+        _$ComplaintsRegistrationSaveComplaintDetailsEventImpl>
     implements
-        _$$ComplaintsRegistrationSaveComplaintDetailsEventCopyWith<$Res> {
-  __$$ComplaintsRegistrationSaveComplaintDetailsEventCopyWithImpl(
-      _$ComplaintsRegistrationSaveComplaintDetailsEvent _value,
-      $Res Function(_$ComplaintsRegistrationSaveComplaintDetailsEvent) _then)
+        _$$ComplaintsRegistrationSaveComplaintDetailsEventImplCopyWith<$Res> {
+  __$$ComplaintsRegistrationSaveComplaintDetailsEventImplCopyWithImpl(
+      _$ComplaintsRegistrationSaveComplaintDetailsEventImpl _value,
+      $Res Function(_$ComplaintsRegistrationSaveComplaintDetailsEventImpl)
+          _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -518,7 +525,7 @@ class __$$ComplaintsRegistrationSaveComplaintDetailsEventCopyWithImpl<$Res>
     Object? complaintsDetailsModel = null,
     Object? boundaryModel = null,
   }) {
-    return _then(_$ComplaintsRegistrationSaveComplaintDetailsEvent(
+    return _then(_$ComplaintsRegistrationSaveComplaintDetailsEventImpl(
       complaintsDetailsModel: null == complaintsDetailsModel
           ? _value.complaintsDetailsModel
           : complaintsDetailsModel // ignore: cast_nullable_to_non_nullable
@@ -542,9 +549,9 @@ class __$$ComplaintsRegistrationSaveComplaintDetailsEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ComplaintsRegistrationSaveComplaintDetailsEvent
+class _$ComplaintsRegistrationSaveComplaintDetailsEventImpl
     implements ComplaintsRegistrationSaveComplaintDetailsEvent {
-  const _$ComplaintsRegistrationSaveComplaintDetailsEvent(
+  const _$ComplaintsRegistrationSaveComplaintDetailsEventImpl(
       {required this.complaintsDetailsModel, required this.boundaryModel});
 
   @override
@@ -558,10 +565,10 @@ class _$ComplaintsRegistrationSaveComplaintDetailsEvent
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ComplaintsRegistrationSaveComplaintDetailsEvent &&
+            other is _$ComplaintsRegistrationSaveComplaintDetailsEventImpl &&
             (identical(other.complaintsDetailsModel, complaintsDetailsModel) ||
                 other.complaintsDetailsModel == complaintsDetailsModel) &&
             (identical(other.boundaryModel, boundaryModel) ||
@@ -575,11 +582,11 @@ class _$ComplaintsRegistrationSaveComplaintDetailsEvent
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ComplaintsRegistrationSaveComplaintDetailsEventCopyWith<
-          _$ComplaintsRegistrationSaveComplaintDetailsEvent>
+  _$$ComplaintsRegistrationSaveComplaintDetailsEventImplCopyWith<
+          _$ComplaintsRegistrationSaveComplaintDetailsEventImpl>
       get copyWith =>
-          __$$ComplaintsRegistrationSaveComplaintDetailsEventCopyWithImpl<
-                  _$ComplaintsRegistrationSaveComplaintDetailsEvent>(
+          __$$ComplaintsRegistrationSaveComplaintDetailsEventImplCopyWithImpl<
+                  _$ComplaintsRegistrationSaveComplaintDetailsEventImpl>(
               this, _$identity);
 
   @override
@@ -685,34 +692,35 @@ abstract class ComplaintsRegistrationSaveComplaintDetailsEvent
   const factory ComplaintsRegistrationSaveComplaintDetailsEvent(
           {required final ComplaintsDetailsModel complaintsDetailsModel,
           required final BoundaryModel boundaryModel}) =
-      _$ComplaintsRegistrationSaveComplaintDetailsEvent;
+      _$ComplaintsRegistrationSaveComplaintDetailsEventImpl;
 
   ComplaintsDetailsModel get complaintsDetailsModel;
   BoundaryModel get boundaryModel;
   @JsonKey(ignore: true)
-  _$$ComplaintsRegistrationSaveComplaintDetailsEventCopyWith<
-          _$ComplaintsRegistrationSaveComplaintDetailsEvent>
+  _$$ComplaintsRegistrationSaveComplaintDetailsEventImplCopyWith<
+          _$ComplaintsRegistrationSaveComplaintDetailsEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$ComplaintsRegistrationSubmitComplaintEventCopyWith<$Res> {
-  factory _$$ComplaintsRegistrationSubmitComplaintEventCopyWith(
-          _$ComplaintsRegistrationSubmitComplaintEvent value,
-          $Res Function(_$ComplaintsRegistrationSubmitComplaintEvent) then) =
-      __$$ComplaintsRegistrationSubmitComplaintEventCopyWithImpl<$Res>;
+abstract class _$$ComplaintsRegistrationSubmitComplaintEventImplCopyWith<$Res> {
+  factory _$$ComplaintsRegistrationSubmitComplaintEventImplCopyWith(
+          _$ComplaintsRegistrationSubmitComplaintEventImpl value,
+          $Res Function(_$ComplaintsRegistrationSubmitComplaintEventImpl)
+              then) =
+      __$$ComplaintsRegistrationSubmitComplaintEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String userId});
 }
 
 /// @nodoc
-class __$$ComplaintsRegistrationSubmitComplaintEventCopyWithImpl<$Res>
+class __$$ComplaintsRegistrationSubmitComplaintEventImplCopyWithImpl<$Res>
     extends _$ComplaintsRegistrationEventCopyWithImpl<$Res,
-        _$ComplaintsRegistrationSubmitComplaintEvent>
-    implements _$$ComplaintsRegistrationSubmitComplaintEventCopyWith<$Res> {
-  __$$ComplaintsRegistrationSubmitComplaintEventCopyWithImpl(
-      _$ComplaintsRegistrationSubmitComplaintEvent _value,
-      $Res Function(_$ComplaintsRegistrationSubmitComplaintEvent) _then)
+        _$ComplaintsRegistrationSubmitComplaintEventImpl>
+    implements _$$ComplaintsRegistrationSubmitComplaintEventImplCopyWith<$Res> {
+  __$$ComplaintsRegistrationSubmitComplaintEventImplCopyWithImpl(
+      _$ComplaintsRegistrationSubmitComplaintEventImpl _value,
+      $Res Function(_$ComplaintsRegistrationSubmitComplaintEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -720,7 +728,7 @@ class __$$ComplaintsRegistrationSubmitComplaintEventCopyWithImpl<$Res>
   $Res call({
     Object? userId = null,
   }) {
-    return _then(_$ComplaintsRegistrationSubmitComplaintEvent(
+    return _then(_$ComplaintsRegistrationSubmitComplaintEventImpl(
       userId: null == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
@@ -731,9 +739,10 @@ class __$$ComplaintsRegistrationSubmitComplaintEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ComplaintsRegistrationSubmitComplaintEvent
+class _$ComplaintsRegistrationSubmitComplaintEventImpl
     implements ComplaintsRegistrationSubmitComplaintEvent {
-  const _$ComplaintsRegistrationSubmitComplaintEvent({required this.userId});
+  const _$ComplaintsRegistrationSubmitComplaintEventImpl(
+      {required this.userId});
 
   @override
   final String userId;
@@ -744,10 +753,10 @@ class _$ComplaintsRegistrationSubmitComplaintEvent
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ComplaintsRegistrationSubmitComplaintEvent &&
+            other is _$ComplaintsRegistrationSubmitComplaintEventImpl &&
             (identical(other.userId, userId) || other.userId == userId));
   }
 
@@ -757,11 +766,12 @@ class _$ComplaintsRegistrationSubmitComplaintEvent
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ComplaintsRegistrationSubmitComplaintEventCopyWith<
-          _$ComplaintsRegistrationSubmitComplaintEvent>
+  _$$ComplaintsRegistrationSubmitComplaintEventImplCopyWith<
+          _$ComplaintsRegistrationSubmitComplaintEventImpl>
       get copyWith =>
-          __$$ComplaintsRegistrationSubmitComplaintEventCopyWithImpl<
-              _$ComplaintsRegistrationSubmitComplaintEvent>(this, _$identity);
+          __$$ComplaintsRegistrationSubmitComplaintEventImplCopyWithImpl<
+                  _$ComplaintsRegistrationSubmitComplaintEventImpl>(
+              this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -865,12 +875,12 @@ abstract class ComplaintsRegistrationSubmitComplaintEvent
     implements ComplaintsRegistrationEvent {
   const factory ComplaintsRegistrationSubmitComplaintEvent(
           {required final String userId}) =
-      _$ComplaintsRegistrationSubmitComplaintEvent;
+      _$ComplaintsRegistrationSubmitComplaintEventImpl;
 
   String get userId;
   @JsonKey(ignore: true)
-  _$$ComplaintsRegistrationSubmitComplaintEventCopyWith<
-          _$ComplaintsRegistrationSubmitComplaintEvent>
+  _$$ComplaintsRegistrationSubmitComplaintEventImplCopyWith<
+          _$ComplaintsRegistrationSubmitComplaintEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -971,11 +981,11 @@ class _$ComplaintsRegistrationStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$ComplaintsRegistrationCreateStateCopyWith<$Res> {
-  factory _$$ComplaintsRegistrationCreateStateCopyWith(
-          _$ComplaintsRegistrationCreateState value,
-          $Res Function(_$ComplaintsRegistrationCreateState) then) =
-      __$$ComplaintsRegistrationCreateStateCopyWithImpl<$Res>;
+abstract class _$$ComplaintsRegistrationCreateStateImplCopyWith<$Res> {
+  factory _$$ComplaintsRegistrationCreateStateImplCopyWith(
+          _$ComplaintsRegistrationCreateStateImpl value,
+          $Res Function(_$ComplaintsRegistrationCreateStateImpl) then) =
+      __$$ComplaintsRegistrationCreateStateImplCopyWithImpl<$Res>;
   @useResult
   $Res call(
       {bool loading,
@@ -988,13 +998,13 @@ abstract class _$$ComplaintsRegistrationCreateStateCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$ComplaintsRegistrationCreateStateCopyWithImpl<$Res>
+class __$$ComplaintsRegistrationCreateStateImplCopyWithImpl<$Res>
     extends _$ComplaintsRegistrationStateCopyWithImpl<$Res,
-        _$ComplaintsRegistrationCreateState>
-    implements _$$ComplaintsRegistrationCreateStateCopyWith<$Res> {
-  __$$ComplaintsRegistrationCreateStateCopyWithImpl(
-      _$ComplaintsRegistrationCreateState _value,
-      $Res Function(_$ComplaintsRegistrationCreateState) _then)
+        _$ComplaintsRegistrationCreateStateImpl>
+    implements _$$ComplaintsRegistrationCreateStateImplCopyWith<$Res> {
+  __$$ComplaintsRegistrationCreateStateImplCopyWithImpl(
+      _$ComplaintsRegistrationCreateStateImpl _value,
+      $Res Function(_$ComplaintsRegistrationCreateStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1006,7 +1016,7 @@ class __$$ComplaintsRegistrationCreateStateCopyWithImpl<$Res>
     Object? addressModel = freezed,
     Object? complaintsDetailsModel = freezed,
   }) {
-    return _then(_$ComplaintsRegistrationCreateState(
+    return _then(_$ComplaintsRegistrationCreateStateImpl(
       loading: null == loading
           ? _value.loading
           : loading // ignore: cast_nullable_to_non_nullable
@@ -1046,9 +1056,9 @@ class __$$ComplaintsRegistrationCreateStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ComplaintsRegistrationCreateState
+class _$ComplaintsRegistrationCreateStateImpl
     implements ComplaintsRegistrationCreateState {
-  const _$ComplaintsRegistrationCreateState(
+  const _$ComplaintsRegistrationCreateStateImpl(
       {this.loading = false,
       this.complaintType,
       this.otherComplaintTypeDescription,
@@ -1073,10 +1083,10 @@ class _$ComplaintsRegistrationCreateState
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ComplaintsRegistrationCreateState &&
+            other is _$ComplaintsRegistrationCreateStateImpl &&
             (identical(other.loading, loading) || other.loading == loading) &&
             (identical(other.complaintType, complaintType) ||
                 other.complaintType == complaintType) &&
@@ -1097,10 +1107,10 @@ class _$ComplaintsRegistrationCreateState
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ComplaintsRegistrationCreateStateCopyWith<
-          _$ComplaintsRegistrationCreateState>
-      get copyWith => __$$ComplaintsRegistrationCreateStateCopyWithImpl<
-          _$ComplaintsRegistrationCreateState>(this, _$identity);
+  _$$ComplaintsRegistrationCreateStateImplCopyWith<
+          _$ComplaintsRegistrationCreateStateImpl>
+      get copyWith => __$$ComplaintsRegistrationCreateStateImplCopyWithImpl<
+          _$ComplaintsRegistrationCreateStateImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -1209,7 +1219,7 @@ abstract class ComplaintsRegistrationCreateState
           final String? otherComplaintTypeDescription,
           final PgrAddressModel? addressModel,
           final ComplaintsDetailsModel? complaintsDetailsModel}) =
-      _$ComplaintsRegistrationCreateState;
+      _$ComplaintsRegistrationCreateStateImpl;
 
   bool get loading;
   String? get complaintType;
@@ -1217,17 +1227,17 @@ abstract class ComplaintsRegistrationCreateState
   PgrAddressModel? get addressModel;
   ComplaintsDetailsModel? get complaintsDetailsModel;
   @JsonKey(ignore: true)
-  _$$ComplaintsRegistrationCreateStateCopyWith<
-          _$ComplaintsRegistrationCreateState>
+  _$$ComplaintsRegistrationCreateStateImplCopyWith<
+          _$ComplaintsRegistrationCreateStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$ComplaintsRegistrationViewStateCopyWith<$Res> {
-  factory _$$ComplaintsRegistrationViewStateCopyWith(
-          _$ComplaintsRegistrationViewState value,
-          $Res Function(_$ComplaintsRegistrationViewState) then) =
-      __$$ComplaintsRegistrationViewStateCopyWithImpl<$Res>;
+abstract class _$$ComplaintsRegistrationViewStateImplCopyWith<$Res> {
+  factory _$$ComplaintsRegistrationViewStateImplCopyWith(
+          _$ComplaintsRegistrationViewStateImpl value,
+          $Res Function(_$ComplaintsRegistrationViewStateImpl) then) =
+      __$$ComplaintsRegistrationViewStateImplCopyWithImpl<$Res>;
   @useResult
   $Res call(
       {String complaintType,
@@ -1238,13 +1248,13 @@ abstract class _$$ComplaintsRegistrationViewStateCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$ComplaintsRegistrationViewStateCopyWithImpl<$Res>
+class __$$ComplaintsRegistrationViewStateImplCopyWithImpl<$Res>
     extends _$ComplaintsRegistrationStateCopyWithImpl<$Res,
-        _$ComplaintsRegistrationViewState>
-    implements _$$ComplaintsRegistrationViewStateCopyWith<$Res> {
-  __$$ComplaintsRegistrationViewStateCopyWithImpl(
-      _$ComplaintsRegistrationViewState _value,
-      $Res Function(_$ComplaintsRegistrationViewState) _then)
+        _$ComplaintsRegistrationViewStateImpl>
+    implements _$$ComplaintsRegistrationViewStateImplCopyWith<$Res> {
+  __$$ComplaintsRegistrationViewStateImplCopyWithImpl(
+      _$ComplaintsRegistrationViewStateImpl _value,
+      $Res Function(_$ComplaintsRegistrationViewStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1254,7 +1264,7 @@ class __$$ComplaintsRegistrationViewStateCopyWithImpl<$Res>
     Object? addressModel = null,
     Object? complaintsDetailsModel = null,
   }) {
-    return _then(_$ComplaintsRegistrationViewState(
+    return _then(_$ComplaintsRegistrationViewStateImpl(
       complaintType: null == complaintType
           ? _value.complaintType
           : complaintType // ignore: cast_nullable_to_non_nullable
@@ -1282,9 +1292,9 @@ class __$$ComplaintsRegistrationViewStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ComplaintsRegistrationViewState
+class _$ComplaintsRegistrationViewStateImpl
     implements ComplaintsRegistrationViewState {
-  const _$ComplaintsRegistrationViewState(
+  const _$ComplaintsRegistrationViewStateImpl(
       {required this.complaintType,
       required this.addressModel,
       required this.complaintsDetailsModel});
@@ -1302,10 +1312,10 @@ class _$ComplaintsRegistrationViewState
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ComplaintsRegistrationViewState &&
+            other is _$ComplaintsRegistrationViewStateImpl &&
             (identical(other.complaintType, complaintType) ||
                 other.complaintType == complaintType) &&
             (identical(other.addressModel, addressModel) ||
@@ -1321,9 +1331,10 @@ class _$ComplaintsRegistrationViewState
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ComplaintsRegistrationViewStateCopyWith<_$ComplaintsRegistrationViewState>
-      get copyWith => __$$ComplaintsRegistrationViewStateCopyWithImpl<
-          _$ComplaintsRegistrationViewState>(this, _$identity);
+  _$$ComplaintsRegistrationViewStateImplCopyWith<
+          _$ComplaintsRegistrationViewStateImpl>
+      get copyWith => __$$ComplaintsRegistrationViewStateImplCopyWithImpl<
+          _$ComplaintsRegistrationViewStateImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -1427,40 +1438,41 @@ abstract class ComplaintsRegistrationViewState
           {required final String complaintType,
           required final PgrAddressModel addressModel,
           required final ComplaintsDetailsModel complaintsDetailsModel}) =
-      _$ComplaintsRegistrationViewState;
+      _$ComplaintsRegistrationViewStateImpl;
 
   String get complaintType;
   PgrAddressModel get addressModel;
   ComplaintsDetailsModel get complaintsDetailsModel;
   @JsonKey(ignore: true)
-  _$$ComplaintsRegistrationViewStateCopyWith<_$ComplaintsRegistrationViewState>
+  _$$ComplaintsRegistrationViewStateImplCopyWith<
+          _$ComplaintsRegistrationViewStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$ComplaintsRegistrationPersistedStateCopyWith<$Res> {
-  factory _$$ComplaintsRegistrationPersistedStateCopyWith(
-          _$ComplaintsRegistrationPersistedState value,
-          $Res Function(_$ComplaintsRegistrationPersistedState) then) =
-      __$$ComplaintsRegistrationPersistedStateCopyWithImpl<$Res>;
+abstract class _$$ComplaintsRegistrationPersistedStateImplCopyWith<$Res> {
+  factory _$$ComplaintsRegistrationPersistedStateImplCopyWith(
+          _$ComplaintsRegistrationPersistedStateImpl value,
+          $Res Function(_$ComplaintsRegistrationPersistedStateImpl) then) =
+      __$$ComplaintsRegistrationPersistedStateImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$ComplaintsRegistrationPersistedStateCopyWithImpl<$Res>
+class __$$ComplaintsRegistrationPersistedStateImplCopyWithImpl<$Res>
     extends _$ComplaintsRegistrationStateCopyWithImpl<$Res,
-        _$ComplaintsRegistrationPersistedState>
-    implements _$$ComplaintsRegistrationPersistedStateCopyWith<$Res> {
-  __$$ComplaintsRegistrationPersistedStateCopyWithImpl(
-      _$ComplaintsRegistrationPersistedState _value,
-      $Res Function(_$ComplaintsRegistrationPersistedState) _then)
+        _$ComplaintsRegistrationPersistedStateImpl>
+    implements _$$ComplaintsRegistrationPersistedStateImplCopyWith<$Res> {
+  __$$ComplaintsRegistrationPersistedStateImplCopyWithImpl(
+      _$ComplaintsRegistrationPersistedStateImpl _value,
+      $Res Function(_$ComplaintsRegistrationPersistedStateImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$ComplaintsRegistrationPersistedState
+class _$ComplaintsRegistrationPersistedStateImpl
     implements ComplaintsRegistrationPersistedState {
-  const _$ComplaintsRegistrationPersistedState();
+  const _$ComplaintsRegistrationPersistedStateImpl();
 
   @override
   String toString() {
@@ -1468,10 +1480,10 @@ class _$ComplaintsRegistrationPersistedState
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ComplaintsRegistrationPersistedState);
+            other is _$ComplaintsRegistrationPersistedStateImpl);
   }
 
   @override
@@ -1576,5 +1588,5 @@ class _$ComplaintsRegistrationPersistedState
 abstract class ComplaintsRegistrationPersistedState
     implements ComplaintsRegistrationState {
   const factory ComplaintsRegistrationPersistedState() =
-      _$ComplaintsRegistrationPersistedState;
+      _$ComplaintsRegistrationPersistedStateImpl;
 }

@@ -81,25 +81,25 @@ class _$FormsEventCopyWithImpl<$Res, $Val extends FormsEvent>
 }
 
 /// @nodoc
-abstract class _$$FormsLoadEventCopyWith<$Res> {
-  factory _$$FormsLoadEventCopyWith(
-          _$FormsLoadEvent value, $Res Function(_$FormsLoadEvent) then) =
-      __$$FormsLoadEventCopyWithImpl<$Res>;
+abstract class _$$FormsLoadEventImplCopyWith<$Res> {
+  factory _$$FormsLoadEventImplCopyWith(_$FormsLoadEventImpl value,
+          $Res Function(_$FormsLoadEventImpl) then) =
+      __$$FormsLoadEventImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$FormsLoadEventCopyWithImpl<$Res>
-    extends _$FormsEventCopyWithImpl<$Res, _$FormsLoadEvent>
-    implements _$$FormsLoadEventCopyWith<$Res> {
-  __$$FormsLoadEventCopyWithImpl(
-      _$FormsLoadEvent _value, $Res Function(_$FormsLoadEvent) _then)
+class __$$FormsLoadEventImplCopyWithImpl<$Res>
+    extends _$FormsEventCopyWithImpl<$Res, _$FormsLoadEventImpl>
+    implements _$$FormsLoadEventImplCopyWith<$Res> {
+  __$$FormsLoadEventImplCopyWithImpl(
+      _$FormsLoadEventImpl _value, $Res Function(_$FormsLoadEventImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$FormsLoadEvent implements FormsLoadEvent {
-  const _$FormsLoadEvent();
+class _$FormsLoadEventImpl implements FormsLoadEvent {
+  const _$FormsLoadEventImpl();
 
   @override
   String toString() {
@@ -107,9 +107,9 @@ class _$FormsLoadEvent implements FormsLoadEvent {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$FormsLoadEvent);
+        (other.runtimeType == runtimeType && other is _$FormsLoadEventImpl);
   }
 
   @override
@@ -185,29 +185,31 @@ class _$FormsLoadEvent implements FormsLoadEvent {
 }
 
 abstract class FormsLoadEvent implements FormsEvent {
-  const factory FormsLoadEvent() = _$FormsLoadEvent;
+  const factory FormsLoadEvent() = _$FormsLoadEventImpl;
 }
 
 /// @nodoc
-abstract class _$$FormsCreateMappingEventCopyWith<$Res> {
-  factory _$$FormsCreateMappingEventCopyWith(_$FormsCreateMappingEvent value,
-          $Res Function(_$FormsCreateMappingEvent) then) =
-      __$$FormsCreateMappingEventCopyWithImpl<$Res>;
+abstract class _$$FormsCreateMappingEventImplCopyWith<$Res> {
+  factory _$$FormsCreateMappingEventImplCopyWith(
+          _$FormsCreateMappingEventImpl value,
+          $Res Function(_$FormsCreateMappingEventImpl) then) =
+      __$$FormsCreateMappingEventImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$FormsCreateMappingEventCopyWithImpl<$Res>
-    extends _$FormsEventCopyWithImpl<$Res, _$FormsCreateMappingEvent>
-    implements _$$FormsCreateMappingEventCopyWith<$Res> {
-  __$$FormsCreateMappingEventCopyWithImpl(_$FormsCreateMappingEvent _value,
-      $Res Function(_$FormsCreateMappingEvent) _then)
+class __$$FormsCreateMappingEventImplCopyWithImpl<$Res>
+    extends _$FormsEventCopyWithImpl<$Res, _$FormsCreateMappingEventImpl>
+    implements _$$FormsCreateMappingEventImplCopyWith<$Res> {
+  __$$FormsCreateMappingEventImplCopyWithImpl(
+      _$FormsCreateMappingEventImpl _value,
+      $Res Function(_$FormsCreateMappingEventImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$FormsCreateMappingEvent implements FormsCreateMappingEvent {
-  const _$FormsCreateMappingEvent();
+class _$FormsCreateMappingEventImpl implements FormsCreateMappingEvent {
+  const _$FormsCreateMappingEventImpl();
 
   @override
   String toString() {
@@ -215,10 +217,10 @@ class _$FormsCreateMappingEvent implements FormsCreateMappingEvent {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$FormsCreateMappingEvent);
+            other is _$FormsCreateMappingEventImpl);
   }
 
   @override
@@ -294,14 +296,14 @@ class _$FormsCreateMappingEvent implements FormsCreateMappingEvent {
 }
 
 abstract class FormsCreateMappingEvent implements FormsEvent {
-  const factory FormsCreateMappingEvent() = _$FormsCreateMappingEvent;
+  const factory FormsCreateMappingEvent() = _$FormsCreateMappingEventImpl;
 }
 
 /// @nodoc
-abstract class _$$FormsUpdateEventCopyWith<$Res> {
-  factory _$$FormsUpdateEventCopyWith(
-          _$FormsUpdateEvent value, $Res Function(_$FormsUpdateEvent) then) =
-      __$$FormsUpdateEventCopyWithImpl<$Res>;
+abstract class _$$FormsUpdateEventImplCopyWith<$Res> {
+  factory _$$FormsUpdateEventImplCopyWith(_$FormsUpdateEventImpl value,
+          $Res Function(_$FormsUpdateEventImpl) then) =
+      __$$FormsUpdateEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call({SchemaObject object});
 
@@ -309,11 +311,11 @@ abstract class _$$FormsUpdateEventCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$FormsUpdateEventCopyWithImpl<$Res>
-    extends _$FormsEventCopyWithImpl<$Res, _$FormsUpdateEvent>
-    implements _$$FormsUpdateEventCopyWith<$Res> {
-  __$$FormsUpdateEventCopyWithImpl(
-      _$FormsUpdateEvent _value, $Res Function(_$FormsUpdateEvent) _then)
+class __$$FormsUpdateEventImplCopyWithImpl<$Res>
+    extends _$FormsEventCopyWithImpl<$Res, _$FormsUpdateEventImpl>
+    implements _$$FormsUpdateEventImplCopyWith<$Res> {
+  __$$FormsUpdateEventImplCopyWithImpl(_$FormsUpdateEventImpl _value,
+      $Res Function(_$FormsUpdateEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -321,7 +323,7 @@ class __$$FormsUpdateEventCopyWithImpl<$Res>
   $Res call({
     Object? object = null,
   }) {
-    return _then(_$FormsUpdateEvent(
+    return _then(_$FormsUpdateEventImpl(
       null == object
           ? _value.object
           : object // ignore: cast_nullable_to_non_nullable
@@ -340,8 +342,8 @@ class __$$FormsUpdateEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$FormsUpdateEvent implements FormsUpdateEvent {
-  const _$FormsUpdateEvent(this.object);
+class _$FormsUpdateEventImpl implements FormsUpdateEvent {
+  const _$FormsUpdateEventImpl(this.object);
 
   @override
   final SchemaObject object;
@@ -352,10 +354,10 @@ class _$FormsUpdateEvent implements FormsUpdateEvent {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$FormsUpdateEvent &&
+            other is _$FormsUpdateEventImpl &&
             (identical(other.object, object) || other.object == object));
   }
 
@@ -365,8 +367,9 @@ class _$FormsUpdateEvent implements FormsUpdateEvent {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$FormsUpdateEventCopyWith<_$FormsUpdateEvent> get copyWith =>
-      __$$FormsUpdateEventCopyWithImpl<_$FormsUpdateEvent>(this, _$identity);
+  _$$FormsUpdateEventImplCopyWith<_$FormsUpdateEventImpl> get copyWith =>
+      __$$FormsUpdateEventImplCopyWithImpl<_$FormsUpdateEventImpl>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -439,11 +442,11 @@ class _$FormsUpdateEvent implements FormsUpdateEvent {
 
 abstract class FormsUpdateEvent implements FormsEvent {
   const factory FormsUpdateEvent(final SchemaObject object) =
-      _$FormsUpdateEvent;
+      _$FormsUpdateEventImpl;
 
   SchemaObject get object;
   @JsonKey(ignore: true)
-  _$$FormsUpdateEventCopyWith<_$FormsUpdateEvent> get copyWith =>
+  _$$FormsUpdateEventImplCopyWith<_$FormsUpdateEventImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -511,11 +514,11 @@ class _$FormsStateCopyWithImpl<$Res, $Val extends FormsState>
 }
 
 /// @nodoc
-abstract class _$$_FormsStateCopyWith<$Res>
+abstract class _$$FormsStateImplCopyWith<$Res>
     implements $FormsStateCopyWith<$Res> {
-  factory _$$_FormsStateCopyWith(
-          _$_FormsState value, $Res Function(_$_FormsState) then) =
-      __$$_FormsStateCopyWithImpl<$Res>;
+  factory _$$FormsStateImplCopyWith(
+          _$FormsStateImpl value, $Res Function(_$FormsStateImpl) then) =
+      __$$FormsStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({SchemaObject? schema, Map<String, dynamic>? savedProperties});
@@ -525,11 +528,11 @@ abstract class _$$_FormsStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_FormsStateCopyWithImpl<$Res>
-    extends _$FormsStateCopyWithImpl<$Res, _$_FormsState>
-    implements _$$_FormsStateCopyWith<$Res> {
-  __$$_FormsStateCopyWithImpl(
-      _$_FormsState _value, $Res Function(_$_FormsState) _then)
+class __$$FormsStateImplCopyWithImpl<$Res>
+    extends _$FormsStateCopyWithImpl<$Res, _$FormsStateImpl>
+    implements _$$FormsStateImplCopyWith<$Res> {
+  __$$FormsStateImplCopyWithImpl(
+      _$FormsStateImpl _value, $Res Function(_$FormsStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -538,7 +541,7 @@ class __$$_FormsStateCopyWithImpl<$Res>
     Object? schema = freezed,
     Object? savedProperties = freezed,
   }) {
-    return _then(_$_FormsState(
+    return _then(_$FormsStateImpl(
       schema: freezed == schema
           ? _value.schema
           : schema // ignore: cast_nullable_to_non_nullable
@@ -553,8 +556,8 @@ class __$$_FormsStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_FormsState implements _FormsState {
-  const _$_FormsState(
+class _$FormsStateImpl implements _FormsState {
+  const _$FormsStateImpl(
       {this.schema, final Map<String, dynamic>? savedProperties})
       : _savedProperties = savedProperties;
 
@@ -576,10 +579,10 @@ class _$_FormsState implements _FormsState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_FormsState &&
+            other is _$FormsStateImpl &&
             (identical(other.schema, schema) || other.schema == schema) &&
             const DeepCollectionEquality()
                 .equals(other._savedProperties, _savedProperties));
@@ -592,14 +595,14 @@ class _$_FormsState implements _FormsState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_FormsStateCopyWith<_$_FormsState> get copyWith =>
-      __$$_FormsStateCopyWithImpl<_$_FormsState>(this, _$identity);
+  _$$FormsStateImplCopyWith<_$FormsStateImpl> get copyWith =>
+      __$$FormsStateImplCopyWithImpl<_$FormsStateImpl>(this, _$identity);
 }
 
 abstract class _FormsState implements FormsState {
   const factory _FormsState(
       {final SchemaObject? schema,
-      final Map<String, dynamic>? savedProperties}) = _$_FormsState;
+      final Map<String, dynamic>? savedProperties}) = _$FormsStateImpl;
 
   @override
   SchemaObject? get schema;
@@ -607,6 +610,6 @@ abstract class _FormsState implements FormsState {
   Map<String, dynamic>? get savedProperties;
   @override
   @JsonKey(ignore: true)
-  _$$_FormsStateCopyWith<_$_FormsState> get copyWith =>
+  _$$FormsStateImplCopyWith<_$FormsStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

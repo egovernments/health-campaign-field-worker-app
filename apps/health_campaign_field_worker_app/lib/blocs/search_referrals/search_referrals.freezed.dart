@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'search_referrals.dart';
 
@@ -88,29 +88,29 @@ class _$SearchReferralsEventCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$SearchReferralsInitializedEventCopyWith<$Res> {
-  factory _$$SearchReferralsInitializedEventCopyWith(
-          _$SearchReferralsInitializedEvent value,
-          $Res Function(_$SearchReferralsInitializedEvent) then) =
-      __$$SearchReferralsInitializedEventCopyWithImpl<$Res>;
+abstract class _$$SearchReferralsInitializedEventImplCopyWith<$Res> {
+  factory _$$SearchReferralsInitializedEventImplCopyWith(
+          _$SearchReferralsInitializedEventImpl value,
+          $Res Function(_$SearchReferralsInitializedEventImpl) then) =
+      __$$SearchReferralsInitializedEventImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$SearchReferralsInitializedEventCopyWithImpl<$Res>
+class __$$SearchReferralsInitializedEventImplCopyWithImpl<$Res>
     extends _$SearchReferralsEventCopyWithImpl<$Res,
-        _$SearchReferralsInitializedEvent>
-    implements _$$SearchReferralsInitializedEventCopyWith<$Res> {
-  __$$SearchReferralsInitializedEventCopyWithImpl(
-      _$SearchReferralsInitializedEvent _value,
-      $Res Function(_$SearchReferralsInitializedEvent) _then)
+        _$SearchReferralsInitializedEventImpl>
+    implements _$$SearchReferralsInitializedEventImplCopyWith<$Res> {
+  __$$SearchReferralsInitializedEventImplCopyWithImpl(
+      _$SearchReferralsInitializedEventImpl _value,
+      $Res Function(_$SearchReferralsInitializedEventImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$SearchReferralsInitializedEvent
+class _$SearchReferralsInitializedEventImpl
     implements SearchReferralsInitializedEvent {
-  const _$SearchReferralsInitializedEvent();
+  const _$SearchReferralsInitializedEventImpl();
 
   @override
   String toString() {
@@ -118,10 +118,10 @@ class _$SearchReferralsInitializedEvent
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$SearchReferralsInitializedEvent);
+            other is _$SearchReferralsInitializedEventImpl);
   }
 
   @override
@@ -204,27 +204,27 @@ class _$SearchReferralsInitializedEvent
 
 abstract class SearchReferralsInitializedEvent implements SearchReferralsEvent {
   const factory SearchReferralsInitializedEvent() =
-      _$SearchReferralsInitializedEvent;
+      _$SearchReferralsInitializedEventImpl;
 }
 
 /// @nodoc
-abstract class _$$SearchReferralsByNameEventCopyWith<$Res> {
-  factory _$$SearchReferralsByNameEventCopyWith(
-          _$SearchReferralsByNameEvent value,
-          $Res Function(_$SearchReferralsByNameEvent) then) =
-      __$$SearchReferralsByNameEventCopyWithImpl<$Res>;
+abstract class _$$SearchReferralsByNameEventImplCopyWith<$Res> {
+  factory _$$SearchReferralsByNameEventImplCopyWith(
+          _$SearchReferralsByNameEventImpl value,
+          $Res Function(_$SearchReferralsByNameEventImpl) then) =
+      __$$SearchReferralsByNameEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String projectId, String searchText});
 }
 
 /// @nodoc
-class __$$SearchReferralsByNameEventCopyWithImpl<$Res>
+class __$$SearchReferralsByNameEventImplCopyWithImpl<$Res>
     extends _$SearchReferralsEventCopyWithImpl<$Res,
-        _$SearchReferralsByNameEvent>
-    implements _$$SearchReferralsByNameEventCopyWith<$Res> {
-  __$$SearchReferralsByNameEventCopyWithImpl(
-      _$SearchReferralsByNameEvent _value,
-      $Res Function(_$SearchReferralsByNameEvent) _then)
+        _$SearchReferralsByNameEventImpl>
+    implements _$$SearchReferralsByNameEventImplCopyWith<$Res> {
+  __$$SearchReferralsByNameEventImplCopyWithImpl(
+      _$SearchReferralsByNameEventImpl _value,
+      $Res Function(_$SearchReferralsByNameEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -233,7 +233,7 @@ class __$$SearchReferralsByNameEventCopyWithImpl<$Res>
     Object? projectId = null,
     Object? searchText = null,
   }) {
-    return _then(_$SearchReferralsByNameEvent(
+    return _then(_$SearchReferralsByNameEventImpl(
       projectId: null == projectId
           ? _value.projectId
           : projectId // ignore: cast_nullable_to_non_nullable
@@ -248,8 +248,8 @@ class __$$SearchReferralsByNameEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$SearchReferralsByNameEvent implements SearchReferralsByNameEvent {
-  const _$SearchReferralsByNameEvent(
+class _$SearchReferralsByNameEventImpl implements SearchReferralsByNameEvent {
+  const _$SearchReferralsByNameEventImpl(
       {required this.projectId, required this.searchText});
 
   @override
@@ -263,10 +263,10 @@ class _$SearchReferralsByNameEvent implements SearchReferralsByNameEvent {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$SearchReferralsByNameEvent &&
+            other is _$SearchReferralsByNameEventImpl &&
             (identical(other.projectId, projectId) ||
                 other.projectId == projectId) &&
             (identical(other.searchText, searchText) ||
@@ -279,9 +279,9 @@ class _$SearchReferralsByNameEvent implements SearchReferralsByNameEvent {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$SearchReferralsByNameEventCopyWith<_$SearchReferralsByNameEvent>
-      get copyWith => __$$SearchReferralsByNameEventCopyWithImpl<
-          _$SearchReferralsByNameEvent>(this, _$identity);
+  _$$SearchReferralsByNameEventImplCopyWith<_$SearchReferralsByNameEventImpl>
+      get copyWith => __$$SearchReferralsByNameEventImplCopyWithImpl<
+          _$SearchReferralsByNameEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -361,32 +361,33 @@ class _$SearchReferralsByNameEvent implements SearchReferralsByNameEvent {
 abstract class SearchReferralsByNameEvent implements SearchReferralsEvent {
   const factory SearchReferralsByNameEvent(
       {required final String projectId,
-      required final String searchText}) = _$SearchReferralsByNameEvent;
+      required final String searchText}) = _$SearchReferralsByNameEventImpl;
 
   String get projectId;
   String get searchText;
   @JsonKey(ignore: true)
-  _$$SearchReferralsByNameEventCopyWith<_$SearchReferralsByNameEvent>
+  _$$SearchReferralsByNameEventImplCopyWith<_$SearchReferralsByNameEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$SearchReferralsByTagEventCopyWith<$Res> {
-  factory _$$SearchReferralsByTagEventCopyWith(
-          _$SearchReferralsByTagEvent value,
-          $Res Function(_$SearchReferralsByTagEvent) then) =
-      __$$SearchReferralsByTagEventCopyWithImpl<$Res>;
+abstract class _$$SearchReferralsByTagEventImplCopyWith<$Res> {
+  factory _$$SearchReferralsByTagEventImplCopyWith(
+          _$SearchReferralsByTagEventImpl value,
+          $Res Function(_$SearchReferralsByTagEventImpl) then) =
+      __$$SearchReferralsByTagEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String tag, String projectId});
 }
 
 /// @nodoc
-class __$$SearchReferralsByTagEventCopyWithImpl<$Res>
+class __$$SearchReferralsByTagEventImplCopyWithImpl<$Res>
     extends _$SearchReferralsEventCopyWithImpl<$Res,
-        _$SearchReferralsByTagEvent>
-    implements _$$SearchReferralsByTagEventCopyWith<$Res> {
-  __$$SearchReferralsByTagEventCopyWithImpl(_$SearchReferralsByTagEvent _value,
-      $Res Function(_$SearchReferralsByTagEvent) _then)
+        _$SearchReferralsByTagEventImpl>
+    implements _$$SearchReferralsByTagEventImplCopyWith<$Res> {
+  __$$SearchReferralsByTagEventImplCopyWithImpl(
+      _$SearchReferralsByTagEventImpl _value,
+      $Res Function(_$SearchReferralsByTagEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -395,7 +396,7 @@ class __$$SearchReferralsByTagEventCopyWithImpl<$Res>
     Object? tag = null,
     Object? projectId = null,
   }) {
-    return _then(_$SearchReferralsByTagEvent(
+    return _then(_$SearchReferralsByTagEventImpl(
       tag: null == tag
           ? _value.tag
           : tag // ignore: cast_nullable_to_non_nullable
@@ -410,8 +411,8 @@ class __$$SearchReferralsByTagEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$SearchReferralsByTagEvent implements SearchReferralsByTagEvent {
-  const _$SearchReferralsByTagEvent(
+class _$SearchReferralsByTagEventImpl implements SearchReferralsByTagEvent {
+  const _$SearchReferralsByTagEventImpl(
       {required this.tag, required this.projectId});
 
   @override
@@ -425,10 +426,10 @@ class _$SearchReferralsByTagEvent implements SearchReferralsByTagEvent {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$SearchReferralsByTagEvent &&
+            other is _$SearchReferralsByTagEventImpl &&
             (identical(other.tag, tag) || other.tag == tag) &&
             (identical(other.projectId, projectId) ||
                 other.projectId == projectId));
@@ -440,9 +441,9 @@ class _$SearchReferralsByTagEvent implements SearchReferralsByTagEvent {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$SearchReferralsByTagEventCopyWith<_$SearchReferralsByTagEvent>
-      get copyWith => __$$SearchReferralsByTagEventCopyWithImpl<
-          _$SearchReferralsByTagEvent>(this, _$identity);
+  _$$SearchReferralsByTagEventImplCopyWith<_$SearchReferralsByTagEventImpl>
+      get copyWith => __$$SearchReferralsByTagEventImplCopyWithImpl<
+          _$SearchReferralsByTagEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -522,37 +523,38 @@ class _$SearchReferralsByTagEvent implements SearchReferralsByTagEvent {
 abstract class SearchReferralsByTagEvent implements SearchReferralsEvent {
   const factory SearchReferralsByTagEvent(
       {required final String tag,
-      required final String projectId}) = _$SearchReferralsByTagEvent;
+      required final String projectId}) = _$SearchReferralsByTagEventImpl;
 
   String get tag;
   String get projectId;
   @JsonKey(ignore: true)
-  _$$SearchReferralsByTagEventCopyWith<_$SearchReferralsByTagEvent>
+  _$$SearchReferralsByTagEventImplCopyWith<_$SearchReferralsByTagEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$SearchReferralsClearEventCopyWith<$Res> {
-  factory _$$SearchReferralsClearEventCopyWith(
-          _$SearchReferralsClearEvent value,
-          $Res Function(_$SearchReferralsClearEvent) then) =
-      __$$SearchReferralsClearEventCopyWithImpl<$Res>;
+abstract class _$$SearchReferralsClearEventImplCopyWith<$Res> {
+  factory _$$SearchReferralsClearEventImplCopyWith(
+          _$SearchReferralsClearEventImpl value,
+          $Res Function(_$SearchReferralsClearEventImpl) then) =
+      __$$SearchReferralsClearEventImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$SearchReferralsClearEventCopyWithImpl<$Res>
+class __$$SearchReferralsClearEventImplCopyWithImpl<$Res>
     extends _$SearchReferralsEventCopyWithImpl<$Res,
-        _$SearchReferralsClearEvent>
-    implements _$$SearchReferralsClearEventCopyWith<$Res> {
-  __$$SearchReferralsClearEventCopyWithImpl(_$SearchReferralsClearEvent _value,
-      $Res Function(_$SearchReferralsClearEvent) _then)
+        _$SearchReferralsClearEventImpl>
+    implements _$$SearchReferralsClearEventImplCopyWith<$Res> {
+  __$$SearchReferralsClearEventImplCopyWithImpl(
+      _$SearchReferralsClearEventImpl _value,
+      $Res Function(_$SearchReferralsClearEventImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$SearchReferralsClearEvent implements SearchReferralsClearEvent {
-  const _$SearchReferralsClearEvent();
+class _$SearchReferralsClearEventImpl implements SearchReferralsClearEvent {
+  const _$SearchReferralsClearEventImpl();
 
   @override
   String toString() {
@@ -560,10 +562,10 @@ class _$SearchReferralsClearEvent implements SearchReferralsClearEvent {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$SearchReferralsClearEvent);
+            other is _$SearchReferralsClearEventImpl);
   }
 
   @override
@@ -645,7 +647,7 @@ class _$SearchReferralsClearEvent implements SearchReferralsClearEvent {
 }
 
 abstract class SearchReferralsClearEvent implements SearchReferralsEvent {
-  const factory SearchReferralsClearEvent() = _$SearchReferralsClearEvent;
+  const factory SearchReferralsClearEvent() = _$SearchReferralsClearEventImpl;
 }
 
 /// @nodoc
@@ -714,11 +716,11 @@ class _$SearchReferralsStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_SearchReferralsStateCopyWith<$Res>
+abstract class _$$SearchReferralsStateImplCopyWith<$Res>
     implements $SearchReferralsStateCopyWith<$Res> {
-  factory _$$_SearchReferralsStateCopyWith(_$_SearchReferralsState value,
-          $Res Function(_$_SearchReferralsState) then) =
-      __$$_SearchReferralsStateCopyWithImpl<$Res>;
+  factory _$$SearchReferralsStateImplCopyWith(_$SearchReferralsStateImpl value,
+          $Res Function(_$SearchReferralsStateImpl) then) =
+      __$$SearchReferralsStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -729,11 +731,11 @@ abstract class _$$_SearchReferralsStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_SearchReferralsStateCopyWithImpl<$Res>
-    extends _$SearchReferralsStateCopyWithImpl<$Res, _$_SearchReferralsState>
-    implements _$$_SearchReferralsStateCopyWith<$Res> {
-  __$$_SearchReferralsStateCopyWithImpl(_$_SearchReferralsState _value,
-      $Res Function(_$_SearchReferralsState) _then)
+class __$$SearchReferralsStateImplCopyWithImpl<$Res>
+    extends _$SearchReferralsStateCopyWithImpl<$Res, _$SearchReferralsStateImpl>
+    implements _$$SearchReferralsStateImplCopyWith<$Res> {
+  __$$SearchReferralsStateImplCopyWithImpl(_$SearchReferralsStateImpl _value,
+      $Res Function(_$SearchReferralsStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -744,7 +746,7 @@ class __$$_SearchReferralsStateCopyWithImpl<$Res>
     Object? tag = freezed,
     Object? referrals = null,
   }) {
-    return _then(_$_SearchReferralsState(
+    return _then(_$SearchReferralsStateImpl(
       loading: null == loading
           ? _value.loading
           : loading // ignore: cast_nullable_to_non_nullable
@@ -767,8 +769,8 @@ class __$$_SearchReferralsStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_SearchReferralsState extends _SearchReferralsState {
-  const _$_SearchReferralsState(
+class _$SearchReferralsStateImpl extends _SearchReferralsState {
+  const _$SearchReferralsStateImpl(
       {this.loading = false,
       this.searchQuery,
       this.tag,
@@ -787,6 +789,7 @@ class _$_SearchReferralsState extends _SearchReferralsState {
   @override
   @JsonKey()
   List<HFReferralModel> get referrals {
+    if (_referrals is EqualUnmodifiableListView) return _referrals;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_referrals);
   }
@@ -797,10 +800,10 @@ class _$_SearchReferralsState extends _SearchReferralsState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_SearchReferralsState &&
+            other is _$SearchReferralsStateImpl &&
             (identical(other.loading, loading) || other.loading == loading) &&
             (identical(other.searchQuery, searchQuery) ||
                 other.searchQuery == searchQuery) &&
@@ -816,9 +819,10 @@ class _$_SearchReferralsState extends _SearchReferralsState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_SearchReferralsStateCopyWith<_$_SearchReferralsState> get copyWith =>
-      __$$_SearchReferralsStateCopyWithImpl<_$_SearchReferralsState>(
-          this, _$identity);
+  _$$SearchReferralsStateImplCopyWith<_$SearchReferralsStateImpl>
+      get copyWith =>
+          __$$SearchReferralsStateImplCopyWithImpl<_$SearchReferralsStateImpl>(
+              this, _$identity);
 }
 
 abstract class _SearchReferralsState extends SearchReferralsState {
@@ -826,7 +830,7 @@ abstract class _SearchReferralsState extends SearchReferralsState {
       {final bool loading,
       final String? searchQuery,
       final String? tag,
-      final List<HFReferralModel> referrals}) = _$_SearchReferralsState;
+      final List<HFReferralModel> referrals}) = _$SearchReferralsStateImpl;
   const _SearchReferralsState._() : super._();
 
   @override
@@ -839,6 +843,6 @@ abstract class _SearchReferralsState extends SearchReferralsState {
   List<HFReferralModel> get referrals;
   @override
   @JsonKey(ignore: true)
-  _$$_SearchReferralsStateCopyWith<_$_SearchReferralsState> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$SearchReferralsStateImplCopyWith<_$SearchReferralsStateImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }

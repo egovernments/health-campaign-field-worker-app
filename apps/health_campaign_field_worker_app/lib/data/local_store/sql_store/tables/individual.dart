@@ -7,7 +7,9 @@ import '../../../../models/entities/gender.dart';
 
 class Individual extends Table {
   TextColumn get id => text().nullable()();
+  TextColumn get individualId => text().nullable()();
   TextColumn get userId => text().nullable()();
+  TextColumn get userUuid => text().nullable()();
   TextColumn get dateOfBirth => text().nullable()();
   TextColumn get mobileNumber => text().nullable()();
   TextColumn get altContactNumber => text().nullable()();

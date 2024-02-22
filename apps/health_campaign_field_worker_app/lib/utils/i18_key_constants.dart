@@ -159,6 +159,10 @@ class HomeShowcase {
     return 'HF_HOME_SHOWCASE_BENEFICIARY_LABEL';
   }
 
+  String get manageAttendance {
+    return 'HF_HOME_SHOWCASE_MANAGE_ATTENDANCE';
+  }
+
   String get distributorSyncData {
     return 'DISTRIBUTOR_HOME_SHOWCASE_SYNC_DATA';
   }
@@ -859,6 +863,7 @@ class Home {
   String get deleteAllLabel => 'HOME_DELETE_ALL_LABEL';
   String get db => 'HOME_DB_LABEL';
   String get beneficiaryReferralLabel => 'HOME_BENEFICIARY_REFERRAL_LABEL';
+  String get manageAttendanceLabel => 'HOME_MANAGE_ATTENDANCE_LABEL';
 }
 
 class SearchBeneficiary {
@@ -970,6 +975,7 @@ class BeneficiaryDetails {
   String get totalrecorddownload => 'TOTAL_RECORD_DOWNLOAD';
   String get insufficientStorageContent =>
       'INSUFFICIENT_STORAGE_WARNING_CONTENT';
+  String get recordCycle => 'BENEFICIARY_DETAILS_RECORD_CYCLE';
 }
 
 class IndividualDetails {
@@ -1260,6 +1266,9 @@ class DeliverIntervention {
   String get resourceCode => 'RESOURCE_CODE';
 
   String get voucherCode => 'VOUCHER_CODE';
+
+  String get checkForProductVariantsConfig =>
+      'CHECK_FOR_PRODUCT_VARIANTS_CONFIG';
 }
 
 class ProjectSelection {
@@ -1325,6 +1334,8 @@ class StockDetails {
   String get selectTransactingPartyReturned => 'STOCK_DETAILS_RETURNED_TO';
 
   String get teamCodeRequired => 'STOCK_DETAILS_TEAM_CODE_IS_REQUIRED';
+
+  String get facilityRequired => 'STOCK_DETAILS_FACILITY_IS_REQUIRED';
 
   String get selectTransactingPartyReceivedFromDamaged {
     return 'STOCK_DETAILS_RECEIVED_FROM_DAMAGED';

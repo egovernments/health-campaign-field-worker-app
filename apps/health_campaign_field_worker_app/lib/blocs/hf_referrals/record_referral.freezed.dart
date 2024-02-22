@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'record_referral.dart';
 
@@ -95,11 +95,11 @@ class _$RecordHFReferralEventCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$RecordHFReferralSaveFacilityDetailsEventCopyWith<$Res> {
-  factory _$$RecordHFReferralSaveFacilityDetailsEventCopyWith(
-          _$RecordHFReferralSaveFacilityDetailsEvent value,
-          $Res Function(_$RecordHFReferralSaveFacilityDetailsEvent) then) =
-      __$$RecordHFReferralSaveFacilityDetailsEventCopyWithImpl<$Res>;
+abstract class _$$RecordHFReferralSaveFacilityDetailsEventImplCopyWith<$Res> {
+  factory _$$RecordHFReferralSaveFacilityDetailsEventImplCopyWith(
+          _$RecordHFReferralSaveFacilityDetailsEventImpl value,
+          $Res Function(_$RecordHFReferralSaveFacilityDetailsEventImpl) then) =
+      __$$RecordHFReferralSaveFacilityDetailsEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call(
       {DateTime dateOfEvaluation,
@@ -109,13 +109,13 @@ abstract class _$$RecordHFReferralSaveFacilityDetailsEventCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$RecordHFReferralSaveFacilityDetailsEventCopyWithImpl<$Res>
+class __$$RecordHFReferralSaveFacilityDetailsEventImplCopyWithImpl<$Res>
     extends _$RecordHFReferralEventCopyWithImpl<$Res,
-        _$RecordHFReferralSaveFacilityDetailsEvent>
-    implements _$$RecordHFReferralSaveFacilityDetailsEventCopyWith<$Res> {
-  __$$RecordHFReferralSaveFacilityDetailsEventCopyWithImpl(
-      _$RecordHFReferralSaveFacilityDetailsEvent _value,
-      $Res Function(_$RecordHFReferralSaveFacilityDetailsEvent) _then)
+        _$RecordHFReferralSaveFacilityDetailsEventImpl>
+    implements _$$RecordHFReferralSaveFacilityDetailsEventImplCopyWith<$Res> {
+  __$$RecordHFReferralSaveFacilityDetailsEventImplCopyWithImpl(
+      _$RecordHFReferralSaveFacilityDetailsEventImpl _value,
+      $Res Function(_$RecordHFReferralSaveFacilityDetailsEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -126,7 +126,7 @@ class __$$RecordHFReferralSaveFacilityDetailsEventCopyWithImpl<$Res>
     Object? healthFacilityCord = freezed,
     Object? referredBy = freezed,
   }) {
-    return _then(_$RecordHFReferralSaveFacilityDetailsEvent(
+    return _then(_$RecordHFReferralSaveFacilityDetailsEventImpl(
       dateOfEvaluation: null == dateOfEvaluation
           ? _value.dateOfEvaluation
           : dateOfEvaluation // ignore: cast_nullable_to_non_nullable
@@ -149,9 +149,9 @@ class __$$RecordHFReferralSaveFacilityDetailsEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$RecordHFReferralSaveFacilityDetailsEvent
+class _$RecordHFReferralSaveFacilityDetailsEventImpl
     implements RecordHFReferralSaveFacilityDetailsEvent {
-  const _$RecordHFReferralSaveFacilityDetailsEvent(
+  const _$RecordHFReferralSaveFacilityDetailsEventImpl(
       {required this.dateOfEvaluation,
       required this.facilityId,
       this.healthFacilityCord,
@@ -172,10 +172,10 @@ class _$RecordHFReferralSaveFacilityDetailsEvent
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$RecordHFReferralSaveFacilityDetailsEvent &&
+            other is _$RecordHFReferralSaveFacilityDetailsEventImpl &&
             (identical(other.dateOfEvaluation, dateOfEvaluation) ||
                 other.dateOfEvaluation == dateOfEvaluation) &&
             (identical(other.facilityId, facilityId) ||
@@ -193,10 +193,11 @@ class _$RecordHFReferralSaveFacilityDetailsEvent
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$RecordHFReferralSaveFacilityDetailsEventCopyWith<
-          _$RecordHFReferralSaveFacilityDetailsEvent>
-      get copyWith => __$$RecordHFReferralSaveFacilityDetailsEventCopyWithImpl<
-          _$RecordHFReferralSaveFacilityDetailsEvent>(this, _$identity);
+  _$$RecordHFReferralSaveFacilityDetailsEventImplCopyWith<
+          _$RecordHFReferralSaveFacilityDetailsEventImpl>
+      get copyWith =>
+          __$$RecordHFReferralSaveFacilityDetailsEventImplCopyWithImpl<
+              _$RecordHFReferralSaveFacilityDetailsEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -286,39 +287,40 @@ class _$RecordHFReferralSaveFacilityDetailsEvent
 abstract class RecordHFReferralSaveFacilityDetailsEvent
     implements RecordHFReferralEvent {
   const factory RecordHFReferralSaveFacilityDetailsEvent(
-      {required final DateTime dateOfEvaluation,
-      required final String facilityId,
-      final String? healthFacilityCord,
-      final String? referredBy}) = _$RecordHFReferralSaveFacilityDetailsEvent;
+          {required final DateTime dateOfEvaluation,
+          required final String facilityId,
+          final String? healthFacilityCord,
+          final String? referredBy}) =
+      _$RecordHFReferralSaveFacilityDetailsEventImpl;
 
   DateTime get dateOfEvaluation;
   String get facilityId;
   String? get healthFacilityCord;
   String? get referredBy;
   @JsonKey(ignore: true)
-  _$$RecordHFReferralSaveFacilityDetailsEventCopyWith<
-          _$RecordHFReferralSaveFacilityDetailsEvent>
+  _$$RecordHFReferralSaveFacilityDetailsEventImplCopyWith<
+          _$RecordHFReferralSaveFacilityDetailsEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$RecordHFReferralCreateEntryEventCopyWith<$Res> {
-  factory _$$RecordHFReferralCreateEntryEventCopyWith(
-          _$RecordHFReferralCreateEntryEvent value,
-          $Res Function(_$RecordHFReferralCreateEntryEvent) then) =
-      __$$RecordHFReferralCreateEntryEventCopyWithImpl<$Res>;
+abstract class _$$RecordHFReferralCreateEntryEventImplCopyWith<$Res> {
+  factory _$$RecordHFReferralCreateEntryEventImplCopyWith(
+          _$RecordHFReferralCreateEntryEventImpl value,
+          $Res Function(_$RecordHFReferralCreateEntryEventImpl) then) =
+      __$$RecordHFReferralCreateEntryEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call({HFReferralModel hfReferralModel});
 }
 
 /// @nodoc
-class __$$RecordHFReferralCreateEntryEventCopyWithImpl<$Res>
+class __$$RecordHFReferralCreateEntryEventImplCopyWithImpl<$Res>
     extends _$RecordHFReferralEventCopyWithImpl<$Res,
-        _$RecordHFReferralCreateEntryEvent>
-    implements _$$RecordHFReferralCreateEntryEventCopyWith<$Res> {
-  __$$RecordHFReferralCreateEntryEventCopyWithImpl(
-      _$RecordHFReferralCreateEntryEvent _value,
-      $Res Function(_$RecordHFReferralCreateEntryEvent) _then)
+        _$RecordHFReferralCreateEntryEventImpl>
+    implements _$$RecordHFReferralCreateEntryEventImplCopyWith<$Res> {
+  __$$RecordHFReferralCreateEntryEventImplCopyWithImpl(
+      _$RecordHFReferralCreateEntryEventImpl _value,
+      $Res Function(_$RecordHFReferralCreateEntryEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -326,7 +328,7 @@ class __$$RecordHFReferralCreateEntryEventCopyWithImpl<$Res>
   $Res call({
     Object? hfReferralModel = null,
   }) {
-    return _then(_$RecordHFReferralCreateEntryEvent(
+    return _then(_$RecordHFReferralCreateEntryEventImpl(
       hfReferralModel: null == hfReferralModel
           ? _value.hfReferralModel
           : hfReferralModel // ignore: cast_nullable_to_non_nullable
@@ -337,9 +339,9 @@ class __$$RecordHFReferralCreateEntryEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$RecordHFReferralCreateEntryEvent
+class _$RecordHFReferralCreateEntryEventImpl
     implements RecordHFReferralCreateEntryEvent {
-  const _$RecordHFReferralCreateEntryEvent({required this.hfReferralModel});
+  const _$RecordHFReferralCreateEntryEventImpl({required this.hfReferralModel});
 
   @override
   final HFReferralModel hfReferralModel;
@@ -350,10 +352,10 @@ class _$RecordHFReferralCreateEntryEvent
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$RecordHFReferralCreateEntryEvent &&
+            other is _$RecordHFReferralCreateEntryEventImpl &&
             (identical(other.hfReferralModel, hfReferralModel) ||
                 other.hfReferralModel == hfReferralModel));
   }
@@ -364,10 +366,10 @@ class _$RecordHFReferralCreateEntryEvent
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$RecordHFReferralCreateEntryEventCopyWith<
-          _$RecordHFReferralCreateEntryEvent>
-      get copyWith => __$$RecordHFReferralCreateEntryEventCopyWithImpl<
-          _$RecordHFReferralCreateEntryEvent>(this, _$identity);
+  _$$RecordHFReferralCreateEntryEventImplCopyWith<
+          _$RecordHFReferralCreateEntryEventImpl>
+      get copyWith => __$$RecordHFReferralCreateEntryEventImplCopyWithImpl<
+          _$RecordHFReferralCreateEntryEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -455,32 +457,33 @@ abstract class RecordHFReferralCreateEntryEvent
     implements RecordHFReferralEvent {
   const factory RecordHFReferralCreateEntryEvent(
           {required final HFReferralModel hfReferralModel}) =
-      _$RecordHFReferralCreateEntryEvent;
+      _$RecordHFReferralCreateEntryEventImpl;
 
   HFReferralModel get hfReferralModel;
   @JsonKey(ignore: true)
-  _$$RecordHFReferralCreateEntryEventCopyWith<
-          _$RecordHFReferralCreateEntryEvent>
+  _$$RecordHFReferralCreateEntryEventImplCopyWith<
+          _$RecordHFReferralCreateEntryEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$RecordHFReferralViewEventCopyWith<$Res> {
-  factory _$$RecordHFReferralViewEventCopyWith(
-          _$RecordHFReferralViewEvent value,
-          $Res Function(_$RecordHFReferralViewEvent) then) =
-      __$$RecordHFReferralViewEventCopyWithImpl<$Res>;
+abstract class _$$RecordHFReferralViewEventImplCopyWith<$Res> {
+  factory _$$RecordHFReferralViewEventImplCopyWith(
+          _$RecordHFReferralViewEventImpl value,
+          $Res Function(_$RecordHFReferralViewEventImpl) then) =
+      __$$RecordHFReferralViewEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call({HFReferralModel hfReferralModel});
 }
 
 /// @nodoc
-class __$$RecordHFReferralViewEventCopyWithImpl<$Res>
+class __$$RecordHFReferralViewEventImplCopyWithImpl<$Res>
     extends _$RecordHFReferralEventCopyWithImpl<$Res,
-        _$RecordHFReferralViewEvent>
-    implements _$$RecordHFReferralViewEventCopyWith<$Res> {
-  __$$RecordHFReferralViewEventCopyWithImpl(_$RecordHFReferralViewEvent _value,
-      $Res Function(_$RecordHFReferralViewEvent) _then)
+        _$RecordHFReferralViewEventImpl>
+    implements _$$RecordHFReferralViewEventImplCopyWith<$Res> {
+  __$$RecordHFReferralViewEventImplCopyWithImpl(
+      _$RecordHFReferralViewEventImpl _value,
+      $Res Function(_$RecordHFReferralViewEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -488,7 +491,7 @@ class __$$RecordHFReferralViewEventCopyWithImpl<$Res>
   $Res call({
     Object? hfReferralModel = null,
   }) {
-    return _then(_$RecordHFReferralViewEvent(
+    return _then(_$RecordHFReferralViewEventImpl(
       hfReferralModel: null == hfReferralModel
           ? _value.hfReferralModel
           : hfReferralModel // ignore: cast_nullable_to_non_nullable
@@ -499,8 +502,8 @@ class __$$RecordHFReferralViewEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$RecordHFReferralViewEvent implements RecordHFReferralViewEvent {
-  const _$RecordHFReferralViewEvent({required this.hfReferralModel});
+class _$RecordHFReferralViewEventImpl implements RecordHFReferralViewEvent {
+  const _$RecordHFReferralViewEventImpl({required this.hfReferralModel});
 
   @override
   final HFReferralModel hfReferralModel;
@@ -511,10 +514,10 @@ class _$RecordHFReferralViewEvent implements RecordHFReferralViewEvent {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$RecordHFReferralViewEvent &&
+            other is _$RecordHFReferralViewEventImpl &&
             (identical(other.hfReferralModel, hfReferralModel) ||
                 other.hfReferralModel == hfReferralModel));
   }
@@ -525,9 +528,9 @@ class _$RecordHFReferralViewEvent implements RecordHFReferralViewEvent {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$RecordHFReferralViewEventCopyWith<_$RecordHFReferralViewEvent>
-      get copyWith => __$$RecordHFReferralViewEventCopyWithImpl<
-          _$RecordHFReferralViewEvent>(this, _$identity);
+  _$$RecordHFReferralViewEventImplCopyWith<_$RecordHFReferralViewEventImpl>
+      get copyWith => __$$RecordHFReferralViewEventImplCopyWithImpl<
+          _$RecordHFReferralViewEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -614,11 +617,11 @@ class _$RecordHFReferralViewEvent implements RecordHFReferralViewEvent {
 abstract class RecordHFReferralViewEvent implements RecordHFReferralEvent {
   const factory RecordHFReferralViewEvent(
           {required final HFReferralModel hfReferralModel}) =
-      _$RecordHFReferralViewEvent;
+      _$RecordHFReferralViewEventImpl;
 
   HFReferralModel get hfReferralModel;
   @JsonKey(ignore: true)
-  _$$RecordHFReferralViewEventCopyWith<_$RecordHFReferralViewEvent>
+  _$$RecordHFReferralViewEventImplCopyWith<_$RecordHFReferralViewEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -771,11 +774,11 @@ class _$RecordHFReferralStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$RecordHFReferralCreateStateCopyWith<$Res> {
-  factory _$$RecordHFReferralCreateStateCopyWith(
-          _$RecordHFReferralCreateState value,
-          $Res Function(_$RecordHFReferralCreateState) then) =
-      __$$RecordHFReferralCreateStateCopyWithImpl<$Res>;
+abstract class _$$RecordHFReferralCreateStateImplCopyWith<$Res> {
+  factory _$$RecordHFReferralCreateStateImplCopyWith(
+          _$RecordHFReferralCreateStateImpl value,
+          $Res Function(_$RecordHFReferralCreateStateImpl) then) =
+      __$$RecordHFReferralCreateStateImplCopyWithImpl<$Res>;
   @useResult
   $Res call(
       {bool loading,
@@ -789,13 +792,13 @@ abstract class _$$RecordHFReferralCreateStateCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$RecordHFReferralCreateStateCopyWithImpl<$Res>
+class __$$RecordHFReferralCreateStateImplCopyWithImpl<$Res>
     extends _$RecordHFReferralStateCopyWithImpl<$Res,
-        _$RecordHFReferralCreateState>
-    implements _$$RecordHFReferralCreateStateCopyWith<$Res> {
-  __$$RecordHFReferralCreateStateCopyWithImpl(
-      _$RecordHFReferralCreateState _value,
-      $Res Function(_$RecordHFReferralCreateState) _then)
+        _$RecordHFReferralCreateStateImpl>
+    implements _$$RecordHFReferralCreateStateImplCopyWith<$Res> {
+  __$$RecordHFReferralCreateStateImplCopyWithImpl(
+      _$RecordHFReferralCreateStateImpl _value,
+      $Res Function(_$RecordHFReferralCreateStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -810,7 +813,7 @@ class __$$RecordHFReferralCreateStateCopyWithImpl<$Res>
     Object? hfReferralModel = freezed,
     Object? viewOnly = null,
   }) {
-    return _then(_$RecordHFReferralCreateState(
+    return _then(_$RecordHFReferralCreateStateImpl(
       loading: null == loading
           ? _value.loading
           : loading // ignore: cast_nullable_to_non_nullable
@@ -849,8 +852,8 @@ class __$$RecordHFReferralCreateStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$RecordHFReferralCreateState implements RecordHFReferralCreateState {
-  const _$RecordHFReferralCreateState(
+class _$RecordHFReferralCreateStateImpl implements RecordHFReferralCreateState {
+  const _$RecordHFReferralCreateStateImpl(
       {this.loading = false,
       required this.projectId,
       this.facilityId,
@@ -885,10 +888,10 @@ class _$RecordHFReferralCreateState implements RecordHFReferralCreateState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$RecordHFReferralCreateState &&
+            other is _$RecordHFReferralCreateStateImpl &&
             (identical(other.loading, loading) || other.loading == loading) &&
             (identical(other.projectId, projectId) ||
                 other.projectId == projectId) &&
@@ -921,9 +924,9 @@ class _$RecordHFReferralCreateState implements RecordHFReferralCreateState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$RecordHFReferralCreateStateCopyWith<_$RecordHFReferralCreateState>
-      get copyWith => __$$RecordHFReferralCreateStateCopyWithImpl<
-          _$RecordHFReferralCreateState>(this, _$identity);
+  _$$RecordHFReferralCreateStateImplCopyWith<_$RecordHFReferralCreateStateImpl>
+      get copyWith => __$$RecordHFReferralCreateStateImplCopyWithImpl<
+          _$RecordHFReferralCreateStateImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -1087,7 +1090,7 @@ abstract class RecordHFReferralCreateState implements RecordHFReferralState {
       final String? healthFacilityCord,
       final String? referredBy,
       final HFReferralModel? hfReferralModel,
-      final bool viewOnly}) = _$RecordHFReferralCreateState;
+      final bool viewOnly}) = _$RecordHFReferralCreateStateImpl;
 
   bool get loading;
   String get projectId;
@@ -1098,16 +1101,16 @@ abstract class RecordHFReferralCreateState implements RecordHFReferralState {
   HFReferralModel? get hfReferralModel;
   bool get viewOnly;
   @JsonKey(ignore: true)
-  _$$RecordHFReferralCreateStateCopyWith<_$RecordHFReferralCreateState>
+  _$$RecordHFReferralCreateStateImplCopyWith<_$RecordHFReferralCreateStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$RecordHFReferralPersistedStateCopyWith<$Res> {
-  factory _$$RecordHFReferralPersistedStateCopyWith(
-          _$RecordHFReferralPersistedState value,
-          $Res Function(_$RecordHFReferralPersistedState) then) =
-      __$$RecordHFReferralPersistedStateCopyWithImpl<$Res>;
+abstract class _$$RecordHFReferralPersistedStateImplCopyWith<$Res> {
+  factory _$$RecordHFReferralPersistedStateImplCopyWith(
+          _$RecordHFReferralPersistedStateImpl value,
+          $Res Function(_$RecordHFReferralPersistedStateImpl) then) =
+      __$$RecordHFReferralPersistedStateImplCopyWithImpl<$Res>;
   @useResult
   $Res call(
       {String projectId,
@@ -1120,13 +1123,13 @@ abstract class _$$RecordHFReferralPersistedStateCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$RecordHFReferralPersistedStateCopyWithImpl<$Res>
+class __$$RecordHFReferralPersistedStateImplCopyWithImpl<$Res>
     extends _$RecordHFReferralStateCopyWithImpl<$Res,
-        _$RecordHFReferralPersistedState>
-    implements _$$RecordHFReferralPersistedStateCopyWith<$Res> {
-  __$$RecordHFReferralPersistedStateCopyWithImpl(
-      _$RecordHFReferralPersistedState _value,
-      $Res Function(_$RecordHFReferralPersistedState) _then)
+        _$RecordHFReferralPersistedStateImpl>
+    implements _$$RecordHFReferralPersistedStateImplCopyWith<$Res> {
+  __$$RecordHFReferralPersistedStateImplCopyWithImpl(
+      _$RecordHFReferralPersistedStateImpl _value,
+      $Res Function(_$RecordHFReferralPersistedStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1140,7 +1143,7 @@ class __$$RecordHFReferralPersistedStateCopyWithImpl<$Res>
     Object? hfReferralModel = freezed,
     Object? viewOnly = null,
   }) {
-    return _then(_$RecordHFReferralPersistedState(
+    return _then(_$RecordHFReferralPersistedStateImpl(
       projectId: null == projectId
           ? _value.projectId
           : projectId // ignore: cast_nullable_to_non_nullable
@@ -1175,9 +1178,9 @@ class __$$RecordHFReferralPersistedStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$RecordHFReferralPersistedState
+class _$RecordHFReferralPersistedStateImpl
     implements RecordHFReferralPersistedState {
-  const _$RecordHFReferralPersistedState(
+  const _$RecordHFReferralPersistedStateImpl(
       {required this.projectId,
       this.facilityId,
       this.dateOfEvaluation,
@@ -1208,10 +1211,10 @@ class _$RecordHFReferralPersistedState
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$RecordHFReferralPersistedState &&
+            other is _$RecordHFReferralPersistedStateImpl &&
             (identical(other.projectId, projectId) ||
                 other.projectId == projectId) &&
             (identical(other.facilityId, facilityId) ||
@@ -1242,9 +1245,10 @@ class _$RecordHFReferralPersistedState
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$RecordHFReferralPersistedStateCopyWith<_$RecordHFReferralPersistedState>
-      get copyWith => __$$RecordHFReferralPersistedStateCopyWithImpl<
-          _$RecordHFReferralPersistedState>(this, _$identity);
+  _$$RecordHFReferralPersistedStateImplCopyWith<
+          _$RecordHFReferralPersistedStateImpl>
+      get copyWith => __$$RecordHFReferralPersistedStateImplCopyWithImpl<
+          _$RecordHFReferralPersistedStateImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -1407,7 +1411,7 @@ abstract class RecordHFReferralPersistedState implements RecordHFReferralState {
       final String? healthFacilityCord,
       final String? referredBy,
       final HFReferralModel? hfReferralModel,
-      final bool viewOnly}) = _$RecordHFReferralPersistedState;
+      final bool viewOnly}) = _$RecordHFReferralPersistedStateImpl;
 
   String get projectId;
   String? get facilityId;
@@ -1417,16 +1421,17 @@ abstract class RecordHFReferralPersistedState implements RecordHFReferralState {
   HFReferralModel? get hfReferralModel;
   bool get viewOnly;
   @JsonKey(ignore: true)
-  _$$RecordHFReferralPersistedStateCopyWith<_$RecordHFReferralPersistedState>
+  _$$RecordHFReferralPersistedStateImplCopyWith<
+          _$RecordHFReferralPersistedStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$RecordHFReferralViewStateCopyWith<$Res> {
-  factory _$$RecordHFReferralViewStateCopyWith(
-          _$RecordHFReferralViewState value,
-          $Res Function(_$RecordHFReferralViewState) then) =
-      __$$RecordHFReferralViewStateCopyWithImpl<$Res>;
+abstract class _$$RecordHFReferralViewStateImplCopyWith<$Res> {
+  factory _$$RecordHFReferralViewStateImplCopyWith(
+          _$RecordHFReferralViewStateImpl value,
+          $Res Function(_$RecordHFReferralViewStateImpl) then) =
+      __$$RecordHFReferralViewStateImplCopyWithImpl<$Res>;
   @useResult
   $Res call(
       {String projectId,
@@ -1439,12 +1444,13 @@ abstract class _$$RecordHFReferralViewStateCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$RecordHFReferralViewStateCopyWithImpl<$Res>
+class __$$RecordHFReferralViewStateImplCopyWithImpl<$Res>
     extends _$RecordHFReferralStateCopyWithImpl<$Res,
-        _$RecordHFReferralViewState>
-    implements _$$RecordHFReferralViewStateCopyWith<$Res> {
-  __$$RecordHFReferralViewStateCopyWithImpl(_$RecordHFReferralViewState _value,
-      $Res Function(_$RecordHFReferralViewState) _then)
+        _$RecordHFReferralViewStateImpl>
+    implements _$$RecordHFReferralViewStateImplCopyWith<$Res> {
+  __$$RecordHFReferralViewStateImplCopyWithImpl(
+      _$RecordHFReferralViewStateImpl _value,
+      $Res Function(_$RecordHFReferralViewStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1458,7 +1464,7 @@ class __$$RecordHFReferralViewStateCopyWithImpl<$Res>
     Object? hfReferralModel = freezed,
     Object? viewOnly = null,
   }) {
-    return _then(_$RecordHFReferralViewState(
+    return _then(_$RecordHFReferralViewStateImpl(
       projectId: null == projectId
           ? _value.projectId
           : projectId // ignore: cast_nullable_to_non_nullable
@@ -1493,8 +1499,8 @@ class __$$RecordHFReferralViewStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$RecordHFReferralViewState implements RecordHFReferralViewState {
-  const _$RecordHFReferralViewState(
+class _$RecordHFReferralViewStateImpl implements RecordHFReferralViewState {
+  const _$RecordHFReferralViewStateImpl(
       {required this.projectId,
       this.facilityId,
       this.dateOfEvaluation,
@@ -1525,10 +1531,10 @@ class _$RecordHFReferralViewState implements RecordHFReferralViewState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$RecordHFReferralViewState &&
+            other is _$RecordHFReferralViewStateImpl &&
             (identical(other.projectId, projectId) ||
                 other.projectId == projectId) &&
             (identical(other.facilityId, facilityId) ||
@@ -1559,9 +1565,9 @@ class _$RecordHFReferralViewState implements RecordHFReferralViewState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$RecordHFReferralViewStateCopyWith<_$RecordHFReferralViewState>
-      get copyWith => __$$RecordHFReferralViewStateCopyWithImpl<
-          _$RecordHFReferralViewState>(this, _$identity);
+  _$$RecordHFReferralViewStateImplCopyWith<_$RecordHFReferralViewStateImpl>
+      get copyWith => __$$RecordHFReferralViewStateImplCopyWithImpl<
+          _$RecordHFReferralViewStateImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -1724,7 +1730,7 @@ abstract class RecordHFReferralViewState implements RecordHFReferralState {
       final String? healthFacilityCord,
       final String? referredBy,
       final HFReferralModel? hfReferralModel,
-      final bool viewOnly}) = _$RecordHFReferralViewState;
+      final bool viewOnly}) = _$RecordHFReferralViewStateImpl;
 
   String get projectId;
   String? get facilityId;
@@ -1734,28 +1740,28 @@ abstract class RecordHFReferralViewState implements RecordHFReferralState {
   HFReferralModel? get hfReferralModel;
   bool get viewOnly;
   @JsonKey(ignore: true)
-  _$$RecordHFReferralViewStateCopyWith<_$RecordHFReferralViewState>
+  _$$RecordHFReferralViewStateImplCopyWith<_$RecordHFReferralViewStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$RecordHFReferralErrorStateCopyWith<$Res> {
-  factory _$$RecordHFReferralErrorStateCopyWith(
-          _$RecordHFReferralErrorState value,
-          $Res Function(_$RecordHFReferralErrorState) then) =
-      __$$RecordHFReferralErrorStateCopyWithImpl<$Res>;
+abstract class _$$RecordHFReferralErrorStateImplCopyWith<$Res> {
+  factory _$$RecordHFReferralErrorStateImplCopyWith(
+          _$RecordHFReferralErrorStateImpl value,
+          $Res Function(_$RecordHFReferralErrorStateImpl) then) =
+      __$$RecordHFReferralErrorStateImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String? error});
 }
 
 /// @nodoc
-class __$$RecordHFReferralErrorStateCopyWithImpl<$Res>
+class __$$RecordHFReferralErrorStateImplCopyWithImpl<$Res>
     extends _$RecordHFReferralStateCopyWithImpl<$Res,
-        _$RecordHFReferralErrorState>
-    implements _$$RecordHFReferralErrorStateCopyWith<$Res> {
-  __$$RecordHFReferralErrorStateCopyWithImpl(
-      _$RecordHFReferralErrorState _value,
-      $Res Function(_$RecordHFReferralErrorState) _then)
+        _$RecordHFReferralErrorStateImpl>
+    implements _$$RecordHFReferralErrorStateImplCopyWith<$Res> {
+  __$$RecordHFReferralErrorStateImplCopyWithImpl(
+      _$RecordHFReferralErrorStateImpl _value,
+      $Res Function(_$RecordHFReferralErrorStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1763,7 +1769,7 @@ class __$$RecordHFReferralErrorStateCopyWithImpl<$Res>
   $Res call({
     Object? error = freezed,
   }) {
-    return _then(_$RecordHFReferralErrorState(
+    return _then(_$RecordHFReferralErrorStateImpl(
       error: freezed == error
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
@@ -1774,8 +1780,8 @@ class __$$RecordHFReferralErrorStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$RecordHFReferralErrorState implements RecordHFReferralErrorState {
-  const _$RecordHFReferralErrorState({this.error});
+class _$RecordHFReferralErrorStateImpl implements RecordHFReferralErrorState {
+  const _$RecordHFReferralErrorStateImpl({this.error});
 
   @override
   final String? error;
@@ -1786,10 +1792,10 @@ class _$RecordHFReferralErrorState implements RecordHFReferralErrorState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$RecordHFReferralErrorState &&
+            other is _$RecordHFReferralErrorStateImpl &&
             (identical(other.error, error) || other.error == error));
   }
 
@@ -1799,9 +1805,9 @@ class _$RecordHFReferralErrorState implements RecordHFReferralErrorState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$RecordHFReferralErrorStateCopyWith<_$RecordHFReferralErrorState>
-      get copyWith => __$$RecordHFReferralErrorStateCopyWithImpl<
-          _$RecordHFReferralErrorState>(this, _$identity);
+  _$$RecordHFReferralErrorStateImplCopyWith<_$RecordHFReferralErrorStateImpl>
+      get copyWith => __$$RecordHFReferralErrorStateImplCopyWithImpl<
+          _$RecordHFReferralErrorStateImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -1955,10 +1961,10 @@ class _$RecordHFReferralErrorState implements RecordHFReferralErrorState {
 
 abstract class RecordHFReferralErrorState implements RecordHFReferralState {
   const factory RecordHFReferralErrorState({final String? error}) =
-      _$RecordHFReferralErrorState;
+      _$RecordHFReferralErrorStateImpl;
 
   String? get error;
   @JsonKey(ignore: true)
-  _$$RecordHFReferralErrorStateCopyWith<_$RecordHFReferralErrorState>
+  _$$RecordHFReferralErrorStateImplCopyWith<_$RecordHFReferralErrorStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

@@ -15,7 +15,6 @@ import '../../../utils/utils.dart';
 import '../../../widgets/header/back_navigation_help_header.dart';
 import '../../../widgets/inventory/no_facilities_assigned_dialog.dart';
 import '../../../widgets/localized.dart';
-import '../facility_selection.dart';
 
 class WarehouseDetailsPage extends LocalizedStatefulWidget {
   const WarehouseDetailsPage({
@@ -33,10 +32,15 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
   static const _warehouseKey = 'warehouse';
   static const _teamCodeKey = 'teamCode';
   bool deliveryTeamSelected = false;
+  String? selectedFacilityId;
 
   @override
   void initState() {
     clearQRCodes();
+    final stockState = context.read<RecordStockBloc>().state;
+    setState(() {
+      selectedFacilityId = stockState.primaryId;
+    });
     super.initState();
   }
 
@@ -46,7 +50,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
         _administrativeUnitKey: FormControl<String>(
           value: context.boundary.name,
         ),
-        _warehouseKey: FormControl<FacilityModel>(
+        _warehouseKey: FormControl<String>(
           validators: [Validators.required],
         ),
         _teamCodeKey: FormControl<String>(
@@ -60,6 +64,12 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
     bool isDistributor = context.loggedInUserRoles
         .where(
           (role) => role.code == RolesType.distributor.toValue(),
+        )
+        .toList()
+        .isNotEmpty;
+    bool isWareHouseMgr = context.loggedInUserRoles
+        .where(
+          (role) => role.code == RolesType.warehouseManager.toValue(),
         )
         .toList()
         .isNotEmpty;
@@ -101,7 +111,9 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                       facilities,
                     );
 
-                    return isDistributor ? teamFacilities : facilities;
+                    return isDistributor && !isWareHouseMgr
+                        ? teamFacilities
+                        : facilities;
                   },
                 ) ??
                 [];
@@ -117,7 +129,8 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                         BlocProvider.of<RecordStockBloc>(context).state;
 
                     return ReactiveFormBuilder(
-                      form: () => buildForm(isDistributor, stockState),
+                      form: () => buildForm(
+                          isDistributor && !isWareHouseMgr, stockState),
                       builder: (context, form, child) {
                         form.control(_teamCodeKey).value =
                             scannerState.qrcodes.isNotEmpty
@@ -162,15 +175,30 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                                         id: teamCode ??
                                                             'Delivery Team',
                                                       )
-                                                    : form
-                                                        .control(_warehouseKey)
-                                                        .value;
+                                                    : selectedFacilityId != null
+                                                        ? FacilityModel(
+                                                            id: selectedFacilityId
+                                                                .toString(),
+                                                          )
+                                                        : null;
 
                                             context.read<ScannerBloc>().add(
                                                   const ScannerEvent
                                                       .handleScanner([], []),
                                                 );
-                                            if (deliveryTeamSelected &&
+                                            if (facility == null) {
+                                              DigitToast.show(
+                                                context,
+                                                options: DigitToastOptions(
+                                                  localizations.translate(
+                                                    i18.stockDetails
+                                                        .facilityRequired,
+                                                  ),
+                                                  true,
+                                                  theme,
+                                                ),
+                                              );
+                                            } else if (deliveryTeamSelected &&
                                                 (teamCode == null ||
                                                     teamCode.trim().isEmpty)) {
                                               DigitToast.show(
@@ -192,7 +220,8 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                                       dateOfRecord:
                                                           dateOfRecord,
                                                       facilityModel:
-                                                          isDistributor
+                                                          isDistributor &&
+                                                                  !isWareHouseMgr
                                                               ? FacilityModel(
                                                                   id: teamCode
                                                                       .toString(),
@@ -202,7 +231,9 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                                               "Delivery Team"
                                                           ? teamCode ?? ''
                                                           : facility.id,
-                                                      primaryType: isDistributor ||
+                                                      primaryType: (isDistributor &&
+                                                                  !isWareHouseMgr &&
+                                                                  deliveryTeamSelected) ||
                                                               deliveryTeamSelected
                                                           ? "STAFF"
                                                           : "WAREHOUSE",
@@ -233,7 +264,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
-                                    isDistributor
+                                    isDistributor && !isWareHouseMgr
                                         ? localizations.translate(
                                             i18.stockDetails
                                                 .transactionDetailsLabel,
@@ -282,7 +313,12 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
 
                                       if (facility == null) return;
                                       form.control(_warehouseKey).value =
-                                          facility;
+                                          localizations
+                                              .translate('FAC_${facility.id}');
+
+                                      setState(() {
+                                        selectedFacilityId = facility.id;
+                                      });
                                       if (facility.id == 'Delivery Team') {
                                         setState(() {
                                           deliveryTeamSelected = true;
@@ -298,9 +334,6 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                         hideKeyboard: true,
                                         padding: const EdgeInsets.only(
                                           bottom: kPadding,
-                                        ),
-                                        valueAccessor: FacilityValueAccessor(
-                                          facilities,
                                         ),
                                         isRequired: true,
                                         label: localizations.translate(
@@ -339,7 +372,12 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
 
                                           if (facility == null) return;
                                           form.control(_warehouseKey).value =
-                                              facility;
+                                              localizations.translate(
+                                                  'FAC_${facility.id}');
+
+                                          setState(() {
+                                            selectedFacilityId = facility.id;
+                                          });
                                           if (facility.id == 'Delivery Team') {
                                             setState(() {
                                               deliveryTeamSelected = true;

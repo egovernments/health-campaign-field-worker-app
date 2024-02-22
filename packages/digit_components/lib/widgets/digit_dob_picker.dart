@@ -17,6 +17,7 @@ class DigitDobPicker extends StatelessWidget {
   final String yearsAndMonthsErrMsg;
   final String cancelText;
   final String confirmText;
+  final DateTime? initialDate;
   final void Function(FormControl<dynamic>)? onChangeOfFormControl;
 
   const DigitDobPicker({
@@ -30,6 +31,7 @@ class DigitDobPicker extends StatelessWidget {
     required this.monthsHintLabel,
     required this.separatorLabel,
     required this.yearsAndMonthsErrMsg,
+    this.initialDate,
     this.confirmText = 'OK',
     this.cancelText = 'Cancel',
     this.onChangeOfFormControl,
@@ -61,6 +63,7 @@ class DigitDobPicker extends StatelessWidget {
             // Date picker component to select the date of birth
             DigitDateFormPicker(
               label: datePickerLabel,
+              start: initialDate,
               formControlName: datePickerFormControl,
               cancelText: cancelText,
               confirmText: confirmText,
@@ -224,7 +227,7 @@ class DobValueAccessorMonthString
   String? modelToViewValue(DateTime? modelValue) {
     final dobAge = accessor.modelToViewValue(modelValue);
 
-    if (dobAge == null || (dobAge.years == 0 && dobAge.months == 0)) {
+    if (dobAge == null || (dobAge.years == 0 && (dobAge.months == 0))) {
       return null;
     }
 

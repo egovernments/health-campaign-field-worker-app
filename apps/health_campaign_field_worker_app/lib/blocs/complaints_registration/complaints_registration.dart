@@ -142,12 +142,6 @@ class ComplaintsRegistrationBloc
           address: address.copyWith(
             relatedClientReferenceId: referenceId,
           ),
-          clientAuditDetails: ClientAuditDetails(
-            createdBy: auditDetails.createdBy,
-            createdTime: auditDetails.createdTime,
-            lastModifiedBy: auditDetails.createdBy,
-            lastModifiedTime: auditDetails.createdTime,
-          ),
           auditDetails: auditDetails,
           additionalDetail: PgrAdditionalDetails(
             supervisorName: complaintDetailsModel.supervisorName,

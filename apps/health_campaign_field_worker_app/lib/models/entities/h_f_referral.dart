@@ -5,8 +5,10 @@ import 'package:drift/drift.dart';
 import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
 
-@MappableClass(ignoreNull: true)
-class HFReferralSearchModel extends EntitySearchModel {
+part 'h_f_referral.mapper.dart';
+
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class HFReferralSearchModel extends EntitySearchModel with HFReferralSearchModelMappable {
   final String? id;
   final String? tenantId;
   final String? name;
@@ -52,8 +54,8 @@ class HFReferralSearchModel extends EntitySearchModel {
   }):  super(isDeleted: false);
 }
 
-@MappableClass(ignoreNull: true)
-class HFReferralModel extends EntityModel {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class HFReferralModel extends EntityModel with HFReferralModelMappable {
 
   static const schemaName = 'HFReferral';
 
@@ -120,11 +122,12 @@ class HFReferralModel extends EntityModel {
   }
 }
 
-@MappableClass(ignoreNull: true)
-class HFReferralAdditionalFields extends AdditionalFields {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class HFReferralAdditionalFields extends AdditionalFields with HFReferralAdditionalFieldsMappable {
   HFReferralAdditionalFields({
     super.schema = 'HFReferral',
     required super.version,
     super.fields,
   });
 }
+

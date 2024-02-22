@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:camera/camera.dart';
 import 'package:digit_components/digit_components.dart';
@@ -6,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
-import 'dart:io';
 
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
@@ -137,7 +138,7 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                         ),
                         // [TODO : Need move to constants]
                         Positioned(
-                          top: MediaQuery.of(context).size.width / 5,
+                          top: MediaQuery.of(context).size.width / 7.5,
                           left: MediaQuery.of(context).size.width / 2.6,
                           width: 250,
                           height: 250,
@@ -157,8 +158,9 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                           ),
                         ),
                         Positioned(
-                          left: MediaQuery.of(context).size.width / 4,
-                          width: 250,
+                          top: MediaQuery.of(context).size.height / 2.4,
+                          left: MediaQuery.of(context).size.width / 5,
+                          width: 300,
                           height: 250,
                           child: SizedBox(
                             width: 150,
@@ -177,9 +179,10 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                             ),
                           ),
                         ),
+
                         Positioned(
-                          top: MediaQuery.of(context).size.height / 2.0,
-                          left: MediaQuery.of(context).size.width / 6,
+                          top: MediaQuery.of(context).size.height / 2.2,
+                          left: MediaQuery.of(context).size.width / 5,
                           width: 250,
                           height: 50,
                           child: SizedBox(

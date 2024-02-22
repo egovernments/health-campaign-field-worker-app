@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'inventory_report.dart';
 
@@ -96,11 +96,11 @@ class _$InventoryReportEventCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$InventoryReportLoadStockDataEventCopyWith<$Res> {
-  factory _$$InventoryReportLoadStockDataEventCopyWith(
-          _$InventoryReportLoadStockDataEvent value,
-          $Res Function(_$InventoryReportLoadStockDataEvent) then) =
-      __$$InventoryReportLoadStockDataEventCopyWithImpl<$Res>;
+abstract class _$$InventoryReportLoadStockDataEventImplCopyWith<$Res> {
+  factory _$$InventoryReportLoadStockDataEventImplCopyWith(
+          _$InventoryReportLoadStockDataEventImpl value,
+          $Res Function(_$InventoryReportLoadStockDataEventImpl) then) =
+      __$$InventoryReportLoadStockDataEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call(
       {InventoryReportType reportType,
@@ -109,13 +109,13 @@ abstract class _$$InventoryReportLoadStockDataEventCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$InventoryReportLoadStockDataEventCopyWithImpl<$Res>
+class __$$InventoryReportLoadStockDataEventImplCopyWithImpl<$Res>
     extends _$InventoryReportEventCopyWithImpl<$Res,
-        _$InventoryReportLoadStockDataEvent>
-    implements _$$InventoryReportLoadStockDataEventCopyWith<$Res> {
-  __$$InventoryReportLoadStockDataEventCopyWithImpl(
-      _$InventoryReportLoadStockDataEvent _value,
-      $Res Function(_$InventoryReportLoadStockDataEvent) _then)
+        _$InventoryReportLoadStockDataEventImpl>
+    implements _$$InventoryReportLoadStockDataEventImplCopyWith<$Res> {
+  __$$InventoryReportLoadStockDataEventImplCopyWithImpl(
+      _$InventoryReportLoadStockDataEventImpl _value,
+      $Res Function(_$InventoryReportLoadStockDataEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -125,7 +125,7 @@ class __$$InventoryReportLoadStockDataEventCopyWithImpl<$Res>
     Object? facilityId = null,
     Object? productVariantId = null,
   }) {
-    return _then(_$InventoryReportLoadStockDataEvent(
+    return _then(_$InventoryReportLoadStockDataEventImpl(
       reportType: null == reportType
           ? _value.reportType
           : reportType // ignore: cast_nullable_to_non_nullable
@@ -144,9 +144,9 @@ class __$$InventoryReportLoadStockDataEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$InventoryReportLoadStockDataEvent
+class _$InventoryReportLoadStockDataEventImpl
     implements InventoryReportLoadStockDataEvent {
-  const _$InventoryReportLoadStockDataEvent(
+  const _$InventoryReportLoadStockDataEventImpl(
       {required this.reportType,
       required this.facilityId,
       required this.productVariantId});
@@ -164,10 +164,10 @@ class _$InventoryReportLoadStockDataEvent
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$InventoryReportLoadStockDataEvent &&
+            other is _$InventoryReportLoadStockDataEventImpl &&
             (identical(other.reportType, reportType) ||
                 other.reportType == reportType) &&
             (identical(other.facilityId, facilityId) ||
@@ -183,10 +183,10 @@ class _$InventoryReportLoadStockDataEvent
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$InventoryReportLoadStockDataEventCopyWith<
-          _$InventoryReportLoadStockDataEvent>
-      get copyWith => __$$InventoryReportLoadStockDataEventCopyWithImpl<
-          _$InventoryReportLoadStockDataEvent>(this, _$identity);
+  _$$InventoryReportLoadStockDataEventImplCopyWith<
+          _$InventoryReportLoadStockDataEventImpl>
+      get copyWith => __$$InventoryReportLoadStockDataEventImplCopyWithImpl<
+          _$InventoryReportLoadStockDataEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -277,38 +277,39 @@ abstract class InventoryReportLoadStockDataEvent
           {required final InventoryReportType reportType,
           required final String facilityId,
           required final String productVariantId}) =
-      _$InventoryReportLoadStockDataEvent;
+      _$InventoryReportLoadStockDataEventImpl;
 
   InventoryReportType get reportType;
   String get facilityId;
   String get productVariantId;
   @JsonKey(ignore: true)
-  _$$InventoryReportLoadStockDataEventCopyWith<
-          _$InventoryReportLoadStockDataEvent>
+  _$$InventoryReportLoadStockDataEventImplCopyWith<
+          _$InventoryReportLoadStockDataEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$InventoryReportLoadStockReconciliationDataEventCopyWith<
+abstract class _$$InventoryReportLoadStockReconciliationDataEventImplCopyWith<
     $Res> {
-  factory _$$InventoryReportLoadStockReconciliationDataEventCopyWith(
-          _$InventoryReportLoadStockReconciliationDataEvent value,
-          $Res Function(_$InventoryReportLoadStockReconciliationDataEvent)
+  factory _$$InventoryReportLoadStockReconciliationDataEventImplCopyWith(
+          _$InventoryReportLoadStockReconciliationDataEventImpl value,
+          $Res Function(_$InventoryReportLoadStockReconciliationDataEventImpl)
               then) =
-      __$$InventoryReportLoadStockReconciliationDataEventCopyWithImpl<$Res>;
+      __$$InventoryReportLoadStockReconciliationDataEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String facilityId, String productVariantId});
 }
 
 /// @nodoc
-class __$$InventoryReportLoadStockReconciliationDataEventCopyWithImpl<$Res>
+class __$$InventoryReportLoadStockReconciliationDataEventImplCopyWithImpl<$Res>
     extends _$InventoryReportEventCopyWithImpl<$Res,
-        _$InventoryReportLoadStockReconciliationDataEvent>
+        _$InventoryReportLoadStockReconciliationDataEventImpl>
     implements
-        _$$InventoryReportLoadStockReconciliationDataEventCopyWith<$Res> {
-  __$$InventoryReportLoadStockReconciliationDataEventCopyWithImpl(
-      _$InventoryReportLoadStockReconciliationDataEvent _value,
-      $Res Function(_$InventoryReportLoadStockReconciliationDataEvent) _then)
+        _$$InventoryReportLoadStockReconciliationDataEventImplCopyWith<$Res> {
+  __$$InventoryReportLoadStockReconciliationDataEventImplCopyWithImpl(
+      _$InventoryReportLoadStockReconciliationDataEventImpl _value,
+      $Res Function(_$InventoryReportLoadStockReconciliationDataEventImpl)
+          _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -317,7 +318,7 @@ class __$$InventoryReportLoadStockReconciliationDataEventCopyWithImpl<$Res>
     Object? facilityId = null,
     Object? productVariantId = null,
   }) {
-    return _then(_$InventoryReportLoadStockReconciliationDataEvent(
+    return _then(_$InventoryReportLoadStockReconciliationDataEventImpl(
       facilityId: null == facilityId
           ? _value.facilityId
           : facilityId // ignore: cast_nullable_to_non_nullable
@@ -332,9 +333,9 @@ class __$$InventoryReportLoadStockReconciliationDataEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$InventoryReportLoadStockReconciliationDataEvent
+class _$InventoryReportLoadStockReconciliationDataEventImpl
     implements InventoryReportLoadStockReconciliationDataEvent {
-  const _$InventoryReportLoadStockReconciliationDataEvent(
+  const _$InventoryReportLoadStockReconciliationDataEventImpl(
       {required this.facilityId, required this.productVariantId});
 
   @override
@@ -348,10 +349,10 @@ class _$InventoryReportLoadStockReconciliationDataEvent
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$InventoryReportLoadStockReconciliationDataEvent &&
+            other is _$InventoryReportLoadStockReconciliationDataEventImpl &&
             (identical(other.facilityId, facilityId) ||
                 other.facilityId == facilityId) &&
             (identical(other.productVariantId, productVariantId) ||
@@ -364,11 +365,11 @@ class _$InventoryReportLoadStockReconciliationDataEvent
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$InventoryReportLoadStockReconciliationDataEventCopyWith<
-          _$InventoryReportLoadStockReconciliationDataEvent>
+  _$$InventoryReportLoadStockReconciliationDataEventImplCopyWith<
+          _$InventoryReportLoadStockReconciliationDataEventImpl>
       get copyWith =>
-          __$$InventoryReportLoadStockReconciliationDataEventCopyWithImpl<
-                  _$InventoryReportLoadStockReconciliationDataEvent>(
+          __$$InventoryReportLoadStockReconciliationDataEventImplCopyWithImpl<
+                  _$InventoryReportLoadStockReconciliationDataEventImpl>(
               this, _$identity);
 
   @override
@@ -459,39 +460,39 @@ abstract class InventoryReportLoadStockReconciliationDataEvent
   const factory InventoryReportLoadStockReconciliationDataEvent(
           {required final String facilityId,
           required final String productVariantId}) =
-      _$InventoryReportLoadStockReconciliationDataEvent;
+      _$InventoryReportLoadStockReconciliationDataEventImpl;
 
   String get facilityId;
   String get productVariantId;
   @JsonKey(ignore: true)
-  _$$InventoryReportLoadStockReconciliationDataEventCopyWith<
-          _$InventoryReportLoadStockReconciliationDataEvent>
+  _$$InventoryReportLoadStockReconciliationDataEventImplCopyWith<
+          _$InventoryReportLoadStockReconciliationDataEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$InventoryReportLoadingEventCopyWith<$Res> {
-  factory _$$InventoryReportLoadingEventCopyWith(
-          _$InventoryReportLoadingEvent value,
-          $Res Function(_$InventoryReportLoadingEvent) then) =
-      __$$InventoryReportLoadingEventCopyWithImpl<$Res>;
+abstract class _$$InventoryReportLoadingEventImplCopyWith<$Res> {
+  factory _$$InventoryReportLoadingEventImplCopyWith(
+          _$InventoryReportLoadingEventImpl value,
+          $Res Function(_$InventoryReportLoadingEventImpl) then) =
+      __$$InventoryReportLoadingEventImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$InventoryReportLoadingEventCopyWithImpl<$Res>
+class __$$InventoryReportLoadingEventImplCopyWithImpl<$Res>
     extends _$InventoryReportEventCopyWithImpl<$Res,
-        _$InventoryReportLoadingEvent>
-    implements _$$InventoryReportLoadingEventCopyWith<$Res> {
-  __$$InventoryReportLoadingEventCopyWithImpl(
-      _$InventoryReportLoadingEvent _value,
-      $Res Function(_$InventoryReportLoadingEvent) _then)
+        _$InventoryReportLoadingEventImpl>
+    implements _$$InventoryReportLoadingEventImplCopyWith<$Res> {
+  __$$InventoryReportLoadingEventImplCopyWithImpl(
+      _$InventoryReportLoadingEventImpl _value,
+      $Res Function(_$InventoryReportLoadingEventImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$InventoryReportLoadingEvent implements InventoryReportLoadingEvent {
-  const _$InventoryReportLoadingEvent();
+class _$InventoryReportLoadingEventImpl implements InventoryReportLoadingEvent {
+  const _$InventoryReportLoadingEventImpl();
 
   @override
   String toString() {
@@ -499,10 +500,10 @@ class _$InventoryReportLoadingEvent implements InventoryReportLoadingEvent {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$InventoryReportLoadingEvent);
+            other is _$InventoryReportLoadingEventImpl);
   }
 
   @override
@@ -592,7 +593,8 @@ class _$InventoryReportLoadingEvent implements InventoryReportLoadingEvent {
 }
 
 abstract class InventoryReportLoadingEvent implements InventoryReportEvent {
-  const factory InventoryReportLoadingEvent() = _$InventoryReportLoadingEvent;
+  const factory InventoryReportLoadingEvent() =
+      _$InventoryReportLoadingEventImpl;
 }
 
 /// @nodoc
@@ -675,28 +677,28 @@ class _$InventoryReportStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$InventoryReportLoadingStateCopyWith<$Res> {
-  factory _$$InventoryReportLoadingStateCopyWith(
-          _$InventoryReportLoadingState value,
-          $Res Function(_$InventoryReportLoadingState) then) =
-      __$$InventoryReportLoadingStateCopyWithImpl<$Res>;
+abstract class _$$InventoryReportLoadingStateImplCopyWith<$Res> {
+  factory _$$InventoryReportLoadingStateImplCopyWith(
+          _$InventoryReportLoadingStateImpl value,
+          $Res Function(_$InventoryReportLoadingStateImpl) then) =
+      __$$InventoryReportLoadingStateImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$InventoryReportLoadingStateCopyWithImpl<$Res>
+class __$$InventoryReportLoadingStateImplCopyWithImpl<$Res>
     extends _$InventoryReportStateCopyWithImpl<$Res,
-        _$InventoryReportLoadingState>
-    implements _$$InventoryReportLoadingStateCopyWith<$Res> {
-  __$$InventoryReportLoadingStateCopyWithImpl(
-      _$InventoryReportLoadingState _value,
-      $Res Function(_$InventoryReportLoadingState) _then)
+        _$InventoryReportLoadingStateImpl>
+    implements _$$InventoryReportLoadingStateImplCopyWith<$Res> {
+  __$$InventoryReportLoadingStateImplCopyWithImpl(
+      _$InventoryReportLoadingStateImpl _value,
+      $Res Function(_$InventoryReportLoadingStateImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$InventoryReportLoadingState implements InventoryReportLoadingState {
-  const _$InventoryReportLoadingState();
+class _$InventoryReportLoadingStateImpl implements InventoryReportLoadingState {
+  const _$InventoryReportLoadingStateImpl();
 
   @override
   String toString() {
@@ -704,10 +706,10 @@ class _$InventoryReportLoadingState implements InventoryReportLoadingState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$InventoryReportLoadingState);
+            other is _$InventoryReportLoadingStateImpl);
   }
 
   @override
@@ -795,31 +797,33 @@ class _$InventoryReportLoadingState implements InventoryReportLoadingState {
 }
 
 abstract class InventoryReportLoadingState implements InventoryReportState {
-  const factory InventoryReportLoadingState() = _$InventoryReportLoadingState;
+  const factory InventoryReportLoadingState() =
+      _$InventoryReportLoadingStateImpl;
 }
 
 /// @nodoc
-abstract class _$$InventoryReportEmptyStateCopyWith<$Res> {
-  factory _$$InventoryReportEmptyStateCopyWith(
-          _$InventoryReportEmptyState value,
-          $Res Function(_$InventoryReportEmptyState) then) =
-      __$$InventoryReportEmptyStateCopyWithImpl<$Res>;
+abstract class _$$InventoryReportEmptyStateImplCopyWith<$Res> {
+  factory _$$InventoryReportEmptyStateImplCopyWith(
+          _$InventoryReportEmptyStateImpl value,
+          $Res Function(_$InventoryReportEmptyStateImpl) then) =
+      __$$InventoryReportEmptyStateImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$InventoryReportEmptyStateCopyWithImpl<$Res>
+class __$$InventoryReportEmptyStateImplCopyWithImpl<$Res>
     extends _$InventoryReportStateCopyWithImpl<$Res,
-        _$InventoryReportEmptyState>
-    implements _$$InventoryReportEmptyStateCopyWith<$Res> {
-  __$$InventoryReportEmptyStateCopyWithImpl(_$InventoryReportEmptyState _value,
-      $Res Function(_$InventoryReportEmptyState) _then)
+        _$InventoryReportEmptyStateImpl>
+    implements _$$InventoryReportEmptyStateImplCopyWith<$Res> {
+  __$$InventoryReportEmptyStateImplCopyWithImpl(
+      _$InventoryReportEmptyStateImpl _value,
+      $Res Function(_$InventoryReportEmptyStateImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$InventoryReportEmptyState implements InventoryReportEmptyState {
-  const _$InventoryReportEmptyState();
+class _$InventoryReportEmptyStateImpl implements InventoryReportEmptyState {
+  const _$InventoryReportEmptyStateImpl();
 
   @override
   String toString() {
@@ -827,10 +831,10 @@ class _$InventoryReportEmptyState implements InventoryReportEmptyState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$InventoryReportEmptyState);
+            other is _$InventoryReportEmptyStateImpl);
   }
 
   @override
@@ -918,26 +922,27 @@ class _$InventoryReportEmptyState implements InventoryReportEmptyState {
 }
 
 abstract class InventoryReportEmptyState implements InventoryReportState {
-  const factory InventoryReportEmptyState() = _$InventoryReportEmptyState;
+  const factory InventoryReportEmptyState() = _$InventoryReportEmptyStateImpl;
 }
 
 /// @nodoc
-abstract class _$$InventoryReportStockStateCopyWith<$Res> {
-  factory _$$InventoryReportStockStateCopyWith(
-          _$InventoryReportStockState value,
-          $Res Function(_$InventoryReportStockState) then) =
-      __$$InventoryReportStockStateCopyWithImpl<$Res>;
+abstract class _$$InventoryReportStockStateImplCopyWith<$Res> {
+  factory _$$InventoryReportStockStateImplCopyWith(
+          _$InventoryReportStockStateImpl value,
+          $Res Function(_$InventoryReportStockStateImpl) then) =
+      __$$InventoryReportStockStateImplCopyWithImpl<$Res>;
   @useResult
   $Res call({Map<String, List<StockModel>> stockData});
 }
 
 /// @nodoc
-class __$$InventoryReportStockStateCopyWithImpl<$Res>
+class __$$InventoryReportStockStateImplCopyWithImpl<$Res>
     extends _$InventoryReportStateCopyWithImpl<$Res,
-        _$InventoryReportStockState>
-    implements _$$InventoryReportStockStateCopyWith<$Res> {
-  __$$InventoryReportStockStateCopyWithImpl(_$InventoryReportStockState _value,
-      $Res Function(_$InventoryReportStockState) _then)
+        _$InventoryReportStockStateImpl>
+    implements _$$InventoryReportStockStateImplCopyWith<$Res> {
+  __$$InventoryReportStockStateImplCopyWithImpl(
+      _$InventoryReportStockStateImpl _value,
+      $Res Function(_$InventoryReportStockStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -945,7 +950,7 @@ class __$$InventoryReportStockStateCopyWithImpl<$Res>
   $Res call({
     Object? stockData = null,
   }) {
-    return _then(_$InventoryReportStockState(
+    return _then(_$InventoryReportStockStateImpl(
       stockData: null == stockData
           ? _value._stockData
           : stockData // ignore: cast_nullable_to_non_nullable
@@ -956,8 +961,8 @@ class __$$InventoryReportStockStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$InventoryReportStockState implements InventoryReportStockState {
-  const _$InventoryReportStockState(
+class _$InventoryReportStockStateImpl implements InventoryReportStockState {
+  const _$InventoryReportStockStateImpl(
       {final Map<String, List<StockModel>> stockData = const {}})
       : _stockData = stockData;
 
@@ -965,6 +970,7 @@ class _$InventoryReportStockState implements InventoryReportStockState {
   @override
   @JsonKey()
   Map<String, List<StockModel>> get stockData {
+    if (_stockData is EqualUnmodifiableMapView) return _stockData;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableMapView(_stockData);
   }
@@ -975,10 +981,10 @@ class _$InventoryReportStockState implements InventoryReportStockState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$InventoryReportStockState &&
+            other is _$InventoryReportStockStateImpl &&
             const DeepCollectionEquality()
                 .equals(other._stockData, _stockData));
   }
@@ -990,9 +996,9 @@ class _$InventoryReportStockState implements InventoryReportStockState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$InventoryReportStockStateCopyWith<_$InventoryReportStockState>
-      get copyWith => __$$InventoryReportStockStateCopyWithImpl<
-          _$InventoryReportStockState>(this, _$identity);
+  _$$InventoryReportStockStateImplCopyWith<_$InventoryReportStockStateImpl>
+      get copyWith => __$$InventoryReportStockStateImplCopyWithImpl<
+          _$InventoryReportStockStateImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -1078,32 +1084,32 @@ class _$InventoryReportStockState implements InventoryReportStockState {
 abstract class InventoryReportStockState implements InventoryReportState {
   const factory InventoryReportStockState(
           {final Map<String, List<StockModel>> stockData}) =
-      _$InventoryReportStockState;
+      _$InventoryReportStockStateImpl;
 
   Map<String, List<StockModel>> get stockData;
   @JsonKey(ignore: true)
-  _$$InventoryReportStockStateCopyWith<_$InventoryReportStockState>
+  _$$InventoryReportStockStateImplCopyWith<_$InventoryReportStockStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$InventoryReportStockReconciliationStateCopyWith<$Res> {
-  factory _$$InventoryReportStockReconciliationStateCopyWith(
-          _$InventoryReportStockReconciliationState value,
-          $Res Function(_$InventoryReportStockReconciliationState) then) =
-      __$$InventoryReportStockReconciliationStateCopyWithImpl<$Res>;
+abstract class _$$InventoryReportStockReconciliationStateImplCopyWith<$Res> {
+  factory _$$InventoryReportStockReconciliationStateImplCopyWith(
+          _$InventoryReportStockReconciliationStateImpl value,
+          $Res Function(_$InventoryReportStockReconciliationStateImpl) then) =
+      __$$InventoryReportStockReconciliationStateImplCopyWithImpl<$Res>;
   @useResult
   $Res call({Map<String, List<StockReconciliationModel>> data});
 }
 
 /// @nodoc
-class __$$InventoryReportStockReconciliationStateCopyWithImpl<$Res>
+class __$$InventoryReportStockReconciliationStateImplCopyWithImpl<$Res>
     extends _$InventoryReportStateCopyWithImpl<$Res,
-        _$InventoryReportStockReconciliationState>
-    implements _$$InventoryReportStockReconciliationStateCopyWith<$Res> {
-  __$$InventoryReportStockReconciliationStateCopyWithImpl(
-      _$InventoryReportStockReconciliationState _value,
-      $Res Function(_$InventoryReportStockReconciliationState) _then)
+        _$InventoryReportStockReconciliationStateImpl>
+    implements _$$InventoryReportStockReconciliationStateImplCopyWith<$Res> {
+  __$$InventoryReportStockReconciliationStateImplCopyWithImpl(
+      _$InventoryReportStockReconciliationStateImpl _value,
+      $Res Function(_$InventoryReportStockReconciliationStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1111,7 +1117,7 @@ class __$$InventoryReportStockReconciliationStateCopyWithImpl<$Res>
   $Res call({
     Object? data = null,
   }) {
-    return _then(_$InventoryReportStockReconciliationState(
+    return _then(_$InventoryReportStockReconciliationStateImpl(
       data: null == data
           ? _value._data
           : data // ignore: cast_nullable_to_non_nullable
@@ -1122,9 +1128,9 @@ class __$$InventoryReportStockReconciliationStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$InventoryReportStockReconciliationState
+class _$InventoryReportStockReconciliationStateImpl
     implements InventoryReportStockReconciliationState {
-  const _$InventoryReportStockReconciliationState(
+  const _$InventoryReportStockReconciliationStateImpl(
       {final Map<String, List<StockReconciliationModel>> data = const {}})
       : _data = data;
 
@@ -1132,6 +1138,7 @@ class _$InventoryReportStockReconciliationState
   @override
   @JsonKey()
   Map<String, List<StockReconciliationModel>> get data {
+    if (_data is EqualUnmodifiableMapView) return _data;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableMapView(_data);
   }
@@ -1142,10 +1149,10 @@ class _$InventoryReportStockReconciliationState
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$InventoryReportStockReconciliationState &&
+            other is _$InventoryReportStockReconciliationStateImpl &&
             const DeepCollectionEquality().equals(other._data, _data));
   }
 
@@ -1156,10 +1163,11 @@ class _$InventoryReportStockReconciliationState
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$InventoryReportStockReconciliationStateCopyWith<
-          _$InventoryReportStockReconciliationState>
-      get copyWith => __$$InventoryReportStockReconciliationStateCopyWithImpl<
-          _$InventoryReportStockReconciliationState>(this, _$identity);
+  _$$InventoryReportStockReconciliationStateImplCopyWith<
+          _$InventoryReportStockReconciliationStateImpl>
+      get copyWith =>
+          __$$InventoryReportStockReconciliationStateImplCopyWithImpl<
+              _$InventoryReportStockReconciliationStateImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -1246,11 +1254,11 @@ abstract class InventoryReportStockReconciliationState
     implements InventoryReportState {
   const factory InventoryReportStockReconciliationState(
           {final Map<String, List<StockReconciliationModel>> data}) =
-      _$InventoryReportStockReconciliationState;
+      _$InventoryReportStockReconciliationStateImpl;
 
   Map<String, List<StockReconciliationModel>> get data;
   @JsonKey(ignore: true)
-  _$$InventoryReportStockReconciliationStateCopyWith<
-          _$InventoryReportStockReconciliationState>
+  _$$InventoryReportStockReconciliationStateImplCopyWith<
+          _$InventoryReportStockReconciliationStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

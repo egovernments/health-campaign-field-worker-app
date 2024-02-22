@@ -18,7 +18,6 @@ import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
 import '../../../widgets/header/back_navigation_help_header.dart';
 import '../../../widgets/localized.dart';
-import '../facility_selection.dart';
 
 class StockDetailsPage extends LocalizedStatefulWidget {
   const StockDetailsPage({
@@ -42,13 +41,14 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
   static const _commentsKey = 'comments';
   static const _deliveryTeamKey = 'deliveryTeam';
   bool deliveryTeamSelected = false;
+  String? selectedFacilityId;
 
   FormGroup _form(StockRecordEntryType stockType) {
     return fb.group({
       _productVariantKey: FormControl<ProductVariantModel>(
-        validators: [Validators.required],
-      ),
-      _secondaryPartyKey: FormControl<FacilityModel>(
+          // validators: [Validators.required],
+          ),
+      _secondaryPartyKey: FormControl<String>(
         validators: [Validators.required],
       ),
       _transactionQuantityKey: FormControl<int>(validators: [
@@ -87,8 +87,8 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
         .toList()
         .isNotEmpty;
 
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      onPopInvoked: (didPop) {
         final stockState = context.read<RecordStockBloc>().state;
         if (stockState.primaryId != null) {
           context.read<ScannerBloc>().add(
@@ -98,8 +98,6 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                 ),
               );
         }
-
-        return true;
       },
       child: Scaffold(
         body: BlocBuilder<LocationBloc, LocationState>(
@@ -229,9 +227,13 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                             BlocProvider.of<RecordStockBloc>(
                                           context,
                                         ).state.primaryId;
-                                        final secondaryParty = form
-                                            .control(_secondaryPartyKey)
-                                            .value as FacilityModel?;
+                                        final secondaryParty =
+                                            selectedFacilityId != null
+                                                ? FacilityModel(
+                                                    id: selectedFacilityId
+                                                        .toString(),
+                                                  )
+                                                : null;
                                         final deliveryTeamName = form
                                             .control(_deliveryTeamKey)
                                             .value as String?;
@@ -586,7 +588,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                   BlocBuilder<FacilityBloc, FacilityState>(
                                     builder: (context, state) {
                                       final facilities = state.whenOrNull(
-                                            fetched: (_, facilities) =>
+                                            fetched: (facilities, _) =>
                                                 facilities,
                                           ) ??
                                           [];
@@ -608,7 +610,13 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                           if (facility == null) return;
                                           form
                                               .control(_secondaryPartyKey)
-                                              .value = facility;
+                                              .value = localizations.translate(
+                                            'FAC_${facility.id}',
+                                          );
+
+                                          setState(() {
+                                            selectedFacilityId = facility.id;
+                                          });
                                           if (facility.id == 'Delivery Team') {
                                             setState(() {
                                               deliveryTeamSelected = true;
@@ -622,10 +630,6 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                         child: IgnorePointer(
                                           child: DigitTextFormField(
                                             hideKeyboard: true,
-                                            valueAccessor:
-                                                FacilityValueAccessor(
-                                              facilities,
-                                            ),
                                             label: localizations.translate(
                                               '${pageTitle}_${i18.stockReconciliationDetails.stockLabel}',
                                             ),
@@ -657,8 +661,16 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
 
                                               if (facility == null) return;
                                               form
-                                                  .control(_secondaryPartyKey)
-                                                  .value = facility;
+                                                      .control(_secondaryPartyKey)
+                                                      .value =
+                                                  localizations.translate(
+                                                'FAC_${facility.id}',
+                                              );
+
+                                              setState(() {
+                                                selectedFacilityId =
+                                                    facility.id;
+                                              });
                                               if (facility.id ==
                                                   'Delivery Team') {
                                                 setState(() {
@@ -781,7 +793,8 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                             onChanged: (value) {
                                               setState(() {
                                                 form.control(
-                                                    _typeOfTransportKey,);
+                                                  _typeOfTransportKey,
+                                                );
                                               });
                                             },
                                             initialValue: transportTypeOptions
@@ -813,7 +826,6 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                     maxLines: 3,
                                     formControlName: _commentsKey,
                                   ),
-
                                   DigitOutlineIconButton(
                                     buttonStyle: OutlinedButton.styleFrom(
                                       shape: const RoundedRectangleBorder(
@@ -829,8 +841,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                     },
                                     icon: Icons.qr_code,
                                     label: localizations.translate(
-                                      i18.common
-                                          .scanBales,
+                                      i18.common.scanBales,
                                     ),
                                   ),
                                 ],
