@@ -380,29 +380,37 @@ class _AttendanceDateSessionSelectionPageState
       nowTime.month,
       nowTime.day,
     );
+
+    // Check if attendance log is available
     if (selectedRegister.attendanceLog != null) {
       for (var log in selectedRegister.attendanceLog!) {
         for (var entry in log.entries) {
           final logDate = entry.key;
           final isAttendanceMarked = entry.value;
-          if (logDate.isBefore(selectedFormattedDate) ||
-              logDate.isAtSameMomentAs(selectedDate)) {
+
+          // If logDate is before or equal to selectedDate
+          if (logDate.isBefore(selectedFormattedDate)) {
+            // If selectedDate is not today
             if (selectedFormattedDate != todayTime) {
+              // If attendance is not marked for any date before or on selectedDate
               if (!isAttendanceMarked) {
-                return true; // If attendance is not marked for any date before or on selectedDate, return true
-              } else {
-                return false;
+                return true;
               }
-            } else {
-              return false;
             }
-          } else {
-            return false; // If attendance is marked for all dates before selectedDate, return false
+            // If selectedDate is today
+            else {
+              // If today's attendance is not marked, show info card
+              if (!isAttendanceMarked) {
+                return true;
+              }
+            }
           }
         }
       }
     }
-    return false; // Return false if attendanceLog is null or all logs are marked
+
+    // If attendance log is null or all logs are marked
+    return false;
   }
 }
 
