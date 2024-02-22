@@ -159,8 +159,8 @@ class _SearchBeneficiaryPageState
                                           const SearchHouseholdsEvent.clear(),
                                         );
 
-                                        return;
-                                      } else if (isProximityEnabled &&
+                                          return;
+                                        } else if (isProximityEnabled &&
                                           value.trim().length < 2) {
                                         blocWrapper.proximitySearchBloc.add(
                                           SearchHouseholdsEvent
@@ -188,8 +188,8 @@ class _SearchBeneficiaryPageState
                                             tag: null,
                                             offset: offset,
                                             limit: limit,
-                                          ),
-                                        );
+                                            ),
+                                          );
                                       }
                                     },
                                   ),
@@ -209,18 +209,18 @@ class _SearchBeneficiaryPageState
                                                   limit = 10;
                                                 });
 
-                                                if (locationState
-                                                        .hasPermissions &&
-                                                    value &&
-                                                    locationState.latitude !=
-                                                        null &&
-                                                    locationState.longitude !=
-                                                        null &&
-                                                    appConfig.maxRadius !=
-                                                        null &&
-                                                    isProximityEnabled) {
-                                                  blocWrapper
-                                                      .proximitySearchBloc
+                                                  if (locationState
+                                                          .hasPermissions &&
+                                                      value &&
+                                                      locationState.latitude !=
+                                                          null &&
+                                                      locationState.longitude !=
+                                                          null &&
+                                                      appConfig.maxRadius !=
+                                                          null &&
+                                                      isProximityEnabled) {
+                                                    blocWrapper
+                                                        .proximitySearchBloc
                                                       .add(
                                                     SearchHouseholdsEvent
                                                         .searchByProximity(
@@ -231,47 +231,48 @@ class _SearchBeneficiaryPageState
                                                       projectId:
                                                           context.projectId,
                                                       maxRadius:
-                                                          appConfig.maxRadius!,
+                                                          appConfig.maxRadius!,),
                                                       offset: offset,
                                                       limit: limit,
                                                     ),
                                                   );
-                                                } else {
-                                                  blocWrapper
-                                                      .proximitySearchBloc
+                                                  } else {
+                                                    blocWrapper
+                                                        .proximitySearchBloc
                                                       .add(
-                                                    const SearchHouseholdsEvent
+                                                      const SearchHouseholdsEvent
                                                         .clear(),
-                                                  );
-                                                }
-                                              },
-                                            ),
-                                            Text(
-                                              localizations.translate(
-                                                i18.searchBeneficiary
-                                                    .proximityLabel,
+                                                    );
+                                                  }
+                                                },
                                               ),
-                                            ),
-                                          ],
-                                        )
-                                      : const Offstage(),
-                                ],
-                              );
-                            },
-                          ),
-                          const SizedBox(height: kPadding * 2),
-                          if (searchHouseholdsState.resultsNotFound &&
-                              !searchHouseholdsState.loading)
-                            DigitInfoCard(
-                              description: localizations.translate(
-                                i18.searchBeneficiary
-                                    .beneficiaryInfoDescription,
-                              ),
-                              title: localizations.translate(
-                                i18.searchBeneficiary.beneficiaryInfoTitle,
-                              ),
+                                              Text(
+                                                localizations.translate(
+                                                  i18.searchBeneficiary
+                                                      .proximityLabel,
+                                                ),
+                                              ),
+                                            ],
+                                          )
+                                        : const Offstage(),
+                                  ],
+                                );
+                              },
                             ),
-                        ],
+                            const SizedBox(height: kPadding * 2),
+                            if (searchHouseholdsState.resultsNotFound &&
+                              !searchHouseholdsState.loading)
+                              DigitInfoCard(
+                                description: localizations.translate(
+                                  i18.searchBeneficiary
+                                      .beneficiaryInfoDescription,
+                                ),
+                                title: localizations.translate(
+                                  i18.searchBeneficiary.beneficiaryInfoTitle,
+                                ),
+                              ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -303,10 +304,10 @@ class _SearchBeneficiaryPageState
                               margin: const EdgeInsets.only(bottom: kPadding),
                               child: ViewBeneficiaryCard(
                                 distance: isProximityEnabled ? distance : null,
-                                householdMember: i,
-                                onOpenPressed: () async {
-                                  final scannerBloc =
-                                      context.read<ScannerBloc>();
+                                  householdMember: i,
+                                  onOpenPressed: () async {
+                                    final scannerBloc =
+                                        context.read<ScannerBloc>();
 
                                   scannerBloc.add(
                                     const ScannerEvent.handleScanner(
@@ -315,24 +316,24 @@ class _SearchBeneficiaryPageState
                                     ),
                                   );
 
-                                  await context.router.push(
-                                    BeneficiaryWrapperRoute(
-                                      wrapper: i,
-                                    ),
-                                  );
-                                  setState(() {
-                                    isProximityEnabled = false;
-                                  });
-                                  searchController.clear();
+                                    await context.router.push(
+                                      BeneficiaryWrapperRoute(
+                                        wrapper: i,
+                                      ),
+                                    );
+                                    setState(() {
+                                      isProximityEnabled = false;
+                                    });
+                                    searchController.clear();
 
-                                  blocWrapper.searchByHeadBloc.add(
-                                    const SearchHouseholdsEvent.clear(),
+                                    blocWrapper.searchByHeadBloc.add(
+                                      const SearchHouseholdsEvent.clear(),
                                   );
                                 },
                               ),
-                            );
-                          },
-                          childCount:
+                            ),
+                          );
+                          },childCount:
                               searchHouseholdsState.householdMembers.length,
                         ),
                       );

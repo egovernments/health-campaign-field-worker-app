@@ -87,6 +87,7 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height,
                         color: Colors.green[300],
+                        //TODO: Add localization
                         child: DetectorView(
                           title: 'Barcode Scanner',
                           customPaint: _customPaint,

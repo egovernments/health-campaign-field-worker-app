@@ -46,8 +46,8 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
   FormGroup _form(StockRecordEntryType stockType) {
     return fb.group({
       _productVariantKey: FormControl<ProductVariantModel>(
-        validators: [Validators.required],
-      ),
+          // validators: [Validators.required],
+          ),
       _secondaryPartyKey: FormControl<String>(
         validators: [Validators.required],
       ),

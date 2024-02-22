@@ -143,7 +143,7 @@ class _BoundarySelectionPageState
                                       onSelected: (value) {
                                               if (value == null) return;
                                         value as BoundaryModel;
-                    
+
                                             context.read<BoundaryBloc>().add(
                                               BoundarySearchEvent(
                                         boundaryNum: (value).boundaryNum! + 1,
@@ -155,7 +155,6 @@ class _BoundarySelectionPageState
                                               BoundarySelectEvent(
                                                 label: label,
                                                 selectedBoundary: value,
-                                                
                                               ),
                                             );
                                         formControls[label]?.updateValue(value);

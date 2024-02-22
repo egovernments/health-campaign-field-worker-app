@@ -146,11 +146,8 @@ class DigitTable extends StatelessWidget {
     var data = tableData[index];
     var list = <Widget>[];
     for (int i = 1; i < data.tableRow.length; i++) {
-      list.add(
-        _generateColumnRow(context, index, data.tableRow[i].label,
-            buttonWidget: data.tableRow[i].widget,
-            style: data.tableRow[i].style),
-      );
+      list.add(_generateColumnRow(context, index, data.tableRow[i].label,
+          style: data.tableRow[i].style));
     }
 
     return Container(

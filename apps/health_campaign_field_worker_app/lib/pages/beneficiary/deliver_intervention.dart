@@ -704,32 +704,32 @@ class _DeliverInterventionPageState
         relatedClientReferenceId: clientReferenceId,
         id: null,
       ),
-      status: Status.administeredSuccess.name,
+      status: Status.administeredSuccess.toValue(),
       additionalFields: TaskAdditionalFields(
         version: task.additionalFields?.version ?? 1,
         fields: [
           AdditionalField(
-            AdditionalFieldsType.dateOfDelivery.name,
+            AdditionalFieldsType.dateOfDelivery.toValue(),
             DateTime.now().millisecondsSinceEpoch.toString(),
           ),
           AdditionalField(
-            AdditionalFieldsType.dateOfAdministration.name,
+            AdditionalFieldsType.dateOfAdministration.toValue(),
             DateTime.now().millisecondsSinceEpoch.toString(),
           ),
           AdditionalField(
-            AdditionalFieldsType.dateOfVerification.name,
+            AdditionalFieldsType.dateOfVerification.toValue(),
             DateTime.now().millisecondsSinceEpoch.toString(),
           ),
           AdditionalField(
-            AdditionalFieldsType.cycleIndex.name,
+            AdditionalFieldsType.cycleIndex.toValue(),
             "0${cycle ?? 1}",
           ),
           AdditionalField(
-            AdditionalFieldsType.doseIndex.name,
+            AdditionalFieldsType.doseIndex.toValue(),
             "0${dose ?? 1}",
           ),
           AdditionalField(
-            AdditionalFieldsType.deliveryStrategy.name,
+            AdditionalFieldsType.deliveryStrategy.toValue(),
             deliveryStrategy,
           ),
           if (latitude != null)

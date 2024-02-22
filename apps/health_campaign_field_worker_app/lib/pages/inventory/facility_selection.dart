@@ -130,6 +130,23 @@ class FacilitySelectionPage extends StatelessWidget {
                                     ),
                                   ),
                                 ),
+                                child: Container(
+                                margin: const EdgeInsets.only(
+                                  top: kPadding,
+                                  left: kPadding,
+                                  right: kPadding,
+                                ),
+                                decoration: BoxDecoration(
+                                  color:
+                                      DigitTheme.instance.colors.alabasterWhite,
+                                  border: Border(
+                                    bottom: BorderSide(
+                                      //                   <--- left side
+                                      color: theme.colorScheme.outline,
+                                      width: 1.0,
+                                    ),
+                                  ),
+                                ),
                                 child: Padding(
                                   padding: const EdgeInsets.only(
                                     left: kPadding * 2,
@@ -141,6 +158,8 @@ class FacilitySelectionPage extends StatelessWidget {
                                         .translate('FAC_${facility.id}'),
                                   ),
                                 ),
+                              ),
+                            ),),
                               ),
                             ),
                           ),
