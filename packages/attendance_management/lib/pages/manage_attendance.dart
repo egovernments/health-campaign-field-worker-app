@@ -18,6 +18,7 @@ class ManageAttendancePage extends LocalizedStatefulWidget {
   final String projectId;
   final String userId;
   final String appVersion;
+
   const ManageAttendancePage({
     required this.attendanceListeners,
     required this.projectId,
@@ -72,23 +73,24 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
                     attendanceBloc: attendanceBloc,
                     data: {
                       t.translate(i18.attendance.campaignNameLabel):
-                          register.name,
-                      // register.additionalDetails?[
-                      //     EnumValues.campaignName.toValue()],
-                      t.translate(i18.attendance.eventTypeLabel): register
-                          .additionalDetails?[EnumValues.eventType.toValue()],
+                          register.additionalDetails?[
+                              EnumValues.campaignName.toValue()],
+                      t.translate(i18.attendance.eventTypeLabel):
+                          register.additionalDetails?[
+                                  EnumValues.eventType.toValue()] ??
+                              t.translate(i18.common.coreCommonNA),
                       t.translate(i18.attendance.staffCountLabel):
                           register.attendees?.length ?? 0,
                       t.translate(i18.attendance.startDateLabel):
                           register.startDate != null
                               ? DigitDateUtils.getDateFromTimestamp(
                                   register.startDate!)
-                              : 'N/A',
+                              : t.translate(i18.common.coreCommonNA),
                       t.translate(i18.attendance.endDateLabel):
                           register.endDate != null
                               ? DigitDateUtils.getDateFromTimestamp(
                                   register.endDate!)
-                              : 'N/A',
+                              : t.translate(i18.common.coreCommonNA),
                       t.translate(i18.attendance.statusLabel):
                           register.endDate != null &&
                                   register.endDate! >
@@ -97,12 +99,13 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
                               : t.translate(i18.common.inactive),
                       t.translate(i18.attendance.attendanceCompletionLabel):
                           calculateCompletedDays(attendanceRegisters[i]) ??
-                              'N/A',
+                              t.translate(i18.common.coreCommonNA),
                     },
                     registers: attendanceRegisters,
                     noOfAttendees: register.attendees?.length ?? 0,
                     registerId: register.id,
-                    tenantId: register.tenantId ?? 'N/A',
+                    tenantId: register.tenantId ??
+                        t.translate(i18.common.coreCommonNA),
                     show: register.startDate != null &&
                         register.endDate != null &&
                         attendanceRegisters.isNotEmpty &&
@@ -243,7 +246,6 @@ class RegisterCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DateTime s = DateTime.now();
     var t = AttendanceLocalization.of(context);
 
     return DigitCard(

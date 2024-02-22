@@ -14,9 +14,11 @@ class CircularButton extends StatelessWidget {
   final bool isNotGreyed;
   final void Function()? onTap;
   final bool viewOnly;
+
   //set index -1 to not select the Circular button
-  //set index 1 to select half of the Circular button
-  //set index 2 to completely select the Circular button
+  //set index 0 for empty circle with red border
+  //set index 0.5 to select half of the Circular button
+  //set index 1 to completely select the Circular button
   // set isNotGreyed to true if your background is white else false
 
   const CircularButton({
@@ -40,15 +42,22 @@ class CircularButton extends StatelessWidget {
             ? Row(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(2.0),
+                    padding: const EdgeInsets.all(
+                      kPadding / 4,
+                    ),
                     child: CustomPaint(
-                      size: const Size(30, 30),
-                      painter: HalfCirclePainter(),
+                      size: const Size(
+                        30,
+                        30,
+                      ),
+                      painter: HalfCirclePainter(
+                        color: const DigitColors().amber,
+                      ),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(
-                      left: 4.0,
+                      left: kPadding / 2,
                     ),
                     child: Text(
                       AttendanceLocalization.of(context)
@@ -56,7 +65,7 @@ class CircularButton extends StatelessWidget {
                       style: DigitTheme
                           .instance.mobileTheme.textTheme.labelSmall
                           ?.apply(
-                        color: const Color.fromRGBO(244, 169, 56, 1),
+                        color: const DigitColors().amber,
                       ),
                     ),
                   ),
@@ -67,25 +76,27 @@ class CircularButton extends StatelessWidget {
                   Container(
                     height: 30,
                     width: 30,
-                    margin: const EdgeInsets.all(2.0),
+                    margin: const EdgeInsets.all(
+                      kPadding / 4,
+                    ),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: index.isNegative || index == 0.0
                           ? Colors.white
                           : index == 0.5
-                              ? const Color.fromRGBO(244, 169, 56, 1)
-                              : const Color.fromRGBO(0, 112, 60, 1),
+                              ? const DigitColors().amber
+                              : const DigitColors().darkSpringGreen,
                       border: Border.all(
                         width: 2,
                         color: onTap != null
                             ? index.isNegative
                                 ? Colors.black
                                 : index == 0.0
-                                    ? const Color.fromRGBO(212, 53, 28, 1)
+                                    ? const DigitColors().lavaRed
                                     : index == 0.5
-                                        ? const Color.fromRGBO(244, 169, 56, 1)
-                                        : const Color.fromRGBO(0, 112, 60, 1)
-                            : const Color.fromRGBO(149, 148, 148, 1),
+                                        ? const DigitColors().amber
+                                        : const DigitColors().darkSpringGreen
+                            : const DigitColors().cloudGray,
                         style: BorderStyle.solid,
                       ),
                     ),
@@ -93,7 +104,7 @@ class CircularButton extends StatelessWidget {
                   if (index != -1)
                     Padding(
                       padding: const EdgeInsets.only(
-                        left: 4.0,
+                        left: kPadding / 2,
                       ),
                       child: Text(
                         AttendanceLocalization.of(context).translate(
@@ -104,8 +115,8 @@ class CircularButton extends StatelessWidget {
                             .instance.mobileTheme.textTheme.labelSmall
                             ?.apply(
                           color: index == 0.0
-                              ? const Color.fromRGBO(212, 53, 28, 1)
-                              : const Color.fromRGBO(0, 112, 60, 1),
+                              ? const DigitColors().lavaRed
+                              : const DigitColors().darkSpringGreen,
                         ),
                       ),
                     ),
@@ -117,11 +128,17 @@ class CircularButton extends StatelessWidget {
 }
 
 class HalfCirclePainter extends CustomPainter {
+  final Color color;
+
+  const HalfCirclePainter({
+    required this.color,
+  });
+
   @override
   void paint(Canvas canvas, Size size) {
     final radius = min(size.width, size.height) / 2;
     final paint = Paint()
-      ..color = const Color.fromRGBO(244, 169, 56, 1)
+      ..color = color
       ..style = PaintingStyle.fill;
 
     final path = Path()
@@ -140,7 +157,7 @@ class HalfCirclePainter extends CustomPainter {
 
     // Draw yellow border around the entire circle
     final borderPaint = Paint()
-      ..color = const Color.fromRGBO(244, 169, 56, 1)
+      ..color = color
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0;
 

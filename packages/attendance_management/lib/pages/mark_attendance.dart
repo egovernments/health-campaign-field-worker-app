@@ -26,6 +26,7 @@ class MarkAttendancePage extends LocalizedStatefulWidget {
   final int entryTime;
   final int exitTime;
   final int? session;
+
   const MarkAttendancePage({
     required this.exitTime,
     required this.entryTime,

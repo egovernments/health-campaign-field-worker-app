@@ -19,10 +19,9 @@ class AttendanceAcknowledgementPage extends LocalizedStatefulWidget {
   final String? actionLabel;
   final Color color;
   final bool enableBackToSearch;
-  final bool enableViewHousehold;
   final VoidCallback? secondaryAction;
   final String? secondaryLabel;
-  final bool isActionLabel;
+
   AttendanceAcknowledgementPage({
     super.key,
     super.appLocalizations,
@@ -35,10 +34,8 @@ class AttendanceAcknowledgementPage extends LocalizedStatefulWidget {
     IconData? icon,
     Color? color,
     this.enableBackToSearch = true,
-    this.enableViewHousehold = false,
     this.secondaryAction,
     this.secondaryLabel,
-    this.isActionLabel = true,
   })  : color = color ?? DigitTheme.instance.colors.darkSpringGreen,
         icon = icon ?? Icons.check_circle;
 
@@ -83,9 +80,9 @@ class _AttendanceAcknowledgementPageState
                     localizations.translate(
                       i18.attendance.attendanceSubmittedSuccessMsg,
                     ),
-                    style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.w400,
+                    style: DigitTheme
+                        .instance.mobileTheme.textTheme.displayMedium
+                        ?.apply(
                       color: theme.colorScheme.onPrimary,
                     ),
                   ),
@@ -130,22 +127,23 @@ class _AttendanceAcknowledgementPageState
                         const SizedBox(
                           height: kPadding,
                         ),
-                        DigitOutLineButton(
-                          buttonStyle: OutlinedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            side: BorderSide(
-                              width: 1.0,
-                              color: Theme.of(context).colorScheme.secondary,
+                        if (widget.secondaryLabel != null)
+                          DigitOutLineButton(
+                            buttonStyle: OutlinedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              side: BorderSide(
+                                width: 1.0,
+                                color: Theme.of(context).colorScheme.secondary,
+                              ),
+                              minimumSize: Size(
+                                MediaQuery.of(context).size.width / 1,
+                                50,
+                              ),
+                              shape: null,
                             ),
-                            minimumSize: Size(
-                              MediaQuery.of(context).size.width / 1,
-                              50,
-                            ),
-                            shape: null,
+                            label: widget.secondaryLabel ?? '',
+                            onPressed: widget.secondaryAction,
                           ),
-                          label: widget.secondaryLabel ?? "Back",
-                          onPressed: widget.secondaryAction,
-                        ),
                       ],
                     ),
                   ],
