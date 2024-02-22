@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:camera/camera.dart';
 import 'package:digit_components/digit_components.dart';
@@ -6,14 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
-import 'dart:io';
 
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/localized.dart';
 import '../blocs/scanner/scanner.dart';
-import '../blocs/search_households/search_bloc_common_wrapper.dart';
 import '../blocs/search_households/search_households.dart';
 import '../blocs/search_referrals/search_referrals.dart';
 import '../models/data_model.dart';
@@ -77,27 +77,25 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
     return Scaffold(
       body: BlocBuilder<ScannerBloc, ScannerState>(
         builder: (context, state) {
-          return !manualcode
-              ? Stack(
-                  children: <Widget>[
-                    GestureDetector(
-                      onTap: () {
-                        controller?.pauseCamera();
-                        controller?.resumeCamera();
-                      },
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height,
-                        color: Colors.green[300],
-                        //TODO: Add localization
-                        child: DetectorView(
-                          title: 'Barcode Scanner',
-                          customPaint: _customPaint,
-                          text: _text,
-                          onImage: _processImage,
-                          initialCameraLensDirection: _cameraLensDirection,
-                          onCameraLensDirectionChanged: (value) =>
-                              _cameraLensDirection = value,
+          return _cameras.isNotEmpty
+              ? !manualcode
+                  ? Stack(
+                      children: <Widget>[
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height,
+                          color: Colors.green[300],
+                          child: DetectorView(
+                            cameraController: _cameraController,
+                            cameras: _cameras,
+                            title: 'Barcode Scanner',
+                            customPaint: _customPaint,
+                            text: _text,
+                            onImage: _processImage,
+                            initialCameraLensDirection: _cameraLensDirection,
+                            onCameraLensDirectionChanged: (value) =>
+                                _cameraLensDirection = value,
+                          ),
                         ),
                         Positioned(
                           top: kPadding * 1.5,
@@ -140,7 +138,7 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                         ),
                         // [TODO : Need move to constants]
                         Positioned(
-                          top: MediaQuery.of(context).size.width / 5,
+                          top: MediaQuery.of(context).size.width / 7.5,
                           left: MediaQuery.of(context).size.width / 2.6,
                           width: 250,
                           height: 250,
@@ -160,8 +158,9 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                           ),
                         ),
                         Positioned(
-                          left: MediaQuery.of(context).size.width / 4,
-                          width: 250,
+                          top: MediaQuery.of(context).size.height / 2.4,
+                          left: MediaQuery.of(context).size.width / 5,
+                          width: 300,
                           height: 250,
                           child: SizedBox(
                             width: 150,
@@ -180,9 +179,10 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                             ),
                           ),
                         ),
+
                         Positioned(
-                          top: MediaQuery.of(context).size.height / 2.0,
-                          left: MediaQuery.of(context).size.width / 6,
+                          top: MediaQuery.of(context).size.height / 2.2,
+                          left: MediaQuery.of(context).size.width / 5,
                           width: 250,
                           height: 50,
                           child: SizedBox(
@@ -455,9 +455,7 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                                 result.length < widget.quantity) {
                               buildDialog();
                             } else {
-                              final bloc = context.read<SearchBlocWrapper>();
-                              final hfBloc =
-                                  context.read<SearchReferralsBloc>();
+                              final bloc = context.read<SearchHouseholdsBloc>();
                               final scannerState =
                                   context.read<ScannerBloc>().state;
                               final hfBloc =
@@ -473,8 +471,10 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                                     projectId: context.projectId,
                                   ));
                                 } else {
-                                  bloc.tagSearchBloc.add(SearchHouseholdsEvent.searchByTag(
-                                    tag: scannerState.qrcodes.first,
+                                  bloc.add(SearchHouseholdsEvent.searchByTag(
+                                    tag: manualcode
+                                        ? _resourceController.value.text
+                                        : scannerState.qrcodes.first,
                                     projectId: context.projectId,
                                   ));
                                 }
@@ -493,43 +493,8 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                               style: theme.textTheme.headlineLarge,
                             ),
                           ),
-                        );
-                        if (widget.isGS1code &&
-                            result.length < widget.quantity) {
-                          buildDialog();
-                        } else {
-                          final bloc = context.read<SearchBlocWrapper>();
-                          final scannerState =
-                              context.read<ScannerBloc>().state;
-                          final hfBloc = context.read<SearchReferralsBloc>();
-
-                          if (scannerState.qrcodes.isNotEmpty || manualcode) {
-                            if (isHealthFacilityWorker) {
-                              hfBloc.add(SearchReferralsEvent.searchByTag(
-                                tag: manualcode
-                                    ? _resourceController.value.text
-                                    : scannerState.qrcodes.first,
-                                projectId: context.projectId,
-                              ));
-                            } else {
-                              bloc.proximitySearchBloc.add(SearchHouseholdsEvent.searchByTag(
-                                tag: manualcode
-                                    ? _resourceController.value.text
-                                    : scannerState.qrcodes.first,
-                                projectId: context.projectId,
-                              ));
-                            }
-                          }
-                          context.router.pop();
-                        }
-                      },
-                    ),
-                    children: [
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          localizations.translate(
-                            i18.deliverIntervention.manualEnterCode,
+                          const SizedBox(
+                            height: kPadding * 2,
                           ),
                           Text(localizations.translate(
                             i18.deliverIntervention.manualCodeDescription,
