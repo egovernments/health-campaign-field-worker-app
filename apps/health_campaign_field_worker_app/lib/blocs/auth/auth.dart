@@ -53,7 +53,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final userObject = await localSecureStore.userRequestModel;
       final actionsList = await localSecureStore.savedActions;
 
-      final loggedInIndividual = await localSecureStore.userIndividualId;
+      final userIndividualId = await localSecureStore.userIndividualId;
       if (accessToken == null ||
           refreshToken == null ||
           userObject == null ||
@@ -64,7 +64,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           accessToken: accessToken,
           refreshToken: refreshToken,
           userModel: userObject,
-          individualId: loggedInIndividual,
+          individualId: userIndividualId,
           actionsWrapper: actionsList,
         ));
       }

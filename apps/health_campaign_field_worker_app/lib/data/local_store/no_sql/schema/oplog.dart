@@ -18,12 +18,12 @@ class OpLog {
 
       case "householdMember":
         final entity = HouseholdMemberModelMapper.fromJson(entityString);
-
         return entity;
 
       case "individual":
         final entity = IndividualModelMapper.fromJson(entityString);
         return entity;
+
       case "projectBeneficiary":
         final entity = ProjectBeneficiaryModelMapper.fromJson(entityString);
         return entity;
@@ -38,23 +38,22 @@ class OpLog {
 
       case "referral":
         final entity = ReferralModelMapper.fromJson(entityString);
-
         return entity;
+
       case "attendance":
         final entity = HCMAttendanceLogModelMapper.fromJson(entityString);
-
         return entity;
+
       case "stock":
         final entity = StockModelMapper.fromJson(entityString);
-
         return entity;
+
       case "hFReferral":
         final entity = HFReferralModelMapper.fromJson(entityString);
-
         return entity;
+
       default:
         final entity = EntityModelMapper.fromJson(entityString);
-
         return entity;
     }
   }

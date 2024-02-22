@@ -34,8 +34,6 @@ class HCMAttendanceBloc extends AttendanceListeners {
   late Function(List<AttendancePackageRegisterModel> registers)
       _registersLoaded;
 
-  // late SearchAttendanceLog _attendeesLoaded;
-
   @override
   void getAttendanceRegisters(
     Function(List<AttendancePackageRegisterModel> registers)
@@ -164,7 +162,6 @@ class HCMAttendanceBloc extends AttendanceListeners {
   Future<void> submitAttendanceDetails(
     SubmitAttendanceDetails attendanceLogs,
   ) async {
-    // TODO: implement submitAttendanceDetails
     final existingLogs = await attendanceLogLocalRepository?.search(
       HCMAttendanceLogSearchModel(
         registerId: attendanceLogs.attendanceLogs.first.registerId,
