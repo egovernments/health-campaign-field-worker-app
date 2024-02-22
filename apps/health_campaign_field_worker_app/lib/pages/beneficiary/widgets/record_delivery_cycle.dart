@@ -226,8 +226,7 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                                   .firstWhereOrNull(
                                     (f) =>
                                         f.key ==
-                                        AdditionalFieldsType.doseIndex
-                                            .name,
+                                        AdditionalFieldsType.doseIndex.name,
                                   )
                                   ?.value ==
                               '0${item.id}' &&
@@ -235,8 +234,7 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                                   .firstWhereOrNull(
                                     (c) =>
                                         c.key ==
-                                        AdditionalFieldsType.cycleIndex
-                                            .name,
+                                        AdditionalFieldsType.cycleIndex.name,
                                   )
                                   ?.value ==
                               '0${e.id}')
@@ -244,7 +242,7 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
 
                   return TableDataRow([
                     TableData(
-                      'Dose ${e.deliveries!.indexOf(item) + 1}',
+                      '${localizations.translate(i18.deliverIntervention.dose)} ${e.deliveries!.indexOf(item) + 1}',
                       cellKey: 'dose',
                     ),
                     TableData(
@@ -257,8 +255,7 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                       style: TextStyle(
                         color: index == selectedIndex
                             ? null
-                            : tasks?.status ==
-                                    Status.administeredSuccess.name
+                            : tasks?.status == Status.administeredSuccess.name
                                 ? DigitTheme
                                     .instance.colorScheme.onSurfaceVariant
                                 : DigitTheme.instance.colorScheme.error,
@@ -271,8 +268,8 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                               (tasks?.additionalFields?.fields
                                       .where((e) =>
                                           e.key ==
-                                          AdditionalFieldsType.deliveryStrategy
-                                              .name)
+                                          AdditionalFieldsType
+                                              .deliveryStrategy.name)
                                       .firstOrNull
                                       ?.value ==
                                   DeliverStrategyType.indirect.name)
@@ -291,9 +288,9 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
             const SizedBox(
               height: 16,
             ),
-              const Divider(
-                thickness: 1.0,
-              ),
+            const Divider(
+              thickness: 1.0,
+            ),
           ],
         ),
       );

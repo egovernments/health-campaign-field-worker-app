@@ -20,7 +20,6 @@ import '../../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import '../../../widgets/header/back_navigation_help_header.dart';
 import '../../../widgets/inventory/no_facilities_assigned_dialog.dart';
 import '../../../widgets/localized.dart';
-import '../facility_selection.dart';
 
 class StockReconciliationPage extends LocalizedStatefulWidget {
   const StockReconciliationPage({
@@ -39,10 +38,11 @@ class _StockReconciliationPageState
   static const _productVariantKey = 'productVariant';
   static const _manualCountKey = 'manualCountKey';
   static const _reconciliationCommentsKey = 'reconciliationCommentsKey';
+  String? selectedFacilityId;
 
   FormGroup _form(bool isDistributor) {
     return fb.group({
-      _facilityKey: FormControl<FacilityModel>(
+      _facilityKey: FormControl<String>(
         validators: isDistributor ? [] : [Validators.required],
       ),
       _productVariantKey: FormControl<ProductVariantModel>(),
@@ -171,9 +171,10 @@ class _StockReconciliationPageState
                                                           ],
                                                         ),
                                                       )
-                                                    : form
-                                                        .control(_facilityKey)
-                                                        .value as FacilityModel;
+                                                    : FacilityModel(
+                                                        id: selectedFacilityId
+                                                            .toString(),
+                                                      );
 
                                             final productVariant = form
                                                 .control(_productVariantKey)
@@ -335,7 +336,13 @@ class _StockReconciliationPageState
 
                                               if (facility == null) return;
                                               form.control(_facilityKey).value =
-                                                  facility;
+                                                  localizations.translate(
+                                                'FAC_${facility.id}',
+                                              );
+                                              setState(() {
+                                                selectedFacilityId =
+                                                    facility.id;
+                                              });
                                               stockReconciliationBloc.add(
                                                 StockReconciliationSelectFacilityEvent(
                                                   facility,
@@ -345,10 +352,6 @@ class _StockReconciliationPageState
                                             child: IgnorePointer(
                                               child: DigitTextFormField(
                                                 hideKeyboard: true,
-                                                valueAccessor:
-                                                    FacilityValueAccessor(
-                                                  facilities,
-                                                ),
                                                 label: localizations.translate(
                                                   i18.stockReconciliationDetails
                                                       .facilityLabel,
@@ -375,8 +378,15 @@ class _StockReconciliationPageState
 
                                                   if (facility == null) return;
                                                   form
-                                                      .control(_facilityKey)
-                                                      .value = facility;
+                                                          .control(_facilityKey)
+                                                          .value =
+                                                      localizations.translate(
+                                                    'FAC_${facility.id}',
+                                                  );
+                                                  setState(() {
+                                                    selectedFacilityId =
+                                                        facility.id;
+                                                  });
                                                   stockReconciliationBloc.add(
                                                     StockReconciliationSelectFacilityEvent(
                                                       facility,

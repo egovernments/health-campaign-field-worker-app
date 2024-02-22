@@ -72,15 +72,15 @@ class _BeneficiaryDetailsPageState
           final bloc = context.read<DeliverInterventionBloc>();
           final lastDose = taskData != null && taskData.isNotEmpty
               ? taskData.last.additionalFields?.fields
-                      .firstWhereOrNull((e) =>
-                          e.key == AdditionalFieldsType.doseIndex.name)
+                      .firstWhereOrNull(
+                          (e) => e.key == AdditionalFieldsType.doseIndex.name)
                       ?.value ??
                   '1'
               : '0';
           final lastCycle = taskData != null && taskData.isNotEmpty
               ? taskData.last.additionalFields?.fields
-                      .firstWhereOrNull((e) =>
-                          e.key == AdditionalFieldsType.cycleIndex.name)
+                      .firstWhereOrNull(
+                          (e) => e.key == AdditionalFieldsType.cycleIndex.name)
                       ?.value ??
                   '1'
               : '1';
@@ -197,7 +197,7 @@ class _BeneficiaryDetailsPageState
                                         },
                                         child: Center(
                                           child: Text(
-                                            'Record Cycle ${(deliverState.cycle == 0 ? (deliverState.cycle + 1) : deliverState.cycle).toString()} Dose ${(deliverState.dose).toString()}',
+                                            '${localizations.translate(i18.beneficiaryDetails.recordsdownload)} ${(deliverState.cycle == 0 ? (deliverState.cycle + 1) : deliverState.cycle).toString()} ${localizations.translate(i18.deliverIntervention.dose)} ${(deliverState.dose).toString()}',
                                           ),
                                         ),
                                       ),

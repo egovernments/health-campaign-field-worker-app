@@ -86,7 +86,8 @@ class _HomePageState extends LocalizedState<HomePage> {
     });
 
     //[TODO: Add below roles to enum]
-    if (!(roles.contains("DISTRIBUTOR") || roles.contains("REGISTRAR"))) {
+    if (!(roles.contains(RolesType.distributor.toValue()) ||
+        roles.contains(RolesType.registrar.toValue()))) {
       skipProgressBar = true;
     }
 
@@ -368,8 +369,7 @@ class _HomePageState extends LocalizedState<HomePage> {
               label: i18.home.syncDataLabel,
               onPressed: () async {
                 if (snapshot.data?['enablesManualSync'] == true) {
-                  if (context.mounted)
-                _attemptSyncUp(context);
+                  if (context.mounted) _attemptSyncUp(context);
                 } else {
                   if (context.mounted) {
                     DigitToast.show(
@@ -426,37 +426,40 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
-      i18.home.manageAttendanceLabel: HomeItemCard(
-        icon: Icons.table_chart,
-        label: i18.home.manageAttendanceLabel,
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ManageAttendancePage(
-                attendanceListeners: HCMAttendanceBloc(
-                  userId: context.loggedInUserUuid,
+      i18.home.manageAttendanceLabel:
+          homeShowcaseData.manageAttendance.buildWith(
+        child: HomeItemCard(
+          icon: Icons.table_chart,
+          label: i18.home.manageAttendanceLabel,
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ManageAttendancePage(
+                  attendanceListeners: HCMAttendanceBloc(
+                    userId: context.loggedInUserUuid,
+                    projectId: context.projectId,
+                    attendanceLocalRepository: context.read<
+                        LocalRepository<HCMAttendanceRegisterModel,
+                            HCMAttendanceSearchModel>>(),
+                    individualLocalRepository: context.read<
+                        LocalRepository<IndividualModel,
+                            IndividualSearchModel>>(),
+                    attendanceLogLocalRepository: context.read<
+                        LocalRepository<HCMAttendanceLogModel,
+                            HCMAttendanceLogSearchModel>>(),
+                    context: context,
+                    individualId: context.loggedInIndividualId,
+                  ),
                   projectId: context.projectId,
-                  attendanceLocalRepository: context.read<
-                      LocalRepository<HCMAttendanceRegisterModel,
-                          HCMAttendanceSearchModel>>(),
-                  individualLocalRepository: context.read<
-                      LocalRepository<IndividualModel,
-                          IndividualSearchModel>>(),
-                  attendanceLogLocalRepository: context.read<
-                      LocalRepository<HCMAttendanceLogModel,
-                          HCMAttendanceLogSearchModel>>(),
-                  context: context,
-                  individualId: context.loggedInIndividualId,
+                  userId: context.loggedInUserUuid,
+                  appVersion: Constants().version,
                 ),
-                projectId: context.projectId,
-                userId: context.loggedInUserUuid,
-                appVersion: Constants().version,
+                settings: const RouteSettings(name: '/manage-attendance'),
               ),
-              settings: const RouteSettings(name: '/manage-attendance'),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     };
 
@@ -476,7 +479,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.beneficiaryReferralLabel:
           homeShowcaseData.hfBeneficiaryReferral.showcaseKey,
       i18.home.manageAttendanceLabel:
-          homeShowcaseData.attendanceRegister.showcaseKey,
+          homeShowcaseData.manageAttendance.showcaseKey,
     };
 
     final homeItemsLabel = <String>[
@@ -546,7 +549,9 @@ class _HomePageState extends LocalizedState<HomePage> {
                     LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
                 context.read<
                     LocalRepository<HFReferralModel, HFReferralSearchModel>>(),
-                //TODO: Add attendance
+                context.read<
+                    LocalRepository<HCMAttendanceLogModel,
+                        HCMAttendanceLogSearchModel>>(),
               ],
               remoteRepositories: [
                 context.read<
@@ -574,7 +579,9 @@ class _HomePageState extends LocalizedState<HomePage> {
                     RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
                 context.read<
                     RemoteRepository<HFReferralModel, HFReferralSearchModel>>(),
-                //TODO: Add attendance
+                context.read<
+                    RemoteRepository<HCMAttendanceLogModel,
+                        HCMAttendanceLogSearchModel>>(),
               ],
             ),
           );

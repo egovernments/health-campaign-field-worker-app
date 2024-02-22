@@ -37,6 +37,8 @@ class RolesTypeMapper extends EnumMapper<RolesType> {
         return RolesType.fieldSupervisor;
       case "SUPERUSER":
         return RolesType.superuser;
+      case "REGISTRAR":
+        return RolesType.registrar;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -57,6 +59,8 @@ class RolesTypeMapper extends EnumMapper<RolesType> {
         return "FIELD_SUPERVISOR";
       case RolesType.superuser:
         return "SUPERUSER";
+      case RolesType.registrar:
+        return "REGISTRAR";
     }
   }
 }

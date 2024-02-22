@@ -108,12 +108,6 @@ class PerformSyncUp {
                 );
               }
 
-              // if (updatedEntity is HCMAttendanceLogModel) {
-              //   updatedEntity = updatedEntity.copyWith(
-              //     id: serverGeneratedId,
-              //   );
-              // }
-
               return updatedEntity;
             }
 

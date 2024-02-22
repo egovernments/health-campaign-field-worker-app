@@ -23,4 +23,3 @@ enum AdditionalFieldsType {
   @MappableValue("longitude") longitude,
   ;
 }
-

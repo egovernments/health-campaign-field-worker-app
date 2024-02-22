@@ -24,6 +24,10 @@
     {
       "name": "Superuser",
       "value": "SUPERUSER"
+    },
+    {
+      "name": "Registrar",
+      "value": "REGISTRAR"
     }
   ],
   "isEnum": true

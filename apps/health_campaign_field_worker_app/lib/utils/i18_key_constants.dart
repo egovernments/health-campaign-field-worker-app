@@ -975,6 +975,7 @@ class BeneficiaryDetails {
   String get totalrecorddownload => 'TOTAL_RECORD_DOWNLOAD';
   String get insufficientStorageContent =>
       'INSUFFICIENT_STORAGE_WARNING_CONTENT';
+  String get recordCycle => 'BENEFICIARY_DETAILS_RECORD_CYCLE';
 }
 
 class IndividualDetails {

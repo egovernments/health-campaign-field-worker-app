@@ -90,15 +90,15 @@ class _HomePageShowcaseData {
     messageLocalizationKey: i18.homeShowcase.beneficiaryReferral,
   );
 
-  final attendanceRegister = ShowcaseItemBuilder(
-    messageLocalizationKey: i18.homeShowcase.manageAttendance,
-  );
-
   final deleteAll = ShowcaseItemBuilder(
     messageLocalizationKey: i18.homeShowcase.deleteAll,
   );
 
   final db = ShowcaseItemBuilder(
     messageLocalizationKey: i18.home.db,
+  );
+
+  final manageAttendance = ShowcaseItemBuilder(
+    messageLocalizationKey: i18.home.manageAttendanceLabel,
   );
 }
