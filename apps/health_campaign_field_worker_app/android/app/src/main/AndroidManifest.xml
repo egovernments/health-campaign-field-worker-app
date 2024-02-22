@@ -30,6 +30,7 @@
             android:turnScreenOn="true"
             android:name=".MainActivity"
             android:exported="true"
+            android:screenOrientation="portrait"
             android:allowBackup="false"
             android:fullBackupContent="false"
             android:launchMode="singleTop"
