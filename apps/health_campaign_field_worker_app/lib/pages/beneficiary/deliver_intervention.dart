@@ -390,11 +390,6 @@ class _DeliverInterventionPageState
                                                               .coreCommonSubmit,
                                                         ),
                                                       ),
-                                                      action: (context) =>
-                                                          Navigator.of(
-                                                        context,
-                                                        rootNavigator: true,
-                                                      ).pop(false),
                                                     ),
                                                   );
                                                 },

@@ -271,19 +271,7 @@ class _SearchBeneficiaryPageState
                                 i18.searchBeneficiary.beneficiaryInfoTitle,
                               ),
                             ),
-                            const SizedBox(height: 16),
-                            if (searchState.resultsNotFound)
-                              DigitInfoCard(
-                                description: localizations.translate(
-                                  i18.searchBeneficiary
-                                      .beneficiaryInfoDescription,
-                                ),
-                                title: localizations.translate(
-                                  i18.searchBeneficiary.beneficiaryInfoTitle,
-                                ),
-                              ),
-                          ],
-                        ),
+                        ],
                       ),
                     ),
                   ),
