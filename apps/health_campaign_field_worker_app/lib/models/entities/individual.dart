@@ -5,9 +5,12 @@ import 'package:drift/drift.dart';
 import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
 
-@MappableClass(ignoreNull: true)
-class IndividualSearchModel extends EntitySearchModel {
-  final String? id;
+part 'individual.mapper.dart';
+
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class IndividualSearchModel extends EntitySearchModel with IndividualSearchModelMappable {
+  final List<String>? id;
+  final String? userUuid;
   final String? dateOfBirth;
   final List<String>? clientReferenceId;
   final String? tenantId;
@@ -17,6 +20,7 @@ class IndividualSearchModel extends EntitySearchModel {
   
   IndividualSearchModel({
     this.id,
+    this.userUuid,
     this.dateOfBirth,
     this.clientReferenceId,
     this.tenantId,
@@ -30,6 +34,7 @@ class IndividualSearchModel extends EntitySearchModel {
   @MappableConstructor()
   IndividualSearchModel.ignoreDeleted({
     this.id,
+    this.userUuid,
     this.dateOfBirth,
     this.clientReferenceId,
     this.tenantId,
@@ -40,13 +45,15 @@ class IndividualSearchModel extends EntitySearchModel {
   }):  super(isDeleted: false);
 }
 
-@MappableClass(ignoreNull: true)
-class IndividualModel extends EntityModel {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class IndividualModel extends EntityModel with IndividualModelMappable {
 
   static const schemaName = 'Individual';
 
   final String? id;
+  final String? individualId;
   final String? userId;
+  final String? userUuid;
   final String? dateOfBirth;
   final String? mobileNumber;
   final String? altContactNumber;
@@ -68,7 +75,9 @@ class IndividualModel extends EntityModel {
   IndividualModel({
     this.additionalFields,
     this.id,
+    this.individualId,
     this.userId,
+    this.userUuid,
     this.dateOfBirth,
     this.mobileNumber,
     this.altContactNumber,
@@ -102,7 +111,9 @@ class IndividualModel extends EntityModel {
       additionalFields: Value(additionalFields?.toJson()),
       isDeleted: Value(isDeleted),
       id: Value(id),
+      individualId: Value(individualId),
       userId: Value(userId),
+      userUuid: Value(userUuid),
       dateOfBirth: Value(dateOfBirth),
       mobileNumber: Value(mobileNumber),
       altContactNumber: Value(altContactNumber),
@@ -120,11 +131,12 @@ class IndividualModel extends EntityModel {
   }
 }
 
-@MappableClass(ignoreNull: true)
-class IndividualAdditionalFields extends AdditionalFields {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class IndividualAdditionalFields extends AdditionalFields with IndividualAdditionalFieldsMappable {
   IndividualAdditionalFields({
     super.schema = 'Individual',
     required super.version,
     super.fields,
   });
 }
+

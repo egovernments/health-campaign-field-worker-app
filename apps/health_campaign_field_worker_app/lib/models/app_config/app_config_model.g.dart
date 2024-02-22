@@ -6,63 +6,66 @@ part of 'app_config_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_MdmsRequestModel _$$_MdmsRequestModelFromJson(Map<String, dynamic> json) =>
-    _$_MdmsRequestModel(
+_$MdmsRequestModelImpl _$$MdmsRequestModelImplFromJson(
+        Map<String, dynamic> json) =>
+    _$MdmsRequestModelImpl(
       mdmsCriteria: MdmsCriteriaModel.fromJson(
           json['MdmsCriteria'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$$_MdmsRequestModelToJson(_$_MdmsRequestModel instance) =>
+Map<String, dynamic> _$$MdmsRequestModelImplToJson(
+        _$MdmsRequestModelImpl instance) =>
     <String, dynamic>{
       'MdmsCriteria': instance.mdmsCriteria,
     };
 
-_$_MdmsCriteriaModel _$$_MdmsCriteriaModelFromJson(Map<String, dynamic> json) =>
-    _$_MdmsCriteriaModel(
+_$MdmsCriteriaModelImpl _$$MdmsCriteriaModelImplFromJson(
+        Map<String, dynamic> json) =>
+    _$MdmsCriteriaModelImpl(
       tenantId: json['tenantId'] as String,
       moduleDetails: (json['moduleDetails'] as List<dynamic>)
           .map((e) => MdmsModuleDetailModel.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
-Map<String, dynamic> _$$_MdmsCriteriaModelToJson(
-        _$_MdmsCriteriaModel instance) =>
+Map<String, dynamic> _$$MdmsCriteriaModelImplToJson(
+        _$MdmsCriteriaModelImpl instance) =>
     <String, dynamic>{
       'tenantId': instance.tenantId,
       'moduleDetails': instance.moduleDetails,
     };
 
-_$_MdmsModuleDetailModel _$$_MdmsModuleDetailModelFromJson(
+_$MdmsModuleDetailModelImpl _$$MdmsModuleDetailModelImplFromJson(
         Map<String, dynamic> json) =>
-    _$_MdmsModuleDetailModel(
+    _$MdmsModuleDetailModelImpl(
       moduleName: json['moduleName'] as String,
       masterDetails: (json['masterDetails'] as List<dynamic>)
           .map((e) => MdmsMasterDetailModel.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
-Map<String, dynamic> _$$_MdmsModuleDetailModelToJson(
-        _$_MdmsModuleDetailModel instance) =>
+Map<String, dynamic> _$$MdmsModuleDetailModelImplToJson(
+        _$MdmsModuleDetailModelImpl instance) =>
     <String, dynamic>{
       'moduleName': instance.moduleName,
       'masterDetails': instance.masterDetails,
     };
 
-_$_MdmsMasterDetailModel _$$_MdmsMasterDetailModelFromJson(
+_$MdmsMasterDetailModelImpl _$$MdmsMasterDetailModelImplFromJson(
         Map<String, dynamic> json) =>
-    _$_MdmsMasterDetailModel(
+    _$MdmsMasterDetailModelImpl(
       json['name'] as String,
     );
 
-Map<String, dynamic> _$$_MdmsMasterDetailModelToJson(
-        _$_MdmsMasterDetailModel instance) =>
+Map<String, dynamic> _$$MdmsMasterDetailModelImplToJson(
+        _$MdmsMasterDetailModelImpl instance) =>
     <String, dynamic>{
       'name': instance.name,
     };
 
-_$_AppConfigPrimaryWrapperModel _$$_AppConfigPrimaryWrapperModelFromJson(
+_$AppConfigPrimaryWrapperModelImpl _$$AppConfigPrimaryWrapperModelImplFromJson(
         Map<String, dynamic> json) =>
-    _$_AppConfigPrimaryWrapperModel(
+    _$AppConfigPrimaryWrapperModelImpl(
       appConfig: json['HCM-FIELD-APP-CONFIG'] == null
           ? null
           : AppConfigSecondaryWrapperModel.fromJson(
@@ -81,8 +84,8 @@ _$_AppConfigPrimaryWrapperModel _$$_AppConfigPrimaryWrapperModelFromJson(
               json['HCM-REFERRAL-REASONS'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$$_AppConfigPrimaryWrapperModelToJson(
-        _$_AppConfigPrimaryWrapperModel instance) =>
+Map<String, dynamic> _$$AppConfigPrimaryWrapperModelImplToJson(
+        _$AppConfigPrimaryWrapperModelImpl instance) =>
     <String, dynamic>{
       'HCM-FIELD-APP-CONFIG': instance.appConfig,
       'module-version': instance.rowVersions,
@@ -90,35 +93,36 @@ Map<String, dynamic> _$$_AppConfigPrimaryWrapperModelToJson(
       'HCM-REFERRAL-REASONS': instance.referralReasons,
     };
 
-_$_AppConfigSecondaryWrapperModel _$$_AppConfigSecondaryWrapperModelFromJson(
-        Map<String, dynamic> json) =>
-    _$_AppConfigSecondaryWrapperModel(
-      appConfiglist: (json['appConfig'] as List<dynamic>?)
-          ?.map((e) => AppConfig.fromJson(e as Map<String, dynamic>))
-          .toList(),
-    );
+_$AppConfigSecondaryWrapperModelImpl
+    _$$AppConfigSecondaryWrapperModelImplFromJson(Map<String, dynamic> json) =>
+        _$AppConfigSecondaryWrapperModelImpl(
+          appConfiglist: (json['appConfig'] as List<dynamic>?)
+              ?.map((e) => AppConfig.fromJson(e as Map<String, dynamic>))
+              .toList(),
+        );
 
-Map<String, dynamic> _$$_AppConfigSecondaryWrapperModelToJson(
-        _$_AppConfigSecondaryWrapperModel instance) =>
+Map<String, dynamic> _$$AppConfigSecondaryWrapperModelImplToJson(
+        _$AppConfigSecondaryWrapperModelImpl instance) =>
     <String, dynamic>{
       'appConfig': instance.appConfiglist,
     };
 
-_$_RowVersionWrapperModel _$$_RowVersionWrapperModelFromJson(
+_$RowVersionWrapperModelImpl _$$RowVersionWrapperModelImplFromJson(
         Map<String, dynamic> json) =>
-    _$_RowVersionWrapperModel(
+    _$RowVersionWrapperModelImpl(
       rowVersionslist: (json['ROW_VERSIONS'] as List<dynamic>?)
           ?.map((e) => RowVersions.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
-Map<String, dynamic> _$$_RowVersionWrapperModelToJson(
-        _$_RowVersionWrapperModel instance) =>
+Map<String, dynamic> _$$RowVersionWrapperModelImplToJson(
+        _$RowVersionWrapperModelImpl instance) =>
     <String, dynamic>{
       'ROW_VERSIONS': instance.rowVersionslist,
     };
 
-_$_AppConfig _$$_AppConfigFromJson(Map<String, dynamic> json) => _$_AppConfig(
+_$AppConfigImpl _$$AppConfigImplFromJson(Map<String, dynamic> json) =>
+    _$AppConfigImpl(
       networkDetection: json['NETWORK_DETECTION'] as String,
       persistenceMode: json['PERSISTENCE_MODE'] as String,
       syncMethod: json['SYNC_METHOD'] as String,
@@ -167,7 +171,7 @@ _$_AppConfig _$$_AppConfigFromJson(Map<String, dynamic> json) => _$_AppConfig(
           .toList(),
     );
 
-Map<String, dynamic> _$$_AppConfigToJson(_$_AppConfig instance) =>
+Map<String, dynamic> _$$AppConfigImplToJson(_$AppConfigImpl instance) =>
     <String, dynamic>{
       'NETWORK_DETECTION': instance.networkDetection,
       'PERSISTENCE_MODE': instance.persistenceMode,
@@ -191,193 +195,202 @@ Map<String, dynamic> _$$_AppConfigToJson(_$_AppConfig instance) =>
       'TRANSPORT_TYPES': instance.transportTypes,
     };
 
-_$_IdTypeOptions _$$_IdTypeOptionsFromJson(Map<String, dynamic> json) =>
-    _$_IdTypeOptions(
+_$IdTypeOptionsImpl _$$IdTypeOptionsImplFromJson(Map<String, dynamic> json) =>
+    _$IdTypeOptionsImpl(
       name: json['name'] as String,
       code: json['code'] as String,
     );
 
-Map<String, dynamic> _$$_IdTypeOptionsToJson(_$_IdTypeOptions instance) =>
+Map<String, dynamic> _$$IdTypeOptionsImplToJson(_$IdTypeOptionsImpl instance) =>
     <String, dynamic>{
       'name': instance.name,
       'code': instance.code,
     };
 
-_$_BandWidthBatchSize _$$_BandWidthBatchSizeFromJson(
+_$BandWidthBatchSizeImpl _$$BandWidthBatchSizeImplFromJson(
         Map<String, dynamic> json) =>
-    _$_BandWidthBatchSize(
+    _$BandWidthBatchSizeImpl(
       minRange: (json['MIN_RANGE'] as num).toDouble(),
       maxRange: (json['MAX_RANGE'] as num).toDouble(),
       batchSize: json['BATCH_SIZE'] as int,
     );
 
-Map<String, dynamic> _$$_BandWidthBatchSizeToJson(
-        _$_BandWidthBatchSize instance) =>
+Map<String, dynamic> _$$BandWidthBatchSizeImplToJson(
+        _$BandWidthBatchSizeImpl instance) =>
     <String, dynamic>{
       'MIN_RANGE': instance.minRange,
       'MAX_RANGE': instance.maxRange,
       'BATCH_SIZE': instance.batchSize,
     };
 
-_$_DeliveryCommentOptions _$$_DeliveryCommentOptionsFromJson(
+_$DeliveryCommentOptionsImpl _$$DeliveryCommentOptionsImplFromJson(
         Map<String, dynamic> json) =>
-    _$_DeliveryCommentOptions(
+    _$DeliveryCommentOptionsImpl(
       name: json['name'] as String,
       code: json['code'] as String,
     );
 
-Map<String, dynamic> _$$_DeliveryCommentOptionsToJson(
-        _$_DeliveryCommentOptions instance) =>
+Map<String, dynamic> _$$DeliveryCommentOptionsImplToJson(
+        _$DeliveryCommentOptionsImpl instance) =>
     <String, dynamic>{
       'name': instance.name,
       'code': instance.code,
     };
 
-_$_DeletionReasonOptions _$$_DeletionReasonOptionsFromJson(
+_$DeletionReasonOptionsImpl _$$DeletionReasonOptionsImplFromJson(
         Map<String, dynamic> json) =>
-    _$_DeletionReasonOptions(
+    _$DeletionReasonOptionsImpl(
       value: json['value'] as String,
       code: json['code'] as String,
     );
 
-Map<String, dynamic> _$$_DeletionReasonOptionsToJson(
-        _$_DeletionReasonOptions instance) =>
+Map<String, dynamic> _$$DeletionReasonOptionsImplToJson(
+        _$DeletionReasonOptionsImpl instance) =>
     <String, dynamic>{
       'value': instance.value,
       'code': instance.code,
     };
 
-_$_GenderOptions _$$_GenderOptionsFromJson(Map<String, dynamic> json) =>
-    _$_GenderOptions(
+_$GenderOptionsImpl _$$GenderOptionsImplFromJson(Map<String, dynamic> json) =>
+    _$GenderOptionsImpl(
       name: json['name'] as String,
       code: json['code'] as String,
     );
 
-Map<String, dynamic> _$$_GenderOptionsToJson(_$_GenderOptions instance) =>
+Map<String, dynamic> _$$GenderOptionsImplToJson(_$GenderOptionsImpl instance) =>
     <String, dynamic>{
       'name': instance.name,
       'code': instance.code,
     };
 
-_$_BackgroundServiceConfig _$$_BackgroundServiceConfigFromJson(
+_$BackgroundServiceConfigImpl _$$BackgroundServiceConfigImplFromJson(
         Map<String, dynamic> json) =>
-    _$_BackgroundServiceConfig(
+    _$BackgroundServiceConfigImpl(
       batteryPercentCutOff: json['BATTERY_PERCENT_CUT_OFF'] as int,
       serviceInterval: json['SERVICE_INTERVAL'] as int,
       apiConcurrency: json['API_CONCURRENCY'] as int,
     );
 
-Map<String, dynamic> _$$_BackgroundServiceConfigToJson(
-        _$_BackgroundServiceConfig instance) =>
+Map<String, dynamic> _$$BackgroundServiceConfigImplToJson(
+        _$BackgroundServiceConfigImpl instance) =>
     <String, dynamic>{
       'BATTERY_PERCENT_CUT_OFF': instance.batteryPercentCutOff,
       'SERVICE_INTERVAL': instance.serviceInterval,
       'API_CONCURRENCY': instance.apiConcurrency,
     };
 
-_$_BackendInterface _$$_BackendInterfaceFromJson(Map<String, dynamic> json) =>
-    _$_BackendInterface(
+_$BackendInterfaceImpl _$$BackendInterfaceImplFromJson(
+        Map<String, dynamic> json) =>
+    _$BackendInterfaceImpl(
       interface: (json['interfaces'] as List<dynamic>)
           .map((e) => Interfaces.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
-Map<String, dynamic> _$$_BackendInterfaceToJson(_$_BackendInterface instance) =>
+Map<String, dynamic> _$$BackendInterfaceImplToJson(
+        _$BackendInterfaceImpl instance) =>
     <String, dynamic>{
       'interfaces': instance.interface,
     };
 
-_$_InterfacesWrapper _$$_InterfacesWrapperFromJson(Map<String, dynamic> json) =>
-    _$_InterfacesWrapper(
+_$InterfacesWrapperImpl _$$InterfacesWrapperImplFromJson(
+        Map<String, dynamic> json) =>
+    _$InterfacesWrapperImpl(
       interface: (json['interface'] as List<dynamic>)
           .map((e) => Interfaces.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
-Map<String, dynamic> _$$_InterfacesWrapperToJson(
-        _$_InterfacesWrapper instance) =>
+Map<String, dynamic> _$$InterfacesWrapperImplToJson(
+        _$InterfacesWrapperImpl instance) =>
     <String, dynamic>{
       'interface': instance.interface,
     };
 
-_$_Interfaces _$$_InterfacesFromJson(Map<String, dynamic> json) =>
-    _$_Interfaces(
+_$InterfacesImpl _$$InterfacesImplFromJson(Map<String, dynamic> json) =>
+    _$InterfacesImpl(
       type: json['type'] as String,
       name: json['name'] as String,
       config: Config.fromJson(json['config'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$$_InterfacesToJson(_$_Interfaces instance) =>
+Map<String, dynamic> _$$InterfacesImplToJson(_$InterfacesImpl instance) =>
     <String, dynamic>{
       'type': instance.type,
       'name': instance.name,
       'config': instance.config,
     };
 
-_$_Config _$$_ConfigFromJson(Map<String, dynamic> json) => _$_Config(
+_$ConfigImpl _$$ConfigImplFromJson(Map<String, dynamic> json) => _$ConfigImpl(
       localStoreTTL: json['localStoreTTL'] as int,
     );
 
-Map<String, dynamic> _$$_ConfigToJson(_$_Config instance) => <String, dynamic>{
+Map<String, dynamic> _$$ConfigImplToJson(_$ConfigImpl instance) =>
+    <String, dynamic>{
       'localStoreTTL': instance.localStoreTTL,
     };
 
-_$_Languages _$$_LanguagesFromJson(Map<String, dynamic> json) => _$_Languages(
+_$LanguagesImpl _$$LanguagesImplFromJson(Map<String, dynamic> json) =>
+    _$LanguagesImpl(
       label: json['label'] as String,
       value: json['value'] as String,
       isSelected: json['isSelected'] as bool? ?? false,
     );
 
-Map<String, dynamic> _$$_LanguagesToJson(_$_Languages instance) =>
+Map<String, dynamic> _$$LanguagesImplToJson(_$LanguagesImpl instance) =>
     <String, dynamic>{
       'label': instance.label,
       'value': instance.value,
       'isSelected': instance.isSelected,
     };
 
-_$_CheckListTypes _$$_CheckListTypesFromJson(Map<String, dynamic> json) =>
-    _$_CheckListTypes(
+_$CheckListTypesImpl _$$CheckListTypesImplFromJson(Map<String, dynamic> json) =>
+    _$CheckListTypesImpl(
       name: json['name'] as String,
       code: json['code'] as String,
     );
 
-Map<String, dynamic> _$$_CheckListTypesToJson(_$_CheckListTypes instance) =>
+Map<String, dynamic> _$$CheckListTypesImplToJson(
+        _$CheckListTypesImpl instance) =>
     <String, dynamic>{
       'name': instance.name,
       'code': instance.code,
     };
 
-_$_CallSupportList _$$_CallSupportListFromJson(Map<String, dynamic> json) =>
-    _$_CallSupportList(
+_$CallSupportListImpl _$$CallSupportListImplFromJson(
+        Map<String, dynamic> json) =>
+    _$CallSupportListImpl(
       name: json['name'] as String,
       code: json['code'] as String,
     );
 
-Map<String, dynamic> _$$_CallSupportListToJson(_$_CallSupportList instance) =>
+Map<String, dynamic> _$$CallSupportListImplToJson(
+        _$CallSupportListImpl instance) =>
     <String, dynamic>{
       'name': instance.name,
       'code': instance.code,
     };
 
-_$_TransportTypes _$$_TransportTypesFromJson(Map<String, dynamic> json) =>
-    _$_TransportTypes(
+_$TransportTypesImpl _$$TransportTypesImplFromJson(Map<String, dynamic> json) =>
+    _$TransportTypesImpl(
       name: json['name'] as String,
       code: json['code'] as String,
     );
 
-Map<String, dynamic> _$$_TransportTypesToJson(_$_TransportTypes instance) =>
+Map<String, dynamic> _$$TransportTypesImplToJson(
+        _$TransportTypesImpl instance) =>
     <String, dynamic>{
       'name': instance.name,
       'code': instance.code,
     };
 
-_$_RowVersions _$$_RowVersionsFromJson(Map<String, dynamic> json) =>
-    _$_RowVersions(
+_$RowVersionsImpl _$$RowVersionsImplFromJson(Map<String, dynamic> json) =>
+    _$RowVersionsImpl(
       module: json['module'] as String,
       version: json['version'] as String,
     );
 
-Map<String, dynamic> _$$_RowVersionsToJson(_$_RowVersions instance) =>
+Map<String, dynamic> _$$RowVersionsImplToJson(_$RowVersionsImpl instance) =>
     <String, dynamic>{
       'module': instance.module,
       'version': instance.version,

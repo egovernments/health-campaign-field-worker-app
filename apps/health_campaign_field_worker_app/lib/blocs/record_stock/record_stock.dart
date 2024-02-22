@@ -22,6 +22,7 @@ class RecordStockBloc extends Bloc<RecordStockEvent, RecordStockState> {
     on(_handleSaveWarehouseDetails);
     on(_handleSaveStockDetails);
     on(_handleCreateStockEntry);
+    on(_handleSaveTransactionDetails);
   }
 
   FutureOr<void> _handleSaveWarehouseDetails(
@@ -37,6 +38,27 @@ class RecordStockBloc extends Bloc<RecordStockEvent, RecordStockState> {
           value.copyWith(
             dateOfRecord: event.dateOfRecord,
             facilityModel: event.facilityModel,
+          ),
+        );
+      },
+    );
+  }
+
+    FutureOr<void> _handleSaveTransactionDetails(
+    RecordStockSaveTransactionDetailsEvent event,
+    RecordStockEmitter emit,
+  ) async {
+    state.maybeMap(
+      orElse: () {
+        throw const InvalidRecordStockStateException();
+      },
+      create: (value) {
+        emit(
+          value.copyWith(
+            dateOfRecord: event.dateOfRecord,
+            facilityModel: event.facilityModel,
+            primaryType: event.primaryType,
+            primaryId: event.primaryId,
           ),
         );
       },
@@ -126,7 +148,15 @@ class RecordStockEvent with _$RecordStockEvent {
 
   const factory RecordStockEvent.createStockEntry() =
       RecordStockCreateStockEntryEvent;
+
+   const factory RecordStockEvent.saveTransactionDetails({
+    required DateTime dateOfRecord,
+    required String primaryType,
+    required String primaryId,
+    FacilityModel? facilityModel,
+  }) = RecordStockSaveTransactionDetailsEvent;
 }
+
 
 @freezed
 class RecordStockState with _$RecordStockState {
@@ -135,6 +165,8 @@ class RecordStockState with _$RecordStockState {
     @Default(false) bool loading,
     required String projectId,
     DateTime? dateOfRecord,
+    String? primaryType,
+    String? primaryId,
     FacilityModel? facilityModel,
     StockModel? stockModel,
   }) = RecordStockCreateState;
@@ -144,6 +176,8 @@ class RecordStockState with _$RecordStockState {
     required String projectId,
     DateTime? dateOfRecord,
     FacilityModel? facilityModel,
+    String? primaryType,
+    String? primaryId,
     StockModel? stockModel,
   }) = RecordStockPersistedState;
 }

@@ -3,6 +3,7 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_row_card/digit_row_card_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../../blocs/localization/app_localization.dart';
 import '../../blocs/app_initialization/app_initialization.dart';
@@ -10,11 +11,11 @@ import '../../blocs/auth/auth.dart';
 import '../../blocs/boundary/boundary.dart';
 import '../../blocs/localization/localization.dart';
 import '../../blocs/user/user.dart';
+import '../../data/local_store/app_shared_preferences.dart';
 import '../../models/data_model.dart';
 import '../../router/app_router.dart';
-import '../../utils/constants.dart';
-import '../../utils/extensions/extensions.dart';
 import '../../utils/i18_key_constants.dart' as i18;
+import '../../utils/utils.dart';
 
 class SideBar extends StatelessWidget {
   const SideBar({super.key});
@@ -42,22 +43,46 @@ class SideBar extends StatelessWidget {
             color: theme.colorScheme.secondary.withOpacity(0.12),
             child: SizedBox(
               width: MediaQuery.of(context).size.width,
-              height: 200,
+              height: 280,
               child: state.maybeMap(
                 authenticated: (value) => Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    const SizedBox(
+                      height: 16.0,
+                    ),
                     Text(
                       value.userModel.name.toString(),
                       style: theme.textTheme.displayMedium,
                     ),
-
-                    // const SizedBox(
-                    //   height: 8,
-                    // ),
                     Text(
                       value.userModel.mobileNumber.toString(),
                       style: theme.textTheme.bodyMedium,
+                    ),
+                    const SizedBox(
+                      height: 16.0,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context, rootNavigator: true).pop();
+                        context.router.push(UserQRDetailsRoute());
+                      },
+                      child: Container(
+                        height: 155,
+                        width: 155,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            width: 2,
+                            color: DigitTheme.instance.colorScheme.secondary,
+                          ),
+                        ),
+                        child: QrImageView(
+                          data: context.loggedInUserUuid,
+                          version: QrVersions.auto,
+                          size: 150.0,
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -72,7 +97,8 @@ class SideBar extends StatelessWidget {
             icon: Icons.home,
             onPressed: () {
               Navigator.of(context, rootNavigator: true).pop();
-              context.router.replace(HomeRoute());
+              context.router.popUntilRoot();
+              context.router.push(HomeRoute());
             },
           ),
           BlocBuilder<AppInitializationBloc, AppInitializationState>(
@@ -136,8 +162,11 @@ class SideBar extends StatelessWidget {
                                   return DigitRowCardModel(
                                     label: e.label,
                                     value: e.value,
-                                    isSelected:
-                                        index == localizationState.index,
+                                    isSelected: languages[index].value ==
+                                            AppSharedPreferences()
+                                                .getSelectedLocale
+                                        ? true
+                                        : false,
                                   );
                                 }).toList(),
                                 width: (MediaQuery.of(context).size.width *

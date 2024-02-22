@@ -12,7 +12,13 @@ import '../blocs/boundary/boundary.dart';
 import '../blocs/household_details/household_details.dart';
 import '../blocs/localization/app_localization.dart';
 import '../blocs/search_households/project_beneficiaries_downsync.dart';
+import '../blocs/search_households/proximity_search.dart';
+import '../blocs/search_households/search_bloc_common_wrapper.dart';
 import '../blocs/search_households/search_households.dart';
+import '../blocs/search_households/search_by_head.dart';
+import '../blocs/search_households/tag_by_search.dart';
+import '../blocs/search_referrals/search_referrals.dart';
+import '../blocs/service/service.dart';
 import '../blocs/sync/sync.dart';
 import '../data/data_repository.dart';
 import '../data/local_store/no_sql/schema/oplog.dart';
@@ -47,48 +53,54 @@ class AuthenticatedPageWrapper extends StatelessWidget {
 
               return Portal(
                 child: Scaffold(
+                  backgroundColor: DigitTheme.instance.colorScheme.background,
                   appBar: AppBar(
-                    actions: [
-                      BlocBuilder<BoundaryBloc, BoundaryState>(
-                        builder: (ctx, state) {
-                          final selectedBoundary = ctx.boundaryOrNull;
+                    backgroundColor: DigitTheme.instance.colorScheme.primary,
+                    actions: showDrawer
+                        ? [
+                            BlocBuilder<BoundaryBloc, BoundaryState>(
+                              builder: (ctx, state) {
+                                final selectedBoundary = ctx.boundaryOrNull;
 
-                          if (selectedBoundary == null) {
-                            return const SizedBox.shrink();
-                          } else {
-                            final boundaryName = selectedBoundary.name ??
-                                selectedBoundary.code ??
-                                AppLocalizations.of(context).translate(
-                                  i18.projectSelection.onProjectMapped,
-                                );
+                                if (selectedBoundary == null) {
+                                  return const SizedBox.shrink();
+                                } else {
+                                  final boundaryName = selectedBoundary.name ??
+                                      selectedBoundary.code ??
+                                      AppLocalizations.of(context).translate(
+                                        i18.projectSelection.onProjectMapped,
+                                      );
 
-                            final theme = Theme.of(context);
+                                  final theme = Theme.of(context);
 
-                            return GestureDetector(
-                              onTap: () {
-                                ctx.router.popUntilRouteWithName(
-                                  AuthenticatedRouteWrapper.name,
-                                );
-                                ctx.router.navigate(BoundarySelectionRoute());
-                              },
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    boundaryName,
-                                    style: TextStyle(
-                                      color: theme.colorScheme.surface,
-                                      fontSize: 16,
+                                  return GestureDetector(
+                                    onTap: () {
+                                      ctx.router.replaceAll([
+                                        HomeRoute(),
+                                        BoundarySelectionRoute(),
+                                      ]);
+                                    },
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          boundaryName,
+                                          style: TextStyle(
+                                            color: theme.colorScheme.surface,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                        const Icon(
+                                          Icons.arrow_drop_down_outlined,
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                  const Icon(Icons.arrow_drop_down_outlined),
-                                ],
-                              ),
-                            );
-                          }
-                        },
-                      ),
-                    ],
+                                  );
+                                }
+                              },
+                            ),
+                          ]
+                        : null,
                   ),
                   drawer: showDrawer ? const Drawer(child: SideBar()) : null,
                   body: MultiBlocProvider(
@@ -121,7 +133,113 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                                 SideEffectModel, SideEffectSearchModel>(),
                             referralDataRepository: context.repository<
                                 ReferralModel, ReferralSearchModel>(),
-                          )..add(const SearchHouseholdsClearEvent());
+                          );
+                        },
+                      ),
+                      BlocProvider(
+                        create: (context) {
+                          final isar = context.read<Isar>();
+
+                          return SearchByHeadBloc(
+                            beneficiaryType: context.beneficiaryType,
+                            userUid: context.loggedInUserUuid,
+                            projectId: context.projectId,
+                            addressRepository: AddressLocalRepository(
+                              context.read<LocalSqlDataStore>(),
+                              AddressOpLogManager(isar),
+                            ),
+                            projectBeneficiary: context.repository<
+                                ProjectBeneficiaryModel,
+                                ProjectBeneficiarySearchModel>(),
+                            householdMember: context.repository<
+                                HouseholdMemberModel,
+                                HouseholdMemberSearchModel>(),
+                            household: context.repository<HouseholdModel,
+                                HouseholdSearchModel>(),
+                            individual: context.repository<IndividualModel,
+                                IndividualSearchModel>(),
+                            taskDataRepository: context
+                                .repository<TaskModel, TaskSearchModel>(),
+                            sideEffectDataRepository: context.repository<
+                                SideEffectModel, SideEffectSearchModel>(),
+                            referralDataRepository: context.repository<
+                                ReferralModel, ReferralSearchModel>(),
+                          );
+                        },
+                      ),
+                      BlocProvider(
+                        create: (context) {
+                          final isar = context.read<Isar>();
+
+                          return ProximitySearchBloc(
+                            beneficiaryType: context.beneficiaryType,
+                            userUid: context.loggedInUserUuid,
+                            projectId: context.projectId,
+                            addressRepository: AddressLocalRepository(
+                              context.read<LocalSqlDataStore>(),
+                              AddressOpLogManager(isar),
+                            ),
+                            projectBeneficiary: context.repository<
+                                ProjectBeneficiaryModel,
+                                ProjectBeneficiarySearchModel>(),
+                            householdMember: context.repository<
+                                HouseholdMemberModel,
+                                HouseholdMemberSearchModel>(),
+                            household: context.repository<HouseholdModel,
+                                HouseholdSearchModel>(),
+                            individual: context.repository<IndividualModel,
+                                IndividualSearchModel>(),
+                            taskDataRepository: context
+                                .repository<TaskModel, TaskSearchModel>(),
+                            sideEffectDataRepository: context.repository<
+                                SideEffectModel, SideEffectSearchModel>(),
+                            referralDataRepository: context.repository<
+                                ReferralModel, ReferralSearchModel>(),
+                          );
+                        },
+                      ),
+                      BlocProvider(
+                        create: (context) {
+                          final isar = context.read<Isar>();
+
+                          return TagSearchBloc(
+                            beneficiaryType: context.beneficiaryType,
+                            userUid: context.loggedInUserUuid,
+                            projectId: context.projectId,
+                            addressRepository: AddressLocalRepository(
+                              context.read<LocalSqlDataStore>(),
+                              AddressOpLogManager(isar),
+                            ),
+                            projectBeneficiary: context.repository<
+                                ProjectBeneficiaryModel,
+                                ProjectBeneficiarySearchModel>(),
+                            householdMember: context.repository<
+                                HouseholdMemberModel,
+                                HouseholdMemberSearchModel>(),
+                            household: context.repository<HouseholdModel,
+                                HouseholdSearchModel>(),
+                            individual: context.repository<IndividualModel,
+                                IndividualSearchModel>(),
+                            taskDataRepository: context
+                                .repository<TaskModel, TaskSearchModel>(),
+                            sideEffectDataRepository: context.repository<
+                                SideEffectModel, SideEffectSearchModel>(),
+                            referralDataRepository: context.repository<
+                                ReferralModel, ReferralSearchModel>(),
+                          );
+                        },
+                      ),
+                      BlocProvider(
+                        create: (context) {
+
+                          return SearchBlocWrapper(
+                            searchHouseholdsBloc:
+                                context.read<SearchHouseholdsBloc>(),
+                            searchByHeadBloc: context.read<SearchByHeadBloc>(),
+                            proximitySearchBloc:
+                                context.read<ProximitySearchBloc>(),
+                            tagSearchBloc: context.read<TagSearchBloc>(),
+                          );
                         },
                       ),
                       BlocProvider(
@@ -163,6 +281,8 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                                         case DataModelType.complaints:
                                         case DataModelType.sideEffect:
                                         case DataModelType.referral:
+                                        case DataModelType.hFReferral:
+                                        case DataModelType.attendance:
                                           return true;
                                         default:
                                           return false;
@@ -198,6 +318,8 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                                         case DataModelType.complaints:
                                         case DataModelType.sideEffect:
                                         case DataModelType.referral:
+                                        case DataModelType.hFReferral:
+                                        case DataModelType.attendance:
                                           return true;
                                         default:
                                           return false;
@@ -224,8 +346,9 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                         create: (ctx) => BeneficiaryDownSyncBloc(
                           //{TODO: Need to get the bandwidth path from config
                           bandwidthCheckRepository: BandwidthCheckRepository(
-                              DioClient().dio,
-                              bandwidthPath: '/project/check/bandwidth'),
+                            DioClient().dio,
+                            bandwidthPath: '/project/check/bandwidth',
+                          ),
                           householdLocalRepository: ctx.read<
                               LocalRepository<HouseholdModel,
                                   HouseholdSearchModel>>(),
@@ -255,6 +378,22 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                           networkManager: ctx.read(),
                         ),
                       ),
+                      BlocProvider(
+                        create: (_) => SearchReferralsBloc(
+                          userUid: context.loggedInUserUuid,
+                          projectId: context.projectId,
+                          beneficiaryType: context.beneficiaryType,
+                          hfReferralDataRepository: context.repository<
+                              HFReferralModel, HFReferralSearchModel>(),
+                        )..add(const SearchReferralsClearEvent()),
+                      ),
+                      BlocProvider(
+                        create: (_) => ServiceBloc(
+                          const ServiceEmptyState(),
+                          serviceDataRepository: context
+                              .repository<ServiceModel, ServiceSearchModel>(),
+                        ),
+                      ),
                     ],
                     child: AutoRouter(
                       navigatorObservers: () => [
@@ -264,6 +403,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                             switch (context.router.topRoute.name) {
                               case ProjectSelectionRoute.name:
                               case BoundarySelectionRoute.name:
+                              case QRScannerRoute.name:
                                 shouldShowDrawer = false;
                                 break;
                               default:

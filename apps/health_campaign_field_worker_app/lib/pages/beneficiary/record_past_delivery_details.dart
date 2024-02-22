@@ -9,7 +9,7 @@ import '../../../utils/i18_key_constants.dart' as i18;
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
 import '../../blocs/localization/app_localization.dart';
-import '../../models/data_model.mapper.g.dart';
+import '../../models/data_model.dart';
 import '../../models/entities/additional_fields_type.dart';
 import '../../models/entities/status.dart';
 import '../../models/entities/task.dart';
@@ -160,7 +160,7 @@ class _RecordPastDeliveryDetailsPageState
                           label: localizations.translate(
                             i18.common.coreCommonYes,
                           ),
-                          action: (ctx) {
+                          action: (ctx) async {
                             router.pop();
                             final event =
                                 context.read<DeliverInterventionBloc>();
@@ -195,18 +195,20 @@ class _RecordPastDeliveryDetailsPageState
                               ));
                             }
                             context.router.popUntilRouteWithName(
-                              SearchBeneficiaryRoute.name,
+                              HouseholdOverviewRoute.name,
                             );
-                            bloc.add(HouseholdOverviewReloadEvent(
-                              projectId: context.projectId,
-                              projectBeneficiaryType: context.beneficiaryType,
-                            ));
                             Navigator.of(ctx).pop();
-                            router.push(
+                            final response = await router.push(
                               SideEffectsRoute(
                                 tasks: [(futureTaskList ?? []).last],
                               ),
                             );
+                            if (response == null) {
+                              bloc.add(HouseholdOverviewReloadEvent(
+                                projectId: context.projectId,
+                                projectBeneficiaryType: context.beneficiaryType,
+                              ));
+                            }
                           },
                         ),
                       ),

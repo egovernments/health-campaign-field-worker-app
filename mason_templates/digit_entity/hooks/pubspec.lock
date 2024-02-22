@@ -5,18 +5,26 @@ packages:
     dependency: transitive
     description:
       name: _fe_analyzer_shared
-      sha256: "4897882604d919befd350648c7f91926a9d5de99e67b455bf0917cc2362f4bb8"
+      sha256: ae92f5d747aee634b87f89d9946000c2de774be1d6ac3e58268224348cd0101a
       url: "https://pub.dev"
     source: hosted
-    version: "47.0.0"
+    version: "61.0.0"
   analyzer:
     dependency: transitive
     description:
       name: analyzer
-      sha256: "690e335554a8385bc9d787117d9eb52c0c03ee207a607e593de3c9d71b1cfe80"
+      sha256: ea3d8652bda62982addfd92fdc2d0214e5f82e43325104990d4f4c4a2a313562
       url: "https://pub.dev"
     source: hosted
-    version: "4.7.0"
+    version: "5.13.0"
+  ansicolor:
+    dependency: transitive
+    description:
+      name: ansicolor
+      sha256: "8bf17a8ff6ea17499e40a2d2542c2f481cd7615760c6d34065cb22bfd22e6880"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.2"
   archive:
     dependency: transitive
     description:
@@ -165,18 +173,17 @@ packages:
     dependency: "direct main"
     description:
       name: dart_mappable
-      sha256: "606ffca123ef2051759fe3501fd5a868bbbb10b15e7b49663f5a982fdcd2943f"
+      sha256: "7b6d38ae95f1ae8ffa65df9a5464f14b56c2de94699a035202ca4cd3a0ba249e"
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.0"
+    version: "4.2.0"
   dart_mappable_builder:
     dependency: "direct dev"
     description:
-      name: dart_mappable_builder
-      sha256: "09073d7e9f84a5c42241cd0fc8388309cfb46ca73e8402e3ed3f9a8c4dbf9472"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.2.1"
+      path: "../../../packages/dart_mappable_builder"
+      relative: true
+    source: path
+    version: "4.2.0"
   dart_style:
     dependency: transitive
     description:
@@ -541,10 +548,10 @@ packages:
     dependency: transitive
     description:
       name: type_plus
-      sha256: d8e0d6b20fac9afcfd0848064b2523b162c0d53e4c0b890ef51323b2ed50b290
+      sha256: "2e33cfac2e129297d5874567bdf7587502ec359881e9318551e014d91b02f84a"
       url: "https://pub.dev"
     source: hosted
-    version: "0.6.3"
+    version: "2.1.0"
   typed_data:
     dependency: transitive
     description:

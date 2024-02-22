@@ -122,7 +122,7 @@ class BoundaryRemoteRepository
     Iterable<Map<String, dynamic>> entityList,
   ) {
     final boundaryModelList = entityList.map((e) {
-      return Mapper.fromMap<BoundaryModel>(e);
+      return BoundaryModelMapper.fromMap(e);
     }).toList();
 
     return boundaryModelList;

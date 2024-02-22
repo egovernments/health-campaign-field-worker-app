@@ -51,20 +51,24 @@ class IndividualLocalRepository
                   query.clientReferenceId!,
                 ),
               if (query.id != null)
-                sql.individual.id.equals(
-                  query.id,
+                sql.individual.id.isIn(
+                  query.id!,
                 ),
               if (query.tenantId != null)
                 sql.individual.tenantId.equals(
-                  query.tenantId,
+                  query.tenantId!,
+                ),
+              if (query.userUuid != null)
+                sql.individual.userUuid.equals(
+                  query.userUuid!,
                 ),
               if (query.dateOfBirth != null)
                 sql.individual.dateOfBirth.equals(
-                  query.dateOfBirth,
+                  query.dateOfBirth!,
                 ),
               if (query.gender != null)
                 sql.individual.gender.equals(
-                  query.gender?.index,
+                  query.gender!.index,
                 ),
               if (query.name?.givenName != null)
                 sql.name.givenName.contains(
@@ -72,11 +76,11 @@ class IndividualLocalRepository
                 ),
               if (query.name?.familyName != null)
                 sql.name.familyName.equals(
-                  query.name!.familyName,
+                  query.name!.familyName!,
                 ),
               if (query.name?.otherNames != null)
                 sql.name.otherNames.equals(
-                  query.name!.otherNames,
+                  query.name!.otherNames!,
                 ),
               if (userId != null)
                 sql.individual.auditCreatedBy.equals(
@@ -96,6 +100,7 @@ class IndividualLocalRepository
           return IndividualModel(
             id: individual.id,
             tenantId: individual.tenantId,
+            individualId: individual.individualId,
             clientReferenceId: individual.clientReferenceId,
             dateOfBirth: individual.dateOfBirth,
             mobileNumber: individual.mobileNumber,
@@ -347,7 +352,14 @@ class IndividualLocalRepository
   }) async {
     final individualCompanion = entity.companion;
 
-    final nameCompanion = entity.name?.companion;
+    final nameCompanion = entity.name
+        ?.copyWith(
+          individualClientReferenceId: entity.clientReferenceId,
+          auditDetails: entity.auditDetails,
+          clientAuditDetails: entity.clientAuditDetails,
+        )
+        .companion;
+
     final addressCompanions = entity.address?.map((e) {
           return e
               .copyWith(
@@ -359,7 +371,9 @@ class IndividualLocalRepository
         [];
 
     final identifierCompanions = entity.identifiers?.map((e) {
-          return e.companion;
+          return e
+              .copyWith(clientAuditDetails: entity.clientAuditDetails)
+              .companion;
         }).toList() ??
         [];
 
@@ -369,7 +383,7 @@ class IndividualLocalRepository
           sql.name,
           nameCompanion,
           where: (table) => table.individualClientReferenceId.equals(
-            nameCompanion.individualClientReferenceId.value,
+            nameCompanion.individualClientReferenceId.value!,
           ),
         );
       }

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -96,6 +97,10 @@ abstract class RemoteRepository<D extends EntityModel,
           );
         },
       );
+      AppLogger.instance.info(
+        'search Response Result: ${response.data}',
+        title: 'Data Repo',
+      );
     } catch (error) {
       return [];
     }
@@ -136,8 +141,22 @@ abstract class RemoteRepository<D extends EntityModel,
     }
 
     final entityList = entityResponse.whereType<Map<String, dynamic>>();
+    var mapperRes = <D>[];
+    try {
+      AppLogger.instance.error(
+        message: 'mappercontainer ${MapperContainer.globals}',
+        title: 'Mapper Contianer',
+      );
+      mapperRes = entityList.map((e) =>
+          MapperContainer.globals.fromMap<D>(e)).toList();
+    } catch (e) {
+      AppLogger.instance.error(
+        message: e.toString(),
+        title: 'Data Repo',
+      );
+    }
 
-    return entityList.map((e) => Mapper.fromMap<D>(e)).toList();
+    return mapperRes;
   }
 
   FutureOr<Response> singleCreate(D entity) async {
@@ -344,7 +363,7 @@ abstract class RemoteRepository<D extends EntityModel,
   }
 
   List<Map<String, dynamic>> _getMap(List<EntityModel> entities) {
-    return entities.map((e) => Mapper.toMap(e)).toList();
+return entities.map((e) => MapperContainer.globals.toMap(e)).toList();
   }
 
   FutureOr<T> executeFuture<T>({
@@ -434,7 +453,7 @@ abstract class LocalRepository<D extends EntityModel,
       entity,
       operation,
       createdAt: DateTime.now(),
-      createdBy: entity.clientAuditDetails!.lastModifiedBy,
+      createdBy: entity.clientAuditDetails?.lastModifiedBy ?? '',
       type: type,
     );
 

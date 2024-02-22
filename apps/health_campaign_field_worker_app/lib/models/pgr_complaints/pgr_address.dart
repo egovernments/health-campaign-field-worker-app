@@ -5,8 +5,10 @@ import 'dart:convert';
 import '../../data/local_store/sql_store/sql_store.dart';
 import '../data_model.dart';
 
-@MappableClass(ignoreNull: true)
-class PgrAddressModel extends EntityModel {
+part 'pgr_address.mapper.dart';
+
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class PgrAddressModel extends EntityModel with PgrAddressModelMappable {
   final String? tenantId;
   final String? relatedClientReferenceId;
   final String? doorNo;
@@ -48,7 +50,10 @@ class PgrAddressModel extends EntityModel {
     this.additionDetails,
     this.isDeleted,
     this.rowVersion,
-  }) : super();
+    super.auditDetails,
+    
+  }) : super(isDeleted: false);
+
 
   AddressCompanion get companion {
     return AddressCompanion(
@@ -79,8 +84,8 @@ class PgrAddressModel extends EntityModel {
   }
 }
 
-@MappableClass(ignoreNull: true)
-class GeoLocation {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class GeoLocation with GeoLocationMappable {
   double? latitude;
   double? longitude;
   Map<String, dynamic>? additionalDetails;

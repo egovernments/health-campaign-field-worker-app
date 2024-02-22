@@ -6,9 +6,9 @@ part of 'complaints.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_ComplaintsDetailsModel _$$_ComplaintsDetailsModelFromJson(
+_$ComplaintsDetailsModelImpl _$$ComplaintsDetailsModelImplFromJson(
         Map<String, dynamic> json) =>
-    _$_ComplaintsDetailsModel(
+    _$ComplaintsDetailsModelImpl(
       dateOfComplaint: DateTime.parse(json['dateOfComplaint'] as String),
       administrativeArea: json['administrativeArea'] as String,
       complaintRaisedFor: json['complaintRaisedFor'] as String,
@@ -19,8 +19,8 @@ _$_ComplaintsDetailsModel _$$_ComplaintsDetailsModelFromJson(
       supervisorContactNumber: json['supervisorContactNumber'] as String?,
     );
 
-Map<String, dynamic> _$$_ComplaintsDetailsModelToJson(
-        _$_ComplaintsDetailsModel instance) =>
+Map<String, dynamic> _$$ComplaintsDetailsModelImplToJson(
+        _$ComplaintsDetailsModelImpl instance) =>
     <String, dynamic>{
       'dateOfComplaint': instance.dateOfComplaint.toIso8601String(),
       'administrativeArea': instance.administrativeArea,
@@ -32,9 +32,9 @@ Map<String, dynamic> _$$_ComplaintsDetailsModelToJson(
       'supervisorContactNumber': instance.supervisorContactNumber,
     };
 
-_$_ComplaintsInboxItem _$$_ComplaintsInboxItemFromJson(
+_$ComplaintsInboxItemImpl _$$ComplaintsInboxItemImplFromJson(
         Map<String, dynamic> json) =>
-    _$_ComplaintsInboxItem(
+    _$ComplaintsInboxItemImpl(
       complaintNumber: json['complaintNumber'] as String?,
       complaintType: json['complaintType'] as String?,
       dateOfComplaint: json['dateOfComplaint'] as String?,
@@ -43,8 +43,8 @@ _$_ComplaintsInboxItem _$$_ComplaintsInboxItemFromJson(
       complaintRaisedBy: json['complaintRaisedBy'] as String?,
     );
 
-Map<String, dynamic> _$$_ComplaintsInboxItemToJson(
-        _$_ComplaintsInboxItem instance) =>
+Map<String, dynamic> _$$ComplaintsInboxItemImplToJson(
+        _$ComplaintsInboxItemImpl instance) =>
     <String, dynamic>{
       'complaintNumber': instance.complaintNumber,
       'complaintType': instance.complaintType,

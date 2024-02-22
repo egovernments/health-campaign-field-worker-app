@@ -1,3 +1,5 @@
+import 'package:attendance_management/blocs/app_localization.dart'
+    as attendance_localization;
 import 'package:digit_components/digit_components.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +17,7 @@ import 'blocs/project/project.dart';
 import 'blocs/scanner/scanner.dart';
 import 'blocs/user/user.dart';
 import 'data/data_repository.dart';
+import 'data/local_store/app_shared_preferences.dart';
 import 'data/local_store/sql_store/sql_store.dart';
 import 'data/network_manager.dart';
 import 'data/repositories/remote/localization.dart';
@@ -89,6 +92,9 @@ class MainApplicationState extends State<MainApplication>
                 create: (ctx) => AuthBloc(
                   authRepository: ctx.read(),
                   mdmsRepository: MdmsRepository(widget.client),
+                  individualRemoteRepository: ctx.read<
+                      RemoteRepository<IndividualModel,
+                          IndividualSearchModel>>(),
                 )..add(
                     AuthAutoLoginEvent(
                       tenantId: envConfig.variables.tenantId,
@@ -102,6 +108,9 @@ class MainApplicationState extends State<MainApplication>
                       .read<NetworkManager>()
                       .repository<ProjectBeneficiaryModel,
                           ProjectBeneficiarySearchModel>(ctx),
+                  hfReferralDataRepository: ctx
+                      .read<NetworkManager>()
+                      .repository<HFReferralModel, HFReferralSearchModel>(ctx),
                 ),
               ),
               BlocProvider(
@@ -115,8 +124,6 @@ class MainApplicationState extends State<MainApplication>
             ],
             child: BlocBuilder<AppInitializationBloc, AppInitializationState>(
               builder: (context, appConfigState) {
-                const defaultLocale = Locale('en', 'IN');
-
                 return BlocBuilder<AuthBloc, AuthState>(
                   builder: (context, authState) {
                     if (appConfigState is! AppInitialized) {
@@ -132,7 +139,8 @@ class MainApplicationState extends State<MainApplication>
                     final appConfig = appConfigState.appConfiguration;
 
                     final localizationModulesList = appConfig.backendInterface;
-                    final firstLanguage = appConfig.languages?.first.value;
+                    var firstLanguage;
+                    firstLanguage = appConfig.languages?.last.value;
                     final languages = appConfig.languages;
 
                     return MultiBlocProvider(
@@ -223,11 +231,34 @@ class MainApplicationState extends State<MainApplication>
                             projectResourceRemoteRepository: ctx.read<
                                 RemoteRepository<ProjectResourceModel,
                                     ProjectResourceSearchModel>>(),
+                            attendanceLocalRepository: ctx.read<
+                                LocalRepository<HCMAttendanceRegisterModel,
+                                    HCMAttendanceSearchModel>>(),
+                            attendanceRemoteRepository: ctx.read<
+                                RemoteRepository<HCMAttendanceRegisterModel,
+                                    HCMAttendanceSearchModel>>(),
+                            individualLocalRepository: ctx.read<
+                                LocalRepository<IndividualModel,
+                                    IndividualSearchModel>>(),
+                            individualRemoteRepository: ctx.read<
+                                RemoteRepository<IndividualModel,
+                                    IndividualSearchModel>>(),
+                            attendanceLogLocalRepository: ctx.read<
+                                LocalRepository<HCMAttendanceLogModel,
+                                    HCMAttendanceLogSearchModel>>(),
+                            attendanceLogRemoteRepository: ctx.read<
+                                RemoteRepository<HCMAttendanceLogModel,
+                                    HCMAttendanceLogSearchModel>>(),
+                            context: context,
                           ),
                         ),
                       ],
                       child: BlocBuilder<LocalizationBloc, LocalizationState>(
                         builder: (context, langState) {
+                          final selectedLocale =
+                              AppSharedPreferences().getSelectedLocale ??
+                                  firstLanguage;
+
                           return MaterialApp.router(
                             debugShowCheckedModeBanner: false,
                             builder: (context, child) {
@@ -258,9 +289,9 @@ class MainApplicationState extends State<MainApplication>
 
                                     return results.isNotEmpty
                                         ? Locale(results.first, results.last)
-                                        : defaultLocale;
+                                        : firstLanguage;
                                   })
-                                : [defaultLocale],
+                                : [firstLanguage],
                             localizationsDelegates: [
                               AppLocalizations.getDelegate(
                                 appConfig,
@@ -269,19 +300,21 @@ class MainApplicationState extends State<MainApplication>
                               GlobalWidgetsLocalizations.delegate,
                               GlobalCupertinoLocalizations.delegate,
                               GlobalMaterialLocalizations.delegate,
+                              attendance_localization.AttendanceLocalization
+                                  .getDelegate(
+                                getLocalizationString(
+                                  widget.isar,
+                                  selectedLocale,
+                                ),
+                                appConfig.languages!,
+                              ),
                             ],
                             locale: languages != null
                                 ? Locale(
-                                    languages[langState.index]
-                                        .value
-                                        .split('_')
-                                        .first,
-                                    languages[langState.index]
-                                        .value
-                                        .split('_')
-                                        .last,
+                                    selectedLocale!.split("_").first,
+                                    selectedLocale.split("_").last,
                                   )
-                                : defaultLocale,
+                                : firstLanguage,
                             theme: DigitTheme.instance.mobileTheme,
                             routeInformationParser:
                                 widget.appRouter.defaultRouteParser(),
@@ -293,7 +326,7 @@ class MainApplicationState extends State<MainApplication>
                                 orElse: () => [
                                   const UnauthenticatedRouteWrapper(),
                                 ],
-                                authenticated: (_, __, ___, ____) => [
+                                authenticated: (_, __, ___, ____, _____) => [
                                   AuthenticatedRouteWrapper(),
                                 ],
                               ),

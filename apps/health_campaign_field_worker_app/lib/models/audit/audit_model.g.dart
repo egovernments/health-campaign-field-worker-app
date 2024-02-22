@@ -6,16 +6,17 @@ part of 'audit_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_AuditDetailsModel _$$_AuditDetailsModelFromJson(Map<String, dynamic> json) =>
-    _$_AuditDetailsModel(
+_$AuditDetailsModelImpl _$$AuditDetailsModelImplFromJson(
+        Map<String, dynamic> json) =>
+    _$AuditDetailsModelImpl(
       createdBy: json['createdBy'] as String,
       createdTime: json['createdTime'] as int,
       lastModifiedBy: json['lastModifiedBy'] as String?,
       lastModifiedTime: json['lastModifiedTime'] as String?,
     );
 
-Map<String, dynamic> _$$_AuditDetailsModelToJson(
-        _$_AuditDetailsModel instance) =>
+Map<String, dynamic> _$$AuditDetailsModelImplToJson(
+        _$AuditDetailsModelImpl instance) =>
     <String, dynamic>{
       'createdBy': instance.createdBy,
       'createdTime': instance.createdTime,

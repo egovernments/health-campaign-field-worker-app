@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'beneficiary_registration.dart';
 
@@ -36,8 +36,8 @@ mixin _$BeneficiaryRegistrationEvent {
     required TResult Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)
         updateHouseholdDetails,
-    required TResult Function(
-            IndividualModel model, String? tag, AddressModel addressModel)
+    required TResult Function(IndividualModel model, String? tag,
+            HouseholdModel householdModel, AddressModel addressModel)
         updateIndividualDetails,
     required TResult Function(String userUuid, String projectId,
             BoundaryModel boundary, String? tag)
@@ -64,8 +64,8 @@ mixin _$BeneficiaryRegistrationEvent {
     TResult? Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)?
         updateHouseholdDetails,
-    TResult? Function(
-            IndividualModel model, String? tag, AddressModel addressModel)?
+    TResult? Function(IndividualModel model, String? tag,
+            HouseholdModel householdModel, AddressModel addressModel)?
         updateIndividualDetails,
     TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
             String? tag)?
@@ -92,8 +92,8 @@ mixin _$BeneficiaryRegistrationEvent {
     TResult Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)?
         updateHouseholdDetails,
-    TResult Function(
-            IndividualModel model, String? tag, AddressModel addressModel)?
+    TResult Function(IndividualModel model, String? tag,
+            HouseholdModel householdModel, AddressModel addressModel)?
         updateIndividualDetails,
     TResult Function(String userUuid, String projectId, BoundaryModel boundary,
             String? tag)?
@@ -184,23 +184,23 @@ class _$BeneficiaryRegistrationEventCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$BeneficiaryRegistrationSaveAddressEventCopyWith<$Res> {
-  factory _$$BeneficiaryRegistrationSaveAddressEventCopyWith(
-          _$BeneficiaryRegistrationSaveAddressEvent value,
-          $Res Function(_$BeneficiaryRegistrationSaveAddressEvent) then) =
-      __$$BeneficiaryRegistrationSaveAddressEventCopyWithImpl<$Res>;
+abstract class _$$BeneficiaryRegistrationSaveAddressEventImplCopyWith<$Res> {
+  factory _$$BeneficiaryRegistrationSaveAddressEventImplCopyWith(
+          _$BeneficiaryRegistrationSaveAddressEventImpl value,
+          $Res Function(_$BeneficiaryRegistrationSaveAddressEventImpl) then) =
+      __$$BeneficiaryRegistrationSaveAddressEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call({AddressModel model});
 }
 
 /// @nodoc
-class __$$BeneficiaryRegistrationSaveAddressEventCopyWithImpl<$Res>
+class __$$BeneficiaryRegistrationSaveAddressEventImplCopyWithImpl<$Res>
     extends _$BeneficiaryRegistrationEventCopyWithImpl<$Res,
-        _$BeneficiaryRegistrationSaveAddressEvent>
-    implements _$$BeneficiaryRegistrationSaveAddressEventCopyWith<$Res> {
-  __$$BeneficiaryRegistrationSaveAddressEventCopyWithImpl(
-      _$BeneficiaryRegistrationSaveAddressEvent _value,
-      $Res Function(_$BeneficiaryRegistrationSaveAddressEvent) _then)
+        _$BeneficiaryRegistrationSaveAddressEventImpl>
+    implements _$$BeneficiaryRegistrationSaveAddressEventImplCopyWith<$Res> {
+  __$$BeneficiaryRegistrationSaveAddressEventImplCopyWithImpl(
+      _$BeneficiaryRegistrationSaveAddressEventImpl _value,
+      $Res Function(_$BeneficiaryRegistrationSaveAddressEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -208,7 +208,7 @@ class __$$BeneficiaryRegistrationSaveAddressEventCopyWithImpl<$Res>
   $Res call({
     Object? model = null,
   }) {
-    return _then(_$BeneficiaryRegistrationSaveAddressEvent(
+    return _then(_$BeneficiaryRegistrationSaveAddressEventImpl(
       null == model
           ? _value.model
           : model // ignore: cast_nullable_to_non_nullable
@@ -219,9 +219,9 @@ class __$$BeneficiaryRegistrationSaveAddressEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$BeneficiaryRegistrationSaveAddressEvent
+class _$BeneficiaryRegistrationSaveAddressEventImpl
     implements BeneficiaryRegistrationSaveAddressEvent {
-  const _$BeneficiaryRegistrationSaveAddressEvent(this.model);
+  const _$BeneficiaryRegistrationSaveAddressEventImpl(this.model);
 
   @override
   final AddressModel model;
@@ -232,10 +232,10 @@ class _$BeneficiaryRegistrationSaveAddressEvent
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$BeneficiaryRegistrationSaveAddressEvent &&
+            other is _$BeneficiaryRegistrationSaveAddressEventImpl &&
             (identical(other.model, model) || other.model == model));
   }
 
@@ -245,10 +245,11 @@ class _$BeneficiaryRegistrationSaveAddressEvent
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$BeneficiaryRegistrationSaveAddressEventCopyWith<
-          _$BeneficiaryRegistrationSaveAddressEvent>
-      get copyWith => __$$BeneficiaryRegistrationSaveAddressEventCopyWithImpl<
-          _$BeneficiaryRegistrationSaveAddressEvent>(this, _$identity);
+  _$$BeneficiaryRegistrationSaveAddressEventImplCopyWith<
+          _$BeneficiaryRegistrationSaveAddressEventImpl>
+      get copyWith =>
+          __$$BeneficiaryRegistrationSaveAddressEventImplCopyWithImpl<
+              _$BeneficiaryRegistrationSaveAddressEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -271,8 +272,8 @@ class _$BeneficiaryRegistrationSaveAddressEvent
     required TResult Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)
         updateHouseholdDetails,
-    required TResult Function(
-            IndividualModel model, String? tag, AddressModel addressModel)
+    required TResult Function(IndividualModel model, String? tag,
+            HouseholdModel householdModel, AddressModel addressModel)
         updateIndividualDetails,
     required TResult Function(String userUuid, String projectId,
             BoundaryModel boundary, String? tag)
@@ -302,8 +303,8 @@ class _$BeneficiaryRegistrationSaveAddressEvent
     TResult? Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)?
         updateHouseholdDetails,
-    TResult? Function(
-            IndividualModel model, String? tag, AddressModel addressModel)?
+    TResult? Function(IndividualModel model, String? tag,
+            HouseholdModel householdModel, AddressModel addressModel)?
         updateIndividualDetails,
     TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
             String? tag)?
@@ -333,8 +334,8 @@ class _$BeneficiaryRegistrationSaveAddressEvent
     TResult Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)?
         updateHouseholdDetails,
-    TResult Function(
-            IndividualModel model, String? tag, AddressModel addressModel)?
+    TResult Function(IndividualModel model, String? tag,
+            HouseholdModel householdModel, AddressModel addressModel)?
         updateIndividualDetails,
     TResult Function(String userUuid, String projectId, BoundaryModel boundary,
             String? tag)?
@@ -422,36 +423,38 @@ class _$BeneficiaryRegistrationSaveAddressEvent
 abstract class BeneficiaryRegistrationSaveAddressEvent
     implements BeneficiaryRegistrationEvent {
   const factory BeneficiaryRegistrationSaveAddressEvent(
-      final AddressModel model) = _$BeneficiaryRegistrationSaveAddressEvent;
+      final AddressModel model) = _$BeneficiaryRegistrationSaveAddressEventImpl;
 
   AddressModel get model;
   @JsonKey(ignore: true)
-  _$$BeneficiaryRegistrationSaveAddressEventCopyWith<
-          _$BeneficiaryRegistrationSaveAddressEvent>
+  _$$BeneficiaryRegistrationSaveAddressEventImplCopyWith<
+          _$BeneficiaryRegistrationSaveAddressEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$BeneficiaryRegistrationSaveHouseholdDetailsEventCopyWith<
+abstract class _$$BeneficiaryRegistrationSaveHouseholdDetailsEventImplCopyWith<
     $Res> {
-  factory _$$BeneficiaryRegistrationSaveHouseholdDetailsEventCopyWith(
-          _$BeneficiaryRegistrationSaveHouseholdDetailsEvent value,
-          $Res Function(_$BeneficiaryRegistrationSaveHouseholdDetailsEvent)
+  factory _$$BeneficiaryRegistrationSaveHouseholdDetailsEventImplCopyWith(
+          _$BeneficiaryRegistrationSaveHouseholdDetailsEventImpl value,
+          $Res Function(_$BeneficiaryRegistrationSaveHouseholdDetailsEventImpl)
               then) =
-      __$$BeneficiaryRegistrationSaveHouseholdDetailsEventCopyWithImpl<$Res>;
+      __$$BeneficiaryRegistrationSaveHouseholdDetailsEventImplCopyWithImpl<
+          $Res>;
   @useResult
   $Res call({HouseholdModel household, DateTime registrationDate});
 }
 
 /// @nodoc
-class __$$BeneficiaryRegistrationSaveHouseholdDetailsEventCopyWithImpl<$Res>
+class __$$BeneficiaryRegistrationSaveHouseholdDetailsEventImplCopyWithImpl<$Res>
     extends _$BeneficiaryRegistrationEventCopyWithImpl<$Res,
-        _$BeneficiaryRegistrationSaveHouseholdDetailsEvent>
+        _$BeneficiaryRegistrationSaveHouseholdDetailsEventImpl>
     implements
-        _$$BeneficiaryRegistrationSaveHouseholdDetailsEventCopyWith<$Res> {
-  __$$BeneficiaryRegistrationSaveHouseholdDetailsEventCopyWithImpl(
-      _$BeneficiaryRegistrationSaveHouseholdDetailsEvent _value,
-      $Res Function(_$BeneficiaryRegistrationSaveHouseholdDetailsEvent) _then)
+        _$$BeneficiaryRegistrationSaveHouseholdDetailsEventImplCopyWith<$Res> {
+  __$$BeneficiaryRegistrationSaveHouseholdDetailsEventImplCopyWithImpl(
+      _$BeneficiaryRegistrationSaveHouseholdDetailsEventImpl _value,
+      $Res Function(_$BeneficiaryRegistrationSaveHouseholdDetailsEventImpl)
+          _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -460,7 +463,7 @@ class __$$BeneficiaryRegistrationSaveHouseholdDetailsEventCopyWithImpl<$Res>
     Object? household = null,
     Object? registrationDate = null,
   }) {
-    return _then(_$BeneficiaryRegistrationSaveHouseholdDetailsEvent(
+    return _then(_$BeneficiaryRegistrationSaveHouseholdDetailsEventImpl(
       household: null == household
           ? _value.household
           : household // ignore: cast_nullable_to_non_nullable
@@ -475,9 +478,9 @@ class __$$BeneficiaryRegistrationSaveHouseholdDetailsEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$BeneficiaryRegistrationSaveHouseholdDetailsEvent
+class _$BeneficiaryRegistrationSaveHouseholdDetailsEventImpl
     implements BeneficiaryRegistrationSaveHouseholdDetailsEvent {
-  const _$BeneficiaryRegistrationSaveHouseholdDetailsEvent(
+  const _$BeneficiaryRegistrationSaveHouseholdDetailsEventImpl(
       {required this.household, required this.registrationDate});
 
   @override
@@ -491,10 +494,10 @@ class _$BeneficiaryRegistrationSaveHouseholdDetailsEvent
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$BeneficiaryRegistrationSaveHouseholdDetailsEvent &&
+            other is _$BeneficiaryRegistrationSaveHouseholdDetailsEventImpl &&
             (identical(other.household, household) ||
                 other.household == household) &&
             (identical(other.registrationDate, registrationDate) ||
@@ -507,11 +510,11 @@ class _$BeneficiaryRegistrationSaveHouseholdDetailsEvent
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$BeneficiaryRegistrationSaveHouseholdDetailsEventCopyWith<
-          _$BeneficiaryRegistrationSaveHouseholdDetailsEvent>
+  _$$BeneficiaryRegistrationSaveHouseholdDetailsEventImplCopyWith<
+          _$BeneficiaryRegistrationSaveHouseholdDetailsEventImpl>
       get copyWith =>
-          __$$BeneficiaryRegistrationSaveHouseholdDetailsEventCopyWithImpl<
-                  _$BeneficiaryRegistrationSaveHouseholdDetailsEvent>(
+          __$$BeneficiaryRegistrationSaveHouseholdDetailsEventImplCopyWithImpl<
+                  _$BeneficiaryRegistrationSaveHouseholdDetailsEventImpl>(
               this, _$identity);
 
   @override
@@ -535,8 +538,8 @@ class _$BeneficiaryRegistrationSaveHouseholdDetailsEvent
     required TResult Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)
         updateHouseholdDetails,
-    required TResult Function(
-            IndividualModel model, String? tag, AddressModel addressModel)
+    required TResult Function(IndividualModel model, String? tag,
+            HouseholdModel householdModel, AddressModel addressModel)
         updateIndividualDetails,
     required TResult Function(String userUuid, String projectId,
             BoundaryModel boundary, String? tag)
@@ -566,8 +569,8 @@ class _$BeneficiaryRegistrationSaveHouseholdDetailsEvent
     TResult? Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)?
         updateHouseholdDetails,
-    TResult? Function(
-            IndividualModel model, String? tag, AddressModel addressModel)?
+    TResult? Function(IndividualModel model, String? tag,
+            HouseholdModel householdModel, AddressModel addressModel)?
         updateIndividualDetails,
     TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
             String? tag)?
@@ -597,8 +600,8 @@ class _$BeneficiaryRegistrationSaveHouseholdDetailsEvent
     TResult Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)?
         updateHouseholdDetails,
-    TResult Function(
-            IndividualModel model, String? tag, AddressModel addressModel)?
+    TResult Function(IndividualModel model, String? tag,
+            HouseholdModel householdModel, AddressModel addressModel)?
         updateIndividualDetails,
     TResult Function(String userUuid, String projectId, BoundaryModel boundary,
             String? tag)?
@@ -688,37 +691,40 @@ abstract class BeneficiaryRegistrationSaveHouseholdDetailsEvent
   const factory BeneficiaryRegistrationSaveHouseholdDetailsEvent(
           {required final HouseholdModel household,
           required final DateTime registrationDate}) =
-      _$BeneficiaryRegistrationSaveHouseholdDetailsEvent;
+      _$BeneficiaryRegistrationSaveHouseholdDetailsEventImpl;
 
   HouseholdModel get household;
   DateTime get registrationDate;
   @JsonKey(ignore: true)
-  _$$BeneficiaryRegistrationSaveHouseholdDetailsEventCopyWith<
-          _$BeneficiaryRegistrationSaveHouseholdDetailsEvent>
+  _$$BeneficiaryRegistrationSaveHouseholdDetailsEventImplCopyWith<
+          _$BeneficiaryRegistrationSaveHouseholdDetailsEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$BeneficiaryRegistrationSaveIndividualDetailsEventCopyWith<
+abstract class _$$BeneficiaryRegistrationSaveIndividualDetailsEventImplCopyWith<
     $Res> {
-  factory _$$BeneficiaryRegistrationSaveIndividualDetailsEventCopyWith(
-          _$BeneficiaryRegistrationSaveIndividualDetailsEvent value,
-          $Res Function(_$BeneficiaryRegistrationSaveIndividualDetailsEvent)
+  factory _$$BeneficiaryRegistrationSaveIndividualDetailsEventImplCopyWith(
+          _$BeneficiaryRegistrationSaveIndividualDetailsEventImpl value,
+          $Res Function(_$BeneficiaryRegistrationSaveIndividualDetailsEventImpl)
               then) =
-      __$$BeneficiaryRegistrationSaveIndividualDetailsEventCopyWithImpl<$Res>;
+      __$$BeneficiaryRegistrationSaveIndividualDetailsEventImplCopyWithImpl<
+          $Res>;
   @useResult
   $Res call({IndividualModel model, bool isHeadOfHousehold});
 }
 
 /// @nodoc
-class __$$BeneficiaryRegistrationSaveIndividualDetailsEventCopyWithImpl<$Res>
+class __$$BeneficiaryRegistrationSaveIndividualDetailsEventImplCopyWithImpl<
+        $Res>
     extends _$BeneficiaryRegistrationEventCopyWithImpl<$Res,
-        _$BeneficiaryRegistrationSaveIndividualDetailsEvent>
+        _$BeneficiaryRegistrationSaveIndividualDetailsEventImpl>
     implements
-        _$$BeneficiaryRegistrationSaveIndividualDetailsEventCopyWith<$Res> {
-  __$$BeneficiaryRegistrationSaveIndividualDetailsEventCopyWithImpl(
-      _$BeneficiaryRegistrationSaveIndividualDetailsEvent _value,
-      $Res Function(_$BeneficiaryRegistrationSaveIndividualDetailsEvent) _then)
+        _$$BeneficiaryRegistrationSaveIndividualDetailsEventImplCopyWith<$Res> {
+  __$$BeneficiaryRegistrationSaveIndividualDetailsEventImplCopyWithImpl(
+      _$BeneficiaryRegistrationSaveIndividualDetailsEventImpl _value,
+      $Res Function(_$BeneficiaryRegistrationSaveIndividualDetailsEventImpl)
+          _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -727,7 +733,7 @@ class __$$BeneficiaryRegistrationSaveIndividualDetailsEventCopyWithImpl<$Res>
     Object? model = null,
     Object? isHeadOfHousehold = null,
   }) {
-    return _then(_$BeneficiaryRegistrationSaveIndividualDetailsEvent(
+    return _then(_$BeneficiaryRegistrationSaveIndividualDetailsEventImpl(
       model: null == model
           ? _value.model
           : model // ignore: cast_nullable_to_non_nullable
@@ -742,9 +748,9 @@ class __$$BeneficiaryRegistrationSaveIndividualDetailsEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$BeneficiaryRegistrationSaveIndividualDetailsEvent
+class _$BeneficiaryRegistrationSaveIndividualDetailsEventImpl
     implements BeneficiaryRegistrationSaveIndividualDetailsEvent {
-  const _$BeneficiaryRegistrationSaveIndividualDetailsEvent(
+  const _$BeneficiaryRegistrationSaveIndividualDetailsEventImpl(
       {required this.model, this.isHeadOfHousehold = false});
 
   @override
@@ -759,10 +765,10 @@ class _$BeneficiaryRegistrationSaveIndividualDetailsEvent
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$BeneficiaryRegistrationSaveIndividualDetailsEvent &&
+            other is _$BeneficiaryRegistrationSaveIndividualDetailsEventImpl &&
             (identical(other.model, model) || other.model == model) &&
             (identical(other.isHeadOfHousehold, isHeadOfHousehold) ||
                 other.isHeadOfHousehold == isHeadOfHousehold));
@@ -774,11 +780,11 @@ class _$BeneficiaryRegistrationSaveIndividualDetailsEvent
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$BeneficiaryRegistrationSaveIndividualDetailsEventCopyWith<
-          _$BeneficiaryRegistrationSaveIndividualDetailsEvent>
+  _$$BeneficiaryRegistrationSaveIndividualDetailsEventImplCopyWith<
+          _$BeneficiaryRegistrationSaveIndividualDetailsEventImpl>
       get copyWith =>
-          __$$BeneficiaryRegistrationSaveIndividualDetailsEventCopyWithImpl<
-                  _$BeneficiaryRegistrationSaveIndividualDetailsEvent>(
+          __$$BeneficiaryRegistrationSaveIndividualDetailsEventImplCopyWithImpl<
+                  _$BeneficiaryRegistrationSaveIndividualDetailsEventImpl>(
               this, _$identity);
 
   @override
@@ -802,8 +808,8 @@ class _$BeneficiaryRegistrationSaveIndividualDetailsEvent
     required TResult Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)
         updateHouseholdDetails,
-    required TResult Function(
-            IndividualModel model, String? tag, AddressModel addressModel)
+    required TResult Function(IndividualModel model, String? tag,
+            HouseholdModel householdModel, AddressModel addressModel)
         updateIndividualDetails,
     required TResult Function(String userUuid, String projectId,
             BoundaryModel boundary, String? tag)
@@ -833,8 +839,8 @@ class _$BeneficiaryRegistrationSaveIndividualDetailsEvent
     TResult? Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)?
         updateHouseholdDetails,
-    TResult? Function(
-            IndividualModel model, String? tag, AddressModel addressModel)?
+    TResult? Function(IndividualModel model, String? tag,
+            HouseholdModel householdModel, AddressModel addressModel)?
         updateIndividualDetails,
     TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
             String? tag)?
@@ -864,8 +870,8 @@ class _$BeneficiaryRegistrationSaveIndividualDetailsEvent
     TResult Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)?
         updateHouseholdDetails,
-    TResult Function(
-            IndividualModel model, String? tag, AddressModel addressModel)?
+    TResult Function(IndividualModel model, String? tag,
+            HouseholdModel householdModel, AddressModel addressModel)?
         updateIndividualDetails,
     TResult Function(String userUuid, String projectId, BoundaryModel boundary,
             String? tag)?
@@ -955,22 +961,22 @@ abstract class BeneficiaryRegistrationSaveIndividualDetailsEvent
   const factory BeneficiaryRegistrationSaveIndividualDetailsEvent(
           {required final IndividualModel model,
           final bool isHeadOfHousehold}) =
-      _$BeneficiaryRegistrationSaveIndividualDetailsEvent;
+      _$BeneficiaryRegistrationSaveIndividualDetailsEventImpl;
 
   IndividualModel get model;
   bool get isHeadOfHousehold;
   @JsonKey(ignore: true)
-  _$$BeneficiaryRegistrationSaveIndividualDetailsEventCopyWith<
-          _$BeneficiaryRegistrationSaveIndividualDetailsEvent>
+  _$$BeneficiaryRegistrationSaveIndividualDetailsEventImplCopyWith<
+          _$BeneficiaryRegistrationSaveIndividualDetailsEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$BeneficiaryRegistrationAddMemberEventCopyWith<$Res> {
-  factory _$$BeneficiaryRegistrationAddMemberEventCopyWith(
-          _$BeneficiaryRegistrationAddMemberEvent value,
-          $Res Function(_$BeneficiaryRegistrationAddMemberEvent) then) =
-      __$$BeneficiaryRegistrationAddMemberEventCopyWithImpl<$Res>;
+abstract class _$$BeneficiaryRegistrationAddMemberEventImplCopyWith<$Res> {
+  factory _$$BeneficiaryRegistrationAddMemberEventImplCopyWith(
+          _$BeneficiaryRegistrationAddMemberEventImpl value,
+          $Res Function(_$BeneficiaryRegistrationAddMemberEventImpl) then) =
+      __$$BeneficiaryRegistrationAddMemberEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call(
       {HouseholdModel householdModel,
@@ -983,13 +989,13 @@ abstract class _$$BeneficiaryRegistrationAddMemberEventCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$BeneficiaryRegistrationAddMemberEventCopyWithImpl<$Res>
+class __$$BeneficiaryRegistrationAddMemberEventImplCopyWithImpl<$Res>
     extends _$BeneficiaryRegistrationEventCopyWithImpl<$Res,
-        _$BeneficiaryRegistrationAddMemberEvent>
-    implements _$$BeneficiaryRegistrationAddMemberEventCopyWith<$Res> {
-  __$$BeneficiaryRegistrationAddMemberEventCopyWithImpl(
-      _$BeneficiaryRegistrationAddMemberEvent _value,
-      $Res Function(_$BeneficiaryRegistrationAddMemberEvent) _then)
+        _$BeneficiaryRegistrationAddMemberEventImpl>
+    implements _$$BeneficiaryRegistrationAddMemberEventImplCopyWith<$Res> {
+  __$$BeneficiaryRegistrationAddMemberEventImplCopyWithImpl(
+      _$BeneficiaryRegistrationAddMemberEventImpl _value,
+      $Res Function(_$BeneficiaryRegistrationAddMemberEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1003,7 +1009,7 @@ class __$$BeneficiaryRegistrationAddMemberEventCopyWithImpl<$Res>
     Object? tag = freezed,
     Object? beneficiaryType = null,
   }) {
-    return _then(_$BeneficiaryRegistrationAddMemberEvent(
+    return _then(_$BeneficiaryRegistrationAddMemberEventImpl(
       householdModel: null == householdModel
           ? _value.householdModel
           : householdModel // ignore: cast_nullable_to_non_nullable
@@ -1038,9 +1044,9 @@ class __$$BeneficiaryRegistrationAddMemberEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$BeneficiaryRegistrationAddMemberEvent
+class _$BeneficiaryRegistrationAddMemberEventImpl
     implements BeneficiaryRegistrationAddMemberEvent {
-  const _$BeneficiaryRegistrationAddMemberEvent(
+  const _$BeneficiaryRegistrationAddMemberEventImpl(
       {required this.householdModel,
       required this.individualModel,
       required this.addressModel,
@@ -1070,10 +1076,10 @@ class _$BeneficiaryRegistrationAddMemberEvent
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$BeneficiaryRegistrationAddMemberEvent &&
+            other is _$BeneficiaryRegistrationAddMemberEventImpl &&
             (identical(other.householdModel, householdModel) ||
                 other.householdModel == householdModel) &&
             (identical(other.individualModel, individualModel) ||
@@ -1096,10 +1102,10 @@ class _$BeneficiaryRegistrationAddMemberEvent
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$BeneficiaryRegistrationAddMemberEventCopyWith<
-          _$BeneficiaryRegistrationAddMemberEvent>
-      get copyWith => __$$BeneficiaryRegistrationAddMemberEventCopyWithImpl<
-          _$BeneficiaryRegistrationAddMemberEvent>(this, _$identity);
+  _$$BeneficiaryRegistrationAddMemberEventImplCopyWith<
+          _$BeneficiaryRegistrationAddMemberEventImpl>
+      get copyWith => __$$BeneficiaryRegistrationAddMemberEventImplCopyWithImpl<
+          _$BeneficiaryRegistrationAddMemberEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -1122,8 +1128,8 @@ class _$BeneficiaryRegistrationAddMemberEvent
     required TResult Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)
         updateHouseholdDetails,
-    required TResult Function(
-            IndividualModel model, String? tag, AddressModel addressModel)
+    required TResult Function(IndividualModel model, String? tag,
+            HouseholdModel householdModel, AddressModel addressModel)
         updateIndividualDetails,
     required TResult Function(String userUuid, String projectId,
             BoundaryModel boundary, String? tag)
@@ -1154,8 +1160,8 @@ class _$BeneficiaryRegistrationAddMemberEvent
     TResult? Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)?
         updateHouseholdDetails,
-    TResult? Function(
-            IndividualModel model, String? tag, AddressModel addressModel)?
+    TResult? Function(IndividualModel model, String? tag,
+            HouseholdModel householdModel, AddressModel addressModel)?
         updateIndividualDetails,
     TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
             String? tag)?
@@ -1186,8 +1192,8 @@ class _$BeneficiaryRegistrationAddMemberEvent
     TResult Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)?
         updateHouseholdDetails,
-    TResult Function(
-            IndividualModel model, String? tag, AddressModel addressModel)?
+    TResult Function(IndividualModel model, String? tag,
+            HouseholdModel householdModel, AddressModel addressModel)?
         updateIndividualDetails,
     TResult Function(String userUuid, String projectId, BoundaryModel boundary,
             String? tag)?
@@ -1283,7 +1289,7 @@ abstract class BeneficiaryRegistrationAddMemberEvent
           required final String projectId,
           final String? tag,
           required final BeneficiaryType beneficiaryType}) =
-      _$BeneficiaryRegistrationAddMemberEvent;
+      _$BeneficiaryRegistrationAddMemberEventImpl;
 
   HouseholdModel get householdModel;
   IndividualModel get individualModel;
@@ -1293,33 +1299,38 @@ abstract class BeneficiaryRegistrationAddMemberEvent
   String? get tag;
   BeneficiaryType get beneficiaryType;
   @JsonKey(ignore: true)
-  _$$BeneficiaryRegistrationAddMemberEventCopyWith<
-          _$BeneficiaryRegistrationAddMemberEvent>
+  _$$BeneficiaryRegistrationAddMemberEventImplCopyWith<
+          _$BeneficiaryRegistrationAddMemberEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$BeneficiaryRegistrationUpdateHouseholdDetailsEventCopyWith<
+abstract class _$$BeneficiaryRegistrationUpdateHouseholdDetailsEventImplCopyWith<
     $Res> {
-  factory _$$BeneficiaryRegistrationUpdateHouseholdDetailsEventCopyWith(
-          _$BeneficiaryRegistrationUpdateHouseholdDetailsEvent value,
-          $Res Function(_$BeneficiaryRegistrationUpdateHouseholdDetailsEvent)
+  factory _$$BeneficiaryRegistrationUpdateHouseholdDetailsEventImplCopyWith(
+          _$BeneficiaryRegistrationUpdateHouseholdDetailsEventImpl value,
+          $Res Function(
+                  _$BeneficiaryRegistrationUpdateHouseholdDetailsEventImpl)
               then) =
-      __$$BeneficiaryRegistrationUpdateHouseholdDetailsEventCopyWithImpl<$Res>;
+      __$$BeneficiaryRegistrationUpdateHouseholdDetailsEventImplCopyWithImpl<
+          $Res>;
   @useResult
   $Res call(
       {HouseholdModel household, AddressModel? addressModel, String? tag});
 }
 
 /// @nodoc
-class __$$BeneficiaryRegistrationUpdateHouseholdDetailsEventCopyWithImpl<$Res>
+class __$$BeneficiaryRegistrationUpdateHouseholdDetailsEventImplCopyWithImpl<
+        $Res>
     extends _$BeneficiaryRegistrationEventCopyWithImpl<$Res,
-        _$BeneficiaryRegistrationUpdateHouseholdDetailsEvent>
+        _$BeneficiaryRegistrationUpdateHouseholdDetailsEventImpl>
     implements
-        _$$BeneficiaryRegistrationUpdateHouseholdDetailsEventCopyWith<$Res> {
-  __$$BeneficiaryRegistrationUpdateHouseholdDetailsEventCopyWithImpl(
-      _$BeneficiaryRegistrationUpdateHouseholdDetailsEvent _value,
-      $Res Function(_$BeneficiaryRegistrationUpdateHouseholdDetailsEvent) _then)
+        _$$BeneficiaryRegistrationUpdateHouseholdDetailsEventImplCopyWith<
+            $Res> {
+  __$$BeneficiaryRegistrationUpdateHouseholdDetailsEventImplCopyWithImpl(
+      _$BeneficiaryRegistrationUpdateHouseholdDetailsEventImpl _value,
+      $Res Function(_$BeneficiaryRegistrationUpdateHouseholdDetailsEventImpl)
+          _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1329,7 +1340,7 @@ class __$$BeneficiaryRegistrationUpdateHouseholdDetailsEventCopyWithImpl<$Res>
     Object? addressModel = freezed,
     Object? tag = freezed,
   }) {
-    return _then(_$BeneficiaryRegistrationUpdateHouseholdDetailsEvent(
+    return _then(_$BeneficiaryRegistrationUpdateHouseholdDetailsEventImpl(
       household: null == household
           ? _value.household
           : household // ignore: cast_nullable_to_non_nullable
@@ -1348,9 +1359,9 @@ class __$$BeneficiaryRegistrationUpdateHouseholdDetailsEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$BeneficiaryRegistrationUpdateHouseholdDetailsEvent
+class _$BeneficiaryRegistrationUpdateHouseholdDetailsEventImpl
     implements BeneficiaryRegistrationUpdateHouseholdDetailsEvent {
-  const _$BeneficiaryRegistrationUpdateHouseholdDetailsEvent(
+  const _$BeneficiaryRegistrationUpdateHouseholdDetailsEventImpl(
       {required this.household, this.addressModel, this.tag});
 
   @override
@@ -1366,10 +1377,10 @@ class _$BeneficiaryRegistrationUpdateHouseholdDetailsEvent
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$BeneficiaryRegistrationUpdateHouseholdDetailsEvent &&
+            other is _$BeneficiaryRegistrationUpdateHouseholdDetailsEventImpl &&
             (identical(other.household, household) ||
                 other.household == household) &&
             (identical(other.addressModel, addressModel) ||
@@ -1383,11 +1394,11 @@ class _$BeneficiaryRegistrationUpdateHouseholdDetailsEvent
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$BeneficiaryRegistrationUpdateHouseholdDetailsEventCopyWith<
-          _$BeneficiaryRegistrationUpdateHouseholdDetailsEvent>
+  _$$BeneficiaryRegistrationUpdateHouseholdDetailsEventImplCopyWith<
+          _$BeneficiaryRegistrationUpdateHouseholdDetailsEventImpl>
       get copyWith =>
-          __$$BeneficiaryRegistrationUpdateHouseholdDetailsEventCopyWithImpl<
-                  _$BeneficiaryRegistrationUpdateHouseholdDetailsEvent>(
+          __$$BeneficiaryRegistrationUpdateHouseholdDetailsEventImplCopyWithImpl<
+                  _$BeneficiaryRegistrationUpdateHouseholdDetailsEventImpl>(
               this, _$identity);
 
   @override
@@ -1411,8 +1422,8 @@ class _$BeneficiaryRegistrationUpdateHouseholdDetailsEvent
     required TResult Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)
         updateHouseholdDetails,
-    required TResult Function(
-            IndividualModel model, String? tag, AddressModel addressModel)
+    required TResult Function(IndividualModel model, String? tag,
+            HouseholdModel householdModel, AddressModel addressModel)
         updateIndividualDetails,
     required TResult Function(String userUuid, String projectId,
             BoundaryModel boundary, String? tag)
@@ -1442,8 +1453,8 @@ class _$BeneficiaryRegistrationUpdateHouseholdDetailsEvent
     TResult? Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)?
         updateHouseholdDetails,
-    TResult? Function(
-            IndividualModel model, String? tag, AddressModel addressModel)?
+    TResult? Function(IndividualModel model, String? tag,
+            HouseholdModel householdModel, AddressModel addressModel)?
         updateIndividualDetails,
     TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
             String? tag)?
@@ -1473,8 +1484,8 @@ class _$BeneficiaryRegistrationUpdateHouseholdDetailsEvent
     TResult Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)?
         updateHouseholdDetails,
-    TResult Function(
-            IndividualModel model, String? tag, AddressModel addressModel)?
+    TResult Function(IndividualModel model, String? tag,
+            HouseholdModel householdModel, AddressModel addressModel)?
         updateIndividualDetails,
     TResult Function(String userUuid, String projectId, BoundaryModel boundary,
             String? tag)?
@@ -1565,38 +1576,46 @@ abstract class BeneficiaryRegistrationUpdateHouseholdDetailsEvent
           {required final HouseholdModel household,
           final AddressModel? addressModel,
           final String? tag}) =
-      _$BeneficiaryRegistrationUpdateHouseholdDetailsEvent;
+      _$BeneficiaryRegistrationUpdateHouseholdDetailsEventImpl;
 
   HouseholdModel get household;
   AddressModel? get addressModel;
   String? get tag;
   @JsonKey(ignore: true)
-  _$$BeneficiaryRegistrationUpdateHouseholdDetailsEventCopyWith<
-          _$BeneficiaryRegistrationUpdateHouseholdDetailsEvent>
+  _$$BeneficiaryRegistrationUpdateHouseholdDetailsEventImplCopyWith<
+          _$BeneficiaryRegistrationUpdateHouseholdDetailsEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$BeneficiaryRegistrationUpdateIndividualDetailsEventCopyWith<
+abstract class _$$BeneficiaryRegistrationUpdateIndividualDetailsEventImplCopyWith<
     $Res> {
-  factory _$$BeneficiaryRegistrationUpdateIndividualDetailsEventCopyWith(
-          _$BeneficiaryRegistrationUpdateIndividualDetailsEvent value,
-          $Res Function(_$BeneficiaryRegistrationUpdateIndividualDetailsEvent)
+  factory _$$BeneficiaryRegistrationUpdateIndividualDetailsEventImplCopyWith(
+          _$BeneficiaryRegistrationUpdateIndividualDetailsEventImpl value,
+          $Res Function(
+                  _$BeneficiaryRegistrationUpdateIndividualDetailsEventImpl)
               then) =
-      __$$BeneficiaryRegistrationUpdateIndividualDetailsEventCopyWithImpl<$Res>;
+      __$$BeneficiaryRegistrationUpdateIndividualDetailsEventImplCopyWithImpl<
+          $Res>;
   @useResult
-  $Res call({IndividualModel model, String? tag, AddressModel addressModel});
+  $Res call(
+      {IndividualModel model,
+      String? tag,
+      HouseholdModel householdModel,
+      AddressModel addressModel});
 }
 
 /// @nodoc
-class __$$BeneficiaryRegistrationUpdateIndividualDetailsEventCopyWithImpl<$Res>
+class __$$BeneficiaryRegistrationUpdateIndividualDetailsEventImplCopyWithImpl<
+        $Res>
     extends _$BeneficiaryRegistrationEventCopyWithImpl<$Res,
-        _$BeneficiaryRegistrationUpdateIndividualDetailsEvent>
+        _$BeneficiaryRegistrationUpdateIndividualDetailsEventImpl>
     implements
-        _$$BeneficiaryRegistrationUpdateIndividualDetailsEventCopyWith<$Res> {
-  __$$BeneficiaryRegistrationUpdateIndividualDetailsEventCopyWithImpl(
-      _$BeneficiaryRegistrationUpdateIndividualDetailsEvent _value,
-      $Res Function(_$BeneficiaryRegistrationUpdateIndividualDetailsEvent)
+        _$$BeneficiaryRegistrationUpdateIndividualDetailsEventImplCopyWith<
+            $Res> {
+  __$$BeneficiaryRegistrationUpdateIndividualDetailsEventImplCopyWithImpl(
+      _$BeneficiaryRegistrationUpdateIndividualDetailsEventImpl _value,
+      $Res Function(_$BeneficiaryRegistrationUpdateIndividualDetailsEventImpl)
           _then)
       : super(_value, _then);
 
@@ -1605,9 +1624,10 @@ class __$$BeneficiaryRegistrationUpdateIndividualDetailsEventCopyWithImpl<$Res>
   $Res call({
     Object? model = null,
     Object? tag = freezed,
+    Object? householdModel = null,
     Object? addressModel = null,
   }) {
-    return _then(_$BeneficiaryRegistrationUpdateIndividualDetailsEvent(
+    return _then(_$BeneficiaryRegistrationUpdateIndividualDetailsEventImpl(
       model: null == model
           ? _value.model
           : model // ignore: cast_nullable_to_non_nullable
@@ -1616,6 +1636,10 @@ class __$$BeneficiaryRegistrationUpdateIndividualDetailsEventCopyWithImpl<$Res>
           ? _value.tag
           : tag // ignore: cast_nullable_to_non_nullable
               as String?,
+      householdModel: null == householdModel
+          ? _value.householdModel
+          : householdModel // ignore: cast_nullable_to_non_nullable
+              as HouseholdModel,
       addressModel: null == addressModel
           ? _value.addressModel
           : addressModel // ignore: cast_nullable_to_non_nullable
@@ -1626,45 +1650,54 @@ class __$$BeneficiaryRegistrationUpdateIndividualDetailsEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$BeneficiaryRegistrationUpdateIndividualDetailsEvent
+class _$BeneficiaryRegistrationUpdateIndividualDetailsEventImpl
     implements BeneficiaryRegistrationUpdateIndividualDetailsEvent {
-  const _$BeneficiaryRegistrationUpdateIndividualDetailsEvent(
-      {required this.model, this.tag, required this.addressModel});
+  const _$BeneficiaryRegistrationUpdateIndividualDetailsEventImpl(
+      {required this.model,
+      this.tag,
+      required this.householdModel,
+      required this.addressModel});
 
   @override
   final IndividualModel model;
   @override
   final String? tag;
   @override
+  final HouseholdModel householdModel;
+  @override
   final AddressModel addressModel;
 
   @override
   String toString() {
-    return 'BeneficiaryRegistrationEvent.updateIndividualDetails(model: $model, tag: $tag, addressModel: $addressModel)';
+    return 'BeneficiaryRegistrationEvent.updateIndividualDetails(model: $model, tag: $tag, householdModel: $householdModel, addressModel: $addressModel)';
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$BeneficiaryRegistrationUpdateIndividualDetailsEvent &&
+            other
+                is _$BeneficiaryRegistrationUpdateIndividualDetailsEventImpl &&
             (identical(other.model, model) || other.model == model) &&
             (identical(other.tag, tag) || other.tag == tag) &&
+            (identical(other.householdModel, householdModel) ||
+                other.householdModel == householdModel) &&
             (identical(other.addressModel, addressModel) ||
                 other.addressModel == addressModel));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, model, tag, addressModel);
+  int get hashCode =>
+      Object.hash(runtimeType, model, tag, householdModel, addressModel);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$BeneficiaryRegistrationUpdateIndividualDetailsEventCopyWith<
-          _$BeneficiaryRegistrationUpdateIndividualDetailsEvent>
+  _$$BeneficiaryRegistrationUpdateIndividualDetailsEventImplCopyWith<
+          _$BeneficiaryRegistrationUpdateIndividualDetailsEventImpl>
       get copyWith =>
-          __$$BeneficiaryRegistrationUpdateIndividualDetailsEventCopyWithImpl<
-                  _$BeneficiaryRegistrationUpdateIndividualDetailsEvent>(
+          __$$BeneficiaryRegistrationUpdateIndividualDetailsEventImplCopyWithImpl<
+                  _$BeneficiaryRegistrationUpdateIndividualDetailsEventImpl>(
               this, _$identity);
 
   @override
@@ -1688,15 +1721,15 @@ class _$BeneficiaryRegistrationUpdateIndividualDetailsEvent
     required TResult Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)
         updateHouseholdDetails,
-    required TResult Function(
-            IndividualModel model, String? tag, AddressModel addressModel)
+    required TResult Function(IndividualModel model, String? tag,
+            HouseholdModel householdModel, AddressModel addressModel)
         updateIndividualDetails,
     required TResult Function(String userUuid, String projectId,
             BoundaryModel boundary, String? tag)
         create,
     required TResult Function(String tag) validate,
   }) {
-    return updateIndividualDetails(model, tag, addressModel);
+    return updateIndividualDetails(model, tag, householdModel, addressModel);
   }
 
   @override
@@ -1719,15 +1752,16 @@ class _$BeneficiaryRegistrationUpdateIndividualDetailsEvent
     TResult? Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)?
         updateHouseholdDetails,
-    TResult? Function(
-            IndividualModel model, String? tag, AddressModel addressModel)?
+    TResult? Function(IndividualModel model, String? tag,
+            HouseholdModel householdModel, AddressModel addressModel)?
         updateIndividualDetails,
     TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
             String? tag)?
         create,
     TResult? Function(String tag)? validate,
   }) {
-    return updateIndividualDetails?.call(model, tag, addressModel);
+    return updateIndividualDetails?.call(
+        model, tag, householdModel, addressModel);
   }
 
   @override
@@ -1750,8 +1784,8 @@ class _$BeneficiaryRegistrationUpdateIndividualDetailsEvent
     TResult Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)?
         updateHouseholdDetails,
-    TResult Function(
-            IndividualModel model, String? tag, AddressModel addressModel)?
+    TResult Function(IndividualModel model, String? tag,
+            HouseholdModel householdModel, AddressModel addressModel)?
         updateIndividualDetails,
     TResult Function(String userUuid, String projectId, BoundaryModel boundary,
             String? tag)?
@@ -1760,7 +1794,7 @@ class _$BeneficiaryRegistrationUpdateIndividualDetailsEvent
     required TResult orElse(),
   }) {
     if (updateIndividualDetails != null) {
-      return updateIndividualDetails(model, tag, addressModel);
+      return updateIndividualDetails(model, tag, householdModel, addressModel);
     }
     return orElse();
   }
@@ -1841,37 +1875,39 @@ abstract class BeneficiaryRegistrationUpdateIndividualDetailsEvent
   const factory BeneficiaryRegistrationUpdateIndividualDetailsEvent(
           {required final IndividualModel model,
           final String? tag,
+          required final HouseholdModel householdModel,
           required final AddressModel addressModel}) =
-      _$BeneficiaryRegistrationUpdateIndividualDetailsEvent;
+      _$BeneficiaryRegistrationUpdateIndividualDetailsEventImpl;
 
   IndividualModel get model;
   String? get tag;
+  HouseholdModel get householdModel;
   AddressModel get addressModel;
   @JsonKey(ignore: true)
-  _$$BeneficiaryRegistrationUpdateIndividualDetailsEventCopyWith<
-          _$BeneficiaryRegistrationUpdateIndividualDetailsEvent>
+  _$$BeneficiaryRegistrationUpdateIndividualDetailsEventImplCopyWith<
+          _$BeneficiaryRegistrationUpdateIndividualDetailsEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$BeneficiaryRegistrationCreateEventCopyWith<$Res> {
-  factory _$$BeneficiaryRegistrationCreateEventCopyWith(
-          _$BeneficiaryRegistrationCreateEvent value,
-          $Res Function(_$BeneficiaryRegistrationCreateEvent) then) =
-      __$$BeneficiaryRegistrationCreateEventCopyWithImpl<$Res>;
+abstract class _$$BeneficiaryRegistrationCreateEventImplCopyWith<$Res> {
+  factory _$$BeneficiaryRegistrationCreateEventImplCopyWith(
+          _$BeneficiaryRegistrationCreateEventImpl value,
+          $Res Function(_$BeneficiaryRegistrationCreateEventImpl) then) =
+      __$$BeneficiaryRegistrationCreateEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call(
       {String userUuid, String projectId, BoundaryModel boundary, String? tag});
 }
 
 /// @nodoc
-class __$$BeneficiaryRegistrationCreateEventCopyWithImpl<$Res>
+class __$$BeneficiaryRegistrationCreateEventImplCopyWithImpl<$Res>
     extends _$BeneficiaryRegistrationEventCopyWithImpl<$Res,
-        _$BeneficiaryRegistrationCreateEvent>
-    implements _$$BeneficiaryRegistrationCreateEventCopyWith<$Res> {
-  __$$BeneficiaryRegistrationCreateEventCopyWithImpl(
-      _$BeneficiaryRegistrationCreateEvent _value,
-      $Res Function(_$BeneficiaryRegistrationCreateEvent) _then)
+        _$BeneficiaryRegistrationCreateEventImpl>
+    implements _$$BeneficiaryRegistrationCreateEventImplCopyWith<$Res> {
+  __$$BeneficiaryRegistrationCreateEventImplCopyWithImpl(
+      _$BeneficiaryRegistrationCreateEventImpl _value,
+      $Res Function(_$BeneficiaryRegistrationCreateEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1882,7 +1918,7 @@ class __$$BeneficiaryRegistrationCreateEventCopyWithImpl<$Res>
     Object? boundary = null,
     Object? tag = freezed,
   }) {
-    return _then(_$BeneficiaryRegistrationCreateEvent(
+    return _then(_$BeneficiaryRegistrationCreateEventImpl(
       userUuid: null == userUuid
           ? _value.userUuid
           : userUuid // ignore: cast_nullable_to_non_nullable
@@ -1905,9 +1941,9 @@ class __$$BeneficiaryRegistrationCreateEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$BeneficiaryRegistrationCreateEvent
+class _$BeneficiaryRegistrationCreateEventImpl
     implements BeneficiaryRegistrationCreateEvent {
-  const _$BeneficiaryRegistrationCreateEvent(
+  const _$BeneficiaryRegistrationCreateEventImpl(
       {required this.userUuid,
       required this.projectId,
       required this.boundary,
@@ -1928,10 +1964,10 @@ class _$BeneficiaryRegistrationCreateEvent
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$BeneficiaryRegistrationCreateEvent &&
+            other is _$BeneficiaryRegistrationCreateEventImpl &&
             (identical(other.userUuid, userUuid) ||
                 other.userUuid == userUuid) &&
             (identical(other.projectId, projectId) ||
@@ -1948,10 +1984,10 @@ class _$BeneficiaryRegistrationCreateEvent
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$BeneficiaryRegistrationCreateEventCopyWith<
-          _$BeneficiaryRegistrationCreateEvent>
-      get copyWith => __$$BeneficiaryRegistrationCreateEventCopyWithImpl<
-          _$BeneficiaryRegistrationCreateEvent>(this, _$identity);
+  _$$BeneficiaryRegistrationCreateEventImplCopyWith<
+          _$BeneficiaryRegistrationCreateEventImpl>
+      get copyWith => __$$BeneficiaryRegistrationCreateEventImplCopyWithImpl<
+          _$BeneficiaryRegistrationCreateEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -1974,8 +2010,8 @@ class _$BeneficiaryRegistrationCreateEvent
     required TResult Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)
         updateHouseholdDetails,
-    required TResult Function(
-            IndividualModel model, String? tag, AddressModel addressModel)
+    required TResult Function(IndividualModel model, String? tag,
+            HouseholdModel householdModel, AddressModel addressModel)
         updateIndividualDetails,
     required TResult Function(String userUuid, String projectId,
             BoundaryModel boundary, String? tag)
@@ -2005,8 +2041,8 @@ class _$BeneficiaryRegistrationCreateEvent
     TResult? Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)?
         updateHouseholdDetails,
-    TResult? Function(
-            IndividualModel model, String? tag, AddressModel addressModel)?
+    TResult? Function(IndividualModel model, String? tag,
+            HouseholdModel householdModel, AddressModel addressModel)?
         updateIndividualDetails,
     TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
             String? tag)?
@@ -2036,8 +2072,8 @@ class _$BeneficiaryRegistrationCreateEvent
     TResult Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)?
         updateHouseholdDetails,
-    TResult Function(
-            IndividualModel model, String? tag, AddressModel addressModel)?
+    TResult Function(IndividualModel model, String? tag,
+            HouseholdModel householdModel, AddressModel addressModel)?
         updateIndividualDetails,
     TResult Function(String userUuid, String projectId, BoundaryModel boundary,
             String? tag)?
@@ -2128,36 +2164,36 @@ abstract class BeneficiaryRegistrationCreateEvent
       {required final String userUuid,
       required final String projectId,
       required final BoundaryModel boundary,
-      final String? tag}) = _$BeneficiaryRegistrationCreateEvent;
+      final String? tag}) = _$BeneficiaryRegistrationCreateEventImpl;
 
   String get userUuid;
   String get projectId;
   BoundaryModel get boundary;
   String? get tag;
   @JsonKey(ignore: true)
-  _$$BeneficiaryRegistrationCreateEventCopyWith<
-          _$BeneficiaryRegistrationCreateEvent>
+  _$$BeneficiaryRegistrationCreateEventImplCopyWith<
+          _$BeneficiaryRegistrationCreateEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$BeneficiaryRegistrationTagEventCopyWith<$Res> {
-  factory _$$BeneficiaryRegistrationTagEventCopyWith(
-          _$BeneficiaryRegistrationTagEvent value,
-          $Res Function(_$BeneficiaryRegistrationTagEvent) then) =
-      __$$BeneficiaryRegistrationTagEventCopyWithImpl<$Res>;
+abstract class _$$BeneficiaryRegistrationTagEventImplCopyWith<$Res> {
+  factory _$$BeneficiaryRegistrationTagEventImplCopyWith(
+          _$BeneficiaryRegistrationTagEventImpl value,
+          $Res Function(_$BeneficiaryRegistrationTagEventImpl) then) =
+      __$$BeneficiaryRegistrationTagEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String tag});
 }
 
 /// @nodoc
-class __$$BeneficiaryRegistrationTagEventCopyWithImpl<$Res>
+class __$$BeneficiaryRegistrationTagEventImplCopyWithImpl<$Res>
     extends _$BeneficiaryRegistrationEventCopyWithImpl<$Res,
-        _$BeneficiaryRegistrationTagEvent>
-    implements _$$BeneficiaryRegistrationTagEventCopyWith<$Res> {
-  __$$BeneficiaryRegistrationTagEventCopyWithImpl(
-      _$BeneficiaryRegistrationTagEvent _value,
-      $Res Function(_$BeneficiaryRegistrationTagEvent) _then)
+        _$BeneficiaryRegistrationTagEventImpl>
+    implements _$$BeneficiaryRegistrationTagEventImplCopyWith<$Res> {
+  __$$BeneficiaryRegistrationTagEventImplCopyWithImpl(
+      _$BeneficiaryRegistrationTagEventImpl _value,
+      $Res Function(_$BeneficiaryRegistrationTagEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -2165,7 +2201,7 @@ class __$$BeneficiaryRegistrationTagEventCopyWithImpl<$Res>
   $Res call({
     Object? tag = null,
   }) {
-    return _then(_$BeneficiaryRegistrationTagEvent(
+    return _then(_$BeneficiaryRegistrationTagEventImpl(
       tag: null == tag
           ? _value.tag
           : tag // ignore: cast_nullable_to_non_nullable
@@ -2176,9 +2212,9 @@ class __$$BeneficiaryRegistrationTagEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$BeneficiaryRegistrationTagEvent
+class _$BeneficiaryRegistrationTagEventImpl
     implements BeneficiaryRegistrationTagEvent {
-  const _$BeneficiaryRegistrationTagEvent({required this.tag});
+  const _$BeneficiaryRegistrationTagEventImpl({required this.tag});
 
   @override
   final String tag;
@@ -2189,10 +2225,10 @@ class _$BeneficiaryRegistrationTagEvent
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$BeneficiaryRegistrationTagEvent &&
+            other is _$BeneficiaryRegistrationTagEventImpl &&
             (identical(other.tag, tag) || other.tag == tag));
   }
 
@@ -2202,9 +2238,10 @@ class _$BeneficiaryRegistrationTagEvent
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$BeneficiaryRegistrationTagEventCopyWith<_$BeneficiaryRegistrationTagEvent>
-      get copyWith => __$$BeneficiaryRegistrationTagEventCopyWithImpl<
-          _$BeneficiaryRegistrationTagEvent>(this, _$identity);
+  _$$BeneficiaryRegistrationTagEventImplCopyWith<
+          _$BeneficiaryRegistrationTagEventImpl>
+      get copyWith => __$$BeneficiaryRegistrationTagEventImplCopyWithImpl<
+          _$BeneficiaryRegistrationTagEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -2227,8 +2264,8 @@ class _$BeneficiaryRegistrationTagEvent
     required TResult Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)
         updateHouseholdDetails,
-    required TResult Function(
-            IndividualModel model, String? tag, AddressModel addressModel)
+    required TResult Function(IndividualModel model, String? tag,
+            HouseholdModel householdModel, AddressModel addressModel)
         updateIndividualDetails,
     required TResult Function(String userUuid, String projectId,
             BoundaryModel boundary, String? tag)
@@ -2258,8 +2295,8 @@ class _$BeneficiaryRegistrationTagEvent
     TResult? Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)?
         updateHouseholdDetails,
-    TResult? Function(
-            IndividualModel model, String? tag, AddressModel addressModel)?
+    TResult? Function(IndividualModel model, String? tag,
+            HouseholdModel householdModel, AddressModel addressModel)?
         updateIndividualDetails,
     TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
             String? tag)?
@@ -2289,8 +2326,8 @@ class _$BeneficiaryRegistrationTagEvent
     TResult Function(
             HouseholdModel household, AddressModel? addressModel, String? tag)?
         updateHouseholdDetails,
-    TResult Function(
-            IndividualModel model, String? tag, AddressModel addressModel)?
+    TResult Function(IndividualModel model, String? tag,
+            HouseholdModel householdModel, AddressModel addressModel)?
         updateIndividualDetails,
     TResult Function(String userUuid, String projectId, BoundaryModel boundary,
             String? tag)?
@@ -2378,16 +2415,18 @@ class _$BeneficiaryRegistrationTagEvent
 abstract class BeneficiaryRegistrationTagEvent
     implements BeneficiaryRegistrationEvent {
   const factory BeneficiaryRegistrationTagEvent({required final String tag}) =
-      _$BeneficiaryRegistrationTagEvent;
+      _$BeneficiaryRegistrationTagEventImpl;
 
   String get tag;
   @JsonKey(ignore: true)
-  _$$BeneficiaryRegistrationTagEventCopyWith<_$BeneficiaryRegistrationTagEvent>
+  _$$BeneficiaryRegistrationTagEventImplCopyWith<
+          _$BeneficiaryRegistrationTagEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 mixin _$BeneficiaryRegistrationState {
+  HouseholdModel? get householdModel => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
@@ -2525,6 +2564,10 @@ mixin _$BeneficiaryRegistrationState {
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
+
+  @JsonKey(ignore: true)
+  $BeneficiaryRegistrationStateCopyWith<BeneficiaryRegistrationState>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -2534,6 +2577,8 @@ abstract class $BeneficiaryRegistrationStateCopyWith<$Res> {
           $Res Function(BeneficiaryRegistrationState) then) =
       _$BeneficiaryRegistrationStateCopyWithImpl<$Res,
           BeneficiaryRegistrationState>;
+  @useResult
+  $Res call({HouseholdModel householdModel});
 }
 
 /// @nodoc
@@ -2546,14 +2591,29 @@ class _$BeneficiaryRegistrationStateCopyWithImpl<$Res,
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? householdModel = null,
+  }) {
+    return _then(_value.copyWith(
+      householdModel: null == householdModel
+          ? _value.householdModel!
+          : householdModel // ignore: cast_nullable_to_non_nullable
+              as HouseholdModel,
+    ) as $Val);
+  }
 }
 
 /// @nodoc
-abstract class _$$BeneficiaryRegistrationCreateStateCopyWith<$Res> {
-  factory _$$BeneficiaryRegistrationCreateStateCopyWith(
-          _$BeneficiaryRegistrationCreateState value,
-          $Res Function(_$BeneficiaryRegistrationCreateState) then) =
-      __$$BeneficiaryRegistrationCreateStateCopyWithImpl<$Res>;
+abstract class _$$BeneficiaryRegistrationCreateStateImplCopyWith<$Res>
+    implements $BeneficiaryRegistrationStateCopyWith<$Res> {
+  factory _$$BeneficiaryRegistrationCreateStateImplCopyWith(
+          _$BeneficiaryRegistrationCreateStateImpl value,
+          $Res Function(_$BeneficiaryRegistrationCreateStateImpl) then) =
+      __$$BeneficiaryRegistrationCreateStateImplCopyWithImpl<$Res>;
+  @override
   @useResult
   $Res call(
       {AddressModel? addressModel,
@@ -2566,13 +2626,13 @@ abstract class _$$BeneficiaryRegistrationCreateStateCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$BeneficiaryRegistrationCreateStateCopyWithImpl<$Res>
+class __$$BeneficiaryRegistrationCreateStateImplCopyWithImpl<$Res>
     extends _$BeneficiaryRegistrationStateCopyWithImpl<$Res,
-        _$BeneficiaryRegistrationCreateState>
-    implements _$$BeneficiaryRegistrationCreateStateCopyWith<$Res> {
-  __$$BeneficiaryRegistrationCreateStateCopyWithImpl(
-      _$BeneficiaryRegistrationCreateState _value,
-      $Res Function(_$BeneficiaryRegistrationCreateState) _then)
+        _$BeneficiaryRegistrationCreateStateImpl>
+    implements _$$BeneficiaryRegistrationCreateStateImplCopyWith<$Res> {
+  __$$BeneficiaryRegistrationCreateStateImplCopyWithImpl(
+      _$BeneficiaryRegistrationCreateStateImpl _value,
+      $Res Function(_$BeneficiaryRegistrationCreateStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -2586,7 +2646,7 @@ class __$$BeneficiaryRegistrationCreateStateCopyWithImpl<$Res>
     Object? loading = null,
     Object? isHeadOfHousehold = null,
   }) {
-    return _then(_$BeneficiaryRegistrationCreateState(
+    return _then(_$BeneficiaryRegistrationCreateStateImpl(
       addressModel: freezed == addressModel
           ? _value.addressModel
           : addressModel // ignore: cast_nullable_to_non_nullable
@@ -2621,9 +2681,9 @@ class __$$BeneficiaryRegistrationCreateStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$BeneficiaryRegistrationCreateState
+class _$BeneficiaryRegistrationCreateStateImpl
     implements BeneficiaryRegistrationCreateState {
-  const _$BeneficiaryRegistrationCreateState(
+  const _$BeneficiaryRegistrationCreateStateImpl(
       {this.addressModel,
       this.householdModel,
       this.individualModel,
@@ -2655,10 +2715,10 @@ class _$BeneficiaryRegistrationCreateState
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$BeneficiaryRegistrationCreateState &&
+            other is _$BeneficiaryRegistrationCreateStateImpl &&
             (identical(other.addressModel, addressModel) ||
                 other.addressModel == addressModel) &&
             (identical(other.householdModel, householdModel) ||
@@ -2688,10 +2748,10 @@ class _$BeneficiaryRegistrationCreateState
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$BeneficiaryRegistrationCreateStateCopyWith<
-          _$BeneficiaryRegistrationCreateState>
-      get copyWith => __$$BeneficiaryRegistrationCreateStateCopyWithImpl<
-          _$BeneficiaryRegistrationCreateState>(this, _$identity);
+  _$$BeneficiaryRegistrationCreateStateImplCopyWith<
+          _$BeneficiaryRegistrationCreateStateImpl>
+      get copyWith => __$$BeneficiaryRegistrationCreateStateImplCopyWithImpl<
+          _$BeneficiaryRegistrationCreateStateImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -2867,27 +2927,31 @@ abstract class BeneficiaryRegistrationCreateState
       final DateTime? registrationDate,
       final String? searchQuery,
       final bool loading,
-      final bool isHeadOfHousehold}) = _$BeneficiaryRegistrationCreateState;
+      final bool isHeadOfHousehold}) = _$BeneficiaryRegistrationCreateStateImpl;
 
   AddressModel? get addressModel;
+  @override
   HouseholdModel? get householdModel;
   IndividualModel? get individualModel;
   DateTime? get registrationDate;
   String? get searchQuery;
   bool get loading;
   bool get isHeadOfHousehold;
+  @override
   @JsonKey(ignore: true)
-  _$$BeneficiaryRegistrationCreateStateCopyWith<
-          _$BeneficiaryRegistrationCreateState>
+  _$$BeneficiaryRegistrationCreateStateImplCopyWith<
+          _$BeneficiaryRegistrationCreateStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$BeneficiaryRegistrationEditHouseholdStateCopyWith<$Res> {
-  factory _$$BeneficiaryRegistrationEditHouseholdStateCopyWith(
-          _$BeneficiaryRegistrationEditHouseholdState value,
-          $Res Function(_$BeneficiaryRegistrationEditHouseholdState) then) =
-      __$$BeneficiaryRegistrationEditHouseholdStateCopyWithImpl<$Res>;
+abstract class _$$BeneficiaryRegistrationEditHouseholdStateImplCopyWith<$Res>
+    implements $BeneficiaryRegistrationStateCopyWith<$Res> {
+  factory _$$BeneficiaryRegistrationEditHouseholdStateImplCopyWith(
+          _$BeneficiaryRegistrationEditHouseholdStateImpl value,
+          $Res Function(_$BeneficiaryRegistrationEditHouseholdStateImpl) then) =
+      __$$BeneficiaryRegistrationEditHouseholdStateImplCopyWithImpl<$Res>;
+  @override
   @useResult
   $Res call(
       {AddressModel addressModel,
@@ -2899,13 +2963,13 @@ abstract class _$$BeneficiaryRegistrationEditHouseholdStateCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$BeneficiaryRegistrationEditHouseholdStateCopyWithImpl<$Res>
+class __$$BeneficiaryRegistrationEditHouseholdStateImplCopyWithImpl<$Res>
     extends _$BeneficiaryRegistrationStateCopyWithImpl<$Res,
-        _$BeneficiaryRegistrationEditHouseholdState>
-    implements _$$BeneficiaryRegistrationEditHouseholdStateCopyWith<$Res> {
-  __$$BeneficiaryRegistrationEditHouseholdStateCopyWithImpl(
-      _$BeneficiaryRegistrationEditHouseholdState _value,
-      $Res Function(_$BeneficiaryRegistrationEditHouseholdState) _then)
+        _$BeneficiaryRegistrationEditHouseholdStateImpl>
+    implements _$$BeneficiaryRegistrationEditHouseholdStateImplCopyWith<$Res> {
+  __$$BeneficiaryRegistrationEditHouseholdStateImplCopyWithImpl(
+      _$BeneficiaryRegistrationEditHouseholdStateImpl _value,
+      $Res Function(_$BeneficiaryRegistrationEditHouseholdStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -2918,7 +2982,7 @@ class __$$BeneficiaryRegistrationEditHouseholdStateCopyWithImpl<$Res>
     Object? projectBeneficiaryModel = freezed,
     Object? loading = null,
   }) {
-    return _then(_$BeneficiaryRegistrationEditHouseholdState(
+    return _then(_$BeneficiaryRegistrationEditHouseholdStateImpl(
       addressModel: null == addressModel
           ? _value.addressModel
           : addressModel // ignore: cast_nullable_to_non_nullable
@@ -2949,9 +3013,9 @@ class __$$BeneficiaryRegistrationEditHouseholdStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$BeneficiaryRegistrationEditHouseholdState
+class _$BeneficiaryRegistrationEditHouseholdStateImpl
     implements BeneficiaryRegistrationEditHouseholdState {
-  const _$BeneficiaryRegistrationEditHouseholdState(
+  const _$BeneficiaryRegistrationEditHouseholdStateImpl(
       {required this.addressModel,
       required this.householdModel,
       required final List<IndividualModel> individualModel,
@@ -2967,6 +3031,7 @@ class _$BeneficiaryRegistrationEditHouseholdState
   final List<IndividualModel> _individualModel;
   @override
   List<IndividualModel> get individualModel {
+    if (_individualModel is EqualUnmodifiableListView) return _individualModel;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_individualModel);
   }
@@ -2985,10 +3050,10 @@ class _$BeneficiaryRegistrationEditHouseholdState
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$BeneficiaryRegistrationEditHouseholdState &&
+            other is _$BeneficiaryRegistrationEditHouseholdStateImpl &&
             (identical(other.addressModel, addressModel) ||
                 other.addressModel == addressModel) &&
             (identical(other.householdModel, householdModel) ||
@@ -3016,10 +3081,12 @@ class _$BeneficiaryRegistrationEditHouseholdState
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$BeneficiaryRegistrationEditHouseholdStateCopyWith<
-          _$BeneficiaryRegistrationEditHouseholdState>
-      get copyWith => __$$BeneficiaryRegistrationEditHouseholdStateCopyWithImpl<
-          _$BeneficiaryRegistrationEditHouseholdState>(this, _$identity);
+  _$$BeneficiaryRegistrationEditHouseholdStateImplCopyWith<
+          _$BeneficiaryRegistrationEditHouseholdStateImpl>
+      get copyWith =>
+          __$$BeneficiaryRegistrationEditHouseholdStateImplCopyWithImpl<
+                  _$BeneficiaryRegistrationEditHouseholdStateImpl>(
+              this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -3194,26 +3261,31 @@ abstract class BeneficiaryRegistrationEditHouseholdState
       required final List<IndividualModel> individualModel,
       required final DateTime registrationDate,
       final ProjectBeneficiaryModel? projectBeneficiaryModel,
-      final bool loading}) = _$BeneficiaryRegistrationEditHouseholdState;
+      final bool loading}) = _$BeneficiaryRegistrationEditHouseholdStateImpl;
 
   AddressModel get addressModel;
+  @override
   HouseholdModel get householdModel;
   List<IndividualModel> get individualModel;
   DateTime get registrationDate;
   ProjectBeneficiaryModel? get projectBeneficiaryModel;
   bool get loading;
+  @override
   @JsonKey(ignore: true)
-  _$$BeneficiaryRegistrationEditHouseholdStateCopyWith<
-          _$BeneficiaryRegistrationEditHouseholdState>
+  _$$BeneficiaryRegistrationEditHouseholdStateImplCopyWith<
+          _$BeneficiaryRegistrationEditHouseholdStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$BeneficiaryRegistrationEditIndividualStateCopyWith<$Res> {
-  factory _$$BeneficiaryRegistrationEditIndividualStateCopyWith(
-          _$BeneficiaryRegistrationEditIndividualState value,
-          $Res Function(_$BeneficiaryRegistrationEditIndividualState) then) =
-      __$$BeneficiaryRegistrationEditIndividualStateCopyWithImpl<$Res>;
+abstract class _$$BeneficiaryRegistrationEditIndividualStateImplCopyWith<$Res>
+    implements $BeneficiaryRegistrationStateCopyWith<$Res> {
+  factory _$$BeneficiaryRegistrationEditIndividualStateImplCopyWith(
+          _$BeneficiaryRegistrationEditIndividualStateImpl value,
+          $Res Function(_$BeneficiaryRegistrationEditIndividualStateImpl)
+              then) =
+      __$$BeneficiaryRegistrationEditIndividualStateImplCopyWithImpl<$Res>;
+  @override
   @useResult
   $Res call(
       {HouseholdModel householdModel,
@@ -3224,13 +3296,13 @@ abstract class _$$BeneficiaryRegistrationEditIndividualStateCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$BeneficiaryRegistrationEditIndividualStateCopyWithImpl<$Res>
+class __$$BeneficiaryRegistrationEditIndividualStateImplCopyWithImpl<$Res>
     extends _$BeneficiaryRegistrationStateCopyWithImpl<$Res,
-        _$BeneficiaryRegistrationEditIndividualState>
-    implements _$$BeneficiaryRegistrationEditIndividualStateCopyWith<$Res> {
-  __$$BeneficiaryRegistrationEditIndividualStateCopyWithImpl(
-      _$BeneficiaryRegistrationEditIndividualState _value,
-      $Res Function(_$BeneficiaryRegistrationEditIndividualState) _then)
+        _$BeneficiaryRegistrationEditIndividualStateImpl>
+    implements _$$BeneficiaryRegistrationEditIndividualStateImplCopyWith<$Res> {
+  __$$BeneficiaryRegistrationEditIndividualStateImplCopyWithImpl(
+      _$BeneficiaryRegistrationEditIndividualStateImpl _value,
+      $Res Function(_$BeneficiaryRegistrationEditIndividualStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -3242,7 +3314,7 @@ class __$$BeneficiaryRegistrationEditIndividualStateCopyWithImpl<$Res>
     Object? projectBeneficiaryModel = freezed,
     Object? loading = null,
   }) {
-    return _then(_$BeneficiaryRegistrationEditIndividualState(
+    return _then(_$BeneficiaryRegistrationEditIndividualStateImpl(
       householdModel: null == householdModel
           ? _value.householdModel
           : householdModel // ignore: cast_nullable_to_non_nullable
@@ -3269,9 +3341,9 @@ class __$$BeneficiaryRegistrationEditIndividualStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$BeneficiaryRegistrationEditIndividualState
+class _$BeneficiaryRegistrationEditIndividualStateImpl
     implements BeneficiaryRegistrationEditIndividualState {
-  const _$BeneficiaryRegistrationEditIndividualState(
+  const _$BeneficiaryRegistrationEditIndividualStateImpl(
       {required this.householdModel,
       required this.individualModel,
       required this.addressModel,
@@ -3296,10 +3368,10 @@ class _$BeneficiaryRegistrationEditIndividualState
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$BeneficiaryRegistrationEditIndividualState &&
+            other is _$BeneficiaryRegistrationEditIndividualStateImpl &&
             (identical(other.householdModel, householdModel) ||
                 other.householdModel == householdModel) &&
             (identical(other.individualModel, individualModel) ||
@@ -3319,11 +3391,12 @@ class _$BeneficiaryRegistrationEditIndividualState
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$BeneficiaryRegistrationEditIndividualStateCopyWith<
-          _$BeneficiaryRegistrationEditIndividualState>
+  _$$BeneficiaryRegistrationEditIndividualStateImplCopyWith<
+          _$BeneficiaryRegistrationEditIndividualStateImpl>
       get copyWith =>
-          __$$BeneficiaryRegistrationEditIndividualStateCopyWithImpl<
-              _$BeneficiaryRegistrationEditIndividualState>(this, _$identity);
+          __$$BeneficiaryRegistrationEditIndividualStateImplCopyWithImpl<
+                  _$BeneficiaryRegistrationEditIndividualStateImpl>(
+              this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -3497,38 +3570,42 @@ abstract class BeneficiaryRegistrationEditIndividualState
       required final IndividualModel individualModel,
       required final AddressModel addressModel,
       final ProjectBeneficiaryModel? projectBeneficiaryModel,
-      final bool loading}) = _$BeneficiaryRegistrationEditIndividualState;
+      final bool loading}) = _$BeneficiaryRegistrationEditIndividualStateImpl;
 
+  @override
   HouseholdModel get householdModel;
   IndividualModel get individualModel;
   AddressModel get addressModel;
   ProjectBeneficiaryModel? get projectBeneficiaryModel;
   bool get loading;
+  @override
   @JsonKey(ignore: true)
-  _$$BeneficiaryRegistrationEditIndividualStateCopyWith<
-          _$BeneficiaryRegistrationEditIndividualState>
+  _$$BeneficiaryRegistrationEditIndividualStateImplCopyWith<
+          _$BeneficiaryRegistrationEditIndividualStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$BeneficiaryRegistrationAddMemberStateCopyWith<$Res> {
-  factory _$$BeneficiaryRegistrationAddMemberStateCopyWith(
-          _$BeneficiaryRegistrationAddMemberState value,
-          $Res Function(_$BeneficiaryRegistrationAddMemberState) then) =
-      __$$BeneficiaryRegistrationAddMemberStateCopyWithImpl<$Res>;
+abstract class _$$BeneficiaryRegistrationAddMemberStateImplCopyWith<$Res>
+    implements $BeneficiaryRegistrationStateCopyWith<$Res> {
+  factory _$$BeneficiaryRegistrationAddMemberStateImplCopyWith(
+          _$BeneficiaryRegistrationAddMemberStateImpl value,
+          $Res Function(_$BeneficiaryRegistrationAddMemberStateImpl) then) =
+      __$$BeneficiaryRegistrationAddMemberStateImplCopyWithImpl<$Res>;
+  @override
   @useResult
   $Res call(
       {AddressModel addressModel, HouseholdModel householdModel, bool loading});
 }
 
 /// @nodoc
-class __$$BeneficiaryRegistrationAddMemberStateCopyWithImpl<$Res>
+class __$$BeneficiaryRegistrationAddMemberStateImplCopyWithImpl<$Res>
     extends _$BeneficiaryRegistrationStateCopyWithImpl<$Res,
-        _$BeneficiaryRegistrationAddMemberState>
-    implements _$$BeneficiaryRegistrationAddMemberStateCopyWith<$Res> {
-  __$$BeneficiaryRegistrationAddMemberStateCopyWithImpl(
-      _$BeneficiaryRegistrationAddMemberState _value,
-      $Res Function(_$BeneficiaryRegistrationAddMemberState) _then)
+        _$BeneficiaryRegistrationAddMemberStateImpl>
+    implements _$$BeneficiaryRegistrationAddMemberStateImplCopyWith<$Res> {
+  __$$BeneficiaryRegistrationAddMemberStateImplCopyWithImpl(
+      _$BeneficiaryRegistrationAddMemberStateImpl _value,
+      $Res Function(_$BeneficiaryRegistrationAddMemberStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -3538,7 +3615,7 @@ class __$$BeneficiaryRegistrationAddMemberStateCopyWithImpl<$Res>
     Object? householdModel = null,
     Object? loading = null,
   }) {
-    return _then(_$BeneficiaryRegistrationAddMemberState(
+    return _then(_$BeneficiaryRegistrationAddMemberStateImpl(
       addressModel: null == addressModel
           ? _value.addressModel
           : addressModel // ignore: cast_nullable_to_non_nullable
@@ -3557,9 +3634,9 @@ class __$$BeneficiaryRegistrationAddMemberStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$BeneficiaryRegistrationAddMemberState
+class _$BeneficiaryRegistrationAddMemberStateImpl
     implements BeneficiaryRegistrationAddMemberState {
-  const _$BeneficiaryRegistrationAddMemberState(
+  const _$BeneficiaryRegistrationAddMemberStateImpl(
       {required this.addressModel,
       required this.householdModel,
       this.loading = false});
@@ -3578,10 +3655,10 @@ class _$BeneficiaryRegistrationAddMemberState
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$BeneficiaryRegistrationAddMemberState &&
+            other is _$BeneficiaryRegistrationAddMemberStateImpl &&
             (identical(other.addressModel, addressModel) ||
                 other.addressModel == addressModel) &&
             (identical(other.householdModel, householdModel) ||
@@ -3596,10 +3673,10 @@ class _$BeneficiaryRegistrationAddMemberState
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$BeneficiaryRegistrationAddMemberStateCopyWith<
-          _$BeneficiaryRegistrationAddMemberState>
-      get copyWith => __$$BeneficiaryRegistrationAddMemberStateCopyWithImpl<
-          _$BeneficiaryRegistrationAddMemberState>(this, _$identity);
+  _$$BeneficiaryRegistrationAddMemberStateImplCopyWith<
+          _$BeneficiaryRegistrationAddMemberStateImpl>
+      get copyWith => __$$BeneficiaryRegistrationAddMemberStateImplCopyWithImpl<
+          _$BeneficiaryRegistrationAddMemberStateImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -3768,35 +3845,39 @@ abstract class BeneficiaryRegistrationAddMemberState
   const factory BeneficiaryRegistrationAddMemberState(
       {required final AddressModel addressModel,
       required final HouseholdModel householdModel,
-      final bool loading}) = _$BeneficiaryRegistrationAddMemberState;
+      final bool loading}) = _$BeneficiaryRegistrationAddMemberStateImpl;
 
   AddressModel get addressModel;
+  @override
   HouseholdModel get householdModel;
   bool get loading;
+  @override
   @JsonKey(ignore: true)
-  _$$BeneficiaryRegistrationAddMemberStateCopyWith<
-          _$BeneficiaryRegistrationAddMemberState>
+  _$$BeneficiaryRegistrationAddMemberStateImplCopyWith<
+          _$BeneficiaryRegistrationAddMemberStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$BeneficiaryRegistrationPersistedStateCopyWith<$Res> {
-  factory _$$BeneficiaryRegistrationPersistedStateCopyWith(
-          _$BeneficiaryRegistrationPersistedState value,
-          $Res Function(_$BeneficiaryRegistrationPersistedState) then) =
-      __$$BeneficiaryRegistrationPersistedStateCopyWithImpl<$Res>;
+abstract class _$$BeneficiaryRegistrationPersistedStateImplCopyWith<$Res>
+    implements $BeneficiaryRegistrationStateCopyWith<$Res> {
+  factory _$$BeneficiaryRegistrationPersistedStateImplCopyWith(
+          _$BeneficiaryRegistrationPersistedStateImpl value,
+          $Res Function(_$BeneficiaryRegistrationPersistedStateImpl) then) =
+      __$$BeneficiaryRegistrationPersistedStateImplCopyWithImpl<$Res>;
+  @override
   @useResult
   $Res call({bool navigateToRoot, HouseholdModel householdModel});
 }
 
 /// @nodoc
-class __$$BeneficiaryRegistrationPersistedStateCopyWithImpl<$Res>
+class __$$BeneficiaryRegistrationPersistedStateImplCopyWithImpl<$Res>
     extends _$BeneficiaryRegistrationStateCopyWithImpl<$Res,
-        _$BeneficiaryRegistrationPersistedState>
-    implements _$$BeneficiaryRegistrationPersistedStateCopyWith<$Res> {
-  __$$BeneficiaryRegistrationPersistedStateCopyWithImpl(
-      _$BeneficiaryRegistrationPersistedState _value,
-      $Res Function(_$BeneficiaryRegistrationPersistedState) _then)
+        _$BeneficiaryRegistrationPersistedStateImpl>
+    implements _$$BeneficiaryRegistrationPersistedStateImplCopyWith<$Res> {
+  __$$BeneficiaryRegistrationPersistedStateImplCopyWithImpl(
+      _$BeneficiaryRegistrationPersistedStateImpl _value,
+      $Res Function(_$BeneficiaryRegistrationPersistedStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -3805,7 +3886,7 @@ class __$$BeneficiaryRegistrationPersistedStateCopyWithImpl<$Res>
     Object? navigateToRoot = null,
     Object? householdModel = null,
   }) {
-    return _then(_$BeneficiaryRegistrationPersistedState(
+    return _then(_$BeneficiaryRegistrationPersistedStateImpl(
       navigateToRoot: null == navigateToRoot
           ? _value.navigateToRoot
           : navigateToRoot // ignore: cast_nullable_to_non_nullable
@@ -3820,9 +3901,9 @@ class __$$BeneficiaryRegistrationPersistedStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$BeneficiaryRegistrationPersistedState
+class _$BeneficiaryRegistrationPersistedStateImpl
     implements BeneficiaryRegistrationPersistedState {
-  const _$BeneficiaryRegistrationPersistedState(
+  const _$BeneficiaryRegistrationPersistedStateImpl(
       {this.navigateToRoot = true, required this.householdModel});
 
   @override
@@ -3837,10 +3918,10 @@ class _$BeneficiaryRegistrationPersistedState
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$BeneficiaryRegistrationPersistedState &&
+            other is _$BeneficiaryRegistrationPersistedStateImpl &&
             (identical(other.navigateToRoot, navigateToRoot) ||
                 other.navigateToRoot == navigateToRoot) &&
             (identical(other.householdModel, householdModel) ||
@@ -3853,10 +3934,10 @@ class _$BeneficiaryRegistrationPersistedState
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$BeneficiaryRegistrationPersistedStateCopyWith<
-          _$BeneficiaryRegistrationPersistedState>
-      get copyWith => __$$BeneficiaryRegistrationPersistedStateCopyWithImpl<
-          _$BeneficiaryRegistrationPersistedState>(this, _$identity);
+  _$$BeneficiaryRegistrationPersistedStateImplCopyWith<
+          _$BeneficiaryRegistrationPersistedStateImpl>
+      get copyWith => __$$BeneficiaryRegistrationPersistedStateImplCopyWithImpl<
+          _$BeneficiaryRegistrationPersistedStateImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -4025,12 +4106,14 @@ abstract class BeneficiaryRegistrationPersistedState
   const factory BeneficiaryRegistrationPersistedState(
           {final bool navigateToRoot,
           required final HouseholdModel householdModel}) =
-      _$BeneficiaryRegistrationPersistedState;
+      _$BeneficiaryRegistrationPersistedStateImpl;
 
   bool get navigateToRoot;
+  @override
   HouseholdModel get householdModel;
+  @override
   @JsonKey(ignore: true)
-  _$$BeneficiaryRegistrationPersistedStateCopyWith<
-          _$BeneficiaryRegistrationPersistedState>
+  _$$BeneficiaryRegistrationPersistedStateImplCopyWith<
+          _$BeneficiaryRegistrationPersistedStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'role_actions_model.dart';
 
@@ -65,23 +65,25 @@ class _$RoleActionsWrapperModelCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_RoleActionsWrapperModelCopyWith<$Res>
+abstract class _$$RoleActionsWrapperModelImplCopyWith<$Res>
     implements $RoleActionsWrapperModelCopyWith<$Res> {
-  factory _$$_RoleActionsWrapperModelCopyWith(_$_RoleActionsWrapperModel value,
-          $Res Function(_$_RoleActionsWrapperModel) then) =
-      __$$_RoleActionsWrapperModelCopyWithImpl<$Res>;
+  factory _$$RoleActionsWrapperModelImplCopyWith(
+          _$RoleActionsWrapperModelImpl value,
+          $Res Function(_$RoleActionsWrapperModelImpl) then) =
+      __$$RoleActionsWrapperModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({@JsonKey(name: 'actions') List<RoleActionsModel> actions});
 }
 
 /// @nodoc
-class __$$_RoleActionsWrapperModelCopyWithImpl<$Res>
+class __$$RoleActionsWrapperModelImplCopyWithImpl<$Res>
     extends _$RoleActionsWrapperModelCopyWithImpl<$Res,
-        _$_RoleActionsWrapperModel>
-    implements _$$_RoleActionsWrapperModelCopyWith<$Res> {
-  __$$_RoleActionsWrapperModelCopyWithImpl(_$_RoleActionsWrapperModel _value,
-      $Res Function(_$_RoleActionsWrapperModel) _then)
+        _$RoleActionsWrapperModelImpl>
+    implements _$$RoleActionsWrapperModelImplCopyWith<$Res> {
+  __$$RoleActionsWrapperModelImplCopyWithImpl(
+      _$RoleActionsWrapperModelImpl _value,
+      $Res Function(_$RoleActionsWrapperModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -89,7 +91,7 @@ class __$$_RoleActionsWrapperModelCopyWithImpl<$Res>
   $Res call({
     Object? actions = null,
   }) {
-    return _then(_$_RoleActionsWrapperModel(
+    return _then(_$RoleActionsWrapperModelImpl(
       actions: null == actions
           ? _value._actions
           : actions // ignore: cast_nullable_to_non_nullable
@@ -101,19 +103,20 @@ class __$$_RoleActionsWrapperModelCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
-class _$_RoleActionsWrapperModel implements _RoleActionsWrapperModel {
-  const _$_RoleActionsWrapperModel(
+class _$RoleActionsWrapperModelImpl implements _RoleActionsWrapperModel {
+  const _$RoleActionsWrapperModelImpl(
       {@JsonKey(name: 'actions')
-          final List<RoleActionsModel> actions = const []})
+      final List<RoleActionsModel> actions = const []})
       : _actions = actions;
 
-  factory _$_RoleActionsWrapperModel.fromJson(Map<String, dynamic> json) =>
-      _$$_RoleActionsWrapperModelFromJson(json);
+  factory _$RoleActionsWrapperModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$RoleActionsWrapperModelImplFromJson(json);
 
   final List<RoleActionsModel> _actions;
   @override
   @JsonKey(name: 'actions')
   List<RoleActionsModel> get actions {
+    if (_actions is EqualUnmodifiableListView) return _actions;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_actions);
   }
@@ -124,10 +127,10 @@ class _$_RoleActionsWrapperModel implements _RoleActionsWrapperModel {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_RoleActionsWrapperModel &&
+            other is _$RoleActionsWrapperModelImpl &&
             const DeepCollectionEquality().equals(other._actions, _actions));
   }
 
@@ -139,14 +142,13 @@ class _$_RoleActionsWrapperModel implements _RoleActionsWrapperModel {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_RoleActionsWrapperModelCopyWith<_$_RoleActionsWrapperModel>
-      get copyWith =>
-          __$$_RoleActionsWrapperModelCopyWithImpl<_$_RoleActionsWrapperModel>(
-              this, _$identity);
+  _$$RoleActionsWrapperModelImplCopyWith<_$RoleActionsWrapperModelImpl>
+      get copyWith => __$$RoleActionsWrapperModelImplCopyWithImpl<
+          _$RoleActionsWrapperModelImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_RoleActionsWrapperModelToJson(
+    return _$$RoleActionsWrapperModelImplToJson(
       this,
     );
   }
@@ -155,17 +157,17 @@ class _$_RoleActionsWrapperModel implements _RoleActionsWrapperModel {
 abstract class _RoleActionsWrapperModel implements RoleActionsWrapperModel {
   const factory _RoleActionsWrapperModel(
           {@JsonKey(name: 'actions') final List<RoleActionsModel> actions}) =
-      _$_RoleActionsWrapperModel;
+      _$RoleActionsWrapperModelImpl;
 
   factory _RoleActionsWrapperModel.fromJson(Map<String, dynamic> json) =
-      _$_RoleActionsWrapperModel.fromJson;
+      _$RoleActionsWrapperModelImpl.fromJson;
 
   @override
   @JsonKey(name: 'actions')
   List<RoleActionsModel> get actions;
   @override
   @JsonKey(ignore: true)
-  _$$_RoleActionsWrapperModelCopyWith<_$_RoleActionsWrapperModel>
+  _$$RoleActionsWrapperModelImplCopyWith<_$RoleActionsWrapperModelImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -355,11 +357,11 @@ class _$RoleActionsModelCopyWithImpl<$Res, $Val extends RoleActionsModel>
 }
 
 /// @nodoc
-abstract class _$$_RoleActionsModelCopyWith<$Res>
+abstract class _$$RoleActionsModelImplCopyWith<$Res>
     implements $RoleActionsModelCopyWith<$Res> {
-  factory _$$_RoleActionsModelCopyWith(
-          _$_RoleActionsModel value, $Res Function(_$_RoleActionsModel) then) =
-      __$$_RoleActionsModelCopyWithImpl<$Res>;
+  factory _$$RoleActionsModelImplCopyWith(_$RoleActionsModelImpl value,
+          $Res Function(_$RoleActionsModelImpl) then) =
+      __$$RoleActionsModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -384,11 +386,11 @@ abstract class _$$_RoleActionsModelCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_RoleActionsModelCopyWithImpl<$Res>
-    extends _$RoleActionsModelCopyWithImpl<$Res, _$_RoleActionsModel>
-    implements _$$_RoleActionsModelCopyWith<$Res> {
-  __$$_RoleActionsModelCopyWithImpl(
-      _$_RoleActionsModel _value, $Res Function(_$_RoleActionsModel) _then)
+class __$$RoleActionsModelImplCopyWithImpl<$Res>
+    extends _$RoleActionsModelCopyWithImpl<$Res, _$RoleActionsModelImpl>
+    implements _$$RoleActionsModelImplCopyWith<$Res> {
+  __$$RoleActionsModelImplCopyWithImpl(_$RoleActionsModelImpl _value,
+      $Res Function(_$RoleActionsModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -413,7 +415,7 @@ class __$$_RoleActionsModelCopyWithImpl<$Res>
     Object? leftIcon = freezed,
     Object? rightIcon = freezed,
   }) {
-    return _then(_$_RoleActionsModel(
+    return _then(_$RoleActionsModelImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -493,8 +495,8 @@ class __$$_RoleActionsModelCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(explicitToJson: true)
-class _$_RoleActionsModel implements _RoleActionsModel {
-  const _$_RoleActionsModel(
+class _$RoleActionsModelImpl implements _RoleActionsModel {
+  const _$RoleActionsModelImpl(
       {@JsonKey(name: 'id') required this.id,
       @JsonKey(name: 'name') this.name,
       @JsonKey(name: 'url') this.url,
@@ -514,8 +516,8 @@ class _$_RoleActionsModel implements _RoleActionsModel {
       @JsonKey(name: 'leftIcon') this.leftIcon,
       @JsonKey(name: 'rightIcon') this.rightIcon});
 
-  factory _$_RoleActionsModel.fromJson(Map<String, dynamic> json) =>
-      _$$_RoleActionsModelFromJson(json);
+  factory _$RoleActionsModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$RoleActionsModelImplFromJson(json);
 
   @override
   @JsonKey(name: 'id')
@@ -578,10 +580,10 @@ class _$_RoleActionsModel implements _RoleActionsModel {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_RoleActionsModel &&
+            other is _$RoleActionsModelImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.url, url) || other.url == url) &&
@@ -641,12 +643,13 @@ class _$_RoleActionsModel implements _RoleActionsModel {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_RoleActionsModelCopyWith<_$_RoleActionsModel> get copyWith =>
-      __$$_RoleActionsModelCopyWithImpl<_$_RoleActionsModel>(this, _$identity);
+  _$$RoleActionsModelImplCopyWith<_$RoleActionsModelImpl> get copyWith =>
+      __$$RoleActionsModelImplCopyWithImpl<_$RoleActionsModelImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_RoleActionsModelToJson(
+    return _$$RoleActionsModelImplToJson(
       this,
     );
   }
@@ -672,10 +675,10 @@ abstract class _RoleActionsModel implements RoleActionsModel {
           @JsonKey(name: 'navigationURL') final String? navigationURL,
           @JsonKey(name: 'leftIcon') final String? leftIcon,
           @JsonKey(name: 'rightIcon') final String? rightIcon}) =
-      _$_RoleActionsModel;
+      _$RoleActionsModelImpl;
 
   factory _RoleActionsModel.fromJson(Map<String, dynamic> json) =
-      _$_RoleActionsModel.fromJson;
+      _$RoleActionsModelImpl.fromJson;
 
   @override
   @JsonKey(name: 'id')
@@ -733,6 +736,6 @@ abstract class _RoleActionsModel implements RoleActionsModel {
   String? get rightIcon;
   @override
   @JsonKey(ignore: true)
-  _$$_RoleActionsModelCopyWith<_$_RoleActionsModel> get copyWith =>
+  _$$RoleActionsModelImplCopyWith<_$RoleActionsModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

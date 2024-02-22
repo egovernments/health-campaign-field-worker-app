@@ -5,8 +5,10 @@ import 'package:drift/drift.dart';
 import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
 
-@MappableClass(ignoreNull: true)
-class TaskResourceSearchModel extends EntitySearchModel {
+part 'task_resource.mapper.dart';
+
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class TaskResourceSearchModel extends EntitySearchModel with TaskResourceSearchModelMappable {
   final String? id;
   final String? tenantId;
   
@@ -25,8 +27,8 @@ class TaskResourceSearchModel extends EntitySearchModel {
   }):  super(isDeleted: false);
 }
 
-@MappableClass(ignoreNull: true)
-class TaskResourceModel extends EntityModel {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class TaskResourceModel extends EntityModel with TaskResourceModelMappable {
 
   static const schemaName = 'TaskResource';
 
@@ -87,11 +89,12 @@ class TaskResourceModel extends EntityModel {
   }
 }
 
-@MappableClass(ignoreNull: true)
-class TaskResourceAdditionalFields extends AdditionalFields {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class TaskResourceAdditionalFields extends AdditionalFields with TaskResourceAdditionalFieldsMappable {
   TaskResourceAdditionalFields({
     super.schema = 'TaskResource',
     required super.version,
     super.fields,
   });
 }
+

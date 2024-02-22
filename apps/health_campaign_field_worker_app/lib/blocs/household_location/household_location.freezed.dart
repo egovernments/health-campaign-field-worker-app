@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'household_location.dart';
 
@@ -90,25 +90,25 @@ class _$HouseholdLocationEventCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$HouseholdLocationSubmitEventCopyWith<$Res>
+abstract class _$$HouseholdLocationSubmitEventImplCopyWith<$Res>
     implements $HouseholdLocationEventCopyWith<$Res> {
-  factory _$$HouseholdLocationSubmitEventCopyWith(
-          _$HouseholdLocationSubmitEvent value,
-          $Res Function(_$HouseholdLocationSubmitEvent) then) =
-      __$$HouseholdLocationSubmitEventCopyWithImpl<$Res>;
+  factory _$$HouseholdLocationSubmitEventImplCopyWith(
+          _$HouseholdLocationSubmitEventImpl value,
+          $Res Function(_$HouseholdLocationSubmitEventImpl) then) =
+      __$$HouseholdLocationSubmitEventImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({AddressModel adressmodel});
 }
 
 /// @nodoc
-class __$$HouseholdLocationSubmitEventCopyWithImpl<$Res>
+class __$$HouseholdLocationSubmitEventImplCopyWithImpl<$Res>
     extends _$HouseholdLocationEventCopyWithImpl<$Res,
-        _$HouseholdLocationSubmitEvent>
-    implements _$$HouseholdLocationSubmitEventCopyWith<$Res> {
-  __$$HouseholdLocationSubmitEventCopyWithImpl(
-      _$HouseholdLocationSubmitEvent _value,
-      $Res Function(_$HouseholdLocationSubmitEvent) _then)
+        _$HouseholdLocationSubmitEventImpl>
+    implements _$$HouseholdLocationSubmitEventImplCopyWith<$Res> {
+  __$$HouseholdLocationSubmitEventImplCopyWithImpl(
+      _$HouseholdLocationSubmitEventImpl _value,
+      $Res Function(_$HouseholdLocationSubmitEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -116,7 +116,7 @@ class __$$HouseholdLocationSubmitEventCopyWithImpl<$Res>
   $Res call({
     Object? adressmodel = null,
   }) {
-    return _then(_$HouseholdLocationSubmitEvent(
+    return _then(_$HouseholdLocationSubmitEventImpl(
       adressmodel: null == adressmodel
           ? _value.adressmodel
           : adressmodel // ignore: cast_nullable_to_non_nullable
@@ -127,8 +127,9 @@ class __$$HouseholdLocationSubmitEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$HouseholdLocationSubmitEvent implements HouseholdLocationSubmitEvent {
-  const _$HouseholdLocationSubmitEvent({required this.adressmodel});
+class _$HouseholdLocationSubmitEventImpl
+    implements HouseholdLocationSubmitEvent {
+  const _$HouseholdLocationSubmitEventImpl({required this.adressmodel});
 
   @override
   final AddressModel adressmodel;
@@ -139,10 +140,10 @@ class _$HouseholdLocationSubmitEvent implements HouseholdLocationSubmitEvent {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$HouseholdLocationSubmitEvent &&
+            other is _$HouseholdLocationSubmitEventImpl &&
             (identical(other.adressmodel, adressmodel) ||
                 other.adressmodel == adressmodel));
   }
@@ -153,9 +154,10 @@ class _$HouseholdLocationSubmitEvent implements HouseholdLocationSubmitEvent {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$HouseholdLocationSubmitEventCopyWith<_$HouseholdLocationSubmitEvent>
-      get copyWith => __$$HouseholdLocationSubmitEventCopyWithImpl<
-          _$HouseholdLocationSubmitEvent>(this, _$identity);
+  _$$HouseholdLocationSubmitEventImplCopyWith<
+          _$HouseholdLocationSubmitEventImpl>
+      get copyWith => __$$HouseholdLocationSubmitEventImplCopyWithImpl<
+          _$HouseholdLocationSubmitEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -217,13 +219,14 @@ class _$HouseholdLocationSubmitEvent implements HouseholdLocationSubmitEvent {
 abstract class HouseholdLocationSubmitEvent implements HouseholdLocationEvent {
   const factory HouseholdLocationSubmitEvent(
           {required final AddressModel adressmodel}) =
-      _$HouseholdLocationSubmitEvent;
+      _$HouseholdLocationSubmitEventImpl;
 
   @override
   AddressModel get adressmodel;
   @override
   @JsonKey(ignore: true)
-  _$$HouseholdLocationSubmitEventCopyWith<_$HouseholdLocationSubmitEvent>
+  _$$HouseholdLocationSubmitEventImplCopyWith<
+          _$HouseholdLocationSubmitEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -294,11 +297,12 @@ class _$HouseholdLocationStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_HouseholdLocationStateCopyWith<$Res>
+abstract class _$$HouseholdLocationStateImplCopyWith<$Res>
     implements $HouseholdLocationStateCopyWith<$Res> {
-  factory _$$_HouseholdLocationStateCopyWith(_$_HouseholdLocationState value,
-          $Res Function(_$_HouseholdLocationState) then) =
-      __$$_HouseholdLocationStateCopyWithImpl<$Res>;
+  factory _$$HouseholdLocationStateImplCopyWith(
+          _$HouseholdLocationStateImpl value,
+          $Res Function(_$HouseholdLocationStateImpl) then) =
+      __$$HouseholdLocationStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -309,12 +313,13 @@ abstract class _$$_HouseholdLocationStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_HouseholdLocationStateCopyWithImpl<$Res>
+class __$$HouseholdLocationStateImplCopyWithImpl<$Res>
     extends _$HouseholdLocationStateCopyWithImpl<$Res,
-        _$_HouseholdLocationState>
-    implements _$$_HouseholdLocationStateCopyWith<$Res> {
-  __$$_HouseholdLocationStateCopyWithImpl(_$_HouseholdLocationState _value,
-      $Res Function(_$_HouseholdLocationState) _then)
+        _$HouseholdLocationStateImpl>
+    implements _$$HouseholdLocationStateImplCopyWith<$Res> {
+  __$$HouseholdLocationStateImplCopyWithImpl(
+      _$HouseholdLocationStateImpl _value,
+      $Res Function(_$HouseholdLocationStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -325,7 +330,7 @@ class __$$_HouseholdLocationStateCopyWithImpl<$Res>
     Object? addressModel = freezed,
     Object? addressRequestModel = freezed,
   }) {
-    return _then(_$_HouseholdLocationState(
+    return _then(_$HouseholdLocationStateImpl(
       loading: null == loading
           ? _value.loading
           : loading // ignore: cast_nullable_to_non_nullable
@@ -348,8 +353,8 @@ class __$$_HouseholdLocationStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_HouseholdLocationState extends _HouseholdLocationState {
-  const _$_HouseholdLocationState(
+class _$HouseholdLocationStateImpl extends _HouseholdLocationState {
+  const _$HouseholdLocationStateImpl(
       {this.loading = false,
       this.isEditModeEnabled = true,
       this.addressModel,
@@ -373,10 +378,10 @@ class _$_HouseholdLocationState extends _HouseholdLocationState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_HouseholdLocationState &&
+            other is _$HouseholdLocationStateImpl &&
             (identical(other.loading, loading) || other.loading == loading) &&
             (identical(other.isEditModeEnabled, isEditModeEnabled) ||
                 other.isEditModeEnabled == isEditModeEnabled) &&
@@ -393,9 +398,9 @@ class _$_HouseholdLocationState extends _HouseholdLocationState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_HouseholdLocationStateCopyWith<_$_HouseholdLocationState> get copyWith =>
-      __$$_HouseholdLocationStateCopyWithImpl<_$_HouseholdLocationState>(
-          this, _$identity);
+  _$$HouseholdLocationStateImplCopyWith<_$HouseholdLocationStateImpl>
+      get copyWith => __$$HouseholdLocationStateImplCopyWithImpl<
+          _$HouseholdLocationStateImpl>(this, _$identity);
 }
 
 abstract class _HouseholdLocationState extends HouseholdLocationState {
@@ -404,7 +409,7 @@ abstract class _HouseholdLocationState extends HouseholdLocationState {
           final bool isEditModeEnabled,
           final AddressModel? addressModel,
           final AddressSearchModel? addressRequestModel}) =
-      _$_HouseholdLocationState;
+      _$HouseholdLocationStateImpl;
   const _HouseholdLocationState._() : super._();
 
   @override
@@ -417,6 +422,6 @@ abstract class _HouseholdLocationState extends HouseholdLocationState {
   AddressSearchModel? get addressRequestModel;
   @override
   @JsonKey(ignore: true)
-  _$$_HouseholdLocationStateCopyWith<_$_HouseholdLocationState> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$HouseholdLocationStateImplCopyWith<_$HouseholdLocationStateImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }

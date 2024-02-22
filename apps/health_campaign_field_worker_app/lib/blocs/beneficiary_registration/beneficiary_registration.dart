@@ -327,7 +327,11 @@ class BeneficiaryRegistrationBloc
 
           final projectBeneficiary = await projectBeneficiaryRepository.search(
             ProjectBeneficiarySearchModel(
-              beneficiaryClientReferenceId: [event.model.clientReferenceId],
+              beneficiaryClientReferenceId: [
+                beneficiaryType == BeneficiaryType.individual
+                    ? event.model.clientReferenceId
+                    : event.householdModel.clientReferenceId,
+              ],
             ),
           );
           await individualRepository.update(individual);
@@ -469,6 +473,7 @@ class BeneficiaryRegistrationEvent with _$BeneficiaryRegistrationEvent {
   const factory BeneficiaryRegistrationEvent.updateIndividualDetails({
     required IndividualModel model,
     String? tag,
+    required HouseholdModel householdModel,
     required AddressModel addressModel,
   }) = BeneficiaryRegistrationUpdateIndividualDetailsEvent;
 

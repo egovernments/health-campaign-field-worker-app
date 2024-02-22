@@ -5,8 +5,10 @@ import 'package:drift/drift.dart';
 import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
 
-@MappableClass(ignoreNull: true)
-class ProductSearchModel extends EntitySearchModel {
+part 'product.mapper.dart';
+
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class ProductSearchModel extends EntitySearchModel with ProductSearchModelMappable {
   final String? id;
   final String? type;
   final String? name;
@@ -37,8 +39,8 @@ class ProductSearchModel extends EntitySearchModel {
   }):  super(isDeleted: false);
 }
 
-@MappableClass(ignoreNull: true)
-class ProductModel extends EntityModel {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class ProductModel extends EntityModel with ProductModelMappable {
 
   static const schemaName = 'Product';
 
@@ -90,11 +92,12 @@ class ProductModel extends EntityModel {
   }
 }
 
-@MappableClass(ignoreNull: true)
-class ProductAdditionalFields extends AdditionalFields {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class ProductAdditionalFields extends AdditionalFields with ProductAdditionalFieldsMappable {
   ProductAdditionalFields({
     super.schema = 'Product',
     required super.version,
     super.fields,
   });
 }
+
