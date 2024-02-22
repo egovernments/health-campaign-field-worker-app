@@ -42,9 +42,8 @@ class FacilitySelectionPage extends StatelessWidget {
                 if (element.id.toLowerCase().contains(query.toLowerCase())) {
                   return true;
                 }
-
                 return false;
-              });
+              }).toList();
 
               return ScrollableContent(
                 backgroundColor: Colors.white,
@@ -56,10 +55,8 @@ class FacilitySelectionPage extends StatelessWidget {
                     child: Container(
                       color: Colors.white,
                       child: Padding(
-                        padding: const EdgeInsets.only(
-                          left: kPadding * 2,
-                          right: kPadding * 2,
-                        ),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: kPadding * 2),
                         child: Column(
                           children: [
                             Padding(
@@ -91,13 +88,13 @@ class FacilitySelectionPage extends StatelessWidget {
                   SliverList(
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
-                        final facility = filteredFacilities.elementAt(index);
+                        final facility = filteredFacilities[index];
 
                         return Container(
                           color: Colors.white,
-                          padding: const EdgeInsets.only(left: 8, right: 8),
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
                           child: Container(
-                            margin: const EdgeInsets.only(left: 8, right: 8),
+                            margin: const EdgeInsets.symmetric(horizontal: 8),
                             decoration: BoxDecoration(
                               color: DigitTheme.instance.colors.alabasterWhite,
                               border: Border(
@@ -114,52 +111,24 @@ class FacilitySelectionPage extends StatelessWidget {
                                 context.router.pop(facility);
                               },
                               child: Container(
-                                margin: const EdgeInsets.only(
-                                  top: kPadding,
-                                  left: kPadding,
-                                  right: kPadding,
-                                ),
+                                margin: const EdgeInsets.all(kPadding),
                                 decoration: BoxDecoration(
                                   color:
                                       DigitTheme.instance.colors.alabasterWhite,
                                   border: Border(
                                     bottom: BorderSide(
-                                      //                   <--- left side
-                                      color: theme.colorScheme.outline,
-                                      width: 1.0,
-                                    ),
-                                  ),
-                                ),
-                                child: Container(
-                                margin: const EdgeInsets.only(
-                                  top: kPadding,
-                                  left: kPadding,
-                                  right: kPadding,
-                                ),
-                                decoration: BoxDecoration(
-                                  color:
-                                      DigitTheme.instance.colors.alabasterWhite,
-                                  border: Border(
-                                    bottom: BorderSide(
-                                      //                   <--- left side
                                       color: theme.colorScheme.outline,
                                       width: 1.0,
                                     ),
                                   ),
                                 ),
                                 child: Padding(
-                                  padding: const EdgeInsets.only(
-                                    left: kPadding * 2,
-                                    bottom: kPadding * 2,
-                                    top: kPadding * 2,
-                                  ),
+                                  padding: const EdgeInsets.all(kPadding * 2),
                                   child: Text(
                                     localizations
                                         .translate('FAC_${facility.id}'),
                                   ),
                                 ),
-                              ),
-                            ),),
                               ),
                             ),
                           ),
