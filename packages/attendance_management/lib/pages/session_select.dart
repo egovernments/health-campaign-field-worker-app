@@ -52,8 +52,6 @@ class _AttendanceDateSessionSelectionPageState
 
   @override
   void dispose() {
-    // Clear the data when the widget is disposed
-
     super.dispose();
   }
 
@@ -119,9 +117,9 @@ class _AttendanceDateSessionSelectionPageState
                                             } else {
                                               form.markAllAsTouched();
 
-                                              if (!form.valid)
+                                              if (!form.valid) {
                                                 return;
-                                              else {
+                                              } else {
                                                 final session = form
                                                     .control(_sessionRadio)
                                                     .value as KeyValue?;
@@ -348,7 +346,6 @@ class _AttendanceDateSessionSelectionPageState
   }
 
   isAttendanceCompleted(DateTime selectedDate) {
-    // [TODO: Test if this is working as expected]
     final register = widget.registers
         .where((register) => register.id == widget.registerID)
         .first;

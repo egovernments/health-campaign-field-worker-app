@@ -7,7 +7,6 @@ import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/theme/digit_theme.dart';
-import 'package:digit_components/utils/app_logger.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_dialog.dart';
@@ -350,7 +349,7 @@ bool checkIfBeneficiaryRefused(
 ) {
   final isBeneficiaryRefused = (tasks != null &&
       (tasks ?? []).isNotEmpty &&
-      tasks.last.status == Status.beneficiaryRefused.name);
+      tasks.last.status == Status.beneficiaryRefused.toValue());
 
   return isBeneficiaryRefused;
 }
@@ -532,7 +531,7 @@ void showDownloadDialog(
   required DigitProgressDialogType dialogType,
   bool isPop = true,
   StreamController<double>? downloadProgressController,
-    }) {
+}) {
   if (isPop) {
     Navigator.of(context, rootNavigator: true).pop();
   }
@@ -637,7 +636,9 @@ void showDownloadDialog(
               return ProgressIndicatorContainer(
                 label: '',
                 prefixLabel: '',
-                suffixLabel: '${(snapshot.data == null ? 0 : snapshot.data! * model.totalCount!.toDouble()).toInt()}/${model.suffixLabel}' ?? '',
+                suffixLabel:
+                    '${(snapshot.data == null ? 0 : snapshot.data! * model.totalCount!.toDouble()).toInt()}/${model.suffixLabel}' ??
+                        '',
                 value: snapshot.data ?? 0,
                 valueColor: AlwaysStoppedAnimation<Color>(
                   DigitTheme.instance.colorScheme.secondary,
@@ -664,16 +665,17 @@ dynamic getValueByKey(List<Map<String, dynamic>> data, String key) {
   return null; // Key not found
 }
 
+//Function to read the localizations from ISAR,
 getLocalizationString(Isar isar, String selectedLocale) async {
   List<dynamic> localizationValues = [];
 
   final List<LocalizationWrapper> localizationList =
-  await isar.localizationWrappers
-      .filter()
-      .localeEqualTo(
-    selectedLocale.toString(),
-  )
-      .findAll();
+      await isar.localizationWrappers
+          .filter()
+          .localeEqualTo(
+            selectedLocale.toString(),
+          )
+          .findAll();
   if (localizationList.isNotEmpty) {
     localizationValues.addAll(localizationList.first.localization!);
   }

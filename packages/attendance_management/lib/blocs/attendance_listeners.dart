@@ -1,21 +1,27 @@
 import 'package:attendance_management/attendance_management.dart';
 
+// Abstract class defining the listener to interact with the data through any other application
 abstract class AttendanceListeners {
+// Method to get attendance registers
   void getAttendanceRegisters(
       Function(
               List<AttendancePackageRegisterModel>
                   attendancePackageRegisterModel)
           attendanceRegisters);
 
+  // Method to search attendance log
   void searchAttendanceLog(SearchAttendanceLog searchAttendanceLog);
 
+  // Method to submit attendance details
   void submitAttendanceDetails(
     SubmitAttendanceDetails attendanceLogs,
   );
 
+  // Method to call synchronization method
   void callSyncMethod();
 }
 
+// Singleton class for managing attendance operations
 class AttendanceSingleton {
   static final AttendanceSingleton _singleton = AttendanceSingleton._internal();
 
@@ -30,6 +36,7 @@ class AttendanceSingleton {
   String _userId = '';
   String _appVersion = '';
 
+  // Method to set attendance listeners and other information
   void setAttendanceListeners(
       {required AttendanceListeners attendanceListeners,
       required String projectId,
@@ -45,6 +52,7 @@ class AttendanceSingleton {
   get userId => _userId;
   get appVersion => _appVersion;
 
+  // Method to get attendance registers
   void getAttendanceRegisters(
       Function(
               List<AttendancePackageRegisterModel>
@@ -53,10 +61,12 @@ class AttendanceSingleton {
     _attendanceListeners?.getAttendanceRegisters(attendanceRegisters);
   }
 
+  // Method to search attendance log
   void searchAttendanceLog(SearchAttendanceLog searchAttendanceLog) {
     _attendanceListeners?.searchAttendanceLog(searchAttendanceLog);
   }
 
+  // Method to submit attendance details
   void submitAttendanceDetails(SubmitAttendanceDetails attendanceLogs) {
     _attendanceListeners?.submitAttendanceDetails(attendanceLogs);
   }
