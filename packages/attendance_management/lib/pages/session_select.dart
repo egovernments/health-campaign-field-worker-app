@@ -19,6 +19,7 @@ import 'mark_attendance.dart';
 class AttendanceDateSessionSelectionPage extends LocalizedStatefulWidget {
   final List<AttendancePackageRegisterModel> registers;
   final String registerID;
+
   const AttendanceDateSessionSelectionPage({
     required this.registers,
     required this.registerID,
@@ -287,8 +288,10 @@ class _AttendanceDateSessionSelectionPageState
                                     ],
                                   ),
                                 ),
-                                if (showInfoCard(selectedRegister,
-                                    form.control(_dateOfSession).value))
+                                if (showInfoCard(
+                                  selectedRegister,
+                                  DateTime.now(),
+                                ))
                                   DigitInfoCard(
                                     title: localizations.translate(
                                       i18.attendance.missedAttendanceHeader,
@@ -417,5 +420,6 @@ class _AttendanceDateSessionSelectionPageState
 class KeyValue {
   String label;
   dynamic key;
+
   KeyValue(this.label, this.key);
 }
