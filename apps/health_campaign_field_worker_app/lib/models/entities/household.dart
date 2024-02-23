@@ -5,8 +5,10 @@ import 'package:drift/drift.dart';
 import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
 
-@MappableClass(ignoreNull: true)
-class HouseholdSearchModel extends EntitySearchModel {
+part 'household.mapper.dart';
+
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class HouseholdSearchModel extends EntitySearchModel with HouseholdSearchModelMappable {
   final String? id;
   final int? memberCount;
   final double? latitude;
@@ -43,8 +45,8 @@ class HouseholdSearchModel extends EntitySearchModel {
   }):  super(isDeleted: false);
 }
 
-@MappableClass(ignoreNull: true)
-class HouseholdModel extends EntityModel {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class HouseholdModel extends EntityModel with HouseholdModelMappable {
 
   static const schemaName = 'Household';
 
@@ -98,11 +100,12 @@ class HouseholdModel extends EntityModel {
   }
 }
 
-@MappableClass(ignoreNull: true)
-class HouseholdAdditionalFields extends AdditionalFields {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class HouseholdAdditionalFields extends AdditionalFields with HouseholdAdditionalFieldsMappable {
   HouseholdAdditionalFields({
     super.schema = 'Household',
     required super.version,
     super.fields,
   });
 }
+

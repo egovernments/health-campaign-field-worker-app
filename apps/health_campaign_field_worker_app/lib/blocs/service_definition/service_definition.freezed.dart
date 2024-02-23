@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'service_definition.dart';
 
@@ -82,28 +82,28 @@ class _$ServiceDefinitionEventCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$ServiceDefinitionFetchEventCopyWith<$Res> {
-  factory _$$ServiceDefinitionFetchEventCopyWith(
-          _$ServiceDefinitionFetchEvent value,
-          $Res Function(_$ServiceDefinitionFetchEvent) then) =
-      __$$ServiceDefinitionFetchEventCopyWithImpl<$Res>;
+abstract class _$$ServiceDefinitionFetchEventImplCopyWith<$Res> {
+  factory _$$ServiceDefinitionFetchEventImplCopyWith(
+          _$ServiceDefinitionFetchEventImpl value,
+          $Res Function(_$ServiceDefinitionFetchEventImpl) then) =
+      __$$ServiceDefinitionFetchEventImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$ServiceDefinitionFetchEventCopyWithImpl<$Res>
+class __$$ServiceDefinitionFetchEventImplCopyWithImpl<$Res>
     extends _$ServiceDefinitionEventCopyWithImpl<$Res,
-        _$ServiceDefinitionFetchEvent>
-    implements _$$ServiceDefinitionFetchEventCopyWith<$Res> {
-  __$$ServiceDefinitionFetchEventCopyWithImpl(
-      _$ServiceDefinitionFetchEvent _value,
-      $Res Function(_$ServiceDefinitionFetchEvent) _then)
+        _$ServiceDefinitionFetchEventImpl>
+    implements _$$ServiceDefinitionFetchEventImplCopyWith<$Res> {
+  __$$ServiceDefinitionFetchEventImplCopyWithImpl(
+      _$ServiceDefinitionFetchEventImpl _value,
+      $Res Function(_$ServiceDefinitionFetchEventImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$ServiceDefinitionFetchEvent implements ServiceDefinitionFetchEvent {
-  const _$ServiceDefinitionFetchEvent();
+class _$ServiceDefinitionFetchEventImpl implements ServiceDefinitionFetchEvent {
+  const _$ServiceDefinitionFetchEventImpl();
 
   @override
   String toString() {
@@ -111,10 +111,10 @@ class _$ServiceDefinitionFetchEvent implements ServiceDefinitionFetchEvent {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ServiceDefinitionFetchEvent);
+            other is _$ServiceDefinitionFetchEventImpl);
   }
 
   @override
@@ -190,27 +190,28 @@ class _$ServiceDefinitionFetchEvent implements ServiceDefinitionFetchEvent {
 }
 
 abstract class ServiceDefinitionFetchEvent implements ServiceDefinitionEvent {
-  const factory ServiceDefinitionFetchEvent() = _$ServiceDefinitionFetchEvent;
+  const factory ServiceDefinitionFetchEvent() =
+      _$ServiceDefinitionFetchEventImpl;
 }
 
 /// @nodoc
-abstract class _$$ServiceDefinitionSelectionEventCopyWith<$Res> {
-  factory _$$ServiceDefinitionSelectionEventCopyWith(
-          _$ServiceDefinitionSelectionEvent value,
-          $Res Function(_$ServiceDefinitionSelectionEvent) then) =
-      __$$ServiceDefinitionSelectionEventCopyWithImpl<$Res>;
+abstract class _$$ServiceDefinitionSelectionEventImplCopyWith<$Res> {
+  factory _$$ServiceDefinitionSelectionEventImplCopyWith(
+          _$ServiceDefinitionSelectionEventImpl value,
+          $Res Function(_$ServiceDefinitionSelectionEventImpl) then) =
+      __$$ServiceDefinitionSelectionEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call({ServiceDefinitionModel serviceDefinition});
 }
 
 /// @nodoc
-class __$$ServiceDefinitionSelectionEventCopyWithImpl<$Res>
+class __$$ServiceDefinitionSelectionEventImplCopyWithImpl<$Res>
     extends _$ServiceDefinitionEventCopyWithImpl<$Res,
-        _$ServiceDefinitionSelectionEvent>
-    implements _$$ServiceDefinitionSelectionEventCopyWith<$Res> {
-  __$$ServiceDefinitionSelectionEventCopyWithImpl(
-      _$ServiceDefinitionSelectionEvent _value,
-      $Res Function(_$ServiceDefinitionSelectionEvent) _then)
+        _$ServiceDefinitionSelectionEventImpl>
+    implements _$$ServiceDefinitionSelectionEventImplCopyWith<$Res> {
+  __$$ServiceDefinitionSelectionEventImplCopyWithImpl(
+      _$ServiceDefinitionSelectionEventImpl _value,
+      $Res Function(_$ServiceDefinitionSelectionEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -218,7 +219,7 @@ class __$$ServiceDefinitionSelectionEventCopyWithImpl<$Res>
   $Res call({
     Object? serviceDefinition = null,
   }) {
-    return _then(_$ServiceDefinitionSelectionEvent(
+    return _then(_$ServiceDefinitionSelectionEventImpl(
       serviceDefinition: null == serviceDefinition
           ? _value.serviceDefinition
           : serviceDefinition // ignore: cast_nullable_to_non_nullable
@@ -229,9 +230,10 @@ class __$$ServiceDefinitionSelectionEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ServiceDefinitionSelectionEvent
+class _$ServiceDefinitionSelectionEventImpl
     implements ServiceDefinitionSelectionEvent {
-  const _$ServiceDefinitionSelectionEvent({required this.serviceDefinition});
+  const _$ServiceDefinitionSelectionEventImpl(
+      {required this.serviceDefinition});
 
   @override
   final ServiceDefinitionModel serviceDefinition;
@@ -242,10 +244,10 @@ class _$ServiceDefinitionSelectionEvent
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ServiceDefinitionSelectionEvent &&
+            other is _$ServiceDefinitionSelectionEventImpl &&
             (identical(other.serviceDefinition, serviceDefinition) ||
                 other.serviceDefinition == serviceDefinition));
   }
@@ -256,9 +258,10 @@ class _$ServiceDefinitionSelectionEvent
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ServiceDefinitionSelectionEventCopyWith<_$ServiceDefinitionSelectionEvent>
-      get copyWith => __$$ServiceDefinitionSelectionEventCopyWithImpl<
-          _$ServiceDefinitionSelectionEvent>(this, _$identity);
+  _$$ServiceDefinitionSelectionEventImplCopyWith<
+          _$ServiceDefinitionSelectionEventImpl>
+      get copyWith => __$$ServiceDefinitionSelectionEventImplCopyWithImpl<
+          _$ServiceDefinitionSelectionEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -333,11 +336,12 @@ abstract class ServiceDefinitionSelectionEvent
     implements ServiceDefinitionEvent {
   const factory ServiceDefinitionSelectionEvent(
           {required final ServiceDefinitionModel serviceDefinition}) =
-      _$ServiceDefinitionSelectionEvent;
+      _$ServiceDefinitionSelectionEventImpl;
 
   ServiceDefinitionModel get serviceDefinition;
   @JsonKey(ignore: true)
-  _$$ServiceDefinitionSelectionEventCopyWith<_$ServiceDefinitionSelectionEvent>
+  _$$ServiceDefinitionSelectionEventImplCopyWith<
+          _$ServiceDefinitionSelectionEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -419,28 +423,28 @@ class _$ServiceDefinitionStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$ServiceDefinitionEmptyStateCopyWith<$Res> {
-  factory _$$ServiceDefinitionEmptyStateCopyWith(
-          _$ServiceDefinitionEmptyState value,
-          $Res Function(_$ServiceDefinitionEmptyState) then) =
-      __$$ServiceDefinitionEmptyStateCopyWithImpl<$Res>;
+abstract class _$$ServiceDefinitionEmptyStateImplCopyWith<$Res> {
+  factory _$$ServiceDefinitionEmptyStateImplCopyWith(
+          _$ServiceDefinitionEmptyStateImpl value,
+          $Res Function(_$ServiceDefinitionEmptyStateImpl) then) =
+      __$$ServiceDefinitionEmptyStateImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$ServiceDefinitionEmptyStateCopyWithImpl<$Res>
+class __$$ServiceDefinitionEmptyStateImplCopyWithImpl<$Res>
     extends _$ServiceDefinitionStateCopyWithImpl<$Res,
-        _$ServiceDefinitionEmptyState>
-    implements _$$ServiceDefinitionEmptyStateCopyWith<$Res> {
-  __$$ServiceDefinitionEmptyStateCopyWithImpl(
-      _$ServiceDefinitionEmptyState _value,
-      $Res Function(_$ServiceDefinitionEmptyState) _then)
+        _$ServiceDefinitionEmptyStateImpl>
+    implements _$$ServiceDefinitionEmptyStateImplCopyWith<$Res> {
+  __$$ServiceDefinitionEmptyStateImplCopyWithImpl(
+      _$ServiceDefinitionEmptyStateImpl _value,
+      $Res Function(_$ServiceDefinitionEmptyStateImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$ServiceDefinitionEmptyState implements ServiceDefinitionEmptyState {
-  const _$ServiceDefinitionEmptyState();
+class _$ServiceDefinitionEmptyStateImpl implements ServiceDefinitionEmptyState {
+  const _$ServiceDefinitionEmptyStateImpl();
 
   @override
   String toString() {
@@ -448,10 +452,10 @@ class _$ServiceDefinitionEmptyState implements ServiceDefinitionEmptyState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ServiceDefinitionEmptyState);
+            other is _$ServiceDefinitionEmptyStateImpl);
   }
 
   @override
@@ -537,33 +541,34 @@ class _$ServiceDefinitionEmptyState implements ServiceDefinitionEmptyState {
 }
 
 abstract class ServiceDefinitionEmptyState implements ServiceDefinitionState {
-  const factory ServiceDefinitionEmptyState() = _$ServiceDefinitionEmptyState;
+  const factory ServiceDefinitionEmptyState() =
+      _$ServiceDefinitionEmptyStateImpl;
 }
 
 /// @nodoc
-abstract class _$$ServiceDefinitionIsloadingStateCopyWith<$Res> {
-  factory _$$ServiceDefinitionIsloadingStateCopyWith(
-          _$ServiceDefinitionIsloadingState value,
-          $Res Function(_$ServiceDefinitionIsloadingState) then) =
-      __$$ServiceDefinitionIsloadingStateCopyWithImpl<$Res>;
+abstract class _$$ServiceDefinitionIsloadingStateImplCopyWith<$Res> {
+  factory _$$ServiceDefinitionIsloadingStateImplCopyWith(
+          _$ServiceDefinitionIsloadingStateImpl value,
+          $Res Function(_$ServiceDefinitionIsloadingStateImpl) then) =
+      __$$ServiceDefinitionIsloadingStateImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$ServiceDefinitionIsloadingStateCopyWithImpl<$Res>
+class __$$ServiceDefinitionIsloadingStateImplCopyWithImpl<$Res>
     extends _$ServiceDefinitionStateCopyWithImpl<$Res,
-        _$ServiceDefinitionIsloadingState>
-    implements _$$ServiceDefinitionIsloadingStateCopyWith<$Res> {
-  __$$ServiceDefinitionIsloadingStateCopyWithImpl(
-      _$ServiceDefinitionIsloadingState _value,
-      $Res Function(_$ServiceDefinitionIsloadingState) _then)
+        _$ServiceDefinitionIsloadingStateImpl>
+    implements _$$ServiceDefinitionIsloadingStateImplCopyWith<$Res> {
+  __$$ServiceDefinitionIsloadingStateImplCopyWithImpl(
+      _$ServiceDefinitionIsloadingStateImpl _value,
+      $Res Function(_$ServiceDefinitionIsloadingStateImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$ServiceDefinitionIsloadingState
+class _$ServiceDefinitionIsloadingStateImpl
     implements ServiceDefinitionIsloadingState {
-  const _$ServiceDefinitionIsloadingState();
+  const _$ServiceDefinitionIsloadingStateImpl();
 
   @override
   String toString() {
@@ -571,10 +576,10 @@ class _$ServiceDefinitionIsloadingState
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ServiceDefinitionIsloadingState);
+            other is _$ServiceDefinitionIsloadingStateImpl);
   }
 
   @override
@@ -662,15 +667,15 @@ class _$ServiceDefinitionIsloadingState
 abstract class ServiceDefinitionIsloadingState
     implements ServiceDefinitionState {
   const factory ServiceDefinitionIsloadingState() =
-      _$ServiceDefinitionIsloadingState;
+      _$ServiceDefinitionIsloadingStateImpl;
 }
 
 /// @nodoc
-abstract class _$$ServiceDefinitionServiceFetchedStateCopyWith<$Res> {
-  factory _$$ServiceDefinitionServiceFetchedStateCopyWith(
-          _$ServiceDefinitionServiceFetchedState value,
-          $Res Function(_$ServiceDefinitionServiceFetchedState) then) =
-      __$$ServiceDefinitionServiceFetchedStateCopyWithImpl<$Res>;
+abstract class _$$ServiceDefinitionServiceFetchedStateImplCopyWith<$Res> {
+  factory _$$ServiceDefinitionServiceFetchedStateImplCopyWith(
+          _$ServiceDefinitionServiceFetchedStateImpl value,
+          $Res Function(_$ServiceDefinitionServiceFetchedStateImpl) then) =
+      __$$ServiceDefinitionServiceFetchedStateImplCopyWithImpl<$Res>;
   @useResult
   $Res call(
       {List<ServiceDefinitionModel> serviceDefinitionList,
@@ -678,13 +683,13 @@ abstract class _$$ServiceDefinitionServiceFetchedStateCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$ServiceDefinitionServiceFetchedStateCopyWithImpl<$Res>
+class __$$ServiceDefinitionServiceFetchedStateImplCopyWithImpl<$Res>
     extends _$ServiceDefinitionStateCopyWithImpl<$Res,
-        _$ServiceDefinitionServiceFetchedState>
-    implements _$$ServiceDefinitionServiceFetchedStateCopyWith<$Res> {
-  __$$ServiceDefinitionServiceFetchedStateCopyWithImpl(
-      _$ServiceDefinitionServiceFetchedState _value,
-      $Res Function(_$ServiceDefinitionServiceFetchedState) _then)
+        _$ServiceDefinitionServiceFetchedStateImpl>
+    implements _$$ServiceDefinitionServiceFetchedStateImplCopyWith<$Res> {
+  __$$ServiceDefinitionServiceFetchedStateImplCopyWithImpl(
+      _$ServiceDefinitionServiceFetchedStateImpl _value,
+      $Res Function(_$ServiceDefinitionServiceFetchedStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -693,7 +698,7 @@ class __$$ServiceDefinitionServiceFetchedStateCopyWithImpl<$Res>
     Object? serviceDefinitionList = null,
     Object? selectedServiceDefinition = freezed,
   }) {
-    return _then(_$ServiceDefinitionServiceFetchedState(
+    return _then(_$ServiceDefinitionServiceFetchedStateImpl(
       serviceDefinitionList: null == serviceDefinitionList
           ? _value._serviceDefinitionList
           : serviceDefinitionList // ignore: cast_nullable_to_non_nullable
@@ -708,9 +713,9 @@ class __$$ServiceDefinitionServiceFetchedStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ServiceDefinitionServiceFetchedState
+class _$ServiceDefinitionServiceFetchedStateImpl
     implements ServiceDefinitionServiceFetchedState {
-  const _$ServiceDefinitionServiceFetchedState(
+  const _$ServiceDefinitionServiceFetchedStateImpl(
       {required final List<ServiceDefinitionModel> serviceDefinitionList,
       this.selectedServiceDefinition})
       : _serviceDefinitionList = serviceDefinitionList;
@@ -718,6 +723,8 @@ class _$ServiceDefinitionServiceFetchedState
   final List<ServiceDefinitionModel> _serviceDefinitionList;
   @override
   List<ServiceDefinitionModel> get serviceDefinitionList {
+    if (_serviceDefinitionList is EqualUnmodifiableListView)
+      return _serviceDefinitionList;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_serviceDefinitionList);
   }
@@ -731,10 +738,10 @@ class _$ServiceDefinitionServiceFetchedState
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ServiceDefinitionServiceFetchedState &&
+            other is _$ServiceDefinitionServiceFetchedStateImpl &&
             const DeepCollectionEquality()
                 .equals(other._serviceDefinitionList, _serviceDefinitionList) &&
             (identical(other.selectedServiceDefinition,
@@ -751,10 +758,10 @@ class _$ServiceDefinitionServiceFetchedState
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ServiceDefinitionServiceFetchedStateCopyWith<
-          _$ServiceDefinitionServiceFetchedState>
-      get copyWith => __$$ServiceDefinitionServiceFetchedStateCopyWithImpl<
-          _$ServiceDefinitionServiceFetchedState>(this, _$identity);
+  _$$ServiceDefinitionServiceFetchedStateImplCopyWith<
+          _$ServiceDefinitionServiceFetchedStateImpl>
+      get copyWith => __$$ServiceDefinitionServiceFetchedStateImplCopyWithImpl<
+          _$ServiceDefinitionServiceFetchedStateImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -843,12 +850,12 @@ abstract class ServiceDefinitionServiceFetchedState
   const factory ServiceDefinitionServiceFetchedState(
           {required final List<ServiceDefinitionModel> serviceDefinitionList,
           final ServiceDefinitionModel? selectedServiceDefinition}) =
-      _$ServiceDefinitionServiceFetchedState;
+      _$ServiceDefinitionServiceFetchedStateImpl;
 
   List<ServiceDefinitionModel> get serviceDefinitionList;
   ServiceDefinitionModel? get selectedServiceDefinition;
   @JsonKey(ignore: true)
-  _$$ServiceDefinitionServiceFetchedStateCopyWith<
-          _$ServiceDefinitionServiceFetchedState>
+  _$$ServiceDefinitionServiceFetchedStateImplCopyWith<
+          _$ServiceDefinitionServiceFetchedStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

@@ -7,6 +7,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/localization/app_localization.dart';
 import '../blocs/localization/localization.dart';
+import '../data/local_store/app_shared_preferences.dart';
 import '../router/app_router.dart';
 import '../utils/constants.dart';
 import '../utils/i18_key_constants.dart' as i18;
@@ -45,7 +46,10 @@ class LanguageSelectionPage extends StatelessWidget {
                               return DigitRowCardModel(
                                 label: e.label,
                                 value: e.value,
-                                isSelected: index == localizationState.index,
+                                isSelected: getSelectedLanguage(
+                                  state,
+                                  index,
+                                ),
                               );
                             }).toList(),
                             onLanguageChange: (value) async {
@@ -91,5 +95,14 @@ class LanguageSelectionPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  getSelectedLanguage(AppInitialized state, int index) {
+    final selectedLanguage = AppSharedPreferences().getSelectedLocale ??
+        state.appConfiguration.languages!.last.value;
+    final isSelected =
+        state.appConfiguration.languages![index].value == selectedLanguage;
+
+    return isSelected;
   }
 }

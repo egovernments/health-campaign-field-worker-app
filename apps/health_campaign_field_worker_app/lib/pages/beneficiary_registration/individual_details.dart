@@ -12,6 +12,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../../blocs/scanner/scanner.dart';
+import '../../blocs/search_households/search_bloc_common_wrapper.dart';
 import '../../blocs/search_households/search_households.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../models/data_model.dart';
@@ -47,12 +48,15 @@ class _IndividualDetailsPageState
   static const _mobileNumberKey = 'mobileNumber';
   bool isDuplicateTag = false;
   static const maxLength = 200;
+  final clickedStatus = ValueNotifier<bool>(false);
+  DateTime now = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
     final bloc = context.read<BeneficiaryRegistrationBloc>();
     final router = context.router;
     final theme = Theme.of(context);
+    DateTime before150Years = DateTime(now.year - 150, now.month, now.day);
 
     return Scaffold(
       body: ReactiveFormBuilder(
@@ -66,7 +70,7 @@ class _IndividualDetailsPageState
                   (router.parent() as StackRouter).pop();
                 } else {
                   (router.parent() as StackRouter).pop();
-                  context.read<SearchHouseholdsBloc>().add(
+                  context.read<SearchBlocWrapper>().searchHouseholdsBloc.add(
                         SearchHouseholdsByHouseholdsEvent(
                           householdModel: value.householdModel,
                           projectId: context.projectId,
@@ -92,225 +96,254 @@ class _IndividualDetailsPageState
               footer: DigitCard(
                 margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
                 padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
-                child: DigitElevatedButton(
-                  onPressed: () async {
-                    if (form.control(_dobKey).value == null) {
-                      form.control(_dobKey).setErrors({'': true});
-                    }
-                    if (form.control(_idTypeKey).value == null) {
-                      form.control(_idTypeKey).setErrors({'': true});
-                    }
-                    final userId = context.loggedInUserUuid;
-                    final projectId = context.projectId;
-                    form.markAllAsTouched();
-                    if (!form.valid) return;
-                    FocusManager.instance.primaryFocus?.unfocus();
-
-                    state.maybeWhen(
-                      orElse: () {
-                        return;
-                      },
-                      create: (
-                        addressModel,
-                        householdModel,
-                        individualModel,
-                        registrationDate,
-                        searchQuery,
-                        loading,
-                        isHeadOfHousehold,
-                      ) async {
-                        final individual = _getIndividualModel(
-                          context,
-                          form: form,
-                          oldIndividual: null,
-                        );
-
-                        final boundary = context.boundary;
-
-                        bloc.add(
-                          BeneficiaryRegistrationSaveIndividualDetailsEvent(
-                            model: individual,
-                            isHeadOfHousehold: widget.isHeadOfHousehold,
-                          ),
-                        );
-                        final scannerBloc = context.read<ScannerBloc>();
-
-                        if (scannerBloc.state.duplicate) {
-                          DigitToast.show(
-                            context,
-                            options: DigitToastOptions(
-                              localizations.translate(
-                                i18.deliverIntervention.resourceAlreadyScanned,
-                              ),
-                              true,
-                              theme,
-                            ),
-                          );
-                        } else {
-                          final submit = await DigitDialog.show<bool>(
-                            context,
-                            options: DigitDialogOptions(
-                              titleText: localizations.translate(
-                                i18.deliverIntervention.dialogTitle,
-                              ),
-                              contentText: localizations.translate(
-                                i18.deliverIntervention.dialogContent,
-                              ),
-                              primaryAction: DigitDialogActions(
-                                label: localizations.translate(
-                                  i18.common.coreCommonSubmit,
-                                ),
-                                action: (context) {
-                                  Navigator.of(
-                                    context,
-                                    rootNavigator: true,
-                                  ).pop(true);
-                                },
-                              ),
-                              secondaryAction: DigitDialogActions(
-                                label: localizations.translate(
-                                  i18.common.coreCommonCancel,
-                                ),
-                                action: (context) => Navigator.of(
-                                  context,
-                                  rootNavigator: true,
-                                ).pop(false),
-                              ),
-                            ),
-                          );
-
-                          if (submit ?? false) {
-                            if (context.mounted) {
-                              final scannerBloc = context.read<ScannerBloc>();
-
-                              bloc.add(
-                                BeneficiaryRegistrationCreateEvent(
-                                  projectId: projectId,
-                                  userUuid: userId,
-                                  boundary: boundary,
-                                  tag: scannerBloc.state.qrcodes.isNotEmpty
-                                      ? scannerBloc.state.qrcodes.first
-                                      : null,
-                                ),
+                child: ValueListenableBuilder(
+                  valueListenable: clickedStatus,
+                  builder: (context, bool isClicked, _) {
+                    return DigitElevatedButton(
+                      onPressed: isClicked
+                          ? null
+                          : () async {
+                              final age = DigitDateUtils.calculateAge(
+                                form.control(_dobKey).value as DateTime?,
                               );
-                            }
-                          }
-                        }
-                      },
-                      editIndividual: (
-                        householdModel,
-                        individualModel,
-                        addressModel,
-                        projectBeneficiaryModel,
-                        loading,
-                      ) {
-                        final scannerBloc = context.read<ScannerBloc>();
-                        final individual = _getIndividualModel(
-                          context,
-                          form: form,
-                          oldIndividual: individualModel,
-                        );
-                        final tag = scannerBloc.state.qrcodes.isNotEmpty
-                            ? scannerBloc.state.qrcodes.first
-                            : null;
+                              if ((age.years == 0 && age.months == 0) ||
+                                  age.years >= 150 && age.months > 0) {
+                                form.control(_dobKey).setErrors({'': true});
+                              }
+                              if (form.control(_idTypeKey).value == null) {
+                                form.control(_idTypeKey).setErrors({'': true});
+                              }
+                              final userId = context.loggedInUserUuid;
+                              final projectId = context.projectId;
+                              form.markAllAsTouched();
+                              if (!form.valid) return;
+                              FocusManager.instance.primaryFocus?.unfocus();
 
-                        if (tag != null &&
-                            tag != projectBeneficiaryModel?.tag &&
-                            scannerBloc.state.duplicate) {
-                          DigitToast.show(
-                            context,
-                            options: DigitToastOptions(
-                              localizations.translate(
-                                i18.deliverIntervention.resourceAlreadyScanned,
-                              ),
-                              true,
-                              theme,
-                            ),
-                          );
-                        } else {
-                          bloc.add(
-                            BeneficiaryRegistrationUpdateIndividualDetailsEvent(
-                              addressModel: addressModel,
-                              model: individual.copyWith(
-                                clientAuditDetails: (individual
-                                                .clientAuditDetails
-                                                ?.createdBy !=
-                                            null &&
-                                        individual.clientAuditDetails
-                                                ?.createdTime !=
-                                            null)
-                                    ? ClientAuditDetails(
-                                        createdBy: individual
-                                            .clientAuditDetails!.createdBy,
-                                        createdTime: individual
-                                            .clientAuditDetails!.createdTime,
-                                        lastModifiedBy:
-                                            context.loggedInUserUuid,
-                                        lastModifiedTime:
-                                            context.millisecondsSinceEpoch(),
-                                      )
-                                    : null,
-                              ),
-                              tag: scannerBloc.state.qrcodes.isNotEmpty
-                                  ? scannerBloc.state.qrcodes.first
-                                  : null,
-                            ),
-                          );
-                        }
-                      },
-                      addMember: (
-                        addressModel,
-                        householdModel,
-                        loading,
-                      ) {
-                        final individual = _getIndividualModel(
-                          context,
-                          form: form,
-                        );
+                              state.maybeWhen(
+                                orElse: () {
+                                  return;
+                                },
+                                create: (
+                                  addressModel,
+                                  householdModel,
+                                  individualModel,
+                                  registrationDate,
+                                  searchQuery,
+                                  loading,
+                                  isHeadOfHousehold,
+                                ) async {
+                                  final individual = _getIndividualModel(
+                                    context,
+                                    form: form,
+                                    oldIndividual: null,
+                                  );
 
-                        if (context.mounted) {
-                          final scannerBloc = context.read<ScannerBloc>();
+                                  final boundary = context.boundary;
 
-                          if (scannerBloc.state.duplicate) {
-                            DigitToast.show(
-                              context,
-                              options: DigitToastOptions(
-                                localizations.translate(
-                                  i18.deliverIntervention
-                                      .resourceAlreadyScanned,
-                                ),
-                                true,
-                                theme,
-                              ),
-                            );
-                          } else {
-                            bloc.add(
-                              BeneficiaryRegistrationAddMemberEvent(
-                                beneficiaryType: context.beneficiaryType,
-                                householdModel: householdModel,
-                                individualModel: individual,
-                                addressModel: addressModel,
-                                userUuid: userId,
-                                projectId: context.projectId,
-                                tag: scannerBloc.state.qrcodes.isNotEmpty
-                                    ? scannerBloc.state.qrcodes.first
-                                    : null,
-                              ),
-                            );
-                          }
-                        }
-                      },
+                                  bloc.add(
+                                    BeneficiaryRegistrationSaveIndividualDetailsEvent(
+                                      model: individual,
+                                      isHeadOfHousehold:
+                                          widget.isHeadOfHousehold,
+                                    ),
+                                  );
+                                  final scannerBloc =
+                                      context.read<ScannerBloc>();
+
+                                  if (scannerBloc.state.duplicate) {
+                                    DigitToast.show(
+                                      context,
+                                      options: DigitToastOptions(
+                                        localizations.translate(
+                                          i18.deliverIntervention
+                                              .resourceAlreadyScanned,
+                                        ),
+                                        true,
+                                        theme,
+                                      ),
+                                    );
+                                  } else {
+                                    final submit = await DigitDialog.show<bool>(
+                                      context,
+                                      options: DigitDialogOptions(
+                                        titleText: localizations.translate(
+                                          i18.deliverIntervention.dialogTitle,
+                                        ),
+                                        contentText: localizations.translate(
+                                          i18.deliverIntervention.dialogContent,
+                                        ),
+                                        primaryAction: DigitDialogActions(
+                                          label: localizations.translate(
+                                            i18.common.coreCommonSubmit,
+                                          ),
+                                          action: (context) {
+                                            clickedStatus.value = true;
+                                            Navigator.of(
+                                              context,
+                                              rootNavigator: true,
+                                            ).pop(true);
+                                          },
+                                        ),
+                                        secondaryAction: DigitDialogActions(
+                                          label: localizations.translate(
+                                            i18.common.coreCommonCancel,
+                                          ),
+                                          action: (context) => Navigator.of(
+                                            context,
+                                            rootNavigator: true,
+                                          ).pop(false),
+                                        ),
+                                      ),
+                                    );
+
+                                    if (submit ?? false) {
+                                      if (context.mounted) {
+                                        final scannerBloc =
+                                            context.read<ScannerBloc>();
+
+                                        bloc.add(
+                                          BeneficiaryRegistrationCreateEvent(
+                                            projectId: projectId,
+                                            userUuid: userId,
+                                            boundary: boundary,
+                                            tag: scannerBloc
+                                                    .state.qrcodes.isNotEmpty
+                                                ? scannerBloc
+                                                    .state.qrcodes.first
+                                                : null,
+                                          ),
+                                        );
+                                      }
+                                    }
+                                  }
+                                },
+                                editIndividual: (
+                                  householdModel,
+                                  individualModel,
+                                  addressModel,
+                                  projectBeneficiaryModel,
+                                  loading,
+                                ) {
+                                  final scannerBloc =
+                                      context.read<ScannerBloc>();
+                                  final individual = _getIndividualModel(
+                                    context,
+                                    form: form,
+                                    oldIndividual: individualModel,
+                                  );
+                                  final tag =
+                                      scannerBloc.state.qrcodes.isNotEmpty
+                                          ? scannerBloc.state.qrcodes.first
+                                          : null;
+
+                                  if (tag != null &&
+                                      tag != projectBeneficiaryModel?.tag &&
+                                      scannerBloc.state.duplicate) {
+                                    DigitToast.show(
+                                      context,
+                                      options: DigitToastOptions(
+                                        localizations.translate(
+                                          i18.deliverIntervention
+                                              .resourceAlreadyScanned,
+                                        ),
+                                        true,
+                                        theme,
+                                      ),
+                                    );
+                                  } else {
+                                    bloc.add(
+                                      BeneficiaryRegistrationUpdateIndividualDetailsEvent(
+                                        addressModel: addressModel,
+                                        householdModel: householdModel,
+                                        model: individual.copyWith(
+                                          clientAuditDetails: (individual
+                                                          .clientAuditDetails
+                                                          ?.createdBy !=
+                                                      null &&
+                                                  individual.clientAuditDetails
+                                                          ?.createdTime !=
+                                                      null)
+                                              ? ClientAuditDetails(
+                                                  createdBy: individual
+                                                      .clientAuditDetails!
+                                                      .createdBy,
+                                                  createdTime: individual
+                                                      .clientAuditDetails!
+                                                      .createdTime,
+                                                  lastModifiedBy:
+                                                      context.loggedInUserUuid,
+                                                  lastModifiedTime: context
+                                                      .millisecondsSinceEpoch(),
+                                                )
+                                              : null,
+                                        ),
+                                        tag: scannerBloc
+                                                .state.qrcodes.isNotEmpty
+                                            ? scannerBloc.state.qrcodes.first
+                                            : null,
+                                      ),
+                                    );
+                                  }
+                                },
+                                addMember: (
+                                  addressModel,
+                                  householdModel,
+                                  loading,
+                                ) {
+                                  final individual = _getIndividualModel(
+                                    context,
+                                    form: form,
+                                  );
+
+                                  if (context.mounted) {
+                                    final scannerBloc =
+                                        context.read<ScannerBloc>();
+
+                                    if (scannerBloc.state.duplicate) {
+                                      DigitToast.show(
+                                        context,
+                                        options: DigitToastOptions(
+                                          localizations.translate(
+                                            i18.deliverIntervention
+                                                .resourceAlreadyScanned,
+                                          ),
+                                          true,
+                                          theme,
+                                        ),
+                                      );
+                                    } else {
+                                      bloc.add(
+                                        BeneficiaryRegistrationAddMemberEvent(
+                                          beneficiaryType:
+                                              context.beneficiaryType,
+                                          householdModel: householdModel,
+                                          individualModel: individual,
+                                          addressModel: addressModel,
+                                          userUuid: userId,
+                                          projectId: context.projectId,
+                                          tag: scannerBloc
+                                                  .state.qrcodes.isNotEmpty
+                                              ? scannerBloc.state.qrcodes.first
+                                              : null,
+                                        ),
+                                      );
+                                    }
+                                  }
+                                },
+                              );
+                            },
+                      child: Center(
+                        child: Text(
+                          state.mapOrNull(
+                                editIndividual: (value) => localizations
+                                    .translate(i18.common.coreCommonSave),
+                              ) ??
+                              localizations
+                                  .translate(i18.common.coreCommonSubmit),
+                        ),
+                      ),
                     );
                   },
-                  child: Center(
-                    child: Text(
-                      state.mapOrNull(
-                            editIndividual: (value) => localizations
-                                .translate(i18.common.coreCommonSave),
-                          ) ??
-                          localizations.translate(i18.common.coreCommonSubmit),
-                    ),
-                  ),
                 ),
               ),
               slivers: [
@@ -469,6 +502,7 @@ class _IndividualDetailsPageState
                                 yearsAndMonthsErrMsg: localizations.translate(
                                   i18.individualDetails.yearsAndMonthsErrorText,
                                 ),
+                                initialDate: before150Years,
                                 onChangeOfFormControl: (formControl) {
                                   // Handle changes to the control's value here
                                   final value = formControl.value;
@@ -479,7 +513,7 @@ class _IndividualDetailsPageState
                                         DigitDateUtils.calculateAge(value);
                                     if ((age.years == 0 && age.months == 0) ||
                                         age.months > 11 ||
-                                        (age.years >= 150 && age.months > 0)) {
+                                        (age.years >= 150 && age.months >= 0)) {
                                       formControl.setErrors({'': true});
                                     } else {
                                       formControl.removeError('');
@@ -538,72 +572,79 @@ class _IndividualDetailsPageState
                           ],
                         ),
                         const SizedBox(height: 16),
-                        BlocBuilder<ScannerBloc, ScannerState>(
-                          builder: (context, state) => state.qrcodes.isNotEmpty
-                              ? Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    SizedBox(
-                                      width:
-                                          MediaQuery.of(context).size.width / 3,
-                                      child: Text(
-                                        localizations.translate(
-                                          i18.deliverIntervention.voucherCode,
+                        if ((context.beneficiaryType ==
+                                    BeneficiaryType.household &&
+                                widget.isHeadOfHousehold) ||
+                            (context.beneficiaryType ==
+                                BeneficiaryType.individual))
+                          BlocBuilder<ScannerBloc, ScannerState>(
+                            builder: (context, state) => state
+                                    .qrcodes.isNotEmpty
+                                ? Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                3,
+                                        child: Text(
+                                          localizations.translate(
+                                            i18.deliverIntervention.voucherCode,
+                                          ),
+                                          style: theme.textTheme.headlineSmall,
                                         ),
-                                        style: theme.textTheme.headlineSmall,
                                       ),
-                                    ),
-                                    Flexible(
-                                      child: Text(
-                                        overflow: TextOverflow.ellipsis,
-                                        localizations
-                                            .translate(state.qrcodes.first),
+                                      Flexible(
+                                        child: Text(
+                                          overflow: TextOverflow.ellipsis,
+                                          localizations
+                                              .translate(state.qrcodes.first),
+                                        ),
                                       ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                        bottom: kPadding * 2,
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                          bottom: kPadding * 2,
+                                        ),
+                                        child: IconButton(
+                                          color: theme.colorScheme.secondary,
+                                          icon: const Icon(Icons.edit),
+                                          onPressed: () {
+                                            // TODO : [Need to handle the Scanner event];
+                                            // context.read<ScannerBloc>().add(ScannerScanEvent())
+                                            context.router.push(QRScannerRoute(
+                                              quantity: 1,
+                                              isGS1code: false,
+                                              sinlgleValue: true,
+                                              isEditEnabled: true,
+                                            ));
+                                          },
+                                        ),
                                       ),
-                                      child: IconButton(
-                                        color: theme.colorScheme.secondary,
-                                        icon: const Icon(Icons.edit),
-                                        onPressed: () {
-                                          // TODO : [Need to handle the Scanner event];
-                                          // context.read<ScannerBloc>().add(ScannerScanEvent())
-                                          context.router.push(QRScannerRoute(
-                                            quantity: 1,
-                                            isGS1code: false,
-                                            sinlgleValue: true,
-                                            isEditEnabled: true,
-                                          ));
-                                        },
-                                      ),
-                                    ),
-                                  ],
+                                    ],
 
-                                  // ignore: no-empty-block
-                                )
-                              : DigitOutlineIconButton(
-                                  buttonStyle: OutlinedButton.styleFrom(
-                                    shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.zero,
+                                    // ignore: no-empty-block
+                                  )
+                                : DigitOutlineIconButton(
+                                    buttonStyle: OutlinedButton.styleFrom(
+                                      shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.zero,
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      context.router.push(QRScannerRoute(
+                                        quantity: 1,
+                                        isGS1code: false,
+                                        sinlgleValue: true,
+                                      ));
+                                    },
+                                    icon: Icons.qr_code,
+                                    label: localizations.translate(
+                                      i18.individualDetails
+                                          .linkVoucherToIndividual,
                                     ),
                                   ),
-                                  onPressed: () {
-                                    context.router.push(QRScannerRoute(
-                                      quantity: 1,
-                                      isGS1code: false,
-                                      sinlgleValue: true,
-                                    ));
-                                  },
-                                  icon: Icons.qr_code,
-                                  label: localizations.translate(
-                                    i18.individualDetails
-                                        .linkVoucherToIndividual,
-                                  ),
-                                ),
-                        ),
+                          ),
                       ],
                     ),
                   ),

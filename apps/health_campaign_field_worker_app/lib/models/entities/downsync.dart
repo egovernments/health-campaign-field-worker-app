@@ -5,8 +5,10 @@ import 'package:drift/drift.dart';
 import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
 
-@MappableClass(ignoreNull: true)
-class DownsyncSearchModel extends EntitySearchModel {
+part 'downsync.mapper.dart';
+
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class DownsyncSearchModel extends EntitySearchModel with DownsyncSearchModelMappable {
   final String? locality;
   final String? projectId;
   final int? offset;
@@ -43,8 +45,8 @@ class DownsyncSearchModel extends EntitySearchModel {
   }):  super(isDeleted: false);
 }
 
-@MappableClass(ignoreNull: true)
-class DownsyncModel extends EntityModel {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class DownsyncModel extends EntityModel with DownsyncModelMappable {
 
   static const schemaName = 'Downsync';
 
@@ -102,11 +104,12 @@ class DownsyncModel extends EntityModel {
   }
 }
 
-@MappableClass(ignoreNull: true)
-class DownsyncAdditionalFields extends AdditionalFields {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class DownsyncAdditionalFields extends AdditionalFields with DownsyncAdditionalFieldsMappable {
   DownsyncAdditionalFields({
     super.schema = 'Downsync',
     required super.version,
     super.fields,
   });
 }
+

@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'complaints_inbox.dart';
 
@@ -147,11 +147,11 @@ class _$ComplaintInboxStateCopyWithImpl<$Res, $Val extends ComplaintInboxState>
 }
 
 /// @nodoc
-abstract class _$$_ComplaintInboxStateCopyWith<$Res>
+abstract class _$$ComplaintInboxStateImplCopyWith<$Res>
     implements $ComplaintInboxStateCopyWith<$Res> {
-  factory _$$_ComplaintInboxStateCopyWith(_$_ComplaintInboxState value,
-          $Res Function(_$_ComplaintInboxState) then) =
-      __$$_ComplaintInboxStateCopyWithImpl<$Res>;
+  factory _$$ComplaintInboxStateImplCopyWith(_$ComplaintInboxStateImpl value,
+          $Res Function(_$ComplaintInboxStateImpl) then) =
+      __$$ComplaintInboxStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -164,11 +164,11 @@ abstract class _$$_ComplaintInboxStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_ComplaintInboxStateCopyWithImpl<$Res>
-    extends _$ComplaintInboxStateCopyWithImpl<$Res, _$_ComplaintInboxState>
-    implements _$$_ComplaintInboxStateCopyWith<$Res> {
-  __$$_ComplaintInboxStateCopyWithImpl(_$_ComplaintInboxState _value,
-      $Res Function(_$_ComplaintInboxState) _then)
+class __$$ComplaintInboxStateImplCopyWithImpl<$Res>
+    extends _$ComplaintInboxStateCopyWithImpl<$Res, _$ComplaintInboxStateImpl>
+    implements _$$ComplaintInboxStateImplCopyWith<$Res> {
+  __$$ComplaintInboxStateImplCopyWithImpl(_$ComplaintInboxStateImpl _value,
+      $Res Function(_$ComplaintInboxStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -181,7 +181,7 @@ class __$$_ComplaintInboxStateCopyWithImpl<$Res>
     Object? filters = freezed,
     Object? searchKeys = freezed,
   }) {
-    return _then(_$_ComplaintInboxState(
+    return _then(_$ComplaintInboxStateImpl(
       loading: null == loading
           ? _value.loading
           : loading // ignore: cast_nullable_to_non_nullable
@@ -212,8 +212,8 @@ class __$$_ComplaintInboxStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_ComplaintInboxState implements _ComplaintInboxState {
-  const _$_ComplaintInboxState(
+class _$ComplaintInboxStateImpl implements _ComplaintInboxState {
+  const _$ComplaintInboxStateImpl(
       {this.loading = false,
       this.isFiltered = false,
       final List<PgrServiceModel> complaints = const [],
@@ -233,6 +233,7 @@ class _$_ComplaintInboxState implements _ComplaintInboxState {
   @override
   @JsonKey()
   List<PgrServiceModel> get complaints {
+    if (_complaints is EqualUnmodifiableListView) return _complaints;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_complaints);
   }
@@ -241,6 +242,8 @@ class _$_ComplaintInboxState implements _ComplaintInboxState {
   @override
   @JsonKey()
   List<PgrServiceModel> get filteredComplaints {
+    if (_filteredComplaints is EqualUnmodifiableListView)
+      return _filteredComplaints;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_filteredComplaints);
   }
@@ -256,10 +259,10 @@ class _$_ComplaintInboxState implements _ComplaintInboxState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ComplaintInboxState &&
+            other is _$ComplaintInboxStateImpl &&
             (identical(other.loading, loading) || other.loading == loading) &&
             (identical(other.isFiltered, isFiltered) ||
                 other.isFiltered == isFiltered) &&
@@ -285,8 +288,8 @@ class _$_ComplaintInboxState implements _ComplaintInboxState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ComplaintInboxStateCopyWith<_$_ComplaintInboxState> get copyWith =>
-      __$$_ComplaintInboxStateCopyWithImpl<_$_ComplaintInboxState>(
+  _$$ComplaintInboxStateImplCopyWith<_$ComplaintInboxStateImpl> get copyWith =>
+      __$$ComplaintInboxStateImplCopyWithImpl<_$ComplaintInboxStateImpl>(
           this, _$identity);
 
   @override
@@ -377,7 +380,7 @@ abstract class _ComplaintInboxState implements ComplaintInboxState {
       final List<PgrServiceModel> complaints,
       final List<PgrServiceModel> filteredComplaints,
       final PgrFilters? filters,
-      final PgrSearchKeys? searchKeys}) = _$_ComplaintInboxState;
+      final PgrSearchKeys? searchKeys}) = _$ComplaintInboxStateImpl;
 
   @override
   bool get loading;
@@ -393,7 +396,7 @@ abstract class _ComplaintInboxState implements ComplaintInboxState {
   PgrSearchKeys? get searchKeys;
   @override
   @JsonKey(ignore: true)
-  _$$_ComplaintInboxStateCopyWith<_$_ComplaintInboxState> get copyWith =>
+  _$$ComplaintInboxStateImplCopyWith<_$ComplaintInboxStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -527,23 +530,23 @@ class _$ComplaintInboxEventCopyWithImpl<$Res, $Val extends ComplaintInboxEvent>
 }
 
 /// @nodoc
-abstract class _$$ComplaintInboxLoadComplaintsEventCopyWith<$Res> {
-  factory _$$ComplaintInboxLoadComplaintsEventCopyWith(
-          _$ComplaintInboxLoadComplaintsEvent value,
-          $Res Function(_$ComplaintInboxLoadComplaintsEvent) then) =
-      __$$ComplaintInboxLoadComplaintsEventCopyWithImpl<$Res>;
+abstract class _$$ComplaintInboxLoadComplaintsEventImplCopyWith<$Res> {
+  factory _$$ComplaintInboxLoadComplaintsEventImplCopyWith(
+          _$ComplaintInboxLoadComplaintsEventImpl value,
+          $Res Function(_$ComplaintInboxLoadComplaintsEventImpl) then) =
+      __$$ComplaintInboxLoadComplaintsEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call({List<PgrServiceModel>? updatedModels, String createdByUserId});
 }
 
 /// @nodoc
-class __$$ComplaintInboxLoadComplaintsEventCopyWithImpl<$Res>
+class __$$ComplaintInboxLoadComplaintsEventImplCopyWithImpl<$Res>
     extends _$ComplaintInboxEventCopyWithImpl<$Res,
-        _$ComplaintInboxLoadComplaintsEvent>
-    implements _$$ComplaintInboxLoadComplaintsEventCopyWith<$Res> {
-  __$$ComplaintInboxLoadComplaintsEventCopyWithImpl(
-      _$ComplaintInboxLoadComplaintsEvent _value,
-      $Res Function(_$ComplaintInboxLoadComplaintsEvent) _then)
+        _$ComplaintInboxLoadComplaintsEventImpl>
+    implements _$$ComplaintInboxLoadComplaintsEventImplCopyWith<$Res> {
+  __$$ComplaintInboxLoadComplaintsEventImplCopyWithImpl(
+      _$ComplaintInboxLoadComplaintsEventImpl _value,
+      $Res Function(_$ComplaintInboxLoadComplaintsEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -552,7 +555,7 @@ class __$$ComplaintInboxLoadComplaintsEventCopyWithImpl<$Res>
     Object? updatedModels = freezed,
     Object? createdByUserId = null,
   }) {
-    return _then(_$ComplaintInboxLoadComplaintsEvent(
+    return _then(_$ComplaintInboxLoadComplaintsEventImpl(
       updatedModels: freezed == updatedModels
           ? _value._updatedModels
           : updatedModels // ignore: cast_nullable_to_non_nullable
@@ -567,9 +570,9 @@ class __$$ComplaintInboxLoadComplaintsEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ComplaintInboxLoadComplaintsEvent
+class _$ComplaintInboxLoadComplaintsEventImpl
     implements ComplaintInboxLoadComplaintsEvent {
-  const _$ComplaintInboxLoadComplaintsEvent(
+  const _$ComplaintInboxLoadComplaintsEventImpl(
       {final List<PgrServiceModel>? updatedModels,
       required this.createdByUserId})
       : _updatedModels = updatedModels;
@@ -579,6 +582,7 @@ class _$ComplaintInboxLoadComplaintsEvent
   List<PgrServiceModel>? get updatedModels {
     final value = _updatedModels;
     if (value == null) return null;
+    if (_updatedModels is EqualUnmodifiableListView) return _updatedModels;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
@@ -592,10 +596,10 @@ class _$ComplaintInboxLoadComplaintsEvent
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ComplaintInboxLoadComplaintsEvent &&
+            other is _$ComplaintInboxLoadComplaintsEventImpl &&
             const DeepCollectionEquality()
                 .equals(other._updatedModels, _updatedModels) &&
             (identical(other.createdByUserId, createdByUserId) ||
@@ -609,10 +613,10 @@ class _$ComplaintInboxLoadComplaintsEvent
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ComplaintInboxLoadComplaintsEventCopyWith<
-          _$ComplaintInboxLoadComplaintsEvent>
-      get copyWith => __$$ComplaintInboxLoadComplaintsEventCopyWithImpl<
-          _$ComplaintInboxLoadComplaintsEvent>(this, _$identity);
+  _$$ComplaintInboxLoadComplaintsEventImplCopyWith<
+          _$ComplaintInboxLoadComplaintsEventImpl>
+      get copyWith => __$$ComplaintInboxLoadComplaintsEventImplCopyWithImpl<
+          _$ComplaintInboxLoadComplaintsEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -751,34 +755,34 @@ abstract class ComplaintInboxLoadComplaintsEvent
   const factory ComplaintInboxLoadComplaintsEvent(
           {final List<PgrServiceModel>? updatedModels,
           required final String createdByUserId}) =
-      _$ComplaintInboxLoadComplaintsEvent;
+      _$ComplaintInboxLoadComplaintsEventImpl;
 
   List<PgrServiceModel>? get updatedModels;
   String get createdByUserId;
   @JsonKey(ignore: true)
-  _$$ComplaintInboxLoadComplaintsEventCopyWith<
-          _$ComplaintInboxLoadComplaintsEvent>
+  _$$ComplaintInboxLoadComplaintsEventImplCopyWith<
+          _$ComplaintInboxLoadComplaintsEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$ComplaintInboxSortComplaintsEventCopyWith<$Res> {
-  factory _$$ComplaintInboxSortComplaintsEventCopyWith(
-          _$ComplaintInboxSortComplaintsEvent value,
-          $Res Function(_$ComplaintInboxSortComplaintsEvent) then) =
-      __$$ComplaintInboxSortComplaintsEventCopyWithImpl<$Res>;
+abstract class _$$ComplaintInboxSortComplaintsEventImplCopyWith<$Res> {
+  factory _$$ComplaintInboxSortComplaintsEventImplCopyWith(
+          _$ComplaintInboxSortComplaintsEventImpl value,
+          $Res Function(_$ComplaintInboxSortComplaintsEventImpl) then) =
+      __$$ComplaintInboxSortComplaintsEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String sortOrder});
 }
 
 /// @nodoc
-class __$$ComplaintInboxSortComplaintsEventCopyWithImpl<$Res>
+class __$$ComplaintInboxSortComplaintsEventImplCopyWithImpl<$Res>
     extends _$ComplaintInboxEventCopyWithImpl<$Res,
-        _$ComplaintInboxSortComplaintsEvent>
-    implements _$$ComplaintInboxSortComplaintsEventCopyWith<$Res> {
-  __$$ComplaintInboxSortComplaintsEventCopyWithImpl(
-      _$ComplaintInboxSortComplaintsEvent _value,
-      $Res Function(_$ComplaintInboxSortComplaintsEvent) _then)
+        _$ComplaintInboxSortComplaintsEventImpl>
+    implements _$$ComplaintInboxSortComplaintsEventImplCopyWith<$Res> {
+  __$$ComplaintInboxSortComplaintsEventImplCopyWithImpl(
+      _$ComplaintInboxSortComplaintsEventImpl _value,
+      $Res Function(_$ComplaintInboxSortComplaintsEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -786,7 +790,7 @@ class __$$ComplaintInboxSortComplaintsEventCopyWithImpl<$Res>
   $Res call({
     Object? sortOrder = null,
   }) {
-    return _then(_$ComplaintInboxSortComplaintsEvent(
+    return _then(_$ComplaintInboxSortComplaintsEventImpl(
       null == sortOrder
           ? _value.sortOrder
           : sortOrder // ignore: cast_nullable_to_non_nullable
@@ -797,9 +801,9 @@ class __$$ComplaintInboxSortComplaintsEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ComplaintInboxSortComplaintsEvent
+class _$ComplaintInboxSortComplaintsEventImpl
     implements ComplaintInboxSortComplaintsEvent {
-  const _$ComplaintInboxSortComplaintsEvent(
+  const _$ComplaintInboxSortComplaintsEventImpl(
       [this.sortOrder = "COMPLAINT_SORT_DATE_ASC"]);
 
   @override
@@ -812,10 +816,10 @@ class _$ComplaintInboxSortComplaintsEvent
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ComplaintInboxSortComplaintsEvent &&
+            other is _$ComplaintInboxSortComplaintsEventImpl &&
             (identical(other.sortOrder, sortOrder) ||
                 other.sortOrder == sortOrder));
   }
@@ -826,10 +830,10 @@ class _$ComplaintInboxSortComplaintsEvent
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ComplaintInboxSortComplaintsEventCopyWith<
-          _$ComplaintInboxSortComplaintsEvent>
-      get copyWith => __$$ComplaintInboxSortComplaintsEventCopyWithImpl<
-          _$ComplaintInboxSortComplaintsEvent>(this, _$identity);
+  _$$ComplaintInboxSortComplaintsEventImplCopyWith<
+          _$ComplaintInboxSortComplaintsEventImpl>
+      get copyWith => __$$ComplaintInboxSortComplaintsEventImplCopyWithImpl<
+          _$ComplaintInboxSortComplaintsEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -966,21 +970,21 @@ class _$ComplaintInboxSortComplaintsEvent
 abstract class ComplaintInboxSortComplaintsEvent
     implements ComplaintInboxEvent {
   const factory ComplaintInboxSortComplaintsEvent([final String sortOrder]) =
-      _$ComplaintInboxSortComplaintsEvent;
+      _$ComplaintInboxSortComplaintsEventImpl;
 
   String get sortOrder;
   @JsonKey(ignore: true)
-  _$$ComplaintInboxSortComplaintsEventCopyWith<
-          _$ComplaintInboxSortComplaintsEvent>
+  _$$ComplaintInboxSortComplaintsEventImplCopyWith<
+          _$ComplaintInboxSortComplaintsEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$ComplaintInboxFilterComplaintsEventCopyWith<$Res> {
-  factory _$$ComplaintInboxFilterComplaintsEventCopyWith(
-          _$ComplaintInboxFilterComplaintsEvent value,
-          $Res Function(_$ComplaintInboxFilterComplaintsEvent) then) =
-      __$$ComplaintInboxFilterComplaintsEventCopyWithImpl<$Res>;
+abstract class _$$ComplaintInboxFilterComplaintsEventImplCopyWith<$Res> {
+  factory _$$ComplaintInboxFilterComplaintsEventImplCopyWith(
+          _$ComplaintInboxFilterComplaintsEventImpl value,
+          $Res Function(_$ComplaintInboxFilterComplaintsEventImpl) then) =
+      __$$ComplaintInboxFilterComplaintsEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call(
       {String? complaintAssignedTo,
@@ -992,13 +996,13 @@ abstract class _$$ComplaintInboxFilterComplaintsEventCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$ComplaintInboxFilterComplaintsEventCopyWithImpl<$Res>
+class __$$ComplaintInboxFilterComplaintsEventImplCopyWithImpl<$Res>
     extends _$ComplaintInboxEventCopyWithImpl<$Res,
-        _$ComplaintInboxFilterComplaintsEvent>
-    implements _$$ComplaintInboxFilterComplaintsEventCopyWith<$Res> {
-  __$$ComplaintInboxFilterComplaintsEventCopyWithImpl(
-      _$ComplaintInboxFilterComplaintsEvent _value,
-      $Res Function(_$ComplaintInboxFilterComplaintsEvent) _then)
+        _$ComplaintInboxFilterComplaintsEventImpl>
+    implements _$$ComplaintInboxFilterComplaintsEventImplCopyWith<$Res> {
+  __$$ComplaintInboxFilterComplaintsEventImplCopyWithImpl(
+      _$ComplaintInboxFilterComplaintsEventImpl _value,
+      $Res Function(_$ComplaintInboxFilterComplaintsEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1011,7 +1015,7 @@ class __$$ComplaintInboxFilterComplaintsEventCopyWithImpl<$Res>
     Object? createdByUserId = null,
     Object? complaintStatus = freezed,
   }) {
-    return _then(_$ComplaintInboxFilterComplaintsEvent(
+    return _then(_$ComplaintInboxFilterComplaintsEventImpl(
       complaintAssignedTo: freezed == complaintAssignedTo
           ? _value.complaintAssignedTo
           : complaintAssignedTo // ignore: cast_nullable_to_non_nullable
@@ -1042,9 +1046,9 @@ class __$$ComplaintInboxFilterComplaintsEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ComplaintInboxFilterComplaintsEvent
+class _$ComplaintInboxFilterComplaintsEventImpl
     implements ComplaintInboxFilterComplaintsEvent {
-  const _$ComplaintInboxFilterComplaintsEvent(
+  const _$ComplaintInboxFilterComplaintsEventImpl(
       {this.complaintAssignedTo,
       this.currentUserName,
       this.complaintTypeCode,
@@ -1068,6 +1072,7 @@ class _$ComplaintInboxFilterComplaintsEvent
   List<PgrServiceApplicationStatus>? get complaintStatus {
     final value = _complaintStatus;
     if (value == null) return null;
+    if (_complaintStatus is EqualUnmodifiableListView) return _complaintStatus;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
@@ -1078,10 +1083,10 @@ class _$ComplaintInboxFilterComplaintsEvent
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ComplaintInboxFilterComplaintsEvent &&
+            other is _$ComplaintInboxFilterComplaintsEventImpl &&
             (identical(other.complaintAssignedTo, complaintAssignedTo) ||
                 other.complaintAssignedTo == complaintAssignedTo) &&
             (identical(other.currentUserName, currentUserName) ||
@@ -1109,10 +1114,10 @@ class _$ComplaintInboxFilterComplaintsEvent
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ComplaintInboxFilterComplaintsEventCopyWith<
-          _$ComplaintInboxFilterComplaintsEvent>
-      get copyWith => __$$ComplaintInboxFilterComplaintsEventCopyWithImpl<
-          _$ComplaintInboxFilterComplaintsEvent>(this, _$identity);
+  _$$ComplaintInboxFilterComplaintsEventImplCopyWith<
+          _$ComplaintInboxFilterComplaintsEventImpl>
+      get copyWith => __$$ComplaintInboxFilterComplaintsEventImplCopyWithImpl<
+          _$ComplaintInboxFilterComplaintsEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -1258,7 +1263,7 @@ abstract class ComplaintInboxFilterComplaintsEvent
           final String? locality,
           required final String createdByUserId,
           final List<PgrServiceApplicationStatus>? complaintStatus}) =
-      _$ComplaintInboxFilterComplaintsEvent;
+      _$ComplaintInboxFilterComplaintsEventImpl;
 
   String? get complaintAssignedTo;
   String? get currentUserName;
@@ -1267,30 +1272,30 @@ abstract class ComplaintInboxFilterComplaintsEvent
   String get createdByUserId;
   List<PgrServiceApplicationStatus>? get complaintStatus;
   @JsonKey(ignore: true)
-  _$$ComplaintInboxFilterComplaintsEventCopyWith<
-          _$ComplaintInboxFilterComplaintsEvent>
+  _$$ComplaintInboxFilterComplaintsEventImplCopyWith<
+          _$ComplaintInboxFilterComplaintsEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$ComplaintInboxSearchComplaintsEventCopyWith<$Res> {
-  factory _$$ComplaintInboxSearchComplaintsEventCopyWith(
-          _$ComplaintInboxSearchComplaintsEvent value,
-          $Res Function(_$ComplaintInboxSearchComplaintsEvent) then) =
-      __$$ComplaintInboxSearchComplaintsEventCopyWithImpl<$Res>;
+abstract class _$$ComplaintInboxSearchComplaintsEventImplCopyWith<$Res> {
+  factory _$$ComplaintInboxSearchComplaintsEventImplCopyWith(
+          _$ComplaintInboxSearchComplaintsEventImpl value,
+          $Res Function(_$ComplaintInboxSearchComplaintsEventImpl) then) =
+      __$$ComplaintInboxSearchComplaintsEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call(
       {String? complaintNumber, String? mobileNumber, String createdByUserId});
 }
 
 /// @nodoc
-class __$$ComplaintInboxSearchComplaintsEventCopyWithImpl<$Res>
+class __$$ComplaintInboxSearchComplaintsEventImplCopyWithImpl<$Res>
     extends _$ComplaintInboxEventCopyWithImpl<$Res,
-        _$ComplaintInboxSearchComplaintsEvent>
-    implements _$$ComplaintInboxSearchComplaintsEventCopyWith<$Res> {
-  __$$ComplaintInboxSearchComplaintsEventCopyWithImpl(
-      _$ComplaintInboxSearchComplaintsEvent _value,
-      $Res Function(_$ComplaintInboxSearchComplaintsEvent) _then)
+        _$ComplaintInboxSearchComplaintsEventImpl>
+    implements _$$ComplaintInboxSearchComplaintsEventImplCopyWith<$Res> {
+  __$$ComplaintInboxSearchComplaintsEventImplCopyWithImpl(
+      _$ComplaintInboxSearchComplaintsEventImpl _value,
+      $Res Function(_$ComplaintInboxSearchComplaintsEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1300,7 +1305,7 @@ class __$$ComplaintInboxSearchComplaintsEventCopyWithImpl<$Res>
     Object? mobileNumber = freezed,
     Object? createdByUserId = null,
   }) {
-    return _then(_$ComplaintInboxSearchComplaintsEvent(
+    return _then(_$ComplaintInboxSearchComplaintsEventImpl(
       complaintNumber: freezed == complaintNumber
           ? _value.complaintNumber
           : complaintNumber // ignore: cast_nullable_to_non_nullable
@@ -1319,9 +1324,9 @@ class __$$ComplaintInboxSearchComplaintsEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ComplaintInboxSearchComplaintsEvent
+class _$ComplaintInboxSearchComplaintsEventImpl
     implements ComplaintInboxSearchComplaintsEvent {
-  const _$ComplaintInboxSearchComplaintsEvent(
+  const _$ComplaintInboxSearchComplaintsEventImpl(
       {this.complaintNumber, this.mobileNumber, required this.createdByUserId});
 
   @override
@@ -1337,10 +1342,10 @@ class _$ComplaintInboxSearchComplaintsEvent
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ComplaintInboxSearchComplaintsEvent &&
+            other is _$ComplaintInboxSearchComplaintsEventImpl &&
             (identical(other.complaintNumber, complaintNumber) ||
                 other.complaintNumber == complaintNumber) &&
             (identical(other.mobileNumber, mobileNumber) ||
@@ -1356,10 +1361,10 @@ class _$ComplaintInboxSearchComplaintsEvent
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ComplaintInboxSearchComplaintsEventCopyWith<
-          _$ComplaintInboxSearchComplaintsEvent>
-      get copyWith => __$$ComplaintInboxSearchComplaintsEventCopyWithImpl<
-          _$ComplaintInboxSearchComplaintsEvent>(this, _$identity);
+  _$$ComplaintInboxSearchComplaintsEventImplCopyWith<
+          _$ComplaintInboxSearchComplaintsEventImpl>
+      get copyWith => __$$ComplaintInboxSearchComplaintsEventImplCopyWithImpl<
+          _$ComplaintInboxSearchComplaintsEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -1500,35 +1505,35 @@ abstract class ComplaintInboxSearchComplaintsEvent
           {final String? complaintNumber,
           final String? mobileNumber,
           required final String createdByUserId}) =
-      _$ComplaintInboxSearchComplaintsEvent;
+      _$ComplaintInboxSearchComplaintsEventImpl;
 
   String? get complaintNumber;
   String? get mobileNumber;
   String get createdByUserId;
   @JsonKey(ignore: true)
-  _$$ComplaintInboxSearchComplaintsEventCopyWith<
-          _$ComplaintInboxSearchComplaintsEvent>
+  _$$ComplaintInboxSearchComplaintsEventImplCopyWith<
+          _$ComplaintInboxSearchComplaintsEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$ComplaintInboxSaveComplaintsEventCopyWith<$Res> {
-  factory _$$ComplaintInboxSaveComplaintsEventCopyWith(
-          _$ComplaintInboxSaveComplaintsEvent value,
-          $Res Function(_$ComplaintInboxSaveComplaintsEvent) then) =
-      __$$ComplaintInboxSaveComplaintsEventCopyWithImpl<$Res>;
+abstract class _$$ComplaintInboxSaveComplaintsEventImplCopyWith<$Res> {
+  factory _$$ComplaintInboxSaveComplaintsEventImplCopyWith(
+          _$ComplaintInboxSaveComplaintsEventImpl value,
+          $Res Function(_$ComplaintInboxSaveComplaintsEventImpl) then) =
+      __$$ComplaintInboxSaveComplaintsEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call({List<ComplaintsInboxItem>? complaintInboxItems});
 }
 
 /// @nodoc
-class __$$ComplaintInboxSaveComplaintsEventCopyWithImpl<$Res>
+class __$$ComplaintInboxSaveComplaintsEventImplCopyWithImpl<$Res>
     extends _$ComplaintInboxEventCopyWithImpl<$Res,
-        _$ComplaintInboxSaveComplaintsEvent>
-    implements _$$ComplaintInboxSaveComplaintsEventCopyWith<$Res> {
-  __$$ComplaintInboxSaveComplaintsEventCopyWithImpl(
-      _$ComplaintInboxSaveComplaintsEvent _value,
-      $Res Function(_$ComplaintInboxSaveComplaintsEvent) _then)
+        _$ComplaintInboxSaveComplaintsEventImpl>
+    implements _$$ComplaintInboxSaveComplaintsEventImplCopyWith<$Res> {
+  __$$ComplaintInboxSaveComplaintsEventImplCopyWithImpl(
+      _$ComplaintInboxSaveComplaintsEventImpl _value,
+      $Res Function(_$ComplaintInboxSaveComplaintsEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1536,7 +1541,7 @@ class __$$ComplaintInboxSaveComplaintsEventCopyWithImpl<$Res>
   $Res call({
     Object? complaintInboxItems = freezed,
   }) {
-    return _then(_$ComplaintInboxSaveComplaintsEvent(
+    return _then(_$ComplaintInboxSaveComplaintsEventImpl(
       complaintInboxItems: freezed == complaintInboxItems
           ? _value._complaintInboxItems
           : complaintInboxItems // ignore: cast_nullable_to_non_nullable
@@ -1547,9 +1552,9 @@ class __$$ComplaintInboxSaveComplaintsEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ComplaintInboxSaveComplaintsEvent
+class _$ComplaintInboxSaveComplaintsEventImpl
     implements ComplaintInboxSaveComplaintsEvent {
-  const _$ComplaintInboxSaveComplaintsEvent(
+  const _$ComplaintInboxSaveComplaintsEventImpl(
       {final List<ComplaintsInboxItem>? complaintInboxItems})
       : _complaintInboxItems = complaintInboxItems;
 
@@ -1558,6 +1563,8 @@ class _$ComplaintInboxSaveComplaintsEvent
   List<ComplaintsInboxItem>? get complaintInboxItems {
     final value = _complaintInboxItems;
     if (value == null) return null;
+    if (_complaintInboxItems is EqualUnmodifiableListView)
+      return _complaintInboxItems;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
@@ -1568,10 +1575,10 @@ class _$ComplaintInboxSaveComplaintsEvent
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ComplaintInboxSaveComplaintsEvent &&
+            other is _$ComplaintInboxSaveComplaintsEventImpl &&
             const DeepCollectionEquality()
                 .equals(other._complaintInboxItems, _complaintInboxItems));
   }
@@ -1583,10 +1590,10 @@ class _$ComplaintInboxSaveComplaintsEvent
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ComplaintInboxSaveComplaintsEventCopyWith<
-          _$ComplaintInboxSaveComplaintsEvent>
-      get copyWith => __$$ComplaintInboxSaveComplaintsEventCopyWithImpl<
-          _$ComplaintInboxSaveComplaintsEvent>(this, _$identity);
+  _$$ComplaintInboxSaveComplaintsEventImplCopyWith<
+          _$ComplaintInboxSaveComplaintsEventImpl>
+      get copyWith => __$$ComplaintInboxSaveComplaintsEventImplCopyWithImpl<
+          _$ComplaintInboxSaveComplaintsEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -1724,21 +1731,21 @@ abstract class ComplaintInboxSaveComplaintsEvent
     implements ComplaintInboxEvent {
   const factory ComplaintInboxSaveComplaintsEvent(
           {final List<ComplaintsInboxItem>? complaintInboxItems}) =
-      _$ComplaintInboxSaveComplaintsEvent;
+      _$ComplaintInboxSaveComplaintsEventImpl;
 
   List<ComplaintsInboxItem>? get complaintInboxItems;
   @JsonKey(ignore: true)
-  _$$ComplaintInboxSaveComplaintsEventCopyWith<
-          _$ComplaintInboxSaveComplaintsEvent>
+  _$$ComplaintInboxSaveComplaintsEventImplCopyWith<
+          _$ComplaintInboxSaveComplaintsEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$ComplaintInboxAddComplaintEventCopyWith<$Res> {
-  factory _$$ComplaintInboxAddComplaintEventCopyWith(
-          _$ComplaintInboxAddComplaintEvent value,
-          $Res Function(_$ComplaintInboxAddComplaintEvent) then) =
-      __$$ComplaintInboxAddComplaintEventCopyWithImpl<$Res>;
+abstract class _$$ComplaintInboxAddComplaintEventImplCopyWith<$Res> {
+  factory _$$ComplaintInboxAddComplaintEventImplCopyWith(
+          _$ComplaintInboxAddComplaintEventImpl value,
+          $Res Function(_$ComplaintInboxAddComplaintEventImpl) then) =
+      __$$ComplaintInboxAddComplaintEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call({ComplaintsInboxItem? complaintInboxItem});
 
@@ -1746,13 +1753,13 @@ abstract class _$$ComplaintInboxAddComplaintEventCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$ComplaintInboxAddComplaintEventCopyWithImpl<$Res>
+class __$$ComplaintInboxAddComplaintEventImplCopyWithImpl<$Res>
     extends _$ComplaintInboxEventCopyWithImpl<$Res,
-        _$ComplaintInboxAddComplaintEvent>
-    implements _$$ComplaintInboxAddComplaintEventCopyWith<$Res> {
-  __$$ComplaintInboxAddComplaintEventCopyWithImpl(
-      _$ComplaintInboxAddComplaintEvent _value,
-      $Res Function(_$ComplaintInboxAddComplaintEvent) _then)
+        _$ComplaintInboxAddComplaintEventImpl>
+    implements _$$ComplaintInboxAddComplaintEventImplCopyWith<$Res> {
+  __$$ComplaintInboxAddComplaintEventImplCopyWithImpl(
+      _$ComplaintInboxAddComplaintEventImpl _value,
+      $Res Function(_$ComplaintInboxAddComplaintEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1760,7 +1767,7 @@ class __$$ComplaintInboxAddComplaintEventCopyWithImpl<$Res>
   $Res call({
     Object? complaintInboxItem = freezed,
   }) {
-    return _then(_$ComplaintInboxAddComplaintEvent(
+    return _then(_$ComplaintInboxAddComplaintEventImpl(
       complaintInboxItem: freezed == complaintInboxItem
           ? _value.complaintInboxItem
           : complaintInboxItem // ignore: cast_nullable_to_non_nullable
@@ -1784,9 +1791,9 @@ class __$$ComplaintInboxAddComplaintEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ComplaintInboxAddComplaintEvent
+class _$ComplaintInboxAddComplaintEventImpl
     implements ComplaintInboxAddComplaintEvent {
-  const _$ComplaintInboxAddComplaintEvent({this.complaintInboxItem});
+  const _$ComplaintInboxAddComplaintEventImpl({this.complaintInboxItem});
 
   @override
   final ComplaintsInboxItem? complaintInboxItem;
@@ -1797,10 +1804,10 @@ class _$ComplaintInboxAddComplaintEvent
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ComplaintInboxAddComplaintEvent &&
+            other is _$ComplaintInboxAddComplaintEventImpl &&
             (identical(other.complaintInboxItem, complaintInboxItem) ||
                 other.complaintInboxItem == complaintInboxItem));
   }
@@ -1811,9 +1818,10 @@ class _$ComplaintInboxAddComplaintEvent
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ComplaintInboxAddComplaintEventCopyWith<_$ComplaintInboxAddComplaintEvent>
-      get copyWith => __$$ComplaintInboxAddComplaintEventCopyWithImpl<
-          _$ComplaintInboxAddComplaintEvent>(this, _$identity);
+  _$$ComplaintInboxAddComplaintEventImplCopyWith<
+          _$ComplaintInboxAddComplaintEventImpl>
+      get copyWith => __$$ComplaintInboxAddComplaintEventImplCopyWithImpl<
+          _$ComplaintInboxAddComplaintEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -1950,10 +1958,11 @@ class _$ComplaintInboxAddComplaintEvent
 abstract class ComplaintInboxAddComplaintEvent implements ComplaintInboxEvent {
   const factory ComplaintInboxAddComplaintEvent(
           {final ComplaintsInboxItem? complaintInboxItem}) =
-      _$ComplaintInboxAddComplaintEvent;
+      _$ComplaintInboxAddComplaintEventImpl;
 
   ComplaintsInboxItem? get complaintInboxItem;
   @JsonKey(ignore: true)
-  _$$ComplaintInboxAddComplaintEventCopyWith<_$ComplaintInboxAddComplaintEvent>
+  _$$ComplaintInboxAddComplaintEventImplCopyWith<
+          _$ComplaintInboxAddComplaintEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

@@ -17,7 +17,7 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
     final select = sql.select(sql.projectBeneficiary)
       ..where(
         (tbl) => buildOr([
-          if (query.projectId != null) tbl.projectId.equals(query.projectId),
+          if (query.projectId != null) tbl.projectId.equals(query.projectId!),
           if (query.beneficiaryRegistrationDateGte != null)
             tbl.dateOfRegistration.isBiggerOrEqualValue(
               query.beneficiaryRegistrationDateGte!.millisecondsSinceEpoch,
@@ -77,7 +77,7 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
               [
                 if (query.tag != null)
                   sql.projectBeneficiary.tag.equals(
-                    query.tag,
+                    query.tag!,
                   ),
                 if (query.clientReferenceId != null)
                   sql.projectBeneficiary.clientReferenceId.isIn(
@@ -88,19 +88,19 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
                       .isIn(query.beneficiaryClientReferenceId!),
                 if (query.id != null)
                   sql.projectBeneficiary.id.equals(
-                    query.id,
+                    query.id!,
                   ),
                 if (query.projectId != null)
                   sql.projectBeneficiary.projectId.equals(
-                    query.projectId,
+                    query.projectId!,
                   ),
                 if (query.beneficiaryId != null)
                   sql.projectBeneficiary.beneficiaryId.equals(
-                    query.beneficiaryId,
+                    query.beneficiaryId!,
                   ),
                 if (query.dateOfRegistrationTime != null)
                   sql.projectBeneficiary.dateOfRegistration.equals(
-                    query.dateOfRegistration,
+                    query.dateOfRegistration!,
                   ),
                 if (userId != null)
                   sql.projectBeneficiary.auditCreatedBy.equals(

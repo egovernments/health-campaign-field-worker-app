@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
@@ -35,6 +37,7 @@ class _BoundarySelectionPageState
   int pendingSyncCount = 0;
   final clickedStatus = ValueNotifier<bool>(false);
   var expenseTypeCtrl = TextEditingController();
+  StreamController<double> downloadProgress = StreamController<double>();
 
   Map<String, TextEditingController> dropdownControllers = {};
 
@@ -70,8 +73,8 @@ class _BoundarySelectionPageState
         .toList()
         .isNotEmpty;
 
-    return WillPopScope(
-      onWillPop: () async => shouldPop,
+    return PopScope(
+      canPop: shouldPop,
       child: BlocBuilder<BoundaryBloc, BoundaryState>(
         builder: (context, state) {
           final selectedBoundary = state.selectedBoundaryMap.entries
@@ -141,7 +144,15 @@ class _BoundarySelectionPageState
                                             'No Value';
                                       },
                                       onSelected: (value) {
-                                        if (value == null) return;
+                                              if (value == null) return;
+                                        value as BoundaryModel;
+
+                                            context.read<BoundaryBloc>().add(
+                                              BoundarySearchEvent(
+                                        boundaryNum: (value).boundaryNum! + 1,
+                                         code:  (value).code!,
+                                              ),
+                                            );
 
                                         context.read<BoundaryBloc>().add(
                                               BoundarySelectEvent(
@@ -281,29 +292,42 @@ class _BoundarySelectionPageState
                                       isPop: true,
                                     );
                                   },
-                                  inProgress: (syncCount, totalCount) =>
-                                      showDownloadDialog(
-                                    context,
-                                    model: DownloadBeneficiary(
-                                      title: localizations.translate(
-                                        i18.beneficiaryDetails
-                                            .dataDownloadInProgress,
+                                  inProgress: (syncCount, totalCount) {
+                                    downloadProgress.add(
+                                      min(
+                                        (syncCount) / (totalCount),
+                                        1,
                                       ),
-                                      projectId: context.projectId,
-                                      boundary: selectedBoundary!.value!.code
-                                          .toString(),
-                                      appConfiguartion: appConfiguration,
-                                      syncCount: syncCount,
-                                      totalCount: totalCount,
-                                      prefixLabel: syncCount.toString(),
-                                      suffixLabel: totalCount.toString(),
-                                      boundaryName: selectedBoundary.value!.name
-                                          .toString(),
-                                    ),
-                                    dialogType:
-                                        DigitProgressDialogType.inProgress,
-                                    isPop: true,
-                                  ),
+                                    );
+                                    if (syncCount < 1) {
+                                      showDownloadDialog(
+                                        context,
+                                        model: DownloadBeneficiary(
+                                          title: localizations.translate(
+                                            i18.beneficiaryDetails
+                                                .dataDownloadInProgress,
+                                          ),
+                                          projectId: context.projectId,
+                                          boundary: selectedBoundary!
+                                              .value!.code
+                                              .toString(),
+                                          appConfiguartion: appConfiguration,
+                                          syncCount: syncCount,
+                                          totalCount: totalCount,
+                                          prefixLabel: syncCount.toString(),
+                                          suffixLabel: totalCount.toString(),
+                                          boundaryName: selectedBoundary
+                                              .value!.name
+                                              .toString(),
+                                        ),
+                                        dialogType:
+                                            DigitProgressDialogType.inProgress,
+                                        isPop: true,
+                                        downloadProgressController:
+                                            downloadProgress,
+                                      );
+                                    }
+                                  },
                                   success: (result) {
                                     int? epochTime = result.lastSyncedTime;
 
@@ -590,6 +614,7 @@ class _BoundarySelectionPageState
       // Check if the form control value is null
       if (formControl.value == null) {
         formControl.setErrors({'': true});
+
         // Return true if any form control has a null value
         return true;
       }

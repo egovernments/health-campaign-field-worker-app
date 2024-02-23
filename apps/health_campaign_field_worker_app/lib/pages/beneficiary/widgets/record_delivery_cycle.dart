@@ -226,8 +226,7 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                                   .firstWhereOrNull(
                                     (f) =>
                                         f.key ==
-                                        AdditionalFieldsType.doseIndex
-                                            .toValue(),
+                                        AdditionalFieldsType.doseIndex.name,
                                   )
                                   ?.value ==
                               '0${item.id}' &&
@@ -235,8 +234,7 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                                   .firstWhereOrNull(
                                     (c) =>
                                         c.key ==
-                                        AdditionalFieldsType.cycleIndex
-                                            .toValue(),
+                                        AdditionalFieldsType.cycleIndex.name,
                                   )
                                   ?.value ==
                               '0${e.id}')
@@ -244,21 +242,20 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
 
                   return TableDataRow([
                     TableData(
-                      'Dose ${e.deliveries!.indexOf(item) + 1}',
+                      '${localizations.translate(i18.deliverIntervention.dose)} ${e.deliveries!.indexOf(item) + 1}',
                       cellKey: 'dose',
                     ),
                     TableData(
                       localizations.translate(
                         index == selectedIndex
-                            ? Status.toAdminister.toValue()
-                            : tasks?.status ?? Status.inComplete.toValue(),
+                            ? Status.toAdminister.name
+                            : tasks?.status ?? Status.inComplete.name,
                       ),
                       cellKey: 'status',
                       style: TextStyle(
                         color: index == selectedIndex
                             ? null
-                            : tasks?.status ==
-                                    Status.administeredSuccess.toValue()
+                            : tasks?.status == Status.administeredSuccess.name
                                 ? DigitTheme
                                     .instance.colorScheme.onSurfaceVariant
                                 : DigitTheme.instance.colorScheme.error,
@@ -267,15 +264,15 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                       ),
                     ),
                     TableData(
-                      tasks?.status == Status.administeredFailed.toValue() ||
+                      tasks?.status == Status.administeredFailed.name ||
                               (tasks?.additionalFields?.fields
                                       .where((e) =>
                                           e.key ==
-                                          AdditionalFieldsType.deliveryStrategy
-                                              .toValue())
+                                          AdditionalFieldsType
+                                              .deliveryStrategy.name)
                                       .firstOrNull
                                       ?.value ==
-                                  DeliverStrategyType.indirect.toValue())
+                                  DeliverStrategyType.indirect.name)
                           ? ' -- '
                           : tasks?.clientAuditDetails?.createdTime.toDateTime
                                   .getFormattedDate() ??
@@ -291,9 +288,9 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
             const SizedBox(
               height: 16,
             ),
-              const Divider(
-                thickness: 1.0,
-              ),
+            const Divider(
+              thickness: 1.0,
+            ),
           ],
         ),
       );

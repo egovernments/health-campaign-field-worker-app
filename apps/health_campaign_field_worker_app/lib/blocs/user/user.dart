@@ -5,7 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../data/data_repository.dart';
-import '../../models/data_model.mapper.g.dart';
+import '../../models/data_model.dart';
 import '../../models/entities/user.dart';
 part 'user.freezed.dart';
 
@@ -51,7 +51,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
           entityResponse.whereType<Map<String, dynamic>>();
 
       final results =
-          entityList.map((e) => Mapper.fromMap<UserModel>(e)).toList();
+          entityList.map((e) => UserModelMapper.fromMap(e)).toList();
       emit(UserState.user(userModel: results.first));
     } on DioError catch (error) {
       // [TODO]- Need to create a model mapper for error;

@@ -6,13 +6,14 @@ part of 'bandwidth_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_BandwidthModel _$$_BandwidthModelFromJson(Map<String, dynamic> json) =>
-    _$_BandwidthModel(
+_$BandwidthModelImpl _$$BandwidthModelImplFromJson(Map<String, dynamic> json) =>
+    _$BandwidthModelImpl(
       userId: json['userId'] as String,
       batchSize: json['batchSize'] as int,
     );
 
-Map<String, dynamic> _$$_BandwidthModelToJson(_$_BandwidthModel instance) =>
+Map<String, dynamic> _$$BandwidthModelImplToJson(
+        _$BandwidthModelImpl instance) =>
     <String, dynamic>{
       'userId': instance.userId,
       'batchSize': instance.batchSize,

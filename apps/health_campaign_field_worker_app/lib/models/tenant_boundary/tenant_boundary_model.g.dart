@@ -6,9 +6,9 @@ part of 'tenant_boundary_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_TargetBoundaryWrapperModel _$$_TargetBoundaryWrapperModelFromJson(
+_$TargetBoundaryWrapperModelImpl _$$TargetBoundaryWrapperModelImplFromJson(
         Map<String, dynamic> json) =>
-    _$_TargetBoundaryWrapperModel(
+    _$TargetBoundaryWrapperModelImpl(
       tenantId: json['tenantId'] as String,
       moduleName: json['moduleName'] as String,
       boundaries: (json['TenantBoundary'] as List<dynamic>?)
@@ -16,8 +16,8 @@ _$_TargetBoundaryWrapperModel _$$_TargetBoundaryWrapperModelFromJson(
           .toList(),
     );
 
-Map<String, dynamic> _$$_TargetBoundaryWrapperModelToJson(
-    _$_TargetBoundaryWrapperModel instance) {
+Map<String, dynamic> _$$TargetBoundaryWrapperModelImplToJson(
+    _$TargetBoundaryWrapperModelImpl instance) {
   final val = <String, dynamic>{
     'tenantId': instance.tenantId,
     'moduleName': instance.moduleName,
@@ -34,38 +34,38 @@ Map<String, dynamic> _$$_TargetBoundaryWrapperModelToJson(
   return val;
 }
 
-_$_TenantBoundaryModel _$$_TenantBoundaryModelFromJson(
+_$TenantBoundaryModelImpl _$$TenantBoundaryModelImplFromJson(
         Map<String, dynamic> json) =>
-    _$_TenantBoundaryModel(
+    _$TenantBoundaryModelImpl(
       hierarchyType: HierarchyTypeModel.fromJson(
           json['hierarchyType'] as Map<String, dynamic>),
       boundary:
           BoundaryModel.fromJson(json['boundary'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$$_TenantBoundaryModelToJson(
-        _$_TenantBoundaryModel instance) =>
+Map<String, dynamic> _$$TenantBoundaryModelImplToJson(
+        _$TenantBoundaryModelImpl instance) =>
     <String, dynamic>{
       'hierarchyType': instance.hierarchyType.toJson(),
       'boundary': instance.boundary.toJson(),
     };
 
-_$_HierarchyTypeModel _$$_HierarchyTypeModelFromJson(
+_$HierarchyTypeModelImpl _$$HierarchyTypeModelImplFromJson(
         Map<String, dynamic> json) =>
-    _$_HierarchyTypeModel(
+    _$HierarchyTypeModelImpl(
       name: json['name'] as String,
       code: json['code'] as String,
     );
 
-Map<String, dynamic> _$$_HierarchyTypeModelToJson(
-        _$_HierarchyTypeModel instance) =>
+Map<String, dynamic> _$$HierarchyTypeModelImplToJson(
+        _$HierarchyTypeModelImpl instance) =>
     <String, dynamic>{
       'name': instance.name,
       'code': instance.code,
     };
 
-_$_BoundaryModel _$$_BoundaryModelFromJson(Map<String, dynamic> json) =>
-    _$_BoundaryModel(
+_$BoundaryModelImpl _$$BoundaryModelImplFromJson(Map<String, dynamic> json) =>
+    _$BoundaryModelImpl(
       id: json['id'] as String?,
       boundaryNum: json['boundaryNum'] as int,
       name: json['name'] as String,
@@ -79,7 +79,7 @@ _$_BoundaryModel _$$_BoundaryModelFromJson(Map<String, dynamic> json) =>
           .toList(),
     );
 
-Map<String, dynamic> _$$_BoundaryModelToJson(_$_BoundaryModel instance) {
+Map<String, dynamic> _$$BoundaryModelImplToJson(_$BoundaryModelImpl instance) {
   final val = <String, dynamic>{
     'id': instance.id,
     'boundaryNum': instance.boundaryNum,

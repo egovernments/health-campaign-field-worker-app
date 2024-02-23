@@ -1,0 +1,60 @@
+{
+  "name": "hFReferral",
+  "createRepository": true,
+  "isSearchResponsePlural": true,
+  "attributes": [
+    {
+      "name": "id",
+      "type": "String",
+      "includeForQuery": true
+    },
+    {
+      "name": "tenantId",
+      "type": "String",
+      "includeForQuery": true
+    },
+    {
+      "name": "name",
+      "type": "String",
+      "includeForQuery": true,
+      "includeForEntity": true,
+      "includeForTable": true
+    },
+    {
+      "name": "projectId",
+      "type": "String",
+      "includeForQuery": true
+    },
+    {
+      "name": "projectFacilityId",
+      "type": "String",
+      "includeForQuery": true
+    },
+    {
+      "name": "symptomSurveyId",
+      "type": "String",
+      "includeForQuery": true
+    },
+    {
+      "name": "beneficiaryId",
+      "type": "String",
+      "includeForQuery": true
+    },
+    {
+      "name": "referralCode",
+      "type": "String",
+      "includeForQuery": true
+    },
+    {
+      "name": "nationalLevelId",
+      "type": "String",
+      "includeForQuery": true
+    },
+    {
+      "name": "symptom",
+      "type": "String",
+      "includeForQuery": true
+    }
+  ],
+  "isEnum": false
+}

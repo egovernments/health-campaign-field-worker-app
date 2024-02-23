@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'product_variant.dart';
 
@@ -89,22 +89,25 @@ class _$ProductVariantEventCopyWithImpl<$Res, $Val extends ProductVariantEvent>
 }
 
 /// @nodoc
-abstract class _$$ProductVariantLoadEventCopyWith<$Res>
+abstract class _$$ProductVariantLoadEventImplCopyWith<$Res>
     implements $ProductVariantEventCopyWith<$Res> {
-  factory _$$ProductVariantLoadEventCopyWith(_$ProductVariantLoadEvent value,
-          $Res Function(_$ProductVariantLoadEvent) then) =
-      __$$ProductVariantLoadEventCopyWithImpl<$Res>;
+  factory _$$ProductVariantLoadEventImplCopyWith(
+          _$ProductVariantLoadEventImpl value,
+          $Res Function(_$ProductVariantLoadEventImpl) then) =
+      __$$ProductVariantLoadEventImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({ProjectResourceSearchModel query});
 }
 
 /// @nodoc
-class __$$ProductVariantLoadEventCopyWithImpl<$Res>
-    extends _$ProductVariantEventCopyWithImpl<$Res, _$ProductVariantLoadEvent>
-    implements _$$ProductVariantLoadEventCopyWith<$Res> {
-  __$$ProductVariantLoadEventCopyWithImpl(_$ProductVariantLoadEvent _value,
-      $Res Function(_$ProductVariantLoadEvent) _then)
+class __$$ProductVariantLoadEventImplCopyWithImpl<$Res>
+    extends _$ProductVariantEventCopyWithImpl<$Res,
+        _$ProductVariantLoadEventImpl>
+    implements _$$ProductVariantLoadEventImplCopyWith<$Res> {
+  __$$ProductVariantLoadEventImplCopyWithImpl(
+      _$ProductVariantLoadEventImpl _value,
+      $Res Function(_$ProductVariantLoadEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -112,7 +115,7 @@ class __$$ProductVariantLoadEventCopyWithImpl<$Res>
   $Res call({
     Object? query = null,
   }) {
-    return _then(_$ProductVariantLoadEvent(
+    return _then(_$ProductVariantLoadEventImpl(
       query: null == query
           ? _value.query
           : query // ignore: cast_nullable_to_non_nullable
@@ -123,8 +126,8 @@ class __$$ProductVariantLoadEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ProductVariantLoadEvent implements ProductVariantLoadEvent {
-  const _$ProductVariantLoadEvent({required this.query});
+class _$ProductVariantLoadEventImpl implements ProductVariantLoadEvent {
+  const _$ProductVariantLoadEventImpl({required this.query});
 
   @override
   final ProjectResourceSearchModel query;
@@ -135,10 +138,10 @@ class _$ProductVariantLoadEvent implements ProductVariantLoadEvent {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ProductVariantLoadEvent &&
+            other is _$ProductVariantLoadEventImpl &&
             (identical(other.query, query) || other.query == query));
   }
 
@@ -148,9 +151,9 @@ class _$ProductVariantLoadEvent implements ProductVariantLoadEvent {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ProductVariantLoadEventCopyWith<_$ProductVariantLoadEvent> get copyWith =>
-      __$$ProductVariantLoadEventCopyWithImpl<_$ProductVariantLoadEvent>(
-          this, _$identity);
+  _$$ProductVariantLoadEventImplCopyWith<_$ProductVariantLoadEventImpl>
+      get copyWith => __$$ProductVariantLoadEventImplCopyWithImpl<
+          _$ProductVariantLoadEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -212,14 +215,14 @@ class _$ProductVariantLoadEvent implements ProductVariantLoadEvent {
 abstract class ProductVariantLoadEvent implements ProductVariantEvent {
   const factory ProductVariantLoadEvent(
           {required final ProjectResourceSearchModel query}) =
-      _$ProductVariantLoadEvent;
+      _$ProductVariantLoadEventImpl;
 
   @override
   ProjectResourceSearchModel get query;
   @override
   @JsonKey(ignore: true)
-  _$$ProductVariantLoadEventCopyWith<_$ProductVariantLoadEvent> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$ProductVariantLoadEventImplCopyWith<_$ProductVariantLoadEventImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -290,28 +293,28 @@ class _$ProductVariantStateCopyWithImpl<$Res, $Val extends ProductVariantState>
 }
 
 /// @nodoc
-abstract class _$$ProductVariantLoadingStateCopyWith<$Res> {
-  factory _$$ProductVariantLoadingStateCopyWith(
-          _$ProductVariantLoadingState value,
-          $Res Function(_$ProductVariantLoadingState) then) =
-      __$$ProductVariantLoadingStateCopyWithImpl<$Res>;
+abstract class _$$ProductVariantLoadingStateImplCopyWith<$Res> {
+  factory _$$ProductVariantLoadingStateImplCopyWith(
+          _$ProductVariantLoadingStateImpl value,
+          $Res Function(_$ProductVariantLoadingStateImpl) then) =
+      __$$ProductVariantLoadingStateImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$ProductVariantLoadingStateCopyWithImpl<$Res>
+class __$$ProductVariantLoadingStateImplCopyWithImpl<$Res>
     extends _$ProductVariantStateCopyWithImpl<$Res,
-        _$ProductVariantLoadingState>
-    implements _$$ProductVariantLoadingStateCopyWith<$Res> {
-  __$$ProductVariantLoadingStateCopyWithImpl(
-      _$ProductVariantLoadingState _value,
-      $Res Function(_$ProductVariantLoadingState) _then)
+        _$ProductVariantLoadingStateImpl>
+    implements _$$ProductVariantLoadingStateImplCopyWith<$Res> {
+  __$$ProductVariantLoadingStateImplCopyWithImpl(
+      _$ProductVariantLoadingStateImpl _value,
+      $Res Function(_$ProductVariantLoadingStateImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$ProductVariantLoadingState implements ProductVariantLoadingState {
-  const _$ProductVariantLoadingState();
+class _$ProductVariantLoadingStateImpl implements ProductVariantLoadingState {
+  const _$ProductVariantLoadingStateImpl();
 
   @override
   String toString() {
@@ -319,10 +322,10 @@ class _$ProductVariantLoadingState implements ProductVariantLoadingState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ProductVariantLoadingState);
+            other is _$ProductVariantLoadingStateImpl);
   }
 
   @override
@@ -399,29 +402,32 @@ class _$ProductVariantLoadingState implements ProductVariantLoadingState {
 }
 
 abstract class ProductVariantLoadingState implements ProductVariantState {
-  const factory ProductVariantLoadingState() = _$ProductVariantLoadingState;
+  const factory ProductVariantLoadingState() = _$ProductVariantLoadingStateImpl;
 }
 
 /// @nodoc
-abstract class _$$ProductVariantEmptyStateCopyWith<$Res> {
-  factory _$$ProductVariantEmptyStateCopyWith(_$ProductVariantEmptyState value,
-          $Res Function(_$ProductVariantEmptyState) then) =
-      __$$ProductVariantEmptyStateCopyWithImpl<$Res>;
+abstract class _$$ProductVariantEmptyStateImplCopyWith<$Res> {
+  factory _$$ProductVariantEmptyStateImplCopyWith(
+          _$ProductVariantEmptyStateImpl value,
+          $Res Function(_$ProductVariantEmptyStateImpl) then) =
+      __$$ProductVariantEmptyStateImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$ProductVariantEmptyStateCopyWithImpl<$Res>
-    extends _$ProductVariantStateCopyWithImpl<$Res, _$ProductVariantEmptyState>
-    implements _$$ProductVariantEmptyStateCopyWith<$Res> {
-  __$$ProductVariantEmptyStateCopyWithImpl(_$ProductVariantEmptyState _value,
-      $Res Function(_$ProductVariantEmptyState) _then)
+class __$$ProductVariantEmptyStateImplCopyWithImpl<$Res>
+    extends _$ProductVariantStateCopyWithImpl<$Res,
+        _$ProductVariantEmptyStateImpl>
+    implements _$$ProductVariantEmptyStateImplCopyWith<$Res> {
+  __$$ProductVariantEmptyStateImplCopyWithImpl(
+      _$ProductVariantEmptyStateImpl _value,
+      $Res Function(_$ProductVariantEmptyStateImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$ProductVariantEmptyState implements ProductVariantEmptyState {
-  const _$ProductVariantEmptyState();
+class _$ProductVariantEmptyStateImpl implements ProductVariantEmptyState {
+  const _$ProductVariantEmptyStateImpl();
 
   @override
   String toString() {
@@ -429,10 +435,10 @@ class _$ProductVariantEmptyState implements ProductVariantEmptyState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ProductVariantEmptyState);
+            other is _$ProductVariantEmptyStateImpl);
   }
 
   @override
@@ -509,27 +515,27 @@ class _$ProductVariantEmptyState implements ProductVariantEmptyState {
 }
 
 abstract class ProductVariantEmptyState implements ProductVariantState {
-  const factory ProductVariantEmptyState() = _$ProductVariantEmptyState;
+  const factory ProductVariantEmptyState() = _$ProductVariantEmptyStateImpl;
 }
 
 /// @nodoc
-abstract class _$$ProductVariantFetchedStateCopyWith<$Res> {
-  factory _$$ProductVariantFetchedStateCopyWith(
-          _$ProductVariantFetchedState value,
-          $Res Function(_$ProductVariantFetchedState) then) =
-      __$$ProductVariantFetchedStateCopyWithImpl<$Res>;
+abstract class _$$ProductVariantFetchedStateImplCopyWith<$Res> {
+  factory _$$ProductVariantFetchedStateImplCopyWith(
+          _$ProductVariantFetchedStateImpl value,
+          $Res Function(_$ProductVariantFetchedStateImpl) then) =
+      __$$ProductVariantFetchedStateImplCopyWithImpl<$Res>;
   @useResult
   $Res call({List<ProductVariantModel> productVariants});
 }
 
 /// @nodoc
-class __$$ProductVariantFetchedStateCopyWithImpl<$Res>
+class __$$ProductVariantFetchedStateImplCopyWithImpl<$Res>
     extends _$ProductVariantStateCopyWithImpl<$Res,
-        _$ProductVariantFetchedState>
-    implements _$$ProductVariantFetchedStateCopyWith<$Res> {
-  __$$ProductVariantFetchedStateCopyWithImpl(
-      _$ProductVariantFetchedState _value,
-      $Res Function(_$ProductVariantFetchedState) _then)
+        _$ProductVariantFetchedStateImpl>
+    implements _$$ProductVariantFetchedStateImplCopyWith<$Res> {
+  __$$ProductVariantFetchedStateImplCopyWithImpl(
+      _$ProductVariantFetchedStateImpl _value,
+      $Res Function(_$ProductVariantFetchedStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -537,7 +543,7 @@ class __$$ProductVariantFetchedStateCopyWithImpl<$Res>
   $Res call({
     Object? productVariants = null,
   }) {
-    return _then(_$ProductVariantFetchedState(
+    return _then(_$ProductVariantFetchedStateImpl(
       productVariants: null == productVariants
           ? _value._productVariants
           : productVariants // ignore: cast_nullable_to_non_nullable
@@ -548,14 +554,15 @@ class __$$ProductVariantFetchedStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ProductVariantFetchedState implements ProductVariantFetchedState {
-  const _$ProductVariantFetchedState(
+class _$ProductVariantFetchedStateImpl implements ProductVariantFetchedState {
+  const _$ProductVariantFetchedStateImpl(
       {required final List<ProductVariantModel> productVariants})
       : _productVariants = productVariants;
 
   final List<ProductVariantModel> _productVariants;
   @override
   List<ProductVariantModel> get productVariants {
+    if (_productVariants is EqualUnmodifiableListView) return _productVariants;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_productVariants);
   }
@@ -566,10 +573,10 @@ class _$ProductVariantFetchedState implements ProductVariantFetchedState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ProductVariantFetchedState &&
+            other is _$ProductVariantFetchedStateImpl &&
             const DeepCollectionEquality()
                 .equals(other._productVariants, _productVariants));
   }
@@ -581,9 +588,9 @@ class _$ProductVariantFetchedState implements ProductVariantFetchedState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ProductVariantFetchedStateCopyWith<_$ProductVariantFetchedState>
-      get copyWith => __$$ProductVariantFetchedStateCopyWithImpl<
-          _$ProductVariantFetchedState>(this, _$identity);
+  _$$ProductVariantFetchedStateImplCopyWith<_$ProductVariantFetchedStateImpl>
+      get copyWith => __$$ProductVariantFetchedStateImplCopyWithImpl<
+          _$ProductVariantFetchedStateImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -658,10 +665,10 @@ class _$ProductVariantFetchedState implements ProductVariantFetchedState {
 abstract class ProductVariantFetchedState implements ProductVariantState {
   const factory ProductVariantFetchedState(
           {required final List<ProductVariantModel> productVariants}) =
-      _$ProductVariantFetchedState;
+      _$ProductVariantFetchedStateImpl;
 
   List<ProductVariantModel> get productVariants;
   @JsonKey(ignore: true)
-  _$$ProductVariantFetchedStateCopyWith<_$ProductVariantFetchedState>
+  _$$ProductVariantFetchedStateImplCopyWith<_$ProductVariantFetchedStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

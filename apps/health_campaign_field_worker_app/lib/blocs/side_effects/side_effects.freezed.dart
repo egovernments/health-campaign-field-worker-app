@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'side_effects.dart';
 
@@ -77,20 +77,22 @@ class _$SideEffectsEventCopyWithImpl<$Res, $Val extends SideEffectsEvent>
 }
 
 /// @nodoc
-abstract class _$$SideEffectsSubmitEventCopyWith<$Res> {
-  factory _$$SideEffectsSubmitEventCopyWith(_$SideEffectsSubmitEvent value,
-          $Res Function(_$SideEffectsSubmitEvent) then) =
-      __$$SideEffectsSubmitEventCopyWithImpl<$Res>;
+abstract class _$$SideEffectsSubmitEventImplCopyWith<$Res> {
+  factory _$$SideEffectsSubmitEventImplCopyWith(
+          _$SideEffectsSubmitEventImpl value,
+          $Res Function(_$SideEffectsSubmitEventImpl) then) =
+      __$$SideEffectsSubmitEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call({SideEffectModel sideEffect, bool isEditing});
 }
 
 /// @nodoc
-class __$$SideEffectsSubmitEventCopyWithImpl<$Res>
-    extends _$SideEffectsEventCopyWithImpl<$Res, _$SideEffectsSubmitEvent>
-    implements _$$SideEffectsSubmitEventCopyWith<$Res> {
-  __$$SideEffectsSubmitEventCopyWithImpl(_$SideEffectsSubmitEvent _value,
-      $Res Function(_$SideEffectsSubmitEvent) _then)
+class __$$SideEffectsSubmitEventImplCopyWithImpl<$Res>
+    extends _$SideEffectsEventCopyWithImpl<$Res, _$SideEffectsSubmitEventImpl>
+    implements _$$SideEffectsSubmitEventImplCopyWith<$Res> {
+  __$$SideEffectsSubmitEventImplCopyWithImpl(
+      _$SideEffectsSubmitEventImpl _value,
+      $Res Function(_$SideEffectsSubmitEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -99,7 +101,7 @@ class __$$SideEffectsSubmitEventCopyWithImpl<$Res>
     Object? sideEffect = null,
     Object? isEditing = null,
   }) {
-    return _then(_$SideEffectsSubmitEvent(
+    return _then(_$SideEffectsSubmitEventImpl(
       null == sideEffect
           ? _value.sideEffect
           : sideEffect // ignore: cast_nullable_to_non_nullable
@@ -114,8 +116,8 @@ class __$$SideEffectsSubmitEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$SideEffectsSubmitEvent implements SideEffectsSubmitEvent {
-  const _$SideEffectsSubmitEvent(this.sideEffect, this.isEditing);
+class _$SideEffectsSubmitEventImpl implements SideEffectsSubmitEvent {
+  const _$SideEffectsSubmitEventImpl(this.sideEffect, this.isEditing);
 
   @override
   final SideEffectModel sideEffect;
@@ -128,10 +130,10 @@ class _$SideEffectsSubmitEvent implements SideEffectsSubmitEvent {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$SideEffectsSubmitEvent &&
+            other is _$SideEffectsSubmitEventImpl &&
             (identical(other.sideEffect, sideEffect) ||
                 other.sideEffect == sideEffect) &&
             (identical(other.isEditing, isEditing) ||
@@ -144,9 +146,9 @@ class _$SideEffectsSubmitEvent implements SideEffectsSubmitEvent {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$SideEffectsSubmitEventCopyWith<_$SideEffectsSubmitEvent> get copyWith =>
-      __$$SideEffectsSubmitEventCopyWithImpl<_$SideEffectsSubmitEvent>(
-          this, _$identity);
+  _$$SideEffectsSubmitEventImplCopyWith<_$SideEffectsSubmitEventImpl>
+      get copyWith => __$$SideEffectsSubmitEventImplCopyWithImpl<
+          _$SideEffectsSubmitEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -216,30 +218,32 @@ class _$SideEffectsSubmitEvent implements SideEffectsSubmitEvent {
 abstract class SideEffectsSubmitEvent implements SideEffectsEvent {
   const factory SideEffectsSubmitEvent(
           final SideEffectModel sideEffect, final bool isEditing) =
-      _$SideEffectsSubmitEvent;
+      _$SideEffectsSubmitEventImpl;
 
   SideEffectModel get sideEffect;
   bool get isEditing;
   @JsonKey(ignore: true)
-  _$$SideEffectsSubmitEventCopyWith<_$SideEffectsSubmitEvent> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$SideEffectsSubmitEventImplCopyWith<_$SideEffectsSubmitEventImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$SideEffectsSearchEventCopyWith<$Res> {
-  factory _$$SideEffectsSearchEventCopyWith(_$SideEffectsSearchEvent value,
-          $Res Function(_$SideEffectsSearchEvent) then) =
-      __$$SideEffectsSearchEventCopyWithImpl<$Res>;
+abstract class _$$SideEffectsSearchEventImplCopyWith<$Res> {
+  factory _$$SideEffectsSearchEventImplCopyWith(
+          _$SideEffectsSearchEventImpl value,
+          $Res Function(_$SideEffectsSearchEventImpl) then) =
+      __$$SideEffectsSearchEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call({SideEffectSearchModel sideEffectSearch});
 }
 
 /// @nodoc
-class __$$SideEffectsSearchEventCopyWithImpl<$Res>
-    extends _$SideEffectsEventCopyWithImpl<$Res, _$SideEffectsSearchEvent>
-    implements _$$SideEffectsSearchEventCopyWith<$Res> {
-  __$$SideEffectsSearchEventCopyWithImpl(_$SideEffectsSearchEvent _value,
-      $Res Function(_$SideEffectsSearchEvent) _then)
+class __$$SideEffectsSearchEventImplCopyWithImpl<$Res>
+    extends _$SideEffectsEventCopyWithImpl<$Res, _$SideEffectsSearchEventImpl>
+    implements _$$SideEffectsSearchEventImplCopyWith<$Res> {
+  __$$SideEffectsSearchEventImplCopyWithImpl(
+      _$SideEffectsSearchEventImpl _value,
+      $Res Function(_$SideEffectsSearchEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -247,7 +251,7 @@ class __$$SideEffectsSearchEventCopyWithImpl<$Res>
   $Res call({
     Object? sideEffectSearch = null,
   }) {
-    return _then(_$SideEffectsSearchEvent(
+    return _then(_$SideEffectsSearchEventImpl(
       null == sideEffectSearch
           ? _value.sideEffectSearch
           : sideEffectSearch // ignore: cast_nullable_to_non_nullable
@@ -258,8 +262,8 @@ class __$$SideEffectsSearchEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$SideEffectsSearchEvent implements SideEffectsSearchEvent {
-  const _$SideEffectsSearchEvent(this.sideEffectSearch);
+class _$SideEffectsSearchEventImpl implements SideEffectsSearchEvent {
+  const _$SideEffectsSearchEventImpl(this.sideEffectSearch);
 
   @override
   final SideEffectSearchModel sideEffectSearch;
@@ -270,10 +274,10 @@ class _$SideEffectsSearchEvent implements SideEffectsSearchEvent {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$SideEffectsSearchEvent &&
+            other is _$SideEffectsSearchEventImpl &&
             (identical(other.sideEffectSearch, sideEffectSearch) ||
                 other.sideEffectSearch == sideEffectSearch));
   }
@@ -284,9 +288,9 @@ class _$SideEffectsSearchEvent implements SideEffectsSearchEvent {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$SideEffectsSearchEventCopyWith<_$SideEffectsSearchEvent> get copyWith =>
-      __$$SideEffectsSearchEventCopyWithImpl<_$SideEffectsSearchEvent>(
-          this, _$identity);
+  _$$SideEffectsSearchEventImplCopyWith<_$SideEffectsSearchEventImpl>
+      get copyWith => __$$SideEffectsSearchEventImplCopyWithImpl<
+          _$SideEffectsSearchEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -355,12 +359,13 @@ class _$SideEffectsSearchEvent implements SideEffectsSearchEvent {
 
 abstract class SideEffectsSearchEvent implements SideEffectsEvent {
   const factory SideEffectsSearchEvent(
-      final SideEffectSearchModel sideEffectSearch) = _$SideEffectsSearchEvent;
+          final SideEffectSearchModel sideEffectSearch) =
+      _$SideEffectsSearchEventImpl;
 
   SideEffectSearchModel get sideEffectSearch;
   @JsonKey(ignore: true)
-  _$$SideEffectsSearchEventCopyWith<_$SideEffectsSearchEvent> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$SideEffectsSearchEventImplCopyWith<_$SideEffectsSearchEventImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -418,22 +423,22 @@ class _$SideEffectsStateCopyWithImpl<$Res, $Val extends SideEffectsState>
 }
 
 /// @nodoc
-abstract class _$$_SideEffectsStateCopyWith<$Res>
+abstract class _$$SideEffectsStateImplCopyWith<$Res>
     implements $SideEffectsStateCopyWith<$Res> {
-  factory _$$_SideEffectsStateCopyWith(
-          _$_SideEffectsState value, $Res Function(_$_SideEffectsState) then) =
-      __$$_SideEffectsStateCopyWithImpl<$Res>;
+  factory _$$SideEffectsStateImplCopyWith(_$SideEffectsStateImpl value,
+          $Res Function(_$SideEffectsStateImpl) then) =
+      __$$SideEffectsStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({bool loading, bool isEditing, List<SideEffectModel>? sideEffects});
 }
 
 /// @nodoc
-class __$$_SideEffectsStateCopyWithImpl<$Res>
-    extends _$SideEffectsStateCopyWithImpl<$Res, _$_SideEffectsState>
-    implements _$$_SideEffectsStateCopyWith<$Res> {
-  __$$_SideEffectsStateCopyWithImpl(
-      _$_SideEffectsState _value, $Res Function(_$_SideEffectsState) _then)
+class __$$SideEffectsStateImplCopyWithImpl<$Res>
+    extends _$SideEffectsStateCopyWithImpl<$Res, _$SideEffectsStateImpl>
+    implements _$$SideEffectsStateImplCopyWith<$Res> {
+  __$$SideEffectsStateImplCopyWithImpl(_$SideEffectsStateImpl _value,
+      $Res Function(_$SideEffectsStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -443,7 +448,7 @@ class __$$_SideEffectsStateCopyWithImpl<$Res>
     Object? isEditing = null,
     Object? sideEffects = freezed,
   }) {
-    return _then(_$_SideEffectsState(
+    return _then(_$SideEffectsStateImpl(
       loading: null == loading
           ? _value.loading
           : loading // ignore: cast_nullable_to_non_nullable
@@ -462,8 +467,8 @@ class __$$_SideEffectsStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_SideEffectsState implements _SideEffectsState {
-  const _$_SideEffectsState(
+class _$SideEffectsStateImpl implements _SideEffectsState {
+  const _$SideEffectsStateImpl(
       {this.loading = false,
       this.isEditing = false,
       final List<SideEffectModel>? sideEffects})
@@ -480,6 +485,7 @@ class _$_SideEffectsState implements _SideEffectsState {
   List<SideEffectModel>? get sideEffects {
     final value = _sideEffects;
     if (value == null) return null;
+    if (_sideEffects is EqualUnmodifiableListView) return _sideEffects;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
@@ -490,10 +496,10 @@ class _$_SideEffectsState implements _SideEffectsState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_SideEffectsState &&
+            other is _$SideEffectsStateImpl &&
             (identical(other.loading, loading) || other.loading == loading) &&
             (identical(other.isEditing, isEditing) ||
                 other.isEditing == isEditing) &&
@@ -508,15 +514,16 @@ class _$_SideEffectsState implements _SideEffectsState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_SideEffectsStateCopyWith<_$_SideEffectsState> get copyWith =>
-      __$$_SideEffectsStateCopyWithImpl<_$_SideEffectsState>(this, _$identity);
+  _$$SideEffectsStateImplCopyWith<_$SideEffectsStateImpl> get copyWith =>
+      __$$SideEffectsStateImplCopyWithImpl<_$SideEffectsStateImpl>(
+          this, _$identity);
 }
 
 abstract class _SideEffectsState implements SideEffectsState {
   const factory _SideEffectsState(
       {final bool loading,
       final bool isEditing,
-      final List<SideEffectModel>? sideEffects}) = _$_SideEffectsState;
+      final List<SideEffectModel>? sideEffects}) = _$SideEffectsStateImpl;
 
   @override
   bool get loading;
@@ -526,6 +533,6 @@ abstract class _SideEffectsState implements SideEffectsState {
   List<SideEffectModel>? get sideEffects;
   @override
   @JsonKey(ignore: true)
-  _$$_SideEffectsStateCopyWith<_$_SideEffectsState> get copyWith =>
+  _$$SideEffectsStateImplCopyWith<_$SideEffectsStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
