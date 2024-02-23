@@ -77,7 +77,7 @@ Widget buildTableContent(
                 localizations.translate(
                   i18.beneficiaryDetails.beneficiaryAge,
                   //[TODO: Condition need to be handled in generic way,]
-                ): '${fetchProductVariant(item, individualModel)?.condition?.split('<=age<').first} - ${fetchProductVariant(item, individualModel)?.condition?.split('<=age<').last} months',
+                ): '${fetchProductVariant(item, individualModel)?.condition?.split('<=age<').first} - ${fetchProductVariant(item, individualModel)?.condition?.split('<=age<').last} ${localizations.translate(i18.memberCard.deliverDetailsMonthsText)}',
               },
             ),
             const Divider(
@@ -108,7 +108,7 @@ Widget buildTableContent(
                                   ?.indexOf(e) ==
                               0
                           ? TableData(
-                              'Dose ${deliverInterventionState.dose}',
+                              '${localizations.translate(i18.deliverIntervention.dose)} ${deliverInterventionState.dose}',
                               cellKey: 'dose',
                             )
                           : TableData(''),
@@ -121,7 +121,7 @@ Widget buildTableContent(
                   },
                 ),
               ],
-              columnWidth: 125,
+              columnWidth: 150,
               height: ((fetchProductVariant(item, individualModel)!
                                   .productVariants ??
                               [])

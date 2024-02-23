@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'service_registry_model.dart';
 
@@ -42,7 +42,7 @@ abstract class $ServiceRegistryPrimaryWrapperModelCopyWith<$Res> {
   @useResult
   $Res call(
       {@JsonKey(name: 'HCM-SERVICE-REGISTRY')
-          ServiceRegistrySecondaryWrapperModel? serviceRegistry});
+      ServiceRegistrySecondaryWrapperModel? serviceRegistry});
 
   $ServiceRegistrySecondaryWrapperModelCopyWith<$Res>? get serviceRegistry;
 }
@@ -86,30 +86,30 @@ class _$ServiceRegistryPrimaryWrapperModelCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_ServiceRegistryPrimaryWrapperModelCopyWith<$Res>
+abstract class _$$ServiceRegistryPrimaryWrapperModelImplCopyWith<$Res>
     implements $ServiceRegistryPrimaryWrapperModelCopyWith<$Res> {
-  factory _$$_ServiceRegistryPrimaryWrapperModelCopyWith(
-          _$_ServiceRegistryPrimaryWrapperModel value,
-          $Res Function(_$_ServiceRegistryPrimaryWrapperModel) then) =
-      __$$_ServiceRegistryPrimaryWrapperModelCopyWithImpl<$Res>;
+  factory _$$ServiceRegistryPrimaryWrapperModelImplCopyWith(
+          _$ServiceRegistryPrimaryWrapperModelImpl value,
+          $Res Function(_$ServiceRegistryPrimaryWrapperModelImpl) then) =
+      __$$ServiceRegistryPrimaryWrapperModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
       {@JsonKey(name: 'HCM-SERVICE-REGISTRY')
-          ServiceRegistrySecondaryWrapperModel? serviceRegistry});
+      ServiceRegistrySecondaryWrapperModel? serviceRegistry});
 
   @override
   $ServiceRegistrySecondaryWrapperModelCopyWith<$Res>? get serviceRegistry;
 }
 
 /// @nodoc
-class __$$_ServiceRegistryPrimaryWrapperModelCopyWithImpl<$Res>
+class __$$ServiceRegistryPrimaryWrapperModelImplCopyWithImpl<$Res>
     extends _$ServiceRegistryPrimaryWrapperModelCopyWithImpl<$Res,
-        _$_ServiceRegistryPrimaryWrapperModel>
-    implements _$$_ServiceRegistryPrimaryWrapperModelCopyWith<$Res> {
-  __$$_ServiceRegistryPrimaryWrapperModelCopyWithImpl(
-      _$_ServiceRegistryPrimaryWrapperModel _value,
-      $Res Function(_$_ServiceRegistryPrimaryWrapperModel) _then)
+        _$ServiceRegistryPrimaryWrapperModelImpl>
+    implements _$$ServiceRegistryPrimaryWrapperModelImplCopyWith<$Res> {
+  __$$ServiceRegistryPrimaryWrapperModelImplCopyWithImpl(
+      _$ServiceRegistryPrimaryWrapperModelImpl _value,
+      $Res Function(_$ServiceRegistryPrimaryWrapperModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -117,7 +117,7 @@ class __$$_ServiceRegistryPrimaryWrapperModelCopyWithImpl<$Res>
   $Res call({
     Object? serviceRegistry = freezed,
   }) {
-    return _then(_$_ServiceRegistryPrimaryWrapperModel(
+    return _then(_$ServiceRegistryPrimaryWrapperModelImpl(
       serviceRegistry: freezed == serviceRegistry
           ? _value.serviceRegistry
           : serviceRegistry // ignore: cast_nullable_to_non_nullable
@@ -128,14 +128,14 @@ class __$$_ServiceRegistryPrimaryWrapperModelCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_ServiceRegistryPrimaryWrapperModel
+class _$ServiceRegistryPrimaryWrapperModelImpl
     implements _ServiceRegistryPrimaryWrapperModel {
-  const _$_ServiceRegistryPrimaryWrapperModel(
+  const _$ServiceRegistryPrimaryWrapperModelImpl(
       {@JsonKey(name: 'HCM-SERVICE-REGISTRY') this.serviceRegistry});
 
-  factory _$_ServiceRegistryPrimaryWrapperModel.fromJson(
+  factory _$ServiceRegistryPrimaryWrapperModelImpl.fromJson(
           Map<String, dynamic> json) =>
-      _$$_ServiceRegistryPrimaryWrapperModelFromJson(json);
+      _$$ServiceRegistryPrimaryWrapperModelImplFromJson(json);
 
   @override
   @JsonKey(name: 'HCM-SERVICE-REGISTRY')
@@ -147,10 +147,10 @@ class _$_ServiceRegistryPrimaryWrapperModel
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ServiceRegistryPrimaryWrapperModel &&
+            other is _$ServiceRegistryPrimaryWrapperModelImpl &&
             (identical(other.serviceRegistry, serviceRegistry) ||
                 other.serviceRegistry == serviceRegistry));
   }
@@ -162,14 +162,14 @@ class _$_ServiceRegistryPrimaryWrapperModel
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ServiceRegistryPrimaryWrapperModelCopyWith<
-          _$_ServiceRegistryPrimaryWrapperModel>
-      get copyWith => __$$_ServiceRegistryPrimaryWrapperModelCopyWithImpl<
-          _$_ServiceRegistryPrimaryWrapperModel>(this, _$identity);
+  _$$ServiceRegistryPrimaryWrapperModelImplCopyWith<
+          _$ServiceRegistryPrimaryWrapperModelImpl>
+      get copyWith => __$$ServiceRegistryPrimaryWrapperModelImplCopyWithImpl<
+          _$ServiceRegistryPrimaryWrapperModelImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_ServiceRegistryPrimaryWrapperModelToJson(
+    return _$$ServiceRegistryPrimaryWrapperModelImplToJson(
       this,
     );
   }
@@ -179,20 +179,20 @@ abstract class _ServiceRegistryPrimaryWrapperModel
     implements ServiceRegistryPrimaryWrapperModel {
   const factory _ServiceRegistryPrimaryWrapperModel(
           {@JsonKey(name: 'HCM-SERVICE-REGISTRY')
-              final ServiceRegistrySecondaryWrapperModel? serviceRegistry}) =
-      _$_ServiceRegistryPrimaryWrapperModel;
+          final ServiceRegistrySecondaryWrapperModel? serviceRegistry}) =
+      _$ServiceRegistryPrimaryWrapperModelImpl;
 
   factory _ServiceRegistryPrimaryWrapperModel.fromJson(
           Map<String, dynamic> json) =
-      _$_ServiceRegistryPrimaryWrapperModel.fromJson;
+      _$ServiceRegistryPrimaryWrapperModelImpl.fromJson;
 
   @override
   @JsonKey(name: 'HCM-SERVICE-REGISTRY')
   ServiceRegistrySecondaryWrapperModel? get serviceRegistry;
   @override
   @JsonKey(ignore: true)
-  _$$_ServiceRegistryPrimaryWrapperModelCopyWith<
-          _$_ServiceRegistryPrimaryWrapperModel>
+  _$$ServiceRegistryPrimaryWrapperModelImplCopyWith<
+          _$ServiceRegistryPrimaryWrapperModelImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -224,7 +224,7 @@ abstract class $ServiceRegistrySecondaryWrapperModelCopyWith<$Res> {
   @useResult
   $Res call(
       {@JsonKey(name: 'serviceRegistry')
-          List<ServiceRegistryModel> serviceRegistryList});
+      List<ServiceRegistryModel> serviceRegistryList});
 }
 
 /// @nodoc
@@ -253,27 +253,27 @@ class _$ServiceRegistrySecondaryWrapperModelCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_ServiceRegistrySecondaryWrapperModelCopyWith<$Res>
+abstract class _$$ServiceRegistrySecondaryWrapperModelImplCopyWith<$Res>
     implements $ServiceRegistrySecondaryWrapperModelCopyWith<$Res> {
-  factory _$$_ServiceRegistrySecondaryWrapperModelCopyWith(
-          _$_ServiceRegistrySecondaryWrapperModel value,
-          $Res Function(_$_ServiceRegistrySecondaryWrapperModel) then) =
-      __$$_ServiceRegistrySecondaryWrapperModelCopyWithImpl<$Res>;
+  factory _$$ServiceRegistrySecondaryWrapperModelImplCopyWith(
+          _$ServiceRegistrySecondaryWrapperModelImpl value,
+          $Res Function(_$ServiceRegistrySecondaryWrapperModelImpl) then) =
+      __$$ServiceRegistrySecondaryWrapperModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
       {@JsonKey(name: 'serviceRegistry')
-          List<ServiceRegistryModel> serviceRegistryList});
+      List<ServiceRegistryModel> serviceRegistryList});
 }
 
 /// @nodoc
-class __$$_ServiceRegistrySecondaryWrapperModelCopyWithImpl<$Res>
+class __$$ServiceRegistrySecondaryWrapperModelImplCopyWithImpl<$Res>
     extends _$ServiceRegistrySecondaryWrapperModelCopyWithImpl<$Res,
-        _$_ServiceRegistrySecondaryWrapperModel>
-    implements _$$_ServiceRegistrySecondaryWrapperModelCopyWith<$Res> {
-  __$$_ServiceRegistrySecondaryWrapperModelCopyWithImpl(
-      _$_ServiceRegistrySecondaryWrapperModel _value,
-      $Res Function(_$_ServiceRegistrySecondaryWrapperModel) _then)
+        _$ServiceRegistrySecondaryWrapperModelImpl>
+    implements _$$ServiceRegistrySecondaryWrapperModelImplCopyWith<$Res> {
+  __$$ServiceRegistrySecondaryWrapperModelImplCopyWithImpl(
+      _$ServiceRegistrySecondaryWrapperModelImpl _value,
+      $Res Function(_$ServiceRegistrySecondaryWrapperModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -281,7 +281,7 @@ class __$$_ServiceRegistrySecondaryWrapperModelCopyWithImpl<$Res>
   $Res call({
     Object? serviceRegistryList = null,
   }) {
-    return _then(_$_ServiceRegistrySecondaryWrapperModel(
+    return _then(_$ServiceRegistrySecondaryWrapperModelImpl(
       serviceRegistryList: null == serviceRegistryList
           ? _value._serviceRegistryList
           : serviceRegistryList // ignore: cast_nullable_to_non_nullable
@@ -292,21 +292,23 @@ class __$$_ServiceRegistrySecondaryWrapperModelCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_ServiceRegistrySecondaryWrapperModel
+class _$ServiceRegistrySecondaryWrapperModelImpl
     implements _ServiceRegistrySecondaryWrapperModel {
-  const _$_ServiceRegistrySecondaryWrapperModel(
+  const _$ServiceRegistrySecondaryWrapperModelImpl(
       {@JsonKey(name: 'serviceRegistry')
-          final List<ServiceRegistryModel> serviceRegistryList = const []})
+      final List<ServiceRegistryModel> serviceRegistryList = const []})
       : _serviceRegistryList = serviceRegistryList;
 
-  factory _$_ServiceRegistrySecondaryWrapperModel.fromJson(
+  factory _$ServiceRegistrySecondaryWrapperModelImpl.fromJson(
           Map<String, dynamic> json) =>
-      _$$_ServiceRegistrySecondaryWrapperModelFromJson(json);
+      _$$ServiceRegistrySecondaryWrapperModelImplFromJson(json);
 
   final List<ServiceRegistryModel> _serviceRegistryList;
   @override
   @JsonKey(name: 'serviceRegistry')
   List<ServiceRegistryModel> get serviceRegistryList {
+    if (_serviceRegistryList is EqualUnmodifiableListView)
+      return _serviceRegistryList;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_serviceRegistryList);
   }
@@ -317,10 +319,10 @@ class _$_ServiceRegistrySecondaryWrapperModel
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ServiceRegistrySecondaryWrapperModel &&
+            other is _$ServiceRegistrySecondaryWrapperModelImpl &&
             const DeepCollectionEquality()
                 .equals(other._serviceRegistryList, _serviceRegistryList));
   }
@@ -333,14 +335,14 @@ class _$_ServiceRegistrySecondaryWrapperModel
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ServiceRegistrySecondaryWrapperModelCopyWith<
-          _$_ServiceRegistrySecondaryWrapperModel>
-      get copyWith => __$$_ServiceRegistrySecondaryWrapperModelCopyWithImpl<
-          _$_ServiceRegistrySecondaryWrapperModel>(this, _$identity);
+  _$$ServiceRegistrySecondaryWrapperModelImplCopyWith<
+          _$ServiceRegistrySecondaryWrapperModelImpl>
+      get copyWith => __$$ServiceRegistrySecondaryWrapperModelImplCopyWithImpl<
+          _$ServiceRegistrySecondaryWrapperModelImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_ServiceRegistrySecondaryWrapperModelToJson(
+    return _$$ServiceRegistrySecondaryWrapperModelImplToJson(
       this,
     );
   }
@@ -350,20 +352,20 @@ abstract class _ServiceRegistrySecondaryWrapperModel
     implements ServiceRegistrySecondaryWrapperModel {
   const factory _ServiceRegistrySecondaryWrapperModel(
           {@JsonKey(name: 'serviceRegistry')
-              final List<ServiceRegistryModel> serviceRegistryList}) =
-      _$_ServiceRegistrySecondaryWrapperModel;
+          final List<ServiceRegistryModel> serviceRegistryList}) =
+      _$ServiceRegistrySecondaryWrapperModelImpl;
 
   factory _ServiceRegistrySecondaryWrapperModel.fromJson(
           Map<String, dynamic> json) =
-      _$_ServiceRegistrySecondaryWrapperModel.fromJson;
+      _$ServiceRegistrySecondaryWrapperModelImpl.fromJson;
 
   @override
   @JsonKey(name: 'serviceRegistry')
   List<ServiceRegistryModel> get serviceRegistryList;
   @override
   @JsonKey(ignore: true)
-  _$$_ServiceRegistrySecondaryWrapperModelCopyWith<
-          _$_ServiceRegistrySecondaryWrapperModel>
+  _$$ServiceRegistrySecondaryWrapperModelImplCopyWith<
+          _$ServiceRegistrySecondaryWrapperModelImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -422,22 +424,22 @@ class _$ServiceRegistryModelCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_ServiceRegistryModelCopyWith<$Res>
+abstract class _$$ServiceRegistryModelImplCopyWith<$Res>
     implements $ServiceRegistryModelCopyWith<$Res> {
-  factory _$$_ServiceRegistryModelCopyWith(_$_ServiceRegistryModel value,
-          $Res Function(_$_ServiceRegistryModel) then) =
-      __$$_ServiceRegistryModelCopyWithImpl<$Res>;
+  factory _$$ServiceRegistryModelImplCopyWith(_$ServiceRegistryModelImpl value,
+          $Res Function(_$ServiceRegistryModelImpl) then) =
+      __$$ServiceRegistryModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String service, List<ActionsModel> actions});
 }
 
 /// @nodoc
-class __$$_ServiceRegistryModelCopyWithImpl<$Res>
-    extends _$ServiceRegistryModelCopyWithImpl<$Res, _$_ServiceRegistryModel>
-    implements _$$_ServiceRegistryModelCopyWith<$Res> {
-  __$$_ServiceRegistryModelCopyWithImpl(_$_ServiceRegistryModel _value,
-      $Res Function(_$_ServiceRegistryModel) _then)
+class __$$ServiceRegistryModelImplCopyWithImpl<$Res>
+    extends _$ServiceRegistryModelCopyWithImpl<$Res, _$ServiceRegistryModelImpl>
+    implements _$$ServiceRegistryModelImplCopyWith<$Res> {
+  __$$ServiceRegistryModelImplCopyWithImpl(_$ServiceRegistryModelImpl _value,
+      $Res Function(_$ServiceRegistryModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -446,7 +448,7 @@ class __$$_ServiceRegistryModelCopyWithImpl<$Res>
     Object? service = null,
     Object? actions = null,
   }) {
-    return _then(_$_ServiceRegistryModel(
+    return _then(_$ServiceRegistryModelImpl(
       service: null == service
           ? _value.service
           : service // ignore: cast_nullable_to_non_nullable
@@ -461,13 +463,13 @@ class __$$_ServiceRegistryModelCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_ServiceRegistryModel implements _ServiceRegistryModel {
-  const _$_ServiceRegistryModel(
+class _$ServiceRegistryModelImpl implements _ServiceRegistryModel {
+  const _$ServiceRegistryModelImpl(
       {required this.service, final List<ActionsModel> actions = const []})
       : _actions = actions;
 
-  factory _$_ServiceRegistryModel.fromJson(Map<String, dynamic> json) =>
-      _$$_ServiceRegistryModelFromJson(json);
+  factory _$ServiceRegistryModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ServiceRegistryModelImplFromJson(json);
 
   @override
   final String service;
@@ -475,6 +477,7 @@ class _$_ServiceRegistryModel implements _ServiceRegistryModel {
   @override
   @JsonKey()
   List<ActionsModel> get actions {
+    if (_actions is EqualUnmodifiableListView) return _actions;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_actions);
   }
@@ -485,10 +488,10 @@ class _$_ServiceRegistryModel implements _ServiceRegistryModel {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ServiceRegistryModel &&
+            other is _$ServiceRegistryModelImpl &&
             (identical(other.service, service) || other.service == service) &&
             const DeepCollectionEquality().equals(other._actions, _actions));
   }
@@ -501,13 +504,14 @@ class _$_ServiceRegistryModel implements _ServiceRegistryModel {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ServiceRegistryModelCopyWith<_$_ServiceRegistryModel> get copyWith =>
-      __$$_ServiceRegistryModelCopyWithImpl<_$_ServiceRegistryModel>(
-          this, _$identity);
+  _$$ServiceRegistryModelImplCopyWith<_$ServiceRegistryModelImpl>
+      get copyWith =>
+          __$$ServiceRegistryModelImplCopyWithImpl<_$ServiceRegistryModelImpl>(
+              this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_ServiceRegistryModelToJson(
+    return _$$ServiceRegistryModelImplToJson(
       this,
     );
   }
@@ -516,10 +520,10 @@ class _$_ServiceRegistryModel implements _ServiceRegistryModel {
 abstract class _ServiceRegistryModel implements ServiceRegistryModel {
   const factory _ServiceRegistryModel(
       {required final String service,
-      final List<ActionsModel> actions}) = _$_ServiceRegistryModel;
+      final List<ActionsModel> actions}) = _$ServiceRegistryModelImpl;
 
   factory _ServiceRegistryModel.fromJson(Map<String, dynamic> json) =
-      _$_ServiceRegistryModel.fromJson;
+      _$ServiceRegistryModelImpl.fromJson;
 
   @override
   String get service;
@@ -527,8 +531,8 @@ abstract class _ServiceRegistryModel implements ServiceRegistryModel {
   List<ActionsModel> get actions;
   @override
   @JsonKey(ignore: true)
-  _$$_ServiceRegistryModelCopyWith<_$_ServiceRegistryModel> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$ServiceRegistryModelImplCopyWith<_$ServiceRegistryModelImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 ActionsModel _$ActionsModelFromJson(Map<String, dynamic> json) {
@@ -591,22 +595,22 @@ class _$ActionsModelCopyWithImpl<$Res, $Val extends ActionsModel>
 }
 
 /// @nodoc
-abstract class _$$_ActionsModelCopyWith<$Res>
+abstract class _$$ActionsModelImplCopyWith<$Res>
     implements $ActionsModelCopyWith<$Res> {
-  factory _$$_ActionsModelCopyWith(
-          _$_ActionsModel value, $Res Function(_$_ActionsModel) then) =
-      __$$_ActionsModelCopyWithImpl<$Res>;
+  factory _$$ActionsModelImplCopyWith(
+          _$ActionsModelImpl value, $Res Function(_$ActionsModelImpl) then) =
+      __$$ActionsModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String action, String entityName, String path});
 }
 
 /// @nodoc
-class __$$_ActionsModelCopyWithImpl<$Res>
-    extends _$ActionsModelCopyWithImpl<$Res, _$_ActionsModel>
-    implements _$$_ActionsModelCopyWith<$Res> {
-  __$$_ActionsModelCopyWithImpl(
-      _$_ActionsModel _value, $Res Function(_$_ActionsModel) _then)
+class __$$ActionsModelImplCopyWithImpl<$Res>
+    extends _$ActionsModelCopyWithImpl<$Res, _$ActionsModelImpl>
+    implements _$$ActionsModelImplCopyWith<$Res> {
+  __$$ActionsModelImplCopyWithImpl(
+      _$ActionsModelImpl _value, $Res Function(_$ActionsModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -616,7 +620,7 @@ class __$$_ActionsModelCopyWithImpl<$Res>
     Object? entityName = null,
     Object? path = null,
   }) {
-    return _then(_$_ActionsModel(
+    return _then(_$ActionsModelImpl(
       action: null == action
           ? _value.action
           : action // ignore: cast_nullable_to_non_nullable
@@ -635,12 +639,12 @@ class __$$_ActionsModelCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_ActionsModel implements _ActionsModel {
-  const _$_ActionsModel(
+class _$ActionsModelImpl implements _ActionsModel {
+  const _$ActionsModelImpl(
       {required this.action, required this.entityName, required this.path});
 
-  factory _$_ActionsModel.fromJson(Map<String, dynamic> json) =>
-      _$$_ActionsModelFromJson(json);
+  factory _$ActionsModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ActionsModelImplFromJson(json);
 
   @override
   final String action;
@@ -655,10 +659,10 @@ class _$_ActionsModel implements _ActionsModel {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ActionsModel &&
+            other is _$ActionsModelImpl &&
             (identical(other.action, action) || other.action == action) &&
             (identical(other.entityName, entityName) ||
                 other.entityName == entityName) &&
@@ -672,12 +676,12 @@ class _$_ActionsModel implements _ActionsModel {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ActionsModelCopyWith<_$_ActionsModel> get copyWith =>
-      __$$_ActionsModelCopyWithImpl<_$_ActionsModel>(this, _$identity);
+  _$$ActionsModelImplCopyWith<_$ActionsModelImpl> get copyWith =>
+      __$$ActionsModelImplCopyWithImpl<_$ActionsModelImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_ActionsModelToJson(
+    return _$$ActionsModelImplToJson(
       this,
     );
   }
@@ -687,10 +691,10 @@ abstract class _ActionsModel implements ActionsModel {
   const factory _ActionsModel(
       {required final String action,
       required final String entityName,
-      required final String path}) = _$_ActionsModel;
+      required final String path}) = _$ActionsModelImpl;
 
   factory _ActionsModel.fromJson(Map<String, dynamic> json) =
-      _$_ActionsModel.fromJson;
+      _$ActionsModelImpl.fromJson;
 
   @override
   String get action;
@@ -700,6 +704,6 @@ abstract class _ActionsModel implements ActionsModel {
   String get path;
   @override
   @JsonKey(ignore: true)
-  _$$_ActionsModelCopyWith<_$_ActionsModel> get copyWith =>
+  _$$ActionsModelImplCopyWith<_$ActionsModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

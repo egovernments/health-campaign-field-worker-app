@@ -20,7 +20,7 @@ class SideEffectLocalRepository
         buildOr([
           if (query.id != null)
             sql.sideEffect.id.equals(
-              query.id,
+              query.id!,
             ),
         ]),
       );

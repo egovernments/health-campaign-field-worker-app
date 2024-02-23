@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'pgr_service_defenitions.dart';
 
@@ -39,7 +39,7 @@ abstract class $PGRServiceDefinitionsCopyWith<$Res> {
   @useResult
   $Res call(
       {@JsonKey(name: 'RAINMAKER-PGR')
-          ServiceDefinitionWrapper? serviceDefinitionWrapper});
+      ServiceDefinitionWrapper? serviceDefinitionWrapper});
 
   $ServiceDefinitionWrapperCopyWith<$Res>? get serviceDefinitionWrapper;
 }
@@ -83,27 +83,29 @@ class _$PGRServiceDefinitionsCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_PGRServiceDefinitionsCopyWith<$Res>
+abstract class _$$PGRServiceDefinitionsImplCopyWith<$Res>
     implements $PGRServiceDefinitionsCopyWith<$Res> {
-  factory _$$_PGRServiceDefinitionsCopyWith(_$_PGRServiceDefinitions value,
-          $Res Function(_$_PGRServiceDefinitions) then) =
-      __$$_PGRServiceDefinitionsCopyWithImpl<$Res>;
+  factory _$$PGRServiceDefinitionsImplCopyWith(
+          _$PGRServiceDefinitionsImpl value,
+          $Res Function(_$PGRServiceDefinitionsImpl) then) =
+      __$$PGRServiceDefinitionsImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
       {@JsonKey(name: 'RAINMAKER-PGR')
-          ServiceDefinitionWrapper? serviceDefinitionWrapper});
+      ServiceDefinitionWrapper? serviceDefinitionWrapper});
 
   @override
   $ServiceDefinitionWrapperCopyWith<$Res>? get serviceDefinitionWrapper;
 }
 
 /// @nodoc
-class __$$_PGRServiceDefinitionsCopyWithImpl<$Res>
-    extends _$PGRServiceDefinitionsCopyWithImpl<$Res, _$_PGRServiceDefinitions>
-    implements _$$_PGRServiceDefinitionsCopyWith<$Res> {
-  __$$_PGRServiceDefinitionsCopyWithImpl(_$_PGRServiceDefinitions _value,
-      $Res Function(_$_PGRServiceDefinitions) _then)
+class __$$PGRServiceDefinitionsImplCopyWithImpl<$Res>
+    extends _$PGRServiceDefinitionsCopyWithImpl<$Res,
+        _$PGRServiceDefinitionsImpl>
+    implements _$$PGRServiceDefinitionsImplCopyWith<$Res> {
+  __$$PGRServiceDefinitionsImplCopyWithImpl(_$PGRServiceDefinitionsImpl _value,
+      $Res Function(_$PGRServiceDefinitionsImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -111,7 +113,7 @@ class __$$_PGRServiceDefinitionsCopyWithImpl<$Res>
   $Res call({
     Object? serviceDefinitionWrapper = freezed,
   }) {
-    return _then(_$_PGRServiceDefinitions(
+    return _then(_$PGRServiceDefinitionsImpl(
       serviceDefinitionWrapper: freezed == serviceDefinitionWrapper
           ? _value.serviceDefinitionWrapper
           : serviceDefinitionWrapper // ignore: cast_nullable_to_non_nullable
@@ -122,12 +124,12 @@ class __$$_PGRServiceDefinitionsCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_PGRServiceDefinitions implements _PGRServiceDefinitions {
-  const _$_PGRServiceDefinitions(
+class _$PGRServiceDefinitionsImpl implements _PGRServiceDefinitions {
+  const _$PGRServiceDefinitionsImpl(
       {@JsonKey(name: 'RAINMAKER-PGR') this.serviceDefinitionWrapper});
 
-  factory _$_PGRServiceDefinitions.fromJson(Map<String, dynamic> json) =>
-      _$$_PGRServiceDefinitionsFromJson(json);
+  factory _$PGRServiceDefinitionsImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PGRServiceDefinitionsImplFromJson(json);
 
   @override
   @JsonKey(name: 'RAINMAKER-PGR')
@@ -139,10 +141,10 @@ class _$_PGRServiceDefinitions implements _PGRServiceDefinitions {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_PGRServiceDefinitions &&
+            other is _$PGRServiceDefinitionsImpl &&
             (identical(
                     other.serviceDefinitionWrapper, serviceDefinitionWrapper) ||
                 other.serviceDefinitionWrapper == serviceDefinitionWrapper));
@@ -155,13 +157,13 @@ class _$_PGRServiceDefinitions implements _PGRServiceDefinitions {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_PGRServiceDefinitionsCopyWith<_$_PGRServiceDefinitions> get copyWith =>
-      __$$_PGRServiceDefinitionsCopyWithImpl<_$_PGRServiceDefinitions>(
-          this, _$identity);
+  _$$PGRServiceDefinitionsImplCopyWith<_$PGRServiceDefinitionsImpl>
+      get copyWith => __$$PGRServiceDefinitionsImplCopyWithImpl<
+          _$PGRServiceDefinitionsImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_PGRServiceDefinitionsToJson(
+    return _$$PGRServiceDefinitionsImplToJson(
       this,
     );
   }
@@ -170,19 +172,19 @@ class _$_PGRServiceDefinitions implements _PGRServiceDefinitions {
 abstract class _PGRServiceDefinitions implements PGRServiceDefinitions {
   const factory _PGRServiceDefinitions(
           {@JsonKey(name: 'RAINMAKER-PGR')
-              final ServiceDefinitionWrapper? serviceDefinitionWrapper}) =
-      _$_PGRServiceDefinitions;
+          final ServiceDefinitionWrapper? serviceDefinitionWrapper}) =
+      _$PGRServiceDefinitionsImpl;
 
   factory _PGRServiceDefinitions.fromJson(Map<String, dynamic> json) =
-      _$_PGRServiceDefinitions.fromJson;
+      _$PGRServiceDefinitionsImpl.fromJson;
 
   @override
   @JsonKey(name: 'RAINMAKER-PGR')
   ServiceDefinitionWrapper? get serviceDefinitionWrapper;
   @override
   @JsonKey(ignore: true)
-  _$$_PGRServiceDefinitionsCopyWith<_$_PGRServiceDefinitions> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$PGRServiceDefinitionsImplCopyWith<_$PGRServiceDefinitionsImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 ServiceDefinitionWrapper _$ServiceDefinitionWrapperFromJson(
@@ -236,24 +238,25 @@ class _$ServiceDefinitionWrapperCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_ServiceDefinitionWrapperCopyWith<$Res>
+abstract class _$$ServiceDefinitionWrapperImplCopyWith<$Res>
     implements $ServiceDefinitionWrapperCopyWith<$Res> {
-  factory _$$_ServiceDefinitionWrapperCopyWith(
-          _$_ServiceDefinitionWrapper value,
-          $Res Function(_$_ServiceDefinitionWrapper) then) =
-      __$$_ServiceDefinitionWrapperCopyWithImpl<$Res>;
+  factory _$$ServiceDefinitionWrapperImplCopyWith(
+          _$ServiceDefinitionWrapperImpl value,
+          $Res Function(_$ServiceDefinitionWrapperImpl) then) =
+      __$$ServiceDefinitionWrapperImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({@JsonKey(name: "ServiceDefs") List<Definition> definition});
 }
 
 /// @nodoc
-class __$$_ServiceDefinitionWrapperCopyWithImpl<$Res>
+class __$$ServiceDefinitionWrapperImplCopyWithImpl<$Res>
     extends _$ServiceDefinitionWrapperCopyWithImpl<$Res,
-        _$_ServiceDefinitionWrapper>
-    implements _$$_ServiceDefinitionWrapperCopyWith<$Res> {
-  __$$_ServiceDefinitionWrapperCopyWithImpl(_$_ServiceDefinitionWrapper _value,
-      $Res Function(_$_ServiceDefinitionWrapper) _then)
+        _$ServiceDefinitionWrapperImpl>
+    implements _$$ServiceDefinitionWrapperImplCopyWith<$Res> {
+  __$$ServiceDefinitionWrapperImplCopyWithImpl(
+      _$ServiceDefinitionWrapperImpl _value,
+      $Res Function(_$ServiceDefinitionWrapperImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -261,7 +264,7 @@ class __$$_ServiceDefinitionWrapperCopyWithImpl<$Res>
   $Res call({
     Object? definition = null,
   }) {
-    return _then(_$_ServiceDefinitionWrapper(
+    return _then(_$ServiceDefinitionWrapperImpl(
       definition: null == definition
           ? _value._definition
           : definition // ignore: cast_nullable_to_non_nullable
@@ -272,19 +275,20 @@ class __$$_ServiceDefinitionWrapperCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_ServiceDefinitionWrapper implements _ServiceDefinitionWrapper {
-  const _$_ServiceDefinitionWrapper(
+class _$ServiceDefinitionWrapperImpl implements _ServiceDefinitionWrapper {
+  const _$ServiceDefinitionWrapperImpl(
       {@JsonKey(name: "ServiceDefs")
-          final List<Definition> definition = const []})
+      final List<Definition> definition = const []})
       : _definition = definition;
 
-  factory _$_ServiceDefinitionWrapper.fromJson(Map<String, dynamic> json) =>
-      _$$_ServiceDefinitionWrapperFromJson(json);
+  factory _$ServiceDefinitionWrapperImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ServiceDefinitionWrapperImplFromJson(json);
 
   final List<Definition> _definition;
   @override
   @JsonKey(name: "ServiceDefs")
   List<Definition> get definition {
+    if (_definition is EqualUnmodifiableListView) return _definition;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_definition);
   }
@@ -295,10 +299,10 @@ class _$_ServiceDefinitionWrapper implements _ServiceDefinitionWrapper {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ServiceDefinitionWrapper &&
+            other is _$ServiceDefinitionWrapperImpl &&
             const DeepCollectionEquality()
                 .equals(other._definition, _definition));
   }
@@ -311,13 +315,13 @@ class _$_ServiceDefinitionWrapper implements _ServiceDefinitionWrapper {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ServiceDefinitionWrapperCopyWith<_$_ServiceDefinitionWrapper>
-      get copyWith => __$$_ServiceDefinitionWrapperCopyWithImpl<
-          _$_ServiceDefinitionWrapper>(this, _$identity);
+  _$$ServiceDefinitionWrapperImplCopyWith<_$ServiceDefinitionWrapperImpl>
+      get copyWith => __$$ServiceDefinitionWrapperImplCopyWithImpl<
+          _$ServiceDefinitionWrapperImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_ServiceDefinitionWrapperToJson(
+    return _$$ServiceDefinitionWrapperImplToJson(
       this,
     );
   }
@@ -326,17 +330,17 @@ class _$_ServiceDefinitionWrapper implements _ServiceDefinitionWrapper {
 abstract class _ServiceDefinitionWrapper implements ServiceDefinitionWrapper {
   const factory _ServiceDefinitionWrapper(
           {@JsonKey(name: "ServiceDefs") final List<Definition> definition}) =
-      _$_ServiceDefinitionWrapper;
+      _$ServiceDefinitionWrapperImpl;
 
   factory _ServiceDefinitionWrapper.fromJson(Map<String, dynamic> json) =
-      _$_ServiceDefinitionWrapper.fromJson;
+      _$ServiceDefinitionWrapperImpl.fromJson;
 
   @override
   @JsonKey(name: "ServiceDefs")
   List<Definition> get definition;
   @override
   @JsonKey(ignore: true)
-  _$$_ServiceDefinitionWrapperCopyWith<_$_ServiceDefinitionWrapper>
+  _$$ServiceDefinitionWrapperImplCopyWith<_$ServiceDefinitionWrapperImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -394,22 +398,22 @@ class _$DefinitionCopyWithImpl<$Res, $Val extends Definition>
 }
 
 /// @nodoc
-abstract class _$$_DefinitionCopyWith<$Res>
+abstract class _$$DefinitionImplCopyWith<$Res>
     implements $DefinitionCopyWith<$Res> {
-  factory _$$_DefinitionCopyWith(
-          _$_Definition value, $Res Function(_$_Definition) then) =
-      __$$_DefinitionCopyWithImpl<$Res>;
+  factory _$$DefinitionImplCopyWith(
+          _$DefinitionImpl value, $Res Function(_$DefinitionImpl) then) =
+      __$$DefinitionImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String serviceCode, String name});
 }
 
 /// @nodoc
-class __$$_DefinitionCopyWithImpl<$Res>
-    extends _$DefinitionCopyWithImpl<$Res, _$_Definition>
-    implements _$$_DefinitionCopyWith<$Res> {
-  __$$_DefinitionCopyWithImpl(
-      _$_Definition _value, $Res Function(_$_Definition) _then)
+class __$$DefinitionImplCopyWithImpl<$Res>
+    extends _$DefinitionCopyWithImpl<$Res, _$DefinitionImpl>
+    implements _$$DefinitionImplCopyWith<$Res> {
+  __$$DefinitionImplCopyWithImpl(
+      _$DefinitionImpl _value, $Res Function(_$DefinitionImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -418,7 +422,7 @@ class __$$_DefinitionCopyWithImpl<$Res>
     Object? serviceCode = null,
     Object? name = null,
   }) {
-    return _then(_$_Definition(
+    return _then(_$DefinitionImpl(
       serviceCode: null == serviceCode
           ? _value.serviceCode
           : serviceCode // ignore: cast_nullable_to_non_nullable
@@ -433,11 +437,11 @@ class __$$_DefinitionCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_Definition implements _Definition {
-  const _$_Definition({required this.serviceCode, required this.name});
+class _$DefinitionImpl implements _Definition {
+  const _$DefinitionImpl({required this.serviceCode, required this.name});
 
-  factory _$_Definition.fromJson(Map<String, dynamic> json) =>
-      _$$_DefinitionFromJson(json);
+  factory _$DefinitionImpl.fromJson(Map<String, dynamic> json) =>
+      _$$DefinitionImplFromJson(json);
 
   @override
   final String serviceCode;
@@ -450,10 +454,10 @@ class _$_Definition implements _Definition {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_Definition &&
+            other is _$DefinitionImpl &&
             (identical(other.serviceCode, serviceCode) ||
                 other.serviceCode == serviceCode) &&
             (identical(other.name, name) || other.name == name));
@@ -466,12 +470,12 @@ class _$_Definition implements _Definition {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_DefinitionCopyWith<_$_Definition> get copyWith =>
-      __$$_DefinitionCopyWithImpl<_$_Definition>(this, _$identity);
+  _$$DefinitionImplCopyWith<_$DefinitionImpl> get copyWith =>
+      __$$DefinitionImplCopyWithImpl<_$DefinitionImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_DefinitionToJson(
+    return _$$DefinitionImplToJson(
       this,
     );
   }
@@ -480,10 +484,10 @@ class _$_Definition implements _Definition {
 abstract class _Definition implements Definition {
   const factory _Definition(
       {required final String serviceCode,
-      required final String name}) = _$_Definition;
+      required final String name}) = _$DefinitionImpl;
 
   factory _Definition.fromJson(Map<String, dynamic> json) =
-      _$_Definition.fromJson;
+      _$DefinitionImpl.fromJson;
 
   @override
   String get serviceCode;
@@ -491,6 +495,6 @@ abstract class _Definition implements Definition {
   String get name;
   @override
   @JsonKey(ignore: true)
-  _$$_DefinitionCopyWith<_$_Definition> get copyWith =>
+  _$$DefinitionImplCopyWith<_$DefinitionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

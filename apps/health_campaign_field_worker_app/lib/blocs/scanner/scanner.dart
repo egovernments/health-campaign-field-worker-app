@@ -2,9 +2,10 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import '../../models/entities/project_beneficiary.dart';
+import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
+
+import '../../models/data_model.dart';
 import '../../utils/typedefs.dart';
 
 part 'scanner.freezed.dart';
@@ -13,10 +14,12 @@ typedef ScannerEmitter = Emitter<ScannerState>;
 
 class ScannerBloc extends Bloc<ScannerEvent, ScannerState> {
   final ProjectBeneficiaryDataRepository projectBeneficiaryRepository;
+  final HFReferralDataRepository hfReferralDataRepository;
 
   ScannerBloc(
     super.initialState, {
     required this.projectBeneficiaryRepository,
+    required this.hfReferralDataRepository,
   }) {
     on(_handleScanner);
   }
@@ -26,8 +29,11 @@ class ScannerBloc extends Bloc<ScannerEvent, ScannerState> {
   ) async {
     try {
       if (event.qrcode.isNotEmpty) {
-        final projectBeneficiary = await projectBeneficiaryRepository
-            .search(ProjectBeneficiarySearchModel(tag: event.qrcode.first));
+        final projectBeneficiary = event.isReferral
+            ? await hfReferralDataRepository
+                .search(HFReferralSearchModel(beneficiaryId: event.qrcode.last))
+            : await projectBeneficiaryRepository
+                .search(ProjectBeneficiarySearchModel(tag: event.qrcode.last));
 
         if (projectBeneficiary.isEmpty) {
           emit(state.copyWith(duplicate: false));
@@ -51,8 +57,9 @@ class ScannerBloc extends Bloc<ScannerEvent, ScannerState> {
 class ScannerEvent with _$ScannerEvent {
   const factory ScannerEvent.handleScanner(
     List<GS1Barcode> barcode,
-    List<String> qrcode,
-  ) = ScannerScanEvent;
+    List<String> qrcode, {
+    @Default(false) bool isReferral,
+  }) = ScannerScanEvent;
 }
 
 @freezed

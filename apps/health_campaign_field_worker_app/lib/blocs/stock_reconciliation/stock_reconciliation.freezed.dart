@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'stock_reconciliation.dart';
 
@@ -18,27 +18,33 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$StockReconciliationEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(FacilityModel facilityModel) selectFacility,
-    required TResult Function(String? productVariantId) selectProduct,
-    required TResult Function() calculate,
+    required TResult Function(FacilityModel facilityModel, bool isDistributor)
+        selectFacility,
+    required TResult Function(String? productVariantId, bool isDistributor)
+        selectProduct,
+    required TResult Function(bool isDistributor) calculate,
     required TResult Function(StockReconciliationModel stockReconciliationModel)
         create,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(FacilityModel facilityModel)? selectFacility,
-    TResult? Function(String? productVariantId)? selectProduct,
-    TResult? Function()? calculate,
+    TResult? Function(FacilityModel facilityModel, bool isDistributor)?
+        selectFacility,
+    TResult? Function(String? productVariantId, bool isDistributor)?
+        selectProduct,
+    TResult? Function(bool isDistributor)? calculate,
     TResult? Function(StockReconciliationModel stockReconciliationModel)?
         create,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(FacilityModel facilityModel)? selectFacility,
-    TResult Function(String? productVariantId)? selectProduct,
-    TResult Function()? calculate,
+    TResult Function(FacilityModel facilityModel, bool isDistributor)?
+        selectFacility,
+    TResult Function(String? productVariantId, bool isDistributor)?
+        selectProduct,
+    TResult Function(bool isDistributor)? calculate,
     TResult Function(StockReconciliationModel stockReconciliationModel)? create,
     required TResult orElse(),
   }) =>
@@ -97,108 +103,126 @@ class _$StockReconciliationEventCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$StockReconciliationSelectFacilityEventCopyWith<$Res> {
-  factory _$$StockReconciliationSelectFacilityEventCopyWith(
-          _$StockReconciliationSelectFacilityEvent value,
-          $Res Function(_$StockReconciliationSelectFacilityEvent) then) =
-      __$$StockReconciliationSelectFacilityEventCopyWithImpl<$Res>;
+abstract class _$$StockReconciliationSelectFacilityEventImplCopyWith<$Res> {
+  factory _$$StockReconciliationSelectFacilityEventImplCopyWith(
+          _$StockReconciliationSelectFacilityEventImpl value,
+          $Res Function(_$StockReconciliationSelectFacilityEventImpl) then) =
+      __$$StockReconciliationSelectFacilityEventImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({FacilityModel facilityModel});
+  $Res call({FacilityModel facilityModel, bool isDistributor});
 }
 
 /// @nodoc
-class __$$StockReconciliationSelectFacilityEventCopyWithImpl<$Res>
+class __$$StockReconciliationSelectFacilityEventImplCopyWithImpl<$Res>
     extends _$StockReconciliationEventCopyWithImpl<$Res,
-        _$StockReconciliationSelectFacilityEvent>
-    implements _$$StockReconciliationSelectFacilityEventCopyWith<$Res> {
-  __$$StockReconciliationSelectFacilityEventCopyWithImpl(
-      _$StockReconciliationSelectFacilityEvent _value,
-      $Res Function(_$StockReconciliationSelectFacilityEvent) _then)
+        _$StockReconciliationSelectFacilityEventImpl>
+    implements _$$StockReconciliationSelectFacilityEventImplCopyWith<$Res> {
+  __$$StockReconciliationSelectFacilityEventImplCopyWithImpl(
+      _$StockReconciliationSelectFacilityEventImpl _value,
+      $Res Function(_$StockReconciliationSelectFacilityEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? facilityModel = null,
+    Object? isDistributor = null,
   }) {
-    return _then(_$StockReconciliationSelectFacilityEvent(
+    return _then(_$StockReconciliationSelectFacilityEventImpl(
       null == facilityModel
           ? _value.facilityModel
           : facilityModel // ignore: cast_nullable_to_non_nullable
               as FacilityModel,
+      isDistributor: null == isDistributor
+          ? _value.isDistributor
+          : isDistributor // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
 
 /// @nodoc
 
-class _$StockReconciliationSelectFacilityEvent
+class _$StockReconciliationSelectFacilityEventImpl
     implements StockReconciliationSelectFacilityEvent {
-  const _$StockReconciliationSelectFacilityEvent(this.facilityModel);
+  const _$StockReconciliationSelectFacilityEventImpl(this.facilityModel,
+      {this.isDistributor = false});
 
   @override
   final FacilityModel facilityModel;
+  @override
+  @JsonKey()
+  final bool isDistributor;
 
   @override
   String toString() {
-    return 'StockReconciliationEvent.selectFacility(facilityModel: $facilityModel)';
+    return 'StockReconciliationEvent.selectFacility(facilityModel: $facilityModel, isDistributor: $isDistributor)';
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$StockReconciliationSelectFacilityEvent &&
+            other is _$StockReconciliationSelectFacilityEventImpl &&
             (identical(other.facilityModel, facilityModel) ||
-                other.facilityModel == facilityModel));
+                other.facilityModel == facilityModel) &&
+            (identical(other.isDistributor, isDistributor) ||
+                other.isDistributor == isDistributor));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, facilityModel);
+  int get hashCode => Object.hash(runtimeType, facilityModel, isDistributor);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$StockReconciliationSelectFacilityEventCopyWith<
-          _$StockReconciliationSelectFacilityEvent>
-      get copyWith => __$$StockReconciliationSelectFacilityEventCopyWithImpl<
-          _$StockReconciliationSelectFacilityEvent>(this, _$identity);
+  _$$StockReconciliationSelectFacilityEventImplCopyWith<
+          _$StockReconciliationSelectFacilityEventImpl>
+      get copyWith =>
+          __$$StockReconciliationSelectFacilityEventImplCopyWithImpl<
+              _$StockReconciliationSelectFacilityEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(FacilityModel facilityModel) selectFacility,
-    required TResult Function(String? productVariantId) selectProduct,
-    required TResult Function() calculate,
+    required TResult Function(FacilityModel facilityModel, bool isDistributor)
+        selectFacility,
+    required TResult Function(String? productVariantId, bool isDistributor)
+        selectProduct,
+    required TResult Function(bool isDistributor) calculate,
     required TResult Function(StockReconciliationModel stockReconciliationModel)
         create,
   }) {
-    return selectFacility(facilityModel);
+    return selectFacility(facilityModel, isDistributor);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(FacilityModel facilityModel)? selectFacility,
-    TResult? Function(String? productVariantId)? selectProduct,
-    TResult? Function()? calculate,
+    TResult? Function(FacilityModel facilityModel, bool isDistributor)?
+        selectFacility,
+    TResult? Function(String? productVariantId, bool isDistributor)?
+        selectProduct,
+    TResult? Function(bool isDistributor)? calculate,
     TResult? Function(StockReconciliationModel stockReconciliationModel)?
         create,
   }) {
-    return selectFacility?.call(facilityModel);
+    return selectFacility?.call(facilityModel, isDistributor);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(FacilityModel facilityModel)? selectFacility,
-    TResult Function(String? productVariantId)? selectProduct,
-    TResult Function()? calculate,
+    TResult Function(FacilityModel facilityModel, bool isDistributor)?
+        selectFacility,
+    TResult Function(String? productVariantId, bool isDistributor)?
+        selectProduct,
+    TResult Function(bool isDistributor)? calculate,
     TResult Function(StockReconciliationModel stockReconciliationModel)? create,
     required TResult orElse(),
   }) {
     if (selectFacility != null) {
-      return selectFacility(facilityModel);
+      return selectFacility(facilityModel, isDistributor);
     }
     return orElse();
   }
@@ -251,119 +275,138 @@ class _$StockReconciliationSelectFacilityEvent
 abstract class StockReconciliationSelectFacilityEvent
     implements StockReconciliationEvent {
   const factory StockReconciliationSelectFacilityEvent(
-          final FacilityModel facilityModel) =
-      _$StockReconciliationSelectFacilityEvent;
+          final FacilityModel facilityModel,
+          {final bool isDistributor}) =
+      _$StockReconciliationSelectFacilityEventImpl;
 
   FacilityModel get facilityModel;
+  bool get isDistributor;
   @JsonKey(ignore: true)
-  _$$StockReconciliationSelectFacilityEventCopyWith<
-          _$StockReconciliationSelectFacilityEvent>
+  _$$StockReconciliationSelectFacilityEventImplCopyWith<
+          _$StockReconciliationSelectFacilityEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$StockReconciliationSelectProductEventCopyWith<$Res> {
-  factory _$$StockReconciliationSelectProductEventCopyWith(
-          _$StockReconciliationSelectProductEvent value,
-          $Res Function(_$StockReconciliationSelectProductEvent) then) =
-      __$$StockReconciliationSelectProductEventCopyWithImpl<$Res>;
+abstract class _$$StockReconciliationSelectProductEventImplCopyWith<$Res> {
+  factory _$$StockReconciliationSelectProductEventImplCopyWith(
+          _$StockReconciliationSelectProductEventImpl value,
+          $Res Function(_$StockReconciliationSelectProductEventImpl) then) =
+      __$$StockReconciliationSelectProductEventImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({String? productVariantId});
+  $Res call({String? productVariantId, bool isDistributor});
 }
 
 /// @nodoc
-class __$$StockReconciliationSelectProductEventCopyWithImpl<$Res>
+class __$$StockReconciliationSelectProductEventImplCopyWithImpl<$Res>
     extends _$StockReconciliationEventCopyWithImpl<$Res,
-        _$StockReconciliationSelectProductEvent>
-    implements _$$StockReconciliationSelectProductEventCopyWith<$Res> {
-  __$$StockReconciliationSelectProductEventCopyWithImpl(
-      _$StockReconciliationSelectProductEvent _value,
-      $Res Function(_$StockReconciliationSelectProductEvent) _then)
+        _$StockReconciliationSelectProductEventImpl>
+    implements _$$StockReconciliationSelectProductEventImplCopyWith<$Res> {
+  __$$StockReconciliationSelectProductEventImplCopyWithImpl(
+      _$StockReconciliationSelectProductEventImpl _value,
+      $Res Function(_$StockReconciliationSelectProductEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? productVariantId = freezed,
+    Object? isDistributor = null,
   }) {
-    return _then(_$StockReconciliationSelectProductEvent(
+    return _then(_$StockReconciliationSelectProductEventImpl(
       freezed == productVariantId
           ? _value.productVariantId
           : productVariantId // ignore: cast_nullable_to_non_nullable
               as String?,
+      isDistributor: null == isDistributor
+          ? _value.isDistributor
+          : isDistributor // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
 
 /// @nodoc
 
-class _$StockReconciliationSelectProductEvent
+class _$StockReconciliationSelectProductEventImpl
     implements StockReconciliationSelectProductEvent {
-  const _$StockReconciliationSelectProductEvent(this.productVariantId);
+  const _$StockReconciliationSelectProductEventImpl(this.productVariantId,
+      {this.isDistributor = false});
 
   @override
   final String? productVariantId;
+  @override
+  @JsonKey()
+  final bool isDistributor;
 
   @override
   String toString() {
-    return 'StockReconciliationEvent.selectProduct(productVariantId: $productVariantId)';
+    return 'StockReconciliationEvent.selectProduct(productVariantId: $productVariantId, isDistributor: $isDistributor)';
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$StockReconciliationSelectProductEvent &&
+            other is _$StockReconciliationSelectProductEventImpl &&
             (identical(other.productVariantId, productVariantId) ||
-                other.productVariantId == productVariantId));
+                other.productVariantId == productVariantId) &&
+            (identical(other.isDistributor, isDistributor) ||
+                other.isDistributor == isDistributor));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, productVariantId);
+  int get hashCode => Object.hash(runtimeType, productVariantId, isDistributor);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$StockReconciliationSelectProductEventCopyWith<
-          _$StockReconciliationSelectProductEvent>
-      get copyWith => __$$StockReconciliationSelectProductEventCopyWithImpl<
-          _$StockReconciliationSelectProductEvent>(this, _$identity);
+  _$$StockReconciliationSelectProductEventImplCopyWith<
+          _$StockReconciliationSelectProductEventImpl>
+      get copyWith => __$$StockReconciliationSelectProductEventImplCopyWithImpl<
+          _$StockReconciliationSelectProductEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(FacilityModel facilityModel) selectFacility,
-    required TResult Function(String? productVariantId) selectProduct,
-    required TResult Function() calculate,
+    required TResult Function(FacilityModel facilityModel, bool isDistributor)
+        selectFacility,
+    required TResult Function(String? productVariantId, bool isDistributor)
+        selectProduct,
+    required TResult Function(bool isDistributor) calculate,
     required TResult Function(StockReconciliationModel stockReconciliationModel)
         create,
   }) {
-    return selectProduct(productVariantId);
+    return selectProduct(productVariantId, isDistributor);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(FacilityModel facilityModel)? selectFacility,
-    TResult? Function(String? productVariantId)? selectProduct,
-    TResult? Function()? calculate,
+    TResult? Function(FacilityModel facilityModel, bool isDistributor)?
+        selectFacility,
+    TResult? Function(String? productVariantId, bool isDistributor)?
+        selectProduct,
+    TResult? Function(bool isDistributor)? calculate,
     TResult? Function(StockReconciliationModel stockReconciliationModel)?
         create,
   }) {
-    return selectProduct?.call(productVariantId);
+    return selectProduct?.call(productVariantId, isDistributor);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(FacilityModel facilityModel)? selectFacility,
-    TResult Function(String? productVariantId)? selectProduct,
-    TResult Function()? calculate,
+    TResult Function(FacilityModel facilityModel, bool isDistributor)?
+        selectFacility,
+    TResult Function(String? productVariantId, bool isDistributor)?
+        selectProduct,
+    TResult Function(bool isDistributor)? calculate,
     TResult Function(StockReconciliationModel stockReconciliationModel)? create,
     required TResult orElse(),
   }) {
     if (selectProduct != null) {
-      return selectProduct(productVariantId);
+      return selectProduct(productVariantId, isDistributor);
     }
     return orElse();
   }
@@ -416,90 +459,127 @@ class _$StockReconciliationSelectProductEvent
 abstract class StockReconciliationSelectProductEvent
     implements StockReconciliationEvent {
   const factory StockReconciliationSelectProductEvent(
-      final String? productVariantId) = _$StockReconciliationSelectProductEvent;
+      final String? productVariantId,
+      {final bool isDistributor}) = _$StockReconciliationSelectProductEventImpl;
 
   String? get productVariantId;
+  bool get isDistributor;
   @JsonKey(ignore: true)
-  _$$StockReconciliationSelectProductEventCopyWith<
-          _$StockReconciliationSelectProductEvent>
+  _$$StockReconciliationSelectProductEventImplCopyWith<
+          _$StockReconciliationSelectProductEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$StockReconciliationCalculateEventCopyWith<$Res> {
-  factory _$$StockReconciliationCalculateEventCopyWith(
-          _$StockReconciliationCalculateEvent value,
-          $Res Function(_$StockReconciliationCalculateEvent) then) =
-      __$$StockReconciliationCalculateEventCopyWithImpl<$Res>;
+abstract class _$$StockReconciliationCalculateEventImplCopyWith<$Res> {
+  factory _$$StockReconciliationCalculateEventImplCopyWith(
+          _$StockReconciliationCalculateEventImpl value,
+          $Res Function(_$StockReconciliationCalculateEventImpl) then) =
+      __$$StockReconciliationCalculateEventImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({bool isDistributor});
 }
 
 /// @nodoc
-class __$$StockReconciliationCalculateEventCopyWithImpl<$Res>
+class __$$StockReconciliationCalculateEventImplCopyWithImpl<$Res>
     extends _$StockReconciliationEventCopyWithImpl<$Res,
-        _$StockReconciliationCalculateEvent>
-    implements _$$StockReconciliationCalculateEventCopyWith<$Res> {
-  __$$StockReconciliationCalculateEventCopyWithImpl(
-      _$StockReconciliationCalculateEvent _value,
-      $Res Function(_$StockReconciliationCalculateEvent) _then)
+        _$StockReconciliationCalculateEventImpl>
+    implements _$$StockReconciliationCalculateEventImplCopyWith<$Res> {
+  __$$StockReconciliationCalculateEventImplCopyWithImpl(
+      _$StockReconciliationCalculateEventImpl _value,
+      $Res Function(_$StockReconciliationCalculateEventImpl) _then)
       : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? isDistributor = null,
+  }) {
+    return _then(_$StockReconciliationCalculateEventImpl(
+      isDistributor: null == isDistributor
+          ? _value.isDistributor
+          : isDistributor // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
 }
 
 /// @nodoc
 
-class _$StockReconciliationCalculateEvent
+class _$StockReconciliationCalculateEventImpl
     implements StockReconciliationCalculateEvent {
-  const _$StockReconciliationCalculateEvent();
+  const _$StockReconciliationCalculateEventImpl({this.isDistributor = false});
+
+  @override
+  @JsonKey()
+  final bool isDistributor;
 
   @override
   String toString() {
-    return 'StockReconciliationEvent.calculate()';
+    return 'StockReconciliationEvent.calculate(isDistributor: $isDistributor)';
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$StockReconciliationCalculateEvent);
+            other is _$StockReconciliationCalculateEventImpl &&
+            (identical(other.isDistributor, isDistributor) ||
+                other.isDistributor == isDistributor));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode => Object.hash(runtimeType, isDistributor);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$StockReconciliationCalculateEventImplCopyWith<
+          _$StockReconciliationCalculateEventImpl>
+      get copyWith => __$$StockReconciliationCalculateEventImplCopyWithImpl<
+          _$StockReconciliationCalculateEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(FacilityModel facilityModel) selectFacility,
-    required TResult Function(String? productVariantId) selectProduct,
-    required TResult Function() calculate,
+    required TResult Function(FacilityModel facilityModel, bool isDistributor)
+        selectFacility,
+    required TResult Function(String? productVariantId, bool isDistributor)
+        selectProduct,
+    required TResult Function(bool isDistributor) calculate,
     required TResult Function(StockReconciliationModel stockReconciliationModel)
         create,
   }) {
-    return calculate();
+    return calculate(isDistributor);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(FacilityModel facilityModel)? selectFacility,
-    TResult? Function(String? productVariantId)? selectProduct,
-    TResult? Function()? calculate,
+    TResult? Function(FacilityModel facilityModel, bool isDistributor)?
+        selectFacility,
+    TResult? Function(String? productVariantId, bool isDistributor)?
+        selectProduct,
+    TResult? Function(bool isDistributor)? calculate,
     TResult? Function(StockReconciliationModel stockReconciliationModel)?
         create,
   }) {
-    return calculate?.call();
+    return calculate?.call(isDistributor);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(FacilityModel facilityModel)? selectFacility,
-    TResult Function(String? productVariantId)? selectProduct,
-    TResult Function()? calculate,
+    TResult Function(FacilityModel facilityModel, bool isDistributor)?
+        selectFacility,
+    TResult Function(String? productVariantId, bool isDistributor)?
+        selectProduct,
+    TResult Function(bool isDistributor)? calculate,
     TResult Function(StockReconciliationModel stockReconciliationModel)? create,
     required TResult orElse(),
   }) {
     if (calculate != null) {
-      return calculate();
+      return calculate(isDistributor);
     }
     return orElse();
   }
@@ -551,28 +631,34 @@ class _$StockReconciliationCalculateEvent
 
 abstract class StockReconciliationCalculateEvent
     implements StockReconciliationEvent {
-  const factory StockReconciliationCalculateEvent() =
-      _$StockReconciliationCalculateEvent;
+  const factory StockReconciliationCalculateEvent({final bool isDistributor}) =
+      _$StockReconciliationCalculateEventImpl;
+
+  bool get isDistributor;
+  @JsonKey(ignore: true)
+  _$$StockReconciliationCalculateEventImplCopyWith<
+          _$StockReconciliationCalculateEventImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$StockReconciliationCreateEventCopyWith<$Res> {
-  factory _$$StockReconciliationCreateEventCopyWith(
-          _$StockReconciliationCreateEvent value,
-          $Res Function(_$StockReconciliationCreateEvent) then) =
-      __$$StockReconciliationCreateEventCopyWithImpl<$Res>;
+abstract class _$$StockReconciliationCreateEventImplCopyWith<$Res> {
+  factory _$$StockReconciliationCreateEventImplCopyWith(
+          _$StockReconciliationCreateEventImpl value,
+          $Res Function(_$StockReconciliationCreateEventImpl) then) =
+      __$$StockReconciliationCreateEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call({StockReconciliationModel stockReconciliationModel});
 }
 
 /// @nodoc
-class __$$StockReconciliationCreateEventCopyWithImpl<$Res>
+class __$$StockReconciliationCreateEventImplCopyWithImpl<$Res>
     extends _$StockReconciliationEventCopyWithImpl<$Res,
-        _$StockReconciliationCreateEvent>
-    implements _$$StockReconciliationCreateEventCopyWith<$Res> {
-  __$$StockReconciliationCreateEventCopyWithImpl(
-      _$StockReconciliationCreateEvent _value,
-      $Res Function(_$StockReconciliationCreateEvent) _then)
+        _$StockReconciliationCreateEventImpl>
+    implements _$$StockReconciliationCreateEventImplCopyWith<$Res> {
+  __$$StockReconciliationCreateEventImplCopyWithImpl(
+      _$StockReconciliationCreateEventImpl _value,
+      $Res Function(_$StockReconciliationCreateEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -580,7 +666,7 @@ class __$$StockReconciliationCreateEventCopyWithImpl<$Res>
   $Res call({
     Object? stockReconciliationModel = null,
   }) {
-    return _then(_$StockReconciliationCreateEvent(
+    return _then(_$StockReconciliationCreateEventImpl(
       null == stockReconciliationModel
           ? _value.stockReconciliationModel
           : stockReconciliationModel // ignore: cast_nullable_to_non_nullable
@@ -591,9 +677,9 @@ class __$$StockReconciliationCreateEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$StockReconciliationCreateEvent
+class _$StockReconciliationCreateEventImpl
     implements StockReconciliationCreateEvent {
-  const _$StockReconciliationCreateEvent(this.stockReconciliationModel);
+  const _$StockReconciliationCreateEventImpl(this.stockReconciliationModel);
 
   @override
   final StockReconciliationModel stockReconciliationModel;
@@ -604,10 +690,10 @@ class _$StockReconciliationCreateEvent
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$StockReconciliationCreateEvent &&
+            other is _$StockReconciliationCreateEventImpl &&
             (identical(
                     other.stockReconciliationModel, stockReconciliationModel) ||
                 other.stockReconciliationModel == stockReconciliationModel));
@@ -619,16 +705,19 @@ class _$StockReconciliationCreateEvent
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$StockReconciliationCreateEventCopyWith<_$StockReconciliationCreateEvent>
-      get copyWith => __$$StockReconciliationCreateEventCopyWithImpl<
-          _$StockReconciliationCreateEvent>(this, _$identity);
+  _$$StockReconciliationCreateEventImplCopyWith<
+          _$StockReconciliationCreateEventImpl>
+      get copyWith => __$$StockReconciliationCreateEventImplCopyWithImpl<
+          _$StockReconciliationCreateEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(FacilityModel facilityModel) selectFacility,
-    required TResult Function(String? productVariantId) selectProduct,
-    required TResult Function() calculate,
+    required TResult Function(FacilityModel facilityModel, bool isDistributor)
+        selectFacility,
+    required TResult Function(String? productVariantId, bool isDistributor)
+        selectProduct,
+    required TResult Function(bool isDistributor) calculate,
     required TResult Function(StockReconciliationModel stockReconciliationModel)
         create,
   }) {
@@ -638,9 +727,11 @@ class _$StockReconciliationCreateEvent
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(FacilityModel facilityModel)? selectFacility,
-    TResult? Function(String? productVariantId)? selectProduct,
-    TResult? Function()? calculate,
+    TResult? Function(FacilityModel facilityModel, bool isDistributor)?
+        selectFacility,
+    TResult? Function(String? productVariantId, bool isDistributor)?
+        selectProduct,
+    TResult? Function(bool isDistributor)? calculate,
     TResult? Function(StockReconciliationModel stockReconciliationModel)?
         create,
   }) {
@@ -650,9 +741,11 @@ class _$StockReconciliationCreateEvent
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(FacilityModel facilityModel)? selectFacility,
-    TResult Function(String? productVariantId)? selectProduct,
-    TResult Function()? calculate,
+    TResult Function(FacilityModel facilityModel, bool isDistributor)?
+        selectFacility,
+    TResult Function(String? productVariantId, bool isDistributor)?
+        selectProduct,
+    TResult Function(bool isDistributor)? calculate,
     TResult Function(StockReconciliationModel stockReconciliationModel)? create,
     required TResult orElse(),
   }) {
@@ -711,11 +804,12 @@ abstract class StockReconciliationCreateEvent
     implements StockReconciliationEvent {
   const factory StockReconciliationCreateEvent(
           final StockReconciliationModel stockReconciliationModel) =
-      _$StockReconciliationCreateEvent;
+      _$StockReconciliationCreateEventImpl;
 
   StockReconciliationModel get stockReconciliationModel;
   @JsonKey(ignore: true)
-  _$$StockReconciliationCreateEventCopyWith<_$StockReconciliationCreateEvent>
+  _$$StockReconciliationCreateEventImplCopyWith<
+          _$StockReconciliationCreateEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -814,12 +908,12 @@ class _$StockReconciliationStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_StockReconciliationStateCopyWith<$Res>
+abstract class _$$StockReconciliationStateImplCopyWith<$Res>
     implements $StockReconciliationStateCopyWith<$Res> {
-  factory _$$_StockReconciliationStateCopyWith(
-          _$_StockReconciliationState value,
-          $Res Function(_$_StockReconciliationState) then) =
-      __$$_StockReconciliationStateCopyWithImpl<$Res>;
+  factory _$$StockReconciliationStateImplCopyWith(
+          _$StockReconciliationStateImpl value,
+          $Res Function(_$StockReconciliationStateImpl) then) =
+      __$$StockReconciliationStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -834,12 +928,13 @@ abstract class _$$_StockReconciliationStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_StockReconciliationStateCopyWithImpl<$Res>
+class __$$StockReconciliationStateImplCopyWithImpl<$Res>
     extends _$StockReconciliationStateCopyWithImpl<$Res,
-        _$_StockReconciliationState>
-    implements _$$_StockReconciliationStateCopyWith<$Res> {
-  __$$_StockReconciliationStateCopyWithImpl(_$_StockReconciliationState _value,
-      $Res Function(_$_StockReconciliationState) _then)
+        _$StockReconciliationStateImpl>
+    implements _$$StockReconciliationStateImplCopyWith<$Res> {
+  __$$StockReconciliationStateImplCopyWithImpl(
+      _$StockReconciliationStateImpl _value,
+      $Res Function(_$StockReconciliationStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -854,7 +949,7 @@ class __$$_StockReconciliationStateCopyWithImpl<$Res>
     Object? stockModels = null,
     Object? stockReconciliationModel = freezed,
   }) {
-    return _then(_$_StockReconciliationState(
+    return _then(_$StockReconciliationStateImpl(
       loading: null == loading
           ? _value.loading
           : loading // ignore: cast_nullable_to_non_nullable
@@ -893,8 +988,8 @@ class __$$_StockReconciliationStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_StockReconciliationState extends _StockReconciliationState {
-  _$_StockReconciliationState(
+class _$StockReconciliationStateImpl extends _StockReconciliationState {
+  _$StockReconciliationStateImpl(
       {this.loading = false,
       this.persisted = false,
       required this.projectId,
@@ -924,6 +1019,7 @@ class _$_StockReconciliationState extends _StockReconciliationState {
   @override
   @JsonKey()
   List<StockModel> get stockModels {
+    if (_stockModels is EqualUnmodifiableListView) return _stockModels;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_stockModels);
   }
@@ -937,10 +1033,10 @@ class _$_StockReconciliationState extends _StockReconciliationState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_StockReconciliationState &&
+            other is _$StockReconciliationStateImpl &&
             (identical(other.loading, loading) || other.loading == loading) &&
             (identical(other.persisted, persisted) ||
                 other.persisted == persisted) &&
@@ -974,9 +1070,9 @@ class _$_StockReconciliationState extends _StockReconciliationState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_StockReconciliationStateCopyWith<_$_StockReconciliationState>
-      get copyWith => __$$_StockReconciliationStateCopyWithImpl<
-          _$_StockReconciliationState>(this, _$identity);
+  _$$StockReconciliationStateImplCopyWith<_$StockReconciliationStateImpl>
+      get copyWith => __$$StockReconciliationStateImplCopyWithImpl<
+          _$StockReconciliationStateImpl>(this, _$identity);
 }
 
 abstract class _StockReconciliationState extends StockReconciliationState {
@@ -989,7 +1085,7 @@ abstract class _StockReconciliationState extends StockReconciliationState {
           final String? productVariantId,
           final List<StockModel> stockModels,
           final StockReconciliationModel? stockReconciliationModel}) =
-      _$_StockReconciliationState;
+      _$StockReconciliationStateImpl;
   _StockReconciliationState._() : super._();
 
   @override
@@ -1010,6 +1106,6 @@ abstract class _StockReconciliationState extends StockReconciliationState {
   StockReconciliationModel? get stockReconciliationModel;
   @override
   @JsonKey(ignore: true)
-  _$$_StockReconciliationStateCopyWith<_$_StockReconciliationState>
+  _$$StockReconciliationStateImplCopyWith<_$StockReconciliationStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'audit_model.dart';
 
@@ -84,11 +84,11 @@ class _$AuditDetailsModelCopyWithImpl<$Res, $Val extends AuditDetailsModel>
 }
 
 /// @nodoc
-abstract class _$$_AuditDetailsModelCopyWith<$Res>
+abstract class _$$AuditDetailsModelImplCopyWith<$Res>
     implements $AuditDetailsModelCopyWith<$Res> {
-  factory _$$_AuditDetailsModelCopyWith(_$_AuditDetailsModel value,
-          $Res Function(_$_AuditDetailsModel) then) =
-      __$$_AuditDetailsModelCopyWithImpl<$Res>;
+  factory _$$AuditDetailsModelImplCopyWith(_$AuditDetailsModelImpl value,
+          $Res Function(_$AuditDetailsModelImpl) then) =
+      __$$AuditDetailsModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -99,11 +99,11 @@ abstract class _$$_AuditDetailsModelCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_AuditDetailsModelCopyWithImpl<$Res>
-    extends _$AuditDetailsModelCopyWithImpl<$Res, _$_AuditDetailsModel>
-    implements _$$_AuditDetailsModelCopyWith<$Res> {
-  __$$_AuditDetailsModelCopyWithImpl(
-      _$_AuditDetailsModel _value, $Res Function(_$_AuditDetailsModel) _then)
+class __$$AuditDetailsModelImplCopyWithImpl<$Res>
+    extends _$AuditDetailsModelCopyWithImpl<$Res, _$AuditDetailsModelImpl>
+    implements _$$AuditDetailsModelImplCopyWith<$Res> {
+  __$$AuditDetailsModelImplCopyWithImpl(_$AuditDetailsModelImpl _value,
+      $Res Function(_$AuditDetailsModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -114,7 +114,7 @@ class __$$_AuditDetailsModelCopyWithImpl<$Res>
     Object? lastModifiedBy = freezed,
     Object? lastModifiedTime = freezed,
   }) {
-    return _then(_$_AuditDetailsModel(
+    return _then(_$AuditDetailsModelImpl(
       createdBy: null == createdBy
           ? _value.createdBy
           : createdBy // ignore: cast_nullable_to_non_nullable
@@ -137,15 +137,15 @@ class __$$_AuditDetailsModelCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_AuditDetailsModel implements _AuditDetailsModel {
-  const _$_AuditDetailsModel(
+class _$AuditDetailsModelImpl implements _AuditDetailsModel {
+  const _$AuditDetailsModelImpl(
       {required this.createdBy,
       required this.createdTime,
       this.lastModifiedBy,
       this.lastModifiedTime});
 
-  factory _$_AuditDetailsModel.fromJson(Map<String, dynamic> json) =>
-      _$$_AuditDetailsModelFromJson(json);
+  factory _$AuditDetailsModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$AuditDetailsModelImplFromJson(json);
 
   @override
   final String createdBy;
@@ -162,10 +162,10 @@ class _$_AuditDetailsModel implements _AuditDetailsModel {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_AuditDetailsModel &&
+            other is _$AuditDetailsModelImpl &&
             (identical(other.createdBy, createdBy) ||
                 other.createdBy == createdBy) &&
             (identical(other.createdTime, createdTime) ||
@@ -184,13 +184,13 @@ class _$_AuditDetailsModel implements _AuditDetailsModel {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_AuditDetailsModelCopyWith<_$_AuditDetailsModel> get copyWith =>
-      __$$_AuditDetailsModelCopyWithImpl<_$_AuditDetailsModel>(
+  _$$AuditDetailsModelImplCopyWith<_$AuditDetailsModelImpl> get copyWith =>
+      __$$AuditDetailsModelImplCopyWithImpl<_$AuditDetailsModelImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_AuditDetailsModelToJson(
+    return _$$AuditDetailsModelImplToJson(
       this,
     );
   }
@@ -201,10 +201,10 @@ abstract class _AuditDetailsModel implements AuditDetailsModel {
       {required final String createdBy,
       required final int createdTime,
       final String? lastModifiedBy,
-      final String? lastModifiedTime}) = _$_AuditDetailsModel;
+      final String? lastModifiedTime}) = _$AuditDetailsModelImpl;
 
   factory _AuditDetailsModel.fromJson(Map<String, dynamic> json) =
-      _$_AuditDetailsModel.fromJson;
+      _$AuditDetailsModelImpl.fromJson;
 
   @override
   String get createdBy;
@@ -216,6 +216,6 @@ abstract class _AuditDetailsModel implements AuditDetailsModel {
   String? get lastModifiedTime;
   @override
   @JsonKey(ignore: true)
-  _$$_AuditDetailsModelCopyWith<_$_AuditDetailsModel> get copyWith =>
+  _$$AuditDetailsModelImplCopyWith<_$AuditDetailsModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

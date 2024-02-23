@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'sync.dart';
 
@@ -92,20 +92,20 @@ class _$SyncEventCopyWithImpl<$Res, $Val extends SyncEvent>
 }
 
 /// @nodoc
-abstract class _$$SyncRefreshEventCopyWith<$Res> {
-  factory _$$SyncRefreshEventCopyWith(
-          _$SyncRefreshEvent value, $Res Function(_$SyncRefreshEvent) then) =
-      __$$SyncRefreshEventCopyWithImpl<$Res>;
+abstract class _$$SyncRefreshEventImplCopyWith<$Res> {
+  factory _$$SyncRefreshEventImplCopyWith(_$SyncRefreshEventImpl value,
+          $Res Function(_$SyncRefreshEventImpl) then) =
+      __$$SyncRefreshEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String createdBy, int? count});
 }
 
 /// @nodoc
-class __$$SyncRefreshEventCopyWithImpl<$Res>
-    extends _$SyncEventCopyWithImpl<$Res, _$SyncRefreshEvent>
-    implements _$$SyncRefreshEventCopyWith<$Res> {
-  __$$SyncRefreshEventCopyWithImpl(
-      _$SyncRefreshEvent _value, $Res Function(_$SyncRefreshEvent) _then)
+class __$$SyncRefreshEventImplCopyWithImpl<$Res>
+    extends _$SyncEventCopyWithImpl<$Res, _$SyncRefreshEventImpl>
+    implements _$$SyncRefreshEventImplCopyWith<$Res> {
+  __$$SyncRefreshEventImplCopyWithImpl(_$SyncRefreshEventImpl _value,
+      $Res Function(_$SyncRefreshEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -114,7 +114,7 @@ class __$$SyncRefreshEventCopyWithImpl<$Res>
     Object? createdBy = null,
     Object? count = freezed,
   }) {
-    return _then(_$SyncRefreshEvent(
+    return _then(_$SyncRefreshEventImpl(
       null == createdBy
           ? _value.createdBy
           : createdBy // ignore: cast_nullable_to_non_nullable
@@ -129,8 +129,8 @@ class __$$SyncRefreshEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$SyncRefreshEvent implements SyncRefreshEvent {
-  const _$SyncRefreshEvent(this.createdBy, [this.count]);
+class _$SyncRefreshEventImpl implements SyncRefreshEvent {
+  const _$SyncRefreshEventImpl(this.createdBy, [this.count]);
 
   @override
   final String createdBy;
@@ -143,10 +143,10 @@ class _$SyncRefreshEvent implements SyncRefreshEvent {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$SyncRefreshEvent &&
+            other is _$SyncRefreshEventImpl &&
             (identical(other.createdBy, createdBy) ||
                 other.createdBy == createdBy) &&
             (identical(other.count, count) || other.count == count));
@@ -158,8 +158,9 @@ class _$SyncRefreshEvent implements SyncRefreshEvent {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$SyncRefreshEventCopyWith<_$SyncRefreshEvent> get copyWith =>
-      __$$SyncRefreshEventCopyWithImpl<_$SyncRefreshEvent>(this, _$identity);
+  _$$SyncRefreshEventImplCopyWith<_$SyncRefreshEventImpl> get copyWith =>
+      __$$SyncRefreshEventImplCopyWithImpl<_$SyncRefreshEventImpl>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -244,20 +245,20 @@ class _$SyncRefreshEvent implements SyncRefreshEvent {
 
 abstract class SyncRefreshEvent implements SyncEvent {
   const factory SyncRefreshEvent(final String createdBy, [final int? count]) =
-      _$SyncRefreshEvent;
+      _$SyncRefreshEventImpl;
 
   String get createdBy;
   int? get count;
   @JsonKey(ignore: true)
-  _$$SyncRefreshEventCopyWith<_$SyncRefreshEvent> get copyWith =>
+  _$$SyncRefreshEventImplCopyWith<_$SyncRefreshEventImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$SyncSyncUpEventCopyWith<$Res> {
-  factory _$$SyncSyncUpEventCopyWith(
-          _$SyncSyncUpEvent value, $Res Function(_$SyncSyncUpEvent) then) =
-      __$$SyncSyncUpEventCopyWithImpl<$Res>;
+abstract class _$$SyncSyncUpEventImplCopyWith<$Res> {
+  factory _$$SyncSyncUpEventImplCopyWith(_$SyncSyncUpEventImpl value,
+          $Res Function(_$SyncSyncUpEventImpl) then) =
+      __$$SyncSyncUpEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call(
       {String userId,
@@ -267,11 +268,11 @@ abstract class _$$SyncSyncUpEventCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$SyncSyncUpEventCopyWithImpl<$Res>
-    extends _$SyncEventCopyWithImpl<$Res, _$SyncSyncUpEvent>
-    implements _$$SyncSyncUpEventCopyWith<$Res> {
-  __$$SyncSyncUpEventCopyWithImpl(
-      _$SyncSyncUpEvent _value, $Res Function(_$SyncSyncUpEvent) _then)
+class __$$SyncSyncUpEventImplCopyWithImpl<$Res>
+    extends _$SyncEventCopyWithImpl<$Res, _$SyncSyncUpEventImpl>
+    implements _$$SyncSyncUpEventImplCopyWith<$Res> {
+  __$$SyncSyncUpEventImplCopyWithImpl(
+      _$SyncSyncUpEventImpl _value, $Res Function(_$SyncSyncUpEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -281,7 +282,7 @@ class __$$SyncSyncUpEventCopyWithImpl<$Res>
     Object? localRepositories = null,
     Object? remoteRepositories = null,
   }) {
-    return _then(_$SyncSyncUpEvent(
+    return _then(_$SyncSyncUpEventImpl(
       userId: null == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
@@ -300,8 +301,8 @@ class __$$SyncSyncUpEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$SyncSyncUpEvent implements SyncSyncUpEvent {
-  const _$SyncSyncUpEvent(
+class _$SyncSyncUpEventImpl implements SyncSyncUpEvent {
+  const _$SyncSyncUpEventImpl(
       {required this.userId,
       required final List<LocalRepository<EntityModel, EntitySearchModel>>
           localRepositories,
@@ -316,6 +317,8 @@ class _$SyncSyncUpEvent implements SyncSyncUpEvent {
       _localRepositories;
   @override
   List<LocalRepository<EntityModel, EntitySearchModel>> get localRepositories {
+    if (_localRepositories is EqualUnmodifiableListView)
+      return _localRepositories;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_localRepositories);
   }
@@ -325,6 +328,8 @@ class _$SyncSyncUpEvent implements SyncSyncUpEvent {
   @override
   List<RemoteRepository<EntityModel, EntitySearchModel>>
       get remoteRepositories {
+    if (_remoteRepositories is EqualUnmodifiableListView)
+      return _remoteRepositories;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_remoteRepositories);
   }
@@ -335,10 +340,10 @@ class _$SyncSyncUpEvent implements SyncSyncUpEvent {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$SyncSyncUpEvent &&
+            other is _$SyncSyncUpEventImpl &&
             (identical(other.userId, userId) || other.userId == userId) &&
             const DeepCollectionEquality()
                 .equals(other._localRepositories, _localRepositories) &&
@@ -356,8 +361,9 @@ class _$SyncSyncUpEvent implements SyncSyncUpEvent {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$SyncSyncUpEventCopyWith<_$SyncSyncUpEvent> get copyWith =>
-      __$$SyncSyncUpEventCopyWithImpl<_$SyncSyncUpEvent>(this, _$identity);
+  _$$SyncSyncUpEventImplCopyWith<_$SyncSyncUpEventImpl> get copyWith =>
+      __$$SyncSyncUpEventImplCopyWithImpl<_$SyncSyncUpEventImpl>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -446,13 +452,13 @@ abstract class SyncSyncUpEvent implements SyncEvent {
       required final List<LocalRepository<EntityModel, EntitySearchModel>>
           localRepositories,
       required final List<RemoteRepository<EntityModel, EntitySearchModel>>
-          remoteRepositories}) = _$SyncSyncUpEvent;
+          remoteRepositories}) = _$SyncSyncUpEventImpl;
 
   String get userId;
   List<LocalRepository<EntityModel, EntitySearchModel>> get localRepositories;
   List<RemoteRepository<EntityModel, EntitySearchModel>> get remoteRepositories;
   @JsonKey(ignore: true)
-  _$$SyncSyncUpEventCopyWith<_$SyncSyncUpEvent> get copyWith =>
+  _$$SyncSyncUpEventImplCopyWith<_$SyncSyncUpEventImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -546,25 +552,25 @@ class _$SyncStateCopyWithImpl<$Res, $Val extends SyncState>
 }
 
 /// @nodoc
-abstract class _$$SyncLoadingStateCopyWith<$Res> {
-  factory _$$SyncLoadingStateCopyWith(
-          _$SyncLoadingState value, $Res Function(_$SyncLoadingState) then) =
-      __$$SyncLoadingStateCopyWithImpl<$Res>;
+abstract class _$$SyncLoadingStateImplCopyWith<$Res> {
+  factory _$$SyncLoadingStateImplCopyWith(_$SyncLoadingStateImpl value,
+          $Res Function(_$SyncLoadingStateImpl) then) =
+      __$$SyncLoadingStateImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$SyncLoadingStateCopyWithImpl<$Res>
-    extends _$SyncStateCopyWithImpl<$Res, _$SyncLoadingState>
-    implements _$$SyncLoadingStateCopyWith<$Res> {
-  __$$SyncLoadingStateCopyWithImpl(
-      _$SyncLoadingState _value, $Res Function(_$SyncLoadingState) _then)
+class __$$SyncLoadingStateImplCopyWithImpl<$Res>
+    extends _$SyncStateCopyWithImpl<$Res, _$SyncLoadingStateImpl>
+    implements _$$SyncLoadingStateImplCopyWith<$Res> {
+  __$$SyncLoadingStateImplCopyWithImpl(_$SyncLoadingStateImpl _value,
+      $Res Function(_$SyncLoadingStateImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$SyncLoadingState implements SyncLoadingState {
-  const _$SyncLoadingState();
+class _$SyncLoadingStateImpl implements SyncLoadingState {
+  const _$SyncLoadingStateImpl();
 
   @override
   String toString() {
@@ -572,9 +578,9 @@ class _$SyncLoadingState implements SyncLoadingState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$SyncLoadingState);
+        (other.runtimeType == runtimeType && other is _$SyncLoadingStateImpl);
   }
 
   @override
@@ -674,29 +680,29 @@ class _$SyncLoadingState implements SyncLoadingState {
 }
 
 abstract class SyncLoadingState implements SyncState {
-  const factory SyncLoadingState() = _$SyncLoadingState;
+  const factory SyncLoadingState() = _$SyncLoadingStateImpl;
 }
 
 /// @nodoc
-abstract class _$$SyncInProgressStateCopyWith<$Res> {
-  factory _$$SyncInProgressStateCopyWith(_$SyncInProgressState value,
-          $Res Function(_$SyncInProgressState) then) =
-      __$$SyncInProgressStateCopyWithImpl<$Res>;
+abstract class _$$SyncInProgressStateImplCopyWith<$Res> {
+  factory _$$SyncInProgressStateImplCopyWith(_$SyncInProgressStateImpl value,
+          $Res Function(_$SyncInProgressStateImpl) then) =
+      __$$SyncInProgressStateImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$SyncInProgressStateCopyWithImpl<$Res>
-    extends _$SyncStateCopyWithImpl<$Res, _$SyncInProgressState>
-    implements _$$SyncInProgressStateCopyWith<$Res> {
-  __$$SyncInProgressStateCopyWithImpl(
-      _$SyncInProgressState _value, $Res Function(_$SyncInProgressState) _then)
+class __$$SyncInProgressStateImplCopyWithImpl<$Res>
+    extends _$SyncStateCopyWithImpl<$Res, _$SyncInProgressStateImpl>
+    implements _$$SyncInProgressStateImplCopyWith<$Res> {
+  __$$SyncInProgressStateImplCopyWithImpl(_$SyncInProgressStateImpl _value,
+      $Res Function(_$SyncInProgressStateImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$SyncInProgressState implements SyncInProgressState {
-  const _$SyncInProgressState();
+class _$SyncInProgressStateImpl implements SyncInProgressState {
+  const _$SyncInProgressStateImpl();
 
   @override
   String toString() {
@@ -704,9 +710,10 @@ class _$SyncInProgressState implements SyncInProgressState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$SyncInProgressState);
+        (other.runtimeType == runtimeType &&
+            other is _$SyncInProgressStateImpl);
   }
 
   @override
@@ -806,24 +813,24 @@ class _$SyncInProgressState implements SyncInProgressState {
 }
 
 abstract class SyncInProgressState implements SyncState {
-  const factory SyncInProgressState() = _$SyncInProgressState;
+  const factory SyncInProgressState() = _$SyncInProgressStateImpl;
 }
 
 /// @nodoc
-abstract class _$$SyncPendingStateCopyWith<$Res> {
-  factory _$$SyncPendingStateCopyWith(
-          _$SyncPendingState value, $Res Function(_$SyncPendingState) then) =
-      __$$SyncPendingStateCopyWithImpl<$Res>;
+abstract class _$$SyncPendingStateImplCopyWith<$Res> {
+  factory _$$SyncPendingStateImplCopyWith(_$SyncPendingStateImpl value,
+          $Res Function(_$SyncPendingStateImpl) then) =
+      __$$SyncPendingStateImplCopyWithImpl<$Res>;
   @useResult
   $Res call({int count});
 }
 
 /// @nodoc
-class __$$SyncPendingStateCopyWithImpl<$Res>
-    extends _$SyncStateCopyWithImpl<$Res, _$SyncPendingState>
-    implements _$$SyncPendingStateCopyWith<$Res> {
-  __$$SyncPendingStateCopyWithImpl(
-      _$SyncPendingState _value, $Res Function(_$SyncPendingState) _then)
+class __$$SyncPendingStateImplCopyWithImpl<$Res>
+    extends _$SyncStateCopyWithImpl<$Res, _$SyncPendingStateImpl>
+    implements _$$SyncPendingStateImplCopyWith<$Res> {
+  __$$SyncPendingStateImplCopyWithImpl(_$SyncPendingStateImpl _value,
+      $Res Function(_$SyncPendingStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -831,7 +838,7 @@ class __$$SyncPendingStateCopyWithImpl<$Res>
   $Res call({
     Object? count = null,
   }) {
-    return _then(_$SyncPendingState(
+    return _then(_$SyncPendingStateImpl(
       count: null == count
           ? _value.count
           : count // ignore: cast_nullable_to_non_nullable
@@ -842,8 +849,8 @@ class __$$SyncPendingStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$SyncPendingState implements SyncPendingState {
-  const _$SyncPendingState({this.count = 0});
+class _$SyncPendingStateImpl implements SyncPendingState {
+  const _$SyncPendingStateImpl({this.count = 0});
 
   @override
   @JsonKey()
@@ -855,10 +862,10 @@ class _$SyncPendingState implements SyncPendingState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$SyncPendingState &&
+            other is _$SyncPendingStateImpl &&
             (identical(other.count, count) || other.count == count));
   }
 
@@ -868,8 +875,9 @@ class _$SyncPendingState implements SyncPendingState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$SyncPendingStateCopyWith<_$SyncPendingState> get copyWith =>
-      __$$SyncPendingStateCopyWithImpl<_$SyncPendingState>(this, _$identity);
+  _$$SyncPendingStateImplCopyWith<_$SyncPendingStateImpl> get copyWith =>
+      __$$SyncPendingStateImplCopyWithImpl<_$SyncPendingStateImpl>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -965,34 +973,34 @@ class _$SyncPendingState implements SyncPendingState {
 }
 
 abstract class SyncPendingState implements SyncState {
-  const factory SyncPendingState({final int count}) = _$SyncPendingState;
+  const factory SyncPendingState({final int count}) = _$SyncPendingStateImpl;
 
   int get count;
   @JsonKey(ignore: true)
-  _$$SyncPendingStateCopyWith<_$SyncPendingState> get copyWith =>
+  _$$SyncPendingStateImplCopyWith<_$SyncPendingStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$SyncCompletedStateCopyWith<$Res> {
-  factory _$$SyncCompletedStateCopyWith(_$SyncCompletedState value,
-          $Res Function(_$SyncCompletedState) then) =
-      __$$SyncCompletedStateCopyWithImpl<$Res>;
+abstract class _$$SyncCompletedStateImplCopyWith<$Res> {
+  factory _$$SyncCompletedStateImplCopyWith(_$SyncCompletedStateImpl value,
+          $Res Function(_$SyncCompletedStateImpl) then) =
+      __$$SyncCompletedStateImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$SyncCompletedStateCopyWithImpl<$Res>
-    extends _$SyncStateCopyWithImpl<$Res, _$SyncCompletedState>
-    implements _$$SyncCompletedStateCopyWith<$Res> {
-  __$$SyncCompletedStateCopyWithImpl(
-      _$SyncCompletedState _value, $Res Function(_$SyncCompletedState) _then)
+class __$$SyncCompletedStateImplCopyWithImpl<$Res>
+    extends _$SyncStateCopyWithImpl<$Res, _$SyncCompletedStateImpl>
+    implements _$$SyncCompletedStateImplCopyWith<$Res> {
+  __$$SyncCompletedStateImplCopyWithImpl(_$SyncCompletedStateImpl _value,
+      $Res Function(_$SyncCompletedStateImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$SyncCompletedState implements SyncCompletedState {
-  const _$SyncCompletedState();
+class _$SyncCompletedStateImpl implements SyncCompletedState {
+  const _$SyncCompletedStateImpl();
 
   @override
   String toString() {
@@ -1000,9 +1008,9 @@ class _$SyncCompletedState implements SyncCompletedState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$SyncCompletedState);
+        (other.runtimeType == runtimeType && other is _$SyncCompletedStateImpl);
   }
 
   @override
@@ -1102,29 +1110,29 @@ class _$SyncCompletedState implements SyncCompletedState {
 }
 
 abstract class SyncCompletedState implements SyncState {
-  const factory SyncCompletedState() = _$SyncCompletedState;
+  const factory SyncCompletedState() = _$SyncCompletedStateImpl;
 }
 
 /// @nodoc
-abstract class _$$SyncFailedStateCopyWith<$Res> {
-  factory _$$SyncFailedStateCopyWith(
-          _$SyncFailedState value, $Res Function(_$SyncFailedState) then) =
-      __$$SyncFailedStateCopyWithImpl<$Res>;
+abstract class _$$SyncFailedStateImplCopyWith<$Res> {
+  factory _$$SyncFailedStateImplCopyWith(_$SyncFailedStateImpl value,
+          $Res Function(_$SyncFailedStateImpl) then) =
+      __$$SyncFailedStateImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$SyncFailedStateCopyWithImpl<$Res>
-    extends _$SyncStateCopyWithImpl<$Res, _$SyncFailedState>
-    implements _$$SyncFailedStateCopyWith<$Res> {
-  __$$SyncFailedStateCopyWithImpl(
-      _$SyncFailedState _value, $Res Function(_$SyncFailedState) _then)
+class __$$SyncFailedStateImplCopyWithImpl<$Res>
+    extends _$SyncStateCopyWithImpl<$Res, _$SyncFailedStateImpl>
+    implements _$$SyncFailedStateImplCopyWith<$Res> {
+  __$$SyncFailedStateImplCopyWithImpl(
+      _$SyncFailedStateImpl _value, $Res Function(_$SyncFailedStateImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$SyncFailedState implements SyncFailedState {
-  const _$SyncFailedState();
+class _$SyncFailedStateImpl implements SyncFailedState {
+  const _$SyncFailedStateImpl();
 
   @override
   String toString() {
@@ -1132,9 +1140,9 @@ class _$SyncFailedState implements SyncFailedState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$SyncFailedState);
+        (other.runtimeType == runtimeType && other is _$SyncFailedStateImpl);
   }
 
   @override
@@ -1234,29 +1242,29 @@ class _$SyncFailedState implements SyncFailedState {
 }
 
 abstract class SyncFailedState implements SyncState {
-  const factory SyncFailedState() = _$SyncFailedState;
+  const factory SyncFailedState() = _$SyncFailedStateImpl;
 }
 
 /// @nodoc
-abstract class _$$DownSyncFailedStateCopyWith<$Res> {
-  factory _$$DownSyncFailedStateCopyWith(_$DownSyncFailedState value,
-          $Res Function(_$DownSyncFailedState) then) =
-      __$$DownSyncFailedStateCopyWithImpl<$Res>;
+abstract class _$$DownSyncFailedStateImplCopyWith<$Res> {
+  factory _$$DownSyncFailedStateImplCopyWith(_$DownSyncFailedStateImpl value,
+          $Res Function(_$DownSyncFailedStateImpl) then) =
+      __$$DownSyncFailedStateImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$DownSyncFailedStateCopyWithImpl<$Res>
-    extends _$SyncStateCopyWithImpl<$Res, _$DownSyncFailedState>
-    implements _$$DownSyncFailedStateCopyWith<$Res> {
-  __$$DownSyncFailedStateCopyWithImpl(
-      _$DownSyncFailedState _value, $Res Function(_$DownSyncFailedState) _then)
+class __$$DownSyncFailedStateImplCopyWithImpl<$Res>
+    extends _$SyncStateCopyWithImpl<$Res, _$DownSyncFailedStateImpl>
+    implements _$$DownSyncFailedStateImplCopyWith<$Res> {
+  __$$DownSyncFailedStateImplCopyWithImpl(_$DownSyncFailedStateImpl _value,
+      $Res Function(_$DownSyncFailedStateImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$DownSyncFailedState implements DownSyncFailedState {
-  const _$DownSyncFailedState();
+class _$DownSyncFailedStateImpl implements DownSyncFailedState {
+  const _$DownSyncFailedStateImpl();
 
   @override
   String toString() {
@@ -1264,9 +1272,10 @@ class _$DownSyncFailedState implements DownSyncFailedState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$DownSyncFailedState);
+        (other.runtimeType == runtimeType &&
+            other is _$DownSyncFailedStateImpl);
   }
 
   @override
@@ -1366,29 +1375,29 @@ class _$DownSyncFailedState implements DownSyncFailedState {
 }
 
 abstract class DownSyncFailedState implements SyncState {
-  const factory DownSyncFailedState() = _$DownSyncFailedState;
+  const factory DownSyncFailedState() = _$DownSyncFailedStateImpl;
 }
 
 /// @nodoc
-abstract class _$$UpSyncFailedStateCopyWith<$Res> {
-  factory _$$UpSyncFailedStateCopyWith(
-          _$UpSyncFailedState value, $Res Function(_$UpSyncFailedState) then) =
-      __$$UpSyncFailedStateCopyWithImpl<$Res>;
+abstract class _$$UpSyncFailedStateImplCopyWith<$Res> {
+  factory _$$UpSyncFailedStateImplCopyWith(_$UpSyncFailedStateImpl value,
+          $Res Function(_$UpSyncFailedStateImpl) then) =
+      __$$UpSyncFailedStateImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$UpSyncFailedStateCopyWithImpl<$Res>
-    extends _$SyncStateCopyWithImpl<$Res, _$UpSyncFailedState>
-    implements _$$UpSyncFailedStateCopyWith<$Res> {
-  __$$UpSyncFailedStateCopyWithImpl(
-      _$UpSyncFailedState _value, $Res Function(_$UpSyncFailedState) _then)
+class __$$UpSyncFailedStateImplCopyWithImpl<$Res>
+    extends _$SyncStateCopyWithImpl<$Res, _$UpSyncFailedStateImpl>
+    implements _$$UpSyncFailedStateImplCopyWith<$Res> {
+  __$$UpSyncFailedStateImplCopyWithImpl(_$UpSyncFailedStateImpl _value,
+      $Res Function(_$UpSyncFailedStateImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$UpSyncFailedState implements UpSyncFailedState {
-  const _$UpSyncFailedState();
+class _$UpSyncFailedStateImpl implements UpSyncFailedState {
+  const _$UpSyncFailedStateImpl();
 
   @override
   String toString() {
@@ -1396,9 +1405,9 @@ class _$UpSyncFailedState implements UpSyncFailedState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$UpSyncFailedState);
+        (other.runtimeType == runtimeType && other is _$UpSyncFailedStateImpl);
   }
 
   @override
@@ -1498,5 +1507,5 @@ class _$UpSyncFailedState implements UpSyncFailedState {
 }
 
 abstract class UpSyncFailedState implements SyncState {
-  const factory UpSyncFailedState() = _$UpSyncFailedState;
+  const factory UpSyncFailedState() = _$UpSyncFailedStateImpl;
 }

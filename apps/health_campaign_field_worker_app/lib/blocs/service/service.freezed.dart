@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'service.dart';
 
@@ -96,20 +96,20 @@ class _$ServiceEventCopyWithImpl<$Res, $Val extends ServiceEvent>
 }
 
 /// @nodoc
-abstract class _$$ServiceCreateEventCopyWith<$Res> {
-  factory _$$ServiceCreateEventCopyWith(_$ServiceCreateEvent value,
-          $Res Function(_$ServiceCreateEvent) then) =
-      __$$ServiceCreateEventCopyWithImpl<$Res>;
+abstract class _$$ServiceCreateEventImplCopyWith<$Res> {
+  factory _$$ServiceCreateEventImplCopyWith(_$ServiceCreateEventImpl value,
+          $Res Function(_$ServiceCreateEventImpl) then) =
+      __$$ServiceCreateEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call({ServiceModel serviceModel});
 }
 
 /// @nodoc
-class __$$ServiceCreateEventCopyWithImpl<$Res>
-    extends _$ServiceEventCopyWithImpl<$Res, _$ServiceCreateEvent>
-    implements _$$ServiceCreateEventCopyWith<$Res> {
-  __$$ServiceCreateEventCopyWithImpl(
-      _$ServiceCreateEvent _value, $Res Function(_$ServiceCreateEvent) _then)
+class __$$ServiceCreateEventImplCopyWithImpl<$Res>
+    extends _$ServiceEventCopyWithImpl<$Res, _$ServiceCreateEventImpl>
+    implements _$$ServiceCreateEventImplCopyWith<$Res> {
+  __$$ServiceCreateEventImplCopyWithImpl(_$ServiceCreateEventImpl _value,
+      $Res Function(_$ServiceCreateEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -117,7 +117,7 @@ class __$$ServiceCreateEventCopyWithImpl<$Res>
   $Res call({
     Object? serviceModel = null,
   }) {
-    return _then(_$ServiceCreateEvent(
+    return _then(_$ServiceCreateEventImpl(
       serviceModel: null == serviceModel
           ? _value.serviceModel
           : serviceModel // ignore: cast_nullable_to_non_nullable
@@ -128,8 +128,8 @@ class __$$ServiceCreateEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ServiceCreateEvent implements ServiceCreateEvent {
-  const _$ServiceCreateEvent({required this.serviceModel});
+class _$ServiceCreateEventImpl implements ServiceCreateEvent {
+  const _$ServiceCreateEventImpl({required this.serviceModel});
 
   @override
   final ServiceModel serviceModel;
@@ -140,10 +140,10 @@ class _$ServiceCreateEvent implements ServiceCreateEvent {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ServiceCreateEvent &&
+            other is _$ServiceCreateEventImpl &&
             (identical(other.serviceModel, serviceModel) ||
                 other.serviceModel == serviceModel));
   }
@@ -154,8 +154,8 @@ class _$ServiceCreateEvent implements ServiceCreateEvent {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ServiceCreateEventCopyWith<_$ServiceCreateEvent> get copyWith =>
-      __$$ServiceCreateEventCopyWithImpl<_$ServiceCreateEvent>(
+  _$$ServiceCreateEventImplCopyWith<_$ServiceCreateEventImpl> get copyWith =>
+      __$$ServiceCreateEventImplCopyWithImpl<_$ServiceCreateEventImpl>(
           this, _$identity);
 
   @override
@@ -244,29 +244,29 @@ class _$ServiceCreateEvent implements ServiceCreateEvent {
 
 abstract class ServiceCreateEvent implements ServiceEvent {
   const factory ServiceCreateEvent({required final ServiceModel serviceModel}) =
-      _$ServiceCreateEvent;
+      _$ServiceCreateEventImpl;
 
   ServiceModel get serviceModel;
   @JsonKey(ignore: true)
-  _$$ServiceCreateEventCopyWith<_$ServiceCreateEvent> get copyWith =>
+  _$$ServiceCreateEventImplCopyWith<_$ServiceCreateEventImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$ServiceSearchEventCopyWith<$Res> {
-  factory _$$ServiceSearchEventCopyWith(_$ServiceSearchEvent value,
-          $Res Function(_$ServiceSearchEvent) then) =
-      __$$ServiceSearchEventCopyWithImpl<$Res>;
+abstract class _$$ServiceSearchEventImplCopyWith<$Res> {
+  factory _$$ServiceSearchEventImplCopyWith(_$ServiceSearchEventImpl value,
+          $Res Function(_$ServiceSearchEventImpl) then) =
+      __$$ServiceSearchEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call({ServiceSearchModel serviceSearchModel});
 }
 
 /// @nodoc
-class __$$ServiceSearchEventCopyWithImpl<$Res>
-    extends _$ServiceEventCopyWithImpl<$Res, _$ServiceSearchEvent>
-    implements _$$ServiceSearchEventCopyWith<$Res> {
-  __$$ServiceSearchEventCopyWithImpl(
-      _$ServiceSearchEvent _value, $Res Function(_$ServiceSearchEvent) _then)
+class __$$ServiceSearchEventImplCopyWithImpl<$Res>
+    extends _$ServiceEventCopyWithImpl<$Res, _$ServiceSearchEventImpl>
+    implements _$$ServiceSearchEventImplCopyWith<$Res> {
+  __$$ServiceSearchEventImplCopyWithImpl(_$ServiceSearchEventImpl _value,
+      $Res Function(_$ServiceSearchEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -274,7 +274,7 @@ class __$$ServiceSearchEventCopyWithImpl<$Res>
   $Res call({
     Object? serviceSearchModel = null,
   }) {
-    return _then(_$ServiceSearchEvent(
+    return _then(_$ServiceSearchEventImpl(
       serviceSearchModel: null == serviceSearchModel
           ? _value.serviceSearchModel
           : serviceSearchModel // ignore: cast_nullable_to_non_nullable
@@ -285,8 +285,8 @@ class __$$ServiceSearchEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ServiceSearchEvent implements ServiceSearchEvent {
-  const _$ServiceSearchEvent({required this.serviceSearchModel});
+class _$ServiceSearchEventImpl implements ServiceSearchEvent {
+  const _$ServiceSearchEventImpl({required this.serviceSearchModel});
 
   @override
   final ServiceSearchModel serviceSearchModel;
@@ -297,10 +297,10 @@ class _$ServiceSearchEvent implements ServiceSearchEvent {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ServiceSearchEvent &&
+            other is _$ServiceSearchEventImpl &&
             (identical(other.serviceSearchModel, serviceSearchModel) ||
                 other.serviceSearchModel == serviceSearchModel));
   }
@@ -311,8 +311,8 @@ class _$ServiceSearchEvent implements ServiceSearchEvent {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ServiceSearchEventCopyWith<_$ServiceSearchEvent> get copyWith =>
-      __$$ServiceSearchEventCopyWithImpl<_$ServiceSearchEvent>(
+  _$$ServiceSearchEventImplCopyWith<_$ServiceSearchEventImpl> get copyWith =>
+      __$$ServiceSearchEventImplCopyWithImpl<_$ServiceSearchEventImpl>(
           this, _$identity);
 
   @override
@@ -402,29 +402,30 @@ class _$ServiceSearchEvent implements ServiceSearchEvent {
 abstract class ServiceSearchEvent implements ServiceEvent {
   const factory ServiceSearchEvent(
           {required final ServiceSearchModel serviceSearchModel}) =
-      _$ServiceSearchEvent;
+      _$ServiceSearchEventImpl;
 
   ServiceSearchModel get serviceSearchModel;
   @JsonKey(ignore: true)
-  _$$ServiceSearchEventCopyWith<_$ServiceSearchEvent> get copyWith =>
+  _$$ServiceSearchEventImplCopyWith<_$ServiceSearchEventImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$ServiceChecklistEventCopyWith<$Res> {
-  factory _$$ServiceChecklistEventCopyWith(_$ServiceChecklistEvent value,
-          $Res Function(_$ServiceChecklistEvent) then) =
-      __$$ServiceChecklistEventCopyWithImpl<$Res>;
+abstract class _$$ServiceChecklistEventImplCopyWith<$Res> {
+  factory _$$ServiceChecklistEventImplCopyWith(
+          _$ServiceChecklistEventImpl value,
+          $Res Function(_$ServiceChecklistEventImpl) then) =
+      __$$ServiceChecklistEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String value, bool submitTriggered});
 }
 
 /// @nodoc
-class __$$ServiceChecklistEventCopyWithImpl<$Res>
-    extends _$ServiceEventCopyWithImpl<$Res, _$ServiceChecklistEvent>
-    implements _$$ServiceChecklistEventCopyWith<$Res> {
-  __$$ServiceChecklistEventCopyWithImpl(_$ServiceChecklistEvent _value,
-      $Res Function(_$ServiceChecklistEvent) _then)
+class __$$ServiceChecklistEventImplCopyWithImpl<$Res>
+    extends _$ServiceEventCopyWithImpl<$Res, _$ServiceChecklistEventImpl>
+    implements _$$ServiceChecklistEventImplCopyWith<$Res> {
+  __$$ServiceChecklistEventImplCopyWithImpl(_$ServiceChecklistEventImpl _value,
+      $Res Function(_$ServiceChecklistEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -433,7 +434,7 @@ class __$$ServiceChecklistEventCopyWithImpl<$Res>
     Object? value = null,
     Object? submitTriggered = null,
   }) {
-    return _then(_$ServiceChecklistEvent(
+    return _then(_$ServiceChecklistEventImpl(
       value: null == value
           ? _value.value
           : value // ignore: cast_nullable_to_non_nullable
@@ -448,8 +449,8 @@ class __$$ServiceChecklistEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ServiceChecklistEvent implements ServiceChecklistEvent {
-  const _$ServiceChecklistEvent(
+class _$ServiceChecklistEventImpl implements ServiceChecklistEvent {
+  const _$ServiceChecklistEventImpl(
       {required this.value, required this.submitTriggered});
 
   @override
@@ -463,10 +464,10 @@ class _$ServiceChecklistEvent implements ServiceChecklistEvent {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ServiceChecklistEvent &&
+            other is _$ServiceChecklistEventImpl &&
             (identical(other.value, value) || other.value == value) &&
             (identical(other.submitTriggered, submitTriggered) ||
                 other.submitTriggered == submitTriggered));
@@ -478,9 +479,9 @@ class _$ServiceChecklistEvent implements ServiceChecklistEvent {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ServiceChecklistEventCopyWith<_$ServiceChecklistEvent> get copyWith =>
-      __$$ServiceChecklistEventCopyWithImpl<_$ServiceChecklistEvent>(
-          this, _$identity);
+  _$$ServiceChecklistEventImplCopyWith<_$ServiceChecklistEventImpl>
+      get copyWith => __$$ServiceChecklistEventImplCopyWithImpl<
+          _$ServiceChecklistEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -569,30 +570,31 @@ class _$ServiceChecklistEvent implements ServiceChecklistEvent {
 abstract class ServiceChecklistEvent implements ServiceEvent {
   const factory ServiceChecklistEvent(
       {required final String value,
-      required final bool submitTriggered}) = _$ServiceChecklistEvent;
+      required final bool submitTriggered}) = _$ServiceChecklistEventImpl;
 
   String get value;
   bool get submitTriggered;
   @JsonKey(ignore: true)
-  _$$ServiceChecklistEventCopyWith<_$ServiceChecklistEvent> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$ServiceChecklistEventImplCopyWith<_$ServiceChecklistEventImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$ServiceSelectionEventCopyWith<$Res> {
-  factory _$$ServiceSelectionEventCopyWith(_$ServiceSelectionEvent value,
-          $Res Function(_$ServiceSelectionEvent) then) =
-      __$$ServiceSelectionEventCopyWithImpl<$Res>;
+abstract class _$$ServiceSelectionEventImplCopyWith<$Res> {
+  factory _$$ServiceSelectionEventImplCopyWith(
+          _$ServiceSelectionEventImpl value,
+          $Res Function(_$ServiceSelectionEventImpl) then) =
+      __$$ServiceSelectionEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call({ServiceModel service});
 }
 
 /// @nodoc
-class __$$ServiceSelectionEventCopyWithImpl<$Res>
-    extends _$ServiceEventCopyWithImpl<$Res, _$ServiceSelectionEvent>
-    implements _$$ServiceSelectionEventCopyWith<$Res> {
-  __$$ServiceSelectionEventCopyWithImpl(_$ServiceSelectionEvent _value,
-      $Res Function(_$ServiceSelectionEvent) _then)
+class __$$ServiceSelectionEventImplCopyWithImpl<$Res>
+    extends _$ServiceEventCopyWithImpl<$Res, _$ServiceSelectionEventImpl>
+    implements _$$ServiceSelectionEventImplCopyWith<$Res> {
+  __$$ServiceSelectionEventImplCopyWithImpl(_$ServiceSelectionEventImpl _value,
+      $Res Function(_$ServiceSelectionEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -600,7 +602,7 @@ class __$$ServiceSelectionEventCopyWithImpl<$Res>
   $Res call({
     Object? service = null,
   }) {
-    return _then(_$ServiceSelectionEvent(
+    return _then(_$ServiceSelectionEventImpl(
       service: null == service
           ? _value.service
           : service // ignore: cast_nullable_to_non_nullable
@@ -611,8 +613,8 @@ class __$$ServiceSelectionEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ServiceSelectionEvent implements ServiceSelectionEvent {
-  const _$ServiceSelectionEvent({required this.service});
+class _$ServiceSelectionEventImpl implements ServiceSelectionEvent {
+  const _$ServiceSelectionEventImpl({required this.service});
 
   @override
   final ServiceModel service;
@@ -623,10 +625,10 @@ class _$ServiceSelectionEvent implements ServiceSelectionEvent {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ServiceSelectionEvent &&
+            other is _$ServiceSelectionEventImpl &&
             (identical(other.service, service) || other.service == service));
   }
 
@@ -636,9 +638,9 @@ class _$ServiceSelectionEvent implements ServiceSelectionEvent {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ServiceSelectionEventCopyWith<_$ServiceSelectionEvent> get copyWith =>
-      __$$ServiceSelectionEventCopyWithImpl<_$ServiceSelectionEvent>(
-          this, _$identity);
+  _$$ServiceSelectionEventImplCopyWith<_$ServiceSelectionEventImpl>
+      get copyWith => __$$ServiceSelectionEventImplCopyWithImpl<
+          _$ServiceSelectionEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -726,29 +728,29 @@ class _$ServiceSelectionEvent implements ServiceSelectionEvent {
 
 abstract class ServiceSelectionEvent implements ServiceEvent {
   const factory ServiceSelectionEvent({required final ServiceModel service}) =
-      _$ServiceSelectionEvent;
+      _$ServiceSelectionEventImpl;
 
   ServiceModel get service;
   @JsonKey(ignore: true)
-  _$$ServiceSelectionEventCopyWith<_$ServiceSelectionEvent> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$ServiceSelectionEventImplCopyWith<_$ServiceSelectionEventImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$ServiceResetEventCopyWith<$Res> {
-  factory _$$ServiceResetEventCopyWith(
-          _$ServiceResetEvent value, $Res Function(_$ServiceResetEvent) then) =
-      __$$ServiceResetEventCopyWithImpl<$Res>;
+abstract class _$$ServiceResetEventImplCopyWith<$Res> {
+  factory _$$ServiceResetEventImplCopyWith(_$ServiceResetEventImpl value,
+          $Res Function(_$ServiceResetEventImpl) then) =
+      __$$ServiceResetEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call({List<ServiceModel> serviceList});
 }
 
 /// @nodoc
-class __$$ServiceResetEventCopyWithImpl<$Res>
-    extends _$ServiceEventCopyWithImpl<$Res, _$ServiceResetEvent>
-    implements _$$ServiceResetEventCopyWith<$Res> {
-  __$$ServiceResetEventCopyWithImpl(
-      _$ServiceResetEvent _value, $Res Function(_$ServiceResetEvent) _then)
+class __$$ServiceResetEventImplCopyWithImpl<$Res>
+    extends _$ServiceEventCopyWithImpl<$Res, _$ServiceResetEventImpl>
+    implements _$$ServiceResetEventImplCopyWith<$Res> {
+  __$$ServiceResetEventImplCopyWithImpl(_$ServiceResetEventImpl _value,
+      $Res Function(_$ServiceResetEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -756,7 +758,7 @@ class __$$ServiceResetEventCopyWithImpl<$Res>
   $Res call({
     Object? serviceList = null,
   }) {
-    return _then(_$ServiceResetEvent(
+    return _then(_$ServiceResetEventImpl(
       serviceList: null == serviceList
           ? _value._serviceList
           : serviceList // ignore: cast_nullable_to_non_nullable
@@ -767,13 +769,14 @@ class __$$ServiceResetEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ServiceResetEvent implements ServiceResetEvent {
-  const _$ServiceResetEvent({required final List<ServiceModel> serviceList})
+class _$ServiceResetEventImpl implements ServiceResetEvent {
+  const _$ServiceResetEventImpl({required final List<ServiceModel> serviceList})
       : _serviceList = serviceList;
 
   final List<ServiceModel> _serviceList;
   @override
   List<ServiceModel> get serviceList {
+    if (_serviceList is EqualUnmodifiableListView) return _serviceList;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_serviceList);
   }
@@ -784,10 +787,10 @@ class _$ServiceResetEvent implements ServiceResetEvent {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ServiceResetEvent &&
+            other is _$ServiceResetEventImpl &&
             const DeepCollectionEquality()
                 .equals(other._serviceList, _serviceList));
   }
@@ -799,8 +802,9 @@ class _$ServiceResetEvent implements ServiceResetEvent {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ServiceResetEventCopyWith<_$ServiceResetEvent> get copyWith =>
-      __$$ServiceResetEventCopyWithImpl<_$ServiceResetEvent>(this, _$identity);
+  _$$ServiceResetEventImplCopyWith<_$ServiceResetEventImpl> get copyWith =>
+      __$$ServiceResetEventImplCopyWithImpl<_$ServiceResetEventImpl>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -888,11 +892,12 @@ class _$ServiceResetEvent implements ServiceResetEvent {
 
 abstract class ServiceResetEvent implements ServiceEvent {
   const factory ServiceResetEvent(
-      {required final List<ServiceModel> serviceList}) = _$ServiceResetEvent;
+          {required final List<ServiceModel> serviceList}) =
+      _$ServiceResetEventImpl;
 
   List<ServiceModel> get serviceList;
   @JsonKey(ignore: true)
-  _$$ServiceResetEventCopyWith<_$ServiceResetEvent> get copyWith =>
+  _$$ServiceResetEventImplCopyWith<_$ServiceResetEventImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -992,25 +997,25 @@ class _$ServiceStateCopyWithImpl<$Res, $Val extends ServiceState>
 }
 
 /// @nodoc
-abstract class _$$ServiceEmptyStateCopyWith<$Res> {
-  factory _$$ServiceEmptyStateCopyWith(
-          _$ServiceEmptyState value, $Res Function(_$ServiceEmptyState) then) =
-      __$$ServiceEmptyStateCopyWithImpl<$Res>;
+abstract class _$$ServiceEmptyStateImplCopyWith<$Res> {
+  factory _$$ServiceEmptyStateImplCopyWith(_$ServiceEmptyStateImpl value,
+          $Res Function(_$ServiceEmptyStateImpl) then) =
+      __$$ServiceEmptyStateImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$ServiceEmptyStateCopyWithImpl<$Res>
-    extends _$ServiceStateCopyWithImpl<$Res, _$ServiceEmptyState>
-    implements _$$ServiceEmptyStateCopyWith<$Res> {
-  __$$ServiceEmptyStateCopyWithImpl(
-      _$ServiceEmptyState _value, $Res Function(_$ServiceEmptyState) _then)
+class __$$ServiceEmptyStateImplCopyWithImpl<$Res>
+    extends _$ServiceStateCopyWithImpl<$Res, _$ServiceEmptyStateImpl>
+    implements _$$ServiceEmptyStateImplCopyWith<$Res> {
+  __$$ServiceEmptyStateImplCopyWithImpl(_$ServiceEmptyStateImpl _value,
+      $Res Function(_$ServiceEmptyStateImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$ServiceEmptyState implements ServiceEmptyState {
-  const _$ServiceEmptyState();
+class _$ServiceEmptyStateImpl implements ServiceEmptyState {
+  const _$ServiceEmptyStateImpl();
 
   @override
   String toString() {
@@ -1018,9 +1023,9 @@ class _$ServiceEmptyState implements ServiceEmptyState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$ServiceEmptyState);
+        (other.runtimeType == runtimeType && other is _$ServiceEmptyStateImpl);
   }
 
   @override
@@ -1125,29 +1130,30 @@ class _$ServiceEmptyState implements ServiceEmptyState {
 }
 
 abstract class ServiceEmptyState implements ServiceState {
-  const factory ServiceEmptyState() = _$ServiceEmptyState;
+  const factory ServiceEmptyState() = _$ServiceEmptyStateImpl;
 }
 
 /// @nodoc
-abstract class _$$ServiceIsloadingStateCopyWith<$Res> {
-  factory _$$ServiceIsloadingStateCopyWith(_$ServiceIsloadingState value,
-          $Res Function(_$ServiceIsloadingState) then) =
-      __$$ServiceIsloadingStateCopyWithImpl<$Res>;
+abstract class _$$ServiceIsloadingStateImplCopyWith<$Res> {
+  factory _$$ServiceIsloadingStateImplCopyWith(
+          _$ServiceIsloadingStateImpl value,
+          $Res Function(_$ServiceIsloadingStateImpl) then) =
+      __$$ServiceIsloadingStateImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$ServiceIsloadingStateCopyWithImpl<$Res>
-    extends _$ServiceStateCopyWithImpl<$Res, _$ServiceIsloadingState>
-    implements _$$ServiceIsloadingStateCopyWith<$Res> {
-  __$$ServiceIsloadingStateCopyWithImpl(_$ServiceIsloadingState _value,
-      $Res Function(_$ServiceIsloadingState) _then)
+class __$$ServiceIsloadingStateImplCopyWithImpl<$Res>
+    extends _$ServiceStateCopyWithImpl<$Res, _$ServiceIsloadingStateImpl>
+    implements _$$ServiceIsloadingStateImplCopyWith<$Res> {
+  __$$ServiceIsloadingStateImplCopyWithImpl(_$ServiceIsloadingStateImpl _value,
+      $Res Function(_$ServiceIsloadingStateImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$ServiceIsloadingState implements ServiceIsloadingState {
-  const _$ServiceIsloadingState();
+class _$ServiceIsloadingStateImpl implements ServiceIsloadingState {
+  const _$ServiceIsloadingStateImpl();
 
   @override
   String toString() {
@@ -1155,9 +1161,10 @@ class _$ServiceIsloadingState implements ServiceIsloadingState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$ServiceIsloadingState);
+        (other.runtimeType == runtimeType &&
+            other is _$ServiceIsloadingStateImpl);
   }
 
   @override
@@ -1262,27 +1269,27 @@ class _$ServiceIsloadingState implements ServiceIsloadingState {
 }
 
 abstract class ServiceIsloadingState implements ServiceState {
-  const factory ServiceIsloadingState() = _$ServiceIsloadingState;
+  const factory ServiceIsloadingState() = _$ServiceIsloadingStateImpl;
 }
 
 /// @nodoc
-abstract class _$$ServiceMultichecklistChangedStateCopyWith<$Res> {
-  factory _$$ServiceMultichecklistChangedStateCopyWith(
-          _$ServiceMultichecklistChangedState value,
-          $Res Function(_$ServiceMultichecklistChangedState) then) =
-      __$$ServiceMultichecklistChangedStateCopyWithImpl<$Res>;
+abstract class _$$ServiceMultichecklistChangedStateImplCopyWith<$Res> {
+  factory _$$ServiceMultichecklistChangedStateImplCopyWith(
+          _$ServiceMultichecklistChangedStateImpl value,
+          $Res Function(_$ServiceMultichecklistChangedStateImpl) then) =
+      __$$ServiceMultichecklistChangedStateImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String value, bool submitTriggered});
 }
 
 /// @nodoc
-class __$$ServiceMultichecklistChangedStateCopyWithImpl<$Res>
+class __$$ServiceMultichecklistChangedStateImplCopyWithImpl<$Res>
     extends _$ServiceStateCopyWithImpl<$Res,
-        _$ServiceMultichecklistChangedState>
-    implements _$$ServiceMultichecklistChangedStateCopyWith<$Res> {
-  __$$ServiceMultichecklistChangedStateCopyWithImpl(
-      _$ServiceMultichecklistChangedState _value,
-      $Res Function(_$ServiceMultichecklistChangedState) _then)
+        _$ServiceMultichecklistChangedStateImpl>
+    implements _$$ServiceMultichecklistChangedStateImplCopyWith<$Res> {
+  __$$ServiceMultichecklistChangedStateImplCopyWithImpl(
+      _$ServiceMultichecklistChangedStateImpl _value,
+      $Res Function(_$ServiceMultichecklistChangedStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1291,7 +1298,7 @@ class __$$ServiceMultichecklistChangedStateCopyWithImpl<$Res>
     Object? value = null,
     Object? submitTriggered = null,
   }) {
-    return _then(_$ServiceMultichecklistChangedState(
+    return _then(_$ServiceMultichecklistChangedStateImpl(
       value: null == value
           ? _value.value
           : value // ignore: cast_nullable_to_non_nullable
@@ -1306,9 +1313,9 @@ class __$$ServiceMultichecklistChangedStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ServiceMultichecklistChangedState
+class _$ServiceMultichecklistChangedStateImpl
     implements ServiceMultichecklistChangedState {
-  const _$ServiceMultichecklistChangedState(
+  const _$ServiceMultichecklistChangedStateImpl(
       {this.value = '', this.submitTriggered = false});
 
   @override
@@ -1324,10 +1331,10 @@ class _$ServiceMultichecklistChangedState
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ServiceMultichecklistChangedState &&
+            other is _$ServiceMultichecklistChangedStateImpl &&
             (identical(other.value, value) || other.value == value) &&
             (identical(other.submitTriggered, submitTriggered) ||
                 other.submitTriggered == submitTriggered));
@@ -1339,10 +1346,10 @@ class _$ServiceMultichecklistChangedState
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ServiceMultichecklistChangedStateCopyWith<
-          _$ServiceMultichecklistChangedState>
-      get copyWith => __$$ServiceMultichecklistChangedStateCopyWithImpl<
-          _$ServiceMultichecklistChangedState>(this, _$identity);
+  _$$ServiceMultichecklistChangedStateImplCopyWith<
+          _$ServiceMultichecklistChangedStateImpl>
+      get copyWith => __$$ServiceMultichecklistChangedStateImplCopyWithImpl<
+          _$ServiceMultichecklistChangedStateImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -1445,21 +1452,21 @@ class _$ServiceMultichecklistChangedState
 abstract class ServiceMultichecklistChangedState implements ServiceState {
   const factory ServiceMultichecklistChangedState(
       {final String value,
-      final bool submitTriggered}) = _$ServiceMultichecklistChangedState;
+      final bool submitTriggered}) = _$ServiceMultichecklistChangedStateImpl;
 
   String get value;
   bool get submitTriggered;
   @JsonKey(ignore: true)
-  _$$ServiceMultichecklistChangedStateCopyWith<
-          _$ServiceMultichecklistChangedState>
+  _$$ServiceMultichecklistChangedStateImplCopyWith<
+          _$ServiceMultichecklistChangedStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$ServiceCreateStateCopyWith<$Res> {
-  factory _$$ServiceCreateStateCopyWith(_$ServiceCreateState value,
-          $Res Function(_$ServiceCreateState) then) =
-      __$$ServiceCreateStateCopyWithImpl<$Res>;
+abstract class _$$ServiceCreateStateImplCopyWith<$Res> {
+  factory _$$ServiceCreateStateImplCopyWith(_$ServiceCreateStateImpl value,
+          $Res Function(_$ServiceCreateStateImpl) then) =
+      __$$ServiceCreateStateImplCopyWithImpl<$Res>;
   @useResult
   $Res call(
       {ServiceModel serviceList,
@@ -1469,11 +1476,11 @@ abstract class _$$ServiceCreateStateCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$ServiceCreateStateCopyWithImpl<$Res>
-    extends _$ServiceStateCopyWithImpl<$Res, _$ServiceCreateState>
-    implements _$$ServiceCreateStateCopyWith<$Res> {
-  __$$ServiceCreateStateCopyWithImpl(
-      _$ServiceCreateState _value, $Res Function(_$ServiceCreateState) _then)
+class __$$ServiceCreateStateImplCopyWithImpl<$Res>
+    extends _$ServiceStateCopyWithImpl<$Res, _$ServiceCreateStateImpl>
+    implements _$$ServiceCreateStateImplCopyWith<$Res> {
+  __$$ServiceCreateStateImplCopyWithImpl(_$ServiceCreateStateImpl _value,
+      $Res Function(_$ServiceCreateStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1484,7 +1491,7 @@ class __$$ServiceCreateStateCopyWithImpl<$Res>
     Object? loading = null,
     Object? isEditing = null,
   }) {
-    return _then(_$ServiceCreateState(
+    return _then(_$ServiceCreateStateImpl(
       serviceList: null == serviceList
           ? _value.serviceList
           : serviceList // ignore: cast_nullable_to_non_nullable
@@ -1507,8 +1514,8 @@ class __$$ServiceCreateStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ServiceCreateState implements ServiceCreateState {
-  const _$ServiceCreateState(
+class _$ServiceCreateStateImpl implements ServiceCreateState {
+  const _$ServiceCreateStateImpl(
       {required this.serviceList,
       this.selectedService,
       this.loading = false,
@@ -1531,10 +1538,10 @@ class _$ServiceCreateState implements ServiceCreateState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ServiceCreateState &&
+            other is _$ServiceCreateStateImpl &&
             (identical(other.serviceList, serviceList) ||
                 other.serviceList == serviceList) &&
             (identical(other.selectedService, selectedService) ||
@@ -1551,8 +1558,8 @@ class _$ServiceCreateState implements ServiceCreateState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ServiceCreateStateCopyWith<_$ServiceCreateState> get copyWith =>
-      __$$ServiceCreateStateCopyWithImpl<_$ServiceCreateState>(
+  _$$ServiceCreateStateImplCopyWith<_$ServiceCreateStateImpl> get copyWith =>
+      __$$ServiceCreateStateImplCopyWithImpl<_$ServiceCreateStateImpl>(
           this, _$identity);
 
   @override
@@ -1659,22 +1666,22 @@ abstract class ServiceCreateState implements ServiceState {
       {required final ServiceModel serviceList,
       final ServiceModel? selectedService,
       final bool loading,
-      final bool isEditing}) = _$ServiceCreateState;
+      final bool isEditing}) = _$ServiceCreateStateImpl;
 
   ServiceModel get serviceList;
   ServiceModel? get selectedService;
   bool get loading;
   bool get isEditing;
   @JsonKey(ignore: true)
-  _$$ServiceCreateStateCopyWith<_$ServiceCreateState> get copyWith =>
+  _$$ServiceCreateStateImplCopyWith<_$ServiceCreateStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$ServiceSearchStateCopyWith<$Res> {
-  factory _$$ServiceSearchStateCopyWith(_$ServiceSearchState value,
-          $Res Function(_$ServiceSearchState) then) =
-      __$$ServiceSearchStateCopyWithImpl<$Res>;
+abstract class _$$ServiceSearchStateImplCopyWith<$Res> {
+  factory _$$ServiceSearchStateImplCopyWith(_$ServiceSearchStateImpl value,
+          $Res Function(_$ServiceSearchStateImpl) then) =
+      __$$ServiceSearchStateImplCopyWithImpl<$Res>;
   @useResult
   $Res call(
       {List<ServiceModel> serviceList,
@@ -1683,11 +1690,11 @@ abstract class _$$ServiceSearchStateCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$ServiceSearchStateCopyWithImpl<$Res>
-    extends _$ServiceStateCopyWithImpl<$Res, _$ServiceSearchState>
-    implements _$$ServiceSearchStateCopyWith<$Res> {
-  __$$ServiceSearchStateCopyWithImpl(
-      _$ServiceSearchState _value, $Res Function(_$ServiceSearchState) _then)
+class __$$ServiceSearchStateImplCopyWithImpl<$Res>
+    extends _$ServiceStateCopyWithImpl<$Res, _$ServiceSearchStateImpl>
+    implements _$$ServiceSearchStateImplCopyWith<$Res> {
+  __$$ServiceSearchStateImplCopyWithImpl(_$ServiceSearchStateImpl _value,
+      $Res Function(_$ServiceSearchStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1697,7 +1704,7 @@ class __$$ServiceSearchStateCopyWithImpl<$Res>
     Object? selectedService = freezed,
     Object? loading = null,
   }) {
-    return _then(_$ServiceSearchState(
+    return _then(_$ServiceSearchStateImpl(
       serviceList: null == serviceList
           ? _value._serviceList
           : serviceList // ignore: cast_nullable_to_non_nullable
@@ -1716,8 +1723,8 @@ class __$$ServiceSearchStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ServiceSearchState implements ServiceSearchState {
-  const _$ServiceSearchState(
+class _$ServiceSearchStateImpl implements ServiceSearchState {
+  const _$ServiceSearchStateImpl(
       {required final List<ServiceModel> serviceList,
       this.selectedService,
       this.loading = false})
@@ -1726,6 +1733,7 @@ class _$ServiceSearchState implements ServiceSearchState {
   final List<ServiceModel> _serviceList;
   @override
   List<ServiceModel> get serviceList {
+    if (_serviceList is EqualUnmodifiableListView) return _serviceList;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_serviceList);
   }
@@ -1742,10 +1750,10 @@ class _$ServiceSearchState implements ServiceSearchState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ServiceSearchState &&
+            other is _$ServiceSearchStateImpl &&
             const DeepCollectionEquality()
                 .equals(other._serviceList, _serviceList) &&
             (identical(other.selectedService, selectedService) ||
@@ -1763,8 +1771,8 @@ class _$ServiceSearchState implements ServiceSearchState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ServiceSearchStateCopyWith<_$ServiceSearchState> get copyWith =>
-      __$$ServiceSearchStateCopyWithImpl<_$ServiceSearchState>(
+  _$$ServiceSearchStateImplCopyWith<_$ServiceSearchStateImpl> get copyWith =>
+      __$$ServiceSearchStateImplCopyWithImpl<_$ServiceSearchStateImpl>(
           this, _$identity);
 
   @override
@@ -1869,12 +1877,12 @@ abstract class ServiceSearchState implements ServiceState {
   const factory ServiceSearchState(
       {required final List<ServiceModel> serviceList,
       final ServiceModel? selectedService,
-      final bool loading}) = _$ServiceSearchState;
+      final bool loading}) = _$ServiceSearchStateImpl;
 
   List<ServiceModel> get serviceList;
   ServiceModel? get selectedService;
   bool get loading;
   @JsonKey(ignore: true)
-  _$$ServiceSearchStateCopyWith<_$ServiceSearchState> get copyWith =>
+  _$$ServiceSearchStateImplCopyWith<_$ServiceSearchStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -5,8 +5,10 @@ import 'package:drift/drift.dart';
 import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
 
-@MappableClass(ignoreNull: true)
-class ServiceSearchModel extends EntitySearchModel {
+part 'service.mapper.dart';
+
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class ServiceSearchModel extends EntitySearchModel with ServiceSearchModelMappable {
   final String? id;
   final String? clientId;
   final String? serviceDefId;
@@ -37,8 +39,8 @@ class ServiceSearchModel extends EntitySearchModel {
   }):  super(isDeleted: false);
 }
 
-@MappableClass(ignoreNull: true)
-class ServiceModel extends EntityModel {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class ServiceModel extends EntityModel with ServiceModelMappable {
 
   static const schemaName = 'Service';
 
@@ -98,11 +100,12 @@ class ServiceModel extends EntityModel {
   }
 }
 
-@MappableClass(ignoreNull: true)
-class ServiceAdditionalFields extends AdditionalFields {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class ServiceAdditionalFields extends AdditionalFields with ServiceAdditionalFieldsMappable {
   ServiceAdditionalFields({
     super.schema = 'Service',
     required super.version,
     super.fields,
   });
 }
+

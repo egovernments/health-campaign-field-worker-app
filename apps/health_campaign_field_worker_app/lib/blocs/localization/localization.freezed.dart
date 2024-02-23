@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'localization.dart';
 
@@ -84,20 +84,22 @@ class _$LocalizationEventCopyWithImpl<$Res, $Val extends LocalizationEvent>
 }
 
 /// @nodoc
-abstract class _$$OnLoadLocalizationEventCopyWith<$Res> {
-  factory _$$OnLoadLocalizationEventCopyWith(_$OnLoadLocalizationEvent value,
-          $Res Function(_$OnLoadLocalizationEvent) then) =
-      __$$OnLoadLocalizationEventCopyWithImpl<$Res>;
+abstract class _$$OnLoadLocalizationEventImplCopyWith<$Res> {
+  factory _$$OnLoadLocalizationEventImplCopyWith(
+          _$OnLoadLocalizationEventImpl value,
+          $Res Function(_$OnLoadLocalizationEventImpl) then) =
+      __$$OnLoadLocalizationEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call({String module, String tenantId, String locale, String path});
 }
 
 /// @nodoc
-class __$$OnLoadLocalizationEventCopyWithImpl<$Res>
-    extends _$LocalizationEventCopyWithImpl<$Res, _$OnLoadLocalizationEvent>
-    implements _$$OnLoadLocalizationEventCopyWith<$Res> {
-  __$$OnLoadLocalizationEventCopyWithImpl(_$OnLoadLocalizationEvent _value,
-      $Res Function(_$OnLoadLocalizationEvent) _then)
+class __$$OnLoadLocalizationEventImplCopyWithImpl<$Res>
+    extends _$LocalizationEventCopyWithImpl<$Res, _$OnLoadLocalizationEventImpl>
+    implements _$$OnLoadLocalizationEventImplCopyWith<$Res> {
+  __$$OnLoadLocalizationEventImplCopyWithImpl(
+      _$OnLoadLocalizationEventImpl _value,
+      $Res Function(_$OnLoadLocalizationEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -108,7 +110,7 @@ class __$$OnLoadLocalizationEventCopyWithImpl<$Res>
     Object? locale = null,
     Object? path = null,
   }) {
-    return _then(_$OnLoadLocalizationEvent(
+    return _then(_$OnLoadLocalizationEventImpl(
       module: null == module
           ? _value.module
           : module // ignore: cast_nullable_to_non_nullable
@@ -131,8 +133,8 @@ class __$$OnLoadLocalizationEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$OnLoadLocalizationEvent implements OnLoadLocalizationEvent {
-  const _$OnLoadLocalizationEvent(
+class _$OnLoadLocalizationEventImpl implements OnLoadLocalizationEvent {
+  const _$OnLoadLocalizationEventImpl(
       {required this.module,
       required this.tenantId,
       required this.locale,
@@ -153,10 +155,10 @@ class _$OnLoadLocalizationEvent implements OnLoadLocalizationEvent {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$OnLoadLocalizationEvent &&
+            other is _$OnLoadLocalizationEventImpl &&
             (identical(other.module, module) || other.module == module) &&
             (identical(other.tenantId, tenantId) ||
                 other.tenantId == tenantId) &&
@@ -170,9 +172,9 @@ class _$OnLoadLocalizationEvent implements OnLoadLocalizationEvent {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$OnLoadLocalizationEventCopyWith<_$OnLoadLocalizationEvent> get copyWith =>
-      __$$OnLoadLocalizationEventCopyWithImpl<_$OnLoadLocalizationEvent>(
-          this, _$identity);
+  _$$OnLoadLocalizationEventImplCopyWith<_$OnLoadLocalizationEventImpl>
+      get copyWith => __$$OnLoadLocalizationEventImplCopyWithImpl<
+          _$OnLoadLocalizationEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -251,35 +253,35 @@ abstract class OnLoadLocalizationEvent implements LocalizationEvent {
       {required final String module,
       required final String tenantId,
       required final String locale,
-      required final String path}) = _$OnLoadLocalizationEvent;
+      required final String path}) = _$OnLoadLocalizationEventImpl;
 
   String get module;
   String get tenantId;
   String get locale;
   String get path;
   @JsonKey(ignore: true)
-  _$$OnLoadLocalizationEventCopyWith<_$OnLoadLocalizationEvent> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$OnLoadLocalizationEventImplCopyWith<_$OnLoadLocalizationEventImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$OnUpdateLocalizationIndexEventCopyWith<$Res> {
-  factory _$$OnUpdateLocalizationIndexEventCopyWith(
-          _$OnUpdateLocalizationIndexEvent value,
-          $Res Function(_$OnUpdateLocalizationIndexEvent) then) =
-      __$$OnUpdateLocalizationIndexEventCopyWithImpl<$Res>;
+abstract class _$$OnUpdateLocalizationIndexEventImplCopyWith<$Res> {
+  factory _$$OnUpdateLocalizationIndexEventImplCopyWith(
+          _$OnUpdateLocalizationIndexEventImpl value,
+          $Res Function(_$OnUpdateLocalizationIndexEventImpl) then) =
+      __$$OnUpdateLocalizationIndexEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call({int index, String code});
 }
 
 /// @nodoc
-class __$$OnUpdateLocalizationIndexEventCopyWithImpl<$Res>
+class __$$OnUpdateLocalizationIndexEventImplCopyWithImpl<$Res>
     extends _$LocalizationEventCopyWithImpl<$Res,
-        _$OnUpdateLocalizationIndexEvent>
-    implements _$$OnUpdateLocalizationIndexEventCopyWith<$Res> {
-  __$$OnUpdateLocalizationIndexEventCopyWithImpl(
-      _$OnUpdateLocalizationIndexEvent _value,
-      $Res Function(_$OnUpdateLocalizationIndexEvent) _then)
+        _$OnUpdateLocalizationIndexEventImpl>
+    implements _$$OnUpdateLocalizationIndexEventImplCopyWith<$Res> {
+  __$$OnUpdateLocalizationIndexEventImplCopyWithImpl(
+      _$OnUpdateLocalizationIndexEventImpl _value,
+      $Res Function(_$OnUpdateLocalizationIndexEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -288,7 +290,7 @@ class __$$OnUpdateLocalizationIndexEventCopyWithImpl<$Res>
     Object? index = null,
     Object? code = null,
   }) {
-    return _then(_$OnUpdateLocalizationIndexEvent(
+    return _then(_$OnUpdateLocalizationIndexEventImpl(
       index: null == index
           ? _value.index
           : index // ignore: cast_nullable_to_non_nullable
@@ -303,9 +305,9 @@ class __$$OnUpdateLocalizationIndexEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$OnUpdateLocalizationIndexEvent
+class _$OnUpdateLocalizationIndexEventImpl
     implements OnUpdateLocalizationIndexEvent {
-  const _$OnUpdateLocalizationIndexEvent(
+  const _$OnUpdateLocalizationIndexEventImpl(
       {required this.index, required this.code});
 
   @override
@@ -319,10 +321,10 @@ class _$OnUpdateLocalizationIndexEvent
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$OnUpdateLocalizationIndexEvent &&
+            other is _$OnUpdateLocalizationIndexEventImpl &&
             (identical(other.index, index) || other.index == index) &&
             (identical(other.code, code) || other.code == code));
   }
@@ -333,9 +335,10 @@ class _$OnUpdateLocalizationIndexEvent
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$OnUpdateLocalizationIndexEventCopyWith<_$OnUpdateLocalizationIndexEvent>
-      get copyWith => __$$OnUpdateLocalizationIndexEventCopyWithImpl<
-          _$OnUpdateLocalizationIndexEvent>(this, _$identity);
+  _$$OnUpdateLocalizationIndexEventImplCopyWith<
+          _$OnUpdateLocalizationIndexEventImpl>
+      get copyWith => __$$OnUpdateLocalizationIndexEventImplCopyWithImpl<
+          _$OnUpdateLocalizationIndexEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -412,12 +415,13 @@ class _$OnUpdateLocalizationIndexEvent
 abstract class OnUpdateLocalizationIndexEvent implements LocalizationEvent {
   const factory OnUpdateLocalizationIndexEvent(
       {required final int index,
-      required final String code}) = _$OnUpdateLocalizationIndexEvent;
+      required final String code}) = _$OnUpdateLocalizationIndexEventImpl;
 
   int get index;
   String get code;
   @JsonKey(ignore: true)
-  _$$OnUpdateLocalizationIndexEventCopyWith<_$OnUpdateLocalizationIndexEvent>
+  _$$OnUpdateLocalizationIndexEventImplCopyWith<
+          _$OnUpdateLocalizationIndexEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -476,22 +480,22 @@ class _$LocalizationStateCopyWithImpl<$Res, $Val extends LocalizationState>
 }
 
 /// @nodoc
-abstract class _$$_LocalizationStateCopyWith<$Res>
+abstract class _$$LocalizationStateImplCopyWith<$Res>
     implements $LocalizationStateCopyWith<$Res> {
-  factory _$$_LocalizationStateCopyWith(_$_LocalizationState value,
-          $Res Function(_$_LocalizationState) then) =
-      __$$_LocalizationStateCopyWithImpl<$Res>;
+  factory _$$LocalizationStateImplCopyWith(_$LocalizationStateImpl value,
+          $Res Function(_$LocalizationStateImpl) then) =
+      __$$LocalizationStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({bool loading, int index, bool isLocalizationLoadCompleted});
 }
 
 /// @nodoc
-class __$$_LocalizationStateCopyWithImpl<$Res>
-    extends _$LocalizationStateCopyWithImpl<$Res, _$_LocalizationState>
-    implements _$$_LocalizationStateCopyWith<$Res> {
-  __$$_LocalizationStateCopyWithImpl(
-      _$_LocalizationState _value, $Res Function(_$_LocalizationState) _then)
+class __$$LocalizationStateImplCopyWithImpl<$Res>
+    extends _$LocalizationStateCopyWithImpl<$Res, _$LocalizationStateImpl>
+    implements _$$LocalizationStateImplCopyWith<$Res> {
+  __$$LocalizationStateImplCopyWithImpl(_$LocalizationStateImpl _value,
+      $Res Function(_$LocalizationStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -501,7 +505,7 @@ class __$$_LocalizationStateCopyWithImpl<$Res>
     Object? index = null,
     Object? isLocalizationLoadCompleted = null,
   }) {
-    return _then(_$_LocalizationState(
+    return _then(_$LocalizationStateImpl(
       loading: null == loading
           ? _value.loading
           : loading // ignore: cast_nullable_to_non_nullable
@@ -520,8 +524,8 @@ class __$$_LocalizationStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_LocalizationState implements _LocalizationState {
-  const _$_LocalizationState(
+class _$LocalizationStateImpl implements _LocalizationState {
+  const _$LocalizationStateImpl(
       {this.loading = false,
       this.index = 0,
       this.isLocalizationLoadCompleted = false});
@@ -542,10 +546,10 @@ class _$_LocalizationState implements _LocalizationState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_LocalizationState &&
+            other is _$LocalizationStateImpl &&
             (identical(other.loading, loading) || other.loading == loading) &&
             (identical(other.index, index) || other.index == index) &&
             (identical(other.isLocalizationLoadCompleted,
@@ -561,8 +565,8 @@ class _$_LocalizationState implements _LocalizationState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_LocalizationStateCopyWith<_$_LocalizationState> get copyWith =>
-      __$$_LocalizationStateCopyWithImpl<_$_LocalizationState>(
+  _$$LocalizationStateImplCopyWith<_$LocalizationStateImpl> get copyWith =>
+      __$$LocalizationStateImplCopyWithImpl<_$LocalizationStateImpl>(
           this, _$identity);
 }
 
@@ -570,7 +574,7 @@ abstract class _LocalizationState implements LocalizationState {
   const factory _LocalizationState(
       {final bool loading,
       final int index,
-      final bool isLocalizationLoadCompleted}) = _$_LocalizationState;
+      final bool isLocalizationLoadCompleted}) = _$LocalizationStateImpl;
 
   @override
   bool get loading;
@@ -580,6 +584,6 @@ abstract class _LocalizationState implements LocalizationState {
   bool get isLocalizationLoadCompleted;
   @override
   @JsonKey(ignore: true)
-  _$$_LocalizationStateCopyWith<_$_LocalizationState> get copyWith =>
+  _$$LocalizationStateImplCopyWith<_$LocalizationStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

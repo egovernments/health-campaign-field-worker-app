@@ -6,30 +6,30 @@ part of 'referral_reasons_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_ReferralReasonsWrapperModel _$$_ReferralReasonsWrapperModelFromJson(
+_$ReferralReasonsWrapperModelImpl _$$ReferralReasonsWrapperModelImplFromJson(
         Map<String, dynamic> json) =>
-    _$_ReferralReasonsWrapperModel(
+    _$ReferralReasonsWrapperModelImpl(
       referralReasonList: (json['referralReasons'] as List<dynamic>?)
           ?.map((e) => ReferralReasonType.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
-Map<String, dynamic> _$$_ReferralReasonsWrapperModelToJson(
-        _$_ReferralReasonsWrapperModel instance) =>
+Map<String, dynamic> _$$ReferralReasonsWrapperModelImplToJson(
+        _$ReferralReasonsWrapperModelImpl instance) =>
     <String, dynamic>{
       'referralReasons': instance.referralReasonList,
     };
 
-_$_ReferralReasonType _$$_ReferralReasonTypeFromJson(
+_$ReferralReasonTypeImpl _$$ReferralReasonTypeImplFromJson(
         Map<String, dynamic> json) =>
-    _$_ReferralReasonType(
+    _$ReferralReasonTypeImpl(
       code: json['code'] as String,
       name: json['name'] as String,
       active: json['active'] as bool,
     );
 
-Map<String, dynamic> _$$_ReferralReasonTypeToJson(
-        _$_ReferralReasonType instance) =>
+Map<String, dynamic> _$$ReferralReasonTypeImplToJson(
+        _$ReferralReasonTypeImpl instance) =>
     <String, dynamic>{
       'code': instance.code,
       'name': instance.name,

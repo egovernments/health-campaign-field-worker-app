@@ -84,11 +84,11 @@ class _$SchemaObjectCopyWithImpl<$Res, $Val extends SchemaObject>
 }
 
 /// @nodoc
-abstract class _$$_SchemaObjectCopyWith<$Res>
+abstract class _$$SchemaObjectImplCopyWith<$Res>
     implements $SchemaObjectCopyWith<$Res> {
-  factory _$$_SchemaObjectCopyWith(
-          _$_SchemaObject value, $Res Function(_$_SchemaObject) then) =
-      __$$_SchemaObjectCopyWithImpl<$Res>;
+  factory _$$SchemaObjectImplCopyWith(
+          _$SchemaObjectImpl value, $Res Function(_$SchemaObjectImpl) then) =
+      __$$SchemaObjectImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -99,11 +99,11 @@ abstract class _$$_SchemaObjectCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_SchemaObjectCopyWithImpl<$Res>
-    extends _$SchemaObjectCopyWithImpl<$Res, _$_SchemaObject>
-    implements _$$_SchemaObjectCopyWith<$Res> {
-  __$$_SchemaObjectCopyWithImpl(
-      _$_SchemaObject _value, $Res Function(_$_SchemaObject) _then)
+class __$$SchemaObjectImplCopyWithImpl<$Res>
+    extends _$SchemaObjectCopyWithImpl<$Res, _$SchemaObjectImpl>
+    implements _$$SchemaObjectImplCopyWith<$Res> {
+  __$$SchemaObjectImplCopyWithImpl(
+      _$SchemaObjectImpl _value, $Res Function(_$SchemaObjectImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -114,7 +114,7 @@ class __$$_SchemaObjectCopyWithImpl<$Res>
     Object? pages = null,
     Object? actionSchema = freezed,
   }) {
-    return _then(_$_SchemaObject(
+    return _then(_$SchemaObjectImpl(
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -138,8 +138,8 @@ class __$$_SchemaObjectCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
-class _$_SchemaObject implements _SchemaObject {
-  const _$_SchemaObject(
+class _$SchemaObjectImpl implements _SchemaObject {
+  const _$SchemaObjectImpl(
       {required this.name,
       required this.version,
       final Map<String, PropertySchema> pages = const {},
@@ -147,8 +147,8 @@ class _$_SchemaObject implements _SchemaObject {
       : _pages = pages,
         _actionSchema = actionSchema;
 
-  factory _$_SchemaObject.fromJson(Map<String, dynamic> json) =>
-      _$$_SchemaObjectFromJson(json);
+  factory _$SchemaObjectImpl.fromJson(Map<String, dynamic> json) =>
+      _$$SchemaObjectImplFromJson(json);
 
   @override
   final String name;
@@ -179,10 +179,10 @@ class _$_SchemaObject implements _SchemaObject {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_SchemaObject &&
+            other is _$SchemaObjectImpl &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.version, version) || other.version == version) &&
             const DeepCollectionEquality().equals(other._pages, _pages) &&
@@ -202,12 +202,12 @@ class _$_SchemaObject implements _SchemaObject {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_SchemaObjectCopyWith<_$_SchemaObject> get copyWith =>
-      __$$_SchemaObjectCopyWithImpl<_$_SchemaObject>(this, _$identity);
+  _$$SchemaObjectImplCopyWith<_$SchemaObjectImpl> get copyWith =>
+      __$$SchemaObjectImplCopyWithImpl<_$SchemaObjectImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_SchemaObjectToJson(
+    return _$$SchemaObjectImplToJson(
       this,
     );
   }
@@ -218,10 +218,10 @@ abstract class _SchemaObject implements SchemaObject {
       {required final String name,
       required final int version,
       final Map<String, PropertySchema> pages,
-      final List<ActionSchema>? actionSchema}) = _$_SchemaObject;
+      final List<ActionSchema>? actionSchema}) = _$SchemaObjectImpl;
 
   factory _SchemaObject.fromJson(Map<String, dynamic> json) =
-      _$_SchemaObject.fromJson;
+      _$SchemaObjectImpl.fromJson;
 
   @override
   String get name;
@@ -233,7 +233,7 @@ abstract class _SchemaObject implements SchemaObject {
   List<ActionSchema>? get actionSchema;
   @override
   @JsonKey(ignore: true)
-  _$$_SchemaObjectCopyWith<_$_SchemaObject> get copyWith =>
+  _$$SchemaObjectImplCopyWith<_$SchemaObjectImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -307,11 +307,11 @@ class _$ActionSchemaCopyWithImpl<$Res, $Val extends ActionSchema>
 }
 
 /// @nodoc
-abstract class _$$_ActionSchemaCopyWith<$Res>
+abstract class _$$ActionSchemaImplCopyWith<$Res>
     implements $ActionSchemaCopyWith<$Res> {
-  factory _$$_ActionSchemaCopyWith(
-          _$_ActionSchema value, $Res Function(_$_ActionSchema) then) =
-      __$$_ActionSchemaCopyWithImpl<$Res>;
+  factory _$$ActionSchemaImplCopyWith(
+          _$ActionSchemaImpl value, $Res Function(_$ActionSchemaImpl) then) =
+      __$$ActionSchemaImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -322,11 +322,11 @@ abstract class _$$_ActionSchemaCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_ActionSchemaCopyWithImpl<$Res>
-    extends _$ActionSchemaCopyWithImpl<$Res, _$_ActionSchema>
-    implements _$$_ActionSchemaCopyWith<$Res> {
-  __$$_ActionSchemaCopyWithImpl(
-      _$_ActionSchema _value, $Res Function(_$_ActionSchema) _then)
+class __$$ActionSchemaImplCopyWithImpl<$Res>
+    extends _$ActionSchemaCopyWithImpl<$Res, _$ActionSchemaImpl>
+    implements _$$ActionSchemaImplCopyWith<$Res> {
+  __$$ActionSchemaImplCopyWithImpl(
+      _$ActionSchemaImpl _value, $Res Function(_$ActionSchemaImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -337,7 +337,7 @@ class __$$_ActionSchemaCopyWithImpl<$Res>
     Object? buttonType = null,
     Object? actionItems = null,
   }) {
-    return _then(_$_ActionSchema(
+    return _then(_$ActionSchemaImpl(
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -361,16 +361,16 @@ class __$$_ActionSchemaCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(explicitToJson: true)
-class _$_ActionSchema implements _ActionSchema {
-  const _$_ActionSchema(
+class _$ActionSchemaImpl implements _ActionSchema {
+  const _$ActionSchemaImpl(
       {required this.name,
       required this.buttonName,
       this.buttonType = ButtonType.elevated,
       required final List<ActionItemSchema> actionItems})
       : _actionItems = actionItems;
 
-  factory _$_ActionSchema.fromJson(Map<String, dynamic> json) =>
-      _$$_ActionSchemaFromJson(json);
+  factory _$ActionSchemaImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ActionSchemaImplFromJson(json);
 
   @override
   final String name;
@@ -393,10 +393,10 @@ class _$_ActionSchema implements _ActionSchema {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ActionSchema &&
+            other is _$ActionSchemaImpl &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.buttonName, buttonName) ||
                 other.buttonName == buttonName) &&
@@ -414,12 +414,12 @@ class _$_ActionSchema implements _ActionSchema {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ActionSchemaCopyWith<_$_ActionSchema> get copyWith =>
-      __$$_ActionSchemaCopyWithImpl<_$_ActionSchema>(this, _$identity);
+  _$$ActionSchemaImplCopyWith<_$ActionSchemaImpl> get copyWith =>
+      __$$ActionSchemaImplCopyWithImpl<_$ActionSchemaImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_ActionSchemaToJson(
+    return _$$ActionSchemaImplToJson(
       this,
     );
   }
@@ -430,10 +430,10 @@ abstract class _ActionSchema implements ActionSchema {
       {required final String name,
       required final String buttonName,
       final ButtonType buttonType,
-      required final List<ActionItemSchema> actionItems}) = _$_ActionSchema;
+      required final List<ActionItemSchema> actionItems}) = _$ActionSchemaImpl;
 
   factory _ActionSchema.fromJson(Map<String, dynamic> json) =
-      _$_ActionSchema.fromJson;
+      _$ActionSchemaImpl.fromJson;
 
   @override
   String get name;
@@ -445,7 +445,7 @@ abstract class _ActionSchema implements ActionSchema {
   List<ActionItemSchema> get actionItems;
   @override
   @JsonKey(ignore: true)
-  _$$_ActionSchemaCopyWith<_$_ActionSchema> get copyWith =>
+  _$$ActionSchemaImplCopyWith<_$ActionSchemaImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -537,11 +537,11 @@ class _$ActionItemSchemaCopyWithImpl<$Res, $Val extends ActionItemSchema>
 }
 
 /// @nodoc
-abstract class _$$_ActionItemSchemaCopyWith<$Res>
+abstract class _$$ActionItemSchemaImplCopyWith<$Res>
     implements $ActionItemSchemaCopyWith<$Res> {
-  factory _$$_ActionItemSchemaCopyWith(
-          _$_ActionItemSchema value, $Res Function(_$_ActionItemSchema) then) =
-      __$$_ActionItemSchemaCopyWithImpl<$Res>;
+  factory _$$ActionItemSchemaImplCopyWith(_$ActionItemSchemaImpl value,
+          $Res Function(_$ActionItemSchemaImpl) then) =
+      __$$ActionItemSchemaImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -554,11 +554,11 @@ abstract class _$$_ActionItemSchemaCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_ActionItemSchemaCopyWithImpl<$Res>
-    extends _$ActionItemSchemaCopyWithImpl<$Res, _$_ActionItemSchema>
-    implements _$$_ActionItemSchemaCopyWith<$Res> {
-  __$$_ActionItemSchemaCopyWithImpl(
-      _$_ActionItemSchema _value, $Res Function(_$_ActionItemSchema) _then)
+class __$$ActionItemSchemaImplCopyWithImpl<$Res>
+    extends _$ActionItemSchemaCopyWithImpl<$Res, _$ActionItemSchemaImpl>
+    implements _$$ActionItemSchemaImplCopyWith<$Res> {
+  __$$ActionItemSchemaImplCopyWithImpl(_$ActionItemSchemaImpl _value,
+      $Res Function(_$ActionItemSchemaImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -568,7 +568,7 @@ class __$$_ActionItemSchemaCopyWithImpl<$Res>
     Object? urlSchema = freezed,
     Object? routingSchema = freezed,
   }) {
-    return _then(_$_ActionItemSchema(
+    return _then(_$ActionItemSchemaImpl(
       type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
@@ -588,12 +588,12 @@ class __$$_ActionItemSchemaCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
-class _$_ActionItemSchema implements _ActionItemSchema {
-  const _$_ActionItemSchema(
+class _$ActionItemSchemaImpl implements _ActionItemSchema {
+  const _$ActionItemSchemaImpl(
       {required this.type, this.urlSchema, this.routingSchema});
 
-  factory _$_ActionItemSchema.fromJson(Map<String, dynamic> json) =>
-      _$$_ActionItemSchemaFromJson(json);
+  factory _$ActionItemSchemaImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ActionItemSchemaImplFromJson(json);
 
   @override
   final ActionType type;
@@ -608,10 +608,10 @@ class _$_ActionItemSchema implements _ActionItemSchema {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ActionItemSchema &&
+            other is _$ActionItemSchemaImpl &&
             (identical(other.type, type) || other.type == type) &&
             (identical(other.urlSchema, urlSchema) ||
                 other.urlSchema == urlSchema) &&
@@ -626,12 +626,13 @@ class _$_ActionItemSchema implements _ActionItemSchema {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ActionItemSchemaCopyWith<_$_ActionItemSchema> get copyWith =>
-      __$$_ActionItemSchemaCopyWithImpl<_$_ActionItemSchema>(this, _$identity);
+  _$$ActionItemSchemaImplCopyWith<_$ActionItemSchemaImpl> get copyWith =>
+      __$$ActionItemSchemaImplCopyWithImpl<_$ActionItemSchemaImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_ActionItemSchemaToJson(
+    return _$$ActionItemSchemaImplToJson(
       this,
     );
   }
@@ -641,10 +642,10 @@ abstract class _ActionItemSchema implements ActionItemSchema {
   const factory _ActionItemSchema(
       {required final ActionType type,
       final UrlSchema? urlSchema,
-      final RoutingSchema? routingSchema}) = _$_ActionItemSchema;
+      final RoutingSchema? routingSchema}) = _$ActionItemSchemaImpl;
 
   factory _ActionItemSchema.fromJson(Map<String, dynamic> json) =
-      _$_ActionItemSchema.fromJson;
+      _$ActionItemSchemaImpl.fromJson;
 
   @override
   ActionType get type;
@@ -654,7 +655,7 @@ abstract class _ActionItemSchema implements ActionItemSchema {
   RoutingSchema? get routingSchema;
   @override
   @JsonKey(ignore: true)
-  _$$_ActionItemSchemaCopyWith<_$_ActionItemSchema> get copyWith =>
+  _$$ActionItemSchemaImplCopyWith<_$ActionItemSchemaImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -711,21 +712,22 @@ class _$UrlSchemaCopyWithImpl<$Res, $Val extends UrlSchema>
 }
 
 /// @nodoc
-abstract class _$$_UrlSchemaCopyWith<$Res> implements $UrlSchemaCopyWith<$Res> {
-  factory _$$_UrlSchemaCopyWith(
-          _$_UrlSchema value, $Res Function(_$_UrlSchema) then) =
-      __$$_UrlSchemaCopyWithImpl<$Res>;
+abstract class _$$UrlSchemaImplCopyWith<$Res>
+    implements $UrlSchemaCopyWith<$Res> {
+  factory _$$UrlSchemaImplCopyWith(
+          _$UrlSchemaImpl value, $Res Function(_$UrlSchemaImpl) then) =
+      __$$UrlSchemaImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String method, String urlSchema});
 }
 
 /// @nodoc
-class __$$_UrlSchemaCopyWithImpl<$Res>
-    extends _$UrlSchemaCopyWithImpl<$Res, _$_UrlSchema>
-    implements _$$_UrlSchemaCopyWith<$Res> {
-  __$$_UrlSchemaCopyWithImpl(
-      _$_UrlSchema _value, $Res Function(_$_UrlSchema) _then)
+class __$$UrlSchemaImplCopyWithImpl<$Res>
+    extends _$UrlSchemaCopyWithImpl<$Res, _$UrlSchemaImpl>
+    implements _$$UrlSchemaImplCopyWith<$Res> {
+  __$$UrlSchemaImplCopyWithImpl(
+      _$UrlSchemaImpl _value, $Res Function(_$UrlSchemaImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -734,7 +736,7 @@ class __$$_UrlSchemaCopyWithImpl<$Res>
     Object? method = null,
     Object? urlSchema = null,
   }) {
-    return _then(_$_UrlSchema(
+    return _then(_$UrlSchemaImpl(
       method: null == method
           ? _value.method
           : method // ignore: cast_nullable_to_non_nullable
@@ -749,11 +751,11 @@ class __$$_UrlSchemaCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_UrlSchema implements _UrlSchema {
-  const _$_UrlSchema({required this.method, required this.urlSchema});
+class _$UrlSchemaImpl implements _UrlSchema {
+  const _$UrlSchemaImpl({required this.method, required this.urlSchema});
 
-  factory _$_UrlSchema.fromJson(Map<String, dynamic> json) =>
-      _$$_UrlSchemaFromJson(json);
+  factory _$UrlSchemaImpl.fromJson(Map<String, dynamic> json) =>
+      _$$UrlSchemaImplFromJson(json);
 
   @override
   final String method;
@@ -766,10 +768,10 @@ class _$_UrlSchema implements _UrlSchema {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_UrlSchema &&
+            other is _$UrlSchemaImpl &&
             (identical(other.method, method) || other.method == method) &&
             (identical(other.urlSchema, urlSchema) ||
                 other.urlSchema == urlSchema));
@@ -782,12 +784,12 @@ class _$_UrlSchema implements _UrlSchema {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_UrlSchemaCopyWith<_$_UrlSchema> get copyWith =>
-      __$$_UrlSchemaCopyWithImpl<_$_UrlSchema>(this, _$identity);
+  _$$UrlSchemaImplCopyWith<_$UrlSchemaImpl> get copyWith =>
+      __$$UrlSchemaImplCopyWithImpl<_$UrlSchemaImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_UrlSchemaToJson(
+    return _$$UrlSchemaImplToJson(
       this,
     );
   }
@@ -796,10 +798,10 @@ class _$_UrlSchema implements _UrlSchema {
 abstract class _UrlSchema implements UrlSchema {
   const factory _UrlSchema(
       {required final String method,
-      required final String urlSchema}) = _$_UrlSchema;
+      required final String urlSchema}) = _$UrlSchemaImpl;
 
   factory _UrlSchema.fromJson(Map<String, dynamic> json) =
-      _$_UrlSchema.fromJson;
+      _$UrlSchemaImpl.fromJson;
 
   @override
   String get method;
@@ -807,7 +809,7 @@ abstract class _UrlSchema implements UrlSchema {
   String get urlSchema;
   @override
   @JsonKey(ignore: true)
-  _$$_UrlSchemaCopyWith<_$_UrlSchema> get copyWith =>
+  _$$UrlSchemaImplCopyWith<_$UrlSchemaImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -879,11 +881,11 @@ class _$RoutingSchemaCopyWithImpl<$Res, $Val extends RoutingSchema>
 }
 
 /// @nodoc
-abstract class _$$_RoutingSchemaCopyWith<$Res>
+abstract class _$$RoutingSchemaImplCopyWith<$Res>
     implements $RoutingSchemaCopyWith<$Res> {
-  factory _$$_RoutingSchemaCopyWith(
-          _$_RoutingSchema value, $Res Function(_$_RoutingSchema) then) =
-      __$$_RoutingSchemaCopyWithImpl<$Res>;
+  factory _$$RoutingSchemaImplCopyWith(
+          _$RoutingSchemaImpl value, $Res Function(_$RoutingSchemaImpl) then) =
+      __$$RoutingSchemaImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String destination, PropertySchema? propertySchema});
@@ -893,11 +895,11 @@ abstract class _$$_RoutingSchemaCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_RoutingSchemaCopyWithImpl<$Res>
-    extends _$RoutingSchemaCopyWithImpl<$Res, _$_RoutingSchema>
-    implements _$$_RoutingSchemaCopyWith<$Res> {
-  __$$_RoutingSchemaCopyWithImpl(
-      _$_RoutingSchema _value, $Res Function(_$_RoutingSchema) _then)
+class __$$RoutingSchemaImplCopyWithImpl<$Res>
+    extends _$RoutingSchemaCopyWithImpl<$Res, _$RoutingSchemaImpl>
+    implements _$$RoutingSchemaImplCopyWith<$Res> {
+  __$$RoutingSchemaImplCopyWithImpl(
+      _$RoutingSchemaImpl _value, $Res Function(_$RoutingSchemaImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -906,7 +908,7 @@ class __$$_RoutingSchemaCopyWithImpl<$Res>
     Object? destination = null,
     Object? propertySchema = freezed,
   }) {
-    return _then(_$_RoutingSchema(
+    return _then(_$RoutingSchemaImpl(
       destination: null == destination
           ? _value.destination
           : destination // ignore: cast_nullable_to_non_nullable
@@ -922,11 +924,11 @@ class __$$_RoutingSchemaCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(explicitToJson: true)
-class _$_RoutingSchema implements _RoutingSchema {
-  const _$_RoutingSchema({required this.destination, this.propertySchema});
+class _$RoutingSchemaImpl implements _RoutingSchema {
+  const _$RoutingSchemaImpl({required this.destination, this.propertySchema});
 
-  factory _$_RoutingSchema.fromJson(Map<String, dynamic> json) =>
-      _$$_RoutingSchemaFromJson(json);
+  factory _$RoutingSchemaImpl.fromJson(Map<String, dynamic> json) =>
+      _$$RoutingSchemaImplFromJson(json);
 
   @override
   final String destination;
@@ -939,10 +941,10 @@ class _$_RoutingSchema implements _RoutingSchema {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_RoutingSchema &&
+            other is _$RoutingSchemaImpl &&
             (identical(other.destination, destination) ||
                 other.destination == destination) &&
             (identical(other.propertySchema, propertySchema) ||
@@ -956,12 +958,12 @@ class _$_RoutingSchema implements _RoutingSchema {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_RoutingSchemaCopyWith<_$_RoutingSchema> get copyWith =>
-      __$$_RoutingSchemaCopyWithImpl<_$_RoutingSchema>(this, _$identity);
+  _$$RoutingSchemaImplCopyWith<_$RoutingSchemaImpl> get copyWith =>
+      __$$RoutingSchemaImplCopyWithImpl<_$RoutingSchemaImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_RoutingSchemaToJson(
+    return _$$RoutingSchemaImplToJson(
       this,
     );
   }
@@ -970,10 +972,10 @@ class _$_RoutingSchema implements _RoutingSchema {
 abstract class _RoutingSchema implements RoutingSchema {
   const factory _RoutingSchema(
       {required final String destination,
-      final PropertySchema? propertySchema}) = _$_RoutingSchema;
+      final PropertySchema? propertySchema}) = _$RoutingSchemaImpl;
 
   factory _RoutingSchema.fromJson(Map<String, dynamic> json) =
-      _$_RoutingSchema.fromJson;
+      _$RoutingSchemaImpl.fromJson;
 
   @override
   String get destination;
@@ -981,6 +983,6 @@ abstract class _RoutingSchema implements RoutingSchema {
   PropertySchema? get propertySchema;
   @override
   @JsonKey(ignore: true)
-  _$$_RoutingSchemaCopyWith<_$_RoutingSchema> get copyWith =>
+  _$$RoutingSchemaImplCopyWith<_$RoutingSchemaImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

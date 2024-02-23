@@ -48,10 +48,14 @@ Future<void> initializeService(dio, isar) async {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
+flutterLocalNotificationsPlugin
+    .resolvePlatformSpecificImplementation<
+    AndroidFlutterLocalNotificationsPlugin>()
+    ?.requestExactAlarmsPermission();
   flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>()
-      ?.requestPermission();
+      ?.requestNotificationsPermission();
 
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
@@ -168,11 +172,10 @@ void onStart(ServiceInstance service) async {
                 'userId': userRequestModel!.uuid,
                 'batchSize': configuredBatchSize,
               });
-
               flutterLocalNotificationsPlugin.show(
                 888,
                 'Auto Sync',
-                'Speed : ${speedArray.first.toString()}Mb/ps - BatchSize : $configuredBatchSize',
+                'Speed : ${speedArray.first}Mb/ps - BatchSize : $configuredBatchSize',
                 const NotificationDetails(
                   android: AndroidNotificationDetails(
                     "my_foreground",

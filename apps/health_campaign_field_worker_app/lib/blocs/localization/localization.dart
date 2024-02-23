@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
+import '../../data/local_store/app_shared_preferences.dart';
 import '../../data/repositories/remote/localization.dart';
 import 'app_localization.dart';
 
@@ -52,6 +53,7 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
   ) async {
     emit(state.copyWith(index: event.index));
     final List codes = event.code.split('_');
+    AppSharedPreferences().setSelectedLocale(codes.join("_"));
     _loadLocale(codes);
   }
 

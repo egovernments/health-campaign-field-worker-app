@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'beneficiary_statistics_model.dart';
 
@@ -61,25 +61,25 @@ class _$BeneficiaryStatisticsWrapperModelCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_BeneficiaryStatisticsWrapperModelCopyWith<$Res>
+abstract class _$$BeneficiaryStatisticsWrapperModelImplCopyWith<$Res>
     implements $BeneficiaryStatisticsWrapperModelCopyWith<$Res> {
-  factory _$$_BeneficiaryStatisticsWrapperModelCopyWith(
-          _$_BeneficiaryStatisticsWrapperModel value,
-          $Res Function(_$_BeneficiaryStatisticsWrapperModel) then) =
-      __$$_BeneficiaryStatisticsWrapperModelCopyWithImpl<$Res>;
+  factory _$$BeneficiaryStatisticsWrapperModelImplCopyWith(
+          _$BeneficiaryStatisticsWrapperModelImpl value,
+          $Res Function(_$BeneficiaryStatisticsWrapperModelImpl) then) =
+      __$$BeneficiaryStatisticsWrapperModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({List<BeneficiaryStatisticsModel> beneficiaryStatisticsList});
 }
 
 /// @nodoc
-class __$$_BeneficiaryStatisticsWrapperModelCopyWithImpl<$Res>
+class __$$BeneficiaryStatisticsWrapperModelImplCopyWithImpl<$Res>
     extends _$BeneficiaryStatisticsWrapperModelCopyWithImpl<$Res,
-        _$_BeneficiaryStatisticsWrapperModel>
-    implements _$$_BeneficiaryStatisticsWrapperModelCopyWith<$Res> {
-  __$$_BeneficiaryStatisticsWrapperModelCopyWithImpl(
-      _$_BeneficiaryStatisticsWrapperModel _value,
-      $Res Function(_$_BeneficiaryStatisticsWrapperModel) _then)
+        _$BeneficiaryStatisticsWrapperModelImpl>
+    implements _$$BeneficiaryStatisticsWrapperModelImplCopyWith<$Res> {
+  __$$BeneficiaryStatisticsWrapperModelImplCopyWithImpl(
+      _$BeneficiaryStatisticsWrapperModelImpl _value,
+      $Res Function(_$BeneficiaryStatisticsWrapperModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -87,7 +87,7 @@ class __$$_BeneficiaryStatisticsWrapperModelCopyWithImpl<$Res>
   $Res call({
     Object? beneficiaryStatisticsList = null,
   }) {
-    return _then(_$_BeneficiaryStatisticsWrapperModel(
+    return _then(_$BeneficiaryStatisticsWrapperModelImpl(
       beneficiaryStatisticsList: null == beneficiaryStatisticsList
           ? _value._beneficiaryStatisticsList
           : beneficiaryStatisticsList // ignore: cast_nullable_to_non_nullable
@@ -98,9 +98,9 @@ class __$$_BeneficiaryStatisticsWrapperModelCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_BeneficiaryStatisticsWrapperModel
+class _$BeneficiaryStatisticsWrapperModelImpl
     implements _BeneficiaryStatisticsWrapperModel {
-  const _$_BeneficiaryStatisticsWrapperModel(
+  const _$BeneficiaryStatisticsWrapperModelImpl(
       {required final List<BeneficiaryStatisticsModel>
           beneficiaryStatisticsList})
       : _beneficiaryStatisticsList = beneficiaryStatisticsList;
@@ -108,6 +108,8 @@ class _$_BeneficiaryStatisticsWrapperModel
   final List<BeneficiaryStatisticsModel> _beneficiaryStatisticsList;
   @override
   List<BeneficiaryStatisticsModel> get beneficiaryStatisticsList {
+    if (_beneficiaryStatisticsList is EqualUnmodifiableListView)
+      return _beneficiaryStatisticsList;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_beneficiaryStatisticsList);
   }
@@ -118,10 +120,10 @@ class _$_BeneficiaryStatisticsWrapperModel
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_BeneficiaryStatisticsWrapperModel &&
+            other is _$BeneficiaryStatisticsWrapperModelImpl &&
             const DeepCollectionEquality().equals(
                 other._beneficiaryStatisticsList, _beneficiaryStatisticsList));
   }
@@ -133,24 +135,24 @@ class _$_BeneficiaryStatisticsWrapperModel
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_BeneficiaryStatisticsWrapperModelCopyWith<
-          _$_BeneficiaryStatisticsWrapperModel>
-      get copyWith => __$$_BeneficiaryStatisticsWrapperModelCopyWithImpl<
-          _$_BeneficiaryStatisticsWrapperModel>(this, _$identity);
+  _$$BeneficiaryStatisticsWrapperModelImplCopyWith<
+          _$BeneficiaryStatisticsWrapperModelImpl>
+      get copyWith => __$$BeneficiaryStatisticsWrapperModelImplCopyWithImpl<
+          _$BeneficiaryStatisticsWrapperModelImpl>(this, _$identity);
 }
 
 abstract class _BeneficiaryStatisticsWrapperModel
     implements BeneficiaryStatisticsWrapperModel {
   const factory _BeneficiaryStatisticsWrapperModel(
       {required final List<BeneficiaryStatisticsModel>
-          beneficiaryStatisticsList}) = _$_BeneficiaryStatisticsWrapperModel;
+          beneficiaryStatisticsList}) = _$BeneficiaryStatisticsWrapperModelImpl;
 
   @override
   List<BeneficiaryStatisticsModel> get beneficiaryStatisticsList;
   @override
   @JsonKey(ignore: true)
-  _$$_BeneficiaryStatisticsWrapperModelCopyWith<
-          _$_BeneficiaryStatisticsWrapperModel>
+  _$$BeneficiaryStatisticsWrapperModelImplCopyWith<
+          _$BeneficiaryStatisticsWrapperModelImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -205,25 +207,25 @@ class _$BeneficiaryStatisticsModelCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_BeneficiaryStatisticsModelCopyWith<$Res>
+abstract class _$$BeneficiaryStatisticsModelImplCopyWith<$Res>
     implements $BeneficiaryStatisticsModelCopyWith<$Res> {
-  factory _$$_BeneficiaryStatisticsModelCopyWith(
-          _$_BeneficiaryStatisticsModel value,
-          $Res Function(_$_BeneficiaryStatisticsModel) then) =
-      __$$_BeneficiaryStatisticsModelCopyWithImpl<$Res>;
+  factory _$$BeneficiaryStatisticsModelImplCopyWith(
+          _$BeneficiaryStatisticsModelImpl value,
+          $Res Function(_$BeneficiaryStatisticsModelImpl) then) =
+      __$$BeneficiaryStatisticsModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String title, String content});
 }
 
 /// @nodoc
-class __$$_BeneficiaryStatisticsModelCopyWithImpl<$Res>
+class __$$BeneficiaryStatisticsModelImplCopyWithImpl<$Res>
     extends _$BeneficiaryStatisticsModelCopyWithImpl<$Res,
-        _$_BeneficiaryStatisticsModel>
-    implements _$$_BeneficiaryStatisticsModelCopyWith<$Res> {
-  __$$_BeneficiaryStatisticsModelCopyWithImpl(
-      _$_BeneficiaryStatisticsModel _value,
-      $Res Function(_$_BeneficiaryStatisticsModel) _then)
+        _$BeneficiaryStatisticsModelImpl>
+    implements _$$BeneficiaryStatisticsModelImplCopyWith<$Res> {
+  __$$BeneficiaryStatisticsModelImplCopyWithImpl(
+      _$BeneficiaryStatisticsModelImpl _value,
+      $Res Function(_$BeneficiaryStatisticsModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -232,7 +234,7 @@ class __$$_BeneficiaryStatisticsModelCopyWithImpl<$Res>
     Object? title = null,
     Object? content = null,
   }) {
-    return _then(_$_BeneficiaryStatisticsModel(
+    return _then(_$BeneficiaryStatisticsModelImpl(
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -247,8 +249,8 @@ class __$$_BeneficiaryStatisticsModelCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_BeneficiaryStatisticsModel implements _BeneficiaryStatisticsModel {
-  const _$_BeneficiaryStatisticsModel(
+class _$BeneficiaryStatisticsModelImpl implements _BeneficiaryStatisticsModel {
+  const _$BeneficiaryStatisticsModelImpl(
       {required this.title, required this.content});
 
   @override
@@ -262,10 +264,10 @@ class _$_BeneficiaryStatisticsModel implements _BeneficiaryStatisticsModel {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_BeneficiaryStatisticsModel &&
+            other is _$BeneficiaryStatisticsModelImpl &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.content, content) || other.content == content));
   }
@@ -276,16 +278,16 @@ class _$_BeneficiaryStatisticsModel implements _BeneficiaryStatisticsModel {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_BeneficiaryStatisticsModelCopyWith<_$_BeneficiaryStatisticsModel>
-      get copyWith => __$$_BeneficiaryStatisticsModelCopyWithImpl<
-          _$_BeneficiaryStatisticsModel>(this, _$identity);
+  _$$BeneficiaryStatisticsModelImplCopyWith<_$BeneficiaryStatisticsModelImpl>
+      get copyWith => __$$BeneficiaryStatisticsModelImplCopyWithImpl<
+          _$BeneficiaryStatisticsModelImpl>(this, _$identity);
 }
 
 abstract class _BeneficiaryStatisticsModel
     implements BeneficiaryStatisticsModel {
   const factory _BeneficiaryStatisticsModel(
       {required final String title,
-      required final String content}) = _$_BeneficiaryStatisticsModel;
+      required final String content}) = _$BeneficiaryStatisticsModelImpl;
 
   @override
   String get title;
@@ -293,6 +295,6 @@ abstract class _BeneficiaryStatisticsModel
   String get content;
   @override
   @JsonKey(ignore: true)
-  _$$_BeneficiaryStatisticsModelCopyWith<_$_BeneficiaryStatisticsModel>
+  _$$BeneficiaryStatisticsModelImplCopyWith<_$BeneficiaryStatisticsModelImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

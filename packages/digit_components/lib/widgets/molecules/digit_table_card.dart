@@ -29,14 +29,14 @@ class DigitTableCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Padding(
-      padding: topPadding ?? const EdgeInsets.only(top: 16),
+      padding: topPadding ?? const EdgeInsets.only(top: 8),
       child: Container(
         decoration: BoxDecoration(
             color: color,
             borderRadius: BorderRadius.circular(4),
             border: border),
         child: Padding(
-          padding: padding ?? const EdgeInsets.only(bottom: 16),
+          padding: padding ?? const EdgeInsets.only(bottom: 8),
           child: Column(
             children: element.keys
                 .map((e) => Container(

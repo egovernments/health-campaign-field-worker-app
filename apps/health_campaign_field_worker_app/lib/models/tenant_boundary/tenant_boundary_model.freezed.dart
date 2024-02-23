@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'tenant_boundary_model.dart';
 
@@ -82,12 +82,12 @@ class _$TargetBoundaryWrapperModelCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_TargetBoundaryWrapperModelCopyWith<$Res>
+abstract class _$$TargetBoundaryWrapperModelImplCopyWith<$Res>
     implements $TargetBoundaryWrapperModelCopyWith<$Res> {
-  factory _$$_TargetBoundaryWrapperModelCopyWith(
-          _$_TargetBoundaryWrapperModel value,
-          $Res Function(_$_TargetBoundaryWrapperModel) then) =
-      __$$_TargetBoundaryWrapperModelCopyWithImpl<$Res>;
+  factory _$$TargetBoundaryWrapperModelImplCopyWith(
+          _$TargetBoundaryWrapperModelImpl value,
+          $Res Function(_$TargetBoundaryWrapperModelImpl) then) =
+      __$$TargetBoundaryWrapperModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -97,13 +97,13 @@ abstract class _$$_TargetBoundaryWrapperModelCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_TargetBoundaryWrapperModelCopyWithImpl<$Res>
+class __$$TargetBoundaryWrapperModelImplCopyWithImpl<$Res>
     extends _$TargetBoundaryWrapperModelCopyWithImpl<$Res,
-        _$_TargetBoundaryWrapperModel>
-    implements _$$_TargetBoundaryWrapperModelCopyWith<$Res> {
-  __$$_TargetBoundaryWrapperModelCopyWithImpl(
-      _$_TargetBoundaryWrapperModel _value,
-      $Res Function(_$_TargetBoundaryWrapperModel) _then)
+        _$TargetBoundaryWrapperModelImpl>
+    implements _$$TargetBoundaryWrapperModelImplCopyWith<$Res> {
+  __$$TargetBoundaryWrapperModelImplCopyWithImpl(
+      _$TargetBoundaryWrapperModelImpl _value,
+      $Res Function(_$TargetBoundaryWrapperModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -113,7 +113,7 @@ class __$$_TargetBoundaryWrapperModelCopyWithImpl<$Res>
     Object? moduleName = null,
     Object? boundaries = freezed,
   }) {
-    return _then(_$_TargetBoundaryWrapperModel(
+    return _then(_$TargetBoundaryWrapperModelImpl(
       tenantId: null == tenantId
           ? _value.tenantId
           : tenantId // ignore: cast_nullable_to_non_nullable
@@ -133,16 +133,17 @@ class __$$_TargetBoundaryWrapperModelCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
-class _$_TargetBoundaryWrapperModel implements _TargetBoundaryWrapperModel {
-  const _$_TargetBoundaryWrapperModel(
+class _$TargetBoundaryWrapperModelImpl implements _TargetBoundaryWrapperModel {
+  const _$TargetBoundaryWrapperModelImpl(
       {required this.tenantId,
       required this.moduleName,
       @JsonKey(name: 'TenantBoundary')
-          final List<TenantBoundaryModel>? boundaries})
+      final List<TenantBoundaryModel>? boundaries})
       : _boundaries = boundaries;
 
-  factory _$_TargetBoundaryWrapperModel.fromJson(Map<String, dynamic> json) =>
-      _$$_TargetBoundaryWrapperModelFromJson(json);
+  factory _$TargetBoundaryWrapperModelImpl.fromJson(
+          Map<String, dynamic> json) =>
+      _$$TargetBoundaryWrapperModelImplFromJson(json);
 
   @override
   final String tenantId;
@@ -154,6 +155,7 @@ class _$_TargetBoundaryWrapperModel implements _TargetBoundaryWrapperModel {
   List<TenantBoundaryModel>? get boundaries {
     final value = _boundaries;
     if (value == null) return null;
+    if (_boundaries is EqualUnmodifiableListView) return _boundaries;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
@@ -164,10 +166,10 @@ class _$_TargetBoundaryWrapperModel implements _TargetBoundaryWrapperModel {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TargetBoundaryWrapperModel &&
+            other is _$TargetBoundaryWrapperModelImpl &&
             (identical(other.tenantId, tenantId) ||
                 other.tenantId == tenantId) &&
             (identical(other.moduleName, moduleName) ||
@@ -184,13 +186,13 @@ class _$_TargetBoundaryWrapperModel implements _TargetBoundaryWrapperModel {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TargetBoundaryWrapperModelCopyWith<_$_TargetBoundaryWrapperModel>
-      get copyWith => __$$_TargetBoundaryWrapperModelCopyWithImpl<
-          _$_TargetBoundaryWrapperModel>(this, _$identity);
+  _$$TargetBoundaryWrapperModelImplCopyWith<_$TargetBoundaryWrapperModelImpl>
+      get copyWith => __$$TargetBoundaryWrapperModelImplCopyWithImpl<
+          _$TargetBoundaryWrapperModelImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_TargetBoundaryWrapperModelToJson(
+    return _$$TargetBoundaryWrapperModelImplToJson(
       this,
     );
   }
@@ -202,11 +204,11 @@ abstract class _TargetBoundaryWrapperModel
           {required final String tenantId,
           required final String moduleName,
           @JsonKey(name: 'TenantBoundary')
-              final List<TenantBoundaryModel>? boundaries}) =
-      _$_TargetBoundaryWrapperModel;
+          final List<TenantBoundaryModel>? boundaries}) =
+      _$TargetBoundaryWrapperModelImpl;
 
   factory _TargetBoundaryWrapperModel.fromJson(Map<String, dynamic> json) =
-      _$_TargetBoundaryWrapperModel.fromJson;
+      _$TargetBoundaryWrapperModelImpl.fromJson;
 
   @override
   String get tenantId;
@@ -217,7 +219,7 @@ abstract class _TargetBoundaryWrapperModel
   List<TenantBoundaryModel>? get boundaries;
   @override
   @JsonKey(ignore: true)
-  _$$_TargetBoundaryWrapperModelCopyWith<_$_TargetBoundaryWrapperModel>
+  _$$TargetBoundaryWrapperModelImplCopyWith<_$TargetBoundaryWrapperModelImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -294,11 +296,11 @@ class _$TenantBoundaryModelCopyWithImpl<$Res, $Val extends TenantBoundaryModel>
 }
 
 /// @nodoc
-abstract class _$$_TenantBoundaryModelCopyWith<$Res>
+abstract class _$$TenantBoundaryModelImplCopyWith<$Res>
     implements $TenantBoundaryModelCopyWith<$Res> {
-  factory _$$_TenantBoundaryModelCopyWith(_$_TenantBoundaryModel value,
-          $Res Function(_$_TenantBoundaryModel) then) =
-      __$$_TenantBoundaryModelCopyWithImpl<$Res>;
+  factory _$$TenantBoundaryModelImplCopyWith(_$TenantBoundaryModelImpl value,
+          $Res Function(_$TenantBoundaryModelImpl) then) =
+      __$$TenantBoundaryModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({HierarchyTypeModel hierarchyType, BoundaryModel boundary});
@@ -310,11 +312,11 @@ abstract class _$$_TenantBoundaryModelCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_TenantBoundaryModelCopyWithImpl<$Res>
-    extends _$TenantBoundaryModelCopyWithImpl<$Res, _$_TenantBoundaryModel>
-    implements _$$_TenantBoundaryModelCopyWith<$Res> {
-  __$$_TenantBoundaryModelCopyWithImpl(_$_TenantBoundaryModel _value,
-      $Res Function(_$_TenantBoundaryModel) _then)
+class __$$TenantBoundaryModelImplCopyWithImpl<$Res>
+    extends _$TenantBoundaryModelCopyWithImpl<$Res, _$TenantBoundaryModelImpl>
+    implements _$$TenantBoundaryModelImplCopyWith<$Res> {
+  __$$TenantBoundaryModelImplCopyWithImpl(_$TenantBoundaryModelImpl _value,
+      $Res Function(_$TenantBoundaryModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -323,7 +325,7 @@ class __$$_TenantBoundaryModelCopyWithImpl<$Res>
     Object? hierarchyType = null,
     Object? boundary = null,
   }) {
-    return _then(_$_TenantBoundaryModel(
+    return _then(_$TenantBoundaryModelImpl(
       hierarchyType: null == hierarchyType
           ? _value.hierarchyType
           : hierarchyType // ignore: cast_nullable_to_non_nullable
@@ -339,12 +341,12 @@ class __$$_TenantBoundaryModelCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(explicitToJson: true)
-class _$_TenantBoundaryModel implements _TenantBoundaryModel {
-  const _$_TenantBoundaryModel(
+class _$TenantBoundaryModelImpl implements _TenantBoundaryModel {
+  const _$TenantBoundaryModelImpl(
       {required this.hierarchyType, required this.boundary});
 
-  factory _$_TenantBoundaryModel.fromJson(Map<String, dynamic> json) =>
-      _$$_TenantBoundaryModelFromJson(json);
+  factory _$TenantBoundaryModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TenantBoundaryModelImplFromJson(json);
 
   @override
   final HierarchyTypeModel hierarchyType;
@@ -357,10 +359,10 @@ class _$_TenantBoundaryModel implements _TenantBoundaryModel {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TenantBoundaryModel &&
+            other is _$TenantBoundaryModelImpl &&
             (identical(other.hierarchyType, hierarchyType) ||
                 other.hierarchyType == hierarchyType) &&
             (identical(other.boundary, boundary) ||
@@ -374,13 +376,13 @@ class _$_TenantBoundaryModel implements _TenantBoundaryModel {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TenantBoundaryModelCopyWith<_$_TenantBoundaryModel> get copyWith =>
-      __$$_TenantBoundaryModelCopyWithImpl<_$_TenantBoundaryModel>(
+  _$$TenantBoundaryModelImplCopyWith<_$TenantBoundaryModelImpl> get copyWith =>
+      __$$TenantBoundaryModelImplCopyWithImpl<_$TenantBoundaryModelImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_TenantBoundaryModelToJson(
+    return _$$TenantBoundaryModelImplToJson(
       this,
     );
   }
@@ -389,10 +391,10 @@ class _$_TenantBoundaryModel implements _TenantBoundaryModel {
 abstract class _TenantBoundaryModel implements TenantBoundaryModel {
   const factory _TenantBoundaryModel(
       {required final HierarchyTypeModel hierarchyType,
-      required final BoundaryModel boundary}) = _$_TenantBoundaryModel;
+      required final BoundaryModel boundary}) = _$TenantBoundaryModelImpl;
 
   factory _TenantBoundaryModel.fromJson(Map<String, dynamic> json) =
-      _$_TenantBoundaryModel.fromJson;
+      _$TenantBoundaryModelImpl.fromJson;
 
   @override
   HierarchyTypeModel get hierarchyType;
@@ -400,7 +402,7 @@ abstract class _TenantBoundaryModel implements TenantBoundaryModel {
   BoundaryModel get boundary;
   @override
   @JsonKey(ignore: true)
-  _$$_TenantBoundaryModelCopyWith<_$_TenantBoundaryModel> get copyWith =>
+  _$$TenantBoundaryModelImplCopyWith<_$TenantBoundaryModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -458,22 +460,22 @@ class _$HierarchyTypeModelCopyWithImpl<$Res, $Val extends HierarchyTypeModel>
 }
 
 /// @nodoc
-abstract class _$$_HierarchyTypeModelCopyWith<$Res>
+abstract class _$$HierarchyTypeModelImplCopyWith<$Res>
     implements $HierarchyTypeModelCopyWith<$Res> {
-  factory _$$_HierarchyTypeModelCopyWith(_$_HierarchyTypeModel value,
-          $Res Function(_$_HierarchyTypeModel) then) =
-      __$$_HierarchyTypeModelCopyWithImpl<$Res>;
+  factory _$$HierarchyTypeModelImplCopyWith(_$HierarchyTypeModelImpl value,
+          $Res Function(_$HierarchyTypeModelImpl) then) =
+      __$$HierarchyTypeModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String name, String code});
 }
 
 /// @nodoc
-class __$$_HierarchyTypeModelCopyWithImpl<$Res>
-    extends _$HierarchyTypeModelCopyWithImpl<$Res, _$_HierarchyTypeModel>
-    implements _$$_HierarchyTypeModelCopyWith<$Res> {
-  __$$_HierarchyTypeModelCopyWithImpl(
-      _$_HierarchyTypeModel _value, $Res Function(_$_HierarchyTypeModel) _then)
+class __$$HierarchyTypeModelImplCopyWithImpl<$Res>
+    extends _$HierarchyTypeModelCopyWithImpl<$Res, _$HierarchyTypeModelImpl>
+    implements _$$HierarchyTypeModelImplCopyWith<$Res> {
+  __$$HierarchyTypeModelImplCopyWithImpl(_$HierarchyTypeModelImpl _value,
+      $Res Function(_$HierarchyTypeModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -482,7 +484,7 @@ class __$$_HierarchyTypeModelCopyWithImpl<$Res>
     Object? name = null,
     Object? code = null,
   }) {
-    return _then(_$_HierarchyTypeModel(
+    return _then(_$HierarchyTypeModelImpl(
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -498,11 +500,11 @@ class __$$_HierarchyTypeModelCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(explicitToJson: true)
-class _$_HierarchyTypeModel implements _HierarchyTypeModel {
-  const _$_HierarchyTypeModel({required this.name, required this.code});
+class _$HierarchyTypeModelImpl implements _HierarchyTypeModel {
+  const _$HierarchyTypeModelImpl({required this.name, required this.code});
 
-  factory _$_HierarchyTypeModel.fromJson(Map<String, dynamic> json) =>
-      _$$_HierarchyTypeModelFromJson(json);
+  factory _$HierarchyTypeModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$HierarchyTypeModelImplFromJson(json);
 
   @override
   final String name;
@@ -515,10 +517,10 @@ class _$_HierarchyTypeModel implements _HierarchyTypeModel {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_HierarchyTypeModel &&
+            other is _$HierarchyTypeModelImpl &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.code, code) || other.code == code));
   }
@@ -530,13 +532,13 @@ class _$_HierarchyTypeModel implements _HierarchyTypeModel {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_HierarchyTypeModelCopyWith<_$_HierarchyTypeModel> get copyWith =>
-      __$$_HierarchyTypeModelCopyWithImpl<_$_HierarchyTypeModel>(
+  _$$HierarchyTypeModelImplCopyWith<_$HierarchyTypeModelImpl> get copyWith =>
+      __$$HierarchyTypeModelImplCopyWithImpl<_$HierarchyTypeModelImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_HierarchyTypeModelToJson(
+    return _$$HierarchyTypeModelImplToJson(
       this,
     );
   }
@@ -545,10 +547,10 @@ class _$_HierarchyTypeModel implements _HierarchyTypeModel {
 abstract class _HierarchyTypeModel implements HierarchyTypeModel {
   const factory _HierarchyTypeModel(
       {required final String name,
-      required final String code}) = _$_HierarchyTypeModel;
+      required final String code}) = _$HierarchyTypeModelImpl;
 
   factory _HierarchyTypeModel.fromJson(Map<String, dynamic> json) =
-      _$_HierarchyTypeModel.fromJson;
+      _$HierarchyTypeModelImpl.fromJson;
 
   @override
   String get name;
@@ -556,7 +558,7 @@ abstract class _HierarchyTypeModel implements HierarchyTypeModel {
   String get code;
   @override
   @JsonKey(ignore: true)
-  _$$_HierarchyTypeModelCopyWith<_$_HierarchyTypeModel> get copyWith =>
+  _$$HierarchyTypeModelImplCopyWith<_$HierarchyTypeModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -667,11 +669,11 @@ class _$BoundaryModelCopyWithImpl<$Res, $Val extends BoundaryModel>
 }
 
 /// @nodoc
-abstract class _$$_BoundaryModelCopyWith<$Res>
+abstract class _$$BoundaryModelImplCopyWith<$Res>
     implements $BoundaryModelCopyWith<$Res> {
-  factory _$$_BoundaryModelCopyWith(
-          _$_BoundaryModel value, $Res Function(_$_BoundaryModel) then) =
-      __$$_BoundaryModelCopyWithImpl<$Res>;
+  factory _$$BoundaryModelImplCopyWith(
+          _$BoundaryModelImpl value, $Res Function(_$BoundaryModelImpl) then) =
+      __$$BoundaryModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -687,11 +689,11 @@ abstract class _$$_BoundaryModelCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_BoundaryModelCopyWithImpl<$Res>
-    extends _$BoundaryModelCopyWithImpl<$Res, _$_BoundaryModel>
-    implements _$$_BoundaryModelCopyWith<$Res> {
-  __$$_BoundaryModelCopyWithImpl(
-      _$_BoundaryModel _value, $Res Function(_$_BoundaryModel) _then)
+class __$$BoundaryModelImplCopyWithImpl<$Res>
+    extends _$BoundaryModelCopyWithImpl<$Res, _$BoundaryModelImpl>
+    implements _$$BoundaryModelImplCopyWith<$Res> {
+  __$$BoundaryModelImplCopyWithImpl(
+      _$BoundaryModelImpl _value, $Res Function(_$BoundaryModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -707,7 +709,7 @@ class __$$_BoundaryModelCopyWithImpl<$Res>
     Object? code = null,
     Object? children = freezed,
   }) {
-    return _then(_$_BoundaryModel(
+    return _then(_$BoundaryModelImpl(
       id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -751,8 +753,8 @@ class __$$_BoundaryModelCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(explicitToJson: true)
-class _$_BoundaryModel implements _BoundaryModel {
-  const _$_BoundaryModel(
+class _$BoundaryModelImpl implements _BoundaryModel {
+  const _$BoundaryModelImpl(
       {this.id,
       required this.boundaryNum,
       required this.name,
@@ -764,8 +766,8 @@ class _$_BoundaryModel implements _BoundaryModel {
       @JsonKey(includeIfNull: false) final List<BoundaryModel>? children})
       : _children = children;
 
-  factory _$_BoundaryModel.fromJson(Map<String, dynamic> json) =>
-      _$$_BoundaryModelFromJson(json);
+  factory _$BoundaryModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$BoundaryModelImplFromJson(json);
 
   @override
   final String? id;
@@ -790,6 +792,7 @@ class _$_BoundaryModel implements _BoundaryModel {
   List<BoundaryModel>? get children {
     final value = _children;
     if (value == null) return null;
+    if (_children is EqualUnmodifiableListView) return _children;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
@@ -800,10 +803,10 @@ class _$_BoundaryModel implements _BoundaryModel {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_BoundaryModel &&
+            other is _$BoundaryModelImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.boundaryNum, boundaryNum) ||
                 other.boundaryNum == boundaryNum) &&
@@ -836,12 +839,12 @@ class _$_BoundaryModel implements _BoundaryModel {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_BoundaryModelCopyWith<_$_BoundaryModel> get copyWith =>
-      __$$_BoundaryModelCopyWithImpl<_$_BoundaryModel>(this, _$identity);
+  _$$BoundaryModelImplCopyWith<_$BoundaryModelImpl> get copyWith =>
+      __$$BoundaryModelImplCopyWithImpl<_$BoundaryModelImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_BoundaryModelToJson(
+    return _$$BoundaryModelImplToJson(
       this,
     );
   }
@@ -858,10 +861,10 @@ abstract class _BoundaryModel implements BoundaryModel {
           required final String label,
           required final String code,
           @JsonKey(includeIfNull: false) final List<BoundaryModel>? children}) =
-      _$_BoundaryModel;
+      _$BoundaryModelImpl;
 
   factory _BoundaryModel.fromJson(Map<String, dynamic> json) =
-      _$_BoundaryModel.fromJson;
+      _$BoundaryModelImpl.fromJson;
 
   @override
   String? get id;
@@ -885,6 +888,6 @@ abstract class _BoundaryModel implements BoundaryModel {
   List<BoundaryModel>? get children;
   @override
   @JsonKey(ignore: true)
-  _$$_BoundaryModelCopyWith<_$_BoundaryModel> get copyWith =>
+  _$$BoundaryModelImplCopyWith<_$BoundaryModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

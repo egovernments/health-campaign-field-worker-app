@@ -13,8 +13,11 @@ import '../data/local_store/no_sql/schema/project_types.dart';
 import '../data/local_store/no_sql/schema/row_versions.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/local_store/sql_store/sql_store.dart';
+import '../data/repositories/local/attendance_logs.dart';
 import '../data/repositories/local/boundary.dart';
 import '../data/repositories/local/facility.dart';
+import '../data/repositories/local/h_f_referral.dart';
+import '../data/repositories/local/hcm_attendance.dart';
 import '../data/repositories/local/household.dart';
 import '../data/repositories/local/houshold_member.dart';
 import '../data/repositories/local/individual.dart';
@@ -33,8 +36,12 @@ import '../data/repositories/local/stock.dart';
 import '../data/repositories/local/stock_reconciliation.dart';
 import '../data/repositories/local/task.dart';
 import '../data/repositories/oplog/oplog.dart';
+import '../data/repositories/remote/attendance_logs.dart';
 import '../data/repositories/remote/boundary.dart';
+import '../data/repositories/remote/downsync.dart';
 import '../data/repositories/remote/facility.dart';
+import '../data/repositories/remote/h_f_referral.dart';
+import '../data/repositories/remote/hcm_attendance.dart';
 import '../data/repositories/remote/household.dart';
 import '../data/repositories/remote/household_member.dart';
 import '../data/repositories/remote/individual.dart';
@@ -54,6 +61,7 @@ import '../data/repositories/remote/stock.dart';
 import '../data/repositories/remote/stock_reconciliation.dart';
 import '../data/repositories/remote/task.dart';
 import '../models/data_model.dart';
+import '../models/data_model.init.dart';
 
 class Constants {
   late Future<Isar> _isar;
@@ -66,6 +74,7 @@ class Constants {
     return _instance;
   }
   Future initialize(version) async {
+    initializeMappers();
     await _initializeIsar(version);
   }
 
@@ -152,6 +161,18 @@ class Constants {
         sql,
         PgrServiceOpLogManager(isar),
       ),
+      HFReferralLocalRepository(
+        sql,
+        HFReferralOpLogManager(isar),
+      ),
+      AttendanceLocalRepository(
+        sql,
+        AttendanceOpLogManager(isar),
+      ),
+      AttendanceLogsLocalRepository(
+        sql,
+        AttendanceLogOpLogManager(isar),
+      ),
     ];
   }
 
@@ -221,6 +242,14 @@ class Constants {
           SideEffectRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.referral)
           ReferralRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.downsync)
+          DownsyncRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.hFReferral)
+          HFReferralRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.attendanceRegister)
+          AttendanceRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.attendance)
+          AttendanceLogRemoteRepository(dio, actionMap: actions),
       ]);
     }
 
@@ -300,6 +329,10 @@ class EntityPlurals {
         return 'StockReconciliation';
       case 'User':
         return 'user';
+      case 'AttendanceRegister':
+        return 'attendanceRegister';
+      case 'Attendance':
+        return 'attendance';
       default:
         return '${entity}s';
     }
@@ -369,6 +402,8 @@ class DataModels {
         return DataModelType.sideEffect;
       case 'Referrals':
         return DataModelType.referral;
+      case 'HFReferrals':
+        return DataModelType.hFReferral;
       default:
         return DataModelType.householdMember;
     }

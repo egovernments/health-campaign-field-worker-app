@@ -6,8 +6,8 @@ part of 'schema_object.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_SchemaObject _$$_SchemaObjectFromJson(Map<String, dynamic> json) =>
-    _$_SchemaObject(
+_$SchemaObjectImpl _$$SchemaObjectImplFromJson(Map<String, dynamic> json) =>
+    _$SchemaObjectImpl(
       name: json['name'] as String,
       version: json['version'] as int,
       pages: (json['pages'] as Map<String, dynamic>?)?.map(
@@ -20,7 +20,7 @@ _$_SchemaObject _$$_SchemaObjectFromJson(Map<String, dynamic> json) =>
           .toList(),
     );
 
-Map<String, dynamic> _$$_SchemaObjectToJson(_$_SchemaObject instance) {
+Map<String, dynamic> _$$SchemaObjectImplToJson(_$SchemaObjectImpl instance) {
   final val = <String, dynamic>{
     'name': instance.name,
     'version': instance.version,
@@ -38,8 +38,8 @@ Map<String, dynamic> _$$_SchemaObjectToJson(_$_SchemaObject instance) {
   return val;
 }
 
-_$_ActionSchema _$$_ActionSchemaFromJson(Map<String, dynamic> json) =>
-    _$_ActionSchema(
+_$ActionSchemaImpl _$$ActionSchemaImplFromJson(Map<String, dynamic> json) =>
+    _$ActionSchemaImpl(
       name: json['name'] as String,
       buttonName: json['buttonName'] as String,
       buttonType:
@@ -50,7 +50,7 @@ _$_ActionSchema _$$_ActionSchemaFromJson(Map<String, dynamic> json) =>
           .toList(),
     );
 
-Map<String, dynamic> _$$_ActionSchemaToJson(_$_ActionSchema instance) =>
+Map<String, dynamic> _$$ActionSchemaImplToJson(_$ActionSchemaImpl instance) =>
     <String, dynamic>{
       'name': instance.name,
       'buttonName': instance.buttonName,
@@ -64,8 +64,9 @@ const _$ButtonTypeEnumMap = {
   ButtonType.elevated: 'elevated',
 };
 
-_$_ActionItemSchema _$$_ActionItemSchemaFromJson(Map<String, dynamic> json) =>
-    _$_ActionItemSchema(
+_$ActionItemSchemaImpl _$$ActionItemSchemaImplFromJson(
+        Map<String, dynamic> json) =>
+    _$ActionItemSchemaImpl(
       type: $enumDecode(_$ActionTypeEnumMap, json['type']),
       urlSchema: json['urlSchema'] == null
           ? null
@@ -76,7 +77,8 @@ _$_ActionItemSchema _$$_ActionItemSchemaFromJson(Map<String, dynamic> json) =>
               json['routingSchema'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$$_ActionItemSchemaToJson(_$_ActionItemSchema instance) {
+Map<String, dynamic> _$$ActionItemSchemaImplToJson(
+    _$ActionItemSchemaImpl instance) {
   final val = <String, dynamic>{
     'type': _$ActionTypeEnumMap[instance.type]!,
   };
@@ -98,19 +100,20 @@ const _$ActionTypeEnumMap = {
   ActionType.navigate: 'navigate',
 };
 
-_$_UrlSchema _$$_UrlSchemaFromJson(Map<String, dynamic> json) => _$_UrlSchema(
+_$UrlSchemaImpl _$$UrlSchemaImplFromJson(Map<String, dynamic> json) =>
+    _$UrlSchemaImpl(
       method: json['method'] as String,
       urlSchema: json['urlSchema'] as String,
     );
 
-Map<String, dynamic> _$$_UrlSchemaToJson(_$_UrlSchema instance) =>
+Map<String, dynamic> _$$UrlSchemaImplToJson(_$UrlSchemaImpl instance) =>
     <String, dynamic>{
       'method': instance.method,
       'urlSchema': instance.urlSchema,
     };
 
-_$_RoutingSchema _$$_RoutingSchemaFromJson(Map<String, dynamic> json) =>
-    _$_RoutingSchema(
+_$RoutingSchemaImpl _$$RoutingSchemaImplFromJson(Map<String, dynamic> json) =>
+    _$RoutingSchemaImpl(
       destination: json['destination'] as String,
       propertySchema: json['propertySchema'] == null
           ? null
@@ -118,7 +121,7 @@ _$_RoutingSchema _$$_RoutingSchemaFromJson(Map<String, dynamic> json) =>
               json['propertySchema'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$$_RoutingSchemaToJson(_$_RoutingSchema instance) =>
+Map<String, dynamic> _$$RoutingSchemaImplToJson(_$RoutingSchemaImpl instance) =>
     <String, dynamic>{
       'destination': instance.destination,
       'propertySchema': instance.propertySchema?.toJson(),

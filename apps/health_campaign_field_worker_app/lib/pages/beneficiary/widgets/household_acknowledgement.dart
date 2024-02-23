@@ -25,8 +25,8 @@ class _HouseholdAcknowledgementPageState
     extends LocalizedState<HouseholdAcknowledgementPage> {
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => false,
+    return PopScope(
+      canPop: false,
       child: Scaffold(
         body: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
           builder: (context, householdState) {
@@ -34,9 +34,8 @@ class _HouseholdAcknowledgementPageState
               action: () {
                 final parent = context.router.parent() as StackRouter;
                 // Pop twice to navigate back to the previous screen
-                parent
-                  ..pop()
-                  ..pop();
+                parent.popUntilRouteWithName(HomeRoute.name);
+                parent.push(SearchBeneficiaryRoute());
               },
               secondaryAction: () {
                 final wrapper = context
@@ -58,7 +57,8 @@ class _HouseholdAcknowledgementPageState
                 i18.acknowledgementSuccess.acknowledgementDescriptionText,
               ),
               label: localizations.translate(
-                  i18.acknowledgementSuccess.acknowledgementLabelText),
+                i18.acknowledgementSuccess.acknowledgementLabelText,
+              ),
             );
           },
         ),

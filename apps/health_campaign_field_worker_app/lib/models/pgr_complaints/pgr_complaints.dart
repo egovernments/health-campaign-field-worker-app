@@ -1,23 +1,28 @@
+import 'dart:convert';
+
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:drift/drift.dart';
-import 'dart:convert';
 
 import '../../data/local_store/sql_store/sql_store.dart';
 import '../data_model.dart';
 
+part 'pgr_complaints.mapper.dart';
+
 @MappableClass(ignoreNull: true)
-class PgrComplaintModel extends EntityModel {
+class PgrComplaintModel extends EntityModel with PgrComplaintModelMappable {
   final PgrServiceModel service;
   final PgrWorkflowModel? workflow;
 
   const PgrComplaintModel({
     required this.service,
     this.workflow,
+       super.isDeleted  = false,
+        super.auditDetails,
   }) : super();
 }
 
 @MappableClass(ignoreNull: true)
-class PgrComplainantModel extends EntityModel {
+class PgrComplainantModel extends EntityModel with PgrComplainantModelMappable {
   final int? id;
   final String clientReferenceId;
   final String complaintClientReferenceId;
@@ -50,6 +55,7 @@ class PgrComplainantModel extends EntityModel {
     this.isDeleted = false,
     this.rowVersion = 1,
     super.auditDetails,
+
   }) : super();
 
   PgrComplainantCompanion get companion {
@@ -76,18 +82,20 @@ class PgrComplainantModel extends EntityModel {
 }
 
 @MappableClass(ignoreNull: true)
-class PgrRolesModel extends EntityModel {
+class PgrRolesModel extends EntityModel with PgrRolesModelMappable {
   final String name;
   final String code;
 
   const PgrRolesModel({
     required this.name,
     required this.code,
+        super.isDeleted  = false,
+        super.auditDetails,
   }) : super();
 }
 
 @MappableClass(ignoreNull: true)
-class PgrServiceSearchModel extends EntitySearchModel {
+class PgrServiceSearchModel extends EntitySearchModel with PgrServiceSearchModelMappable {
   final String? tenantId;
   final String? serviceRequestId;
   final String? clientReferenceId;
@@ -110,11 +118,15 @@ class PgrServiceSearchModel extends EntitySearchModel {
     this.clientReferenceId,
     this.complainantMobileNumber,
     this.complaintNumber,
+       super.isDeleted  = false,
+        super.auditDetails,
+        super.additionalFields,
+        super.boundaryCode,
   }) : super();
 }
 
 @MappableClass(ignoreNull: true)
-class PgrServiceModel extends EntityModel {
+class PgrServiceModel extends EntityModel with PgrServiceModelMappable {
   final bool active;
   final PgrComplainantModel user;
   final String clientReferenceId;
@@ -126,13 +138,13 @@ class PgrServiceModel extends EntityModel {
   final String? accountId;
   final PgrServiceApplicationStatus applicationStatus;
   final String? source;
-  @override
   final bool isDeleted;
   final int rowVersion;
   final PgrAddressModel address;
   final String? additionalDetail;
 
-  const PgrServiceModel({
+
+  const PgrServiceModel( {
     required this.clientReferenceId,
     this.active = true,
     this.id,
@@ -149,7 +161,8 @@ class PgrServiceModel extends EntityModel {
     required this.address,
     this.additionalDetail,
     super.auditDetails,
-  }) : super();
+
+  }) : super(isDeleted: false);
 
   PgrServiceCompanion get companion {
     return PgrServiceCompanion(
@@ -177,7 +190,7 @@ class PgrServiceModel extends EntityModel {
 }
 
 @MappableClass(ignoreNull: true)
-class PgrWorkflowModel extends EntityModel {
+class PgrWorkflowModel extends EntityModel with PgrWorkflowModelMappable {
   final String action;
   final List<String> assignees;
   final String comments;
@@ -186,6 +199,8 @@ class PgrWorkflowModel extends EntityModel {
     required this.action,
     @MappableField(key: 'assignes') this.assignees = const [],
     required this.comments,
+    super.auditDetails,
+  super.isDeleted  = false,
   }) : super();
 }
 
@@ -204,7 +219,7 @@ enum PgrServiceApplicationStatus {
 }
 
 @MappableClass(ignoreNull: true)
-class PgrFilters {
+class PgrFilters with PgrFiltersMappable {
   String? complaintAssignedTo;
   String? complaintTypeCode;
   String? locality;
@@ -219,7 +234,7 @@ class PgrFilters {
 }
 
 @MappableClass(ignoreNull: true)
-class PgrSearchKeys {
+class PgrSearchKeys with PgrSearchKeysMappable {
   String? complaintNumber;
   String? complainantMobileNumber;
 
@@ -230,7 +245,7 @@ class PgrSearchKeys {
 }
 
 @MappableClass(ignoreNull: true)
-class PgrAdditionalDetails {
+class PgrAdditionalDetails with PgrAdditionalDetailsMappable {
   String? supervisorName;
   String? supervisorContactNumber;
   String? otherComplaintDescription;

@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'complaints.dart';
 
@@ -114,11 +114,12 @@ class _$ComplaintsDetailsModelCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_ComplaintsDetailsModelCopyWith<$Res>
+abstract class _$$ComplaintsDetailsModelImplCopyWith<$Res>
     implements $ComplaintsDetailsModelCopyWith<$Res> {
-  factory _$$_ComplaintsDetailsModelCopyWith(_$_ComplaintsDetailsModel value,
-          $Res Function(_$_ComplaintsDetailsModel) then) =
-      __$$_ComplaintsDetailsModelCopyWithImpl<$Res>;
+  factory _$$ComplaintsDetailsModelImplCopyWith(
+          _$ComplaintsDetailsModelImpl value,
+          $Res Function(_$ComplaintsDetailsModelImpl) then) =
+      __$$ComplaintsDetailsModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -133,12 +134,13 @@ abstract class _$$_ComplaintsDetailsModelCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_ComplaintsDetailsModelCopyWithImpl<$Res>
+class __$$ComplaintsDetailsModelImplCopyWithImpl<$Res>
     extends _$ComplaintsDetailsModelCopyWithImpl<$Res,
-        _$_ComplaintsDetailsModel>
-    implements _$$_ComplaintsDetailsModelCopyWith<$Res> {
-  __$$_ComplaintsDetailsModelCopyWithImpl(_$_ComplaintsDetailsModel _value,
-      $Res Function(_$_ComplaintsDetailsModel) _then)
+        _$ComplaintsDetailsModelImpl>
+    implements _$$ComplaintsDetailsModelImplCopyWith<$Res> {
+  __$$ComplaintsDetailsModelImplCopyWithImpl(
+      _$ComplaintsDetailsModelImpl _value,
+      $Res Function(_$ComplaintsDetailsModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -153,7 +155,7 @@ class __$$_ComplaintsDetailsModelCopyWithImpl<$Res>
     Object? supervisorName = freezed,
     Object? supervisorContactNumber = freezed,
   }) {
-    return _then(_$_ComplaintsDetailsModel(
+    return _then(_$ComplaintsDetailsModelImpl(
       dateOfComplaint: null == dateOfComplaint
           ? _value.dateOfComplaint
           : dateOfComplaint // ignore: cast_nullable_to_non_nullable
@@ -192,8 +194,8 @@ class __$$_ComplaintsDetailsModelCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_ComplaintsDetailsModel implements _ComplaintsDetailsModel {
-  const _$_ComplaintsDetailsModel(
+class _$ComplaintsDetailsModelImpl implements _ComplaintsDetailsModel {
+  const _$ComplaintsDetailsModelImpl(
       {required this.dateOfComplaint,
       required this.administrativeArea,
       required this.complaintRaisedFor,
@@ -203,8 +205,8 @@ class _$_ComplaintsDetailsModel implements _ComplaintsDetailsModel {
       this.supervisorName,
       this.supervisorContactNumber});
 
-  factory _$_ComplaintsDetailsModel.fromJson(Map<String, dynamic> json) =>
-      _$$_ComplaintsDetailsModelFromJson(json);
+  factory _$ComplaintsDetailsModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ComplaintsDetailsModelImplFromJson(json);
 
   @override
   final DateTime dateOfComplaint;
@@ -229,10 +231,10 @@ class _$_ComplaintsDetailsModel implements _ComplaintsDetailsModel {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ComplaintsDetailsModel &&
+            other is _$ComplaintsDetailsModelImpl &&
             (identical(other.dateOfComplaint, dateOfComplaint) ||
                 other.dateOfComplaint == dateOfComplaint) &&
             (identical(other.administrativeArea, administrativeArea) ||
@@ -269,13 +271,13 @@ class _$_ComplaintsDetailsModel implements _ComplaintsDetailsModel {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ComplaintsDetailsModelCopyWith<_$_ComplaintsDetailsModel> get copyWith =>
-      __$$_ComplaintsDetailsModelCopyWithImpl<_$_ComplaintsDetailsModel>(
-          this, _$identity);
+  _$$ComplaintsDetailsModelImplCopyWith<_$ComplaintsDetailsModelImpl>
+      get copyWith => __$$ComplaintsDetailsModelImplCopyWithImpl<
+          _$ComplaintsDetailsModelImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_ComplaintsDetailsModelToJson(
+    return _$$ComplaintsDetailsModelImplToJson(
       this,
     );
   }
@@ -290,10 +292,10 @@ abstract class _ComplaintsDetailsModel implements ComplaintsDetailsModel {
       required final String complainantContactNumber,
       required final String complaintDescription,
       final String? supervisorName,
-      final String? supervisorContactNumber}) = _$_ComplaintsDetailsModel;
+      final String? supervisorContactNumber}) = _$ComplaintsDetailsModelImpl;
 
   factory _ComplaintsDetailsModel.fromJson(Map<String, dynamic> json) =
-      _$_ComplaintsDetailsModel.fromJson;
+      _$ComplaintsDetailsModelImpl.fromJson;
 
   @override
   DateTime get dateOfComplaint;
@@ -313,8 +315,8 @@ abstract class _ComplaintsDetailsModel implements ComplaintsDetailsModel {
   String? get supervisorContactNumber;
   @override
   @JsonKey(ignore: true)
-  _$$_ComplaintsDetailsModelCopyWith<_$_ComplaintsDetailsModel> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$ComplaintsDetailsModelImplCopyWith<_$ComplaintsDetailsModelImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 ComplaintsInboxItem _$ComplaintsInboxItemFromJson(Map<String, dynamic> json) {
@@ -401,11 +403,11 @@ class _$ComplaintsInboxItemCopyWithImpl<$Res, $Val extends ComplaintsInboxItem>
 }
 
 /// @nodoc
-abstract class _$$_ComplaintsInboxItemCopyWith<$Res>
+abstract class _$$ComplaintsInboxItemImplCopyWith<$Res>
     implements $ComplaintsInboxItemCopyWith<$Res> {
-  factory _$$_ComplaintsInboxItemCopyWith(_$_ComplaintsInboxItem value,
-          $Res Function(_$_ComplaintsInboxItem) then) =
-      __$$_ComplaintsInboxItemCopyWithImpl<$Res>;
+  factory _$$ComplaintsInboxItemImplCopyWith(_$ComplaintsInboxItemImpl value,
+          $Res Function(_$ComplaintsInboxItemImpl) then) =
+      __$$ComplaintsInboxItemImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -418,11 +420,11 @@ abstract class _$$_ComplaintsInboxItemCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_ComplaintsInboxItemCopyWithImpl<$Res>
-    extends _$ComplaintsInboxItemCopyWithImpl<$Res, _$_ComplaintsInboxItem>
-    implements _$$_ComplaintsInboxItemCopyWith<$Res> {
-  __$$_ComplaintsInboxItemCopyWithImpl(_$_ComplaintsInboxItem _value,
-      $Res Function(_$_ComplaintsInboxItem) _then)
+class __$$ComplaintsInboxItemImplCopyWithImpl<$Res>
+    extends _$ComplaintsInboxItemCopyWithImpl<$Res, _$ComplaintsInboxItemImpl>
+    implements _$$ComplaintsInboxItemImplCopyWith<$Res> {
+  __$$ComplaintsInboxItemImplCopyWithImpl(_$ComplaintsInboxItemImpl _value,
+      $Res Function(_$ComplaintsInboxItemImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -435,7 +437,7 @@ class __$$_ComplaintsInboxItemCopyWithImpl<$Res>
     Object? status = freezed,
     Object? complaintRaisedBy = freezed,
   }) {
-    return _then(_$_ComplaintsInboxItem(
+    return _then(_$ComplaintsInboxItemImpl(
       complaintNumber: freezed == complaintNumber
           ? _value.complaintNumber
           : complaintNumber // ignore: cast_nullable_to_non_nullable
@@ -466,8 +468,8 @@ class __$$_ComplaintsInboxItemCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_ComplaintsInboxItem implements _ComplaintsInboxItem {
-  const _$_ComplaintsInboxItem(
+class _$ComplaintsInboxItemImpl implements _ComplaintsInboxItem {
+  const _$ComplaintsInboxItemImpl(
       {this.complaintNumber,
       this.complaintType,
       this.dateOfComplaint,
@@ -475,8 +477,8 @@ class _$_ComplaintsInboxItem implements _ComplaintsInboxItem {
       this.status,
       this.complaintRaisedBy});
 
-  factory _$_ComplaintsInboxItem.fromJson(Map<String, dynamic> json) =>
-      _$$_ComplaintsInboxItemFromJson(json);
+  factory _$ComplaintsInboxItemImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ComplaintsInboxItemImplFromJson(json);
 
   @override
   final String? complaintNumber;
@@ -497,10 +499,10 @@ class _$_ComplaintsInboxItem implements _ComplaintsInboxItem {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ComplaintsInboxItem &&
+            other is _$ComplaintsInboxItemImpl &&
             (identical(other.complaintNumber, complaintNumber) ||
                 other.complaintNumber == complaintNumber) &&
             (identical(other.complaintType, complaintType) ||
@@ -521,13 +523,13 @@ class _$_ComplaintsInboxItem implements _ComplaintsInboxItem {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ComplaintsInboxItemCopyWith<_$_ComplaintsInboxItem> get copyWith =>
-      __$$_ComplaintsInboxItemCopyWithImpl<_$_ComplaintsInboxItem>(
+  _$$ComplaintsInboxItemImplCopyWith<_$ComplaintsInboxItemImpl> get copyWith =>
+      __$$ComplaintsInboxItemImplCopyWithImpl<_$ComplaintsInboxItemImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_ComplaintsInboxItemToJson(
+    return _$$ComplaintsInboxItemImplToJson(
       this,
     );
   }
@@ -540,10 +542,10 @@ abstract class _ComplaintsInboxItem implements ComplaintsInboxItem {
       final String? dateOfComplaint,
       final String? area,
       final String? status,
-      final String? complaintRaisedBy}) = _$_ComplaintsInboxItem;
+      final String? complaintRaisedBy}) = _$ComplaintsInboxItemImpl;
 
   factory _ComplaintsInboxItem.fromJson(Map<String, dynamic> json) =
-      _$_ComplaintsInboxItem.fromJson;
+      _$ComplaintsInboxItemImpl.fromJson;
 
   @override
   String? get complaintNumber;
@@ -559,6 +561,6 @@ abstract class _ComplaintsInboxItem implements ComplaintsInboxItem {
   String? get complaintRaisedBy;
   @override
   @JsonKey(ignore: true)
-  _$$_ComplaintsInboxItemCopyWith<_$_ComplaintsInboxItem> get copyWith =>
+  _$$ComplaintsInboxItemImplCopyWith<_$ComplaintsInboxItemImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

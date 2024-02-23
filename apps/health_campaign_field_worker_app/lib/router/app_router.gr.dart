@@ -70,6 +70,17 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    UserQRDetailsRoute.name: (routeData) {
+      final args = routeData.argsAs<UserQRDetailsRouteArgs>(
+          orElse: () => const UserQRDetailsRouteArgs());
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: UserQRDetailsPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     SearchBeneficiaryRoute.name: (routeData) {
       final args = routeData.argsAs<SearchBeneficiaryRouteArgs>(
           orElse: () => const SearchBeneficiaryRouteArgs());
@@ -184,6 +195,29 @@ class _$AppRouter extends RootStackRouter {
         )),
       );
     },
+    SearchReferralsRoute.name: (routeData) {
+      final args = routeData.argsAs<SearchReferralsRouteArgs>(
+          orElse: () => const SearchReferralsRouteArgs());
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: SearchReferralsPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    HFCreateReferralWrapperRoute.name: (routeData) {
+      final args = routeData.argsAs<HFCreateReferralWrapperRouteArgs>();
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: WrappedRoute(
+            child: HFCreateReferralWrapperPage(
+          key: args.key,
+          viewOnly: args.viewOnly,
+          hfReferralModel: args.hfReferralModel,
+        )),
+      );
+    },
     ManageStocksRoute.name: (routeData) {
       final args = routeData.argsAs<ManageStocksRouteArgs>(
           orElse: () => const ManageStocksRouteArgs());
@@ -213,6 +247,16 @@ class _$AppRouter extends RootStackRouter {
         child: FacilitySelectionPage(
           key: args.key,
           facilities: args.facilities,
+        ),
+      );
+    },
+    ProjectFacilitySelectionRoute.name: (routeData) {
+      final args = routeData.argsAs<ProjectFacilitySelectionRouteArgs>();
+      return MaterialPageX<ProjectFacilityModel>(
+        routeData: routeData,
+        child: ProjectFacilitySelectionPage(
+          key: args.key,
+          projectFacilities: args.projectFacilities,
         ),
       );
     },
@@ -437,6 +481,7 @@ class _$AppRouter extends RootStackRouter {
         routeData: routeData,
         child: ChecklistViewPage(
           key: args.key,
+          referralClientRefId: args.referralClientRefId,
           appLocalizations: args.appLocalizations,
         ),
       );
@@ -493,6 +538,56 @@ class _$AppRouter extends RootStackRouter {
         child: StockDetailsPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    ReferralFacilityRoute.name: (routeData) {
+      final args = routeData.argsAs<ReferralFacilityRouteArgs>(
+          orElse: () => const ReferralFacilityRouteArgs());
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: ReferralFacilityPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          isEditing: args.isEditing,
+        ),
+      );
+    },
+    RecordReferralDetailsRoute.name: (routeData) {
+      final args = routeData.argsAs<RecordReferralDetailsRouteArgs>(
+          orElse: () => const RecordReferralDetailsRouteArgs());
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: RecordReferralDetailsPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          isEditing: args.isEditing,
+        ),
+      );
+    },
+    ReferralReasonChecklistRoute.name: (routeData) {
+      final args = routeData.argsAs<ReferralReasonChecklistRouteArgs>(
+          orElse: () => const ReferralReasonChecklistRouteArgs());
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: ReferralReasonChecklistPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          isEditing: args.isEditing,
+          referralClientRefId: args.referralClientRefId,
+        ),
+      );
+    },
+    ReferralReasonCheckListPreviewRoute.name: (routeData) {
+      final args = routeData.argsAs<ReferralReasonCheckListPreviewRouteArgs>(
+          orElse: () => const ReferralReasonCheckListPreviewRouteArgs());
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: ReferralReasonCheckListPreviewPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          isEditing: args.isEditing,
+          referralClientRefId: args.referralClientRefId,
         ),
       );
     },
@@ -629,6 +724,11 @@ class _$AppRouter extends RootStackRouter {
             RouteConfig(
               ProfileRoute.name,
               path: 'profile',
+              parent: AuthenticatedRouteWrapper.name,
+            ),
+            RouteConfig(
+              UserQRDetailsRoute.name,
+              path: 'user-qr-code',
               parent: AuthenticatedRouteWrapper.name,
             ),
             RouteConfig(
@@ -811,6 +911,45 @@ class _$AppRouter extends RootStackRouter {
               ],
             ),
             RouteConfig(
+              SearchReferralsRoute.name,
+              path: 'search-referrals',
+              parent: AuthenticatedRouteWrapper.name,
+            ),
+            RouteConfig(
+              HFCreateReferralWrapperRoute.name,
+              path: 'hf-referral',
+              parent: AuthenticatedRouteWrapper.name,
+              children: [
+                RouteConfig(
+                  '#redirect',
+                  path: '',
+                  parent: HFCreateReferralWrapperRoute.name,
+                  redirectTo: 'facility-details',
+                  fullMatch: true,
+                ),
+                RouteConfig(
+                  ReferralFacilityRoute.name,
+                  path: 'facility-details',
+                  parent: HFCreateReferralWrapperRoute.name,
+                ),
+                RouteConfig(
+                  RecordReferralDetailsRoute.name,
+                  path: 'referral-details',
+                  parent: HFCreateReferralWrapperRoute.name,
+                ),
+                RouteConfig(
+                  ReferralReasonChecklistRoute.name,
+                  path: 'referral-reason',
+                  parent: HFCreateReferralWrapperRoute.name,
+                ),
+                RouteConfig(
+                  ReferralReasonCheckListPreviewRoute.name,
+                  path: 'referral-reason-view',
+                  parent: HFCreateReferralWrapperRoute.name,
+                ),
+              ],
+            ),
+            RouteConfig(
               ManageStocksRoute.name,
               path: 'manage-stocks',
               parent: AuthenticatedRouteWrapper.name,
@@ -823,6 +962,11 @@ class _$AppRouter extends RootStackRouter {
             RouteConfig(
               FacilitySelectionRoute.name,
               path: 'select-facilities',
+              parent: AuthenticatedRouteWrapper.name,
+            ),
+            RouteConfig(
+              ProjectFacilitySelectionRoute.name,
+              path: 'select-project-facilities',
               parent: AuthenticatedRouteWrapper.name,
             ),
             RouteConfig(
@@ -1070,6 +1214,40 @@ class ProfileRouteArgs {
   @override
   String toString() {
     return 'ProfileRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [UserQRDetailsPage]
+class UserQRDetailsRoute extends PageRouteInfo<UserQRDetailsRouteArgs> {
+  UserQRDetailsRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+  }) : super(
+          UserQRDetailsRoute.name,
+          path: 'user-qr-code',
+          args: UserQRDetailsRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+        );
+
+  static const String name = 'UserQRDetailsRoute';
+}
+
+class UserQRDetailsRouteArgs {
+  const UserQRDetailsRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'UserQRDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
@@ -1455,6 +1633,82 @@ class RecordStockWrapperRouteArgs {
 }
 
 /// generated route for
+/// [SearchReferralsPage]
+class SearchReferralsRoute extends PageRouteInfo<SearchReferralsRouteArgs> {
+  SearchReferralsRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+  }) : super(
+          SearchReferralsRoute.name,
+          path: 'search-referrals',
+          args: SearchReferralsRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+        );
+
+  static const String name = 'SearchReferralsRoute';
+}
+
+class SearchReferralsRouteArgs {
+  const SearchReferralsRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'SearchReferralsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [HFCreateReferralWrapperPage]
+class HFCreateReferralWrapperRoute
+    extends PageRouteInfo<HFCreateReferralWrapperRouteArgs> {
+  HFCreateReferralWrapperRoute({
+    Key? key,
+    required bool viewOnly,
+    HFReferralModel? hfReferralModel,
+    List<PageRouteInfo>? children,
+  }) : super(
+          HFCreateReferralWrapperRoute.name,
+          path: 'hf-referral',
+          args: HFCreateReferralWrapperRouteArgs(
+            key: key,
+            viewOnly: viewOnly,
+            hfReferralModel: hfReferralModel,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'HFCreateReferralWrapperRoute';
+}
+
+class HFCreateReferralWrapperRouteArgs {
+  const HFCreateReferralWrapperRouteArgs({
+    this.key,
+    required this.viewOnly,
+    this.hfReferralModel,
+  });
+
+  final Key? key;
+
+  final bool viewOnly;
+
+  final HFReferralModel? hfReferralModel;
+
+  @override
+  String toString() {
+    return 'HFCreateReferralWrapperRouteArgs{key: $key, viewOnly: $viewOnly, hfReferralModel: $hfReferralModel}';
+  }
+}
+
+/// generated route for
 /// [ManageStocksPage]
 class ManageStocksRoute extends PageRouteInfo<ManageStocksRouteArgs> {
   ManageStocksRoute({
@@ -1554,6 +1808,41 @@ class FacilitySelectionRouteArgs {
   @override
   String toString() {
     return 'FacilitySelectionRouteArgs{key: $key, facilities: $facilities}';
+  }
+}
+
+/// generated route for
+/// [ProjectFacilitySelectionPage]
+class ProjectFacilitySelectionRoute
+    extends PageRouteInfo<ProjectFacilitySelectionRouteArgs> {
+  ProjectFacilitySelectionRoute({
+    Key? key,
+    required List<ProjectFacilityModel> projectFacilities,
+  }) : super(
+          ProjectFacilitySelectionRoute.name,
+          path: 'select-project-facilities',
+          args: ProjectFacilitySelectionRouteArgs(
+            key: key,
+            projectFacilities: projectFacilities,
+          ),
+        );
+
+  static const String name = 'ProjectFacilitySelectionRoute';
+}
+
+class ProjectFacilitySelectionRouteArgs {
+  const ProjectFacilitySelectionRouteArgs({
+    this.key,
+    required this.projectFacilities,
+  });
+
+  final Key? key;
+
+  final List<ProjectFacilityModel> projectFacilities;
+
+  @override
+  String toString() {
+    return 'ProjectFacilitySelectionRouteArgs{key: $key, projectFacilities: $projectFacilities}';
   }
 }
 
@@ -2252,12 +2541,14 @@ class HouseholdAcknowledgementRouteArgs {
 class ChecklistViewRoute extends PageRouteInfo<ChecklistViewRouteArgs> {
   ChecklistViewRoute({
     Key? key,
+    String? referralClientRefId,
     AppLocalizations? appLocalizations,
   }) : super(
           ChecklistViewRoute.name,
           path: 'view',
           args: ChecklistViewRouteArgs(
             key: key,
+            referralClientRefId: referralClientRefId,
             appLocalizations: appLocalizations,
           ),
         );
@@ -2268,16 +2559,19 @@ class ChecklistViewRoute extends PageRouteInfo<ChecklistViewRouteArgs> {
 class ChecklistViewRouteArgs {
   const ChecklistViewRouteArgs({
     this.key,
+    this.referralClientRefId,
     this.appLocalizations,
   });
 
   final Key? key;
 
+  final String? referralClientRefId;
+
   final AppLocalizations? appLocalizations;
 
   @override
   String toString() {
-    return 'ChecklistViewRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+    return 'ChecklistViewRouteArgs{key: $key, referralClientRefId: $referralClientRefId, appLocalizations: $appLocalizations}';
   }
 }
 
@@ -2449,6 +2743,175 @@ class StockDetailsRouteArgs {
   @override
   String toString() {
     return 'StockDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [ReferralFacilityPage]
+class ReferralFacilityRoute extends PageRouteInfo<ReferralFacilityRouteArgs> {
+  ReferralFacilityRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    bool isEditing = false,
+  }) : super(
+          ReferralFacilityRoute.name,
+          path: 'facility-details',
+          args: ReferralFacilityRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            isEditing: isEditing,
+          ),
+        );
+
+  static const String name = 'ReferralFacilityRoute';
+}
+
+class ReferralFacilityRouteArgs {
+  const ReferralFacilityRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.isEditing = false,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final bool isEditing;
+
+  @override
+  String toString() {
+    return 'ReferralFacilityRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing}';
+  }
+}
+
+/// generated route for
+/// [RecordReferralDetailsPage]
+class RecordReferralDetailsRoute
+    extends PageRouteInfo<RecordReferralDetailsRouteArgs> {
+  RecordReferralDetailsRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    bool isEditing = false,
+  }) : super(
+          RecordReferralDetailsRoute.name,
+          path: 'referral-details',
+          args: RecordReferralDetailsRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            isEditing: isEditing,
+          ),
+        );
+
+  static const String name = 'RecordReferralDetailsRoute';
+}
+
+class RecordReferralDetailsRouteArgs {
+  const RecordReferralDetailsRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.isEditing = false,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final bool isEditing;
+
+  @override
+  String toString() {
+    return 'RecordReferralDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing}';
+  }
+}
+
+/// generated route for
+/// [ReferralReasonChecklistPage]
+class ReferralReasonChecklistRoute
+    extends PageRouteInfo<ReferralReasonChecklistRouteArgs> {
+  ReferralReasonChecklistRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    bool isEditing = false,
+    String? referralClientRefId,
+  }) : super(
+          ReferralReasonChecklistRoute.name,
+          path: 'referral-reason',
+          args: ReferralReasonChecklistRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            isEditing: isEditing,
+            referralClientRefId: referralClientRefId,
+          ),
+        );
+
+  static const String name = 'ReferralReasonChecklistRoute';
+}
+
+class ReferralReasonChecklistRouteArgs {
+  const ReferralReasonChecklistRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.isEditing = false,
+    this.referralClientRefId,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final bool isEditing;
+
+  final String? referralClientRefId;
+
+  @override
+  String toString() {
+    return 'ReferralReasonChecklistRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing, referralClientRefId: $referralClientRefId}';
+  }
+}
+
+/// generated route for
+/// [ReferralReasonCheckListPreviewPage]
+class ReferralReasonCheckListPreviewRoute
+    extends PageRouteInfo<ReferralReasonCheckListPreviewRouteArgs> {
+  ReferralReasonCheckListPreviewRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    bool isEditing = false,
+    String? referralClientRefId,
+  }) : super(
+          ReferralReasonCheckListPreviewRoute.name,
+          path: 'referral-reason-view',
+          args: ReferralReasonCheckListPreviewRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            isEditing: isEditing,
+            referralClientRefId: referralClientRefId,
+          ),
+        );
+
+  static const String name = 'ReferralReasonCheckListPreviewRoute';
+}
+
+class ReferralReasonCheckListPreviewRouteArgs {
+  const ReferralReasonCheckListPreviewRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.isEditing = false,
+    this.referralClientRefId,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final bool isEditing;
+
+  final String? referralClientRefId;
+
+  @override
+  String toString() {
+    return 'ReferralReasonCheckListPreviewRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing, referralClientRefId: $referralClientRefId}';
   }
 }
 

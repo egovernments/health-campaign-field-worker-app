@@ -16,7 +16,9 @@ class StockLocalRepository
     bool createOpLog = true,
     DataOperation dataOperation = DataOperation.create,
   }) async {
-    final stockCompanion = entity.companion;
+    final stockCompanion = entity.companion.copyWith(
+      transactionType: Value(entity.companion.transactionType.value),
+    );
     await sql.batch((batch) {
       batch.insert(sql.stock, stockCompanion);
     });
@@ -33,11 +35,13 @@ class StockLocalRepository
           ..where(
             buildAnd(
               [
-                if (query.id != null) sql.stock.id.equals(query.id),
-                if (query.facilityId != null)
-                  sql.stock.facilityId.equals(query.facilityId),
+                if (query.id != null) sql.stock.id.equals(query.id!),
+                if (query.receiverId != null)
+                  sql.stock.receiverId.equals(query.receiverId!),
+                if (query.senderId != null)
+                  sql.stock.senderId.equals(query.senderId!),
                 if (query.productVariantId != null)
-                  sql.stock.productVariantId.equals(query.productVariantId),
+                  sql.stock.productVariantId.equals(query.productVariantId!),
                 if (query.clientReferenceId != null)
                   sql.stock.clientReferenceId.isIn(query.clientReferenceId!),
                 if (userId != null)
@@ -72,6 +76,10 @@ class StockLocalRepository
         tenantId: data.tenantId,
         facilityId: data.facilityId,
         productVariantId: data.productVariantId,
+        receiverId: data.receiverId,
+        senderId: data.senderId,
+        receiverType: data.receiverType,
+        senderType: data.senderType,
         referenceId: data.referenceId,
         referenceIdType: data.referenceIdType,
         transactionType: data.transactionType,

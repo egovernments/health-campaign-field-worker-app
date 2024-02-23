@@ -102,6 +102,12 @@ class PerformSyncUp {
                 );
               }
 
+              if (updatedEntity is HFReferralModel) {
+                updatedEntity = updatedEntity.copyWith(
+                  id: serverGeneratedId,
+                );
+              }
+
               return updatedEntity;
             }
 
@@ -234,7 +240,7 @@ class PerformSyncUp {
                       PgrComplaintResponseModel pgrComplaintModel;
                       try {
                         pgrServiceCreateResponseModel =
-                            Mapper.fromMap<PgrServiceCreateResponseModel>(
+                            PgrServiceCreateResponseModelMapper.fromMap(
                           responseData,
                         );
                         pgrComplaintModel =

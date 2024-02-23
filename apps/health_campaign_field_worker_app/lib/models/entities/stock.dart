@@ -5,8 +5,10 @@ import 'package:drift/drift.dart';
 import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
 
-@MappableClass(ignoreNull: true)
-class StockSearchModel extends EntitySearchModel {
+part 'stock.mapper.dart';
+
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class StockSearchModel extends EntitySearchModel with StockSearchModelMappable {
   final String? id;
   final String? tenantId;
   final String? facilityId;
@@ -15,6 +17,10 @@ class StockSearchModel extends EntitySearchModel {
   final String? referenceIdType;
   final String? transactingPartyId;
   final String? transactingPartyType;
+  final String? receiverId;
+  final String? receiverType;
+  final String? senderId;
+  final String? senderType;
   final List<String>? clientReferenceId;
   final List<TransactionType>? transactionType;
   final List<TransactionReason>? transactionReason;
@@ -28,6 +34,10 @@ class StockSearchModel extends EntitySearchModel {
     this.referenceIdType,
     this.transactingPartyId,
     this.transactingPartyType,
+    this.receiverId,
+    this.receiverType,
+    this.senderId,
+    this.senderType,
     this.clientReferenceId,
     this.transactionType,
     this.transactionReason,
@@ -45,6 +55,10 @@ class StockSearchModel extends EntitySearchModel {
     this.referenceIdType,
     this.transactingPartyId,
     this.transactingPartyType,
+    this.receiverId,
+    this.receiverType,
+    this.senderId,
+    this.senderType,
     this.clientReferenceId,
     this.transactionType,
     this.transactionReason,
@@ -52,8 +66,8 @@ class StockSearchModel extends EntitySearchModel {
   }):  super(isDeleted: false);
 }
 
-@MappableClass(ignoreNull: true)
-class StockModel extends EntityModel {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class StockModel extends EntityModel with StockModelMappable {
 
   static const schemaName = 'Stock';
 
@@ -67,6 +81,10 @@ class StockModel extends EntityModel {
   final String? transactingPartyType;
   final String? quantity;
   final String? waybillNumber;
+  final String? receiverId;
+  final String? receiverType;
+  final String? senderId;
+  final String? senderType;
   final bool? nonRecoverableError;
   final String clientReferenceId;
   final int? rowVersion;
@@ -86,6 +104,10 @@ class StockModel extends EntityModel {
     this.transactingPartyType,
     this.quantity,
     this.waybillNumber,
+    this.receiverId,
+    this.receiverType,
+    this.senderId,
+    this.senderType,
     this.nonRecoverableError = false,
     required this.clientReferenceId,
     this.rowVersion,
@@ -117,6 +139,10 @@ class StockModel extends EntityModel {
       transactingPartyType: Value(transactingPartyType),
       quantity: Value(quantity),
       waybillNumber: Value(waybillNumber),
+      receiverId: Value(receiverId),
+      receiverType: Value(receiverType),
+      senderId: Value(senderId),
+      senderType: Value(senderType),
       nonRecoverableError: Value(nonRecoverableError),
       clientReferenceId: Value(clientReferenceId),
       rowVersion: Value(rowVersion),
@@ -126,11 +152,12 @@ class StockModel extends EntityModel {
   }
 }
 
-@MappableClass(ignoreNull: true)
-class StockAdditionalFields extends AdditionalFields {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class StockAdditionalFields extends AdditionalFields with StockAdditionalFieldsMappable {
   StockAdditionalFields({
     super.schema = 'Stock',
     required super.version,
     super.fields,
   });
 }
+

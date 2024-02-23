@@ -3,8 +3,8 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Loaders {
   static circularLoader(BuildContext context) {
-    return WillPopScope(
-        onWillPop: () async => false,
+    return PopScope(
+        canPop: false,
         child: SizedBox(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
@@ -42,8 +42,8 @@ class Loaders {
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
-          return WillPopScope(
-              onWillPop: () async => false,
+          return PopScope(
+              canPop: false,
               child: SizedBox(
                 height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width,
@@ -80,16 +80,14 @@ class Loaders {
         barrierColor: Colors.transparent,
         barrierDismissible: false,
         builder: (BuildContext context) {
-          return WillPopScope(
-            onWillPop: () async => false,
+          return PopScope(
+            canPop: false,
             child: Dialog(
               // backgroundColor:CustomColors.BLACK,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15)),
-              child: WillPopScope(
-                onWillPop: () async {
-                  return true;
-                },
+              child: PopScope(
+                canPop: true,
                 child: Container(
                     padding: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 10),

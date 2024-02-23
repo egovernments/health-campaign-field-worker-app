@@ -26,6 +26,7 @@ class DigitTextField extends StatelessWidget {
   final Widget? suffixIcon;
   final Widget? prefixIcon;
   final TextStyle? textStyle;
+  final String? hintText;
 
   const DigitTextField({
     super.key,
@@ -51,6 +52,7 @@ class DigitTextField extends StatelessWidget {
     this.suffixIcon,
     this.prefixIcon,
     this.textStyle,
+    this.hintText,
   });
 
   @override
@@ -86,6 +88,7 @@ class DigitTextField extends StatelessWidget {
         readOnly: readOnly,
         validator: (value) => validator?.call(value),
         decoration: InputDecoration(
+          hintText: hintText,
           suffixIconConstraints: const BoxConstraints(
             maxHeight: 48,
             maxWidth: 48,

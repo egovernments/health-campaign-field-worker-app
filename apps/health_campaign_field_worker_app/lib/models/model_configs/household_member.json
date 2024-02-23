@@ -9,6 +9,22 @@
       "includeForQuery": true
     },
     {
+      "name": "individualClientReferenceIds",
+      "type": "String",
+      "isList": true,
+      "includeForQuery": true,
+      "includeForEntity": false,
+      "includeForTable": false
+    },
+    {
+      "name": "householdClientReferenceIds",
+      "type": "String",
+      "isList": true,
+      "includeForQuery": true,
+      "includeForEntity": false,
+      "includeForTable": false
+    },
+     {
       "name": "householdId",
       "type": "String",
       "includeForQuery": true

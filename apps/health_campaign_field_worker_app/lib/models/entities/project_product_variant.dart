@@ -5,8 +5,10 @@ import 'package:drift/drift.dart';
 import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
 
-@MappableClass(ignoreNull: true)
-class ProjectProductVariantSearchModel extends EntitySearchModel {
+part 'project_product_variant.mapper.dart';
+
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class ProjectProductVariantSearchModel extends EntitySearchModel with ProjectProductVariantSearchModelMappable {
   final String? productVariantId;
   final String? tenantId;
   
@@ -25,8 +27,8 @@ class ProjectProductVariantSearchModel extends EntitySearchModel {
   }):  super(isDeleted: false);
 }
 
-@MappableClass(ignoreNull: true)
-class ProjectProductVariantModel extends EntityModel {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class ProjectProductVariantModel extends EntityModel with ProjectProductVariantModelMappable {
 
   static const schemaName = 'ProjectProductVariant';
 
@@ -72,11 +74,12 @@ class ProjectProductVariantModel extends EntityModel {
   }
 }
 
-@MappableClass(ignoreNull: true)
-class ProjectProductVariantAdditionalFields extends AdditionalFields {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class ProjectProductVariantAdditionalFields extends AdditionalFields with ProjectProductVariantAdditionalFieldsMappable {
   ProjectProductVariantAdditionalFields({
     super.schema = 'ProjectProductVariant',
     required super.version,
     super.fields,
   });
 }
+

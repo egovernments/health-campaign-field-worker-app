@@ -46,29 +46,93 @@ class _HouseholdOverviewPageState
     final theme = Theme.of(context);
     final beneficiaryType = context.beneficiaryType;
 
-    return BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
-      builder: (ctx, state) {
-        return Scaffold(
-          body: state.loading
-              ? const Center(child: CircularProgressIndicator())
-              : BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
-                  builder: (ctx, state) {
-                    if (state.loading) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
+    return PopScope(
+      onPopInvoked: (didPop) async {
+        context
+            .read<SearchHouseholdsBloc>()
+            .add(const SearchHouseholdsClearEvent());
+        Navigator.of(context).pop();
+      },
+      child: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
+        builder: (ctx, state) {
+          return Scaffold(
+            body: state.loading
+                ? const Center(child: CircularProgressIndicator())
+                : BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
+                    builder: (ctx, state) {
+                      if (state.loading) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
 
-                    return ScrollableContent(
-                      header: const BackNavigationHelpHeaderWidget(),
-                      children: [
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height / 1.25,
-                          child: SingleChildScrollView(
+                      return ScrollableContent(
+                        header: BackNavigationHelpHeaderWidget(
+                          handleback: () {
+                            context
+                                .read<SearchHouseholdsBloc>()
+                                .add(const SearchHouseholdsClearEvent());
+                          },
+                        ),
+                        enableFixedButton: true,
+                        footer: Offstage(
+                          offstage:
+                              beneficiaryType == BeneficiaryType.individual,
+                          child: BlocBuilder<DeliverInterventionBloc,
+                              DeliverInterventionState>(
+                            builder: (ctx, state) => DigitCard(
+                              margin:
+                                  const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
+                              padding: const EdgeInsets.fromLTRB(
+                                  kPadding, 0, kPadding, 0),
+                              child: state.tasks?.first.status ==
+                                      Status.administeredSuccess.toValue()
+                                  ? DigitOutLineButton(
+                                      label: localizations.translate(
+                                        i18.memberCard
+                                            .deliverDetailsUpdateLabel,
+                                      ),
+                                      onPressed: () async {
+                                        await context.router
+                                            .push(DeliverInterventionRoute());
+                                      },
+                                    )
+                                  : DigitElevatedButton(
+                                      onPressed: () async {
+                                        final bloc =
+                                            ctx.read<HouseholdOverviewBloc>();
+
+                                        final projectId = context.projectId;
+
+                                        bloc.add(
+                                          HouseholdOverviewReloadEvent(
+                                            projectId: projectId,
+                                            projectBeneficiaryType:
+                                                beneficiaryType,
+                                          ),
+                                        );
+
+                                        await context.router
+                                            .push(DeliverInterventionRoute());
+                                      },
+                                      child: Center(
+                                        child: Text(
+                                          localizations.translate(
+                                            i18.householdOverView
+                                                .householdOverViewActionText,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                            ),
+                          ),
+                        ),
+                        slivers: [
+                          SliverToBoxAdapter(
                             child: DigitCard(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
+                                mainAxisSize: MainAxisSize.max,
                                 children: [
                                   BlocBuilder<ProjectBloc, ProjectState>(
                                     builder: (context, projectState) {
@@ -417,7 +481,7 @@ class _HouseholdOverviewPageState
                                             final isBeneficiaryReferred =
                                                 checkIfBeneficiaryReferred(
                                               referralData,
-                                              currentCycle ?? Cycle(),
+                                              currentCycle ?? const Cycle(),
                                             );
 
                                             return MemberCard(
@@ -468,13 +532,21 @@ class _HouseholdOverviewPageState
                                                         (element) =>
                                                             element
                                                                 .beneficiaryClientReferenceId ==
-                                                            e.clientReferenceId,
+                                                            (context.beneficiaryType ==
+                                                                    BeneficiaryType
+                                                                        .individual
+                                                                ? e
+                                                                    .clientReferenceId
+                                                                : state
+                                                                    .householdMemberWrapper
+                                                                    .household
+                                                                    .clientReferenceId),
                                                       ),
                                                     ),
                                                     children: [
                                                       IndividualDetailsRoute(
                                                         isHeadOfHousehold:
-                                                            false,
+                                                            isHead,
                                                       ),
                                                     ],
                                                   ),
@@ -647,6 +719,9 @@ class _HouseholdOverviewPageState
                                       },
                                     ).toList(),
                                   ),
+                                  const SizedBox(
+                                    height: kPadding,
+                                  ),
                                   Center(
                                     child: DigitIconButton(
                                       onPressed: () async {
@@ -702,56 +777,13 @@ class _HouseholdOverviewPageState
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    );
-                  },
-                ),
-          bottomNavigationBar: Offstage(
-            offstage: beneficiaryType == BeneficiaryType.individual,
-            child:
-                BlocBuilder<DeliverInterventionBloc, DeliverInterventionState>(
-              builder: (ctx, state) => DigitCard(
-                margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
-                padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
-                child: state.tasks?.first.status ==
-                        Status.administeredSuccess.toValue()
-                    ? DigitOutLineButton(
-                        label: localizations.translate(
-                          i18.memberCard.deliverDetailsUpdateLabel,
-                        ),
-                        onPressed: () async {
-                          await context.router.push(DeliverInterventionRoute());
-                        },
-                      )
-                    : DigitElevatedButton(
-                        onPressed: () async {
-                          final bloc = ctx.read<HouseholdOverviewBloc>();
-
-                          final projectId = context.projectId;
-
-                          bloc.add(
-                            HouseholdOverviewReloadEvent(
-                              projectId: projectId,
-                              projectBeneficiaryType: beneficiaryType,
-                            ),
-                          );
-
-                          await context.router.push(DeliverInterventionRoute());
-                        },
-                        child: Center(
-                          child: Text(
-                            localizations.translate(
-                              i18.householdOverView.householdOverViewActionText,
-                            ),
-                          ),
-                        ),
-                      ),
-              ),
-            ),
-          ),
-        );
-      },
+                        ],
+                      );
+                    },
+                  ),
+          );
+        },
+      ),
     );
   }
 }

@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'facility.dart';
 
@@ -97,24 +97,24 @@ class _$FacilityEventCopyWithImpl<$Res, $Val extends FacilityEvent>
 }
 
 /// @nodoc
-abstract class _$$FacilityLoadForProjectEventCopyWith<$Res>
+abstract class _$$FacilityLoadForProjectEventImplCopyWith<$Res>
     implements $FacilityEventCopyWith<$Res> {
-  factory _$$FacilityLoadForProjectEventCopyWith(
-          _$FacilityLoadForProjectEvent value,
-          $Res Function(_$FacilityLoadForProjectEvent) then) =
-      __$$FacilityLoadForProjectEventCopyWithImpl<$Res>;
+  factory _$$FacilityLoadForProjectEventImplCopyWith(
+          _$FacilityLoadForProjectEventImpl value,
+          $Res Function(_$FacilityLoadForProjectEventImpl) then) =
+      __$$FacilityLoadForProjectEventImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String projectId, bool loadAllProjects});
 }
 
 /// @nodoc
-class __$$FacilityLoadForProjectEventCopyWithImpl<$Res>
-    extends _$FacilityEventCopyWithImpl<$Res, _$FacilityLoadForProjectEvent>
-    implements _$$FacilityLoadForProjectEventCopyWith<$Res> {
-  __$$FacilityLoadForProjectEventCopyWithImpl(
-      _$FacilityLoadForProjectEvent _value,
-      $Res Function(_$FacilityLoadForProjectEvent) _then)
+class __$$FacilityLoadForProjectEventImplCopyWithImpl<$Res>
+    extends _$FacilityEventCopyWithImpl<$Res, _$FacilityLoadForProjectEventImpl>
+    implements _$$FacilityLoadForProjectEventImplCopyWith<$Res> {
+  __$$FacilityLoadForProjectEventImplCopyWithImpl(
+      _$FacilityLoadForProjectEventImpl _value,
+      $Res Function(_$FacilityLoadForProjectEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -123,7 +123,7 @@ class __$$FacilityLoadForProjectEventCopyWithImpl<$Res>
     Object? projectId = null,
     Object? loadAllProjects = null,
   }) {
-    return _then(_$FacilityLoadForProjectEvent(
+    return _then(_$FacilityLoadForProjectEventImpl(
       projectId: null == projectId
           ? _value.projectId
           : projectId // ignore: cast_nullable_to_non_nullable
@@ -138,8 +138,8 @@ class __$$FacilityLoadForProjectEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$FacilityLoadForProjectEvent implements FacilityLoadForProjectEvent {
-  const _$FacilityLoadForProjectEvent(
+class _$FacilityLoadForProjectEventImpl implements FacilityLoadForProjectEvent {
+  const _$FacilityLoadForProjectEventImpl(
       {required this.projectId, this.loadAllProjects = true});
 
   @override
@@ -154,10 +154,10 @@ class _$FacilityLoadForProjectEvent implements FacilityLoadForProjectEvent {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$FacilityLoadForProjectEvent &&
+            other is _$FacilityLoadForProjectEventImpl &&
             (identical(other.projectId, projectId) ||
                 other.projectId == projectId) &&
             (identical(other.loadAllProjects, loadAllProjects) ||
@@ -170,9 +170,9 @@ class _$FacilityLoadForProjectEvent implements FacilityLoadForProjectEvent {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$FacilityLoadForProjectEventCopyWith<_$FacilityLoadForProjectEvent>
-      get copyWith => __$$FacilityLoadForProjectEventCopyWithImpl<
-          _$FacilityLoadForProjectEvent>(this, _$identity);
+  _$$FacilityLoadForProjectEventImplCopyWith<_$FacilityLoadForProjectEventImpl>
+      get copyWith => __$$FacilityLoadForProjectEventImplCopyWithImpl<
+          _$FacilityLoadForProjectEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -236,7 +236,7 @@ class _$FacilityLoadForProjectEvent implements FacilityLoadForProjectEvent {
 abstract class FacilityLoadForProjectEvent implements FacilityEvent {
   const factory FacilityLoadForProjectEvent(
       {required final String projectId,
-      final bool loadAllProjects}) = _$FacilityLoadForProjectEvent;
+      final bool loadAllProjects}) = _$FacilityLoadForProjectEventImpl;
 
   @override
   String get projectId;
@@ -244,7 +244,7 @@ abstract class FacilityLoadForProjectEvent implements FacilityEvent {
   bool get loadAllProjects;
   @override
   @JsonKey(ignore: true)
-  _$$FacilityLoadForProjectEventCopyWith<_$FacilityLoadForProjectEvent>
+  _$$FacilityLoadForProjectEventImplCopyWith<_$FacilityLoadForProjectEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -321,25 +321,25 @@ class _$FacilityStateCopyWithImpl<$Res, $Val extends FacilityState>
 }
 
 /// @nodoc
-abstract class _$$FacilityEmptyStateCopyWith<$Res> {
-  factory _$$FacilityEmptyStateCopyWith(_$FacilityEmptyState value,
-          $Res Function(_$FacilityEmptyState) then) =
-      __$$FacilityEmptyStateCopyWithImpl<$Res>;
+abstract class _$$FacilityEmptyStateImplCopyWith<$Res> {
+  factory _$$FacilityEmptyStateImplCopyWith(_$FacilityEmptyStateImpl value,
+          $Res Function(_$FacilityEmptyStateImpl) then) =
+      __$$FacilityEmptyStateImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$FacilityEmptyStateCopyWithImpl<$Res>
-    extends _$FacilityStateCopyWithImpl<$Res, _$FacilityEmptyState>
-    implements _$$FacilityEmptyStateCopyWith<$Res> {
-  __$$FacilityEmptyStateCopyWithImpl(
-      _$FacilityEmptyState _value, $Res Function(_$FacilityEmptyState) _then)
+class __$$FacilityEmptyStateImplCopyWithImpl<$Res>
+    extends _$FacilityStateCopyWithImpl<$Res, _$FacilityEmptyStateImpl>
+    implements _$$FacilityEmptyStateImplCopyWith<$Res> {
+  __$$FacilityEmptyStateImplCopyWithImpl(_$FacilityEmptyStateImpl _value,
+      $Res Function(_$FacilityEmptyStateImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$FacilityEmptyState implements FacilityEmptyState {
-  const _$FacilityEmptyState();
+class _$FacilityEmptyStateImpl implements FacilityEmptyState {
+  const _$FacilityEmptyStateImpl();
 
   @override
   String toString() {
@@ -347,9 +347,9 @@ class _$FacilityEmptyState implements FacilityEmptyState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$FacilityEmptyState);
+        (other.runtimeType == runtimeType && other is _$FacilityEmptyStateImpl);
   }
 
   @override
@@ -431,29 +431,29 @@ class _$FacilityEmptyState implements FacilityEmptyState {
 }
 
 abstract class FacilityEmptyState implements FacilityState {
-  const factory FacilityEmptyState() = _$FacilityEmptyState;
+  const factory FacilityEmptyState() = _$FacilityEmptyStateImpl;
 }
 
 /// @nodoc
-abstract class _$$FacilityLoadingStateCopyWith<$Res> {
-  factory _$$FacilityLoadingStateCopyWith(_$FacilityLoadingState value,
-          $Res Function(_$FacilityLoadingState) then) =
-      __$$FacilityLoadingStateCopyWithImpl<$Res>;
+abstract class _$$FacilityLoadingStateImplCopyWith<$Res> {
+  factory _$$FacilityLoadingStateImplCopyWith(_$FacilityLoadingStateImpl value,
+          $Res Function(_$FacilityLoadingStateImpl) then) =
+      __$$FacilityLoadingStateImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$FacilityLoadingStateCopyWithImpl<$Res>
-    extends _$FacilityStateCopyWithImpl<$Res, _$FacilityLoadingState>
-    implements _$$FacilityLoadingStateCopyWith<$Res> {
-  __$$FacilityLoadingStateCopyWithImpl(_$FacilityLoadingState _value,
-      $Res Function(_$FacilityLoadingState) _then)
+class __$$FacilityLoadingStateImplCopyWithImpl<$Res>
+    extends _$FacilityStateCopyWithImpl<$Res, _$FacilityLoadingStateImpl>
+    implements _$$FacilityLoadingStateImplCopyWith<$Res> {
+  __$$FacilityLoadingStateImplCopyWithImpl(_$FacilityLoadingStateImpl _value,
+      $Res Function(_$FacilityLoadingStateImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$FacilityLoadingState implements FacilityLoadingState {
-  const _$FacilityLoadingState();
+class _$FacilityLoadingStateImpl implements FacilityLoadingState {
+  const _$FacilityLoadingStateImpl();
 
   @override
   String toString() {
@@ -461,9 +461,10 @@ class _$FacilityLoadingState implements FacilityLoadingState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$FacilityLoadingState);
+        (other.runtimeType == runtimeType &&
+            other is _$FacilityLoadingStateImpl);
   }
 
   @override
@@ -545,25 +546,25 @@ class _$FacilityLoadingState implements FacilityLoadingState {
 }
 
 abstract class FacilityLoadingState implements FacilityState {
-  const factory FacilityLoadingState() = _$FacilityLoadingState;
+  const factory FacilityLoadingState() = _$FacilityLoadingStateImpl;
 }
 
 /// @nodoc
-abstract class _$$FacilityFetchedStateCopyWith<$Res> {
-  factory _$$FacilityFetchedStateCopyWith(_$FacilityFetchedState value,
-          $Res Function(_$FacilityFetchedState) then) =
-      __$$FacilityFetchedStateCopyWithImpl<$Res>;
+abstract class _$$FacilityFetchedStateImplCopyWith<$Res> {
+  factory _$$FacilityFetchedStateImplCopyWith(_$FacilityFetchedStateImpl value,
+          $Res Function(_$FacilityFetchedStateImpl) then) =
+      __$$FacilityFetchedStateImplCopyWithImpl<$Res>;
   @useResult
   $Res call(
       {List<FacilityModel> facilities, List<FacilityModel> allFacilities});
 }
 
 /// @nodoc
-class __$$FacilityFetchedStateCopyWithImpl<$Res>
-    extends _$FacilityStateCopyWithImpl<$Res, _$FacilityFetchedState>
-    implements _$$FacilityFetchedStateCopyWith<$Res> {
-  __$$FacilityFetchedStateCopyWithImpl(_$FacilityFetchedState _value,
-      $Res Function(_$FacilityFetchedState) _then)
+class __$$FacilityFetchedStateImplCopyWithImpl<$Res>
+    extends _$FacilityStateCopyWithImpl<$Res, _$FacilityFetchedStateImpl>
+    implements _$$FacilityFetchedStateImplCopyWith<$Res> {
+  __$$FacilityFetchedStateImplCopyWithImpl(_$FacilityFetchedStateImpl _value,
+      $Res Function(_$FacilityFetchedStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -572,7 +573,7 @@ class __$$FacilityFetchedStateCopyWithImpl<$Res>
     Object? facilities = null,
     Object? allFacilities = null,
   }) {
-    return _then(_$FacilityFetchedState(
+    return _then(_$FacilityFetchedStateImpl(
       facilities: null == facilities
           ? _value._facilities
           : facilities // ignore: cast_nullable_to_non_nullable
@@ -587,8 +588,8 @@ class __$$FacilityFetchedStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$FacilityFetchedState implements FacilityFetchedState {
-  const _$FacilityFetchedState(
+class _$FacilityFetchedStateImpl implements FacilityFetchedState {
+  const _$FacilityFetchedStateImpl(
       {required final List<FacilityModel> facilities,
       final List<FacilityModel> allFacilities = const []})
       : _facilities = facilities,
@@ -597,6 +598,7 @@ class _$FacilityFetchedState implements FacilityFetchedState {
   final List<FacilityModel> _facilities;
   @override
   List<FacilityModel> get facilities {
+    if (_facilities is EqualUnmodifiableListView) return _facilities;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_facilities);
   }
@@ -605,6 +607,7 @@ class _$FacilityFetchedState implements FacilityFetchedState {
   @override
   @JsonKey()
   List<FacilityModel> get allFacilities {
+    if (_allFacilities is EqualUnmodifiableListView) return _allFacilities;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_allFacilities);
   }
@@ -615,10 +618,10 @@ class _$FacilityFetchedState implements FacilityFetchedState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$FacilityFetchedState &&
+            other is _$FacilityFetchedStateImpl &&
             const DeepCollectionEquality()
                 .equals(other._facilities, _facilities) &&
             const DeepCollectionEquality()
@@ -634,9 +637,10 @@ class _$FacilityFetchedState implements FacilityFetchedState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$FacilityFetchedStateCopyWith<_$FacilityFetchedState> get copyWith =>
-      __$$FacilityFetchedStateCopyWithImpl<_$FacilityFetchedState>(
-          this, _$identity);
+  _$$FacilityFetchedStateImplCopyWith<_$FacilityFetchedStateImpl>
+      get copyWith =>
+          __$$FacilityFetchedStateImplCopyWithImpl<_$FacilityFetchedStateImpl>(
+              this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -716,11 +720,11 @@ class _$FacilityFetchedState implements FacilityFetchedState {
 abstract class FacilityFetchedState implements FacilityState {
   const factory FacilityFetchedState(
       {required final List<FacilityModel> facilities,
-      final List<FacilityModel> allFacilities}) = _$FacilityFetchedState;
+      final List<FacilityModel> allFacilities}) = _$FacilityFetchedStateImpl;
 
   List<FacilityModel> get facilities;
   List<FacilityModel> get allFacilities;
   @JsonKey(ignore: true)
-  _$$FacilityFetchedStateCopyWith<_$FacilityFetchedState> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$FacilityFetchedStateImplCopyWith<_$FacilityFetchedStateImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }

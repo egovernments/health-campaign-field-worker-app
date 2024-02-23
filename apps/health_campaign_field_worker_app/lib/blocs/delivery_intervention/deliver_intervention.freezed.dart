@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'deliver_intervention.dart';
 
@@ -114,23 +114,23 @@ class _$DeliverInterventionEventCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$DeliverInterventionSubmitEventCopyWith<$Res> {
-  factory _$$DeliverInterventionSubmitEventCopyWith(
-          _$DeliverInterventionSubmitEvent value,
-          $Res Function(_$DeliverInterventionSubmitEvent) then) =
-      __$$DeliverInterventionSubmitEventCopyWithImpl<$Res>;
+abstract class _$$DeliverInterventionSubmitEventImplCopyWith<$Res> {
+  factory _$$DeliverInterventionSubmitEventImplCopyWith(
+          _$DeliverInterventionSubmitEventImpl value,
+          $Res Function(_$DeliverInterventionSubmitEventImpl) then) =
+      __$$DeliverInterventionSubmitEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call({TaskModel task, bool isEditing, BoundaryModel boundaryModel});
 }
 
 /// @nodoc
-class __$$DeliverInterventionSubmitEventCopyWithImpl<$Res>
+class __$$DeliverInterventionSubmitEventImplCopyWithImpl<$Res>
     extends _$DeliverInterventionEventCopyWithImpl<$Res,
-        _$DeliverInterventionSubmitEvent>
-    implements _$$DeliverInterventionSubmitEventCopyWith<$Res> {
-  __$$DeliverInterventionSubmitEventCopyWithImpl(
-      _$DeliverInterventionSubmitEvent _value,
-      $Res Function(_$DeliverInterventionSubmitEvent) _then)
+        _$DeliverInterventionSubmitEventImpl>
+    implements _$$DeliverInterventionSubmitEventImplCopyWith<$Res> {
+  __$$DeliverInterventionSubmitEventImplCopyWithImpl(
+      _$DeliverInterventionSubmitEventImpl _value,
+      $Res Function(_$DeliverInterventionSubmitEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -140,7 +140,7 @@ class __$$DeliverInterventionSubmitEventCopyWithImpl<$Res>
     Object? isEditing = null,
     Object? boundaryModel = null,
   }) {
-    return _then(_$DeliverInterventionSubmitEvent(
+    return _then(_$DeliverInterventionSubmitEventImpl(
       null == task
           ? _value.task
           : task // ignore: cast_nullable_to_non_nullable
@@ -159,9 +159,9 @@ class __$$DeliverInterventionSubmitEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$DeliverInterventionSubmitEvent
+class _$DeliverInterventionSubmitEventImpl
     implements DeliverInterventionSubmitEvent {
-  const _$DeliverInterventionSubmitEvent(
+  const _$DeliverInterventionSubmitEventImpl(
       this.task, this.isEditing, this.boundaryModel);
 
   @override
@@ -177,10 +177,10 @@ class _$DeliverInterventionSubmitEvent
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$DeliverInterventionSubmitEvent &&
+            other is _$DeliverInterventionSubmitEventImpl &&
             (identical(other.task, task) || other.task == task) &&
             (identical(other.isEditing, isEditing) ||
                 other.isEditing == isEditing) &&
@@ -194,9 +194,10 @@ class _$DeliverInterventionSubmitEvent
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$DeliverInterventionSubmitEventCopyWith<_$DeliverInterventionSubmitEvent>
-      get copyWith => __$$DeliverInterventionSubmitEventCopyWithImpl<
-          _$DeliverInterventionSubmitEvent>(this, _$identity);
+  _$$DeliverInterventionSubmitEventImplCopyWith<
+          _$DeliverInterventionSubmitEventImpl>
+      get copyWith => __$$DeliverInterventionSubmitEventImplCopyWithImpl<
+          _$DeliverInterventionSubmitEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -304,34 +305,35 @@ abstract class DeliverInterventionSubmitEvent
   const factory DeliverInterventionSubmitEvent(
       final TaskModel task,
       final bool isEditing,
-      final BoundaryModel boundaryModel) = _$DeliverInterventionSubmitEvent;
+      final BoundaryModel boundaryModel) = _$DeliverInterventionSubmitEventImpl;
 
   TaskModel get task;
   bool get isEditing;
   BoundaryModel get boundaryModel;
   @JsonKey(ignore: true)
-  _$$DeliverInterventionSubmitEventCopyWith<_$DeliverInterventionSubmitEvent>
+  _$$DeliverInterventionSubmitEventImplCopyWith<
+          _$DeliverInterventionSubmitEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$DeliverInterventionSearchEventCopyWith<$Res> {
-  factory _$$DeliverInterventionSearchEventCopyWith(
-          _$DeliverInterventionSearchEvent value,
-          $Res Function(_$DeliverInterventionSearchEvent) then) =
-      __$$DeliverInterventionSearchEventCopyWithImpl<$Res>;
+abstract class _$$DeliverInterventionSearchEventImplCopyWith<$Res> {
+  factory _$$DeliverInterventionSearchEventImplCopyWith(
+          _$DeliverInterventionSearchEventImpl value,
+          $Res Function(_$DeliverInterventionSearchEventImpl) then) =
+      __$$DeliverInterventionSearchEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call({TaskSearchModel taskSearch});
 }
 
 /// @nodoc
-class __$$DeliverInterventionSearchEventCopyWithImpl<$Res>
+class __$$DeliverInterventionSearchEventImplCopyWithImpl<$Res>
     extends _$DeliverInterventionEventCopyWithImpl<$Res,
-        _$DeliverInterventionSearchEvent>
-    implements _$$DeliverInterventionSearchEventCopyWith<$Res> {
-  __$$DeliverInterventionSearchEventCopyWithImpl(
-      _$DeliverInterventionSearchEvent _value,
-      $Res Function(_$DeliverInterventionSearchEvent) _then)
+        _$DeliverInterventionSearchEventImpl>
+    implements _$$DeliverInterventionSearchEventImplCopyWith<$Res> {
+  __$$DeliverInterventionSearchEventImplCopyWithImpl(
+      _$DeliverInterventionSearchEventImpl _value,
+      $Res Function(_$DeliverInterventionSearchEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -339,7 +341,7 @@ class __$$DeliverInterventionSearchEventCopyWithImpl<$Res>
   $Res call({
     Object? taskSearch = null,
   }) {
-    return _then(_$DeliverInterventionSearchEvent(
+    return _then(_$DeliverInterventionSearchEventImpl(
       null == taskSearch
           ? _value.taskSearch
           : taskSearch // ignore: cast_nullable_to_non_nullable
@@ -350,9 +352,9 @@ class __$$DeliverInterventionSearchEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$DeliverInterventionSearchEvent
+class _$DeliverInterventionSearchEventImpl
     implements DeliverInterventionSearchEvent {
-  const _$DeliverInterventionSearchEvent(this.taskSearch);
+  const _$DeliverInterventionSearchEventImpl(this.taskSearch);
 
   @override
   final TaskSearchModel taskSearch;
@@ -363,10 +365,10 @@ class _$DeliverInterventionSearchEvent
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$DeliverInterventionSearchEvent &&
+            other is _$DeliverInterventionSearchEventImpl &&
             (identical(other.taskSearch, taskSearch) ||
                 other.taskSearch == taskSearch));
   }
@@ -377,9 +379,10 @@ class _$DeliverInterventionSearchEvent
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$DeliverInterventionSearchEventCopyWith<_$DeliverInterventionSearchEvent>
-      get copyWith => __$$DeliverInterventionSearchEventCopyWithImpl<
-          _$DeliverInterventionSearchEvent>(this, _$identity);
+  _$$DeliverInterventionSearchEventImplCopyWith<
+          _$DeliverInterventionSearchEventImpl>
+      get copyWith => __$$DeliverInterventionSearchEventImplCopyWithImpl<
+          _$DeliverInterventionSearchEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -485,22 +488,24 @@ class _$DeliverInterventionSearchEvent
 abstract class DeliverInterventionSearchEvent
     implements DeliverInterventionEvent {
   const factory DeliverInterventionSearchEvent(
-      final TaskSearchModel taskSearch) = _$DeliverInterventionSearchEvent;
+      final TaskSearchModel taskSearch) = _$DeliverInterventionSearchEventImpl;
 
   TaskSearchModel get taskSearch;
   @JsonKey(ignore: true)
-  _$$DeliverInterventionSearchEventCopyWith<_$DeliverInterventionSearchEvent>
+  _$$DeliverInterventionSearchEventImplCopyWith<
+          _$DeliverInterventionSearchEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$DeliverInterventionCycleFutureDoseSelectionEventCopyWith<
+abstract class _$$DeliverInterventionCycleFutureDoseSelectionEventImplCopyWith<
     $Res> {
-  factory _$$DeliverInterventionCycleFutureDoseSelectionEventCopyWith(
-          _$DeliverInterventionCycleFutureDoseSelectionEvent value,
-          $Res Function(_$DeliverInterventionCycleFutureDoseSelectionEvent)
+  factory _$$DeliverInterventionCycleFutureDoseSelectionEventImplCopyWith(
+          _$DeliverInterventionCycleFutureDoseSelectionEventImpl value,
+          $Res Function(_$DeliverInterventionCycleFutureDoseSelectionEventImpl)
               then) =
-      __$$DeliverInterventionCycleFutureDoseSelectionEventCopyWithImpl<$Res>;
+      __$$DeliverInterventionCycleFutureDoseSelectionEventImplCopyWithImpl<
+          $Res>;
   @useResult
   $Res call({int dose, Cycle cycle, IndividualModel? individualModel});
 
@@ -508,14 +513,15 @@ abstract class _$$DeliverInterventionCycleFutureDoseSelectionEventCopyWith<
 }
 
 /// @nodoc
-class __$$DeliverInterventionCycleFutureDoseSelectionEventCopyWithImpl<$Res>
+class __$$DeliverInterventionCycleFutureDoseSelectionEventImplCopyWithImpl<$Res>
     extends _$DeliverInterventionEventCopyWithImpl<$Res,
-        _$DeliverInterventionCycleFutureDoseSelectionEvent>
+        _$DeliverInterventionCycleFutureDoseSelectionEventImpl>
     implements
-        _$$DeliverInterventionCycleFutureDoseSelectionEventCopyWith<$Res> {
-  __$$DeliverInterventionCycleFutureDoseSelectionEventCopyWithImpl(
-      _$DeliverInterventionCycleFutureDoseSelectionEvent _value,
-      $Res Function(_$DeliverInterventionCycleFutureDoseSelectionEvent) _then)
+        _$$DeliverInterventionCycleFutureDoseSelectionEventImplCopyWith<$Res> {
+  __$$DeliverInterventionCycleFutureDoseSelectionEventImplCopyWithImpl(
+      _$DeliverInterventionCycleFutureDoseSelectionEventImpl _value,
+      $Res Function(_$DeliverInterventionCycleFutureDoseSelectionEventImpl)
+          _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -525,7 +531,7 @@ class __$$DeliverInterventionCycleFutureDoseSelectionEventCopyWithImpl<$Res>
     Object? cycle = null,
     Object? individualModel = freezed,
   }) {
-    return _then(_$DeliverInterventionCycleFutureDoseSelectionEvent(
+    return _then(_$DeliverInterventionCycleFutureDoseSelectionEventImpl(
       null == dose
           ? _value.dose
           : dose // ignore: cast_nullable_to_non_nullable
@@ -552,9 +558,9 @@ class __$$DeliverInterventionCycleFutureDoseSelectionEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$DeliverInterventionCycleFutureDoseSelectionEvent
+class _$DeliverInterventionCycleFutureDoseSelectionEventImpl
     implements DeliverInterventionCycleFutureDoseSelectionEvent {
-  const _$DeliverInterventionCycleFutureDoseSelectionEvent(
+  const _$DeliverInterventionCycleFutureDoseSelectionEventImpl(
       this.dose, this.cycle, this.individualModel);
 
   @override
@@ -570,10 +576,10 @@ class _$DeliverInterventionCycleFutureDoseSelectionEvent
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$DeliverInterventionCycleFutureDoseSelectionEvent &&
+            other is _$DeliverInterventionCycleFutureDoseSelectionEventImpl &&
             (identical(other.dose, dose) || other.dose == dose) &&
             (identical(other.cycle, cycle) || other.cycle == cycle) &&
             (identical(other.individualModel, individualModel) ||
@@ -586,11 +592,11 @@ class _$DeliverInterventionCycleFutureDoseSelectionEvent
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$DeliverInterventionCycleFutureDoseSelectionEventCopyWith<
-          _$DeliverInterventionCycleFutureDoseSelectionEvent>
+  _$$DeliverInterventionCycleFutureDoseSelectionEventImplCopyWith<
+          _$DeliverInterventionCycleFutureDoseSelectionEventImpl>
       get copyWith =>
-          __$$DeliverInterventionCycleFutureDoseSelectionEventCopyWithImpl<
-                  _$DeliverInterventionCycleFutureDoseSelectionEvent>(
+          __$$DeliverInterventionCycleFutureDoseSelectionEventImplCopyWithImpl<
+                  _$DeliverInterventionCycleFutureDoseSelectionEventImpl>(
               this, _$identity);
 
   @override
@@ -698,25 +704,26 @@ abstract class DeliverInterventionCycleFutureDoseSelectionEvent
     implements DeliverInterventionEvent {
   const factory DeliverInterventionCycleFutureDoseSelectionEvent(final int dose,
           final Cycle cycle, final IndividualModel? individualModel) =
-      _$DeliverInterventionCycleFutureDoseSelectionEvent;
+      _$DeliverInterventionCycleFutureDoseSelectionEventImpl;
 
   int get dose;
   Cycle get cycle;
   IndividualModel? get individualModel;
   @JsonKey(ignore: true)
-  _$$DeliverInterventionCycleFutureDoseSelectionEventCopyWith<
-          _$DeliverInterventionCycleFutureDoseSelectionEvent>
+  _$$DeliverInterventionCycleFutureDoseSelectionEventImplCopyWith<
+          _$DeliverInterventionCycleFutureDoseSelectionEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$DeliverInterventionActiveCycleDoseSelectionEventCopyWith<
+abstract class _$$DeliverInterventionActiveCycleDoseSelectionEventImplCopyWith<
     $Res> {
-  factory _$$DeliverInterventionActiveCycleDoseSelectionEventCopyWith(
-          _$DeliverInterventionActiveCycleDoseSelectionEvent value,
-          $Res Function(_$DeliverInterventionActiveCycleDoseSelectionEvent)
+  factory _$$DeliverInterventionActiveCycleDoseSelectionEventImplCopyWith(
+          _$DeliverInterventionActiveCycleDoseSelectionEventImpl value,
+          $Res Function(_$DeliverInterventionActiveCycleDoseSelectionEventImpl)
               then) =
-      __$$DeliverInterventionActiveCycleDoseSelectionEventCopyWithImpl<$Res>;
+      __$$DeliverInterventionActiveCycleDoseSelectionEventImplCopyWithImpl<
+          $Res>;
   @useResult
   $Res call(
       {int lastDose,
@@ -728,14 +735,15 @@ abstract class _$$DeliverInterventionActiveCycleDoseSelectionEventCopyWith<
 }
 
 /// @nodoc
-class __$$DeliverInterventionActiveCycleDoseSelectionEventCopyWithImpl<$Res>
+class __$$DeliverInterventionActiveCycleDoseSelectionEventImplCopyWithImpl<$Res>
     extends _$DeliverInterventionEventCopyWithImpl<$Res,
-        _$DeliverInterventionActiveCycleDoseSelectionEvent>
+        _$DeliverInterventionActiveCycleDoseSelectionEventImpl>
     implements
-        _$$DeliverInterventionActiveCycleDoseSelectionEventCopyWith<$Res> {
-  __$$DeliverInterventionActiveCycleDoseSelectionEventCopyWithImpl(
-      _$DeliverInterventionActiveCycleDoseSelectionEvent _value,
-      $Res Function(_$DeliverInterventionActiveCycleDoseSelectionEvent) _then)
+        _$$DeliverInterventionActiveCycleDoseSelectionEventImplCopyWith<$Res> {
+  __$$DeliverInterventionActiveCycleDoseSelectionEventImplCopyWithImpl(
+      _$DeliverInterventionActiveCycleDoseSelectionEventImpl _value,
+      $Res Function(_$DeliverInterventionActiveCycleDoseSelectionEventImpl)
+          _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -746,7 +754,7 @@ class __$$DeliverInterventionActiveCycleDoseSelectionEventCopyWithImpl<$Res>
     Object? individualModel = freezed,
     Object? projectType = null,
   }) {
-    return _then(_$DeliverInterventionActiveCycleDoseSelectionEvent(
+    return _then(_$DeliverInterventionActiveCycleDoseSelectionEventImpl(
       null == lastDose
           ? _value.lastDose
           : lastDose // ignore: cast_nullable_to_non_nullable
@@ -777,9 +785,9 @@ class __$$DeliverInterventionActiveCycleDoseSelectionEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$DeliverInterventionActiveCycleDoseSelectionEvent
+class _$DeliverInterventionActiveCycleDoseSelectionEventImpl
     implements DeliverInterventionActiveCycleDoseSelectionEvent {
-  const _$DeliverInterventionActiveCycleDoseSelectionEvent(
+  const _$DeliverInterventionActiveCycleDoseSelectionEventImpl(
       this.lastDose, this.lastCycle, this.individualModel, this.projectType);
 
   @override
@@ -797,10 +805,10 @@ class _$DeliverInterventionActiveCycleDoseSelectionEvent
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$DeliverInterventionActiveCycleDoseSelectionEvent &&
+            other is _$DeliverInterventionActiveCycleDoseSelectionEventImpl &&
             (identical(other.lastDose, lastDose) ||
                 other.lastDose == lastDose) &&
             (identical(other.lastCycle, lastCycle) ||
@@ -818,11 +826,11 @@ class _$DeliverInterventionActiveCycleDoseSelectionEvent
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$DeliverInterventionActiveCycleDoseSelectionEventCopyWith<
-          _$DeliverInterventionActiveCycleDoseSelectionEvent>
+  _$$DeliverInterventionActiveCycleDoseSelectionEventImplCopyWith<
+          _$DeliverInterventionActiveCycleDoseSelectionEventImpl>
       get copyWith =>
-          __$$DeliverInterventionActiveCycleDoseSelectionEventCopyWithImpl<
-                  _$DeliverInterventionActiveCycleDoseSelectionEvent>(
+          __$$DeliverInterventionActiveCycleDoseSelectionEventImplCopyWithImpl<
+                  _$DeliverInterventionActiveCycleDoseSelectionEventImpl>(
               this, _$identity);
 
   @override
@@ -936,15 +944,15 @@ abstract class DeliverInterventionActiveCycleDoseSelectionEvent
           final int lastCycle,
           final IndividualModel? individualModel,
           final ProjectType projectType) =
-      _$DeliverInterventionActiveCycleDoseSelectionEvent;
+      _$DeliverInterventionActiveCycleDoseSelectionEventImpl;
 
   int get lastDose;
   int get lastCycle;
   IndividualModel? get individualModel;
   ProjectType get projectType;
   @JsonKey(ignore: true)
-  _$$DeliverInterventionActiveCycleDoseSelectionEventCopyWith<
-          _$DeliverInterventionActiveCycleDoseSelectionEvent>
+  _$$DeliverInterventionActiveCycleDoseSelectionEventImplCopyWith<
+          _$DeliverInterventionActiveCycleDoseSelectionEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -1064,12 +1072,12 @@ class _$DeliverInterventionStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_DeliverInterventionStateCopyWith<$Res>
+abstract class _$$DeliverInterventionStateImplCopyWith<$Res>
     implements $DeliverInterventionStateCopyWith<$Res> {
-  factory _$$_DeliverInterventionStateCopyWith(
-          _$_DeliverInterventionState value,
-          $Res Function(_$_DeliverInterventionState) then) =
-      __$$_DeliverInterventionStateCopyWithImpl<$Res>;
+  factory _$$DeliverInterventionStateImplCopyWith(
+          _$DeliverInterventionStateImpl value,
+          $Res Function(_$DeliverInterventionStateImpl) then) =
+      __$$DeliverInterventionStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -1087,12 +1095,13 @@ abstract class _$$_DeliverInterventionStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_DeliverInterventionStateCopyWithImpl<$Res>
+class __$$DeliverInterventionStateImplCopyWithImpl<$Res>
     extends _$DeliverInterventionStateCopyWithImpl<$Res,
-        _$_DeliverInterventionState>
-    implements _$$_DeliverInterventionStateCopyWith<$Res> {
-  __$$_DeliverInterventionStateCopyWithImpl(_$_DeliverInterventionState _value,
-      $Res Function(_$_DeliverInterventionState) _then)
+        _$DeliverInterventionStateImpl>
+    implements _$$DeliverInterventionStateImplCopyWith<$Res> {
+  __$$DeliverInterventionStateImplCopyWithImpl(
+      _$DeliverInterventionStateImpl _value,
+      $Res Function(_$DeliverInterventionStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1110,7 +1119,7 @@ class __$$_DeliverInterventionStateCopyWithImpl<$Res>
     Object? futureTask = freezed,
     Object? oldTask = freezed,
   }) {
-    return _then(_$_DeliverInterventionState(
+    return _then(_$DeliverInterventionStateImpl(
       loading: null == loading
           ? _value.loading
           : loading // ignore: cast_nullable_to_non_nullable
@@ -1161,8 +1170,8 @@ class __$$_DeliverInterventionStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_DeliverInterventionState implements _DeliverInterventionState {
-  const _$_DeliverInterventionState(
+class _$DeliverInterventionStateImpl implements _DeliverInterventionState {
+  const _$DeliverInterventionStateImpl(
       {this.loading = false,
       this.isEditing = false,
       this.cycle = 1,
@@ -1196,6 +1205,7 @@ class _$_DeliverInterventionState implements _DeliverInterventionState {
   List<Cycle>? get pastCycles {
     final value = _pastCycles;
     if (value == null) return null;
+    if (_pastCycles is EqualUnmodifiableListView) return _pastCycles;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
@@ -1211,6 +1221,7 @@ class _$_DeliverInterventionState implements _DeliverInterventionState {
   List<TaskModel>? get tasks {
     final value = _tasks;
     if (value == null) return null;
+    if (_tasks is EqualUnmodifiableListView) return _tasks;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
@@ -1220,6 +1231,8 @@ class _$_DeliverInterventionState implements _DeliverInterventionState {
   List<DeliveryModel>? get futureDeliveries {
     final value = _futureDeliveries;
     if (value == null) return null;
+    if (_futureDeliveries is EqualUnmodifiableListView)
+      return _futureDeliveries;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
@@ -1229,6 +1242,7 @@ class _$_DeliverInterventionState implements _DeliverInterventionState {
   List<TaskModel>? get futureTask {
     final value = _futureTask;
     if (value == null) return null;
+    if (_futureTask is EqualUnmodifiableListView) return _futureTask;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
@@ -1242,10 +1256,10 @@ class _$_DeliverInterventionState implements _DeliverInterventionState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_DeliverInterventionState &&
+            other is _$DeliverInterventionStateImpl &&
             (identical(other.loading, loading) || other.loading == loading) &&
             (identical(other.isEditing, isEditing) ||
                 other.isEditing == isEditing) &&
@@ -1283,9 +1297,9 @@ class _$_DeliverInterventionState implements _DeliverInterventionState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_DeliverInterventionStateCopyWith<_$_DeliverInterventionState>
-      get copyWith => __$$_DeliverInterventionStateCopyWithImpl<
-          _$_DeliverInterventionState>(this, _$identity);
+  _$$DeliverInterventionStateImplCopyWith<_$DeliverInterventionStateImpl>
+      get copyWith => __$$DeliverInterventionStateImplCopyWithImpl<
+          _$DeliverInterventionStateImpl>(this, _$identity);
 }
 
 abstract class _DeliverInterventionState implements DeliverInterventionState {
@@ -1300,7 +1314,7 @@ abstract class _DeliverInterventionState implements DeliverInterventionState {
       final List<TaskModel>? tasks,
       final List<DeliveryModel>? futureDeliveries,
       final List<TaskModel>? futureTask,
-      final TaskModel? oldTask}) = _$_DeliverInterventionState;
+      final TaskModel? oldTask}) = _$DeliverInterventionStateImpl;
 
   @override
   bool get loading;
@@ -1326,6 +1340,6 @@ abstract class _DeliverInterventionState implements DeliverInterventionState {
   TaskModel? get oldTask;
   @override
   @JsonKey(ignore: true)
-  _$$_DeliverInterventionStateCopyWith<_$_DeliverInterventionState>
+  _$$DeliverInterventionStateImplCopyWith<_$DeliverInterventionStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

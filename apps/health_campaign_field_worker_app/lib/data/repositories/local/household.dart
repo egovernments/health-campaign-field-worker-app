@@ -36,11 +36,11 @@ class HouseholdLocalRepository
               sql.household.clientReferenceId.isIn(query.clientReferenceId!),
             if (query.id != null)
               sql.household.id.equals(
-                query.id,
+                query.id!,
               ),
             if (query.tenantId != null)
               sql.household.tenantId.equals(
-                query.tenantId,
+                query.tenantId!,
               ),
             if (userId != null)
               sql.household.auditCreatedBy.equals(
@@ -240,7 +240,7 @@ class HouseholdLocalRepository
           sql.address,
           addressCompanion,
           where: (table) => table.relatedClientReferenceId.equals(
-            addressCompanion.relatedClientReferenceId.value,
+            addressCompanion.relatedClientReferenceId.value!,
           ),
         );
       }

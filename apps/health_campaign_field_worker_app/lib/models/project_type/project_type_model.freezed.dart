@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'project_type_model.dart';
 
@@ -39,7 +39,7 @@ abstract class $ProjectTypePrimaryWrapperCopyWith<$Res> {
   @useResult
   $Res call(
       {@JsonKey(name: "HCM-PROJECT-TYPES")
-          ProjectTypesSecondaryModel? projectTypeWrapper});
+      ProjectTypesSecondaryModel? projectTypeWrapper});
 
   $ProjectTypesSecondaryModelCopyWith<$Res>? get projectTypeWrapper;
 }
@@ -83,30 +83,30 @@ class _$ProjectTypePrimaryWrapperCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_ProjectTypePrimaryWrapperCopyWith<$Res>
+abstract class _$$ProjectTypePrimaryWrapperImplCopyWith<$Res>
     implements $ProjectTypePrimaryWrapperCopyWith<$Res> {
-  factory _$$_ProjectTypePrimaryWrapperCopyWith(
-          _$_ProjectTypePrimaryWrapper value,
-          $Res Function(_$_ProjectTypePrimaryWrapper) then) =
-      __$$_ProjectTypePrimaryWrapperCopyWithImpl<$Res>;
+  factory _$$ProjectTypePrimaryWrapperImplCopyWith(
+          _$ProjectTypePrimaryWrapperImpl value,
+          $Res Function(_$ProjectTypePrimaryWrapperImpl) then) =
+      __$$ProjectTypePrimaryWrapperImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
       {@JsonKey(name: "HCM-PROJECT-TYPES")
-          ProjectTypesSecondaryModel? projectTypeWrapper});
+      ProjectTypesSecondaryModel? projectTypeWrapper});
 
   @override
   $ProjectTypesSecondaryModelCopyWith<$Res>? get projectTypeWrapper;
 }
 
 /// @nodoc
-class __$$_ProjectTypePrimaryWrapperCopyWithImpl<$Res>
+class __$$ProjectTypePrimaryWrapperImplCopyWithImpl<$Res>
     extends _$ProjectTypePrimaryWrapperCopyWithImpl<$Res,
-        _$_ProjectTypePrimaryWrapper>
-    implements _$$_ProjectTypePrimaryWrapperCopyWith<$Res> {
-  __$$_ProjectTypePrimaryWrapperCopyWithImpl(
-      _$_ProjectTypePrimaryWrapper _value,
-      $Res Function(_$_ProjectTypePrimaryWrapper) _then)
+        _$ProjectTypePrimaryWrapperImpl>
+    implements _$$ProjectTypePrimaryWrapperImplCopyWith<$Res> {
+  __$$ProjectTypePrimaryWrapperImplCopyWithImpl(
+      _$ProjectTypePrimaryWrapperImpl _value,
+      $Res Function(_$ProjectTypePrimaryWrapperImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -114,7 +114,7 @@ class __$$_ProjectTypePrimaryWrapperCopyWithImpl<$Res>
   $Res call({
     Object? projectTypeWrapper = freezed,
   }) {
-    return _then(_$_ProjectTypePrimaryWrapper(
+    return _then(_$ProjectTypePrimaryWrapperImpl(
       projectTypeWrapper: freezed == projectTypeWrapper
           ? _value.projectTypeWrapper
           : projectTypeWrapper // ignore: cast_nullable_to_non_nullable
@@ -125,12 +125,12 @@ class __$$_ProjectTypePrimaryWrapperCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_ProjectTypePrimaryWrapper implements _ProjectTypePrimaryWrapper {
-  const _$_ProjectTypePrimaryWrapper(
+class _$ProjectTypePrimaryWrapperImpl implements _ProjectTypePrimaryWrapper {
+  const _$ProjectTypePrimaryWrapperImpl(
       {@JsonKey(name: "HCM-PROJECT-TYPES") this.projectTypeWrapper});
 
-  factory _$_ProjectTypePrimaryWrapper.fromJson(Map<String, dynamic> json) =>
-      _$$_ProjectTypePrimaryWrapperFromJson(json);
+  factory _$ProjectTypePrimaryWrapperImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ProjectTypePrimaryWrapperImplFromJson(json);
 
   @override
   @JsonKey(name: "HCM-PROJECT-TYPES")
@@ -142,10 +142,10 @@ class _$_ProjectTypePrimaryWrapper implements _ProjectTypePrimaryWrapper {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ProjectTypePrimaryWrapper &&
+            other is _$ProjectTypePrimaryWrapperImpl &&
             (identical(other.projectTypeWrapper, projectTypeWrapper) ||
                 other.projectTypeWrapper == projectTypeWrapper));
   }
@@ -157,13 +157,13 @@ class _$_ProjectTypePrimaryWrapper implements _ProjectTypePrimaryWrapper {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ProjectTypePrimaryWrapperCopyWith<_$_ProjectTypePrimaryWrapper>
-      get copyWith => __$$_ProjectTypePrimaryWrapperCopyWithImpl<
-          _$_ProjectTypePrimaryWrapper>(this, _$identity);
+  _$$ProjectTypePrimaryWrapperImplCopyWith<_$ProjectTypePrimaryWrapperImpl>
+      get copyWith => __$$ProjectTypePrimaryWrapperImplCopyWithImpl<
+          _$ProjectTypePrimaryWrapperImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_ProjectTypePrimaryWrapperToJson(
+    return _$$ProjectTypePrimaryWrapperImplToJson(
       this,
     );
   }
@@ -172,18 +172,18 @@ class _$_ProjectTypePrimaryWrapper implements _ProjectTypePrimaryWrapper {
 abstract class _ProjectTypePrimaryWrapper implements ProjectTypePrimaryWrapper {
   const factory _ProjectTypePrimaryWrapper(
           {@JsonKey(name: "HCM-PROJECT-TYPES")
-              final ProjectTypesSecondaryModel? projectTypeWrapper}) =
-      _$_ProjectTypePrimaryWrapper;
+          final ProjectTypesSecondaryModel? projectTypeWrapper}) =
+      _$ProjectTypePrimaryWrapperImpl;
 
   factory _ProjectTypePrimaryWrapper.fromJson(Map<String, dynamic> json) =
-      _$_ProjectTypePrimaryWrapper.fromJson;
+      _$ProjectTypePrimaryWrapperImpl.fromJson;
 
   @override
   @JsonKey(name: "HCM-PROJECT-TYPES")
   ProjectTypesSecondaryModel? get projectTypeWrapper;
   @override
   @JsonKey(ignore: true)
-  _$$_ProjectTypePrimaryWrapperCopyWith<_$_ProjectTypePrimaryWrapper>
+  _$$ProjectTypePrimaryWrapperImplCopyWith<_$ProjectTypePrimaryWrapperImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -239,25 +239,25 @@ class _$ProjectTypesSecondaryModelCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_ProjectTypesSecondaryModelCopyWith<$Res>
+abstract class _$$ProjectTypesSecondaryModelImplCopyWith<$Res>
     implements $ProjectTypesSecondaryModelCopyWith<$Res> {
-  factory _$$_ProjectTypesSecondaryModelCopyWith(
-          _$_ProjectTypesSecondaryModel value,
-          $Res Function(_$_ProjectTypesSecondaryModel) then) =
-      __$$_ProjectTypesSecondaryModelCopyWithImpl<$Res>;
+  factory _$$ProjectTypesSecondaryModelImplCopyWith(
+          _$ProjectTypesSecondaryModelImpl value,
+          $Res Function(_$ProjectTypesSecondaryModelImpl) then) =
+      __$$ProjectTypesSecondaryModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({@JsonKey(name: 'projectTypes') List<ProjectType> projectTypes});
 }
 
 /// @nodoc
-class __$$_ProjectTypesSecondaryModelCopyWithImpl<$Res>
+class __$$ProjectTypesSecondaryModelImplCopyWithImpl<$Res>
     extends _$ProjectTypesSecondaryModelCopyWithImpl<$Res,
-        _$_ProjectTypesSecondaryModel>
-    implements _$$_ProjectTypesSecondaryModelCopyWith<$Res> {
-  __$$_ProjectTypesSecondaryModelCopyWithImpl(
-      _$_ProjectTypesSecondaryModel _value,
-      $Res Function(_$_ProjectTypesSecondaryModel) _then)
+        _$ProjectTypesSecondaryModelImpl>
+    implements _$$ProjectTypesSecondaryModelImplCopyWith<$Res> {
+  __$$ProjectTypesSecondaryModelImplCopyWithImpl(
+      _$ProjectTypesSecondaryModelImpl _value,
+      $Res Function(_$ProjectTypesSecondaryModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -265,7 +265,7 @@ class __$$_ProjectTypesSecondaryModelCopyWithImpl<$Res>
   $Res call({
     Object? projectTypes = null,
   }) {
-    return _then(_$_ProjectTypesSecondaryModel(
+    return _then(_$ProjectTypesSecondaryModelImpl(
       projectTypes: null == projectTypes
           ? _value._projectTypes
           : projectTypes // ignore: cast_nullable_to_non_nullable
@@ -276,19 +276,21 @@ class __$$_ProjectTypesSecondaryModelCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_ProjectTypesSecondaryModel implements _ProjectTypesSecondaryModel {
-  const _$_ProjectTypesSecondaryModel(
+class _$ProjectTypesSecondaryModelImpl implements _ProjectTypesSecondaryModel {
+  const _$ProjectTypesSecondaryModelImpl(
       {@JsonKey(name: 'projectTypes')
-          final List<ProjectType> projectTypes = const []})
+      final List<ProjectType> projectTypes = const []})
       : _projectTypes = projectTypes;
 
-  factory _$_ProjectTypesSecondaryModel.fromJson(Map<String, dynamic> json) =>
-      _$$_ProjectTypesSecondaryModelFromJson(json);
+  factory _$ProjectTypesSecondaryModelImpl.fromJson(
+          Map<String, dynamic> json) =>
+      _$$ProjectTypesSecondaryModelImplFromJson(json);
 
   final List<ProjectType> _projectTypes;
   @override
   @JsonKey(name: 'projectTypes')
   List<ProjectType> get projectTypes {
+    if (_projectTypes is EqualUnmodifiableListView) return _projectTypes;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_projectTypes);
   }
@@ -299,10 +301,10 @@ class _$_ProjectTypesSecondaryModel implements _ProjectTypesSecondaryModel {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ProjectTypesSecondaryModel &&
+            other is _$ProjectTypesSecondaryModelImpl &&
             const DeepCollectionEquality()
                 .equals(other._projectTypes, _projectTypes));
   }
@@ -315,13 +317,13 @@ class _$_ProjectTypesSecondaryModel implements _ProjectTypesSecondaryModel {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ProjectTypesSecondaryModelCopyWith<_$_ProjectTypesSecondaryModel>
-      get copyWith => __$$_ProjectTypesSecondaryModelCopyWithImpl<
-          _$_ProjectTypesSecondaryModel>(this, _$identity);
+  _$$ProjectTypesSecondaryModelImplCopyWith<_$ProjectTypesSecondaryModelImpl>
+      get copyWith => __$$ProjectTypesSecondaryModelImplCopyWithImpl<
+          _$ProjectTypesSecondaryModelImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_ProjectTypesSecondaryModelToJson(
+    return _$$ProjectTypesSecondaryModelImplToJson(
       this,
     );
   }
@@ -330,19 +332,18 @@ class _$_ProjectTypesSecondaryModel implements _ProjectTypesSecondaryModel {
 abstract class _ProjectTypesSecondaryModel
     implements ProjectTypesSecondaryModel {
   const factory _ProjectTypesSecondaryModel(
-          {@JsonKey(name: 'projectTypes')
-              final List<ProjectType> projectTypes}) =
-      _$_ProjectTypesSecondaryModel;
+      {@JsonKey(name: 'projectTypes')
+      final List<ProjectType> projectTypes}) = _$ProjectTypesSecondaryModelImpl;
 
   factory _ProjectTypesSecondaryModel.fromJson(Map<String, dynamic> json) =
-      _$_ProjectTypesSecondaryModel.fromJson;
+      _$ProjectTypesSecondaryModelImpl.fromJson;
 
   @override
   @JsonKey(name: 'projectTypes')
   List<ProjectType> get projectTypes;
   @override
   @JsonKey(ignore: true)
-  _$$_ProjectTypesSecondaryModelCopyWith<_$_ProjectTypesSecondaryModel>
+  _$$ProjectTypesSecondaryModelImplCopyWith<_$ProjectTypesSecondaryModelImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -459,11 +460,11 @@ class _$ProjectTypeCopyWithImpl<$Res, $Val extends ProjectType>
 }
 
 /// @nodoc
-abstract class _$$_ProjectTypeCopyWith<$Res>
+abstract class _$$ProjectTypeImplCopyWith<$Res>
     implements $ProjectTypeCopyWith<$Res> {
-  factory _$$_ProjectTypeCopyWith(
-          _$_ProjectType value, $Res Function(_$_ProjectType) then) =
-      __$$_ProjectTypeCopyWithImpl<$Res>;
+  factory _$$ProjectTypeImplCopyWith(
+          _$ProjectTypeImpl value, $Res Function(_$ProjectTypeImpl) then) =
+      __$$ProjectTypeImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -480,11 +481,11 @@ abstract class _$$_ProjectTypeCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_ProjectTypeCopyWithImpl<$Res>
-    extends _$ProjectTypeCopyWithImpl<$Res, _$_ProjectType>
-    implements _$$_ProjectTypeCopyWith<$Res> {
-  __$$_ProjectTypeCopyWithImpl(
-      _$_ProjectType _value, $Res Function(_$_ProjectType) _then)
+class __$$ProjectTypeImplCopyWithImpl<$Res>
+    extends _$ProjectTypeCopyWithImpl<$Res, _$ProjectTypeImpl>
+    implements _$$ProjectTypeImplCopyWith<$Res> {
+  __$$ProjectTypeImplCopyWithImpl(
+      _$ProjectTypeImpl _value, $Res Function(_$ProjectTypeImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -501,7 +502,7 @@ class __$$_ProjectTypeCopyWithImpl<$Res>
     Object? validMinAge = freezed,
     Object? validMaxAge = freezed,
   }) {
-    return _then(_$_ProjectType(
+    return _then(_$ProjectTypeImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -548,8 +549,8 @@ class __$$_ProjectTypeCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_ProjectType implements _ProjectType {
-  const _$_ProjectType(
+class _$ProjectTypeImpl implements _ProjectType {
+  const _$ProjectTypeImpl(
       {required this.id,
       required this.code,
       required this.name,
@@ -563,8 +564,8 @@ class _$_ProjectType implements _ProjectType {
       : _cycles = cycles,
         _resources = resources;
 
-  factory _$_ProjectType.fromJson(Map<String, dynamic> json) =>
-      _$$_ProjectTypeFromJson(json);
+  factory _$ProjectTypeImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ProjectTypeImplFromJson(json);
 
   @override
   final String id;
@@ -583,6 +584,7 @@ class _$_ProjectType implements _ProjectType {
   List<Cycle>? get cycles {
     final value = _cycles;
     if (value == null) return null;
+    if (_cycles is EqualUnmodifiableListView) return _cycles;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
@@ -592,6 +594,7 @@ class _$_ProjectType implements _ProjectType {
   List<ProductVariantsModel>? get resources {
     final value = _resources;
     if (value == null) return null;
+    if (_resources is EqualUnmodifiableListView) return _resources;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
@@ -607,10 +610,10 @@ class _$_ProjectType implements _ProjectType {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ProjectType &&
+            other is _$ProjectTypeImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.code, code) || other.code == code) &&
             (identical(other.name, name) || other.name == name) &&
@@ -646,12 +649,12 @@ class _$_ProjectType implements _ProjectType {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ProjectTypeCopyWith<_$_ProjectType> get copyWith =>
-      __$$_ProjectTypeCopyWithImpl<_$_ProjectType>(this, _$identity);
+  _$$ProjectTypeImplCopyWith<_$ProjectTypeImpl> get copyWith =>
+      __$$ProjectTypeImplCopyWithImpl<_$ProjectTypeImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_ProjectTypeToJson(
+    return _$$ProjectTypeImplToJson(
       this,
     );
   }
@@ -668,10 +671,10 @@ abstract class _ProjectType implements ProjectType {
       final List<Cycle>? cycles,
       final List<ProductVariantsModel>? resources,
       final int? validMinAge,
-      final int? validMaxAge}) = _$_ProjectType;
+      final int? validMaxAge}) = _$ProjectTypeImpl;
 
   factory _ProjectType.fromJson(Map<String, dynamic> json) =
-      _$_ProjectType.fromJson;
+      _$ProjectTypeImpl.fromJson;
 
   @override
   String get id;
@@ -695,7 +698,7 @@ abstract class _ProjectType implements ProjectType {
   int? get validMaxAge;
   @override
   @JsonKey(ignore: true)
-  _$$_ProjectTypeCopyWith<_$_ProjectType> get copyWith =>
+  _$$ProjectTypeImplCopyWith<_$ProjectTypeImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -777,9 +780,10 @@ class _$CycleCopyWithImpl<$Res, $Val extends Cycle>
 }
 
 /// @nodoc
-abstract class _$$_CycleCopyWith<$Res> implements $CycleCopyWith<$Res> {
-  factory _$$_CycleCopyWith(_$_Cycle value, $Res Function(_$_Cycle) then) =
-      __$$_CycleCopyWithImpl<$Res>;
+abstract class _$$CycleImplCopyWith<$Res> implements $CycleCopyWith<$Res> {
+  factory _$$CycleImplCopyWith(
+          _$CycleImpl value, $Res Function(_$CycleImpl) then) =
+      __$$CycleImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -791,9 +795,11 @@ abstract class _$$_CycleCopyWith<$Res> implements $CycleCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_CycleCopyWithImpl<$Res> extends _$CycleCopyWithImpl<$Res, _$_Cycle>
-    implements _$$_CycleCopyWith<$Res> {
-  __$$_CycleCopyWithImpl(_$_Cycle _value, $Res Function(_$_Cycle) _then)
+class __$$CycleImplCopyWithImpl<$Res>
+    extends _$CycleCopyWithImpl<$Res, _$CycleImpl>
+    implements _$$CycleImplCopyWith<$Res> {
+  __$$CycleImplCopyWithImpl(
+      _$CycleImpl _value, $Res Function(_$CycleImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -805,7 +811,7 @@ class __$$_CycleCopyWithImpl<$Res> extends _$CycleCopyWithImpl<$Res, _$_Cycle>
     Object? id = null,
     Object? deliveries = freezed,
   }) {
-    return _then(_$_Cycle(
+    return _then(_$CycleImpl(
       mandatoryWaitSinceLastCycleInDays: freezed ==
               mandatoryWaitSinceLastCycleInDays
           ? _value.mandatoryWaitSinceLastCycleInDays
@@ -833,8 +839,8 @@ class __$$_CycleCopyWithImpl<$Res> extends _$CycleCopyWithImpl<$Res, _$_Cycle>
 
 /// @nodoc
 @JsonSerializable()
-class _$_Cycle implements _Cycle {
-  const _$_Cycle(
+class _$CycleImpl implements _Cycle {
+  const _$CycleImpl(
       {this.mandatoryWaitSinceLastCycleInDays,
       this.startDate,
       this.endDate,
@@ -842,8 +848,8 @@ class _$_Cycle implements _Cycle {
       @JsonKey(name: 'deliveries') final List<DeliveryModel>? deliveries})
       : _deliveries = deliveries;
 
-  factory _$_Cycle.fromJson(Map<String, dynamic> json) =>
-      _$$_CycleFromJson(json);
+  factory _$CycleImpl.fromJson(Map<String, dynamic> json) =>
+      _$$CycleImplFromJson(json);
 
   @override
   final String? mandatoryWaitSinceLastCycleInDays;
@@ -860,6 +866,7 @@ class _$_Cycle implements _Cycle {
   List<DeliveryModel>? get deliveries {
     final value = _deliveries;
     if (value == null) return null;
+    if (_deliveries is EqualUnmodifiableListView) return _deliveries;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
@@ -870,10 +877,10 @@ class _$_Cycle implements _Cycle {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_Cycle &&
+            other is _$CycleImpl &&
             (identical(other.mandatoryWaitSinceLastCycleInDays,
                     mandatoryWaitSinceLastCycleInDays) ||
                 other.mandatoryWaitSinceLastCycleInDays ==
@@ -899,12 +906,12 @@ class _$_Cycle implements _Cycle {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_CycleCopyWith<_$_Cycle> get copyWith =>
-      __$$_CycleCopyWithImpl<_$_Cycle>(this, _$identity);
+  _$$CycleImplCopyWith<_$CycleImpl> get copyWith =>
+      __$$CycleImplCopyWithImpl<_$CycleImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_CycleToJson(
+    return _$$CycleImplToJson(
       this,
     );
   }
@@ -917,9 +924,9 @@ abstract class _Cycle implements Cycle {
           final int? endDate,
           final int id,
           @JsonKey(name: 'deliveries') final List<DeliveryModel>? deliveries}) =
-      _$_Cycle;
+      _$CycleImpl;
 
-  factory _Cycle.fromJson(Map<String, dynamic> json) = _$_Cycle.fromJson;
+  factory _Cycle.fromJson(Map<String, dynamic> json) = _$CycleImpl.fromJson;
 
   @override
   String? get mandatoryWaitSinceLastCycleInDays;
@@ -934,7 +941,7 @@ abstract class _Cycle implements Cycle {
   List<DeliveryModel>? get deliveries;
   @override
   @JsonKey(ignore: true)
-  _$$_CycleCopyWith<_$_Cycle> get copyWith =>
+  _$$CycleImplCopyWith<_$CycleImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -968,9 +975,8 @@ abstract class $DeliveryModelCopyWith<$Res> {
   $Res call(
       {List<DoseCriteriaModel>? doseCriteria,
       @JsonKey(name: 'mandatoryWaitSinceLastDeliveryInDays')
-          String? mandatoryWaitSinceLastDeliveryInDays,
-      @JsonKey(name: 'deliveryStrategy')
-          String? deliveryStrategy,
+      String? mandatoryWaitSinceLastDeliveryInDays,
+      @JsonKey(name: 'deliveryStrategy') String? deliveryStrategy,
       int id});
 }
 
@@ -1015,28 +1021,27 @@ class _$DeliveryModelCopyWithImpl<$Res, $Val extends DeliveryModel>
 }
 
 /// @nodoc
-abstract class _$$_DeliveryModelCopyWith<$Res>
+abstract class _$$DeliveryModelImplCopyWith<$Res>
     implements $DeliveryModelCopyWith<$Res> {
-  factory _$$_DeliveryModelCopyWith(
-          _$_DeliveryModel value, $Res Function(_$_DeliveryModel) then) =
-      __$$_DeliveryModelCopyWithImpl<$Res>;
+  factory _$$DeliveryModelImplCopyWith(
+          _$DeliveryModelImpl value, $Res Function(_$DeliveryModelImpl) then) =
+      __$$DeliveryModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
       {List<DoseCriteriaModel>? doseCriteria,
       @JsonKey(name: 'mandatoryWaitSinceLastDeliveryInDays')
-          String? mandatoryWaitSinceLastDeliveryInDays,
-      @JsonKey(name: 'deliveryStrategy')
-          String? deliveryStrategy,
+      String? mandatoryWaitSinceLastDeliveryInDays,
+      @JsonKey(name: 'deliveryStrategy') String? deliveryStrategy,
       int id});
 }
 
 /// @nodoc
-class __$$_DeliveryModelCopyWithImpl<$Res>
-    extends _$DeliveryModelCopyWithImpl<$Res, _$_DeliveryModel>
-    implements _$$_DeliveryModelCopyWith<$Res> {
-  __$$_DeliveryModelCopyWithImpl(
-      _$_DeliveryModel _value, $Res Function(_$_DeliveryModel) _then)
+class __$$DeliveryModelImplCopyWithImpl<$Res>
+    extends _$DeliveryModelCopyWithImpl<$Res, _$DeliveryModelImpl>
+    implements _$$DeliveryModelImplCopyWith<$Res> {
+  __$$DeliveryModelImplCopyWithImpl(
+      _$DeliveryModelImpl _value, $Res Function(_$DeliveryModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1047,7 +1052,7 @@ class __$$_DeliveryModelCopyWithImpl<$Res>
     Object? deliveryStrategy = freezed,
     Object? id = null,
   }) {
-    return _then(_$_DeliveryModel(
+    return _then(_$DeliveryModelImpl(
       doseCriteria: freezed == doseCriteria
           ? _value._doseCriteria
           : doseCriteria // ignore: cast_nullable_to_non_nullable
@@ -1071,24 +1076,24 @@ class __$$_DeliveryModelCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_DeliveryModel implements _DeliveryModel {
-  const _$_DeliveryModel(
+class _$DeliveryModelImpl implements _DeliveryModel {
+  const _$DeliveryModelImpl(
       {final List<DoseCriteriaModel>? doseCriteria,
       @JsonKey(name: 'mandatoryWaitSinceLastDeliveryInDays')
-          this.mandatoryWaitSinceLastDeliveryInDays,
-      @JsonKey(name: 'deliveryStrategy')
-          this.deliveryStrategy,
+      this.mandatoryWaitSinceLastDeliveryInDays,
+      @JsonKey(name: 'deliveryStrategy') this.deliveryStrategy,
       this.id = 0})
       : _doseCriteria = doseCriteria;
 
-  factory _$_DeliveryModel.fromJson(Map<String, dynamic> json) =>
-      _$$_DeliveryModelFromJson(json);
+  factory _$DeliveryModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$DeliveryModelImplFromJson(json);
 
   final List<DoseCriteriaModel>? _doseCriteria;
   @override
   List<DoseCriteriaModel>? get doseCriteria {
     final value = _doseCriteria;
     if (value == null) return null;
+    if (_doseCriteria is EqualUnmodifiableListView) return _doseCriteria;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
@@ -1109,10 +1114,10 @@ class _$_DeliveryModel implements _DeliveryModel {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_DeliveryModel &&
+            other is _$DeliveryModelImpl &&
             const DeepCollectionEquality()
                 .equals(other._doseCriteria, _doseCriteria) &&
             (identical(other.mandatoryWaitSinceLastDeliveryInDays,
@@ -1136,12 +1141,12 @@ class _$_DeliveryModel implements _DeliveryModel {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_DeliveryModelCopyWith<_$_DeliveryModel> get copyWith =>
-      __$$_DeliveryModelCopyWithImpl<_$_DeliveryModel>(this, _$identity);
+  _$$DeliveryModelImplCopyWith<_$DeliveryModelImpl> get copyWith =>
+      __$$DeliveryModelImplCopyWithImpl<_$DeliveryModelImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_DeliveryModelToJson(
+    return _$$DeliveryModelImplToJson(
       this,
     );
   }
@@ -1151,13 +1156,12 @@ abstract class _DeliveryModel implements DeliveryModel {
   const factory _DeliveryModel(
       {final List<DoseCriteriaModel>? doseCriteria,
       @JsonKey(name: 'mandatoryWaitSinceLastDeliveryInDays')
-          final String? mandatoryWaitSinceLastDeliveryInDays,
-      @JsonKey(name: 'deliveryStrategy')
-          final String? deliveryStrategy,
-      final int id}) = _$_DeliveryModel;
+      final String? mandatoryWaitSinceLastDeliveryInDays,
+      @JsonKey(name: 'deliveryStrategy') final String? deliveryStrategy,
+      final int id}) = _$DeliveryModelImpl;
 
   factory _DeliveryModel.fromJson(Map<String, dynamic> json) =
-      _$_DeliveryModel.fromJson;
+      _$DeliveryModelImpl.fromJson;
 
   @override
   List<DoseCriteriaModel>? get doseCriteria;
@@ -1171,7 +1175,7 @@ abstract class _DeliveryModel implements DeliveryModel {
   int get id;
   @override
   @JsonKey(ignore: true)
-  _$$_DeliveryModelCopyWith<_$_DeliveryModel> get copyWith =>
+  _$$DeliveryModelImplCopyWith<_$DeliveryModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -1200,10 +1204,9 @@ abstract class $DoseCriteriaModelCopyWith<$Res> {
       _$DoseCriteriaModelCopyWithImpl<$Res, DoseCriteriaModel>;
   @useResult
   $Res call(
-      {@JsonKey(name: 'condition')
-          String? condition,
+      {@JsonKey(name: 'condition') String? condition,
       @JsonKey(name: 'ProductVariants')
-          List<ProductVariantsModel>? productVariants});
+      List<ProductVariantsModel>? productVariants});
 }
 
 /// @nodoc
@@ -1236,26 +1239,25 @@ class _$DoseCriteriaModelCopyWithImpl<$Res, $Val extends DoseCriteriaModel>
 }
 
 /// @nodoc
-abstract class _$$_DoseCriteriaModelCopyWith<$Res>
+abstract class _$$DoseCriteriaModelImplCopyWith<$Res>
     implements $DoseCriteriaModelCopyWith<$Res> {
-  factory _$$_DoseCriteriaModelCopyWith(_$_DoseCriteriaModel value,
-          $Res Function(_$_DoseCriteriaModel) then) =
-      __$$_DoseCriteriaModelCopyWithImpl<$Res>;
+  factory _$$DoseCriteriaModelImplCopyWith(_$DoseCriteriaModelImpl value,
+          $Res Function(_$DoseCriteriaModelImpl) then) =
+      __$$DoseCriteriaModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'condition')
-          String? condition,
+      {@JsonKey(name: 'condition') String? condition,
       @JsonKey(name: 'ProductVariants')
-          List<ProductVariantsModel>? productVariants});
+      List<ProductVariantsModel>? productVariants});
 }
 
 /// @nodoc
-class __$$_DoseCriteriaModelCopyWithImpl<$Res>
-    extends _$DoseCriteriaModelCopyWithImpl<$Res, _$_DoseCriteriaModel>
-    implements _$$_DoseCriteriaModelCopyWith<$Res> {
-  __$$_DoseCriteriaModelCopyWithImpl(
-      _$_DoseCriteriaModel _value, $Res Function(_$_DoseCriteriaModel) _then)
+class __$$DoseCriteriaModelImplCopyWithImpl<$Res>
+    extends _$DoseCriteriaModelCopyWithImpl<$Res, _$DoseCriteriaModelImpl>
+    implements _$$DoseCriteriaModelImplCopyWith<$Res> {
+  __$$DoseCriteriaModelImplCopyWithImpl(_$DoseCriteriaModelImpl _value,
+      $Res Function(_$DoseCriteriaModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1264,7 +1266,7 @@ class __$$_DoseCriteriaModelCopyWithImpl<$Res>
     Object? condition = freezed,
     Object? productVariants = freezed,
   }) {
-    return _then(_$_DoseCriteriaModel(
+    return _then(_$DoseCriteriaModelImpl(
       condition: freezed == condition
           ? _value.condition
           : condition // ignore: cast_nullable_to_non_nullable
@@ -1279,16 +1281,15 @@ class __$$_DoseCriteriaModelCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_DoseCriteriaModel implements _DoseCriteriaModel {
-  const _$_DoseCriteriaModel(
-      {@JsonKey(name: 'condition')
-          this.condition,
+class _$DoseCriteriaModelImpl implements _DoseCriteriaModel {
+  const _$DoseCriteriaModelImpl(
+      {@JsonKey(name: 'condition') this.condition,
       @JsonKey(name: 'ProductVariants')
-          final List<ProductVariantsModel>? productVariants})
+      final List<ProductVariantsModel>? productVariants})
       : _productVariants = productVariants;
 
-  factory _$_DoseCriteriaModel.fromJson(Map<String, dynamic> json) =>
-      _$$_DoseCriteriaModelFromJson(json);
+  factory _$DoseCriteriaModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$DoseCriteriaModelImplFromJson(json);
 
   @override
   @JsonKey(name: 'condition')
@@ -1299,6 +1300,7 @@ class _$_DoseCriteriaModel implements _DoseCriteriaModel {
   List<ProductVariantsModel>? get productVariants {
     final value = _productVariants;
     if (value == null) return null;
+    if (_productVariants is EqualUnmodifiableListView) return _productVariants;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
@@ -1309,10 +1311,10 @@ class _$_DoseCriteriaModel implements _DoseCriteriaModel {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_DoseCriteriaModel &&
+            other is _$DoseCriteriaModelImpl &&
             (identical(other.condition, condition) ||
                 other.condition == condition) &&
             const DeepCollectionEquality()
@@ -1327,13 +1329,13 @@ class _$_DoseCriteriaModel implements _DoseCriteriaModel {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_DoseCriteriaModelCopyWith<_$_DoseCriteriaModel> get copyWith =>
-      __$$_DoseCriteriaModelCopyWithImpl<_$_DoseCriteriaModel>(
+  _$$DoseCriteriaModelImplCopyWith<_$DoseCriteriaModelImpl> get copyWith =>
+      __$$DoseCriteriaModelImplCopyWithImpl<_$DoseCriteriaModelImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_DoseCriteriaModelToJson(
+    return _$$DoseCriteriaModelImplToJson(
       this,
     );
   }
@@ -1341,14 +1343,13 @@ class _$_DoseCriteriaModel implements _DoseCriteriaModel {
 
 abstract class _DoseCriteriaModel implements DoseCriteriaModel {
   const factory _DoseCriteriaModel(
-          {@JsonKey(name: 'condition')
-              final String? condition,
+          {@JsonKey(name: 'condition') final String? condition,
           @JsonKey(name: 'ProductVariants')
-              final List<ProductVariantsModel>? productVariants}) =
-      _$_DoseCriteriaModel;
+          final List<ProductVariantsModel>? productVariants}) =
+      _$DoseCriteriaModelImpl;
 
   factory _DoseCriteriaModel.fromJson(Map<String, dynamic> json) =
-      _$_DoseCriteriaModel.fromJson;
+      _$DoseCriteriaModelImpl.fromJson;
 
   @override
   @JsonKey(name: 'condition')
@@ -1358,7 +1359,7 @@ abstract class _DoseCriteriaModel implements DoseCriteriaModel {
   List<ProductVariantsModel>? get productVariants;
   @override
   @JsonKey(ignore: true)
-  _$$_DoseCriteriaModelCopyWith<_$_DoseCriteriaModel> get copyWith =>
+  _$$DoseCriteriaModelImplCopyWith<_$DoseCriteriaModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -1417,22 +1418,22 @@ class _$ProductVariantsModelCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_ProductVariantsModelCopyWith<$Res>
+abstract class _$$ProductVariantsModelImplCopyWith<$Res>
     implements $ProductVariantsModelCopyWith<$Res> {
-  factory _$$_ProductVariantsModelCopyWith(_$_ProductVariantsModel value,
-          $Res Function(_$_ProductVariantsModel) then) =
-      __$$_ProductVariantsModelCopyWithImpl<$Res>;
+  factory _$$ProductVariantsModelImplCopyWith(_$ProductVariantsModelImpl value,
+          $Res Function(_$ProductVariantsModelImpl) then) =
+      __$$ProductVariantsModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String? productVariantId, int? quantity});
 }
 
 /// @nodoc
-class __$$_ProductVariantsModelCopyWithImpl<$Res>
-    extends _$ProductVariantsModelCopyWithImpl<$Res, _$_ProductVariantsModel>
-    implements _$$_ProductVariantsModelCopyWith<$Res> {
-  __$$_ProductVariantsModelCopyWithImpl(_$_ProductVariantsModel _value,
-      $Res Function(_$_ProductVariantsModel) _then)
+class __$$ProductVariantsModelImplCopyWithImpl<$Res>
+    extends _$ProductVariantsModelCopyWithImpl<$Res, _$ProductVariantsModelImpl>
+    implements _$$ProductVariantsModelImplCopyWith<$Res> {
+  __$$ProductVariantsModelImplCopyWithImpl(_$ProductVariantsModelImpl _value,
+      $Res Function(_$ProductVariantsModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1441,7 +1442,7 @@ class __$$_ProductVariantsModelCopyWithImpl<$Res>
     Object? productVariantId = freezed,
     Object? quantity = freezed,
   }) {
-    return _then(_$_ProductVariantsModel(
+    return _then(_$ProductVariantsModelImpl(
       productVariantId: freezed == productVariantId
           ? _value.productVariantId
           : productVariantId // ignore: cast_nullable_to_non_nullable
@@ -1456,11 +1457,11 @@ class __$$_ProductVariantsModelCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_ProductVariantsModel implements _ProductVariantsModel {
-  const _$_ProductVariantsModel({this.productVariantId, this.quantity});
+class _$ProductVariantsModelImpl implements _ProductVariantsModel {
+  const _$ProductVariantsModelImpl({this.productVariantId, this.quantity});
 
-  factory _$_ProductVariantsModel.fromJson(Map<String, dynamic> json) =>
-      _$$_ProductVariantsModelFromJson(json);
+  factory _$ProductVariantsModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ProductVariantsModelImplFromJson(json);
 
   @override
   final String? productVariantId;
@@ -1473,10 +1474,10 @@ class _$_ProductVariantsModel implements _ProductVariantsModel {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ProductVariantsModel &&
+            other is _$ProductVariantsModelImpl &&
             (identical(other.productVariantId, productVariantId) ||
                 other.productVariantId == productVariantId) &&
             (identical(other.quantity, quantity) ||
@@ -1490,13 +1491,14 @@ class _$_ProductVariantsModel implements _ProductVariantsModel {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ProductVariantsModelCopyWith<_$_ProductVariantsModel> get copyWith =>
-      __$$_ProductVariantsModelCopyWithImpl<_$_ProductVariantsModel>(
-          this, _$identity);
+  _$$ProductVariantsModelImplCopyWith<_$ProductVariantsModelImpl>
+      get copyWith =>
+          __$$ProductVariantsModelImplCopyWithImpl<_$ProductVariantsModelImpl>(
+              this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_ProductVariantsModelToJson(
+    return _$$ProductVariantsModelImplToJson(
       this,
     );
   }
@@ -1505,10 +1507,10 @@ class _$_ProductVariantsModel implements _ProductVariantsModel {
 abstract class _ProductVariantsModel implements ProductVariantsModel {
   const factory _ProductVariantsModel(
       {final String? productVariantId,
-      final int? quantity}) = _$_ProductVariantsModel;
+      final int? quantity}) = _$ProductVariantsModelImpl;
 
   factory _ProductVariantsModel.fromJson(Map<String, dynamic> json) =
-      _$_ProductVariantsModel.fromJson;
+      _$ProductVariantsModelImpl.fromJson;
 
   @override
   String? get productVariantId;
@@ -1516,6 +1518,6 @@ abstract class _ProductVariantsModel implements ProductVariantsModel {
   int? get quantity;
   @override
   @JsonKey(ignore: true)
-  _$$_ProductVariantsModelCopyWith<_$_ProductVariantsModel> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$ProductVariantsModelImplCopyWith<_$ProductVariantsModelImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }

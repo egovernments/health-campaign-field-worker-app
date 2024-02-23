@@ -6,43 +6,43 @@ part of 'pgr_service_defenitions.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_PGRServiceDefinitions _$$_PGRServiceDefinitionsFromJson(
+_$PGRServiceDefinitionsImpl _$$PGRServiceDefinitionsImplFromJson(
         Map<String, dynamic> json) =>
-    _$_PGRServiceDefinitions(
+    _$PGRServiceDefinitionsImpl(
       serviceDefinitionWrapper: json['RAINMAKER-PGR'] == null
           ? null
           : ServiceDefinitionWrapper.fromJson(
               json['RAINMAKER-PGR'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$$_PGRServiceDefinitionsToJson(
-        _$_PGRServiceDefinitions instance) =>
+Map<String, dynamic> _$$PGRServiceDefinitionsImplToJson(
+        _$PGRServiceDefinitionsImpl instance) =>
     <String, dynamic>{
       'RAINMAKER-PGR': instance.serviceDefinitionWrapper,
     };
 
-_$_ServiceDefinitionWrapper _$$_ServiceDefinitionWrapperFromJson(
+_$ServiceDefinitionWrapperImpl _$$ServiceDefinitionWrapperImplFromJson(
         Map<String, dynamic> json) =>
-    _$_ServiceDefinitionWrapper(
+    _$ServiceDefinitionWrapperImpl(
       definition: (json['ServiceDefs'] as List<dynamic>?)
               ?.map((e) => Definition.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
     );
 
-Map<String, dynamic> _$$_ServiceDefinitionWrapperToJson(
-        _$_ServiceDefinitionWrapper instance) =>
+Map<String, dynamic> _$$ServiceDefinitionWrapperImplToJson(
+        _$ServiceDefinitionWrapperImpl instance) =>
     <String, dynamic>{
       'ServiceDefs': instance.definition,
     };
 
-_$_Definition _$$_DefinitionFromJson(Map<String, dynamic> json) =>
-    _$_Definition(
+_$DefinitionImpl _$$DefinitionImplFromJson(Map<String, dynamic> json) =>
+    _$DefinitionImpl(
       serviceCode: json['serviceCode'] as String,
       name: json['name'] as String,
     );
 
-Map<String, dynamic> _$$_DefinitionToJson(_$_Definition instance) =>
+Map<String, dynamic> _$$DefinitionImplToJson(_$DefinitionImpl instance) =>
     <String, dynamic>{
       'serviceCode': instance.serviceCode,
       'name': instance.name,

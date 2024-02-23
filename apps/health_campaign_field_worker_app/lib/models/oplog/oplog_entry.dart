@@ -4,8 +4,10 @@ import '../../data/local_store/no_sql/schema/oplog.dart' hide AdditionalId;
 import '../../data/local_store/no_sql/schema/oplog.dart' as o show AdditionalId;
 import '../data_model.dart';
 
+part 'oplog_entry.mapper.dart';
+
 @MappableClass()
-class OpLogEntry<T extends EntityModel> {
+class OpLogEntry<T extends EntityModel> with OpLogEntryMappable {
   final int? id;
   final T entity;
   final DataModelType type;
@@ -96,7 +98,7 @@ class OpLogEntry<T extends EntityModel> {
 }
 
 @MappableClass()
-class AdditionalId {
+class AdditionalId with AdditionalIdMappable {
   final String idType;
   final String id;
 

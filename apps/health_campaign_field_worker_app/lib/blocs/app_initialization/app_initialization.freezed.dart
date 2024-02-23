@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'app_initialization.dart';
 
@@ -90,25 +90,25 @@ class _$AppInitializationEventCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$AppInitializationSetupEventCopyWith<$Res>
+abstract class _$$AppInitializationSetupEventImplCopyWith<$Res>
     implements $AppInitializationEventCopyWith<$Res> {
-  factory _$$AppInitializationSetupEventCopyWith(
-          _$AppInitializationSetupEvent value,
-          $Res Function(_$AppInitializationSetupEvent) then) =
-      __$$AppInitializationSetupEventCopyWithImpl<$Res>;
+  factory _$$AppInitializationSetupEventImplCopyWith(
+          _$AppInitializationSetupEventImpl value,
+          $Res Function(_$AppInitializationSetupEventImpl) then) =
+      __$$AppInitializationSetupEventImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({int retriesLeft});
 }
 
 /// @nodoc
-class __$$AppInitializationSetupEventCopyWithImpl<$Res>
+class __$$AppInitializationSetupEventImplCopyWithImpl<$Res>
     extends _$AppInitializationEventCopyWithImpl<$Res,
-        _$AppInitializationSetupEvent>
-    implements _$$AppInitializationSetupEventCopyWith<$Res> {
-  __$$AppInitializationSetupEventCopyWithImpl(
-      _$AppInitializationSetupEvent _value,
-      $Res Function(_$AppInitializationSetupEvent) _then)
+        _$AppInitializationSetupEventImpl>
+    implements _$$AppInitializationSetupEventImplCopyWith<$Res> {
+  __$$AppInitializationSetupEventImplCopyWithImpl(
+      _$AppInitializationSetupEventImpl _value,
+      $Res Function(_$AppInitializationSetupEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -116,7 +116,7 @@ class __$$AppInitializationSetupEventCopyWithImpl<$Res>
   $Res call({
     Object? retriesLeft = null,
   }) {
-    return _then(_$AppInitializationSetupEvent(
+    return _then(_$AppInitializationSetupEventImpl(
       retriesLeft: null == retriesLeft
           ? _value.retriesLeft
           : retriesLeft // ignore: cast_nullable_to_non_nullable
@@ -127,8 +127,8 @@ class __$$AppInitializationSetupEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$AppInitializationSetupEvent implements AppInitializationSetupEvent {
-  const _$AppInitializationSetupEvent({this.retriesLeft = 3});
+class _$AppInitializationSetupEventImpl implements AppInitializationSetupEvent {
+  const _$AppInitializationSetupEventImpl({this.retriesLeft = 3});
 
   @override
   @JsonKey()
@@ -140,10 +140,10 @@ class _$AppInitializationSetupEvent implements AppInitializationSetupEvent {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$AppInitializationSetupEvent &&
+            other is _$AppInitializationSetupEventImpl &&
             (identical(other.retriesLeft, retriesLeft) ||
                 other.retriesLeft == retriesLeft));
   }
@@ -154,9 +154,9 @@ class _$AppInitializationSetupEvent implements AppInitializationSetupEvent {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$AppInitializationSetupEventCopyWith<_$AppInitializationSetupEvent>
-      get copyWith => __$$AppInitializationSetupEventCopyWithImpl<
-          _$AppInitializationSetupEvent>(this, _$identity);
+  _$$AppInitializationSetupEventImplCopyWith<_$AppInitializationSetupEventImpl>
+      get copyWith => __$$AppInitializationSetupEventImplCopyWithImpl<
+          _$AppInitializationSetupEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -217,13 +217,13 @@ class _$AppInitializationSetupEvent implements AppInitializationSetupEvent {
 
 abstract class AppInitializationSetupEvent implements AppInitializationEvent {
   const factory AppInitializationSetupEvent({final int retriesLeft}) =
-      _$AppInitializationSetupEvent;
+      _$AppInitializationSetupEventImpl;
 
   @override
   int get retriesLeft;
   @override
   @JsonKey(ignore: true)
-  _$$AppInitializationSetupEventCopyWith<_$AppInitializationSetupEvent>
+  _$$AppInitializationSetupEventImplCopyWith<_$AppInitializationSetupEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -307,30 +307,30 @@ class _$AppInitializationStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$AppUninitializedCopyWith<$Res> {
-  factory _$$AppUninitializedCopyWith(
-          _$AppUninitialized value, $Res Function(_$AppUninitialized) then) =
-      __$$AppUninitializedCopyWithImpl<$Res>;
+abstract class _$$AppUninitializedImplCopyWith<$Res> {
+  factory _$$AppUninitializedImplCopyWith(_$AppUninitializedImpl value,
+          $Res Function(_$AppUninitializedImpl) then) =
+      __$$AppUninitializedImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$AppUninitializedCopyWithImpl<$Res>
-    extends _$AppInitializationStateCopyWithImpl<$Res, _$AppUninitialized>
-    implements _$$AppUninitializedCopyWith<$Res> {
-  __$$AppUninitializedCopyWithImpl(
-      _$AppUninitialized _value, $Res Function(_$AppUninitialized) _then)
+class __$$AppUninitializedImplCopyWithImpl<$Res>
+    extends _$AppInitializationStateCopyWithImpl<$Res, _$AppUninitializedImpl>
+    implements _$$AppUninitializedImplCopyWith<$Res> {
+  __$$AppUninitializedImplCopyWithImpl(_$AppUninitializedImpl _value,
+      $Res Function(_$AppUninitializedImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$AppUninitialized extends AppUninitialized {
-  const _$AppUninitialized() : super._();
+class _$AppUninitializedImpl extends AppUninitialized {
+  const _$AppUninitializedImpl() : super._();
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$AppUninitialized);
+        (other.runtimeType == runtimeType && other is _$AppUninitializedImpl);
   }
 
   @override
@@ -418,35 +418,35 @@ class _$AppUninitialized extends AppUninitialized {
 }
 
 abstract class AppUninitialized extends AppInitializationState {
-  const factory AppUninitialized() = _$AppUninitialized;
+  const factory AppUninitialized() = _$AppUninitializedImpl;
   const AppUninitialized._() : super._();
 }
 
 /// @nodoc
-abstract class _$$AppInitializingCopyWith<$Res> {
-  factory _$$AppInitializingCopyWith(
-          _$AppInitializing value, $Res Function(_$AppInitializing) then) =
-      __$$AppInitializingCopyWithImpl<$Res>;
+abstract class _$$AppInitializingImplCopyWith<$Res> {
+  factory _$$AppInitializingImplCopyWith(_$AppInitializingImpl value,
+          $Res Function(_$AppInitializingImpl) then) =
+      __$$AppInitializingImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$AppInitializingCopyWithImpl<$Res>
-    extends _$AppInitializationStateCopyWithImpl<$Res, _$AppInitializing>
-    implements _$$AppInitializingCopyWith<$Res> {
-  __$$AppInitializingCopyWithImpl(
-      _$AppInitializing _value, $Res Function(_$AppInitializing) _then)
+class __$$AppInitializingImplCopyWithImpl<$Res>
+    extends _$AppInitializationStateCopyWithImpl<$Res, _$AppInitializingImpl>
+    implements _$$AppInitializingImplCopyWith<$Res> {
+  __$$AppInitializingImplCopyWithImpl(
+      _$AppInitializingImpl _value, $Res Function(_$AppInitializingImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$AppInitializing extends AppInitializing {
-  const _$AppInitializing() : super._();
+class _$AppInitializingImpl extends AppInitializing {
+  const _$AppInitializingImpl() : super._();
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$AppInitializing);
+        (other.runtimeType == runtimeType && other is _$AppInitializingImpl);
   }
 
   @override
@@ -534,37 +534,39 @@ class _$AppInitializing extends AppInitializing {
 }
 
 abstract class AppInitializing extends AppInitializationState {
-  const factory AppInitializing() = _$AppInitializing;
+  const factory AppInitializing() = _$AppInitializingImpl;
   const AppInitializing._() : super._();
 }
 
 /// @nodoc
-abstract class _$$AppInitializationFailedCopyWith<$Res> {
-  factory _$$AppInitializationFailedCopyWith(_$AppInitializationFailed value,
-          $Res Function(_$AppInitializationFailed) then) =
-      __$$AppInitializationFailedCopyWithImpl<$Res>;
+abstract class _$$AppInitializationFailedImplCopyWith<$Res> {
+  factory _$$AppInitializationFailedImplCopyWith(
+          _$AppInitializationFailedImpl value,
+          $Res Function(_$AppInitializationFailedImpl) then) =
+      __$$AppInitializationFailedImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$AppInitializationFailedCopyWithImpl<$Res>
+class __$$AppInitializationFailedImplCopyWithImpl<$Res>
     extends _$AppInitializationStateCopyWithImpl<$Res,
-        _$AppInitializationFailed>
-    implements _$$AppInitializationFailedCopyWith<$Res> {
-  __$$AppInitializationFailedCopyWithImpl(_$AppInitializationFailed _value,
-      $Res Function(_$AppInitializationFailed) _then)
+        _$AppInitializationFailedImpl>
+    implements _$$AppInitializationFailedImplCopyWith<$Res> {
+  __$$AppInitializationFailedImplCopyWithImpl(
+      _$AppInitializationFailedImpl _value,
+      $Res Function(_$AppInitializationFailedImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$AppInitializationFailed extends AppInitializationFailed {
-  const _$AppInitializationFailed() : super._();
+class _$AppInitializationFailedImpl extends AppInitializationFailed {
+  const _$AppInitializationFailedImpl() : super._();
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$AppInitializationFailed);
+            other is _$AppInitializationFailedImpl);
   }
 
   @override
@@ -652,15 +654,15 @@ class _$AppInitializationFailed extends AppInitializationFailed {
 }
 
 abstract class AppInitializationFailed extends AppInitializationState {
-  const factory AppInitializationFailed() = _$AppInitializationFailed;
+  const factory AppInitializationFailed() = _$AppInitializationFailedImpl;
   const AppInitializationFailed._() : super._();
 }
 
 /// @nodoc
-abstract class _$$AppInitializedCopyWith<$Res> {
-  factory _$$AppInitializedCopyWith(
-          _$AppInitialized value, $Res Function(_$AppInitialized) then) =
-      __$$AppInitializedCopyWithImpl<$Res>;
+abstract class _$$AppInitializedImplCopyWith<$Res> {
+  factory _$$AppInitializedImplCopyWith(_$AppInitializedImpl value,
+          $Res Function(_$AppInitializedImpl) then) =
+      __$$AppInitializedImplCopyWithImpl<$Res>;
   @useResult
   $Res call(
       {AppConfiguration appConfiguration,
@@ -668,11 +670,11 @@ abstract class _$$AppInitializedCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$AppInitializedCopyWithImpl<$Res>
-    extends _$AppInitializationStateCopyWithImpl<$Res, _$AppInitialized>
-    implements _$$AppInitializedCopyWith<$Res> {
-  __$$AppInitializedCopyWithImpl(
-      _$AppInitialized _value, $Res Function(_$AppInitialized) _then)
+class __$$AppInitializedImplCopyWithImpl<$Res>
+    extends _$AppInitializationStateCopyWithImpl<$Res, _$AppInitializedImpl>
+    implements _$$AppInitializedImplCopyWith<$Res> {
+  __$$AppInitializedImplCopyWithImpl(
+      _$AppInitializedImpl _value, $Res Function(_$AppInitializedImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -681,7 +683,7 @@ class __$$AppInitializedCopyWithImpl<$Res>
     Object? appConfiguration = null,
     Object? serviceRegistryList = null,
   }) {
-    return _then(_$AppInitialized(
+    return _then(_$AppInitializedImpl(
       appConfiguration: null == appConfiguration
           ? _value.appConfiguration
           : appConfiguration // ignore: cast_nullable_to_non_nullable
@@ -696,8 +698,8 @@ class __$$AppInitializedCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$AppInitialized extends AppInitialized {
-  const _$AppInitialized(
+class _$AppInitializedImpl extends AppInitialized {
+  const _$AppInitializedImpl(
       {required this.appConfiguration,
       final List<ServiceRegistry> serviceRegistryList = const []})
       : _serviceRegistryList = serviceRegistryList,
@@ -709,15 +711,17 @@ class _$AppInitialized extends AppInitialized {
   @override
   @JsonKey()
   List<ServiceRegistry> get serviceRegistryList {
+    if (_serviceRegistryList is EqualUnmodifiableListView)
+      return _serviceRegistryList;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_serviceRegistryList);
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$AppInitialized &&
+            other is _$AppInitializedImpl &&
             (identical(other.appConfiguration, appConfiguration) ||
                 other.appConfiguration == appConfiguration) &&
             const DeepCollectionEquality()
@@ -731,8 +735,9 @@ class _$AppInitialized extends AppInitialized {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$AppInitializedCopyWith<_$AppInitialized> get copyWith =>
-      __$$AppInitializedCopyWithImpl<_$AppInitialized>(this, _$identity);
+  _$$AppInitializedImplCopyWith<_$AppInitializedImpl> get copyWith =>
+      __$$AppInitializedImplCopyWithImpl<_$AppInitializedImpl>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -818,12 +823,12 @@ class _$AppInitialized extends AppInitialized {
 abstract class AppInitialized extends AppInitializationState {
   const factory AppInitialized(
       {required final AppConfiguration appConfiguration,
-      final List<ServiceRegistry> serviceRegistryList}) = _$AppInitialized;
+      final List<ServiceRegistry> serviceRegistryList}) = _$AppInitializedImpl;
   const AppInitialized._() : super._();
 
   AppConfiguration get appConfiguration;
   List<ServiceRegistry> get serviceRegistryList;
   @JsonKey(ignore: true)
-  _$$AppInitializedCopyWith<_$AppInitialized> get copyWith =>
+  _$$AppInitializedImplCopyWith<_$AppInitializedImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -13,6 +13,7 @@ import '../../data/repositories/remote/bandwidth_check.dart';
 import '../../models/data_model.dart';
 import '../../utils/background_service.dart';
 import '../../utils/environment_config.dart';
+import 'search_households.dart';
 
 part 'project_beneficiaries_downsync.freezed.dart';
 
@@ -96,6 +97,8 @@ class BeneficiaryDownSyncBloc
       emit(const BeneficiaryDownSyncState.totalCountCheckFailed());
     }
   }
+
+
 
   FutureOr<void> _handleCheckTotalCount(
     DownSyncCheckTotalCountEvent event,

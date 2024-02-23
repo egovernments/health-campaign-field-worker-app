@@ -217,11 +217,11 @@ class _$PropertySchemaCopyWithImpl<$Res, $Val extends PropertySchema>
 }
 
 /// @nodoc
-abstract class _$$_PropertySchemaCopyWith<$Res>
+abstract class _$$PropertySchemaImplCopyWith<$Res>
     implements $PropertySchemaCopyWith<$Res> {
-  factory _$$_PropertySchemaCopyWith(
-          _$_PropertySchema value, $Res Function(_$_PropertySchema) then) =
-      __$$_PropertySchemaCopyWithImpl<$Res>;
+  factory _$$PropertySchemaImplCopyWith(_$PropertySchemaImpl value,
+          $Res Function(_$PropertySchemaImpl) then) =
+      __$$PropertySchemaImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -252,11 +252,11 @@ abstract class _$$_PropertySchemaCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_PropertySchemaCopyWithImpl<$Res>
-    extends _$PropertySchemaCopyWithImpl<$Res, _$_PropertySchema>
-    implements _$$_PropertySchemaCopyWith<$Res> {
-  __$$_PropertySchemaCopyWithImpl(
-      _$_PropertySchema _value, $Res Function(_$_PropertySchema) _then)
+class __$$PropertySchemaImplCopyWithImpl<$Res>
+    extends _$PropertySchemaCopyWithImpl<$Res, _$PropertySchemaImpl>
+    implements _$$PropertySchemaImplCopyWith<$Res> {
+  __$$PropertySchemaImplCopyWithImpl(
+      _$PropertySchemaImpl _value, $Res Function(_$PropertySchemaImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -280,7 +280,7 @@ class __$$_PropertySchemaCopyWithImpl<$Res>
     Object? value = freezed,
     Object? displayBehavior = freezed,
   }) {
-    return _then(_$_PropertySchema(
+    return _then(_$PropertySchemaImpl(
       type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
@@ -356,8 +356,8 @@ class __$$_PropertySchemaCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
-class _$_PropertySchema implements _PropertySchema {
-  const _$_PropertySchema(
+class _$PropertySchemaImpl implements _PropertySchema {
+  const _$PropertySchemaImpl(
       {@JsonKey(name: 'type') required this.type,
       this.readonly,
       this.displayOnly,
@@ -379,8 +379,8 @@ class _$_PropertySchema implements _PropertySchema {
         _required = required,
         _enums = enums;
 
-  factory _$_PropertySchema.fromJson(Map<String, dynamic> json) =>
-      _$$_PropertySchemaFromJson(json);
+  factory _$PropertySchemaImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PropertySchemaImplFromJson(json);
 
   @override
   @JsonKey(name: 'type')
@@ -448,10 +448,10 @@ class _$_PropertySchema implements _PropertySchema {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_PropertySchema &&
+            other is _$PropertySchemaImpl &&
             (identical(other.type, type) || other.type == type) &&
             (identical(other.readonly, readonly) ||
                 other.readonly == readonly) &&
@@ -504,12 +504,13 @@ class _$_PropertySchema implements _PropertySchema {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_PropertySchemaCopyWith<_$_PropertySchema> get copyWith =>
-      __$$_PropertySchemaCopyWithImpl<_$_PropertySchema>(this, _$identity);
+  _$$PropertySchemaImplCopyWith<_$PropertySchemaImpl> get copyWith =>
+      __$$PropertySchemaImplCopyWithImpl<_$PropertySchemaImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_PropertySchemaToJson(
+    return _$$PropertySchemaImplToJson(
       this,
     );
   }
@@ -533,10 +534,10 @@ abstract class _PropertySchema implements PropertySchema {
       final String? hint,
       final String? label,
       final dynamic value,
-      final DisplayBehavior? displayBehavior}) = _$_PropertySchema;
+      final DisplayBehavior? displayBehavior}) = _$PropertySchemaImpl;
 
   factory _PropertySchema.fromJson(Map<String, dynamic> json) =
-      _$_PropertySchema.fromJson;
+      _$PropertySchemaImpl.fromJson;
 
   @override
   @JsonKey(name: 'type')
@@ -575,7 +576,7 @@ abstract class _PropertySchema implements PropertySchema {
   DisplayBehavior? get displayBehavior;
   @override
   @JsonKey(ignore: true)
-  _$$_PropertySchemaCopyWith<_$_PropertySchema> get copyWith =>
+  _$$PropertySchemaImplCopyWith<_$PropertySchemaImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -633,22 +634,22 @@ class _$DateFormatValueCopyWithImpl<$Res, $Val extends DateFormatValue>
 }
 
 /// @nodoc
-abstract class _$$_DateFormatValueCopyWith<$Res>
+abstract class _$$DateFormatValueImplCopyWith<$Res>
     implements $DateFormatValueCopyWith<$Res> {
-  factory _$$_DateFormatValueCopyWith(
-          _$_DateFormatValue value, $Res Function(_$_DateFormatValue) then) =
-      __$$_DateFormatValueCopyWithImpl<$Res>;
+  factory _$$DateFormatValueImplCopyWith(_$DateFormatValueImpl value,
+          $Res Function(_$DateFormatValueImpl) then) =
+      __$$DateFormatValueImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String value, String format});
 }
 
 /// @nodoc
-class __$$_DateFormatValueCopyWithImpl<$Res>
-    extends _$DateFormatValueCopyWithImpl<$Res, _$_DateFormatValue>
-    implements _$$_DateFormatValueCopyWith<$Res> {
-  __$$_DateFormatValueCopyWithImpl(
-      _$_DateFormatValue _value, $Res Function(_$_DateFormatValue) _then)
+class __$$DateFormatValueImplCopyWithImpl<$Res>
+    extends _$DateFormatValueCopyWithImpl<$Res, _$DateFormatValueImpl>
+    implements _$$DateFormatValueImplCopyWith<$Res> {
+  __$$DateFormatValueImplCopyWithImpl(
+      _$DateFormatValueImpl _value, $Res Function(_$DateFormatValueImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -657,7 +658,7 @@ class __$$_DateFormatValueCopyWithImpl<$Res>
     Object? value = null,
     Object? format = null,
   }) {
-    return _then(_$_DateFormatValue(
+    return _then(_$DateFormatValueImpl(
       value: null == value
           ? _value.value
           : value // ignore: cast_nullable_to_non_nullable
@@ -672,12 +673,12 @@ class __$$_DateFormatValueCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_DateFormatValue extends _DateFormatValue {
-  const _$_DateFormatValue({required this.value, this.format = 'yyyy-MM-dd'})
+class _$DateFormatValueImpl extends _DateFormatValue {
+  const _$DateFormatValueImpl({required this.value, this.format = 'yyyy-MM-dd'})
       : super._();
 
-  factory _$_DateFormatValue.fromJson(Map<String, dynamic> json) =>
-      _$$_DateFormatValueFromJson(json);
+  factory _$DateFormatValueImpl.fromJson(Map<String, dynamic> json) =>
+      _$$DateFormatValueImplFromJson(json);
 
   @override
   final String value;
@@ -691,10 +692,10 @@ class _$_DateFormatValue extends _DateFormatValue {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_DateFormatValue &&
+            other is _$DateFormatValueImpl &&
             (identical(other.value, value) || other.value == value) &&
             (identical(other.format, format) || other.format == format));
   }
@@ -706,12 +707,13 @@ class _$_DateFormatValue extends _DateFormatValue {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_DateFormatValueCopyWith<_$_DateFormatValue> get copyWith =>
-      __$$_DateFormatValueCopyWithImpl<_$_DateFormatValue>(this, _$identity);
+  _$$DateFormatValueImplCopyWith<_$DateFormatValueImpl> get copyWith =>
+      __$$DateFormatValueImplCopyWithImpl<_$DateFormatValueImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_DateFormatValueToJson(
+    return _$$DateFormatValueImplToJson(
       this,
     );
   }
@@ -719,11 +721,12 @@ class _$_DateFormatValue extends _DateFormatValue {
 
 abstract class _DateFormatValue extends DateFormatValue {
   const factory _DateFormatValue(
-      {required final String value, final String format}) = _$_DateFormatValue;
+      {required final String value,
+      final String format}) = _$DateFormatValueImpl;
   const _DateFormatValue._() : super._();
 
   factory _DateFormatValue.fromJson(Map<String, dynamic> json) =
-      _$_DateFormatValue.fromJson;
+      _$DateFormatValueImpl.fromJson;
 
   @override
   String get value;
@@ -731,7 +734,7 @@ abstract class _DateFormatValue extends DateFormatValue {
   String get format;
   @override
   @JsonKey(ignore: true)
-  _$$_DateFormatValueCopyWith<_$_DateFormatValue> get copyWith =>
+  _$$DateFormatValueImplCopyWith<_$DateFormatValueImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -796,11 +799,11 @@ class _$DisplayBehaviorCopyWithImpl<$Res, $Val extends DisplayBehavior>
 }
 
 /// @nodoc
-abstract class _$$_DisplayBehaviorCopyWith<$Res>
+abstract class _$$DisplayBehaviorImplCopyWith<$Res>
     implements $DisplayBehaviorCopyWith<$Res> {
-  factory _$$_DisplayBehaviorCopyWith(
-          _$_DisplayBehavior value, $Res Function(_$_DisplayBehavior) then) =
-      __$$_DisplayBehaviorCopyWithImpl<$Res>;
+  factory _$$DisplayBehaviorImplCopyWith(_$DisplayBehaviorImpl value,
+          $Res Function(_$DisplayBehaviorImpl) then) =
+      __$$DisplayBehaviorImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -808,11 +811,11 @@ abstract class _$$_DisplayBehaviorCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_DisplayBehaviorCopyWithImpl<$Res>
-    extends _$DisplayBehaviorCopyWithImpl<$Res, _$_DisplayBehavior>
-    implements _$$_DisplayBehaviorCopyWith<$Res> {
-  __$$_DisplayBehaviorCopyWithImpl(
-      _$_DisplayBehavior _value, $Res Function(_$_DisplayBehavior) _then)
+class __$$DisplayBehaviorImplCopyWithImpl<$Res>
+    extends _$DisplayBehaviorCopyWithImpl<$Res, _$DisplayBehaviorImpl>
+    implements _$$DisplayBehaviorImplCopyWith<$Res> {
+  __$$DisplayBehaviorImplCopyWithImpl(
+      _$DisplayBehaviorImpl _value, $Res Function(_$DisplayBehaviorImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -822,7 +825,7 @@ class __$$_DisplayBehaviorCopyWithImpl<$Res>
     Object? oneOf = freezed,
     Object? allOf = freezed,
   }) {
-    return _then(_$_DisplayBehavior(
+    return _then(_$DisplayBehaviorImpl(
       behavior: null == behavior
           ? _value.behavior
           : behavior // ignore: cast_nullable_to_non_nullable
@@ -841,16 +844,16 @@ class __$$_DisplayBehaviorCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_DisplayBehavior implements _DisplayBehavior {
-  const _$_DisplayBehavior(
+class _$DisplayBehaviorImpl implements _DisplayBehavior {
+  const _$DisplayBehaviorImpl(
       {required this.behavior,
       final List<String>? oneOf,
       final List<String>? allOf})
       : _oneOf = oneOf,
         _allOf = allOf;
 
-  factory _$_DisplayBehavior.fromJson(Map<String, dynamic> json) =>
-      _$$_DisplayBehaviorFromJson(json);
+  factory _$DisplayBehaviorImpl.fromJson(Map<String, dynamic> json) =>
+      _$$DisplayBehaviorImplFromJson(json);
 
   @override
   final FormulaBehavior behavior;
@@ -880,10 +883,10 @@ class _$_DisplayBehavior implements _DisplayBehavior {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_DisplayBehavior &&
+            other is _$DisplayBehaviorImpl &&
             (identical(other.behavior, behavior) ||
                 other.behavior == behavior) &&
             const DeepCollectionEquality().equals(other._oneOf, _oneOf) &&
@@ -901,12 +904,13 @@ class _$_DisplayBehavior implements _DisplayBehavior {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_DisplayBehaviorCopyWith<_$_DisplayBehavior> get copyWith =>
-      __$$_DisplayBehaviorCopyWithImpl<_$_DisplayBehavior>(this, _$identity);
+  _$$DisplayBehaviorImplCopyWith<_$DisplayBehaviorImpl> get copyWith =>
+      __$$DisplayBehaviorImplCopyWithImpl<_$DisplayBehaviorImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_DisplayBehaviorToJson(
+    return _$$DisplayBehaviorImplToJson(
       this,
     );
   }
@@ -916,10 +920,10 @@ abstract class _DisplayBehavior implements DisplayBehavior {
   const factory _DisplayBehavior(
       {required final FormulaBehavior behavior,
       final List<String>? oneOf,
-      final List<String>? allOf}) = _$_DisplayBehavior;
+      final List<String>? allOf}) = _$DisplayBehaviorImpl;
 
   factory _DisplayBehavior.fromJson(Map<String, dynamic> json) =
-      _$_DisplayBehavior.fromJson;
+      _$DisplayBehaviorImpl.fromJson;
 
   @override
   FormulaBehavior get behavior;
@@ -929,6 +933,6 @@ abstract class _DisplayBehavior implements DisplayBehavior {
   List<String>? get allOf;
   @override
   @JsonKey(ignore: true)
-  _$$_DisplayBehaviorCopyWith<_$_DisplayBehavior> get copyWith =>
+  _$$DisplayBehaviorImplCopyWith<_$DisplayBehaviorImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -9,7 +9,6 @@ import 'package:stream_transform/stream_transform.dart';
 import '../../data/repositories/local/address.dart';
 import '../../models/data_model.dart';
 import '../../utils/typedefs.dart';
-import '../../utils/utils.dart';
 
 part 'search_households.freezed.dart';
 
@@ -46,18 +45,11 @@ class SearchHouseholdsBloc
     required this.addressRepository,
     required this.referralDataRepository,
   }) : super(const SearchHouseholdsState()) {
-    on(
-      _handleSearchByHouseholdHead,
-      transformer: debounce<SearchHouseholdsSearchByHouseholdHeadEvent>(
-        const Duration(milliseconds: 100),
-      ),
-    );
-    on(_handleSearchByProximitity);
     on(_handleClear);
     on(_handleSearchByHousehold);
-    on(_handleSearchByTag);
   }
 
+  // This function is been used in Individual details screen.
   Future<void> _handleSearchByHousehold(
     SearchHouseholdsByHouseholdsEvent event,
     SearchHouseholdsEmitter emit,
@@ -143,505 +135,6 @@ class SearchHouseholdsBloc
     }
   }
 
-  FutureOr<void> _handleSearchByTag(
-    SearchHouseholdsByTagEvent event,
-    SearchHouseholdsEmitter emit,
-  ) async {
-    List<ProjectBeneficiaryModel> beneficiaries =
-        await projectBeneficiary.search(
-      ProjectBeneficiarySearchModel(
-        tag: event.tag,
-        projectId: event.projectId,
-      ),
-    );
-
-/* [TODO: Need to handle the Tag search based on Beneficary Type
- current implementation is based on the individual based project
- ] */
-
-    final List<IndividualModel> individuals = await individual.search(
-      IndividualSearchModel(
-        clientReferenceId:
-            beneficiaries.map((e) => e.beneficiaryClientReferenceId!).toList(),
-      ),
-    );
-
-    // Initialize a list to store household member wrappers.
-    final containers = <HouseholdMemberWrapper>[];
-    if (individuals.isNotEmpty) {
-      final member = await householdMember.search(
-        HouseholdMemberSearchModel(
-          individualClientReferenceId:
-              individuals.map((e) => e.clientReferenceId).toList().first,
-        ),
-      );
-
-      final members = await householdMember.search(
-        HouseholdMemberSearchModel(
-          householdClientReferenceId: member.first.householdClientReferenceId,
-          isHeadOfHousehold: true,
-        ),
-      );
-
-      final householdList = await household.search(HouseholdSearchModel(
-        clientReferenceId: [members.first.householdClientReferenceId!],
-      ));
-
-      // Search for tasks and side effects based on project beneficiaries.
-      final tasks = await fetchTaskbyProjectBeneficiary(beneficiaries);
-      final referrals = await referralDataRepository.search(ReferralSearchModel(
-        projectBeneficiaryClientReferenceId:
-            beneficiaries.map((e) => e.clientReferenceId).toList(),
-      ));
-
-      final sideEffects =
-          await sideEffectDataRepository.search(SideEffectSearchModel(
-        taskClientReferenceId: tasks.map((e) => e.clientReferenceId).toList(),
-      ));
-
-      // Group household members by household client reference ID.
-
-      containers.add(
-        HouseholdMemberWrapper(
-          household: householdList.first,
-          headOfHousehold: individuals.first,
-          members: individuals,
-          projectBeneficiaries: beneficiaries,
-          tasks: tasks.isEmpty ? null : tasks,
-          sideEffects: sideEffects.isEmpty ? null : sideEffects,
-          referrals: referrals.isEmpty ? null : referrals,
-        ),
-      );
-    }
-
-    emit(state.copyWith(
-      householdMembers: containers,
-      loading: false,
-      tag: event.tag,
-    ));
-  }
-
-  FutureOr<void> _handleSearchByProximitity(
-    SearchHouseholdsByProximityEvent event,
-    SearchHouseholdsEmitter emit,
-  ) async {
-    // Perform a series of asynchronous data retrieval operations based on the search criteria.
-
-    // Fetch household results based on proximity and other criteria.
-    final List<HouseholdModel> proximityBasedResults =
-        await addressRepository.searchHouseHoldbyAddress(AddressSearchModel(
-      latitude: event.latitude,
-      longitude: event.longititude,
-      maxRadius: event.maxRadius,
-    ));
-
-    // Fetch individual results based on proximity and other criteria.
-    final List<IndividualModel> proximityBasedIndividualResults =
-        await addressRepository.searchHouseHoldByIndividual(AddressSearchModel(
-      latitude: event.latitude,
-      longitude: event.longititude,
-      maxRadius: event.maxRadius,
-    ));
-
-    // Extract individual IDs from proximity-based individual results.
-    final indIds = proximityBasedIndividualResults
-        .map((e) => e.clientReferenceId)
-        .toList();
-
-    // Search for individual results using the extracted IDs and search text.
-    final List<IndividualModel> indResults = await individual.search(
-      IndividualSearchModel(
-        clientReferenceId: indIds,
-      ),
-    );
-
-    // Search for individual results based on the search text only.
-
-    // Initialize a list to store household members.
-    final householdMembers = <HouseholdMemberModel>[];
-
-    // Determine the source of results based on proximity and beneficiary type.
-    final r = beneficiaryType != BeneficiaryType.individual
-        ? proximityBasedResults
-        : indResults;
-
-    // Iterate through the results and retrieve household members.
-    for (final element in r) {
-      // Determine the type of household members based on proximity and beneficiary type.
-      final members = beneficiaryType != BeneficiaryType.individual
-          ? await fetchHouseholdMembers(
-              (element as HouseholdModel).clientReferenceId,
-              null,
-              true,
-            )
-          : await fetchHouseholdMembers(
-              null,
-              (element as IndividualModel).clientReferenceId,
-              true,
-            );
-
-      // Retrieve all household members associated with each member.
-      for (final member in members) {
-        final allHouseholdMembers = await householdMember.search(
-          HouseholdMemberSearchModel(
-            householdClientReferenceId: member.householdClientReferenceId,
-          ),
-        );
-
-        householdMembers.addAll(allHouseholdMembers);
-      }
-    }
-
-    // Initialize a list to store household member wrappers.
-    final containers = <HouseholdMemberWrapper>[];
-
-    // Group household members by household client reference ID.
-    final groupedHouseholds = householdMembers
-        .groupListsBy((element) => element.householdClientReferenceId);
-
-    // Iterate through grouped households and retrieve additional data.
-    for (final entry in groupedHouseholds.entries) {
-      final householdId = entry.key;
-
-      // Extract individual IDs from household members.
-      final individualIds = entry.value
-          .map((element) => element.individualClientReferenceId)
-          .whereNotNull()
-          .toList();
-
-      if (householdId == null) continue;
-
-      // Search for households based on client reference ID and proximity.
-      final households = await household.search(
-        HouseholdSearchModel(
-          clientReferenceId: [householdId],
-          latitude: event.latitude,
-          longitude: event.longititude,
-          maxRadius: event.maxRadius,
-        ),
-      );
-
-      if (households.isEmpty) continue;
-
-      // Retrieve the first household result.
-      final resultHousehold = households.first;
-
-      // Search for individuals based on proximity, beneficiary type, and search text.
-      final individuals = await fetchIndividuals(individualIds, null);
-      // Find the head of household from the individuals.
-      final head = individuals.firstWhereOrNull(
-        (element) =>
-            element.clientReferenceId ==
-            entry.value
-                .firstWhereOrNull(
-                  (element) => element.isHeadOfHousehold,
-                )
-                ?.individualClientReferenceId,
-      );
-
-      if (head == null) continue;
-
-      // Search for project beneficiaries based on client reference ID and project.
-      final projectBeneficiaries = await fetchProjectBeneficiary(
-        beneficiaryType != BeneficiaryType.individual
-            ? [resultHousehold.clientReferenceId]
-            : individualIds,
-      );
-
-      if (projectBeneficiaries.isEmpty) continue;
-
-      // Search for tasks and side effects based on project beneficiaries.
-      final tasks = await fetchTaskbyProjectBeneficiary(projectBeneficiaries);
-
-      final sideEffects =
-          await sideEffectDataRepository.search(SideEffectSearchModel(
-        taskClientReferenceId: tasks.map((e) => e.clientReferenceId).toList(),
-      ));
-
-      final referrals = await referralDataRepository.search(ReferralSearchModel(
-        projectBeneficiaryClientReferenceId:
-            projectBeneficiaries.map((e) => e.clientReferenceId).toList(),
-      ));
-
-      // Create a container for household members and associated data.
-      containers.add(
-        HouseholdMemberWrapper(
-          household: resultHousehold,
-          headOfHousehold: head,
-          members: individuals,
-          projectBeneficiaries: projectBeneficiaries,
-          tasks: tasks.isEmpty ? null : tasks,
-          sideEffects: sideEffects.isEmpty ? null : sideEffects,
-          referrals: referrals.isEmpty ? null : referrals,
-        ),
-      );
-    }
-
-    containers.sort((a, b) {
-      final d1 = calculateDistance(
-            Coordinate(
-              event.latitude,
-              event.longititude,
-            ),
-            Coordinate(
-              a.household.address?.latitude,
-              a.household.address?.longitude,
-            ),
-          ) ??
-          0;
-      final d2 = calculateDistance(
-            Coordinate(
-              event.latitude,
-              event.longititude,
-            ),
-            Coordinate(
-              b.household.address?.latitude,
-              b.household.address?.longitude,
-            ),
-          ) ??
-          0;
-
-      return d1.compareTo(d2);
-    });
-    // Update the state with the results and mark the search as completed.
-    emit(state.copyWith(
-      householdMembers: containers,
-      loading: false,
-    ));
-  }
-
-  FutureOr<void> _handleSearchByHouseholdHead(
-    SearchHouseholdsSearchByHouseholdHeadEvent event,
-    SearchHouseholdsEmitter emit,
-  ) async {
-    // Check if the search text is empty; if so, clear the results and return.
-    if (event.searchText.trim().isEmpty) {
-      emit(state.copyWith(
-        householdMembers: [],
-        searchQuery: null,
-        loading: false,
-      ));
-
-      return;
-    }
-
-    // Update the state to indicate that the search is in progress.
-    emit(state.copyWith(
-      loading: true,
-      searchQuery: event.searchText,
-    ));
-
-    // Perform a series of asynchronous data retrieval operations based on the search criteria.
-
-    // Fetch household results based on proximity and other criteria.
-    final List<HouseholdModel> proximityBasedResults =
-        await addressRepository.searchHouseHoldbyAddress(AddressSearchModel(
-      latitude: event.latitude,
-      longitude: event.longitude,
-      maxRadius: event.maxRadius,
-    ));
-
-    // Fetch individual results based on proximity and other criteria.
-    final List<IndividualModel> proximityBasedIndividualResults =
-        await addressRepository.searchHouseHoldByIndividual(AddressSearchModel(
-      latitude: event.latitude,
-      longitude: event.longitude,
-      maxRadius: event.maxRadius,
-    ));
-
-    // Extract individual IDs from proximity-based individual results.
-    final indIds = proximityBasedIndividualResults
-        .map((e) => e.clientReferenceId)
-        .toList();
-
-    // Search for individual results using the extracted IDs and search text.
-    final List<IndividualModel> indResults = await individual.search(
-      IndividualSearchModel(
-        clientReferenceId: indIds,
-        name: NameSearchModel(givenName: event.searchText.trim()),
-      ),
-    );
-
-    // Search for individual results based on the search text only.
-    final List<IndividualModel> results = await individual.search(
-      IndividualSearchModel(
-        name: NameSearchModel(givenName: event.searchText.trim()),
-      ),
-    );
-
-    // Initialize a list to store household members.
-    final householdMembers = <HouseholdMemberModel>[];
-
-    // Determine the source of results based on proximity and beneficiary type.
-    final r = event.isProximityEnabled
-        ? beneficiaryType != BeneficiaryType.individual
-            ? proximityBasedResults
-            : indResults
-        : results;
-
-    // Iterate through the results and retrieve household members.
-    for (final element in r) {
-      // Determine the type of household members based on proximity and beneficiary type.
-
-      final isProximityEnabled = event.isProximityEnabled;
-      final isNotIndividual = beneficiaryType != BeneficiaryType.individual;
-      final clientReferenceId = (element as IndividualModel).clientReferenceId;
-
-      String? param1, param2;
-      bool? param3;
-
-      if (isProximityEnabled) {
-        if (isNotIndividual) {
-          param1 = clientReferenceId;
-          param2 = null;
-          param3 = true;
-        } else {
-          param1 = null;
-          param2 = clientReferenceId;
-          param3 = null;
-        }
-      } else {
-        param1 = null;
-        param2 = clientReferenceId;
-        param3 = isNotIndividual ? true : null;
-      }
-
-      final members = await fetchHouseholdMembers(param1, param2, param3);
-
-      // Retrieve all household members associated with each member.
-      for (final member in members) {
-        final allHouseholdMembers = await fetchHouseholdMembers(
-          member.householdClientReferenceId,
-          null,
-          null,
-        );
-
-        householdMembers.addAll(allHouseholdMembers);
-      }
-    }
-
-    // Initialize a list to store household member wrappers.
-    final containers = <HouseholdMemberWrapper>[];
-
-    // Group household members by household client reference ID.
-    final groupedHouseholds = householdMembers
-        .groupListsBy((element) => element.householdClientReferenceId);
-
-    // Iterate through grouped households and retrieve additional data.
-    for (final entry in groupedHouseholds.entries) {
-      final householdId = entry.key;
-
-      // Extract individual IDs from household members.
-      final individualIds = entry.value
-          .map((element) => element.individualClientReferenceId)
-          .whereNotNull()
-          .toList();
-
-      if (householdId == null) continue;
-
-      // Search for households based on client reference ID and proximity.
-      final households = await household.search(
-        HouseholdSearchModel(
-          clientReferenceId: [householdId],
-          latitude: event.latitude,
-          longitude: event.longitude,
-          maxRadius: event.maxRadius,
-        ),
-      );
-
-      if (households.isEmpty) continue;
-
-      // Retrieve the first household result.
-      final resultHousehold = households.first;
-
-      // Search for individuals based on proximity, beneficiary type, and search text.
-      final individuals = event.isProximityEnabled &&
-              beneficiaryType != BeneficiaryType.individual
-          ? await fetchIndividuals(individualIds, event.searchText.trim())
-          : await fetchIndividuals(individualIds, null);
-
-      // Find the head of household from the individuals.
-      final head = individuals.firstWhereOrNull(
-        (element) =>
-            element.clientReferenceId ==
-            entry.value
-                .firstWhereOrNull(
-                  (element) => element.isHeadOfHousehold,
-                )
-                ?.individualClientReferenceId,
-      );
-
-      if (head == null) continue;
-
-      // Search for project beneficiaries based on client reference ID and project.
-      final projectBeneficiaries = await fetchProjectBeneficiary(
-        beneficiaryType != BeneficiaryType.individual
-            ? [
-                resultHousehold.clientReferenceId,
-              ]
-            : individualIds,
-      );
-      if (projectBeneficiaries.isEmpty) continue;
-
-      // Search for tasks and side effects based on project beneficiaries.
-      final tasks = await fetchTaskbyProjectBeneficiary(projectBeneficiaries);
-
-      final sideEffects =
-          await sideEffectDataRepository.search(SideEffectSearchModel(
-        taskClientReferenceId: tasks.map((e) => e.clientReferenceId).toList(),
-      ));
-      final referrals = await referralDataRepository.search(ReferralSearchModel(
-        projectBeneficiaryClientReferenceId:
-            projectBeneficiaries.map((e) => e.clientReferenceId).toList(),
-      ));
-
-      // Create a container for household members and associated data.
-      containers.add(
-        HouseholdMemberWrapper(
-          household: resultHousehold,
-          headOfHousehold: head,
-          members: individuals,
-          projectBeneficiaries: projectBeneficiaries,
-          tasks: tasks.isEmpty ? null : tasks,
-          sideEffects: sideEffects.isEmpty ? null : sideEffects,
-          referrals: referrals.isEmpty ? null : referrals,
-        ),
-      );
-    }
-
-    containers.sort((a, b) {
-      final d1 = calculateDistance(
-            Coordinate(
-              event.latitude,
-              event.longitude,
-            ),
-            Coordinate(
-              a.household.address?.latitude,
-              a.household.address?.longitude,
-            ),
-          ) ??
-          0;
-      final d2 = calculateDistance(
-            Coordinate(
-              event.latitude,
-              event.longitude,
-            ),
-            Coordinate(
-              b.household.address?.latitude,
-              b.household.address?.longitude,
-            ),
-          ) ??
-          0;
-
-      return d1.compareTo(d2);
-    });
-    // Update the state with the results and mark the search as completed.
-    emit(state.copyWith(
-      householdMembers: containers,
-      loading: false,
-    ));
-  }
-
   FutureOr<void> _handleClear(
     SearchHouseholdsClearEvent event,
     SearchHouseholdsEmitter emit,
@@ -669,7 +162,19 @@ class SearchHouseholdsBloc
     );
   }
 
-// Fetch the task
+  Future<List<HouseholdMemberModel>> fetchHouseholdMembersBulk(
+    List<String>? individualClientReferenceIds,
+    List<String>? householdClientReferenceIds,
+  ) async {
+    return await householdMember.search(
+      HouseholdMemberSearchModel(
+        individualClientReferenceIds: individualClientReferenceIds,
+        householdClientReferenceIds: householdClientReferenceIds,
+      ),
+    );
+  }
+
+  // Fetch the task
   Future<List<TaskModel>> fetchTaskbyProjectBeneficiary(
     List<ProjectBeneficiaryModel> projectBeneficiaries,
   ) async {
@@ -680,7 +185,6 @@ class SearchHouseholdsBloc
   }
 
   // Fetch the project Beneficiary
-
   Future<List<ProjectBeneficiaryModel>> fetchProjectBeneficiary(
     List<String> projectBeneficiariesIds,
   ) async {
@@ -726,6 +230,9 @@ class SearchHouseholdsEvent with _$SearchHouseholdsEvent {
     double? latitude,
     double? longitude,
     double? maxRadius,
+    String? tag,
+    required int offset,
+    required int limit,
   }) = SearchHouseholdsSearchByHouseholdHeadEvent;
 
   const factory SearchHouseholdsEvent.searchByProximity({
@@ -733,6 +240,8 @@ class SearchHouseholdsEvent with _$SearchHouseholdsEvent {
     required double longititude,
     required String projectId,
     required double maxRadius,
+    required int offset,
+    required int limit,
   }) = SearchHouseholdsByProximityEvent;
 
   const factory SearchHouseholdsEvent.searchByTag({

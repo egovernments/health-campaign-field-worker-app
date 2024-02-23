@@ -15,8 +15,16 @@
     {
       "name": "staffId",
       "type": "String",
-      "includeForQuery": true,
+      "includeForQuery": false,
       "nullable": true
+    },
+    {
+      "name": "staffId",
+      "type": "String",
+      "includeForQuery": true,
+      "includeForEntity": false,
+      "includeForTable": false,
+      "isList": true
     },
     {
       "name": "userId",

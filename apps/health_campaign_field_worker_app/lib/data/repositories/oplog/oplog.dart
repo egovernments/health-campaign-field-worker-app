@@ -129,8 +129,9 @@ abstract class OpLogManager<T extends EntityModel> {
     return oplogs.map((e) => OpLogEntry.fromOpLog<T>(e)).toList();
   }
 
-  Future<void> put(OpLogEntry<T> entry) async {
+  Future<void> put(OpLogEntry<dynamic> entry) async {
     await isar.writeTxn(() async {
+
       await isar.opLogs.put(entry
           .copyWith(
             clientReferenceId: getClientReferenceId(entry.entity),
@@ -153,7 +154,7 @@ abstract class OpLogManager<T extends EntityModel> {
     if (nonRecoverableError == true && id != null && entry != null) {
       final oplog = await isar.opLogs.filter().idEqualTo(id).findFirst();
       if (oplog == null) return;
-      final fetchedEntry = OpLogEntry.fromOpLog<T>(oplog);
+      final OpLogEntry<T>  fetchedEntry = OpLogEntry.fromOpLog<T>(oplog);
       await isar.writeTxn(() async {
         await isar.opLogs.put(fetchedEntry
             .copyWith(
@@ -165,19 +166,21 @@ abstract class OpLogManager<T extends EntityModel> {
             .oplog);
       });
     } else if (entry != null) {
-      await put(entry.copyWith(syncedUp: true, syncedUpOn: DateTime.now()));
+      await put(
+        entry.copyWith(syncedUp: true, syncedUpOn: DateTime.now()),
+      );
     } else if (id != null) {
       OpLog? oplog;
 
       oplog = await isar.opLogs.get(id);
       if (oplog == null) return;
-      final fetchedEntry = OpLogEntry.fromOpLog<T>(oplog);
+      final OpLogEntry<T> fetchedEntry = OpLogEntry.fromOpLog<T>(oplog);
 
       await put(
         fetchedEntry.copyWith(
           syncedUp: true,
           syncedUpOn: DateTime.now(),
-        ),
+        ) as OpLogEntry<T>,
       );
     } else if (clientReferenceId != null) {
       final oplog = await isar.opLogs
@@ -193,7 +196,7 @@ abstract class OpLogManager<T extends EntityModel> {
         fetchedEntry.copyWith(
           syncedUp: true,
           syncedUpOn: DateTime.now(),
-        ),
+        ) as OpLogEntry<T>,
       );
     } else {
       throw AppException('Invalid arguments');
@@ -210,7 +213,11 @@ abstract class OpLogManager<T extends EntityModel> {
         .clientReferenceIdEqualTo(model.clientReferenceId)
         .findAll();
 
-    for (final oplog in opLogs) {
+    for (final oplog in opLogs
+        .where(
+          (element) => element.entityType.name != DataModelType.service.name,
+        )
+        .toList()) {
       final entry = OpLogEntry.fromOpLog<T>(oplog);
 
       OpLogEntry updatedEntry = entry.copyWith(
@@ -587,6 +594,92 @@ class ReferralOpLogManager extends OpLogManager<ReferralModel> {
 
   @override
   bool? getNonRecoverableError(ReferralModel entity) =>
+      entity.nonRecoverableError;
+}
+
+class HFReferralOpLogManager extends OpLogManager<HFReferralModel> {
+  HFReferralOpLogManager(super.isar);
+
+  @override
+  HFReferralModel applyServerGeneratedIdToEntity(
+    HFReferralModel entity,
+    String serverGeneratedId,
+    int rowVersion,
+  ) =>
+      entity.copyWith(id: serverGeneratedId, rowVersion: rowVersion);
+
+  @override
+  String getClientReferenceId(HFReferralModel entity) =>
+      entity.clientReferenceId;
+
+  @override
+  String? getServerGeneratedId(HFReferralModel entity) => entity.id;
+
+  @override
+  int? getRowVersion(HFReferralModel entity) => entity.rowVersion;
+
+  @override
+  bool? getNonRecoverableError(HFReferralModel entity) =>
+      entity.nonRecoverableError;
+}
+
+class AttendanceOpLogManager extends OpLogManager<HCMAttendanceRegisterModel> {
+  AttendanceOpLogManager(super.isar);
+
+  @override
+  HCMAttendanceRegisterModel applyServerGeneratedIdToEntity(
+    HCMAttendanceRegisterModel entity,
+    String serverGeneratedId,
+    int rowVersion,
+  ) =>
+      throw UnimplementedError();
+
+  @override
+  String getClientReferenceId(HCMAttendanceRegisterModel entity) =>
+      throw UnimplementedError();
+
+  @override
+  String? getServerGeneratedId(HCMAttendanceRegisterModel entity) =>
+      throw UnimplementedError();
+
+  @override
+  int? getRowVersion(HCMAttendanceRegisterModel entity) =>
+      throw UnimplementedError();
+
+  @override
+  bool? getNonRecoverableError(HCMAttendanceRegisterModel entity) =>
+      throw UnimplementedError();
+}
+
+class AttendanceLogOpLogManager extends OpLogManager<HCMAttendanceLogModel> {
+  AttendanceLogOpLogManager(super.isar);
+
+  @override
+  HCMAttendanceLogModel applyServerGeneratedIdToEntity(
+    HCMAttendanceLogModel entity,
+    String serverGeneratedId,
+    int rowVersion,
+  ) =>
+      entity.copyWith(
+        attendance: entity.attendance?.copyWith(
+          id: serverGeneratedId,
+        ),
+        rowVersion: rowVersion,
+      );
+
+  @override
+  String getClientReferenceId(HCMAttendanceLogModel entity) =>
+      entity.attendance!.clientReferenceId.toString();
+
+  @override
+  String? getServerGeneratedId(HCMAttendanceLogModel entity) =>
+      entity.attendance?.id;
+
+  @override
+  int? getRowVersion(HCMAttendanceLogModel entity) => entity.rowVersion;
+
+  @override
+  bool? getNonRecoverableError(HCMAttendanceLogModel entity) =>
       entity.nonRecoverableError;
 }
 

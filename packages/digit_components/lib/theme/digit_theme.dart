@@ -31,6 +31,7 @@ class DigitTheme {
 
     return ThemeData(
       colorScheme: colorScheme,
+      useMaterial3: false,
       scaffoldBackgroundColor: colorScheme.background,
       textTheme: mobileTypography.textTheme,
       appBarTheme: const AppBarTheme(elevation: 0),

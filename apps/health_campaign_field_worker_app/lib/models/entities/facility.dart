@@ -5,8 +5,10 @@ import 'package:drift/drift.dart';
 import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
 
-@MappableClass(ignoreNull: true)
-class FacilitySearchModel extends EntitySearchModel {
+part 'facility.mapper.dart';
+
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class FacilitySearchModel extends EntitySearchModel with FacilitySearchModelMappable {
   final List<String>? id;
   final bool? isPermanent;
   final String? usage;
@@ -34,8 +36,8 @@ class FacilitySearchModel extends EntitySearchModel {
   }):  super(isDeleted: false);
 }
 
-@MappableClass(ignoreNull: true)
-class FacilityModel extends EntityModel {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class FacilityModel extends EntityModel with FacilityModelMappable {
 
   static const schemaName = 'Facility';
 
@@ -86,11 +88,12 @@ class FacilityModel extends EntityModel {
   }
 }
 
-@MappableClass(ignoreNull: true)
-class FacilityAdditionalFields extends AdditionalFields {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class FacilityAdditionalFields extends AdditionalFields with FacilityAdditionalFieldsMappable {
   FacilityAdditionalFields({
     super.schema = 'Facility',
     required super.version,
     super.fields,
   });
 }
+

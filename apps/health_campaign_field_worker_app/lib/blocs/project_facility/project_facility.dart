@@ -28,7 +28,7 @@ class ProjectFacilityBloc
   ) async {
     emit(const ProjectFacilityEmptyState());
     final results = await projectFacilityDataRepository.search(
-      ProjectFacilitySearchModel(),
+      event.query,
     );
 
     if (results.isEmpty) {

@@ -5,8 +5,10 @@ import 'package:drift/drift.dart';
 import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
 
-@MappableClass(ignoreNull: true)
-class IdentifierSearchModel extends EntitySearchModel {
+part 'identifier.mapper.dart';
+
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class IdentifierSearchModel extends EntitySearchModel with IdentifierSearchModelMappable {
   final String? id;
   final String? identifierType;
   final String? identifierId;
@@ -34,8 +36,8 @@ class IdentifierSearchModel extends EntitySearchModel {
   }):  super(isDeleted: false);
 }
 
-@MappableClass(ignoreNull: true)
-class IdentifierModel extends EntityModel {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class IdentifierModel extends EntityModel with IdentifierModelMappable {
 
   static const schemaName = 'Identifier';
 
@@ -84,11 +86,12 @@ class IdentifierModel extends EntityModel {
   }
 }
 
-@MappableClass(ignoreNull: true)
-class IdentifierAdditionalFields extends AdditionalFields {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class IdentifierAdditionalFields extends AdditionalFields with IdentifierAdditionalFieldsMappable {
   IdentifierAdditionalFields({
     super.schema = 'Identifier',
     required super.version,
     super.fields,
   });
 }
+

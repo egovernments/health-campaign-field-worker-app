@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:math';
+
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
@@ -29,6 +32,8 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
   List<DownsyncModel> downSyncList = [];
   int pendingSyncCount = 0;
   BoundaryModel? selectedBoundary;
+  StreamController<double> downloadProgress = StreamController<double>();
+
   @override
   void initState() {
     final syncBloc = context.read<SyncBloc>();
@@ -180,25 +185,35 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                           dialogType: DigitProgressDialogType.dataFound,
                           isPop: true,
                         ),
-                        inProgress: (syncCount, totalCount) =>
-                            showDownloadDialog(
-                          context,
-                          model: DownloadBeneficiary(
-                            title: localizations.translate(
-                              i18.beneficiaryDetails.dataDownloadInProgress,
+                        inProgress: (syncCount, totalCount) {
+                          downloadProgress.add(
+                            min(
+                              (syncCount) / (totalCount),
+                              1,
                             ),
-                            projectId: context.projectId,
-                            boundary: selectedBoundary!.code.toString(),
-                            appConfiguartion: appConfiguration,
-                            syncCount: syncCount,
-                            totalCount: totalCount,
-                            prefixLabel: syncCount.toString(),
-                            suffixLabel: totalCount.toString(),
-                            boundaryName: selectedBoundary!.name.toString(),
-                          ),
-                          dialogType: DigitProgressDialogType.inProgress,
-                          isPop: true,
-                        ),
+                          );
+                          if (syncCount < 1) {
+                            showDownloadDialog(
+                              context,
+                              model: DownloadBeneficiary(
+                                title: localizations.translate(
+                                  i18.beneficiaryDetails.dataDownloadInProgress,
+                                ),
+                                projectId: context.projectId,
+                                boundary: selectedBoundary!.code.toString(),
+                                appConfiguartion: appConfiguration,
+                                syncCount: syncCount,
+                                totalCount: totalCount,
+                                prefixLabel: syncCount.toString(),
+                                suffixLabel: totalCount.toString(),
+                                boundaryName: selectedBoundary!.name.toString(),
+                              ),
+                              dialogType: DigitProgressDialogType.inProgress,
+                              isPop: true,
+                              downloadProgressController: downloadProgress,
+                            );
+                          }
+                        },
                         success: (result) {
                           int? epochTime = result.lastSyncedTime;
 

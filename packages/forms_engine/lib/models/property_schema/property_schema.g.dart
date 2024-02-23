@@ -6,8 +6,8 @@ part of 'property_schema.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_PropertySchema _$$_PropertySchemaFromJson(Map<String, dynamic> json) =>
-    _$_PropertySchema(
+_$PropertySchemaImpl _$$PropertySchemaImplFromJson(Map<String, dynamic> json) =>
+    _$PropertySchemaImpl(
       type: $enumDecode(_$PropertySchemaTypeEnumMap, json['type']),
       readonly: json['readonly'] as bool?,
       displayOnly: json['displayOnly'] as bool?,
@@ -41,7 +41,8 @@ _$_PropertySchema _$$_PropertySchemaFromJson(Map<String, dynamic> json) =>
               json['displayBehavior'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$$_PropertySchemaToJson(_$_PropertySchema instance) {
+Map<String, dynamic> _$$PropertySchemaImplToJson(
+    _$PropertySchemaImpl instance) {
   final val = <String, dynamic>{
     'type': _$PropertySchemaTypeEnumMap[instance.type]!,
   };
@@ -87,20 +88,23 @@ const _$PropertySchemaFormatEnumMap = {
   PropertySchemaFormat.incrementer: 'incrementer',
 };
 
-_$_DateFormatValue _$$_DateFormatValueFromJson(Map<String, dynamic> json) =>
-    _$_DateFormatValue(
+_$DateFormatValueImpl _$$DateFormatValueImplFromJson(
+        Map<String, dynamic> json) =>
+    _$DateFormatValueImpl(
       value: json['value'] as String,
       format: json['format'] as String? ?? 'yyyy-MM-dd',
     );
 
-Map<String, dynamic> _$$_DateFormatValueToJson(_$_DateFormatValue instance) =>
+Map<String, dynamic> _$$DateFormatValueImplToJson(
+        _$DateFormatValueImpl instance) =>
     <String, dynamic>{
       'value': instance.value,
       'format': instance.format,
     };
 
-_$_DisplayBehavior _$$_DisplayBehaviorFromJson(Map<String, dynamic> json) =>
-    _$_DisplayBehavior(
+_$DisplayBehaviorImpl _$$DisplayBehaviorImplFromJson(
+        Map<String, dynamic> json) =>
+    _$DisplayBehaviorImpl(
       behavior: $enumDecode(_$FormulaBehaviorEnumMap, json['behavior']),
       oneOf:
           (json['oneOf'] as List<dynamic>?)?.map((e) => e as String).toList(),
@@ -108,7 +112,8 @@ _$_DisplayBehavior _$$_DisplayBehaviorFromJson(Map<String, dynamic> json) =>
           (json['allOf'] as List<dynamic>?)?.map((e) => e as String).toList(),
     );
 
-Map<String, dynamic> _$$_DisplayBehaviorToJson(_$_DisplayBehavior instance) =>
+Map<String, dynamic> _$$DisplayBehaviorImplToJson(
+        _$DisplayBehaviorImpl instance) =>
     <String, dynamic>{
       'behavior': _$FormulaBehaviorEnumMap[instance.behavior]!,
       'oneOf': instance.oneOf,

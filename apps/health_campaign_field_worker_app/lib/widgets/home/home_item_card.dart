@@ -26,14 +26,14 @@ class HomeItemCard extends StatelessWidget {
 
     return DigitCard(
       onPressed: onPressed,
-      padding: const EdgeInsets.all(kPadding / 2).copyWith(top: kPadding * 3),
+      padding: const EdgeInsets.all(kPadding / 2).copyWith(top: kPadding / 2),
       margin: const EdgeInsets.all(kPadding),
       child: Align(
         alignment: Alignment.center,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: MainAxisSize.max,
           children: [
             if (enableCustomIcon)
               SvgPicture.asset(
@@ -47,7 +47,7 @@ class HomeItemCard extends StatelessWidget {
                 color: onPressed == null
                     ? theme.disabledColor
                     : theme.colorScheme.secondary,
-                size: 30,
+                size: 40,
               ),
             Wrap(
               children: [
