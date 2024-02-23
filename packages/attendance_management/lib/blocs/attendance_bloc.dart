@@ -28,8 +28,8 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
     emit(const RegisterLoading());
     // Getting attendance registers using a singleton instance
     AttendanceSingleton().getAttendanceRegisters(
-        (attendancePackageRegisterModel) =>
-            add(LoadAttendanceRegisterData(attendancePackageRegisterModel)));
+        (attendanceRegisterModel) =>
+            add(LoadAttendanceRegisterData(attendanceRegisterModel)));
   }
 
   // Event handler for LoadAttendanceRegisterData event
@@ -62,10 +62,9 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
 class AttendanceEvents with _$AttendanceEvents {
   const factory AttendanceEvents.initial() = InitialAttendance;
   const factory AttendanceEvents.loadAttendanceRegisters(
-          List<AttendancePackageRegisterModel> registers) =
-      LoadAttendanceRegisterData;
+      List<AttendanceRegisterModel> registers) = LoadAttendanceRegisterData;
   const factory AttendanceEvents.loadSelectedRegister(
-      {required final List<AttendancePackageRegisterModel> registers,
+      {required final List<AttendanceRegisterModel> registers,
       required final String registerID}) = LoadSelectedAttendanceRegisterData;
 }
 
@@ -74,10 +73,10 @@ class AttendanceEvents with _$AttendanceEvents {
 class AttendanceStates with _$AttendanceStates {
   const factory AttendanceStates.registerLoading() = RegisterLoading;
   const factory AttendanceStates.registerLoaded({
-    required final List<AttendancePackageRegisterModel> registers,
+    required final List<AttendanceRegisterModel> registers,
   }) = RegisterLoaded;
   const factory AttendanceStates.selectedRegisterLoaded({
-    final AttendancePackageRegisterModel? selectedRegister,
+    final AttendanceRegisterModel? selectedRegister,
   }) = SelectedRegisterLoaded;
 
   const factory AttendanceStates.registerError(String message) = RegisterError;

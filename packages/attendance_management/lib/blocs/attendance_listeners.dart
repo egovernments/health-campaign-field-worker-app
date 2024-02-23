@@ -4,9 +4,7 @@ import 'package:attendance_management/attendance_management.dart';
 abstract class AttendanceListeners {
 // Method to get attendance registers
   void getAttendanceRegisters(
-      Function(
-              List<AttendancePackageRegisterModel>
-                  attendancePackageRegisterModel)
+      Function(List<AttendanceRegisterModel> attendanceRegisterModel)
           attendanceRegisters);
 
   // Method to search attendance log
@@ -54,9 +52,7 @@ class AttendanceSingleton {
 
   // Method to get attendance registers
   void getAttendanceRegisters(
-      Function(
-              List<AttendancePackageRegisterModel>
-                  attendancePackageRegisterModel)
+      Function(List<AttendanceRegisterModel> attendanceRegisterModel)
           attendanceRegisters) {
     _attendanceListeners?.getAttendanceRegisters(attendanceRegisters);
   }

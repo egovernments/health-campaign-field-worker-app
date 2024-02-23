@@ -17,7 +17,7 @@ import '../widgets/back_navigation_help_header.dart';
 import 'mark_attendance.dart';
 
 class AttendanceDateSessionSelectionPage extends LocalizedStatefulWidget {
-  final List<AttendancePackageRegisterModel> registers;
+  final List<AttendanceRegisterModel> registers;
   final String registerID;
 
   const AttendanceDateSessionSelectionPage({
@@ -368,7 +368,7 @@ class _AttendanceDateSessionSelectionPageState
   }
 
   bool showInfoCard(
-      AttendancePackageRegisterModel selectedRegister, DateTime selectedDate) {
+      AttendanceRegisterModel selectedRegister, DateTime selectedDate) {
     final selectedFormattedDate = DateTime(
       selectedDate.year,
       selectedDate.month,

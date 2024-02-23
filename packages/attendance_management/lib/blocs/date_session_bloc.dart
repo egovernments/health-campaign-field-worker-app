@@ -50,7 +50,7 @@ class DateSessionEvents with _$DateSessionEvents {
   const factory DateSessionEvents.initial() = InitialDateSession;
   // Event for loading selected register
   const factory DateSessionEvents.loadSelectedRegister(
-      {required final List<AttendancePackageRegisterModel> registers,
+      {required final List<AttendanceRegisterModel> registers,
       required final String registerID}) = LoadSelectedRegisterData;
 }
 
@@ -61,6 +61,6 @@ class DateSessionStates with _$DateSessionStates {
   const factory DateSessionStates.dateSessionLoading() = DateSessionLoading;
   // Loaded state with selected register
   const factory DateSessionStates.dateSessionLoaded({
-    required final AttendancePackageRegisterModel selectedRegister,
+    required final AttendanceRegisterModel selectedRegister,
   }) = DateSessionLoaded;
 }
