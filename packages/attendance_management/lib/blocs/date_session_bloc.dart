@@ -8,6 +8,9 @@ part 'date_session_bloc.freezed.dart';
 // Type definition for emitter used in the DateSessionBloc
 typedef DateSessionEmitter = Emitter<DateSessionStates>;
 
+/*
+  @author  Ramkrishna-egov
+  */
 // DateSessionBloc responsible for managing date session-related state
 class DateSessionBloc extends Bloc<DateSessionEvents, DateSessionStates> {
   DateSessionBloc(super.initialState) {

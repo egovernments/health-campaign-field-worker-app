@@ -8,6 +8,9 @@ part 'attendance_bloc.freezed.dart';
 // Type definition for emitter used in the AttendanceBloc
 typedef AttendanceSearchEmitter = Emitter<AttendanceStates>;
 
+/*
+  @author  Ramkrishna-egov
+  */
 // AttendanceBloc responsible for managing attendance-related state
 class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
   // Constructor initializing the initial state and setting up event handlers

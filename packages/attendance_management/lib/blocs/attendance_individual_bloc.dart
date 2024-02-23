@@ -12,6 +12,9 @@ part 'attendance_individual_bloc.freezed.dart';
 // Type definition for emitter used in the AttendanceIndividualBloc
 typedef AttendanceIndividualEmitter = Emitter<AttendanceIndividualState>;
 
+/*
+  @author  Ramkrishna-egov
+  */
 // AttendanceIndividualBloc responsible for managing individual attendance logs-related state
 class AttendanceIndividualBloc
     extends Bloc<AttendanceIndividualEvent, AttendanceIndividualState> {
