@@ -20,7 +20,7 @@ Add navigation to manage attendance page from hcm app and pass the required fiel
 
 
 Sequence diagram of attendance package:
+![image (4)](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/9c8f2e91-941a-4792-a3df-93c9672be07e)
 
-![attendance_sequence1](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/863923a4-b301-447b-b2ca-e1b4fb878c2a)
 
 
