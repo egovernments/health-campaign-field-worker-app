@@ -287,8 +287,10 @@ class _AttendanceDateSessionSelectionPageState
                                     ],
                                   ),
                                 ),
-                                if (showInfoCard(selectedRegister,
-                                    form.control(_dateOfSession).value))
+                                if (showInfoCard(
+                                  selectedRegister,
+                                  DateTime.now(),
+                                ))
                                   DigitInfoCard(
                                     title: localizations.translate(
                                       i18.attendance.missedAttendanceHeader,
