@@ -19,8 +19,10 @@ import 'package:isar/isar.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:uuid/uuid.dart';
 
+import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/search_households/project_beneficiaries_downsync.dart';
 import '../blocs/search_households/search_households.dart';
+import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/localization.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../models/data_model.dart';
@@ -681,4 +683,16 @@ getLocalizationString(Isar isar, String selectedLocale) async {
   }
 
   return localizationValues;
+}
+
+getSelectedLanguage(AppInitialized state, int index) {
+  if (AppSharedPreferences().getSelectedLocale == null) {
+    AppSharedPreferences()
+        .setSelectedLocale(state.appConfiguration.languages!.last.value);
+  }
+  final selectedLanguage = AppSharedPreferences().getSelectedLocale;
+  final isSelected =
+      state.appConfiguration.languages![index].value == selectedLanguage;
+
+  return isSelected;
 }
