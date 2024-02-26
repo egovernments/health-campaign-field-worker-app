@@ -10,7 +10,8 @@ import '../data_model.dart';
 part 'hcm_attendance_model.mapper.dart';
 
 @MappableClass(ignoreNull: true)
-class HCMAttendanceSearchModel extends EntitySearchModel with HCMAttendanceSearchModelMappable {
+class HCMAttendanceSearchModel extends EntitySearchModel
+    with HCMAttendanceSearchModelMappable {
   final String? id;
   final String? staffId;
   final String? registerNumber;
@@ -42,9 +43,10 @@ class HCMAttendanceSearchModel extends EntitySearchModel with HCMAttendanceSearc
 }
 
 @MappableClass(ignoreNull: true)
-class HCMAttendanceRegisterModel extends EntityModel with HCMAttendanceRegisterModelMappable {
+class HCMAttendanceRegisterModel extends EntityModel
+    with HCMAttendanceRegisterModelMappable {
   static const schemaName = 'AttendanceRegister';
-  final AttendancePackageRegisterModel attendanceRegister;
+  final AttendanceRegisterModel attendanceRegister;
   final List<IndividualModel>? individualList;
 
   HCMAttendanceRegisterModel({
@@ -85,7 +87,8 @@ class HCMAttendanceRegisterModel extends EntityModel with HCMAttendanceRegisterM
 }
 
 @MappableClass(ignoreNull: true)
-class HCMAttendanceAdditionalModel extends AdditionalFields with HCMAttendanceAdditionalModelMappable {
+class HCMAttendanceAdditionalModel extends AdditionalFields
+    with HCMAttendanceAdditionalModelMappable {
   final AttendanceRegisterAdditionalFields attendanceAdditionalFields;
 
   HCMAttendanceAdditionalModel({

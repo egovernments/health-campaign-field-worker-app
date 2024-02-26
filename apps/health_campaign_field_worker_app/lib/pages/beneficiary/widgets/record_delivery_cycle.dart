@@ -226,7 +226,8 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                                   .firstWhereOrNull(
                                     (f) =>
                                         f.key ==
-                                        AdditionalFieldsType.doseIndex.name,
+                                        AdditionalFieldsType.doseIndex
+                                            .toValue(),
                                   )
                                   ?.value ==
                               '0${item.id}' &&
@@ -234,7 +235,8 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                                   .firstWhereOrNull(
                                     (c) =>
                                         c.key ==
-                                        AdditionalFieldsType.cycleIndex.name,
+                                        AdditionalFieldsType.cycleIndex
+                                            .toValue(),
                                   )
                                   ?.value ==
                               '0${e.id}')
@@ -248,14 +250,15 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                     TableData(
                       localizations.translate(
                         index == selectedIndex
-                            ? Status.toAdminister.name
-                            : tasks?.status ?? Status.inComplete.name,
+                            ? Status.toAdminister.toValue()
+                            : tasks?.status ?? Status.inComplete.toValue(),
                       ),
                       cellKey: 'status',
                       style: TextStyle(
                         color: index == selectedIndex
                             ? null
-                            : tasks?.status == Status.administeredSuccess.name
+                            : tasks?.status ==
+                                    Status.administeredSuccess.toValue()
                                 ? DigitTheme
                                     .instance.colorScheme.onSurfaceVariant
                                 : DigitTheme.instance.colorScheme.error,
@@ -264,15 +267,15 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                       ),
                     ),
                     TableData(
-                      tasks?.status == Status.administeredFailed.name ||
+                      tasks?.status == Status.administeredFailed.toValue() ||
                               (tasks?.additionalFields?.fields
                                       .where((e) =>
                                           e.key ==
-                                          AdditionalFieldsType
-                                              .deliveryStrategy.name)
+                                          AdditionalFieldsType.deliveryStrategy
+                                              .toValue())
                                       .firstOrNull
                                       ?.value ==
-                                  DeliverStrategyType.indirect.name)
+                                  DeliverStrategyType.indirect.toValue())
                           ? ' -- '
                           : tasks?.clientAuditDetails?.createdTime.toDateTime
                                   .getFormattedDate() ??
