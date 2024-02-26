@@ -141,6 +141,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       emit(const AuthLoadingState());
       await localSecureStore.deleteAll();
+      await localSecureStore.setBoundaryRefetch(true);
     } catch (error) {
       rethrow;
     }

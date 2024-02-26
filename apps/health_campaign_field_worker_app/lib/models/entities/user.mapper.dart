@@ -282,8 +282,8 @@ class UserModelMapper extends SubClassMapperBase<UserModel> {
   static String? _$tenantId(UserModel v) => v.tenantId;
   static const Field<UserModel, String> _f$tenantId =
       Field('tenantId', _$tenantId, opt: true);
-  static List<String>? _$uuid(UserModel v) => v.uuid;
-  static const Field<UserModel, List<String>> _f$uuid =
+  static String? _$uuid(UserModel v) => v.uuid;
+  static const Field<UserModel, String> _f$uuid =
       Field('uuid', _$uuid, opt: true);
   static String? _$createdDate(UserModel v) => v.createdDate;
   static const Field<UserModel, String> _f$createdDate =
@@ -456,7 +456,6 @@ abstract class UserModelCopyWith<$R, $In extends UserModel, $Out>
     implements EntityModelCopyWith<$R, $In, $Out> {
   UserAdditionalFieldsCopyWith<$R, UserAdditionalFields, UserAdditionalFields>?
       get additionalFields;
-  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get uuid;
   @override
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
   @override
@@ -496,7 +495,7 @@ abstract class UserModelCopyWith<$R, $In extends UserModel, $Out>
       int? createdBy,
       String? lastModifiedBy,
       String? tenantId,
-      List<String>? uuid,
+      String? uuid,
       String? createdDate,
       bool? nonRecoverableError,
       int? rowVersion,
@@ -518,12 +517,6 @@ class _UserModelCopyWithImpl<$R, $Out>
   UserAdditionalFieldsCopyWith<$R, UserAdditionalFields, UserAdditionalFields>?
       get additionalFields => $value.additionalFields?.copyWith
           .$chain((v) => call(additionalFields: v));
-  @override
-  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get uuid =>
-      $value.uuid != null
-          ? ListCopyWith($value.uuid!,
-              (v, t) => ObjectCopyWith(v, $identity, t), (v) => call(uuid: v))
-          : null;
   @override
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
       $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
