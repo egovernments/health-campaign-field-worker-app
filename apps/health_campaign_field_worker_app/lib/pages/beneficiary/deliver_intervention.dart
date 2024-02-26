@@ -305,7 +305,7 @@ class _DeliverInterventionPageState
                                                                             cycle:
                                                                                 deliveryInterventionstate.cycle,
                                                                             deliveryStrategy:
-                                                                                DeliverStrategyType.direct.name,
+                                                                                DeliverStrategyType.direct.toValue(),
                                                                             address:
                                                                                 householdMemberWrapper.members.first.address?.first,
                                                                             latitude:

@@ -75,7 +75,7 @@ class AttendanceRemoteRepository extends RemoteRepository<
 
     return entityList
         .map((e) => HCMAttendanceRegisterModel(
-              attendanceRegister: AttendancePackageRegisterModelMapper.fromMap(e),
+              attendanceRegister: AttendanceRegisterModelMapper.fromMap(e),
             ))
         .toList();
   }

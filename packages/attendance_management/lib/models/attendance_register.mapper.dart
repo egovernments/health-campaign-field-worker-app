@@ -162,92 +162,85 @@ class _RegisterAuditDetailsCopyWithImpl<$R, $Out>
           _RegisterAuditDetailsCopyWithImpl($value, $cast, t);
 }
 
-class AttendancePackageRegisterModelMapper
-    extends ClassMapperBase<AttendancePackageRegisterModel> {
-  AttendancePackageRegisterModelMapper._();
+class AttendanceRegisterModelMapper
+    extends ClassMapperBase<AttendanceRegisterModel> {
+  AttendanceRegisterModelMapper._();
 
-  static AttendancePackageRegisterModelMapper? _instance;
-  static AttendancePackageRegisterModelMapper ensureInitialized() {
+  static AttendanceRegisterModelMapper? _instance;
+  static AttendanceRegisterModelMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals
-          .use(_instance = AttendancePackageRegisterModelMapper._());
+          .use(_instance = AttendanceRegisterModelMapper._());
     }
     return _instance!;
   }
 
   @override
-  final String id = 'AttendancePackageRegisterModel';
+  final String id = 'AttendanceRegisterModel';
 
-  static Map<String, dynamic>? _$additionalDetails(
-          AttendancePackageRegisterModel v) =>
+  static Map<String, dynamic>? _$additionalDetails(AttendanceRegisterModel v) =>
       v.additionalDetails;
-  static const Field<AttendancePackageRegisterModel, Map<String, dynamic>>
+  static const Field<AttendanceRegisterModel, Map<String, dynamic>>
       _f$additionalDetails =
       Field('additionalDetails', _$additionalDetails, opt: true);
-  static String _$id(AttendancePackageRegisterModel v) => v.id;
-  static const Field<AttendancePackageRegisterModel, String> _f$id =
-      Field('id', _$id);
-  static String? _$tenantId(AttendancePackageRegisterModel v) => v.tenantId;
-  static const Field<AttendancePackageRegisterModel, String> _f$tenantId =
+  static String _$id(AttendanceRegisterModel v) => v.id;
+  static const Field<AttendanceRegisterModel, String> _f$id = Field('id', _$id);
+  static String? _$tenantId(AttendanceRegisterModel v) => v.tenantId;
+  static const Field<AttendanceRegisterModel, String> _f$tenantId =
       Field('tenantId', _$tenantId, opt: true);
-  static String? _$registerNumber(AttendancePackageRegisterModel v) =>
+  static String? _$registerNumber(AttendanceRegisterModel v) =>
       v.registerNumber;
-  static const Field<AttendancePackageRegisterModel, String> _f$registerNumber =
+  static const Field<AttendanceRegisterModel, String> _f$registerNumber =
       Field('registerNumber', _$registerNumber, opt: true);
-  static String? _$name(AttendancePackageRegisterModel v) => v.name;
-  static const Field<AttendancePackageRegisterModel, String> _f$name =
+  static String? _$name(AttendanceRegisterModel v) => v.name;
+  static const Field<AttendanceRegisterModel, String> _f$name =
       Field('name', _$name, opt: true);
-  static String? _$referenceId(AttendancePackageRegisterModel v) =>
-      v.referenceId;
-  static const Field<AttendancePackageRegisterModel, String> _f$referenceId =
+  static String? _$referenceId(AttendanceRegisterModel v) => v.referenceId;
+  static const Field<AttendanceRegisterModel, String> _f$referenceId =
       Field('referenceId', _$referenceId, opt: true);
-  static String? _$serviceCode(AttendancePackageRegisterModel v) =>
-      v.serviceCode;
-  static const Field<AttendancePackageRegisterModel, String> _f$serviceCode =
+  static String? _$serviceCode(AttendanceRegisterModel v) => v.serviceCode;
+  static const Field<AttendanceRegisterModel, String> _f$serviceCode =
       Field('serviceCode', _$serviceCode, opt: true);
-  static String? _$status(AttendancePackageRegisterModel v) => v.status;
-  static const Field<AttendancePackageRegisterModel, String> _f$status =
+  static String? _$status(AttendanceRegisterModel v) => v.status;
+  static const Field<AttendanceRegisterModel, String> _f$status =
       Field('status', _$status, opt: true);
-  static bool? _$nonRecoverableError(AttendancePackageRegisterModel v) =>
+  static bool? _$nonRecoverableError(AttendanceRegisterModel v) =>
       v.nonRecoverableError;
-  static const Field<AttendancePackageRegisterModel, bool>
-      _f$nonRecoverableError = Field(
-          'nonRecoverableError', _$nonRecoverableError,
+  static const Field<AttendanceRegisterModel, bool> _f$nonRecoverableError =
+      Field('nonRecoverableError', _$nonRecoverableError,
           opt: true, def: false);
-  static int? _$rowVersion(AttendancePackageRegisterModel v) => v.rowVersion;
-  static const Field<AttendancePackageRegisterModel, int> _f$rowVersion =
+  static int? _$rowVersion(AttendanceRegisterModel v) => v.rowVersion;
+  static const Field<AttendanceRegisterModel, int> _f$rowVersion =
       Field('rowVersion', _$rowVersion, opt: true);
-  static int? _$startDate(AttendancePackageRegisterModel v) => v.startDate;
-  static const Field<AttendancePackageRegisterModel, int> _f$startDate =
+  static int? _$startDate(AttendanceRegisterModel v) => v.startDate;
+  static const Field<AttendanceRegisterModel, int> _f$startDate =
       Field('startDate', _$startDate, opt: true);
-  static int? _$endDate(AttendancePackageRegisterModel v) => v.endDate;
-  static const Field<AttendancePackageRegisterModel, int> _f$endDate =
+  static int? _$endDate(AttendanceRegisterModel v) => v.endDate;
+  static const Field<AttendanceRegisterModel, int> _f$endDate =
       Field('endDate', _$endDate, opt: true);
-  static List<AttendeeModel>? _$attendees(AttendancePackageRegisterModel v) =>
+  static List<AttendeeModel>? _$attendees(AttendanceRegisterModel v) =>
       v.attendees;
-  static const Field<AttendancePackageRegisterModel, List<AttendeeModel>>
+  static const Field<AttendanceRegisterModel, List<AttendeeModel>>
       _f$attendees = Field('attendees', _$attendees, opt: true);
-  static List<StaffModel>? _$staff(AttendancePackageRegisterModel v) => v.staff;
-  static const Field<AttendancePackageRegisterModel, List<StaffModel>>
-      _f$staff = Field('staff', _$staff, opt: true);
-  static AttendanceAuditDetails? _$auditDetails(
-          AttendancePackageRegisterModel v) =>
+  static List<StaffModel>? _$staff(AttendanceRegisterModel v) => v.staff;
+  static const Field<AttendanceRegisterModel, List<StaffModel>> _f$staff =
+      Field('staff', _$staff, opt: true);
+  static AttendanceAuditDetails? _$auditDetails(AttendanceRegisterModel v) =>
       v.auditDetails;
-  static const Field<AttendancePackageRegisterModel, AttendanceAuditDetails>
+  static const Field<AttendanceRegisterModel, AttendanceAuditDetails>
       _f$auditDetails = Field('auditDetails', _$auditDetails, opt: true);
-  static int? _$completedDays(AttendancePackageRegisterModel v) =>
-      v.completedDays;
-  static const Field<AttendancePackageRegisterModel, int> _f$completedDays =
+  static int? _$completedDays(AttendanceRegisterModel v) => v.completedDays;
+  static const Field<AttendanceRegisterModel, int> _f$completedDays =
       Field('completedDays', _$completedDays, opt: true, def: 0);
   static List<Map<DateTime, bool>>? _$attendanceLog(
-          AttendancePackageRegisterModel v) =>
+          AttendanceRegisterModel v) =>
       v.attendanceLog;
-  static const Field<AttendancePackageRegisterModel, List<Map<DateTime, bool>>>
+  static const Field<AttendanceRegisterModel, List<Map<DateTime, bool>>>
       _f$attendanceLog =
       Field('attendanceLog', _$attendanceLog, opt: true, def: const []);
 
   @override
-  final MappableFields<AttendancePackageRegisterModel> fields = const {
+  final MappableFields<AttendanceRegisterModel> fields = const {
     #additionalDetails: _f$additionalDetails,
     #id: _f$id,
     #tenantId: _f$tenantId,
@@ -269,8 +262,8 @@ class AttendancePackageRegisterModelMapper
   @override
   final bool ignoreNull = true;
 
-  static AttendancePackageRegisterModel _instantiate(DecodingData data) {
-    return AttendancePackageRegisterModel(
+  static AttendanceRegisterModel _instantiate(DecodingData data) {
+    return AttendanceRegisterModel(
         additionalDetails: data.dec(_f$additionalDetails),
         id: data.dec(_f$id),
         tenantId: data.dec(_f$tenantId),
@@ -293,64 +286,61 @@ class AttendancePackageRegisterModelMapper
   @override
   final Function instantiate = _instantiate;
 
-  static AttendancePackageRegisterModel fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<AttendancePackageRegisterModel>(map);
+  static AttendanceRegisterModel fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<AttendanceRegisterModel>(map);
   }
 
-  static AttendancePackageRegisterModel fromJson(String json) {
-    return ensureInitialized().decodeJson<AttendancePackageRegisterModel>(json);
+  static AttendanceRegisterModel fromJson(String json) {
+    return ensureInitialized().decodeJson<AttendanceRegisterModel>(json);
   }
 }
 
-mixin AttendancePackageRegisterModelMappable {
+mixin AttendanceRegisterModelMappable {
   String toJson() {
-    return AttendancePackageRegisterModelMapper.ensureInitialized()
-        .encodeJson<AttendancePackageRegisterModel>(
-            this as AttendancePackageRegisterModel);
+    return AttendanceRegisterModelMapper.ensureInitialized()
+        .encodeJson<AttendanceRegisterModel>(this as AttendanceRegisterModel);
   }
 
   Map<String, dynamic> toMap() {
-    return AttendancePackageRegisterModelMapper.ensureInitialized()
-        .encodeMap<AttendancePackageRegisterModel>(
-            this as AttendancePackageRegisterModel);
+    return AttendanceRegisterModelMapper.ensureInitialized()
+        .encodeMap<AttendanceRegisterModel>(this as AttendanceRegisterModel);
   }
 
-  AttendancePackageRegisterModelCopyWith<AttendancePackageRegisterModel,
-          AttendancePackageRegisterModel, AttendancePackageRegisterModel>
-      get copyWith => _AttendancePackageRegisterModelCopyWithImpl(
-          this as AttendancePackageRegisterModel, $identity, $identity);
+  AttendanceRegisterModelCopyWith<AttendanceRegisterModel,
+          AttendanceRegisterModel, AttendanceRegisterModel>
+      get copyWith => _AttendanceRegisterModelCopyWithImpl(
+          this as AttendanceRegisterModel, $identity, $identity);
   @override
   String toString() {
-    return AttendancePackageRegisterModelMapper.ensureInitialized()
-        .stringifyValue(this as AttendancePackageRegisterModel);
+    return AttendanceRegisterModelMapper.ensureInitialized()
+        .stringifyValue(this as AttendanceRegisterModel);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            AttendancePackageRegisterModelMapper.ensureInitialized()
-                .isValueEqual(this as AttendancePackageRegisterModel, other));
+            AttendanceRegisterModelMapper.ensureInitialized()
+                .isValueEqual(this as AttendanceRegisterModel, other));
   }
 
   @override
   int get hashCode {
-    return AttendancePackageRegisterModelMapper.ensureInitialized()
-        .hashValue(this as AttendancePackageRegisterModel);
+    return AttendanceRegisterModelMapper.ensureInitialized()
+        .hashValue(this as AttendanceRegisterModel);
   }
 }
 
-extension AttendancePackageRegisterModelValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, AttendancePackageRegisterModel, $Out> {
-  AttendancePackageRegisterModelCopyWith<$R, AttendancePackageRegisterModel,
-          $Out>
-      get $asAttendancePackageRegisterModel => $base.as(
-          (v, t, t2) => _AttendancePackageRegisterModelCopyWithImpl(v, t, t2));
+extension AttendanceRegisterModelValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, AttendanceRegisterModel, $Out> {
+  AttendanceRegisterModelCopyWith<$R, AttendanceRegisterModel, $Out>
+      get $asAttendanceRegisterModel => $base
+          .as((v, t, t2) => _AttendanceRegisterModelCopyWithImpl(v, t, t2));
 }
 
-abstract class AttendancePackageRegisterModelCopyWith<
+abstract class AttendanceRegisterModelCopyWith<
     $R,
-    $In extends AttendancePackageRegisterModel,
+    $In extends AttendanceRegisterModel,
     $Out> implements ClassCopyWith<$R, $In, $Out> {
   MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>?
       get additionalDetails;
@@ -381,21 +371,19 @@ abstract class AttendancePackageRegisterModelCopyWith<
       AttendanceAuditDetails? auditDetails,
       int? completedDays,
       List<Map<DateTime, bool>>? attendanceLog});
-  AttendancePackageRegisterModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
+  AttendanceRegisterModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
 
-class _AttendancePackageRegisterModelCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, AttendancePackageRegisterModel, $Out>
+class _AttendanceRegisterModelCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, AttendanceRegisterModel, $Out>
     implements
-        AttendancePackageRegisterModelCopyWith<$R,
-            AttendancePackageRegisterModel, $Out> {
-  _AttendancePackageRegisterModelCopyWithImpl(
-      super.value, super.then, super.then2);
+        AttendanceRegisterModelCopyWith<$R, AttendanceRegisterModel, $Out> {
+  _AttendanceRegisterModelCopyWithImpl(super.value, super.then, super.then2);
 
   @override
-  late final ClassMapperBase<AttendancePackageRegisterModel> $mapper =
-      AttendancePackageRegisterModelMapper.ensureInitialized();
+  late final ClassMapperBase<AttendanceRegisterModel> $mapper =
+      AttendanceRegisterModelMapper.ensureInitialized();
   @override
   MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>?
       get additionalDetails => $value.additionalDetails != null
@@ -471,33 +459,31 @@ class _AttendancePackageRegisterModelCopyWithImpl<$R, $Out>
         if (attendanceLog != $none) #attendanceLog: attendanceLog
       }));
   @override
-  AttendancePackageRegisterModel $make(CopyWithData data) =>
-      AttendancePackageRegisterModel(
-          additionalDetails:
-              data.get(#additionalDetails, or: $value.additionalDetails),
-          id: data.get(#id, or: $value.id),
-          tenantId: data.get(#tenantId, or: $value.tenantId),
-          registerNumber: data.get(#registerNumber, or: $value.registerNumber),
-          name: data.get(#name, or: $value.name),
-          referenceId: data.get(#referenceId, or: $value.referenceId),
-          serviceCode: data.get(#serviceCode, or: $value.serviceCode),
-          status: data.get(#status, or: $value.status),
-          nonRecoverableError:
-              data.get(#nonRecoverableError, or: $value.nonRecoverableError),
-          rowVersion: data.get(#rowVersion, or: $value.rowVersion),
-          startDate: data.get(#startDate, or: $value.startDate),
-          endDate: data.get(#endDate, or: $value.endDate),
-          attendees: data.get(#attendees, or: $value.attendees),
-          staff: data.get(#staff, or: $value.staff),
-          auditDetails: data.get(#auditDetails, or: $value.auditDetails),
-          completedDays: data.get(#completedDays, or: $value.completedDays),
-          attendanceLog: data.get(#attendanceLog, or: $value.attendanceLog));
+  AttendanceRegisterModel $make(CopyWithData data) => AttendanceRegisterModel(
+      additionalDetails:
+          data.get(#additionalDetails, or: $value.additionalDetails),
+      id: data.get(#id, or: $value.id),
+      tenantId: data.get(#tenantId, or: $value.tenantId),
+      registerNumber: data.get(#registerNumber, or: $value.registerNumber),
+      name: data.get(#name, or: $value.name),
+      referenceId: data.get(#referenceId, or: $value.referenceId),
+      serviceCode: data.get(#serviceCode, or: $value.serviceCode),
+      status: data.get(#status, or: $value.status),
+      nonRecoverableError:
+          data.get(#nonRecoverableError, or: $value.nonRecoverableError),
+      rowVersion: data.get(#rowVersion, or: $value.rowVersion),
+      startDate: data.get(#startDate, or: $value.startDate),
+      endDate: data.get(#endDate, or: $value.endDate),
+      attendees: data.get(#attendees, or: $value.attendees),
+      staff: data.get(#staff, or: $value.staff),
+      auditDetails: data.get(#auditDetails, or: $value.auditDetails),
+      completedDays: data.get(#completedDays, or: $value.completedDays),
+      attendanceLog: data.get(#attendanceLog, or: $value.attendanceLog));
 
   @override
-  AttendancePackageRegisterModelCopyWith<$R2, AttendancePackageRegisterModel,
-      $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _AttendancePackageRegisterModelCopyWithImpl($value, $cast, t);
+  AttendanceRegisterModelCopyWith<$R2, AttendanceRegisterModel, $Out2>
+      $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+          _AttendanceRegisterModelCopyWithImpl($value, $cast, t);
 }
 
 class AttendanceRegisterAdditionalFieldsMapper

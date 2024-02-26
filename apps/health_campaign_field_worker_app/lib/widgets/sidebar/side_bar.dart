@@ -11,7 +11,6 @@ import '../../blocs/auth/auth.dart';
 import '../../blocs/boundary/boundary.dart';
 import '../../blocs/localization/localization.dart';
 import '../../blocs/user/user.dart';
-import '../../data/local_store/app_shared_preferences.dart';
 import '../../models/data_model.dart';
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
@@ -156,11 +155,10 @@ class SideBar extends StatelessWidget {
                                   return DigitRowCardModel(
                                     label: e.label,
                                     value: e.value,
-                                    isSelected: languages[index].value ==
-                                            AppSharedPreferences()
-                                                .getSelectedLocale
-                                        ? true
-                                        : false,
+                                    isSelected: getSelectedLanguage(
+                                      state,
+                                      index,
+                                    ),
                                   );
                                 }).toList(),
                                 width: (MediaQuery.of(context).size.width *

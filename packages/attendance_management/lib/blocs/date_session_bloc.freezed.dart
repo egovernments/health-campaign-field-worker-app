@@ -21,7 +21,7 @@ mixin _$DateSessionEvents {
     required TResult Function(List<dynamic> codes) loadLocalization,
     required TResult Function() initial,
     required TResult Function(
-            List<AttendancePackageRegisterModel> registers, String registerID)
+            List<AttendanceRegisterModel> registers, String registerID)
         loadSelectedRegister,
   }) =>
       throw _privateConstructorUsedError;
@@ -30,7 +30,7 @@ mixin _$DateSessionEvents {
     TResult? Function(List<dynamic> codes)? loadLocalization,
     TResult? Function()? initial,
     TResult? Function(
-            List<AttendancePackageRegisterModel> registers, String registerID)?
+            List<AttendanceRegisterModel> registers, String registerID)?
         loadSelectedRegister,
   }) =>
       throw _privateConstructorUsedError;
@@ -39,7 +39,7 @@ mixin _$DateSessionEvents {
     TResult Function(List<dynamic> codes)? loadLocalization,
     TResult Function()? initial,
     TResult Function(
-            List<AttendancePackageRegisterModel> registers, String registerID)?
+            List<AttendanceRegisterModel> registers, String registerID)?
         loadSelectedRegister,
     required TResult orElse(),
   }) =>
@@ -161,7 +161,7 @@ class _$LoadLocalizationImpl implements LoadLocalization {
     required TResult Function(List<dynamic> codes) loadLocalization,
     required TResult Function() initial,
     required TResult Function(
-            List<AttendancePackageRegisterModel> registers, String registerID)
+            List<AttendanceRegisterModel> registers, String registerID)
         loadSelectedRegister,
   }) {
     return loadLocalization(codes);
@@ -173,7 +173,7 @@ class _$LoadLocalizationImpl implements LoadLocalization {
     TResult? Function(List<dynamic> codes)? loadLocalization,
     TResult? Function()? initial,
     TResult? Function(
-            List<AttendancePackageRegisterModel> registers, String registerID)?
+            List<AttendanceRegisterModel> registers, String registerID)?
         loadSelectedRegister,
   }) {
     return loadLocalization?.call(codes);
@@ -185,7 +185,7 @@ class _$LoadLocalizationImpl implements LoadLocalization {
     TResult Function(List<dynamic> codes)? loadLocalization,
     TResult Function()? initial,
     TResult Function(
-            List<AttendancePackageRegisterModel> registers, String registerID)?
+            List<AttendanceRegisterModel> registers, String registerID)?
         loadSelectedRegister,
     required TResult orElse(),
   }) {
@@ -282,7 +282,7 @@ class _$InitialDateSessionImpl implements InitialDateSession {
     required TResult Function(List<dynamic> codes) loadLocalization,
     required TResult Function() initial,
     required TResult Function(
-            List<AttendancePackageRegisterModel> registers, String registerID)
+            List<AttendanceRegisterModel> registers, String registerID)
         loadSelectedRegister,
   }) {
     return initial();
@@ -294,7 +294,7 @@ class _$InitialDateSessionImpl implements InitialDateSession {
     TResult? Function(List<dynamic> codes)? loadLocalization,
     TResult? Function()? initial,
     TResult? Function(
-            List<AttendancePackageRegisterModel> registers, String registerID)?
+            List<AttendanceRegisterModel> registers, String registerID)?
         loadSelectedRegister,
   }) {
     return initial?.call();
@@ -306,7 +306,7 @@ class _$InitialDateSessionImpl implements InitialDateSession {
     TResult Function(List<dynamic> codes)? loadLocalization,
     TResult Function()? initial,
     TResult Function(
-            List<AttendancePackageRegisterModel> registers, String registerID)?
+            List<AttendanceRegisterModel> registers, String registerID)?
         loadSelectedRegister,
     required TResult orElse(),
   }) {
@@ -363,8 +363,7 @@ abstract class _$$LoadSelectedRegisterDataImplCopyWith<$Res> {
           $Res Function(_$LoadSelectedRegisterDataImpl) then) =
       __$$LoadSelectedRegisterDataImplCopyWithImpl<$Res>;
   @useResult
-  $Res call(
-      {List<AttendancePackageRegisterModel> registers, String registerID});
+  $Res call({List<AttendanceRegisterModel> registers, String registerID});
 }
 
 /// @nodoc
@@ -387,7 +386,7 @@ class __$$LoadSelectedRegisterDataImplCopyWithImpl<$Res>
       registers: null == registers
           ? _value._registers
           : registers // ignore: cast_nullable_to_non_nullable
-              as List<AttendancePackageRegisterModel>,
+              as List<AttendanceRegisterModel>,
       registerID: null == registerID
           ? _value.registerID
           : registerID // ignore: cast_nullable_to_non_nullable
@@ -400,13 +399,13 @@ class __$$LoadSelectedRegisterDataImplCopyWithImpl<$Res>
 
 class _$LoadSelectedRegisterDataImpl implements LoadSelectedRegisterData {
   const _$LoadSelectedRegisterDataImpl(
-      {required final List<AttendancePackageRegisterModel> registers,
+      {required final List<AttendanceRegisterModel> registers,
       required this.registerID})
       : _registers = registers;
 
-  final List<AttendancePackageRegisterModel> _registers;
+  final List<AttendanceRegisterModel> _registers;
   @override
-  List<AttendancePackageRegisterModel> get registers {
+  List<AttendanceRegisterModel> get registers {
     if (_registers is EqualUnmodifiableListView) return _registers;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_registers);
@@ -448,7 +447,7 @@ class _$LoadSelectedRegisterDataImpl implements LoadSelectedRegisterData {
     required TResult Function(List<dynamic> codes) loadLocalization,
     required TResult Function() initial,
     required TResult Function(
-            List<AttendancePackageRegisterModel> registers, String registerID)
+            List<AttendanceRegisterModel> registers, String registerID)
         loadSelectedRegister,
   }) {
     return loadSelectedRegister(registers, registerID);
@@ -460,7 +459,7 @@ class _$LoadSelectedRegisterDataImpl implements LoadSelectedRegisterData {
     TResult? Function(List<dynamic> codes)? loadLocalization,
     TResult? Function()? initial,
     TResult? Function(
-            List<AttendancePackageRegisterModel> registers, String registerID)?
+            List<AttendanceRegisterModel> registers, String registerID)?
         loadSelectedRegister,
   }) {
     return loadSelectedRegister?.call(registers, registerID);
@@ -472,7 +471,7 @@ class _$LoadSelectedRegisterDataImpl implements LoadSelectedRegisterData {
     TResult Function(List<dynamic> codes)? loadLocalization,
     TResult Function()? initial,
     TResult Function(
-            List<AttendancePackageRegisterModel> registers, String registerID)?
+            List<AttendanceRegisterModel> registers, String registerID)?
         loadSelectedRegister,
     required TResult orElse(),
   }) {
@@ -520,10 +519,10 @@ class _$LoadSelectedRegisterDataImpl implements LoadSelectedRegisterData {
 
 abstract class LoadSelectedRegisterData implements DateSessionEvents {
   const factory LoadSelectedRegisterData(
-      {required final List<AttendancePackageRegisterModel> registers,
+      {required final List<AttendanceRegisterModel> registers,
       required final String registerID}) = _$LoadSelectedRegisterDataImpl;
 
-  List<AttendancePackageRegisterModel> get registers;
+  List<AttendanceRegisterModel> get registers;
   String get registerID;
   @JsonKey(ignore: true)
   _$$LoadSelectedRegisterDataImplCopyWith<_$LoadSelectedRegisterDataImpl>
@@ -535,21 +534,21 @@ mixin _$DateSessionStates {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() dateSessionLoading,
-    required TResult Function(AttendancePackageRegisterModel selectedRegister)
+    required TResult Function(AttendanceRegisterModel selectedRegister)
         dateSessionLoaded,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? dateSessionLoading,
-    TResult? Function(AttendancePackageRegisterModel selectedRegister)?
+    TResult? Function(AttendanceRegisterModel selectedRegister)?
         dateSessionLoaded,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? dateSessionLoading,
-    TResult Function(AttendancePackageRegisterModel selectedRegister)?
+    TResult Function(AttendanceRegisterModel selectedRegister)?
         dateSessionLoaded,
     required TResult orElse(),
   }) =>
@@ -632,7 +631,7 @@ class _$DateSessionLoadingImpl implements DateSessionLoading {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() dateSessionLoading,
-    required TResult Function(AttendancePackageRegisterModel selectedRegister)
+    required TResult Function(AttendanceRegisterModel selectedRegister)
         dateSessionLoaded,
   }) {
     return dateSessionLoading();
@@ -642,7 +641,7 @@ class _$DateSessionLoadingImpl implements DateSessionLoading {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? dateSessionLoading,
-    TResult? Function(AttendancePackageRegisterModel selectedRegister)?
+    TResult? Function(AttendanceRegisterModel selectedRegister)?
         dateSessionLoaded,
   }) {
     return dateSessionLoading?.call();
@@ -652,7 +651,7 @@ class _$DateSessionLoadingImpl implements DateSessionLoading {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? dateSessionLoading,
-    TResult Function(AttendancePackageRegisterModel selectedRegister)?
+    TResult Function(AttendanceRegisterModel selectedRegister)?
         dateSessionLoaded,
     required TResult orElse(),
   }) {
@@ -704,7 +703,7 @@ abstract class _$$DateSessionLoadedImplCopyWith<$Res> {
           $Res Function(_$DateSessionLoadedImpl) then) =
       __$$DateSessionLoadedImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({AttendancePackageRegisterModel selectedRegister});
+  $Res call({AttendanceRegisterModel selectedRegister});
 }
 
 /// @nodoc
@@ -724,7 +723,7 @@ class __$$DateSessionLoadedImplCopyWithImpl<$Res>
       selectedRegister: null == selectedRegister
           ? _value.selectedRegister
           : selectedRegister // ignore: cast_nullable_to_non_nullable
-              as AttendancePackageRegisterModel,
+              as AttendanceRegisterModel,
     ));
   }
 }
@@ -735,7 +734,7 @@ class _$DateSessionLoadedImpl implements DateSessionLoaded {
   const _$DateSessionLoadedImpl({required this.selectedRegister});
 
   @override
-  final AttendancePackageRegisterModel selectedRegister;
+  final AttendanceRegisterModel selectedRegister;
 
   @override
   String toString() {
@@ -765,7 +764,7 @@ class _$DateSessionLoadedImpl implements DateSessionLoaded {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() dateSessionLoading,
-    required TResult Function(AttendancePackageRegisterModel selectedRegister)
+    required TResult Function(AttendanceRegisterModel selectedRegister)
         dateSessionLoaded,
   }) {
     return dateSessionLoaded(selectedRegister);
@@ -775,7 +774,7 @@ class _$DateSessionLoadedImpl implements DateSessionLoaded {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? dateSessionLoading,
-    TResult? Function(AttendancePackageRegisterModel selectedRegister)?
+    TResult? Function(AttendanceRegisterModel selectedRegister)?
         dateSessionLoaded,
   }) {
     return dateSessionLoaded?.call(selectedRegister);
@@ -785,7 +784,7 @@ class _$DateSessionLoadedImpl implements DateSessionLoaded {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? dateSessionLoading,
-    TResult Function(AttendancePackageRegisterModel selectedRegister)?
+    TResult Function(AttendanceRegisterModel selectedRegister)?
         dateSessionLoaded,
     required TResult orElse(),
   }) {
@@ -829,10 +828,10 @@ class _$DateSessionLoadedImpl implements DateSessionLoaded {
 
 abstract class DateSessionLoaded implements DateSessionStates {
   const factory DateSessionLoaded(
-          {required final AttendancePackageRegisterModel selectedRegister}) =
+          {required final AttendanceRegisterModel selectedRegister}) =
       _$DateSessionLoadedImpl;
 
-  AttendancePackageRegisterModel get selectedRegister;
+  AttendanceRegisterModel get selectedRegister;
   @JsonKey(ignore: true)
   _$$DateSessionLoadedImplCopyWith<_$DateSessionLoadedImpl> get copyWith =>
       throw _privateConstructorUsedError;

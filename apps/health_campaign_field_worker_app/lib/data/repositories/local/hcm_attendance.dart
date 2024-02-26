@@ -84,7 +84,7 @@ class AttendanceLocalRepository extends LocalRepository<
             );
       } else {
         registerMap[register.id.toString()] = HCMAttendanceRegisterModel(
-          attendanceRegister: AttendancePackageRegisterModel(
+          attendanceRegister: AttendanceRegisterModel(
             id: register.id.toString(),
             attendees: attendees == null
                 ? null

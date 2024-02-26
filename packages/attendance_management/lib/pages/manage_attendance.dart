@@ -32,7 +32,7 @@ class ManageAttendancePage extends LocalizedStatefulWidget {
 }
 
 class _ManageAttendancePageState extends State<ManageAttendancePage> {
-  List<AttendancePackageRegisterModel> attendanceRegisters = [];
+  List<AttendanceRegisterModel> attendanceRegisters = [];
   var list = <Widget>[];
 
   bool empty = false;
@@ -206,7 +206,7 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
     );
   }
 
-  calculateCompletedDays(AttendancePackageRegisterModel attendanceRegister) {
+  calculateCompletedDays(AttendanceRegisterModel attendanceRegister) {
     var completedDays = 0;
     var totalDays = 0;
     totalDays = attendanceRegister.attendanceLog!.length;
@@ -229,7 +229,7 @@ class RegisterCard extends StatelessWidget {
   final DateTime? startDate;
   final DateTime? endDate;
   final int noOfAttendees;
-  final List<AttendancePackageRegisterModel> registers;
+  final List<AttendanceRegisterModel> registers;
 
   const RegisterCard({
     super.key,

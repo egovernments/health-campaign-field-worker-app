@@ -7,7 +7,8 @@ import 'attendee.dart';
 part 'attendance_register.mapper.dart';
 
 @MappableClass()
-class RegisterAuditDetails extends AttendanceAuditDetails with RegisterAuditDetailsMappable {
+class RegisterAuditDetails extends AttendanceAuditDetails
+    with RegisterAuditDetailsMappable {
   final String? registerId;
 
   const RegisterAuditDetails({
@@ -25,7 +26,7 @@ class RegisterAuditDetails extends AttendanceAuditDetails with RegisterAuditDeta
 }
 
 @MappableClass(ignoreNull: true)
-class AttendancePackageRegisterModel with AttendancePackageRegisterModelMappable {
+class AttendanceRegisterModel with AttendanceRegisterModelMappable {
   static const schemaName = 'AttendanceRegister';
 
   final String id;
@@ -46,7 +47,7 @@ class AttendancePackageRegisterModel with AttendancePackageRegisterModelMappable
   final int? completedDays;
   final List<Map<DateTime, bool>>? attendanceLog;
 
-  AttendancePackageRegisterModel({
+  AttendanceRegisterModel({
     this.additionalDetails,
     required this.id,
     this.tenantId,
@@ -68,7 +69,8 @@ class AttendancePackageRegisterModel with AttendancePackageRegisterModelMappable
 }
 
 @MappableClass(ignoreNull: true)
-class AttendanceRegisterAdditionalFields with AttendanceRegisterAdditionalFieldsMappable {
+class AttendanceRegisterAdditionalFields
+    with AttendanceRegisterAdditionalFieldsMappable {
   final Map<String, dynamic> description;
   AttendanceRegisterAdditionalFields({
     required this.description,

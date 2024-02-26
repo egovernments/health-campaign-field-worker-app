@@ -332,7 +332,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
           size: 15,
           viewOnly: viewOnly,
           color: const Color.fromRGBO(0, 100, 0, 1),
-          index: double.parse(tableDataModel.status.toString()) ?? -1,
+          index: double.parse(tableDataModel.status.toString()),
           isNotGreyed: false,
           onTap: () {
             individualLogBloc.add(

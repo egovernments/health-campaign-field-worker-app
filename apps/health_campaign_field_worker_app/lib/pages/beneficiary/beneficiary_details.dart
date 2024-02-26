@@ -73,14 +73,18 @@ class _BeneficiaryDetailsPageState
           final lastDose = taskData != null && taskData.isNotEmpty
               ? taskData.last.additionalFields?.fields
                       .firstWhereOrNull(
-                          (e) => e.key == AdditionalFieldsType.doseIndex.name)
+                        (e) =>
+                            e.key == AdditionalFieldsType.doseIndex.toValue(),
+                      )
                       ?.value ??
                   '1'
               : '0';
           final lastCycle = taskData != null && taskData.isNotEmpty
               ? taskData.last.additionalFields?.fields
                       .firstWhereOrNull(
-                          (e) => e.key == AdditionalFieldsType.cycleIndex.name)
+                        (e) =>
+                            e.key == AdditionalFieldsType.cycleIndex.toValue(),
+                      )
                       ?.value ??
                   '1'
               : '1';
@@ -197,7 +201,7 @@ class _BeneficiaryDetailsPageState
                                         },
                                         child: Center(
                                           child: Text(
-                                            '${localizations.translate(i18.beneficiaryDetails.recordsdownload)} ${(deliverState.cycle == 0 ? (deliverState.cycle + 1) : deliverState.cycle).toString()} ${localizations.translate(i18.deliverIntervention.dose)} ${(deliverState.dose).toString()}',
+                                            '${localizations.translate(i18.beneficiaryDetails.recordCycle)} ${(deliverState.cycle == 0 ? (deliverState.cycle + 1) : deliverState.cycle).toString()} ${localizations.translate(i18.deliverIntervention.dose)} ${(deliverState.dose).toString()}',
                                           ),
                                         ),
                                       ),

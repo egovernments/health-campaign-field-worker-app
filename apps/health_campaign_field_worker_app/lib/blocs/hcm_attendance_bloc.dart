@@ -31,12 +31,12 @@ class HCMAttendanceBloc extends AttendanceListeners {
     required this.context,
   });
 
-  late Function(List<AttendancePackageRegisterModel> registers)
+  late Function(List<AttendanceRegisterModel> registers)
       _registersLoaded;
 
   @override
   void getAttendanceRegisters(
-    Function(List<AttendancePackageRegisterModel> registers)
+    Function(List<AttendanceRegisterModel> registers)
         attendanceRegisters,
   ) {
     _registersLoaded = attendanceRegisters;
@@ -50,7 +50,7 @@ class HCMAttendanceBloc extends AttendanceListeners {
     );
 
     if (registers != null) {
-      final List<AttendancePackageRegisterModel> attendanceRegisters =
+      final List<AttendanceRegisterModel> attendanceRegisters =
           await Future.wait(registers.map((e) async {
         final registerCompletedLogs =
             await attendanceLogLocalRepository?.search(

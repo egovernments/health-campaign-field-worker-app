@@ -143,14 +143,20 @@ class _BoundarySelectionPageState
                                             value.code ??
                                             'No Value';
                                       },
+                                      onFieldTap: (value) {
+                                        setState(() {
+                                          resetChildDropdowns(label, state);
+                                        });
+                                      },
                                       onSelected: (value) {
-                                              if (value == null) return;
+                                        if (value == null) return;
                                         value as BoundaryModel;
 
-                                            context.read<BoundaryBloc>().add(
+                                        context.read<BoundaryBloc>().add(
                                               BoundarySearchEvent(
-                                        boundaryNum: (value).boundaryNum! + 1,
-                                         code:  (value).code!,
+                                                boundaryNum:
+                                                    (value).boundaryNum! + 1,
+                                                code: (value).code!,
                                               ),
                                             );
 
