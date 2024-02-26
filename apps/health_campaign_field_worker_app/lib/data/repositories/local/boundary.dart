@@ -100,5 +100,12 @@ class BoundaryLocalRepository
   }
 
   @override
+  FutureOr<void> delete(BoundaryModel entity, {bool createOpLog = true}) async {
+    sql.delete(
+      sql.boundary,
+    ).go();
+  }
+
+  @override
   DataModelType get type => DataModelType.boundary;
 }
