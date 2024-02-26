@@ -397,10 +397,10 @@ class HCMAttendanceRegisterModelMapper
   @override
   final String id = 'HCMAttendanceRegisterModel';
 
-  static AttendancePackageRegisterModel _$attendanceRegister(
+  static AttendanceRegisterModel _$attendanceRegister(
           HCMAttendanceRegisterModel v) =>
       v.attendanceRegister;
-  static const Field<HCMAttendanceRegisterModel, AttendancePackageRegisterModel>
+  static const Field<HCMAttendanceRegisterModel, AttendanceRegisterModel>
       _f$attendanceRegister = Field('attendanceRegister', _$attendanceRegister);
   static List<IndividualModel>? _$individualList(
           HCMAttendanceRegisterModel v) =>
@@ -502,8 +502,8 @@ abstract class HCMAttendanceRegisterModelCopyWith<
     $R,
     $In extends HCMAttendanceRegisterModel,
     $Out> implements EntityModelCopyWith<$R, $In, $Out> {
-  AttendancePackageRegisterModelCopyWith<$R, AttendancePackageRegisterModel,
-      AttendancePackageRegisterModel> get attendanceRegister;
+  AttendanceRegisterModelCopyWith<$R, AttendanceRegisterModel,
+      AttendanceRegisterModel> get attendanceRegister;
   ListCopyWith<$R, IndividualModel,
           IndividualModelCopyWith<$R, IndividualModel, IndividualModel>>?
       get individualList;
@@ -514,7 +514,7 @@ abstract class HCMAttendanceRegisterModelCopyWith<
       get clientAuditDetails;
   @override
   $R call(
-      {AttendancePackageRegisterModel? attendanceRegister,
+      {AttendanceRegisterModel? attendanceRegister,
       List<IndividualModel>? individualList,
       AuditDetails? auditDetails,
       ClientAuditDetails? clientAuditDetails,
@@ -534,8 +534,8 @@ class _HCMAttendanceRegisterModelCopyWithImpl<$R, $Out>
   late final ClassMapperBase<HCMAttendanceRegisterModel> $mapper =
       HCMAttendanceRegisterModelMapper.ensureInitialized();
   @override
-  AttendancePackageRegisterModelCopyWith<$R, AttendancePackageRegisterModel,
-          AttendancePackageRegisterModel>
+  AttendanceRegisterModelCopyWith<$R, AttendanceRegisterModel,
+          AttendanceRegisterModel>
       get attendanceRegister => $value.attendanceRegister.copyWith
           .$chain((v) => call(attendanceRegister: v));
   @override
@@ -554,7 +554,7 @@ class _HCMAttendanceRegisterModelCopyWithImpl<$R, $Out>
           .$chain((v) => call(clientAuditDetails: v));
   @override
   $R call(
-          {AttendancePackageRegisterModel? attendanceRegister,
+          {AttendanceRegisterModel? attendanceRegister,
           Object? individualList = $none,
           Object? auditDetails = $none,
           Object? clientAuditDetails = $none,

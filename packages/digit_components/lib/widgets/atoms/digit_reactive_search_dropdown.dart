@@ -15,6 +15,7 @@ class DigitReactiveSearchDropdown<T> extends StatefulWidget {
   final String? validationMessage;
   final EdgeInsets? padding;
   final void Function(dynamic)? onSelected;
+  final void Function(dynamic)? onFieldTap;
   final String emptyText;
 
   const DigitReactiveSearchDropdown({
@@ -28,6 +29,7 @@ class DigitReactiveSearchDropdown<T> extends StatefulWidget {
     this.validationMessage,
     this.padding,
     this.onSelected,
+    this.onFieldTap,
     this.emptyText = 'No Matches Found',
     this.enabled = true,
   }) : super(key: key);
@@ -125,6 +127,9 @@ class _DigitReactiveSearchDropdownState<T>
                       widget.form
                           .control(widget.formControlName)
                           .setErrors({'': true});
+                    }
+                    if (widget.onFieldTap != null) {
+                      widget.onFieldTap!(null);
                     }
                   },
           ),

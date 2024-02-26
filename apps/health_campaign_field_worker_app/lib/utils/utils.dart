@@ -7,7 +7,6 @@ import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/theme/digit_theme.dart';
-import 'package:digit_components/utils/app_logger.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_dialog.dart';
@@ -20,8 +19,10 @@ import 'package:isar/isar.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:uuid/uuid.dart';
 
+import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/search_households/project_beneficiaries_downsync.dart';
 import '../blocs/search_households/search_households.dart';
+import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/localization.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../models/data_model.dart';
@@ -350,7 +351,7 @@ bool checkIfBeneficiaryRefused(
 ) {
   final isBeneficiaryRefused = (tasks != null &&
       (tasks ?? []).isNotEmpty &&
-      tasks.last.status == Status.beneficiaryRefused.name);
+      tasks.last.status == Status.beneficiaryRefused.toValue());
 
   return isBeneficiaryRefused;
 }
@@ -532,7 +533,7 @@ void showDownloadDialog(
   required DigitProgressDialogType dialogType,
   bool isPop = true,
   StreamController<double>? downloadProgressController,
-    }) {
+}) {
   if (isPop) {
     Navigator.of(context, rootNavigator: true).pop();
   }
@@ -637,7 +638,9 @@ void showDownloadDialog(
               return ProgressIndicatorContainer(
                 label: '',
                 prefixLabel: '',
-                suffixLabel: '${(snapshot.data == null ? 0 : snapshot.data! * model.totalCount!.toDouble()).toInt()}/${model.suffixLabel}' ?? '',
+                suffixLabel:
+                    '${(snapshot.data == null ? 0 : snapshot.data! * model.totalCount!.toDouble()).toInt()}/${model.suffixLabel}' ??
+                        '',
                 value: snapshot.data ?? 0,
                 valueColor: AlwaysStoppedAnimation<Color>(
                   DigitTheme.instance.colorScheme.secondary,
@@ -664,19 +667,32 @@ dynamic getValueByKey(List<Map<String, dynamic>> data, String key) {
   return null; // Key not found
 }
 
+//Function to read the localizations from ISAR,
 getLocalizationString(Isar isar, String selectedLocale) async {
   List<dynamic> localizationValues = [];
 
   final List<LocalizationWrapper> localizationList =
-  await isar.localizationWrappers
-      .filter()
-      .localeEqualTo(
-    selectedLocale.toString(),
-  )
-      .findAll();
+      await isar.localizationWrappers
+          .filter()
+          .localeEqualTo(
+            selectedLocale.toString(),
+          )
+          .findAll();
   if (localizationList.isNotEmpty) {
     localizationValues.addAll(localizationList.first.localization!);
   }
 
   return localizationValues;
+}
+
+getSelectedLanguage(AppInitialized state, int index) {
+  if (AppSharedPreferences().getSelectedLocale == null) {
+    AppSharedPreferences()
+        .setSelectedLocale(state.appConfiguration.languages!.last.value);
+  }
+  final selectedLanguage = AppSharedPreferences().getSelectedLocale;
+  final isSelected =
+      state.appConfiguration.languages![index].value == selectedLanguage;
+
+  return isSelected;
 }
