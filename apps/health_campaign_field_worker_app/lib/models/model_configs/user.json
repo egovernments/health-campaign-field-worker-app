@@ -135,9 +135,16 @@
         {
             "name": "uuid",
             "type": "String",
-            "includeForQuery": true,
-            "isList": true,
+            "includeForQuery": false,
             "isPk": true
+        },
+        {
+            "name": "uuid",
+            "type": "String",
+            "includeForQuery": true,
+            "includeForEntity": false,
+            "includeForTable": false,
+            "isList": true
         },
         {
             "name": "createdDate",

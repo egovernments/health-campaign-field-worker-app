@@ -196,6 +196,8 @@ class DobValueAccessorYearsString
   String? modelToViewValue(DateTime? modelValue) {
     final dobAge = accessor.modelToViewValue(modelValue);
     if (dobAge == null || (dobAge.years == 0 && dobAge.months == 0)) {
+      existingMonth = '';
+      existingDays = '';
       return null;
     }
 
@@ -228,6 +230,8 @@ class DobValueAccessorMonthString
     final dobAge = accessor.modelToViewValue(modelValue);
 
     if (dobAge == null || (dobAge.years == 0 && (dobAge.months == 0))) {
+      existingYear = '';
+      existingDays = '';
       return null;
     }
 

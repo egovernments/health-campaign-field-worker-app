@@ -30,31 +30,31 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
     BoundaryResetEvent event,
     BoundaryEmitter emit,
   ) async {
+    await boundaryRepository.delete(BoundaryModel());
     emit(const BoundaryState());
   }
-
-
 
   Future<void> _handlefind(
     BoundaryFindEvent event,
     BoundaryEmitter emit,
   ) async {
-        List<BoundaryModel> boundaryList = await boundaryRepository.search(
-      BoundarySearchModel(code: event.code,
-      isSingle:  true,
+    List<BoundaryModel> boundaryList = await boundaryRepository.search(
+      BoundarySearchModel(
+        code: event.code,
+        isSingle: true,
       ),
     );
 
     int?  boundaryNum = boundaryList.first.boundaryNum;
 
 
-        final List<String> boundaryLabelList = [];
-            for (var element in boundaryList) {
+    final List<String> boundaryLabelList = [];
+    for (var element in boundaryList) {
       if (!boundaryLabelList.contains(element.label.toString())) {
         boundaryLabelList.add(element.label.toString());
       }
     }
-  emit(
+    emit(
       state.copyWith(
         boundaryList: boundaryList,
         selectedBoundaryMap: Map.fromEntries(
@@ -66,7 +66,6 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
       ),
     );
   }
-  
 
   FutureOr<void> _handleSearch(
     BoundarySearchEvent event,
@@ -76,17 +75,16 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
     List<BoundaryModel> boundaryList = await boundaryRepository.search(
       BoundarySearchModel(
         code: event.code,
-     boundaryNum: event.boundaryNum,
-     isSingle:  false,
+        boundaryNum: event.boundaryNum,
+        isSingle: false,
       ),
     );
 
-
-final r = [...state.boundaryList, ...boundaryList];
+    final r = [...state.boundaryList, ...boundaryList];
 
     emit(
       state.copyWith(
-        boundaryList:  Set.of(r).toList(),
+        boundaryList: Set.of(r).toList(),
         selectedBoundaryMap: state.selectedBoundaryMap,
         loading: false,
       ),
@@ -142,15 +140,16 @@ final r = [...state.boundaryList, ...boundaryList];
 class BoundaryEvent with _$BoundaryEvent {
   const factory BoundaryEvent.reset() = BoundaryResetEvent;
 
-  const factory BoundaryEvent.search({required String code, required int boundaryNum}) =
-      BoundarySearchEvent;
+  const factory BoundaryEvent.search(
+      {required String code, required int boundaryNum}) = BoundarySearchEvent;
 
   const factory BoundaryEvent.select({
     required String label,
     required BoundaryModel selectedBoundary,
   }) = BoundarySelectEvent;
 
-  const factory BoundaryEvent.findBoundary({required String code}) =       BoundaryFindEvent;
+  const factory BoundaryEvent.findBoundary({required String code}) =
+      BoundaryFindEvent;
 
   const factory BoundaryEvent.submit() = BoundarySubmitEvent;
 }
