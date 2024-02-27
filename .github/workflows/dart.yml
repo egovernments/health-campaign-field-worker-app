@@ -34,7 +34,7 @@ jobs:
       - name: Run MobSF Analysis
         uses: fundacaocerti/mobsf-action@v1.7.2
         env:
-          INPUT_FILE_NAME: build/app/outputs/apk/app.apk
+          INPUT_FILE_NAME: /home/runner/work/health-campaign-field-worker-app/health-campaign-field-worker-app/build/app/outputs/apk/app.apk
           SCAN_TYPE: apk
           OUTPUT_FILE_NAME: mobsf-report
 
