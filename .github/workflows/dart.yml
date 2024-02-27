@@ -30,6 +30,9 @@ jobs:
       - name: Analyze code
         run: melos run analyze
 
+      - name : Navigate to app
+        run: cd ./apps/health_campaign_field_worker_app/  
+        
       - name: Flutter Build
         run: flutter build apk
 
