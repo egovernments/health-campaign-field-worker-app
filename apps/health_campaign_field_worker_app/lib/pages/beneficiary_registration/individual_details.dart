@@ -71,7 +71,7 @@ class _IndividualDetailsPageState
                 } else {
                   (router.parent() as StackRouter).pop();
                   context.read<SearchBlocWrapper>().searchHouseholdsBloc.add(
-                        SearchHouseholdsByHouseholdsEvent(
+                        SearchHouseholdsEvent.searchByHousehold(
                           householdModel: value.householdModel,
                           projectId: context.projectId,
                           isProximityEnabled: false,
