@@ -9,6 +9,7 @@ import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
 import '../../blocs/project/project.dart';
 import '../../blocs/scanner/scanner.dart';
+import '../../blocs/search_households/search_bloc_common_wrapper.dart';
 import '../../blocs/search_households/search_households.dart';
 import '../../models/data_model.dart';
 import '../../models/project_type/project_type_model.dart';
@@ -49,7 +50,8 @@ class _HouseholdOverviewPageState
     return PopScope(
       onPopInvoked: (didPop) async {
         context
-            .read<SearchHouseholdsBloc>()
+            .read<SearchBlocWrapper>()
+            .searchHouseholdsBloc
             .add(const SearchHouseholdsClearEvent());
         Navigator.of(context).pop();
       },
@@ -70,7 +72,8 @@ class _HouseholdOverviewPageState
                         header: BackNavigationHelpHeaderWidget(
                           handleback: () {
                             context
-                                .read<SearchHouseholdsBloc>()
+                                .read<SearchBlocWrapper>()
+                                .searchHouseholdsBloc
                                 .add(const SearchHouseholdsClearEvent());
                           },
                         ),
