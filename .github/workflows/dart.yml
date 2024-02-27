@@ -29,23 +29,11 @@ jobs:
 
       - name: Analyze code
         run: melos run analyze
-        
-          
-      - name: Run MobSF Analysis
-        uses: fundacaocerti/mobsf-action@v1.7.2
-        env:
-          INPUT_FILE_NAME: $GITHUB_WORKSPACE/health-campaign-field-worker-app/build/app/outputs/apk/app.apk
-          SCAN_TYPE: apk
-          OUTPUT_FILE_NAME: mobsf-report
 
-      - name: Upload MobSF Analysis PDF Result
-        uses: actions/upload-artifact@v2
-        with:
-          name: mobsf-report.pdf
-          path: mobsf-report.pdf
+      - name: Install MobSF
+        run: |
+          pip install --user https://github.com/MobSF/Mobile-Security-Framework-MobSF/archive/master.zip
 
-      - name: Upload MobSF Analysis JSON Result
-        uses: actions/upload-artifact@v2
-        with:
-          name: mobsf-report.json
-          path: mobsf-report.json
+      - name: Run MobSF
+        run: |
+          ~/.local/bin/mobsf -f $GITHUB_WORKSPACE/health-campaign-field-worker-app/build/app/outputs/apk/app.apk -o $GITHUB_WORKSPACE/mobsf_report.html
