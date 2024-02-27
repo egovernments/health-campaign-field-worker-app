@@ -30,11 +30,6 @@ jobs:
       - name: Analyze code
         run: melos run analyze
 
-      - name : Navigate to app
-        run: cd ./apps/health_campaign_field_worker_app/  
-        
-      - name: Flutter Build
-        run: flutter build apk
 
       - name: Run MobSF Analysis
         uses: fundacaocerti/mobsf-action@v1.7.2
