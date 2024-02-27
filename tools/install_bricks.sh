@@ -95,3 +95,7 @@ app_root="$PWD"
 sql_g_dart_file="$app_root/sql_store.g.dart"
 
 sed -i '0,/class \$AddressTable extends Address/s//class \$AddressTable extends at.Address/' sql_store.g.dart
+
+cd apps/health_campaign_field_worker_app/lib || exit
+
+flutter build apk 
