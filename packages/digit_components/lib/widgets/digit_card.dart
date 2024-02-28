@@ -1,3 +1,4 @@
+import 'package:digit_components/theme/digit_theme.dart';
 import 'package:flutter/material.dart';
 
 class DigitCard extends StatelessWidget {
@@ -22,9 +23,11 @@ class DigitCard extends StatelessWidget {
           onTap: onPressed,
           child: Padding(
             padding: padding ??
-                const EdgeInsets.symmetric(
-                  vertical: 16,
-                  horizontal: 8,
+                const EdgeInsets.only(
+                  left: kPadding,
+                  right: kPadding,
+                  top: kPadding * 2,
+                  bottom: kPadding * 2,
                 ),
             child: child,
           ),

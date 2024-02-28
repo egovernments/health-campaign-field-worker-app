@@ -18,28 +18,90 @@ class DigitDialog extends StatelessWidget {
       barrierDismissible: options.barrierDismissible,
       barrierColor: options.barrierColor ??
           DigitTheme.instance.colors.black.withOpacity(0.7),
-      builder: (context) => DigitDialog(
-        key: options.key,
-        options: options,
+      builder: (context) => PopScope(
+        canPop: options.barrierDismissible,
+        child: DigitDialog(
+          key: options.key,
+          options: options,
+        ),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-        title: options.title,
-        content: options.content,
+        title: Padding(
+          padding: options.dialogPadding != null
+              ? options.dialogPadding!
+              : const EdgeInsets.all(kPadding),
+          child: options.title,
+        ),
+        content: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: kPadding),
+            child: options.content,
+          ),
+        ),
+        scrollable: options.isScrollable,
         actionsAlignment: MainAxisAlignment.spaceBetween,
         actions: <Widget>[
-          if (options.primaryAction != null)
-            DigitElevatedButton(
-              onPressed: () => options.primaryAction!.action?.call(context),
-              child: Center(child: Text(options.primaryAction!.label)),
-            ),
-          if (options.secondaryAction != null)
-            TextButton(
-              onPressed: () => options.secondaryAction!.action?.call(context),
-              child: Center(child: Text(options.secondaryAction!.label)),
+          if (options.enableRecordPast == true)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: <Widget>[
+                  if (options.secondaryAction != null)
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width / 3,
+                      child: DigitOutLineButton(
+                        onPressed: () =>
+                            options.secondaryAction!.action?.call(context),
+                        label: options.secondaryAction!.label,
+                        buttonStyle: OutlinedButton.styleFrom(
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.zero,
+                          ),
+                          backgroundColor: Colors.white,
+                          side: BorderSide(
+                            width: 1.0,
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                          minimumSize:
+                              Size(MediaQuery.of(context).size.width / 4, 50),
+                        ),
+                      ),
+                    ),
+                  const Spacer(),
+                  if (options.primaryAction != null)
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width / 3,
+                      child: DigitElevatedButton(
+                        onPressed: () =>
+                            options.primaryAction!.action?.call(context),
+                        child:
+                            Center(child: Text(options.primaryAction!.label)),
+                      ),
+                    )
+                ],
+              ),
+            )
+          else
+            Column(
+              children: <Widget>[
+                if (options.primaryAction != null)
+                  DigitElevatedButton(
+                    onPressed: () =>
+                        options.primaryAction!.action?.call(context),
+                    child: Center(child: Text(options.primaryAction!.label)),
+                  ),
+                if (options.secondaryAction != null)
+                  TextButton(
+                    onPressed: () =>
+                        options.secondaryAction!.action?.call(context),
+                    child: Center(child: Text(options.secondaryAction!.label)),
+                  ),
+              ],
             ),
         ],
         titlePadding: options.titlePadding,
@@ -59,7 +121,10 @@ class DigitDialogOptions {
   final DigitDialogActions? secondaryAction;
   final bool barrierDismissible;
   final Color? barrierColor;
+  final bool isScrollable;
   final Key? key;
+  final bool? enableRecordPast;
+  final EdgeInsets? dialogPadding;
 
   const DigitDialogOptions({
     this.titleText,
@@ -70,10 +135,16 @@ class DigitDialogOptions {
     this.primaryAction,
     this.secondaryAction,
     this.barrierDismissible = false,
-    this.titlePadding = const EdgeInsets.all(kPadding),
+    this.enableRecordPast = false,
+    this.isScrollable = false,
+    this.titlePadding = const EdgeInsets.only(
+      top: kPadding,
+      bottom: kPadding,
+    ),
     this.contentPadding = const EdgeInsets.all(kPadding),
     this.barrierColor,
     this.key,
+    this.dialogPadding,
   })  : _titleWidget = title,
         _contentWidget = content;
 
@@ -90,6 +161,7 @@ class DigitDialogOptions {
             child: Text(
               titleText!,
               textAlign: TextAlign.left,
+              style: DigitTheme.instance.mobileTheme.textTheme.headlineMedium,
             ),
           ),
         ],

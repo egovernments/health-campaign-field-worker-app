@@ -129,6 +129,8 @@ class MyHomePageState extends State<MyHomePage> {
                           formControlName: dobKey,
                           autoValidation: AutovalidateMode.always,
                           requiredMessage: 'Date of birth is required',
+                          cancelText: 'Cancel',
+                          confirmText: 'OK',
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),

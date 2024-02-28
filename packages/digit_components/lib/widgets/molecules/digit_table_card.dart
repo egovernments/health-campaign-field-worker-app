@@ -8,6 +8,9 @@ class DigitTableCard extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final double gap;
   final num fraction;
+  final EdgeInsetsGeometry? topPadding;
+  final TextStyle? labelStyle;
+  final TextStyle? descriptionStyle;
 
   const DigitTableCard({
     super.key,
@@ -16,21 +19,24 @@ class DigitTableCard extends StatelessWidget {
     this.color,
     this.padding,
     this.gap = 0,
-    this.fraction = 2,
+    this.fraction = 1.8,
+    this.topPadding,
+    this.labelStyle,
+    this.descriptionStyle,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.only(top: 16),
+      padding: topPadding ?? const EdgeInsets.only(top: 8),
       child: Container(
         decoration: BoxDecoration(
             color: color,
             borderRadius: BorderRadius.circular(4),
             border: border),
         child: Padding(
-          padding: padding ?? const EdgeInsets.only(right: 8, bottom: 16),
+          padding: padding ?? const EdgeInsets.only(bottom: 8),
           child: Column(
             children: element.keys
                 .map((e) => Container(
@@ -42,7 +48,8 @@ class DigitTableCard extends StatelessWidget {
                             width: MediaQuery.of(context).size.width / fraction,
                             child: Text(
                               e,
-                              style: theme.textTheme.headlineSmall,
+                              style:
+                                  labelStyle ?? theme.textTheme.headlineSmall,
                               textAlign: TextAlign.start,
                             ),
                           ),
@@ -50,7 +57,10 @@ class DigitTableCard extends StatelessWidget {
                           Flexible(
                               child: Padding(
                             padding: const EdgeInsets.only(top: 1.4),
-                            child: Text(element[e].toString()),
+                            child: Text(
+                              element[e].toString(),
+                              style: descriptionStyle,
+                            ),
                           )),
                         ],
                       ),

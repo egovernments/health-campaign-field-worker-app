@@ -1,3 +1,5 @@
+import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/widgets/atoms/checkbox_icon.dart';
 import 'package:flutter/material.dart';
 
 class DigitCheckboxTile extends StatelessWidget {
@@ -21,33 +23,27 @@ class DigitCheckboxTile extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Padding(
-      padding: margin ?? const EdgeInsets.all(8.0),
-      child: Material(
-        child: InkWell(
-          onTap: () => onChanged?.call(!value),
-          child: Padding(
-            padding: padding ??
-                const EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 8,
+      padding: padding ?? const EdgeInsets.all(0),
+      child: InkWell(
+        onTap: () => onChanged?.call(!value),
+        child: Padding(
+          padding: const EdgeInsets.only(left: 0, bottom: kPadding * 2),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              value
+                  ? const CheckboxIcon(
+                      value: true,
+                    )
+                  : const CheckboxIcon(),
+              const SizedBox(width: kPadding * 2),
+              Expanded(
+                child: Text(
+                  label,
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
-            child: Row(
-              children: [
-                Icon(
-                  value
-                      ? Icons.check_box_outline_blank_sharp
-                      : Icons.check_box_outlined,
-                  color: theme.colorScheme.secondary,
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Text(
-                    label,
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

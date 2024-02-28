@@ -31,6 +31,7 @@ class DigitTheme {
 
     return ThemeData(
       colorScheme: colorScheme,
+      useMaterial3: false,
       scaffoldBackgroundColor: colorScheme.background,
       textTheme: mobileTypography.textTheme,
       appBarTheme: const AppBarTheme(elevation: 0),
@@ -99,7 +100,7 @@ class DigitTheme {
   OutlinedButtonThemeData get outlinedButtonTheme => OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           foregroundColor: colorScheme.secondary,
-          // side: BorderSide(color: colorScheme.secondary),
+          side: BorderSide(color: colorScheme.secondary),
           padding: buttonPadding,
         ),
       );
@@ -151,7 +152,7 @@ class DigitTheme {
               0,
             ),
           ),
-          borderSide: BorderSide(color: colors.cloudGray, width: 2),
+          borderSide: BorderSide(color: colors.cloudGray, width: 1),
         ),
         contentPadding: const EdgeInsets.all(12),
         isDense: true,

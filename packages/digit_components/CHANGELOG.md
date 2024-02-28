@@ -33,3 +33,7 @@
 ## 0.0.2+0
 
 * Updated digit_components to the latest version
+
+## 0.0.2+1
+
+* Updated digit_components missing utils and components

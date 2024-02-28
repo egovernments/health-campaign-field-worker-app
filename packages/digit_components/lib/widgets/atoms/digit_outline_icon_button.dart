@@ -6,6 +6,8 @@ class DigitOutlineIconButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback? onPressed;
   final Color? iconColor;
+  final ButtonStyle? buttonStyle;
+  final TextStyle? textStyle;
 
   const DigitOutlineIconButton({
     super.key,
@@ -13,19 +15,50 @@ class DigitOutlineIconButton extends StatelessWidget {
     required this.label,
     required this.icon,
     required this.onPressed,
+    this.buttonStyle,
+    this.textStyle,
   });
 
   @override
   Widget build(BuildContext context) {
-    return OutlinedButton(
-      onPressed: onPressed,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Flexible(child: Icon(icon)),
-          const SizedBox(width: kPadding),
-          Text(label),
-        ],
+    return Container(
+      margin: const EdgeInsets.only(
+        top: kPadding,
+        bottom: kPadding,
+      ),
+      constraints: const BoxConstraints(maxHeight: 50, minHeight: 40),
+      child: OutlinedButton(
+        onPressed: onPressed,
+        style: buttonStyle ??
+            OutlinedButton.styleFrom(
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.zero,
+              ),
+            ),
+        child: Padding(
+          padding: const EdgeInsets.all(kPadding / 2),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Flexible(
+                  child: Icon(
+                icon,
+                color: iconColor,
+              )),
+              const SizedBox(width: kPadding),
+              Text(
+                label,
+                style: textStyle ??
+                    DigitTheme.instance.mobileTheme.textTheme.headlineSmall
+                        ?.apply(
+                      color: onPressed != null
+                          ? DigitTheme.instance.colorScheme.secondary
+                          : DigitTheme.instance.colorScheme.outline,
+                    ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

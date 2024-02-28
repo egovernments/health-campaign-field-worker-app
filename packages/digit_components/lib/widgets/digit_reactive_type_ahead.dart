@@ -51,6 +51,7 @@ class DigitReactiveTypeAhead<T, V> extends ReactiveFormField<T, V> {
     TextAlignVertical? textAlignVertical,
     bool autofocus = false,
     bool readOnly = false,
+    ToolbarOptions? toolbarOptions,
     bool? showCursor,
     bool obscureText = false,
     String obscuringCharacter = '•',
@@ -162,6 +163,11 @@ class _ReactiveTypeaheadState<T, V> extends ReactiveFormFieldState<T, V> {
   void unsubscribeControl() {
     _unregisterFocusController();
     super.unsubscribeControl();
+  }
+
+  /// Method to reset the dropdown by clearing the text in the text controller.
+  void resetDropdown() {
+    _textController.clear();
   }
 
   @override

@@ -13,7 +13,7 @@ class DigitColors {
   Color get white => const Color(0xFFFFFFFF);
   Color get alabasterWhite => const Color(0xFFFAFAFA);
   Color get quillGray => const Color(0xFFD6D5D4);
-  Color get paleRose => const Color(0xFFEFC7C1);
+  Color get paleRose => const Color(0xFFFBD6C3);
   Color get paleLeafGreen => const Color(0xFFBAD6C9);
   Color get tropicalBlue => const Color(0xFFC7E0F1);
   Color get bonePink => const Color(0xFFE6D7D0);
@@ -25,4 +25,6 @@ class DigitColors {
   Color get darkOrchid => const Color(0xFF8E29BF);
   Color get mangoOrange => const Color(0xFFEA8A3B);
   Color get pacificBlue => const Color(0xFF0BABDE);
+  Color get hintGrey => const Color.fromRGBO(80, 90, 95, 1);
+  Color get amber => const Color.fromRGBO(234, 138, 59, 1);
 }
