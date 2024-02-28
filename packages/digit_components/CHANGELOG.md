@@ -29,3 +29,7 @@
 ## 0.0.1+8
 
 * Updated Images in ReadMe File 
+
+## 0.0.2+0
+
+* Updated digit_components to the latest version

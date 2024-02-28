@@ -12,7 +12,7 @@ part of 'digit_row_card_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 DigitRowCardModel _$DigitRowCardModelFromJson(Map<String, dynamic> json) {
   return _DigitRowCardModel.fromJson(json);
@@ -74,22 +74,22 @@ class _$DigitRowCardModelCopyWithImpl<$Res, $Val extends DigitRowCardModel>
 }
 
 /// @nodoc
-abstract class _$$_DigitRowCardModelCopyWith<$Res>
+abstract class _$$DigitRowCardModelImplCopyWith<$Res>
     implements $DigitRowCardModelCopyWith<$Res> {
-  factory _$$_DigitRowCardModelCopyWith(_$_DigitRowCardModel value,
-          $Res Function(_$_DigitRowCardModel) then) =
-      __$$_DigitRowCardModelCopyWithImpl<$Res>;
+  factory _$$DigitRowCardModelImplCopyWith(_$DigitRowCardModelImpl value,
+          $Res Function(_$DigitRowCardModelImpl) then) =
+      __$$DigitRowCardModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String label, String value, bool isSelected});
 }
 
 /// @nodoc
-class __$$_DigitRowCardModelCopyWithImpl<$Res>
-    extends _$DigitRowCardModelCopyWithImpl<$Res, _$_DigitRowCardModel>
-    implements _$$_DigitRowCardModelCopyWith<$Res> {
-  __$$_DigitRowCardModelCopyWithImpl(
-      _$_DigitRowCardModel _value, $Res Function(_$_DigitRowCardModel) _then)
+class __$$DigitRowCardModelImplCopyWithImpl<$Res>
+    extends _$DigitRowCardModelCopyWithImpl<$Res, _$DigitRowCardModelImpl>
+    implements _$$DigitRowCardModelImplCopyWith<$Res> {
+  __$$DigitRowCardModelImplCopyWithImpl(_$DigitRowCardModelImpl _value,
+      $Res Function(_$DigitRowCardModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -99,7 +99,7 @@ class __$$_DigitRowCardModelCopyWithImpl<$Res>
     Object? value = null,
     Object? isSelected = null,
   }) {
-    return _then(_$_DigitRowCardModel(
+    return _then(_$DigitRowCardModelImpl(
       label: null == label
           ? _value.label
           : label // ignore: cast_nullable_to_non_nullable
@@ -119,12 +119,12 @@ class __$$_DigitRowCardModelCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(explicitToJson: true)
-class _$_DigitRowCardModel implements _DigitRowCardModel {
-  const _$_DigitRowCardModel(
+class _$DigitRowCardModelImpl implements _DigitRowCardModel {
+  const _$DigitRowCardModelImpl(
       {required this.label, required this.value, this.isSelected = false});
 
-  factory _$_DigitRowCardModel.fromJson(Map<String, dynamic> json) =>
-      _$$_DigitRowCardModelFromJson(json);
+  factory _$DigitRowCardModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$DigitRowCardModelImplFromJson(json);
 
   @override
   final String label;
@@ -140,10 +140,10 @@ class _$_DigitRowCardModel implements _DigitRowCardModel {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_DigitRowCardModel &&
+            other is _$DigitRowCardModelImpl &&
             (identical(other.label, label) || other.label == label) &&
             (identical(other.value, value) || other.value == value) &&
             (identical(other.isSelected, isSelected) ||
@@ -157,13 +157,13 @@ class _$_DigitRowCardModel implements _DigitRowCardModel {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_DigitRowCardModelCopyWith<_$_DigitRowCardModel> get copyWith =>
-      __$$_DigitRowCardModelCopyWithImpl<_$_DigitRowCardModel>(
+  _$$DigitRowCardModelImplCopyWith<_$DigitRowCardModelImpl> get copyWith =>
+      __$$DigitRowCardModelImplCopyWithImpl<_$DigitRowCardModelImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_DigitRowCardModelToJson(
+    return _$$DigitRowCardModelImplToJson(
       this,
     );
   }
@@ -173,10 +173,10 @@ abstract class _DigitRowCardModel implements DigitRowCardModel {
   const factory _DigitRowCardModel(
       {required final String label,
       required final String value,
-      final bool isSelected}) = _$_DigitRowCardModel;
+      final bool isSelected}) = _$DigitRowCardModelImpl;
 
   factory _DigitRowCardModel.fromJson(Map<String, dynamic> json) =
-      _$_DigitRowCardModel.fromJson;
+      _$DigitRowCardModelImpl.fromJson;
 
   @override
   String get label;
@@ -186,6 +186,6 @@ abstract class _DigitRowCardModel implements DigitRowCardModel {
   bool get isSelected;
   @override
   @JsonKey(ignore: true)
-  _$$_DigitRowCardModelCopyWith<_$_DigitRowCardModel> get copyWith =>
+  _$$DigitRowCardModelImplCopyWith<_$DigitRowCardModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
