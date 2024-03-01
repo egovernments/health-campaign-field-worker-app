@@ -3,11 +3,16 @@
 import 'package:drift/drift.dart';
 
 
-class Facility extends Table {
-  TextColumn get id => text()();
-  BoolColumn get isPermanent => boolean().nullable()();
-  TextColumn get usage => text().nullable()();
-  IntColumn get storageCapacity => integer().nullable()();
+class StockReconciliation extends Table {
+  TextColumn get id => text().nullable()();
+  TextColumn get tenantId => text().nullable()();
+  TextColumn get facilityId => text().nullable()();
+  TextColumn get productVariantId => text().nullable()();
+  TextColumn get referenceId => text().nullable()();
+  TextColumn get referenceIdType => text().nullable()();
+  IntColumn get physicalCount => integer().nullable()();
+  IntColumn get calculatedCount => integer().nullable()();
+  TextColumn get commentsOnReconciliation => text().nullable()();
   TextColumn get auditCreatedBy => text().nullable()();
   BoolColumn get nonRecoverableError => boolean().nullable().withDefault(const Constant(false))();
   IntColumn get auditCreatedTime => integer().nullable()();
@@ -17,12 +22,13 @@ class Facility extends Table {
   IntColumn get clientModifiedTime => integer().nullable()();
   TextColumn get auditModifiedBy => text().nullable()();
   IntColumn get auditModifiedTime => integer().nullable()();
-  TextColumn get tenantId => text().nullable()();
+  TextColumn get clientReferenceId => text()();
   BoolColumn get isDeleted => boolean().nullable().withDefault(const Constant(false))();
   IntColumn get rowVersion => integer().nullable()();
-  
+  IntColumn get dateOfReconciliation => integer()();
+
   TextColumn get additionalFields => text().nullable()();
 
   @override
-  Set<Column> get primaryKey => { id, auditCreatedBy,  };
+  Set<Column> get primaryKey => { auditCreatedBy, clientReferenceId,  };
 }

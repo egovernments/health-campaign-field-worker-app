@@ -1,14 +1,13 @@
-// Generated using mason. Do not modify by hand
-import 'package:dart_mappable/dart_mappable.dart';
-import 'package:drift/drift.dart';
 
-import '../data_model.dart';
-import '../../data/local_store/sql_store/sql_store.dart';
+import 'package:dart_mappable/dart_mappable.dart';
+
+import 'transaction_reason.dart';
+import 'transaction_type.dart';
 
 part 'stock.mapper.dart';
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class StockSearchModel extends EntitySearchModel with StockSearchModelMappable {
+class StockSearchModel with StockSearchModelMappable {
   final String? id;
   final String? tenantId;
   final String? facilityId;
@@ -41,8 +40,6 @@ class StockSearchModel extends EntitySearchModel with StockSearchModelMappable {
     this.clientReferenceId,
     this.transactionType,
     this.transactionReason,
-    super.boundaryCode,
-    super.isDeleted,
   }):  super();
 
   @MappableConstructor()
@@ -62,12 +59,11 @@ class StockSearchModel extends EntitySearchModel with StockSearchModelMappable {
     this.clientReferenceId,
     this.transactionType,
     this.transactionReason,
-    super.boundaryCode,
-  }):  super(isDeleted: false);
+  }):  super();
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class StockModel extends EntityModel with StockModelMappable {
+class StockModel with StockModelMappable {
 
   static const schemaName = 'Stock';
 
@@ -86,14 +82,12 @@ class StockModel extends EntityModel with StockModelMappable {
   final String? senderId;
   final String? senderType;
   final bool? nonRecoverableError;
-  final String clientReferenceId;
+  final String? clientReferenceId;
   final int? rowVersion;
   final TransactionType? transactionType;
   final TransactionReason? transactionReason;
-  final StockAdditionalFields? additionalFields;
 
   StockModel({
-    this.additionalFields,
     this.id,
     this.tenantId,
     this.facilityId,
@@ -113,51 +107,6 @@ class StockModel extends EntityModel with StockModelMappable {
     this.rowVersion,
     this.transactionType,
     this.transactionReason,
-    super.auditDetails,super.clientAuditDetails,
-    super.isDeleted = false,
   }): super();
-
-  StockCompanion get companion {
-    return StockCompanion(
-      auditCreatedBy: Value(auditDetails?.createdBy),
-      auditCreatedTime: Value(auditDetails?.createdTime),
-      auditModifiedBy: Value(auditDetails?.lastModifiedBy),
-      clientCreatedTime: Value(clientAuditDetails?.createdTime),
-      clientModifiedTime: Value(clientAuditDetails?.lastModifiedTime),
-      clientCreatedBy: Value(clientAuditDetails?.createdBy),
-      clientModifiedBy: Value(clientAuditDetails?.lastModifiedBy),
-      auditModifiedTime: Value(auditDetails?.lastModifiedTime),
-      additionalFields: Value(additionalFields?.toJson()),
-      isDeleted: Value(isDeleted),
-      id: Value(id),
-      tenantId: Value(tenantId),
-      facilityId: Value(facilityId),
-      productVariantId: Value(productVariantId),
-      referenceId: Value(referenceId),
-      referenceIdType: Value(referenceIdType),
-      transactingPartyId: Value(transactingPartyId),
-      transactingPartyType: Value(transactingPartyType),
-      quantity: Value(quantity),
-      waybillNumber: Value(waybillNumber),
-      receiverId: Value(receiverId),
-      receiverType: Value(receiverType),
-      senderId: Value(senderId),
-      senderType: Value(senderType),
-      nonRecoverableError: Value(nonRecoverableError),
-      clientReferenceId: Value(clientReferenceId),
-      rowVersion: Value(rowVersion),
-      transactionType: Value(transactionType),
-      transactionReason: Value(transactionReason),
-      );
-  }
-}
-
-@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class StockAdditionalFields extends AdditionalFields with StockAdditionalFieldsMappable {
-  StockAdditionalFields({
-    super.schema = 'Stock',
-    required super.version,
-    super.fields,
-  });
 }
 

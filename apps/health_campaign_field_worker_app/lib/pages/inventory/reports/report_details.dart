@@ -43,7 +43,8 @@ and attached the event to load the data*/
         return InventoryReportBloc(
           stockReconciliationRepository: context.repository<
               StockReconciliationModel, StockReconciliationSearchModel>(),
-          stockRepository: context.repository<StockModel, StockSearchModel>(),
+          stockRepository:
+              context.repository<HcmStockModel, HcmStockSearchModel>(),
         );
       },
       child: this,
@@ -154,8 +155,8 @@ class _InventoryReportDetailsPageState
                       child: ProductVariantBlocWrapper(
                         child: BlocProvider(
                           create: (context) => StockReconciliationBloc(
-                            stockRepository: context
-                                .repository<StockModel, StockSearchModel>(),
+                            stockRepository: context.repository<HcmStockModel,
+                                HcmStockSearchModel>(),
                             stockReconciliationRepository: context.repository<
                                 StockReconciliationModel,
                                 StockReconciliationSearchModel>(),
@@ -399,17 +400,17 @@ class _InventoryReportDetailsPageState
                                                         ),
                                                         DigitGridCell(
                                                           key: waybillKey,
-                                                          value: model
+                                                          value: model.stock!
                                                                   .waybillNumber ??
-                                                              model
+                                                              model.stock!
                                                                   .waybillNumber ??
                                                               '',
                                                         ),
                                                         DigitGridCell(
                                                           key: quantityKey,
-                                                          value:
-                                                              model.quantity ??
-                                                                  '',
+                                                          value: model.stock!
+                                                                  .quantity ??
+                                                              '',
                                                         ),
                                                         DigitGridCell(
                                                           key:
@@ -427,12 +428,14 @@ class _InventoryReportDetailsPageState
                                                                   widget.reportType ==
                                                                       InventoryReportType
                                                                           .damage
-                                                              ? model.receiverId ??
-                                                                  model
+                                                              ? model.stock!
+                                                                      .receiverId ??
+                                                                  model.stock!
                                                                       .receiverType ??
                                                                   ''
-                                                              : model.senderId ??
-                                                                  model
+                                                              : model.stock!
+                                                                      .senderId ??
+                                                                  model.stock!
                                                                       .receiverType ??
                                                                   '',
                                                         ),

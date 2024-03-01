@@ -43,13 +43,11 @@ import 'entities/service_attributes.dart' as p36;
 import 'entities/service_definition.dart' as p37;
 import 'entities/side_effect.dart' as p38;
 import 'entities/status.dart' as p39;
-import 'entities/stock.dart' as p40;
-import 'entities/stock_reconciliation.dart' as p41;
+import 'entities/hcm_stock.dart' as p40;
+import 'entities/hcm_stock_recon.dart' as p41;
 import 'entities/target.dart' as p42;
 import 'entities/task.dart' as p43;
 import 'entities/task_resource.dart' as p44;
-import 'entities/transaction_reason.dart' as p45;
-import 'entities/transaction_type.dart' as p46;
 import 'entities/user.dart' as p47;
 import 'oplog/oplog_entry.dart' as p48;
 import 'pgr_complaints/pgr_address.dart' as p49;
@@ -60,6 +58,11 @@ import 'package:attendance_management/models/attendance_log.dart' as p55;
 import 'package:attendance_management/models/attendance_register.dart' as p56;
 import 'package:attendance_management/models/attendee.dart' as p54;
 import 'package:attendance_management/models/staff.dart' as p53;
+import 'package:inventory_management/models/entities/stock.dart' as p57;
+import 'package:inventory_management/models/entities/stock_reconciliation.dart' as p57;
+import 'package:inventory_management/models/entities/transaction_reason.dart' as p57;
+import 'package:inventory_management/models/entities/transaction_type.dart' as p57;
+import 'package:inventory_management/models/entities/facility.dart' as p57;
 
 void initializeMappers() {
   p0.EntityModelMapper.ensureInitialized();
@@ -163,11 +166,11 @@ void initializeMappers() {
   p38.SideEffectModelMapper.ensureInitialized();
   p38.SideEffectAdditionalFieldsMapper.ensureInitialized();
   p39.StatusMapper.ensureInitialized();
-  p40.StockSearchModelMapper.ensureInitialized();
-  p40.StockModelMapper.ensureInitialized();
+  p40.HcmStockSearchModelMapper.ensureInitialized();
+  p40.HcmStockModelMapper.ensureInitialized();
   p40.StockAdditionalFieldsMapper.ensureInitialized();
-  p41.StockReconciliationSearchModelMapper.ensureInitialized();
-  p41.StockReconciliationModelMapper.ensureInitialized();
+  p41.HcmStockReconciliationSearchModelMapper.ensureInitialized();
+  p41.HcmStockReconciliationModelMapper.ensureInitialized();
   p41.StockReconciliationAdditionalFieldsMapper.ensureInitialized();
   p42.TargetSearchModelMapper.ensureInitialized();
   p42.TargetModelMapper.ensureInitialized();
@@ -178,8 +181,6 @@ void initializeMappers() {
   p44.TaskResourceSearchModelMapper.ensureInitialized();
   p44.TaskResourceModelMapper.ensureInitialized();
   p44.TaskResourceAdditionalFieldsMapper.ensureInitialized();
-  p45.TransactionReasonMapper.ensureInitialized();
-  p46.TransactionTypeMapper.ensureInitialized();
   p47.UserSearchModelMapper.ensureInitialized();
   p47.UserModelMapper.ensureInitialized();
   p47.UserAdditionalFieldsMapper.ensureInitialized();
@@ -208,4 +209,10 @@ void initializeMappers() {
   p54.AttendeeModelMapper.ensureInitialized();
   p55.AttendanceLogModelMapper.ensureInitialized();
   p56.AttendanceRegisterModelMapper.ensureInitialized();
+  p57.StockModelMapper.ensureInitialized();
+  p57.StockSearchModelMapper.ensureInitialized();
+  p57.StockReconciliationModelMapper.ensureInitialized();
+  p57.StockReconciliationSearchModelMapper.ensureInitialized();
+  p57.TransactionReasonMapper.ensureInitialized();
+  p57.TransactionTypeMapper.ensureInitialized();
 }

@@ -5,6 +5,7 @@ library models;
 
 import 'package:dart_mappable/dart_mappable.dart';
 import 'data_model.dart';
+import 'entities/hcm_stock_recon.dart';
 export 'entities/additional_fields_type.dart';
 export 'entities/address.dart';
 export 'entities/address_type.dart';
@@ -43,19 +44,16 @@ export 'entities/service_attributes.dart';
 export 'entities/service_definition.dart';
 export 'entities/side_effect.dart';
 export 'entities/status.dart';
-export 'entities/stock.dart';
+export 'entities/hcm_stock.dart';
 export 'entities/stock_reconciliation.dart';
 export 'entities/target.dart';
 export 'entities/task.dart';
 export 'entities/task_resource.dart';
-export 'entities/transaction_reason.dart';
-export 'entities/transaction_type.dart';
 export 'entities/user.dart';
 export 'oplog/oplog_entry.dart';
 export 'pgr_complaints/pgr_address.dart';
 export 'pgr_complaints/pgr_complaints.dart';
 export 'pgr_complaints/pgr_complaints_response.dart';
-export 'package:attendance_management/models/attendance_log.dart';
 
 part 'data_model.mapper.dart';
 
@@ -76,6 +74,8 @@ abstract class DataModel {
   NameModel,
   HCMAttendanceLogModel,
   HCMAttendanceRegisterModel,
+  HcmStockModel,
+  HcmStockReconciliationModel,
 ])
 abstract class EntityModel extends DataModel with EntityModelMappable {
   final AuditDetails? auditDetails;
@@ -92,7 +92,8 @@ abstract class EntityModel extends DataModel with EntityModelMappable {
   HFReferralSearchModel,
   HCMAttendanceLogSearchModel,
   HCMAttendanceSearchModel,
-
+  HcmStockSearchModel,
+  HcmStockReconciliationSearchModel,
 ])
 abstract class EntitySearchModel extends DataModel
     with EntitySearchModelMappable {

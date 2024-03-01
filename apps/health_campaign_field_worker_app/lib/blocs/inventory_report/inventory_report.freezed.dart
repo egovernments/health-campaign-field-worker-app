@@ -603,7 +603,7 @@ mixin _$InventoryReportState {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function() empty,
-    required TResult Function(Map<String, List<StockModel>> stockData) stock,
+    required TResult Function(Map<String, List<HcmStockModel>> stockData) stock,
     required TResult Function(Map<String, List<StockReconciliationModel>> data)
         stockReconciliation,
   }) =>
@@ -612,7 +612,7 @@ mixin _$InventoryReportState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function()? empty,
-    TResult? Function(Map<String, List<StockModel>> stockData)? stock,
+    TResult? Function(Map<String, List<HcmStockModel>> stockData)? stock,
     TResult? Function(Map<String, List<StockReconciliationModel>> data)?
         stockReconciliation,
   }) =>
@@ -621,7 +621,7 @@ mixin _$InventoryReportState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function()? empty,
-    TResult Function(Map<String, List<StockModel>> stockData)? stock,
+    TResult Function(Map<String, List<HcmStockModel>> stockData)? stock,
     TResult Function(Map<String, List<StockReconciliationModel>> data)?
         stockReconciliation,
     required TResult orElse(),
@@ -720,7 +720,7 @@ class _$InventoryReportLoadingStateImpl implements InventoryReportLoadingState {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function() empty,
-    required TResult Function(Map<String, List<StockModel>> stockData) stock,
+    required TResult Function(Map<String, List<HcmStockModel>> stockData) stock,
     required TResult Function(Map<String, List<StockReconciliationModel>> data)
         stockReconciliation,
   }) {
@@ -732,7 +732,7 @@ class _$InventoryReportLoadingStateImpl implements InventoryReportLoadingState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function()? empty,
-    TResult? Function(Map<String, List<StockModel>> stockData)? stock,
+    TResult? Function(Map<String, List<HcmStockModel>> stockData)? stock,
     TResult? Function(Map<String, List<StockReconciliationModel>> data)?
         stockReconciliation,
   }) {
@@ -744,7 +744,7 @@ class _$InventoryReportLoadingStateImpl implements InventoryReportLoadingState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function()? empty,
-    TResult Function(Map<String, List<StockModel>> stockData)? stock,
+    TResult Function(Map<String, List<HcmStockModel>> stockData)? stock,
     TResult Function(Map<String, List<StockReconciliationModel>> data)?
         stockReconciliation,
     required TResult orElse(),
@@ -845,7 +845,7 @@ class _$InventoryReportEmptyStateImpl implements InventoryReportEmptyState {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function() empty,
-    required TResult Function(Map<String, List<StockModel>> stockData) stock,
+    required TResult Function(Map<String, List<HcmStockModel>> stockData) stock,
     required TResult Function(Map<String, List<StockReconciliationModel>> data)
         stockReconciliation,
   }) {
@@ -857,7 +857,7 @@ class _$InventoryReportEmptyStateImpl implements InventoryReportEmptyState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function()? empty,
-    TResult? Function(Map<String, List<StockModel>> stockData)? stock,
+    TResult? Function(Map<String, List<HcmStockModel>> stockData)? stock,
     TResult? Function(Map<String, List<StockReconciliationModel>> data)?
         stockReconciliation,
   }) {
@@ -869,7 +869,7 @@ class _$InventoryReportEmptyStateImpl implements InventoryReportEmptyState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function()? empty,
-    TResult Function(Map<String, List<StockModel>> stockData)? stock,
+    TResult Function(Map<String, List<HcmStockModel>> stockData)? stock,
     TResult Function(Map<String, List<StockReconciliationModel>> data)?
         stockReconciliation,
     required TResult orElse(),
@@ -932,7 +932,7 @@ abstract class _$$InventoryReportStockStateImplCopyWith<$Res> {
           $Res Function(_$InventoryReportStockStateImpl) then) =
       __$$InventoryReportStockStateImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({Map<String, List<StockModel>> stockData});
+  $Res call({Map<String, List<HcmStockModel>> stockData});
 }
 
 /// @nodoc
@@ -954,7 +954,7 @@ class __$$InventoryReportStockStateImplCopyWithImpl<$Res>
       stockData: null == stockData
           ? _value._stockData
           : stockData // ignore: cast_nullable_to_non_nullable
-              as Map<String, List<StockModel>>,
+              as Map<String, List<HcmStockModel>>,
     ));
   }
 }
@@ -963,13 +963,13 @@ class __$$InventoryReportStockStateImplCopyWithImpl<$Res>
 
 class _$InventoryReportStockStateImpl implements InventoryReportStockState {
   const _$InventoryReportStockStateImpl(
-      {final Map<String, List<StockModel>> stockData = const {}})
+      {final Map<String, List<HcmStockModel>> stockData = const {}})
       : _stockData = stockData;
 
-  final Map<String, List<StockModel>> _stockData;
+  final Map<String, List<HcmStockModel>> _stockData;
   @override
   @JsonKey()
-  Map<String, List<StockModel>> get stockData {
+  Map<String, List<HcmStockModel>> get stockData {
     if (_stockData is EqualUnmodifiableMapView) return _stockData;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableMapView(_stockData);
@@ -1005,7 +1005,7 @@ class _$InventoryReportStockStateImpl implements InventoryReportStockState {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function() empty,
-    required TResult Function(Map<String, List<StockModel>> stockData) stock,
+    required TResult Function(Map<String, List<HcmStockModel>> stockData) stock,
     required TResult Function(Map<String, List<StockReconciliationModel>> data)
         stockReconciliation,
   }) {
@@ -1017,7 +1017,7 @@ class _$InventoryReportStockStateImpl implements InventoryReportStockState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function()? empty,
-    TResult? Function(Map<String, List<StockModel>> stockData)? stock,
+    TResult? Function(Map<String, List<HcmStockModel>> stockData)? stock,
     TResult? Function(Map<String, List<StockReconciliationModel>> data)?
         stockReconciliation,
   }) {
@@ -1029,7 +1029,7 @@ class _$InventoryReportStockStateImpl implements InventoryReportStockState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function()? empty,
-    TResult Function(Map<String, List<StockModel>> stockData)? stock,
+    TResult Function(Map<String, List<HcmStockModel>> stockData)? stock,
     TResult Function(Map<String, List<StockReconciliationModel>> data)?
         stockReconciliation,
     required TResult orElse(),
@@ -1083,10 +1083,10 @@ class _$InventoryReportStockStateImpl implements InventoryReportStockState {
 
 abstract class InventoryReportStockState implements InventoryReportState {
   const factory InventoryReportStockState(
-          {final Map<String, List<StockModel>> stockData}) =
+          {final Map<String, List<HcmStockModel>> stockData}) =
       _$InventoryReportStockStateImpl;
 
-  Map<String, List<StockModel>> get stockData;
+  Map<String, List<HcmStockModel>> get stockData;
   @JsonKey(ignore: true)
   _$$InventoryReportStockStateImplCopyWith<_$InventoryReportStockStateImpl>
       get copyWith => throw _privateConstructorUsedError;
@@ -1174,7 +1174,7 @@ class _$InventoryReportStockReconciliationStateImpl
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function() empty,
-    required TResult Function(Map<String, List<StockModel>> stockData) stock,
+    required TResult Function(Map<String, List<HcmStockModel>> stockData) stock,
     required TResult Function(Map<String, List<StockReconciliationModel>> data)
         stockReconciliation,
   }) {
@@ -1186,7 +1186,7 @@ class _$InventoryReportStockReconciliationStateImpl
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function()? empty,
-    TResult? Function(Map<String, List<StockModel>> stockData)? stock,
+    TResult? Function(Map<String, List<HcmStockModel>> stockData)? stock,
     TResult? Function(Map<String, List<StockReconciliationModel>> data)?
         stockReconciliation,
   }) {
@@ -1198,7 +1198,7 @@ class _$InventoryReportStockReconciliationStateImpl
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function()? empty,
-    TResult Function(Map<String, List<StockModel>> stockData)? stock,
+    TResult Function(Map<String, List<HcmStockModel>> stockData)? stock,
     TResult Function(Map<String, List<StockReconciliationModel>> data)?
         stockReconciliation,
     required TResult orElse(),

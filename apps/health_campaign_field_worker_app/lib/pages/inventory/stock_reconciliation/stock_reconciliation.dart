@@ -105,7 +105,7 @@ class _StockReconciliationPageState
               child: BlocProvider(
                 create: (context) => StockReconciliationBloc(
                   stockRepository:
-                      context.repository<StockModel, StockSearchModel>(),
+                      context.repository<HcmStockModel, HcmStockSearchModel>(),
                   stockReconciliationRepository: context.repository<
                       StockReconciliationModel,
                       StockReconciliationSearchModel>(),

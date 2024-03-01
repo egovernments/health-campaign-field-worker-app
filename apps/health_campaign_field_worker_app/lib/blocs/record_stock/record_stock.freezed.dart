@@ -21,7 +21,7 @@ mixin _$RecordStockEvent {
     required TResult Function(
             DateTime dateOfRecord, FacilityModel facilityModel)
         saveWarehouseDetails,
-    required TResult Function(StockModel stockModel) saveStockDetails,
+    required TResult Function(HcmStockModel stockModel) saveStockDetails,
     required TResult Function() createStockEntry,
     required TResult Function(DateTime dateOfRecord, String primaryType,
             String primaryId, FacilityModel? facilityModel)
@@ -32,7 +32,7 @@ mixin _$RecordStockEvent {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(DateTime dateOfRecord, FacilityModel facilityModel)?
         saveWarehouseDetails,
-    TResult? Function(StockModel stockModel)? saveStockDetails,
+    TResult? Function(HcmStockModel stockModel)? saveStockDetails,
     TResult? Function()? createStockEntry,
     TResult? Function(DateTime dateOfRecord, String primaryType,
             String primaryId, FacilityModel? facilityModel)?
@@ -43,7 +43,7 @@ mixin _$RecordStockEvent {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(DateTime dateOfRecord, FacilityModel facilityModel)?
         saveWarehouseDetails,
-    TResult Function(StockModel stockModel)? saveStockDetails,
+    TResult Function(HcmStockModel stockModel)? saveStockDetails,
     TResult Function()? createStockEntry,
     TResult Function(DateTime dateOfRecord, String primaryType,
             String primaryId, FacilityModel? facilityModel)?
@@ -188,7 +188,7 @@ class _$RecordStockSaveWarehouseDetailsEventImpl
     required TResult Function(
             DateTime dateOfRecord, FacilityModel facilityModel)
         saveWarehouseDetails,
-    required TResult Function(StockModel stockModel) saveStockDetails,
+    required TResult Function(HcmStockModel stockModel) saveStockDetails,
     required TResult Function() createStockEntry,
     required TResult Function(DateTime dateOfRecord, String primaryType,
             String primaryId, FacilityModel? facilityModel)
@@ -202,7 +202,7 @@ class _$RecordStockSaveWarehouseDetailsEventImpl
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(DateTime dateOfRecord, FacilityModel facilityModel)?
         saveWarehouseDetails,
-    TResult? Function(StockModel stockModel)? saveStockDetails,
+    TResult? Function(HcmStockModel stockModel)? saveStockDetails,
     TResult? Function()? createStockEntry,
     TResult? Function(DateTime dateOfRecord, String primaryType,
             String primaryId, FacilityModel? facilityModel)?
@@ -216,7 +216,7 @@ class _$RecordStockSaveWarehouseDetailsEventImpl
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(DateTime dateOfRecord, FacilityModel facilityModel)?
         saveWarehouseDetails,
-    TResult Function(StockModel stockModel)? saveStockDetails,
+    TResult Function(HcmStockModel stockModel)? saveStockDetails,
     TResult Function()? createStockEntry,
     TResult Function(DateTime dateOfRecord, String primaryType,
             String primaryId, FacilityModel? facilityModel)?
@@ -297,7 +297,7 @@ abstract class _$$RecordStockSaveStockDetailsEventImplCopyWith<$Res> {
           $Res Function(_$RecordStockSaveStockDetailsEventImpl) then) =
       __$$RecordStockSaveStockDetailsEventImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({StockModel stockModel});
+  $Res call({HcmStockModel stockModel});
 }
 
 /// @nodoc
@@ -319,7 +319,7 @@ class __$$RecordStockSaveStockDetailsEventImplCopyWithImpl<$Res>
       stockModel: null == stockModel
           ? _value.stockModel
           : stockModel // ignore: cast_nullable_to_non_nullable
-              as StockModel,
+              as HcmStockModel,
     ));
   }
 }
@@ -331,7 +331,7 @@ class _$RecordStockSaveStockDetailsEventImpl
   const _$RecordStockSaveStockDetailsEventImpl({required this.stockModel});
 
   @override
-  final StockModel stockModel;
+  final HcmStockModel stockModel;
 
   @override
   String toString() {
@@ -364,7 +364,7 @@ class _$RecordStockSaveStockDetailsEventImpl
     required TResult Function(
             DateTime dateOfRecord, FacilityModel facilityModel)
         saveWarehouseDetails,
-    required TResult Function(StockModel stockModel) saveStockDetails,
+    required TResult Function(HcmStockModel stockModel) saveStockDetails,
     required TResult Function() createStockEntry,
     required TResult Function(DateTime dateOfRecord, String primaryType,
             String primaryId, FacilityModel? facilityModel)
@@ -378,7 +378,7 @@ class _$RecordStockSaveStockDetailsEventImpl
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(DateTime dateOfRecord, FacilityModel facilityModel)?
         saveWarehouseDetails,
-    TResult? Function(StockModel stockModel)? saveStockDetails,
+    TResult? Function(HcmStockModel stockModel)? saveStockDetails,
     TResult? Function()? createStockEntry,
     TResult? Function(DateTime dateOfRecord, String primaryType,
             String primaryId, FacilityModel? facilityModel)?
@@ -392,7 +392,7 @@ class _$RecordStockSaveStockDetailsEventImpl
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(DateTime dateOfRecord, FacilityModel facilityModel)?
         saveWarehouseDetails,
-    TResult Function(StockModel stockModel)? saveStockDetails,
+    TResult Function(HcmStockModel stockModel)? saveStockDetails,
     TResult Function()? createStockEntry,
     TResult Function(DateTime dateOfRecord, String primaryType,
             String primaryId, FacilityModel? facilityModel)?
@@ -453,10 +453,10 @@ class _$RecordStockSaveStockDetailsEventImpl
 
 abstract class RecordStockSaveStockDetailsEvent implements RecordStockEvent {
   const factory RecordStockSaveStockDetailsEvent(
-          {required final StockModel stockModel}) =
+          {required final HcmStockModel stockModel}) =
       _$RecordStockSaveStockDetailsEventImpl;
 
-  StockModel get stockModel;
+  HcmStockModel get stockModel;
   @JsonKey(ignore: true)
   _$$RecordStockSaveStockDetailsEventImplCopyWith<
           _$RecordStockSaveStockDetailsEventImpl>
@@ -509,7 +509,7 @@ class _$RecordStockCreateStockEntryEventImpl
     required TResult Function(
             DateTime dateOfRecord, FacilityModel facilityModel)
         saveWarehouseDetails,
-    required TResult Function(StockModel stockModel) saveStockDetails,
+    required TResult Function(HcmStockModel stockModel) saveStockDetails,
     required TResult Function() createStockEntry,
     required TResult Function(DateTime dateOfRecord, String primaryType,
             String primaryId, FacilityModel? facilityModel)
@@ -523,7 +523,7 @@ class _$RecordStockCreateStockEntryEventImpl
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(DateTime dateOfRecord, FacilityModel facilityModel)?
         saveWarehouseDetails,
-    TResult? Function(StockModel stockModel)? saveStockDetails,
+    TResult? Function(HcmStockModel stockModel)? saveStockDetails,
     TResult? Function()? createStockEntry,
     TResult? Function(DateTime dateOfRecord, String primaryType,
             String primaryId, FacilityModel? facilityModel)?
@@ -537,7 +537,7 @@ class _$RecordStockCreateStockEntryEventImpl
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(DateTime dateOfRecord, FacilityModel facilityModel)?
         saveWarehouseDetails,
-    TResult Function(StockModel stockModel)? saveStockDetails,
+    TResult Function(HcmStockModel stockModel)? saveStockDetails,
     TResult Function()? createStockEntry,
     TResult Function(DateTime dateOfRecord, String primaryType,
             String primaryId, FacilityModel? facilityModel)?
@@ -712,7 +712,7 @@ class _$RecordStockSaveTransactionDetailsEventImpl
     required TResult Function(
             DateTime dateOfRecord, FacilityModel facilityModel)
         saveWarehouseDetails,
-    required TResult Function(StockModel stockModel) saveStockDetails,
+    required TResult Function(HcmStockModel stockModel) saveStockDetails,
     required TResult Function() createStockEntry,
     required TResult Function(DateTime dateOfRecord, String primaryType,
             String primaryId, FacilityModel? facilityModel)
@@ -727,7 +727,7 @@ class _$RecordStockSaveTransactionDetailsEventImpl
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(DateTime dateOfRecord, FacilityModel facilityModel)?
         saveWarehouseDetails,
-    TResult? Function(StockModel stockModel)? saveStockDetails,
+    TResult? Function(HcmStockModel stockModel)? saveStockDetails,
     TResult? Function()? createStockEntry,
     TResult? Function(DateTime dateOfRecord, String primaryType,
             String primaryId, FacilityModel? facilityModel)?
@@ -742,7 +742,7 @@ class _$RecordStockSaveTransactionDetailsEventImpl
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(DateTime dateOfRecord, FacilityModel facilityModel)?
         saveWarehouseDetails,
-    TResult Function(StockModel stockModel)? saveStockDetails,
+    TResult Function(HcmStockModel stockModel)? saveStockDetails,
     TResult Function()? createStockEntry,
     TResult Function(DateTime dateOfRecord, String primaryType,
             String primaryId, FacilityModel? facilityModel)?
@@ -829,7 +829,7 @@ mixin _$RecordStockState {
   String? get primaryType => throw _privateConstructorUsedError;
   String? get primaryId => throw _privateConstructorUsedError;
   FacilityModel? get facilityModel => throw _privateConstructorUsedError;
-  StockModel? get stockModel => throw _privateConstructorUsedError;
+  HcmStockModel? get stockModel => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
@@ -840,7 +840,7 @@ mixin _$RecordStockState {
             String? primaryType,
             String? primaryId,
             FacilityModel? facilityModel,
-            StockModel? stockModel)
+            HcmStockModel? stockModel)
         create,
     required TResult Function(
             StockRecordEntryType entryType,
@@ -849,7 +849,7 @@ mixin _$RecordStockState {
             FacilityModel? facilityModel,
             String? primaryType,
             String? primaryId,
-            StockModel? stockModel)
+            HcmStockModel? stockModel)
         persisted,
   }) =>
       throw _privateConstructorUsedError;
@@ -863,7 +863,7 @@ mixin _$RecordStockState {
             String? primaryType,
             String? primaryId,
             FacilityModel? facilityModel,
-            StockModel? stockModel)?
+            HcmStockModel? stockModel)?
         create,
     TResult? Function(
             StockRecordEntryType entryType,
@@ -872,7 +872,7 @@ mixin _$RecordStockState {
             FacilityModel? facilityModel,
             String? primaryType,
             String? primaryId,
-            StockModel? stockModel)?
+            HcmStockModel? stockModel)?
         persisted,
   }) =>
       throw _privateConstructorUsedError;
@@ -886,7 +886,7 @@ mixin _$RecordStockState {
             String? primaryType,
             String? primaryId,
             FacilityModel? facilityModel,
-            StockModel? stockModel)?
+            HcmStockModel? stockModel)?
         create,
     TResult Function(
             StockRecordEntryType entryType,
@@ -895,7 +895,7 @@ mixin _$RecordStockState {
             FacilityModel? facilityModel,
             String? primaryType,
             String? primaryId,
-            StockModel? stockModel)?
+            HcmStockModel? stockModel)?
         persisted,
     required TResult orElse(),
   }) =>
@@ -938,7 +938,7 @@ abstract class $RecordStockStateCopyWith<$Res> {
       String? primaryType,
       String? primaryId,
       FacilityModel? facilityModel,
-      StockModel? stockModel});
+      HcmStockModel? stockModel});
 }
 
 /// @nodoc
@@ -990,7 +990,7 @@ class _$RecordStockStateCopyWithImpl<$Res, $Val extends RecordStockState>
       stockModel: freezed == stockModel
           ? _value.stockModel
           : stockModel // ignore: cast_nullable_to_non_nullable
-              as StockModel?,
+              as HcmStockModel?,
     ) as $Val);
   }
 }
@@ -1012,7 +1012,7 @@ abstract class _$$RecordStockCreateStateImplCopyWith<$Res>
       String? primaryType,
       String? primaryId,
       FacilityModel? facilityModel,
-      StockModel? stockModel});
+      HcmStockModel? stockModel});
 }
 
 /// @nodoc
@@ -1068,7 +1068,7 @@ class __$$RecordStockCreateStateImplCopyWithImpl<$Res>
       stockModel: freezed == stockModel
           ? _value.stockModel
           : stockModel // ignore: cast_nullable_to_non_nullable
-              as StockModel?,
+              as HcmStockModel?,
     ));
   }
 }
@@ -1102,7 +1102,7 @@ class _$RecordStockCreateStateImpl implements RecordStockCreateState {
   @override
   final FacilityModel? facilityModel;
   @override
-  final StockModel? stockModel;
+  final HcmStockModel? stockModel;
 
   @override
   String toString() {
@@ -1153,7 +1153,7 @@ class _$RecordStockCreateStateImpl implements RecordStockCreateState {
             String? primaryType,
             String? primaryId,
             FacilityModel? facilityModel,
-            StockModel? stockModel)
+            HcmStockModel? stockModel)
         create,
     required TResult Function(
             StockRecordEntryType entryType,
@@ -1162,7 +1162,7 @@ class _$RecordStockCreateStateImpl implements RecordStockCreateState {
             FacilityModel? facilityModel,
             String? primaryType,
             String? primaryId,
-            StockModel? stockModel)
+            HcmStockModel? stockModel)
         persisted,
   }) {
     return create(entryType, loading, projectId, dateOfRecord, primaryType,
@@ -1180,7 +1180,7 @@ class _$RecordStockCreateStateImpl implements RecordStockCreateState {
             String? primaryType,
             String? primaryId,
             FacilityModel? facilityModel,
-            StockModel? stockModel)?
+            HcmStockModel? stockModel)?
         create,
     TResult? Function(
             StockRecordEntryType entryType,
@@ -1189,7 +1189,7 @@ class _$RecordStockCreateStateImpl implements RecordStockCreateState {
             FacilityModel? facilityModel,
             String? primaryType,
             String? primaryId,
-            StockModel? stockModel)?
+            HcmStockModel? stockModel)?
         persisted,
   }) {
     return create?.call(entryType, loading, projectId, dateOfRecord,
@@ -1207,7 +1207,7 @@ class _$RecordStockCreateStateImpl implements RecordStockCreateState {
             String? primaryType,
             String? primaryId,
             FacilityModel? facilityModel,
-            StockModel? stockModel)?
+            HcmStockModel? stockModel)?
         create,
     TResult Function(
             StockRecordEntryType entryType,
@@ -1216,7 +1216,7 @@ class _$RecordStockCreateStateImpl implements RecordStockCreateState {
             FacilityModel? facilityModel,
             String? primaryType,
             String? primaryId,
-            StockModel? stockModel)?
+            HcmStockModel? stockModel)?
         persisted,
     required TResult orElse(),
   }) {
@@ -1268,7 +1268,7 @@ abstract class RecordStockCreateState implements RecordStockState {
       final String? primaryType,
       final String? primaryId,
       final FacilityModel? facilityModel,
-      final StockModel? stockModel}) = _$RecordStockCreateStateImpl;
+      final HcmStockModel? stockModel}) = _$RecordStockCreateStateImpl;
 
   @override
   StockRecordEntryType get entryType;
@@ -1284,7 +1284,7 @@ abstract class RecordStockCreateState implements RecordStockState {
   @override
   FacilityModel? get facilityModel;
   @override
-  StockModel? get stockModel;
+  HcmStockModel? get stockModel;
   @override
   @JsonKey(ignore: true)
   _$$RecordStockCreateStateImplCopyWith<_$RecordStockCreateStateImpl>
@@ -1307,7 +1307,7 @@ abstract class _$$RecordStockPersistedStateImplCopyWith<$Res>
       FacilityModel? facilityModel,
       String? primaryType,
       String? primaryId,
-      StockModel? stockModel});
+      HcmStockModel? stockModel});
 }
 
 /// @nodoc
@@ -1359,7 +1359,7 @@ class __$$RecordStockPersistedStateImplCopyWithImpl<$Res>
       stockModel: freezed == stockModel
           ? _value.stockModel
           : stockModel // ignore: cast_nullable_to_non_nullable
-              as StockModel?,
+              as HcmStockModel?,
     ));
   }
 }
@@ -1389,7 +1389,7 @@ class _$RecordStockPersistedStateImpl implements RecordStockPersistedState {
   @override
   final String? primaryId;
   @override
-  final StockModel? stockModel;
+  final HcmStockModel? stockModel;
 
   @override
   String toString() {
@@ -1439,7 +1439,7 @@ class _$RecordStockPersistedStateImpl implements RecordStockPersistedState {
             String? primaryType,
             String? primaryId,
             FacilityModel? facilityModel,
-            StockModel? stockModel)
+            HcmStockModel? stockModel)
         create,
     required TResult Function(
             StockRecordEntryType entryType,
@@ -1448,7 +1448,7 @@ class _$RecordStockPersistedStateImpl implements RecordStockPersistedState {
             FacilityModel? facilityModel,
             String? primaryType,
             String? primaryId,
-            StockModel? stockModel)
+            HcmStockModel? stockModel)
         persisted,
   }) {
     return persisted(entryType, projectId, dateOfRecord, facilityModel,
@@ -1466,7 +1466,7 @@ class _$RecordStockPersistedStateImpl implements RecordStockPersistedState {
             String? primaryType,
             String? primaryId,
             FacilityModel? facilityModel,
-            StockModel? stockModel)?
+            HcmStockModel? stockModel)?
         create,
     TResult? Function(
             StockRecordEntryType entryType,
@@ -1475,7 +1475,7 @@ class _$RecordStockPersistedStateImpl implements RecordStockPersistedState {
             FacilityModel? facilityModel,
             String? primaryType,
             String? primaryId,
-            StockModel? stockModel)?
+            HcmStockModel? stockModel)?
         persisted,
   }) {
     return persisted?.call(entryType, projectId, dateOfRecord, facilityModel,
@@ -1493,7 +1493,7 @@ class _$RecordStockPersistedStateImpl implements RecordStockPersistedState {
             String? primaryType,
             String? primaryId,
             FacilityModel? facilityModel,
-            StockModel? stockModel)?
+            HcmStockModel? stockModel)?
         create,
     TResult Function(
             StockRecordEntryType entryType,
@@ -1502,7 +1502,7 @@ class _$RecordStockPersistedStateImpl implements RecordStockPersistedState {
             FacilityModel? facilityModel,
             String? primaryType,
             String? primaryId,
-            StockModel? stockModel)?
+            HcmStockModel? stockModel)?
         persisted,
     required TResult orElse(),
   }) {
@@ -1553,7 +1553,7 @@ abstract class RecordStockPersistedState implements RecordStockState {
       final FacilityModel? facilityModel,
       final String? primaryType,
       final String? primaryId,
-      final StockModel? stockModel}) = _$RecordStockPersistedStateImpl;
+      final HcmStockModel? stockModel}) = _$RecordStockPersistedStateImpl;
 
   @override
   StockRecordEntryType get entryType;
@@ -1568,7 +1568,7 @@ abstract class RecordStockPersistedState implements RecordStockState {
   @override
   String? get primaryId;
   @override
-  StockModel? get stockModel;
+  HcmStockModel? get stockModel;
   @override
   @JsonKey(ignore: true)
   _$$RecordStockPersistedStateImplCopyWith<_$RecordStockPersistedStateImpl>

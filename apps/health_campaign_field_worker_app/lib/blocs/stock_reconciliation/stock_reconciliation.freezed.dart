@@ -821,7 +821,7 @@ mixin _$StockReconciliationState {
   DateTime get dateOfReconciliation => throw _privateConstructorUsedError;
   FacilityModel? get facilityModel => throw _privateConstructorUsedError;
   String? get productVariantId => throw _privateConstructorUsedError;
-  List<StockModel> get stockModels => throw _privateConstructorUsedError;
+  List<HcmStockModel> get stockModels => throw _privateConstructorUsedError;
   StockReconciliationModel? get stockReconciliationModel =>
       throw _privateConstructorUsedError;
 
@@ -843,7 +843,7 @@ abstract class $StockReconciliationStateCopyWith<$Res> {
       DateTime dateOfReconciliation,
       FacilityModel? facilityModel,
       String? productVariantId,
-      List<StockModel> stockModels,
+      List<HcmStockModel> stockModels,
       StockReconciliationModel? stockReconciliationModel});
 }
 
@@ -898,7 +898,7 @@ class _$StockReconciliationStateCopyWithImpl<$Res,
       stockModels: null == stockModels
           ? _value.stockModels
           : stockModels // ignore: cast_nullable_to_non_nullable
-              as List<StockModel>,
+              as List<HcmStockModel>,
       stockReconciliationModel: freezed == stockReconciliationModel
           ? _value.stockReconciliationModel
           : stockReconciliationModel // ignore: cast_nullable_to_non_nullable
@@ -923,7 +923,7 @@ abstract class _$$StockReconciliationStateImplCopyWith<$Res>
       DateTime dateOfReconciliation,
       FacilityModel? facilityModel,
       String? productVariantId,
-      List<StockModel> stockModels,
+      List<HcmStockModel> stockModels,
       StockReconciliationModel? stockReconciliationModel});
 }
 
@@ -977,7 +977,7 @@ class __$$StockReconciliationStateImplCopyWithImpl<$Res>
       stockModels: null == stockModels
           ? _value._stockModels
           : stockModels // ignore: cast_nullable_to_non_nullable
-              as List<StockModel>,
+              as List<HcmStockModel>,
       stockReconciliationModel: freezed == stockReconciliationModel
           ? _value.stockReconciliationModel
           : stockReconciliationModel // ignore: cast_nullable_to_non_nullable
@@ -996,7 +996,7 @@ class _$StockReconciliationStateImpl extends _StockReconciliationState {
       required this.dateOfReconciliation,
       this.facilityModel,
       this.productVariantId,
-      final List<StockModel> stockModels = const [],
+      final List<HcmStockModel> stockModels = const [],
       this.stockReconciliationModel})
       : _stockModels = stockModels,
         super._();
@@ -1015,10 +1015,10 @@ class _$StockReconciliationStateImpl extends _StockReconciliationState {
   final FacilityModel? facilityModel;
   @override
   final String? productVariantId;
-  final List<StockModel> _stockModels;
+  final List<HcmStockModel> _stockModels;
   @override
   @JsonKey()
-  List<StockModel> get stockModels {
+  List<HcmStockModel> get stockModels {
     if (_stockModels is EqualUnmodifiableListView) return _stockModels;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_stockModels);
@@ -1083,7 +1083,7 @@ abstract class _StockReconciliationState extends StockReconciliationState {
           required final DateTime dateOfReconciliation,
           final FacilityModel? facilityModel,
           final String? productVariantId,
-          final List<StockModel> stockModels,
+          final List<HcmStockModel> stockModels,
           final StockReconciliationModel? stockReconciliationModel}) =
       _$StockReconciliationStateImpl;
   _StockReconciliationState._() : super._();
@@ -1101,7 +1101,7 @@ abstract class _StockReconciliationState extends StockReconciliationState {
   @override
   String? get productVariantId;
   @override
-  List<StockModel> get stockModels;
+  List<HcmStockModel> get stockModels;
   @override
   StockReconciliationModel? get stockReconciliationModel;
   @override

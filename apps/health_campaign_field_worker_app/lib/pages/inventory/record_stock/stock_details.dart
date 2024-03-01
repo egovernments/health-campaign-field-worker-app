@@ -3,6 +3,9 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:inventory_management/models/entities/stock.dart';
+import 'package:inventory_management/models/entities/transaction_reason.dart';
+import 'package:inventory_management/models/entities/transaction_type.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recase/recase.dart';
 
@@ -382,21 +385,23 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                               break;
                                           }
 
-                                          final stockModel = StockModel(
-                                            clientReferenceId:
-                                                IdGen.i.identifier,
-                                            productVariantId: productVariant.id,
-                                            transactionReason:
-                                                transactionReason,
-                                            transactionType: transactionType,
-                                            referenceId: stockState.projectId,
-                                            referenceIdType: 'PROJECT',
-                                            quantity: quantity.toString(),
-                                            waybillNumber: waybillNumber,
-                                            receiverId: receiverId,
-                                            receiverType: receiverType,
-                                            senderId: senderId,
-                                            senderType: senderType,
+                                          final stockModel = HcmStockModel(
+                                            stock: StockModel(
+                                              clientReferenceId:
+                                              IdGen.i.identifier,
+                                              productVariantId: productVariant.id,
+                                              transactionReason:
+                                              transactionReason,
+                                              transactionType: transactionType,
+                                              referenceId: stockState.projectId,
+                                              referenceIdType: 'PROJECT',
+                                              quantity: quantity.toString(),
+                                              waybillNumber: waybillNumber,
+                                              receiverId: receiverId,
+                                              receiverType: receiverType,
+                                              senderId: senderId,
+                                              senderType: senderType,
+                                            ),
                                             auditDetails: AuditDetails(
                                               createdBy:
                                                   context.loggedInUserUuid,

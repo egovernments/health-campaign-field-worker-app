@@ -733,28 +733,28 @@ class ProjectOpLogManager extends OpLogManager<ProjectModel> {
       entity.nonRecoverableError;
 }
 
-class StockOpLogManager extends OpLogManager<StockModel> {
+class StockOpLogManager extends OpLogManager<HcmStockModel> {
   StockOpLogManager(super.isar);
 
   @override
-  StockModel applyServerGeneratedIdToEntity(
-    StockModel entity,
+  HcmStockModel applyServerGeneratedIdToEntity(
+    HcmStockModel entity,
     String serverGeneratedId,
     int rowVersion,
   ) =>
-      entity.copyWith(id: serverGeneratedId, rowVersion: rowVersion);
+      entity.copyWith(stock: entity.stock!.copyWith(id: serverGeneratedId));
 
   @override
-  String getClientReferenceId(StockModel entity) => entity.clientReferenceId;
+  String getClientReferenceId(HcmStockModel entity) => entity.stock!.clientReferenceId!;
 
   @override
-  String? getServerGeneratedId(StockModel entity) => entity.id;
+  String? getServerGeneratedId(HcmStockModel entity) => entity.stock!.id;
 
   @override
-  int? getRowVersion(StockModel entity) => entity.rowVersion;
+  int? getRowVersion(HcmStockModel entity) => entity.stock!.rowVersion;
 
   @override
-  bool? getNonRecoverableError(StockModel entity) => entity.nonRecoverableError;
+  bool? getNonRecoverableError(HcmStockModel entity) => entity.stock!.nonRecoverableError;
 }
 
 class StockReconciliationOpLogManager

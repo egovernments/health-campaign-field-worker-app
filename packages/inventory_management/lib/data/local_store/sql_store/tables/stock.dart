@@ -2,9 +2,10 @@
 
 import 'package:drift/drift.dart';
 
-import '../../../../models/entities/transaction_type.dart';
 import '../../../../models/entities/transaction_reason.dart';
+import '../../../../models/entities/transaction_type.dart';
 
+@DataClassName("Stock")
 class Stock extends Table {
   TextColumn get id => text().nullable()();
   TextColumn get tenantId => text().nullable()();

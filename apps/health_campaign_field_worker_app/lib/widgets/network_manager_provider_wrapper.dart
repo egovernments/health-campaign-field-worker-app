@@ -202,7 +202,7 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           ProjectStaffOpLogManager(isar),
         ),
       ),
-      RepositoryProvider<LocalRepository<StockModel, StockSearchModel>>(
+      RepositoryProvider<LocalRepository<HcmStockModel, HcmStockSearchModel>>(
         create: (_) => StockLocalRepository(
           sql,
           StockOpLogManager(isar),
@@ -425,7 +425,7 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
             ),
           ),
         if (value == DataModelType.stock)
-          RepositoryProvider<RemoteRepository<StockModel, StockSearchModel>>(
+          RepositoryProvider<RemoteRepository<HcmStockModel, HcmStockSearchModel>>(
             create: (_) => StockRemoteRepository(
               dio,
               actionMap: actions,

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:inventory_management/models/entities/stock.dart';
 
 import './remote_type.dart';
 import '../../../models/bandwidth/bandwidth_model.dart';
@@ -22,7 +23,6 @@ class PerformSyncDown {
     const individualIdentifierIdKey = 'individualIdentifierId';
     const householdAddressIdKey = 'householdAddressId';
     const individualAddressIdKey = 'individualAddressId';
-    final nameOfReferralKey = AdditionalFieldsType.nameOfReferral.toValue();
 
     if (configuration.persistenceConfig ==
         PersistenceConfiguration.onlineOnly) {
@@ -559,30 +559,31 @@ class PerformSyncDown {
 
           case DataModelType.stock:
             responseEntities = await remote.search(
-              StockSearchModel(
-                clientReferenceId: entities
-                    .whereType<StockModel>()
-                    .map((e) => e.clientReferenceId)
-                    .whereNotNull()
-                    .toList(),
+              HcmStockSearchModel(
+                 stock: StockSearchModel(
+                  clientReferenceId: entities
+                      .whereType<HcmStockModel>()
+                      .map((e) => e.stock?.clientReferenceId)
+                      .whereNotNull()
+                      .toList(),
               ),
-            );
+            ),);
 
             for (var element in operationGroupedEntity.value) {
               if (element.id == null) return;
-              final entity = element.entity as StockModel;
+              final entity = element.entity as HcmStockModel;
               final responseEntity =
-                  responseEntities.whereType<StockModel>().firstWhereOrNull(
-                        (e) => e.clientReferenceId == entity.clientReferenceId,
+                  responseEntities.whereType<HcmStockModel>().firstWhereOrNull(
+                        (e) => e.stock?.clientReferenceId == entity.stock?.clientReferenceId,
                       );
 
-              final serverGeneratedId = responseEntity?.id;
-              final rowVersion = responseEntity?.rowVersion;
+              final serverGeneratedId = responseEntity?.stock?.id;
+              final rowVersion = responseEntity?.stock?.rowVersion;
 
               if (serverGeneratedId != null) {
                 await local.opLogManager.updateServerGeneratedIds(
                   model: UpdateServerGeneratedIdModel(
-                    clientReferenceId: entity.clientReferenceId,
+                    clientReferenceId: entity.stock!.clientReferenceId!,
                     serverGeneratedId: serverGeneratedId,
                     dataOperation: element.operation,
                     rowVersion: rowVersion,
@@ -590,12 +591,14 @@ class PerformSyncDown {
                 );
               } else {
                 final bool markAsNonRecoverable = await local.opLogManager
-                    .updateSyncDownRetry(entity.clientReferenceId);
+                    .updateSyncDownRetry(entity.stock!.clientReferenceId!);
 
                 if (markAsNonRecoverable) {
                   await local.update(
                     entity.copyWith(
-                      nonRecoverableError: true,
+                      stock: entity.stock!.copyWith(
+                        nonRecoverableError: true,
+                      ),
                     ),
                     createOpLog: false,
                   );

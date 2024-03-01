@@ -28,7 +28,7 @@ class RecordStockWrapperPage extends StatelessWidget with AutoRouteWrapper {
 
   @override
   Widget wrappedRoute(BuildContext context) {
-    final stockRepository = context.repository<StockModel, StockSearchModel>();
+    final stockRepository = context.repository<HcmStockModel, HcmStockSearchModel>();
 
     return BlocBuilder<ProjectBloc, ProjectState>(
       builder: (context, projectState) {

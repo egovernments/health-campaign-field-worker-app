@@ -4,6 +4,9 @@ import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
+import 'package:inventory_management/models/entities/stock.dart';
+import 'package:inventory_management/models/entities/transaction_reason.dart';
+import 'package:inventory_management/models/entities/transaction_type.dart';
 
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../models/data_model.dart';
@@ -85,21 +88,25 @@ class InventoryReportBloc
 
     final data = (receiverId != null
             ? await stockRepository.search(
-                StockSearchModel(
-                  transactionType: transactionType,
-                  tenantId: envConfig.variables.tenantId,
-                  receiverId: receiverId,
-                  productVariantId: productVariantId,
-                  transactionReason: transactionReason,
+                HcmStockSearchModel(
+                  stock: StockSearchModel(
+                    transactionType: transactionType,
+                    tenantId: envConfig.variables.tenantId,
+                    receiverId: receiverId,
+                    productVariantId: productVariantId,
+                    transactionReason: transactionReason,
+                  ),
                 ),
               )
             : await stockRepository.search(
-                StockSearchModel(
-                  transactionType: transactionType,
-                  tenantId: envConfig.variables.tenantId,
-                  senderId: senderId,
-                  productVariantId: productVariantId,
-                  transactionReason: transactionReason,
+                HcmStockSearchModel(
+                  stock: StockSearchModel(
+                    transactionType: transactionType,
+                    tenantId: envConfig.variables.tenantId,
+                    senderId: senderId,
+                    productVariantId: productVariantId,
+                    transactionReason: transactionReason,
+                  ),
                 ),
               ))
         .where((element) =>
@@ -171,7 +178,7 @@ class InventoryReportState with _$InventoryReportState {
   const factory InventoryReportState.empty() = InventoryReportEmptyState;
 
   const factory InventoryReportState.stock({
-    @Default({}) Map<String, List<StockModel>> stockData,
+    @Default({}) Map<String, List<HcmStockModel>> stockData,
   }) = InventoryReportStockState;
 
   const factory InventoryReportState.stockReconciliation({

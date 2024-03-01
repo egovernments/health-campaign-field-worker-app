@@ -1,5 +1,7 @@
 import 'package:attendance_management/blocs/app_localization.dart'
     as attendance_localization;
+import 'package:inventory_management/blocs/app_localization.dart'
+    as inventory_localization;
 import 'package:digit_components/digit_components.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -301,6 +303,14 @@ class MainApplicationState extends State<MainApplication>
                               GlobalCupertinoLocalizations.delegate,
                               GlobalMaterialLocalizations.delegate,
                               attendance_localization.AttendanceLocalization
+                                  .getDelegate(
+                                getLocalizationString(
+                                  widget.isar,
+                                  selectedLocale,
+                                ),
+                                appConfig.languages!,
+                              ),
+                              inventory_localization.InventoryLocalization
                                   .getDelegate(
                                 getLocalizationString(
                                   widget.isar,

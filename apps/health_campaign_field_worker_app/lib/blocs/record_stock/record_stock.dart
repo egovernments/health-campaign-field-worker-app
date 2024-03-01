@@ -44,7 +44,7 @@ class RecordStockBloc extends Bloc<RecordStockEvent, RecordStockState> {
     );
   }
 
-    FutureOr<void> _handleSaveTransactionDetails(
+  FutureOr<void> _handleSaveTransactionDetails(
     RecordStockSaveTransactionDetailsEvent event,
     RecordStockEmitter emit,
   ) async {
@@ -111,9 +111,11 @@ class RecordStockBloc extends Bloc<RecordStockEvent, RecordStockState> {
         try {
           await stockRepository.create(
             stockModel.copyWith(
-              facilityId: facilityModel.id,
-              rowVersion: 1,
-              tenantId: envConfig.variables.tenantId,
+              stock: stockModel.stock?.copyWith(
+                facilityId: facilityModel.id,
+                rowVersion: 1,
+                tenantId: envConfig.variables.tenantId,
+              ),
             ),
           );
 
@@ -143,13 +145,13 @@ class RecordStockEvent with _$RecordStockEvent {
   }) = RecordStockSaveWarehouseDetailsEvent;
 
   const factory RecordStockEvent.saveStockDetails({
-    required StockModel stockModel,
+    required HcmStockModel stockModel,
   }) = RecordStockSaveStockDetailsEvent;
 
   const factory RecordStockEvent.createStockEntry() =
       RecordStockCreateStockEntryEvent;
 
-   const factory RecordStockEvent.saveTransactionDetails({
+  const factory RecordStockEvent.saveTransactionDetails({
     required DateTime dateOfRecord,
     required String primaryType,
     required String primaryId,
@@ -168,7 +170,7 @@ class RecordStockState with _$RecordStockState {
     String? primaryType,
     String? primaryId,
     FacilityModel? facilityModel,
-    StockModel? stockModel,
+    HcmStockModel? stockModel,
   }) = RecordStockCreateState;
 
   const factory RecordStockState.persisted({
@@ -178,7 +180,7 @@ class RecordStockState with _$RecordStockState {
     FacilityModel? facilityModel,
     String? primaryType,
     String? primaryId,
-    StockModel? stockModel,
+    HcmStockModel? stockModel,
   }) = RecordStockPersistedState;
 }
 

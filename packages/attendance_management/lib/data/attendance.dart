@@ -27,10 +27,10 @@ class Attendance extends Table {
       boolean().nullable().withDefault(const Constant(false))();
   @override
   Set<Column> get primaryKey => {
-        registerId,
-        individualId,
-        tenantId,
-        type,
-        clientReferenceId,
-      };
+    registerId,
+    individualId,
+    tenantId,
+    type,
+    clientReferenceId,
+  };
 }

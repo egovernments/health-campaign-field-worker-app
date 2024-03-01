@@ -3,6 +3,9 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:inventory_management/models/entities/stock.dart';
+import 'package:inventory_management/models/entities/transaction_reason.dart';
+import 'package:inventory_management/models/entities/transaction_type.dart';
 
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../models/data_model.dart';
@@ -62,9 +65,11 @@ class StockReconciliationBloc
     final user = await LocalSecureStore.instance.userRequestModel;
 
     final receivedStocks = (await stockRepository.search(
-      StockSearchModel(
-        productVariantId: productVariantId,
-        receiverId: facilityId,
+      HcmStockSearchModel(
+        stock: StockSearchModel(
+          productVariantId: productVariantId,
+          receiverId: facilityId,
+        ),
       ),
     ))
         .where((element) =>
@@ -72,9 +77,11 @@ class StockReconciliationBloc
             element.auditDetails?.createdBy == user?.uuid)
         .toList();
     final sentStocks = (await stockRepository.search(
-      StockSearchModel(
-        productVariantId: productVariantId,
-        senderId: facilityId,
+      HcmStockSearchModel(
+        stock: StockSearchModel(
+          productVariantId: productVariantId,
+          senderId: facilityId,
+        ),
       ),
     ))
         .where((element) =>
@@ -153,50 +160,51 @@ class StockReconciliationState with _$StockReconciliationState {
     required DateTime dateOfReconciliation,
     FacilityModel? facilityModel,
     String? productVariantId,
-    @Default([]) List<StockModel> stockModels,
+    @Default([]) List<HcmStockModel> stockModels,
     StockReconciliationModel? stockReconciliationModel,
   }) = _StockReconciliationState;
 
   num get stockReceived => _getQuantityCount(
         stockModels.where((e) =>
-            e.transactionType == TransactionType.received &&
-            e.transactionReason == TransactionReason.received),
+            e.stock!.transactionType == TransactionType.received &&
+            e.stock!.transactionReason == TransactionReason.received),
       );
 
   num get stockIssued => _getQuantityCount(
         stockModels.where((e) =>
-            e.transactionType == TransactionType.dispatched &&
-            e.transactionReason == null),
+            e.stock!.transactionType! == TransactionType.dispatched &&
+            e.stock!.transactionReason == null),
       );
 
   num get stockReturned => _getQuantityCount(
         stockModels.where((e) =>
-            e.transactionType == TransactionType.received &&
-            e.transactionReason == TransactionReason.returned),
+            e.stock!.transactionType! == TransactionType.received &&
+            e.stock!.transactionReason == TransactionReason.returned),
       );
 
   num get stockLost => _getQuantityCount(
         stockModels.where((e) =>
-            e.transactionType == TransactionType.dispatched &&
-            (e.transactionReason == TransactionReason.lostInTransit ||
-                e.transactionReason == TransactionReason.lostInStorage)),
+            e.stock!.transactionType! == TransactionType.dispatched &&
+            (e.stock!.transactionReason == TransactionReason.lostInTransit ||
+                e.stock!.transactionReason == TransactionReason.lostInStorage)),
       );
 
   num get stockDamaged => _getQuantityCount(
         stockModels.where((e) =>
-            e.transactionType == TransactionType.dispatched &&
-            (e.transactionReason == TransactionReason.damagedInTransit ||
-                e.transactionReason == TransactionReason.damagedInStorage)),
+            e.stock!.transactionType! == TransactionType.dispatched &&
+            (e.stock!.transactionReason == TransactionReason.damagedInTransit ||
+                e.stock!.transactionReason ==
+                    TransactionReason.damagedInStorage)),
       );
 
   num get stockInHand =>
       (stockReceived + stockReturned) -
       (stockIssued + stockDamaged + stockLost);
 
-  num _getQuantityCount(Iterable<StockModel> stocks) {
+  num _getQuantityCount(Iterable<HcmStockModel> stocks) {
     return stocks.fold<num>(
       0.0,
-      (old, e) => (num.tryParse(e.quantity ?? '') ?? 0.0) + old,
+      (old, e) => (num.tryParse(e.stock!.quantity ?? '') ?? 0.0) + old,
     );
   }
 }
