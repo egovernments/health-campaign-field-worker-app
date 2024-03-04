@@ -94,6 +94,11 @@ class Variables {
     'https://health-dev.digit.org/',
   );
 
+  static const _checkBandwidthApi = EnvEntry(
+    'CHECK_BANDWIDTH_API',
+    '/health-project/check/bandwidth',
+  );
+
   static const _mdmsApi = EnvEntry(
     'MDMS_API_PATH',
     'egov-mdms-service/v1/_search',
@@ -117,6 +122,10 @@ class Variables {
   String get baseUrl => useFallbackValues
       ? _baseUrl.value
       : _dotEnv.get(_baseUrl.key, fallback: _baseUrl.value);
+
+  String get checkBandwidthApiPath => useFallbackValues
+      ? _checkBandwidthApi.value
+      : _dotEnv.get(_checkBandwidthApi.key, fallback: _checkBandwidthApi.value);
 
   String get mdmsApiPath => useFallbackValues
       ? _mdmsApi.value

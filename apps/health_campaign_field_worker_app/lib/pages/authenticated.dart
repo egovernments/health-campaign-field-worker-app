@@ -30,6 +30,7 @@ import '../data/repositories/remote/bandwidth_check.dart';
 import '../models/data_model.dart';
 import '../router/app_router.dart';
 import '../router/authenticated_route_observer.dart';
+import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
 import '../widgets/sidebar/side_bar.dart';
@@ -344,10 +345,10 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                       ),
                       BlocProvider(
                         create: (ctx) => BeneficiaryDownSyncBloc(
-                          //{TODO: Need to get the bandwidth path from config
                           bandwidthCheckRepository: BandwidthCheckRepository(
                             DioClient().dio,
-                            bandwidthPath: '/project/check/bandwidth',
+                            bandwidthPath:
+                                envConfig.variables.checkBandwidthApiPath,
                           ),
                           householdLocalRepository: ctx.read<
                               LocalRepository<HouseholdModel,

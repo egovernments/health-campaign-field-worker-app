@@ -41,7 +41,6 @@ class IndividualLocalRepository
         ),
       ],
     );
-    final r = await selectQuery.get();
 
     final results = await (selectQuery
           ..where(
@@ -59,7 +58,7 @@ class IndividualLocalRepository
                   query.tenantId!,
                 ),
               if (query.userUuid != null)
-                sql.individual.userUuid.equals(
+                sql.individual.userUuid.isIn(
                   query.userUuid!,
                 ),
               if (query.dateOfBirth != null)

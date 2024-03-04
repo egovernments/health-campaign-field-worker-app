@@ -187,8 +187,16 @@ class _AttendanceDateSessionSelectionPageState
                                                       attendees: selectedRegister
                                                                   .attendees !=
                                                               null
-                                                          ? selectedRegister
-                                                              .attendees!
+                                                          //Filtering attendees based on current time and enrollment date of the attendee
+                                                          ? (selectedRegister
+                                                                      .attendees ??
+                                                                  [])
+                                                              .where((att) =>
+                                                                  att.enrollmentDate !=
+                                                                      null &&
+                                                                  att.enrollmentDate! <=
+                                                                      entryTime)
+                                                              .toList()
                                                           : [],
                                                       dateTime: s,
                                                       session: session?.key,

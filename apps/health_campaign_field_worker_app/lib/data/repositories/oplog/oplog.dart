@@ -637,18 +637,22 @@ class AttendanceOpLogManager extends OpLogManager<HCMAttendanceRegisterModel> {
   @override
   String getClientReferenceId(HCMAttendanceRegisterModel entity) =>
       throw UnimplementedError();
+  //ClientreferenceId is not needed for register
 
   @override
   String? getServerGeneratedId(HCMAttendanceRegisterModel entity) =>
       throw UnimplementedError();
+  //Not being used for down sync using client referenceIds
 
   @override
   int? getRowVersion(HCMAttendanceRegisterModel entity) =>
       throw UnimplementedError();
+  //Not being used for down sync using client referenceIds
 
   @override
   bool? getNonRecoverableError(HCMAttendanceRegisterModel entity) =>
       throw UnimplementedError();
+//Not being used for down sync using client referenceIds
 }
 
 class AttendanceLogOpLogManager extends OpLogManager<HCMAttendanceLogModel> {

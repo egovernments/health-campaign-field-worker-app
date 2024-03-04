@@ -66,6 +66,7 @@ class _SearchBeneficiaryPageState
 
   @override
   void dispose() {
+    blocWrapper.clearEvent();
     super.dispose();
   }
 
@@ -149,15 +150,11 @@ class _SearchBeneficiaryPageState
                                         TextCapitalization.words,
                                     onChanged: (value) {
                                       if (value.isEmpty) {
-                                        blocWrapper.searchByHeadBloc.add(
-                                          const SearchHouseholdsEvent.clear(),
-                                        );
+                                        blocWrapper.clearEvent();
                                       }
                                       if (value.trim().length < 2 &&
                                           !isProximityEnabled) {
-                                        blocWrapper.searchByHeadBloc.add(
-                                          const SearchHouseholdsEvent.clear(),
-                                        );
+                                        blocWrapper.clearEvent();
 
                                         return;
                                       } else if (isProximityEnabled &&
@@ -237,12 +234,7 @@ class _SearchBeneficiaryPageState
                                                     ),
                                                   );
                                                 } else {
-                                                  blocWrapper
-                                                      .proximitySearchBloc
-                                                      .add(
-                                                    const SearchHouseholdsEvent
-                                                        .clear(),
-                                                  );
+                                                  blocWrapper.clearEvent();
                                                 }
                                               },
                                             ),
@@ -325,9 +317,7 @@ class _SearchBeneficiaryPageState
                                   });
                                   searchController.clear();
 
-                                  blocWrapper.searchByHeadBloc.add(
-                                    const SearchHouseholdsEvent.clear(),
-                                  );
+                                  blocWrapper.clearEvent();
                                 },
                               ),
                             );
@@ -366,9 +356,7 @@ class _SearchBeneficiaryPageState
                                   ),
                                 ));
                                 searchController.clear();
-                                blocWrapper.searchByHeadBloc.add(
-                                  const SearchHouseholdsEvent.clear(),
-                                );
+                                blocWrapper.clearEvent();
                               }
                             : null,
                         child: Center(
@@ -384,8 +372,7 @@ class _SearchBeneficiaryPageState
                           ),
                         ),
                         onPressed: () {
-                          blocWrapper.tagSearchBloc
-                              .add(const SearchHouseholdsEvent.clear());
+                          blocWrapper.clearEvent();
                           context.router.push(QRScannerRoute(
                             quantity: 1,
                             isGS1code: false,

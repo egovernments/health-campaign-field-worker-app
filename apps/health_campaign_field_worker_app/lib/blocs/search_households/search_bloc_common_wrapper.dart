@@ -40,6 +40,13 @@ class SearchBlocWrapper implements StateStreamableSource<Object?> {
     }
   }
 
+  void clearEvent() {
+    proximitySearchBloc.add(const SearchHouseholdsEvent.clear());
+    searchByHeadBloc.add(const SearchHouseholdsEvent.clear());
+    tagSearchBloc.add(const SearchHouseholdsEvent.clear());
+    searchHouseholdsBloc.add(const SearchHouseholdsEvent.clear());
+  }
+
   @override
   SearchHouseholdsState get state => searchHouseholdsBloc.state;
 
