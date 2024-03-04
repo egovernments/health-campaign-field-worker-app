@@ -24,8 +24,8 @@ class IndividualSearchModelMapper
   static List<String>? _$id(IndividualSearchModel v) => v.id;
   static const Field<IndividualSearchModel, List<String>> _f$id =
       Field('id', _$id, opt: true);
-  static String? _$userUuid(IndividualSearchModel v) => v.userUuid;
-  static const Field<IndividualSearchModel, String> _f$userUuid =
+  static List<String>? _$userUuid(IndividualSearchModel v) => v.userUuid;
+  static const Field<IndividualSearchModel, List<String>> _f$userUuid =
       Field('userUuid', _$userUuid, opt: true);
   static String? _$dateOfBirth(IndividualSearchModel v) => v.dateOfBirth;
   static const Field<IndividualSearchModel, String> _f$dateOfBirth =
@@ -158,6 +158,7 @@ abstract class IndividualSearchModelCopyWith<
     $In extends IndividualSearchModel,
     $Out> implements EntitySearchModelCopyWith<$R, $In, $Out> {
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get id;
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get userUuid;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get clientReferenceId;
   NameSearchModelCopyWith<$R, NameSearchModel, NameSearchModel>? get name;
@@ -169,7 +170,7 @@ abstract class IndividualSearchModelCopyWith<
   @override
   $R call(
       {List<String>? id,
-      String? userUuid,
+      List<String>? userUuid,
       String? dateOfBirth,
       List<String>? clientReferenceId,
       String? tenantId,
@@ -194,6 +195,14 @@ class _IndividualSearchModelCopyWithImpl<$R, $Out>
       $value.id != null
           ? ListCopyWith($value.id!, (v, t) => ObjectCopyWith(v, $identity, t),
               (v) => call(id: v))
+          : null;
+  @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get userUuid =>
+      $value.userUuid != null
+          ? ListCopyWith(
+              $value.userUuid!,
+              (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(userUuid: v))
           : null;
   @override
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?

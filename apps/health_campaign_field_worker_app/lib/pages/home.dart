@@ -429,7 +429,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.manageAttendanceLabel:
           homeShowcaseData.manageAttendance.buildWith(
         child: HomeItemCard(
-          icon: Icons.table_chart,
+          icon: Icons.fingerprint_outlined,
           label: i18.home.manageAttendanceLabel,
           onPressed: () {
             Navigator.push(
