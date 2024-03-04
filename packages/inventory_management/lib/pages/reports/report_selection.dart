@@ -1,17 +1,19 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
+import 'package:auto_route/auto_route.dart';
 
-import '../../../blocs/inventory_report/inventory_report.dart';
-import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
-import '../../../widgets/header/back_navigation_help_header.dart';
 import '../../../widgets/localized.dart';
+import '../../blocs/inventory_listener.dart';
+import '../../blocs/inventory_report.dart';
+import '../../router/inventory_router.dart';
+import '../../widgets/back_navigation_help_header.dart';
 
 class InventoryReportSelectionPage extends LocalizedStatefulWidget {
   const InventoryReportSelectionPage({
-    Key? key,
+    super.key,
     super.appLocalizations,
-  }) : super(key: key);
+  });
 
   @override
   State<InventoryReportSelectionPage> createState() =>
@@ -35,7 +37,8 @@ class _InventoryReportSelectionPageState
             mainAxisSize: MainAxisSize.min,
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(kPadding*2, kPadding, kPadding*2, kPadding),
+                padding: const EdgeInsets.fromLTRB(
+                    kPadding * 2, kPadding, kPadding * 2, kPadding),
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: Text(
@@ -55,9 +58,11 @@ class _InventoryReportSelectionPageState
                       .inventoryReportReceiptDescription),
                   prefixIcon: Icons.login,
                   sufixIcon: Icons.arrow_circle_right,
-                  onPressed: () => context.router.push(
-                    InventoryReportDetailsRoute(
+                  onPressed: () => AutoRouter.of(context).push(
+                    InventoryReportDetailsPageRoute(
                       reportType: InventoryReportType.receipt,
+                      isDistributor: false,
+                      projectId: InventorySingleton().projectId,
                     ),
                   ),
                 ),
@@ -71,8 +76,10 @@ class _InventoryReportSelectionPageState
                   prefixIcon: Icons.logout,
                   sufixIcon: Icons.arrow_circle_right,
                   onPressed: () => context.router.push(
-                    InventoryReportDetailsRoute(
+                    InventoryReportDetailsPageRoute(
                       reportType: InventoryReportType.dispatch,
+                      isDistributor: false,
+                      projectId: InventorySingleton().projectId,
                     ),
                   ),
                 ),
@@ -86,8 +93,10 @@ class _InventoryReportSelectionPageState
                   prefixIcon: Icons.settings_backup_restore,
                   sufixIcon: Icons.arrow_circle_right,
                   onPressed: () => context.router.push(
-                    InventoryReportDetailsRoute(
+                    InventoryReportDetailsPageRoute(
                       reportType: InventoryReportType.returned,
+                      isDistributor: false,
+                      projectId: InventorySingleton().projectId,
                     ),
                   ),
                 ),
@@ -102,8 +111,10 @@ class _InventoryReportSelectionPageState
                   prefixIcon: Icons.store,
                   sufixIcon: Icons.arrow_circle_right,
                   onPressed: () => context.router.push(
-                    InventoryReportDetailsRoute(
+                    InventoryReportDetailsPageRoute(
                       reportType: InventoryReportType.damage,
+                      isDistributor: false,
+                      projectId: InventorySingleton().projectId,
                     ),
                   ),
                 ),
@@ -117,8 +128,10 @@ class _InventoryReportSelectionPageState
                   prefixIcon: Icons.store,
                   sufixIcon: Icons.arrow_circle_right,
                   onPressed: () => context.router.push(
-                    InventoryReportDetailsRoute(
+                    InventoryReportDetailsPageRoute(
                       reportType: InventoryReportType.loss,
+                      isDistributor: false,
+                      projectId: InventorySingleton().projectId,
                     ),
                   ),
                 ),
@@ -134,8 +147,10 @@ class _InventoryReportSelectionPageState
                   prefixIcon: Icons.store,
                   sufixIcon: Icons.arrow_circle_right,
                   onPressed: () => context.router.push(
-                    InventoryReportDetailsRoute(
+                    InventoryReportDetailsPageRoute(
                       reportType: InventoryReportType.reconciliation,
+                      isDistributor: false,
+                      projectId: InventorySingleton().projectId,
                     ),
                   ),
                 ),
