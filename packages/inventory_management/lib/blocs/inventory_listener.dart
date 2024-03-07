@@ -1,27 +1,47 @@
-abstract class InventoryListener {
+import '../models/entities/inventory_facility.dart';
 
+abstract class InventoryListener {
+  void fetchFacilitiesForProjectId(
+      Function(List<InventoryFacilityModel> facilitiesModel) facilities);
+
+  void callSyncMethod();
 }
 
 class InventorySingleton {
   static final InventorySingleton _singleton = InventorySingleton._internal();
+
   factory InventorySingleton() {
     return _singleton;
   }
 
   InventorySingleton._internal();
-  final List<InventoryListener> _listeners = [];
 
-  void addListener(InventoryListener listener) {
-    _listeners.add(listener);
-  }
-  void removeListener(InventoryListener listener) {
-    _listeners.remove(listener);
+  InventoryListener? _inventoryListener;
+  String _projectId = '';
+  String _userId = '';
+  String _appVersion = '';
+
+  void setInitialData(
+      {required InventoryListener inventoryListener,
+      required String userId,
+      required String projectId,
+      required String appVersion}) {
+    _inventoryListener = inventoryListener;
+    _projectId = projectId;
+    _userId = userId;
+    _appVersion = appVersion;
   }
 
-  void notifyListeners() {
-    for (var listener in _listeners) {
-      // listener.onInventoryChanged();
-    }
+  get projectId => _projectId;
+  get userId => _userId;
+  get appVersion => _appVersion;
+
+  void getFacilitiesForProjectId(
+      Function(List<InventoryFacilityModel> facilitiesModel) facilities) {
+    _inventoryListener?.fetchFacilitiesForProjectId(facilities);
   }
 
+  void callSync() {
+    _inventoryListener?.callSyncMethod();
+  }
 }

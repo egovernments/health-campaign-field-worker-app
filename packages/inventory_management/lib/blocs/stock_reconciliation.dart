@@ -7,7 +7,7 @@ import 'package:inventory_management/models/entities/stock.dart';
 import 'package:inventory_management/models/entities/transaction_reason.dart';
 import 'package:inventory_management/models/entities/transaction_type.dart';
 
-import '../models/entities/facility.dart';
+import '../models/entities/inventory_facility.dart';
 import '../models/entities/stock_reconciliation.dart';
 
 part 'stock_reconciliation.freezed.dart';
@@ -136,7 +136,7 @@ class StockReconciliationBloc
 @freezed
 class StockReconciliationEvent with _$StockReconciliationEvent {
   const factory StockReconciliationEvent.selectFacility(
-    FacilityModel facilityModel, {
+    InventoryFacilityModel facilityModel, {
     @Default(false) bool isDistributor,
   }) = StockReconciliationSelectFacilityEvent;
 
@@ -163,7 +163,7 @@ class StockReconciliationState with _$StockReconciliationState {
     @Default(false) bool persisted,
     required String projectId,
     required DateTime dateOfReconciliation,
-    FacilityModel? facilityModel,
+    InventoryFacilityModel? facilityModel,
     String? productVariantId,
     @Default([]) List<StockModel> stockModels,
     StockReconciliationModel? stockReconciliationModel,
@@ -198,8 +198,7 @@ class StockReconciliationState with _$StockReconciliationState {
         stockModels.where((e) =>
             e.transactionType! == TransactionType.dispatched &&
             (e.transactionReason == TransactionReason.damagedInTransit ||
-                e.transactionReason ==
-                    TransactionReason.damagedInStorage)),
+                e.transactionReason == TransactionReason.damagedInStorage)),
       );
 
   num get stockInHand =>

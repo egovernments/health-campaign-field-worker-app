@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:inventory_management/pages/record_stock/record_stock_wrapper.dart';
 
 import '../blocs/app_localization.dart';
+import '../blocs/inventory_listener.dart';
 import '../blocs/inventory_report.dart';
 import '../blocs/record_stock.dart';
 import '../models/entities/inventory_facility.dart';

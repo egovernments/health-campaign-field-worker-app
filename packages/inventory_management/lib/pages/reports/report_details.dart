@@ -1,51 +1,57 @@
-import 'package:collection/collection.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-import '../../../blocs/facility/facility.dart';
-import '../../../blocs/inventory_report/inventory_report.dart';
-import '../../../blocs/product_variant/product_variant.dart';
-import '../../../blocs/stock_reconciliation/stock_reconciliation.dart';
-import '../../../models/data_model.dart';
-import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
 import '../../../widgets/component_wrapper/facility_bloc_wrapper.dart';
 import '../../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
-import '../../../widgets/header/back_navigation_help_header.dart';
 import '../../../widgets/inventory/no_facilities_assigned_dialog.dart';
 import '../../../widgets/localized.dart';
 import '../../../widgets/reports/readonly_pluto_grid.dart';
+import '../../blocs/facility.dart';
+import '../../blocs/inventory_report.dart';
+import '../../blocs/product_variant.dart';
+import '../../blocs/stock_reconciliation.dart';
+import '../../models/entities/inventory_facility.dart';
+import '../../models/entities/product_variant.dart';
+import '../../models/entities/stock.dart';
+import '../../models/entities/stock_reconciliation.dart';
+import '../../router/inventory_router.dart';
+import '../../widgets/back_navigation_help_header.dart';
 import '../facility_selection.dart';
 
 class InventoryReportDetailsPage extends LocalizedStatefulWidget
     with AutoRouteWrapper {
+  final bool? isDistributor;
   final InventoryReportType reportType;
 
   const InventoryReportDetailsPage({
-    Key? key,
+    required this.isDistributor,
+    super.key,
     super.appLocalizations,
     required this.reportType,
-  }) : super(key: key);
+    required String projectId,
+  });
 
   @override
   State<InventoryReportDetailsPage> createState() =>
       _InventoryReportDetailsPageState();
 
-/* created a wrapper  Router which handles the BlocProvider 
+/* created a wrapper  Router which handles the BlocProvider
 and attached the event to load the data*/
   @override
   Widget wrappedRoute(BuildContext context) {
     return BlocProvider(
       create: (context) {
         return InventoryReportBloc(
-          stockReconciliationRepository: context.repository<
-              StockReconciliationModel, StockReconciliationSearchModel>(),
-          stockRepository:
-              context.repository<HcmStockModel, HcmStockSearchModel>(),
-        );
+            // stockReconciliationRepository: context.repository<
+            //     StockReconciliationModel, StockReconciliationSearchModel>(),
+            // stockRepository:
+            // context.repository<StockModel, StockSearchModel>(),
+            );
       },
       child: this,
     );
@@ -61,7 +67,7 @@ class _InventoryReportDetailsPageState
     final event = widget.reportType == InventoryReportType.reconciliation
         ? InventoryReportLoadStockReconciliationDataEvent(
             facilityId: form.control(_facilityKey).value != null
-                ? (form.control(_facilityKey).value as FacilityModel).id
+                ? (form.control(_facilityKey).value as InventoryFacilityModel).id
                 : '',
             productVariantId: form.control(_productVariantKey).value != null
                 ? (form.control(_productVariantKey).value
@@ -72,7 +78,7 @@ class _InventoryReportDetailsPageState
         : InventoryReportLoadStockDataEvent(
             reportType: widget.reportType,
             facilityId: form.control(_facilityKey).value != null
-                ? (form.control(_facilityKey).value as FacilityModel).id
+                ? (form.control(_facilityKey).value as InventoryFacilityModel).id
                 : '',
             productVariantId: form.control(_productVariantKey).value != null
                 ? (form.control(_productVariantKey).value
@@ -92,7 +98,7 @@ class _InventoryReportDetailsPageState
 
   FormGroup _form() {
     return fb.group({
-      _facilityKey: FormControl<FacilityModel>(
+      _facilityKey: FormControl<InventoryFacilityModel>(
         validators: [Validators.required],
       ),
       _productVariantKey: FormControl<ProductVariantModel>(),
@@ -101,13 +107,6 @@ class _InventoryReportDetailsPageState
 
   @override
   Widget build(BuildContext context) {
-    bool isDistributor = context.loggedInUserRoles
-        .where(
-          (role) => role.code == RolesType.distributor.toValue(),
-        )
-        .toList()
-        .isNotEmpty;
-
     return Scaffold(
       bottomNavigationBar: DigitCard(
         padding: const EdgeInsets.all(8.0),
@@ -152,16 +151,18 @@ class _InventoryReportDetailsPageState
                   return SizedBox(
                     height: MediaQuery.of(context).size.height * 0.65,
                     child: FacilityBlocWrapper(
+                      projectId: '',
                       child: ProductVariantBlocWrapper(
+                        projectId: '',
                         child: BlocProvider(
                           create: (context) => StockReconciliationBloc(
-                            stockRepository: context.repository<HcmStockModel,
-                                HcmStockSearchModel>(),
-                            stockReconciliationRepository: context.repository<
-                                StockReconciliationModel,
-                                StockReconciliationSearchModel>(),
+                            // stockRepository: context.repository<StockModel,
+                            //     StockSearchModel>(),
+                            // stockReconciliationRepository: context.repository<
+                            //     StockReconciliationModel,
+                            //     StockReconciliationSearchModel>(),
                             StockReconciliationState(
-                              projectId: context.projectId,
+                              projectId: '',
                               dateOfReconciliation: DateTime.now(),
                             ),
                           ),
@@ -170,7 +171,8 @@ class _InventoryReportDetailsPageState
                             listener: (context, stockState) {
                               if (!stockState.persisted) return;
 
-                              context.router.replace(AcknowledgementRoute());
+                              context.router
+                                  .replace(InventoryAcknowledgementPageRoute());
                             },
                             builder: (context, stockState) {
                               return Column(
@@ -178,7 +180,7 @@ class _InventoryReportDetailsPageState
                                   DigitCard(
                                     child: Column(
                                       children: [
-                                        if (!isDistributor)
+                                        if (!widget.isDistributor!)
                                           BlocConsumer<FacilityBloc,
                                               FacilityState>(
                                             listener: (context, state) =>
@@ -206,8 +208,8 @@ class _InventoryReportDetailsPageState
 
                                                   final facility = await context
                                                       .router
-                                                      .push<FacilityModel>(
-                                                    FacilitySelectionRoute(
+                                                      .push<InventoryFacilityModel>(
+                                                    FacilitySelectionPageRoute(
                                                       facilities: facilities,
                                                     ),
                                                   );
@@ -252,8 +254,8 @@ class _InventoryReportDetailsPageState
                                                       final facility =
                                                           await context.router
                                                               .push<
-                                                                  FacilityModel>(
-                                                        FacilitySelectionRoute(
+                                                                  InventoryFacilityModel>(
+                                                        FacilitySelectionPageRoute(
                                                           facilities:
                                                               facilities,
                                                         ),
@@ -400,17 +402,17 @@ class _InventoryReportDetailsPageState
                                                         ),
                                                         DigitGridCell(
                                                           key: waybillKey,
-                                                          value: model.stock!
+                                                          value: model
                                                                   .waybillNumber ??
-                                                              model.stock!
+                                                              model
                                                                   .waybillNumber ??
                                                               '',
                                                         ),
                                                         DigitGridCell(
                                                           key: quantityKey,
-                                                          value: model.stock!
-                                                                  .quantity ??
-                                                              '',
+                                                          value:
+                                                              model.quantity ??
+                                                                  '',
                                                         ),
                                                         DigitGridCell(
                                                           key:
@@ -428,14 +430,12 @@ class _InventoryReportDetailsPageState
                                                                   widget.reportType ==
                                                                       InventoryReportType
                                                                           .damage
-                                                              ? model.stock!
-                                                                      .receiverId ??
-                                                                  model.stock!
+                                                              ? model.receiverId ??
+                                                                  model
                                                                       .receiverType ??
                                                                   ''
-                                                              : model.stock!
-                                                                      .senderId ??
-                                                                  model.stock!
+                                                              : model.senderId ??
+                                                                  model
                                                                       .receiverType ??
                                                                   '',
                                                         ),
@@ -715,16 +715,18 @@ class _InventoryReportDetailsPageState
     StockReconciliationModel model,
     String key,
   ) {
-    final additionalDetails = model.additionalFields;
-    if (additionalDetails == null) {
-      return '0';
-    }
-    final count = additionalDetails.fields.firstWhereOrNull(
-      (e) => e.key == key,
-    );
-    if (count == null) {
-      return '0';
-    }
+    var count;
+
+    // final additionalDetails = model.additionalFields;
+    // if (additionalDetails == null) {
+    //   return '0';
+    // }
+    // final count = additionalDetails.fields.firstWhereOrNull(
+    //   (e) => e.key == key,
+    // );
+    // if (count == null) {
+    //   return '0';
+    // }
 
     return (double.tryParse(count.value.toString()) ?? 0.0).toStringAsFixed(0);
   }

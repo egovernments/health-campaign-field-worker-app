@@ -1,29 +1,28 @@
-import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:inventory_management/models/entities/stock.dart';
-import 'package:inventory_management/models/entities/transaction_reason.dart';
-import 'package:inventory_management/models/entities/transaction_type.dart';
+import 'package:inventory_management/blocs/inventory_listener.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recase/recase.dart';
 
-import '../../../blocs/app_initialization/app_initialization.dart';
-import '../../../blocs/facility/facility.dart';
-import '../../../blocs/product_variant/product_variant.dart';
-import '../../../blocs/record_stock/record_stock.dart';
-import '../../../blocs/scanner/scanner.dart';
-import '../../../data/local_store/no_sql/schema/app_configuration.dart';
-import '../../../models/data_model.dart';
-import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
-import '../../../widgets/header/back_navigation_help_header.dart';
 import '../../../widgets/localized.dart';
+import '../../blocs/facility.dart';
+import '../../blocs/product_variant.dart';
+import '../../blocs/record_stock.dart';
+import '../../inventory_management.dart';
+import '../../models/entities/inventory_facility.dart';
+import '../../models/entities/product_variant.dart';
+import '../../router/inventory_router.dart';
+import '../../widgets/back_navigation_help_header.dart';
+import '../facility_selection.dart';
 
 class StockDetailsPage extends LocalizedStatefulWidget {
+  final bool? isWareHouseMgr;
   const StockDetailsPage({
+    this.isWareHouseMgr,
     super.key,
     super.appLocalizations,
   });
@@ -45,6 +44,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
   static const _deliveryTeamKey = 'deliveryTeam';
   bool deliveryTeamSelected = false;
   String? selectedFacilityId;
+  List<TransportTypes> transportTypeOptions = [];
 
   FormGroup _form(StockRecordEntryType stockType) {
     return fb.group({
@@ -85,124 +85,146 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    bool isWareHouseMgr = context.loggedInUserRoles
-        .where((role) => role.code == RolesType.warehouseManager.toValue())
-        .toList()
-        .isNotEmpty;
+    // bool isWareHouseMgr = context.loggedInUserRoles
+    //     .where((role) => role.code == RolesType.warehouseManager.toValue())
+    //     .toList()
+    //     .isNotEmpty;
 
     return PopScope(
       onPopInvoked: (didPop) {
-        final stockState = context.read<RecordStockBloc>().state;
-        if (stockState.primaryId != null) {
-          context.read<ScannerBloc>().add(
-                ScannerEvent.handleScanner(
-                  [],
-                  [stockState.primaryId.toString()],
-                ),
-              );
-        }
+        // final stockState = context.read<RecordStockBloc>().state;
+        // if (stockState.primaryId != null) {
+        //   // context.read<ScannerBloc>().add(
+        //   //       ScannerEvent.handleScanner(
+        //   //         [],
+        //   //         [stockState.primaryId.toString()],
+        //   //       ),
+        //   //     );
+        // } else {
+        //   Navigator.of(context).pop();
+        // }
       },
       child: Scaffold(
-        body: BlocBuilder<LocationBloc, LocationState>(
-          builder: (context, locationState) {
-            return BlocConsumer<RecordStockBloc, RecordStockState>(
-              listener: (context, stockState) {
-                stockState.mapOrNull(
-                  persisted: (value) {
-                    final parent = context.router.parent() as StackRouter;
-                    parent.replace(AcknowledgementRoute());
+        body: MultiBlocProvider(
+          providers: [
+            BlocProvider<ProductVariantBloc>(
+              create: (context) => ProductVariantBloc(
+                const ProductVariantEmptyState(),
+              ),
+            ),
+            BlocProvider<FacilityBloc>(
+              create: (context) => FacilityBloc(const FacilityState.empty())
+                ..add(
+                  FacilityEvent.loadForProjectId(
+                    projectId: InventorySingleton().projectId,
+                  ),
+                ),
+            ),
+          ],
+          child: BlocProvider<RecordStockBloc>(
+            create: (context) => RecordStockBloc(
+              RecordStockCreateState(
+                entryType: StockRecordEntryType.receipt,
+                projectId: InventorySingleton().projectId,
+              ),
+            ),
+            child: BlocBuilder<LocationBloc, LocationState>(
+              builder: (context, locationState) {
+                return BlocConsumer<RecordStockBloc, RecordStockState>(
+                  listener: (context, stockState) {
+                    stockState.mapOrNull(
+                      persisted: (value) {
+                        // final parent = context.router.parent() as StackRouter;
+                        // parent.replace(AcknowledgementRoute());
+                      },
+                    );
                   },
-                );
-              },
-              builder: (context, stockState) {
-                StockRecordEntryType entryType = stockState.entryType;
+                  builder: (context, stockState) {
+                    StockRecordEntryType entryType = stockState.entryType;
 
-                const module = i18.stockDetails;
+                    const module = i18.stockDetails;
 
-                String pageTitle;
-                String transactionPartyLabel;
-                String quantityCountLabel;
-                String? transactionReasonLabel;
-                TransactionReason? transactionReason;
-                TransactionType transactionType;
+                    String pageTitle;
+                    String transactionPartyLabel;
+                    String quantityCountLabel;
+                    String? transactionReasonLabel;
+                    TransactionReason? transactionReason;
+                    TransactionType transactionType;
 
-                List<TransactionReason>? reasons;
+                    List<TransactionReason>? reasons;
 
-                switch (entryType) {
-                  case StockRecordEntryType.receipt:
-                    pageTitle = module.receivedPageTitle;
-                    transactionPartyLabel =
-                        module.selectTransactingPartyReceived;
-                    quantityCountLabel = module.quantityReceivedLabel;
-                    transactionType = TransactionType.received;
+                    switch (entryType) {
+                      case StockRecordEntryType.receipt:
+                        pageTitle = module.receivedPageTitle;
+                        transactionPartyLabel =
+                            module.selectTransactingPartyReceived;
+                        quantityCountLabel = module.quantityReceivedLabel;
+                        transactionType = TransactionType.received;
 
-                    break;
-                  case StockRecordEntryType.dispatch:
-                    pageTitle = module.issuedPageTitle;
-                    transactionPartyLabel = module.selectTransactingPartyIssued;
-                    quantityCountLabel = module.quantitySentLabel;
-                    transactionType = TransactionType.dispatched;
+                        break;
+                      case StockRecordEntryType.dispatch:
+                        pageTitle = module.issuedPageTitle;
+                        transactionPartyLabel =
+                            module.selectTransactingPartyIssued;
+                        quantityCountLabel = module.quantitySentLabel;
+                        transactionType = TransactionType.dispatched;
 
-                    break;
-                  case StockRecordEntryType.returned:
-                    pageTitle = module.returnedPageTitle;
-                    transactionPartyLabel =
-                        module.selectTransactingPartyReturned;
-                    quantityCountLabel = module.quantityReturnedLabel;
-                    transactionType = TransactionType.received;
-                    break;
-                  case StockRecordEntryType.loss:
-                    pageTitle = module.lostPageTitle;
-                    quantityCountLabel = module.quantityLostLabel;
-                    transactionReasonLabel = module.transactionReasonLost;
-                    transactionType = TransactionType.dispatched;
+                        break;
+                      case StockRecordEntryType.returned:
+                        pageTitle = module.returnedPageTitle;
+                        transactionPartyLabel =
+                            module.selectTransactingPartyReturned;
+                        quantityCountLabel = module.quantityReturnedLabel;
+                        transactionType = TransactionType.received;
+                        break;
+                      case StockRecordEntryType.loss:
+                        pageTitle = module.lostPageTitle;
+                        quantityCountLabel = module.quantityLostLabel;
+                        transactionReasonLabel = module.transactionReasonLost;
+                        transactionType = TransactionType.dispatched;
 
-                    reasons = [
-                      TransactionReason.lostInStorage,
-                      TransactionReason.lostInTransit,
-                    ];
-                    break;
-                  case StockRecordEntryType.damaged:
-                    pageTitle = module.damagedPageTitle;
-                    transactionPartyLabel =
-                        module.selectTransactingPartyReceivedFromDamaged;
-                    quantityCountLabel = module.quantityDamagedLabel;
-                    transactionReasonLabel = module.transactionReasonDamaged;
-                    transactionType = TransactionType.dispatched;
+                        reasons = [
+                          TransactionReason.lostInStorage,
+                          TransactionReason.lostInTransit,
+                        ];
+                        break;
+                      case StockRecordEntryType.damaged:
+                        pageTitle = module.damagedPageTitle;
+                        transactionPartyLabel =
+                            module.selectTransactingPartyReceivedFromDamaged;
+                        quantityCountLabel = module.quantityDamagedLabel;
+                        transactionReasonLabel =
+                            module.transactionReasonDamaged;
+                        transactionType = TransactionType.dispatched;
 
-                    reasons = [
-                      TransactionReason.damagedInStorage,
-                      TransactionReason.damagedInTransit,
-                    ];
-                    break;
-                }
+                        reasons = [
+                          TransactionReason.damagedInStorage,
+                          TransactionReason.damagedInTransit,
+                        ];
+                        break;
+                    }
 
-                transactionReasonLabel ??= '';
+                    transactionReasonLabel ??= '';
 
-                return ReactiveFormBuilder(
-                  form: () => _form(entryType),
-                  builder: (context, form, child) {
-                    return BlocBuilder<ScannerBloc, ScannerState>(
-                      builder: (context, scannerState) {
-                        form.control(_deliveryTeamKey).value =
-                            scannerState.qrcodes.isNotEmpty
-                                ? scannerState.qrcodes.last
-                                : '';
-
+                    return ReactiveFormBuilder(
+                      form: () => _form(entryType),
+                      builder: (context, form, child) {
                         return ScrollableContent(
                           header: Column(children: [
                             BackNavigationHelpHeaderWidget(
-                              handleback: () {
-                                final stockState =
-                                    context.read<RecordStockBloc>().state;
-                                if (stockState.primaryId != null) {
-                                  context.read<ScannerBloc>().add(
-                                        ScannerEvent.handleScanner(
-                                          [],
-                                          [stockState.primaryId.toString()],
-                                        ),
-                                      );
-                                }
+                              handleBack: () {
+                                //   final stockState =
+                                //       context.read<RecordStockBloc>().state;
+                                //   if (stockState.primaryId != null) {
+                                //     // context.read<ScannerBloc>().add(
+                                //     //       ScannerEvent.handleScanner(
+                                //     //         [],
+                                //     //         [stockState.primaryId.toString()],
+                                //     //       ),
+                                //     //     );
+                                //   } else {
+                                //     Navigator.of(context).pop();
+                                //   }
                               },
                             ),
                           ]),
@@ -232,7 +254,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                         ).state.primaryId;
                                         final secondaryParty =
                                             selectedFacilityId != null
-                                                ? FacilityModel(
+                                                ? InventoryFacilityModel(
                                                     id: selectedFacilityId
                                                         .toString(),
                                                   )
@@ -385,99 +407,115 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                               break;
                                           }
 
-                                          final stockModel = HcmStockModel(
-                                            stock: StockModel(
-                                              clientReferenceId:
-                                              IdGen.i.identifier,
-                                              productVariantId: productVariant.id,
-                                              transactionReason:
-                                              transactionReason,
-                                              transactionType: transactionType,
-                                              referenceId: stockState.projectId,
-                                              referenceIdType: 'PROJECT',
-                                              quantity: quantity.toString(),
-                                              waybillNumber: waybillNumber,
-                                              receiverId: receiverId,
-                                              receiverType: receiverType,
-                                              senderId: senderId,
-                                              senderType: senderType,
-                                            ),
-                                            auditDetails: AuditDetails(
-                                              createdBy:
-                                                  context.loggedInUserUuid,
-                                              createdTime: context
-                                                  .millisecondsSinceEpoch(),
-                                            ),
-                                            clientAuditDetails:
-                                                ClientAuditDetails(
-                                              createdBy:
-                                                  context.loggedInUserUuid,
-                                              createdTime: context
-                                                  .millisecondsSinceEpoch(),
-                                              lastModifiedBy:
-                                                  context.loggedInUserUuid,
-                                              lastModifiedTime: context
-                                                  .millisecondsSinceEpoch(),
-                                            ),
-                                            additionalFields: [
-                                                      waybillQuantity,
-                                                      vehicleNumber,
-                                                      comments,
-                                                    ].any((element) =>
-                                                        element != null) ||
-                                                    hasLocationData
-                                                ? StockAdditionalFields(
-                                                    version: 1,
-                                                    fields: [
-                                                      if (waybillQuantity !=
-                                                              null &&
-                                                          waybillQuantity
-                                                              .trim()
-                                                              .isNotEmpty)
-                                                        AdditionalField(
-                                                          'waybill_quantity',
-                                                          waybillQuantity,
-                                                        ),
-                                                      if (vehicleNumber !=
-                                                              null &&
-                                                          vehicleNumber
-                                                              .trim()
-                                                              .isNotEmpty)
-                                                        AdditionalField(
-                                                          'vehicle_number',
-                                                          vehicleNumber,
-                                                        ),
-                                                      if (comments != null &&
-                                                          comments
-                                                              .trim()
-                                                              .isNotEmpty)
-                                                        AdditionalField(
-                                                          'comments',
-                                                          comments,
-                                                        ),
-                                                      if (deliveryTeamName !=
-                                                              null &&
-                                                          deliveryTeamName
-                                                              .trim()
-                                                              .isNotEmpty)
-                                                        AdditionalField(
-                                                          'deliveryTeam',
-                                                          deliveryTeamName,
-                                                        ),
-                                                      if (hasLocationData) ...[
-                                                        AdditionalField(
-                                                          'lat',
-                                                          lat,
-                                                        ),
-                                                        AdditionalField(
-                                                          'lng',
-                                                          lng,
-                                                        ),
-                                                      ],
-                                                    ],
-                                                  )
-                                                : null,
+                                          final stockModel = StockModel(
+                                            clientReferenceId:
+                                                IdGen.i.identifier,
+                                            productVariantId: productVariant.id,
+                                            transactionReason:
+                                                transactionReason,
+                                            transactionType: transactionType,
+                                            referenceId: stockState.projectId,
+                                            referenceIdType: 'PROJECT',
+                                            quantity: quantity.toString(),
+                                            waybillNumber: waybillNumber,
+                                            receiverId: receiverId,
+                                            receiverType: receiverType,
+                                            senderId: senderId,
+                                            senderType: senderType,
                                           );
+                                          // StockModel(
+                                          //   stock: StockModel(
+                                          //     clientReferenceId:
+                                          //     IdGen.i.identifier,
+                                          //     productVariantId: productVariant.id,
+                                          //     transactionReason:
+                                          //     transactionReason,
+                                          //     transactionType: transactionType,
+                                          //     referenceId: stockState.projectId,
+                                          //     referenceIdType: 'PROJECT',
+                                          //     quantity: quantity.toString(),
+                                          //     waybillNumber: waybillNumber,
+                                          //     receiverId: receiverId,
+                                          //     receiverType: receiverType,
+                                          //     senderId: senderId,
+                                          //     senderType: senderType,
+                                          //   ),
+                                          //   auditDetails: AuditDetails(
+                                          //     createdBy:
+                                          //     context.loggedInUserUuid,
+                                          //     createdTime: context
+                                          //         .millisecondsSinceEpoch(),
+                                          //   ),
+                                          //   clientAuditDetails:
+                                          //   ClientAuditDetails(
+                                          //     createdBy:
+                                          //     context.loggedInUserUuid,
+                                          //     createdTime: context
+                                          //         .millisecondsSinceEpoch(),
+                                          //     lastModifiedBy:
+                                          //     context.loggedInUserUuid,
+                                          //     lastModifiedTime: context
+                                          //         .millisecondsSinceEpoch(),
+                                          //   ),
+                                          //   additionalFields: [
+                                          //     waybillQuantity,
+                                          //     vehicleNumber,
+                                          //     comments,
+                                          //   ].any((element) =>
+                                          //   element != null) ||
+                                          //       hasLocationData
+                                          //       ? StockAdditionalFields(
+                                          //     version: 1,
+                                          //     fields: [
+                                          //       if (waybillQuantity !=
+                                          //           null &&
+                                          //           waybillQuantity
+                                          //               .trim()
+                                          //               .isNotEmpty)
+                                          //         AdditionalField(
+                                          //           'waybill_quantity',
+                                          //           waybillQuantity,
+                                          //         ),
+                                          //       if (vehicleNumber !=
+                                          //           null &&
+                                          //           vehicleNumber
+                                          //               .trim()
+                                          //               .isNotEmpty)
+                                          //         AdditionalField(
+                                          //           'vehicle_number',
+                                          //           vehicleNumber,
+                                          //         ),
+                                          //       if (comments != null &&
+                                          //           comments
+                                          //               .trim()
+                                          //               .isNotEmpty)
+                                          //         AdditionalField(
+                                          //           'comments',
+                                          //           comments,
+                                          //         ),
+                                          //       if (deliveryTeamName !=
+                                          //           null &&
+                                          //           deliveryTeamName
+                                          //               .trim()
+                                          //               .isNotEmpty)
+                                          //         AdditionalField(
+                                          //           'deliveryTeam',
+                                          //           deliveryTeamName,
+                                          //         ),
+                                          //       if (hasLocationData) ...[
+                                          //         AdditionalField(
+                                          //           'lat',
+                                          //           lat,
+                                          //         ),
+                                          //         AdditionalField(
+                                          //           'lng',
+                                          //           lng,
+                                          //         ),
+                                          //       ],
+                                          //     ],
+                                          //   )
+                                          //       : null,
+                                          // );
 
                                           bloc.add(
                                             RecordStockSaveStockDetailsEvent(
@@ -606,9 +644,12 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                           final parent = context.router.parent()
                                               as StackRouter;
                                           final facility =
-                                              await parent.push<FacilityModel>(
-                                            FacilitySelectionRoute(
-                                              facilities: facilities,
+                                              await Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  FacilitySelectionPage(
+                                                facilities: facilities,
+                                              ),
                                             ),
                                           );
 
@@ -655,11 +696,12 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                               form
                                                   .control(_deliveryTeamKey)
                                                   .value = '';
+                                              // var facility;
                                               final parent = context.router
                                                   .parent() as StackRouter;
                                               final facility = await parent
-                                                  .push<FacilityModel>(
-                                                FacilitySelectionRoute(
+                                                  .push<InventoryFacilityModel>(
+                                                FacilitySelectionPageRoute(
                                                   facilities: facilities,
                                                 ),
                                               );
@@ -703,23 +745,23 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                         String? value = val.value as String?;
                                         if (value != null &&
                                             value.trim().isNotEmpty) {
-                                          context.read<ScannerBloc>().add(
-                                                ScannerEvent.handleScanner(
-                                                  [],
-                                                  [value],
-                                                ),
-                                              );
+                                          // context.read<ScannerBloc>().add(
+                                          //       ScannerEvent.handleScanner(
+                                          //         [],
+                                          //         [value],
+                                          //       ),
+                                          //     );
                                         } else {
                                           clearQRCodes();
                                         }
                                       },
                                       suffix: IconButton(
                                         onPressed: () {
-                                          context.router.push(QRScannerRoute(
-                                            quantity: 5,
-                                            isGS1code: false,
-                                            sinlgleValue: false,
-                                          ));
+                                          // context.router.push(QRScannerRoute(
+                                          //   quantity: 5,
+                                          //   isGS1code: false,
+                                          //   sinlgleValue: false,
+                                          // ));
                                         },
                                         icon: Icon(
                                           Icons.qr_code_2,
@@ -756,14 +798,14 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                       quantityCountLabel,
                                     ),
                                   ),
-                                  if (isWareHouseMgr)
+                                  if (widget.isWareHouseMgr!)
                                     DigitTextFormField(
                                       label: localizations.translate(
                                         i18.stockDetails.waybillNumberLabel,
                                       ),
                                       formControlName: _waybillNumberKey,
                                     ),
-                                  if (isWareHouseMgr)
+                                  if (widget.isWareHouseMgr!)
                                     DigitTextFormField(
                                       label: localizations.translate(
                                         i18.stockDetails
@@ -777,46 +819,31 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                             ),
                                       },
                                     ),
-                                  if (isWareHouseMgr)
-                                    BlocBuilder<AppInitializationBloc,
-                                        AppInitializationState>(
-                                      builder: (context, state) =>
-                                          state.maybeWhen(
-                                        orElse: () => const Offstage(),
-                                        initialized: (appConfiguration, _) {
-                                          final transportTypeOptions =
-                                              appConfiguration.transportTypes ??
-                                                  <TransportTypes>[];
-
-                                          return DigitReactiveDropdown<String>(
-                                            isRequired: false,
-                                            label: localizations.translate(
-                                              i18.stockDetails
-                                                  .transportTypeLabel,
-                                            ),
-                                            valueMapper: (e) => e,
-                                            onChanged: (value) {
-                                              setState(() {
-                                                form.control(
-                                                  _typeOfTransportKey,
-                                                );
-                                              });
-                                            },
-                                            initialValue: transportTypeOptions
-                                                .firstOrNull?.name,
-                                            menuItems: transportTypeOptions.map(
-                                              (e) {
-                                                return localizations
-                                                    .translate(e.name);
-                                              },
-                                            ).toList(),
-                                            formControlName:
-                                                _typeOfTransportKey,
-                                          );
-                                        },
+                                  if (widget.isWareHouseMgr!)
+                                    DigitReactiveDropdown<String>(
+                                      isRequired: false,
+                                      label: localizations.translate(
+                                        i18.stockDetails.transportTypeLabel,
                                       ),
+                                      valueMapper: (e) => e,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          form.control(
+                                            _typeOfTransportKey,
+                                          );
+                                        });
+                                      },
+                                      initialValue: transportTypeOptions
+                                          .firstOrNull?.name,
+                                      menuItems: transportTypeOptions.map(
+                                        (e) {
+                                          return localizations
+                                              .translate(e.name);
+                                        },
+                                      ).toList(),
+                                      formControlName: _typeOfTransportKey,
                                     ),
-                                  if (isWareHouseMgr)
+                                  if (widget.isWareHouseMgr!)
                                     DigitTextFormField(
                                       label: localizations.translate(
                                         i18.stockDetails.vehicleNumberLabel,
@@ -838,11 +865,11 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                       ),
                                     ),
                                     onPressed: () {
-                                      context.router.push(QRScannerRoute(
-                                        quantity: 5,
-                                        isGS1code: true,
-                                        sinlgleValue: false,
-                                      ));
+                                      // context.router.push(QRScannerRoute(
+                                      //   quantity: 5,
+                                      //   isGS1code: true,
+                                      //   sinlgleValue: false,
+                                      // ));
                                     },
                                     icon: Icons.qr_code,
                                     label: localizations.translate(
@@ -859,14 +886,12 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                   },
                 );
               },
-            );
-          },
+            ),
+          ),
         ),
       ),
     );
   }
 
-  void clearQRCodes() {
-    context.read<ScannerBloc>().add(const ScannerEvent.handleScanner([], []));
-  }
+  void clearQRCodes() {}
 }

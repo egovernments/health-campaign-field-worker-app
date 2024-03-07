@@ -10,9 +10,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:inventory_management/blocs/record_stock.dart';
+import 'package:inventory_management/pages/manage_stocks.dart';
 
 import '../blocs/auth/auth.dart';
 import '../blocs/hcm_attendance_bloc.dart';
+import '../blocs/hcm_inventory_bloc.dart';
 import '../blocs/search_households/search_bloc_common_wrapper.dart';
 import '../blocs/search_households/search_households.dart';
 import '../blocs/search_referrals/search_referrals.dart';
@@ -328,7 +331,29 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.store_mall_directory,
           label: i18.home.manageStockLabel,
           onPressed: () {
-            context.router.push(ManageStocksRoute());
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ManageStocksPage(
+                  inventoryListener: HcmInventoryBloc(
+                    context: context,
+                    userId: context.loggedInUserUuid,
+                    individualId: context.loggedInIndividualId,
+                    projectId: context.projectId,
+                  ),
+                  projectId: context.projectId,
+                ),
+                settings: const RouteSettings(name: '/record-stock'),
+              ),
+            );
+            HcmInventoryBloc(
+              context: context,
+              userId: context.loggedInUserUuid,
+              individualId: context.loggedInIndividualId,
+              projectId: context.projectId,
+            ).fetchFacilitiesForProjectId((facilitiesModel) {
+              print('$facilitiesModel');
+            });
           },
         ),
       ),
@@ -338,7 +363,14 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.menu_book,
           label: i18.home.stockReconciliationLabel,
           onPressed: () {
-            context.router.push(StockReconciliationRoute());
+            context.router.push(StockReconciliationRoute(
+              projectId: context.projectId,
+              isDistributor: context.loggedInUserRoles
+                  .contains(RolesType.distributor.toValue()),
+              isWareHouseMgr: context.loggedInUserRoles
+                  .contains(RolesType.warehouseManager.toValue()),
+              loggedInUserUuid: context.loggedInUserUuid,
+            ));
           },
         ),
       ),
@@ -539,7 +571,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                     LocalRepository<SideEffectModel, SideEffectSearchModel>>(),
                 context.read<
                     LocalRepository<ReferralModel, ReferralSearchModel>>(),
-                context.read<LocalRepository<HcmStockModel, HcmStockSearchModel>>(),
+                context.read<
+                    LocalRepository<HcmStockModel, HcmStockSearchModel>>(),
                 context
                     .read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
                 context.read<
@@ -569,7 +602,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                     RemoteRepository<SideEffectModel, SideEffectSearchModel>>(),
                 context.read<
                     RemoteRepository<ReferralModel, ReferralSearchModel>>(),
-                context.read<RemoteRepository<HcmStockModel, HcmStockSearchModel>>(),
+                context.read<
+                    RemoteRepository<HcmStockModel, HcmStockSearchModel>>(),
                 context
                     .read<RemoteRepository<ServiceModel, ServiceSearchModel>>(),
                 context.read<

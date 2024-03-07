@@ -11,13 +11,13 @@ import '../router/inventory_router.dart';
 import '../widgets/back_navigation_help_header.dart';
 
 class ManageStocksPage extends LocalizedStatefulWidget {
+  final InventoryListener inventoryListener;
   final String projectId;
-  final StackRouter router;
   const ManageStocksPage({
     super.key,
     super.appLocalizations,
+    required this.inventoryListener,
     required this.projectId,
-    required this.router,
   });
 
   @override
@@ -25,14 +25,13 @@ class ManageStocksPage extends LocalizedStatefulWidget {
 }
 
 class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
-  StackRouter get router => widget.router;
-
   @override
   initState() {
     InventorySingleton().setInitialData(
-      projectId: widget.projectId,
+      inventoryListener: widget.inventoryListener,
       userId: '',
       appVersion: '',
+      projectId: widget.projectId,
     );
     super.initState();
   }
@@ -87,10 +86,10 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                       .translate(i18.manageStock.recordStockIssuedDescription),
                   prefixIcon: Icons.file_upload_outlined,
                   sufixIcon: Icons.arrow_circle_right,
-                  onPressed: () => widget.router.push(
-                    RecordStockWrapperRoute(
+                  onPressed: () => context.router.push(
+                    RecordStockWrapperPageRoute(
                       type: StockRecordEntryType.dispatch,
-                      projectId: widget.projectId,
+                      projectId: '',
                     ),
                   ),
                 ),
@@ -102,8 +101,11 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                   ),
                   prefixIcon: Icons.settings_backup_restore,
                   sufixIcon: Icons.arrow_circle_right,
-                  onPressed: () => widget.router.push(
-                    StockDetailsPageRoute(),
+                  onPressed: () => context.router.push(
+                    RecordStockWrapperPageRoute(
+                      type: StockRecordEntryType.returned,
+                      projectId: '',
+                    ),
                   ),
                 ),
                 DigitListView(
@@ -115,9 +117,9 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                   prefixIcon: Icons.store,
                   sufixIcon: Icons.arrow_circle_right,
                   onPressed: () => context.router.push(
-                    RecordStockWrapperRoute(
+                    RecordStockWrapperPageRoute(
                       type: StockRecordEntryType.damaged,
-                      projectId: widget.projectId,
+                      projectId: '',
                     ),
                   ),
                 ),
@@ -130,9 +132,9 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                   prefixIcon: Icons.store,
                   sufixIcon: Icons.arrow_circle_right,
                   onPressed: () => context.router.push(
-                    RecordStockWrapperRoute(
+                    RecordStockWrapperPageRoute(
                       type: StockRecordEntryType.loss,
-                      projectId: widget.projectId,
+                      projectId: '',
                     ),
                   ),
                 ),

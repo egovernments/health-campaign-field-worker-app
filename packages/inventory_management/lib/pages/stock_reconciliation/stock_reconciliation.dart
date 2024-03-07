@@ -3,27 +3,34 @@ import 'package:digit_components/widgets/atoms/digit_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:inventory_management/router/inventory_router.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:auto_route/auto_route.dart';
 
-import '../../../blocs/boundary/boundary.dart';
-import '../../../blocs/facility/facility.dart';
-import '../../../blocs/localization/app_localization.dart';
-import '../../../blocs/product_variant/product_variant.dart';
-import '../../../blocs/project/project.dart';
-import '../../../blocs/stock_reconciliation/stock_reconciliation.dart';
-import '../../../models/data_model.dart';
-import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
-import '../../../widgets/component_wrapper/facility_bloc_wrapper.dart';
-import '../../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
-import '../../../widgets/header/back_navigation_help_header.dart';
 import '../../../widgets/inventory/no_facilities_assigned_dialog.dart';
 import '../../../widgets/localized.dart';
+import '../../blocs/facility.dart';
+import '../../blocs/product_variant.dart';
+import '../../blocs/stock_reconciliation.dart';
+import '../../models/entities/inventory_facility.dart';
 import '../../models/entities/product_variant.dart';
+import '../../models/entities/stock_reconciliation.dart';
+import '../../widgets/back_navigation_help_header.dart';
+import '../../widgets/component_wrapper/facility_bloc_wrapper.dart';
+import '../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 
 class StockReconciliationPage extends LocalizedStatefulWidget {
+  final String projectId;
+  final bool? isDistributor;
+  final bool? isWareHouseMgr;
+  final String? loggedInUserUuid;
   const StockReconciliationPage({
+    required this.projectId,
+    required this.isDistributor,
+    required this.isWareHouseMgr,
+    required this.loggedInUserUuid,
     super.key,
     super.appLocalizations,
   });
@@ -62,56 +69,24 @@ class _StockReconciliationPageState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    bool isDistributor = context.loggedInUserRoles
-        .where(
-          (role) => role.code == RolesType.distributor.toValue(),
-        )
-        .toList()
-        .isNotEmpty;
 
-    bool isWareHouseMgr = context.loggedInUserRoles
-        .where(
-          (role) => role.code == RolesType.warehouseManager.toValue(),
-        )
-        .toList()
-        .isNotEmpty;
-
-    return BlocListener<BoundaryBloc, BoundaryState>(
-      listener: (context, state) {
-        if (state.hasSubmitted) {
-          context.navigateTo(HomeRoute());
-        }
-      },
-      child: BlocBuilder<ProjectBloc, ProjectState>(
-        builder: (context, projectState) {
-          final noProjectSelected = Center(
-            child: Text(AppLocalizations.of(context)
-                .translate(i18.stockReconciliationDetails.noProjectSelected)),
-          );
-
-          final selectedProject = projectState.selectedProject;
-
-          if (projectState.loading) {
-            const Center(child: CircularProgressIndicator());
-          }
-
-          if (selectedProject == null) {
-            return noProjectSelected;
-          }
-
-          final projectId = selectedProject.id;
-
-          return FacilityBlocWrapper(
+    return widget.projectId.isEmpty
+        ? const Center(
+            child: Text('No project selected'),
+          )
+        : FacilityBlocWrapper(
+            projectId: widget.projectId,
             child: ProductVariantBlocWrapper(
+              projectId: widget.projectId,
               child: BlocProvider(
                 create: (context) => StockReconciliationBloc(
-                  stockRepository:
-                      context.repository<HcmStockModel, HcmStockSearchModel>(),
-                  stockReconciliationRepository: context.repository<
-                      StockReconciliationModel,
-                      StockReconciliationSearchModel>(),
+                  // stockRepository:
+                  //     context.repository<HcmStockModel, HcmStockSearchModel>(),
+                  // stockReconciliationRepository: context.repository<
+                  //     StockReconciliationModel,
+                  //     StockReconciliationSearchModel>(),
                   StockReconciliationState(
-                    projectId: projectId,
+                    projectId: widget.projectId,
                     dateOfReconciliation: DateTime.now(),
                   ),
                 ),
@@ -120,11 +95,12 @@ class _StockReconciliationPageState
                   listener: (context, stockState) {
                     if (!stockState.persisted) return;
 
-                    context.router.replace(AcknowledgementRoute());
+                    // context.router.replace(AcknowledgementRoute());
                   },
                   builder: (context, stockState) {
                     return ReactiveFormBuilder(
-                      form: () => _form(isDistributor && !isWareHouseMgr),
+                      form: () => _form(
+                          widget.isDistributor! && !widget.isWareHouseMgr!),
                       builder: (ctx, form, child) {
                         return Scaffold(
                           body: ScrollableContent(
@@ -157,22 +133,23 @@ class _StockReconciliationPageState
                                                 StockReconciliationBloc>();
 
                                             final facilityId =
-                                                isDistributor && !isWareHouseMgr
-                                                    ? FacilityModel(
-                                                        id: context
-                                                            .loggedInUserUuid,
-                                                        additionalFields:
-                                                            FacilityAdditionalFields(
-                                                          version: 1,
-                                                          fields: [
-                                                            const AdditionalField(
-                                                              'type',
-                                                              'deliveryTeam',
-                                                            ),
-                                                          ],
-                                                        ),
+                                                widget.isDistributor! &&
+                                                        !widget.isWareHouseMgr!
+                                                    ? InventoryFacilityModel(
+                                                        id: widget
+                                                            .loggedInUserUuid!,
+                                                        // additionalFields:
+                                                        //     FacilityAdditionalFields(
+                                                        //   version: 1,
+                                                        //   fields: [
+                                                        //     const AdditionalField(
+                                                        //       'type',
+                                                        //       'deliveryTeam',
+                                                        //     ),
+                                                        //   ],
+                                                        // ),
                                                       )
-                                                    : FacilityModel(
+                                                    : InventoryFacilityModel(
                                                         id: selectedFacilityId
                                                             .toString(),
                                                       );
@@ -210,23 +187,23 @@ class _StockReconciliationPageState
                                                     calculatedCount,
                                                   ) ??
                                                   0,
-                                              auditDetails: AuditDetails(
-                                                createdBy:
-                                                    context.loggedInUserUuid,
-                                                createdTime: context
-                                                    .millisecondsSinceEpoch(),
-                                              ),
-                                              clientAuditDetails:
-                                                  ClientAuditDetails(
-                                                createdBy:
-                                                    context.loggedInUserUuid,
-                                                createdTime: context
-                                                    .millisecondsSinceEpoch(),
-                                                lastModifiedBy:
-                                                    context.loggedInUserUuid,
-                                                lastModifiedTime: context
-                                                    .millisecondsSinceEpoch(),
-                                              ),
+                                              // auditDetails: AuditDetails(
+                                              //   createdBy:
+                                              //       context.loggedInUserUuid,
+                                              //   createdTime: context
+                                              //       .millisecondsSinceEpoch(),
+                                              // ),
+                                              // clientAuditDetails:
+                                              //     ClientAuditDetails(
+                                              //   createdBy:
+                                              //       context.loggedInUserUuid,
+                                              //   createdTime: context
+                                              //       .millisecondsSinceEpoch(),
+                                              //   lastModifiedBy:
+                                              //       context.loggedInUserUuid,
+                                              //   lastModifiedTime: context
+                                              //       .millisecondsSinceEpoch(),
+                                              // ),
                                             );
 
                                             final submit =
@@ -305,7 +282,7 @@ class _StockReconciliationPageState
                                           .textTheme
                                           .displayMedium,
                                     ),
-                                    if (isWareHouseMgr)
+                                    if (widget.isWareHouseMgr!)
                                       BlocConsumer<FacilityBloc, FacilityState>(
                                         listener: (context, state) =>
                                             state.whenOrNull(
@@ -326,14 +303,14 @@ class _StockReconciliationPageState
                                               final stockReconciliationBloc =
                                                   context.read<
                                                       StockReconciliationBloc>();
-
-                                              final facility = await context
-                                                  .router
-                                                  .push<FacilityModel>(
-                                                FacilitySelectionRoute(
-                                                  facilities: facilities,
-                                                ),
-                                              );
+                                              var facility;
+                                              // final facility = await context
+                                              //     .router
+                                              //     .push<InventoryFacilityModel>(
+                                              //   FacilitySelectionRoute(
+                                              //     facilities: facilities,
+                                              //   ),
+                                              // );
 
                                               if (facility == null) return;
                                               form.control(_facilityKey).value =
@@ -371,8 +348,8 @@ class _StockReconciliationPageState
 
                                                   final facility = await context
                                                       .router
-                                                      .push<FacilityModel>(
-                                                    FacilitySelectionRoute(
+                                                      .push<InventoryFacilityModel>(
+                                                    FacilitySelectionPageRoute(
                                                       facilities: facilities,
                                                     ),
                                                   );
@@ -428,9 +405,10 @@ class _StockReconciliationPageState
                                                     .add(
                                                       StockReconciliationSelectProductEvent(
                                                         value.id,
-                                                        isDistributor:
-                                                            isDistributor &&
-                                                                !isWareHouseMgr,
+                                                        isDistributor: widget
+                                                                .isDistributor! &&
+                                                            !widget
+                                                                .isWareHouseMgr!,
                                                       ),
                                                     );
                                               },
@@ -602,8 +580,5 @@ class _StockReconciliationPageState
               ),
             ),
           );
-        },
-      ),
-    );
   }
 }

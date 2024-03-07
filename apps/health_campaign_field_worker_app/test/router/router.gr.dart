@@ -64,33 +64,40 @@ class _$AppRouter extends RootStackRouter {
       );
     },
     ManageStocksRoute.name: (routeData) {
-      final args = routeData.argsAs<ManageStocksRouteArgs>(
-          orElse: () => const ManageStocksRouteArgs());
+      final args = routeData.argsAs<ManageStocksRouteArgs>();
       return MaterialPageX<dynamic>(
         routeData: routeData,
         child: ManageStocksPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
+          inventoryListener: args.inventoryListener,
+          projectId: args.projectId,
         ),
       );
     },
     StockReconciliationRoute.name: (routeData) {
-      final args = routeData.argsAs<StockReconciliationRouteArgs>(
-          orElse: () => const StockReconciliationRouteArgs());
+      final args = routeData.argsAs<StockReconciliationRouteArgs>();
       return MaterialPageX<dynamic>(
         routeData: routeData,
         child: StockReconciliationPage(
+          projectId: args.projectId,
+          isDistributor: args.isDistributor,
+          isWareHouseMgr: args.isWareHouseMgr,
+          loggedInUserUuid: args.loggedInUserUuid,
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
       );
     },
     WarehouseDetailsRoute.name: (routeData) {
-      final args = routeData.argsAs<WarehouseDetailsRouteArgs>(
-          orElse: () => const WarehouseDetailsRouteArgs());
+      final args = routeData.argsAs<WarehouseDetailsRouteArgs>();
       return MaterialPageX<dynamic>(
         routeData: routeData,
         child: WarehouseDetailsPage(
+          boundaryName: args.boundaryName,
+          projectId: args.projectId,
+          isDistributor: args.isDistributor,
+          isWareHouseMgr: args.isWareHouseMgr,
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -283,13 +290,17 @@ class DeliverInterventionRouteArgs {
 class ManageStocksRoute extends PageRouteInfo<ManageStocksRouteArgs> {
   ManageStocksRoute({
     Key? key,
-    AppLocalizations? appLocalizations,
+    InventoryLocalization? appLocalizations,
+    required InventoryListener inventoryListener,
+    required String projectId,
   }) : super(
           ManageStocksRoute.name,
           path: 'manage-stocks',
           args: ManageStocksRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
+            inventoryListener: inventoryListener,
+            projectId: projectId,
           ),
         );
 
@@ -300,15 +311,21 @@ class ManageStocksRouteArgs {
   const ManageStocksRouteArgs({
     this.key,
     this.appLocalizations,
+    required this.inventoryListener,
+    required this.projectId,
   });
 
   final Key? key;
 
-  final AppLocalizations? appLocalizations;
+  final InventoryLocalization? appLocalizations;
+
+  final InventoryListener inventoryListener;
+
+  final String projectId;
 
   @override
   String toString() {
-    return 'ManageStocksRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+    return 'ManageStocksRouteArgs{key: $key, appLocalizations: $appLocalizations, inventoryListener: $inventoryListener, projectId: $projectId}';
   }
 }
 
@@ -317,12 +334,20 @@ class ManageStocksRouteArgs {
 class StockReconciliationRoute
     extends PageRouteInfo<StockReconciliationRouteArgs> {
   StockReconciliationRoute({
+    required String projectId,
+    required bool? isDistributor,
+    required bool? isWareHouseMgr,
+    required String? loggedInUserUuid,
     Key? key,
-    AppLocalizations? appLocalizations,
+    InventoryLocalization? appLocalizations,
   }) : super(
           StockReconciliationRoute.name,
           path: 'reconcile-stocks',
           args: StockReconciliationRouteArgs(
+            projectId: projectId,
+            isDistributor: isDistributor,
+            isWareHouseMgr: isWareHouseMgr,
+            loggedInUserUuid: loggedInUserUuid,
             key: key,
             appLocalizations: appLocalizations,
           ),
@@ -333,17 +358,29 @@ class StockReconciliationRoute
 
 class StockReconciliationRouteArgs {
   const StockReconciliationRouteArgs({
+    required this.projectId,
+    required this.isDistributor,
+    required this.isWareHouseMgr,
+    required this.loggedInUserUuid,
     this.key,
     this.appLocalizations,
   });
 
+  final String projectId;
+
+  final bool? isDistributor;
+
+  final bool? isWareHouseMgr;
+
+  final String? loggedInUserUuid;
+
   final Key? key;
 
-  final AppLocalizations? appLocalizations;
+  final InventoryLocalization? appLocalizations;
 
   @override
   String toString() {
-    return 'StockReconciliationRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+    return 'StockReconciliationRouteArgs{projectId: $projectId, isDistributor: $isDistributor, isWareHouseMgr: $isWareHouseMgr, loggedInUserUuid: $loggedInUserUuid, key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
@@ -351,12 +388,20 @@ class StockReconciliationRouteArgs {
 /// [WarehouseDetailsPage]
 class WarehouseDetailsRoute extends PageRouteInfo<WarehouseDetailsRouteArgs> {
   WarehouseDetailsRoute({
+    String boundaryName = '',
+    required String projectId,
+    bool? isDistributor = false,
+    bool? isWareHouseMgr = false,
     Key? key,
-    AppLocalizations? appLocalizations,
+    InventoryLocalization? appLocalizations,
   }) : super(
           WarehouseDetailsRoute.name,
           path: 'warehouse-details',
           args: WarehouseDetailsRouteArgs(
+            boundaryName: boundaryName,
+            projectId: projectId,
+            isDistributor: isDistributor,
+            isWareHouseMgr: isWareHouseMgr,
             key: key,
             appLocalizations: appLocalizations,
           ),
@@ -367,16 +412,28 @@ class WarehouseDetailsRoute extends PageRouteInfo<WarehouseDetailsRouteArgs> {
 
 class WarehouseDetailsRouteArgs {
   const WarehouseDetailsRouteArgs({
+    this.boundaryName = '',
+    required this.projectId,
+    this.isDistributor = false,
+    this.isWareHouseMgr = false,
     this.key,
     this.appLocalizations,
   });
 
+  final String boundaryName;
+
+  final String projectId;
+
+  final bool? isDistributor;
+
+  final bool? isWareHouseMgr;
+
   final Key? key;
 
-  final AppLocalizations? appLocalizations;
+  final InventoryLocalization? appLocalizations;
 
   @override
   String toString() {
-    return 'WarehouseDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+    return 'WarehouseDetailsRouteArgs{boundaryName: $boundaryName, projectId: $projectId, isDistributor: $isDistributor, isWareHouseMgr: $isWareHouseMgr, key: $key, appLocalizations: $appLocalizations}';
   }
 }

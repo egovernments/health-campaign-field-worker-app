@@ -18,6 +18,7 @@ class FacilityBlocWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => FacilityBloc(
+          FacilityEmptyState(),
           // facilityDataRepository: facilityRepository,
           // projectFacilityDataRepository: projectFacilityRepository,
           )

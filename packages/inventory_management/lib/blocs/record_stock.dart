@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:inventory_management/inventory_management.dart';
 
-import '../models/entities/facility.dart';
+import '../models/entities/inventory_facility.dart';
 
 part 'record_stock.freezed.dart';
 
@@ -127,7 +127,7 @@ class RecordStockBloc extends Bloc<RecordStockEvent, RecordStockState> {
 class RecordStockEvent with _$RecordStockEvent {
   const factory RecordStockEvent.saveWarehouseDetails({
     required DateTime dateOfRecord,
-    required FacilityModel facilityModel,
+    required InventoryFacilityModel facilityModel,
   }) = RecordStockSaveWarehouseDetailsEvent;
 
   const factory RecordStockEvent.saveStockDetails({
@@ -141,7 +141,7 @@ class RecordStockEvent with _$RecordStockEvent {
     required DateTime dateOfRecord,
     required String primaryType,
     required String primaryId,
-    FacilityModel? facilityModel,
+    InventoryFacilityModel? facilityModel,
   }) = RecordStockSaveTransactionDetailsEvent;
 }
 
@@ -154,7 +154,7 @@ class RecordStockState with _$RecordStockState {
     DateTime? dateOfRecord,
     String? primaryType,
     String? primaryId,
-    FacilityModel? facilityModel,
+    InventoryFacilityModel? facilityModel,
     StockModel? stockModel,
   }) = RecordStockCreateState;
 
@@ -162,7 +162,7 @@ class RecordStockState with _$RecordStockState {
     required StockRecordEntryType entryType,
     required String projectId,
     DateTime? dateOfRecord,
-    FacilityModel? facilityModel,
+    InventoryFacilityModel? facilityModel,
     String? primaryType,
     String? primaryId,
     StockModel? stockModel,

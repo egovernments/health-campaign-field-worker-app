@@ -11,6 +11,7 @@ import '../../blocs/service/service.dart';
 import '../../blocs/service_definition/service_definition.dart';
 import '../../blocs/side_effects/side_effects.dart';
 import '../../models/data_model.dart';
+import '../../models/entities/hcm_inventory_facility.dart';
 import '../../utils/extensions/extensions.dart';
 
 class BeneficiaryWrapperPage extends StatelessWidget {

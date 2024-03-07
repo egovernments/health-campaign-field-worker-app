@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:inventory_management/blocs/inventory_listener.dart';
 
 import '../models/entities/inventory_facility.dart';
 
@@ -8,17 +9,22 @@ part 'facility.freezed.dart';
 typedef FacilityStateEmitter = Emitter<FacilityState>;
 
 class FacilityBloc extends Bloc<FacilityEvent, FacilityState> {
-
-  FacilityBloc() : super(const FacilityEmptyState()) {
+  FacilityBloc(super.initialState) {
     on(_handleLoadFacilitiesForProjectId);
   }
 
   Future<void> _handleLoadFacilitiesForProjectId(
-      FacilityLoadForProjectEvent event,
-      FacilityStateEmitter emit,
-      ) async {
+    FacilityLoadForProjectEvent event,
+    FacilityStateEmitter emit,
+  ) async {
     emit(const FacilityLoadingState());
     var projectFacilities;
+
+    InventorySingleton().getFacilitiesForProjectId(
+        (facilities) => projectFacilities = facilities);
+
+    InventorySingleton().callSync();
+
     // final projectFacilities = await projectFacilityDataRepository.search(
     //   ProjectFacilitySearchModel(projectId: [event.projectId]),
     // );
@@ -41,14 +47,14 @@ class FacilityBloc extends Bloc<FacilityEvent, FacilityState> {
       // ));
     }
 
-    for (final projectFacility in projectFacilities) {
-      final results = <InventoryFacilityModel>[];
-      // = await facilityDataRepository.search(
-      //   FacilitySearchModel(id: [projectFacility.facilityId]),
-      // );
-
-      facilities.addAll(results);
-    }
+    // for (final projectFacility in projectFacilities) {
+    //   final results = <InventoryFacilityModel>[];
+    //   // = await facilityDataRepository.search(
+    //   //   FacilitySearchModel(id: [projectFacility.facilityId]),
+    //   // );
+    //
+    //   facilities.addAll(results);
+    // }
 
     if (facilities.isEmpty) {
       emit(const FacilityEmptyState());

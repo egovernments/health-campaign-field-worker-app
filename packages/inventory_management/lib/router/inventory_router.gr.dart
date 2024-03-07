@@ -37,8 +37,8 @@ class _$InventoryRouter extends RootStackRouter {
         child: ManageStocksPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
+          inventoryListener: args.inventoryListener,
           projectId: args.projectId,
-          router: args.router,
         ),
       );
     },
@@ -234,16 +234,16 @@ class ManageStocksPageRoute extends PageRouteInfo<ManageStocksPageRouteArgs> {
   ManageStocksPageRoute({
     Key? key,
     InventoryLocalization? appLocalizations,
+    required InventoryListener inventoryListener,
     required String projectId,
-    required StackRouter router,
   }) : super(
           ManageStocksPageRoute.name,
           path: 'manage-stocks',
           args: ManageStocksPageRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
+            inventoryListener: inventoryListener,
             projectId: projectId,
-            router: router,
           ),
         );
 
@@ -254,21 +254,21 @@ class ManageStocksPageRouteArgs {
   const ManageStocksPageRouteArgs({
     this.key,
     this.appLocalizations,
+    required this.inventoryListener,
     required this.projectId,
-    required this.router,
   });
 
   final Key? key;
 
   final InventoryLocalization? appLocalizations;
 
-  final String projectId;
+  final InventoryListener inventoryListener;
 
-  final StackRouter router;
+  final String projectId;
 
   @override
   String toString() {
-    return 'ManageStocksPageRouteArgs{key: $key, appLocalizations: $appLocalizations, projectId: $projectId, router: $router}';
+    return 'ManageStocksPageRouteArgs{key: $key, appLocalizations: $appLocalizations, inventoryListener: $inventoryListener, projectId: $projectId}';
   }
 }
 

@@ -27,6 +27,10 @@ dependencies:
   path_provider: ^2.0.11
   path: ^1.8.2
   drift_db_viewer: ^2.0.0
+  uuid: ^3.0.6
+  recase: ^4.1.0
+  pluto_grid: ^7.0.1
+  auto_route: ^5.0.2
 
 dev_dependencies:
   flutter_test:
