@@ -213,8 +213,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             )
             .toList()
             .isNotEmpty) {
-          final individual = await individualRemoteRepository
-              .search(IndividualSearchModel(userUuid: projectStaff.userId));
+          final individual = await individualRemoteRepository.search(
+            IndividualSearchModel(
+              userUuid: [projectStaff.userId.toString()],
+            ),
+          );
           final attendanceRegisters = await attendanceRemoteRepository.search(
             HCMAttendanceSearchModel(
               staffId: individual.first.id,
@@ -518,15 +521,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             (element) => element.id == event.model.projectTypeId,
           )
           .toList()
-          .firstOrNull;
-
-      final currentRunningCycle = selectedProjectType?.cycles
-          ?.where(
-            (e) =>
-                (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
-                (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
-            // Return null when no matching cycle is found
-          )
           .firstOrNull;
 
       final cycles = List<Cycle>.from(
