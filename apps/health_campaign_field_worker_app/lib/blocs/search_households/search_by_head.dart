@@ -86,10 +86,18 @@ class SearchByHeadBloc extends SearchHouseholdsBloc {
       event.isProximityEnabled
           ? IndividualSearchModel(
               clientReferenceId: individualIds,
-              name: NameSearchModel(givenName: event.searchText.trim()),
+              name: NameSearchModel(
+                givenName: event.searchText.trim(),
+                offset: event.offset,
+                limit: event.limit,
+              ),
             )
           : IndividualSearchModel(
-              name: NameSearchModel(givenName: event.searchText.trim()),
+              name: NameSearchModel(
+                givenName: event.searchText.trim(),
+                offset: event.offset,
+                limit: event.limit,
+              ),
             ),
     );
 
@@ -148,6 +156,12 @@ class SearchByHeadBloc extends SearchHouseholdsBloc {
 
     // Initialize a list to store household members.
     final groupedHouseholds = allhouseholdMembers
+        .where((hm) => projectBeneficiaries
+            .map((p) => p.beneficiaryClientReferenceId)
+            .toList()
+            .contains(beneficiaryType == BeneficiaryType.individual
+                ? hm.individualClientReferenceId
+                : hm.householdClientReferenceId))
         .groupListsBy((element) => element.householdClientReferenceId);
 
     // Iterate through grouped households and retrieve additional data.
@@ -170,8 +184,27 @@ class SearchByHeadBloc extends SearchHouseholdsBloc {
                   .contains(element.beneficiaryClientReferenceId)
               : (househHoldIds).contains(element.beneficiaryClientReferenceId))
           .toList();
+      final beneficiaryClientReferenceIds = projectBeneficiaries
+          .map((e) => e.beneficiaryClientReferenceId)
+          .toList();
+      final List<IndividualModel> beneficiaryIndividuals = individualMembersList
+          .where((element) =>
+              beneficiaryClientReferenceIds.contains(element.clientReferenceId))
+          .toList();
       // Find the head of household from the individuals.
-      final head = individualMembersList.firstWhereOrNull(
+      final head = ((beneficiaryType == BeneficiaryType.individual
+              ? beneficiaryIndividuals
+              : individualMembersList))
+          .firstWhereOrNull(
+        (element) =>
+            element.clientReferenceId ==
+            entry.value
+                .firstWhereOrNull(
+                  (element) => element.isHeadOfHousehold,
+                )
+                ?.individualClientReferenceId,
+      );
+      individualMembersList.firstWhereOrNull(
         (element) =>
             element.clientReferenceId ==
             entry.value
@@ -181,17 +214,25 @@ class SearchByHeadBloc extends SearchHouseholdsBloc {
                 ?.individualClientReferenceId,
       );
 
-      if (head == null) continue;
+      if (head == null || beneficiaries.isEmpty) continue;
 
       // Search for project beneficiaries based on client reference ID and project.
 
       if (beneficiaries.isNotEmpty) {
+        individualMembersList.sort((a, b) =>
+            (a.clientAuditDetails?.createdTime ?? 0)
+                .compareTo(b.clientAuditDetails?.createdTime ?? 0));
+        beneficiaryIndividuals.sort((a, b) =>
+            (a.clientAuditDetails?.createdTime ?? 0)
+                .compareTo(b.clientAuditDetails?.createdTime ?? 0));
         // Create a container for household members and associated data.
         containers.add(
           HouseholdMemberWrapper(
             household: householdresult,
             headOfHousehold: head,
-            members: individualMembersList,
+            members: beneficiaryType == BeneficiaryType.individual
+                ? beneficiaryIndividuals
+                : individualMembersList,
             projectBeneficiaries: beneficiaries,
             tasks: tasks.isEmpty ? null : tasks,
             sideEffects: sideEffects.isEmpty ? null : sideEffects,
@@ -204,7 +245,7 @@ class SearchByHeadBloc extends SearchHouseholdsBloc {
     }
     super.emit(state.copyWith(
       searchQuery: event.searchText,
-      householdMembers: containers,
+      householdMembers: [...state.householdMembers, ...containers],
       loading: false,
     ));
   }

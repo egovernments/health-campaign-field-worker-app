@@ -42,6 +42,10 @@ class IndividualLocalRepository
       ],
     );
 
+    if (query.limit != null && query.offset != null) {
+      selectQuery.limit(query.limit!, offset: query.offset);
+    }
+
     final results = await (selectQuery
           ..where(
             buildAnd([

@@ -4,10 +4,10 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../data/data_repository.dart';
-import '../models/data_model.dart';
-import '../utils/utils.dart';
-import 'sync/sync.dart';
+import '../../data/data_repository.dart';
+import '../../models/data_model.dart';
+import '../../utils/utils.dart';
+import '../sync/sync.dart';
 
 class HCMAttendanceBloc extends AttendanceListeners {
   final LocalRepository<HCMAttendanceRegisterModel, HCMAttendanceSearchModel>?
@@ -31,13 +31,11 @@ class HCMAttendanceBloc extends AttendanceListeners {
     required this.context,
   });
 
-  late Function(List<AttendanceRegisterModel> registers)
-      _registersLoaded;
+  late Function(List<AttendanceRegisterModel> registers) _registersLoaded;
 
   @override
   void getAttendanceRegisters(
-    Function(List<AttendanceRegisterModel> registers)
-        attendanceRegisters,
+    Function(List<AttendanceRegisterModel> registers) attendanceRegisters,
   ) {
     _registersLoaded = attendanceRegisters;
 

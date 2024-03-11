@@ -89,13 +89,28 @@ class _SearchBeneficiaryPageState
                   final metrics = scrollNotification.metrics;
                   if (metrics.atEdge &&
                       isProximityEnabled &&
-                      searchController.text == '') {
+                      searchController.text == '' &&
+                      metrics.pixels != 0) {
                     blocWrapper.proximitySearchBloc
                         .add(SearchHouseholdsEvent.searchByProximity(
                       latitude: lat,
                       longititude: long,
                       projectId: context.projectId,
                       maxRadius: appConfig.maxRadius!,
+                      offset: offset + limit,
+                      limit: limit,
+                    ));
+                    setState(() {
+                      offset = (offset + limit);
+                    });
+                  } else if (metrics.atEdge &&
+                      searchController.text != '' &&
+                      metrics.pixels != 0) {
+                    final bloc = context.read<SearchHouseholdsBloc>();
+                    bloc.add(SearchHouseholdsEvent.searchByHouseholdHead(
+                      searchText: searchController.text,
+                      projectId: context.projectId,
+                      isProximityEnabled: isProximityEnabled,
                       offset: offset + limit,
                       limit: limit,
                     ));
@@ -172,6 +187,10 @@ class _SearchBeneficiaryPageState
                                           ),
                                         );
                                       } else {
+                                        setState(() {
+                                          offset = 0;
+                                          limit = limit;
+                                        });
                                         blocWrapper.searchByHeadBloc.add(
                                           SearchHouseholdsEvent
                                               .searchByHouseholdHead(

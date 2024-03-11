@@ -525,6 +525,7 @@ UserRequestModel _$UserRequestModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$UserRequestModel {
+  int? get id => throw _privateConstructorUsedError;
   String get uuid => throw _privateConstructorUsedError;
   String? get userName => throw _privateConstructorUsedError;
   String? get name => throw _privateConstructorUsedError;
@@ -550,7 +551,8 @@ abstract class $UserRequestModelCopyWith<$Res> {
       _$UserRequestModelCopyWithImpl<$Res, UserRequestModel>;
   @useResult
   $Res call(
-      {String uuid,
+      {int? id,
+      String uuid,
       String? userName,
       String? name,
       String? mobileNumber,
@@ -576,6 +578,7 @@ class _$UserRequestModelCopyWithImpl<$Res, $Val extends UserRequestModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = freezed,
     Object? uuid = null,
     Object? userName = freezed,
     Object? name = freezed,
@@ -589,6 +592,10 @@ class _$UserRequestModelCopyWithImpl<$Res, $Val extends UserRequestModel>
     Object? roles = null,
   }) {
     return _then(_value.copyWith(
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int?,
       uuid: null == uuid
           ? _value.uuid
           : uuid // ignore: cast_nullable_to_non_nullable
@@ -646,7 +653,8 @@ abstract class _$$UserRequestModelImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String uuid,
+      {int? id,
+      String uuid,
       String? userName,
       String? name,
       String? mobileNumber,
@@ -670,6 +678,7 @@ class __$$UserRequestModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = freezed,
     Object? uuid = null,
     Object? userName = freezed,
     Object? name = freezed,
@@ -683,6 +692,10 @@ class __$$UserRequestModelImplCopyWithImpl<$Res>
     Object? roles = null,
   }) {
     return _then(_$UserRequestModelImpl(
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int?,
       uuid: null == uuid
           ? _value.uuid
           : uuid // ignore: cast_nullable_to_non_nullable
@@ -735,7 +748,8 @@ class __$$UserRequestModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$UserRequestModelImpl implements _UserRequestModel {
   const _$UserRequestModelImpl(
-      {required this.uuid,
+      {this.id,
+      required this.uuid,
       this.userName,
       this.name,
       this.mobileNumber,
@@ -751,6 +765,8 @@ class _$UserRequestModelImpl implements _UserRequestModel {
   factory _$UserRequestModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserRequestModelImplFromJson(json);
 
+  @override
+  final int? id;
   @override
   final String uuid;
   @override
@@ -782,7 +798,7 @@ class _$UserRequestModelImpl implements _UserRequestModel {
 
   @override
   String toString() {
-    return 'UserRequestModel(uuid: $uuid, userName: $userName, name: $name, mobileNumber: $mobileNumber, emailId: $emailId, locale: $locale, active: $active, tenantId: $tenantId, permanentCity: $permanentCity, gender: $gender, roles: $roles)';
+    return 'UserRequestModel(id: $id, uuid: $uuid, userName: $userName, name: $name, mobileNumber: $mobileNumber, emailId: $emailId, locale: $locale, active: $active, tenantId: $tenantId, permanentCity: $permanentCity, gender: $gender, roles: $roles)';
   }
 
   @override
@@ -790,6 +806,7 @@ class _$UserRequestModelImpl implements _UserRequestModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$UserRequestModelImpl &&
+            (identical(other.id, id) || other.id == id) &&
             (identical(other.uuid, uuid) || other.uuid == uuid) &&
             (identical(other.userName, userName) ||
                 other.userName == userName) &&
@@ -811,6 +828,7 @@ class _$UserRequestModelImpl implements _UserRequestModel {
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      id,
       uuid,
       userName,
       name,
@@ -840,7 +858,8 @@ class _$UserRequestModelImpl implements _UserRequestModel {
 
 abstract class _UserRequestModel implements UserRequestModel {
   const factory _UserRequestModel(
-      {required final String uuid,
+      {final int? id,
+      required final String uuid,
       final String? userName,
       final String? name,
       final String? mobileNumber,
@@ -855,6 +874,8 @@ abstract class _UserRequestModel implements UserRequestModel {
   factory _UserRequestModel.fromJson(Map<String, dynamic> json) =
       _$UserRequestModelImpl.fromJson;
 
+  @override
+  int? get id;
   @override
   String get uuid;
   @override
