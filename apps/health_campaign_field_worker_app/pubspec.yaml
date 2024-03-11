@@ -67,7 +67,6 @@ dependencies:
   google_mlkit_barcode_scanning: ^0.10.0
   camera: ^0.10.5+7
   attendance_management: ^0.0.1
-  digit_scanner: ^0.0.1
 
 dev_dependencies:
   flutter_test:
