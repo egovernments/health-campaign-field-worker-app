@@ -55,6 +55,20 @@ import 'oplog/oplog_entry.dart' as p48;
 import 'pgr_complaints/pgr_address.dart' as p49;
 import 'pgr_complaints/pgr_complaints.dart' as p50;
 import 'pgr_complaints/pgr_complaints_response.dart' as p51;
+import 'package:attendance_management/models/attendance_audit.dart' as p52;
+import 'package:attendance_management/models/attendance_log.dart' as p55;
+import 'package:attendance_management/models/attendance_register.dart' as p56;
+import 'package:attendance_management/models/attendee.dart' as p54;
+import 'package:attendance_management/models/staff.dart' as p53;
+import 'package:inventory_management/models/entities/stock.dart' as p57;
+import 'package:inventory_management/models/entities/stock_reconciliation.dart'
+    as p57;
+import 'package:inventory_management/models/entities/transaction_reason.dart'
+    as p57;
+import 'package:inventory_management/models/entities/transaction_type.dart'
+    as p57;
+import 'package:inventory_management/models/entities/inventory_facility.dart'
+    as p57;
 
 void initializeMappers() {
   p0.EntityModelMapper.ensureInitialized();
@@ -202,4 +216,17 @@ void initializeMappers() {
   p51.PgrComplaintResponseModelMapper.ensureInitialized();
   p51.PgrComplainantResponseModelMapper.ensureInitialized();
   p51.PgrServiceResponseModelMapper.ensureInitialized();
+  p52.AttendanceAuditDetailsMapper.ensureInitialized();
+  p53.StaffModelMapper.ensureInitialized();
+  p54.AttendeeModelMapper.ensureInitialized();
+  p55.AttendanceLogModelMapper.ensureInitialized();
+  p56.AttendanceRegisterModelMapper.ensureInitialized();
+  p57.StockModelMapper.ensureInitialized();
+  p57.StockSearchModelMapper.ensureInitialized();
+  p57.StockReconciliationModelMapper.ensureInitialized();
+  p57.StockReconciliationSearchModelMapper.ensureInitialized();
+  p57.TransactionReasonMapper.ensureInitialized();
+  p57.TransactionTypeMapper.ensureInitialized();
+  p57.InventoryFacilityModelMapper.ensureInitialized();
+  p57.InventoryFacilitySearchModelMapper.ensureInitialized();
 }

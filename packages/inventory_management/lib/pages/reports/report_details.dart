@@ -1,4 +1,3 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,12 +18,11 @@ import '../../models/entities/inventory_facility.dart';
 import '../../models/entities/product_variant.dart';
 import '../../models/entities/stock.dart';
 import '../../models/entities/stock_reconciliation.dart';
-import '../../router/inventory_router.dart';
 import '../../widgets/back_navigation_help_header.dart';
+import '../acknowledgement.dart';
 import '../facility_selection.dart';
 
-class InventoryReportDetailsPage extends LocalizedStatefulWidget
-    with AutoRouteWrapper {
+class InventoryReportDetailsPage extends LocalizedStatefulWidget {
   final bool? isDistributor;
   final InventoryReportType reportType;
 
@@ -67,7 +65,8 @@ class _InventoryReportDetailsPageState
     final event = widget.reportType == InventoryReportType.reconciliation
         ? InventoryReportLoadStockReconciliationDataEvent(
             facilityId: form.control(_facilityKey).value != null
-                ? (form.control(_facilityKey).value as InventoryFacilityModel).id
+                ? (form.control(_facilityKey).value as InventoryFacilityModel)
+                    .id
                 : '',
             productVariantId: form.control(_productVariantKey).value != null
                 ? (form.control(_productVariantKey).value
@@ -78,7 +77,8 @@ class _InventoryReportDetailsPageState
         : InventoryReportLoadStockDataEvent(
             reportType: widget.reportType,
             facilityId: form.control(_facilityKey).value != null
-                ? (form.control(_facilityKey).value as InventoryFacilityModel).id
+                ? (form.control(_facilityKey).value as InventoryFacilityModel)
+                    .id
                 : '',
             productVariantId: form.control(_productVariantKey).value != null
                 ? (form.control(_productVariantKey).value
@@ -111,7 +111,8 @@ class _InventoryReportDetailsPageState
       bottomNavigationBar: DigitCard(
         padding: const EdgeInsets.all(8.0),
         child: DigitElevatedButton(
-          onPressed: () => context.router.popUntilRoot(),
+          onPressed: () =>
+              Navigator.of(context).popUntil((route) => route.isFirst),
           child: Text(
             localizations.translate(
               i18.inventoryReportDetails.backToHomeButtonLabel,
@@ -171,8 +172,22 @@ class _InventoryReportDetailsPageState
                             listener: (context, stockState) {
                               if (!stockState.persisted) return;
 
-                              context.router
-                                  .replace(InventoryAcknowledgementPageRoute());
+                              Navigator.pushReplacement(context,
+                                  MaterialPageRoute(
+                                builder: (context) {
+                                  return InventoryAcknowledgementPage(
+                                    isDataRecordSuccess: true,
+                                    label: localizations.translate(
+                                      i18.acknowledgementSuccess
+                                          .acknowledgementLabelText,
+                                    ),
+                                    description: localizations.translate(
+                                      i18.acknowledgementSuccess
+                                          .acknowledgementDescriptionText,
+                                    ),
+                                  );
+                                },
+                              ));
                             },
                             builder: (context, stockState) {
                               return Column(
@@ -194,9 +209,10 @@ class _InventoryReportDetailsPageState
                                             builder: (context, state) {
                                               final facilities =
                                                   state.whenOrNull(
-                                                        fetched:
-                                                            (facilities, _) =>
-                                                                facilities,
+                                                        fetched: (
+                                                          facilities,
+                                                        ) =>
+                                                            facilities,
                                                       ) ??
                                                       [];
 
@@ -206,11 +222,16 @@ class _InventoryReportDetailsPageState
                                                       context.read<
                                                           StockReconciliationBloc>();
 
-                                                  final facility = await context
-                                                      .router
-                                                      .push<InventoryFacilityModel>(
-                                                    FacilitySelectionPageRoute(
-                                                      facilities: facilities,
+                                                  final facility =
+                                                      await Navigator.of(
+                                                    context,
+                                                    rootNavigator: true,
+                                                  ).push(
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          FacilitySelectionPage(
+                                                        facilities: facilities,
+                                                      ),
                                                     ),
                                                   );
 
@@ -252,12 +273,16 @@ class _InventoryReportDetailsPageState
                                                               StockReconciliationBloc>();
 
                                                       final facility =
-                                                          await context.router
-                                                              .push<
-                                                                  InventoryFacilityModel>(
-                                                        FacilitySelectionPageRoute(
-                                                          facilities:
-                                                              facilities,
+                                                          await Navigator.of(
+                                                        context,
+                                                        rootNavigator: true,
+                                                      ).push(
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              FacilitySelectionPage(
+                                                            facilities:
+                                                                facilities,
+                                                          ),
                                                         ),
                                                       );
 

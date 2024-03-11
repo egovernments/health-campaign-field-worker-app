@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/facility.dart';
+import '../../blocs/inventory_listener.dart';
 import '../../models/entities/inventory_facility.dart';
 
 class FacilityBlocWrapper extends StatelessWidget {
@@ -18,12 +19,9 @@ class FacilityBlocWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => FacilityBloc(
-          FacilityEmptyState(),
-          // facilityDataRepository: facilityRepository,
-          // projectFacilityDataRepository: projectFacilityRepository,
-          )
-        ..add(
-          FacilityLoadForProjectEvent(
+        const FacilityEmptyState(),
+      )..add(
+          FacilityEvent.loadForProjectId(
             projectId: projectId,
           ),
         ),

@@ -3,7 +3,6 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:inventory_management/blocs/app_localization.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:auto_route/auto_route.dart';
 
 import '../../models/entities/inventory_facility.dart';
 import '../../utils/i18_key_constants.dart' as i18;
@@ -13,9 +12,9 @@ class FacilitySelectionPage extends StatelessWidget {
   final List<InventoryFacilityModel> facilities;
 
   const FacilitySelectionPage({
-    Key? key,
+    super.key,
     required this.facilities,
-  }) : super(key: key);
+  });
 
   static const _facilityName = 'facilityKey';
   static const _selectedFacility = 'selectedFacilityKey';
@@ -108,7 +107,7 @@ class FacilitySelectionPage extends StatelessWidget {
                             ),
                             child: InkWell(
                               onTap: () {
-                                context.router.pop(facility);
+                                Navigator.of(context).pop(facility);
                               },
                               child: Container(
                                 margin: const EdgeInsets.all(kPadding),

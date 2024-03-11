@@ -14,6 +14,7 @@ import 'package:inventory_management/blocs/app_localization.dart';
 import 'package:inventory_management/blocs/record_stock.dart';
 import 'package:inventory_management/blocs/inventory_report.dart';
 import 'package:inventory_management/blocs/inventory_listener.dart';
+import 'package:inventory_management/utils/utils.dart';
 
 import '../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../blocs/localization/app_localization.dart';

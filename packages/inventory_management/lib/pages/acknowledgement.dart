@@ -1,8 +1,5 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
-import 'package:auto_route/auto_route.dart';
-
-import '../router/inventory_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/localized.dart';
 
@@ -45,7 +42,7 @@ class _AcknowledgementPageState extends LocalizedState<InventoryAcknowledgementP
               i18.acknowledgementSuccess.acknowledgementLabelText,
             ),
         action: () {
-          context.router.pop();
+          Navigator.of(context).pop();
         },
         enableBackToSearch: widget.isDataRecordSuccess ? false : true,
         actionLabel:

@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:inventory_management/blocs/inventory_listener.dart';
 
 import '../models/entities/product_variant.dart';
 import '../models/entities/project_resource.dart';
@@ -22,24 +23,11 @@ class ProductVariantBloc
     ProductVariantEmitter emit,
   ) async {
     emit(const ProductVariantLoadingState());
-    var variants;
-    // final projectResources = await projectResourceDataRepository.search(
-    //   event.query,
-    // );
-    //
-    // final variants = await productVariantDataRepository.search(
-    //   ProductVariantSearchModel(
-    //     id: projectResources.map((e) {
-    //       return e.resource.productVariantId;
-    //     }).toList(),
-    //   ),
-    // );
-
-    if (variants == null || variants.isEmpty) {
-      emit(const ProductVariantEmptyState());
-    } else {
-      emit(ProductVariantFetchedState(productVariants: variants));
-    }
+    InventorySingleton().getProductVariants(
+      (productVariants) => {
+        emit(ProductVariantState.fetched(productVariants: productVariants)),
+      },
+    );
   }
 }
 

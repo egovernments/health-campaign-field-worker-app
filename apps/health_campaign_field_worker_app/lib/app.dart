@@ -1,5 +1,7 @@
 import 'package:attendance_management/blocs/app_localization.dart'
     as attendance_localization;
+import 'package:health_campaign_field_worker_app/blocs/facility/facility.dart';
+import 'package:health_campaign_field_worker_app/blocs/product_variant/product_variant.dart';
 import 'package:inventory_management/blocs/app_localization.dart'
     as inventory_localization;
 import 'package:digit_components/digit_components.dart';
@@ -251,7 +253,34 @@ class MainApplicationState extends State<MainApplication>
                             attendanceLogRemoteRepository: ctx.read<
                                 RemoteRepository<HCMAttendanceLogModel,
                                     HCMAttendanceLogSearchModel>>(),
+                            stockLocalRepository: ctx.read<
+                                LocalRepository<HcmStockModel,
+                                    HcmStockSearchModel>>(),
+                            stockRemoteRepository: ctx.read<
+                                RemoteRepository<HcmStockModel,
+                                    HcmStockSearchModel>>(),
                             context: context,
+                          ),
+                        ),
+                        BlocProvider(
+                          create: (context) => FacilityBloc(
+                            facilityDataRepository: context.read<
+                                RemoteRepository<FacilityModel,
+                                    FacilitySearchModel>>(),
+                            projectFacilityDataRepository: context.read<
+                                RemoteRepository<ProjectFacilityModel,
+                                    ProjectFacilitySearchModel>>(),
+                          ),
+                        ),
+                        BlocProvider(
+                          create: (context) => ProductVariantBloc(
+                            const ProductVariantEmptyState(),
+                            productVariantDataRepository: context.read<
+                                RemoteRepository<ProductVariantModel,
+                                    ProductVariantSearchModel>>(),
+                            projectResourceDataRepository: context.read<
+                                RemoteRepository<ProjectResourceModel,
+                                    ProjectResourceSearchModel>>(),
                           ),
                         ),
                       ],

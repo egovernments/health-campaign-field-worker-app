@@ -72,6 +72,11 @@ class _$AppRouter extends RootStackRouter {
           appLocalizations: args.appLocalizations,
           inventoryListener: args.inventoryListener,
           projectId: args.projectId,
+          userId: args.userId,
+          boundaryName: args.boundaryName,
+          isDistributor: args.isDistributor,
+          isWareHouseMgr: args.isWareHouseMgr,
+          transportType: args.transportType,
         ),
       );
     },
@@ -94,10 +99,7 @@ class _$AppRouter extends RootStackRouter {
       return MaterialPageX<dynamic>(
         routeData: routeData,
         child: WarehouseDetailsPage(
-          boundaryName: args.boundaryName,
-          projectId: args.projectId,
-          isDistributor: args.isDistributor,
-          isWareHouseMgr: args.isWareHouseMgr,
+          entryType: args.entryType,
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -293,6 +295,11 @@ class ManageStocksRoute extends PageRouteInfo<ManageStocksRouteArgs> {
     InventoryLocalization? appLocalizations,
     required InventoryListener inventoryListener,
     required String projectId,
+    required String userId,
+    required String boundaryName,
+    required bool isDistributor,
+    required bool isWareHouseMgr,
+    required List<InventoryTransportTypes>? transportType,
   }) : super(
           ManageStocksRoute.name,
           path: 'manage-stocks',
@@ -301,6 +308,11 @@ class ManageStocksRoute extends PageRouteInfo<ManageStocksRouteArgs> {
             appLocalizations: appLocalizations,
             inventoryListener: inventoryListener,
             projectId: projectId,
+            userId: userId,
+            boundaryName: boundaryName,
+            isDistributor: isDistributor,
+            isWareHouseMgr: isWareHouseMgr,
+            transportType: transportType,
           ),
         );
 
@@ -313,6 +325,11 @@ class ManageStocksRouteArgs {
     this.appLocalizations,
     required this.inventoryListener,
     required this.projectId,
+    required this.userId,
+    required this.boundaryName,
+    required this.isDistributor,
+    required this.isWareHouseMgr,
+    required this.transportType,
   });
 
   final Key? key;
@@ -323,9 +340,19 @@ class ManageStocksRouteArgs {
 
   final String projectId;
 
+  final String userId;
+
+  final String boundaryName;
+
+  final bool isDistributor;
+
+  final bool isWareHouseMgr;
+
+  final List<InventoryTransportTypes>? transportType;
+
   @override
   String toString() {
-    return 'ManageStocksRouteArgs{key: $key, appLocalizations: $appLocalizations, inventoryListener: $inventoryListener, projectId: $projectId}';
+    return 'ManageStocksRouteArgs{key: $key, appLocalizations: $appLocalizations, inventoryListener: $inventoryListener, projectId: $projectId, userId: $userId, boundaryName: $boundaryName, isDistributor: $isDistributor, isWareHouseMgr: $isWareHouseMgr, transportType: $transportType}';
   }
 }
 
@@ -388,20 +415,14 @@ class StockReconciliationRouteArgs {
 /// [WarehouseDetailsPage]
 class WarehouseDetailsRoute extends PageRouteInfo<WarehouseDetailsRouteArgs> {
   WarehouseDetailsRoute({
-    String boundaryName = '',
-    required String projectId,
-    bool? isDistributor = false,
-    bool? isWareHouseMgr = false,
+    required StockRecordEntryType entryType,
     Key? key,
     InventoryLocalization? appLocalizations,
   }) : super(
           WarehouseDetailsRoute.name,
           path: 'warehouse-details',
           args: WarehouseDetailsRouteArgs(
-            boundaryName: boundaryName,
-            projectId: projectId,
-            isDistributor: isDistributor,
-            isWareHouseMgr: isWareHouseMgr,
+            entryType: entryType,
             key: key,
             appLocalizations: appLocalizations,
           ),
@@ -412,21 +433,12 @@ class WarehouseDetailsRoute extends PageRouteInfo<WarehouseDetailsRouteArgs> {
 
 class WarehouseDetailsRouteArgs {
   const WarehouseDetailsRouteArgs({
-    this.boundaryName = '',
-    required this.projectId,
-    this.isDistributor = false,
-    this.isWareHouseMgr = false,
+    required this.entryType,
     this.key,
     this.appLocalizations,
   });
 
-  final String boundaryName;
-
-  final String projectId;
-
-  final bool? isDistributor;
-
-  final bool? isWareHouseMgr;
+  final StockRecordEntryType entryType;
 
   final Key? key;
 
@@ -434,6 +446,6 @@ class WarehouseDetailsRouteArgs {
 
   @override
   String toString() {
-    return 'WarehouseDetailsRouteArgs{boundaryName: $boundaryName, projectId: $projectId, isDistributor: $isDistributor, isWareHouseMgr: $isWareHouseMgr, key: $key, appLocalizations: $appLocalizations}';
+    return 'WarehouseDetailsRouteArgs{entryType: $entryType, key: $key, appLocalizations: $appLocalizations}';
   }
 }

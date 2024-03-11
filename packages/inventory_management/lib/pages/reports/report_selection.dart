@@ -1,12 +1,11 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
-import 'package:auto_route/auto_route.dart';
+import 'package:inventory_management/pages/reports/report_details.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../widgets/localized.dart';
 import '../../blocs/inventory_listener.dart';
 import '../../blocs/inventory_report.dart';
-import '../../router/inventory_router.dart';
 import '../../widgets/back_navigation_help_header.dart';
 
 class InventoryReportSelectionPage extends LocalizedStatefulWidget {
@@ -58,13 +57,14 @@ class _InventoryReportSelectionPageState
                       .inventoryReportReceiptDescription),
                   prefixIcon: Icons.login,
                   sufixIcon: Icons.arrow_circle_right,
-                  onPressed: () => AutoRouter.of(context).push(
-                    InventoryReportDetailsPageRoute(
-                      reportType: InventoryReportType.receipt,
-                      isDistributor: false,
-                      projectId: InventorySingleton().projectId,
-                    ),
-                  ),
+                  onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => InventoryReportDetailsPage(
+                                isDistributor: false,
+                                reportType: InventoryReportType.receipt,
+                                projectId: InventorySingleton().projectId,
+                              ))),
                 ),
                 DigitListView(
                   title: localizations.translate(
@@ -75,13 +75,14 @@ class _InventoryReportSelectionPageState
                       .inventoryReportIssuedDescription),
                   prefixIcon: Icons.logout,
                   sufixIcon: Icons.arrow_circle_right,
-                  onPressed: () => context.router.push(
-                    InventoryReportDetailsPageRoute(
-                      reportType: InventoryReportType.dispatch,
-                      isDistributor: false,
-                      projectId: InventorySingleton().projectId,
-                    ),
-                  ),
+                  onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => InventoryReportDetailsPage(
+                                isDistributor: false,
+                                reportType: InventoryReportType.dispatch,
+                                projectId: InventorySingleton().projectId,
+                              ))),
                 ),
                 DigitListView(
                   title: localizations.translate(i18
@@ -92,13 +93,14 @@ class _InventoryReportSelectionPageState
                   ),
                   prefixIcon: Icons.settings_backup_restore,
                   sufixIcon: Icons.arrow_circle_right,
-                  onPressed: () => context.router.push(
-                    InventoryReportDetailsPageRoute(
-                      reportType: InventoryReportType.returned,
-                      isDistributor: false,
-                      projectId: InventorySingleton().projectId,
-                    ),
-                  ),
+                  onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => InventoryReportDetailsPage(
+                                isDistributor: false,
+                                reportType: InventoryReportType.returned,
+                                projectId: InventorySingleton().projectId,
+                              ))),
                 ),
                 DigitListView(
                   title: localizations.translate(
@@ -110,13 +112,14 @@ class _InventoryReportSelectionPageState
                   ),
                   prefixIcon: Icons.store,
                   sufixIcon: Icons.arrow_circle_right,
-                  onPressed: () => context.router.push(
-                    InventoryReportDetailsPageRoute(
-                      reportType: InventoryReportType.damage,
-                      isDistributor: false,
-                      projectId: InventorySingleton().projectId,
-                    ),
-                  ),
+                  onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => InventoryReportDetailsPage(
+                                isDistributor: false,
+                                reportType: InventoryReportType.damage,
+                                projectId: InventorySingleton().projectId,
+                              ))),
                 ),
                 DigitListView(
                   title: localizations.translate(
@@ -127,13 +130,14 @@ class _InventoryReportSelectionPageState
                   ),
                   prefixIcon: Icons.store,
                   sufixIcon: Icons.arrow_circle_right,
-                  onPressed: () => context.router.push(
-                    InventoryReportDetailsPageRoute(
-                      reportType: InventoryReportType.loss,
-                      isDistributor: false,
-                      projectId: InventorySingleton().projectId,
-                    ),
-                  ),
+                  onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => InventoryReportDetailsPage(
+                                isDistributor: false,
+                                reportType: InventoryReportType.loss,
+                                projectId: InventorySingleton().projectId,
+                              ))),
                 ),
                 DigitListView(
                   title: localizations.translate(
@@ -146,13 +150,14 @@ class _InventoryReportSelectionPageState
                   ),
                   prefixIcon: Icons.store,
                   sufixIcon: Icons.arrow_circle_right,
-                  onPressed: () => context.router.push(
-                    InventoryReportDetailsPageRoute(
-                      reportType: InventoryReportType.reconciliation,
-                      isDistributor: false,
-                      projectId: InventorySingleton().projectId,
-                    ),
-                  ),
+                  onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => InventoryReportDetailsPage(
+                                isDistributor: false,
+                                reportType: InventoryReportType.reconciliation,
+                                projectId: InventorySingleton().projectId,
+                              ))),
                 ),
               ]),
               const SizedBox(height: 16),

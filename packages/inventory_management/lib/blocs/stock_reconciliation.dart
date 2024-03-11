@@ -16,15 +16,9 @@ typedef StockReconciliationEmitter = Emitter<StockReconciliationState>;
 
 class StockReconciliationBloc
     extends Bloc<StockReconciliationEvent, StockReconciliationState> {
-  // final StockDataRepository stockRepository;
-  // final StockReconciliationDataRepository stockReconciliationRepository;
 
   StockReconciliationBloc(
     super.initialState,
-    // {
-    // required this.stockReconciliationRepository,
-    // required this.stockRepository,
-    // }
   ) {
     on(_handleSelectFacility);
     on(_handleSelectProduct);

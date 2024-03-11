@@ -20,8 +20,6 @@ class ProductVariantBlocWrapper extends StatelessWidget {
     return BlocProvider(
       create: (_) => ProductVariantBloc(
         const ProductVariantEmptyState(),
-        // productVariantDataRepository: productVariant,
-        // projectResourceDataRepository: projectResource,
       )..add(
           ProductVariantLoadEvent(
             query: ProjectResourceSearchModel(

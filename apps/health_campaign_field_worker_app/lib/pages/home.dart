@@ -12,7 +12,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:inventory_management/blocs/record_stock.dart';
 import 'package:inventory_management/pages/manage_stocks.dart';
+import 'package:inventory_management/utils/utils.dart';
 
+import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
 import '../blocs/hcm_attendance_bloc.dart';
 import '../blocs/hcm_inventory_bloc.dart';
@@ -21,6 +23,7 @@ import '../blocs/search_households/search_households.dart';
 import '../blocs/search_referrals/search_referrals.dart';
 import '../blocs/sync/sync.dart';
 import '../data/data_repository.dart';
+import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../data/local_store/sql_store/sql_store.dart';
 import '../models/data_model.dart';
@@ -331,29 +334,46 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.store_mall_directory,
           label: i18.home.manageStockLabel,
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ManageStocksPage(
-                  inventoryListener: HcmInventoryBloc(
-                    context: context,
-                    userId: context.loggedInUserUuid,
-                    individualId: context.loggedInIndividualId,
-                    projectId: context.projectId,
-                  ),
-                  projectId: context.projectId,
-                ),
-                settings: const RouteSettings(name: '/record-stock'),
-              ),
-            );
-            HcmInventoryBloc(
-              context: context,
-              userId: context.loggedInUserUuid,
-              individualId: context.loggedInIndividualId,
-              projectId: context.projectId,
-            ).fetchFacilitiesForProjectId((facilitiesModel) {
-              print('$facilitiesModel');
-            });
+            context.read<AppInitializationBloc>().state.maybeWhen(
+                  orElse: () {},
+                  initialized: (AppConfiguration appConfiguration, _) {
+                    context.router.push(
+                      ManageStocksRoute(
+                        isWareHouseMgr: context.loggedInUserRoles
+                            .where((role) =>
+                                role.code ==
+                                RolesType.warehouseManager.toValue())
+                            .toList()
+                            .isNotEmpty,
+                        isDistributor: context.loggedInUserRoles
+                            .where(
+                              (role) =>
+                                  role.code == RolesType.distributor.toValue(),
+                            )
+                            .toList()
+                            .isNotEmpty,
+                        boundaryName: context.boundary.name!,
+                        inventoryListener: HcmInventoryBloc(
+                          context: context,
+                          userId: context.loggedInUserUuid,
+                          individualId: context.loggedInIndividualId,
+                          projectId: context.projectId,
+                          stockLocalRepository: context.read<
+                              LocalRepository<HcmStockModel, HcmStockSearchModel>>(),
+                          stockRemoteRepository: context.read<
+                              RemoteRepository<HcmStockModel, HcmStockSearchModel>>(),
+                        ),
+                        projectId: context.projectId,
+                        userId: context.loggedInUserUuid,
+                        transportType: appConfiguration.transportTypes
+                            ?.map((e) => InventoryTransportTypes()
+                              ..name = e.name
+                              ..code = e.code)
+                            .toList(),
+                      ),
+                    );
+                  },
+                );
           },
         ),
       ),

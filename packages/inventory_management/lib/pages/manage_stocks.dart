@@ -1,23 +1,36 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
-import 'package:auto_route/auto_route.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_management/pages/record_stock/record_stock_wrapper.dart';
+import 'package:inventory_management/pages/record_stock/warehouse_details.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/localized.dart';
 import '../blocs/inventory_listener.dart';
+import '../blocs/product_variant.dart';
 import '../blocs/record_stock.dart';
-import '../router/inventory_router.dart';
+import '../models/entities/project_resource.dart';
+import '../utils/utils.dart';
 import '../widgets/back_navigation_help_header.dart';
 
 class ManageStocksPage extends LocalizedStatefulWidget {
   final InventoryListener inventoryListener;
   final String projectId;
+  final String userId;
+  final String boundaryName;
+  final bool isDistributor;
+  final bool isWareHouseMgr;
+  final List<InventoryTransportTypes>? transportType;
   const ManageStocksPage({
     super.key,
     super.appLocalizations,
     required this.inventoryListener,
     required this.projectId,
+    required this.userId,
+    required this.boundaryName,
+    required this.isDistributor,
+    required this.isWareHouseMgr,
+    required this.transportType,
   });
 
   @override
@@ -29,9 +42,12 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
   initState() {
     InventorySingleton().setInitialData(
       inventoryListener: widget.inventoryListener,
-      userId: '',
-      appVersion: '',
+      transportTypes: widget.transportType,
+      userId: widget.userId,
       projectId: widget.projectId,
+      isDistributor: widget.isDistributor,
+      isWareHouseMgr: widget.isWareHouseMgr,
+      boundaryName: widget.boundaryName,
     );
     super.initState();
   }
@@ -73,71 +89,75 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                       MaterialPageRoute(
                         builder: (context) => RecordStockWrapperPage(
                           type: StockRecordEntryType.receipt,
-                          projectId: widget.projectId,
+                          projectId: InventorySingleton().projectId,
                         ),
                       ),
                     );
                   },
                 ),
                 DigitListView(
-                  title: localizations
-                      .translate(i18.manageStock.recordStockIssuedLabel),
-                  description: localizations
-                      .translate(i18.manageStock.recordStockIssuedDescription),
-                  prefixIcon: Icons.file_upload_outlined,
-                  sufixIcon: Icons.arrow_circle_right,
-                  onPressed: () => context.router.push(
-                    RecordStockWrapperPageRoute(
-                      type: StockRecordEntryType.dispatch,
-                      projectId: '',
-                    ),
-                  ),
-                ),
+                    title: localizations
+                        .translate(i18.manageStock.recordStockIssuedLabel),
+                    description: localizations.translate(
+                        i18.manageStock.recordStockIssuedDescription),
+                    prefixIcon: Icons.file_upload_outlined,
+                    sufixIcon: Icons.arrow_circle_right,
+                    onPressed: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => RecordStockWrapperPage(
+                              type: StockRecordEntryType.dispatch,
+                              projectId: InventorySingleton().projectId,
+                            ),
+                          ),
+                        )),
                 DigitListView(
-                  title: localizations
-                      .translate(i18.manageStock.recordStockReturnedLabel),
-                  description: localizations.translate(
-                    i18.manageStock.recordStockReturnedDescription,
-                  ),
-                  prefixIcon: Icons.settings_backup_restore,
-                  sufixIcon: Icons.arrow_circle_right,
-                  onPressed: () => context.router.push(
-                    RecordStockWrapperPageRoute(
-                      type: StockRecordEntryType.returned,
-                      projectId: '',
+                    title: localizations
+                        .translate(i18.manageStock.recordStockReturnedLabel),
+                    description: localizations.translate(
+                      i18.manageStock.recordStockReturnedDescription,
                     ),
-                  ),
-                ),
+                    prefixIcon: Icons.settings_backup_restore,
+                    sufixIcon: Icons.arrow_circle_right,
+                    onPressed: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => RecordStockWrapperPage(
+                              type: StockRecordEntryType.returned,
+                              projectId: InventorySingleton().projectId,
+                            ),
+                          ),
+                        )),
                 DigitListView(
-                  title: localizations
-                      .translate(i18.manageStock.recordStockDamagedLabel),
-                  description: localizations.translate(
-                    i18.manageStock.recordStockDamagedDescription,
-                  ),
-                  prefixIcon: Icons.store,
-                  sufixIcon: Icons.arrow_circle_right,
-                  onPressed: () => context.router.push(
-                    RecordStockWrapperPageRoute(
-                      type: StockRecordEntryType.damaged,
-                      projectId: '',
+                    title: localizations
+                        .translate(i18.manageStock.recordStockDamagedLabel),
+                    description: localizations.translate(
+                      i18.manageStock.recordStockDamagedDescription,
                     ),
-                  ),
-                ),
+                    prefixIcon: Icons.store,
+                    sufixIcon: Icons.arrow_circle_right,
+                    onPressed: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => RecordStockWrapperPage(
+                              type: StockRecordEntryType.damaged,
+                              projectId: InventorySingleton().projectId,
+                            ),
+                          ),
+                        )),
                 DigitListView(
-                  title: localizations
-                      .translate(i18.manageStock.recordStockLossLabel),
-                  description: localizations.translate(
-                    i18.manageStock.recordStockDamagedDescription,
-                  ),
-                  prefixIcon: Icons.store,
-                  sufixIcon: Icons.arrow_circle_right,
-                  onPressed: () => context.router.push(
-                    RecordStockWrapperPageRoute(
-                      type: StockRecordEntryType.loss,
-                      projectId: '',
+                    title: localizations
+                        .translate(i18.manageStock.recordStockLossLabel),
+                    description: localizations.translate(
+                      i18.manageStock.recordStockDamagedDescription,
                     ),
-                  ),
-                ),
+                    prefixIcon: Icons.store,
+                    sufixIcon: Icons.arrow_circle_right,
+                    onPressed: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => RecordStockWrapperPage(
+                              type: StockRecordEntryType.loss,
+                              projectId: InventorySingleton().projectId,
+                            ),
+                          ),
+                        )),
               ]),
               const SizedBox(height: 16),
             ],

@@ -3,9 +3,8 @@ import 'package:digit_components/widgets/atoms/digit_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:inventory_management/router/inventory_router.dart';
+import 'package:inventory_management/pages/facility_selection.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:auto_route/auto_route.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
@@ -67,6 +66,11 @@ class _StockReconciliationPageState
   }
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
@@ -80,11 +84,6 @@ class _StockReconciliationPageState
               projectId: widget.projectId,
               child: BlocProvider(
                 create: (context) => StockReconciliationBloc(
-                  // stockRepository:
-                  //     context.repository<HcmStockModel, HcmStockSearchModel>(),
-                  // stockReconciliationRepository: context.repository<
-                  //     StockReconciliationModel,
-                  //     StockReconciliationSearchModel>(),
                   StockReconciliationState(
                     projectId: widget.projectId,
                     dateOfReconciliation: DateTime.now(),
@@ -105,9 +104,7 @@ class _StockReconciliationPageState
                         return Scaffold(
                           body: ScrollableContent(
                             enableFixedButton: true,
-                            header: const Column(children: [
-                              BackNavigationHelpHeaderWidget(),
-                            ]),
+                            header: const BackNavigationHelpHeaderWidget(),
                             footer: SizedBox(
                               child: DigitCard(
                                 margin: const EdgeInsets.fromLTRB(
@@ -293,7 +290,9 @@ class _StockReconciliationPageState
                                         ),
                                         builder: (context, state) {
                                           final facilities = state.whenOrNull(
-                                                fetched: (facilities, _) =>
+                                                fetched: (
+                                                  facilities,
+                                                ) =>
                                                     facilities,
                                               ) ??
                                               [];
@@ -346,11 +345,16 @@ class _StockReconciliationPageState
                                                       context.read<
                                                           StockReconciliationBloc>();
 
-                                                  final facility = await context
-                                                      .router
-                                                      .push<InventoryFacilityModel>(
-                                                    FacilitySelectionPageRoute(
-                                                      facilities: facilities,
+                                                  final facility =
+                                                      await Navigator.of(
+                                                    context,
+                                                    rootNavigator: true,
+                                                  ).push(
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          FacilitySelectionPage(
+                                                        facilities: facilities,
+                                                      ),
                                                     ),
                                                   );
 
