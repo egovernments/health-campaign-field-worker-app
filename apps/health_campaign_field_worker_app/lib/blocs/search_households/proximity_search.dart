@@ -145,12 +145,6 @@ class ProximitySearchBloc extends SearchHouseholdsBloc {
       if (head == null || filteredBeneficiaries.isEmpty) continue;
       // Create a container for household members and associated data.
       if (filteredBeneficiaries.isNotEmpty) {
-        filteredIndividuals.sort((a, b) =>
-            (a.clientAuditDetails?.createdTime ?? 0)
-                .compareTo(b.clientAuditDetails?.createdTime ?? 0));
-        beneficiaryIndividuals.sort((a, b) =>
-            (a.clientAuditDetails?.createdTime ?? 0)
-                .compareTo(b.clientAuditDetails?.createdTime ?? 0));
         containers.add(
           HouseholdMemberWrapper(
             household: filteredHousehold,

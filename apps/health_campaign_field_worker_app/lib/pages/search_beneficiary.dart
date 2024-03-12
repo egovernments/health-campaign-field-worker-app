@@ -191,6 +191,9 @@ class _SearchBeneficiaryPageState
                                           offset = 0;
                                           limit = limit;
                                         });
+                                        blocWrapper.searchHouseholdsBloc.add(
+                                          const SearchHouseholdsClearEvent(),
+                                        );
                                         blocWrapper.searchByHeadBloc.add(
                                           SearchHouseholdsEvent
                                               .searchByHouseholdHead(

@@ -74,9 +74,11 @@ class IndividualLocalRepository
                   query.gender!.index,
                 ),
               if (query.name?.givenName != null)
-                sql.name.givenName.contains(
-                  query.name!.givenName!,
-                ),
+                buildOr([
+                  sql.name.givenName.contains(
+                    query.name!.givenName!,
+                  ),
+                ]),
               if (query.name?.familyName != null)
                 sql.name.familyName.equals(
                   query.name!.familyName!,

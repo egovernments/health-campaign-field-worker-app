@@ -219,12 +219,6 @@ class SearchByHeadBloc extends SearchHouseholdsBloc {
       // Search for project beneficiaries based on client reference ID and project.
 
       if (beneficiaries.isNotEmpty) {
-        individualMembersList.sort((a, b) =>
-            (a.clientAuditDetails?.createdTime ?? 0)
-                .compareTo(b.clientAuditDetails?.createdTime ?? 0));
-        beneficiaryIndividuals.sort((a, b) =>
-            (a.clientAuditDetails?.createdTime ?? 0)
-                .compareTo(b.clientAuditDetails?.createdTime ?? 0));
         // Create a container for household members and associated data.
         containers.add(
           HouseholdMemberWrapper(
