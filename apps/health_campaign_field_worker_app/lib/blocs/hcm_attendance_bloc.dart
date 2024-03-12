@@ -31,13 +31,11 @@ class HCMAttendanceBloc extends AttendanceListeners {
     required this.context,
   });
 
-  late Function(List<AttendanceRegisterModel> registers)
-      _registersLoaded;
+  late Function(List<AttendanceRegisterModel> registers) _registersLoaded;
 
   @override
   void getAttendanceRegisters(
-    Function(List<AttendanceRegisterModel> registers)
-        attendanceRegisters,
+    Function(List<AttendanceRegisterModel> registers) attendanceRegisters,
   ) {
     _registersLoaded = attendanceRegisters;
 
@@ -72,6 +70,11 @@ class HCMAttendanceBloc extends AttendanceListeners {
                 ? list.length ~/ 2 //for registers with 2 sessions
                 : list.length; ////for registers with single session
 
+        //In the AttendeeModel we only know the id details of the person
+        //In the individualModel we have details like photograph, FatherName etc.
+        //We need to fetch complete individual details by passing the attendee id
+        //we need only the individuals who are still enrolled, so it makes sense to only pass
+        //the IDs of those attendees who are not past the denrollment date while making a search call
         final individualList = await individualLocalRepository?.search(
           IndividualSearchModel(
             id: e.attendanceRegister.attendees
@@ -83,12 +86,17 @@ class HCMAttendanceBloc extends AttendanceListeners {
                 .toList(),
           ),
         );
+
+        //in the attendeeList, we need attendee details(not complete individual details) but with
+        //their names and individualNumbers also this time
         final attendeeList = e.attendanceRegister.attendees
+            //filtering the attendees to reduce number of comparisions made with individualList
             ?.where((att) => (att.denrollmentDate == null ||
                 (att.denrollmentDate ??
                         DateTime.now().millisecondsSinceEpoch) >=
                     DateTime.now().millisecondsSinceEpoch))
             .map(
+              //only pick those individuals from the individual list who are still enrolled
               (a) => a.copyWith(
                 name: individualList
                     ?.where((i) => i.id == a.individualId)
@@ -124,6 +132,7 @@ class HCMAttendanceBloc extends AttendanceListeners {
   void searchAttendanceLog(
     SearchAttendanceLog searchAttendanceLog,
   ) async {
+    //make a search for attendance logs and filter them according to the log time
     final attendanceLogs = await attendanceLogLocalRepository?.search(
       HCMAttendanceLogSearchModel(
         registerId: searchAttendanceLog.registerId,

@@ -441,10 +441,10 @@ class _RecordReferralDetailsPageState
                                                           serviceDefinition: value
                                                               .serviceDefinitionList
                                                               .where((e) => e
-                                                                  .code!
-                                                                  .contains(
-                                                                      symptom
-                                                                          .key))
+                                                                      .code!
+                                                                      .contains(
+                                                                    symptom.key,
+                                                                  ))
                                                               .first,
                                                         ),
                                                       );
@@ -831,6 +831,11 @@ class _RecordReferralDetailsPageState
                                         inputFormatters: [
                                           FilteringTextInputFormatter
                                               .digitsOnly,
+                                          LengthLimitingTextInputFormatter(
+                                            4,
+                                            maxLengthEnforcement:
+                                                MaxLengthEnforcement.none,
+                                          ),
                                         ],
                                         isRequired: true,
                                         validationMessages: {
