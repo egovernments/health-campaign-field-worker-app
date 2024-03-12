@@ -57,7 +57,7 @@ class HCMAttendanceBloc extends AttendanceListeners {
             uploadToServer: true,
           ),
         );
-        //generateDateList will return the map of completed attendance Dates.
+
         var list = generateDateList(
           e.attendanceRegister.startDate!,
           e.attendanceRegister.endDate!,
@@ -67,14 +67,9 @@ class HCMAttendanceBloc extends AttendanceListeners {
 
         var completedDaysCount =
             e.attendanceRegister.additionalDetails?["sessions"] == 2
-                ? list.length ~/ 2 //for registers with 2 sessions
-                : list.length; ////for registers with single session
+                ? list.length ~/ 2
+                : list.length;
 
-        //In the AttendeeModel we only know the id details of the person
-        //In the individualModel we have details like photograph, FatherName etc.
-        //We need to fetch complete individual details by passing the attendee id
-        //we need only the individuals who are still enrolled, so it makes sense to only pass
-        //the IDs of those attendees who are not past the denrollment date while making a search call
         final individualList = await individualLocalRepository?.search(
           IndividualSearchModel(
             id: e.attendanceRegister.attendees
@@ -87,16 +82,12 @@ class HCMAttendanceBloc extends AttendanceListeners {
           ),
         );
 
-        //in the attendeeList, we need attendee details(not complete individual details) but with
-        //their names and individualNumbers also this time
         final attendeeList = e.attendanceRegister.attendees
-            //filtering the attendees to reduce number of comparisions made with individualList
             ?.where((att) => (att.denrollmentDate == null ||
                 (att.denrollmentDate ??
                         DateTime.now().millisecondsSinceEpoch) >=
                     DateTime.now().millisecondsSinceEpoch))
             .map(
-              //only pick those individuals from the individual list who are still enrolled
               (a) => a.copyWith(
                 name: individualList
                     ?.where((i) => i.id == a.individualId)
@@ -132,7 +123,6 @@ class HCMAttendanceBloc extends AttendanceListeners {
   void searchAttendanceLog(
     SearchAttendanceLog searchAttendanceLog,
   ) async {
-    //make a search for attendance logs and filter them according to the log time
     final attendanceLogs = await attendanceLogLocalRepository?.search(
       HCMAttendanceLogSearchModel(
         registerId: searchAttendanceLog.registerId,
@@ -269,7 +259,6 @@ class HCMAttendanceBloc extends AttendanceListeners {
   ) {
     List<Map<DateTime, bool>> dateList = [];
 
-    // Convert milliseconds to DateTime objects
     DateTime startTime = DateTime.fromMillisecondsSinceEpoch(startMillis);
 
     DateTime startDate = DateTime(
@@ -296,7 +285,7 @@ class HCMAttendanceBloc extends AttendanceListeners {
       endTime.month,
       endTime.day,
     );
-    // Iterate over each date and add to the list with value set to true
+
     for (DateTime date = startDate;
         date.isBefore(endDateStartTime);
         date = date.add(const Duration(days: 1))) {
