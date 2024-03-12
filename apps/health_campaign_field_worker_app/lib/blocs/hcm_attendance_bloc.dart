@@ -57,7 +57,7 @@ class HCMAttendanceBloc extends AttendanceListeners {
             uploadToServer: true,
           ),
         );
-
+        //generateDateList will return the map of completed attendance Dates.
         var list = generateDateList(
           e.attendanceRegister.startDate!,
           e.attendanceRegister.endDate!,
@@ -67,9 +67,8 @@ class HCMAttendanceBloc extends AttendanceListeners {
 
         var completedDaysCount =
             e.attendanceRegister.additionalDetails?["sessions"] == 2
-                ? list.length ~/ 2
-                : list.length;
-
+                ? list.length ~/ 2 //for registers with 2 sessions
+                : list.length; ////for registers with single session
         final individualList = await individualLocalRepository?.search(
           IndividualSearchModel(
             id: e.attendanceRegister.attendees
@@ -259,6 +258,7 @@ class HCMAttendanceBloc extends AttendanceListeners {
   ) {
     List<Map<DateTime, bool>> dateList = [];
 
+    // Convert milliseconds to DateTime objects
     DateTime startTime = DateTime.fromMillisecondsSinceEpoch(startMillis);
 
     DateTime startDate = DateTime(
@@ -285,7 +285,7 @@ class HCMAttendanceBloc extends AttendanceListeners {
       endTime.month,
       endTime.day,
     );
-
+    // Iterate over each date and add to the list with value set to true
     for (DateTime date = startDate;
         date.isBefore(endDateStartTime);
         date = date.add(const Duration(days: 1))) {
