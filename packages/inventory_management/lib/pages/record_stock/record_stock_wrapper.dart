@@ -29,7 +29,7 @@ class RecordStockWrapperPage extends StatelessWidget {
     } else {
       return BlocProvider<FacilityBloc>(
           create: (_) => FacilityBloc(
-                const FacilityEmptyState(),
+                const FacilityLoadingState(),
               )..add(
                   FacilityEvent.loadForProjectId(
                     projectId: projectId,
@@ -37,7 +37,7 @@ class RecordStockWrapperPage extends StatelessWidget {
                 ),
           child: BlocProvider<ProductVariantBloc>(
               create: (_) => ProductVariantBloc(
-                    const ProductVariantEmptyState(),
+                    const ProductVariantLoadingState(),
                   )..add(
                       ProductVariantEvent.load(
                           query: ProjectResourceSearchModel(

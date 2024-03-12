@@ -60,7 +60,7 @@ class HcmInventoryBloc extends InventoryListener {
   }
 
   void fetchFacilities() async {
-    final facilities = await context.read<FacilityBloc>()
+    final facilities = context.read<FacilityBloc>()
       ..add(FacilityLoadForProjectEvent(projectId: projectId!));
 
     facilities.state.whenOrNull(
@@ -131,27 +131,6 @@ class HcmInventoryBloc extends InventoryListener {
   @override
   void saveStockDetails(SaveStockDetails saveStockDetails) async {
     print('saveStockDetails $saveStockDetails');
-    // context.read<RecordStockBloc>().add(
-    //       RecordStockSaveStockDetailsEvent(
-    //         stockModel: HcmStockModel(
-    //           stock: saveStockDetails.stockModel,
-    //           additionalFields: StockAdditionalFields(
-    //             version: 1,
-    //             fields: getAdditionalData(saveStockDetails.additionalData),
-    //           ),
-    //           auditDetails: AuditDetails(
-    //             createdBy: context.loggedInUserUuid,
-    //             createdTime: context.millisecondsSinceEpoch(),
-    //           ),
-    //           clientAuditDetails: ClientAuditDetails(
-    //             createdBy: context.loggedInUserUuid,
-    //             createdTime: context.millisecondsSinceEpoch(),
-    //             lastModifiedBy: context.loggedInUserUuid,
-    //             lastModifiedTime: context.millisecondsSinceEpoch(),
-    //           ),
-    //         ),
-    //       ),
-    //     );
 
     var response = await stockLocalRepository.create(HcmStockModel(
       stock: saveStockDetails.stockModel.copyWith(

@@ -20,9 +20,9 @@ class FacilityBloc extends Bloc<FacilityEvent, FacilityState> {
   }
 
   Future<void> _handleLoadFacilitiesForProjectId(
-    FacilityLoadForProjectEvent event,
-    FacilityStateEmitter emit,
-  ) async {
+      FacilityLoadForProjectEvent event,
+      FacilityStateEmitter emit,
+      ) async {
     emit(const FacilityLoadingState());
 
     final projectFacilities = await projectFacilityDataRepository.search(
@@ -42,13 +42,14 @@ class FacilityBloc extends Bloc<FacilityEvent, FacilityState> {
     List<FacilityModel> facilities = [];
 
     if (event.loadAllProjects) {
-      allFacilities.addAll(await facilityDataRepository.search(
+      var searchResult = await facilityDataRepository.search(
         FacilitySearchModel(id: null),
-      ));
+      );
+      allFacilities.addAll(searchResult);
     }
 
     for (final projectFacility in projectFacilities) {
-      final results = await facilityDataRepository.search(
+      var results = await facilityDataRepository.search(
         FacilitySearchModel(id: [projectFacility.facilityId]),
       );
 

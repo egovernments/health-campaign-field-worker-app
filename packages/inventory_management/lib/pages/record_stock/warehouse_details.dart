@@ -282,6 +282,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                   onTap: () async {
                                     clearQRCodes();
                                     form.control(_teamCodeKey).value = '';
+
                                     final facility =
                                         await Navigator.of(context).push(
                                       MaterialPageRoute(

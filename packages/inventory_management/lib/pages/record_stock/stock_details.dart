@@ -100,10 +100,10 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
           builder: (context, locationState) {
             return BlocConsumer<RecordStockBloc, RecordStockState>(
               listener: (context, stockState) {
-                stockState.mapOrNull(persisted: (value) {
+                if(stockState is RecordStockPersistedState){
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
                       builder: (context) => InventoryAcknowledgementPage()));
-                });
+                }
               },
               builder: (context, stockState) {
                 StockRecordEntryType entryType = stockState.entryType;

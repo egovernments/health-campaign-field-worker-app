@@ -102,8 +102,6 @@ class RecordStockBloc extends Bloc<RecordStockEvent, RecordStockState> {
           );
         }
 
-        emit(value.copyWith(loading: true));
-
         try {
           InventorySingleton().saveStockDetails(
             SaveStockDetails(

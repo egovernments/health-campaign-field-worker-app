@@ -37,23 +37,6 @@ class InventoryReportDetailsPage extends LocalizedStatefulWidget {
   @override
   State<InventoryReportDetailsPage> createState() =>
       _InventoryReportDetailsPageState();
-
-/* created a wrapper  Router which handles the BlocProvider
-and attached the event to load the data*/
-  @override
-  Widget wrappedRoute(BuildContext context) {
-    return BlocProvider(
-      create: (context) {
-        return InventoryReportBloc(
-            // stockReconciliationRepository: context.repository<
-            //     StockReconciliationModel, StockReconciliationSearchModel>(),
-            // stockRepository:
-            // context.repository<StockModel, StockSearchModel>(),
-            );
-      },
-      child: this,
-    );
-  }
 }
 
 class _InventoryReportDetailsPageState
