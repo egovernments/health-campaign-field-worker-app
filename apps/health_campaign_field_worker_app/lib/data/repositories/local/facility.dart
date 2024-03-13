@@ -99,5 +99,20 @@ class FacilityLocalRepository
   }
 
   @override
+  FutureOr<void> bulkCreate(
+    List<FacilityModel> entities,
+  ) async {
+    final facilityCompanions = entities.map((e) => e.companion).toList();
+
+    await sql.batch((batch) async {
+      batch.insertAll(
+        sql.facility,
+        facilityCompanions,
+        mode: InsertMode.insertOrReplace,
+      );
+    });
+  }
+
+  @override
   DataModelType get type => DataModelType.facility;
 }

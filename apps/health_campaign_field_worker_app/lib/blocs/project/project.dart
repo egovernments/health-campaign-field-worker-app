@@ -392,27 +392,15 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       ),
     );
 
-    for (final projectFacility in projectFacilities) {
-      await projectFacilityLocalRepository.create(
-        projectFacility,
-        createOpLog: false,
-      );
+    await projectFacilityLocalRepository.bulkCreate(projectFacilities);
 
-      /// Passing [id] as [null] is required to load all facilities associated
-      /// with the tenant
-      final facilities = await facilityRemoteRepository.search(
-        FacilitySearchModel(
-          id: null,
-        ),
-      );
+    final facilities = await facilityRemoteRepository.search(
+      FacilitySearchModel(
+        id: null,
+      ),
+    );
 
-      for (final facility in facilities) {
-        await facilityLocalRepository.create(
-          facility,
-          createOpLog: false,
-        );
-      }
-    }
+    await facilityLocalRepository.bulkCreate(facilities);
   }
 
   FutureOr<void> _loadServiceDefinition(List<ProjectModel> projects) async {
