@@ -10,7 +10,18 @@ import '../../blocs/inventory_report.dart';
 import '../../widgets/back_navigation_help_header.dart';
 
 class InventoryReportSelectionPage extends LocalizedStatefulWidget {
+  final InventoryListener inventoryListener;
+  final String projectId;
+  final bool? isDistributor;
+  final bool? isWareHouseMgr;
+  final String? loggedInUserUuid;
+
   const InventoryReportSelectionPage({
+    required this.inventoryListener,
+    required this.projectId,
+    required this.isDistributor,
+    required this.isWareHouseMgr,
+    required this.loggedInUserUuid,
     super.key,
     super.appLocalizations,
   });
@@ -22,6 +33,20 @@ class InventoryReportSelectionPage extends LocalizedStatefulWidget {
 
 class _InventoryReportSelectionPageState
     extends LocalizedState<InventoryReportSelectionPage> {
+  @override
+  void initState() {
+    InventorySingleton().setInitialData(
+      inventoryListener: widget.inventoryListener,
+      transportTypes: [],
+      userId: '',
+      projectId: widget.projectId,
+      isDistributor: widget.isDistributor!,
+      isWareHouseMgr: widget.isWareHouseMgr!,
+      boundaryName: '',
+    );
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

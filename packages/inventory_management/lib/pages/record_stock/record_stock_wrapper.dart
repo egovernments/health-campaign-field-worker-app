@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_management/pages/record_stock/stock_details.dart';
 import 'package:inventory_management/pages/record_stock/warehouse_details.dart';
+import 'package:inventory_management/widgets/component_wrapper/facility_bloc_wrapper.dart';
+import 'package:inventory_management/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 
 import '../../blocs/facility.dart';
 import '../../blocs/product_variant.dart';
@@ -27,50 +29,39 @@ class RecordStockWrapperPage extends StatelessWidget {
         child: Text('No project selected'),
       );
     } else {
-      return BlocProvider<FacilityBloc>(
-          create: (_) => FacilityBloc(
-                const FacilityLoadingState(),
-              )..add(
-                  FacilityEvent.loadForProjectId(
-                    projectId: projectId,
-                  ),
+      return FacilityBlocWrapper(
+        projectId: projectId,
+        child: ProductVariantBlocWrapper(
+          projectId: projectId,
+          child: BlocProvider<RecordStockBloc>(
+            create: (_) {
+              return RecordStockBloc(
+                RecordStockCreateState(
+                  entryType: type,
+                  projectId: projectId,
                 ),
-          child: BlocProvider<ProductVariantBloc>(
-              create: (_) => ProductVariantBloc(
-                    const ProductVariantLoadingState(),
-                  )..add(
-                      ProductVariantEvent.load(
-                          query: ProjectResourceSearchModel(
-                        projectId: projectId,
-                      )),
-                    ),
-              child: BlocProvider<RecordStockBloc>(
-                create: (_) {
-                  return RecordStockBloc(
-                    RecordStockCreateState(
-                      entryType: type,
-                      projectId: projectId,
-                    ),
+              );
+            },
+            child: BlocBuilder<RecordStockBloc, RecordStockState>(
+              builder: (context, state) {
+                if (state is RecordStockCreateState) {
+                  return state.facilityModel == null
+                      ? WarehouseDetailsPage(entryType: type)
+                      : StockDetailsPage(entryType: type);
+                } else if (state is RecordStockPersistedState) {
+                  return state.facilityModel == null
+                      ? WarehouseDetailsPage(entryType: type)
+                      : StockDetailsPage(entryType: type);
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
                   );
-                },
-                child: BlocBuilder<RecordStockBloc, RecordStockState>(
-                  builder: (context, state) {
-                    if (state is RecordStockCreateState) {
-                      return state.facilityModel == null
-                          ? WarehouseDetailsPage(entryType: type)
-                          : StockDetailsPage(entryType: type);
-                    } else if (state is RecordStockPersistedState) {
-                      return state.facilityModel == null
-                          ? WarehouseDetailsPage(entryType: type)
-                          : StockDetailsPage(entryType: type);
-                    } else {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                  },
-                ),
-              )));
+                }
+              },
+            ),
+          ),
+        ),
+      );
     }
   }
 }

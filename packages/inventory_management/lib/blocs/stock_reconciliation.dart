@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:inventory_management/blocs/inventory_listener.dart';
 import 'package:inventory_management/models/entities/stock.dart';
 import 'package:inventory_management/models/entities/transaction_reason.dart';
 import 'package:inventory_management/models/entities/transaction_type.dart';
@@ -16,7 +17,6 @@ typedef StockReconciliationEmitter = Emitter<StockReconciliationState>;
 
 class StockReconciliationBloc
     extends Bloc<StockReconciliationEvent, StockReconciliationState> {
-
   StockReconciliationBloc(
     super.initialState,
   ) {
@@ -56,42 +56,18 @@ class StockReconciliationBloc
     if ((productVariantId == null) ||
         (!event.isDistributor && facilityId == null)) return;
 
-    // final user = await LocalSecureStore.instance.userRequestModel;
-
-    //   final receivedStocks = (
-    // await stockRepository.search(
-    //     HcmStockSearchModel(
-    //       stock: StockSearchModel(
-    //         productVariantId: productVariantId,
-    //         receiverId: facilityId,
-    //       ),
-    //     ),
-    //   )
-    // )
-    //       .where((element) =>
-    //   element.auditDetails != null &&
-    //       element.auditDetails?.createdBy == user?.uuid)
-    //       .toList();
-    //   final sentStocks = (await stockRepository.search(
-    //     HcmStockSearchModel(
-    //       stock: StockSearchModel(
-    //         productVariantId: productVariantId,
-    //         senderId: facilityId,
-    //       ),
-    //     ),
-    //   ))
-    //       .where((element) =>
-    //   element.auditDetails != null &&
-    //       element.auditDetails?.createdBy == user?.uuid)
-    //       .toList();
-
-    var receivedStocks = <StockModel>[];
-    var sentStocks = <StockModel>[];
-
-    emit(state.copyWith(
-      loading: false,
-      stockModels: [...receivedStocks, ...sentStocks],
-    ));
+    await InventorySingleton().fetchStockReconciliationDetails(
+      FetchStockReconDetails(
+        productVariantId: productVariantId,
+        facilityId: facilityId!,
+        stockReconDetails: (receivedStocks, sentStocks) {
+          emit(state.copyWith(
+            loading: false,
+            stockModels: [...receivedStocks, ...sentStocks],
+          ));
+        },
+      ),
+    );
   }
 
   FutureOr<void> _handleCreate(
@@ -99,29 +75,24 @@ class StockReconciliationBloc
     StockReconciliationEmitter emit,
   ) async {
     emit(state.copyWith(loading: true));
-    // stockReconciliationRepository.create(
-    //   event.stockReconciliationModel.copyWith(
-    //     tenantId: envConfig.variables.tenantId,
-    //     referenceId: state.projectId,
-    //     referenceIdType: 'PROJECT',
-    //     additionalFields: StockReconciliationAdditionalFields(
-    //       version: 1,
-    //       fields: [
-    //         AdditionalField('received', state.stockReceived),
-    //         AdditionalField('issued', state.stockIssued),
-    //         AdditionalField('returned', state.stockReturned),
-    //         AdditionalField('lost', state.stockLost),
-    //         AdditionalField('damaged', state.stockDamaged),
-    //         AdditionalField('inHand', state.stockInHand),
-    //       ],
-    //     ),
-    //     rowVersion: 1,
-    //   ),
-    // );
-    emit(
-      state.copyWith(
-        loading: false,
-        persisted: true,
+
+    await InventorySingleton().saveStockReconciliationDetails(
+      SaveStockReconciliationModel(
+        stockReconciliationModel: event.stockReconciliationModel,
+        additionalData: {
+          'received': state.stockReceived,
+          'issued': state.stockIssued,
+          'returned': state.stockReturned,
+          'lost': state.stockLost,
+          'damaged': state.stockDamaged,
+          'inHand': state.stockInHand,
+        },
+        isStockReconciliationSaved: (isStockReconciliationSaved) {
+          emit(state.copyWith(
+            loading: false,
+            persisted: isStockReconciliationSaved,
+          ));
+        },
       ),
     );
   }

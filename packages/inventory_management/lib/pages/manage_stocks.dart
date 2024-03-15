@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_management/pages/record_stock/record_stock_wrapper.dart';
 import 'package:inventory_management/pages/record_stock/warehouse_details.dart';
+import 'package:inventory_management/widgets/component_wrapper/facility_bloc_wrapper.dart';
+import 'package:inventory_management/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/localized.dart';
@@ -76,89 +78,95 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                   ),
                 ),
               ),
-              Column(children: [
-                DigitListView(
-                  title: localizations
-                      .translate(i18.manageStock.recordStockReceiptLabel),
-                  description: localizations
-                      .translate(i18.manageStock.recordStockReceiptDescription),
-                  prefixIcon: Icons.file_download_outlined,
-                  sufixIcon: Icons.arrow_circle_right,
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => RecordStockWrapperPage(
-                          type: StockRecordEntryType.receipt,
-                          projectId: InventorySingleton().projectId,
+              FacilityBlocWrapper(
+                projectId: widget.projectId,
+                child: ProductVariantBlocWrapper(
+                  projectId: widget.projectId,
+                  child: Column(children: [
+                    DigitListView(
+                      title: localizations
+                          .translate(i18.manageStock.recordStockReceiptLabel),
+                      description: localizations.translate(
+                          i18.manageStock.recordStockReceiptDescription),
+                      prefixIcon: Icons.file_download_outlined,
+                      sufixIcon: Icons.arrow_circle_right,
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => RecordStockWrapperPage(
+                              type: StockRecordEntryType.receipt,
+                              projectId: InventorySingleton().projectId,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    DigitListView(
+                        title: localizations
+                            .translate(i18.manageStock.recordStockIssuedLabel),
+                        description: localizations.translate(
+                            i18.manageStock.recordStockIssuedDescription),
+                        prefixIcon: Icons.file_upload_outlined,
+                        sufixIcon: Icons.arrow_circle_right,
+                        onPressed: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => RecordStockWrapperPage(
+                                  type: StockRecordEntryType.dispatch,
+                                  projectId: InventorySingleton().projectId,
+                                ),
+                              ),
+                            )),
+                    DigitListView(
+                        title: localizations.translate(
+                            i18.manageStock.recordStockReturnedLabel),
+                        description: localizations.translate(
+                          i18.manageStock.recordStockReturnedDescription,
                         ),
-                      ),
-                    );
-                  },
+                        prefixIcon: Icons.settings_backup_restore,
+                        sufixIcon: Icons.arrow_circle_right,
+                        onPressed: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => RecordStockWrapperPage(
+                                  type: StockRecordEntryType.returned,
+                                  projectId: InventorySingleton().projectId,
+                                ),
+                              ),
+                            )),
+                    DigitListView(
+                        title: localizations
+                            .translate(i18.manageStock.recordStockDamagedLabel),
+                        description: localizations.translate(
+                          i18.manageStock.recordStockDamagedDescription,
+                        ),
+                        prefixIcon: Icons.store,
+                        sufixIcon: Icons.arrow_circle_right,
+                        onPressed: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => RecordStockWrapperPage(
+                                  type: StockRecordEntryType.damaged,
+                                  projectId: InventorySingleton().projectId,
+                                ),
+                              ),
+                            )),
+                    DigitListView(
+                        title: localizations
+                            .translate(i18.manageStock.recordStockLossLabel),
+                        description: localizations.translate(
+                          i18.manageStock.recordStockDamagedDescription,
+                        ),
+                        prefixIcon: Icons.store,
+                        sufixIcon: Icons.arrow_circle_right,
+                        onPressed: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => RecordStockWrapperPage(
+                                  type: StockRecordEntryType.loss,
+                                  projectId: InventorySingleton().projectId,
+                                ),
+                              ),
+                            )),
+                  ]),
                 ),
-                DigitListView(
-                    title: localizations
-                        .translate(i18.manageStock.recordStockIssuedLabel),
-                    description: localizations.translate(
-                        i18.manageStock.recordStockIssuedDescription),
-                    prefixIcon: Icons.file_upload_outlined,
-                    sufixIcon: Icons.arrow_circle_right,
-                    onPressed: () => Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => RecordStockWrapperPage(
-                              type: StockRecordEntryType.dispatch,
-                              projectId: InventorySingleton().projectId,
-                            ),
-                          ),
-                        )),
-                DigitListView(
-                    title: localizations
-                        .translate(i18.manageStock.recordStockReturnedLabel),
-                    description: localizations.translate(
-                      i18.manageStock.recordStockReturnedDescription,
-                    ),
-                    prefixIcon: Icons.settings_backup_restore,
-                    sufixIcon: Icons.arrow_circle_right,
-                    onPressed: () => Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => RecordStockWrapperPage(
-                              type: StockRecordEntryType.returned,
-                              projectId: InventorySingleton().projectId,
-                            ),
-                          ),
-                        )),
-                DigitListView(
-                    title: localizations
-                        .translate(i18.manageStock.recordStockDamagedLabel),
-                    description: localizations.translate(
-                      i18.manageStock.recordStockDamagedDescription,
-                    ),
-                    prefixIcon: Icons.store,
-                    sufixIcon: Icons.arrow_circle_right,
-                    onPressed: () => Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => RecordStockWrapperPage(
-                              type: StockRecordEntryType.damaged,
-                              projectId: InventorySingleton().projectId,
-                            ),
-                          ),
-                        )),
-                DigitListView(
-                    title: localizations
-                        .translate(i18.manageStock.recordStockLossLabel),
-                    description: localizations.translate(
-                      i18.manageStock.recordStockDamagedDescription,
-                    ),
-                    prefixIcon: Icons.store,
-                    sufixIcon: Icons.arrow_circle_right,
-                    onPressed: () => Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => RecordStockWrapperPage(
-                              type: StockRecordEntryType.loss,
-                              projectId: InventorySingleton().projectId,
-                            ),
-                          ),
-                        )),
-              ]),
+              ),
               const SizedBox(height: 16),
             ],
           ),

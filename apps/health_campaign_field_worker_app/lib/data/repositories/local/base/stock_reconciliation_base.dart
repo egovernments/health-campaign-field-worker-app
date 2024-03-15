@@ -4,7 +4,7 @@ import '../../../../models/data_model.dart';
 import '../../../data_repository.dart';
 
 abstract class StockReconciliationLocalBaseRepository
-    extends LocalRepository<StockReconciliationModel, StockReconciliationSearchModel> {
+    extends LocalRepository<HcmStockReconciliationModel, HcmStockReconciliationSearchModel> {
   const StockReconciliationLocalBaseRepository(super.sql, super.opLogManager);
 
   @override

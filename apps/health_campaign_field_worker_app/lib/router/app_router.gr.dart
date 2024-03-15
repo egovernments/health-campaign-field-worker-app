@@ -241,6 +241,7 @@ class _$AppRouter extends RootStackRouter {
       return MaterialPageX<dynamic>(
         routeData: routeData,
         child: StockReconciliationPage(
+          inventoryListener: args.inventoryListener,
           projectId: args.projectId,
           isDistributor: args.isDistributor,
           isWareHouseMgr: args.isWareHouseMgr,
@@ -286,11 +287,15 @@ class _$AppRouter extends RootStackRouter {
       );
     },
     InventoryReportSelectionRoute.name: (routeData) {
-      final args = routeData.argsAs<InventoryReportSelectionRouteArgs>(
-          orElse: () => const InventoryReportSelectionRouteArgs());
+      final args = routeData.argsAs<InventoryReportSelectionRouteArgs>();
       return MaterialPageX<dynamic>(
         routeData: routeData,
         child: InventoryReportSelectionPage(
+          inventoryListener: args.inventoryListener,
+          projectId: args.projectId,
+          isDistributor: args.isDistributor,
+          isWareHouseMgr: args.isWareHouseMgr,
+          loggedInUserUuid: args.loggedInUserUuid,
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -1823,6 +1828,7 @@ class ManageStocksRouteArgs {
 class StockReconciliationRoute
     extends PageRouteInfo<StockReconciliationRouteArgs> {
   StockReconciliationRoute({
+    required InventoryListener inventoryListener,
     required String projectId,
     required bool? isDistributor,
     required bool? isWareHouseMgr,
@@ -1833,6 +1839,7 @@ class StockReconciliationRoute
           StockReconciliationRoute.name,
           path: 'stock-reconciliation',
           args: StockReconciliationRouteArgs(
+            inventoryListener: inventoryListener,
             projectId: projectId,
             isDistributor: isDistributor,
             isWareHouseMgr: isWareHouseMgr,
@@ -1847,6 +1854,7 @@ class StockReconciliationRoute
 
 class StockReconciliationRouteArgs {
   const StockReconciliationRouteArgs({
+    required this.inventoryListener,
     required this.projectId,
     required this.isDistributor,
     required this.isWareHouseMgr,
@@ -1854,6 +1862,8 @@ class StockReconciliationRouteArgs {
     this.key,
     this.appLocalizations,
   });
+
+  final InventoryListener inventoryListener;
 
   final String projectId;
 
@@ -1869,7 +1879,7 @@ class StockReconciliationRouteArgs {
 
   @override
   String toString() {
-    return 'StockReconciliationRouteArgs{projectId: $projectId, isDistributor: $isDistributor, isWareHouseMgr: $isWareHouseMgr, loggedInUserUuid: $loggedInUserUuid, key: $key, appLocalizations: $appLocalizations}';
+    return 'StockReconciliationRouteArgs{inventoryListener: $inventoryListener, projectId: $projectId, isDistributor: $isDistributor, isWareHouseMgr: $isWareHouseMgr, loggedInUserUuid: $loggedInUserUuid, key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
@@ -2002,12 +2012,22 @@ class ProjectFacilitySelectionRouteArgs {
 class InventoryReportSelectionRoute
     extends PageRouteInfo<InventoryReportSelectionRouteArgs> {
   InventoryReportSelectionRoute({
+    required InventoryListener inventoryListener,
+    required String projectId,
+    required bool? isDistributor,
+    required bool? isWareHouseMgr,
+    required String? loggedInUserUuid,
     Key? key,
     InventoryLocalization? appLocalizations,
   }) : super(
           InventoryReportSelectionRoute.name,
           path: 'inventory-report-selection',
           args: InventoryReportSelectionRouteArgs(
+            inventoryListener: inventoryListener,
+            projectId: projectId,
+            isDistributor: isDistributor,
+            isWareHouseMgr: isWareHouseMgr,
+            loggedInUserUuid: loggedInUserUuid,
             key: key,
             appLocalizations: appLocalizations,
           ),
@@ -2018,9 +2038,24 @@ class InventoryReportSelectionRoute
 
 class InventoryReportSelectionRouteArgs {
   const InventoryReportSelectionRouteArgs({
+    required this.inventoryListener,
+    required this.projectId,
+    required this.isDistributor,
+    required this.isWareHouseMgr,
+    required this.loggedInUserUuid,
     this.key,
     this.appLocalizations,
   });
+
+  final InventoryListener inventoryListener;
+
+  final String projectId;
+
+  final bool? isDistributor;
+
+  final bool? isWareHouseMgr;
+
+  final String? loggedInUserUuid;
 
   final Key? key;
 
@@ -2028,7 +2063,7 @@ class InventoryReportSelectionRouteArgs {
 
   @override
   String toString() {
-    return 'InventoryReportSelectionRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+    return 'InventoryReportSelectionRouteArgs{inventoryListener: $inventoryListener, projectId: $projectId, isDistributor: $isDistributor, isWareHouseMgr: $isWareHouseMgr, loggedInUserUuid: $loggedInUserUuid, key: $key, appLocalizations: $appLocalizations}';
   }
 }
 

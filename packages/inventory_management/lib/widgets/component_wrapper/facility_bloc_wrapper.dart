@@ -17,14 +17,13 @@ class FacilityBlocWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
+    return BlocProvider<FacilityBloc>(
       create: (_) => FacilityBloc(
         const FacilityEmptyState(),
       )..add(
-          FacilityEvent.loadForProjectId(
-            projectId: projectId,
-          ),
+          FacilityLoadForProjectEvent(projectId: projectId)
         ),
+      lazy: false,
       child: child,
     );
   }

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:inventory_management/models/entities/stock.dart';
+import 'package:inventory_management/models/entities/stock_reconciliation.dart';
 
 import './remote_type.dart';
 import '../../../models/bandwidth/bandwidth_model.dart';
@@ -560,21 +561,24 @@ class PerformSyncDown {
           case DataModelType.stock:
             responseEntities = await remote.search(
               HcmStockSearchModel(
-                 stock: StockSearchModel(
+                stock: StockSearchModel(
                   clientReferenceId: entities
                       .whereType<HcmStockModel>()
                       .map((e) => e.stock?.clientReferenceId)
                       .whereNotNull()
                       .toList(),
+                ),
               ),
-            ),);
+            );
 
             for (var element in operationGroupedEntity.value) {
               if (element.id == null) return;
               final entity = element.entity as HcmStockModel;
               final responseEntity =
                   responseEntities.whereType<HcmStockModel>().firstWhereOrNull(
-                        (e) => e.stock?.clientReferenceId == entity.stock?.clientReferenceId,
+                        (e) =>
+                            e.stock?.clientReferenceId ==
+                            entity.stock?.clientReferenceId,
                       );
 
               final serverGeneratedId = responseEntity?.stock?.id;
@@ -610,30 +614,36 @@ class PerformSyncDown {
 
           case DataModelType.stockReconciliation:
             responseEntities =
-                await remote.search(StockReconciliationSearchModel(
-              clientReferenceId: entities
-                  .whereType<StockReconciliationModel>()
-                  .map((e) => e.clientReferenceId)
-                  .whereNotNull()
-                  .toList(),
+                await remote.search(HcmStockReconciliationSearchModel(
+              stockReconciliationSearchModel: StockReconciliationSearchModel(
+                clientReferenceId: entities
+                    .whereType<HcmStockReconciliationModel>()
+                    .map((e) => e.stockReconciliation?.clientReferenceId)
+                    .whereNotNull()
+                    .toList(),
+              ),
             ));
 
             for (var element in operationGroupedEntity.value) {
               if (element.id == null) return;
-              final entity = element.entity as StockReconciliationModel;
+              final entity = element.entity as HcmStockReconciliationModel;
               final responseEntity = responseEntities
-                  .whereType<StockReconciliationModel>()
+                  .whereType<HcmStockReconciliationModel>()
                   .firstWhereOrNull(
-                    (e) => e.clientReferenceId == entity.clientReferenceId,
+                    (e) =>
+                        e.stockReconciliation?.clientReferenceId ==
+                        entity.stockReconciliation?.clientReferenceId,
                   );
 
-              final serverGeneratedId = responseEntity?.id;
-              final rowVersion = responseEntity?.rowVersion;
+              final serverGeneratedId = responseEntity?.stockReconciliation?.id;
+              final rowVersion =
+                  responseEntity?.stockReconciliation?.rowVersion;
 
               if (serverGeneratedId != null) {
                 await local.opLogManager.updateServerGeneratedIds(
                   model: UpdateServerGeneratedIdModel(
-                    clientReferenceId: entity.clientReferenceId,
+                    clientReferenceId:
+                        entity.stockReconciliation!.clientReferenceId,
                     serverGeneratedId: serverGeneratedId,
                     dataOperation: element.operation,
                     rowVersion: rowVersion,
@@ -641,12 +651,15 @@ class PerformSyncDown {
                 );
               } else {
                 final bool markAsNonRecoverable = await local.opLogManager
-                    .updateSyncDownRetry(entity.clientReferenceId);
+                    .updateSyncDownRetry(
+                        entity.stockReconciliation!.clientReferenceId);
 
                 if (markAsNonRecoverable) {
                   await local.update(
                     entity.copyWith(
-                      nonRecoverableError: true,
+                      stockReconciliation: entity.stockReconciliation!.copyWith(
+                        nonRecoverableError: true,
+                      ),
                     ),
                     createOpLog: false,
                   );
@@ -695,7 +708,6 @@ class PerformSyncDown {
                         complaintClientReferenceId: e.serviceRequestId ?? '',
                       ),
                       address: PgrAddressModel(),
-              
                     ))
                 .toList();
 

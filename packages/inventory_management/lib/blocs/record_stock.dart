@@ -79,6 +79,8 @@ class RecordStockBloc extends Bloc<RecordStockEvent, RecordStockState> {
     RecordStockCreateStockEntryEvent event,
     RecordStockEmitter emit,
   ) async {
+    bool stockSaved = false;
+
     await state.maybeMap(
       orElse: () {
         throw const InvalidRecordStockStateException();
@@ -102,33 +104,31 @@ class RecordStockBloc extends Bloc<RecordStockEvent, RecordStockState> {
           );
         }
 
-        try {
-          InventorySingleton().saveStockDetails(
-            SaveStockDetails(
-              stockModel: stockModel.copyWith(
-                facilityId: facilityModel.id,
-              ),
-              additionalData: value.additionalData ?? {},
-              isStockSaved: (bool isStockSaved) {
-                if (isStockSaved == true) {
-                  emit(value.copyWith(loading: false));
-                  emit(
-                    RecordStockPersistedState(
-                      entryType: value.entryType,
-                      projectId: value.projectId,
-                      stockModel: value.stockModel,
-                      facilityModel: value.facilityModel,
-                      dateOfRecord: value.dateOfRecord,
-                      additionalData: value.additionalData,
-                    ),
-                  );
-                }
-              },
+        InventorySingleton().saveStockDetails(
+          SaveStockDetails(
+            stockModel: stockModel.copyWith(
+              facilityId: facilityModel.id,
+            ),
+            additionalData: value.additionalData ?? {},
+            isStockSaved: (bool isStockSaved) {
+              if (isStockSaved == true) {
+                stockSaved = true;
+              }
+            },
+          ),
+        );
+
+        if (stockSaved) {
+          emit(
+            RecordStockPersistedState(
+              entryType: value.entryType,
+              projectId: value.projectId,
+              stockModel: value.stockModel,
+              facilityModel: value.facilityModel,
+              dateOfRecord: value.dateOfRecord,
+              additionalData: value.additionalData,
             ),
           );
-        } catch (error) {
-          emit(value.copyWith(loading: false));
-          rethrow;
         }
       },
     );

@@ -85,6 +85,7 @@ class _$AppRouter extends RootStackRouter {
       return MaterialPageX<dynamic>(
         routeData: routeData,
         child: StockReconciliationPage(
+          inventoryListener: args.inventoryListener,
           projectId: args.projectId,
           isDistributor: args.isDistributor,
           isWareHouseMgr: args.isWareHouseMgr,
@@ -361,6 +362,7 @@ class ManageStocksRouteArgs {
 class StockReconciliationRoute
     extends PageRouteInfo<StockReconciliationRouteArgs> {
   StockReconciliationRoute({
+    required InventoryListener inventoryListener,
     required String projectId,
     required bool? isDistributor,
     required bool? isWareHouseMgr,
@@ -371,6 +373,7 @@ class StockReconciliationRoute
           StockReconciliationRoute.name,
           path: 'reconcile-stocks',
           args: StockReconciliationRouteArgs(
+            inventoryListener: inventoryListener,
             projectId: projectId,
             isDistributor: isDistributor,
             isWareHouseMgr: isWareHouseMgr,
@@ -385,6 +388,7 @@ class StockReconciliationRoute
 
 class StockReconciliationRouteArgs {
   const StockReconciliationRouteArgs({
+    required this.inventoryListener,
     required this.projectId,
     required this.isDistributor,
     required this.isWareHouseMgr,
@@ -392,6 +396,8 @@ class StockReconciliationRouteArgs {
     this.key,
     this.appLocalizations,
   });
+
+  final InventoryListener inventoryListener;
 
   final String projectId;
 
@@ -407,7 +413,7 @@ class StockReconciliationRouteArgs {
 
   @override
   String toString() {
-    return 'StockReconciliationRouteArgs{projectId: $projectId, isDistributor: $isDistributor, isWareHouseMgr: $isWareHouseMgr, loggedInUserUuid: $loggedInUserUuid, key: $key, appLocalizations: $appLocalizations}';
+    return 'StockReconciliationRouteArgs{inventoryListener: $inventoryListener, projectId: $projectId, isDistributor: $isDistributor, isWareHouseMgr: $isWareHouseMgr, loggedInUserUuid: $loggedInUserUuid, key: $key, appLocalizations: $appLocalizations}';
   }
 }
 

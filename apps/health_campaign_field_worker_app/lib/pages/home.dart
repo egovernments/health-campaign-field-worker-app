@@ -27,9 +27,11 @@ import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../data/local_store/sql_store/sql_store.dart';
 import '../models/data_model.dart';
+import '../models/entities/hcm_stock_recon.dart';
 import '../router/app_router.dart';
 import '../utils/debound.dart';
 import '../utils/i18_key_constants.dart' as i18;
+import '../utils/typedefs.dart';
 import '../utils/utils.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/home/home_item_card.dart';
@@ -359,9 +361,14 @@ class _HomePageState extends LocalizedState<HomePage> {
                           individualId: context.loggedInIndividualId,
                           projectId: context.projectId,
                           stockLocalRepository: context.read<
-                              LocalRepository<HcmStockModel, HcmStockSearchModel>>(),
-                          stockRemoteRepository: context.read<
-                              RemoteRepository<HcmStockModel, HcmStockSearchModel>>(),
+                              LocalRepository<HcmStockModel,
+                                  HcmStockSearchModel>>(),
+                          stockReconLocalRepository: context.read<
+                              LocalRepository<HcmStockReconciliationModel,
+                                  HcmStockReconciliationSearchModel>>(),
+                          stockReconRemoteRepository: context.read<
+                              RemoteRepository<HcmStockReconciliationModel,
+                                  HcmStockReconciliationSearchModel>>(),
                         ),
                         projectId: context.projectId,
                         userId: context.loggedInUserUuid,
@@ -384,11 +391,33 @@ class _HomePageState extends LocalizedState<HomePage> {
           label: i18.home.stockReconciliationLabel,
           onPressed: () {
             context.router.push(StockReconciliationRoute(
+              inventoryListener: HcmInventoryBloc(
+                context: context,
+                userId: context.loggedInUserUuid,
+                individualId: context.loggedInIndividualId,
+                projectId: context.projectId,
+                stockLocalRepository: context.read<
+                    LocalRepository<HcmStockModel, HcmStockSearchModel>>(),
+                stockReconLocalRepository: context.read<
+                    LocalRepository<HcmStockReconciliationModel,
+                        HcmStockReconciliationSearchModel>>(),
+                stockReconRemoteRepository: context.read<
+                    RemoteRepository<HcmStockReconciliationModel,
+                        HcmStockReconciliationSearchModel>>(),
+              ),
               projectId: context.projectId,
               isDistributor: context.loggedInUserRoles
-                  .contains(RolesType.distributor.toValue()),
+                  .where(
+                    (role) => role.code == RolesType.distributor.toValue(),
+                  )
+                  .toList()
+                  .isNotEmpty,
               isWareHouseMgr: context.loggedInUserRoles
-                  .contains(RolesType.warehouseManager.toValue()),
+                  .where(
+                    (role) => role.code == RolesType.warehouseManager.toValue(),
+                  )
+                  .toList()
+                  .isNotEmpty,
               loggedInUserUuid: context.loggedInUserUuid,
             ));
           },
@@ -458,7 +487,37 @@ class _HomePageState extends LocalizedState<HomePage> {
           label: i18.home.viewReportsLabel,
           onPressed: () {
             context.router.push(
-              InventoryReportSelectionRoute(),
+              InventoryReportSelectionRoute(
+                inventoryListener: HcmInventoryBloc(
+                  context: context,
+                  userId: context.loggedInUserUuid,
+                  individualId: context.loggedInIndividualId,
+                  projectId: context.projectId,
+                  stockLocalRepository: context.read<
+                      LocalRepository<HcmStockModel, HcmStockSearchModel>>(),
+                  stockReconLocalRepository: context.read<
+                      LocalRepository<HcmStockReconciliationModel,
+                          HcmStockReconciliationSearchModel>>(),
+                  stockReconRemoteRepository: context.read<
+                      RemoteRepository<HcmStockReconciliationModel,
+                          HcmStockReconciliationSearchModel>>(),
+                ),
+                projectId: context.projectId,
+                isDistributor: context.loggedInUserRoles
+                    .where(
+                      (role) => role.code == RolesType.distributor.toValue(),
+                    )
+                    .toList()
+                    .isNotEmpty,
+                isWareHouseMgr: context.loggedInUserRoles
+                    .where(
+                      (role) =>
+                          role.code == RolesType.warehouseManager.toValue(),
+                    )
+                    .toList()
+                    .isNotEmpty,
+                loggedInUserUuid: context.loggedInUserUuid,
+              ),
             );
           },
         ),
@@ -596,8 +655,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                 context
                     .read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
                 context.read<
-                    LocalRepository<StockReconciliationModel,
-                        StockReconciliationSearchModel>>(),
+                    LocalRepository<HcmStockReconciliationModel,
+                        HcmStockReconciliationSearchModel>>(),
                 context.read<
                     LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
                 context.read<
@@ -627,8 +686,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                 context
                     .read<RemoteRepository<ServiceModel, ServiceSearchModel>>(),
                 context.read<
-                    RemoteRepository<StockReconciliationModel,
-                        StockReconciliationSearchModel>>(),
+                    RemoteRepository<HcmStockReconciliationModel,
+                        HcmStockReconciliationSearchModel>>(),
                 context.read<
                     RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
                 context.read<

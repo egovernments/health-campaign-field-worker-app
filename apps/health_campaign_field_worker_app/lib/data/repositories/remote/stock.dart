@@ -108,7 +108,12 @@ class StockRemoteRepository
 
     return entityList
         .map((e) => HcmStockModel(
+              additionalFields:
+                  StockAdditionalFieldsMapper.fromMap(e),
               stock: StockModelMapper.fromMap(e),
+              auditDetails: AuditDetailsMapper.fromMap(e['auditDetails']),
+              clientAuditDetails:
+                  ClientAuditDetailsMapper.fromMap(e['clientAuditDetails']),
             ))
         .toList();
   }

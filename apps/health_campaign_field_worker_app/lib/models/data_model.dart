@@ -5,7 +5,6 @@ library models;
 
 import 'package:dart_mappable/dart_mappable.dart';
 import 'data_model.dart';
-import 'entities/hcm_stock_recon.dart';
 export 'entities/additional_fields_type.dart';
 export 'entities/address.dart';
 export 'entities/address_type.dart';
@@ -45,7 +44,7 @@ export 'entities/service_definition.dart';
 export 'entities/side_effect.dart';
 export 'entities/status.dart';
 export 'entities/hcm_stock.dart';
-export 'entities/stock_reconciliation.dart';
+export 'entities/hcm_stock_recon.dart';
 export 'entities/target.dart';
 export 'entities/task.dart';
 export 'entities/task_resource.dart';

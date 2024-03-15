@@ -17,7 +17,7 @@ class ProductVariantBlocWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
+    return BlocProvider<ProductVariantBloc>(
       create: (_) => ProductVariantBloc(
         const ProductVariantEmptyState(),
       )..add(

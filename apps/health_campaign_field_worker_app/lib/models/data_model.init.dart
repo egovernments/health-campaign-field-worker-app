@@ -46,7 +46,7 @@ import 'entities/service_attributes.dart' as p39;
 import 'entities/service_definition.dart' as p40;
 import 'entities/side_effect.dart' as p41;
 import 'entities/status.dart' as p42;
-import 'entities/stock_reconciliation.dart' as p43;
+import 'entities/hcm_stock_recon.dart' as p43;
 import 'entities/target.dart' as p44;
 import 'entities/task.dart' as p45;
 import 'entities/task_resource.dart' as p46;
@@ -68,6 +68,8 @@ import 'package:inventory_management/models/entities/transaction_reason.dart'
 import 'package:inventory_management/models/entities/transaction_type.dart'
     as p57;
 import 'package:inventory_management/models/entities/inventory_facility.dart'
+    as p57;
+import 'package:inventory_management/models/entities/stock_reconciliation.dart'
     as p57;
 
 void initializeMappers() {
@@ -181,8 +183,8 @@ void initializeMappers() {
   p41.SideEffectModelMapper.ensureInitialized();
   p41.SideEffectAdditionalFieldsMapper.ensureInitialized();
   p42.StatusMapper.ensureInitialized();
-  p43.StockReconciliationSearchModelMapper.ensureInitialized();
-  p43.StockReconciliationModelMapper.ensureInitialized();
+  p43.HcmStockReconciliationSearchModelMapper.ensureInitialized();
+  p43.HcmStockReconciliationModelMapper.ensureInitialized();
   p43.StockReconciliationAdditionalFieldsMapper.ensureInitialized();
   p44.TargetSearchModelMapper.ensureInitialized();
   p44.TargetModelMapper.ensureInitialized();
@@ -229,4 +231,6 @@ void initializeMappers() {
   p57.TransactionTypeMapper.ensureInitialized();
   p57.InventoryFacilityModelMapper.ensureInitialized();
   p57.InventoryFacilitySearchModelMapper.ensureInitialized();
+  p57.StockReconciliationSearchModelMapper.ensureInitialized();
+  p57.StockReconciliationModelMapper.ensureInitialized();
 }

@@ -99,12 +99,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
         body: BlocBuilder<LocationBloc, LocationState>(
           builder: (context, locationState) {
             return BlocConsumer<RecordStockBloc, RecordStockState>(
-              listener: (context, stockState) {
-                if(stockState is RecordStockPersistedState){
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => InventoryAcknowledgementPage()));
-                }
-              },
+              listener: (context, stockState) {},
               builder: (context, stockState) {
                 StockRecordEntryType entryType = stockState.entryType;
 
@@ -480,6 +475,19 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                           const RecordStockCreateStockEntryEvent(),
                                         );
                                       }
+
+                                      bloc.state.maybeMap(
+                                        orElse: () {},
+                                        persisted: (value) {},
+                                        create: (value) {
+                                          if (value.stockModel != null) {
+                                            Navigator.of(context).pushReplacement(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        InventoryAcknowledgementPage()));
+                                          }
+                                        },
+                                      );
                                     }
                                   },
                             child: Center(

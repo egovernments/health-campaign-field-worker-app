@@ -11,6 +11,7 @@ import '../../../utils/utils.dart';
 import '../../../widgets/inventory/no_facilities_assigned_dialog.dart';
 import '../../../widgets/localized.dart';
 import '../../blocs/facility.dart';
+import '../../blocs/inventory_listener.dart';
 import '../../blocs/product_variant.dart';
 import '../../blocs/stock_reconciliation.dart';
 import '../../models/entities/inventory_facility.dart';
@@ -19,13 +20,16 @@ import '../../models/entities/stock_reconciliation.dart';
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/component_wrapper/facility_bloc_wrapper.dart';
 import '../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
+import '../acknowledgement.dart';
 
 class StockReconciliationPage extends LocalizedStatefulWidget {
+  final InventoryListener inventoryListener;
   final String projectId;
   final bool? isDistributor;
   final bool? isWareHouseMgr;
   final String? loggedInUserUuid;
   const StockReconciliationPage({
+    required this.inventoryListener,
     required this.projectId,
     required this.isDistributor,
     required this.isWareHouseMgr,
@@ -67,6 +71,15 @@ class _StockReconciliationPageState
 
   @override
   void initState() {
+    InventorySingleton().setInitialData(
+      inventoryListener: widget.inventoryListener,
+      transportTypes: [],
+      userId: '',
+      projectId: widget.projectId,
+      isDistributor: widget.isDistributor!,
+      isWareHouseMgr: widget.isWareHouseMgr!,
+      boundaryName: '',
+    );
     super.initState();
   }
 
@@ -93,8 +106,8 @@ class _StockReconciliationPageState
                     StockReconciliationState>(
                   listener: (context, stockState) {
                     if (!stockState.persisted) return;
-
-                    // context.router.replace(AcknowledgementRoute());
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => InventoryAcknowledgementPage()));
                   },
                   builder: (context, stockState) {
                     return ReactiveFormBuilder(
@@ -184,23 +197,6 @@ class _StockReconciliationPageState
                                                     calculatedCount,
                                                   ) ??
                                                   0,
-                                              // auditDetails: AuditDetails(
-                                              //   createdBy:
-                                              //       context.loggedInUserUuid,
-                                              //   createdTime: context
-                                              //       .millisecondsSinceEpoch(),
-                                              // ),
-                                              // clientAuditDetails:
-                                              //     ClientAuditDetails(
-                                              //   createdBy:
-                                              //       context.loggedInUserUuid,
-                                              //   createdTime: context
-                                              //       .millisecondsSinceEpoch(),
-                                              //   lastModifiedBy:
-                                              //       context.loggedInUserUuid,
-                                              //   lastModifiedTime: context
-                                              //       .millisecondsSinceEpoch(),
-                                              // ),
                                             );
 
                                             final submit =
@@ -280,14 +276,7 @@ class _StockReconciliationPageState
                                           .displayMedium,
                                     ),
                                     if (widget.isWareHouseMgr!)
-                                      BlocConsumer<FacilityBloc, FacilityState>(
-                                        listener: (context, state) =>
-                                            state.whenOrNull(
-                                          empty: () =>
-                                              NoFacilitiesAssignedDialog.show(
-                                            context,
-                                          ),
-                                        ),
+                                      BlocBuilder<FacilityBloc, FacilityState>(
                                         builder: (context, state) {
                                           final facilities = state.whenOrNull(
                                                 fetched: (
@@ -302,14 +291,16 @@ class _StockReconciliationPageState
                                               final stockReconciliationBloc =
                                                   context.read<
                                                       StockReconciliationBloc>();
-                                              var facility;
-                                              // final facility = await context
-                                              //     .router
-                                              //     .push<InventoryFacilityModel>(
-                                              //   FacilitySelectionRoute(
-                                              //     facilities: facilities,
-                                              //   ),
-                                              // );
+                                              final facility = await Navigator
+                                                      .of(context)
+                                                  .push<InventoryFacilityModel>(
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      FacilitySelectionPage(
+                                                    facilities: facilities,
+                                                  ),
+                                                ),
+                                              );
 
                                               if (facility == null) return;
                                               form.control(_facilityKey).value =

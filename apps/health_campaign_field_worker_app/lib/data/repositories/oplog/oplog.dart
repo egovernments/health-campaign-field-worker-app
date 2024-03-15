@@ -131,7 +131,6 @@ abstract class OpLogManager<T extends EntityModel> {
 
   Future<void> put(OpLogEntry<dynamic> entry) async {
     await isar.writeTxn(() async {
-
       await isar.opLogs.put(entry
           .copyWith(
             clientReferenceId: getClientReferenceId(entry.entity),
@@ -154,7 +153,7 @@ abstract class OpLogManager<T extends EntityModel> {
     if (nonRecoverableError == true && id != null && entry != null) {
       final oplog = await isar.opLogs.filter().idEqualTo(id).findFirst();
       if (oplog == null) return;
-      final OpLogEntry<T>  fetchedEntry = OpLogEntry.fromOpLog<T>(oplog);
+      final OpLogEntry<T> fetchedEntry = OpLogEntry.fromOpLog<T>(oplog);
       await isar.writeTxn(() async {
         await isar.opLogs.put(fetchedEntry
             .copyWith(
@@ -742,10 +741,14 @@ class StockOpLogManager extends OpLogManager<HcmStockModel> {
     String serverGeneratedId,
     int rowVersion,
   ) =>
-      entity.copyWith(stock: entity.stock!.copyWith(id: serverGeneratedId));
+      entity.copyWith(
+        stock: entity.stock!
+            .copyWith(id: serverGeneratedId, rowVersion: rowVersion),
+      );
 
   @override
-  String getClientReferenceId(HcmStockModel entity) => entity.stock!.clientReferenceId!;
+  String getClientReferenceId(HcmStockModel entity) =>
+      entity.stock!.clientReferenceId!;
 
   @override
   String? getServerGeneratedId(HcmStockModel entity) => entity.stock!.id;
@@ -754,34 +757,40 @@ class StockOpLogManager extends OpLogManager<HcmStockModel> {
   int? getRowVersion(HcmStockModel entity) => entity.stock!.rowVersion;
 
   @override
-  bool? getNonRecoverableError(HcmStockModel entity) => entity.stock!.nonRecoverableError;
+  bool? getNonRecoverableError(HcmStockModel entity) =>
+      entity.stock!.nonRecoverableError;
 }
 
 class StockReconciliationOpLogManager
-    extends OpLogManager<StockReconciliationModel> {
+    extends OpLogManager<HcmStockReconciliationModel> {
   StockReconciliationOpLogManager(super.isar);
 
   @override
-  StockReconciliationModel applyServerGeneratedIdToEntity(
-    StockReconciliationModel entity,
+  HcmStockReconciliationModel applyServerGeneratedIdToEntity(
+    HcmStockReconciliationModel entity,
     String serverGeneratedId,
     int rowVersion,
   ) =>
-      entity.copyWith(id: serverGeneratedId, rowVersion: rowVersion);
+      entity.copyWith(
+        stockReconciliation: entity.stockReconciliation!
+            .copyWith(id: serverGeneratedId, rowVersion: rowVersion),
+      );
 
   @override
-  String getClientReferenceId(StockReconciliationModel entity) =>
-      entity.clientReferenceId;
+  String getClientReferenceId(HcmStockReconciliationModel entity) =>
+      entity.stockReconciliation!.clientReferenceId;
 
   @override
-  String? getServerGeneratedId(StockReconciliationModel entity) => entity.id;
+  String? getServerGeneratedId(HcmStockReconciliationModel entity) =>
+      entity.stockReconciliation!.id;
 
   @override
-  int? getRowVersion(StockReconciliationModel entity) => entity.rowVersion;
+  int? getRowVersion(HcmStockReconciliationModel entity) =>
+      entity.stockReconciliation!.rowVersion;
 
   @override
-  bool? getNonRecoverableError(StockReconciliationModel entity) =>
-      entity.nonRecoverableError;
+  bool? getNonRecoverableError(HcmStockReconciliationModel entity) =>
+      entity.stockReconciliation!.nonRecoverableError;
 }
 
 class ServiceDefinitionOpLogManager
