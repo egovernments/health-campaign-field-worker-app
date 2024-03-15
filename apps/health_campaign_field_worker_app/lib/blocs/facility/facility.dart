@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../data/data_repository.dart';
 import '../../models/data_model.dart';
 import '../../utils/typedefs.dart';
 
@@ -9,23 +10,25 @@ part 'facility.freezed.dart';
 typedef FacilityStateEmitter = Emitter<FacilityState>;
 
 class FacilityBloc extends Bloc<FacilityEvent, FacilityState> {
-  final FacilityDataRepository facilityDataRepository;
-  final ProjectFacilityDataRepository projectFacilityDataRepository;
+  final LocalRepository<FacilityModel, FacilitySearchModel>
+      facilityLocalRepository;
+  final LocalRepository<ProjectFacilityModel, ProjectFacilitySearchModel>
+      projectFacilityLocalRepository;
 
   FacilityBloc({
-    required this.facilityDataRepository,
-    required this.projectFacilityDataRepository,
+    required this.facilityLocalRepository,
+    required this.projectFacilityLocalRepository,
   }) : super(const FacilityEmptyState()) {
     on(_handleLoadFacilitiesForProjectId);
   }
 
   Future<void> _handleLoadFacilitiesForProjectId(
-      FacilityLoadForProjectEvent event,
-      FacilityStateEmitter emit,
-      ) async {
+    FacilityLoadForProjectEvent event,
+    FacilityStateEmitter emit,
+  ) async {
     emit(const FacilityLoadingState());
 
-    final projectFacilities = await projectFacilityDataRepository.search(
+    final projectFacilities = await projectFacilityLocalRepository.search(
       ProjectFacilitySearchModel(projectId: [event.projectId]),
     );
 
@@ -42,14 +45,14 @@ class FacilityBloc extends Bloc<FacilityEvent, FacilityState> {
     List<FacilityModel> facilities = [];
 
     if (event.loadAllProjects) {
-      var searchResult = await facilityDataRepository.search(
+      var searchResult = await facilityLocalRepository.search(
         FacilitySearchModel(id: null),
       );
       allFacilities.addAll(searchResult);
     }
 
     for (final projectFacility in projectFacilities) {
-      var results = await facilityDataRepository.search(
+      var results = await facilityLocalRepository.search(
         FacilitySearchModel(id: [projectFacility.facilityId]),
       );
 

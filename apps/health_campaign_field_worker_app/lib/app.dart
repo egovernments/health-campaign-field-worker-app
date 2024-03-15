@@ -264,11 +264,11 @@ class MainApplicationState extends State<MainApplication>
                         ),
                         BlocProvider(
                           create: (context) => FacilityBloc(
-                            facilityDataRepository: context.read<
-                                RemoteRepository<FacilityModel,
+                            facilityLocalRepository: context.read<
+                                LocalRepository<FacilityModel,
                                     FacilitySearchModel>>(),
-                            projectFacilityDataRepository: context.read<
-                                RemoteRepository<ProjectFacilityModel,
+                            projectFacilityLocalRepository: context.read<
+                                LocalRepository<ProjectFacilityModel,
                                     ProjectFacilitySearchModel>>(),
                           ),
                         ),
