@@ -1,5 +1,7 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
+import 'package:digit_scanner/blocs/scanner.dart';
+import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -7,7 +9,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import '../../../blocs/facility/facility.dart';
 import '../../../blocs/project/project.dart';
 import '../../../blocs/record_stock/record_stock.dart';
-import '../../../blocs/scanner/scanner.dart';
+import '../../../blocs/scanner/hcm_scanner_bloc.dart';
 import '../../../models/data_model.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
@@ -123,7 +125,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                 onTap: () {
                   FocusScope.of(context).unfocus();
                 },
-                child: BlocBuilder<ScannerBloc, ScannerState>(
+                child: BlocBuilder<DigitScannerBloc, DigitScannerState>(
                   builder: (context, scannerState) {
                     final stockState =
                         BlocProvider.of<RecordStockBloc>(context).state;
@@ -133,8 +135,8 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                           isDistributor && !isWareHouseMgr, stockState),
                       builder: (context, form, child) {
                         form.control(_teamCodeKey).value =
-                            scannerState.qrcodes.isNotEmpty
-                                ? scannerState.qrcodes.last
+                            scannerState.qrCodes.isNotEmpty
+                                ? scannerState.qrCodes.last
                                 : '';
 
                         return ScrollableContent(
@@ -182,9 +184,11 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                                           )
                                                         : null;
 
-                                            context.read<ScannerBloc>().add(
-                                                  const ScannerEvent
-                                                      .handleScanner([], []),
+                                            context
+                                                .read<DigitScannerBloc>()
+                                                .add(
+                                                  const DigitScannerEvent
+                                                      .handleScanner(),
                                                 );
                                             if (facility == null) {
                                               DigitToast.show(
@@ -353,12 +357,9 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                         formControlName: _warehouseKey,
                                         readOnly: true,
                                         onTap: () async {
-                                          context.read<ScannerBloc>().add(
-                                                const ScannerEvent
-                                                    .handleScanner(
-                                                  [],
-                                                  [],
-                                                ),
+                                          context.read<DigitScannerBloc>().add(
+                                                const DigitScannerEvent
+                                                    .handleScanner(),
                                               );
                                           form.control(_teamCodeKey).value = '';
                                           final parent = context.router.parent()
@@ -402,10 +403,10 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                         String? value = val as String?;
                                         if (value != null &&
                                             value.trim().isNotEmpty) {
-                                          context.read<ScannerBloc>().add(
-                                                ScannerEvent.handleScanner(
-                                                  [],
-                                                  [value],
+                                          context.read<DigitScannerBloc>().add(
+                                                DigitScannerEvent.handleScanner(
+                                                  barCode: [],
+                                                  qrCode: [value],
                                                 ),
                                               );
                                         } else {
@@ -415,11 +416,20 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                       isRequired: true,
                                       suffix: IconButton(
                                         onPressed: () {
-                                          context.router.push(QRScannerRoute(
-                                            quantity: 1,
-                                            isGS1code: false,
-                                            sinlgleValue: true,
-                                          ));
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  DigitScannerPage(
+                                                scannerListeners:
+                                                    HCMScannerBloc(),
+                                                quantity: 1,
+                                                isGS1code: false,
+                                                singleValue: true,
+                                              ),
+                                              settings: const RouteSettings(
+                                                  name: '/qr-scanner'),
+                                            ),
+                                          );
                                         },
                                         icon: Icon(
                                           Icons.qr_code_2,
@@ -445,6 +455,8 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
   }
 
   void clearQRCodes() {
-    context.read<ScannerBloc>().add(const ScannerEvent.handleScanner([], []));
+    context
+        .read<DigitScannerBloc>()
+        .add(const DigitScannerEvent.handleScanner());
   }
 }

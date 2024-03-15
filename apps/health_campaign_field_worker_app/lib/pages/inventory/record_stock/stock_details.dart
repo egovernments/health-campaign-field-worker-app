@@ -1,6 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
+import 'package:digit_scanner/blocs/scanner.dart';
+import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -10,7 +12,7 @@ import '../../../blocs/app_initialization/app_initialization.dart';
 import '../../../blocs/facility/facility.dart';
 import '../../../blocs/product_variant/product_variant.dart';
 import '../../../blocs/record_stock/record_stock.dart';
-import '../../../blocs/scanner/scanner.dart';
+import '../../../blocs/scanner/hcm_scanner_bloc.dart';
 import '../../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../../models/data_model.dart';
 import '../../../router/app_router.dart';
@@ -91,10 +93,10 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
       onPopInvoked: (didPop) {
         final stockState = context.read<RecordStockBloc>().state;
         if (stockState.primaryId != null) {
-          context.read<ScannerBloc>().add(
-                ScannerEvent.handleScanner(
-                  [],
-                  [stockState.primaryId.toString()],
+          context.read<DigitScannerBloc>().add(
+                DigitScannerEvent.handleScanner(
+                  barCode: [],
+                  qrCode: [stockState.primaryId.toString()],
                 ),
               );
         }
@@ -179,11 +181,11 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                 return ReactiveFormBuilder(
                   form: () => _form(entryType),
                   builder: (context, form, child) {
-                    return BlocBuilder<ScannerBloc, ScannerState>(
+                    return BlocBuilder<DigitScannerBloc, DigitScannerState>(
                       builder: (context, scannerState) {
                         form.control(_deliveryTeamKey).value =
-                            scannerState.qrcodes.isNotEmpty
-                                ? scannerState.qrcodes.last
+                            scannerState.qrCodes.isNotEmpty
+                                ? scannerState.qrCodes.last
                                 : '';
 
                         return ScrollableContent(
@@ -193,10 +195,12 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                 final stockState =
                                     context.read<RecordStockBloc>().state;
                                 if (stockState.primaryId != null) {
-                                  context.read<ScannerBloc>().add(
-                                        ScannerEvent.handleScanner(
-                                          [],
-                                          [stockState.primaryId.toString()],
+                                  context.read<DigitScannerBloc>().add(
+                                        DigitScannerEvent.handleScanner(
+                                          barCode: [],
+                                          qrCode: [
+                                            stockState.primaryId.toString()
+                                          ],
                                         ),
                                       );
                                 }
@@ -698,10 +702,10 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                         String? value = val.value as String?;
                                         if (value != null &&
                                             value.trim().isNotEmpty) {
-                                          context.read<ScannerBloc>().add(
-                                                ScannerEvent.handleScanner(
-                                                  [],
-                                                  [value],
+                                          context.read<DigitScannerBloc>().add(
+                                                DigitScannerEvent.handleScanner(
+                                                  barCode: [],
+                                                  qrCode: [value],
                                                 ),
                                               );
                                         } else {
@@ -710,11 +714,20 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                       },
                                       suffix: IconButton(
                                         onPressed: () {
-                                          context.router.push(QRScannerRoute(
-                                            quantity: 5,
-                                            isGS1code: false,
-                                            sinlgleValue: false,
-                                          ));
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  DigitScannerPage(
+                                                scannerListeners:
+                                                    HCMScannerBloc(),
+                                                quantity: 5,
+                                                isGS1code: false,
+                                                singleValue: false,
+                                              ),
+                                              settings: const RouteSettings(
+                                                  name: '/qr-scanner'),
+                                            ),
+                                          );
                                         },
                                         icon: Icon(
                                           Icons.qr_code_2,
@@ -833,11 +846,19 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                       ),
                                     ),
                                     onPressed: () {
-                                      context.router.push(QRScannerRoute(
-                                        quantity: 5,
-                                        isGS1code: true,
-                                        sinlgleValue: false,
-                                      ));
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              DigitScannerPage(
+                                            scannerListeners: HCMScannerBloc(),
+                                            quantity: 5,
+                                            isGS1code: true,
+                                            singleValue: false,
+                                          ),
+                                          settings: const RouteSettings(
+                                              name: '/qr-scanner'),
+                                        ),
+                                      );
                                     },
                                     icon: Icons.qr_code,
                                     label: localizations.translate(
@@ -862,6 +883,8 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
   }
 
   void clearQRCodes() {
-    context.read<ScannerBloc>().add(const ScannerEvent.handleScanner([], []));
+    context
+        .read<DigitScannerBloc>()
+        .add(const DigitScannerEvent.handleScanner());
   }
 }

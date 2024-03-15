@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
 part of 'attendance_individual_bloc.dart';
 
@@ -12,7 +12,7 @@ part of 'attendance_individual_bloc.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 /// @nodoc
 mixin _$AttendanceIndividualEvent {
@@ -152,11 +152,11 @@ class _$AttendanceIndividualEventCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$AttendanceIndividualLogSearchEventImplCopyWith<$Res> {
-  factory _$$AttendanceIndividualLogSearchEventImplCopyWith(
-          _$AttendanceIndividualLogSearchEventImpl value,
-          $Res Function(_$AttendanceIndividualLogSearchEventImpl) then) =
-      __$$AttendanceIndividualLogSearchEventImplCopyWithImpl<$Res>;
+abstract class _$$AttendanceIndividualLogSearchEventCopyWith<$Res> {
+  factory _$$AttendanceIndividualLogSearchEventCopyWith(
+          _$AttendanceIndividualLogSearchEvent value,
+          $Res Function(_$AttendanceIndividualLogSearchEvent) then) =
+      __$$AttendanceIndividualLogSearchEventCopyWithImpl<$Res>;
   @useResult
   $Res call(
       {String registerId,
@@ -171,13 +171,13 @@ abstract class _$$AttendanceIndividualLogSearchEventImplCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$AttendanceIndividualLogSearchEventImplCopyWithImpl<$Res>
+class __$$AttendanceIndividualLogSearchEventCopyWithImpl<$Res>
     extends _$AttendanceIndividualEventCopyWithImpl<$Res,
-        _$AttendanceIndividualLogSearchEventImpl>
-    implements _$$AttendanceIndividualLogSearchEventImplCopyWith<$Res> {
-  __$$AttendanceIndividualLogSearchEventImplCopyWithImpl(
-      _$AttendanceIndividualLogSearchEventImpl _value,
-      $Res Function(_$AttendanceIndividualLogSearchEventImpl) _then)
+        _$AttendanceIndividualLogSearchEvent>
+    implements _$$AttendanceIndividualLogSearchEventCopyWith<$Res> {
+  __$$AttendanceIndividualLogSearchEventCopyWithImpl(
+      _$AttendanceIndividualLogSearchEvent _value,
+      $Res Function(_$AttendanceIndividualLogSearchEvent) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -193,7 +193,7 @@ class __$$AttendanceIndividualLogSearchEventImplCopyWithImpl<$Res>
     Object? limit = null,
     Object? isSingleSession = null,
   }) {
-    return _then(_$AttendanceIndividualLogSearchEventImpl(
+    return _then(_$AttendanceIndividualLogSearchEvent(
       registerId: null == registerId
           ? _value.registerId
           : registerId // ignore: cast_nullable_to_non_nullable
@@ -236,9 +236,9 @@ class __$$AttendanceIndividualLogSearchEventImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$AttendanceIndividualLogSearchEventImpl
+class _$AttendanceIndividualLogSearchEvent
     implements AttendanceIndividualLogSearchEvent {
-  const _$AttendanceIndividualLogSearchEventImpl(
+  const _$AttendanceIndividualLogSearchEvent(
       {required this.registerId,
       required this.tenantId,
       required this.entryTime,
@@ -263,7 +263,6 @@ class _$AttendanceIndividualLogSearchEventImpl
   final List<AttendeeModel> _attendees;
   @override
   List<AttendeeModel> get attendees {
-    if (_attendees is EqualUnmodifiableListView) return _attendees;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_attendees);
   }
@@ -282,10 +281,10 @@ class _$AttendanceIndividualLogSearchEventImpl
   }
 
   @override
-  bool operator ==(Object other) {
+  bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$AttendanceIndividualLogSearchEventImpl &&
+            other is _$AttendanceIndividualLogSearchEvent &&
             (identical(other.registerId, registerId) ||
                 other.registerId == registerId) &&
             (identical(other.tenantId, tenantId) ||
@@ -320,10 +319,10 @@ class _$AttendanceIndividualLogSearchEventImpl
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$AttendanceIndividualLogSearchEventImplCopyWith<
-          _$AttendanceIndividualLogSearchEventImpl>
-      get copyWith => __$$AttendanceIndividualLogSearchEventImplCopyWithImpl<
-          _$AttendanceIndividualLogSearchEventImpl>(this, _$identity);
+  _$$AttendanceIndividualLogSearchEventCopyWith<
+          _$AttendanceIndividualLogSearchEvent>
+      get copyWith => __$$AttendanceIndividualLogSearchEventCopyWithImpl<
+          _$AttendanceIndividualLogSearchEvent>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -478,7 +477,7 @@ abstract class AttendanceIndividualLogSearchEvent
       required final List<AttendeeModel> attendees,
       required final int offset,
       required final int limit,
-      final bool isSingleSession}) = _$AttendanceIndividualLogSearchEventImpl;
+      final bool isSingleSession}) = _$AttendanceIndividualLogSearchEvent;
 
   String get registerId;
   String get tenantId;
@@ -490,16 +489,16 @@ abstract class AttendanceIndividualLogSearchEvent
   int get limit;
   bool get isSingleSession;
   @JsonKey(ignore: true)
-  _$$AttendanceIndividualLogSearchEventImplCopyWith<
-          _$AttendanceIndividualLogSearchEventImpl>
+  _$$AttendanceIndividualLogSearchEventCopyWith<
+          _$AttendanceIndividualLogSearchEvent>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$AttendanceMarkEventImplCopyWith<$Res> {
-  factory _$$AttendanceMarkEventImplCopyWith(_$AttendanceMarkEventImpl value,
-          $Res Function(_$AttendanceMarkEventImpl) then) =
-      __$$AttendanceMarkEventImplCopyWithImpl<$Res>;
+abstract class _$$AttendanceMarkEventCopyWith<$Res> {
+  factory _$$AttendanceMarkEventCopyWith(_$AttendanceMarkEvent value,
+          $Res Function(_$AttendanceMarkEvent) then) =
+      __$$AttendanceMarkEventCopyWithImpl<$Res>;
   @useResult
   $Res call(
       {int entryTime,
@@ -511,12 +510,11 @@ abstract class _$$AttendanceMarkEventImplCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$AttendanceMarkEventImplCopyWithImpl<$Res>
-    extends _$AttendanceIndividualEventCopyWithImpl<$Res,
-        _$AttendanceMarkEventImpl>
-    implements _$$AttendanceMarkEventImplCopyWith<$Res> {
-  __$$AttendanceMarkEventImplCopyWithImpl(_$AttendanceMarkEventImpl _value,
-      $Res Function(_$AttendanceMarkEventImpl) _then)
+class __$$AttendanceMarkEventCopyWithImpl<$Res>
+    extends _$AttendanceIndividualEventCopyWithImpl<$Res, _$AttendanceMarkEvent>
+    implements _$$AttendanceMarkEventCopyWith<$Res> {
+  __$$AttendanceMarkEventCopyWithImpl(
+      _$AttendanceMarkEvent _value, $Res Function(_$AttendanceMarkEvent) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -524,12 +522,12 @@ class __$$AttendanceMarkEventImplCopyWithImpl<$Res>
   $Res call({
     Object? entryTime = null,
     Object? exitTime = null,
-    Object? status = freezed,
+    Object? status = null,
     Object? isSingleSession = null,
     Object? individualId = null,
     Object? registerId = null,
   }) {
-    return _then(_$AttendanceMarkEventImpl(
+    return _then(_$AttendanceMarkEvent(
       entryTime: null == entryTime
           ? _value.entryTime
           : entryTime // ignore: cast_nullable_to_non_nullable
@@ -538,7 +536,7 @@ class __$$AttendanceMarkEventImplCopyWithImpl<$Res>
           ? _value.exitTime
           : exitTime // ignore: cast_nullable_to_non_nullable
               as int,
-      status: freezed == status ? _value.status! : status,
+      status: null == status ? _value.status : status,
       isSingleSession: null == isSingleSession
           ? _value.isSingleSession
           : isSingleSession // ignore: cast_nullable_to_non_nullable
@@ -557,8 +555,8 @@ class __$$AttendanceMarkEventImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$AttendanceMarkEventImpl implements AttendanceMarkEvent {
-  const _$AttendanceMarkEventImpl(
+class _$AttendanceMarkEvent implements AttendanceMarkEvent {
+  const _$AttendanceMarkEvent(
       {this.entryTime = 0,
       this.exitTime = 0,
       this.status = -1,
@@ -589,10 +587,10 @@ class _$AttendanceMarkEventImpl implements AttendanceMarkEvent {
   }
 
   @override
-  bool operator ==(Object other) {
+  bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$AttendanceMarkEventImpl &&
+            other is _$AttendanceMarkEvent &&
             (identical(other.entryTime, entryTime) ||
                 other.entryTime == entryTime) &&
             (identical(other.exitTime, exitTime) ||
@@ -619,8 +617,8 @@ class _$AttendanceMarkEventImpl implements AttendanceMarkEvent {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$AttendanceMarkEventImplCopyWith<_$AttendanceMarkEventImpl> get copyWith =>
-      __$$AttendanceMarkEventImplCopyWithImpl<_$AttendanceMarkEventImpl>(
+  _$$AttendanceMarkEventCopyWith<_$AttendanceMarkEvent> get copyWith =>
+      __$$AttendanceMarkEventCopyWithImpl<_$AttendanceMarkEvent>(
           this, _$identity);
 
   @override
@@ -772,7 +770,7 @@ abstract class AttendanceMarkEvent implements AttendanceIndividualEvent {
       final dynamic status,
       final bool isSingleSession,
       required final String individualId,
-      required final String registerId}) = _$AttendanceMarkEventImpl;
+      required final String registerId}) = _$AttendanceMarkEvent;
 
   int get entryTime;
   int get exitTime;
@@ -781,15 +779,15 @@ abstract class AttendanceMarkEvent implements AttendanceIndividualEvent {
   String get individualId;
   String get registerId;
   @JsonKey(ignore: true)
-  _$$AttendanceMarkEventImplCopyWith<_$AttendanceMarkEventImpl> get copyWith =>
+  _$$AttendanceMarkEventCopyWith<_$AttendanceMarkEvent> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$SaveAsDraftEventImplCopyWith<$Res> {
-  factory _$$SaveAsDraftEventImplCopyWith(_$SaveAsDraftEventImpl value,
-          $Res Function(_$SaveAsDraftEventImpl) then) =
-      __$$SaveAsDraftEventImplCopyWithImpl<$Res>;
+abstract class _$$SaveAsDraftEventCopyWith<$Res> {
+  factory _$$SaveAsDraftEventCopyWith(
+          _$SaveAsDraftEvent value, $Res Function(_$SaveAsDraftEvent) then) =
+      __$$SaveAsDraftEventCopyWithImpl<$Res>;
   @useResult
   $Res call(
       {int entryTime,
@@ -802,12 +800,11 @@ abstract class _$$SaveAsDraftEventImplCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$SaveAsDraftEventImplCopyWithImpl<$Res>
-    extends _$AttendanceIndividualEventCopyWithImpl<$Res,
-        _$SaveAsDraftEventImpl>
-    implements _$$SaveAsDraftEventImplCopyWith<$Res> {
-  __$$SaveAsDraftEventImplCopyWithImpl(_$SaveAsDraftEventImpl _value,
-      $Res Function(_$SaveAsDraftEventImpl) _then)
+class __$$SaveAsDraftEventCopyWithImpl<$Res>
+    extends _$AttendanceIndividualEventCopyWithImpl<$Res, _$SaveAsDraftEvent>
+    implements _$$SaveAsDraftEventCopyWith<$Res> {
+  __$$SaveAsDraftEventCopyWithImpl(
+      _$SaveAsDraftEvent _value, $Res Function(_$SaveAsDraftEvent) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -821,7 +818,7 @@ class __$$SaveAsDraftEventImplCopyWithImpl<$Res>
     Object? latitude = freezed,
     Object? longitude = freezed,
   }) {
-    return _then(_$SaveAsDraftEventImpl(
+    return _then(_$SaveAsDraftEvent(
       entryTime: null == entryTime
           ? _value.entryTime
           : entryTime // ignore: cast_nullable_to_non_nullable
@@ -856,8 +853,8 @@ class __$$SaveAsDraftEventImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$SaveAsDraftEventImpl implements SaveAsDraftEvent {
-  const _$SaveAsDraftEventImpl(
+class _$SaveAsDraftEvent implements SaveAsDraftEvent {
+  const _$SaveAsDraftEvent(
       {required this.entryTime,
       required this.exitTime,
       required this.selectedDate,
@@ -889,10 +886,10 @@ class _$SaveAsDraftEventImpl implements SaveAsDraftEvent {
   }
 
   @override
-  bool operator ==(Object other) {
+  bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$SaveAsDraftEventImpl &&
+            other is _$SaveAsDraftEvent &&
             (identical(other.entryTime, entryTime) ||
                 other.entryTime == entryTime) &&
             (identical(other.exitTime, exitTime) ||
@@ -916,9 +913,8 @@ class _$SaveAsDraftEventImpl implements SaveAsDraftEvent {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$SaveAsDraftEventImplCopyWith<_$SaveAsDraftEventImpl> get copyWith =>
-      __$$SaveAsDraftEventImplCopyWithImpl<_$SaveAsDraftEventImpl>(
-          this, _$identity);
+  _$$SaveAsDraftEventCopyWith<_$SaveAsDraftEvent> get copyWith =>
+      __$$SaveAsDraftEventCopyWithImpl<_$SaveAsDraftEvent>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -1070,7 +1066,7 @@ abstract class SaveAsDraftEvent implements AttendanceIndividualEvent {
       final bool isSingleSession,
       final bool? createOplog,
       final double? latitude,
-      final double? longitude}) = _$SaveAsDraftEventImpl;
+      final double? longitude}) = _$SaveAsDraftEvent;
 
   int get entryTime;
   int get exitTime;
@@ -1080,26 +1076,26 @@ abstract class SaveAsDraftEvent implements AttendanceIndividualEvent {
   double? get latitude;
   double? get longitude;
   @JsonKey(ignore: true)
-  _$$SaveAsDraftEventImplCopyWith<_$SaveAsDraftEventImpl> get copyWith =>
+  _$$SaveAsDraftEventCopyWith<_$SaveAsDraftEvent> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$SearchAttendeesEventImplCopyWith<$Res> {
-  factory _$$SearchAttendeesEventImplCopyWith(_$SearchAttendeesEventImpl value,
-          $Res Function(_$SearchAttendeesEventImpl) then) =
-      __$$SearchAttendeesEventImplCopyWithImpl<$Res>;
+abstract class _$$SearchAttendeesEventCopyWith<$Res> {
+  factory _$$SearchAttendeesEventCopyWith(_$SearchAttendeesEvent value,
+          $Res Function(_$SearchAttendeesEvent) then) =
+      __$$SearchAttendeesEventCopyWithImpl<$Res>;
   @useResult
   $Res call({String name});
 }
 
 /// @nodoc
-class __$$SearchAttendeesEventImplCopyWithImpl<$Res>
+class __$$SearchAttendeesEventCopyWithImpl<$Res>
     extends _$AttendanceIndividualEventCopyWithImpl<$Res,
-        _$SearchAttendeesEventImpl>
-    implements _$$SearchAttendeesEventImplCopyWith<$Res> {
-  __$$SearchAttendeesEventImplCopyWithImpl(_$SearchAttendeesEventImpl _value,
-      $Res Function(_$SearchAttendeesEventImpl) _then)
+        _$SearchAttendeesEvent>
+    implements _$$SearchAttendeesEventCopyWith<$Res> {
+  __$$SearchAttendeesEventCopyWithImpl(_$SearchAttendeesEvent _value,
+      $Res Function(_$SearchAttendeesEvent) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1107,7 +1103,7 @@ class __$$SearchAttendeesEventImplCopyWithImpl<$Res>
   $Res call({
     Object? name = null,
   }) {
-    return _then(_$SearchAttendeesEventImpl(
+    return _then(_$SearchAttendeesEvent(
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -1118,8 +1114,8 @@ class __$$SearchAttendeesEventImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$SearchAttendeesEventImpl implements SearchAttendeesEvent {
-  const _$SearchAttendeesEventImpl({required this.name});
+class _$SearchAttendeesEvent implements SearchAttendeesEvent {
+  const _$SearchAttendeesEvent({required this.name});
 
   @override
   final String name;
@@ -1130,10 +1126,10 @@ class _$SearchAttendeesEventImpl implements SearchAttendeesEvent {
   }
 
   @override
-  bool operator ==(Object other) {
+  bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$SearchAttendeesEventImpl &&
+            other is _$SearchAttendeesEvent &&
             (identical(other.name, name) || other.name == name));
   }
 
@@ -1143,10 +1139,9 @@ class _$SearchAttendeesEventImpl implements SearchAttendeesEvent {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$SearchAttendeesEventImplCopyWith<_$SearchAttendeesEventImpl>
-      get copyWith =>
-          __$$SearchAttendeesEventImplCopyWithImpl<_$SearchAttendeesEventImpl>(
-              this, _$identity);
+  _$$SearchAttendeesEventCopyWith<_$SearchAttendeesEvent> get copyWith =>
+      __$$SearchAttendeesEventCopyWithImpl<_$SearchAttendeesEvent>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -1289,12 +1284,12 @@ class _$SearchAttendeesEventImpl implements SearchAttendeesEvent {
 
 abstract class SearchAttendeesEvent implements AttendanceIndividualEvent {
   const factory SearchAttendeesEvent({required final String name}) =
-      _$SearchAttendeesEventImpl;
+      _$SearchAttendeesEvent;
 
   String get name;
   @JsonKey(ignore: true)
-  _$$SearchAttendeesEventImplCopyWith<_$SearchAttendeesEventImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  _$$SearchAttendeesEventCopyWith<_$SearchAttendeesEvent> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -1395,25 +1390,24 @@ class _$AttendanceIndividualStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$InitialImplCopyWith<$Res> {
-  factory _$$InitialImplCopyWith(
-          _$InitialImpl value, $Res Function(_$InitialImpl) then) =
-      __$$InitialImplCopyWithImpl<$Res>;
+abstract class _$$_InitialCopyWith<$Res> {
+  factory _$$_InitialCopyWith(
+          _$_Initial value, $Res Function(_$_Initial) then) =
+      __$$_InitialCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$InitialImplCopyWithImpl<$Res>
-    extends _$AttendanceIndividualStateCopyWithImpl<$Res, _$InitialImpl>
-    implements _$$InitialImplCopyWith<$Res> {
-  __$$InitialImplCopyWithImpl(
-      _$InitialImpl _value, $Res Function(_$InitialImpl) _then)
+class __$$_InitialCopyWithImpl<$Res>
+    extends _$AttendanceIndividualStateCopyWithImpl<$Res, _$_Initial>
+    implements _$$_InitialCopyWith<$Res> {
+  __$$_InitialCopyWithImpl(_$_Initial _value, $Res Function(_$_Initial) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$InitialImpl extends _Initial {
-  const _$InitialImpl() : super._();
+class _$_Initial extends _Initial {
+  const _$_Initial() : super._();
 
   @override
   String toString() {
@@ -1421,9 +1415,9 @@ class _$InitialImpl extends _Initial {
   }
 
   @override
-  bool operator ==(Object other) {
+  bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$InitialImpl);
+        (other.runtimeType == runtimeType && other is _$_Initial);
   }
 
   @override
@@ -1529,30 +1523,29 @@ class _$InitialImpl extends _Initial {
 }
 
 abstract class _Initial extends AttendanceIndividualState {
-  const factory _Initial() = _$InitialImpl;
+  const factory _Initial() = _$_Initial;
   const _Initial._() : super._();
 }
 
 /// @nodoc
-abstract class _$$LoadingImplCopyWith<$Res> {
-  factory _$$LoadingImplCopyWith(
-          _$LoadingImpl value, $Res Function(_$LoadingImpl) then) =
-      __$$LoadingImplCopyWithImpl<$Res>;
+abstract class _$$_LoadingCopyWith<$Res> {
+  factory _$$_LoadingCopyWith(
+          _$_Loading value, $Res Function(_$_Loading) then) =
+      __$$_LoadingCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$LoadingImplCopyWithImpl<$Res>
-    extends _$AttendanceIndividualStateCopyWithImpl<$Res, _$LoadingImpl>
-    implements _$$LoadingImplCopyWith<$Res> {
-  __$$LoadingImplCopyWithImpl(
-      _$LoadingImpl _value, $Res Function(_$LoadingImpl) _then)
+class __$$_LoadingCopyWithImpl<$Res>
+    extends _$AttendanceIndividualStateCopyWithImpl<$Res, _$_Loading>
+    implements _$$_LoadingCopyWith<$Res> {
+  __$$_LoadingCopyWithImpl(_$_Loading _value, $Res Function(_$_Loading) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$LoadingImpl extends _Loading {
-  const _$LoadingImpl() : super._();
+class _$_Loading extends _Loading {
+  const _$_Loading() : super._();
 
   @override
   String toString() {
@@ -1560,9 +1553,9 @@ class _$LoadingImpl extends _Loading {
   }
 
   @override
-  bool operator ==(Object other) {
+  bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$LoadingImpl);
+        (other.runtimeType == runtimeType && other is _$_Loading);
   }
 
   @override
@@ -1668,16 +1661,16 @@ class _$LoadingImpl extends _Loading {
 }
 
 abstract class _Loading extends AttendanceIndividualState {
-  const factory _Loading() = _$LoadingImpl;
+  const factory _Loading() = _$_Loading;
   const _Loading._() : super._();
 }
 
 /// @nodoc
-abstract class _$$AttendanceRowModelLoadedImplCopyWith<$Res> {
-  factory _$$AttendanceRowModelLoadedImplCopyWith(
-          _$AttendanceRowModelLoadedImpl value,
-          $Res Function(_$AttendanceRowModelLoadedImpl) then) =
-      __$$AttendanceRowModelLoadedImplCopyWithImpl<$Res>;
+abstract class _$$_AttendanceRowModelLoadedCopyWith<$Res> {
+  factory _$$_AttendanceRowModelLoadedCopyWith(
+          _$_AttendanceRowModelLoaded value,
+          $Res Function(_$_AttendanceRowModelLoaded) then) =
+      __$$_AttendanceRowModelLoadedCopyWithImpl<$Res>;
   @useResult
   $Res call(
       {List<AttendeeModel>? attendanceSearchModelList,
@@ -1690,13 +1683,12 @@ abstract class _$$AttendanceRowModelLoadedImplCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$AttendanceRowModelLoadedImplCopyWithImpl<$Res>
+class __$$_AttendanceRowModelLoadedCopyWithImpl<$Res>
     extends _$AttendanceIndividualStateCopyWithImpl<$Res,
-        _$AttendanceRowModelLoadedImpl>
-    implements _$$AttendanceRowModelLoadedImplCopyWith<$Res> {
-  __$$AttendanceRowModelLoadedImplCopyWithImpl(
-      _$AttendanceRowModelLoadedImpl _value,
-      $Res Function(_$AttendanceRowModelLoadedImpl) _then)
+        _$_AttendanceRowModelLoaded>
+    implements _$$_AttendanceRowModelLoadedCopyWith<$Res> {
+  __$$_AttendanceRowModelLoadedCopyWithImpl(_$_AttendanceRowModelLoaded _value,
+      $Res Function(_$_AttendanceRowModelLoaded) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1710,7 +1702,7 @@ class __$$AttendanceRowModelLoadedImplCopyWithImpl<$Res>
     Object? limitData = null,
     Object? viewOnly = null,
   }) {
-    return _then(_$AttendanceRowModelLoadedImpl(
+    return _then(_$_AttendanceRowModelLoaded(
       attendanceSearchModelList: freezed == attendanceSearchModelList
           ? _value._attendanceSearchModelList
           : attendanceSearchModelList // ignore: cast_nullable_to_non_nullable
@@ -1745,8 +1737,8 @@ class __$$AttendanceRowModelLoadedImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$AttendanceRowModelLoadedImpl extends _AttendanceRowModelLoaded {
-  _$AttendanceRowModelLoadedImpl(
+class _$_AttendanceRowModelLoaded extends _AttendanceRowModelLoaded {
+  _$_AttendanceRowModelLoaded(
       {final List<AttendeeModel>? attendanceSearchModelList,
       final List<AttendeeModel>? attendanceCollectionModel,
       this.offsetData = 0,
@@ -1763,8 +1755,6 @@ class _$AttendanceRowModelLoadedImpl extends _AttendanceRowModelLoaded {
   List<AttendeeModel>? get attendanceSearchModelList {
     final value = _attendanceSearchModelList;
     if (value == null) return null;
-    if (_attendanceSearchModelList is EqualUnmodifiableListView)
-      return _attendanceSearchModelList;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
@@ -1774,8 +1764,6 @@ class _$AttendanceRowModelLoadedImpl extends _AttendanceRowModelLoaded {
   List<AttendeeModel>? get attendanceCollectionModel {
     final value = _attendanceCollectionModel;
     if (value == null) return null;
-    if (_attendanceCollectionModel is EqualUnmodifiableListView)
-      return _attendanceCollectionModel;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
@@ -1802,10 +1790,10 @@ class _$AttendanceRowModelLoadedImpl extends _AttendanceRowModelLoaded {
   }
 
   @override
-  bool operator ==(Object other) {
+  bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$AttendanceRowModelLoadedImpl &&
+            other is _$_AttendanceRowModelLoaded &&
             const DeepCollectionEquality().equals(
                 other._attendanceSearchModelList, _attendanceSearchModelList) &&
             const DeepCollectionEquality().equals(
@@ -1836,9 +1824,9 @@ class _$AttendanceRowModelLoadedImpl extends _AttendanceRowModelLoaded {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$AttendanceRowModelLoadedImplCopyWith<_$AttendanceRowModelLoadedImpl>
-      get copyWith => __$$AttendanceRowModelLoadedImplCopyWithImpl<
-          _$AttendanceRowModelLoadedImpl>(this, _$identity);
+  _$$_AttendanceRowModelLoadedCopyWith<_$_AttendanceRowModelLoaded>
+      get copyWith => __$$_AttendanceRowModelLoadedCopyWithImpl<
+          _$_AttendanceRowModelLoaded>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -1950,7 +1938,7 @@ abstract class _AttendanceRowModelLoaded extends AttendanceIndividualState {
       final int currentOffset,
       final int countData,
       final int limitData,
-      final bool viewOnly}) = _$AttendanceRowModelLoadedImpl;
+      final bool viewOnly}) = _$_AttendanceRowModelLoaded;
   _AttendanceRowModelLoaded._() : super._();
 
   List<AttendeeModel>? get attendanceSearchModelList;
@@ -1961,25 +1949,23 @@ abstract class _AttendanceRowModelLoaded extends AttendanceIndividualState {
   int get limitData;
   bool get viewOnly;
   @JsonKey(ignore: true)
-  _$$AttendanceRowModelLoadedImplCopyWith<_$AttendanceRowModelLoadedImpl>
+  _$$_AttendanceRowModelLoadedCopyWith<_$_AttendanceRowModelLoaded>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$ErrorImplCopyWith<$Res> {
-  factory _$$ErrorImplCopyWith(
-          _$ErrorImpl value, $Res Function(_$ErrorImpl) then) =
-      __$$ErrorImplCopyWithImpl<$Res>;
+abstract class _$$_ErrorCopyWith<$Res> {
+  factory _$$_ErrorCopyWith(_$_Error value, $Res Function(_$_Error) then) =
+      __$$_ErrorCopyWithImpl<$Res>;
   @useResult
   $Res call({String? error});
 }
 
 /// @nodoc
-class __$$ErrorImplCopyWithImpl<$Res>
-    extends _$AttendanceIndividualStateCopyWithImpl<$Res, _$ErrorImpl>
-    implements _$$ErrorImplCopyWith<$Res> {
-  __$$ErrorImplCopyWithImpl(
-      _$ErrorImpl _value, $Res Function(_$ErrorImpl) _then)
+class __$$_ErrorCopyWithImpl<$Res>
+    extends _$AttendanceIndividualStateCopyWithImpl<$Res, _$_Error>
+    implements _$$_ErrorCopyWith<$Res> {
+  __$$_ErrorCopyWithImpl(_$_Error _value, $Res Function(_$_Error) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1987,7 +1973,7 @@ class __$$ErrorImplCopyWithImpl<$Res>
   $Res call({
     Object? error = freezed,
   }) {
-    return _then(_$ErrorImpl(
+    return _then(_$_Error(
       freezed == error
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
@@ -1998,8 +1984,8 @@ class __$$ErrorImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ErrorImpl extends _Error {
-  const _$ErrorImpl(this.error) : super._();
+class _$_Error extends _Error {
+  const _$_Error(this.error) : super._();
 
   @override
   final String? error;
@@ -2010,10 +1996,10 @@ class _$ErrorImpl extends _Error {
   }
 
   @override
-  bool operator ==(Object other) {
+  bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ErrorImpl &&
+            other is _$_Error &&
             (identical(other.error, error) || other.error == error));
   }
 
@@ -2023,8 +2009,8 @@ class _$ErrorImpl extends _Error {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ErrorImplCopyWith<_$ErrorImpl> get copyWith =>
-      __$$ErrorImplCopyWithImpl<_$ErrorImpl>(this, _$identity);
+  _$$_ErrorCopyWith<_$_Error> get copyWith =>
+      __$$_ErrorCopyWithImpl<_$_Error>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -2126,11 +2112,11 @@ class _$ErrorImpl extends _Error {
 }
 
 abstract class _Error extends AttendanceIndividualState {
-  const factory _Error(final String? error) = _$ErrorImpl;
+  const factory _Error(final String? error) = _$_Error;
   const _Error._() : super._();
 
   String? get error;
   @JsonKey(ignore: true)
-  _$$ErrorImplCopyWith<_$ErrorImpl> get copyWith =>
+  _$$_ErrorCopyWith<_$_Error> get copyWith =>
       throw _privateConstructorUsedError;
 }

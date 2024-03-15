@@ -4,43 +4,41 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:camera/camera.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
+import 'package:digit_scanner/blocs/scanner_listeners.dart';
+import 'package:digit_scanner/utils/extensions/extensions.dart';
+import 'package:digit_scanner/widgets/localized.dart';
+import 'package:digit_scanner/widgets/vision_detector_views/painters/barcode_detector_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
 
-import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
-import '../../utils/utils.dart';
-import '../../widgets/localized.dart';
-import '../blocs/scanner/scanner.dart';
-import '../blocs/search_households/search_bloc_common_wrapper.dart';
-import '../blocs/search_households/search_households.dart';
-import '../blocs/search_referrals/search_referrals.dart';
-import '../models/data_model.dart';
-import '../vision_detector_views/detector_view.dart';
-import '../vision_detector_views/painters/barcode_detector_painter.dart';
+import '../blocs/scanner.dart';
+import '../widgets/vision_detector_views/detector_view.dart';
 
-class QRScannerPage extends LocalizedStatefulWidget {
-  final bool sinlgleValue;
+class DigitScannerPage extends LocalizedStatefulWidget {
+  final bool singleValue;
   final int quantity;
   final bool isGS1code;
   final bool isEditEnabled;
+  final ScannerListeners scannerListeners;
 
-  const QRScannerPage({
+  const DigitScannerPage({
     super.key,
     super.appLocalizations,
+    required this.scannerListeners,
     required this.quantity,
     required this.isGS1code,
-    this.sinlgleValue = false,
+    this.singleValue = false,
     this.isEditEnabled = false,
   });
 
   @override
-  State<QRScannerPage> createState() => _QRScannerPageState();
+  State<DigitScannerPage> createState() => _DigitScannerPageState();
 }
 
-class _QRScannerPageState extends LocalizedState<QRScannerPage> {
+class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
   final BarcodeScanner _barcodeScanner = BarcodeScanner();
   bool _canProcess = true;
   bool _isBusy = false;
@@ -53,33 +51,34 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
   int _cameraIndex = -1;
   List<GS1Barcode> result = [];
   List<String> codes = [];
-  bool manualcode = false;
-  bool flashstatus = false;
+  bool manualCode = false;
+  bool flashStatus = false;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   final _resourceController = TextEditingController();
 
   @override
   void initState() {
     initializeCameras();
+    ScannerSingleton().setScannerListeners(
+      scannerListeners: widget.scannerListeners,
+    );
     if (!widget.isEditEnabled) {
-      context.read<ScannerBloc>().add(const ScannerEvent.handleScanner([], []));
+      context
+          .read<DigitScannerBloc>()
+          .add(const DigitScannerEvent.handleScanner());
     }
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    bool isHealthFacilityWorker = context.loggedInUserRoles
-        .where((role) => role.code == RolesType.healthFacilityWorker.toValue())
-        .toList()
-        .isNotEmpty;
     final theme = Theme.of(context);
 
     return Scaffold(
-      body: BlocBuilder<ScannerBloc, ScannerState>(
+      body: BlocBuilder<DigitScannerBloc, DigitScannerState>(
         builder: (context, state) {
           return _cameras.isNotEmpty
-              ? !manualcode
+              ? !manualCode
                   ? Stack(
                       children: <Widget>[
                         Container(
@@ -105,10 +104,10 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                             child: InkWell(
                               onTap: () async {
                                 _cameraController?.setFlashMode(
-                                  flashstatus ? FlashMode.off : FlashMode.torch,
+                                  flashStatus ? FlashMode.off : FlashMode.torch,
                                 );
                                 setState(() {
-                                  flashstatus = !flashstatus;
+                                  flashStatus = !flashStatus;
                                 });
                               },
                               child: Row(
@@ -117,16 +116,16 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                                     MainAxisAlignment.spaceAround,
                                 children: [
                                   Icon(
-                                    flashstatus
+                                    flashStatus
                                         ? Icons.flashlight_off
                                         : Icons.flashlight_on,
                                     color: theme.colorScheme.secondary,
                                   ),
                                   Text(
                                     localizations.translate(
-                                      flashstatus
-                                          ? i18.deliverIntervention.flashOff
-                                          : i18.deliverIntervention.flashOn,
+                                      flashStatus
+                                          ? i18.scanner.flashOff
+                                          : i18.scanner.flashOn,
                                     ),
                                     style: TextStyle(
                                       color: theme.colorScheme.secondary,
@@ -146,10 +145,9 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                           child: SizedBox(
                             width: MediaQuery.of(context).size.width / 3,
                             height: MediaQuery.of(context).size.height / 3,
-                            // [TODO: Localization need to be added]
                             child: Text(
                               localizations.translate(
-                                i18.deliverIntervention.scannerLabel,
+                                i18.scanner.scannerLabel,
                               ),
                               style: const TextStyle(
                                 color: Colors.white,
@@ -170,7 +168,7 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                               padding: const EdgeInsets.only(top: kPadding),
                               child: Text(
                                 localizations.translate(
-                                  i18.deliverIntervention.manualScan,
+                                  i18.scanner.manualScan,
                                 ),
                                 style: const TextStyle(
                                   color: Colors.white,
@@ -191,17 +189,21 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                             height: 50,
                             child: TextButton(
                               onPressed: () {
-                                context.read<ScannerBloc>().add(
-                                    const ScannerEvent.handleScanner([], []));
+                                context.read<DigitScannerBloc>().add(
+                                      const DigitScannerEvent.handleScanner(
+                                        barCode: [],
+                                        qrCode: [],
+                                      ),
+                                    );
                                 setState(() {
-                                  manualcode = true;
+                                  manualCode = true;
                                 });
                               },
                               child: Padding(
                                 padding: const EdgeInsets.only(top: kPadding),
                                 child: Text(
                                   localizations.translate(
-                                    i18.deliverIntervention.manualEnterCode,
+                                    i18.scanner.enterManualCode,
                                   ),
                                   style: TextStyle(
                                     color: theme.colorScheme.secondary,
@@ -229,31 +231,19 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                                     result.length < widget.quantity) {
                                   buildDialog();
                                 } else {
-                                  final bloc =
-                                      context.read<SearchBlocWrapper>();
-                                  final hfBloc =
-                                      context.read<SearchReferralsBloc>();
+                                  // final bloc =
+                                  //     context.read<SearchBlocWrapper>();
+                                  // final hfBloc =
+                                  //     context.read<SearchReferralsBloc>();
 
-                                  final scannerState =
-                                      context.read<ScannerBloc>().state;
-
-                                  if (scannerState.qrcodes.isNotEmpty) {
-                                    if (isHealthFacilityWorker) {
-                                      hfBloc
-                                          .add(SearchReferralsEvent.searchByTag(
-                                        tag: scannerState.qrcodes.first,
-                                        projectId: context.projectId,
-                                      ));
-                                    } else {
-                                      bloc.tagSearchBloc.add(
-                                        SearchHouseholdsEvent.searchByTag(
-                                          tag: scannerState.qrcodes.first,
-                                          projectId: context.projectId,
-                                        ),
-                                      );
-                                    }
-                                  }
-                                  context.router.pop();
+                                  final bloc = context.read<DigitScannerBloc>();
+                                  bloc.add(DigitScannerEvent.handleScanner(
+                                    barCode: state.barCodes,
+                                    qrCode: state.qrCodes,
+                                  ));
+                                  Navigator.of(
+                                    context,
+                                  ).pop();
                                 }
                               },
                             ),
@@ -263,11 +253,11 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                         Positioned(
                           bottom: (kPadding * 7.5),
                           height: widget.isGS1code
-                              ? state.barcodes.length < 10
-                                  ? (state.barcodes.length * 60) + 80
+                              ? state.barCodes.length < 10
+                                  ? (state.barCodes.length * 60) + 80
                                   : MediaQuery.of(context).size.height / 2.2
-                              : state.qrcodes.length < 10
-                                  ? (state.qrcodes.length * 60) + 80
+                              : state.qrCodes.length < 10
+                                  ? (state.qrCodes.length * 60) + 80
                                   : MediaQuery.of(context).size.height / 2,
                           width: MediaQuery.of(context).size.width,
                           child: Container(
@@ -300,19 +290,19 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                                   width: MediaQuery.of(context).size.width,
                                   child: widget.isGS1code
                                       ? Text(
-                                          '${state.barcodes.length.toString()} ${localizations.translate(i18.deliverIntervention.resourcesScanned)}',
+                                          '${state.barCodes.length.toString()} ${localizations.translate(i18.scanner.resourcesScanned)}',
                                           style: theme.textTheme.headlineMedium,
                                         )
                                       : Text(
-                                          '${state.qrcodes.length.toString()} ${localizations.translate(i18.deliverIntervention.resourcesScanned)}',
+                                          '${state.qrCodes.length.toString()} ${localizations.translate(i18.scanner.resourcesScanned)}',
                                           style: theme.textTheme.headlineMedium,
                                         ),
                                 ),
                                 Expanded(
                                   child: ListView.builder(
                                     itemCount: widget.isGS1code
-                                        ? state.barcodes.length
-                                        : state.qrcodes.length,
+                                        ? state.barCodes.length
+                                        : state.qrCodes.length,
                                     itemBuilder:
                                         (BuildContext context, int index) {
                                       return ListTile(
@@ -350,7 +340,7 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                                                       TextOverflow.ellipsis,
                                                   widget.isGS1code
                                                       ? state
-                                                          .barcodes[index]
+                                                          .barCodes[index]
                                                           .elements
                                                           .entries
                                                           .last
@@ -358,7 +348,7 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                                                           .data
                                                           .toString()
                                                       : trimString(state
-                                                          .qrcodes[index]
+                                                          .qrCodes[index]
                                                           .toString()),
                                                 ),
                                               ),
@@ -370,10 +360,10 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                                                 ),
                                                 onPressed: () {
                                                   final bloc = context
-                                                      .read<ScannerBloc>();
+                                                      .read<DigitScannerBloc>();
                                                   if (widget.isGS1code) {
                                                     result = List.from(
-                                                      state.barcodes,
+                                                      state.barCodes,
                                                     );
                                                     result.removeAt(index);
                                                     setState(() {
@@ -381,17 +371,15 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                                                     });
 
                                                     bloc.add(
-                                                      ScannerEvent
+                                                      DigitScannerEvent
                                                           .handleScanner(
-                                                        result,
-                                                        state.qrcodes,
-                                                        isReferral:
-                                                            isHealthFacilityWorker,
+                                                        barCode: result,
+                                                        qrCode: state.qrCodes,
                                                       ),
                                                     );
                                                   } else {
                                                     codes = List.from(
-                                                      state.qrcodes,
+                                                      state.qrCodes,
                                                     );
                                                     codes.removeAt(index);
                                                     setState(() {
@@ -399,12 +387,10 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                                                     });
 
                                                     bloc.add(
-                                                      ScannerEvent
+                                                      DigitScannerEvent
                                                           .handleScanner(
-                                                        state.barcodes,
-                                                        codes,
-                                                        isReferral:
-                                                            isHealthFacilityWorker,
+                                                        barCode: state.barCodes,
+                                                        qrCode: codes,
                                                       ),
                                                     );
                                                   }
@@ -429,7 +415,7 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                         header: GestureDetector(
                           onTap: () {
                             setState(() {
-                              manualcode = false;
+                              manualCode = false;
                               initializeCameras();
                             });
                           },
@@ -443,45 +429,42 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                             i18.common.coreCommonSubmit,
                           )),
                           onPressed: () async {
-                            final bloc = context.read<ScannerBloc>();
+                            final bloc = context.read<DigitScannerBloc>();
                             codes.add(_resourceController.value.text);
                             bloc.add(
-                              ScannerEvent.handleScanner(
-                                state.barcodes,
-                                codes,
-                                isReferral: isHealthFacilityWorker,
+                              DigitScannerEvent.handleScanner(
+                                barCode: state.barCodes,
+                                qrCode: codes,
                               ),
                             );
                             if (widget.isGS1code &&
                                 result.length < widget.quantity) {
                               buildDialog();
                             } else {
-                              final bloc = context.read<SearchBlocWrapper>();
-                              final scannerState =
-                                  context.read<ScannerBloc>().state;
-                              final hfBloc =
-                                  context.read<SearchReferralsBloc>();
-
-                              if (scannerState.qrcodes.isNotEmpty ||
-                                  manualcode) {
-                                if (isHealthFacilityWorker) {
-                                  hfBloc.add(SearchReferralsEvent.searchByTag(
-                                    tag: manualcode
-                                        ? _resourceController.value.text
-                                        : scannerState.qrcodes.first,
-                                    projectId: context.projectId,
-                                  ));
-                                } else {
-                                  bloc.tagSearchBloc
-                                      .add(SearchHouseholdsEvent.searchByTag(
-                                    tag: manualcode
-                                        ? _resourceController.value.text
-                                        : scannerState.qrcodes.first,
-                                    projectId: context.projectId,
-                                  ));
-                                }
-                              }
-                              context.router.pop();
+                              // final bloc = context.read<SearchBlocWrapper>();
+                              // final scannerState =
+                              //     context.read<ScannerBloc>().state;
+                              // final hfBloc =
+                              //     context.read<SearchReferralsBloc>();
+                              //
+                              // if (scannerState.qrcodes.isNotEmpty ||
+                              //     manualcode) {
+                              //   if (isHealthFacilityWorker) {
+                              //     hfBloc.add(SearchReferralsEvent.searchByTag(
+                              //       tag: manualcode
+                              //           ? _resourceController.value.text
+                              //           : scannerState.qrcodes.first,
+                              //       projectId: context.projectId,
+                              //     ));
+                              //   } else {
+                              //     bloc.tagSearchBloc
+                              //         .add(SearchHouseholdsEvent.searchByTag(
+                              //       tag: manualcode
+                              //           ? _resourceController.value.text
+                              //           : scannerState.qrcodes.first,
+                              //       projectId: context.projectId,
+                              //     ));
+                              //   }
                             }
                           },
                         ),
@@ -490,7 +473,7 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                             alignment: Alignment.topLeft,
                             child: Text(
                               localizations.translate(
-                                i18.deliverIntervention.manualEnterCode,
+                                i18.scanner.enterManualCode,
                               ),
                               style: theme.textTheme.headlineLarge,
                             ),
@@ -499,14 +482,14 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
                             height: kPadding * 2,
                           ),
                           Text(localizations.translate(
-                            i18.deliverIntervention.manualCodeDescription,
+                            i18.scanner.manualCodeDescription,
                           )),
                           const SizedBox(
                             height: kPadding * 2,
                           ),
                           DigitTextField(
                             label: localizations.translate(
-                              i18.deliverIntervention.resourceCode,
+                              i18.scanner.resourceCode,
                             ),
                             controller: _resourceController,
                           ),
@@ -526,14 +509,14 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
       context,
       options: DigitDialogOptions(
         titleText: localizations.translate(
-          i18.deliverIntervention.scannerDialogTitle,
+          i18.scanner.scannerDialogTitle,
         ),
         contentText: localizations.translate(
-          i18.deliverIntervention.scannerDialogContent,
+          i18.scanner.scannerDialogContent,
         ),
         primaryAction: DigitDialogActions(
           label: localizations.translate(
-            i18.deliverIntervention.scannerDialogPrimaryAction,
+            i18.scanner.scannerDialogPrimaryAction,
           ),
           action: (ctx) {
             Navigator.of(
@@ -544,7 +527,7 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
         ),
         secondaryAction: DigitDialogActions(
           label: localizations.translate(
-            i18.deliverIntervention.scannerDialogSecondaryAction,
+            i18.scanner.scannerDialogSecondaryAction,
           ),
           action: (ctx) {
             Navigator.of(
@@ -552,7 +535,9 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
               rootNavigator: true,
             ).pop(true);
 
-            context.router.pop();
+            Navigator.of(
+              context,
+            ).pop();
           },
         ),
       ),
@@ -571,35 +556,35 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
     if (inputImage.metadata?.size != null &&
         inputImage.metadata?.rotation != null) {
       if (barcodes.isNotEmpty) {
-        final bloc = context.read<ScannerBloc>();
+        final bloc = context.read<DigitScannerBloc>();
         if (widget.isGS1code) {
           try {
             final parser = GS1BarcodeParser.defaultParser();
             final parsedResult =
                 parser.parse(barcodes.first.displayValue.toString());
-            final alreadyScanned = bloc.state.barcodes.any((element) =>
+            final alreadyScanned = bloc.state.barCodes.any((element) =>
                 element.elements.entries.last.value.data ==
                 parsedResult.elements.entries.last.value.data);
             if (alreadyScanned) {
               await handleError(
-                i18.deliverIntervention.resourceAlreadyScanned,
+                i18.scanner.resourceAlreadyScanned,
               );
             } else if (widget.quantity > result.length) {
               await storeValue(parsedResult);
             } else {
               await handleError(
-                i18.deliverIntervention.scannedResourceCountMisMatch,
+                i18.scanner.scannedResourceCountMisMatch,
               );
             }
           } catch (e) {
             await handleError(
-              i18.deliverIntervention.scannedResourceCountMisMatch,
+              i18.scanner.scannedResourceCountMisMatch,
             );
           }
         } else {
-          if (bloc.state.qrcodes.contains(barcodes.first.displayValue)) {
+          if (bloc.state.qrCodes.contains(barcodes.first.displayValue)) {
             await handleError(
-              i18.deliverIntervention.resourceAlreadyScanned,
+              i18.scanner.resourceAlreadyScanned,
             );
             return;
           } else {
@@ -657,14 +642,10 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
   Future storeCode(
     String code,
   ) async {
-    bool isHealthFacilityWorker = context.loggedInUserRoles
-        .where((role) => role.code == RolesType.healthFacilityWorker.toValue())
-        .toList()
-        .isNotEmpty;
     player.play(AssetSource("audio/add.wav"));
-    final bloc = context.read<ScannerBloc>();
-    codes = List.from(bloc.state.qrcodes);
-    if (widget.sinlgleValue) {
+    final bloc = context.read<DigitScannerBloc>();
+    codes = List.from(bloc.state.qrCodes);
+    if (widget.singleValue) {
       codes = [];
     }
 
@@ -674,10 +655,9 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
       codes = codes;
     });
 
-    bloc.add(ScannerEvent.handleScanner(
-      bloc.state.barcodes,
-      codes,
-      isReferral: isHealthFacilityWorker,
+    bloc.add(DigitScannerEvent.handleScanner(
+      barCode: bloc.state.barCodes,
+      qrCode: codes,
     ));
     await Future.delayed(
       const Duration(seconds: 5),
@@ -689,26 +669,21 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
   Future storeValue(
     GS1Barcode scanData,
   ) async {
-    bool isHealthFacilityWorker = context.loggedInUserRoles
-        .where((role) => role.code == RolesType.healthFacilityWorker.toValue())
-        .toList()
-        .isNotEmpty;
-    final parsedresult = scanData;
-    final bloc = context.read<ScannerBloc>();
+    final parsedResult = scanData;
+    final bloc = context.read<DigitScannerBloc>();
 
     player.play(AssetSource("audio/add.wav"));
     await Future.delayed(const Duration(seconds: 3));
 
-    result = List.from(bloc.state.barcodes);
+    result = List.from(bloc.state.barCodes);
     result.removeDuplicates(
       (element) => element.elements.entries.last.value.data,
     );
 
-    result.add(parsedresult);
-    bloc.add(ScannerEvent.handleScanner(
-      result,
-      bloc.state.qrcodes,
-      isReferral: isHealthFacilityWorker,
+    result.add(parsedResult);
+    bloc.add(DigitScannerEvent.handleScanner(
+      barCode: result,
+      qrCode: bloc.state.qrCodes,
     ));
     setState(() {
       result = result;

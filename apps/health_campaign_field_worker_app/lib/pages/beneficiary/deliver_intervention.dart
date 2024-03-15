@@ -742,7 +742,8 @@ class _DeliverInterventionPageState
               AdditionalFieldsType.longitude.toValue(),
               longitude,
             ),
-          if (deliveryComment != null)
+          if (deliveryComment != null &&
+              deliveryComment.trim().toString().isNotEmpty)
             AdditionalField(
               AdditionalFieldsType.deliveryComment.toValue(),
               deliveryComment,

@@ -1,6 +1,9 @@
 import 'package:attendance_management/blocs/app_localization.dart'
     as attendance_localization;
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_scanner/blocs/app_localization.dart'
+    as scanner_localization;
+import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,7 +17,6 @@ import 'blocs/boundary/boundary.dart';
 import 'blocs/localization/app_localization.dart';
 import 'blocs/localization/localization.dart';
 import 'blocs/project/project.dart';
-import 'blocs/scanner/scanner.dart';
 import 'blocs/user/user.dart';
 import 'data/data_repository.dart';
 import 'data/local_store/app_shared_preferences.dart';
@@ -80,6 +82,14 @@ class MainApplicationState extends State<MainApplication>
                 lazy: false,
               ),
               BlocProvider(
+                create: (_) {
+                  return DigitScannerBloc(
+                    const DigitScannerState(),
+                  );
+                },
+                lazy: false,
+              ),
+              BlocProvider(
                 create: (context) {
                   return UserBloc(
                     const UserEmptyState(),
@@ -100,18 +110,6 @@ class MainApplicationState extends State<MainApplication>
                       tenantId: envConfig.variables.tenantId,
                     ),
                   ),
-              ),
-              BlocProvider(
-                create: (ctx) => ScannerBloc(
-                  const ScannerState(),
-                  projectBeneficiaryRepository: ctx
-                      .read<NetworkManager>()
-                      .repository<ProjectBeneficiaryModel,
-                          ProjectBeneficiarySearchModel>(ctx),
-                  hfReferralDataRepository: ctx
-                      .read<NetworkManager>()
-                      .repository<HFReferralModel, HFReferralSearchModel>(ctx),
-                ),
               ),
               BlocProvider(
                 create: (ctx) => BoundaryBloc(
@@ -308,6 +306,14 @@ class MainApplicationState extends State<MainApplication>
                                 ),
                                 appConfig.languages!,
                               ),
+                              scanner_localization.ScannerLocalization
+                                  .getDelegate(
+                                getLocalizationString(
+                                  widget.isar,
+                                  selectedLocale,
+                                ),
+                                appConfig.languages!,
+                              )
                             ],
                             locale: languages != null
                                 ? Locale(
