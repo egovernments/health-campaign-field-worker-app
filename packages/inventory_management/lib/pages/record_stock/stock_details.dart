@@ -724,18 +724,24 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                 ),
                               if (isWareHouseMgr)
                                 DigitTextFormField(
-                                  label: localizations.translate(
-                                    i18.stockDetails
-                                        .quantityOfProductIndicatedOnWaybillLabel,
-                                  ),
-                                  formControlName: _waybillQuantityKey,
-                                  validationMessages: {
-                                    "number": (object) =>
-                                        localizations.translate(
-                                          '${i18.stockDetails.quantityOfProductIndicatedOnWaybillLabel}_ERROR',
-                                        ),
-                                  },
-                                ),
+                                    label: localizations.translate(
+                                      i18.stockDetails
+                                          .quantityOfProductIndicatedOnWaybillLabel,
+                                    ),
+                                    formControlName: _waybillQuantityKey,
+                                    validationMessages: {
+                                      "number": (object) =>
+                                          localizations.translate(
+                                            '${i18.stockDetails.quantityOfProductIndicatedOnWaybillLabel}_ERROR',
+                                          ),
+                                    },
+                                    onChanged: (val) {
+                                      if (val.toString().isEmpty) {
+                                        form
+                                            .control(_waybillQuantityKey)
+                                            .value = '0';
+                                      }
+                                    }),
                               if (isWareHouseMgr)
                                 transportTypes.isNotEmpty
                                     ? DigitReactiveDropdown<String>(

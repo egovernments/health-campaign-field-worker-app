@@ -17,7 +17,7 @@ import 'package:inventory_management/utils/utils.dart';
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
 import '../blocs/hcm_attendance_bloc.dart';
-import '../blocs/hcm_inventory_bloc.dart';
+import '../blocs/inventory/hcm_inventory_bloc.dart';
 import '../blocs/search_households/search_bloc_common_wrapper.dart';
 import '../blocs/search_households/search_households.dart';
 import '../blocs/search_referrals/search_referrals.dart';
@@ -366,9 +366,6 @@ class _HomePageState extends LocalizedState<HomePage> {
                           stockReconLocalRepository: context.read<
                               LocalRepository<HcmStockReconciliationModel,
                                   HcmStockReconciliationSearchModel>>(),
-                          stockReconRemoteRepository: context.read<
-                              RemoteRepository<HcmStockReconciliationModel,
-                                  HcmStockReconciliationSearchModel>>(),
                         ),
                         projectId: context.projectId,
                         userId: context.loggedInUserUuid,
@@ -400,9 +397,6 @@ class _HomePageState extends LocalizedState<HomePage> {
                     LocalRepository<HcmStockModel, HcmStockSearchModel>>(),
                 stockReconLocalRepository: context.read<
                     LocalRepository<HcmStockReconciliationModel,
-                        HcmStockReconciliationSearchModel>>(),
-                stockReconRemoteRepository: context.read<
-                    RemoteRepository<HcmStockReconciliationModel,
                         HcmStockReconciliationSearchModel>>(),
               ),
               projectId: context.projectId,
@@ -497,9 +491,6 @@ class _HomePageState extends LocalizedState<HomePage> {
                       LocalRepository<HcmStockModel, HcmStockSearchModel>>(),
                   stockReconLocalRepository: context.read<
                       LocalRepository<HcmStockReconciliationModel,
-                          HcmStockReconciliationSearchModel>>(),
-                  stockReconRemoteRepository: context.read<
-                      RemoteRepository<HcmStockReconciliationModel,
                           HcmStockReconciliationSearchModel>>(),
                 ),
                 projectId: context.projectId,

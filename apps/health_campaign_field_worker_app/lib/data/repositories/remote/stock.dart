@@ -27,6 +27,7 @@ class StockRemoteRepository
       var stock = log["stock"] as Map<String, dynamic>;
       var transformedLog = {
         ...stock,
+        "additionalFields": log["additionalFields"],
         "auditDetails": log["auditDetails"],
         "clientAuditDetails": log["clientAuditDetails"],
       };
@@ -67,7 +68,8 @@ class StockRemoteRepository
             if (query.isDeleted ?? false) 'includeDeleted': query.isDeleted,
           },
           data: {
-            EntityPlurals.getPluralForEntityName(entityName): query.toMap(),
+            EntityPlurals.getPluralForEntityName(entityName):
+                query.stock?.toMap(),
           },
         );
       },
@@ -106,16 +108,18 @@ class StockRemoteRepository
 
     final entityList = entityResponse.whereType<Map<String, dynamic>>();
 
-    return entityList
+    var entities = entityList
         .map((e) => HcmStockModel(
               additionalFields:
-                  StockAdditionalFieldsMapper.fromMap(e),
+                  StockAdditionalFieldsMapper.fromMap(e['additionalFields']),
               stock: StockModelMapper.fromMap(e),
               auditDetails: AuditDetailsMapper.fromMap(e['auditDetails']),
               clientAuditDetails:
                   ClientAuditDetailsMapper.fromMap(e['clientAuditDetails']),
             ))
         .toList();
+
+    return entities;
   }
 
   @override

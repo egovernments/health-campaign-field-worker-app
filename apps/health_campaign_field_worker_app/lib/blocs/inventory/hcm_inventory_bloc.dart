@@ -7,14 +7,14 @@ import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/models/entities/product_variant.dart'
     as invProdVar;
 import 'package:inventory_management/models/entities/stock_reconciliation.dart';
-import '../data/data_repository.dart';
-import '../data/local_store/secure_store/secure_store.dart';
-import '../models/data_model.dart';
-import '../utils/environment_config.dart';
-import '../utils/utils.dart';
-import 'facility/facility.dart';
-import 'product_variant/product_variant.dart';
-import 'sync/sync.dart';
+import '../../data/data_repository.dart';
+import '../../data/local_store/secure_store/secure_store.dart';
+import '../../models/data_model.dart';
+import '../../utils/environment_config.dart';
+import '../../utils/utils.dart';
+import '../facility/facility.dart';
+import '../product_variant/product_variant.dart';
+import '../sync/sync.dart';
 import 'package:inventory_management/models/entities/inventory_facility.dart';
 
 class HcmInventoryBloc extends InventoryListener {
@@ -26,8 +26,6 @@ class HcmInventoryBloc extends InventoryListener {
       stockLocalRepository;
   final LocalRepository<HcmStockReconciliationModel,
       HcmStockReconciliationSearchModel> stockReconLocalRepository;
-  final RemoteRepository<HcmStockReconciliationModel,
-      HcmStockReconciliationSearchModel> stockReconRemoteRepository;
 
   HcmInventoryBloc({
     required this.context,
@@ -36,7 +34,6 @@ class HcmInventoryBloc extends InventoryListener {
     required this.projectId,
     required this.stockLocalRepository,
     required this.stockReconLocalRepository,
-    required this.stockReconRemoteRepository,
   });
 
   late Function(List<InventoryFacilityModel> facilities) _facilitiesLoaded;
