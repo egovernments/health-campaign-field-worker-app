@@ -94,11 +94,11 @@ class _HomePageShowcaseData {
     messageLocalizationKey: i18.homeShowcase.deleteAll,
   );
 
-  final db = ShowcaseItemBuilder(
-    messageLocalizationKey: i18.home.db,
-  );
-
   final manageAttendance = ShowcaseItemBuilder(
     messageLocalizationKey: i18.home.manageAttendanceLabel,
+  );
+
+  final db = ShowcaseItemBuilder(
+    messageLocalizationKey: i18.home.db,
   );
 }
