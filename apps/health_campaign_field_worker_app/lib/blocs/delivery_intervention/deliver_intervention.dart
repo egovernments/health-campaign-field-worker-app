@@ -36,16 +36,17 @@ class DeliverInterventionBloc
       if (event.isEditing) {
         // Update an existing task
         await taskRepository.update(event.task.copyWith(
-          clientAuditDetails: (event.task.clientAuditDetails?.createdBy !=
-                      null &&
-                  event.task.clientAuditDetails?.createdTime != null)
-              ? ClientAuditDetails(
-                  createdBy: event.task.clientAuditDetails!.createdBy,
-                  createdTime: event.task.clientAuditDetails!.createdTime,
-                  lastModifiedBy: event.task.clientAuditDetails!.lastModifiedBy,
-                  lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
-                )
-              : null,
+          clientAuditDetails:
+              (event.task.clientAuditDetails?.createdBy != null &&
+                      event.task.clientAuditDetails?.createdTime != null)
+                  ? ClientAuditDetails(
+                      createdBy: event.task.clientAuditDetails!.createdBy,
+                      createdTime: event.task.clientAuditDetails!.createdTime,
+                      lastModifiedBy: event.task.auditDetails?.lastModifiedBy ??
+                          event.task.clientAuditDetails!.createdBy,
+                      lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+                    )
+                  : null,
         ));
       } else {
         // Create a new task

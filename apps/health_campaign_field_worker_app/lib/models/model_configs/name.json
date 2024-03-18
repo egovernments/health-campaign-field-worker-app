@@ -21,6 +21,20 @@
       "includeForTable": false
     },
     {
+      "name": "offset",
+      "type": "int",
+      "includeForQuery": true,
+      "includeForEntity": false,
+      "includeForTable": false
+    },
+    {
+      "name": "limit",
+      "type": "int",
+      "includeForQuery": true,
+      "includeForEntity": false,
+      "includeForTable": false
+    },
+    {
       "name": "givenName",
       "type": "String",
       "includeForQuery": true

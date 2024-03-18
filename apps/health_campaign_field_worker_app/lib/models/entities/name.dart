@@ -10,6 +10,8 @@ part 'name.mapper.dart';
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
 class NameSearchModel extends EntitySearchModel with NameSearchModelMappable {
   final String? id;
+  final int? offset;
+  final int? limit;
   final String? givenName;
   final String? familyName;
   final String? otherNames;
@@ -17,6 +19,8 @@ class NameSearchModel extends EntitySearchModel with NameSearchModelMappable {
   
   NameSearchModel({
     this.id,
+    this.offset,
+    this.limit,
     this.givenName,
     this.familyName,
     this.otherNames,
@@ -28,6 +32,8 @@ class NameSearchModel extends EntitySearchModel with NameSearchModelMappable {
   @MappableConstructor()
   NameSearchModel.ignoreDeleted({
     this.id,
+    this.offset,
+    this.limit,
     this.givenName,
     this.familyName,
     this.otherNames,

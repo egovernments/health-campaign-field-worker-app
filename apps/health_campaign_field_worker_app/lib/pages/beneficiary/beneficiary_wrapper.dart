@@ -79,17 +79,17 @@ class BeneficiaryWrapperPage extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => HouseholdOverviewBloc(
-            HouseholdOverviewState(
-              householdMemberWrapper: wrapper,
-            ),
-            individualRepository: individual,
-            householdRepository: household,
-            householdMemberRepository: householdMember,
-            projectBeneficiaryRepository: projectBeneficiary,
-            taskDataRepository: task,
-            sideEffectDataRepository: sideEffect,
-            referralDataRepository: referral,
-          ),
+              HouseholdOverviewState(
+                householdMemberWrapper: wrapper,
+              ),
+              individualRepository: individual,
+              householdRepository: household,
+              householdMemberRepository: householdMember,
+              projectBeneficiaryRepository: projectBeneficiary,
+              taskDataRepository: task,
+              sideEffectDataRepository: sideEffect,
+              referralDataRepository: referral,
+              beneficiaryType: context.beneficiaryType),
         ),
         BlocProvider(
           create: (_) => DeliverInterventionBloc(

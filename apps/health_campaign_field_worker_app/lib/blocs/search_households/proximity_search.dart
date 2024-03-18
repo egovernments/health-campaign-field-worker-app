@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'search_households.dart';
+
 import '../../models/entities/address.dart';
 import '../../models/entities/beneficiary_type.dart';
 import '../../models/entities/household.dart';
@@ -11,6 +11,7 @@ import '../../models/entities/project_beneficiary.dart';
 import '../../models/entities/referral.dart';
 import '../../models/entities/side_effect.dart';
 import '../../models/entities/task.dart';
+import 'search_households.dart';
 
 class ProximitySearchBloc extends SearchHouseholdsBloc {
   ProximitySearchBloc({
@@ -85,6 +86,12 @@ class ProximitySearchBloc extends SearchHouseholdsBloc {
     final containers = <HouseholdMemberWrapper>[...state.householdMembers];
     // Group household members by household client reference ID.
     final groupedHouseholdsMembers = householdMembersList
+        .where((hm) => projectBeneficiariesList
+            .map((p) => p.beneficiaryClientReferenceId)
+            .toList()
+            .contains(beneficiaryType == BeneficiaryType.individual
+                ? hm.individualClientReferenceId
+                : hm.householdClientReferenceId))
         .groupListsBy((element) => element.householdClientReferenceId);
     // Iterate through grouped households and retrieve additional data.
     for (final entry in groupedHouseholdsMembers.entries) {
@@ -96,17 +103,15 @@ class ProximitySearchBloc extends SearchHouseholdsBloc {
       if (householdId == null) continue;
       filteredHousehold =
           householdList.firstWhere((e) => e.clientReferenceId == householdId);
+      final List<String?> membersIds =
+          entry.value.map((e) => e.individualClientReferenceId).toList();
       filteredIndividuals = individualsList
-          .where((element) => entry.value
-              .map((e) => e.individualClientReferenceId)
-              .contains(element.clientReferenceId))
+          .where((element) => membersIds.contains(element.clientReferenceId))
           .toList();
       filteredBeneficiaries = projectBeneficiariesList
           .where((element) => beneficiaryType == BeneficiaryType.individual
-              ? entry.value
-                  .map((e) => e.individualClientReferenceId)
-                  .contains(element.beneficiaryClientReferenceId)
-              : entry.key == element.beneficiaryClientReferenceId)
+              ? membersIds.contains(element.beneficiaryClientReferenceId)
+              : householdId == element.beneficiaryClientReferenceId)
           .toList();
       filteredTasks = taskList
           .where((element) => filteredBeneficiaries
@@ -115,8 +120,20 @@ class ProximitySearchBloc extends SearchHouseholdsBloc {
                   element.projectBeneficiaryClientReferenceId)
               .isNotEmpty)
           .toList();
+
+      final beneficiaryClientReferenceIds = filteredBeneficiaries
+          .map((e) => e.beneficiaryClientReferenceId)
+          .toList();
+
+      final List<IndividualModel> beneficiaryIndividuals = filteredIndividuals
+          .where((element) =>
+              beneficiaryClientReferenceIds.contains(element.clientReferenceId))
+          .toList();
       // Find the head of household from the individuals.
-      final head = filteredIndividuals.firstWhereOrNull(
+      final head = (beneficiaryType == BeneficiaryType.individual
+              ? beneficiaryIndividuals
+              : filteredIndividuals)
+          .firstWhereOrNull(
         (element) =>
             element.clientReferenceId ==
             entry.value
@@ -125,14 +142,16 @@ class ProximitySearchBloc extends SearchHouseholdsBloc {
                 )
                 ?.individualClientReferenceId,
       );
-      if (head == null) continue;
+      if (head == null || filteredBeneficiaries.isEmpty) continue;
       // Create a container for household members and associated data.
       if (filteredBeneficiaries.isNotEmpty) {
         containers.add(
           HouseholdMemberWrapper(
             household: filteredHousehold,
             headOfHousehold: head,
-            members: filteredIndividuals,
+            members: beneficiaryType == BeneficiaryType.individual
+                ? beneficiaryIndividuals
+                : filteredIndividuals,
             projectBeneficiaries: filteredBeneficiaries,
             tasks: filteredTasks.isEmpty ? null : filteredTasks,
             sideEffects: sideEffectsList.isEmpty ? null : sideEffectsList,

@@ -38,6 +38,9 @@ class SearchReferralsBloc
     SearchReferralsByTagEvent event,
     SearchReferralsEmitter emit,
   ) async {
+    emit(state.copyWith(
+      loading: true,
+    ));
     List<HFReferralModel> beneficiaries = await hfReferralDataRepository.search(
       HFReferralSearchModel(
         projectId: event.projectId,
@@ -54,6 +57,8 @@ class SearchReferralsBloc
       loading: false,
       tag: event.tag,
     ));
+    print('Referral Satte');
+    print(state);
   }
 
   FutureOr<void> _handleSearchByName(
@@ -134,5 +139,9 @@ class SearchReferralsState with _$SearchReferralsState {
     if (searchQuery?.isEmpty ?? true && tag == null) return false;
 
     return referrals.isEmpty;
+  }
+
+  bool get screenLoading {
+    return loading;
   }
 }

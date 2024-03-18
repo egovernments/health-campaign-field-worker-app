@@ -49,9 +49,3 @@ class AttendanceLocalization {
     }
   }
 }
-
-// Class representing supported languages for attendance localization
-class AttendanceLanguages {
-  late String label;
-  late String value;
-}

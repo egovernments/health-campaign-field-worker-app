@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
 part of 'attendance_bloc.dart';
 
@@ -12,7 +12,7 @@ part of 'attendance_bloc.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 /// @nodoc
 mixin _$AttendanceEvents {
@@ -95,25 +95,25 @@ class _$AttendanceEventsCopyWithImpl<$Res, $Val extends AttendanceEvents>
 }
 
 /// @nodoc
-abstract class _$$InitialAttendanceImplCopyWith<$Res> {
-  factory _$$InitialAttendanceImplCopyWith(_$InitialAttendanceImpl value,
-          $Res Function(_$InitialAttendanceImpl) then) =
-      __$$InitialAttendanceImplCopyWithImpl<$Res>;
+abstract class _$$InitialAttendanceCopyWith<$Res> {
+  factory _$$InitialAttendanceCopyWith(
+          _$InitialAttendance value, $Res Function(_$InitialAttendance) then) =
+      __$$InitialAttendanceCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$InitialAttendanceImplCopyWithImpl<$Res>
-    extends _$AttendanceEventsCopyWithImpl<$Res, _$InitialAttendanceImpl>
-    implements _$$InitialAttendanceImplCopyWith<$Res> {
-  __$$InitialAttendanceImplCopyWithImpl(_$InitialAttendanceImpl _value,
-      $Res Function(_$InitialAttendanceImpl) _then)
+class __$$InitialAttendanceCopyWithImpl<$Res>
+    extends _$AttendanceEventsCopyWithImpl<$Res, _$InitialAttendance>
+    implements _$$InitialAttendanceCopyWith<$Res> {
+  __$$InitialAttendanceCopyWithImpl(
+      _$InitialAttendance _value, $Res Function(_$InitialAttendance) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$InitialAttendanceImpl implements InitialAttendance {
-  const _$InitialAttendanceImpl();
+class _$InitialAttendance implements InitialAttendance {
+  const _$InitialAttendance();
 
   @override
   String toString() {
@@ -121,9 +121,9 @@ class _$InitialAttendanceImpl implements InitialAttendance {
   }
 
   @override
-  bool operator ==(Object other) {
+  bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$InitialAttendanceImpl);
+        (other.runtimeType == runtimeType && other is _$InitialAttendance);
   }
 
   @override
@@ -213,27 +213,26 @@ class _$InitialAttendanceImpl implements InitialAttendance {
 }
 
 abstract class InitialAttendance implements AttendanceEvents {
-  const factory InitialAttendance() = _$InitialAttendanceImpl;
+  const factory InitialAttendance() = _$InitialAttendance;
 }
 
 /// @nodoc
-abstract class _$$LoadAttendanceRegisterDataImplCopyWith<$Res> {
-  factory _$$LoadAttendanceRegisterDataImplCopyWith(
-          _$LoadAttendanceRegisterDataImpl value,
-          $Res Function(_$LoadAttendanceRegisterDataImpl) then) =
-      __$$LoadAttendanceRegisterDataImplCopyWithImpl<$Res>;
+abstract class _$$LoadAttendanceRegisterDataCopyWith<$Res> {
+  factory _$$LoadAttendanceRegisterDataCopyWith(
+          _$LoadAttendanceRegisterData value,
+          $Res Function(_$LoadAttendanceRegisterData) then) =
+      __$$LoadAttendanceRegisterDataCopyWithImpl<$Res>;
   @useResult
   $Res call({List<AttendanceRegisterModel> registers});
 }
 
 /// @nodoc
-class __$$LoadAttendanceRegisterDataImplCopyWithImpl<$Res>
-    extends _$AttendanceEventsCopyWithImpl<$Res,
-        _$LoadAttendanceRegisterDataImpl>
-    implements _$$LoadAttendanceRegisterDataImplCopyWith<$Res> {
-  __$$LoadAttendanceRegisterDataImplCopyWithImpl(
-      _$LoadAttendanceRegisterDataImpl _value,
-      $Res Function(_$LoadAttendanceRegisterDataImpl) _then)
+class __$$LoadAttendanceRegisterDataCopyWithImpl<$Res>
+    extends _$AttendanceEventsCopyWithImpl<$Res, _$LoadAttendanceRegisterData>
+    implements _$$LoadAttendanceRegisterDataCopyWith<$Res> {
+  __$$LoadAttendanceRegisterDataCopyWithImpl(
+      _$LoadAttendanceRegisterData _value,
+      $Res Function(_$LoadAttendanceRegisterData) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -241,7 +240,7 @@ class __$$LoadAttendanceRegisterDataImplCopyWithImpl<$Res>
   $Res call({
     Object? registers = null,
   }) {
-    return _then(_$LoadAttendanceRegisterDataImpl(
+    return _then(_$LoadAttendanceRegisterData(
       null == registers
           ? _value._registers
           : registers // ignore: cast_nullable_to_non_nullable
@@ -252,15 +251,14 @@ class __$$LoadAttendanceRegisterDataImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$LoadAttendanceRegisterDataImpl implements LoadAttendanceRegisterData {
-  const _$LoadAttendanceRegisterDataImpl(
+class _$LoadAttendanceRegisterData implements LoadAttendanceRegisterData {
+  const _$LoadAttendanceRegisterData(
       final List<AttendanceRegisterModel> registers)
       : _registers = registers;
 
   final List<AttendanceRegisterModel> _registers;
   @override
   List<AttendanceRegisterModel> get registers {
-    if (_registers is EqualUnmodifiableListView) return _registers;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_registers);
   }
@@ -271,10 +269,10 @@ class _$LoadAttendanceRegisterDataImpl implements LoadAttendanceRegisterData {
   }
 
   @override
-  bool operator ==(Object other) {
+  bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$LoadAttendanceRegisterDataImpl &&
+            other is _$LoadAttendanceRegisterData &&
             const DeepCollectionEquality()
                 .equals(other._registers, _registers));
   }
@@ -286,9 +284,9 @@ class _$LoadAttendanceRegisterDataImpl implements LoadAttendanceRegisterData {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$LoadAttendanceRegisterDataImplCopyWith<_$LoadAttendanceRegisterDataImpl>
-      get copyWith => __$$LoadAttendanceRegisterDataImplCopyWithImpl<
-          _$LoadAttendanceRegisterDataImpl>(this, _$identity);
+  _$$LoadAttendanceRegisterDataCopyWith<_$LoadAttendanceRegisterData>
+      get copyWith => __$$LoadAttendanceRegisterDataCopyWithImpl<
+          _$LoadAttendanceRegisterData>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -376,32 +374,32 @@ class _$LoadAttendanceRegisterDataImpl implements LoadAttendanceRegisterData {
 abstract class LoadAttendanceRegisterData implements AttendanceEvents {
   const factory LoadAttendanceRegisterData(
           final List<AttendanceRegisterModel> registers) =
-      _$LoadAttendanceRegisterDataImpl;
+      _$LoadAttendanceRegisterData;
 
   List<AttendanceRegisterModel> get registers;
   @JsonKey(ignore: true)
-  _$$LoadAttendanceRegisterDataImplCopyWith<_$LoadAttendanceRegisterDataImpl>
+  _$$LoadAttendanceRegisterDataCopyWith<_$LoadAttendanceRegisterData>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$LoadSelectedAttendanceRegisterDataImplCopyWith<$Res> {
-  factory _$$LoadSelectedAttendanceRegisterDataImplCopyWith(
-          _$LoadSelectedAttendanceRegisterDataImpl value,
-          $Res Function(_$LoadSelectedAttendanceRegisterDataImpl) then) =
-      __$$LoadSelectedAttendanceRegisterDataImplCopyWithImpl<$Res>;
+abstract class _$$LoadSelectedAttendanceRegisterDataCopyWith<$Res> {
+  factory _$$LoadSelectedAttendanceRegisterDataCopyWith(
+          _$LoadSelectedAttendanceRegisterData value,
+          $Res Function(_$LoadSelectedAttendanceRegisterData) then) =
+      __$$LoadSelectedAttendanceRegisterDataCopyWithImpl<$Res>;
   @useResult
   $Res call({List<AttendanceRegisterModel> registers, String registerID});
 }
 
 /// @nodoc
-class __$$LoadSelectedAttendanceRegisterDataImplCopyWithImpl<$Res>
+class __$$LoadSelectedAttendanceRegisterDataCopyWithImpl<$Res>
     extends _$AttendanceEventsCopyWithImpl<$Res,
-        _$LoadSelectedAttendanceRegisterDataImpl>
-    implements _$$LoadSelectedAttendanceRegisterDataImplCopyWith<$Res> {
-  __$$LoadSelectedAttendanceRegisterDataImplCopyWithImpl(
-      _$LoadSelectedAttendanceRegisterDataImpl _value,
-      $Res Function(_$LoadSelectedAttendanceRegisterDataImpl) _then)
+        _$LoadSelectedAttendanceRegisterData>
+    implements _$$LoadSelectedAttendanceRegisterDataCopyWith<$Res> {
+  __$$LoadSelectedAttendanceRegisterDataCopyWithImpl(
+      _$LoadSelectedAttendanceRegisterData _value,
+      $Res Function(_$LoadSelectedAttendanceRegisterData) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -410,7 +408,7 @@ class __$$LoadSelectedAttendanceRegisterDataImplCopyWithImpl<$Res>
     Object? registers = null,
     Object? registerID = null,
   }) {
-    return _then(_$LoadSelectedAttendanceRegisterDataImpl(
+    return _then(_$LoadSelectedAttendanceRegisterData(
       registers: null == registers
           ? _value._registers
           : registers // ignore: cast_nullable_to_non_nullable
@@ -425,9 +423,9 @@ class __$$LoadSelectedAttendanceRegisterDataImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$LoadSelectedAttendanceRegisterDataImpl
+class _$LoadSelectedAttendanceRegisterData
     implements LoadSelectedAttendanceRegisterData {
-  const _$LoadSelectedAttendanceRegisterDataImpl(
+  const _$LoadSelectedAttendanceRegisterData(
       {required final List<AttendanceRegisterModel> registers,
       required this.registerID})
       : _registers = registers;
@@ -435,7 +433,6 @@ class _$LoadSelectedAttendanceRegisterDataImpl
   final List<AttendanceRegisterModel> _registers;
   @override
   List<AttendanceRegisterModel> get registers {
-    if (_registers is EqualUnmodifiableListView) return _registers;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_registers);
   }
@@ -449,10 +446,10 @@ class _$LoadSelectedAttendanceRegisterDataImpl
   }
 
   @override
-  bool operator ==(Object other) {
+  bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$LoadSelectedAttendanceRegisterDataImpl &&
+            other is _$LoadSelectedAttendanceRegisterData &&
             const DeepCollectionEquality()
                 .equals(other._registers, _registers) &&
             (identical(other.registerID, registerID) ||
@@ -466,10 +463,10 @@ class _$LoadSelectedAttendanceRegisterDataImpl
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$LoadSelectedAttendanceRegisterDataImplCopyWith<
-          _$LoadSelectedAttendanceRegisterDataImpl>
-      get copyWith => __$$LoadSelectedAttendanceRegisterDataImplCopyWithImpl<
-          _$LoadSelectedAttendanceRegisterDataImpl>(this, _$identity);
+  _$$LoadSelectedAttendanceRegisterDataCopyWith<
+          _$LoadSelectedAttendanceRegisterData>
+      get copyWith => __$$LoadSelectedAttendanceRegisterDataCopyWithImpl<
+          _$LoadSelectedAttendanceRegisterData>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -556,15 +553,14 @@ class _$LoadSelectedAttendanceRegisterDataImpl
 
 abstract class LoadSelectedAttendanceRegisterData implements AttendanceEvents {
   const factory LoadSelectedAttendanceRegisterData(
-          {required final List<AttendanceRegisterModel> registers,
-          required final String registerID}) =
-      _$LoadSelectedAttendanceRegisterDataImpl;
+      {required final List<AttendanceRegisterModel> registers,
+      required final String registerID}) = _$LoadSelectedAttendanceRegisterData;
 
   List<AttendanceRegisterModel> get registers;
   String get registerID;
   @JsonKey(ignore: true)
-  _$$LoadSelectedAttendanceRegisterDataImplCopyWith<
-          _$LoadSelectedAttendanceRegisterDataImpl>
+  _$$LoadSelectedAttendanceRegisterDataCopyWith<
+          _$LoadSelectedAttendanceRegisterData>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -646,25 +642,25 @@ class _$AttendanceStatesCopyWithImpl<$Res, $Val extends AttendanceStates>
 }
 
 /// @nodoc
-abstract class _$$RegisterLoadingImplCopyWith<$Res> {
-  factory _$$RegisterLoadingImplCopyWith(_$RegisterLoadingImpl value,
-          $Res Function(_$RegisterLoadingImpl) then) =
-      __$$RegisterLoadingImplCopyWithImpl<$Res>;
+abstract class _$$RegisterLoadingCopyWith<$Res> {
+  factory _$$RegisterLoadingCopyWith(
+          _$RegisterLoading value, $Res Function(_$RegisterLoading) then) =
+      __$$RegisterLoadingCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$RegisterLoadingImplCopyWithImpl<$Res>
-    extends _$AttendanceStatesCopyWithImpl<$Res, _$RegisterLoadingImpl>
-    implements _$$RegisterLoadingImplCopyWith<$Res> {
-  __$$RegisterLoadingImplCopyWithImpl(
-      _$RegisterLoadingImpl _value, $Res Function(_$RegisterLoadingImpl) _then)
+class __$$RegisterLoadingCopyWithImpl<$Res>
+    extends _$AttendanceStatesCopyWithImpl<$Res, _$RegisterLoading>
+    implements _$$RegisterLoadingCopyWith<$Res> {
+  __$$RegisterLoadingCopyWithImpl(
+      _$RegisterLoading _value, $Res Function(_$RegisterLoading) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$RegisterLoadingImpl implements RegisterLoading {
-  const _$RegisterLoadingImpl();
+class _$RegisterLoading implements RegisterLoading {
+  const _$RegisterLoading();
 
   @override
   String toString() {
@@ -672,9 +668,9 @@ class _$RegisterLoadingImpl implements RegisterLoading {
   }
 
   @override
-  bool operator ==(Object other) {
+  bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$RegisterLoadingImpl);
+        (other.runtimeType == runtimeType && other is _$RegisterLoading);
   }
 
   @override
@@ -761,24 +757,24 @@ class _$RegisterLoadingImpl implements RegisterLoading {
 }
 
 abstract class RegisterLoading implements AttendanceStates {
-  const factory RegisterLoading() = _$RegisterLoadingImpl;
+  const factory RegisterLoading() = _$RegisterLoading;
 }
 
 /// @nodoc
-abstract class _$$RegisterLoadedImplCopyWith<$Res> {
-  factory _$$RegisterLoadedImplCopyWith(_$RegisterLoadedImpl value,
-          $Res Function(_$RegisterLoadedImpl) then) =
-      __$$RegisterLoadedImplCopyWithImpl<$Res>;
+abstract class _$$RegisterLoadedCopyWith<$Res> {
+  factory _$$RegisterLoadedCopyWith(
+          _$RegisterLoaded value, $Res Function(_$RegisterLoaded) then) =
+      __$$RegisterLoadedCopyWithImpl<$Res>;
   @useResult
   $Res call({List<AttendanceRegisterModel> registers});
 }
 
 /// @nodoc
-class __$$RegisterLoadedImplCopyWithImpl<$Res>
-    extends _$AttendanceStatesCopyWithImpl<$Res, _$RegisterLoadedImpl>
-    implements _$$RegisterLoadedImplCopyWith<$Res> {
-  __$$RegisterLoadedImplCopyWithImpl(
-      _$RegisterLoadedImpl _value, $Res Function(_$RegisterLoadedImpl) _then)
+class __$$RegisterLoadedCopyWithImpl<$Res>
+    extends _$AttendanceStatesCopyWithImpl<$Res, _$RegisterLoaded>
+    implements _$$RegisterLoadedCopyWith<$Res> {
+  __$$RegisterLoadedCopyWithImpl(
+      _$RegisterLoaded _value, $Res Function(_$RegisterLoaded) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -786,7 +782,7 @@ class __$$RegisterLoadedImplCopyWithImpl<$Res>
   $Res call({
     Object? registers = null,
   }) {
-    return _then(_$RegisterLoadedImpl(
+    return _then(_$RegisterLoaded(
       registers: null == registers
           ? _value._registers
           : registers // ignore: cast_nullable_to_non_nullable
@@ -797,15 +793,14 @@ class __$$RegisterLoadedImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$RegisterLoadedImpl implements RegisterLoaded {
-  const _$RegisterLoadedImpl(
+class _$RegisterLoaded implements RegisterLoaded {
+  const _$RegisterLoaded(
       {required final List<AttendanceRegisterModel> registers})
       : _registers = registers;
 
   final List<AttendanceRegisterModel> _registers;
   @override
   List<AttendanceRegisterModel> get registers {
-    if (_registers is EqualUnmodifiableListView) return _registers;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_registers);
   }
@@ -816,10 +811,10 @@ class _$RegisterLoadedImpl implements RegisterLoaded {
   }
 
   @override
-  bool operator ==(Object other) {
+  bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$RegisterLoadedImpl &&
+            other is _$RegisterLoaded &&
             const DeepCollectionEquality()
                 .equals(other._registers, _registers));
   }
@@ -831,9 +826,8 @@ class _$RegisterLoadedImpl implements RegisterLoaded {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$RegisterLoadedImplCopyWith<_$RegisterLoadedImpl> get copyWith =>
-      __$$RegisterLoadedImplCopyWithImpl<_$RegisterLoadedImpl>(
-          this, _$identity);
+  _$$RegisterLoadedCopyWith<_$RegisterLoaded> get copyWith =>
+      __$$RegisterLoadedCopyWithImpl<_$RegisterLoaded>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -918,31 +912,29 @@ class _$RegisterLoadedImpl implements RegisterLoaded {
 abstract class RegisterLoaded implements AttendanceStates {
   const factory RegisterLoaded(
           {required final List<AttendanceRegisterModel> registers}) =
-      _$RegisterLoadedImpl;
+      _$RegisterLoaded;
 
   List<AttendanceRegisterModel> get registers;
   @JsonKey(ignore: true)
-  _$$RegisterLoadedImplCopyWith<_$RegisterLoadedImpl> get copyWith =>
+  _$$RegisterLoadedCopyWith<_$RegisterLoaded> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$SelectedRegisterLoadedImplCopyWith<$Res> {
-  factory _$$SelectedRegisterLoadedImplCopyWith(
-          _$SelectedRegisterLoadedImpl value,
-          $Res Function(_$SelectedRegisterLoadedImpl) then) =
-      __$$SelectedRegisterLoadedImplCopyWithImpl<$Res>;
+abstract class _$$SelectedRegisterLoadedCopyWith<$Res> {
+  factory _$$SelectedRegisterLoadedCopyWith(_$SelectedRegisterLoaded value,
+          $Res Function(_$SelectedRegisterLoaded) then) =
+      __$$SelectedRegisterLoadedCopyWithImpl<$Res>;
   @useResult
   $Res call({AttendanceRegisterModel? selectedRegister});
 }
 
 /// @nodoc
-class __$$SelectedRegisterLoadedImplCopyWithImpl<$Res>
-    extends _$AttendanceStatesCopyWithImpl<$Res, _$SelectedRegisterLoadedImpl>
-    implements _$$SelectedRegisterLoadedImplCopyWith<$Res> {
-  __$$SelectedRegisterLoadedImplCopyWithImpl(
-      _$SelectedRegisterLoadedImpl _value,
-      $Res Function(_$SelectedRegisterLoadedImpl) _then)
+class __$$SelectedRegisterLoadedCopyWithImpl<$Res>
+    extends _$AttendanceStatesCopyWithImpl<$Res, _$SelectedRegisterLoaded>
+    implements _$$SelectedRegisterLoadedCopyWith<$Res> {
+  __$$SelectedRegisterLoadedCopyWithImpl(_$SelectedRegisterLoaded _value,
+      $Res Function(_$SelectedRegisterLoaded) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -950,7 +942,7 @@ class __$$SelectedRegisterLoadedImplCopyWithImpl<$Res>
   $Res call({
     Object? selectedRegister = freezed,
   }) {
-    return _then(_$SelectedRegisterLoadedImpl(
+    return _then(_$SelectedRegisterLoaded(
       selectedRegister: freezed == selectedRegister
           ? _value.selectedRegister
           : selectedRegister // ignore: cast_nullable_to_non_nullable
@@ -961,8 +953,8 @@ class __$$SelectedRegisterLoadedImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$SelectedRegisterLoadedImpl implements SelectedRegisterLoaded {
-  const _$SelectedRegisterLoadedImpl({this.selectedRegister});
+class _$SelectedRegisterLoaded implements SelectedRegisterLoaded {
+  const _$SelectedRegisterLoaded({this.selectedRegister});
 
   @override
   final AttendanceRegisterModel? selectedRegister;
@@ -973,10 +965,10 @@ class _$SelectedRegisterLoadedImpl implements SelectedRegisterLoaded {
   }
 
   @override
-  bool operator ==(Object other) {
+  bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$SelectedRegisterLoadedImpl &&
+            other is _$SelectedRegisterLoaded &&
             (identical(other.selectedRegister, selectedRegister) ||
                 other.selectedRegister == selectedRegister));
   }
@@ -987,9 +979,9 @@ class _$SelectedRegisterLoadedImpl implements SelectedRegisterLoaded {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$SelectedRegisterLoadedImplCopyWith<_$SelectedRegisterLoadedImpl>
-      get copyWith => __$$SelectedRegisterLoadedImplCopyWithImpl<
-          _$SelectedRegisterLoadedImpl>(this, _$identity);
+  _$$SelectedRegisterLoadedCopyWith<_$SelectedRegisterLoaded> get copyWith =>
+      __$$SelectedRegisterLoadedCopyWithImpl<_$SelectedRegisterLoaded>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -1074,29 +1066,29 @@ class _$SelectedRegisterLoadedImpl implements SelectedRegisterLoaded {
 abstract class SelectedRegisterLoaded implements AttendanceStates {
   const factory SelectedRegisterLoaded(
           {final AttendanceRegisterModel? selectedRegister}) =
-      _$SelectedRegisterLoadedImpl;
+      _$SelectedRegisterLoaded;
 
   AttendanceRegisterModel? get selectedRegister;
   @JsonKey(ignore: true)
-  _$$SelectedRegisterLoadedImplCopyWith<_$SelectedRegisterLoadedImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  _$$SelectedRegisterLoadedCopyWith<_$SelectedRegisterLoaded> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$RegisterErrorImplCopyWith<$Res> {
-  factory _$$RegisterErrorImplCopyWith(
-          _$RegisterErrorImpl value, $Res Function(_$RegisterErrorImpl) then) =
-      __$$RegisterErrorImplCopyWithImpl<$Res>;
+abstract class _$$RegisterErrorCopyWith<$Res> {
+  factory _$$RegisterErrorCopyWith(
+          _$RegisterError value, $Res Function(_$RegisterError) then) =
+      __$$RegisterErrorCopyWithImpl<$Res>;
   @useResult
   $Res call({String message});
 }
 
 /// @nodoc
-class __$$RegisterErrorImplCopyWithImpl<$Res>
-    extends _$AttendanceStatesCopyWithImpl<$Res, _$RegisterErrorImpl>
-    implements _$$RegisterErrorImplCopyWith<$Res> {
-  __$$RegisterErrorImplCopyWithImpl(
-      _$RegisterErrorImpl _value, $Res Function(_$RegisterErrorImpl) _then)
+class __$$RegisterErrorCopyWithImpl<$Res>
+    extends _$AttendanceStatesCopyWithImpl<$Res, _$RegisterError>
+    implements _$$RegisterErrorCopyWith<$Res> {
+  __$$RegisterErrorCopyWithImpl(
+      _$RegisterError _value, $Res Function(_$RegisterError) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1104,7 +1096,7 @@ class __$$RegisterErrorImplCopyWithImpl<$Res>
   $Res call({
     Object? message = null,
   }) {
-    return _then(_$RegisterErrorImpl(
+    return _then(_$RegisterError(
       null == message
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
@@ -1115,8 +1107,8 @@ class __$$RegisterErrorImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$RegisterErrorImpl implements RegisterError {
-  const _$RegisterErrorImpl(this.message);
+class _$RegisterError implements RegisterError {
+  const _$RegisterError(this.message);
 
   @override
   final String message;
@@ -1127,10 +1119,10 @@ class _$RegisterErrorImpl implements RegisterError {
   }
 
   @override
-  bool operator ==(Object other) {
+  bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$RegisterErrorImpl &&
+            other is _$RegisterError &&
             (identical(other.message, message) || other.message == message));
   }
 
@@ -1140,8 +1132,8 @@ class _$RegisterErrorImpl implements RegisterError {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$RegisterErrorImplCopyWith<_$RegisterErrorImpl> get copyWith =>
-      __$$RegisterErrorImplCopyWithImpl<_$RegisterErrorImpl>(this, _$identity);
+  _$$RegisterErrorCopyWith<_$RegisterError> get copyWith =>
+      __$$RegisterErrorCopyWithImpl<_$RegisterError>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -1224,10 +1216,10 @@ class _$RegisterErrorImpl implements RegisterError {
 }
 
 abstract class RegisterError implements AttendanceStates {
-  const factory RegisterError(final String message) = _$RegisterErrorImpl;
+  const factory RegisterError(final String message) = _$RegisterError;
 
   String get message;
   @JsonKey(ignore: true)
-  _$$RegisterErrorImplCopyWith<_$RegisterErrorImpl> get copyWith =>
+  _$$RegisterErrorCopyWith<_$RegisterError> get copyWith =>
       throw _privateConstructorUsedError;
 }

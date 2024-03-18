@@ -24,8 +24,15 @@
     },
     {
       "name": "userUuid",
+      "type": "String"
+    },
+    {
+      "name": "userUuid",
       "type": "String",
-      "includeForQuery": true
+      "includeForQuery": true,
+      "includeForEntity": false,
+      "includeForTable": false,
+      "isList": true
     },
     {
       "name": "dateOfBirth",
@@ -55,6 +62,20 @@
     {
       "name": "photo",
       "type": "String"
+    },
+    {
+      "name": "offset",
+      "type": "int",
+      "includeForQuery": true,
+      "includeForEntity": false,
+      "includeForTable": false
+    },
+    {
+      "name": "limit",
+      "type": "int",
+      "includeForQuery": true,
+      "includeForEntity": false,
+      "includeForTable": false
     }
   ],
   "customAttributes": [

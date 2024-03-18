@@ -106,7 +106,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           .isNotEmpty) {
         final loggedInIndividual = await individualRemoteRepository.search(
           IndividualSearchModel(
-            userUuid: result.userRequestModel.uuid,
+            userUuid: [result.userRequestModel.uuid],
           ),
         );
         await localSecureStore
@@ -121,7 +121,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           actionsWrapper: actionsWrapper,
         ),
       );
-    } on DioError catch (error) {
+    } on DioException catch (error) {
       emit(const AuthErrorState());
       emit(const AuthUnauthenticatedState());
 

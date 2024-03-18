@@ -41,7 +41,10 @@ class IndividualLocalRepository
         ),
       ],
     );
-    final r = await selectQuery.get();
+
+    if (query.limit != null && query.offset != null) {
+      selectQuery.limit(query.limit!, offset: query.offset);
+    }
 
     final results = await (selectQuery
           ..where(
@@ -59,7 +62,7 @@ class IndividualLocalRepository
                   query.tenantId!,
                 ),
               if (query.userUuid != null)
-                sql.individual.userUuid.equals(
+                sql.individual.userUuid.isIn(
                   query.userUuid!,
                 ),
               if (query.dateOfBirth != null)
@@ -71,9 +74,11 @@ class IndividualLocalRepository
                   query.gender!.index,
                 ),
               if (query.name?.givenName != null)
-                sql.name.givenName.contains(
-                  query.name!.givenName!,
-                ),
+                buildOr([
+                  sql.name.givenName.contains(
+                    query.name!.givenName!,
+                  ),
+                ]),
               if (query.name?.familyName != null)
                 sql.name.familyName.equals(
                   query.name!.familyName!,

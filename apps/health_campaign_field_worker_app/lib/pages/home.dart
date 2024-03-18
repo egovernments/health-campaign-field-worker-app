@@ -15,6 +15,7 @@ import 'package:inventory_management/pages/manage_stocks.dart';
 import 'package:inventory_management/utils/utils.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
+import '../blocs/attendance/hcm_attendance_bloc.dart';
 import '../blocs/auth/auth.dart';
 import '../blocs/hcm_attendance_bloc.dart';
 import '../blocs/inventory/hcm_inventory_bloc.dart';

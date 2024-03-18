@@ -41,6 +41,10 @@ class OpLog {
         final entity = ReferralModelMapper.fromJson(entityString);
         return entity;
 
+      case "service":
+        final entity = ServiceModelMapper.fromJson(entityString);
+        return entity;
+
       case "attendance":
         final entity = HCMAttendanceLogModelMapper.fromJson(entityString);
         return entity;
@@ -55,6 +59,10 @@ class OpLog {
 
       case "hFReferral":
         final entity = HFReferralModelMapper.fromJson(entityString);
+        return entity;
+
+      case "service":
+        final entity = ServiceModelMapper.fromJson(entityString);
         return entity;
 
       default:
