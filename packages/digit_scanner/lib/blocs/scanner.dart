@@ -11,9 +11,6 @@ part 'scanner.freezed.dart';
 typedef DigitScannerEmitter = Emitter<DigitScannerState>;
 
 class DigitScannerBloc extends Bloc<DigitScannerEvent, DigitScannerState> {
-  // final ProjectBeneficiaryDataRepository projectBeneficiaryRepository;
-  // final HFReferralDataRepository hfReferralDataRepository;
-
   DigitScannerBloc(
     super.initialState,
   ) {

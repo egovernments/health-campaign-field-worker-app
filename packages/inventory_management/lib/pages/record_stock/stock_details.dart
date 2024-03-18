@@ -1,5 +1,7 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
+import 'package:digit_scanner/blocs/scanner.dart';
+import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_management/pages/acknowledgement.dart';
@@ -13,6 +15,7 @@ import '../../blocs/facility.dart';
 import '../../blocs/inventory_listener.dart';
 import '../../blocs/product_variant.dart';
 import '../../blocs/record_stock.dart';
+import '../../blocs/scanner.dart';
 import '../../models/entities/inventory_facility.dart';
 import '../../models/entities/product_variant.dart';
 import '../../models/entities/stock.dart';
@@ -188,12 +191,14 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                               final stockState =
                                   context.read<RecordStockBloc>().state;
                               if (stockState.primaryId != null) {
-                                // context.read<ScannerBloc>().add(
-                                //   ScannerEvent.handleScanner(
-                                //     [],
-                                //     [stockState.primaryId.toString()],
-                                //   ),
-                                // );
+                                context.read<DigitScannerBloc>().add(
+                                      DigitScannerEvent.handleScanner(
+                                        barCode: [],
+                                        qrCode: [
+                                          stockState.primaryId.toString()
+                                        ],
+                                      ),
+                                    );
                               }
                             },
                           ),
@@ -669,23 +674,33 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                       String? value = val.value as String?;
                                       if (value != null &&
                                           value.trim().isNotEmpty) {
-                                        // context.read<ScannerBloc>().add(
-                                        //       ScannerEvent.handleScanner(
-                                        //         [],
-                                        //         [value],
-                                        //       ),
-                                        //     );
+                                        context.read<DigitScannerBloc>().add(
+                                              DigitScannerEvent.handleScanner(
+                                                barCode: [],
+                                                qrCode: [value],
+                                                manualCode: value,
+                                              ),
+                                            );
                                       } else {
                                         clearQRCodes();
                                       }
                                     },
                                     suffix: IconButton(
                                       onPressed: () {
-                                        // context.router.push(QRScannerRoute(
-                                        //   quantity: 5,
-                                        //   isGS1code: false,
-                                        //   sinlgleValue: false,
-                                        // ));
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                DigitScannerPage(
+                                              scannerListeners:
+                                                  HCMScannerBloc(),
+                                              quantity: 5,
+                                              isGS1code: false,
+                                              singleValue: false,
+                                            ),
+                                            settings: const RouteSettings(
+                                                name: '/qr-scanner'),
+                                          ),
+                                        );
                                       },
                                       icon: Icon(
                                         Icons.qr_code_2,
@@ -806,11 +821,18 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                     ),
                                   ),
                                   onPressed: () {
-                                    // context.router.push(QRScannerRoute(
-                                    //   quantity: 5,
-                                    //   isGS1code: true,
-                                    //   sinlgleValue: false,
-                                    // ));
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => DigitScannerPage(
+                                          scannerListeners: HCMScannerBloc(),
+                                          quantity: 5,
+                                          isGS1code: true,
+                                          singleValue: false,
+                                        ),
+                                        settings: const RouteSettings(
+                                            name: '/qr-scanner'),
+                                      ),
+                                    );
                                   },
                                   icon: Icons.qr_code,
                                   label: localizations.translate(
@@ -833,5 +855,10 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
     );
   }
 
-  void clearQRCodes() {}
+  void clearQRCodes() {
+    context.read<DigitScannerBloc>().add(const DigitScannerEvent.handleScanner(
+          barCode: [],
+          qrCode: [],
+        ));
+  }
 }

@@ -30,6 +30,7 @@ dependencies:
   uuid: ^3.0.6
   recase: ^4.1.0
   pluto_grid: ^7.0.1
+  digit_scanner: ^0.0.1
 
 dev_dependencies:
   flutter_test:

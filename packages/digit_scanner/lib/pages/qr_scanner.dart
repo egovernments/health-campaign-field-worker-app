@@ -578,7 +578,7 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
             }
           } catch (e) {
             await handleError(
-              i18.scanner.scannedResourceCountMisMatch,
+              i18.scanner.invalidResourceCode,
             );
           }
         } else {
