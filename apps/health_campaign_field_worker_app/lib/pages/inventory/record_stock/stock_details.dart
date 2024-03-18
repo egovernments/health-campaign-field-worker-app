@@ -5,6 +5,7 @@ import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recase/recase.dart';
 
@@ -88,6 +89,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
         .where((role) => role.code == RolesType.warehouseManager.toValue())
         .toList()
         .isNotEmpty;
+    final parser = GS1BarcodeParser.defaultParser();
 
     return PopScope(
       onPopInvoked: (didPop) {
@@ -473,6 +475,18 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                           lng,
                                                         ),
                                                       ],
+                                                      if (scannerState
+                                                          .barCodes.isNotEmpty)
+                                                        AdditionalField(
+                                                          'resources',
+                                                          scannerState.barCodes
+                                                              .map((e) => e
+                                                                  .elements
+                                                                  .values
+                                                                  .first
+                                                                  .data)
+                                                              .toList(),
+                                                        ),
                                                     ],
                                                   )
                                                 : null,
@@ -839,32 +853,93 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                     maxLines: 3,
                                     formControlName: _commentsKey,
                                   ),
-                                  DigitOutlineIconButton(
-                                    buttonStyle: OutlinedButton.styleFrom(
-                                      shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.zero,
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              DigitScannerPage(
-                                            scannerListeners: HCMScannerBloc(),
-                                            quantity: 5,
-                                            isGS1code: true,
-                                            singleValue: false,
+                                  scannerState.barCodes.isEmpty
+                                      ? DigitOutlineIconButton(
+                                          buttonStyle: OutlinedButton.styleFrom(
+                                            shape: const RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.zero,
+                                            ),
                                           ),
-                                          settings: const RouteSettings(
-                                              name: '/qr-scanner'),
-                                        ),
-                                      );
-                                    },
-                                    icon: Icons.qr_code,
-                                    label: localizations.translate(
-                                      i18.common.scanBales,
-                                    ),
-                                  ),
+                                          onPressed: () {
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    DigitScannerPage(
+                                                  scannerListeners:
+                                                      HCMScannerBloc(),
+                                                  quantity: 5,
+                                                  isGS1code: true,
+                                                  singleValue: false,
+                                                ),
+                                                settings: const RouteSettings(
+                                                    name: '/qr-scanner'),
+                                              ),
+                                            );
+                                          },
+                                          icon: Icons.qr_code,
+                                          label: localizations.translate(
+                                            i18.common.scanBales,
+                                          ),
+                                        )
+                                      : Column(children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Align(
+                                                alignment: Alignment.centerLeft,
+                                                child: Text(
+                                                  localizations.translate(i18
+                                                      .stockDetails
+                                                      .scannedResources),
+                                                  style: DigitTheme
+                                                      .instance
+                                                      .mobileTheme
+                                                      .textTheme
+                                                      .labelSmall,
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                  bottom: kPadding * 2,
+                                                ),
+                                                child: IconButton(
+                                                  alignment:
+                                                      Alignment.centerRight,
+                                                  color: theme
+                                                      .colorScheme.secondary,
+                                                  icon: const Icon(Icons.edit),
+                                                  onPressed: () {
+                                                    Navigator.of(context).push(
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            DigitScannerPage(
+                                                          scannerListeners:
+                                                              HCMScannerBloc(),
+                                                          quantity: 5,
+                                                          isGS1code: true,
+                                                          singleValue: false,
+                                                        ),
+                                                        settings:
+                                                            const RouteSettings(
+                                                                name:
+                                                                    '/qr-scanner'),
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          ...scannerState.barCodes
+                                              .map((e) => Align(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Text(e.elements
+                                                        .values.first.data
+                                                        .toString()),
+                                                  ))
+                                        ])
                                 ],
                               ),
                             ),
