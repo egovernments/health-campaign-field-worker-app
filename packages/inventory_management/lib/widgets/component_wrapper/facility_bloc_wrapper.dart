@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../blocs/facility.dart';
-import '../../blocs/inventory_listener.dart';
-import '../../models/entities/inventory_facility.dart';
 
 class FacilityBlocWrapper extends StatelessWidget {
   final Widget child;

@@ -4,11 +4,7 @@ import 'package:inventory_management/pages/record_stock/stock_details.dart';
 import 'package:inventory_management/pages/record_stock/warehouse_details.dart';
 import 'package:inventory_management/widgets/component_wrapper/facility_bloc_wrapper.dart';
 import 'package:inventory_management/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
-
-import '../../blocs/facility.dart';
-import '../../blocs/product_variant.dart';
 import '../../blocs/record_stock.dart';
-import '../../models/entities/project_resource.dart';
 
 class RecordStockWrapperPage extends StatelessWidget {
   final StockRecordEntryType type;
