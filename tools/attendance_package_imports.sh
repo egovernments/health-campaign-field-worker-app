@@ -1,6 +1,6 @@
 # for adding imports and mappers of attendance
 
-cd apps/health_campaign_field_worker_app/lib || exit
+cd ../apps/health_campaign_field_worker_app/lib || exit
 
 app_root="$PWD"
 

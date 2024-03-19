@@ -1,6 +1,6 @@
 # for adding imports and mappers of attendance
 
-cd apps/health_campaign_field_worker_app/lib || exit
+cd ../apps/health_campaign_field_worker_app/lib || exit
 
 app_root="$PWD"
 
@@ -20,8 +20,8 @@ new_imports=(
   ["project_product_variant.dart"]="ProjectProductVariantModelMapper"
   ["stock.dart"]="StockModelMapper"
   ["stock_reconciliation.dart"]="StockReconciliationModelMapper"
-  ["transaction_reason.dart"]="TransactionReasonModelMapper"
-  ["transaction_type.dart"]="TransactionTypeModelMapper"
+  ["transaction_reason.dart"]="TransactionReasonMapper"
+  ["transaction_type.dart"]="TransactionTypeMapper"
 )
 
 # Create temporary files for imports and mappers
@@ -42,8 +42,6 @@ for file in "${!new_imports[@]}"; do
   # Write the mapper initialization to the temporary mappers file
   echo "$mapper" >> "$temp_mappers"
 
-  # Increment the number for the next import
-  ((start_num++))
 done
 
 # Get the line number of the last import statement
