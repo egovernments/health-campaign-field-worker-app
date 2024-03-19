@@ -30,7 +30,11 @@ dependencies:
   uuid: ^3.0.6
   recase: ^4.1.0
   pluto_grid: ^7.0.1
-  digit_scanner: ^0.0.1
+  digit_scanner:
+    git:
+      url: https://github.com/egovernments/health-campaign-field-worker-app/
+      ref: HLM-5097
+      path: ./packages/digit_scanner
   gs1_barcode_parser: ^1.0.5
 
 dev_dependencies:
