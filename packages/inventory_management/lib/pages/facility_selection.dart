@@ -28,120 +28,122 @@ class FacilitySelectionPage extends StatelessWidget {
       width: 1.0,
     );
 
-    return ReactiveFormBuilder(
-      form: _form,
-      builder: (context, form, child) {
-        return Scaffold(
-          backgroundColor: Colors.white,
-          body: ReactiveFormConsumer(
-            builder: (context, form, _) {
-              final filteredFacilities = facilities.where((element) {
-                final query = form.control(_facilityName).value as String?;
-                if (query == null || query.isEmpty) return true;
-                if (element.id.toLowerCase().contains(query.toLowerCase())) {
-                  return true;
-                }
-                return false;
-              }).toList();
+    return SafeArea(
+      child: ReactiveFormBuilder(
+        form: _form,
+        builder: (context, form, child) {
+          return Scaffold(
+            backgroundColor: Colors.white,
+            body: ReactiveFormConsumer(
+              builder: (context, form, _) {
+                final filteredFacilities = facilities.where((element) {
+                  final query = form.control(_facilityName).value as String?;
+                  if (query == null || query.isEmpty) return true;
+                  if (element.id.toLowerCase().contains(query.toLowerCase())) {
+                    return true;
+                  }
+                  return false;
+                }).toList();
 
-              return ScrollableContent(
-                backgroundColor: Colors.white,
-                header: const BackNavigationHelpHeaderWidget(
-                  showHelp: false,
-                ),
-                slivers: [
-                  SliverToBoxAdapter(
-                    child: Container(
-                      color: Colors.white,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: kPadding * 2),
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(kPadding),
-                              child: Align(
-                                alignment: Alignment.topLeft,
-                                child: Text(
-                                  localizations.translate(
-                                    i18.common.facilitySearchHeaderLabel,
+                return ScrollableContent(
+                  backgroundColor: Colors.white,
+                  header: const BackNavigationHelpHeaderWidget(
+                    showHelp: false,
+                  ),
+                  slivers: [
+                    SliverToBoxAdapter(
+                      child: Container(
+                        color: Colors.white,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: kPadding * 2),
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(kPadding),
+                                child: Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text(
+                                    localizations.translate(
+                                      i18.common.facilitySearchHeaderLabel,
+                                    ),
+                                    style: theme.textTheme.displayMedium,
+                                    textAlign: TextAlign.left,
                                   ),
-                                  style: theme.textTheme.displayMedium,
-                                  textAlign: TextAlign.left,
                                 ),
                               ),
-                            ),
-                            const DigitTextFormField(
-                              suffix: Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Icon(Icons.search),
+                              const DigitTextFormField(
+                                suffix: Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Icon(Icons.search),
+                                ),
+                                label: '',
+                                formControlName: _facilityName,
                               ),
-                              label: '',
-                              formControlName: _facilityName,
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        final facility = filteredFacilities[index];
+                    SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                          final facility = filteredFacilities[index];
 
-                        return Container(
-                          color: Colors.white,
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 8),
-                            decoration: BoxDecoration(
-                              color: DigitTheme.instance.colors.alabasterWhite,
-                              border: Border(
-                                top: index == 0 ? borderSide : BorderSide.none,
-                                bottom: index == filteredFacilities.length - 1
-                                    ? borderSide
-                                    : BorderSide.none,
-                                left: borderSide,
-                                right: borderSide,
+                          return Container(
+                            color: Colors.white,
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 8),
+                              decoration: BoxDecoration(
+                                color: DigitTheme.instance.colors.alabasterWhite,
+                                border: Border(
+                                  top: index == 0 ? borderSide : BorderSide.none,
+                                  bottom: index == filteredFacilities.length - 1
+                                      ? borderSide
+                                      : BorderSide.none,
+                                  left: borderSide,
+                                  right: borderSide,
+                                ),
                               ),
-                            ),
-                            child: InkWell(
-                              onTap: () {
-                                Navigator.of(context).pop(facility);
-                              },
-                              child: Container(
-                                margin: const EdgeInsets.all(kPadding),
-                                decoration: BoxDecoration(
-                                  color:
-                                      DigitTheme.instance.colors.alabasterWhite,
-                                  border: Border(
-                                    bottom: BorderSide(
-                                      color: theme.colorScheme.outline,
-                                      width: 1.0,
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.of(context).pop(facility);
+                                },
+                                child: Container(
+                                  margin: const EdgeInsets.all(kPadding),
+                                  decoration: BoxDecoration(
+                                    color:
+                                        DigitTheme.instance.colors.alabasterWhite,
+                                    border: Border(
+                                      bottom: BorderSide(
+                                        color: theme.colorScheme.outline,
+                                        width: 1.0,
+                                      ),
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(kPadding * 2),
+                                    child: Text(
+                                      localizations
+                                          .translate('FAC_${facility.id}'),
                                     ),
                                   ),
                                 ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(kPadding * 2),
-                                  child: Text(
-                                    localizations
-                                        .translate('FAC_${facility.id}'),
-                                  ),
-                                ),
                               ),
                             ),
-                          ),
-                        );
-                      },
-                      childCount: filteredFacilities.length,
+                          );
+                        },
+                        childCount: filteredFacilities.length,
+                      ),
                     ),
-                  ),
-                ],
-              );
-            },
-          ),
-        );
-      },
+                  ],
+                );
+              },
+            ),
+          );
+        },
+      ),
     );
   }
 

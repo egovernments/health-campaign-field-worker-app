@@ -46,8 +46,6 @@ class BeneficiaryWrapperPage extends StatelessWidget {
         context.repository<SideEffectModel, SideEffectSearchModel>();
     final facilityRepository =
         context.read<LocalRepository<FacilityModel, FacilitySearchModel>>();
-    final inventoryFacilityRepository = context.repository<
-        HcmInventoryFacilityModel, HcmInventoryFacilitySearchModel>();
 
     final projectFacilityRepository = context.read<
         LocalRepository<ProjectFacilityModel, ProjectFacilitySearchModel>>();

@@ -4,6 +4,7 @@ import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
 import 'package:inventory_management/pages/acknowledgement.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recase/recase.dart';
@@ -95,95 +96,105 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
     final theme = Theme.of(context);
 
     bool isWareHouseMgr = InventorySingleton().isWareHouseMgr;
+    final parser = GS1BarcodeParser.defaultParser();
 
     return PopScope(
       onPopInvoked: (didPop) {
         final stockState = context.read<RecordStockBloc>().state;
-        if (stockState.primaryId != null) {}
+        if (stockState.primaryId != null) {
+          context.read<DigitScannerBloc>().add(
+                DigitScannerEvent.handleScanner(
+                  barCode: [],
+                  qrCode: [stockState.primaryId.toString()],
+                ),
+              );
+        }
       },
       child: Scaffold(
-        body: BlocProvider<RecordStockBloc>(
-          create: (_) {
-            return RecordStockBloc(
-              RecordStockCreateState(
-                entryType: widget.entryType,
-                projectId: InventorySingleton().projectId,
-              ),
-            );
-          },
-          child: BlocBuilder<LocationBloc, LocationState>(
-            builder: (context, locationState) {
-              return BlocConsumer<RecordStockBloc, RecordStockState>(
-                listener: (context, stockState) {},
-                builder: (context, stockState) {
-                  StockRecordEntryType entryType = stockState.entryType;
+        body: BlocBuilder<LocationBloc, LocationState>(
+          builder: (context, locationState) {
+            return BlocConsumer<RecordStockBloc, RecordStockState>(
+              listener: (context, stockState) {
+                stockState.mapOrNull(
+                  persisted: (value) {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => InventoryAcknowledgementPage(),
+                      ),
+                    );
+                  },
+                );
+              },
+              builder: (context, stockState) {
+                StockRecordEntryType entryType = stockState.entryType;
 
-                  const module = i18.stockDetails;
+                const module = i18.stockDetails;
 
-                  String pageTitle;
-                  String transactionPartyLabel;
-                  String quantityCountLabel;
-                  String? transactionReasonLabel;
-                  TransactionReason? transactionReason;
-                  TransactionType transactionType;
+                String pageTitle;
+                String transactionPartyLabel;
+                String quantityCountLabel;
+                String? transactionReasonLabel;
+                TransactionReason? transactionReason;
+                TransactionType transactionType;
 
-                  List<TransactionReason>? reasons;
+                List<TransactionReason>? reasons;
 
-                  switch (entryType) {
-                    case StockRecordEntryType.receipt:
-                      pageTitle = module.receivedPageTitle;
-                      transactionPartyLabel =
-                          module.selectTransactingPartyReceived;
-                      quantityCountLabel = module.quantityReceivedLabel;
-                      transactionType = TransactionType.received;
+                switch (entryType) {
+                  case StockRecordEntryType.receipt:
+                    pageTitle = module.receivedPageTitle;
+                    transactionPartyLabel =
+                        module.selectTransactingPartyReceived;
+                    quantityCountLabel = module.quantityReceivedLabel;
+                    transactionType = TransactionType.received;
 
-                      break;
-                    case StockRecordEntryType.dispatch:
-                      pageTitle = module.issuedPageTitle;
-                      transactionPartyLabel =
-                          module.selectTransactingPartyIssued;
-                      quantityCountLabel = module.quantitySentLabel;
-                      transactionType = TransactionType.dispatched;
+                    break;
+                  case StockRecordEntryType.dispatch:
+                    pageTitle = module.issuedPageTitle;
+                    transactionPartyLabel = module.selectTransactingPartyIssued;
+                    quantityCountLabel = module.quantitySentLabel;
+                    transactionType = TransactionType.dispatched;
 
-                      break;
-                    case StockRecordEntryType.returned:
-                      pageTitle = module.returnedPageTitle;
-                      transactionPartyLabel =
-                          module.selectTransactingPartyReturned;
-                      quantityCountLabel = module.quantityReturnedLabel;
-                      transactionType = TransactionType.received;
-                      break;
-                    case StockRecordEntryType.loss:
-                      pageTitle = module.lostPageTitle;
-                      quantityCountLabel = module.quantityLostLabel;
-                      transactionReasonLabel = module.transactionReasonLost;
-                      transactionType = TransactionType.dispatched;
+                    break;
+                  case StockRecordEntryType.returned:
+                    pageTitle = module.returnedPageTitle;
+                    transactionPartyLabel =
+                        module.selectTransactingPartyReturned;
+                    quantityCountLabel = module.quantityReturnedLabel;
+                    transactionType = TransactionType.received;
+                    break;
+                  case StockRecordEntryType.loss:
+                    pageTitle = module.lostPageTitle;
+                    quantityCountLabel = module.quantityLostLabel;
+                    transactionReasonLabel = module.transactionReasonLost;
+                    transactionType = TransactionType.dispatched;
 
-                      reasons = [
-                        TransactionReason.lostInStorage,
-                        TransactionReason.lostInTransit,
-                      ];
-                      break;
-                    case StockRecordEntryType.damaged:
-                      pageTitle = module.damagedPageTitle;
-                      transactionPartyLabel =
-                          module.selectTransactingPartyReceivedFromDamaged;
-                      quantityCountLabel = module.quantityDamagedLabel;
-                      transactionReasonLabel = module.transactionReasonDamaged;
-                      transactionType = TransactionType.dispatched;
+                    reasons = [
+                      TransactionReason.lostInStorage,
+                      TransactionReason.lostInTransit,
+                    ];
+                    break;
+                  case StockRecordEntryType.damaged:
+                    pageTitle = module.damagedPageTitle;
+                    transactionPartyLabel =
+                        module.selectTransactingPartyReceivedFromDamaged;
+                    quantityCountLabel = module.quantityDamagedLabel;
+                    transactionReasonLabel = module.transactionReasonDamaged;
+                    transactionType = TransactionType.dispatched;
 
-                      reasons = [
-                        TransactionReason.damagedInStorage,
-                        TransactionReason.damagedInTransit,
-                      ];
-                      break;
-                  }
+                    reasons = [
+                      TransactionReason.damagedInStorage,
+                      TransactionReason.damagedInTransit,
+                    ];
+                    break;
+                }
 
-                  transactionReasonLabel ??= '';
+                transactionReasonLabel ??= '';
 
-                  return ReactiveFormBuilder(
-                    form: () => _form(entryType),
-                    builder: (context, form, child) {
+                return ReactiveFormBuilder(
+                  form: () => _form(entryType),
+                  builder: (context, form, child) {
+                    return BlocBuilder<DigitScannerBloc, DigitScannerState>(
+                        builder: (context, scannerState) {
                       return ScrollableContent(
                         header: Column(children: [
                           BackNavigationHelpHeaderWidget(
@@ -435,6 +446,11 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                       'lat': lat,
                                                       'lng': lng,
                                                     },
+                                                    if (scannerState
+                                                        .barCodes.isNotEmpty)
+                                                      ...addBarCodesToFields(
+                                                          scannerState
+                                                              .barCodes),
                                                   }
                                                 : null,
                                           ),
@@ -484,12 +500,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                           orElse: () {},
                                           persisted: (value) {},
                                           create: (value) {
-                                            if (value.stockModel != null) {
-                                              Navigator.of(context).pushReplacement(
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          InventoryAcknowledgementPage()));
-                                            }
+                                            if (value.stockModel != null) {}
                                           },
                                         );
                                       }
@@ -814,42 +825,104 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                   maxLines: 3,
                                   formControlName: _commentsKey,
                                 ),
-                                DigitOutlineIconButton(
-                                  buttonStyle: OutlinedButton.styleFrom(
-                                    shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.zero,
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) => DigitScannerPage(
-                                          scannerListeners: HCMScannerBloc(),
-                                          quantity: 5,
-                                          isGS1code: true,
-                                          singleValue: false,
+                                scannerState.barCodes.isEmpty
+                                    ? DigitOutlineIconButton(
+                                        buttonStyle: OutlinedButton.styleFrom(
+                                          shape: const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.zero,
+                                          ),
                                         ),
-                                        settings: const RouteSettings(
-                                            name: '/qr-scanner'),
-                                      ),
-                                    );
-                                  },
-                                  icon: Icons.qr_code,
-                                  label: localizations.translate(
-                                    i18.common.scanBales,
-                                  ),
-                                ),
+                                        onPressed: () {
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  DigitScannerPage(
+                                                scannerListeners:
+                                                    HCMScannerBloc(),
+                                                quantity: 5,
+                                                isGS1code: true,
+                                                singleValue: false,
+                                              ),
+                                              settings: const RouteSettings(
+                                                  name: '/qr-scanner'),
+                                            ),
+                                          );
+                                        },
+                                        icon: Icons.qr_code,
+                                        label: localizations.translate(
+                                          i18.common.scanBales,
+                                        ),
+                                      )
+                                    : Column(children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Text(
+                                                localizations.translate(i18
+                                                    .stockDetails
+                                                    .scannedResources),
+                                                style: DigitTheme
+                                                    .instance
+                                                    .mobileTheme
+                                                    .textTheme
+                                                    .labelSmall,
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                bottom: kPadding * 2,
+                                              ),
+                                              child: IconButton(
+                                                alignment:
+                                                    Alignment.centerRight,
+                                                color:
+                                                    theme.colorScheme.secondary,
+                                                icon: const Icon(Icons.edit),
+                                                onPressed: () {
+                                                  Navigator.of(context).push(
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          DigitScannerPage(
+                                                        scannerListeners:
+                                                            HCMScannerBloc(),
+                                                        quantity: 5,
+                                                        isGS1code: true,
+                                                        singleValue: false,
+                                                      ),
+                                                      settings:
+                                                          const RouteSettings(
+                                                              name:
+                                                                  '/qr-scanner'),
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        ...scannerState.barCodes
+                                            .map((e) => Align(
+                                                  alignment:
+                                                      Alignment.centerLeft,
+                                                  child: Text(e.elements.values
+                                                      .first.data
+                                                      .toString()),
+                                                ))
+                                      ])
                               ],
                             ),
                           ),
                         ],
                       );
-                    },
-                  );
-                },
-              );
-            },
-          ),
+                    });
+                  },
+                );
+              },
+            );
+          },
         ),
       ),
     );
@@ -860,5 +933,20 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
           barCode: [],
           qrCode: [],
         ));
+  }
+
+  addBarCodesToFields(List<GS1Barcode> barCodes) {
+    List<String> keys = [];
+    List<String> values = [];
+    for (var element in barCodes) {
+      for (var e in element.elements.entries) {
+        e.value.rawData;
+        keys.add(e.key.toString());
+        values.add(e.value.data.toString());
+      }
+    }
+    return {
+      keys.join('|'): values.join('|'),
+    };
   }
 }

@@ -106,7 +106,7 @@ class _StockReconciliationPageState
                     StockReconciliationState>(
                   listener: (context, stockState) {
                     if (!stockState.persisted) return;
-                    Navigator.of(context).push(MaterialPageRoute(
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
                         builder: (context) => InventoryAcknowledgementPage()));
                   },
                   builder: (context, stockState) {

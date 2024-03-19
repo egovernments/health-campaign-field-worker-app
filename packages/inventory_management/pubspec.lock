@@ -675,7 +675,7 @@ packages:
     source: hosted
     version: "2.3.1"
   gs1_barcode_parser:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: gs1_barcode_parser
       sha256: "9aaff47bdab7177deaf9248cc861ef41cf611d3f828498cb40b64bedcbf53391"

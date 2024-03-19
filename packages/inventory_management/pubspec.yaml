@@ -31,6 +31,7 @@ dependencies:
   recase: ^4.1.0
   pluto_grid: ^7.0.1
   digit_scanner: ^0.0.1
+  gs1_barcode_parser: ^1.0.5
 
 dev_dependencies:
   flutter_test:
