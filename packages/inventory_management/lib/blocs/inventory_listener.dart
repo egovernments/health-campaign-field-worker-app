@@ -7,11 +7,9 @@ import '../utils/utils.dart';
 import 'inventory_report.dart';
 
 abstract class InventoryListener {
-  Future<void> fetchFacilitiesForProjectId(
-      Function(List<InventoryFacilityModel> facilitiesModel) facilities);
+  Future<List<InventoryFacilityModel>> fetchFacilitiesForProjectId();
 
-  Future<void> fetchProductVariants(
-      Function(List<ProductVariantModel> productVariantsModel) productVariants);
+  Future<List<ProductVariantModel>> fetchProductVariants();
 
   Future<void> saveStockDetails(SaveStockDetails saveStockDetails);
 
@@ -72,19 +70,12 @@ class InventorySingleton {
   get isWareHouseMgr => _isWareHouseMgr;
   get transportType => _transportType;
 
-  Future<void> getFacilitiesForProjectId(
-      Function(List<InventoryFacilityModel> facilitiesModel) facilities) async {
-    return Future(
-      () => _inventoryListener?.fetchFacilitiesForProjectId(facilities),
-    );
+  Future<List<InventoryFacilityModel>?> getFacilitiesForProjectId() async {
+    return await _inventoryListener?.fetchFacilitiesForProjectId();
   }
 
-  Future<void> getProductVariants(
-      Function(List<ProductVariantModel> productVariantsModel)
-          productVariants) async {
-    return Future(
-      () => _inventoryListener?.fetchProductVariants(productVariants),
-    );
+  Future<List<ProductVariantModel>?> getProductVariants() async {
+    return await _inventoryListener?.fetchProductVariants();
   }
 
   Future<void> saveStockDetails(SaveStockDetails saveStockDetails) async {
@@ -178,7 +169,9 @@ class FetchInventoryReports {
   final InventoryReportType reportType;
   final String facilityId;
   final String productVariantId;
-  final Function(Map<String, List<StockModel>> groupedData,) stocks;
+  final Function(
+    Map<String, List<StockModel>> groupedData,
+  ) stocks;
 
   FetchInventoryReports({
     required this.reportType,

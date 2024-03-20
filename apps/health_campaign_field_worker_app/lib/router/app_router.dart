@@ -1,20 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:inventory_management/models/entities/inventory_facility.dart';
-import 'package:inventory_management/pages/acknowledgement.dart';
-import 'package:inventory_management/pages/facility_selection.dart';
-import 'package:inventory_management/pages/manage_stocks.dart';
-import 'package:inventory_management/pages/record_stock/record_stock_wrapper.dart';
-import 'package:inventory_management/pages/record_stock/stock_details.dart';
-import 'package:inventory_management/pages/record_stock/warehouse_details.dart';
-import 'package:inventory_management/pages/reports/report_details.dart';
-import 'package:inventory_management/pages/reports/report_selection.dart';
-import 'package:inventory_management/pages/stock_reconciliation/stock_reconciliation.dart';
-import 'package:inventory_management/blocs/app_localization.dart';
-import 'package:inventory_management/blocs/record_stock.dart';
-import 'package:inventory_management/blocs/inventory_report.dart';
-import 'package:inventory_management/blocs/inventory_listener.dart';
-import 'package:inventory_management/utils/utils.dart';
 
 import '../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../blocs/localization/app_localization.dart';
@@ -186,19 +171,6 @@ part 'app_router.gr.dart';
           path: 'complaints-acknowledgement',
         ),
 
-        /// Inventory Routes
-        AutoRoute(
-          page: RecordStockWrapperPage,
-          path: 'record-stock',
-          children: [
-            AutoRoute(
-              page: WarehouseDetailsPage,
-              path: 'warehouse-details',
-              initial: true,
-            ),
-            AutoRoute(page: StockDetailsPage, path: 'details'),
-          ],
-        ),
         AutoRoute(page: SearchReferralsPage, path: 'search-referrals'),
         AutoRoute(
           page: HFCreateReferralWrapperPage,
@@ -223,24 +195,9 @@ part 'app_router.gr.dart';
             ),
           ],
         ),
-        AutoRoute(page: ManageStocksPage, path: 'manage-stocks'),
-        AutoRoute(page: StockReconciliationPage, path: 'stock-reconciliation'),
-        AutoRoute<InventoryFacilityModel>(
-          page: FacilitySelectionPage,
-          path: 'select-facilities',
-        ),
-        AutoRoute(page: InventoryAcknowledgementPage, path: 'acknowledgement'),
         AutoRoute<ProjectFacilityModel>(
           page: ProjectFacilitySelectionPage,
           path: 'select-project-facilities',
-        ),
-        AutoRoute(
-          page: InventoryReportSelectionPage,
-          path: 'inventory-report-selection',
-        ),
-        AutoRoute(
-          page: InventoryReportDetailsPage,
-          path: 'inventory-report-details',
         ),
 
         /// Project Selection

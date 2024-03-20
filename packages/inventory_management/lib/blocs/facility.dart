@@ -18,8 +18,13 @@ class FacilityBloc extends Bloc<FacilityEvent, FacilityState> {
     FacilityStateEmitter emit,
   ) async {
     emit(const FacilityLoadingState());
-    await InventorySingleton().getFacilitiesForProjectId(
-        (facilities) => {emit(FacilityState.fetched(facilities: facilities))});
+    List<InventoryFacilityModel>? facilities =
+        await InventorySingleton().getFacilitiesForProjectId();
+    if (facilities == null) {
+      emit(const FacilityEmptyState());
+    } else {
+      emit(FacilityFetchedState(facilities: facilities));
+    }
   }
 }
 

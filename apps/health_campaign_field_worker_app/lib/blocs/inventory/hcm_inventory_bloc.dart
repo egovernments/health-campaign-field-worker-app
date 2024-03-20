@@ -49,88 +49,162 @@ class HcmInventoryBloc extends InventoryListener {
   }
 
   @override
-  Future<void> fetchFacilitiesForProjectId(
-    Function(List<InventoryFacilityModel> facilitiesModel) facilities,
-  ) async {
-    _facilitiesLoaded = facilities;
+  Future<List<InventoryFacilityModel>> fetchFacilitiesForProjectId() async {
+    final facilitiesBloc = context.read<FacilityBloc>();
+    facilitiesBloc.add(FacilityLoadForProjectEvent(projectId: projectId!));
 
-    final facilitiesBloc = context.read<FacilityBloc>()
-      ..add(FacilityLoadForProjectEvent(projectId: projectId!));
+    final facilitiesState = await facilitiesBloc.stream.firstWhere(
+          (state) => state.maybeWhen(
+        fetched: (facilities, _) => true,
+        orElse: () => false,
+      ),
+    );
 
-    facilitiesBloc.state.whenOrNull(
-          fetched: (facilities, _) {
-            _facilitiesLoaded(loadInventoryFacilities(facilities));
-          },
-        ) ??
-        [];
-
-    return;
-  }
-
-  @override
-  Future<void> fetchProductVariants(
-    Function(List<invProdVar.ProductVariantModel> productVariantsModel)
-        productVariants,
-  ) async {
-    _productVariantsLoaded = productVariants;
-
-    final productsBloc = context.read<ProductVariantBloc>()
-      ..add(ProductVariantLoadEvent(
-        query: ProjectResourceSearchModel(
-          projectId: projectId!,
-        ),
-      ));
-
-    productsBloc.state.whenOrNull(
-          fetched: (productVariants) {
-            _productVariantsLoaded(loadProductVariants(productVariants));
-          },
-        ) ??
-        [];
-
-    return;
-  }
-
-  loadInventoryFacilities(List<FacilityModel> facilities) {
     List<InventoryFacilityModel> hcmInventoryFacilityModel = [];
-    for (var element in facilities) {
-      hcmInventoryFacilityModel.add(
-        InventoryFacilityModel(
-          id: element.id,
-          isPermanent: element.isPermanent,
-          nonRecoverableError: element.nonRecoverableError,
-          rowVersion: element.rowVersion,
-          storageCapacity: element.storageCapacity,
-          tenantId: element.tenantId,
-          usage: element.usage,
-        ),
-      );
-    }
+    facilitiesState.maybeWhen(
+      fetched: (facilities, _) {
+        for (var element in facilities) {
+          hcmInventoryFacilityModel.add(
+            InventoryFacilityModel(
+              id: element.id,
+              isPermanent: element.isPermanent,
+              nonRecoverableError: element.nonRecoverableError,
+              rowVersion: element.rowVersion,
+              storageCapacity: element.storageCapacity,
+              tenantId: element.tenantId,
+              usage: element.usage,
+            ),
+          );
+        }
+      },
+      orElse: () {},
+    );
 
     return hcmInventoryFacilityModel;
   }
 
-  List<invProdVar.ProductVariantModel> loadProductVariants(
-    List<ProductVariantModel> productVariants,
-  ) {
-    List<invProdVar.ProductVariantModel> hcmProductVariantModel = [];
+  @override
+  Future<List<invProdVar.ProductVariantModel>> fetchProductVariants() async {
+    final productsBloc = context.read<ProductVariantBloc>();
+    productsBloc.add(ProductVariantLoadEvent(
+      query: ProjectResourceSearchModel(
+        projectId: projectId!,
+      ),
+    ));
 
-    for (var element in productVariants) {
-      hcmProductVariantModel.add(
-        invProdVar.ProductVariantModel(
-          id: element.id,
-          variation: element.variation,
-          rowVersion: element.rowVersion,
-          tenantId: element.tenantId,
-          nonRecoverableError: element.nonRecoverableError,
-          productId: element.productId,
-          sku: element.sku,
-        ),
-      );
-    }
+    final productVariantsState = await productsBloc.stream.firstWhere(
+          (state) => state.maybeWhen(
+        fetched: (productVariants) => true,
+        orElse: () => false,
+      ),
+    );
+
+    List<invProdVar.ProductVariantModel> hcmProductVariantModel = [];
+    productVariantsState.maybeWhen(
+      fetched: (productVariants) {
+        for (var element in productVariants) {
+          hcmProductVariantModel.add(
+            invProdVar.ProductVariantModel(
+              id: element.id,
+              variation: element.variation,
+              rowVersion: element.rowVersion,
+              tenantId: element.tenantId,
+              nonRecoverableError: element.nonRecoverableError,
+              productId: element.productId,
+              sku: element.sku,
+            ),
+          );
+        }
+      },
+      orElse: () {},
+    );
 
     return hcmProductVariantModel;
   }
+
+  // @override
+  // Future<void> fetchFacilitiesForProjectId(
+  //   Function(List<InventoryFacilityModel> facilitiesModel) facilities,
+  // ) async {
+  //   _facilitiesLoaded = facilities;
+  //
+  //   final facilitiesBloc = context.read<FacilityBloc>()
+  //     ..add(FacilityLoadForProjectEvent(projectId: projectId!));
+  //
+  //   facilitiesBloc.state.whenOrNull(
+  //         fetched: (facilities, _) {
+  //           _facilitiesLoaded(loadInventoryFacilities(facilities));
+  //         },
+  //       ) ??
+  //       [];
+  //
+  //   return;
+  // }
+  //
+  // @override
+  // Future<void> fetchProductVariants(
+  //   Function(List<invProdVar.ProductVariantModel> productVariantsModel)
+  //       productVariants,
+  // ) async {
+  //   _productVariantsLoaded = productVariants;
+  //
+  //   final productsBloc = await context.read<ProductVariantBloc>()
+  //     ..add(ProductVariantLoadEvent(
+  //       query: ProjectResourceSearchModel(
+  //         projectId: projectId!,
+  //       ),
+  //     ));
+  //
+  //   await productsBloc.state.whenOrNull(
+  //         fetched: (productVariants) {
+  //           _productVariantsLoaded(loadProductVariants(productVariants));
+  //         },
+  //       ) ??
+  //       [];
+  //
+  //   return;
+  // }
+
+  // loadInventoryFacilities(List<FacilityModel> facilities) {
+  //   List<InventoryFacilityModel> hcmInventoryFacilityModel = [];
+  //   for (var element in facilities) {
+  //     hcmInventoryFacilityModel.add(
+  //       InventoryFacilityModel(
+  //         id: element.id,
+  //         isPermanent: element.isPermanent,
+  //         nonRecoverableError: element.nonRecoverableError,
+  //         rowVersion: element.rowVersion,
+  //         storageCapacity: element.storageCapacity,
+  //         tenantId: element.tenantId,
+  //         usage: element.usage,
+  //       ),
+  //     );
+  //   }
+  //
+  //   return hcmInventoryFacilityModel;
+  // }
+  //
+  // List<invProdVar.ProductVariantModel> loadProductVariants(
+  //   List<ProductVariantModel> productVariants,
+  // ) {
+  //   List<invProdVar.ProductVariantModel> hcmProductVariantModel = [];
+  //
+  //   for (var element in productVariants) {
+  //     hcmProductVariantModel.add(
+  //       invProdVar.ProductVariantModel(
+  //         id: element.id,
+  //         variation: element.variation,
+  //         rowVersion: element.rowVersion,
+  //         tenantId: element.tenantId,
+  //         nonRecoverableError: element.nonRecoverableError,
+  //         productId: element.productId,
+  //         sku: element.sku,
+  //       ),
+  //     );
+  //   }
+  //
+  //   return hcmProductVariantModel;
+  // }
 
   getAdditionalData(Map<String, Object> additionalData) {
     List<AdditionalField> additionalFields = [];
@@ -173,8 +247,6 @@ class HcmInventoryBloc extends InventoryListener {
             element.auditDetails?.createdBy == user?.uuid)
         .toList();
 
-    print('receivedStocks $receivedStocks' 'sentStocks $sentStocks');
-
     var received = receivedStocks.map((e) => e.stock!).toList();
     var sent = sentStocks.map((e) => e.stock!).toList();
 
@@ -186,8 +258,6 @@ class HcmInventoryBloc extends InventoryListener {
 
   @override
   Future<void> saveStockDetails(SaveStockDetails saveStockDetails) async {
-    print('saveStockDetails $saveStockDetails');
-
     var response = await stockLocalRepository.create(HcmStockModel(
       stock: saveStockDetails.stockModel.copyWith(
         facilityId: saveStockDetails.stockModel.facilityId,

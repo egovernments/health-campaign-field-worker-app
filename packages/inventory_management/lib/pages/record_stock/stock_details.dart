@@ -529,6 +529,9 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                   builder: (context, state) {
                                     return state.maybeWhen(
                                       orElse: () => const Offstage(),
+                                      loading: () => const Center(
+                                        child: CircularProgressIndicator(),
+                                      ),
                                       fetched: (productVariants) {
                                         return DigitReactiveDropdown<
                                             ProductVariantModel>(
@@ -568,110 +571,121 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                   ),
                                 BlocBuilder<FacilityBloc, FacilityState>(
                                   builder: (context, state) {
-                                    final facilities = state.whenOrNull(
-                                          fetched: (
-                                            facilities,
-                                          ) =>
-                                              facilities,
-                                        ) ??
-                                        [];
-
-                                    return InkWell(
-                                      onTap: () async {
-                                        clearQRCodes();
-                                        form.control(_deliveryTeamKey).value =
-                                            '';
-
-                                        final facility =
-                                            await Navigator.of(context)
-                                                .push<InventoryFacilityModel>(
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                FacilitySelectionPage(
-                                              facilities: facilities,
+                                    return state.maybeWhen(
+                                        orElse: () => const Offstage(),
+                                        loading: () => const Center(
+                                              child:
+                                                  CircularProgressIndicator(),
                                             ),
-                                          ),
-                                        );
+                                        fetched: (facilities) {
+                                          return InkWell(
+                                            onTap: () async {
+                                              clearQRCodes();
+                                              form
+                                                  .control(_deliveryTeamKey)
+                                                  .value = '';
 
-                                        if (facility == null) return;
-                                        form.control(_secondaryPartyKey).value =
-                                            localizations.translate(
-                                          'FAC_${facility.id}',
-                                        );
-
-                                        setState(() {
-                                          selectedFacilityId = facility.id;
-                                        });
-                                        if (facility.id == 'Delivery Team') {
-                                          setState(() {
-                                            deliveryTeamSelected = true;
-                                          });
-                                        } else {
-                                          setState(() {
-                                            deliveryTeamSelected = false;
-                                          });
-                                        }
-                                      },
-                                      child: IgnorePointer(
-                                        child: DigitTextFormField(
-                                          hideKeyboard: true,
-                                          label: localizations.translate(
-                                            '${pageTitle}_${i18.stockReconciliationDetails.stockLabel}',
-                                          ),
-                                          isRequired: true,
-                                          validationMessages: {
-                                            'required': (object) =>
-                                                localizations.translate(
-                                                  '${i18.individualDetails.nameLabelText}_IS_REQUIRED',
+                                              final facility = await Navigator
+                                                      .of(context)
+                                                  .push<InventoryFacilityModel>(
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      FacilitySelectionPage(
+                                                    facilities: facilities,
+                                                  ),
                                                 ),
-                                          },
-                                          suffix: const Padding(
-                                            padding: EdgeInsets.all(8.0),
-                                            child: Icon(Icons.search),
-                                          ),
-                                          formControlName: _secondaryPartyKey,
-                                          onTap: () async {
-                                            clearQRCodes();
-                                            form
-                                                .control(_deliveryTeamKey)
-                                                .value = '';
+                                              );
 
-                                            final facility = await Navigator.of(
-                                              context,
-                                            ).push<InventoryFacilityModel>(
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    FacilitySelectionPage(
-                                                  facilities: facilities,
+                                              if (facility == null) return;
+                                              form
+                                                      .control(_secondaryPartyKey)
+                                                      .value =
+                                                  localizations.translate(
+                                                'FAC_${facility.id}',
+                                              );
+
+                                              setState(() {
+                                                selectedFacilityId =
+                                                    facility.id;
+                                              });
+                                              if (facility.id ==
+                                                  'Delivery Team') {
+                                                setState(() {
+                                                  deliveryTeamSelected = true;
+                                                });
+                                              } else {
+                                                setState(() {
+                                                  deliveryTeamSelected = false;
+                                                });
+                                              }
+                                            },
+                                            child: IgnorePointer(
+                                              child: DigitTextFormField(
+                                                hideKeyboard: true,
+                                                label: localizations.translate(
+                                                  '${pageTitle}_${i18.stockReconciliationDetails.stockLabel}',
                                                 ),
+                                                isRequired: true,
+                                                validationMessages: {
+                                                  'required': (object) =>
+                                                      localizations.translate(
+                                                        '${i18.individualDetails.nameLabelText}_IS_REQUIRED',
+                                                      ),
+                                                },
+                                                suffix: const Padding(
+                                                  padding: EdgeInsets.all(8.0),
+                                                  child: Icon(Icons.search),
+                                                ),
+                                                formControlName:
+                                                    _secondaryPartyKey,
+                                                onTap: () async {
+                                                  clearQRCodes();
+                                                  form
+                                                      .control(_deliveryTeamKey)
+                                                      .value = '';
+
+                                                  final facility =
+                                                      await Navigator.of(
+                                                    context,
+                                                  ).push<InventoryFacilityModel>(
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          FacilitySelectionPage(
+                                                        facilities: facilities,
+                                                      ),
+                                                    ),
+                                                  );
+
+                                                  if (facility == null) return;
+                                                  form
+                                                          .control(
+                                                              _secondaryPartyKey)
+                                                          .value =
+                                                      localizations.translate(
+                                                    'FAC_${facility.id}',
+                                                  );
+
+                                                  setState(() {
+                                                    selectedFacilityId =
+                                                        facility.id;
+                                                  });
+                                                  if (facility.id ==
+                                                      'Delivery Team') {
+                                                    setState(() {
+                                                      deliveryTeamSelected =
+                                                          true;
+                                                    });
+                                                  } else {
+                                                    setState(() {
+                                                      deliveryTeamSelected =
+                                                          false;
+                                                    });
+                                                  }
+                                                },
                                               ),
-                                            );
-
-                                            if (facility == null) return;
-                                            form
-                                                    .control(_secondaryPartyKey)
-                                                    .value =
-                                                localizations.translate(
-                                              'FAC_${facility.id}',
-                                            );
-
-                                            setState(() {
-                                              selectedFacilityId = facility.id;
-                                            });
-                                            if (facility.id ==
-                                                'Delivery Team') {
-                                              setState(() {
-                                                deliveryTeamSelected = true;
-                                              });
-                                            } else {
-                                              setState(() {
-                                                deliveryTeamSelected = false;
-                                              });
-                                            }
-                                          },
-                                        ),
-                                      ),
-                                    );
+                                            ),
+                                          );
+                                        });
                                   },
                                 ),
                                 Visibility(

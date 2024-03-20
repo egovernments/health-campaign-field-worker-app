@@ -170,18 +170,6 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    RecordStockWrapperRoute.name: (routeData) {
-      final args = routeData.argsAs<RecordStockWrapperRouteArgs>();
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: RecordStockWrapperPage(
-          key: args.key,
-          type: args.type,
-          projectId: args.projectId,
-          showStockDetailsPage: args.showStockDetailsPage,
-        ),
-      );
-    },
     SearchReferralsRoute.name: (routeData) {
       final args = routeData.argsAs<SearchReferralsRouteArgs>(
           orElse: () => const SearchReferralsRouteArgs());
@@ -205,63 +193,6 @@ class _$AppRouter extends RootStackRouter {
         )),
       );
     },
-    ManageStocksRoute.name: (routeData) {
-      final args = routeData.argsAs<ManageStocksRouteArgs>();
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: ManageStocksPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-          inventoryListener: args.inventoryListener,
-          projectId: args.projectId,
-          userId: args.userId,
-          boundaryName: args.boundaryName,
-          isDistributor: args.isDistributor,
-          isWareHouseMgr: args.isWareHouseMgr,
-          transportType: args.transportType,
-        ),
-      );
-    },
-    StockReconciliationRoute.name: (routeData) {
-      final args = routeData.argsAs<StockReconciliationRouteArgs>();
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: StockReconciliationPage(
-          inventoryListener: args.inventoryListener,
-          projectId: args.projectId,
-          isDistributor: args.isDistributor,
-          isWareHouseMgr: args.isWareHouseMgr,
-          loggedInUserUuid: args.loggedInUserUuid,
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-        ),
-      );
-    },
-    FacilitySelectionRoute.name: (routeData) {
-      final args = routeData.argsAs<FacilitySelectionRouteArgs>();
-      return MaterialPageX<InventoryFacilityModel>(
-        routeData: routeData,
-        child: FacilitySelectionPage(
-          key: args.key,
-          facilities: args.facilities,
-        ),
-      );
-    },
-    InventoryAcknowledgementRoute.name: (routeData) {
-      final args = routeData.argsAs<InventoryAcknowledgementRouteArgs>(
-          orElse: () => const InventoryAcknowledgementRouteArgs());
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: InventoryAcknowledgementPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-          isDataRecordSuccess: args.isDataRecordSuccess,
-          label: args.label,
-          description: args.description,
-          descriptionTableData: args.descriptionTableData,
-        ),
-      );
-    },
     ProjectFacilitySelectionRoute.name: (routeData) {
       final args = routeData.argsAs<ProjectFacilitySelectionRouteArgs>();
       return MaterialPageX<ProjectFacilityModel>(
@@ -269,34 +200,6 @@ class _$AppRouter extends RootStackRouter {
         child: ProjectFacilitySelectionPage(
           key: args.key,
           projectFacilities: args.projectFacilities,
-        ),
-      );
-    },
-    InventoryReportSelectionRoute.name: (routeData) {
-      final args = routeData.argsAs<InventoryReportSelectionRouteArgs>();
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: InventoryReportSelectionPage(
-          inventoryListener: args.inventoryListener,
-          projectId: args.projectId,
-          isDistributor: args.isDistributor,
-          isWareHouseMgr: args.isWareHouseMgr,
-          loggedInUserUuid: args.loggedInUserUuid,
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-        ),
-      );
-    },
-    InventoryReportDetailsRoute.name: (routeData) {
-      final args = routeData.argsAs<InventoryReportDetailsRouteArgs>();
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: InventoryReportDetailsPage(
-          isDistributor: args.isDistributor,
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-          reportType: args.reportType,
-          projectId: args.projectId,
         ),
       );
     },
@@ -533,28 +436,6 @@ class _$AppRouter extends RootStackRouter {
         child: ChecklistPreviewPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
-        ),
-      );
-    },
-    WarehouseDetailsRoute.name: (routeData) {
-      final args = routeData.argsAs<WarehouseDetailsRouteArgs>();
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: WarehouseDetailsPage(
-          entryType: args.entryType,
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-        ),
-      );
-    },
-    StockDetailsRoute.name: (routeData) {
-      final args = routeData.argsAs<StockDetailsRouteArgs>();
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: StockDetailsPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-          entryType: args.entryType,
         ),
       );
     },
@@ -899,30 +780,6 @@ class _$AppRouter extends RootStackRouter {
               parent: AuthenticatedRouteWrapper.name,
             ),
             RouteConfig(
-              RecordStockWrapperRoute.name,
-              path: 'record-stock',
-              parent: AuthenticatedRouteWrapper.name,
-              children: [
-                RouteConfig(
-                  '#redirect',
-                  path: '',
-                  parent: RecordStockWrapperRoute.name,
-                  redirectTo: 'warehouse-details',
-                  fullMatch: true,
-                ),
-                RouteConfig(
-                  WarehouseDetailsRoute.name,
-                  path: 'warehouse-details',
-                  parent: RecordStockWrapperRoute.name,
-                ),
-                RouteConfig(
-                  StockDetailsRoute.name,
-                  path: 'details',
-                  parent: RecordStockWrapperRoute.name,
-                ),
-              ],
-            ),
-            RouteConfig(
               SearchReferralsRoute.name,
               path: 'search-referrals',
               parent: AuthenticatedRouteWrapper.name,
@@ -962,38 +819,8 @@ class _$AppRouter extends RootStackRouter {
               ],
             ),
             RouteConfig(
-              ManageStocksRoute.name,
-              path: 'manage-stocks',
-              parent: AuthenticatedRouteWrapper.name,
-            ),
-            RouteConfig(
-              StockReconciliationRoute.name,
-              path: 'stock-reconciliation',
-              parent: AuthenticatedRouteWrapper.name,
-            ),
-            RouteConfig(
-              FacilitySelectionRoute.name,
-              path: 'select-facilities',
-              parent: AuthenticatedRouteWrapper.name,
-            ),
-            RouteConfig(
-              InventoryAcknowledgementRoute.name,
-              path: 'acknowledgement',
-              parent: AuthenticatedRouteWrapper.name,
-            ),
-            RouteConfig(
               ProjectFacilitySelectionRoute.name,
               path: 'select-project-facilities',
-              parent: AuthenticatedRouteWrapper.name,
-            ),
-            RouteConfig(
-              InventoryReportSelectionRoute.name,
-              path: 'inventory-report-selection',
-              parent: AuthenticatedRouteWrapper.name,
-            ),
-            RouteConfig(
-              InventoryReportDetailsRoute.name,
-              path: 'inventory-report-details',
               parent: AuthenticatedRouteWrapper.name,
             ),
             RouteConfig(
@@ -1559,53 +1386,6 @@ class ComplaintsAcknowledgementRouteArgs {
 }
 
 /// generated route for
-/// [RecordStockWrapperPage]
-class RecordStockWrapperRoute
-    extends PageRouteInfo<RecordStockWrapperRouteArgs> {
-  RecordStockWrapperRoute({
-    Key? key,
-    required StockRecordEntryType type,
-    required String projectId,
-    bool showStockDetailsPage = false,
-    List<PageRouteInfo>? children,
-  }) : super(
-          RecordStockWrapperRoute.name,
-          path: 'record-stock',
-          args: RecordStockWrapperRouteArgs(
-            key: key,
-            type: type,
-            projectId: projectId,
-            showStockDetailsPage: showStockDetailsPage,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'RecordStockWrapperRoute';
-}
-
-class RecordStockWrapperRouteArgs {
-  const RecordStockWrapperRouteArgs({
-    this.key,
-    required this.type,
-    required this.projectId,
-    this.showStockDetailsPage = false,
-  });
-
-  final Key? key;
-
-  final StockRecordEntryType type;
-
-  final String projectId;
-
-  final bool showStockDetailsPage;
-
-  @override
-  String toString() {
-    return 'RecordStockWrapperRouteArgs{key: $key, type: $type, projectId: $projectId, showStockDetailsPage: $showStockDetailsPage}';
-  }
-}
-
-/// generated route for
 /// [SearchReferralsPage]
 class SearchReferralsRoute extends PageRouteInfo<SearchReferralsRouteArgs> {
   SearchReferralsRoute({
@@ -1682,224 +1462,6 @@ class HFCreateReferralWrapperRouteArgs {
 }
 
 /// generated route for
-/// [ManageStocksPage]
-class ManageStocksRoute extends PageRouteInfo<ManageStocksRouteArgs> {
-  ManageStocksRoute({
-    Key? key,
-    InventoryLocalization? appLocalizations,
-    required InventoryListener inventoryListener,
-    required String projectId,
-    required String userId,
-    required String boundaryName,
-    required bool isDistributor,
-    required bool isWareHouseMgr,
-    required List<InventoryTransportTypes>? transportType,
-  }) : super(
-          ManageStocksRoute.name,
-          path: 'manage-stocks',
-          args: ManageStocksRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-            inventoryListener: inventoryListener,
-            projectId: projectId,
-            userId: userId,
-            boundaryName: boundaryName,
-            isDistributor: isDistributor,
-            isWareHouseMgr: isWareHouseMgr,
-            transportType: transportType,
-          ),
-        );
-
-  static const String name = 'ManageStocksRoute';
-}
-
-class ManageStocksRouteArgs {
-  const ManageStocksRouteArgs({
-    this.key,
-    this.appLocalizations,
-    required this.inventoryListener,
-    required this.projectId,
-    required this.userId,
-    required this.boundaryName,
-    required this.isDistributor,
-    required this.isWareHouseMgr,
-    required this.transportType,
-  });
-
-  final Key? key;
-
-  final InventoryLocalization? appLocalizations;
-
-  final InventoryListener inventoryListener;
-
-  final String projectId;
-
-  final String userId;
-
-  final String boundaryName;
-
-  final bool isDistributor;
-
-  final bool isWareHouseMgr;
-
-  final List<InventoryTransportTypes>? transportType;
-
-  @override
-  String toString() {
-    return 'ManageStocksRouteArgs{key: $key, appLocalizations: $appLocalizations, inventoryListener: $inventoryListener, projectId: $projectId, userId: $userId, boundaryName: $boundaryName, isDistributor: $isDistributor, isWareHouseMgr: $isWareHouseMgr, transportType: $transportType}';
-  }
-}
-
-/// generated route for
-/// [StockReconciliationPage]
-class StockReconciliationRoute
-    extends PageRouteInfo<StockReconciliationRouteArgs> {
-  StockReconciliationRoute({
-    required InventoryListener inventoryListener,
-    required String projectId,
-    required bool? isDistributor,
-    required bool? isWareHouseMgr,
-    required String? loggedInUserUuid,
-    Key? key,
-    InventoryLocalization? appLocalizations,
-  }) : super(
-          StockReconciliationRoute.name,
-          path: 'stock-reconciliation',
-          args: StockReconciliationRouteArgs(
-            inventoryListener: inventoryListener,
-            projectId: projectId,
-            isDistributor: isDistributor,
-            isWareHouseMgr: isWareHouseMgr,
-            loggedInUserUuid: loggedInUserUuid,
-            key: key,
-            appLocalizations: appLocalizations,
-          ),
-        );
-
-  static const String name = 'StockReconciliationRoute';
-}
-
-class StockReconciliationRouteArgs {
-  const StockReconciliationRouteArgs({
-    required this.inventoryListener,
-    required this.projectId,
-    required this.isDistributor,
-    required this.isWareHouseMgr,
-    required this.loggedInUserUuid,
-    this.key,
-    this.appLocalizations,
-  });
-
-  final InventoryListener inventoryListener;
-
-  final String projectId;
-
-  final bool? isDistributor;
-
-  final bool? isWareHouseMgr;
-
-  final String? loggedInUserUuid;
-
-  final Key? key;
-
-  final InventoryLocalization? appLocalizations;
-
-  @override
-  String toString() {
-    return 'StockReconciliationRouteArgs{inventoryListener: $inventoryListener, projectId: $projectId, isDistributor: $isDistributor, isWareHouseMgr: $isWareHouseMgr, loggedInUserUuid: $loggedInUserUuid, key: $key, appLocalizations: $appLocalizations}';
-  }
-}
-
-/// generated route for
-/// [FacilitySelectionPage]
-class FacilitySelectionRoute extends PageRouteInfo<FacilitySelectionRouteArgs> {
-  FacilitySelectionRoute({
-    Key? key,
-    required List<InventoryFacilityModel> facilities,
-  }) : super(
-          FacilitySelectionRoute.name,
-          path: 'select-facilities',
-          args: FacilitySelectionRouteArgs(
-            key: key,
-            facilities: facilities,
-          ),
-        );
-
-  static const String name = 'FacilitySelectionRoute';
-}
-
-class FacilitySelectionRouteArgs {
-  const FacilitySelectionRouteArgs({
-    this.key,
-    required this.facilities,
-  });
-
-  final Key? key;
-
-  final List<InventoryFacilityModel> facilities;
-
-  @override
-  String toString() {
-    return 'FacilitySelectionRouteArgs{key: $key, facilities: $facilities}';
-  }
-}
-
-/// generated route for
-/// [InventoryAcknowledgementPage]
-class InventoryAcknowledgementRoute
-    extends PageRouteInfo<InventoryAcknowledgementRouteArgs> {
-  InventoryAcknowledgementRoute({
-    Key? key,
-    InventoryLocalization? appLocalizations,
-    bool isDataRecordSuccess = false,
-    String? label,
-    String? description,
-    Map<String, dynamic>? descriptionTableData,
-  }) : super(
-          InventoryAcknowledgementRoute.name,
-          path: 'acknowledgement',
-          args: InventoryAcknowledgementRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-            isDataRecordSuccess: isDataRecordSuccess,
-            label: label,
-            description: description,
-            descriptionTableData: descriptionTableData,
-          ),
-        );
-
-  static const String name = 'InventoryAcknowledgementRoute';
-}
-
-class InventoryAcknowledgementRouteArgs {
-  const InventoryAcknowledgementRouteArgs({
-    this.key,
-    this.appLocalizations,
-    this.isDataRecordSuccess = false,
-    this.label,
-    this.description,
-    this.descriptionTableData,
-  });
-
-  final Key? key;
-
-  final InventoryLocalization? appLocalizations;
-
-  final bool isDataRecordSuccess;
-
-  final String? label;
-
-  final String? description;
-
-  final Map<String, dynamic>? descriptionTableData;
-
-  @override
-  String toString() {
-    return 'InventoryAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, isDataRecordSuccess: $isDataRecordSuccess, label: $label, description: $description, descriptionTableData: $descriptionTableData}';
-  }
-}
-
-/// generated route for
 /// [ProjectFacilitySelectionPage]
 class ProjectFacilitySelectionRoute
     extends PageRouteInfo<ProjectFacilitySelectionRouteArgs> {
@@ -1931,116 +1493,6 @@ class ProjectFacilitySelectionRouteArgs {
   @override
   String toString() {
     return 'ProjectFacilitySelectionRouteArgs{key: $key, projectFacilities: $projectFacilities}';
-  }
-}
-
-/// generated route for
-/// [InventoryReportSelectionPage]
-class InventoryReportSelectionRoute
-    extends PageRouteInfo<InventoryReportSelectionRouteArgs> {
-  InventoryReportSelectionRoute({
-    required InventoryListener inventoryListener,
-    required String projectId,
-    required bool? isDistributor,
-    required bool? isWareHouseMgr,
-    required String? loggedInUserUuid,
-    Key? key,
-    InventoryLocalization? appLocalizations,
-  }) : super(
-          InventoryReportSelectionRoute.name,
-          path: 'inventory-report-selection',
-          args: InventoryReportSelectionRouteArgs(
-            inventoryListener: inventoryListener,
-            projectId: projectId,
-            isDistributor: isDistributor,
-            isWareHouseMgr: isWareHouseMgr,
-            loggedInUserUuid: loggedInUserUuid,
-            key: key,
-            appLocalizations: appLocalizations,
-          ),
-        );
-
-  static const String name = 'InventoryReportSelectionRoute';
-}
-
-class InventoryReportSelectionRouteArgs {
-  const InventoryReportSelectionRouteArgs({
-    required this.inventoryListener,
-    required this.projectId,
-    required this.isDistributor,
-    required this.isWareHouseMgr,
-    required this.loggedInUserUuid,
-    this.key,
-    this.appLocalizations,
-  });
-
-  final InventoryListener inventoryListener;
-
-  final String projectId;
-
-  final bool? isDistributor;
-
-  final bool? isWareHouseMgr;
-
-  final String? loggedInUserUuid;
-
-  final Key? key;
-
-  final InventoryLocalization? appLocalizations;
-
-  @override
-  String toString() {
-    return 'InventoryReportSelectionRouteArgs{inventoryListener: $inventoryListener, projectId: $projectId, isDistributor: $isDistributor, isWareHouseMgr: $isWareHouseMgr, loggedInUserUuid: $loggedInUserUuid, key: $key, appLocalizations: $appLocalizations}';
-  }
-}
-
-/// generated route for
-/// [InventoryReportDetailsPage]
-class InventoryReportDetailsRoute
-    extends PageRouteInfo<InventoryReportDetailsRouteArgs> {
-  InventoryReportDetailsRoute({
-    required bool? isDistributor,
-    Key? key,
-    InventoryLocalization? appLocalizations,
-    required InventoryReportType reportType,
-    required String projectId,
-  }) : super(
-          InventoryReportDetailsRoute.name,
-          path: 'inventory-report-details',
-          args: InventoryReportDetailsRouteArgs(
-            isDistributor: isDistributor,
-            key: key,
-            appLocalizations: appLocalizations,
-            reportType: reportType,
-            projectId: projectId,
-          ),
-        );
-
-  static const String name = 'InventoryReportDetailsRoute';
-}
-
-class InventoryReportDetailsRouteArgs {
-  const InventoryReportDetailsRouteArgs({
-    required this.isDistributor,
-    this.key,
-    this.appLocalizations,
-    required this.reportType,
-    required this.projectId,
-  });
-
-  final bool? isDistributor;
-
-  final Key? key;
-
-  final InventoryLocalization? appLocalizations;
-
-  final InventoryReportType reportType;
-
-  final String projectId;
-
-  @override
-  String toString() {
-    return 'InventoryReportDetailsRouteArgs{isDistributor: $isDistributor, key: $key, appLocalizations: $appLocalizations, reportType: $reportType, projectId: $projectId}';
   }
 }
 
@@ -2798,84 +2250,6 @@ class ChecklistPreviewRouteArgs {
   @override
   String toString() {
     return 'ChecklistPreviewRouteArgs{key: $key, appLocalizations: $appLocalizations}';
-  }
-}
-
-/// generated route for
-/// [WarehouseDetailsPage]
-class WarehouseDetailsRoute extends PageRouteInfo<WarehouseDetailsRouteArgs> {
-  WarehouseDetailsRoute({
-    required StockRecordEntryType entryType,
-    Key? key,
-    InventoryLocalization? appLocalizations,
-  }) : super(
-          WarehouseDetailsRoute.name,
-          path: 'warehouse-details',
-          args: WarehouseDetailsRouteArgs(
-            entryType: entryType,
-            key: key,
-            appLocalizations: appLocalizations,
-          ),
-        );
-
-  static const String name = 'WarehouseDetailsRoute';
-}
-
-class WarehouseDetailsRouteArgs {
-  const WarehouseDetailsRouteArgs({
-    required this.entryType,
-    this.key,
-    this.appLocalizations,
-  });
-
-  final StockRecordEntryType entryType;
-
-  final Key? key;
-
-  final InventoryLocalization? appLocalizations;
-
-  @override
-  String toString() {
-    return 'WarehouseDetailsRouteArgs{entryType: $entryType, key: $key, appLocalizations: $appLocalizations}';
-  }
-}
-
-/// generated route for
-/// [StockDetailsPage]
-class StockDetailsRoute extends PageRouteInfo<StockDetailsRouteArgs> {
-  StockDetailsRoute({
-    Key? key,
-    InventoryLocalization? appLocalizations,
-    required StockRecordEntryType entryType,
-  }) : super(
-          StockDetailsRoute.name,
-          path: 'details',
-          args: StockDetailsRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-            entryType: entryType,
-          ),
-        );
-
-  static const String name = 'StockDetailsRoute';
-}
-
-class StockDetailsRouteArgs {
-  const StockDetailsRouteArgs({
-    this.key,
-    this.appLocalizations,
-    required this.entryType,
-  });
-
-  final Key? key;
-
-  final InventoryLocalization? appLocalizations;
-
-  final StockRecordEntryType entryType;
-
-  @override
-  String toString() {
-    return 'StockDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations, entryType: $entryType}';
   }
 }
 

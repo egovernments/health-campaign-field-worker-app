@@ -106,8 +106,12 @@ class _StockReconciliationPageState
                     StockReconciliationState>(
                   listener: (context, stockState) {
                     if (!stockState.persisted) return;
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => InventoryAcknowledgementPage()));
+
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => InventoryAcknowledgementPage(),
+                      ),
+                    );
                   },
                   builder: (context, stockState) {
                     return ReactiveFormBuilder(
@@ -148,16 +152,6 @@ class _StockReconciliationPageState
                                                     ? InventoryFacilityModel(
                                                         id: widget
                                                             .loggedInUserUuid!,
-                                                        // additionalFields:
-                                                        //     FacilityAdditionalFields(
-                                                        //   version: 1,
-                                                        //   fields: [
-                                                        //     const AdditionalField(
-                                                        //       'type',
-                                                        //       'deliveryTeam',
-                                                        //     ),
-                                                        //   ],
-                                                        // ),
                                                       )
                                                     : InventoryFacilityModel(
                                                         id: selectedFacilityId
@@ -278,97 +272,112 @@ class _StockReconciliationPageState
                                     if (widget.isWareHouseMgr!)
                                       BlocBuilder<FacilityBloc, FacilityState>(
                                         builder: (context, state) {
-                                          final facilities = state.whenOrNull(
-                                                fetched: (
-                                                  facilities,
-                                                ) =>
-                                                    facilities,
-                                              ) ??
-                                              [];
-
-                                          return InkWell(
-                                            onTap: () async {
-                                              final stockReconciliationBloc =
-                                                  context.read<
-                                                      StockReconciliationBloc>();
-                                              final facility = await Navigator
-                                                      .of(context)
-                                                  .push<InventoryFacilityModel>(
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      FacilitySelectionPage(
-                                                    facilities: facilities,
+                                          return state.maybeWhen(
+                                              orElse: () => const Offstage(),
+                                              loading: () => const Center(
+                                                    child:
+                                                        CircularProgressIndicator(),
                                                   ),
-                                                ),
-                                              );
-
-                                              if (facility == null) return;
-                                              form.control(_facilityKey).value =
-                                                  localizations.translate(
-                                                'FAC_${facility.id}',
-                                              );
-                                              setState(() {
-                                                selectedFacilityId =
-                                                    facility.id;
-                                              });
-                                              stockReconciliationBloc.add(
-                                                StockReconciliationSelectFacilityEvent(
-                                                  facility,
-                                                ),
-                                              );
-                                            },
-                                            child: IgnorePointer(
-                                              child: DigitTextFormField(
-                                                hideKeyboard: true,
-                                                label: localizations.translate(
-                                                  i18.stockReconciliationDetails
-                                                      .facilityLabel,
-                                                ),
-                                                suffix: const Padding(
-                                                  padding: EdgeInsets.all(8.0),
-                                                  child: Icon(Icons.search),
-                                                ),
-                                                formControlName: _facilityKey,
-                                                readOnly: true,
-                                                isRequired: true,
-                                                onTap: () async {
-                                                  final stockReconciliationBloc =
-                                                      context.read<
-                                                          StockReconciliationBloc>();
-
-                                                  final facility =
-                                                      await Navigator.of(
-                                                    context,
-                                                    rootNavigator: true,
-                                                  ).push(
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          FacilitySelectionPage(
-                                                        facilities: facilities,
+                                              fetched: (facilities) {
+                                                return InkWell(
+                                                  onTap: () async {
+                                                    final stockReconciliationBloc =
+                                                        context.read<
+                                                            StockReconciliationBloc>();
+                                                    final facility =
+                                                        await Navigator.of(
+                                                                context)
+                                                            .push<
+                                                                InventoryFacilityModel>(
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            FacilitySelectionPage(
+                                                          facilities:
+                                                              facilities,
+                                                        ),
                                                       ),
-                                                    ),
-                                                  );
+                                                    );
 
-                                                  if (facility == null) return;
-                                                  form
-                                                          .control(_facilityKey)
-                                                          .value =
-                                                      localizations.translate(
-                                                    'FAC_${facility.id}',
-                                                  );
-                                                  setState(() {
-                                                    selectedFacilityId =
-                                                        facility.id;
-                                                  });
-                                                  stockReconciliationBloc.add(
-                                                    StockReconciliationSelectFacilityEvent(
-                                                      facility,
+                                                    if (facility == null)
+                                                      return;
+                                                    form
+                                                            .control(_facilityKey)
+                                                            .value =
+                                                        localizations.translate(
+                                                      'FAC_${facility.id}',
+                                                    );
+                                                    setState(() {
+                                                      selectedFacilityId =
+                                                          facility.id;
+                                                    });
+                                                    stockReconciliationBloc.add(
+                                                      StockReconciliationSelectFacilityEvent(
+                                                        facility,
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: IgnorePointer(
+                                                    child: DigitTextFormField(
+                                                      hideKeyboard: true,
+                                                      label: localizations
+                                                          .translate(
+                                                        i18.stockReconciliationDetails
+                                                            .facilityLabel,
+                                                      ),
+                                                      suffix: const Padding(
+                                                        padding:
+                                                            EdgeInsets.all(8.0),
+                                                        child:
+                                                            Icon(Icons.search),
+                                                      ),
+                                                      formControlName:
+                                                          _facilityKey,
+                                                      readOnly: true,
+                                                      isRequired: true,
+                                                      onTap: () async {
+                                                        final stockReconciliationBloc =
+                                                            context.read<
+                                                                StockReconciliationBloc>();
+
+                                                        final facility =
+                                                            await Navigator.of(
+                                                          context,
+                                                          rootNavigator: true,
+                                                        ).push(
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                FacilitySelectionPage(
+                                                              facilities:
+                                                                  facilities,
+                                                            ),
+                                                          ),
+                                                        );
+
+                                                        if (facility == null)
+                                                          return;
+                                                        form
+                                                                .control(
+                                                                    _facilityKey)
+                                                                .value =
+                                                            localizations
+                                                                .translate(
+                                                          'FAC_${facility.id}',
+                                                        );
+                                                        setState(() {
+                                                          selectedFacilityId =
+                                                              facility.id;
+                                                        });
+                                                        stockReconciliationBloc
+                                                            .add(
+                                                          StockReconciliationSelectFacilityEvent(
+                                                            facility,
+                                                          ),
+                                                        );
+                                                      },
                                                     ),
-                                                  );
-                                                },
-                                              ),
-                                            ),
-                                          );
+                                                  ),
+                                                );
+                                              });
                                         },
                                       ),
                                     BlocBuilder<ProductVariantBloc,
@@ -376,6 +385,9 @@ class _StockReconciliationPageState
                                       builder: (context, state) {
                                         return state.maybeWhen(
                                           orElse: () => const Offstage(),
+                                          loading: () => const Center(
+                                            child: CircularProgressIndicator(),
+                                          ),
                                           fetched: (productVariants) {
                                             return DigitReactiveSearchDropdown<
                                                 ProductVariantModel>(

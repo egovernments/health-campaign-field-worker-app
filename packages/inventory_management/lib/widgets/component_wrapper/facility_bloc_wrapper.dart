@@ -20,7 +20,6 @@ class FacilityBlocWrapper extends StatelessWidget {
       )..add(
           FacilityLoadForProjectEvent(projectId: projectId)
         ),
-      lazy: false,
       child: child,
     );
   }

@@ -85,15 +85,6 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                       final teamFacilities = [
                         InventoryFacilityModel(
                           id: 'Delivery Team',
-                          // additionalFields: FacilityAdditionalFields(
-                          //   version: 1,
-                          //   fields: [
-                          //     const AdditionalField(
-                          //       'type',
-                          //       'DeliveryTeam',
-                          //     ),
-                          //   ],
-                          // ),
                         ),
                       ];
                       teamFacilities.addAll(

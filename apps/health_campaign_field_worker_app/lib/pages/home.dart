@@ -10,6 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:inventory_management/pages/manage_stocks.dart';
+import 'package:inventory_management/pages/reports/report_selection.dart';
+import 'package:inventory_management/pages/stock_reconciliation/stock_reconciliation.dart';
 import 'package:inventory_management/utils/utils.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
@@ -335,42 +338,45 @@ class _HomePageState extends LocalizedState<HomePage> {
             context.read<AppInitializationBloc>().state.maybeWhen(
                   orElse: () {},
                   initialized: (AppConfiguration appConfiguration, _) {
-                    context.router.push(
-                      ManageStocksRoute(
-                        isWareHouseMgr: context.loggedInUserRoles
-                            .where((role) =>
-                                role.code ==
-                                RolesType.warehouseManager.toValue())
-                            .toList()
-                            .isNotEmpty,
-                        isDistributor: context.loggedInUserRoles
-                            .where(
-                              (role) =>
-                                  role.code == RolesType.distributor.toValue(),
-                            )
-                            .toList()
-                            .isNotEmpty,
-                        boundaryName: context.boundary.name!,
-                        inventoryListener: HcmInventoryBloc(
-                          context: context,
-                          userId: context.loggedInUserUuid,
-                          individualId: context.loggedInIndividualId,
-                          projectId: context.projectId,
-                          stockLocalRepository: context.read<
-                              LocalRepository<HcmStockModel,
-                                  HcmStockSearchModel>>(),
-                          stockReconLocalRepository: context.read<
-                              LocalRepository<HcmStockReconciliationModel,
-                                  HcmStockReconciliationSearchModel>>(),
-                        ),
-                        projectId: context.projectId,
-                        userId: context.loggedInUserUuid,
-                        transportType: appConfiguration.transportTypes
-                            ?.map((e) => InventoryTransportTypes()
-                              ..name = e.name
-                              ..code = e.code)
-                            .toList(),
-                      ),
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) => ManageStocksPage(
+                                isWareHouseMgr: context.loggedInUserRoles
+                                    .where((role) =>
+                                        role.code ==
+                                        RolesType.warehouseManager.toValue())
+                                    .toList()
+                                    .isNotEmpty,
+                                isDistributor: context.loggedInUserRoles
+                                    .where(
+                                      (role) =>
+                                          role.code ==
+                                          RolesType.distributor.toValue(),
+                                    )
+                                    .toList()
+                                    .isNotEmpty,
+                                boundaryName: context.boundary.name!,
+                                inventoryListener: HcmInventoryBloc(
+                                  context: context,
+                                  userId: context.loggedInUserUuid,
+                                  individualId: context.loggedInIndividualId,
+                                  projectId: context.projectId,
+                                  stockLocalRepository: context.read<
+                                      LocalRepository<HcmStockModel,
+                                          HcmStockSearchModel>>(),
+                                  stockReconLocalRepository: context.read<
+                                      LocalRepository<
+                                          HcmStockReconciliationModel,
+                                          HcmStockReconciliationSearchModel>>(),
+                                ),
+                                projectId: context.projectId,
+                                userId: context.loggedInUserUuid,
+                                transportType: appConfiguration.transportTypes
+                                    ?.map((e) => InventoryTransportTypes()
+                                      ..name = e.name
+                                      ..code = e.code)
+                                    .toList(),
+                              )),
                     );
                   },
                 );
@@ -383,33 +389,41 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.menu_book,
           label: i18.home.stockReconciliationLabel,
           onPressed: () {
-            context.router.push(StockReconciliationRoute(
-              inventoryListener: HcmInventoryBloc(
-                context: context,
-                userId: context.loggedInUserUuid,
-                individualId: context.loggedInIndividualId,
-                projectId: context.projectId,
-                stockLocalRepository: context.read<
-                    LocalRepository<HcmStockModel, HcmStockSearchModel>>(),
-                stockReconLocalRepository: context.read<
-                    LocalRepository<HcmStockReconciliationModel,
-                        HcmStockReconciliationSearchModel>>(),
-              ),
-              projectId: context.projectId,
-              isDistributor: context.loggedInUserRoles
-                  .where(
-                    (role) => role.code == RolesType.distributor.toValue(),
-                  )
-                  .toList()
-                  .isNotEmpty,
-              isWareHouseMgr: context.loggedInUserRoles
-                  .where(
-                    (role) => role.code == RolesType.warehouseManager.toValue(),
-                  )
-                  .toList()
-                  .isNotEmpty,
-              loggedInUserUuid: context.loggedInUserUuid,
-            ));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => StockReconciliationPage(
+                          inventoryListener: HcmInventoryBloc(
+                            context: context,
+                            userId: context.loggedInUserUuid,
+                            individualId: context.loggedInIndividualId,
+                            projectId: context.projectId,
+                            stockLocalRepository: context.read<
+                                LocalRepository<HcmStockModel,
+                                    HcmStockSearchModel>>(),
+                            stockReconLocalRepository: context.read<
+                                LocalRepository<HcmStockReconciliationModel,
+                                    HcmStockReconciliationSearchModel>>(),
+                          ),
+                          projectId: context.projectId,
+                          isDistributor: context.loggedInUserRoles
+                              .where(
+                                (role) =>
+                                    role.code ==
+                                    RolesType.distributor.toValue(),
+                              )
+                              .toList()
+                              .isNotEmpty,
+                          isWareHouseMgr: context.loggedInUserRoles
+                              .where(
+                                (role) =>
+                                    role.code ==
+                                    RolesType.warehouseManager.toValue(),
+                              )
+                              .toList()
+                              .isNotEmpty,
+                          loggedInUserUuid: context.loggedInUserUuid,
+                        )));
           },
         ),
       ),
@@ -476,35 +490,37 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.announcement,
           label: i18.home.viewReportsLabel,
           onPressed: () {
-            context.router.push(
-              InventoryReportSelectionRoute(
-                inventoryListener: HcmInventoryBloc(
-                  context: context,
-                  userId: context.loggedInUserUuid,
-                  individualId: context.loggedInIndividualId,
-                  projectId: context.projectId,
-                  stockLocalRepository: context.read<
-                      LocalRepository<HcmStockModel, HcmStockSearchModel>>(),
-                  stockReconLocalRepository: context.read<
-                      LocalRepository<HcmStockReconciliationModel,
-                          HcmStockReconciliationSearchModel>>(),
-                ),
-                projectId: context.projectId,
-                isDistributor: context.loggedInUserRoles
-                    .where(
-                      (role) => role.code == RolesType.distributor.toValue(),
-                    )
-                    .toList()
-                    .isNotEmpty,
-                isWareHouseMgr: context.loggedInUserRoles
-                    .where(
-                      (role) =>
-                          role.code == RolesType.warehouseManager.toValue(),
-                    )
-                    .toList()
-                    .isNotEmpty,
-                loggedInUserUuid: context.loggedInUserUuid,
-              ),
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                  builder: (context) => InventoryReportSelectionPage(
+                        isWareHouseMgr: context.loggedInUserRoles
+                            .where((role) =>
+                                role.code ==
+                                RolesType.warehouseManager.toValue())
+                            .toList()
+                            .isNotEmpty,
+                        isDistributor: context.loggedInUserRoles
+                            .where(
+                              (role) =>
+                                  role.code == RolesType.distributor.toValue(),
+                            )
+                            .toList()
+                            .isNotEmpty,
+                        inventoryListener: HcmInventoryBloc(
+                          context: context,
+                          userId: context.loggedInUserUuid,
+                          individualId: context.loggedInIndividualId,
+                          projectId: context.projectId,
+                          stockLocalRepository: context.read<
+                              LocalRepository<HcmStockModel,
+                                  HcmStockSearchModel>>(),
+                          stockReconLocalRepository: context.read<
+                              LocalRepository<HcmStockReconciliationModel,
+                                  HcmStockReconciliationSearchModel>>(),
+                        ),
+                        projectId: context.projectId,
+                        loggedInUserUuid: context.loggedInUserUuid,
+                      )),
             );
           },
         ),

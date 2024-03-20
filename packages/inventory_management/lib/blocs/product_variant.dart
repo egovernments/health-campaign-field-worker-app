@@ -23,11 +23,14 @@ class ProductVariantBloc
     ProductVariantEmitter emit,
   ) async {
     emit(const ProductVariantLoadingState());
-    await InventorySingleton().getProductVariants(
-      (productVariants) => {
-        emit(ProductVariantState.fetched(productVariants: productVariants)),
-      },
-    );
+    List<ProductVariantModel>? productVariants =
+        await InventorySingleton().getProductVariants();
+
+    if (productVariants == null) {
+      emit((const ProductVariantEmptyState()));
+    } else {
+      emit(ProductVariantState.fetched(productVariants: productVariants));
+    }
   }
 }
 

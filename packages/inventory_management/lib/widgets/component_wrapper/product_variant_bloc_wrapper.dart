@@ -25,7 +25,6 @@ class ProductVariantBlocWrapper extends StatelessWidget {
             ),
           ),
         ),
-      lazy: false,
       child: child,
     );
   }
