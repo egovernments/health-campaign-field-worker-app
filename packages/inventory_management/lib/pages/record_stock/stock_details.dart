@@ -68,13 +68,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
       ]),
       _transactionReasonKey: FormControl<TransactionReason>(),
       _waybillNumberKey: FormControl<String>(),
-      _waybillQuantityKey: FormControl<String>(
-        validators: [
-          Validators.number,
-          Validators.required,
-        ],
-        value: '0',
-      ),
+      _waybillQuantityKey: FormControl<String>(),
       _vehicleNumberKey: FormControl<String>(),
       _typeOfTransportKey: FormControl<String>(),
       _commentsKey: FormControl<String>(),
@@ -783,13 +777,6 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                             .quantityOfProductIndicatedOnWaybillLabel,
                                       ),
                                       formControlName: _waybillQuantityKey,
-                                      validationMessages: {
-                                        "number": (object) =>
-                                            localizations.translate(
-                                              '${i18.stockDetails.quantityOfProductIndicatedOnWaybillLabel}_ERROR',
-                                            ),
-                                      },
-                                      isRequired: true,
                                       onChanged: (val) {
                                         if (val.toString().isEmpty ||
                                             val.value == null) {
