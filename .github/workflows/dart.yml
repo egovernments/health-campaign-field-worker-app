@@ -29,3 +29,11 @@ jobs:
 
       - name: Analyze code
         run: melos run analyze
+
+      - name: Install MobSF
+        run: |
+          pip install --user https://github.com/MobSF/Mobile-Security-Framework-MobSF/archive/master.zip
+
+      - name: Run MobSF
+        run: |
+          ~/.local/bin/mobsf -f $GITHUB_WORKSPACE/health-campaign-field-worker-app/build/app/outputs/apk/app.apk -o $GITHUB_WORKSPACE/mobsf_report.html
