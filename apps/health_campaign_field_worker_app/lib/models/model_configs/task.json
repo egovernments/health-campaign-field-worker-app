@@ -39,6 +39,20 @@
       "name": "status",
       "type": "String",
       "includeForQuery": true
+    },
+    {
+      "name": "offset",
+      "type": "int",
+      "includeForQuery": true,
+      "includeForEntity": false,
+      "includeForTable": false
+    },
+    {
+      "name": "limit",
+      "type": "int",
+      "includeForQuery": true,
+      "includeForEntity": false,
+      "includeForTable": false
     }
   ],
   "customAttributes": [

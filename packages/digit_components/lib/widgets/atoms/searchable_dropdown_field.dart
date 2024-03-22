@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:remove_emoji_input_formatter/remove_emoji_input_formatter.dart';
 
 class SearchDropdownEditingController<T> extends ChangeNotifier {
   T? _value;
@@ -197,6 +198,8 @@ class SearchDropdownFormFieldState<T> extends State<SearchDropdownFormField>
             showErrors: widget.showErrors,
             builder: (state) {
               return InputDecorator(
+                textAlign: TextAlign.center,
+                textAlignVertical: TextAlignVertical.center,
                 decoration: widget.decoration ??
                     InputDecoration(
                       enabled: widget.enabled,
@@ -220,6 +223,9 @@ class SearchDropdownFormFieldState<T> extends State<SearchDropdownFormField>
                     ? EditableText(
                         textInputAction: TextInputAction.none,
                         keyboardType: TextInputType.name,
+                        inputFormatters: [
+                          RemoveEmojiInputFormatter(),
+                        ],
                         style: widget.searchTextStyle ??
                             const TextStyle(
                                 fontSize: 16, color: Colors.black87),

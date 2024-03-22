@@ -1,8 +1,11 @@
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
+import 'package:digit_scanner/blocs/scanner.dart';
+import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recase/recase.dart';
 
@@ -10,7 +13,7 @@ import '../../../blocs/app_initialization/app_initialization.dart';
 import '../../../blocs/facility/facility.dart';
 import '../../../blocs/product_variant/product_variant.dart';
 import '../../../blocs/record_stock/record_stock.dart';
-import '../../../blocs/scanner/scanner.dart';
+import '../../../blocs/scanner/hcm_scanner_bloc.dart';
 import '../../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../../models/data_model.dart';
 import '../../../router/app_router.dart';
@@ -86,15 +89,16 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
         .where((role) => role.code == RolesType.warehouseManager.toValue())
         .toList()
         .isNotEmpty;
+    final parser = GS1BarcodeParser.defaultParser();
 
     return PopScope(
       onPopInvoked: (didPop) {
         final stockState = context.read<RecordStockBloc>().state;
         if (stockState.primaryId != null) {
-          context.read<ScannerBloc>().add(
-                ScannerEvent.handleScanner(
-                  [],
-                  [stockState.primaryId.toString()],
+          context.read<DigitScannerBloc>().add(
+                DigitScannerEvent.handleScanner(
+                  barCode: [],
+                  qrCode: [stockState.primaryId.toString()],
                 ),
               );
         }
@@ -179,11 +183,11 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                 return ReactiveFormBuilder(
                   form: () => _form(entryType),
                   builder: (context, form, child) {
-                    return BlocBuilder<ScannerBloc, ScannerState>(
+                    return BlocBuilder<DigitScannerBloc, DigitScannerState>(
                       builder: (context, scannerState) {
                         form.control(_deliveryTeamKey).value =
-                            scannerState.qrcodes.isNotEmpty
-                                ? scannerState.qrcodes.last
+                            scannerState.qrCodes.isNotEmpty
+                                ? scannerState.qrCodes.last
                                 : '';
 
                         return ScrollableContent(
@@ -193,10 +197,12 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                 final stockState =
                                     context.read<RecordStockBloc>().state;
                                 if (stockState.primaryId != null) {
-                                  context.read<ScannerBloc>().add(
-                                        ScannerEvent.handleScanner(
-                                          [],
-                                          [stockState.primaryId.toString()],
+                                  context.read<DigitScannerBloc>().add(
+                                        DigitScannerEvent.handleScanner(
+                                          barCode: [],
+                                          qrCode: [
+                                            stockState.primaryId.toString()
+                                          ],
                                         ),
                                       );
                                 }
@@ -469,6 +475,18 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                           lng,
                                                         ),
                                                       ],
+                                                      if (scannerState
+                                                          .barCodes.isNotEmpty)
+                                                        AdditionalField(
+                                                          'resources',
+                                                          scannerState.barCodes
+                                                              .map((e) => e
+                                                                  .elements
+                                                                  .values
+                                                                  .first
+                                                                  .data)
+                                                              .toList(),
+                                                        ),
                                                     ],
                                                   )
                                                 : null,
@@ -698,10 +716,10 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                         String? value = val.value as String?;
                                         if (value != null &&
                                             value.trim().isNotEmpty) {
-                                          context.read<ScannerBloc>().add(
-                                                ScannerEvent.handleScanner(
-                                                  [],
-                                                  [value],
+                                          context.read<DigitScannerBloc>().add(
+                                                DigitScannerEvent.handleScanner(
+                                                  barCode: [],
+                                                  qrCode: [value],
                                                 ),
                                               );
                                         } else {
@@ -710,11 +728,20 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                       },
                                       suffix: IconButton(
                                         onPressed: () {
-                                          context.router.push(QRScannerRoute(
-                                            quantity: 5,
-                                            isGS1code: false,
-                                            sinlgleValue: false,
-                                          ));
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  DigitScannerPage(
+                                                scannerListeners:
+                                                    HCMScannerBloc(),
+                                                quantity: 5,
+                                                isGS1code: false,
+                                                singleValue: false,
+                                              ),
+                                              settings: const RouteSettings(
+                                                  name: '/qr-scanner'),
+                                            ),
+                                          );
                                         },
                                         icon: Icon(
                                           Icons.qr_code_2,
@@ -826,24 +853,93 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                     maxLines: 3,
                                     formControlName: _commentsKey,
                                   ),
-                                  DigitOutlineIconButton(
-                                    buttonStyle: OutlinedButton.styleFrom(
-                                      shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.zero,
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      context.router.push(QRScannerRoute(
-                                        quantity: 5,
-                                        isGS1code: true,
-                                        sinlgleValue: false,
-                                      ));
-                                    },
-                                    icon: Icons.qr_code,
-                                    label: localizations.translate(
-                                      i18.common.scanBales,
-                                    ),
-                                  ),
+                                  scannerState.barCodes.isEmpty
+                                      ? DigitOutlineIconButton(
+                                          buttonStyle: OutlinedButton.styleFrom(
+                                            shape: const RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.zero,
+                                            ),
+                                          ),
+                                          onPressed: () {
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    DigitScannerPage(
+                                                  scannerListeners:
+                                                      HCMScannerBloc(),
+                                                  quantity: 5,
+                                                  isGS1code: true,
+                                                  singleValue: false,
+                                                ),
+                                                settings: const RouteSettings(
+                                                    name: '/qr-scanner'),
+                                              ),
+                                            );
+                                          },
+                                          icon: Icons.qr_code,
+                                          label: localizations.translate(
+                                            i18.common.scanBales,
+                                          ),
+                                        )
+                                      : Column(children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Align(
+                                                alignment: Alignment.centerLeft,
+                                                child: Text(
+                                                  localizations.translate(i18
+                                                      .stockDetails
+                                                      .scannedResources),
+                                                  style: DigitTheme
+                                                      .instance
+                                                      .mobileTheme
+                                                      .textTheme
+                                                      .labelSmall,
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                  bottom: kPadding * 2,
+                                                ),
+                                                child: IconButton(
+                                                  alignment:
+                                                      Alignment.centerRight,
+                                                  color: theme
+                                                      .colorScheme.secondary,
+                                                  icon: const Icon(Icons.edit),
+                                                  onPressed: () {
+                                                    Navigator.of(context).push(
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            DigitScannerPage(
+                                                          scannerListeners:
+                                                              HCMScannerBloc(),
+                                                          quantity: 5,
+                                                          isGS1code: true,
+                                                          singleValue: false,
+                                                        ),
+                                                        settings:
+                                                            const RouteSettings(
+                                                                name:
+                                                                    '/qr-scanner'),
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          ...scannerState.barCodes
+                                              .map((e) => Align(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Text(e.elements
+                                                        .values.first.data
+                                                        .toString()),
+                                                  ))
+                                        ])
                                 ],
                               ),
                             ),
@@ -862,6 +958,8 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
   }
 
   void clearQRCodes() {
-    context.read<ScannerBloc>().add(const ScannerEvent.handleScanner([], []));
+    context
+        .read<DigitScannerBloc>()
+        .add(const DigitScannerEvent.handleScanner());
   }
 }

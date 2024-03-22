@@ -1,6 +1,8 @@
 // ignore_for_file: invalid_annotation_target
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../auth/auth_model.dart';
+
 part 'request_info_model.freezed.dart';
 part 'request_info_model.g.dart';
 
@@ -26,6 +28,7 @@ class RequestInfoModel with _$RequestInfoModel {
     final String? key,
     final String? msgId,
     final String? authToken,
+    final UserRequestModel? userInfo,
   }) = _RequestInfoModel;
 
   factory RequestInfoModel.fromJson(Map<String, dynamic> json) =>

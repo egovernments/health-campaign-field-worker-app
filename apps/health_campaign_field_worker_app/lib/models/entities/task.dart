@@ -15,6 +15,8 @@ class TaskSearchModel extends EntitySearchModel with TaskSearchModelMappable {
   final List<String>? projectBeneficiaryClientReferenceId;
   final String? createdBy;
   final String? status;
+  final int? offset;
+  final int? limit;
   final List<String>? clientReferenceId;
   final String? tenantId;
   final DateTime? plannedStartDateTime;
@@ -29,6 +31,8 @@ class TaskSearchModel extends EntitySearchModel with TaskSearchModelMappable {
     this.projectBeneficiaryClientReferenceId,
     this.createdBy,
     this.status,
+    this.offset,
+    this.limit,
     this.clientReferenceId,
     this.tenantId,
     int? plannedStartDate,
@@ -59,6 +63,8 @@ class TaskSearchModel extends EntitySearchModel with TaskSearchModelMappable {
     this.projectBeneficiaryClientReferenceId,
     this.createdBy,
     this.status,
+    this.offset,
+    this.limit,
     this.clientReferenceId,
     this.tenantId,
     int? plannedStartDate,

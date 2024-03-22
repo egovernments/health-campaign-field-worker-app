@@ -28,6 +28,9 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
             ),
         ]),
       );
+    if (query.limit != null && query.offset != null) {
+      select.limit(query.limit!, offset: query.offset);
+    }
 
     select.watch().listen((event) {
       final data = event.map((e) {

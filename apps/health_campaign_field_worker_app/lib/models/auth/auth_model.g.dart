@@ -48,6 +48,7 @@ Map<String, dynamic> _$$LoginModelImplToJson(_$LoginModelImpl instance) =>
 _$UserRequestModelImpl _$$UserRequestModelImplFromJson(
         Map<String, dynamic> json) =>
     _$UserRequestModelImpl(
+      id: json['id'] as int?,
       uuid: json['uuid'] as String,
       userName: json['userName'] as String?,
       name: json['name'] as String?,
@@ -67,6 +68,7 @@ _$UserRequestModelImpl _$$UserRequestModelImplFromJson(
 Map<String, dynamic> _$$UserRequestModelImplToJson(
         _$UserRequestModelImpl instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'uuid': instance.uuid,
       'userName': instance.userName,
       'name': instance.name,

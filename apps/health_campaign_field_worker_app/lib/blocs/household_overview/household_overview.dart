@@ -15,6 +15,7 @@ typedef HouseholdOverviewEmitter = Emitter<HouseholdOverviewState>;
 
 class HouseholdOverviewBloc
     extends Bloc<HouseholdOverviewEvent, HouseholdOverviewState> {
+  final BeneficiaryType beneficiaryType;
   final IndividualDataRepository individualRepository;
   final HouseholdDataRepository householdRepository;
   final HouseholdMemberDataRepository householdMemberRepository;
@@ -32,6 +33,7 @@ class HouseholdOverviewBloc
     required this.taskDataRepository,
     required this.sideEffectDataRepository,
     required this.referralDataRepository,
+    required this.beneficiaryType,
   }) {
     on(_handleDeleteHousehold);
     on(_handleDeleteIndividual);
@@ -111,23 +113,6 @@ class HouseholdOverviewBloc
       IndividualSearchModel(clientReferenceId: individualIds),
     );
 
-    // Find the head of the household.
-    final head = individuals.firstWhereOrNull(
-      (i) =>
-          i.clientReferenceId ==
-          householdMemberList
-              .firstWhereOrNull((h) => h.isHeadOfHousehold)
-              ?.individualClientReferenceId,
-    );
-
-    // Check if a head of household was found.
-    if (head == null) {
-      // If no head of household was found, stop loading and return.
-      emit(state.copyWith(loading: false));
-
-      return;
-    }
-
     // Search for project beneficiaries based on specified criteria.
     final projectBeneficiaries = await projectBeneficiaryRepository.search(
       ProjectBeneficiarySearchModel(
@@ -143,6 +128,35 @@ class HouseholdOverviewBloc
     // Check if any project beneficiaries were found.
     if (projectBeneficiaries.isEmpty) {
       // If no project beneficiaries were found, stop loading and return.
+      emit(state.copyWith(loading: false));
+
+      return;
+    }
+
+    final beneficiaryClientReferenceIds = projectBeneficiaries
+        .map((e) => e.beneficiaryClientReferenceId)
+        .toList();
+
+    final List<IndividualModel> beneficiaryIndividuals = individuals
+        .where((element) =>
+            beneficiaryClientReferenceIds.contains(element.clientReferenceId))
+        .toList();
+
+    // Find the head of the household.
+    final head = (event.projectBeneficiaryType == BeneficiaryType.individual
+            ? beneficiaryIndividuals
+            : individuals)
+        .firstWhereOrNull(
+      (i) =>
+          i.clientReferenceId ==
+          householdMemberList
+              .firstWhereOrNull((h) => h.isHeadOfHousehold)
+              ?.individualClientReferenceId,
+    );
+
+    // Check if a head of household was found.
+    if (head == null) {
+      // If no head of household was found, stop loading and return.
       emit(state.copyWith(loading: false));
 
       return;
@@ -168,13 +182,21 @@ class HouseholdOverviewBloc
           .toList(),
     ));
 
+    individuals.sort((a, b) => (a.clientAuditDetails?.createdTime ?? 0)
+        .compareTo(b.clientAuditDetails?.createdTime ?? 0));
+
+    beneficiaryIndividuals.sort((a, b) =>
+        (a.clientAuditDetails?.createdTime ?? 0)
+            .compareTo(b.clientAuditDetails?.createdTime ?? 0));
     // Update the state with the loaded data and stop loading.
     emit(
       state.copyWith(
         householdMemberWrapper: HouseholdMemberWrapper(
           household: resultHousehold,
           headOfHousehold: head,
-          members: individuals,
+          members: (event.projectBeneficiaryType == BeneficiaryType.individual
+              ? beneficiaryIndividuals
+              : individuals),
           tasks: tasks.isEmpty ? null : tasks,
           projectBeneficiaries: projectBeneficiaries,
           sideEffects: sideEffects,

@@ -1,5 +1,6 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
+import 'package:remove_emoji_input_formatter/remove_emoji_input_formatter.dart';
 
 class DigitSearchBar extends StatelessWidget {
   final TextEditingController? controller;
@@ -40,6 +41,9 @@ class DigitSearchBar extends StatelessWidget {
         child: TextField(
           controller: controller,
           onChanged: onChanged,
+          inputFormatters: [
+            RemoveEmojiInputFormatter(),
+          ],
           textCapitalization: textCapitalization,
           decoration: InputDecoration(
             icon: icon ??

@@ -56,6 +56,12 @@ class ProjectBeneficiarySearchModelMapper
       _f$beneficiaryRegistrationDateGte = Field(
           'beneficiaryRegistrationDateGte', _$beneficiaryRegistrationDateGte,
           opt: true);
+  static int? _$offset(ProjectBeneficiarySearchModel v) => v.offset;
+  static const Field<ProjectBeneficiarySearchModel, int> _f$offset =
+      Field('offset', _$offset, opt: true);
+  static int? _$limit(ProjectBeneficiarySearchModel v) => v.limit;
+  static const Field<ProjectBeneficiarySearchModel, int> _f$limit =
+      Field('limit', _$limit, opt: true);
   static List<String>? _$clientReferenceId(ProjectBeneficiarySearchModel v) =>
       v.clientReferenceId;
   static const Field<ProjectBeneficiarySearchModel, List<String>>
@@ -99,6 +105,8 @@ class ProjectBeneficiarySearchModelMapper
     #beneficiaryClientReferenceId: _f$beneficiaryClientReferenceId,
     #beneficiaryRegistrationDateLte: _f$beneficiaryRegistrationDateLte,
     #beneficiaryRegistrationDateGte: _f$beneficiaryRegistrationDateGte,
+    #offset: _f$offset,
+    #limit: _f$limit,
     #clientReferenceId: _f$clientReferenceId,
     #tenantId: _f$tenantId,
     #dateOfRegistration: _f$dateOfRegistration,
@@ -129,6 +137,8 @@ class ProjectBeneficiarySearchModelMapper
             data.dec(_f$beneficiaryRegistrationDateLte),
         beneficiaryRegistrationDateGte:
             data.dec(_f$beneficiaryRegistrationDateGte),
+        offset: data.dec(_f$offset),
+        limit: data.dec(_f$limit),
         clientReferenceId: data.dec(_f$clientReferenceId),
         tenantId: data.dec(_f$tenantId),
         dateOfRegistration: data.dec(_f$dateOfRegistration),
@@ -209,6 +219,8 @@ abstract class ProjectBeneficiarySearchModelCopyWith<
       List<String>? beneficiaryClientReferenceId,
       DateTime? beneficiaryRegistrationDateLte,
       DateTime? beneficiaryRegistrationDateGte,
+      int? offset,
+      int? limit,
       List<String>? clientReferenceId,
       String? tenantId,
       int? dateOfRegistration,
@@ -254,6 +266,8 @@ class _ProjectBeneficiarySearchModelCopyWithImpl<$R, $Out>
           Object? beneficiaryClientReferenceId = $none,
           Object? beneficiaryRegistrationDateLte = $none,
           Object? beneficiaryRegistrationDateGte = $none,
+          Object? offset = $none,
+          Object? limit = $none,
           Object? clientReferenceId = $none,
           Object? tenantId = $none,
           Object? dateOfRegistration = $none,
@@ -269,6 +283,8 @@ class _ProjectBeneficiarySearchModelCopyWithImpl<$R, $Out>
           #beneficiaryRegistrationDateLte: beneficiaryRegistrationDateLte,
         if (beneficiaryRegistrationDateGte != $none)
           #beneficiaryRegistrationDateGte: beneficiaryRegistrationDateGte,
+        if (offset != $none) #offset: offset,
+        if (limit != $none) #limit: limit,
         if (clientReferenceId != $none) #clientReferenceId: clientReferenceId,
         if (tenantId != $none) #tenantId: tenantId,
         if (dateOfRegistration != $none)
@@ -290,6 +306,8 @@ class _ProjectBeneficiarySearchModelCopyWithImpl<$R, $Out>
           beneficiaryRegistrationDateGte: data.get(
               #beneficiaryRegistrationDateGte,
               or: $value.beneficiaryRegistrationDateGte),
+          offset: data.get(#offset, or: $value.offset),
+          limit: data.get(#limit, or: $value.limit),
           clientReferenceId:
               data.get(#clientReferenceId, or: $value.clientReferenceId),
           tenantId: data.get(#tenantId, or: $value.tenantId),

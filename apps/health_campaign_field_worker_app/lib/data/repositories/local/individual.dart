@@ -42,6 +42,10 @@ class IndividualLocalRepository
       ],
     );
 
+    if (query.limit != null && query.offset != null) {
+      selectQuery.limit(query.limit!, offset: query.offset);
+    }
+
     final results = await (selectQuery
           ..where(
             buildAnd([
@@ -70,9 +74,11 @@ class IndividualLocalRepository
                   query.gender!.index,
                 ),
               if (query.name?.givenName != null)
-                sql.name.givenName.contains(
-                  query.name!.givenName!,
-                ),
+                buildOr([
+                  sql.name.givenName.contains(
+                    query.name!.givenName!,
+                  ),
+                ]),
               if (query.name?.familyName != null)
                 sql.name.familyName.equals(
                   query.name!.familyName!,

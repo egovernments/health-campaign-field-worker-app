@@ -23,6 +23,12 @@ class NameSearchModelMapper extends SubClassMapperBase<NameSearchModel> {
   static String? _$id(NameSearchModel v) => v.id;
   static const Field<NameSearchModel, String> _f$id =
       Field('id', _$id, opt: true);
+  static int? _$offset(NameSearchModel v) => v.offset;
+  static const Field<NameSearchModel, int> _f$offset =
+      Field('offset', _$offset, opt: true);
+  static int? _$limit(NameSearchModel v) => v.limit;
+  static const Field<NameSearchModel, int> _f$limit =
+      Field('limit', _$limit, opt: true);
   static String? _$givenName(NameSearchModel v) => v.givenName;
   static const Field<NameSearchModel, String> _f$givenName =
       Field('givenName', _$givenName, opt: true);
@@ -49,6 +55,8 @@ class NameSearchModelMapper extends SubClassMapperBase<NameSearchModel> {
   @override
   final MappableFields<NameSearchModel> fields = const {
     #id: _f$id,
+    #offset: _f$offset,
+    #limit: _f$limit,
     #givenName: _f$givenName,
     #familyName: _f$familyName,
     #otherNames: _f$otherNames,
@@ -71,6 +79,8 @@ class NameSearchModelMapper extends SubClassMapperBase<NameSearchModel> {
   static NameSearchModel _instantiate(DecodingData data) {
     return NameSearchModel.ignoreDeleted(
         id: data.dec(_f$id),
+        offset: data.dec(_f$offset),
+        limit: data.dec(_f$limit),
         givenName: data.dec(_f$givenName),
         familyName: data.dec(_f$familyName),
         otherNames: data.dec(_f$otherNames),
@@ -136,6 +146,8 @@ abstract class NameSearchModelCopyWith<$R, $In extends NameSearchModel, $Out>
   @override
   $R call(
       {String? id,
+      int? offset,
+      int? limit,
       String? givenName,
       String? familyName,
       String? otherNames,
@@ -156,6 +168,8 @@ class _NameSearchModelCopyWithImpl<$R, $Out>
   @override
   $R call(
           {Object? id = $none,
+          Object? offset = $none,
+          Object? limit = $none,
           Object? givenName = $none,
           Object? familyName = $none,
           Object? otherNames = $none,
@@ -163,6 +177,8 @@ class _NameSearchModelCopyWithImpl<$R, $Out>
           Object? boundaryCode = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
+        if (offset != $none) #offset: offset,
+        if (limit != $none) #limit: limit,
         if (givenName != $none) #givenName: givenName,
         if (familyName != $none) #familyName: familyName,
         if (otherNames != $none) #otherNames: otherNames,
@@ -172,6 +188,8 @@ class _NameSearchModelCopyWithImpl<$R, $Out>
   @override
   NameSearchModel $make(CopyWithData data) => NameSearchModel.ignoreDeleted(
       id: data.get(#id, or: $value.id),
+      offset: data.get(#offset, or: $value.offset),
+      limit: data.get(#limit, or: $value.limit),
       givenName: data.get(#givenName, or: $value.givenName),
       familyName: data.get(#familyName, or: $value.familyName),
       otherNames: data.get(#otherNames, or: $value.otherNames),
