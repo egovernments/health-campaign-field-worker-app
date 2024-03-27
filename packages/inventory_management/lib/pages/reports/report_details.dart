@@ -468,7 +468,8 @@ class _InventoryReportDetailsPageState
                                               ),
                                             );
                                           },
-                                          stockReconciliation: (data) {
+                                          stockReconciliation:
+                                              (data, additionalData) {
                                             if (data.isEmpty) {
                                               return Padding(
                                                 padding: const EdgeInsets.all(
@@ -584,7 +585,7 @@ class _InventoryReportDetailsPageState
                                                             key: receivedKey,
                                                             value:
                                                                 _getCountFromAdditionalDetails(
-                                                              model,
+                                                              additionalData,
                                                               'received',
                                                             ),
                                                           ),
@@ -592,7 +593,7 @@ class _InventoryReportDetailsPageState
                                                             key: dispatchedKey,
                                                             value:
                                                                 _getCountFromAdditionalDetails(
-                                                              model,
+                                                              additionalData,
                                                               'issued',
                                                             ),
                                                           ),
@@ -600,7 +601,7 @@ class _InventoryReportDetailsPageState
                                                             key: returnedKey,
                                                             value:
                                                                 _getCountFromAdditionalDetails(
-                                                              model,
+                                                              additionalData,
                                                               'returned',
                                                             ),
                                                           ),
@@ -608,7 +609,7 @@ class _InventoryReportDetailsPageState
                                                             key: lossKey,
                                                             value:
                                                                 _getCountFromAdditionalDetails(
-                                                              model,
+                                                              additionalData,
                                                               'lost',
                                                             ),
                                                           ),
@@ -616,7 +617,7 @@ class _InventoryReportDetailsPageState
                                                             key: damagedKey,
                                                             value:
                                                                 _getCountFromAdditionalDetails(
-                                                              model,
+                                                              additionalData,
                                                               'damaged',
                                                             ),
                                                           ),
@@ -624,7 +625,7 @@ class _InventoryReportDetailsPageState
                                                             key: stockInHandKey,
                                                             value:
                                                                 _getCountFromAdditionalDetails(
-                                                              model,
+                                                              additionalData,
                                                               'inHand',
                                                             ),
                                                           ),
@@ -737,23 +738,23 @@ class _InventoryReportDetailsPageState
   }
 
   String _getCountFromAdditionalDetails(
-    StockReconciliationModel model,
+    Iterable<Iterable<MapEntry<String, dynamic>>> additionalData,
     String key,
   ) {
-    var count;
+    final additionalDetails = additionalData;
+    if (additionalDetails == null) {
+      return '0';
+    }
 
-    // final additionalDetails = model.additionalFields;
-    // if (additionalDetails == null) {
-    //   return '0';
-    // }
-    // final count = additionalDetails.fields.firstWhereOrNull(
-    //   (e) => e.key == key,
-    // );
-    // if (count == null) {
-    //   return '0';
-    // }
+    final count = additionalDetails.firstOrNull?.where(
+      (element) => element.key == key,
+    );
 
-    return (double.tryParse(count.value.toString()) ?? 0.0).toStringAsFixed(0);
+    if (count == null) {
+      return '0';
+    }
+
+    return (double.tryParse(count.toString()) ?? 0.0).toStringAsFixed(0);
   }
 }
 

@@ -53,23 +53,16 @@ class InventoryReportBloc
     InventoryReportEmitter emit,
   ) async {
     emit(const InventoryReportLoadingState());
-    // final data = await stockReconciliationRepository.search(
-    //   StockReconciliationSearchModel(
-    //     tenantId: event.tenantId,
-    //     facilityId: event.facilityId,
-    //     productVariantId: event.productVariantId,
-    //   ),
-    // );
-    //
-    // final groupedData = data.groupListsBy(
-    //       (element) => DateFormat('dd MMM yyyy').format(
-    //     element.dateOfReconciliationTime,
-    //   ),
-    // );
-
-    emit(InventoryReportStockReconciliationState(
-        // data: groupedData,
-        ));
+    await InventorySingleton().handleStockReconciliationReport(
+        StockReconciliationReport(
+            facilityId: event.facilityId,
+            productVariantId: event.productVariantId,
+            stockReconciliationReport:
+                (stockReconciliationReport, additionalData) {
+              emit(InventoryReportStockReconciliationState(
+                data: stockReconciliationReport,
+              ));
+            }));
   }
 }
 
@@ -100,6 +93,7 @@ class InventoryReportState with _$InventoryReportState {
 
   const factory InventoryReportState.stockReconciliation({
     @Default({}) Map<String, List<StockReconciliationModel>> data,
+    @Default([{}]) Iterable<Iterable<MapEntry<String, dynamic>>> additionalData,
   }) = InventoryReportStockReconciliationState;
 }
 

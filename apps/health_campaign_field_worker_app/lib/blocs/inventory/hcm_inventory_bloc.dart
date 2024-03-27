@@ -18,22 +18,23 @@ import '../sync/sync.dart';
 import 'package:inventory_management/models/entities/inventory_facility.dart';
 
 class HcmInventoryBloc extends InventoryListener {
-  BuildContext context;
+  BuildContext? context;
   final String? userId;
   final String? individualId;
   final String? projectId;
-  final LocalRepository<HcmStockModel, HcmStockSearchModel>
+  final LocalRepository<HcmStockModel, HcmStockSearchModel>?
       stockLocalRepository;
   final LocalRepository<HcmStockReconciliationModel,
-      HcmStockReconciliationSearchModel> stockReconLocalRepository;
+      HcmStockReconciliationSearchModel>? stockReconLocalRepository;
+  late Function(bool) _onTriggerDetected = (bool) {};
 
   HcmInventoryBloc({
-    required this.context,
-    required this.userId,
-    required this.individualId,
-    required this.projectId,
-    required this.stockLocalRepository,
-    required this.stockReconLocalRepository,
+    this.context,
+    this.userId,
+    this.individualId,
+    this.projectId,
+    this.stockLocalRepository,
+    this.stockReconLocalRepository,
   });
 
   late Function(List<InventoryFacilityModel> facilities) _facilitiesLoaded;
@@ -45,16 +46,16 @@ class HcmInventoryBloc extends InventoryListener {
 
   @override
   void callSyncMethod() {
-    context.read<SyncBloc>().add(SyncRefreshEvent(userId!));
+    context!.read<SyncBloc>().add(SyncRefreshEvent(userId!));
   }
 
   @override
   Future<List<InventoryFacilityModel>> fetchFacilitiesForProjectId() async {
-    final facilitiesBloc = context.read<FacilityBloc>();
+    final facilitiesBloc = context!.read<FacilityBloc>();
     facilitiesBloc.add(FacilityLoadForProjectEvent(projectId: projectId!));
 
     final facilitiesState = await facilitiesBloc.stream.firstWhere(
-          (state) => state.maybeWhen(
+      (state) => state.maybeWhen(
         fetched: (facilities, _) => true,
         orElse: () => false,
       ),
@@ -85,7 +86,7 @@ class HcmInventoryBloc extends InventoryListener {
 
   @override
   Future<List<invProdVar.ProductVariantModel>> fetchProductVariants() async {
-    final productsBloc = context.read<ProductVariantBloc>();
+    final productsBloc = context!.read<ProductVariantBloc>();
     productsBloc.add(ProductVariantLoadEvent(
       query: ProjectResourceSearchModel(
         projectId: projectId!,
@@ -93,7 +94,7 @@ class HcmInventoryBloc extends InventoryListener {
     ));
 
     final productVariantsState = await productsBloc.stream.firstWhere(
-          (state) => state.maybeWhen(
+      (state) => state.maybeWhen(
         fetched: (productVariants) => true,
         orElse: () => false,
       ),
@@ -122,90 +123,6 @@ class HcmInventoryBloc extends InventoryListener {
     return hcmProductVariantModel;
   }
 
-  // @override
-  // Future<void> fetchFacilitiesForProjectId(
-  //   Function(List<InventoryFacilityModel> facilitiesModel) facilities,
-  // ) async {
-  //   _facilitiesLoaded = facilities;
-  //
-  //   final facilitiesBloc = context.read<FacilityBloc>()
-  //     ..add(FacilityLoadForProjectEvent(projectId: projectId!));
-  //
-  //   facilitiesBloc.state.whenOrNull(
-  //         fetched: (facilities, _) {
-  //           _facilitiesLoaded(loadInventoryFacilities(facilities));
-  //         },
-  //       ) ??
-  //       [];
-  //
-  //   return;
-  // }
-  //
-  // @override
-  // Future<void> fetchProductVariants(
-  //   Function(List<invProdVar.ProductVariantModel> productVariantsModel)
-  //       productVariants,
-  // ) async {
-  //   _productVariantsLoaded = productVariants;
-  //
-  //   final productsBloc = await context.read<ProductVariantBloc>()
-  //     ..add(ProductVariantLoadEvent(
-  //       query: ProjectResourceSearchModel(
-  //         projectId: projectId!,
-  //       ),
-  //     ));
-  //
-  //   await productsBloc.state.whenOrNull(
-  //         fetched: (productVariants) {
-  //           _productVariantsLoaded(loadProductVariants(productVariants));
-  //         },
-  //       ) ??
-  //       [];
-  //
-  //   return;
-  // }
-
-  // loadInventoryFacilities(List<FacilityModel> facilities) {
-  //   List<InventoryFacilityModel> hcmInventoryFacilityModel = [];
-  //   for (var element in facilities) {
-  //     hcmInventoryFacilityModel.add(
-  //       InventoryFacilityModel(
-  //         id: element.id,
-  //         isPermanent: element.isPermanent,
-  //         nonRecoverableError: element.nonRecoverableError,
-  //         rowVersion: element.rowVersion,
-  //         storageCapacity: element.storageCapacity,
-  //         tenantId: element.tenantId,
-  //         usage: element.usage,
-  //       ),
-  //     );
-  //   }
-  //
-  //   return hcmInventoryFacilityModel;
-  // }
-  //
-  // List<invProdVar.ProductVariantModel> loadProductVariants(
-  //   List<ProductVariantModel> productVariants,
-  // ) {
-  //   List<invProdVar.ProductVariantModel> hcmProductVariantModel = [];
-  //
-  //   for (var element in productVariants) {
-  //     hcmProductVariantModel.add(
-  //       invProdVar.ProductVariantModel(
-  //         id: element.id,
-  //         variation: element.variation,
-  //         rowVersion: element.rowVersion,
-  //         tenantId: element.tenantId,
-  //         nonRecoverableError: element.nonRecoverableError,
-  //         productId: element.productId,
-  //         sku: element.sku,
-  //       ),
-  //     );
-  //   }
-  //
-  //   return hcmProductVariantModel;
-  // }
-
   getAdditionalData(Map<String, Object> additionalData) {
     List<AdditionalField> additionalFields = [];
 
@@ -222,7 +139,7 @@ class HcmInventoryBloc extends InventoryListener {
   ) async {
     final user = await LocalSecureStore.instance.userRequestModel;
 
-    final receivedStocks = (await stockLocalRepository.search(
+    final receivedStocks = (await stockLocalRepository!.search(
       HcmStockSearchModel(
         stock: StockSearchModel(
           productVariantId: fetchStockReconDetails.productVariantId,
@@ -234,7 +151,7 @@ class HcmInventoryBloc extends InventoryListener {
             element.auditDetails != null &&
             element.auditDetails?.createdBy == user?.uuid)
         .toList();
-    final sentStocks = (await stockLocalRepository.search(
+    final sentStocks = (await stockLocalRepository!.search(
       HcmStockSearchModel(
         stock: StockSearchModel(
           productVariantId: fetchStockReconDetails.productVariantId,
@@ -258,7 +175,7 @@ class HcmInventoryBloc extends InventoryListener {
 
   @override
   Future<void> saveStockDetails(SaveStockDetails saveStockDetails) async {
-    var response = await stockLocalRepository.create(HcmStockModel(
+    var response = await stockLocalRepository!.create(HcmStockModel(
       stock: saveStockDetails.stockModel.copyWith(
         facilityId: saveStockDetails.stockModel.facilityId,
         rowVersion: 1,
@@ -269,14 +186,14 @@ class HcmInventoryBloc extends InventoryListener {
         fields: getAdditionalData(saveStockDetails.additionalData),
       ),
       auditDetails: AuditDetails(
-        createdBy: context.loggedInUserUuid,
-        createdTime: context.millisecondsSinceEpoch(),
+        createdBy: context!.loggedInUserUuid,
+        createdTime: context!.millisecondsSinceEpoch(),
       ),
       clientAuditDetails: ClientAuditDetails(
-        createdBy: context.loggedInUserUuid,
-        createdTime: context.millisecondsSinceEpoch(),
-        lastModifiedBy: context.loggedInUserUuid,
-        lastModifiedTime: context.millisecondsSinceEpoch(),
+        createdBy: context!.loggedInUserUuid,
+        createdTime: context!.millisecondsSinceEpoch(),
+        lastModifiedBy: context!.loggedInUserUuid,
+        lastModifiedTime: context!.millisecondsSinceEpoch(),
       ),
     ));
 
@@ -287,7 +204,7 @@ class HcmInventoryBloc extends InventoryListener {
   Future<void> saveStockReconciliationDetails(
     SaveStockReconciliationModel stockReconciliationModel,
   ) async {
-    var response = await stockReconLocalRepository.create(
+    var response = await stockReconLocalRepository!.create(
       HcmStockReconciliationModel(
         stockReconciliation:
             stockReconciliationModel.stockReconciliationModel.copyWith(
@@ -300,14 +217,14 @@ class HcmInventoryBloc extends InventoryListener {
           fields: getAdditionalData(stockReconciliationModel.additionalData),
         ),
         auditDetails: AuditDetails(
-          createdBy: context.loggedInUserUuid,
-          createdTime: context.millisecondsSinceEpoch(),
+          createdBy: context!.loggedInUserUuid,
+          createdTime: context!.millisecondsSinceEpoch(),
         ),
         clientAuditDetails: ClientAuditDetails(
-          createdBy: context.loggedInUserUuid,
-          createdTime: context.millisecondsSinceEpoch(),
-          lastModifiedBy: context.loggedInUserUuid,
-          lastModifiedTime: context.millisecondsSinceEpoch(),
+          createdBy: context!.loggedInUserUuid,
+          createdTime: context!.millisecondsSinceEpoch(),
+          lastModifiedBy: context!.loggedInUserUuid,
+          lastModifiedTime: context!.millisecondsSinceEpoch(),
         ),
       ),
     );
@@ -371,7 +288,7 @@ class HcmInventoryBloc extends InventoryListener {
     final user = await LocalSecureStore.instance.userRequestModel;
 
     final data = (receiverId != null
-            ? await stockLocalRepository.search(
+            ? await stockLocalRepository!.search(
                 HcmStockSearchModel(
                   stock: StockSearchModel(
                     transactionType: transactionType,
@@ -382,7 +299,7 @@ class HcmInventoryBloc extends InventoryListener {
                   ),
                 ),
               )
-            : await stockLocalRepository.search(
+            : await stockLocalRepository!.search(
                 HcmStockSearchModel(
                   stock: StockSearchModel(
                     transactionType: transactionType,
@@ -414,7 +331,7 @@ class HcmInventoryBloc extends InventoryListener {
   Future<void> handleStockReconciliationReport(
     StockReconciliationReport stockReconciliationReport,
   ) async {
-    final data = await stockReconLocalRepository.search(
+    final data = await stockReconLocalRepository!.search(
       HcmStockReconciliationSearchModel(
         stockReconciliationSearchModel: StockReconciliationSearchModel(
           tenantId: envConfig.variables.tenantId,
@@ -434,6 +351,20 @@ class HcmInventoryBloc extends InventoryListener {
       return MapEntry(key, value.map((e) => e.stockReconciliation!).toList());
     });
 
-    stockReconciliationReport.stockReconciliationReport(groupedData);
+    final additionalData = data.map((e) => e.additionalFields).toList();
+    var moreDetails = additionalData.map((e) => e?.fields).toList();
+    var additionalFields = moreDetails.map((e) => e!.map((e) {
+          return MapEntry(e.key, e.value);
+        }));
+    stockReconciliationReport.stockReconciliationReport(groupedData, additionalFields);
+  }
+
+  @override
+  void listenToDispose(Function(bool isDisposePackage) disposePackage) {
+    _onTriggerDetected = disposePackage;
+  }
+
+  void onSideMenuTriggered() {
+    _onTriggerDetected(true);
   }
 }
