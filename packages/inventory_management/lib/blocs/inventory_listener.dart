@@ -2,8 +2,8 @@ import 'package:inventory_management/models/entities/product_variant.dart';
 import 'package:inventory_management/models/entities/stock_reconciliation.dart';
 
 import '../models/entities/inventory_facility.dart';
+import '../models/entities/inventory_transport_type.dart';
 import '../models/entities/stock.dart';
-import '../utils/utils.dart';
 import 'inventory_report.dart';
 
 // This is an abstract class that defines the methods for inventory operations.
@@ -35,8 +35,6 @@ abstract class InventoryListener {
 
   // Calls the sync method.
   void callSyncMethod();
-
-  void listenToDispose(Function(bool isDisposePackage) disposePackage);
 }
 
 // This is a singleton class for inventory operations.
@@ -148,10 +146,6 @@ class InventorySingleton {
   // Calls the sync method.
   void callSync() {
     _inventoryListener?.callSyncMethod();
-  }
-
-  void listenToDispose(Function(bool isDisposePackage) disposePackage) {
-    _inventoryListener?.listenToDispose(disposePackage);
   }
 }
 

@@ -1,5 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:inventory_management/blocs/inventory_listener.dart';
+import 'package:inventory_management/blocs/app_localization.dart';
+import 'package:inventory_management/pages/manage_stocks.dart';
+import 'package:inventory_management/pages/reports/report_selection.dart';
+import 'package:inventory_management/pages/stock_reconciliation/stock_reconciliation.dart';
+import 'package:inventory_management/models/entities/inventory_transport_type.dart';
 
 import '../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../blocs/localization/app_localization.dart';
@@ -261,6 +267,14 @@ part 'app_router.gr.dart';
               path: 'complaints-details',
             ),
           ],
+        ),
+
+        // Inventory Routes
+        AutoRoute(page: ManageStocksPage, path: 'manage-stocks'),
+        AutoRoute(page: StockReconciliationPage, path: 'stock-reconciliation'),
+        AutoRoute(
+          page: InventoryReportSelectionPage,
+          path: 'inventory-report-selection',
         ),
       ],
     ),

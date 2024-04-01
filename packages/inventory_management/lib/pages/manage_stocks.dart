@@ -9,10 +9,8 @@ import 'package:inventory_management/widgets/component_wrapper/product_variant_b
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/localized.dart';
 import '../blocs/inventory_listener.dart';
-import '../blocs/product_variant.dart';
 import '../blocs/record_stock.dart';
-import '../models/entities/project_resource.dart';
-import '../utils/utils.dart';
+import '../models/entities/inventory_transport_type.dart';
 import '../widgets/back_navigation_help_header.dart';
 
 class ManageStocksPage extends LocalizedStatefulWidget {

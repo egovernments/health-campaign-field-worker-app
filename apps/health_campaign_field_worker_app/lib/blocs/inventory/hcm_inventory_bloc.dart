@@ -26,7 +26,6 @@ class HcmInventoryBloc extends InventoryListener {
       stockLocalRepository;
   final LocalRepository<HcmStockReconciliationModel,
       HcmStockReconciliationSearchModel>? stockReconLocalRepository;
-  late Function(bool) _onTriggerDetected = (bool) {};
 
   HcmInventoryBloc({
     this.context,
@@ -351,20 +350,16 @@ class HcmInventoryBloc extends InventoryListener {
       return MapEntry(key, value.map((e) => e.stockReconciliation!).toList());
     });
 
-    final additionalData = data.map((e) => e.additionalFields).toList();
-    var moreDetails = additionalData.map((e) => e?.fields).toList();
-    var additionalFields = moreDetails.map((e) => e!.map((e) {
-          return MapEntry(e.key, e.value);
-        }));
-    stockReconciliationReport.stockReconciliationReport(groupedData, additionalFields);
-  }
+    final additionalData = data.map((e) => e.additionalFields).map((e) {
+      return e!.fields;
+    }).toList();
+    var additionalFields = additionalData.map((e) {
+      return e.map((e) {
+        return MapEntry(e.key, e.value);
+      });
+    }).toList();
 
-  @override
-  void listenToDispose(Function(bool isDisposePackage) disposePackage) {
-    _onTriggerDetected = disposePackage;
-  }
-
-  void onSideMenuTriggered() {
-    _onTriggerDetected(true);
+    stockReconciliationReport.stockReconciliationReport(
+        groupedData, additionalFields);
   }
 }

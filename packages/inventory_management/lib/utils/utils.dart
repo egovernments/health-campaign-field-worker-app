@@ -56,8 +56,3 @@ class CustomValidator {
     return null;
   }
 }
-
-class InventoryTransportTypes {
-  late String name;
-  late String code;
-}
