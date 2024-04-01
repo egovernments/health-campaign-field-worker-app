@@ -54,6 +54,16 @@ void main() {
                 name: 'First User',
               ),
             ],
+            attendanceCollectionModel: [
+              AttendeeModel(
+                individualId: '1',
+                name: 'First User',
+              ),
+              AttendeeModel(
+                individualId: '2',
+                name: 'Second User',
+              ),
+            ],
           ),
         ),
       );
@@ -90,6 +100,16 @@ void main() {
                 name: 'First User',
               ),
             ],
+            attendanceCollectionModel: [
+              AttendeeModel(
+                individualId: '1',
+                name: 'First User',
+              ),
+              AttendeeModel(
+                individualId: '2',
+                name: 'Second User',
+              ),
+            ],
           ),
         ),
       );
@@ -121,6 +141,16 @@ void main() {
         emits(
           AttendanceIndividualState.loaded(
             attendanceSearchModelList: [],
+            attendanceCollectionModel: [
+              AttendeeModel(
+                individualId: '1',
+                name: 'First User',
+              ),
+              AttendeeModel(
+                individualId: '2',
+                name: 'Second User',
+              ),
+            ],
           ),
         ),
       );
@@ -157,6 +187,16 @@ void main() {
               AttendeeModel(
                 individualId: '1',
                 name: 'First User',
+              ),
+            ],
+            attendanceCollectionModel: [
+              AttendeeModel(
+                individualId: '1',
+                name: 'First User',
+              ),
+              AttendeeModel(
+                individualId: '2',
+                name: 'Second User',
               ),
             ],
           ),
