@@ -7,10 +7,8 @@ class MockAttendanceSingleton extends Mock implements AttendanceSingleton {}
 void main() {
   group('AttendanceBloc', () {
     late AttendanceBloc attendanceBloc;
-    // late MockAttendanceSingleton mockAttendanceSingleton;
 
     setUp(() {
-      // mockAttendanceSingleton = MockAttendanceSingleton();
       attendanceBloc = AttendanceBloc(const AttendanceStates.registerLoading());
     });
 
@@ -18,18 +16,6 @@ void main() {
       expect(attendanceBloc.state,
           equals(const AttendanceStates.registerLoading()));
     });
-
-    // test(
-    //     'Emits RegisterLoaded state when attendance registers are fetched on initializing',
-    //     () {
-    //   attendanceBloc.add(const AttendanceEvents.initial());
-    //   expectLater(
-    //       attendanceBloc.stream,
-    //       emitsInOrder([
-    //         // const AttendanceStates.registerLoading(),
-    //         const AttendanceStates.registerLoaded(registers: [])
-    //       ]));
-    // });
 
     test(
         'Emits SelectedRegisterLoaded state when LoadSelectedAttendanceRegisterData event is added',
