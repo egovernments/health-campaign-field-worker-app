@@ -144,11 +144,11 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
                             )
                           : null));
                 }
+                setState(() {});
               }
             },
             child: Scaffold(
               body: ScrollableContent(
-                enableFixedButton: (list.length == 1),
                 header: BackNavigationHelpHeaderWidget(
                   showHelp: false,
                   showLogoutCTA: false,
@@ -202,6 +202,9 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
                                   PoweredByDigit(
                                       version:
                                           AttendanceSingleton().appVersion),
+                                const SizedBox(
+                                  height: 16,
+                                ),
                               ],
                             ),
                             registerLoading: () => const Center(
@@ -322,7 +325,7 @@ class RegisterCard extends StatelessWidget {
                     }
                   },
                 )
-              : const SizedBox.shrink(),
+              : const Offstage(),
         ],
       ),
     );
