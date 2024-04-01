@@ -28,18 +28,66 @@ class AttendanceLogSearchModelMapper
   static String? _$registerId(AttendanceLogSearchModel v) => v.registerId;
   static const Field<AttendanceLogSearchModel, String> _f$registerId =
       Field('registerId', _$registerId, opt: true);
+  static String? _$individualId(AttendanceLogSearchModel v) => v.individualId;
+  static const Field<AttendanceLogSearchModel, String> _f$individualId =
+      Field('individualId', _$individualId, opt: true);
+  static String? _$status(AttendanceLogSearchModel v) => v.status;
+  static const Field<AttendanceLogSearchModel, String> _f$status =
+      Field('status', _$status, opt: true);
+  static String? _$type(AttendanceLogSearchModel v) => v.type;
+  static const Field<AttendanceLogSearchModel, String> _f$type =
+      Field('type', _$type, opt: true);
+  static String? _$tenantId(AttendanceLogSearchModel v) => v.tenantId;
+  static const Field<AttendanceLogSearchModel, String> _f$tenantId =
+      Field('tenantId', _$tenantId, opt: true);
+  static int? _$time(AttendanceLogSearchModel v) => v.time;
+  static const Field<AttendanceLogSearchModel, int> _f$time =
+      Field('time', _$time, opt: true);
+  static int? _$entryTime(AttendanceLogSearchModel v) => v.entryTime;
+  static const Field<AttendanceLogSearchModel, int> _f$entryTime =
+      Field('entryTime', _$entryTime, opt: true);
+  static int? _$exitTime(AttendanceLogSearchModel v) => v.exitTime;
+  static const Field<AttendanceLogSearchModel, int> _f$exitTime =
+      Field('exitTime', _$exitTime, opt: true);
+  static List<String>? _$clientReferenceId(AttendanceLogSearchModel v) =>
+      v.clientReferenceId;
+  static const Field<AttendanceLogSearchModel, List<String>>
+      _f$clientReferenceId =
+      Field('clientReferenceId', _$clientReferenceId, opt: true);
+  static bool? _$uploadToServer(AttendanceLogSearchModel v) => v.uploadToServer;
+  static const Field<AttendanceLogSearchModel, bool> _f$uploadToServer =
+      Field('uploadToServer', _$uploadToServer, opt: true);
 
   @override
   final MappableFields<AttendanceLogSearchModel> fields = const {
     #id: _f$id,
     #registerId: _f$registerId,
+    #individualId: _f$individualId,
+    #status: _f$status,
+    #type: _f$type,
+    #tenantId: _f$tenantId,
+    #time: _f$time,
+    #entryTime: _f$entryTime,
+    #exitTime: _f$exitTime,
+    #clientReferenceId: _f$clientReferenceId,
+    #uploadToServer: _f$uploadToServer,
   };
   @override
   final bool ignoreNull = true;
 
   static AttendanceLogSearchModel _instantiate(DecodingData data) {
     return AttendanceLogSearchModel.ignoreDeleted(
-        id: data.dec(_f$id), registerId: data.dec(_f$registerId));
+        id: data.dec(_f$id),
+        registerId: data.dec(_f$registerId),
+        individualId: data.dec(_f$individualId),
+        status: data.dec(_f$status),
+        type: data.dec(_f$type),
+        tenantId: data.dec(_f$tenantId),
+        time: data.dec(_f$time),
+        entryTime: data.dec(_f$entryTime),
+        exitTime: data.dec(_f$exitTime),
+        clientReferenceId: data.dec(_f$clientReferenceId),
+        uploadToServer: data.dec(_f$uploadToServer));
   }
 
   @override
@@ -101,7 +149,20 @@ abstract class AttendanceLogSearchModelCopyWith<
     $R,
     $In extends AttendanceLogSearchModel,
     $Out> implements ClassCopyWith<$R, $In, $Out> {
-  $R call({String? id, String? registerId});
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get clientReferenceId;
+  $R call(
+      {String? id,
+      String? registerId,
+      String? individualId,
+      String? status,
+      String? type,
+      String? tenantId,
+      int? time,
+      int? entryTime,
+      int? exitTime,
+      List<String>? clientReferenceId,
+      bool? uploadToServer});
   AttendanceLogSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -116,16 +177,54 @@ class _AttendanceLogSearchModelCopyWithImpl<$R, $Out>
   late final ClassMapperBase<AttendanceLogSearchModel> $mapper =
       AttendanceLogSearchModelMapper.ensureInitialized();
   @override
-  $R call({Object? id = $none, Object? registerId = $none}) =>
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get clientReferenceId => $value.clientReferenceId != null
+          ? ListCopyWith(
+              $value.clientReferenceId!,
+              (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(clientReferenceId: v))
+          : null;
+  @override
+  $R call(
+          {Object? id = $none,
+          Object? registerId = $none,
+          Object? individualId = $none,
+          Object? status = $none,
+          Object? type = $none,
+          Object? tenantId = $none,
+          Object? time = $none,
+          Object? entryTime = $none,
+          Object? exitTime = $none,
+          Object? clientReferenceId = $none,
+          Object? uploadToServer = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
-        if (registerId != $none) #registerId: registerId
+        if (registerId != $none) #registerId: registerId,
+        if (individualId != $none) #individualId: individualId,
+        if (status != $none) #status: status,
+        if (type != $none) #type: type,
+        if (tenantId != $none) #tenantId: tenantId,
+        if (time != $none) #time: time,
+        if (entryTime != $none) #entryTime: entryTime,
+        if (exitTime != $none) #exitTime: exitTime,
+        if (clientReferenceId != $none) #clientReferenceId: clientReferenceId,
+        if (uploadToServer != $none) #uploadToServer: uploadToServer
       }));
   @override
   AttendanceLogSearchModel $make(CopyWithData data) =>
       AttendanceLogSearchModel.ignoreDeleted(
           id: data.get(#id, or: $value.id),
-          registerId: data.get(#registerId, or: $value.registerId));
+          registerId: data.get(#registerId, or: $value.registerId),
+          individualId: data.get(#individualId, or: $value.individualId),
+          status: data.get(#status, or: $value.status),
+          type: data.get(#type, or: $value.type),
+          tenantId: data.get(#tenantId, or: $value.tenantId),
+          time: data.get(#time, or: $value.time),
+          entryTime: data.get(#entryTime, or: $value.entryTime),
+          exitTime: data.get(#exitTime, or: $value.exitTime),
+          clientReferenceId:
+              data.get(#clientReferenceId, or: $value.clientReferenceId),
+          uploadToServer: data.get(#uploadToServer, or: $value.uploadToServer));
 
   @override
   AttendanceLogSearchModelCopyWith<$R2, AttendanceLogSearchModel, $Out2>

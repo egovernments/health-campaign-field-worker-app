@@ -23,43 +23,12 @@ class HCMAttendanceLogSearchModelMapper
   @override
   final String id = 'HCMAttendanceLogSearchModel';
 
-  static String? _$id(HCMAttendanceLogSearchModel v) => v.id;
-  static const Field<HCMAttendanceLogSearchModel, String> _f$id =
-      Field('id', _$id, opt: true);
-  static String? _$registerId(HCMAttendanceLogSearchModel v) => v.registerId;
-  static const Field<HCMAttendanceLogSearchModel, String> _f$registerId =
-      Field('registerId', _$registerId, opt: true);
-  static String? _$individualId(HCMAttendanceLogSearchModel v) =>
-      v.individualId;
-  static const Field<HCMAttendanceLogSearchModel, String> _f$individualId =
-      Field('individualId', _$individualId, opt: true);
-  static String? _$status(HCMAttendanceLogSearchModel v) => v.status;
-  static const Field<HCMAttendanceLogSearchModel, String> _f$status =
-      Field('status', _$status, opt: true);
-  static String? _$type(HCMAttendanceLogSearchModel v) => v.type;
-  static const Field<HCMAttendanceLogSearchModel, String> _f$type =
-      Field('type', _$type, opt: true);
-  static String? _$tenantId(HCMAttendanceLogSearchModel v) => v.tenantId;
-  static const Field<HCMAttendanceLogSearchModel, String> _f$tenantId =
-      Field('tenantId', _$tenantId, opt: true);
-  static int? _$time(HCMAttendanceLogSearchModel v) => v.time;
-  static const Field<HCMAttendanceLogSearchModel, int> _f$time =
-      Field('time', _$time, opt: true);
-  static int? _$entryTime(HCMAttendanceLogSearchModel v) => v.entryTime;
-  static const Field<HCMAttendanceLogSearchModel, int> _f$entryTime =
-      Field('entryTime', _$entryTime, opt: true);
-  static int? _$exitTime(HCMAttendanceLogSearchModel v) => v.exitTime;
-  static const Field<HCMAttendanceLogSearchModel, int> _f$exitTime =
-      Field('exitTime', _$exitTime, opt: true);
-  static List<String>? _$clientReferenceId(HCMAttendanceLogSearchModel v) =>
-      v.clientReferenceId;
-  static const Field<HCMAttendanceLogSearchModel, List<String>>
-      _f$clientReferenceId =
-      Field('clientReferenceId', _$clientReferenceId, opt: true);
-  static bool? _$uploadToServer(HCMAttendanceLogSearchModel v) =>
-      v.uploadToServer;
-  static const Field<HCMAttendanceLogSearchModel, bool> _f$uploadToServer =
-      Field('uploadToServer', _$uploadToServer, opt: true);
+  static AttendanceLogSearchModel? _$attendanceSearchModel(
+          HCMAttendanceLogSearchModel v) =>
+      v.attendanceSearchModel;
+  static const Field<HCMAttendanceLogSearchModel, AttendanceLogSearchModel>
+      _f$attendanceSearchModel =
+      Field('attendanceSearchModel', _$attendanceSearchModel, opt: true);
   static AdditionalFields? _$additionalFields(HCMAttendanceLogSearchModel v) =>
       v.additionalFields;
   static const Field<HCMAttendanceLogSearchModel, AdditionalFields>
@@ -72,17 +41,7 @@ class HCMAttendanceLogSearchModelMapper
 
   @override
   final MappableFields<HCMAttendanceLogSearchModel> fields = const {
-    #id: _f$id,
-    #registerId: _f$registerId,
-    #individualId: _f$individualId,
-    #status: _f$status,
-    #type: _f$type,
-    #tenantId: _f$tenantId,
-    #time: _f$time,
-    #entryTime: _f$entryTime,
-    #exitTime: _f$exitTime,
-    #clientReferenceId: _f$clientReferenceId,
-    #uploadToServer: _f$uploadToServer,
+    #attendanceSearchModel: _f$attendanceSearchModel,
     #additionalFields: _f$additionalFields,
     #auditDetails: _f$auditDetails,
   };
@@ -91,17 +50,7 @@ class HCMAttendanceLogSearchModelMapper
 
   static HCMAttendanceLogSearchModel _instantiate(DecodingData data) {
     return HCMAttendanceLogSearchModel.ignoreDeleted(
-        id: data.dec(_f$id),
-        registerId: data.dec(_f$registerId),
-        individualId: data.dec(_f$individualId),
-        status: data.dec(_f$status),
-        type: data.dec(_f$type),
-        tenantId: data.dec(_f$tenantId),
-        time: data.dec(_f$time),
-        entryTime: data.dec(_f$entryTime),
-        exitTime: data.dec(_f$exitTime),
-        clientReferenceId: data.dec(_f$clientReferenceId),
-        uploadToServer: data.dec(_f$uploadToServer),
+        attendanceSearchModel: data.dec(_f$attendanceSearchModel),
         additionalFields: data.dec(_f$additionalFields),
         auditDetails: data.dec(_f$auditDetails));
   }
@@ -167,8 +116,8 @@ abstract class HCMAttendanceLogSearchModelCopyWith<
     $R,
     $In extends HCMAttendanceLogSearchModel,
     $Out> implements EntitySearchModelCopyWith<$R, $In, $Out> {
-  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
-      get clientReferenceId;
+  AttendanceLogSearchModelCopyWith<$R, AttendanceLogSearchModel,
+      AttendanceLogSearchModel>? get attendanceSearchModel;
   @override
   AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
       get additionalFields;
@@ -176,17 +125,7 @@ abstract class HCMAttendanceLogSearchModelCopyWith<
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
   @override
   $R call(
-      {String? id,
-      String? registerId,
-      String? individualId,
-      String? status,
-      String? type,
-      String? tenantId,
-      int? time,
-      int? entryTime,
-      int? exitTime,
-      List<String>? clientReferenceId,
-      bool? uploadToServer,
+      {AttendanceLogSearchModel? attendanceSearchModel,
       AdditionalFields? additionalFields,
       AuditDetails? auditDetails});
   HCMAttendanceLogSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
@@ -205,13 +144,10 @@ class _HCMAttendanceLogSearchModelCopyWithImpl<$R, $Out>
   late final ClassMapperBase<HCMAttendanceLogSearchModel> $mapper =
       HCMAttendanceLogSearchModelMapper.ensureInitialized();
   @override
-  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
-      get clientReferenceId => $value.clientReferenceId != null
-          ? ListCopyWith(
-              $value.clientReferenceId!,
-              (v, t) => ObjectCopyWith(v, $identity, t),
-              (v) => call(clientReferenceId: v))
-          : null;
+  AttendanceLogSearchModelCopyWith<$R, AttendanceLogSearchModel,
+          AttendanceLogSearchModel>?
+      get attendanceSearchModel => $value.attendanceSearchModel?.copyWith
+          .$chain((v) => call(attendanceSearchModel: v));
   @override
   AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
       get additionalFields => $value.additionalFields?.copyWith
@@ -221,49 +157,20 @@ class _HCMAttendanceLogSearchModelCopyWithImpl<$R, $Out>
       $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
   @override
   $R call(
-          {Object? id = $none,
-          Object? registerId = $none,
-          Object? individualId = $none,
-          Object? status = $none,
-          Object? type = $none,
-          Object? tenantId = $none,
-          Object? time = $none,
-          Object? entryTime = $none,
-          Object? exitTime = $none,
-          Object? clientReferenceId = $none,
-          Object? uploadToServer = $none,
+          {Object? attendanceSearchModel = $none,
           Object? additionalFields = $none,
           Object? auditDetails = $none}) =>
       $apply(FieldCopyWithData({
-        if (id != $none) #id: id,
-        if (registerId != $none) #registerId: registerId,
-        if (individualId != $none) #individualId: individualId,
-        if (status != $none) #status: status,
-        if (type != $none) #type: type,
-        if (tenantId != $none) #tenantId: tenantId,
-        if (time != $none) #time: time,
-        if (entryTime != $none) #entryTime: entryTime,
-        if (exitTime != $none) #exitTime: exitTime,
-        if (clientReferenceId != $none) #clientReferenceId: clientReferenceId,
-        if (uploadToServer != $none) #uploadToServer: uploadToServer,
+        if (attendanceSearchModel != $none)
+          #attendanceSearchModel: attendanceSearchModel,
         if (additionalFields != $none) #additionalFields: additionalFields,
         if (auditDetails != $none) #auditDetails: auditDetails
       }));
   @override
   HCMAttendanceLogSearchModel $make(CopyWithData data) =>
       HCMAttendanceLogSearchModel.ignoreDeleted(
-          id: data.get(#id, or: $value.id),
-          registerId: data.get(#registerId, or: $value.registerId),
-          individualId: data.get(#individualId, or: $value.individualId),
-          status: data.get(#status, or: $value.status),
-          type: data.get(#type, or: $value.type),
-          tenantId: data.get(#tenantId, or: $value.tenantId),
-          time: data.get(#time, or: $value.time),
-          entryTime: data.get(#entryTime, or: $value.entryTime),
-          exitTime: data.get(#exitTime, or: $value.exitTime),
-          clientReferenceId:
-              data.get(#clientReferenceId, or: $value.clientReferenceId),
-          uploadToServer: data.get(#uploadToServer, or: $value.uploadToServer),
+          attendanceSearchModel: data.get(#attendanceSearchModel,
+              or: $value.attendanceSearchModel),
           additionalFields:
               data.get(#additionalFields, or: $value.additionalFields),
           auditDetails: data.get(#auditDetails, or: $value.auditDetails));

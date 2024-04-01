@@ -12,31 +12,16 @@ part 'hcm_attendance_model.mapper.dart';
 @MappableClass(ignoreNull: true)
 class HCMAttendanceSearchModel extends EntitySearchModel
     with HCMAttendanceSearchModelMappable {
-  final String? id;
-  final String? staffId;
-  final String? registerNumber;
-  final String? status;
-  final String? referenceId;
-  final String? serviceCode;
+  final AttendanceRegisterSearchModel attendanceRegisterSearchModel;
 
   HCMAttendanceSearchModel({
-    this.id,
-    this.staffId,
-    this.registerNumber,
-    this.status,
-    this.serviceCode,
-    this.referenceId,
+    required this.attendanceRegisterSearchModel,
     super.isDeleted,
   }) : super();
 
   @MappableConstructor()
   HCMAttendanceSearchModel.ignoreDeleted({
-    this.id,
-    this.staffId,
-    this.registerNumber,
-    this.status,
-    this.referenceId,
-    this.serviceCode,
+    required this.attendanceRegisterSearchModel,
     super.additionalFields,
     super.auditDetails,
   }) : super(isDeleted: false);

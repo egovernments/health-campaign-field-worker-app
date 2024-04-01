@@ -22,17 +22,17 @@ class AttendanceLogsLocalRepository extends LocalRepository<
 
     final results = await (selectQuery
           ..where(buildAnd([
-            if (query.individualId != null)
+            if (query.attendanceSearchModel?.individualId != null)
               sql.attendance.individualId.equals(
-                query.individualId!,
+                query.attendanceSearchModel!.individualId!,
               ),
-            if (query.registerId != null)
+            if (query.attendanceSearchModel?.registerId != null)
               sql.attendance.registerId.equals(
-                query.registerId!,
+                query.attendanceSearchModel!.registerId!,
               ),
-            if (query.uploadToServer != null)
+            if (query.attendanceSearchModel?.uploadToServer != null)
               sql.attendance.uploadToServer.equals(
-                query.uploadToServer!,
+                query.attendanceSearchModel!.uploadToServer!,
               ),
           ])))
         .get();

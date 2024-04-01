@@ -35,6 +35,9 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
   List<AttendanceRegisterModel> attendanceRegisters = [];
   var list = <Widget>[];
 
+  int offSet = 0;
+  int limit = 10;
+
   bool empty = false;
   AttendanceBloc attendanceBloc = AttendanceBloc(const RegisterLoading());
   DateSessionBloc sessionBloc = DateSessionBloc(const DateSessionLoading());
@@ -56,149 +59,170 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
 
   @override
   Widget build(BuildContext context) {
-    var t = AttendanceLocalization.of(context);
-    return BlocProvider<AttendanceBloc>(
-      create: (context) =>
-          attendanceBloc..add(const AttendanceEvents.initial()),
-      child: BlocProvider<DateSessionBloc>(
-        create: (context) => sessionBloc,
-        child: BlocListener<AttendanceBloc, AttendanceStates>(
-          listener: (ctx, states) {
-            if (states is RegisterLoaded) {
-              list.clear();
-              attendanceRegisters = states.registers;
-              for (int i = 0; i < attendanceRegisters.length; i++) {
-                final register = attendanceRegisters[i];
-                list.add(RegisterCard(
-                    attendanceBloc: attendanceBloc,
-                    data: {
-                      t.translate(i18.attendance.campaignNameLabel):
-                          register.additionalDetails?[
-                              EnumValues.campaignName.toValue()],
-                      t.translate(i18.attendance.eventTypeLabel):
-                          register.additionalDetails?[
-                                  EnumValues.eventType.toValue()] ??
-                              t.translate(i18.common.coreCommonNA),
-                      t.translate(i18.attendance.staffCountLabel):
-                          register.attendees?.length ?? 0,
-                      t.translate(i18.attendance.startDateLabel):
-                          register.startDate != null
-                              ? DigitDateUtils.getDateFromTimestamp(
-                                  register.startDate!)
-                              : t.translate(i18.common.coreCommonNA),
-                      t.translate(i18.attendance.endDateLabel):
-                          register.endDate != null
-                              ? DigitDateUtils.getDateFromTimestamp(
-                                  register.endDate!)
-                              : t.translate(i18.common.coreCommonNA),
-                      t.translate(i18.attendance.statusLabel):
+    var localization = AttendanceLocalization.of(context);
+    return NotificationListener<ScrollNotification>(
+      onNotification: (scrollNotification) {
+        if (scrollNotification is ScrollUpdateNotification) {
+          final metrics = scrollNotification.metrics;
+          if (metrics.atEdge && metrics.pixels != 0) {
+            setState(() {
+              offSet = offSet + limit;
+            });
+            attendanceBloc.add(AttendanceEvents.loadMoreAttendanceRegisters(
+                limit: limit, offset: offSet + limit));
+          }
+        }
+        return false;
+      },
+      child: BlocProvider<AttendanceBloc>(
+        create: (context) =>
+            attendanceBloc..add(const AttendanceEvents.initial()),
+        child: BlocProvider<DateSessionBloc>(
+          create: (context) => sessionBloc,
+          child: BlocListener<AttendanceBloc, AttendanceStates>(
+            listener: (ctx, states) {
+              if (states is RegisterLoaded) {
+                list.clear();
+                attendanceRegisters = states.registers;
+                for (int i = 0; i < attendanceRegisters.length; i++) {
+                  final register = attendanceRegisters[i];
+                  list.add(RegisterCard(
+                      attendanceBloc: attendanceBloc,
+                      data: {
+                        localization
+                                .translate(i18.attendance.campaignNameLabel):
+                            register.additionalDetails?[
+                                EnumValues.campaignName.toValue()],
+                        localization.translate(i18.attendance.eventTypeLabel):
+                            register.additionalDetails?[
+                                    EnumValues.eventType.toValue()] ??
+                                localization.translate(i18.common.coreCommonNA),
+                        localization.translate(i18.attendance.staffCountLabel):
+                            register.attendees?.length ?? 0,
+                        localization.translate(i18.attendance.startDateLabel):
+                            register.startDate != null
+                                ? DigitDateUtils.getDateFromTimestamp(
+                                    register.startDate!)
+                                : localization
+                                    .translate(i18.common.coreCommonNA),
+                        localization.translate(i18.attendance.endDateLabel):
+                            register.endDate != null
+                                ? DigitDateUtils.getDateFromTimestamp(
+                                    register.endDate!)
+                                : localization
+                                    .translate(i18.common.coreCommonNA),
+                        localization.translate(i18.attendance.statusLabel):
+                            register.endDate != null &&
+                                    register.endDate! >
+                                        DateTime.now().millisecondsSinceEpoch
+                                ? localization
+                                    .translate(register.status.toString())
+                                : localization.translate(i18.common.inactive),
+                        localization.translate(
+                                i18.attendance.attendanceCompletionLabel):
+                            calculateCompletedDays(attendanceRegisters[i]) ??
+                                localization.translate(i18.common.coreCommonNA),
+                      },
+                      registers: attendanceRegisters,
+                      noOfAttendees: register.attendees?.length ?? 0,
+                      registerId: register.id,
+                      tenantId: register.tenantId ??
+                          localization.translate(i18.common.coreCommonNA),
+                      show: register.startDate != null &&
                           register.endDate != null &&
-                                  register.endDate! >
-                                      DateTime.now().millisecondsSinceEpoch
-                              ? t.translate(register.status.toString())
-                              : t.translate(i18.common.inactive),
-                      t.translate(i18.attendance.attendanceCompletionLabel):
-                          calculateCompletedDays(attendanceRegisters[i]) ??
-                              t.translate(i18.common.coreCommonNA),
-                    },
-                    registers: attendanceRegisters,
-                    noOfAttendees: register.attendees?.length ?? 0,
-                    registerId: register.id,
-                    tenantId: register.tenantId ??
-                        t.translate(i18.common.coreCommonNA),
-                    show: register.startDate != null &&
-                        register.endDate != null &&
-                        attendanceRegisters.isNotEmpty &&
-                        register.endDate! >
-                            DateTime.now().millisecondsSinceEpoch,
-                    startDate: register.startDate != null
-                        ? DateTime.fromMillisecondsSinceEpoch(
-                            register.startDate!,
-                          )
-                        : null,
-                    endDate: register.startDate != null
-                        ? DateTime.fromMillisecondsSinceEpoch(
-                            register.endDate!,
-                          )
-                        : null));
+                          attendanceRegisters.isNotEmpty &&
+                          register.endDate! >
+                              DateTime.now().millisecondsSinceEpoch,
+                      startDate: register.startDate != null
+                          ? DateTime.fromMillisecondsSinceEpoch(
+                              register.startDate!,
+                            )
+                          : null,
+                      endDate: register.startDate != null
+                          ? DateTime.fromMillisecondsSinceEpoch(
+                              register.endDate!,
+                            )
+                          : null));
+                }
               }
-            }
-          },
-          child: Scaffold(
-            body: ScrollableContent(
-              header: BackNavigationHelpHeaderWidget(
-                showHelp: false,
-                showLogoutCTA: false,
-                handleBack: () {
-                  AttendanceSingleton().callSync();
-                },
-              ),
-              footer: (list.length == 1)
-                  ? PoweredByDigit(
-                      version: AttendanceSingleton().appVersion,
-                    )
-                  : const SizedBox.shrink(),
-              children: [
-                BlocBuilder<AttendanceBloc, AttendanceStates>(
-                  builder: (context, blocState) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(kPadding).copyWith(
-                            top: 2,
-                            left: kPadding * 2,
+            },
+            child: Scaffold(
+              body: ScrollableContent(
+                enableFixedButton: (list.length == 1),
+                header: BackNavigationHelpHeaderWidget(
+                  showHelp: false,
+                  showLogoutCTA: false,
+                  handleBack: () {
+                    AttendanceSingleton().callSync();
+                  },
+                ),
+                footer: (list.length == 1)
+                    ? PoweredByDigit(
+                        version: AttendanceSingleton().appVersion,
+                      )
+                    : const Offstage(),
+                children: [
+                  BlocBuilder<AttendanceBloc, AttendanceStates>(
+                    builder: (context, blocState) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(kPadding).copyWith(
+                              top: 2,
+                              left: kPadding * 2,
+                            ),
+                            child: Text(
+                              AttendanceLocalization.of(context).translate(
+                                  i18.attendance.attendanceRegistarLabel),
+                              style: DigitTheme
+                                  .instance.mobileTheme.textTheme.displayMedium
+                                  ?.apply(color: const DigitColors().black),
+                              textAlign: TextAlign.left,
+                            ),
                           ),
-                          child: Text(
-                            AttendanceLocalization.of(context).translate(
-                                i18.attendance.attendanceRegistarLabel),
-                            style: DigitTheme
-                                .instance.mobileTheme.textTheme.displayMedium
-                                ?.apply(color: const DigitColors().black),
-                            textAlign: TextAlign.left,
-                          ),
-                        ),
-                        blocState.maybeWhen(
-                          orElse: () => const SizedBox.shrink(),
-                          registerLoaded: (
-                            registers,
-                          ) =>
-                              Column(
-                            children: [
-                              if (list.isEmpty)
-                                NoResultCard(
-                                  align: Alignment.center,
-                                  label: t.translate(
-                                    i18.common.noResultsFound,
+                          blocState.maybeWhen(
+                            orElse: () => const SizedBox.shrink(),
+                            registerLoaded: (
+                              registers,
+                            ) =>
+                                Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                if (list.isEmpty)
+                                  NoResultCard(
+                                    align: Alignment.center,
+                                    label: localization.translate(
+                                      i18.common.noResultsFound,
+                                    ),
                                   ),
+                                ...list,
+                                if (list.length > 1)
+                                  PoweredByDigit(
+                                      version:
+                                          AttendanceSingleton().appVersion),
+                              ],
+                            ),
+                            registerLoading: () => const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                            registerError: (message) => Center(
+                              child: Card(
+                                child: SizedBox(
+                                  height: 60,
+                                  width: 200,
+                                  child: Center(child: Text(message)),
                                 ),
-                              ...list,
-                              if (list.length > 1)
-                                PoweredByDigit(
-                                    version: AttendanceSingleton().appVersion),
-                              const SizedBox(
-                                height: 16,
-                              ),
-                            ],
-                          ),
-                          registerLoading: () => const Center(
-                            child: CircularProgressIndicator(),
-                          ),
-                          registerError: (message) => Center(
-                            child: Card(
-                              child: SizedBox(
-                                height: 60,
-                                width: 200,
-                                child: Center(child: Text(message)),
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              ],
+                        ],
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -246,7 +270,7 @@ class RegisterCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var t = AttendanceLocalization.of(context);
+    var localization = AttendanceLocalization.of(context);
 
     return DigitCard(
       padding: const EdgeInsets.all(kPadding),
@@ -266,7 +290,7 @@ class RegisterCard extends StatelessWidget {
                       DigitToast.show(
                         context,
                         options: DigitToastOptions(
-                          t.translate(
+                          localization.translate(
                               i18.attendance.noAttendeesEnrolledMessage),
                           true,
                           DigitTheme.instance.mobileTheme,
@@ -278,7 +302,8 @@ class RegisterCard extends StatelessWidget {
                       DigitToast.show(
                         context,
                         options: DigitToastOptions(
-                          t.translate(i18.attendance.registerNotStarted),
+                          localization
+                              .translate(i18.attendance.registerNotStarted),
                           true,
                           DigitTheme.instance.mobileTheme,
                         ),

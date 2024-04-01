@@ -12,46 +12,16 @@ part 'hcm_attendance_log_model.mapper.dart';
 @MappableClass(ignoreNull: true)
 class HCMAttendanceLogSearchModel extends EntitySearchModel
     with HCMAttendanceLogSearchModelMappable {
-  final String? id;
-  final String? tenantId;
-  final String? registerId;
-  final String? individualId;
-  final int? time;
-  final int? entryTime;
-  final int? exitTime;
-  final String? type;
-  final String? status;
-  final List<String>? clientReferenceId;
-  final bool? uploadToServer;
+  final AttendanceLogSearchModel? attendanceSearchModel;
 
   HCMAttendanceLogSearchModel({
-    this.id,
-    this.registerId,
-    this.individualId,
-    this.status,
-    this.type,
-    this.tenantId,
-    this.time,
-    this.entryTime,
-    this.exitTime,
-    this.clientReferenceId,
-    this.uploadToServer,
+    this.attendanceSearchModel,
     super.isDeleted,
   }) : super();
 
   @MappableConstructor()
   HCMAttendanceLogSearchModel.ignoreDeleted({
-    this.id,
-    this.registerId,
-    this.individualId,
-    this.status,
-    this.type,
-    this.tenantId,
-    this.time,
-    this.entryTime,
-    this.exitTime,
-    this.clientReferenceId,
-    this.uploadToServer,
+    this.attendanceSearchModel,
     super.additionalFields,
     super.auditDetails,
   }) : super(isDeleted: false);

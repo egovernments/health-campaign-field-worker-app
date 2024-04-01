@@ -23,25 +23,12 @@ class HCMAttendanceSearchModelMapper
   @override
   final String id = 'HCMAttendanceSearchModel';
 
-  static String? _$id(HCMAttendanceSearchModel v) => v.id;
-  static const Field<HCMAttendanceSearchModel, String> _f$id =
-      Field('id', _$id, opt: true);
-  static String? _$staffId(HCMAttendanceSearchModel v) => v.staffId;
-  static const Field<HCMAttendanceSearchModel, String> _f$staffId =
-      Field('staffId', _$staffId, opt: true);
-  static String? _$registerNumber(HCMAttendanceSearchModel v) =>
-      v.registerNumber;
-  static const Field<HCMAttendanceSearchModel, String> _f$registerNumber =
-      Field('registerNumber', _$registerNumber, opt: true);
-  static String? _$status(HCMAttendanceSearchModel v) => v.status;
-  static const Field<HCMAttendanceSearchModel, String> _f$status =
-      Field('status', _$status, opt: true);
-  static String? _$referenceId(HCMAttendanceSearchModel v) => v.referenceId;
-  static const Field<HCMAttendanceSearchModel, String> _f$referenceId =
-      Field('referenceId', _$referenceId, opt: true);
-  static String? _$serviceCode(HCMAttendanceSearchModel v) => v.serviceCode;
-  static const Field<HCMAttendanceSearchModel, String> _f$serviceCode =
-      Field('serviceCode', _$serviceCode, opt: true);
+  static AttendanceRegisterSearchModel _$attendanceRegisterSearchModel(
+          HCMAttendanceSearchModel v) =>
+      v.attendanceRegisterSearchModel;
+  static const Field<HCMAttendanceSearchModel, AttendanceRegisterSearchModel>
+      _f$attendanceRegisterSearchModel =
+      Field('attendanceRegisterSearchModel', _$attendanceRegisterSearchModel);
   static AdditionalFields? _$additionalFields(HCMAttendanceSearchModel v) =>
       v.additionalFields;
   static const Field<HCMAttendanceSearchModel, AdditionalFields>
@@ -54,12 +41,7 @@ class HCMAttendanceSearchModelMapper
 
   @override
   final MappableFields<HCMAttendanceSearchModel> fields = const {
-    #id: _f$id,
-    #staffId: _f$staffId,
-    #registerNumber: _f$registerNumber,
-    #status: _f$status,
-    #referenceId: _f$referenceId,
-    #serviceCode: _f$serviceCode,
+    #attendanceRegisterSearchModel: _f$attendanceRegisterSearchModel,
     #additionalFields: _f$additionalFields,
     #auditDetails: _f$auditDetails,
   };
@@ -68,12 +50,8 @@ class HCMAttendanceSearchModelMapper
 
   static HCMAttendanceSearchModel _instantiate(DecodingData data) {
     return HCMAttendanceSearchModel.ignoreDeleted(
-        id: data.dec(_f$id),
-        staffId: data.dec(_f$staffId),
-        registerNumber: data.dec(_f$registerNumber),
-        status: data.dec(_f$status),
-        referenceId: data.dec(_f$referenceId),
-        serviceCode: data.dec(_f$serviceCode),
+        attendanceRegisterSearchModel:
+            data.dec(_f$attendanceRegisterSearchModel),
         additionalFields: data.dec(_f$additionalFields),
         auditDetails: data.dec(_f$auditDetails));
   }
@@ -137,6 +115,8 @@ abstract class HCMAttendanceSearchModelCopyWith<
     $R,
     $In extends HCMAttendanceSearchModel,
     $Out> implements EntitySearchModelCopyWith<$R, $In, $Out> {
+  AttendanceRegisterSearchModelCopyWith<$R, AttendanceRegisterSearchModel,
+      AttendanceRegisterSearchModel> get attendanceRegisterSearchModel;
   @override
   AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
       get additionalFields;
@@ -144,12 +124,7 @@ abstract class HCMAttendanceSearchModelCopyWith<
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
   @override
   $R call(
-      {String? id,
-      String? staffId,
-      String? registerNumber,
-      String? status,
-      String? referenceId,
-      String? serviceCode,
+      {AttendanceRegisterSearchModel? attendanceRegisterSearchModel,
       AdditionalFields? additionalFields,
       AuditDetails? auditDetails});
   HCMAttendanceSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
@@ -166,6 +141,12 @@ class _HCMAttendanceSearchModelCopyWithImpl<$R, $Out>
   late final ClassMapperBase<HCMAttendanceSearchModel> $mapper =
       HCMAttendanceSearchModelMapper.ensureInitialized();
   @override
+  AttendanceRegisterSearchModelCopyWith<$R, AttendanceRegisterSearchModel,
+          AttendanceRegisterSearchModel>
+      get attendanceRegisterSearchModel =>
+          $value.attendanceRegisterSearchModel.copyWith
+              .$chain((v) => call(attendanceRegisterSearchModel: v));
+  @override
   AdditionalFieldsCopyWith<$R, AdditionalFields, AdditionalFields>?
       get additionalFields => $value.additionalFields?.copyWith
           .$chain((v) => call(additionalFields: v));
@@ -174,33 +155,21 @@ class _HCMAttendanceSearchModelCopyWithImpl<$R, $Out>
       $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
   @override
   $R call(
-          {Object? id = $none,
-          Object? staffId = $none,
-          Object? registerNumber = $none,
-          Object? status = $none,
-          Object? referenceId = $none,
-          Object? serviceCode = $none,
+          {AttendanceRegisterSearchModel? attendanceRegisterSearchModel,
           Object? additionalFields = $none,
           Object? auditDetails = $none}) =>
       $apply(FieldCopyWithData({
-        if (id != $none) #id: id,
-        if (staffId != $none) #staffId: staffId,
-        if (registerNumber != $none) #registerNumber: registerNumber,
-        if (status != $none) #status: status,
-        if (referenceId != $none) #referenceId: referenceId,
-        if (serviceCode != $none) #serviceCode: serviceCode,
+        if (attendanceRegisterSearchModel != null)
+          #attendanceRegisterSearchModel: attendanceRegisterSearchModel,
         if (additionalFields != $none) #additionalFields: additionalFields,
         if (auditDetails != $none) #auditDetails: auditDetails
       }));
   @override
   HCMAttendanceSearchModel $make(CopyWithData data) =>
       HCMAttendanceSearchModel.ignoreDeleted(
-          id: data.get(#id, or: $value.id),
-          staffId: data.get(#staffId, or: $value.staffId),
-          registerNumber: data.get(#registerNumber, or: $value.registerNumber),
-          status: data.get(#status, or: $value.status),
-          referenceId: data.get(#referenceId, or: $value.referenceId),
-          serviceCode: data.get(#serviceCode, or: $value.serviceCode),
+          attendanceRegisterSearchModel: data.get(
+              #attendanceRegisterSearchModel,
+              or: $value.attendanceRegisterSearchModel),
           additionalFields:
               data.get(#additionalFields, or: $value.additionalFields),
           auditDetails: data.get(#auditDetails, or: $value.auditDetails));

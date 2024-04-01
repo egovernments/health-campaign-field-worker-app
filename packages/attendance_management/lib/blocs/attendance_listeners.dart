@@ -3,15 +3,23 @@ import 'package:attendance_management/attendance_management.dart';
 // Abstract class defining the listener to interact with the data through any other application
 abstract class AttendanceListeners {
 // Method to get attendance registers
-  void getAttendanceRegisters(
+  Future<List<AttendanceRegisterModel>> getAttendanceRegisters(
+    Function(List<AttendanceRegisterModel> attendanceRegisterModel,
+            {required int offset, required int limit})
+        attendanceRegisters,
+  );
+
+  Future<List<AttendanceRegisterModel>> loadMoreAttendanceRegisters(
       Function(List<AttendanceRegisterModel> attendanceRegisterModel)
-          attendanceRegisters);
+          attendanceRegisters,
+      {required int limit,
+      required int offSet});
 
   // Method to search attendance log
-  void searchAttendanceLog(SearchAttendanceLog searchAttendanceLog);
+  Future<void> searchAttendanceLog(SearchAttendanceLog searchAttendanceLog);
 
   // Method to submit attendance details
-  void submitAttendanceDetails(
+  Future<void> submitAttendanceDetails(
     SubmitAttendanceDetails attendanceLogs,
   );
 
@@ -51,20 +59,40 @@ class AttendanceSingleton {
   get appVersion => _appVersion;
 
   // Method to get attendance registers
-  void getAttendanceRegisters(
+  Future<List<AttendanceRegisterModel>?> getAttendanceRegisters(
+    Function(List<AttendanceRegisterModel> attendanceRegisterModel,
+            {required int offset, required int limit})
+        attendanceRegisters,
+  ) async {
+    return await _attendanceListeners?.getAttendanceRegisters(
+      attendanceRegisters,
+    );
+  }
+
+  // Method to load more attendance registers
+  Future<List<AttendanceRegisterModel>?> loadMoreAttendanceRegisters(
       Function(List<AttendanceRegisterModel> attendanceRegisterModel)
-          attendanceRegisters) {
-    _attendanceListeners?.getAttendanceRegisters(attendanceRegisters);
+          attendanceRegisters,
+      {required int limit,
+      required int offSet}) async {
+    return await _attendanceListeners?.loadMoreAttendanceRegisters(
+        attendanceRegisters,
+        limit: limit,
+        offSet: offSet);
   }
 
   // Method to search attendance log
-  void searchAttendanceLog(SearchAttendanceLog searchAttendanceLog) {
-    _attendanceListeners?.searchAttendanceLog(searchAttendanceLog);
+  Future<void> searchAttendanceLog(
+      SearchAttendanceLog searchAttendanceLog) async {
+    return Future(
+        () => _attendanceListeners?.searchAttendanceLog(searchAttendanceLog));
   }
 
   // Method to submit attendance details
-  void submitAttendanceDetails(SubmitAttendanceDetails attendanceLogs) {
-    _attendanceListeners?.submitAttendanceDetails(attendanceLogs);
+  Future<void> submitAttendanceDetails(
+      SubmitAttendanceDetails attendanceLogs) async {
+    return Future(
+        () => _attendanceListeners?.submitAttendanceDetails(attendanceLogs));
   }
 
   void callSync() {

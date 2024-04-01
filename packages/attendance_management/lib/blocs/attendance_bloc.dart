@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:attendance_management/attendance_management.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -18,6 +20,7 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
     on(_onInitial);
     on(_onLoadAttendanceRegisterData);
     on(_onLoadSelectedRegisterData);
+    on(_onLoadMoreAttendanceRegisters);
   }
 
   // Event handler for InitialAttendance event
@@ -26,10 +29,14 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
     Emitter<AttendanceStates> emit,
   ) async {
     emit(const RegisterLoading());
-    // Getting attendance registers using a singleton instance
-    AttendanceSingleton().getAttendanceRegisters(
-        (attendanceRegisterModel) =>
-            add(LoadAttendanceRegisterData(attendanceRegisterModel)));
+    await AttendanceSingleton().getAttendanceRegisters(
+      (attendanceRegisterModel, {required int offset, required int limit}) =>
+          add(AttendanceEvents.loadAttendanceRegisters(
+        attendanceRegisterModel,
+        limit,
+        offset,
+      )),
+    );
   }
 
   // Event handler for LoadAttendanceRegisterData event
@@ -37,9 +44,24 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
     LoadAttendanceRegisterData event,
     Emitter<AttendanceStates> emit,
   ) async {
-    emit(RegisterLoaded(
-      registers: event.registers,
-    ));
+    // Get the current state
+    final currentState = state;
+
+    // Check if the current state is RegisterLoaded
+    if (currentState is RegisterLoaded) {
+      // Append the new registers to the existing ones
+      final updatedRegisters = currentState.registers + event.registers;
+
+      // Emit the new state with the updated registers
+      emit(RegisterLoaded(
+        registers: updatedRegisters,
+      ));
+    } else {
+      // Emit the new state with the loaded registers
+      emit(RegisterLoaded(
+        registers: event.registers,
+      ));
+    }
   }
 
   // Event handler for LoadSelectedAttendanceRegisterData event
@@ -55,6 +77,27 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
       selectedRegister: selectedRegister,
     ));
   }
+
+  FutureOr<void> _onLoadMoreAttendanceRegisters(
+      LoadMoreAttendanceRegisterData event,
+      Emitter<AttendanceStates> emit) async {
+    // Getting more attendance registers using a singleton instance
+    await AttendanceSingleton().loadMoreAttendanceRegisters(
+        (attendanceRegisterModel) {
+      // Get the current state
+      final currentState = state;
+
+      // Check if the current state is RegisterLoaded
+      if (currentState is RegisterLoaded) {
+        // Append the new registers to the existing ones
+        final updatedRegisters =
+            currentState.registers + attendanceRegisterModel;
+
+        // Emit the new state with the updated registers
+        emit(currentState.copyWith(registers: updatedRegisters));
+      }
+    }, limit: event.limit!, offSet: event.offset!);
+  }
 }
 
 // Freezed class for defining attendance-related events
@@ -62,10 +105,13 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
 class AttendanceEvents with _$AttendanceEvents {
   const factory AttendanceEvents.initial() = InitialAttendance;
   const factory AttendanceEvents.loadAttendanceRegisters(
-      List<AttendanceRegisterModel> registers) = LoadAttendanceRegisterData;
+          List<AttendanceRegisterModel> registers, int limit, int offset) =
+      LoadAttendanceRegisterData;
   const factory AttendanceEvents.loadSelectedRegister(
       {required final List<AttendanceRegisterModel> registers,
       required final String registerID}) = LoadSelectedAttendanceRegisterData;
+  const factory AttendanceEvents.loadMoreAttendanceRegisters(
+      {int? limit, int? offset}) = LoadMoreAttendanceRegisterData;
 }
 
 // Freezed class for defining attendance-related states

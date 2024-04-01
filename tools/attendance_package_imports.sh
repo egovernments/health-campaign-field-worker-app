@@ -17,7 +17,9 @@ declare -A new_imports
 new_imports=(
   ["attendance_audit.dart"]="AttendanceAuditDetailsMapper"
   ["attendance_log.dart"]="AttendanceLogModelMapper"
+  ["attendance_log.dart"]="AttendanceLogSearchModelMapper"
   ["attendance_register.dart"]="AttendanceRegisterModelMapper"
+  ["attendance_register.dart"]="AttendanceRegisterSearchModelMapper"
   ["attendee.dart"]="AttendeeModelMapper"
   ["staff.dart"]="StaffModelMapper"
 )
