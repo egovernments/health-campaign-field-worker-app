@@ -1,5 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+
+import 'package:attendance_management/pages/manage_attendance.dart';
+import 'package:attendance_management/blocs/attendance_listeners.dart';
+
 import 'package:inventory_management/blocs/inventory_listener.dart';
 import 'package:inventory_management/blocs/app_localization.dart';
 import 'package:inventory_management/pages/manage_stocks.dart';
@@ -267,6 +271,12 @@ part 'app_router.gr.dart';
               path: 'complaints-details',
             ),
           ],
+        ),
+
+        //Attendance Route
+        AutoRoute(
+          page: ManageAttendancePage,
+          path: 'manage-attendance',
         ),
 
         // Inventory Routes

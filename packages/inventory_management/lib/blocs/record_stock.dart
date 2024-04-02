@@ -11,18 +11,23 @@ part 'record_stock.freezed.dart';
 
 typedef RecordStockEmitter = Emitter<RecordStockState>;
 
+// Bloc for handling record stock related events and states
 class RecordStockBloc extends Bloc<RecordStockEvent, RecordStockState> {
+  // Constructor for the bloc
   RecordStockBloc(super.initialState) {
+    // Registering the event handlers
     on(_handleSaveWarehouseDetails);
     on(_handleSaveStockDetails);
     on(_handleCreateStockEntry);
     on(_handleSaveTransactionDetails);
   }
 
+  // Event handler for saving warehouse details
   FutureOr<void> _handleSaveWarehouseDetails(
     RecordStockSaveWarehouseDetailsEvent event,
     RecordStockEmitter emit,
   ) async {
+    // Emitting the state with the saved warehouse details
     state.maybeMap(
       orElse: () {
         throw const InvalidRecordStockStateException();
@@ -38,10 +43,12 @@ class RecordStockBloc extends Bloc<RecordStockEvent, RecordStockState> {
     );
   }
 
+  // Event handler for saving transaction details
   FutureOr<void> _handleSaveTransactionDetails(
     RecordStockSaveTransactionDetailsEvent event,
     RecordStockEmitter emit,
   ) async {
+    // Emitting the state with the saved transaction details
     state.maybeMap(
       orElse: () {
         throw const InvalidRecordStockStateException();
@@ -59,10 +66,12 @@ class RecordStockBloc extends Bloc<RecordStockEvent, RecordStockState> {
     );
   }
 
+  // Event handler for saving stock details
   FutureOr<void> _handleSaveStockDetails(
     RecordStockSaveStockDetailsEvent event,
     RecordStockEmitter emit,
   ) async {
+    // Emitting the state with the saved stock details
     state.maybeMap(
       orElse: () {
         throw const InvalidRecordStockStateException();
@@ -75,6 +84,7 @@ class RecordStockBloc extends Bloc<RecordStockEvent, RecordStockState> {
     );
   }
 
+  // Event handler for creating a stock entry
   FutureOr<void> _handleCreateStockEntry(
     RecordStockCreateStockEntryEvent event,
     RecordStockEmitter emit,
@@ -135,21 +145,26 @@ class RecordStockBloc extends Bloc<RecordStockEvent, RecordStockState> {
   }
 }
 
+// Freezed union class for record stock events
 @freezed
 class RecordStockEvent with _$RecordStockEvent {
+  // Event for saving warehouse details
   const factory RecordStockEvent.saveWarehouseDetails({
     required DateTime dateOfRecord,
     required InventoryFacilityModel facilityModel,
   }) = RecordStockSaveWarehouseDetailsEvent;
 
+  // Event for saving stock details
   const factory RecordStockEvent.saveStockDetails({
     required StockModel stockModel,
     required Map<String, Object>? additionalData,
   }) = RecordStockSaveStockDetailsEvent;
 
+  // Event for creating a stock entry
   const factory RecordStockEvent.createStockEntry() =
       RecordStockCreateStockEntryEvent;
 
+  // Event for saving transaction details
   const factory RecordStockEvent.saveTransactionDetails({
     required DateTime dateOfRecord,
     required String primaryType,
@@ -158,8 +173,10 @@ class RecordStockEvent with _$RecordStockEvent {
   }) = RecordStockSaveTransactionDetailsEvent;
 }
 
+// Freezed union class for record stock states
 @freezed
 class RecordStockState with _$RecordStockState {
+  // State for creating a record stock
   const factory RecordStockState.create({
     required StockRecordEntryType entryType,
     @Default(false) bool loading,
@@ -172,6 +189,7 @@ class RecordStockState with _$RecordStockState {
     Map<String, Object>? additionalData,
   }) = RecordStockCreateState;
 
+  // State for a persisted record stock
   const factory RecordStockState.persisted(
       {required StockRecordEntryType entryType,
       required String projectId,
@@ -183,12 +201,14 @@ class RecordStockState with _$RecordStockState {
       Map<String, Object>? additionalData}) = RecordStockPersistedState;
 }
 
+// Exception for invalid record stock state
 class InvalidRecordStockStateException implements Exception {
   final String? message;
 
   const InvalidRecordStockStateException([this.message]);
 }
 
+// Enum for stock record entry type
 enum StockRecordEntryType {
   receipt,
   dispatch,

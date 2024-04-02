@@ -10,13 +10,11 @@ class RecordStockWrapperPage extends StatelessWidget {
   final StockRecordEntryType type;
   final String projectId;
 
-  bool showStockDetailsPage = false;
-
-  RecordStockWrapperPage(
-      {super.key,
-      required this.type,
-      required this.projectId,
-      this.showStockDetailsPage = false});
+  const RecordStockWrapperPage({
+    super.key,
+    required this.type,
+    required this.projectId,
+  });
 
   @override
   Widget build(BuildContext context) {

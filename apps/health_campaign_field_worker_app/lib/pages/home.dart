@@ -523,32 +523,25 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.fingerprint_outlined,
           label: i18.home.manageAttendanceLabel,
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ManageAttendancePage(
-                  attendanceListeners: HCMAttendanceBloc(
-                    userId: context.loggedInUserUuid,
-                    projectId: context.projectId,
-                    attendanceLocalRepository: context.read<
-                        LocalRepository<HCMAttendanceRegisterModel,
-                            HCMAttendanceSearchModel>>(),
-                    individualLocalRepository: context.read<
-                        LocalRepository<IndividualModel,
-                            IndividualSearchModel>>(),
-                    attendanceLogLocalRepository: context.read<
-                        LocalRepository<HCMAttendanceLogModel,
-                            HCMAttendanceLogSearchModel>>(),
-                    context: context,
-                    individualId: context.loggedInIndividualId,
-                  ),
-                  projectId: context.projectId,
-                  userId: context.loggedInUserUuid,
-                  appVersion: Constants().version,
-                ),
-                settings: const RouteSettings(name: '/manage-attendance'),
+            context.router.push(ManageAttendanceRoute(
+              attendanceListeners: HCMAttendanceBloc(
+                userId: context.loggedInUserUuid,
+                projectId: context.projectId,
+                attendanceLocalRepository: context.read<
+                    LocalRepository<HCMAttendanceRegisterModel,
+                        HCMAttendanceSearchModel>>(),
+                individualLocalRepository: context.read<
+                    LocalRepository<IndividualModel, IndividualSearchModel>>(),
+                attendanceLogLocalRepository: context.read<
+                    LocalRepository<HCMAttendanceLogModel,
+                        HCMAttendanceLogSearchModel>>(),
+                context: context,
+                individualId: context.loggedInIndividualId,
               ),
-            );
+              projectId: context.projectId,
+              userId: context.loggedInUserUuid,
+              appVersion: Constants().version,
+            ));
           },
         ),
       ),

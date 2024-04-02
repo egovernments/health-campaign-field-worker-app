@@ -243,6 +243,19 @@ class _$AppRouter extends RootStackRouter {
         )),
       );
     },
+    ManageAttendanceRoute.name: (routeData) {
+      final args = routeData.argsAs<ManageAttendanceRouteArgs>();
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: ManageAttendancePage(
+          attendanceListeners: args.attendanceListeners,
+          projectId: args.projectId,
+          userId: args.userId,
+          appVersion: args.appVersion,
+          key: args.key,
+        ),
+      );
+    },
     ManageStocksRoute.name: (routeData) {
       final args = routeData.argsAs<ManageStocksRouteArgs>();
       return MaterialPageX<dynamic>(
@@ -947,6 +960,11 @@ class _$AppRouter extends RootStackRouter {
                   parent: ComplaintsRegistrationWrapperRoute.name,
                 ),
               ],
+            ),
+            RouteConfig(
+              ManageAttendanceRoute.name,
+              path: 'manage-attendance',
+              parent: AuthenticatedRouteWrapper.name,
             ),
             RouteConfig(
               ManageStocksRoute.name,
@@ -1673,6 +1691,55 @@ class ComplaintsRegistrationWrapperRouteArgs {
   @override
   String toString() {
     return 'ComplaintsRegistrationWrapperRouteArgs{key: $key, pgrServiceModel: $pgrServiceModel}';
+  }
+}
+
+/// generated route for
+/// [ManageAttendancePage]
+class ManageAttendanceRoute extends PageRouteInfo<ManageAttendanceRouteArgs> {
+  ManageAttendanceRoute({
+    required AttendanceListeners attendanceListeners,
+    required String projectId,
+    required String userId,
+    required String appVersion,
+    Key? key,
+  }) : super(
+          ManageAttendanceRoute.name,
+          path: 'manage-attendance',
+          args: ManageAttendanceRouteArgs(
+            attendanceListeners: attendanceListeners,
+            projectId: projectId,
+            userId: userId,
+            appVersion: appVersion,
+            key: key,
+          ),
+        );
+
+  static const String name = 'ManageAttendanceRoute';
+}
+
+class ManageAttendanceRouteArgs {
+  const ManageAttendanceRouteArgs({
+    required this.attendanceListeners,
+    required this.projectId,
+    required this.userId,
+    required this.appVersion,
+    this.key,
+  });
+
+  final AttendanceListeners attendanceListeners;
+
+  final String projectId;
+
+  final String userId;
+
+  final String appVersion;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'ManageAttendanceRouteArgs{attendanceListeners: $attendanceListeners, projectId: $projectId, userId: $userId, appVersion: $appVersion, key: $key}';
   }
 }
 

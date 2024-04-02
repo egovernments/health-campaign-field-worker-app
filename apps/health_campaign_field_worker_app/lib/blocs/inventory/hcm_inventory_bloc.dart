@@ -17,6 +17,7 @@ import '../product_variant/product_variant.dart';
 import '../sync/sync.dart';
 import 'package:inventory_management/models/entities/inventory_facility.dart';
 
+// Bloc for handling inventory related operations
 class HcmInventoryBloc extends InventoryListener {
   BuildContext? context;
   final String? userId;
@@ -27,6 +28,7 @@ class HcmInventoryBloc extends InventoryListener {
   final LocalRepository<HcmStockReconciliationModel,
       HcmStockReconciliationSearchModel>? stockReconLocalRepository;
 
+  // Constructor for the HcmInventoryBloc
   HcmInventoryBloc({
     this.context,
     this.userId,
@@ -36,18 +38,17 @@ class HcmInventoryBloc extends InventoryListener {
     this.stockReconLocalRepository,
   });
 
-  late Function(List<InventoryFacilityModel> facilities) _facilitiesLoaded;
-  late Function(List<invProdVar.ProductVariantModel> productVariants)
-      _productVariantsLoaded;
   late Function(
     Map<String, List<StockModel>> groupedData,
   ) _stockModelsLoaded;
 
+  // Method to call the sync method
   @override
   void callSyncMethod() {
     context!.read<SyncBloc>().add(SyncRefreshEvent(userId!));
   }
 
+  // Method to fetch facilities for a given project ID
   @override
   Future<List<InventoryFacilityModel>> fetchFacilitiesForProjectId() async {
     final facilitiesBloc = context!.read<FacilityBloc>();
@@ -83,6 +84,7 @@ class HcmInventoryBloc extends InventoryListener {
     return hcmInventoryFacilityModel;
   }
 
+  // Method to fetch product variants
   @override
   Future<List<invProdVar.ProductVariantModel>> fetchProductVariants() async {
     final productsBloc = context!.read<ProductVariantBloc>();
@@ -96,6 +98,7 @@ class HcmInventoryBloc extends InventoryListener {
       (state) => state.maybeWhen(
         fetched: (productVariants) => true,
         orElse: () => false,
+        empty: () => true,
       ),
     );
 
@@ -116,12 +119,18 @@ class HcmInventoryBloc extends InventoryListener {
           );
         }
       },
-      orElse: () {},
+      empty: () {
+        hcmProductVariantModel = [];
+      },
+      orElse: () {
+        hcmProductVariantModel = [];
+      },
     );
 
     return hcmProductVariantModel;
   }
 
+  // Method to get additional data
   getAdditionalData(Map<String, Object> additionalData) {
     List<AdditionalField> additionalFields = [];
 
@@ -132,6 +141,7 @@ class HcmInventoryBloc extends InventoryListener {
     return additionalFields;
   }
 
+  // Method to fetch stock reconciliation details
   @override
   Future<void> fetchStockReconciliationDetails(
     FetchStockReconDetails fetchStockReconDetails,
@@ -172,6 +182,7 @@ class HcmInventoryBloc extends InventoryListener {
     );
   }
 
+  // Method to save stock details
   @override
   Future<void> saveStockDetails(SaveStockDetails saveStockDetails) async {
     var response = await stockLocalRepository!.create(HcmStockModel(
@@ -199,6 +210,7 @@ class HcmInventoryBloc extends InventoryListener {
     saveStockDetails.isStockSaved(true);
   }
 
+  // Method to save stock reconciliation details
   @override
   Future<void> saveStockReconciliationDetails(
     SaveStockReconciliationModel stockReconciliationModel,
@@ -231,6 +243,7 @@ class HcmInventoryBloc extends InventoryListener {
     stockReconciliationModel.isStockReconciliationSaved(true);
   }
 
+  // Method to fetch inventory reports
   @override
   Future<void> fetchInventoryReports(
     FetchInventoryReports fetchInventoryReports,
@@ -326,6 +339,7 @@ class HcmInventoryBloc extends InventoryListener {
     }));
   }
 
+  // Method to handle stock reconciliation report
   @override
   Future<void> handleStockReconciliationReport(
     StockReconciliationReport stockReconciliationReport,
