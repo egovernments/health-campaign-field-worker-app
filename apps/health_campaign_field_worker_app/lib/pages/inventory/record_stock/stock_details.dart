@@ -730,12 +730,11 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                   DigitTextFormField(
                                     formControlName: _transactionQuantityKey,
                                     keyboardType:
-                                        const TextInputType.numberWithOptions(
-                                      decimal: true,
-                                    ),
+                                        const TextInputType.numberWithOptions(),
                                     isRequired: true,
                                     inputFormatters: [
-                                      LengthLimitingTextInputFormatter(4)
+                                      LengthLimitingTextInputFormatter(4),
+                                      FilteringTextInputFormatter.digitsOnly
                                     ],
                                     validationMessages: {
                                       "number": (object) =>
