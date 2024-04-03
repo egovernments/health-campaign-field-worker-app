@@ -15,7 +15,7 @@ abstract class InventoryListener {
   Future<List<ProductVariantModel>> fetchProductVariants();
 
   // Saves the stock details.
-  Future<void> saveStockDetails(SaveStockDetails saveStockDetails);
+  Future<bool> saveStockDetails(SaveStockDetails saveStockDetails);
 
   // Fetches the stock reconciliation details.
   Future<void> fetchStockReconciliationDetails(
@@ -26,11 +26,12 @@ abstract class InventoryListener {
       SaveStockReconciliationModel stockReconciliationModel);
 
   // Handles the stock reconciliation report.
-  Future<void> handleStockReconciliationReport(
-      StockReconciliationReport stockReconciliationReport);
+  Future<Map<String, List<StockReconciliationModel>>>
+      handleStockReconciliationReport(
+          StockReconciliationReport stockReconciliationReport);
 
   // Fetches the inventory reports.
-  Future<void> fetchInventoryReports(
+  Future<Map<String, List<StockModel>>> fetchInventoryReports(
       FetchInventoryReports fetchInventoryReports);
 
   // Calls the sync method.
@@ -97,10 +98,8 @@ class InventorySingleton {
   }
 
   // Saves the stock details.
-  Future<void> saveStockDetails(SaveStockDetails saveStockDetails) async {
-    return Future(
-      () => _inventoryListener?.saveStockDetails(saveStockDetails),
-    );
+  Future<bool?> saveStockDetails(SaveStockDetails saveStockDetails) async {
+    return await _inventoryListener?.saveStockDetails(saveStockDetails);
   }
 
   // Fetches the stock reconciliation details.
@@ -124,23 +123,20 @@ class InventorySingleton {
   }
 
   // Fetches the inventory reports.
-  Future<void> fetchInventoryReports(
+  Future<Map<String, List<StockModel>>> fetchInventoryReports(
       FetchInventoryReports fetchInventoryReports) async {
-    return Future(
-      () => _inventoryListener?.fetchInventoryReports(
-        fetchInventoryReports,
-      ),
-    );
+    return await (_inventoryListener
+            ?.fetchInventoryReports(fetchInventoryReports) ??
+        Future.value({}));
   }
 
   // Handles the stock reconciliation report.
-  Future<void> handleStockReconciliationReport(
-      StockReconciliationReport stockReconciliationReport) async {
-    return Future(
-      () => _inventoryListener?.handleStockReconciliationReport(
-        stockReconciliationReport,
-      ),
-    );
+  Future<Map<String, List<StockReconciliationModel>>>
+      handleStockReconciliationReport(
+          StockReconciliationReport stockReconciliationReport) async {
+    return await (_inventoryListener
+            ?.handleStockReconciliationReport(stockReconciliationReport) ??
+        Future.value({}));
   }
 
   // Calls the sync method.
@@ -153,12 +149,11 @@ class InventorySingleton {
 class SaveStockDetails {
   final StockModel stockModel;
   final Map<String, Object> additionalData;
-  final Function(bool isStockSaved) isStockSaved;
 
-  SaveStockDetails(
-      {required this.stockModel,
-      required this.additionalData,
-      required this.isStockSaved});
+  SaveStockDetails({
+    required this.stockModel,
+    required this.additionalData,
+  });
 }
 
 // Class to hold the details for fetching stock reconciliation.
@@ -192,13 +187,10 @@ class SaveStockReconciliationModel {
 class StockReconciliationReport {
   final String facilityId;
   final String productVariantId;
-  final Function(Map<String, List<StockReconciliationModel>> data,
-      Iterable<Iterable<MapEntry<String, dynamic>>>) stockReconciliationReport;
 
   StockReconciliationReport({
     required this.facilityId,
     required this.productVariantId,
-    required this.stockReconciliationReport,
   });
 }
 
@@ -207,14 +199,10 @@ class FetchInventoryReports {
   final InventoryReportType reportType;
   final String facilityId;
   final String productVariantId;
-  final Function(
-    Map<String, List<StockModel>> groupedData,
-  ) stocks;
 
   FetchInventoryReports({
     required this.reportType,
     required this.facilityId,
     required this.productVariantId,
-    required this.stocks,
   });
 }

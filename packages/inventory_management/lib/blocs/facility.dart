@@ -11,8 +11,10 @@ typedef FacilityStateEmitter = Emitter<FacilityState>;
 
 // Bloc for handling facility related events and states
 class FacilityBloc extends Bloc<FacilityEvent, FacilityState> {
+  final InventorySingleton inventorySingleton;
+
   // Constructor for the bloc
-  FacilityBloc(super.initialState) {
+  FacilityBloc(super.initialState, {required this.inventorySingleton}) {
     // Registering the event handler for loading facilities for a specific project ID
     on(_handleLoadFacilitiesForProjectId);
   }
@@ -26,7 +28,7 @@ class FacilityBloc extends Bloc<FacilityEvent, FacilityState> {
     emit(const FacilityLoadingState());
     // Fetching the facilities for the project ID
     List<InventoryFacilityModel>? facilities =
-        await InventorySingleton().getFacilitiesForProjectId();
+        await inventorySingleton.getFacilitiesForProjectId();
     // Checking if the facilities are null
     if (facilities == null) {
       // Emitting the empty state if facilities are null

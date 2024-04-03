@@ -38,10 +38,6 @@ class HcmInventoryBloc extends InventoryListener {
     this.stockReconLocalRepository,
   });
 
-  late Function(
-    Map<String, List<StockModel>> groupedData,
-  ) _stockModelsLoaded;
-
   // Method to call the sync method
   @override
   void callSyncMethod() {
@@ -184,7 +180,7 @@ class HcmInventoryBloc extends InventoryListener {
 
   // Method to save stock details
   @override
-  Future<void> saveStockDetails(SaveStockDetails saveStockDetails) async {
+  Future<bool> saveStockDetails(SaveStockDetails saveStockDetails) async {
     var response = await stockLocalRepository!.create(HcmStockModel(
       stock: saveStockDetails.stockModel.copyWith(
         facilityId: saveStockDetails.stockModel.facilityId,
@@ -207,7 +203,7 @@ class HcmInventoryBloc extends InventoryListener {
       ),
     ));
 
-    saveStockDetails.isStockSaved(true);
+    return true;
   }
 
   // Method to save stock reconciliation details
@@ -245,11 +241,8 @@ class HcmInventoryBloc extends InventoryListener {
 
   // Method to fetch inventory reports
   @override
-  Future<void> fetchInventoryReports(
-    FetchInventoryReports fetchInventoryReports,
-  ) async {
-    _stockModelsLoaded = fetchInventoryReports.stocks;
-
+  Future<Map<String, List<StockModel>>> fetchInventoryReports(
+      FetchInventoryReports fetchInventoryReports) async {
     final reportType = fetchInventoryReports.reportType;
     final facilityId = fetchInventoryReports.facilityId;
     final productVariantId = fetchInventoryReports.productVariantId;
@@ -334,14 +327,18 @@ class HcmInventoryBloc extends InventoryListener {
       ),
     );
 
-    _stockModelsLoaded(groupedData.map((key, value) {
-      return MapEntry(key, value.map((e) => e.stock!).toList());
-    }));
+    return groupedData.map((key, value) {
+      return MapEntry(
+        key,
+        value.map((e) => e.stock!).toList(),
+      );
+    });
   }
 
   // Method to handle stock reconciliation report
   @override
-  Future<void> handleStockReconciliationReport(
+  Future<Map<String, List<StockReconciliationModel>>>
+      handleStockReconciliationReport(
     StockReconciliationReport stockReconciliationReport,
   ) async {
     final data = await stockReconLocalRepository!.search(
@@ -373,7 +370,6 @@ class HcmInventoryBloc extends InventoryListener {
       });
     }).toList();
 
-    stockReconciliationReport.stockReconciliationReport(
-        groupedData, additionalFields);
+    return groupedData;
   }
 }

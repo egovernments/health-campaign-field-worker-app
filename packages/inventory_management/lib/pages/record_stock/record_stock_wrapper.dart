@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:inventory_management/blocs/inventory_listener.dart';
 import 'package:inventory_management/pages/record_stock/stock_details.dart';
 import 'package:inventory_management/pages/record_stock/warehouse_details.dart';
 import 'package:inventory_management/widgets/component_wrapper/facility_bloc_wrapper.dart';
@@ -34,6 +35,7 @@ class RecordStockWrapperPage extends StatelessWidget {
                   entryType: type,
                   projectId: projectId,
                 ),
+                inventorySingleton: InventorySingleton(),
               );
             },
             child: BlocBuilder<RecordStockBloc, RecordStockState>(

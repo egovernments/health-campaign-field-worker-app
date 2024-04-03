@@ -58,7 +58,8 @@ class _InventoryReportSelectionPageState
         ]),
         children: [
           BlocProvider<InventoryReportBloc>(
-            create: (_) => InventoryReportBloc(),
+            create: (_) =>
+                InventoryReportBloc(inventorySingleton: InventorySingleton()),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,

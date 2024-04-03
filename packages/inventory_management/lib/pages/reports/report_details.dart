@@ -93,7 +93,9 @@ class _InventoryReportDetailsPageState
   @override
   Widget build(BuildContext context) {
     return BlocProvider<InventoryReportBloc>(
-      create: (context) => InventoryReportBloc(),
+      create: (context) =>
+          InventoryReportBloc(inventorySingleton: InventorySingleton())
+            ..add(const InventoryReportLoadingEvent()),
       child: Scaffold(
         bottomNavigationBar: DigitCard(
           padding: const EdgeInsets.all(8.0),

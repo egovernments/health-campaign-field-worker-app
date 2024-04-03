@@ -13,8 +13,10 @@ typedef RecordStockEmitter = Emitter<RecordStockState>;
 
 // Bloc for handling record stock related events and states
 class RecordStockBloc extends Bloc<RecordStockEvent, RecordStockState> {
+  final InventorySingleton inventorySingleton;
+
   // Constructor for the bloc
-  RecordStockBloc(super.initialState) {
+  RecordStockBloc(super.initialState, {required this.inventorySingleton}) {
     // Registering the event handlers
     on(_handleSaveWarehouseDetails);
     on(_handleSaveStockDetails);
@@ -89,7 +91,7 @@ class RecordStockBloc extends Bloc<RecordStockEvent, RecordStockState> {
     RecordStockCreateStockEntryEvent event,
     RecordStockEmitter emit,
   ) async {
-    bool stockSaved = false;
+    bool? stockSaved = false;
 
     await state.maybeMap(
       orElse: () {
@@ -114,21 +116,16 @@ class RecordStockBloc extends Bloc<RecordStockEvent, RecordStockState> {
           );
         }
 
-        await InventorySingleton().saveStockDetails(
+        stockSaved = await inventorySingleton.saveStockDetails(
           SaveStockDetails(
             stockModel: stockModel.copyWith(
               facilityId: facilityModel.id,
             ),
             additionalData: value.additionalData ?? {},
-            isStockSaved: (bool isStockSaved) {
-              if (isStockSaved == true) {
-                stockSaved = true;
-              }
-            },
           ),
         );
 
-        if (stockSaved) {
+        if (stockSaved!) {
           emit(
             RecordStockPersistedState(
               entryType: value.entryType,
