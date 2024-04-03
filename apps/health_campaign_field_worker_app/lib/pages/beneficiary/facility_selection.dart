@@ -3,15 +3,14 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:inventory_management/blocs/app_localization.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-
-import '../../models/entities/inventory_facility.dart';
+import '../../models/entities/facility.dart';
 import '../../utils/i18_key_constants.dart' as i18;
-import '../widgets/back_navigation_help_header.dart';
+import '../../widgets/header/back_navigation_help_header.dart';
 
-class InventoryFacilitySelectionPage extends StatelessWidget {
-  final List<InventoryFacilityModel> facilities;
+class FacilitySelectionPage extends StatelessWidget {
+  final List<FacilityModel> facilities;
 
-  const InventoryFacilitySelectionPage({
+  const FacilitySelectionPage({
     super.key,
     required this.facilities,
   });
@@ -96,9 +95,11 @@ class InventoryFacilitySelectionPage extends StatelessWidget {
                             child: Container(
                               margin: const EdgeInsets.symmetric(horizontal: 8),
                               decoration: BoxDecoration(
-                                color: DigitTheme.instance.colors.alabasterWhite,
+                                color:
+                                    DigitTheme.instance.colors.alabasterWhite,
                                 border: Border(
-                                  top: index == 0 ? borderSide : BorderSide.none,
+                                  top:
+                                      index == 0 ? borderSide : BorderSide.none,
                                   bottom: index == filteredFacilities.length - 1
                                       ? borderSide
                                       : BorderSide.none,
@@ -113,8 +114,8 @@ class InventoryFacilitySelectionPage extends StatelessWidget {
                                 child: Container(
                                   margin: const EdgeInsets.all(kPadding),
                                   decoration: BoxDecoration(
-                                    color:
-                                        DigitTheme.instance.colors.alabasterWhite,
+                                    color: DigitTheme
+                                        .instance.colors.alabasterWhite,
                                     border: Border(
                                       bottom: BorderSide(
                                         color: theme.colorScheme.outline,
@@ -150,7 +151,7 @@ class InventoryFacilitySelectionPage extends StatelessWidget {
   FormGroup _form() {
     return fb.group({
       _facilityName: FormControl<String>(),
-      _selectedFacility: FormControl<InventoryFacilityModel>(
+      _selectedFacility: FormControl<FacilityModel>(
         validators: [Validators.required],
       ),
     });
@@ -158,18 +159,18 @@ class InventoryFacilitySelectionPage extends StatelessWidget {
 }
 
 class FacilityValueAccessor
-    extends ControlValueAccessor<InventoryFacilityModel, String> {
-  final List<InventoryFacilityModel> models;
+    extends ControlValueAccessor<FacilityModel, String> {
+  final List<FacilityModel> models;
 
   FacilityValueAccessor(this.models);
 
   @override
-  String? modelToViewValue(InventoryFacilityModel? modelValue) {
+  String? modelToViewValue(FacilityModel? modelValue) {
     return modelValue?.id;
   }
 
   @override
-  InventoryFacilityModel? viewToModelValue(String? viewValue) {
+  FacilityModel? viewToModelValue(String? viewValue) {
     return models.firstWhereOrNull((element) => element.id == viewValue);
   }
 }

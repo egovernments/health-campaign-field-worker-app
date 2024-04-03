@@ -291,7 +291,7 @@ class _StockReconciliationPageState
                                                                 InventoryFacilityModel>(
                                                       MaterialPageRoute(
                                                         builder: (context) =>
-                                                            FacilitySelectionPage(
+                                                            InventoryFacilitySelectionPage(
                                                           facilities:
                                                               facilities,
                                                         ),
@@ -346,7 +346,7 @@ class _StockReconciliationPageState
                                                         ).push(
                                                           MaterialPageRoute(
                                                             builder: (context) =>
-                                                                FacilitySelectionPage(
+                                                                InventoryFacilitySelectionPage(
                                                               facilities:
                                                                   facilities,
                                                             ),

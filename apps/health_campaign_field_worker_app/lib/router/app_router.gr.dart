@@ -203,6 +203,16 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    FacilitySelectionRoute.name: (routeData) {
+      final args = routeData.argsAs<FacilitySelectionRouteArgs>();
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: FacilitySelectionPage(
+          key: args.key,
+          facilities: args.facilities,
+        ),
+      );
+    },
     ProjectSelectionRoute.name: (routeData) {
       final args = routeData.argsAs<ProjectSelectionRouteArgs>(
           orElse: () => const ProjectSelectionRouteArgs());
@@ -881,6 +891,11 @@ class _$AppRouter extends RootStackRouter {
             RouteConfig(
               ProjectFacilitySelectionRoute.name,
               path: 'select-project-facilities',
+              parent: AuthenticatedRouteWrapper.name,
+            ),
+            RouteConfig(
+              FacilitySelectionRoute.name,
+              path: 'select-facilities',
               parent: AuthenticatedRouteWrapper.name,
             ),
             RouteConfig(
@@ -1573,6 +1588,40 @@ class ProjectFacilitySelectionRouteArgs {
   @override
   String toString() {
     return 'ProjectFacilitySelectionRouteArgs{key: $key, projectFacilities: $projectFacilities}';
+  }
+}
+
+/// generated route for
+/// [FacilitySelectionPage]
+class FacilitySelectionRoute extends PageRouteInfo<FacilitySelectionRouteArgs> {
+  FacilitySelectionRoute({
+    Key? key,
+    required List<FacilityModel> facilities,
+  }) : super(
+          FacilitySelectionRoute.name,
+          path: 'select-facilities',
+          args: FacilitySelectionRouteArgs(
+            key: key,
+            facilities: facilities,
+          ),
+        );
+
+  static const String name = 'FacilitySelectionRoute';
+}
+
+class FacilitySelectionRouteArgs {
+  const FacilitySelectionRouteArgs({
+    this.key,
+    required this.facilities,
+  });
+
+  final Key? key;
+
+  final List<FacilityModel> facilities;
+
+  @override
+  String toString() {
+    return 'FacilitySelectionRouteArgs{key: $key, facilities: $facilities}';
   }
 }
 

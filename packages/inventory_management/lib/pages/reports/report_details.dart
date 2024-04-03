@@ -213,7 +213,7 @@ class _InventoryReportDetailsPageState
                                                     ).push(
                                                       MaterialPageRoute(
                                                         builder: (context) =>
-                                                            FacilitySelectionPage(
+                                                            InventoryFacilitySelectionPage(
                                                           facilities:
                                                               facilities,
                                                         ),
@@ -269,7 +269,7 @@ class _InventoryReportDetailsPageState
                                                         ).push(
                                                           MaterialPageRoute(
                                                             builder: (context) =>
-                                                                FacilitySelectionPage(
+                                                                InventoryFacilitySelectionPage(
                                                               facilities:
                                                                   facilities,
                                                             ),

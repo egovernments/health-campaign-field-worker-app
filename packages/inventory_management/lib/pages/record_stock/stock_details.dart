@@ -588,7 +588,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                   .push<InventoryFacilityModel>(
                                                 MaterialPageRoute(
                                                   builder: (context) =>
-                                                      FacilitySelectionPage(
+                                                      InventoryFacilitySelectionPage(
                                                     facilities: facilities,
                                                   ),
                                                 ),
@@ -648,7 +648,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                   ).push<InventoryFacilityModel>(
                                                     MaterialPageRoute(
                                                       builder: (context) =>
-                                                          FacilitySelectionPage(
+                                                          InventoryFacilitySelectionPage(
                                                         facilities: facilities,
                                                       ),
                                                     ),

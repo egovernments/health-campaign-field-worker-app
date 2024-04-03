@@ -21,6 +21,7 @@ import '../pages/beneficiary/beneficiary_details.dart';
 import '../pages/beneficiary/beneficiary_wrapper.dart';
 import '../pages/beneficiary/deliver_intervention.dart';
 import '../pages/beneficiary/dose_administered.dart';
+import '../pages/beneficiary/facility_selection.dart';
 import '../pages/beneficiary/household_overview.dart';
 import '../pages/beneficiary/record_past_delivery_details.dart';
 import '../pages/beneficiary/refer_beneficiary.dart';
@@ -208,6 +209,11 @@ part 'app_router.gr.dart';
         AutoRoute<ProjectFacilityModel>(
           page: ProjectFacilitySelectionPage,
           path: 'select-project-facilities',
+        ),
+
+        AutoRoute(
+          page: FacilitySelectionPage,
+          path: 'select-facilities',
         ),
 
         /// Project Selection
