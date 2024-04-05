@@ -39,6 +39,7 @@ class LanguageSelectionPage extends StatelessWidget {
                   builder: (context, localizationState) {
                     return localizationModulesList != null
                         ? DigitLanguageCard(
+                            key: const Key('language_card'),
                             digitRowCardItems: languages.map((e) {
                               var index = languages.indexOf(e);
 
