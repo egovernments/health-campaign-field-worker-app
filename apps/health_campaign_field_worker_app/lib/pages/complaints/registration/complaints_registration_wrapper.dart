@@ -10,8 +10,9 @@ import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
 import '../../../widgets/boundary_selection_wrapper.dart';
 
+@RoutePage()
 class ComplaintsRegistrationWrapperPage extends StatelessWidget
-    with AutoRouteWrapper {
+    implements AutoRouteWrapper {
   final PgrServiceModel? pgrServiceModel;
 
   const ComplaintsRegistrationWrapperPage({

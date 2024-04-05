@@ -18,6 +18,7 @@ import '../widgets/beneficiary/view_referral_card.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
 
+@RoutePage()
 class SearchReferralsPage extends LocalizedStatefulWidget {
   const SearchReferralsPage({
     super.key,

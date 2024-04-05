@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
@@ -5,9 +6,9 @@ import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
-import 'package:inventory_management/pages/acknowledgement.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recase/recase.dart';
+import 'package:inventory_management/router/inventory_router.gm.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
@@ -24,14 +25,12 @@ import '../../models/entities/stock.dart';
 import '../../models/entities/transaction_reason.dart';
 import '../../models/entities/transaction_type.dart';
 import '../../widgets/back_navigation_help_header.dart';
-import '../facility_selection.dart';
 
+@RoutePage()
 class StockDetailsPage extends LocalizedStatefulWidget {
-  final StockRecordEntryType entryType;
   const StockDetailsPage({
     super.key,
     super.appLocalizations,
-    required this.entryType,
   });
 
   @override
@@ -112,10 +111,9 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
               listener: (context, stockState) {
                 stockState.mapOrNull(
                   persisted: (value) {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => InventoryAcknowledgementPage(),
-                      ),
+                    final parent = context.router.parent() as StackRouter;
+                    parent.replace(
+                      InventoryAcknowledgementRoute(),
                     );
                   },
                 );
@@ -490,14 +488,6 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                             const RecordStockCreateStockEntryEvent(),
                                           );
                                         }
-
-                                        bloc.state.maybeMap(
-                                          orElse: () {},
-                                          persisted: (value) {},
-                                          create: (value) {
-                                            if (value.stockModel != null) {}
-                                          },
-                                        );
                                       }
                                     },
                               child: Center(
@@ -583,16 +573,13 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                   .control(_deliveryTeamKey)
                                                   .value = '';
 
-                                              final facility = await Navigator
-                                                      .of(context)
-                                                  .push<InventoryFacilityModel>(
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      FacilitySelectionPage(
-                                                    facilities: facilities,
-                                                  ),
-                                                ),
-                                              );
+                                              final facility = await context
+                                                      .router
+                                                      .push(
+                                                          FacilitySelectionRoute(
+                                                              facilities:
+                                                                  facilities))
+                                                  as InventoryFacilityModel?;
 
                                               if (facility == null) return;
                                               form
@@ -643,16 +630,11 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                       .value = '';
 
                                                   final facility =
-                                                      await Navigator.of(
-                                                    context,
-                                                  ).push<InventoryFacilityModel>(
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          FacilitySelectionPage(
-                                                        facilities: facilities,
-                                                      ),
+                                                      await context.router.push(
+                                                    FacilitySelectionRoute(
+                                                      facilities: facilities,
                                                     ),
-                                                  );
+                                                  ) as InventoryFacilityModel?;
 
                                                   if (facility == null) return;
                                                   form

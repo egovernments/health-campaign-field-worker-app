@@ -1,5 +1,6 @@
 import 'package:attendance_management/blocs/date_session_bloc.dart';
 import 'package:attendance_management/models/enum_values.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/digit_radio_button_list.dart';
@@ -12,10 +13,11 @@ import '../../widgets/localized.dart';
 import '../blocs/app_localization.dart';
 import '../blocs/attendance_individual_bloc.dart';
 import '../models/attendance_register.dart';
+import '../router/attendance_router.gm.dart';
 import '../utils/date_util_attendance.dart';
 import '../widgets/back_navigation_help_header.dart';
-import 'mark_attendance.dart';
 
+@RoutePage()
 class AttendanceDateSessionSelectionPage extends LocalizedStatefulWidget {
   final List<AttendanceRegisterModel> registers;
   final String registerID;
@@ -179,35 +181,31 @@ class _AttendanceDateSessionSelectionPageState
                                                         .millisecondsSinceEpoch);
 
                                                 final submit =
-                                                    await Navigator.of(context)
-                                                        .push(
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        MarkAttendancePage(
-                                                      attendees: selectedRegister
-                                                                  .attendees !=
-                                                              null
-                                                          //Filtering attendees based on current time and enrollment date of the attendee
-                                                          ? (selectedRegister
-                                                                      .attendees ??
-                                                                  [])
-                                                              .where((att) =>
-                                                                  att.enrollmentDate !=
-                                                                      null &&
-                                                                  att.enrollmentDate! <=
-                                                                      entryTime)
-                                                              .toList()
-                                                          : [],
-                                                      dateTime: s,
-                                                      session: session?.key,
-                                                      entryTime: entryTime,
-                                                      exitTime: exitTime,
-                                                      registerId:
-                                                          selectedRegister.id,
-                                                      tenantId: selectedRegister
-                                                          .tenantId
-                                                          .toString(),
-                                                    ),
+                                                    await context.router.push(
+                                                  MarkAttendanceRoute(
+                                                    attendees: selectedRegister
+                                                                .attendees !=
+                                                            null
+                                                        //Filtering attendees based on current time and enrollment date of the attendee
+                                                        ? (selectedRegister
+                                                                    .attendees ??
+                                                                [])
+                                                            .where((att) =>
+                                                                att.enrollmentDate !=
+                                                                    null &&
+                                                                att.enrollmentDate! <=
+                                                                    entryTime)
+                                                            .toList()
+                                                        : [],
+                                                    dateTime: s,
+                                                    session: session?.key,
+                                                    entryTime: entryTime,
+                                                    exitTime: exitTime,
+                                                    registerId:
+                                                        selectedRegister.id,
+                                                    tenantId: selectedRegister
+                                                        .tenantId
+                                                        .toString(),
                                                   ),
                                                 );
                                                 if (submit == null) {

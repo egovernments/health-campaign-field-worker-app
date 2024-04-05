@@ -4,12 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:health_campaign_field_worker_app/blocs/household_details/household_details.dart';
 import 'package:health_campaign_field_worker_app/blocs/localization/app_localization.dart';
+import 'package:health_campaign_field_worker_app/router/app_router.dart';
 
 import 'package:health_campaign_field_worker_app/utils/i18_key_constants.dart'
     as i18;
 import 'package:mocktail/mocktail.dart';
-
-import '../router/router.dart';
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 

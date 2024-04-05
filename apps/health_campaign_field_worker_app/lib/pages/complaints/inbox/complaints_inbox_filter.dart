@@ -16,6 +16,7 @@ import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
 import '../../../widgets/localized.dart';
 
+@RoutePage()
 class ComplaintsInboxFilterPage extends LocalizedStatefulWidget {
   const ComplaintsInboxFilterPage({
     super.key,

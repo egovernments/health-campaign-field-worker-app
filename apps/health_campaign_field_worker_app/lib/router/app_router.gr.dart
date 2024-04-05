@@ -1,153 +1,24 @@
-// **************************************************************************
-// AutoRouteGenerator
-// **************************************************************************
-
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 // **************************************************************************
-// AutoRouteGenerator
+// AutoRouterGenerator
 // **************************************************************************
-//
+
 // ignore_for_file: type=lint
+// coverage:ignore-file
 
 part of 'app_router.dart';
 
-class _$AppRouter extends RootStackRouter {
-  _$AppRouter([GlobalKey<NavigatorState>? navigatorKey]) : super(navigatorKey);
+abstract class _$AppRouter extends RootStackRouter {
+  // ignore: unused_element
+  _$AppRouter({super.navigatorKey});
 
   @override
   final Map<String, PageFactory> pagesMap = {
-    UnauthenticatedRouteWrapper.name: (routeData) {
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: const UnauthenticatedPageWrapper(),
-      );
-    },
-    AuthenticatedRouteWrapper.name: (routeData) {
-      final args = routeData.argsAs<AuthenticatedRouteWrapperArgs>(
-          orElse: () => const AuthenticatedRouteWrapperArgs());
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: AuthenticatedPageWrapper(key: args.key),
-      );
-    },
-    LanguageSelectionRoute.name: (routeData) {
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: const LanguageSelectionPage(),
-      );
-    },
-    LoginRoute.name: (routeData) {
-      final args = routeData.argsAs<LoginRouteArgs>(
-          orElse: () => const LoginRouteArgs());
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: LoginPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-        ),
-      );
-    },
-    HomeRoute.name: (routeData) {
-      final args =
-          routeData.argsAs<HomeRouteArgs>(orElse: () => const HomeRouteArgs());
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: HomePage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-        ),
-      );
-    },
-    ProfileRoute.name: (routeData) {
-      final args = routeData.argsAs<ProfileRouteArgs>(
-          orElse: () => const ProfileRouteArgs());
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: ProfilePage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-        ),
-      );
-    },
-    UserQRDetailsRoute.name: (routeData) {
-      final args = routeData.argsAs<UserQRDetailsRouteArgs>(
-          orElse: () => const UserQRDetailsRouteArgs());
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: UserQRDetailsPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-        ),
-      );
-    },
-    SearchBeneficiaryRoute.name: (routeData) {
-      final args = routeData.argsAs<SearchBeneficiaryRouteArgs>(
-          orElse: () => const SearchBeneficiaryRouteArgs());
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: SearchBeneficiaryPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-        ),
-      );
-    },
-    BeneficiariesReportRoute.name: (routeData) {
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: const BeneficiariesReportPage(),
-      );
-    },
-    BeneficiaryRegistrationWrapperRoute.name: (routeData) {
-      final args = routeData.argsAs<BeneficiaryRegistrationWrapperRouteArgs>();
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: WrappedRoute(
-            child: BeneficiaryRegistrationWrapperPage(
-          key: args.key,
-          initialState: args.initialState,
-        )),
-      );
-    },
-    BeneficiaryWrapperRoute.name: (routeData) {
-      final args = routeData.argsAs<BeneficiaryWrapperRouteArgs>();
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: BeneficiaryWrapperPage(
-          key: args.key,
-          wrapper: args.wrapper,
-          isEditing: args.isEditing,
-        ),
-      );
-    },
-    ChecklistWrapperRoute.name: (routeData) {
-      final args = routeData.argsAs<ChecklistWrapperRouteArgs>(
-          orElse: () => const ChecklistWrapperRouteArgs());
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: WrappedRoute(
-            child: ChecklistWrapperPage(
-          key: args.key,
-          isEditing: args.isEditing,
-        )),
-      );
-    },
-    BeneficiaryAcknowledgementRoute.name: (routeData) {
-      final args = routeData.argsAs<BeneficiaryAcknowledgementRouteArgs>(
-          orElse: () => const BeneficiaryAcknowledgementRouteArgs());
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: BeneficiaryAcknowledgementPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-          enableViewHousehold: args.enableViewHousehold,
-        ),
-      );
-    },
     AcknowledgementRoute.name: (routeData) {
       final args = routeData.argsAs<AcknowledgementRouteArgs>(
           orElse: () => const AcknowledgementRouteArgs());
-      return MaterialPageX<dynamic>(
+      return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: AcknowledgementPage(
           key: args.key,
@@ -159,10 +30,148 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    AuthenticatedRouteWrapper.name: (routeData) {
+      final args = routeData.argsAs<AuthenticatedRouteWrapperArgs>(
+          orElse: () => const AuthenticatedRouteWrapperArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: AuthenticatedPageWrapper(key: args.key),
+      );
+    },
+    BeneficiariesReportRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const BeneficiariesReportPage(),
+      );
+    },
+    BeneficiaryAcknowledgementRoute.name: (routeData) {
+      final args = routeData.argsAs<BeneficiaryAcknowledgementRouteArgs>(
+          orElse: () => const BeneficiaryAcknowledgementRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: BeneficiaryAcknowledgementPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          enableViewHousehold: args.enableViewHousehold,
+        ),
+      );
+    },
+    BeneficiaryDetailsRoute.name: (routeData) {
+      final args = routeData.argsAs<BeneficiaryDetailsRouteArgs>(
+          orElse: () => const BeneficiaryDetailsRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: BeneficiaryDetailsPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    BeneficiaryRegistrationWrapperRoute.name: (routeData) {
+      final args = routeData.argsAs<BeneficiaryRegistrationWrapperRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: WrappedRoute(
+            child: BeneficiaryRegistrationWrapperPage(
+          key: args.key,
+          initialState: args.initialState,
+        )),
+      );
+    },
+    BeneficiaryWrapperRoute.name: (routeData) {
+      final args = routeData.argsAs<BeneficiaryWrapperRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: BeneficiaryWrapperPage(
+          key: args.key,
+          wrapper: args.wrapper,
+          isEditing: args.isEditing,
+        ),
+      );
+    },
+    BoundarySelectionRoute.name: (routeData) {
+      final args = routeData.argsAs<BoundarySelectionRouteArgs>(
+          orElse: () => const BoundarySelectionRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: BoundarySelectionPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    ChecklistBoundaryViewRoute.name: (routeData) {
+      final args = routeData.argsAs<ChecklistBoundaryViewRouteArgs>(
+          orElse: () => const ChecklistBoundaryViewRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ChecklistBoundaryViewPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    ChecklistRoute.name: (routeData) {
+      final args = routeData.argsAs<ChecklistRouteArgs>(
+          orElse: () => const ChecklistRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ChecklistPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    ChecklistPreviewRoute.name: (routeData) {
+      final args = routeData.argsAs<ChecklistPreviewRouteArgs>(
+          orElse: () => const ChecklistPreviewRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ChecklistPreviewPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    ChecklistViewRoute.name: (routeData) {
+      final args = routeData.argsAs<ChecklistViewRouteArgs>(
+          orElse: () => const ChecklistViewRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ChecklistViewPage(
+          key: args.key,
+          referralClientRefId: args.referralClientRefId,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    ChecklistWrapperRoute.name: (routeData) {
+      final args = routeData.argsAs<ChecklistWrapperRouteArgs>(
+          orElse: () => const ChecklistWrapperRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: WrappedRoute(
+            child: ChecklistWrapperPage(
+          key: args.key,
+          isEditing: args.isEditing,
+        )),
+      );
+    },
+    ComplaintTypeRoute.name: (routeData) {
+      final args = routeData.argsAs<ComplaintTypeRouteArgs>(
+          orElse: () => const ComplaintTypeRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ComplaintTypePage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     ComplaintsAcknowledgementRoute.name: (routeData) {
       final args = routeData.argsAs<ComplaintsAcknowledgementRouteArgs>(
           orElse: () => const ComplaintsAcknowledgementRouteArgs());
-      return MaterialPageX<dynamic>(
+      return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: ComplaintsAcknowledgementPage(
           key: args.key,
@@ -170,12 +179,118 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    SearchReferralsRoute.name: (routeData) {
-      final args = routeData.argsAs<SearchReferralsRouteArgs>(
-          orElse: () => const SearchReferralsRouteArgs());
-      return MaterialPageX<dynamic>(
+    ComplaintsDetailsRoute.name: (routeData) {
+      final args = routeData.argsAs<ComplaintsDetailsRouteArgs>(
+          orElse: () => const ComplaintsDetailsRouteArgs());
+      return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: SearchReferralsPage(
+        child: ComplaintsDetailsPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    ComplaintsDetailsViewRoute.name: (routeData) {
+      final args = routeData.argsAs<ComplaintsDetailsViewRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ComplaintsDetailsViewPage(
+          key: args.key,
+          complaint: args.complaint,
+        ),
+      );
+    },
+    ComplaintsInboxFilterRoute.name: (routeData) {
+      final args = routeData.argsAs<ComplaintsInboxFilterRouteArgs>(
+          orElse: () => const ComplaintsInboxFilterRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ComplaintsInboxFilterPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    ComplaintsInboxRoute.name: (routeData) {
+      final args = routeData.argsAs<ComplaintsInboxRouteArgs>(
+          orElse: () => const ComplaintsInboxRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ComplaintsInboxPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    ComplaintsInboxSearchRoute.name: (routeData) {
+      final args = routeData.argsAs<ComplaintsInboxSearchRouteArgs>(
+          orElse: () => const ComplaintsInboxSearchRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ComplaintsInboxSearchPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    ComplaintsInboxSortRoute.name: (routeData) {
+      final args = routeData.argsAs<ComplaintsInboxSortRouteArgs>(
+          orElse: () => const ComplaintsInboxSortRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ComplaintsInboxSortPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    ComplaintsInboxWrapperRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ComplaintsInboxWrapperPage(),
+      );
+    },
+    ComplaintsLocationRoute.name: (routeData) {
+      final args = routeData.argsAs<ComplaintsLocationRouteArgs>(
+          orElse: () => const ComplaintsLocationRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ComplaintsLocationPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    ComplaintsRegistrationWrapperRoute.name: (routeData) {
+      final args = routeData.argsAs<ComplaintsRegistrationWrapperRouteArgs>(
+          orElse: () => const ComplaintsRegistrationWrapperRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: WrappedRoute(
+            child: ComplaintsRegistrationWrapperPage(
+          key: args.key,
+          pgrServiceModel: args.pgrServiceModel,
+        )),
+      );
+    },
+    DeliverInterventionRoute.name: (routeData) {
+      final args = routeData.argsAs<DeliverInterventionRouteArgs>(
+          orElse: () => const DeliverInterventionRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: DeliverInterventionPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          isEditing: args.isEditing,
+        ),
+      );
+    },
+    DoseAdministeredRoute.name: (routeData) {
+      final args = routeData.argsAs<DoseAdministeredRouteArgs>(
+          orElse: () => const DoseAdministeredRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: DoseAdministeredPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -183,7 +298,7 @@ class _$AppRouter extends RootStackRouter {
     },
     HFCreateReferralWrapperRoute.name: (routeData) {
       final args = routeData.argsAs<HFCreateReferralWrapperRouteArgs>();
-      return MaterialPageX<dynamic>(
+      return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: WrappedRoute(
             child: HFCreateReferralWrapperPage(
@@ -193,132 +308,21 @@ class _$AppRouter extends RootStackRouter {
         )),
       );
     },
-    ProjectFacilitySelectionRoute.name: (routeData) {
-      final args = routeData.argsAs<ProjectFacilitySelectionRouteArgs>();
-      return MaterialPageX<ProjectFacilityModel>(
+    HomeRoute.name: (routeData) {
+      final args =
+          routeData.argsAs<HomeRouteArgs>(orElse: () => const HomeRouteArgs());
+      return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: ProjectFacilitySelectionPage(
-          key: args.key,
-          projectFacilities: args.projectFacilities,
-        ),
-      );
-    },
-    ProjectSelectionRoute.name: (routeData) {
-      final args = routeData.argsAs<ProjectSelectionRouteArgs>(
-          orElse: () => const ProjectSelectionRouteArgs());
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: ProjectSelectionPage(
+        child: HomePage(
           key: args.key,
           appLocalizations: args.appLocalizations,
-        ),
-      );
-    },
-    BoundarySelectionRoute.name: (routeData) {
-      final args = routeData.argsAs<BoundarySelectionRouteArgs>(
-          orElse: () => const BoundarySelectionRouteArgs());
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: BoundarySelectionPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-        ),
-      );
-    },
-    ComplaintsInboxWrapperRoute.name: (routeData) {
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: const ComplaintsInboxWrapperPage(),
-      );
-    },
-    ComplaintsRegistrationWrapperRoute.name: (routeData) {
-      final args = routeData.argsAs<ComplaintsRegistrationWrapperRouteArgs>(
-          orElse: () => const ComplaintsRegistrationWrapperRouteArgs());
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: WrappedRoute(
-            child: ComplaintsRegistrationWrapperPage(
-          key: args.key,
-          pgrServiceModel: args.pgrServiceModel,
-        )),
-      );
-    },
-    ManageAttendanceRoute.name: (routeData) {
-      final args = routeData.argsAs<ManageAttendanceRouteArgs>();
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: ManageAttendancePage(
-          attendanceListeners: args.attendanceListeners,
-          projectId: args.projectId,
-          userId: args.userId,
-          appVersion: args.appVersion,
-          key: args.key,
-        ),
-      );
-    },
-    ManageStocksRoute.name: (routeData) {
-      final args = routeData.argsAs<ManageStocksRouteArgs>();
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: ManageStocksPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-          inventoryListener: args.inventoryListener,
-          projectId: args.projectId,
-          userId: args.userId,
-          boundaryName: args.boundaryName,
-          isDistributor: args.isDistributor,
-          isWareHouseMgr: args.isWareHouseMgr,
-          transportType: args.transportType,
-        ),
-      );
-    },
-    StockReconciliationRoute.name: (routeData) {
-      final args = routeData.argsAs<StockReconciliationRouteArgs>();
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: StockReconciliationPage(
-          inventoryListener: args.inventoryListener,
-          projectId: args.projectId,
-          isDistributor: args.isDistributor,
-          isWareHouseMgr: args.isWareHouseMgr,
-          loggedInUserUuid: args.loggedInUserUuid,
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-        ),
-      );
-    },
-    InventoryReportSelectionRoute.name: (routeData) {
-      final args = routeData.argsAs<InventoryReportSelectionRouteArgs>();
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: InventoryReportSelectionPage(
-          inventoryListener: args.inventoryListener,
-          projectId: args.projectId,
-          isDistributor: args.isDistributor,
-          isWareHouseMgr: args.isWareHouseMgr,
-          loggedInUserUuid: args.loggedInUserUuid,
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-        ),
-      );
-    },
-    IndividualDetailsRoute.name: (routeData) {
-      final args = routeData.argsAs<IndividualDetailsRouteArgs>(
-          orElse: () => const IndividualDetailsRouteArgs());
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: IndividualDetailsPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-          isHeadOfHousehold: args.isHeadOfHousehold,
         ),
       );
     },
     HouseHoldDetailsRoute.name: (routeData) {
       final args = routeData.argsAs<HouseHoldDetailsRouteArgs>(
           orElse: () => const HouseHoldDetailsRouteArgs());
-      return MaterialPageX<dynamic>(
+      return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: HouseHoldDetailsPage(
           key: args.key,
@@ -326,10 +330,22 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    HouseholdAcknowledgementRoute.name: (routeData) {
+      final args = routeData.argsAs<HouseholdAcknowledgementRouteArgs>(
+          orElse: () => const HouseholdAcknowledgementRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: HouseholdAcknowledgementPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          enableViewHousehold: args.enableViewHousehold,
+        ),
+      );
+    },
     HouseholdLocationRoute.name: (routeData) {
       final args = routeData.argsAs<HouseholdLocationRouteArgs>(
           orElse: () => const HouseholdLocationRouteArgs());
-      return MaterialPageX<dynamic>(
+      return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: HouseholdLocationPage(
           key: args.key,
@@ -340,7 +356,7 @@ class _$AppRouter extends RootStackRouter {
     HouseholdOverviewRoute.name: (routeData) {
       final args = routeData.argsAs<HouseholdOverviewRouteArgs>(
           orElse: () => const HouseholdOverviewRouteArgs());
-      return MaterialPageX<dynamic>(
+      return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: HouseholdOverviewPage(
           key: args.key,
@@ -348,80 +364,71 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    BeneficiaryDetailsRoute.name: (routeData) {
-      final args = routeData.argsAs<BeneficiaryDetailsRouteArgs>(
-          orElse: () => const BeneficiaryDetailsRouteArgs());
-      return MaterialPageX<dynamic>(
+    IndividualDetailsRoute.name: (routeData) {
+      final args = routeData.argsAs<IndividualDetailsRouteArgs>(
+          orElse: () => const IndividualDetailsRouteArgs());
+      return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: BeneficiaryDetailsPage(
+        child: IndividualDetailsPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          isHeadOfHousehold: args.isHeadOfHousehold,
+        ),
+      );
+    },
+    LanguageSelectionRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const LanguageSelectionPage(),
+      );
+    },
+    LoginRoute.name: (routeData) {
+      final args = routeData.argsAs<LoginRouteArgs>(
+          orElse: () => const LoginRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: LoginPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
       );
     },
-    DeliverInterventionRoute.name: (routeData) {
-      final args = routeData.argsAs<DeliverInterventionRouteArgs>(
-          orElse: () => const DeliverInterventionRouteArgs());
-      return MaterialPageX<dynamic>(
+    ProfileRoute.name: (routeData) {
+      final args = routeData.argsAs<ProfileRouteArgs>(
+          orElse: () => const ProfileRouteArgs());
+      return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: DeliverInterventionPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-          isEditing: args.isEditing,
-        ),
-      );
-    },
-    SideEffectsRoute.name: (routeData) {
-      final args = routeData.argsAs<SideEffectsRouteArgs>();
-      return MaterialPageX<List<TaskModel>>(
-        routeData: routeData,
-        child: SideEffectsPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-          tasks: args.tasks,
-          isEditing: args.isEditing,
-        ),
-      );
-    },
-    ReferBeneficiaryRoute.name: (routeData) {
-      final args = routeData.argsAs<ReferBeneficiaryRouteArgs>();
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: ReferBeneficiaryPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-          isEditing: args.isEditing,
-          projectBeneficiaryClientRefId: args.projectBeneficiaryClientRefId,
-        ),
-      );
-    },
-    DoseAdministeredRoute.name: (routeData) {
-      final args = routeData.argsAs<DoseAdministeredRouteArgs>(
-          orElse: () => const DoseAdministeredRouteArgs());
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: DoseAdministeredPage(
+        child: ProfilePage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
       );
     },
-    SplashAcknowledgementRoute.name: (routeData) {
-      final args = routeData.argsAs<SplashAcknowledgementRouteArgs>(
-          orElse: () => const SplashAcknowledgementRouteArgs());
-      return MaterialPageX<dynamic>(
+    ProjectFacilitySelectionRoute.name: (routeData) {
+      final args = routeData.argsAs<ProjectFacilitySelectionRouteArgs>();
+      return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: SplashAcknowledgementPage(
+        child: ProjectFacilitySelectionPage(
+          key: args.key,
+          projectFacilities: args.projectFacilities,
+        ),
+      );
+    },
+    ProjectSelectionRoute.name: (routeData) {
+      final args = routeData.argsAs<ProjectSelectionRouteArgs>(
+          orElse: () => const ProjectSelectionRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ProjectSelectionPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
-          enableBackToSearch: args.enableBackToSearch,
         ),
       );
     },
     ReasonForDeletionRoute.name: (routeData) {
       final args = routeData.argsAs<ReasonForDeletionRouteArgs>(
           orElse: () => const ReasonForDeletionRouteArgs());
-      return MaterialPageX<dynamic>(
+      return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: ReasonForDeletionPage(
           key: args.key,
@@ -433,7 +440,7 @@ class _$AppRouter extends RootStackRouter {
     RecordPastDeliveryDetailsRoute.name: (routeData) {
       final args = routeData.argsAs<RecordPastDeliveryDetailsRouteArgs>(
           orElse: () => const RecordPastDeliveryDetailsRouteArgs());
-      return MaterialPageX<dynamic>(
+      return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: RecordPastDeliveryDetailsPage(
           key: args.key,
@@ -442,79 +449,10 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    HouseholdAcknowledgementRoute.name: (routeData) {
-      final args = routeData.argsAs<HouseholdAcknowledgementRouteArgs>(
-          orElse: () => const HouseholdAcknowledgementRouteArgs());
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: HouseholdAcknowledgementPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-          enableViewHousehold: args.enableViewHousehold,
-        ),
-      );
-    },
-    ChecklistViewRoute.name: (routeData) {
-      final args = routeData.argsAs<ChecklistViewRouteArgs>(
-          orElse: () => const ChecklistViewRouteArgs());
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: ChecklistViewPage(
-          key: args.key,
-          referralClientRefId: args.referralClientRefId,
-          appLocalizations: args.appLocalizations,
-        ),
-      );
-    },
-    ChecklistRoute.name: (routeData) {
-      final args = routeData.argsAs<ChecklistRouteArgs>(
-          orElse: () => const ChecklistRouteArgs());
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: ChecklistPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-        ),
-      );
-    },
-    ChecklistBoundaryViewRoute.name: (routeData) {
-      final args = routeData.argsAs<ChecklistBoundaryViewRouteArgs>(
-          orElse: () => const ChecklistBoundaryViewRouteArgs());
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: ChecklistBoundaryViewPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-        ),
-      );
-    },
-    ChecklistPreviewRoute.name: (routeData) {
-      final args = routeData.argsAs<ChecklistPreviewRouteArgs>(
-          orElse: () => const ChecklistPreviewRouteArgs());
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: ChecklistPreviewPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-        ),
-      );
-    },
-    ReferralFacilityRoute.name: (routeData) {
-      final args = routeData.argsAs<ReferralFacilityRouteArgs>(
-          orElse: () => const ReferralFacilityRouteArgs());
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: ReferralFacilityPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-          isEditing: args.isEditing,
-        ),
-      );
-    },
     RecordReferralDetailsRoute.name: (routeData) {
       final args = routeData.argsAs<RecordReferralDetailsRouteArgs>(
           orElse: () => const RecordReferralDetailsRouteArgs());
-      return MaterialPageX<dynamic>(
+      return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: RecordReferralDetailsPage(
           key: args.key,
@@ -523,23 +461,34 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    ReferralReasonChecklistRoute.name: (routeData) {
-      final args = routeData.argsAs<ReferralReasonChecklistRouteArgs>(
-          orElse: () => const ReferralReasonChecklistRouteArgs());
-      return MaterialPageX<dynamic>(
+    ReferBeneficiaryRoute.name: (routeData) {
+      final args = routeData.argsAs<ReferBeneficiaryRouteArgs>();
+      return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: ReferralReasonChecklistPage(
+        child: ReferBeneficiaryPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
           isEditing: args.isEditing,
-          referralClientRefId: args.referralClientRefId,
+          projectBeneficiaryClientRefId: args.projectBeneficiaryClientRefId,
+        ),
+      );
+    },
+    ReferralFacilityRoute.name: (routeData) {
+      final args = routeData.argsAs<ReferralFacilityRouteArgs>(
+          orElse: () => const ReferralFacilityRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ReferralFacilityPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          isEditing: args.isEditing,
         ),
       );
     },
     ReferralReasonCheckListPreviewRoute.name: (routeData) {
       final args = routeData.argsAs<ReferralReasonCheckListPreviewRouteArgs>(
           orElse: () => const ReferralReasonCheckListPreviewRouteArgs());
-      return MaterialPageX<dynamic>(
+      return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: ReferralReasonCheckListPreviewPage(
           key: args.key,
@@ -549,831 +498,85 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    ComplaintsInboxRoute.name: (routeData) {
-      final args = routeData.argsAs<ComplaintsInboxRouteArgs>(
-          orElse: () => const ComplaintsInboxRouteArgs());
-      return MaterialPageX<dynamic>(
+    ReferralReasonChecklistRoute.name: (routeData) {
+      final args = routeData.argsAs<ReferralReasonChecklistRouteArgs>(
+          orElse: () => const ReferralReasonChecklistRouteArgs());
+      return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: ComplaintsInboxPage(
+        child: ReferralReasonChecklistPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          isEditing: args.isEditing,
+          referralClientRefId: args.referralClientRefId,
+        ),
+      );
+    },
+    SearchBeneficiaryRoute.name: (routeData) {
+      final args = routeData.argsAs<SearchBeneficiaryRouteArgs>(
+          orElse: () => const SearchBeneficiaryRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: SearchBeneficiaryPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
       );
     },
-    ComplaintsInboxFilterRoute.name: (routeData) {
-      final args = routeData.argsAs<ComplaintsInboxFilterRouteArgs>(
-          orElse: () => const ComplaintsInboxFilterRouteArgs());
-      return MaterialPageX<dynamic>(
+    SearchReferralsRoute.name: (routeData) {
+      final args = routeData.argsAs<SearchReferralsRouteArgs>(
+          orElse: () => const SearchReferralsRouteArgs());
+      return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: ComplaintsInboxFilterPage(
+        child: SearchReferralsPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
       );
     },
-    ComplaintsInboxSearchRoute.name: (routeData) {
-      final args = routeData.argsAs<ComplaintsInboxSearchRouteArgs>(
-          orElse: () => const ComplaintsInboxSearchRouteArgs());
-      return MaterialPageX<dynamic>(
+    SideEffectsRoute.name: (routeData) {
+      final args = routeData.argsAs<SideEffectsRouteArgs>();
+      return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: ComplaintsInboxSearchPage(
+        child: SideEffectsPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          tasks: args.tasks,
+          isEditing: args.isEditing,
+        ),
+      );
+    },
+    SplashAcknowledgementRoute.name: (routeData) {
+      final args = routeData.argsAs<SplashAcknowledgementRouteArgs>(
+          orElse: () => const SplashAcknowledgementRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: SplashAcknowledgementPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          enableBackToSearch: args.enableBackToSearch,
+        ),
+      );
+    },
+    UnauthenticatedRouteWrapper.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const UnauthenticatedPageWrapper(),
+      );
+    },
+    UserQRDetailsRoute.name: (routeData) {
+      final args = routeData.argsAs<UserQRDetailsRouteArgs>(
+          orElse: () => const UserQRDetailsRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: UserQRDetailsPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
       );
     },
-    ComplaintsInboxSortRoute.name: (routeData) {
-      final args = routeData.argsAs<ComplaintsInboxSortRouteArgs>(
-          orElse: () => const ComplaintsInboxSortRouteArgs());
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: ComplaintsInboxSortPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-        ),
-      );
-    },
-    ComplaintsDetailsViewRoute.name: (routeData) {
-      final args = routeData.argsAs<ComplaintsDetailsViewRouteArgs>();
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: ComplaintsDetailsViewPage(
-          key: args.key,
-          complaint: args.complaint,
-        ),
-      );
-    },
-    ComplaintTypeRoute.name: (routeData) {
-      final args = routeData.argsAs<ComplaintTypeRouteArgs>(
-          orElse: () => const ComplaintTypeRouteArgs());
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: ComplaintTypePage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-        ),
-      );
-    },
-    ComplaintsLocationRoute.name: (routeData) {
-      final args = routeData.argsAs<ComplaintsLocationRouteArgs>(
-          orElse: () => const ComplaintsLocationRouteArgs());
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: ComplaintsLocationPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-        ),
-      );
-    },
-    ComplaintsDetailsRoute.name: (routeData) {
-      final args = routeData.argsAs<ComplaintsDetailsRouteArgs>(
-          orElse: () => const ComplaintsDetailsRouteArgs());
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: ComplaintsDetailsPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-        ),
-      );
-    },
+    ...InventoryRoute().pagesMap,
+    ...AttendanceRoute().pagesMap,
   };
-
-  @override
-  List<RouteConfig> get routes => [
-        RouteConfig(
-          UnauthenticatedRouteWrapper.name,
-          path: '/',
-          children: [
-            RouteConfig(
-              '#redirect',
-              path: '',
-              parent: UnauthenticatedRouteWrapper.name,
-              redirectTo: 'language_selection',
-              fullMatch: true,
-            ),
-            RouteConfig(
-              LanguageSelectionRoute.name,
-              path: 'language_selection',
-              parent: UnauthenticatedRouteWrapper.name,
-            ),
-            RouteConfig(
-              LoginRoute.name,
-              path: 'login',
-              parent: UnauthenticatedRouteWrapper.name,
-            ),
-          ],
-        ),
-        RouteConfig(
-          AuthenticatedRouteWrapper.name,
-          path: '/',
-          children: [
-            RouteConfig(
-              '#redirect',
-              path: '',
-              parent: AuthenticatedRouteWrapper.name,
-              redirectTo: 'select-project',
-              fullMatch: true,
-            ),
-            RouteConfig(
-              HomeRoute.name,
-              path: 'home',
-              parent: AuthenticatedRouteWrapper.name,
-            ),
-            RouteConfig(
-              ProfileRoute.name,
-              path: 'profile',
-              parent: AuthenticatedRouteWrapper.name,
-            ),
-            RouteConfig(
-              UserQRDetailsRoute.name,
-              path: 'user-qr-code',
-              parent: AuthenticatedRouteWrapper.name,
-            ),
-            RouteConfig(
-              SearchBeneficiaryRoute.name,
-              path: 'search-beneficiary',
-              parent: AuthenticatedRouteWrapper.name,
-            ),
-            RouteConfig(
-              BeneficiariesReportRoute.name,
-              path: 'beneficiary-downsync-report',
-              parent: AuthenticatedRouteWrapper.name,
-            ),
-            RouteConfig(
-              BeneficiaryRegistrationWrapperRoute.name,
-              path: 'beneficiary-registration',
-              parent: AuthenticatedRouteWrapper.name,
-              children: [
-                RouteConfig(
-                  '#redirect',
-                  path: '',
-                  parent: BeneficiaryRegistrationWrapperRoute.name,
-                  redirectTo: 'household-location',
-                  fullMatch: true,
-                ),
-                RouteConfig(
-                  IndividualDetailsRoute.name,
-                  path: 'individual-details',
-                  parent: BeneficiaryRegistrationWrapperRoute.name,
-                ),
-                RouteConfig(
-                  HouseHoldDetailsRoute.name,
-                  path: 'household-details',
-                  parent: BeneficiaryRegistrationWrapperRoute.name,
-                ),
-                RouteConfig(
-                  HouseholdLocationRoute.name,
-                  path: 'household-location',
-                  parent: BeneficiaryRegistrationWrapperRoute.name,
-                ),
-              ],
-            ),
-            RouteConfig(
-              BeneficiaryWrapperRoute.name,
-              path: 'beneficiary',
-              parent: AuthenticatedRouteWrapper.name,
-              children: [
-                RouteConfig(
-                  '#redirect',
-                  path: '',
-                  parent: BeneficiaryWrapperRoute.name,
-                  redirectTo: 'overview',
-                  fullMatch: true,
-                ),
-                RouteConfig(
-                  HouseholdOverviewRoute.name,
-                  path: 'overview',
-                  parent: BeneficiaryWrapperRoute.name,
-                ),
-                RouteConfig(
-                  BeneficiaryDetailsRoute.name,
-                  path: 'beneficiary-details',
-                  parent: BeneficiaryWrapperRoute.name,
-                ),
-                RouteConfig(
-                  DeliverInterventionRoute.name,
-                  path: 'deliver-intervention',
-                  parent: BeneficiaryWrapperRoute.name,
-                ),
-                RouteConfig(
-                  SideEffectsRoute.name,
-                  path: 'side-effects',
-                  parent: BeneficiaryWrapperRoute.name,
-                ),
-                RouteConfig(
-                  ReferBeneficiaryRoute.name,
-                  path: 'refer-beneficiary',
-                  parent: BeneficiaryWrapperRoute.name,
-                ),
-                RouteConfig(
-                  DoseAdministeredRoute.name,
-                  path: 'dose-administered',
-                  parent: BeneficiaryWrapperRoute.name,
-                ),
-                RouteConfig(
-                  SplashAcknowledgementRoute.name,
-                  path: 'splash-acknowledgement',
-                  parent: BeneficiaryWrapperRoute.name,
-                ),
-                RouteConfig(
-                  ReasonForDeletionRoute.name,
-                  path: 'reason-for-deletion',
-                  parent: BeneficiaryWrapperRoute.name,
-                ),
-                RouteConfig(
-                  RecordPastDeliveryDetailsRoute.name,
-                  path: 'record-past-delivery-details',
-                  parent: BeneficiaryWrapperRoute.name,
-                ),
-                RouteConfig(
-                  HouseholdAcknowledgementRoute.name,
-                  path: 'household-acknowledgement',
-                  parent: BeneficiaryWrapperRoute.name,
-                ),
-                RouteConfig(
-                  ChecklistViewRoute.name,
-                  path: 'view',
-                  parent: BeneficiaryWrapperRoute.name,
-                ),
-              ],
-            ),
-            RouteConfig(
-              ChecklistWrapperRoute.name,
-              path: 'checklist',
-              parent: AuthenticatedRouteWrapper.name,
-              children: [
-                RouteConfig(
-                  ChecklistRoute.name,
-                  path: '',
-                  parent: ChecklistWrapperRoute.name,
-                ),
-                RouteConfig(
-                  ChecklistBoundaryViewRoute.name,
-                  path: 'view-boundary',
-                  parent: ChecklistWrapperRoute.name,
-                ),
-                RouteConfig(
-                  ChecklistViewRoute.name,
-                  path: 'view',
-                  parent: ChecklistWrapperRoute.name,
-                ),
-                RouteConfig(
-                  ChecklistPreviewRoute.name,
-                  path: 'preview',
-                  parent: ChecklistWrapperRoute.name,
-                ),
-              ],
-            ),
-            RouteConfig(
-              BeneficiaryAcknowledgementRoute.name,
-              path: 'beneficiary-acknowledgement',
-              parent: AuthenticatedRouteWrapper.name,
-            ),
-            RouteConfig(
-              AcknowledgementRoute.name,
-              path: 'acknowledgement',
-              parent: AuthenticatedRouteWrapper.name,
-            ),
-            RouteConfig(
-              ComplaintsAcknowledgementRoute.name,
-              path: 'complaints-acknowledgement',
-              parent: AuthenticatedRouteWrapper.name,
-            ),
-            RouteConfig(
-              SearchReferralsRoute.name,
-              path: 'search-referrals',
-              parent: AuthenticatedRouteWrapper.name,
-            ),
-            RouteConfig(
-              HFCreateReferralWrapperRoute.name,
-              path: 'hf-referral',
-              parent: AuthenticatedRouteWrapper.name,
-              children: [
-                RouteConfig(
-                  '#redirect',
-                  path: '',
-                  parent: HFCreateReferralWrapperRoute.name,
-                  redirectTo: 'facility-details',
-                  fullMatch: true,
-                ),
-                RouteConfig(
-                  ReferralFacilityRoute.name,
-                  path: 'facility-details',
-                  parent: HFCreateReferralWrapperRoute.name,
-                ),
-                RouteConfig(
-                  RecordReferralDetailsRoute.name,
-                  path: 'referral-details',
-                  parent: HFCreateReferralWrapperRoute.name,
-                ),
-                RouteConfig(
-                  ReferralReasonChecklistRoute.name,
-                  path: 'referral-reason',
-                  parent: HFCreateReferralWrapperRoute.name,
-                ),
-                RouteConfig(
-                  ReferralReasonCheckListPreviewRoute.name,
-                  path: 'referral-reason-view',
-                  parent: HFCreateReferralWrapperRoute.name,
-                ),
-              ],
-            ),
-            RouteConfig(
-              ProjectFacilitySelectionRoute.name,
-              path: 'select-project-facilities',
-              parent: AuthenticatedRouteWrapper.name,
-            ),
-            RouteConfig(
-              ProjectSelectionRoute.name,
-              path: 'select-project',
-              parent: AuthenticatedRouteWrapper.name,
-            ),
-            RouteConfig(
-              BoundarySelectionRoute.name,
-              path: 'select-boundary',
-              parent: AuthenticatedRouteWrapper.name,
-            ),
-            RouteConfig(
-              ComplaintsInboxWrapperRoute.name,
-              path: 'complaints-inbox',
-              parent: AuthenticatedRouteWrapper.name,
-              children: [
-                RouteConfig(
-                  '#redirect',
-                  path: '',
-                  parent: ComplaintsInboxWrapperRoute.name,
-                  redirectTo: 'complaints-inbox-items',
-                  fullMatch: true,
-                ),
-                RouteConfig(
-                  ComplaintsInboxRoute.name,
-                  path: 'complaints-inbox-items',
-                  parent: ComplaintsInboxWrapperRoute.name,
-                ),
-                RouteConfig(
-                  ComplaintsInboxFilterRoute.name,
-                  path: 'complaints-inbox-filter',
-                  parent: ComplaintsInboxWrapperRoute.name,
-                ),
-                RouteConfig(
-                  ComplaintsInboxSearchRoute.name,
-                  path: 'complaints-inbox-search',
-                  parent: ComplaintsInboxWrapperRoute.name,
-                ),
-                RouteConfig(
-                  ComplaintsInboxSortRoute.name,
-                  path: 'complaints-inbox-sort',
-                  parent: ComplaintsInboxWrapperRoute.name,
-                ),
-                RouteConfig(
-                  ComplaintsDetailsViewRoute.name,
-                  path: 'complaints-inbox-view-details',
-                  parent: ComplaintsInboxWrapperRoute.name,
-                ),
-              ],
-            ),
-            RouteConfig(
-              ComplaintsRegistrationWrapperRoute.name,
-              path: 'complaints-registration',
-              parent: AuthenticatedRouteWrapper.name,
-              children: [
-                RouteConfig(
-                  '#redirect',
-                  path: '',
-                  parent: ComplaintsRegistrationWrapperRoute.name,
-                  redirectTo: 'complaints-type',
-                  fullMatch: true,
-                ),
-                RouteConfig(
-                  ComplaintTypeRoute.name,
-                  path: 'complaints-type',
-                  parent: ComplaintsRegistrationWrapperRoute.name,
-                ),
-                RouteConfig(
-                  ComplaintsLocationRoute.name,
-                  path: 'complaints-location',
-                  parent: ComplaintsRegistrationWrapperRoute.name,
-                ),
-                RouteConfig(
-                  ComplaintsDetailsRoute.name,
-                  path: 'complaints-details',
-                  parent: ComplaintsRegistrationWrapperRoute.name,
-                ),
-              ],
-            ),
-            RouteConfig(
-              ManageAttendanceRoute.name,
-              path: 'manage-attendance',
-              parent: AuthenticatedRouteWrapper.name,
-            ),
-            RouteConfig(
-              ManageStocksRoute.name,
-              path: 'manage-stocks',
-              parent: AuthenticatedRouteWrapper.name,
-            ),
-            RouteConfig(
-              StockReconciliationRoute.name,
-              path: 'stock-reconciliation',
-              parent: AuthenticatedRouteWrapper.name,
-            ),
-            RouteConfig(
-              InventoryReportSelectionRoute.name,
-              path: 'inventory-report-selection',
-              parent: AuthenticatedRouteWrapper.name,
-            ),
-          ],
-        ),
-      ];
-}
-
-/// generated route for
-/// [UnauthenticatedPageWrapper]
-class UnauthenticatedRouteWrapper extends PageRouteInfo<void> {
-  const UnauthenticatedRouteWrapper({List<PageRouteInfo>? children})
-      : super(
-          UnauthenticatedRouteWrapper.name,
-          path: '/',
-          initialChildren: children,
-        );
-
-  static const String name = 'UnauthenticatedRouteWrapper';
-}
-
-/// generated route for
-/// [AuthenticatedPageWrapper]
-class AuthenticatedRouteWrapper
-    extends PageRouteInfo<AuthenticatedRouteWrapperArgs> {
-  AuthenticatedRouteWrapper({
-    Key? key,
-    List<PageRouteInfo>? children,
-  }) : super(
-          AuthenticatedRouteWrapper.name,
-          path: '/',
-          args: AuthenticatedRouteWrapperArgs(key: key),
-          initialChildren: children,
-        );
-
-  static const String name = 'AuthenticatedRouteWrapper';
-}
-
-class AuthenticatedRouteWrapperArgs {
-  const AuthenticatedRouteWrapperArgs({this.key});
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'AuthenticatedRouteWrapperArgs{key: $key}';
-  }
-}
-
-/// generated route for
-/// [LanguageSelectionPage]
-class LanguageSelectionRoute extends PageRouteInfo<void> {
-  const LanguageSelectionRoute()
-      : super(
-          LanguageSelectionRoute.name,
-          path: 'language_selection',
-        );
-
-  static const String name = 'LanguageSelectionRoute';
-}
-
-/// generated route for
-/// [LoginPage]
-class LoginRoute extends PageRouteInfo<LoginRouteArgs> {
-  LoginRoute({
-    Key? key,
-    AppLocalizations? appLocalizations,
-  }) : super(
-          LoginRoute.name,
-          path: 'login',
-          args: LoginRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-          ),
-        );
-
-  static const String name = 'LoginRoute';
-}
-
-class LoginRouteArgs {
-  const LoginRouteArgs({
-    this.key,
-    this.appLocalizations,
-  });
-
-  final Key? key;
-
-  final AppLocalizations? appLocalizations;
-
-  @override
-  String toString() {
-    return 'LoginRouteArgs{key: $key, appLocalizations: $appLocalizations}';
-  }
-}
-
-/// generated route for
-/// [HomePage]
-class HomeRoute extends PageRouteInfo<HomeRouteArgs> {
-  HomeRoute({
-    Key? key,
-    AppLocalizations? appLocalizations,
-  }) : super(
-          HomeRoute.name,
-          path: 'home',
-          args: HomeRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-          ),
-        );
-
-  static const String name = 'HomeRoute';
-}
-
-class HomeRouteArgs {
-  const HomeRouteArgs({
-    this.key,
-    this.appLocalizations,
-  });
-
-  final Key? key;
-
-  final AppLocalizations? appLocalizations;
-
-  @override
-  String toString() {
-    return 'HomeRouteArgs{key: $key, appLocalizations: $appLocalizations}';
-  }
-}
-
-/// generated route for
-/// [ProfilePage]
-class ProfileRoute extends PageRouteInfo<ProfileRouteArgs> {
-  ProfileRoute({
-    Key? key,
-    AppLocalizations? appLocalizations,
-  }) : super(
-          ProfileRoute.name,
-          path: 'profile',
-          args: ProfileRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-          ),
-        );
-
-  static const String name = 'ProfileRoute';
-}
-
-class ProfileRouteArgs {
-  const ProfileRouteArgs({
-    this.key,
-    this.appLocalizations,
-  });
-
-  final Key? key;
-
-  final AppLocalizations? appLocalizations;
-
-  @override
-  String toString() {
-    return 'ProfileRouteArgs{key: $key, appLocalizations: $appLocalizations}';
-  }
-}
-
-/// generated route for
-/// [UserQRDetailsPage]
-class UserQRDetailsRoute extends PageRouteInfo<UserQRDetailsRouteArgs> {
-  UserQRDetailsRoute({
-    Key? key,
-    AppLocalizations? appLocalizations,
-  }) : super(
-          UserQRDetailsRoute.name,
-          path: 'user-qr-code',
-          args: UserQRDetailsRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-          ),
-        );
-
-  static const String name = 'UserQRDetailsRoute';
-}
-
-class UserQRDetailsRouteArgs {
-  const UserQRDetailsRouteArgs({
-    this.key,
-    this.appLocalizations,
-  });
-
-  final Key? key;
-
-  final AppLocalizations? appLocalizations;
-
-  @override
-  String toString() {
-    return 'UserQRDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
-  }
-}
-
-/// generated route for
-/// [SearchBeneficiaryPage]
-class SearchBeneficiaryRoute extends PageRouteInfo<SearchBeneficiaryRouteArgs> {
-  SearchBeneficiaryRoute({
-    Key? key,
-    AppLocalizations? appLocalizations,
-  }) : super(
-          SearchBeneficiaryRoute.name,
-          path: 'search-beneficiary',
-          args: SearchBeneficiaryRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-          ),
-        );
-
-  static const String name = 'SearchBeneficiaryRoute';
-}
-
-class SearchBeneficiaryRouteArgs {
-  const SearchBeneficiaryRouteArgs({
-    this.key,
-    this.appLocalizations,
-  });
-
-  final Key? key;
-
-  final AppLocalizations? appLocalizations;
-
-  @override
-  String toString() {
-    return 'SearchBeneficiaryRouteArgs{key: $key, appLocalizations: $appLocalizations}';
-  }
-}
-
-/// generated route for
-/// [BeneficiariesReportPage]
-class BeneficiariesReportRoute extends PageRouteInfo<void> {
-  const BeneficiariesReportRoute()
-      : super(
-          BeneficiariesReportRoute.name,
-          path: 'beneficiary-downsync-report',
-        );
-
-  static const String name = 'BeneficiariesReportRoute';
-}
-
-/// generated route for
-/// [BeneficiaryRegistrationWrapperPage]
-class BeneficiaryRegistrationWrapperRoute
-    extends PageRouteInfo<BeneficiaryRegistrationWrapperRouteArgs> {
-  BeneficiaryRegistrationWrapperRoute({
-    Key? key,
-    required BeneficiaryRegistrationState initialState,
-    List<PageRouteInfo>? children,
-  }) : super(
-          BeneficiaryRegistrationWrapperRoute.name,
-          path: 'beneficiary-registration',
-          args: BeneficiaryRegistrationWrapperRouteArgs(
-            key: key,
-            initialState: initialState,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'BeneficiaryRegistrationWrapperRoute';
-}
-
-class BeneficiaryRegistrationWrapperRouteArgs {
-  const BeneficiaryRegistrationWrapperRouteArgs({
-    this.key,
-    required this.initialState,
-  });
-
-  final Key? key;
-
-  final BeneficiaryRegistrationState initialState;
-
-  @override
-  String toString() {
-    return 'BeneficiaryRegistrationWrapperRouteArgs{key: $key, initialState: $initialState}';
-  }
-}
-
-/// generated route for
-/// [BeneficiaryWrapperPage]
-class BeneficiaryWrapperRoute
-    extends PageRouteInfo<BeneficiaryWrapperRouteArgs> {
-  BeneficiaryWrapperRoute({
-    Key? key,
-    required HouseholdMemberWrapper wrapper,
-    bool isEditing = false,
-    List<PageRouteInfo>? children,
-  }) : super(
-          BeneficiaryWrapperRoute.name,
-          path: 'beneficiary',
-          args: BeneficiaryWrapperRouteArgs(
-            key: key,
-            wrapper: wrapper,
-            isEditing: isEditing,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'BeneficiaryWrapperRoute';
-}
-
-class BeneficiaryWrapperRouteArgs {
-  const BeneficiaryWrapperRouteArgs({
-    this.key,
-    required this.wrapper,
-    this.isEditing = false,
-  });
-
-  final Key? key;
-
-  final HouseholdMemberWrapper wrapper;
-
-  final bool isEditing;
-
-  @override
-  String toString() {
-    return 'BeneficiaryWrapperRouteArgs{key: $key, wrapper: $wrapper, isEditing: $isEditing}';
-  }
-}
-
-/// generated route for
-/// [ChecklistWrapperPage]
-class ChecklistWrapperRoute extends PageRouteInfo<ChecklistWrapperRouteArgs> {
-  ChecklistWrapperRoute({
-    Key? key,
-    bool isEditing = false,
-    List<PageRouteInfo>? children,
-  }) : super(
-          ChecklistWrapperRoute.name,
-          path: 'checklist',
-          args: ChecklistWrapperRouteArgs(
-            key: key,
-            isEditing: isEditing,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'ChecklistWrapperRoute';
-}
-
-class ChecklistWrapperRouteArgs {
-  const ChecklistWrapperRouteArgs({
-    this.key,
-    this.isEditing = false,
-  });
-
-  final Key? key;
-
-  final bool isEditing;
-
-  @override
-  String toString() {
-    return 'ChecklistWrapperRouteArgs{key: $key, isEditing: $isEditing}';
-  }
-}
-
-/// generated route for
-/// [BeneficiaryAcknowledgementPage]
-class BeneficiaryAcknowledgementRoute
-    extends PageRouteInfo<BeneficiaryAcknowledgementRouteArgs> {
-  BeneficiaryAcknowledgementRoute({
-    Key? key,
-    AppLocalizations? appLocalizations,
-    bool? enableViewHousehold,
-  }) : super(
-          BeneficiaryAcknowledgementRoute.name,
-          path: 'beneficiary-acknowledgement',
-          args: BeneficiaryAcknowledgementRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-            enableViewHousehold: enableViewHousehold,
-          ),
-        );
-
-  static const String name = 'BeneficiaryAcknowledgementRoute';
-}
-
-class BeneficiaryAcknowledgementRouteArgs {
-  const BeneficiaryAcknowledgementRouteArgs({
-    this.key,
-    this.appLocalizations,
-    this.enableViewHousehold,
-  });
-
-  final Key? key;
-
-  final AppLocalizations? appLocalizations;
-
-  final bool? enableViewHousehold;
-
-  @override
-  String toString() {
-    return 'BeneficiaryAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, enableViewHousehold: $enableViewHousehold}';
-  }
 }
 
 /// generated route for
@@ -1386,9 +589,9 @@ class AcknowledgementRoute extends PageRouteInfo<AcknowledgementRouteArgs> {
     String? label,
     String? description,
     Map<String, dynamic>? descriptionTableData,
+    List<PageRouteInfo>? children,
   }) : super(
           AcknowledgementRoute.name,
-          path: 'acknowledgement',
           args: AcknowledgementRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
@@ -1397,9 +600,13 @@ class AcknowledgementRoute extends PageRouteInfo<AcknowledgementRouteArgs> {
             description: description,
             descriptionTableData: descriptionTableData,
           ),
+          initialChildren: children,
         );
 
   static const String name = 'AcknowledgementRoute';
+
+  static const PageInfo<AcknowledgementRouteArgs> page =
+      PageInfo<AcknowledgementRouteArgs>(name);
 }
 
 class AcknowledgementRouteArgs {
@@ -1431,22 +638,508 @@ class AcknowledgementRouteArgs {
 }
 
 /// generated route for
+/// [AuthenticatedPageWrapper]
+class AuthenticatedRouteWrapper
+    extends PageRouteInfo<AuthenticatedRouteWrapperArgs> {
+  AuthenticatedRouteWrapper({
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          AuthenticatedRouteWrapper.name,
+          args: AuthenticatedRouteWrapperArgs(key: key),
+          initialChildren: children,
+        );
+
+  static const String name = 'AuthenticatedRouteWrapper';
+
+  static const PageInfo<AuthenticatedRouteWrapperArgs> page =
+      PageInfo<AuthenticatedRouteWrapperArgs>(name);
+}
+
+class AuthenticatedRouteWrapperArgs {
+  const AuthenticatedRouteWrapperArgs({this.key});
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'AuthenticatedRouteWrapperArgs{key: $key}';
+  }
+}
+
+/// generated route for
+/// [BeneficiariesReportPage]
+class BeneficiariesReportRoute extends PageRouteInfo<void> {
+  const BeneficiariesReportRoute({List<PageRouteInfo>? children})
+      : super(
+          BeneficiariesReportRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'BeneficiariesReportRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [BeneficiaryAcknowledgementPage]
+class BeneficiaryAcknowledgementRoute
+    extends PageRouteInfo<BeneficiaryAcknowledgementRouteArgs> {
+  BeneficiaryAcknowledgementRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    bool? enableViewHousehold,
+    List<PageRouteInfo>? children,
+  }) : super(
+          BeneficiaryAcknowledgementRoute.name,
+          args: BeneficiaryAcknowledgementRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            enableViewHousehold: enableViewHousehold,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'BeneficiaryAcknowledgementRoute';
+
+  static const PageInfo<BeneficiaryAcknowledgementRouteArgs> page =
+      PageInfo<BeneficiaryAcknowledgementRouteArgs>(name);
+}
+
+class BeneficiaryAcknowledgementRouteArgs {
+  const BeneficiaryAcknowledgementRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.enableViewHousehold,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final bool? enableViewHousehold;
+
+  @override
+  String toString() {
+    return 'BeneficiaryAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, enableViewHousehold: $enableViewHousehold}';
+  }
+}
+
+/// generated route for
+/// [BeneficiaryDetailsPage]
+class BeneficiaryDetailsRoute
+    extends PageRouteInfo<BeneficiaryDetailsRouteArgs> {
+  BeneficiaryDetailsRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          BeneficiaryDetailsRoute.name,
+          args: BeneficiaryDetailsRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'BeneficiaryDetailsRoute';
+
+  static const PageInfo<BeneficiaryDetailsRouteArgs> page =
+      PageInfo<BeneficiaryDetailsRouteArgs>(name);
+}
+
+class BeneficiaryDetailsRouteArgs {
+  const BeneficiaryDetailsRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'BeneficiaryDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [BeneficiaryRegistrationWrapperPage]
+class BeneficiaryRegistrationWrapperRoute
+    extends PageRouteInfo<BeneficiaryRegistrationWrapperRouteArgs> {
+  BeneficiaryRegistrationWrapperRoute({
+    Key? key,
+    required BeneficiaryRegistrationState initialState,
+    List<PageRouteInfo>? children,
+  }) : super(
+          BeneficiaryRegistrationWrapperRoute.name,
+          args: BeneficiaryRegistrationWrapperRouteArgs(
+            key: key,
+            initialState: initialState,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'BeneficiaryRegistrationWrapperRoute';
+
+  static const PageInfo<BeneficiaryRegistrationWrapperRouteArgs> page =
+      PageInfo<BeneficiaryRegistrationWrapperRouteArgs>(name);
+}
+
+class BeneficiaryRegistrationWrapperRouteArgs {
+  const BeneficiaryRegistrationWrapperRouteArgs({
+    this.key,
+    required this.initialState,
+  });
+
+  final Key? key;
+
+  final BeneficiaryRegistrationState initialState;
+
+  @override
+  String toString() {
+    return 'BeneficiaryRegistrationWrapperRouteArgs{key: $key, initialState: $initialState}';
+  }
+}
+
+/// generated route for
+/// [BeneficiaryWrapperPage]
+class BeneficiaryWrapperRoute
+    extends PageRouteInfo<BeneficiaryWrapperRouteArgs> {
+  BeneficiaryWrapperRoute({
+    Key? key,
+    required HouseholdMemberWrapper wrapper,
+    bool isEditing = false,
+    List<PageRouteInfo>? children,
+  }) : super(
+          BeneficiaryWrapperRoute.name,
+          args: BeneficiaryWrapperRouteArgs(
+            key: key,
+            wrapper: wrapper,
+            isEditing: isEditing,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'BeneficiaryWrapperRoute';
+
+  static const PageInfo<BeneficiaryWrapperRouteArgs> page =
+      PageInfo<BeneficiaryWrapperRouteArgs>(name);
+}
+
+class BeneficiaryWrapperRouteArgs {
+  const BeneficiaryWrapperRouteArgs({
+    this.key,
+    required this.wrapper,
+    this.isEditing = false,
+  });
+
+  final Key? key;
+
+  final HouseholdMemberWrapper wrapper;
+
+  final bool isEditing;
+
+  @override
+  String toString() {
+    return 'BeneficiaryWrapperRouteArgs{key: $key, wrapper: $wrapper, isEditing: $isEditing}';
+  }
+}
+
+/// generated route for
+/// [BoundarySelectionPage]
+class BoundarySelectionRoute extends PageRouteInfo<BoundarySelectionRouteArgs> {
+  BoundarySelectionRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          BoundarySelectionRoute.name,
+          args: BoundarySelectionRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'BoundarySelectionRoute';
+
+  static const PageInfo<BoundarySelectionRouteArgs> page =
+      PageInfo<BoundarySelectionRouteArgs>(name);
+}
+
+class BoundarySelectionRouteArgs {
+  const BoundarySelectionRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'BoundarySelectionRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [ChecklistBoundaryViewPage]
+class ChecklistBoundaryViewRoute
+    extends PageRouteInfo<ChecklistBoundaryViewRouteArgs> {
+  ChecklistBoundaryViewRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ChecklistBoundaryViewRoute.name,
+          args: ChecklistBoundaryViewRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ChecklistBoundaryViewRoute';
+
+  static const PageInfo<ChecklistBoundaryViewRouteArgs> page =
+      PageInfo<ChecklistBoundaryViewRouteArgs>(name);
+}
+
+class ChecklistBoundaryViewRouteArgs {
+  const ChecklistBoundaryViewRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'ChecklistBoundaryViewRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [ChecklistPage]
+class ChecklistRoute extends PageRouteInfo<ChecklistRouteArgs> {
+  ChecklistRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ChecklistRoute.name,
+          args: ChecklistRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ChecklistRoute';
+
+  static const PageInfo<ChecklistRouteArgs> page =
+      PageInfo<ChecklistRouteArgs>(name);
+}
+
+class ChecklistRouteArgs {
+  const ChecklistRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'ChecklistRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [ChecklistPreviewPage]
+class ChecklistPreviewRoute extends PageRouteInfo<ChecklistPreviewRouteArgs> {
+  ChecklistPreviewRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ChecklistPreviewRoute.name,
+          args: ChecklistPreviewRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ChecklistPreviewRoute';
+
+  static const PageInfo<ChecklistPreviewRouteArgs> page =
+      PageInfo<ChecklistPreviewRouteArgs>(name);
+}
+
+class ChecklistPreviewRouteArgs {
+  const ChecklistPreviewRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'ChecklistPreviewRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [ChecklistViewPage]
+class ChecklistViewRoute extends PageRouteInfo<ChecklistViewRouteArgs> {
+  ChecklistViewRoute({
+    Key? key,
+    String? referralClientRefId,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ChecklistViewRoute.name,
+          args: ChecklistViewRouteArgs(
+            key: key,
+            referralClientRefId: referralClientRefId,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ChecklistViewRoute';
+
+  static const PageInfo<ChecklistViewRouteArgs> page =
+      PageInfo<ChecklistViewRouteArgs>(name);
+}
+
+class ChecklistViewRouteArgs {
+  const ChecklistViewRouteArgs({
+    this.key,
+    this.referralClientRefId,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final String? referralClientRefId;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'ChecklistViewRouteArgs{key: $key, referralClientRefId: $referralClientRefId, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [ChecklistWrapperPage]
+class ChecklistWrapperRoute extends PageRouteInfo<ChecklistWrapperRouteArgs> {
+  ChecklistWrapperRoute({
+    Key? key,
+    bool isEditing = false,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ChecklistWrapperRoute.name,
+          args: ChecklistWrapperRouteArgs(
+            key: key,
+            isEditing: isEditing,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ChecklistWrapperRoute';
+
+  static const PageInfo<ChecklistWrapperRouteArgs> page =
+      PageInfo<ChecklistWrapperRouteArgs>(name);
+}
+
+class ChecklistWrapperRouteArgs {
+  const ChecklistWrapperRouteArgs({
+    this.key,
+    this.isEditing = false,
+  });
+
+  final Key? key;
+
+  final bool isEditing;
+
+  @override
+  String toString() {
+    return 'ChecklistWrapperRouteArgs{key: $key, isEditing: $isEditing}';
+  }
+}
+
+/// generated route for
+/// [ComplaintTypePage]
+class ComplaintTypeRoute extends PageRouteInfo<ComplaintTypeRouteArgs> {
+  ComplaintTypeRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ComplaintTypeRoute.name,
+          args: ComplaintTypeRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ComplaintTypeRoute';
+
+  static const PageInfo<ComplaintTypeRouteArgs> page =
+      PageInfo<ComplaintTypeRouteArgs>(name);
+}
+
+class ComplaintTypeRouteArgs {
+  const ComplaintTypeRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'ComplaintTypeRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
 /// [ComplaintsAcknowledgementPage]
 class ComplaintsAcknowledgementRoute
     extends PageRouteInfo<ComplaintsAcknowledgementRouteArgs> {
   ComplaintsAcknowledgementRoute({
     Key? key,
     AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
   }) : super(
           ComplaintsAcknowledgementRoute.name,
-          path: 'complaints-acknowledgement',
           args: ComplaintsAcknowledgementRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
           ),
+          initialChildren: children,
         );
 
   static const String name = 'ComplaintsAcknowledgementRoute';
+
+  static const PageInfo<ComplaintsAcknowledgementRouteArgs> page =
+      PageInfo<ComplaintsAcknowledgementRouteArgs>(name);
 }
 
 class ComplaintsAcknowledgementRouteArgs {
@@ -1466,25 +1159,29 @@ class ComplaintsAcknowledgementRouteArgs {
 }
 
 /// generated route for
-/// [SearchReferralsPage]
-class SearchReferralsRoute extends PageRouteInfo<SearchReferralsRouteArgs> {
-  SearchReferralsRoute({
+/// [ComplaintsDetailsPage]
+class ComplaintsDetailsRoute extends PageRouteInfo<ComplaintsDetailsRouteArgs> {
+  ComplaintsDetailsRoute({
     Key? key,
     AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
   }) : super(
-          SearchReferralsRoute.name,
-          path: 'search-referrals',
-          args: SearchReferralsRouteArgs(
+          ComplaintsDetailsRoute.name,
+          args: ComplaintsDetailsRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
           ),
+          initialChildren: children,
         );
 
-  static const String name = 'SearchReferralsRoute';
+  static const String name = 'ComplaintsDetailsRoute';
+
+  static const PageInfo<ComplaintsDetailsRouteArgs> page =
+      PageInfo<ComplaintsDetailsRouteArgs>(name);
 }
 
-class SearchReferralsRouteArgs {
-  const SearchReferralsRouteArgs({
+class ComplaintsDetailsRouteArgs {
+  const ComplaintsDetailsRouteArgs({
     this.key,
     this.appLocalizations,
   });
@@ -1495,7 +1192,375 @@ class SearchReferralsRouteArgs {
 
   @override
   String toString() {
-    return 'SearchReferralsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+    return 'ComplaintsDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [ComplaintsDetailsViewPage]
+class ComplaintsDetailsViewRoute
+    extends PageRouteInfo<ComplaintsDetailsViewRouteArgs> {
+  ComplaintsDetailsViewRoute({
+    Key? key,
+    required PgrServiceModel complaint,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ComplaintsDetailsViewRoute.name,
+          args: ComplaintsDetailsViewRouteArgs(
+            key: key,
+            complaint: complaint,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ComplaintsDetailsViewRoute';
+
+  static const PageInfo<ComplaintsDetailsViewRouteArgs> page =
+      PageInfo<ComplaintsDetailsViewRouteArgs>(name);
+}
+
+class ComplaintsDetailsViewRouteArgs {
+  const ComplaintsDetailsViewRouteArgs({
+    this.key,
+    required this.complaint,
+  });
+
+  final Key? key;
+
+  final PgrServiceModel complaint;
+
+  @override
+  String toString() {
+    return 'ComplaintsDetailsViewRouteArgs{key: $key, complaint: $complaint}';
+  }
+}
+
+/// generated route for
+/// [ComplaintsInboxFilterPage]
+class ComplaintsInboxFilterRoute
+    extends PageRouteInfo<ComplaintsInboxFilterRouteArgs> {
+  ComplaintsInboxFilterRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ComplaintsInboxFilterRoute.name,
+          args: ComplaintsInboxFilterRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ComplaintsInboxFilterRoute';
+
+  static const PageInfo<ComplaintsInboxFilterRouteArgs> page =
+      PageInfo<ComplaintsInboxFilterRouteArgs>(name);
+}
+
+class ComplaintsInboxFilterRouteArgs {
+  const ComplaintsInboxFilterRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'ComplaintsInboxFilterRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [ComplaintsInboxPage]
+class ComplaintsInboxRoute extends PageRouteInfo<ComplaintsInboxRouteArgs> {
+  ComplaintsInboxRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ComplaintsInboxRoute.name,
+          args: ComplaintsInboxRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ComplaintsInboxRoute';
+
+  static const PageInfo<ComplaintsInboxRouteArgs> page =
+      PageInfo<ComplaintsInboxRouteArgs>(name);
+}
+
+class ComplaintsInboxRouteArgs {
+  const ComplaintsInboxRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'ComplaintsInboxRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [ComplaintsInboxSearchPage]
+class ComplaintsInboxSearchRoute
+    extends PageRouteInfo<ComplaintsInboxSearchRouteArgs> {
+  ComplaintsInboxSearchRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ComplaintsInboxSearchRoute.name,
+          args: ComplaintsInboxSearchRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ComplaintsInboxSearchRoute';
+
+  static const PageInfo<ComplaintsInboxSearchRouteArgs> page =
+      PageInfo<ComplaintsInboxSearchRouteArgs>(name);
+}
+
+class ComplaintsInboxSearchRouteArgs {
+  const ComplaintsInboxSearchRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'ComplaintsInboxSearchRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [ComplaintsInboxSortPage]
+class ComplaintsInboxSortRoute
+    extends PageRouteInfo<ComplaintsInboxSortRouteArgs> {
+  ComplaintsInboxSortRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ComplaintsInboxSortRoute.name,
+          args: ComplaintsInboxSortRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ComplaintsInboxSortRoute';
+
+  static const PageInfo<ComplaintsInboxSortRouteArgs> page =
+      PageInfo<ComplaintsInboxSortRouteArgs>(name);
+}
+
+class ComplaintsInboxSortRouteArgs {
+  const ComplaintsInboxSortRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'ComplaintsInboxSortRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [ComplaintsInboxWrapperPage]
+class ComplaintsInboxWrapperRoute extends PageRouteInfo<void> {
+  const ComplaintsInboxWrapperRoute({List<PageRouteInfo>? children})
+      : super(
+          ComplaintsInboxWrapperRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ComplaintsInboxWrapperRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ComplaintsLocationPage]
+class ComplaintsLocationRoute
+    extends PageRouteInfo<ComplaintsLocationRouteArgs> {
+  ComplaintsLocationRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ComplaintsLocationRoute.name,
+          args: ComplaintsLocationRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ComplaintsLocationRoute';
+
+  static const PageInfo<ComplaintsLocationRouteArgs> page =
+      PageInfo<ComplaintsLocationRouteArgs>(name);
+}
+
+class ComplaintsLocationRouteArgs {
+  const ComplaintsLocationRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'ComplaintsLocationRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [ComplaintsRegistrationWrapperPage]
+class ComplaintsRegistrationWrapperRoute
+    extends PageRouteInfo<ComplaintsRegistrationWrapperRouteArgs> {
+  ComplaintsRegistrationWrapperRoute({
+    Key? key,
+    PgrServiceModel? pgrServiceModel,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ComplaintsRegistrationWrapperRoute.name,
+          args: ComplaintsRegistrationWrapperRouteArgs(
+            key: key,
+            pgrServiceModel: pgrServiceModel,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ComplaintsRegistrationWrapperRoute';
+
+  static const PageInfo<ComplaintsRegistrationWrapperRouteArgs> page =
+      PageInfo<ComplaintsRegistrationWrapperRouteArgs>(name);
+}
+
+class ComplaintsRegistrationWrapperRouteArgs {
+  const ComplaintsRegistrationWrapperRouteArgs({
+    this.key,
+    this.pgrServiceModel,
+  });
+
+  final Key? key;
+
+  final PgrServiceModel? pgrServiceModel;
+
+  @override
+  String toString() {
+    return 'ComplaintsRegistrationWrapperRouteArgs{key: $key, pgrServiceModel: $pgrServiceModel}';
+  }
+}
+
+/// generated route for
+/// [DeliverInterventionPage]
+class DeliverInterventionRoute
+    extends PageRouteInfo<DeliverInterventionRouteArgs> {
+  DeliverInterventionRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    bool isEditing = false,
+    List<PageRouteInfo>? children,
+  }) : super(
+          DeliverInterventionRoute.name,
+          args: DeliverInterventionRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            isEditing: isEditing,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'DeliverInterventionRoute';
+
+  static const PageInfo<DeliverInterventionRouteArgs> page =
+      PageInfo<DeliverInterventionRouteArgs>(name);
+}
+
+class DeliverInterventionRouteArgs {
+  const DeliverInterventionRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.isEditing = false,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final bool isEditing;
+
+  @override
+  String toString() {
+    return 'DeliverInterventionRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing}';
+  }
+}
+
+/// generated route for
+/// [DoseAdministeredPage]
+class DoseAdministeredRoute extends PageRouteInfo<DoseAdministeredRouteArgs> {
+  DoseAdministeredRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          DoseAdministeredRoute.name,
+          args: DoseAdministeredRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'DoseAdministeredRoute';
+
+  static const PageInfo<DoseAdministeredRouteArgs> page =
+      PageInfo<DoseAdministeredRouteArgs>(name);
+}
+
+class DoseAdministeredRouteArgs {
+  const DoseAdministeredRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'DoseAdministeredRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
@@ -1510,7 +1575,6 @@ class HFCreateReferralWrapperRoute
     List<PageRouteInfo>? children,
   }) : super(
           HFCreateReferralWrapperRoute.name,
-          path: 'hf-referral',
           args: HFCreateReferralWrapperRouteArgs(
             key: key,
             viewOnly: viewOnly,
@@ -1520,6 +1584,9 @@ class HFCreateReferralWrapperRoute
         );
 
   static const String name = 'HFCreateReferralWrapperRoute';
+
+  static const PageInfo<HFCreateReferralWrapperRouteArgs> page =
+      PageInfo<HFCreateReferralWrapperRouteArgs>(name);
 }
 
 class HFCreateReferralWrapperRouteArgs {
@@ -1542,432 +1609,39 @@ class HFCreateReferralWrapperRouteArgs {
 }
 
 /// generated route for
-/// [ProjectFacilitySelectionPage]
-class ProjectFacilitySelectionRoute
-    extends PageRouteInfo<ProjectFacilitySelectionRouteArgs> {
-  ProjectFacilitySelectionRoute({
-    Key? key,
-    required List<ProjectFacilityModel> projectFacilities,
-  }) : super(
-          ProjectFacilitySelectionRoute.name,
-          path: 'select-project-facilities',
-          args: ProjectFacilitySelectionRouteArgs(
-            key: key,
-            projectFacilities: projectFacilities,
-          ),
-        );
-
-  static const String name = 'ProjectFacilitySelectionRoute';
-}
-
-class ProjectFacilitySelectionRouteArgs {
-  const ProjectFacilitySelectionRouteArgs({
-    this.key,
-    required this.projectFacilities,
-  });
-
-  final Key? key;
-
-  final List<ProjectFacilityModel> projectFacilities;
-
-  @override
-  String toString() {
-    return 'ProjectFacilitySelectionRouteArgs{key: $key, projectFacilities: $projectFacilities}';
-  }
-}
-
-/// generated route for
-/// [ProjectSelectionPage]
-class ProjectSelectionRoute extends PageRouteInfo<ProjectSelectionRouteArgs> {
-  ProjectSelectionRoute({
+/// [HomePage]
+class HomeRoute extends PageRouteInfo<HomeRouteArgs> {
+  HomeRoute({
     Key? key,
     AppLocalizations? appLocalizations,
-  }) : super(
-          ProjectSelectionRoute.name,
-          path: 'select-project',
-          args: ProjectSelectionRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-          ),
-        );
-
-  static const String name = 'ProjectSelectionRoute';
-}
-
-class ProjectSelectionRouteArgs {
-  const ProjectSelectionRouteArgs({
-    this.key,
-    this.appLocalizations,
-  });
-
-  final Key? key;
-
-  final AppLocalizations? appLocalizations;
-
-  @override
-  String toString() {
-    return 'ProjectSelectionRouteArgs{key: $key, appLocalizations: $appLocalizations}';
-  }
-}
-
-/// generated route for
-/// [BoundarySelectionPage]
-class BoundarySelectionRoute extends PageRouteInfo<BoundarySelectionRouteArgs> {
-  BoundarySelectionRoute({
-    Key? key,
-    AppLocalizations? appLocalizations,
-  }) : super(
-          BoundarySelectionRoute.name,
-          path: 'select-boundary',
-          args: BoundarySelectionRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-          ),
-        );
-
-  static const String name = 'BoundarySelectionRoute';
-}
-
-class BoundarySelectionRouteArgs {
-  const BoundarySelectionRouteArgs({
-    this.key,
-    this.appLocalizations,
-  });
-
-  final Key? key;
-
-  final AppLocalizations? appLocalizations;
-
-  @override
-  String toString() {
-    return 'BoundarySelectionRouteArgs{key: $key, appLocalizations: $appLocalizations}';
-  }
-}
-
-/// generated route for
-/// [ComplaintsInboxWrapperPage]
-class ComplaintsInboxWrapperRoute extends PageRouteInfo<void> {
-  const ComplaintsInboxWrapperRoute({List<PageRouteInfo>? children})
-      : super(
-          ComplaintsInboxWrapperRoute.name,
-          path: 'complaints-inbox',
-          initialChildren: children,
-        );
-
-  static const String name = 'ComplaintsInboxWrapperRoute';
-}
-
-/// generated route for
-/// [ComplaintsRegistrationWrapperPage]
-class ComplaintsRegistrationWrapperRoute
-    extends PageRouteInfo<ComplaintsRegistrationWrapperRouteArgs> {
-  ComplaintsRegistrationWrapperRoute({
-    Key? key,
-    PgrServiceModel? pgrServiceModel,
     List<PageRouteInfo>? children,
   }) : super(
-          ComplaintsRegistrationWrapperRoute.name,
-          path: 'complaints-registration',
-          args: ComplaintsRegistrationWrapperRouteArgs(
+          HomeRoute.name,
+          args: HomeRouteArgs(
             key: key,
-            pgrServiceModel: pgrServiceModel,
+            appLocalizations: appLocalizations,
           ),
           initialChildren: children,
         );
 
-  static const String name = 'ComplaintsRegistrationWrapperRoute';
+  static const String name = 'HomeRoute';
+
+  static const PageInfo<HomeRouteArgs> page = PageInfo<HomeRouteArgs>(name);
 }
 
-class ComplaintsRegistrationWrapperRouteArgs {
-  const ComplaintsRegistrationWrapperRouteArgs({
-    this.key,
-    this.pgrServiceModel,
-  });
-
-  final Key? key;
-
-  final PgrServiceModel? pgrServiceModel;
-
-  @override
-  String toString() {
-    return 'ComplaintsRegistrationWrapperRouteArgs{key: $key, pgrServiceModel: $pgrServiceModel}';
-  }
-}
-
-/// generated route for
-/// [ManageAttendancePage]
-class ManageAttendanceRoute extends PageRouteInfo<ManageAttendanceRouteArgs> {
-  ManageAttendanceRoute({
-    required AttendanceListeners attendanceListeners,
-    required String projectId,
-    required String userId,
-    required String appVersion,
-    Key? key,
-  }) : super(
-          ManageAttendanceRoute.name,
-          path: 'manage-attendance',
-          args: ManageAttendanceRouteArgs(
-            attendanceListeners: attendanceListeners,
-            projectId: projectId,
-            userId: userId,
-            appVersion: appVersion,
-            key: key,
-          ),
-        );
-
-  static const String name = 'ManageAttendanceRoute';
-}
-
-class ManageAttendanceRouteArgs {
-  const ManageAttendanceRouteArgs({
-    required this.attendanceListeners,
-    required this.projectId,
-    required this.userId,
-    required this.appVersion,
-    this.key,
-  });
-
-  final AttendanceListeners attendanceListeners;
-
-  final String projectId;
-
-  final String userId;
-
-  final String appVersion;
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'ManageAttendanceRouteArgs{attendanceListeners: $attendanceListeners, projectId: $projectId, userId: $userId, appVersion: $appVersion, key: $key}';
-  }
-}
-
-/// generated route for
-/// [ManageStocksPage]
-class ManageStocksRoute extends PageRouteInfo<ManageStocksRouteArgs> {
-  ManageStocksRoute({
-    Key? key,
-    InventoryLocalization? appLocalizations,
-    required InventoryListener inventoryListener,
-    required String projectId,
-    required String userId,
-    required String boundaryName,
-    required bool isDistributor,
-    required bool isWareHouseMgr,
-    required List<InventoryTransportTypes>? transportType,
-  }) : super(
-          ManageStocksRoute.name,
-          path: 'manage-stocks',
-          args: ManageStocksRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-            inventoryListener: inventoryListener,
-            projectId: projectId,
-            userId: userId,
-            boundaryName: boundaryName,
-            isDistributor: isDistributor,
-            isWareHouseMgr: isWareHouseMgr,
-            transportType: transportType,
-          ),
-        );
-
-  static const String name = 'ManageStocksRoute';
-}
-
-class ManageStocksRouteArgs {
-  const ManageStocksRouteArgs({
+class HomeRouteArgs {
+  const HomeRouteArgs({
     this.key,
     this.appLocalizations,
-    required this.inventoryListener,
-    required this.projectId,
-    required this.userId,
-    required this.boundaryName,
-    required this.isDistributor,
-    required this.isWareHouseMgr,
-    required this.transportType,
-  });
-
-  final Key? key;
-
-  final InventoryLocalization? appLocalizations;
-
-  final InventoryListener inventoryListener;
-
-  final String projectId;
-
-  final String userId;
-
-  final String boundaryName;
-
-  final bool isDistributor;
-
-  final bool isWareHouseMgr;
-
-  final List<InventoryTransportTypes>? transportType;
-
-  @override
-  String toString() {
-    return 'ManageStocksRouteArgs{key: $key, appLocalizations: $appLocalizations, inventoryListener: $inventoryListener, projectId: $projectId, userId: $userId, boundaryName: $boundaryName, isDistributor: $isDistributor, isWareHouseMgr: $isWareHouseMgr, transportType: $transportType}';
-  }
-}
-
-/// generated route for
-/// [StockReconciliationPage]
-class StockReconciliationRoute
-    extends PageRouteInfo<StockReconciliationRouteArgs> {
-  StockReconciliationRoute({
-    required InventoryListener inventoryListener,
-    required String projectId,
-    required bool? isDistributor,
-    required bool? isWareHouseMgr,
-    required String? loggedInUserUuid,
-    Key? key,
-    InventoryLocalization? appLocalizations,
-  }) : super(
-          StockReconciliationRoute.name,
-          path: 'stock-reconciliation',
-          args: StockReconciliationRouteArgs(
-            inventoryListener: inventoryListener,
-            projectId: projectId,
-            isDistributor: isDistributor,
-            isWareHouseMgr: isWareHouseMgr,
-            loggedInUserUuid: loggedInUserUuid,
-            key: key,
-            appLocalizations: appLocalizations,
-          ),
-        );
-
-  static const String name = 'StockReconciliationRoute';
-}
-
-class StockReconciliationRouteArgs {
-  const StockReconciliationRouteArgs({
-    required this.inventoryListener,
-    required this.projectId,
-    required this.isDistributor,
-    required this.isWareHouseMgr,
-    required this.loggedInUserUuid,
-    this.key,
-    this.appLocalizations,
-  });
-
-  final InventoryListener inventoryListener;
-
-  final String projectId;
-
-  final bool? isDistributor;
-
-  final bool? isWareHouseMgr;
-
-  final String? loggedInUserUuid;
-
-  final Key? key;
-
-  final InventoryLocalization? appLocalizations;
-
-  @override
-  String toString() {
-    return 'StockReconciliationRouteArgs{inventoryListener: $inventoryListener, projectId: $projectId, isDistributor: $isDistributor, isWareHouseMgr: $isWareHouseMgr, loggedInUserUuid: $loggedInUserUuid, key: $key, appLocalizations: $appLocalizations}';
-  }
-}
-
-/// generated route for
-/// [InventoryReportSelectionPage]
-class InventoryReportSelectionRoute
-    extends PageRouteInfo<InventoryReportSelectionRouteArgs> {
-  InventoryReportSelectionRoute({
-    required InventoryListener inventoryListener,
-    required String projectId,
-    required bool? isDistributor,
-    required bool? isWareHouseMgr,
-    required String? loggedInUserUuid,
-    Key? key,
-    InventoryLocalization? appLocalizations,
-  }) : super(
-          InventoryReportSelectionRoute.name,
-          path: 'inventory-report-selection',
-          args: InventoryReportSelectionRouteArgs(
-            inventoryListener: inventoryListener,
-            projectId: projectId,
-            isDistributor: isDistributor,
-            isWareHouseMgr: isWareHouseMgr,
-            loggedInUserUuid: loggedInUserUuid,
-            key: key,
-            appLocalizations: appLocalizations,
-          ),
-        );
-
-  static const String name = 'InventoryReportSelectionRoute';
-}
-
-class InventoryReportSelectionRouteArgs {
-  const InventoryReportSelectionRouteArgs({
-    required this.inventoryListener,
-    required this.projectId,
-    required this.isDistributor,
-    required this.isWareHouseMgr,
-    required this.loggedInUserUuid,
-    this.key,
-    this.appLocalizations,
-  });
-
-  final InventoryListener inventoryListener;
-
-  final String projectId;
-
-  final bool? isDistributor;
-
-  final bool? isWareHouseMgr;
-
-  final String? loggedInUserUuid;
-
-  final Key? key;
-
-  final InventoryLocalization? appLocalizations;
-
-  @override
-  String toString() {
-    return 'InventoryReportSelectionRouteArgs{inventoryListener: $inventoryListener, projectId: $projectId, isDistributor: $isDistributor, isWareHouseMgr: $isWareHouseMgr, loggedInUserUuid: $loggedInUserUuid, key: $key, appLocalizations: $appLocalizations}';
-  }
-}
-
-/// generated route for
-/// [IndividualDetailsPage]
-class IndividualDetailsRoute extends PageRouteInfo<IndividualDetailsRouteArgs> {
-  IndividualDetailsRoute({
-    Key? key,
-    AppLocalizations? appLocalizations,
-    bool isHeadOfHousehold = false,
-  }) : super(
-          IndividualDetailsRoute.name,
-          path: 'individual-details',
-          args: IndividualDetailsRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-            isHeadOfHousehold: isHeadOfHousehold,
-          ),
-        );
-
-  static const String name = 'IndividualDetailsRoute';
-}
-
-class IndividualDetailsRouteArgs {
-  const IndividualDetailsRouteArgs({
-    this.key,
-    this.appLocalizations,
-    this.isHeadOfHousehold = false,
   });
 
   final Key? key;
 
   final AppLocalizations? appLocalizations;
 
-  final bool isHeadOfHousehold;
-
   @override
   String toString() {
-    return 'IndividualDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations, isHeadOfHousehold: $isHeadOfHousehold}';
+    return 'HomeRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
@@ -1977,16 +1651,20 @@ class HouseHoldDetailsRoute extends PageRouteInfo<HouseHoldDetailsRouteArgs> {
   HouseHoldDetailsRoute({
     Key? key,
     AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
   }) : super(
           HouseHoldDetailsRoute.name,
-          path: 'household-details',
           args: HouseHoldDetailsRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
           ),
+          initialChildren: children,
         );
 
   static const String name = 'HouseHoldDetailsRoute';
+
+  static const PageInfo<HouseHoldDetailsRouteArgs> page =
+      PageInfo<HouseHoldDetailsRouteArgs>(name);
 }
 
 class HouseHoldDetailsRouteArgs {
@@ -2006,21 +1684,69 @@ class HouseHoldDetailsRouteArgs {
 }
 
 /// generated route for
+/// [HouseholdAcknowledgementPage]
+class HouseholdAcknowledgementRoute
+    extends PageRouteInfo<HouseholdAcknowledgementRouteArgs> {
+  HouseholdAcknowledgementRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    bool? enableViewHousehold,
+    List<PageRouteInfo>? children,
+  }) : super(
+          HouseholdAcknowledgementRoute.name,
+          args: HouseholdAcknowledgementRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            enableViewHousehold: enableViewHousehold,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'HouseholdAcknowledgementRoute';
+
+  static const PageInfo<HouseholdAcknowledgementRouteArgs> page =
+      PageInfo<HouseholdAcknowledgementRouteArgs>(name);
+}
+
+class HouseholdAcknowledgementRouteArgs {
+  const HouseholdAcknowledgementRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.enableViewHousehold,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final bool? enableViewHousehold;
+
+  @override
+  String toString() {
+    return 'HouseholdAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, enableViewHousehold: $enableViewHousehold}';
+  }
+}
+
+/// generated route for
 /// [HouseholdLocationPage]
 class HouseholdLocationRoute extends PageRouteInfo<HouseholdLocationRouteArgs> {
   HouseholdLocationRoute({
     Key? key,
     AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
   }) : super(
           HouseholdLocationRoute.name,
-          path: 'household-location',
           args: HouseholdLocationRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
           ),
+          initialChildren: children,
         );
 
   static const String name = 'HouseholdLocationRoute';
+
+  static const PageInfo<HouseholdLocationRouteArgs> page =
+      PageInfo<HouseholdLocationRouteArgs>(name);
 }
 
 class HouseholdLocationRouteArgs {
@@ -2045,16 +1771,20 @@ class HouseholdOverviewRoute extends PageRouteInfo<HouseholdOverviewRouteArgs> {
   HouseholdOverviewRoute({
     Key? key,
     AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
   }) : super(
           HouseholdOverviewRoute.name,
-          path: 'overview',
           args: HouseholdOverviewRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
           ),
+          initialChildren: children,
         );
 
   static const String name = 'HouseholdOverviewRoute';
+
+  static const PageInfo<HouseholdOverviewRouteArgs> page =
+      PageInfo<HouseholdOverviewRouteArgs>(name);
 }
 
 class HouseholdOverviewRouteArgs {
@@ -2074,188 +1804,200 @@ class HouseholdOverviewRouteArgs {
 }
 
 /// generated route for
-/// [BeneficiaryDetailsPage]
-class BeneficiaryDetailsRoute
-    extends PageRouteInfo<BeneficiaryDetailsRouteArgs> {
-  BeneficiaryDetailsRoute({
+/// [IndividualDetailsPage]
+class IndividualDetailsRoute extends PageRouteInfo<IndividualDetailsRouteArgs> {
+  IndividualDetailsRoute({
     Key? key,
     AppLocalizations? appLocalizations,
+    bool isHeadOfHousehold = false,
+    List<PageRouteInfo>? children,
   }) : super(
-          BeneficiaryDetailsRoute.name,
-          path: 'beneficiary-details',
-          args: BeneficiaryDetailsRouteArgs(
+          IndividualDetailsRoute.name,
+          args: IndividualDetailsRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
+            isHeadOfHousehold: isHeadOfHousehold,
           ),
+          initialChildren: children,
         );
 
-  static const String name = 'BeneficiaryDetailsRoute';
+  static const String name = 'IndividualDetailsRoute';
+
+  static const PageInfo<IndividualDetailsRouteArgs> page =
+      PageInfo<IndividualDetailsRouteArgs>(name);
 }
 
-class BeneficiaryDetailsRouteArgs {
-  const BeneficiaryDetailsRouteArgs({
+class IndividualDetailsRouteArgs {
+  const IndividualDetailsRouteArgs({
     this.key,
     this.appLocalizations,
+    this.isHeadOfHousehold = false,
   });
 
   final Key? key;
 
   final AppLocalizations? appLocalizations;
 
+  final bool isHeadOfHousehold;
+
   @override
   String toString() {
-    return 'BeneficiaryDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+    return 'IndividualDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations, isHeadOfHousehold: $isHeadOfHousehold}';
   }
 }
 
 /// generated route for
-/// [DeliverInterventionPage]
-class DeliverInterventionRoute
-    extends PageRouteInfo<DeliverInterventionRouteArgs> {
-  DeliverInterventionRoute({
-    Key? key,
-    AppLocalizations? appLocalizations,
-    bool isEditing = false,
-  }) : super(
-          DeliverInterventionRoute.name,
-          path: 'deliver-intervention',
-          args: DeliverInterventionRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-            isEditing: isEditing,
-          ),
+/// [LanguageSelectionPage]
+class LanguageSelectionRoute extends PageRouteInfo<void> {
+  const LanguageSelectionRoute({List<PageRouteInfo>? children})
+      : super(
+          LanguageSelectionRoute.name,
+          initialChildren: children,
         );
 
-  static const String name = 'DeliverInterventionRoute';
+  static const String name = 'LanguageSelectionRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
-class DeliverInterventionRouteArgs {
-  const DeliverInterventionRouteArgs({
+/// generated route for
+/// [LoginPage]
+class LoginRoute extends PageRouteInfo<LoginRouteArgs> {
+  LoginRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          LoginRoute.name,
+          args: LoginRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'LoginRoute';
+
+  static const PageInfo<LoginRouteArgs> page = PageInfo<LoginRouteArgs>(name);
+}
+
+class LoginRouteArgs {
+  const LoginRouteArgs({
     this.key,
     this.appLocalizations,
-    this.isEditing = false,
   });
 
   final Key? key;
 
   final AppLocalizations? appLocalizations;
 
-  final bool isEditing;
-
   @override
   String toString() {
-    return 'DeliverInterventionRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing}';
+    return 'LoginRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
 /// generated route for
-/// [SideEffectsPage]
-class SideEffectsRoute extends PageRouteInfo<SideEffectsRouteArgs> {
-  SideEffectsRoute({
+/// [ProfilePage]
+class ProfileRoute extends PageRouteInfo<ProfileRouteArgs> {
+  ProfileRoute({
     Key? key,
     AppLocalizations? appLocalizations,
-    required List<TaskModel> tasks,
-    bool isEditing = false,
+    List<PageRouteInfo>? children,
   }) : super(
-          SideEffectsRoute.name,
-          path: 'side-effects',
-          args: SideEffectsRouteArgs(
+          ProfileRoute.name,
+          args: ProfileRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
-            tasks: tasks,
-            isEditing: isEditing,
           ),
+          initialChildren: children,
         );
 
-  static const String name = 'SideEffectsRoute';
+  static const String name = 'ProfileRoute';
+
+  static const PageInfo<ProfileRouteArgs> page =
+      PageInfo<ProfileRouteArgs>(name);
 }
 
-class SideEffectsRouteArgs {
-  const SideEffectsRouteArgs({
+class ProfileRouteArgs {
+  const ProfileRouteArgs({
     this.key,
     this.appLocalizations,
-    required this.tasks,
-    this.isEditing = false,
   });
 
   final Key? key;
 
   final AppLocalizations? appLocalizations;
 
-  final List<TaskModel> tasks;
-
-  final bool isEditing;
-
   @override
   String toString() {
-    return 'SideEffectsRouteArgs{key: $key, appLocalizations: $appLocalizations, tasks: $tasks, isEditing: $isEditing}';
+    return 'ProfileRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
 /// generated route for
-/// [ReferBeneficiaryPage]
-class ReferBeneficiaryRoute extends PageRouteInfo<ReferBeneficiaryRouteArgs> {
-  ReferBeneficiaryRoute({
+/// [ProjectFacilitySelectionPage]
+class ProjectFacilitySelectionRoute
+    extends PageRouteInfo<ProjectFacilitySelectionRouteArgs> {
+  ProjectFacilitySelectionRoute({
     Key? key,
-    AppLocalizations? appLocalizations,
-    bool isEditing = false,
-    required String projectBeneficiaryClientRefId,
+    required List<ProjectFacilityModel> projectFacilities,
+    List<PageRouteInfo>? children,
   }) : super(
-          ReferBeneficiaryRoute.name,
-          path: 'refer-beneficiary',
-          args: ReferBeneficiaryRouteArgs(
+          ProjectFacilitySelectionRoute.name,
+          args: ProjectFacilitySelectionRouteArgs(
             key: key,
-            appLocalizations: appLocalizations,
-            isEditing: isEditing,
-            projectBeneficiaryClientRefId: projectBeneficiaryClientRefId,
+            projectFacilities: projectFacilities,
           ),
+          initialChildren: children,
         );
 
-  static const String name = 'ReferBeneficiaryRoute';
+  static const String name = 'ProjectFacilitySelectionRoute';
+
+  static const PageInfo<ProjectFacilitySelectionRouteArgs> page =
+      PageInfo<ProjectFacilitySelectionRouteArgs>(name);
 }
 
-class ReferBeneficiaryRouteArgs {
-  const ReferBeneficiaryRouteArgs({
+class ProjectFacilitySelectionRouteArgs {
+  const ProjectFacilitySelectionRouteArgs({
     this.key,
-    this.appLocalizations,
-    this.isEditing = false,
-    required this.projectBeneficiaryClientRefId,
+    required this.projectFacilities,
   });
 
   final Key? key;
 
-  final AppLocalizations? appLocalizations;
-
-  final bool isEditing;
-
-  final String projectBeneficiaryClientRefId;
+  final List<ProjectFacilityModel> projectFacilities;
 
   @override
   String toString() {
-    return 'ReferBeneficiaryRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing, projectBeneficiaryClientRefId: $projectBeneficiaryClientRefId}';
+    return 'ProjectFacilitySelectionRouteArgs{key: $key, projectFacilities: $projectFacilities}';
   }
 }
 
 /// generated route for
-/// [DoseAdministeredPage]
-class DoseAdministeredRoute extends PageRouteInfo<DoseAdministeredRouteArgs> {
-  DoseAdministeredRoute({
+/// [ProjectSelectionPage]
+class ProjectSelectionRoute extends PageRouteInfo<ProjectSelectionRouteArgs> {
+  ProjectSelectionRoute({
     Key? key,
     AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
   }) : super(
-          DoseAdministeredRoute.name,
-          path: 'dose-administered',
-          args: DoseAdministeredRouteArgs(
+          ProjectSelectionRoute.name,
+          args: ProjectSelectionRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
           ),
+          initialChildren: children,
         );
 
-  static const String name = 'DoseAdministeredRoute';
+  static const String name = 'ProjectSelectionRoute';
+
+  static const PageInfo<ProjectSelectionRouteArgs> page =
+      PageInfo<ProjectSelectionRouteArgs>(name);
 }
 
-class DoseAdministeredRouteArgs {
-  const DoseAdministeredRouteArgs({
+class ProjectSelectionRouteArgs {
+  const ProjectSelectionRouteArgs({
     this.key,
     this.appLocalizations,
   });
@@ -2266,47 +2008,7 @@ class DoseAdministeredRouteArgs {
 
   @override
   String toString() {
-    return 'DoseAdministeredRouteArgs{key: $key, appLocalizations: $appLocalizations}';
-  }
-}
-
-/// generated route for
-/// [SplashAcknowledgementPage]
-class SplashAcknowledgementRoute
-    extends PageRouteInfo<SplashAcknowledgementRouteArgs> {
-  SplashAcknowledgementRoute({
-    Key? key,
-    AppLocalizations? appLocalizations,
-    bool? enableBackToSearch,
-  }) : super(
-          SplashAcknowledgementRoute.name,
-          path: 'splash-acknowledgement',
-          args: SplashAcknowledgementRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-            enableBackToSearch: enableBackToSearch,
-          ),
-        );
-
-  static const String name = 'SplashAcknowledgementRoute';
-}
-
-class SplashAcknowledgementRouteArgs {
-  const SplashAcknowledgementRouteArgs({
-    this.key,
-    this.appLocalizations,
-    this.enableBackToSearch,
-  });
-
-  final Key? key;
-
-  final AppLocalizations? appLocalizations;
-
-  final bool? enableBackToSearch;
-
-  @override
-  String toString() {
-    return 'SplashAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, enableBackToSearch: $enableBackToSearch}';
+    return 'ProjectSelectionRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
@@ -2317,17 +2019,21 @@ class ReasonForDeletionRoute extends PageRouteInfo<ReasonForDeletionRouteArgs> {
     Key? key,
     AppLocalizations? appLocalizations,
     bool isHousholdDelete = false,
+    List<PageRouteInfo>? children,
   }) : super(
           ReasonForDeletionRoute.name,
-          path: 'reason-for-deletion',
           args: ReasonForDeletionRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
             isHousholdDelete: isHousholdDelete,
           ),
+          initialChildren: children,
         );
 
   static const String name = 'ReasonForDeletionRoute';
+
+  static const PageInfo<ReasonForDeletionRouteArgs> page =
+      PageInfo<ReasonForDeletionRouteArgs>(name);
 }
 
 class ReasonForDeletionRouteArgs {
@@ -2357,17 +2063,21 @@ class RecordPastDeliveryDetailsRoute
     Key? key,
     AppLocalizations? appLocalizations,
     List<TaskModel>? tasks,
+    List<PageRouteInfo>? children,
   }) : super(
           RecordPastDeliveryDetailsRoute.name,
-          path: 'record-past-delivery-details',
           args: RecordPastDeliveryDetailsRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
             tasks: tasks,
           ),
+          initialChildren: children,
         );
 
   static const String name = 'RecordPastDeliveryDetailsRoute';
+
+  static const PageInfo<RecordPastDeliveryDetailsRouteArgs> page =
+      PageInfo<RecordPastDeliveryDetailsRouteArgs>(name);
 }
 
 class RecordPastDeliveryDetailsRouteArgs {
@@ -2390,227 +2100,6 @@ class RecordPastDeliveryDetailsRouteArgs {
 }
 
 /// generated route for
-/// [HouseholdAcknowledgementPage]
-class HouseholdAcknowledgementRoute
-    extends PageRouteInfo<HouseholdAcknowledgementRouteArgs> {
-  HouseholdAcknowledgementRoute({
-    Key? key,
-    AppLocalizations? appLocalizations,
-    bool? enableViewHousehold,
-  }) : super(
-          HouseholdAcknowledgementRoute.name,
-          path: 'household-acknowledgement',
-          args: HouseholdAcknowledgementRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-            enableViewHousehold: enableViewHousehold,
-          ),
-        );
-
-  static const String name = 'HouseholdAcknowledgementRoute';
-}
-
-class HouseholdAcknowledgementRouteArgs {
-  const HouseholdAcknowledgementRouteArgs({
-    this.key,
-    this.appLocalizations,
-    this.enableViewHousehold,
-  });
-
-  final Key? key;
-
-  final AppLocalizations? appLocalizations;
-
-  final bool? enableViewHousehold;
-
-  @override
-  String toString() {
-    return 'HouseholdAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, enableViewHousehold: $enableViewHousehold}';
-  }
-}
-
-/// generated route for
-/// [ChecklistViewPage]
-class ChecklistViewRoute extends PageRouteInfo<ChecklistViewRouteArgs> {
-  ChecklistViewRoute({
-    Key? key,
-    String? referralClientRefId,
-    AppLocalizations? appLocalizations,
-  }) : super(
-          ChecklistViewRoute.name,
-          path: 'view',
-          args: ChecklistViewRouteArgs(
-            key: key,
-            referralClientRefId: referralClientRefId,
-            appLocalizations: appLocalizations,
-          ),
-        );
-
-  static const String name = 'ChecklistViewRoute';
-}
-
-class ChecklistViewRouteArgs {
-  const ChecklistViewRouteArgs({
-    this.key,
-    this.referralClientRefId,
-    this.appLocalizations,
-  });
-
-  final Key? key;
-
-  final String? referralClientRefId;
-
-  final AppLocalizations? appLocalizations;
-
-  @override
-  String toString() {
-    return 'ChecklistViewRouteArgs{key: $key, referralClientRefId: $referralClientRefId, appLocalizations: $appLocalizations}';
-  }
-}
-
-/// generated route for
-/// [ChecklistPage]
-class ChecklistRoute extends PageRouteInfo<ChecklistRouteArgs> {
-  ChecklistRoute({
-    Key? key,
-    AppLocalizations? appLocalizations,
-  }) : super(
-          ChecklistRoute.name,
-          path: '',
-          args: ChecklistRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-          ),
-        );
-
-  static const String name = 'ChecklistRoute';
-}
-
-class ChecklistRouteArgs {
-  const ChecklistRouteArgs({
-    this.key,
-    this.appLocalizations,
-  });
-
-  final Key? key;
-
-  final AppLocalizations? appLocalizations;
-
-  @override
-  String toString() {
-    return 'ChecklistRouteArgs{key: $key, appLocalizations: $appLocalizations}';
-  }
-}
-
-/// generated route for
-/// [ChecklistBoundaryViewPage]
-class ChecklistBoundaryViewRoute
-    extends PageRouteInfo<ChecklistBoundaryViewRouteArgs> {
-  ChecklistBoundaryViewRoute({
-    Key? key,
-    AppLocalizations? appLocalizations,
-  }) : super(
-          ChecklistBoundaryViewRoute.name,
-          path: 'view-boundary',
-          args: ChecklistBoundaryViewRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-          ),
-        );
-
-  static const String name = 'ChecklistBoundaryViewRoute';
-}
-
-class ChecklistBoundaryViewRouteArgs {
-  const ChecklistBoundaryViewRouteArgs({
-    this.key,
-    this.appLocalizations,
-  });
-
-  final Key? key;
-
-  final AppLocalizations? appLocalizations;
-
-  @override
-  String toString() {
-    return 'ChecklistBoundaryViewRouteArgs{key: $key, appLocalizations: $appLocalizations}';
-  }
-}
-
-/// generated route for
-/// [ChecklistPreviewPage]
-class ChecklistPreviewRoute extends PageRouteInfo<ChecklistPreviewRouteArgs> {
-  ChecklistPreviewRoute({
-    Key? key,
-    AppLocalizations? appLocalizations,
-  }) : super(
-          ChecklistPreviewRoute.name,
-          path: 'preview',
-          args: ChecklistPreviewRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-          ),
-        );
-
-  static const String name = 'ChecklistPreviewRoute';
-}
-
-class ChecklistPreviewRouteArgs {
-  const ChecklistPreviewRouteArgs({
-    this.key,
-    this.appLocalizations,
-  });
-
-  final Key? key;
-
-  final AppLocalizations? appLocalizations;
-
-  @override
-  String toString() {
-    return 'ChecklistPreviewRouteArgs{key: $key, appLocalizations: $appLocalizations}';
-  }
-}
-
-/// generated route for
-/// [ReferralFacilityPage]
-class ReferralFacilityRoute extends PageRouteInfo<ReferralFacilityRouteArgs> {
-  ReferralFacilityRoute({
-    Key? key,
-    AppLocalizations? appLocalizations,
-    bool isEditing = false,
-  }) : super(
-          ReferralFacilityRoute.name,
-          path: 'facility-details',
-          args: ReferralFacilityRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-            isEditing: isEditing,
-          ),
-        );
-
-  static const String name = 'ReferralFacilityRoute';
-}
-
-class ReferralFacilityRouteArgs {
-  const ReferralFacilityRouteArgs({
-    this.key,
-    this.appLocalizations,
-    this.isEditing = false,
-  });
-
-  final Key? key;
-
-  final AppLocalizations? appLocalizations;
-
-  final bool isEditing;
-
-  @override
-  String toString() {
-    return 'ReferralFacilityRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing}';
-  }
-}
-
-/// generated route for
 /// [RecordReferralDetailsPage]
 class RecordReferralDetailsRoute
     extends PageRouteInfo<RecordReferralDetailsRouteArgs> {
@@ -2618,17 +2107,21 @@ class RecordReferralDetailsRoute
     Key? key,
     AppLocalizations? appLocalizations,
     bool isEditing = false,
+    List<PageRouteInfo>? children,
   }) : super(
           RecordReferralDetailsRoute.name,
-          path: 'referral-details',
           args: RecordReferralDetailsRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
             isEditing: isEditing,
           ),
+          initialChildren: children,
         );
 
   static const String name = 'RecordReferralDetailsRoute';
+
+  static const PageInfo<RecordReferralDetailsRouteArgs> page =
+      PageInfo<RecordReferralDetailsRouteArgs>(name);
 }
 
 class RecordReferralDetailsRouteArgs {
@@ -2651,34 +2144,37 @@ class RecordReferralDetailsRouteArgs {
 }
 
 /// generated route for
-/// [ReferralReasonChecklistPage]
-class ReferralReasonChecklistRoute
-    extends PageRouteInfo<ReferralReasonChecklistRouteArgs> {
-  ReferralReasonChecklistRoute({
+/// [ReferBeneficiaryPage]
+class ReferBeneficiaryRoute extends PageRouteInfo<ReferBeneficiaryRouteArgs> {
+  ReferBeneficiaryRoute({
     Key? key,
     AppLocalizations? appLocalizations,
     bool isEditing = false,
-    String? referralClientRefId,
+    required String projectBeneficiaryClientRefId,
+    List<PageRouteInfo>? children,
   }) : super(
-          ReferralReasonChecklistRoute.name,
-          path: 'referral-reason',
-          args: ReferralReasonChecklistRouteArgs(
+          ReferBeneficiaryRoute.name,
+          args: ReferBeneficiaryRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
             isEditing: isEditing,
-            referralClientRefId: referralClientRefId,
+            projectBeneficiaryClientRefId: projectBeneficiaryClientRefId,
           ),
+          initialChildren: children,
         );
 
-  static const String name = 'ReferralReasonChecklistRoute';
+  static const String name = 'ReferBeneficiaryRoute';
+
+  static const PageInfo<ReferBeneficiaryRouteArgs> page =
+      PageInfo<ReferBeneficiaryRouteArgs>(name);
 }
 
-class ReferralReasonChecklistRouteArgs {
-  const ReferralReasonChecklistRouteArgs({
+class ReferBeneficiaryRouteArgs {
+  const ReferBeneficiaryRouteArgs({
     this.key,
     this.appLocalizations,
     this.isEditing = false,
-    this.referralClientRefId,
+    required this.projectBeneficiaryClientRefId,
   });
 
   final Key? key;
@@ -2687,11 +2183,54 @@ class ReferralReasonChecklistRouteArgs {
 
   final bool isEditing;
 
-  final String? referralClientRefId;
+  final String projectBeneficiaryClientRefId;
 
   @override
   String toString() {
-    return 'ReferralReasonChecklistRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing, referralClientRefId: $referralClientRefId}';
+    return 'ReferBeneficiaryRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing, projectBeneficiaryClientRefId: $projectBeneficiaryClientRefId}';
+  }
+}
+
+/// generated route for
+/// [ReferralFacilityPage]
+class ReferralFacilityRoute extends PageRouteInfo<ReferralFacilityRouteArgs> {
+  ReferralFacilityRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    bool isEditing = false,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ReferralFacilityRoute.name,
+          args: ReferralFacilityRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            isEditing: isEditing,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ReferralFacilityRoute';
+
+  static const PageInfo<ReferralFacilityRouteArgs> page =
+      PageInfo<ReferralFacilityRouteArgs>(name);
+}
+
+class ReferralFacilityRouteArgs {
+  const ReferralFacilityRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.isEditing = false,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final bool isEditing;
+
+  @override
+  String toString() {
+    return 'ReferralFacilityRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing}';
   }
 }
 
@@ -2704,18 +2243,22 @@ class ReferralReasonCheckListPreviewRoute
     AppLocalizations? appLocalizations,
     bool isEditing = false,
     String? referralClientRefId,
+    List<PageRouteInfo>? children,
   }) : super(
           ReferralReasonCheckListPreviewRoute.name,
-          path: 'referral-reason-view',
           args: ReferralReasonCheckListPreviewRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
             isEditing: isEditing,
             referralClientRefId: referralClientRefId,
           ),
+          initialChildren: children,
         );
 
   static const String name = 'ReferralReasonCheckListPreviewRoute';
+
+  static const PageInfo<ReferralReasonCheckListPreviewRouteArgs> page =
+      PageInfo<ReferralReasonCheckListPreviewRouteArgs>(name);
 }
 
 class ReferralReasonCheckListPreviewRouteArgs {
@@ -2741,25 +2284,78 @@ class ReferralReasonCheckListPreviewRouteArgs {
 }
 
 /// generated route for
-/// [ComplaintsInboxPage]
-class ComplaintsInboxRoute extends PageRouteInfo<ComplaintsInboxRouteArgs> {
-  ComplaintsInboxRoute({
+/// [ReferralReasonChecklistPage]
+class ReferralReasonChecklistRoute
+    extends PageRouteInfo<ReferralReasonChecklistRouteArgs> {
+  ReferralReasonChecklistRoute({
     Key? key,
     AppLocalizations? appLocalizations,
+    bool isEditing = false,
+    String? referralClientRefId,
+    List<PageRouteInfo>? children,
   }) : super(
-          ComplaintsInboxRoute.name,
-          path: 'complaints-inbox-items',
-          args: ComplaintsInboxRouteArgs(
+          ReferralReasonChecklistRoute.name,
+          args: ReferralReasonChecklistRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            isEditing: isEditing,
+            referralClientRefId: referralClientRefId,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ReferralReasonChecklistRoute';
+
+  static const PageInfo<ReferralReasonChecklistRouteArgs> page =
+      PageInfo<ReferralReasonChecklistRouteArgs>(name);
+}
+
+class ReferralReasonChecklistRouteArgs {
+  const ReferralReasonChecklistRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.isEditing = false,
+    this.referralClientRefId,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final bool isEditing;
+
+  final String? referralClientRefId;
+
+  @override
+  String toString() {
+    return 'ReferralReasonChecklistRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing, referralClientRefId: $referralClientRefId}';
+  }
+}
+
+/// generated route for
+/// [SearchBeneficiaryPage]
+class SearchBeneficiaryRoute extends PageRouteInfo<SearchBeneficiaryRouteArgs> {
+  SearchBeneficiaryRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          SearchBeneficiaryRoute.name,
+          args: SearchBeneficiaryRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
           ),
+          initialChildren: children,
         );
 
-  static const String name = 'ComplaintsInboxRoute';
+  static const String name = 'SearchBeneficiaryRoute';
+
+  static const PageInfo<SearchBeneficiaryRouteArgs> page =
+      PageInfo<SearchBeneficiaryRouteArgs>(name);
 }
 
-class ComplaintsInboxRouteArgs {
-  const ComplaintsInboxRouteArgs({
+class SearchBeneficiaryRouteArgs {
+  const SearchBeneficiaryRouteArgs({
     this.key,
     this.appLocalizations,
   });
@@ -2770,31 +2366,34 @@ class ComplaintsInboxRouteArgs {
 
   @override
   String toString() {
-    return 'ComplaintsInboxRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+    return 'SearchBeneficiaryRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
 /// generated route for
-/// [ComplaintsInboxFilterPage]
-class ComplaintsInboxFilterRoute
-    extends PageRouteInfo<ComplaintsInboxFilterRouteArgs> {
-  ComplaintsInboxFilterRoute({
+/// [SearchReferralsPage]
+class SearchReferralsRoute extends PageRouteInfo<SearchReferralsRouteArgs> {
+  SearchReferralsRoute({
     Key? key,
     AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
   }) : super(
-          ComplaintsInboxFilterRoute.name,
-          path: 'complaints-inbox-filter',
-          args: ComplaintsInboxFilterRouteArgs(
+          SearchReferralsRoute.name,
+          args: SearchReferralsRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
           ),
+          initialChildren: children,
         );
 
-  static const String name = 'ComplaintsInboxFilterRoute';
+  static const String name = 'SearchReferralsRoute';
+
+  static const PageInfo<SearchReferralsRouteArgs> page =
+      PageInfo<SearchReferralsRouteArgs>(name);
 }
 
-class ComplaintsInboxFilterRouteArgs {
-  const ComplaintsInboxFilterRouteArgs({
+class SearchReferralsRouteArgs {
+  const SearchReferralsRouteArgs({
     this.key,
     this.appLocalizations,
   });
@@ -2805,31 +2404,140 @@ class ComplaintsInboxFilterRouteArgs {
 
   @override
   String toString() {
-    return 'ComplaintsInboxFilterRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+    return 'SearchReferralsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
 /// generated route for
-/// [ComplaintsInboxSearchPage]
-class ComplaintsInboxSearchRoute
-    extends PageRouteInfo<ComplaintsInboxSearchRouteArgs> {
-  ComplaintsInboxSearchRoute({
+/// [SideEffectsPage]
+class SideEffectsRoute extends PageRouteInfo<SideEffectsRouteArgs> {
+  SideEffectsRoute({
     Key? key,
     AppLocalizations? appLocalizations,
+    required List<TaskModel> tasks,
+    bool isEditing = false,
+    List<PageRouteInfo>? children,
   }) : super(
-          ComplaintsInboxSearchRoute.name,
-          path: 'complaints-inbox-search',
-          args: ComplaintsInboxSearchRouteArgs(
+          SideEffectsRoute.name,
+          args: SideEffectsRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            tasks: tasks,
+            isEditing: isEditing,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'SideEffectsRoute';
+
+  static const PageInfo<SideEffectsRouteArgs> page =
+      PageInfo<SideEffectsRouteArgs>(name);
+}
+
+class SideEffectsRouteArgs {
+  const SideEffectsRouteArgs({
+    this.key,
+    this.appLocalizations,
+    required this.tasks,
+    this.isEditing = false,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final List<TaskModel> tasks;
+
+  final bool isEditing;
+
+  @override
+  String toString() {
+    return 'SideEffectsRouteArgs{key: $key, appLocalizations: $appLocalizations, tasks: $tasks, isEditing: $isEditing}';
+  }
+}
+
+/// generated route for
+/// [SplashAcknowledgementPage]
+class SplashAcknowledgementRoute
+    extends PageRouteInfo<SplashAcknowledgementRouteArgs> {
+  SplashAcknowledgementRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    bool? enableBackToSearch,
+    List<PageRouteInfo>? children,
+  }) : super(
+          SplashAcknowledgementRoute.name,
+          args: SplashAcknowledgementRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            enableBackToSearch: enableBackToSearch,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'SplashAcknowledgementRoute';
+
+  static const PageInfo<SplashAcknowledgementRouteArgs> page =
+      PageInfo<SplashAcknowledgementRouteArgs>(name);
+}
+
+class SplashAcknowledgementRouteArgs {
+  const SplashAcknowledgementRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.enableBackToSearch,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final bool? enableBackToSearch;
+
+  @override
+  String toString() {
+    return 'SplashAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, enableBackToSearch: $enableBackToSearch}';
+  }
+}
+
+/// generated route for
+/// [UnauthenticatedPageWrapper]
+class UnauthenticatedRouteWrapper extends PageRouteInfo<void> {
+  const UnauthenticatedRouteWrapper({List<PageRouteInfo>? children})
+      : super(
+          UnauthenticatedRouteWrapper.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'UnauthenticatedRouteWrapper';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [UserQRDetailsPage]
+class UserQRDetailsRoute extends PageRouteInfo<UserQRDetailsRouteArgs> {
+  UserQRDetailsRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          UserQRDetailsRoute.name,
+          args: UserQRDetailsRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
           ),
+          initialChildren: children,
         );
 
-  static const String name = 'ComplaintsInboxSearchRoute';
+  static const String name = 'UserQRDetailsRoute';
+
+  static const PageInfo<UserQRDetailsRouteArgs> page =
+      PageInfo<UserQRDetailsRouteArgs>(name);
 }
 
-class ComplaintsInboxSearchRouteArgs {
-  const ComplaintsInboxSearchRouteArgs({
+class UserQRDetailsRouteArgs {
+  const UserQRDetailsRouteArgs({
     this.key,
     this.appLocalizations,
   });
@@ -2840,179 +2548,6 @@ class ComplaintsInboxSearchRouteArgs {
 
   @override
   String toString() {
-    return 'ComplaintsInboxSearchRouteArgs{key: $key, appLocalizations: $appLocalizations}';
-  }
-}
-
-/// generated route for
-/// [ComplaintsInboxSortPage]
-class ComplaintsInboxSortRoute
-    extends PageRouteInfo<ComplaintsInboxSortRouteArgs> {
-  ComplaintsInboxSortRoute({
-    Key? key,
-    AppLocalizations? appLocalizations,
-  }) : super(
-          ComplaintsInboxSortRoute.name,
-          path: 'complaints-inbox-sort',
-          args: ComplaintsInboxSortRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-          ),
-        );
-
-  static const String name = 'ComplaintsInboxSortRoute';
-}
-
-class ComplaintsInboxSortRouteArgs {
-  const ComplaintsInboxSortRouteArgs({
-    this.key,
-    this.appLocalizations,
-  });
-
-  final Key? key;
-
-  final AppLocalizations? appLocalizations;
-
-  @override
-  String toString() {
-    return 'ComplaintsInboxSortRouteArgs{key: $key, appLocalizations: $appLocalizations}';
-  }
-}
-
-/// generated route for
-/// [ComplaintsDetailsViewPage]
-class ComplaintsDetailsViewRoute
-    extends PageRouteInfo<ComplaintsDetailsViewRouteArgs> {
-  ComplaintsDetailsViewRoute({
-    Key? key,
-    required PgrServiceModel complaint,
-  }) : super(
-          ComplaintsDetailsViewRoute.name,
-          path: 'complaints-inbox-view-details',
-          args: ComplaintsDetailsViewRouteArgs(
-            key: key,
-            complaint: complaint,
-          ),
-        );
-
-  static const String name = 'ComplaintsDetailsViewRoute';
-}
-
-class ComplaintsDetailsViewRouteArgs {
-  const ComplaintsDetailsViewRouteArgs({
-    this.key,
-    required this.complaint,
-  });
-
-  final Key? key;
-
-  final PgrServiceModel complaint;
-
-  @override
-  String toString() {
-    return 'ComplaintsDetailsViewRouteArgs{key: $key, complaint: $complaint}';
-  }
-}
-
-/// generated route for
-/// [ComplaintTypePage]
-class ComplaintTypeRoute extends PageRouteInfo<ComplaintTypeRouteArgs> {
-  ComplaintTypeRoute({
-    Key? key,
-    AppLocalizations? appLocalizations,
-  }) : super(
-          ComplaintTypeRoute.name,
-          path: 'complaints-type',
-          args: ComplaintTypeRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-          ),
-        );
-
-  static const String name = 'ComplaintTypeRoute';
-}
-
-class ComplaintTypeRouteArgs {
-  const ComplaintTypeRouteArgs({
-    this.key,
-    this.appLocalizations,
-  });
-
-  final Key? key;
-
-  final AppLocalizations? appLocalizations;
-
-  @override
-  String toString() {
-    return 'ComplaintTypeRouteArgs{key: $key, appLocalizations: $appLocalizations}';
-  }
-}
-
-/// generated route for
-/// [ComplaintsLocationPage]
-class ComplaintsLocationRoute
-    extends PageRouteInfo<ComplaintsLocationRouteArgs> {
-  ComplaintsLocationRoute({
-    Key? key,
-    AppLocalizations? appLocalizations,
-  }) : super(
-          ComplaintsLocationRoute.name,
-          path: 'complaints-location',
-          args: ComplaintsLocationRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-          ),
-        );
-
-  static const String name = 'ComplaintsLocationRoute';
-}
-
-class ComplaintsLocationRouteArgs {
-  const ComplaintsLocationRouteArgs({
-    this.key,
-    this.appLocalizations,
-  });
-
-  final Key? key;
-
-  final AppLocalizations? appLocalizations;
-
-  @override
-  String toString() {
-    return 'ComplaintsLocationRouteArgs{key: $key, appLocalizations: $appLocalizations}';
-  }
-}
-
-/// generated route for
-/// [ComplaintsDetailsPage]
-class ComplaintsDetailsRoute extends PageRouteInfo<ComplaintsDetailsRouteArgs> {
-  ComplaintsDetailsRoute({
-    Key? key,
-    AppLocalizations? appLocalizations,
-  }) : super(
-          ComplaintsDetailsRoute.name,
-          path: 'complaints-details',
-          args: ComplaintsDetailsRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-          ),
-        );
-
-  static const String name = 'ComplaintsDetailsRoute';
-}
-
-class ComplaintsDetailsRouteArgs {
-  const ComplaintsDetailsRouteArgs({
-    this.key,
-    this.appLocalizations,
-  });
-
-  final Key? key;
-
-  final AppLocalizations? appLocalizations;
-
-  @override
-  String toString() {
-    return 'ComplaintsDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+    return 'UserQRDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
