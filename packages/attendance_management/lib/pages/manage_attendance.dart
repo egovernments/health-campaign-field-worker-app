@@ -258,7 +258,7 @@ class RegisterCard extends StatelessWidget {
           DigitTableCard(
             element: data,
           ),
-          !show
+          show
               ? DigitElevatedButton(
                   child: Text(
                     AttendanceLocalization.of(context)
@@ -293,7 +293,7 @@ class RegisterCard extends StatelessWidget {
                           registerID: registerId,
                         ),
                       );
-                      // attendanceBloc.add(const AttendanceEvents.initial());
+                      attendanceBloc.add(const AttendanceEvents.initial());
                     }
                   },
                 )
