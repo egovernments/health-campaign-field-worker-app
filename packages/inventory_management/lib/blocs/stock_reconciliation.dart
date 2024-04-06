@@ -66,19 +66,17 @@ class StockReconciliationBloc
         (!event.isDistributor && facilityId == null)) return;
 
     // Fetching the stock reconciliation details
-    await InventorySingleton().fetchStockReconciliationDetails(
-      FetchStockReconDetails(
-        productVariantId: productVariantId,
-        facilityId: facilityId!,
-        stockReconDetails: (receivedStocks, sentStocks) {
-          // Emitting the state with the fetched stock reconciliation details
-          emit(state.copyWith(
-            loading: false,
-            stockModels: [...receivedStocks, ...sentStocks],
-          ));
-        },
-      ),
+    List<List<StockModel>> stocks =
+        await InventorySingleton().fetchStockReconciliationDetails(
+      productVariantId: productVariantId,
+      facilityId: facilityId!,
     );
+
+    // Emitting the state with the fetched stock reconciliation details
+    emit(state.copyWith(
+      loading: false,
+      stockModels: stocks.expand((e) => e).toList(),
+    ));
   }
 
   // Event handler for creating a stock reconciliation
@@ -90,7 +88,8 @@ class StockReconciliationBloc
     emit(state.copyWith(loading: true));
 
     // Saving the stock reconciliation details
-    await InventorySingleton().saveStockReconciliationDetails(
+    var isStockReconciliationSaved =
+        await InventorySingleton().saveStockReconciliationDetails(
       SaveStockReconciliationModel(
         stockReconciliationModel: event.stockReconciliationModel,
         additionalData: {
@@ -101,15 +100,14 @@ class StockReconciliationBloc
           'damaged': state.stockDamaged,
           'inHand': state.stockInHand,
         },
-        isStockReconciliationSaved: (isStockReconciliationSaved) {
-          // Emitting the state with the persisted stock reconciliation details
-          emit(state.copyWith(
-            loading: false,
-            persisted: isStockReconciliationSaved,
-          ));
-        },
       ),
     );
+
+    // Emitting the state with the persisted stock reconciliation details
+    emit(state.copyWith(
+      loading: false,
+      persisted: isStockReconciliationSaved!,
+    ));
   }
 }
 

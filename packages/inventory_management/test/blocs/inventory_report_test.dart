@@ -9,35 +9,37 @@ import 'package:mocktail/mocktail.dart';
 class MockInventorySingleton extends Mock implements InventorySingleton {
   @override
   Future<Map<String, List<StockModel>>> fetchInventoryReports(
-      FetchInventoryReports fetchInventoryReports) async {
+      {required InventoryReportType reportType,
+      required String facilityId,
+      required String productVariantId}) async {
     return <String, List<StockModel>>{
       'stock1': [StockModel(id: '1', clientReferenceId: 'abc123')]
     };
   }
 
   @override
-  Future<Map<String, List<StockReconciliationModel>>>
-      handleStockReconciliationReport(
-          StockReconciliationReport stockReconciliationReport) async {
-    return <String, List<StockReconciliationModel>>{
-      'stock1': [
-        StockReconciliationModel(
-            id: '1',
-            clientReferenceId: 'abc123',
-            dateOfReconciliation: DateTime.now().toLocal().day)
-      ]
-    };
+  Future<StockReconciliationReport?> handleStockReconciliationReport(
+      {required String productVariantId, required String facilityId}) async {
+    return StockReconciliationReport(
+        stockReconModel: <String, List<StockReconciliationModel>>{
+          'stock1': [
+            StockReconciliationModel(
+                id: '1',
+                clientReferenceId: 'abc123',
+                dateOfReconciliation: DateTime.now().toLocal().day)
+          ]
+        },
+        additionalData: {
+          const MapEntry("returned", "10")
+        });
   }
 }
-
-class FetchInventoryReportsFake extends Fake implements FetchInventoryReports {}
 
 class StockReconciliationReportFake extends Fake
     implements StockReconciliationReport {}
 
 void main() {
   setUpAll(() {
-    registerFallbackValue(FetchInventoryReportsFake());
     registerFallbackValue(StockReconciliationReportFake());
   });
 
@@ -84,6 +86,8 @@ void main() {
                 clientReferenceId: 'abc123',
                 dateOfReconciliation: DateTime.now().toLocal().day)
           ]
+        }, additionalData: {
+          const MapEntry("returned", "10")
         }),
       ],
     );

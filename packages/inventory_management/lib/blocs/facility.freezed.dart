@@ -255,6 +255,7 @@ mixin _$FacilityState {
     required TResult Function() empty,
     required TResult Function() loading,
     required TResult Function(List<InventoryFacilityModel> facilities) fetched,
+    required TResult Function() error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -262,6 +263,7 @@ mixin _$FacilityState {
     TResult? Function()? empty,
     TResult? Function()? loading,
     TResult? Function(List<InventoryFacilityModel> facilities)? fetched,
+    TResult? Function()? error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -269,6 +271,7 @@ mixin _$FacilityState {
     TResult Function()? empty,
     TResult Function()? loading,
     TResult Function(List<InventoryFacilityModel> facilities)? fetched,
+    TResult Function()? error,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -277,6 +280,7 @@ mixin _$FacilityState {
     required TResult Function(FacilityEmptyState value) empty,
     required TResult Function(FacilityLoadingState value) loading,
     required TResult Function(FacilityFetchedState value) fetched,
+    required TResult Function(FacilityErrorState value) error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -284,6 +288,7 @@ mixin _$FacilityState {
     TResult? Function(FacilityEmptyState value)? empty,
     TResult? Function(FacilityLoadingState value)? loading,
     TResult? Function(FacilityFetchedState value)? fetched,
+    TResult? Function(FacilityErrorState value)? error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -291,6 +296,7 @@ mixin _$FacilityState {
     TResult Function(FacilityEmptyState value)? empty,
     TResult Function(FacilityLoadingState value)? loading,
     TResult Function(FacilityFetchedState value)? fetched,
+    TResult Function(FacilityErrorState value)? error,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -355,6 +361,7 @@ class _$FacilityEmptyStateImpl implements FacilityEmptyState {
     required TResult Function() empty,
     required TResult Function() loading,
     required TResult Function(List<InventoryFacilityModel> facilities) fetched,
+    required TResult Function() error,
   }) {
     return empty();
   }
@@ -365,6 +372,7 @@ class _$FacilityEmptyStateImpl implements FacilityEmptyState {
     TResult? Function()? empty,
     TResult? Function()? loading,
     TResult? Function(List<InventoryFacilityModel> facilities)? fetched,
+    TResult? Function()? error,
   }) {
     return empty?.call();
   }
@@ -375,6 +383,7 @@ class _$FacilityEmptyStateImpl implements FacilityEmptyState {
     TResult Function()? empty,
     TResult Function()? loading,
     TResult Function(List<InventoryFacilityModel> facilities)? fetched,
+    TResult Function()? error,
     required TResult orElse(),
   }) {
     if (empty != null) {
@@ -389,6 +398,7 @@ class _$FacilityEmptyStateImpl implements FacilityEmptyState {
     required TResult Function(FacilityEmptyState value) empty,
     required TResult Function(FacilityLoadingState value) loading,
     required TResult Function(FacilityFetchedState value) fetched,
+    required TResult Function(FacilityErrorState value) error,
   }) {
     return empty(this);
   }
@@ -399,6 +409,7 @@ class _$FacilityEmptyStateImpl implements FacilityEmptyState {
     TResult? Function(FacilityEmptyState value)? empty,
     TResult? Function(FacilityLoadingState value)? loading,
     TResult? Function(FacilityFetchedState value)? fetched,
+    TResult? Function(FacilityErrorState value)? error,
   }) {
     return empty?.call(this);
   }
@@ -409,6 +420,7 @@ class _$FacilityEmptyStateImpl implements FacilityEmptyState {
     TResult Function(FacilityEmptyState value)? empty,
     TResult Function(FacilityLoadingState value)? loading,
     TResult Function(FacilityFetchedState value)? fetched,
+    TResult Function(FacilityErrorState value)? error,
     required TResult orElse(),
   }) {
     if (empty != null) {
@@ -464,6 +476,7 @@ class _$FacilityLoadingStateImpl implements FacilityLoadingState {
     required TResult Function() empty,
     required TResult Function() loading,
     required TResult Function(List<InventoryFacilityModel> facilities) fetched,
+    required TResult Function() error,
   }) {
     return loading();
   }
@@ -474,6 +487,7 @@ class _$FacilityLoadingStateImpl implements FacilityLoadingState {
     TResult? Function()? empty,
     TResult? Function()? loading,
     TResult? Function(List<InventoryFacilityModel> facilities)? fetched,
+    TResult? Function()? error,
   }) {
     return loading?.call();
   }
@@ -484,6 +498,7 @@ class _$FacilityLoadingStateImpl implements FacilityLoadingState {
     TResult Function()? empty,
     TResult Function()? loading,
     TResult Function(List<InventoryFacilityModel> facilities)? fetched,
+    TResult Function()? error,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -498,6 +513,7 @@ class _$FacilityLoadingStateImpl implements FacilityLoadingState {
     required TResult Function(FacilityEmptyState value) empty,
     required TResult Function(FacilityLoadingState value) loading,
     required TResult Function(FacilityFetchedState value) fetched,
+    required TResult Function(FacilityErrorState value) error,
   }) {
     return loading(this);
   }
@@ -508,6 +524,7 @@ class _$FacilityLoadingStateImpl implements FacilityLoadingState {
     TResult? Function(FacilityEmptyState value)? empty,
     TResult? Function(FacilityLoadingState value)? loading,
     TResult? Function(FacilityFetchedState value)? fetched,
+    TResult? Function(FacilityErrorState value)? error,
   }) {
     return loading?.call(this);
   }
@@ -518,6 +535,7 @@ class _$FacilityLoadingStateImpl implements FacilityLoadingState {
     TResult Function(FacilityEmptyState value)? empty,
     TResult Function(FacilityLoadingState value)? loading,
     TResult Function(FacilityFetchedState value)? fetched,
+    TResult Function(FacilityErrorState value)? error,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -609,6 +627,7 @@ class _$FacilityFetchedStateImpl implements FacilityFetchedState {
     required TResult Function() empty,
     required TResult Function() loading,
     required TResult Function(List<InventoryFacilityModel> facilities) fetched,
+    required TResult Function() error,
   }) {
     return fetched(facilities);
   }
@@ -619,6 +638,7 @@ class _$FacilityFetchedStateImpl implements FacilityFetchedState {
     TResult? Function()? empty,
     TResult? Function()? loading,
     TResult? Function(List<InventoryFacilityModel> facilities)? fetched,
+    TResult? Function()? error,
   }) {
     return fetched?.call(facilities);
   }
@@ -629,6 +649,7 @@ class _$FacilityFetchedStateImpl implements FacilityFetchedState {
     TResult Function()? empty,
     TResult Function()? loading,
     TResult Function(List<InventoryFacilityModel> facilities)? fetched,
+    TResult Function()? error,
     required TResult orElse(),
   }) {
     if (fetched != null) {
@@ -643,6 +664,7 @@ class _$FacilityFetchedStateImpl implements FacilityFetchedState {
     required TResult Function(FacilityEmptyState value) empty,
     required TResult Function(FacilityLoadingState value) loading,
     required TResult Function(FacilityFetchedState value) fetched,
+    required TResult Function(FacilityErrorState value) error,
   }) {
     return fetched(this);
   }
@@ -653,6 +675,7 @@ class _$FacilityFetchedStateImpl implements FacilityFetchedState {
     TResult? Function(FacilityEmptyState value)? empty,
     TResult? Function(FacilityLoadingState value)? loading,
     TResult? Function(FacilityFetchedState value)? fetched,
+    TResult? Function(FacilityErrorState value)? error,
   }) {
     return fetched?.call(this);
   }
@@ -663,6 +686,7 @@ class _$FacilityFetchedStateImpl implements FacilityFetchedState {
     TResult Function(FacilityEmptyState value)? empty,
     TResult Function(FacilityLoadingState value)? loading,
     TResult Function(FacilityFetchedState value)? fetched,
+    TResult Function(FacilityErrorState value)? error,
     required TResult orElse(),
   }) {
     if (fetched != null) {
@@ -681,4 +705,118 @@ abstract class FacilityFetchedState implements FacilityState {
   @JsonKey(ignore: true)
   _$$FacilityFetchedStateImplCopyWith<_$FacilityFetchedStateImpl>
       get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$FacilityErrorStateImplCopyWith<$Res> {
+  factory _$$FacilityErrorStateImplCopyWith(_$FacilityErrorStateImpl value,
+          $Res Function(_$FacilityErrorStateImpl) then) =
+      __$$FacilityErrorStateImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$FacilityErrorStateImplCopyWithImpl<$Res>
+    extends _$FacilityStateCopyWithImpl<$Res, _$FacilityErrorStateImpl>
+    implements _$$FacilityErrorStateImplCopyWith<$Res> {
+  __$$FacilityErrorStateImplCopyWithImpl(_$FacilityErrorStateImpl _value,
+      $Res Function(_$FacilityErrorStateImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$FacilityErrorStateImpl implements FacilityErrorState {
+  const _$FacilityErrorStateImpl();
+
+  @override
+  String toString() {
+    return 'FacilityState.error()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$FacilityErrorStateImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() empty,
+    required TResult Function() loading,
+    required TResult Function(List<InventoryFacilityModel> facilities) fetched,
+    required TResult Function() error,
+  }) {
+    return error();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? empty,
+    TResult? Function()? loading,
+    TResult? Function(List<InventoryFacilityModel> facilities)? fetched,
+    TResult? Function()? error,
+  }) {
+    return error?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? empty,
+    TResult Function()? loading,
+    TResult Function(List<InventoryFacilityModel> facilities)? fetched,
+    TResult Function()? error,
+    required TResult orElse(),
+  }) {
+    if (error != null) {
+      return error();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(FacilityEmptyState value) empty,
+    required TResult Function(FacilityLoadingState value) loading,
+    required TResult Function(FacilityFetchedState value) fetched,
+    required TResult Function(FacilityErrorState value) error,
+  }) {
+    return error(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(FacilityEmptyState value)? empty,
+    TResult? Function(FacilityLoadingState value)? loading,
+    TResult? Function(FacilityFetchedState value)? fetched,
+    TResult? Function(FacilityErrorState value)? error,
+  }) {
+    return error?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(FacilityEmptyState value)? empty,
+    TResult Function(FacilityLoadingState value)? loading,
+    TResult Function(FacilityFetchedState value)? fetched,
+    TResult Function(FacilityErrorState value)? error,
+    required TResult orElse(),
+  }) {
+    if (error != null) {
+      return error(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class FacilityErrorState implements FacilityState {
+  const factory FacilityErrorState() = _$FacilityErrorStateImpl;
 }

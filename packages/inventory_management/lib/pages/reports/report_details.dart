@@ -5,7 +5,6 @@ import 'package:inventory_management/blocs/inventory_listener.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
-import '../../../utils/utils.dart';
 import '../../../widgets/component_wrapper/facility_bloc_wrapper.dart';
 import '../../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import '../../../widgets/inventory/no_facilities_assigned_dialog.dart';
@@ -17,8 +16,6 @@ import '../../blocs/product_variant.dart';
 import '../../blocs/stock_reconciliation.dart';
 import '../../models/entities/inventory_facility.dart';
 import '../../models/entities/product_variant.dart';
-import '../../models/entities/stock.dart';
-import '../../models/entities/stock_reconciliation.dart';
 import '../../widgets/back_navigation_help_header.dart';
 import '../acknowledgement.dart';
 import '../facility_selection.dart';
@@ -740,23 +737,17 @@ class _InventoryReportDetailsPageState
   }
 
   String _getCountFromAdditionalDetails(
-    Iterable<Iterable<MapEntry<String, dynamic>>> additionalData,
+    Iterable<MapEntry<String, dynamic>> additionalData,
     String key,
   ) {
-    final additionalDetails = additionalData;
-    if (additionalDetails == null) {
-      return '0';
-    }
+    final additionalDetails = additionalData
+        .where((element) => element.key == key);
 
-    final count = additionalDetails.firstOrNull?.where(
-      (element) => element.key == key,
-    );
+    final cost = additionalDetails.isNotEmpty
+        ? (double.tryParse(additionalDetails.first.value.toString()) ?? 0.0).toStringAsFixed(0)
+        : '0';
 
-    if (count == null) {
-      return '0';
-    }
-
-    return (double.tryParse(count.toString()) ?? 0.0).toStringAsFixed(0);
+    return cost;
   }
 }
 

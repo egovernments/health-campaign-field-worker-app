@@ -605,7 +605,7 @@ mixin _$InventoryReportState {
     required TResult Function() empty,
     required TResult Function(Map<String, List<StockModel>> stockData) stock,
     required TResult Function(Map<String, List<StockReconciliationModel>> data,
-            Iterable<Iterable<MapEntry<String, dynamic>>> additionalData)
+            Iterable<MapEntry<String, dynamic>> additionalData)
         stockReconciliation,
   }) =>
       throw _privateConstructorUsedError;
@@ -615,7 +615,7 @@ mixin _$InventoryReportState {
     TResult? Function()? empty,
     TResult? Function(Map<String, List<StockModel>> stockData)? stock,
     TResult? Function(Map<String, List<StockReconciliationModel>> data,
-            Iterable<Iterable<MapEntry<String, dynamic>>> additionalData)?
+            Iterable<MapEntry<String, dynamic>> additionalData)?
         stockReconciliation,
   }) =>
       throw _privateConstructorUsedError;
@@ -625,7 +625,7 @@ mixin _$InventoryReportState {
     TResult Function()? empty,
     TResult Function(Map<String, List<StockModel>> stockData)? stock,
     TResult Function(Map<String, List<StockReconciliationModel>> data,
-            Iterable<Iterable<MapEntry<String, dynamic>>> additionalData)?
+            Iterable<MapEntry<String, dynamic>> additionalData)?
         stockReconciliation,
     required TResult orElse(),
   }) =>
@@ -725,7 +725,7 @@ class _$InventoryReportLoadingStateImpl implements InventoryReportLoadingState {
     required TResult Function() empty,
     required TResult Function(Map<String, List<StockModel>> stockData) stock,
     required TResult Function(Map<String, List<StockReconciliationModel>> data,
-            Iterable<Iterable<MapEntry<String, dynamic>>> additionalData)
+            Iterable<MapEntry<String, dynamic>> additionalData)
         stockReconciliation,
   }) {
     return loading();
@@ -738,7 +738,7 @@ class _$InventoryReportLoadingStateImpl implements InventoryReportLoadingState {
     TResult? Function()? empty,
     TResult? Function(Map<String, List<StockModel>> stockData)? stock,
     TResult? Function(Map<String, List<StockReconciliationModel>> data,
-            Iterable<Iterable<MapEntry<String, dynamic>>> additionalData)?
+            Iterable<MapEntry<String, dynamic>> additionalData)?
         stockReconciliation,
   }) {
     return loading?.call();
@@ -751,7 +751,7 @@ class _$InventoryReportLoadingStateImpl implements InventoryReportLoadingState {
     TResult Function()? empty,
     TResult Function(Map<String, List<StockModel>> stockData)? stock,
     TResult Function(Map<String, List<StockReconciliationModel>> data,
-            Iterable<Iterable<MapEntry<String, dynamic>>> additionalData)?
+            Iterable<MapEntry<String, dynamic>> additionalData)?
         stockReconciliation,
     required TResult orElse(),
   }) {
@@ -853,7 +853,7 @@ class _$InventoryReportEmptyStateImpl implements InventoryReportEmptyState {
     required TResult Function() empty,
     required TResult Function(Map<String, List<StockModel>> stockData) stock,
     required TResult Function(Map<String, List<StockReconciliationModel>> data,
-            Iterable<Iterable<MapEntry<String, dynamic>>> additionalData)
+            Iterable<MapEntry<String, dynamic>> additionalData)
         stockReconciliation,
   }) {
     return empty();
@@ -866,7 +866,7 @@ class _$InventoryReportEmptyStateImpl implements InventoryReportEmptyState {
     TResult? Function()? empty,
     TResult? Function(Map<String, List<StockModel>> stockData)? stock,
     TResult? Function(Map<String, List<StockReconciliationModel>> data,
-            Iterable<Iterable<MapEntry<String, dynamic>>> additionalData)?
+            Iterable<MapEntry<String, dynamic>> additionalData)?
         stockReconciliation,
   }) {
     return empty?.call();
@@ -879,7 +879,7 @@ class _$InventoryReportEmptyStateImpl implements InventoryReportEmptyState {
     TResult Function()? empty,
     TResult Function(Map<String, List<StockModel>> stockData)? stock,
     TResult Function(Map<String, List<StockReconciliationModel>> data,
-            Iterable<Iterable<MapEntry<String, dynamic>>> additionalData)?
+            Iterable<MapEntry<String, dynamic>> additionalData)?
         stockReconciliation,
     required TResult orElse(),
   }) {
@@ -1016,7 +1016,7 @@ class _$InventoryReportStockStateImpl implements InventoryReportStockState {
     required TResult Function() empty,
     required TResult Function(Map<String, List<StockModel>> stockData) stock,
     required TResult Function(Map<String, List<StockReconciliationModel>> data,
-            Iterable<Iterable<MapEntry<String, dynamic>>> additionalData)
+            Iterable<MapEntry<String, dynamic>> additionalData)
         stockReconciliation,
   }) {
     return stock(stockData);
@@ -1029,7 +1029,7 @@ class _$InventoryReportStockStateImpl implements InventoryReportStockState {
     TResult? Function()? empty,
     TResult? Function(Map<String, List<StockModel>> stockData)? stock,
     TResult? Function(Map<String, List<StockReconciliationModel>> data,
-            Iterable<Iterable<MapEntry<String, dynamic>>> additionalData)?
+            Iterable<MapEntry<String, dynamic>> additionalData)?
         stockReconciliation,
   }) {
     return stock?.call(stockData);
@@ -1042,7 +1042,7 @@ class _$InventoryReportStockStateImpl implements InventoryReportStockState {
     TResult Function()? empty,
     TResult Function(Map<String, List<StockModel>> stockData)? stock,
     TResult Function(Map<String, List<StockReconciliationModel>> data,
-            Iterable<Iterable<MapEntry<String, dynamic>>> additionalData)?
+            Iterable<MapEntry<String, dynamic>> additionalData)?
         stockReconciliation,
     required TResult orElse(),
   }) {
@@ -1113,7 +1113,7 @@ abstract class _$$InventoryReportStockReconciliationStateImplCopyWith<$Res> {
   @useResult
   $Res call(
       {Map<String, List<StockReconciliationModel>> data,
-      Iterable<Iterable<MapEntry<String, dynamic>>> additionalData});
+      Iterable<MapEntry<String, dynamic>> additionalData});
 }
 
 /// @nodoc
@@ -1140,7 +1140,7 @@ class __$$InventoryReportStockReconciliationStateImplCopyWithImpl<$Res>
       additionalData: null == additionalData
           ? _value.additionalData
           : additionalData // ignore: cast_nullable_to_non_nullable
-              as Iterable<Iterable<MapEntry<String, dynamic>>>,
+              as Iterable<MapEntry<String, dynamic>>,
     ));
   }
 }
@@ -1151,7 +1151,7 @@ class _$InventoryReportStockReconciliationStateImpl
     implements InventoryReportStockReconciliationState {
   const _$InventoryReportStockReconciliationStateImpl(
       {final Map<String, List<StockReconciliationModel>> data = const {},
-      this.additionalData = const [{}]})
+      this.additionalData = const <MapEntry<String, dynamic>>[]})
       : _data = data;
 
   final Map<String, List<StockReconciliationModel>> _data;
@@ -1165,7 +1165,7 @@ class _$InventoryReportStockReconciliationStateImpl
 
   @override
   @JsonKey()
-  final Iterable<Iterable<MapEntry<String, dynamic>>> additionalData;
+  final Iterable<MapEntry<String, dynamic>> additionalData;
 
   @override
   String toString() {
@@ -1204,7 +1204,7 @@ class _$InventoryReportStockReconciliationStateImpl
     required TResult Function() empty,
     required TResult Function(Map<String, List<StockModel>> stockData) stock,
     required TResult Function(Map<String, List<StockReconciliationModel>> data,
-            Iterable<Iterable<MapEntry<String, dynamic>>> additionalData)
+            Iterable<MapEntry<String, dynamic>> additionalData)
         stockReconciliation,
   }) {
     return stockReconciliation(data, additionalData);
@@ -1217,7 +1217,7 @@ class _$InventoryReportStockReconciliationStateImpl
     TResult? Function()? empty,
     TResult? Function(Map<String, List<StockModel>> stockData)? stock,
     TResult? Function(Map<String, List<StockReconciliationModel>> data,
-            Iterable<Iterable<MapEntry<String, dynamic>>> additionalData)?
+            Iterable<MapEntry<String, dynamic>> additionalData)?
         stockReconciliation,
   }) {
     return stockReconciliation?.call(data, additionalData);
@@ -1230,7 +1230,7 @@ class _$InventoryReportStockReconciliationStateImpl
     TResult Function()? empty,
     TResult Function(Map<String, List<StockModel>> stockData)? stock,
     TResult Function(Map<String, List<StockReconciliationModel>> data,
-            Iterable<Iterable<MapEntry<String, dynamic>>> additionalData)?
+            Iterable<MapEntry<String, dynamic>> additionalData)?
         stockReconciliation,
     required TResult orElse(),
   }) {
@@ -1285,11 +1285,11 @@ abstract class InventoryReportStockReconciliationState
     implements InventoryReportState {
   const factory InventoryReportStockReconciliationState(
           {final Map<String, List<StockReconciliationModel>> data,
-          final Iterable<Iterable<MapEntry<String, dynamic>>> additionalData}) =
+          final Iterable<MapEntry<String, dynamic>> additionalData}) =
       _$InventoryReportStockReconciliationStateImpl;
 
   Map<String, List<StockReconciliationModel>> get data;
-  Iterable<Iterable<MapEntry<String, dynamic>>> get additionalData;
+  Iterable<MapEntry<String, dynamic>> get additionalData;
   @JsonKey(ignore: true)
   _$$InventoryReportStockReconciliationStateImplCopyWith<
           _$InventoryReportStockReconciliationStateImpl>

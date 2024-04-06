@@ -24,18 +24,23 @@ class FacilityBloc extends Bloc<FacilityEvent, FacilityState> {
     FacilityLoadForProjectEvent event,
     FacilityStateEmitter emit,
   ) async {
-    // Emitting the loading state
-    emit(const FacilityLoadingState());
-    // Fetching the facilities for the project ID
-    List<InventoryFacilityModel>? facilities =
-        await inventorySingleton.getFacilitiesForProjectId();
-    // Checking if the facilities are null
-    if (facilities == null) {
-      // Emitting the empty state if facilities are null
-      emit(const FacilityEmptyState());
-    } else {
-      // Emitting the fetched state with the fetched facilities
-      emit(FacilityFetchedState(facilities: facilities));
+    try {
+      // Emitting the loading state
+      emit(const FacilityLoadingState());
+      // Fetching the facilities for the project ID
+      List<InventoryFacilityModel>? facilities =
+          await inventorySingleton.getFacilitiesForProjectId();
+      // Checking if the facilities are null
+      if (facilities == null) {
+        // Emitting the empty state if facilities are null
+        emit(const FacilityEmptyState());
+      } else {
+        // Emitting the fetched state with the fetched facilities
+        emit(FacilityFetchedState(facilities: facilities));
+      }
+    } catch (e) {
+      // Emitting the error state if an exception occurs
+      emit(const FacilityErrorState());
     }
   }
 }
@@ -63,4 +68,6 @@ class FacilityState with _$FacilityState {
   const factory FacilityState.fetched({
     required List<InventoryFacilityModel> facilities,
   }) = FacilityFetchedState;
+
+  const factory FacilityState.error() = FacilityErrorState;
 }
