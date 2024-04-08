@@ -33,6 +33,10 @@ migrate_working_dir/
 /build/
 **.apk
 .env
+.env-prod
+.env-qa
+.env-training
+.env-uat
 
 # Symbolication related
 app.*.symbols

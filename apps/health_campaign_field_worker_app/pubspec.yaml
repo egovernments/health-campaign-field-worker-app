@@ -59,7 +59,7 @@ dependencies:
   package_info_plus: ^5.0.1
   expandable: ^5.0.1
   flutter_svg: ^2.0.8
-  digit_showcase: ^0.0.1
+  # digit_showcase: ^0.0.1
   audioplayers: ^5.2.0
   gs1_barcode_parser: ^1.0.5
   qr_flutter: ^4.1.0
