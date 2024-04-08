@@ -294,6 +294,10 @@ class _InventoryReportDetailsPageState
                                                   child:
                                                   CircularProgressIndicator(),
                                                 ),
+                                                empty: () => const Center(
+                                                  child: Text(
+                                                      'No products found'),
+                                                ),
                                                 fetched: (productVariants) {
                                                   return DigitReactiveSearchDropdown<
                                                       ProductVariantModel>(

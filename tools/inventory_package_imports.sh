@@ -1,4 +1,4 @@
-# for adding imports and mappers of attendance
+# for adding imports and mappers of inventory
 
 cd ../apps/health_campaign_field_worker_app/lib || exit
 
@@ -59,3 +59,39 @@ sed -i ''"$last_mapper_line"'r '"$temp_mappers" "$data_model_file"
 # Remove the temporary files
 rm "$temp_imports"
 rm "$temp_mappers"
+
+# Adding localization delegates to the localization_delegates.dart file
+
+#!/bin/bash
+
+# Define the path to the Dart file
+dart_file_path="$app_root/utils/localization_delegates.dart"
+
+# Define the import statement
+import_statement="import 'package:inventory_management/blocs/app_localization.dart' as inventory_localization;"
+
+# Define the delegate
+delegate="inventory_localization.InventoryLocalization.getDelegate(getLocalizationString(isar,selectedLocale,),appConfig.languages!,),"
+
+# Convert the delegate string into a single line string
+delegate_single_line=$(echo "$delegate" | tr -d '\n')
+
+# Check if the import statement is in the file
+if grep -Fq "$import_statement" $dart_file_path
+then
+    echo "The import statement is already in the file."
+else
+    # If not, add it at the top of the file
+    echo -e "$import_statement\n$(cat $dart_file_path)" > $dart_file_path
+    echo "The import statement was added."
+fi
+
+# Check if the delegate is in the file
+if grep -Fq "$delegate_single_line" $dart_file_path
+then
+    echo "The delegate is already in the file."
+else
+    # If not, add it before the line containing the closing bracket of the list
+    sed -i '/^[ \t]*]/i '"$delegate" $dart_file_path
+    echo "The delegate was added."
+fi
