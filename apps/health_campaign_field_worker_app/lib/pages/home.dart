@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:attendance_management/pages/manage_attendance.dart';
+import 'package:attendance_management/router/attendance_router.gm.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
@@ -11,6 +11,7 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:inventory_management/models/entities/inventory_transport_type.dart';
+import 'package:inventory_management/router/inventory_router.gm.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/attendance/hcm_attendance_bloc.dart';
@@ -36,6 +37,7 @@ import '../widgets/progress_bar/beneficiary_progress.dart';
 import '../widgets/showcase/config/showcase_constants.dart';
 import '../widgets/showcase/showcase_button.dart';
 
+@RoutePage()
 class HomePage extends LocalizedStatefulWidget {
   const HomePage({
     super.key,

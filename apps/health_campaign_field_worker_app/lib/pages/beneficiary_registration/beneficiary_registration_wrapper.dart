@@ -7,8 +7,9 @@ import '../../models/data_model.dart';
 import '../../utils/extensions/extensions.dart';
 import '../../widgets/boundary_selection_wrapper.dart';
 
+@RoutePage()
 class BeneficiaryRegistrationWrapperPage extends StatelessWidget
-    with AutoRouteWrapper {
+    implements AutoRouteWrapper {
   final BeneficiaryRegistrationState initialState;
 
   const BeneficiaryRegistrationWrapperPage({

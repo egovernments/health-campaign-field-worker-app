@@ -10,6 +10,7 @@ import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
 import '../../../widgets/header/back_navigation_help_header.dart';
 
+@RoutePage()
 class ComplaintsDetailsViewPage extends StatelessWidget {
   final PgrServiceModel complaint;
 

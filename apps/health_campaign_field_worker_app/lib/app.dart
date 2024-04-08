@@ -1,7 +1,7 @@
 import 'package:attendance_management/blocs/app_localization.dart'
     as attendance_localization;
-import 'package:health_campaign_field_worker_app/blocs/facility/facility.dart';
-import 'package:health_campaign_field_worker_app/blocs/product_variant/product_variant.dart';
+import 'blocs/facility/facility.dart';
+import 'blocs/product_variant/product_variant.dart';
 import 'package:inventory_management/blocs/app_localization.dart'
     as inventory_localization;
 import 'package:digit_components/digit_components.dart';

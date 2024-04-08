@@ -22,6 +22,7 @@ import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/inventory/no_facilities_assigned_dialog.dart';
 import '../../widgets/localized.dart';
 
+@RoutePage()
 class ReferBeneficiaryPage extends LocalizedStatefulWidget {
   final bool isEditing;
   final String projectBeneficiaryClientRefId;

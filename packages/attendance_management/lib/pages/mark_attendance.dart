@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/widgets/attendance_acknowledgement.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_table_model.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
@@ -14,10 +15,12 @@ import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/localized.dart';
 import '../blocs/attendance_individual_bloc.dart';
 import '../models/enum_values.dart';
+import '../router/attendance_router.gm.dart';
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/circular_button.dart';
 import '../widgets/no_result_card.dart';
 
+@RoutePage()
 class MarkAttendancePage extends LocalizedStatefulWidget {
   final List<AttendeeModel> attendees;
   final String registerId;
@@ -416,7 +419,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                         ),
                       ),
                       onPressed: () {
-                        Navigator.of(context).pop();
+                        context.router.maybePop();
                       },
                     ),
                   ),
@@ -507,27 +510,23 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                         latitude: latitude,
                         longitude: longitude,
                       ));
-                      Navigator.of(context).pop(true);
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (context) => AttendanceAcknowledgementPage(
-                                  label: localizations.translate(i18.attendance
-                                      .attendanceSubmittedSuccessMsg),
-                                  actionLabel: localizations
-                                      .translate(i18.attendance.goHome),
-                                  action: () {
-                                    AttendanceSingleton().callSync();
-                                    Navigator.popUntil(
-                                        context, (route) => route.isFirst);
-                                  },
-                                  secondaryLabel: localizations.translate(
-                                      i18.attendance.goToAttendanceRegisters),
-                                  secondaryAction: () {
-                                    AttendanceSingleton().callSync();
-                                    Navigator.of(context).pop();
-                                    Navigator.of(context).pop(true);
-                                  },
-                                )),
+                      context.router.push(
+                        AttendanceAcknowledgementRoute(
+                          label: localizations.translate(
+                              i18.attendance.attendanceSubmittedSuccessMsg),
+                          actionLabel:
+                              localizations.translate(i18.attendance.goHome),
+                          action: () {
+                            AttendanceSingleton().callSync();
+                            context.router.popUntilRoot();
+                          },
+                          secondaryLabel: localizations.translate(
+                              i18.attendance.goToAttendanceRegisters),
+                          secondaryAction: () {
+                            AttendanceSingleton().callSync();
+                            context.router.maybePop();
+                          },
+                        ),
                       );
                     },
                   ),
