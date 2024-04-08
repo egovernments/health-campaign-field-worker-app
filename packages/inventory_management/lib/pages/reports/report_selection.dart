@@ -92,8 +92,6 @@ class _InventoryReportSelectionPageState
                     onPressed: () => context.router.push(
                       InventoryReportDetailsRoute(
                         reportType: InventoryReportType.receipt,
-                        projectId: InventorySingleton().projectId,
-                        isDistributor: InventorySingleton().isDistributor,
                       ),
                     ),
                   ),
@@ -109,8 +107,6 @@ class _InventoryReportSelectionPageState
                     onPressed: () => context.router.push(
                       InventoryReportDetailsRoute(
                         reportType: InventoryReportType.dispatch,
-                        isDistributor: InventorySingleton().isDistributor,
-                        projectId: InventorySingleton().projectId,
                       ),
                     ),
                   ),
@@ -126,8 +122,6 @@ class _InventoryReportSelectionPageState
                     onPressed: () => context.router.push(
                       InventoryReportDetailsRoute(
                         reportType: InventoryReportType.returned,
-                        projectId: InventorySingleton().projectId,
-                        isDistributor: InventorySingleton().isDistributor,
                       ),
                     ),
                   ),
@@ -144,8 +138,6 @@ class _InventoryReportSelectionPageState
                     onPressed: () => context.router.push(
                       InventoryReportDetailsRoute(
                         reportType: InventoryReportType.damage,
-                        projectId: InventorySingleton().projectId,
-                        isDistributor: InventorySingleton().isDistributor,
                       ),
                     ),
                   ),
@@ -162,8 +154,6 @@ class _InventoryReportSelectionPageState
                     onPressed: () => context.router.push(
                       InventoryReportDetailsRoute(
                         reportType: InventoryReportType.loss,
-                        projectId: InventorySingleton().projectId,
-                        isDistributor: InventorySingleton().isDistributor,
                       ),
                     ),
                   ),
@@ -181,8 +171,6 @@ class _InventoryReportSelectionPageState
                     onPressed: () => context.router.push(
                       InventoryReportDetailsRoute(
                         reportType: InventoryReportType.reconciliation,
-                        projectId: InventorySingleton().projectId,
-                        isDistributor: InventorySingleton().isDistributor,
                       ),
                     ),
                   ),

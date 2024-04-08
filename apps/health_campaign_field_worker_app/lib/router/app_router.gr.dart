@@ -296,6 +296,16 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    FacilitySelectionRoute.name: (routeData) {
+      final args = routeData.argsAs<FacilitySelectionRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: FacilitySelectionPage(
+          key: args.key,
+          facilities: args.facilities,
+        ),
+      );
+    },
     HFCreateReferralWrapperRoute.name: (routeData) {
       final args = routeData.argsAs<HFCreateReferralWrapperRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -1561,6 +1571,44 @@ class DoseAdministeredRouteArgs {
   @override
   String toString() {
     return 'DoseAdministeredRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [FacilitySelectionPage]
+class FacilitySelectionRoute extends PageRouteInfo<FacilitySelectionRouteArgs> {
+  FacilitySelectionRoute({
+    Key? key,
+    required List<FacilityModel> facilities,
+    List<PageRouteInfo>? children,
+  }) : super(
+          FacilitySelectionRoute.name,
+          args: FacilitySelectionRouteArgs(
+            key: key,
+            facilities: facilities,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'FacilitySelectionRoute';
+
+  static const PageInfo<FacilitySelectionRouteArgs> page =
+      PageInfo<FacilitySelectionRouteArgs>(name);
+}
+
+class FacilitySelectionRouteArgs {
+  const FacilitySelectionRouteArgs({
+    this.key,
+    required this.facilities,
+  });
+
+  final Key? key;
+
+  final List<FacilityModel> facilities;
+
+  @override
+  String toString() {
+    return 'FacilitySelectionRouteArgs{key: $key, facilities: $facilities}';
   }
 }
 

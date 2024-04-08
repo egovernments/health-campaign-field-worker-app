@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import '../../models/entities/facility.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/header/back_navigation_help_header.dart';
 
+@RoutePage()
 class FacilitySelectionPage extends StatelessWidget {
   final List<FacilityModel> facilities;
 
@@ -86,7 +88,7 @@ class FacilitySelectionPage extends StatelessWidget {
                     ),
                     SliverList(
                       delegate: SliverChildBuilderDelegate(
-                        (context, index) {
+                            (context, index) {
                           final facility = filteredFacilities[index];
 
                           return Container(
@@ -96,10 +98,10 @@ class FacilitySelectionPage extends StatelessWidget {
                               margin: const EdgeInsets.symmetric(horizontal: 8),
                               decoration: BoxDecoration(
                                 color:
-                                    DigitTheme.instance.colors.alabasterWhite,
+                                DigitTheme.instance.colors.alabasterWhite,
                                 border: Border(
                                   top:
-                                      index == 0 ? borderSide : BorderSide.none,
+                                  index == 0 ? borderSide : BorderSide.none,
                                   bottom: index == filteredFacilities.length - 1
                                       ? borderSide
                                       : BorderSide.none,

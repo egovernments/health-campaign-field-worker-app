@@ -10,16 +10,16 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i10;
 import 'package:flutter/material.dart' as _i11;
-import 'package:inventory_management/blocs/app_localization.dart' as _i13;
+import 'package:inventory_management/blocs/app_localization.dart' as _i12;
 import 'package:inventory_management/blocs/inventory_listener.dart' as _i15;
 import 'package:inventory_management/blocs/inventory_report.dart' as _i14;
 import 'package:inventory_management/blocs/record_stock.dart' as _i17;
 import 'package:inventory_management/models/entities/inventory_facility.dart'
-    as _i12;
+    as _i13;
 import 'package:inventory_management/models/entities/inventory_transport_type.dart'
     as _i16;
-import 'package:inventory_management/pages/acknowledgement.dart' as _i2;
-import 'package:inventory_management/pages/facility_selection.dart' as _i1;
+import 'package:inventory_management/pages/acknowledgement.dart' as _i1;
+import 'package:inventory_management/pages/facility_selection.dart' as _i2;
 import 'package:inventory_management/pages/manage_stocks.dart' as _i5;
 import 'package:inventory_management/pages/record_stock/record_stock_wrapper.dart'
     as _i6;
@@ -36,22 +36,12 @@ import 'package:inventory_management/pages/stock_reconciliation/stock_reconcilia
 abstract class $InventoryRoute extends _i10.AutoRouterModule {
   @override
   final Map<String, _i10.PageFactory> pagesMap = {
-    FacilitySelectionRoute.name: (routeData) {
-      final args = routeData.argsAs<FacilitySelectionRouteArgs>();
-      return _i10.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: _i1.FacilitySelectionPage(
-          key: args.key,
-          facilities: args.facilities,
-        ),
-      );
-    },
     InventoryAcknowledgementRoute.name: (routeData) {
       final args = routeData.argsAs<InventoryAcknowledgementRouteArgs>(
           orElse: () => const InventoryAcknowledgementRouteArgs());
       return _i10.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i2.InventoryAcknowledgementPage(
+        child: _i1.InventoryAcknowledgementPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
           isDataRecordSuccess: args.isDataRecordSuccess,
@@ -61,16 +51,24 @@ abstract class $InventoryRoute extends _i10.AutoRouterModule {
         ),
       );
     },
+    InventoryFacilitySelectionRoute.name: (routeData) {
+      final args = routeData.argsAs<InventoryFacilitySelectionRouteArgs>();
+      return _i10.AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: _i2.InventoryFacilitySelectionPage(
+          key: args.key,
+          facilities: args.facilities,
+        ),
+      );
+    },
     InventoryReportDetailsRoute.name: (routeData) {
       final args = routeData.argsAs<InventoryReportDetailsRouteArgs>();
       return _i10.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: _i3.InventoryReportDetailsPage(
-          isDistributor: args.isDistributor,
           key: args.key,
           appLocalizations: args.appLocalizations,
           reportType: args.reportType,
-          projectId: args.projectId,
         ),
       );
     },
@@ -158,51 +156,12 @@ abstract class $InventoryRoute extends _i10.AutoRouterModule {
 }
 
 /// generated route for
-/// [_i1.FacilitySelectionPage]
-class FacilitySelectionRoute
-    extends _i10.PageRouteInfo<FacilitySelectionRouteArgs> {
-  FacilitySelectionRoute({
-    _i11.Key? key,
-    required List<_i12.InventoryFacilityModel> facilities,
-    List<_i10.PageRouteInfo>? children,
-  }) : super(
-          FacilitySelectionRoute.name,
-          args: FacilitySelectionRouteArgs(
-            key: key,
-            facilities: facilities,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'FacilitySelectionRoute';
-
-  static const _i10.PageInfo<FacilitySelectionRouteArgs> page =
-      _i10.PageInfo<FacilitySelectionRouteArgs>(name);
-}
-
-class FacilitySelectionRouteArgs {
-  const FacilitySelectionRouteArgs({
-    this.key,
-    required this.facilities,
-  });
-
-  final _i11.Key? key;
-
-  final List<_i12.InventoryFacilityModel> facilities;
-
-  @override
-  String toString() {
-    return 'FacilitySelectionRouteArgs{key: $key, facilities: $facilities}';
-  }
-}
-
-/// generated route for
-/// [_i2.InventoryAcknowledgementPage]
+/// [_i1.InventoryAcknowledgementPage]
 class InventoryAcknowledgementRoute
     extends _i10.PageRouteInfo<InventoryAcknowledgementRouteArgs> {
   InventoryAcknowledgementRoute({
     _i11.Key? key,
-    _i13.InventoryLocalization? appLocalizations,
+    _i12.InventoryLocalization? appLocalizations,
     bool isDataRecordSuccess = false,
     String? label,
     String? description,
@@ -239,7 +198,7 @@ class InventoryAcknowledgementRouteArgs {
 
   final _i11.Key? key;
 
-  final _i13.InventoryLocalization? appLocalizations;
+  final _i12.InventoryLocalization? appLocalizations;
 
   final bool isDataRecordSuccess;
 
@@ -256,24 +215,59 @@ class InventoryAcknowledgementRouteArgs {
 }
 
 /// generated route for
+/// [_i2.InventoryFacilitySelectionPage]
+class InventoryFacilitySelectionRoute
+    extends _i10.PageRouteInfo<InventoryFacilitySelectionRouteArgs> {
+  InventoryFacilitySelectionRoute({
+    _i11.Key? key,
+    required List<_i13.InventoryFacilityModel> facilities,
+    List<_i10.PageRouteInfo>? children,
+  }) : super(
+          InventoryFacilitySelectionRoute.name,
+          args: InventoryFacilitySelectionRouteArgs(
+            key: key,
+            facilities: facilities,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'InventoryFacilitySelectionRoute';
+
+  static const _i10.PageInfo<InventoryFacilitySelectionRouteArgs> page =
+      _i10.PageInfo<InventoryFacilitySelectionRouteArgs>(name);
+}
+
+class InventoryFacilitySelectionRouteArgs {
+  const InventoryFacilitySelectionRouteArgs({
+    this.key,
+    required this.facilities,
+  });
+
+  final _i11.Key? key;
+
+  final List<_i13.InventoryFacilityModel> facilities;
+
+  @override
+  String toString() {
+    return 'InventoryFacilitySelectionRouteArgs{key: $key, facilities: $facilities}';
+  }
+}
+
+/// generated route for
 /// [_i3.InventoryReportDetailsPage]
 class InventoryReportDetailsRoute
     extends _i10.PageRouteInfo<InventoryReportDetailsRouteArgs> {
   InventoryReportDetailsRoute({
-    required bool? isDistributor,
     _i11.Key? key,
-    _i13.InventoryLocalization? appLocalizations,
+    _i12.InventoryLocalization? appLocalizations,
     required _i14.InventoryReportType reportType,
-    required String projectId,
     List<_i10.PageRouteInfo>? children,
   }) : super(
           InventoryReportDetailsRoute.name,
           args: InventoryReportDetailsRouteArgs(
-            isDistributor: isDistributor,
             key: key,
             appLocalizations: appLocalizations,
             reportType: reportType,
-            projectId: projectId,
           ),
           initialChildren: children,
         );
@@ -286,26 +280,20 @@ class InventoryReportDetailsRoute
 
 class InventoryReportDetailsRouteArgs {
   const InventoryReportDetailsRouteArgs({
-    required this.isDistributor,
     this.key,
     this.appLocalizations,
     required this.reportType,
-    required this.projectId,
   });
-
-  final bool? isDistributor;
 
   final _i11.Key? key;
 
-  final _i13.InventoryLocalization? appLocalizations;
+  final _i12.InventoryLocalization? appLocalizations;
 
   final _i14.InventoryReportType reportType;
 
-  final String projectId;
-
   @override
   String toString() {
-    return 'InventoryReportDetailsRouteArgs{isDistributor: $isDistributor, key: $key, appLocalizations: $appLocalizations, reportType: $reportType, projectId: $projectId}';
+    return 'InventoryReportDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations, reportType: $reportType}';
   }
 }
 
@@ -320,7 +308,7 @@ class InventoryReportSelectionRoute
     required bool? isWareHouseMgr,
     required String? loggedInUserUuid,
     _i11.Key? key,
-    _i13.InventoryLocalization? appLocalizations,
+    _i12.InventoryLocalization? appLocalizations,
     List<_i10.PageRouteInfo>? children,
   }) : super(
           InventoryReportSelectionRoute.name,
@@ -365,7 +353,7 @@ class InventoryReportSelectionRouteArgs {
 
   final _i11.Key? key;
 
-  final _i13.InventoryLocalization? appLocalizations;
+  final _i12.InventoryLocalization? appLocalizations;
 
   @override
   String toString() {
@@ -378,7 +366,7 @@ class InventoryReportSelectionRouteArgs {
 class ManageStocksRoute extends _i10.PageRouteInfo<ManageStocksRouteArgs> {
   ManageStocksRoute({
     _i11.Key? key,
-    _i13.InventoryLocalization? appLocalizations,
+    _i12.InventoryLocalization? appLocalizations,
     required _i15.InventoryListener inventoryListener,
     required String projectId,
     required String userId,
@@ -424,7 +412,7 @@ class ManageStocksRouteArgs {
 
   final _i11.Key? key;
 
-  final _i13.InventoryLocalization? appLocalizations;
+  final _i12.InventoryLocalization? appLocalizations;
 
   final _i15.InventoryListener inventoryListener;
 
@@ -490,7 +478,7 @@ class RecordStockWrapperRouteArgs {
 class StockDetailsRoute extends _i10.PageRouteInfo<StockDetailsRouteArgs> {
   StockDetailsRoute({
     _i11.Key? key,
-    _i13.InventoryLocalization? appLocalizations,
+    _i12.InventoryLocalization? appLocalizations,
     List<_i10.PageRouteInfo>? children,
   }) : super(
           StockDetailsRoute.name,
@@ -515,7 +503,7 @@ class StockDetailsRouteArgs {
 
   final _i11.Key? key;
 
-  final _i13.InventoryLocalization? appLocalizations;
+  final _i12.InventoryLocalization? appLocalizations;
 
   @override
   String toString() {
@@ -534,7 +522,7 @@ class StockReconciliationRoute
     required bool? isWareHouseMgr,
     required String? loggedInUserUuid,
     _i11.Key? key,
-    _i13.InventoryLocalization? appLocalizations,
+    _i12.InventoryLocalization? appLocalizations,
     List<_i10.PageRouteInfo>? children,
   }) : super(
           StockReconciliationRoute.name,
@@ -579,7 +567,7 @@ class StockReconciliationRouteArgs {
 
   final _i11.Key? key;
 
-  final _i13.InventoryLocalization? appLocalizations;
+  final _i12.InventoryLocalization? appLocalizations;
 
   @override
   String toString() {
@@ -593,7 +581,7 @@ class WarehouseDetailsRoute
     extends _i10.PageRouteInfo<WarehouseDetailsRouteArgs> {
   WarehouseDetailsRoute({
     _i11.Key? key,
-    _i13.InventoryLocalization? appLocalizations,
+    _i12.InventoryLocalization? appLocalizations,
     List<_i10.PageRouteInfo>? children,
   }) : super(
           WarehouseDetailsRoute.name,
@@ -618,7 +606,7 @@ class WarehouseDetailsRouteArgs {
 
   final _i11.Key? key;
 
-  final _i13.InventoryLocalization? appLocalizations;
+  final _i12.InventoryLocalization? appLocalizations;
 
   @override
   String toString() {
