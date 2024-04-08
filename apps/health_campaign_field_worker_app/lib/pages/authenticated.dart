@@ -17,7 +17,6 @@ import '../blocs/search_households/search_bloc_common_wrapper.dart';
 import '../blocs/search_households/search_by_head.dart';
 import '../blocs/search_households/search_households.dart';
 import '../blocs/search_households/tag_by_search.dart';
-import '../blocs/search_referrals/search_referrals.dart';
 import '../blocs/service/service.dart';
 import '../blocs/sync/sync.dart';
 import '../data/data_repository.dart';
@@ -377,15 +376,6 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                                   DownsyncSearchModel>>(),
                           networkManager: ctx.read(),
                         ),
-                      ),
-                      BlocProvider(
-                        create: (_) => SearchReferralsBloc(
-                          userUid: context.loggedInUserUuid,
-                          projectId: context.projectId,
-                          beneficiaryType: context.beneficiaryType,
-                          hfReferralDataRepository: context.repository<
-                              HFReferralModel, HFReferralSearchModel>(),
-                        )..add(const SearchReferralsClearEvent()),
                       ),
                       BlocProvider(
                         create: (_) => ServiceBloc(

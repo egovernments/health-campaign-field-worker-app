@@ -1438,6 +1438,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.0"
+  referral_reconciliation:
+    dependency: "direct main"
+    description:
+      path: "../../packages/referral_reconciliation"
+      relative: true
+    source: path
+    version: "0.0.1+1"
   remove_emoji_input_formatter:
     dependency: transitive
     description:

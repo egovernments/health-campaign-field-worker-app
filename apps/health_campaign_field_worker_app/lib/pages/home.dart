@@ -15,7 +15,6 @@ import '../blocs/attendance/hcm_attendance_bloc.dart';
 import '../blocs/auth/auth.dart';
 import '../blocs/search_households/search_bloc_common_wrapper.dart';
 import '../blocs/search_households/search_households.dart';
-import '../blocs/search_referrals/search_referrals.dart';
 import '../blocs/sync/sync.dart';
 import '../data/data_repository.dart';
 import '../data/local_store/secure_store/secure_store.dart';
@@ -389,14 +388,14 @@ class _HomePageState extends LocalizedState<HomePage> {
         ),
       ),
       i18.home.beneficiaryReferralLabel:
-          homeShowcaseData.beneficiaryReferral.buildWith(
+          homeShowcaseData.hfBeneficiaryReferral.buildWith(
         child: HomeItemCard(
           icon: Icons.supervised_user_circle_rounded,
           label: i18.home.beneficiaryReferralLabel,
           onPressed: () async {
-            final searchBloc = context.read<SearchReferralsBloc>();
-            searchBloc.add(const SearchReferralsClearEvent());
-            await context.router.push(SearchReferralsRoute());
+            // final searchBloc = context.read<SearchReferralsBloc>();
+            // searchBloc.add(const SearchReferralsClearEvent());
+            // await context.router.push(SearchReferralsRoute());
           },
         ),
       ),
@@ -550,7 +549,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                 context.read<
                     LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
                 context.read<
-                    LocalRepository<HFReferralModel, HFReferralSearchModel>>(),
+                    LocalRepository<HcmHFReferralModel,
+                        HcmHFReferralSearchModel>>(),
                 context.read<
                     LocalRepository<HCMAttendanceLogModel,
                         HCMAttendanceLogSearchModel>>(),
@@ -580,7 +580,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                 context.read<
                     RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
                 context.read<
-                    RemoteRepository<HFReferralModel, HFReferralSearchModel>>(),
+                    RemoteRepository<HcmHFReferralModel,
+                        HcmHFReferralSearchModel>>(),
                 context.read<
                     RemoteRepository<HCMAttendanceLogModel,
                         HCMAttendanceLogSearchModel>>(),

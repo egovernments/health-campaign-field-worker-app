@@ -4,7 +4,11 @@
 library models;
 
 import 'package:dart_mappable/dart_mappable.dart';
+
 import 'data_model.dart';
+
+export 'package:attendance_management/models/attendance_log.dart';
+
 export 'entities/additional_fields_type.dart';
 export 'entities/address.dart';
 export 'entities/address_type.dart';
@@ -17,9 +21,9 @@ export 'entities/document.dart';
 export 'entities/downsync.dart';
 export 'entities/facility.dart';
 export 'entities/gender.dart';
-export 'entities/h_f_referral.dart';
 export 'entities/hcm_attendance_log_model.dart';
 export 'entities/hcm_attendance_model.dart';
+export 'entities/hcm_hf_referral.dart';
 export 'entities/household.dart';
 export 'entities/household_member.dart';
 export 'entities/identifier.dart';
@@ -55,7 +59,6 @@ export 'oplog/oplog_entry.dart';
 export 'pgr_complaints/pgr_address.dart';
 export 'pgr_complaints/pgr_complaints.dart';
 export 'pgr_complaints/pgr_complaints_response.dart';
-export 'package:attendance_management/models/attendance_log.dart';
 
 part 'data_model.mapper.dart';
 
@@ -76,6 +79,7 @@ abstract class DataModel {
   NameModel,
   HCMAttendanceLogModel,
   HCMAttendanceRegisterModel,
+  HcmHFReferralModel,
 ])
 abstract class EntityModel extends DataModel with EntityModelMappable {
   final AuditDetails? auditDetails;
@@ -89,10 +93,9 @@ abstract class EntityModel extends DataModel with EntityModelMappable {
 
 @MappableClass(ignoreNull: true, includeSubClasses: [
   AddressSearchModel,
-  HFReferralSearchModel,
   HCMAttendanceLogSearchModel,
   HCMAttendanceSearchModel,
-
+  HcmHFReferralSearchModel,
 ])
 abstract class EntitySearchModel extends DataModel
     with EntitySearchModelMappable {

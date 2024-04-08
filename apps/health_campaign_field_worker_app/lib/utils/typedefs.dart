@@ -48,8 +48,8 @@ typedef ReferralDataRepository
 typedef DownsyncDataRepository
     = DataRepository<DownsyncModel, DownsyncSearchModel>;
 typedef HFReferralDataRepository
-    = DataRepository<HFReferralModel, HFReferralSearchModel>;
+    = DataRepository<HcmHFReferralModel, HcmHFReferralSearchModel>;
 typedef AttendanceDataRepository
     = DataRepository<HCMAttendanceRegisterModel, HCMAttendanceSearchModel>;
-    typedef AttendanceLogDataRepository
+typedef AttendanceLogDataRepository
     = DataRepository<HCMAttendanceLogModel, HCMAttendanceLogSearchModel>;

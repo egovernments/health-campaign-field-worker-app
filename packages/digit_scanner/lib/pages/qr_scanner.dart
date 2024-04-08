@@ -4,7 +4,6 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:camera/camera.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
-import 'package:digit_scanner/blocs/scanner_listeners.dart';
 import 'package:digit_scanner/utils/extensions/extensions.dart';
 import 'package:digit_scanner/widgets/localized.dart';
 import 'package:digit_scanner/widgets/vision_detector_views/painters/barcode_detector_painter.dart';
@@ -22,12 +21,10 @@ class DigitScannerPage extends LocalizedStatefulWidget {
   final int quantity;
   final bool isGS1code;
   final bool isEditEnabled;
-  final ScannerListeners scannerListeners;
 
   const DigitScannerPage({
     super.key,
     super.appLocalizations,
-    required this.scannerListeners,
     required this.quantity,
     required this.isGS1code,
     this.singleValue = false,
@@ -59,9 +56,6 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
   @override
   void initState() {
     initializeCameras();
-    ScannerSingleton().setScannerListeners(
-      scannerListeners: widget.scannerListeners,
-    );
     if (!widget.isEditEnabled) {
       context
           .read<DigitScannerBloc>()

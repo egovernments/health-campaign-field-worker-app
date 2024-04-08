@@ -63,7 +63,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
       onWillPop: isHealthFacilityWorker && widget.referralClientRefId != null
           ? () async => false
           : () async => _onBackPressed(context),
-        child: Scaffold(
+      child: Scaffold(
         body: BlocBuilder<ServiceDefinitionBloc, ServiceDefinitionState>(
           builder: (context, state) {
             state.mapOrNull(
@@ -270,7 +270,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                         if (shouldSubmit ?? false) {
                           if (isHealthFacilityWorker &&
                               widget.referralClientRefId != null) {
-                            router.navigate(SearchReferralsRoute());
+                            // router.navigate(SearchReferralsRoute());
                           } else {
                             router.navigate(ChecklistRoute());
                           }
