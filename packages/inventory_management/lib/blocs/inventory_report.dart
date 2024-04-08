@@ -14,8 +14,11 @@ typedef InventoryReportEmitter = Emitter<InventoryReportState>;
 // Bloc for handling inventory report related events and states
 class InventoryReportBloc
     extends Bloc<InventoryReportEvent, InventoryReportState> {
+  final InventorySingleton inventorySingleton;
+
   // Constructor for the bloc
-  InventoryReportBloc() : super(const InventoryReportEmptyState()) {
+  InventoryReportBloc({required this.inventorySingleton})
+      : super(const InventoryReportEmptyState()) {
     // Registering the event handlers
     on(_handleLoadDataEvent);
     on(_handleLoadStockReconciliationDataEvent);
@@ -30,19 +33,14 @@ class InventoryReportBloc
     // Emitting the loading state
     emit(const InventoryReportLoadingState());
     // Fetching the inventory reports
-    await InventorySingleton().fetchInventoryReports(
-      FetchInventoryReports(
-        reportType: event.reportType,
-        facilityId: event.facilityId,
-        productVariantId: event.productVariantId,
-        stocks: (stocks) {
-          // Emitting the fetched state with the fetched stock data
-          emit(InventoryReportStockState(
-            stockData: stocks,
-          ));
-        },
-      ),
+    Map<String, List<StockModel>> stocks =
+        await inventorySingleton.fetchInventoryReports(
+      reportType: event.reportType,
+      facilityId: event.facilityId,
+      productVariantId: event.productVariantId,
     );
+    // Emitting the fetched state with the fetched stock data
+    emit(InventoryReportStockState(stockData: stocks));
   }
 
   // Event handler for loading state
@@ -61,18 +59,15 @@ class InventoryReportBloc
   ) async {
     // Emitting the loading state
     emit(const InventoryReportLoadingState());
-    // Handling the stock reconciliation report
-    await InventorySingleton().handleStockReconciliationReport(
-        StockReconciliationReport(
-            facilityId: event.facilityId,
-            productVariantId: event.productVariantId,
-            stockReconciliationReport:
-                (stockReconciliationReport, additionalData) {
-              // Emitting the fetched state with the fetched stock reconciliation data
-              emit(InventoryReportStockReconciliationState(
-                data: stockReconciliationReport,
-              ));
-            }));
+    // Fetching the stock reconciliation reports
+    StockReconciliationReport? data =
+        await inventorySingleton.handleStockReconciliationReport(
+      facilityId: event.facilityId,
+      productVariantId: event.productVariantId,
+    );
+    // Emitting the fetched state with the fetched stock data
+    emit(InventoryReportStockReconciliationState(
+        data: data!.stockReconModel, additionalData: data.additionalData));
   }
 }
 
@@ -113,7 +108,8 @@ class InventoryReportState with _$InventoryReportState {
   // State for when the stock reconciliation data has been fetched
   const factory InventoryReportState.stockReconciliation({
     @Default({}) Map<String, List<StockReconciliationModel>> data,
-    @Default([{}]) Iterable<Iterable<MapEntry<String, dynamic>>> additionalData,
+    @Default(<MapEntry<String, dynamic>>[])
+    Iterable<MapEntry<String, dynamic>> additionalData,
   }) = InventoryReportStockReconciliationState;
 }
 

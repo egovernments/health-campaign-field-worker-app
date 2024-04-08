@@ -16,6 +16,7 @@ import '../pages/beneficiary/beneficiary_details.dart';
 import '../pages/beneficiary/beneficiary_wrapper.dart';
 import '../pages/beneficiary/deliver_intervention.dart';
 import '../pages/beneficiary/dose_administered.dart';
+import '../pages/beneficiary/facility_selection.dart';
 import '../pages/beneficiary/household_overview.dart';
 import '../pages/beneficiary/record_past_delivery_details.dart';
 import '../pages/beneficiary/refer_beneficiary.dart';
@@ -214,6 +215,11 @@ class AppRouter extends _$AppRouter {
           path: 'select-project-facilities',
         ),
 
+        AutoRoute(
+          page: FacilitySelectionRoute.page,
+          path: 'select-facilities',
+        ),
+
         /// Project Selection
         AutoRoute(
           page: ProjectSelectionRoute.page,
@@ -306,7 +312,7 @@ class AppRouter extends _$AppRouter {
                   initial: true),
               AutoRoute(page: StockDetailsRoute.page, path: 'details'),
             ]),
-        AutoRoute(page: FacilitySelectionRoute.page, path: 'select-facilities'),
+        AutoRoute(page: InventoryFacilitySelectionRoute.page, path: 'inventory-select-facilities'),
         AutoRoute(
             page: StockReconciliationRoute.page, path: 'stock-reconciliation'),
         AutoRoute(

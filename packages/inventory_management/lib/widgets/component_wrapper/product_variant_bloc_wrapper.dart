@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../blocs/inventory_listener.dart';
 import '../../blocs/product_variant.dart';
 import '../../models/entities/project_resource.dart';
 
@@ -18,6 +19,7 @@ class ProductVariantBlocWrapper extends StatelessWidget {
     return BlocProvider<ProductVariantBloc>(
       create: (_) => ProductVariantBloc(
         const ProductVariantEmptyState(),
+        inventorySingleton: InventorySingleton(),
       )..add(
           ProductVariantLoadEvent(
             query: ProjectResourceSearchModel(

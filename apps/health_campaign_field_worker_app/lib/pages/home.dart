@@ -339,14 +339,14 @@ class _HomePageState extends LocalizedState<HomePage> {
                     context.router.push(ManageStocksRoute(
                       isWareHouseMgr: context.loggedInUserRoles
                           .where((role) =>
-                              role.code == RolesType.warehouseManager.toValue())
+                      role.code == RolesType.warehouseManager.toValue())
                           .toList()
                           .isNotEmpty,
                       isDistributor: context.loggedInUserRoles
                           .where(
                             (role) =>
-                                role.code == RolesType.distributor.toValue(),
-                          )
+                        role.code == RolesType.distributor.toValue(),
+                      )
                           .toList()
                           .isNotEmpty,
                       boundaryName: context.boundary.name!,
@@ -366,8 +366,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                       userId: context.loggedInUserUuid,
                       transportType: appConfiguration.transportTypes
                           ?.map((e) => InventoryTransportTypes()
-                            ..name = e.name
-                            ..code = e.code)
+                        ..name = e.name
+                        ..code = e.code)
                           .toList(),
                     ));
                   },

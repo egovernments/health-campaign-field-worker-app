@@ -15,8 +15,10 @@ typedef ProductVariantEmitter = Emitter<ProductVariantState>;
 // Bloc for handling product variant related events and states
 class ProductVariantBloc
     extends Bloc<ProductVariantEvent, ProductVariantState> {
+  final InventorySingleton inventorySingleton;
+
   // Constructor for the bloc
-  ProductVariantBloc(super.initialState) {
+  ProductVariantBloc(super.initialState, {required this.inventorySingleton}) {
     // Registering the event handler for loading product variants
     on(_handleLoad);
   }
@@ -30,7 +32,7 @@ class ProductVariantBloc
     emit(const ProductVariantLoadingState());
     // Fetching the product variants
     List<ProductVariantModel>? productVariants =
-        await InventorySingleton().getProductVariants();
+        await inventorySingleton.getProductVariants();
 
     // Checking if the product variants are null
     if (productVariants == null || productVariants.isEmpty) {

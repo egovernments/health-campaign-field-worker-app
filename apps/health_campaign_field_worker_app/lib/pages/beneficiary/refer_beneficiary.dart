@@ -262,16 +262,16 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                           ),
                           InkWell(
                             onTap: () async {
-                              // final parent =
-                              //     context.router.parent() as StackRouter;
-                              // final facility = await parent.push<FacilityModel>(
-                              //   FacilitySelectionRoute(
-                              //     facilities: facilities,
-                              //   ),
-                              // );
-                              //
-                              // if (facility == null) return;
-                              // form.control(_referredToKey).value = facility;
+                              final parent =
+                                  context.router.parent() as StackRouter;
+                              final facility = await parent.push<FacilityModel>(
+                                FacilitySelectionRoute(
+                                  facilities: facilities,
+                                ),
+                              );
+
+                              if (facility == null) return;
+                              form.control(_referredToKey).value = facility;
                             },
                             child: IgnorePointer(
                               child: DigitTextFormField(

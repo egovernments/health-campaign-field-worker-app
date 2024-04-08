@@ -1,8 +1,10 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/localized.dart';
 
+@RoutePage()
 class InventoryAcknowledgementPage extends LocalizedStatefulWidget {
   bool isDataRecordSuccess;
   String? label;
@@ -34,8 +36,8 @@ class _AcknowledgementPageState extends LocalizedState<InventoryAcknowledgementP
             ),
         descriptionWidget: widget.isDataRecordSuccess
             ? DigitTableCard(
-                element: widget.descriptionTableData ?? {},
-              )
+          element: widget.descriptionTableData ?? {},
+        )
             : null,
         label: widget.label ??
             localizations.translate(
@@ -46,7 +48,7 @@ class _AcknowledgementPageState extends LocalizedState<InventoryAcknowledgementP
         },
         enableBackToSearch: widget.isDataRecordSuccess ? false : true,
         actionLabel:
-            localizations.translate(i18.acknowledgementSuccess.actionLabelText),
+        localizations.translate(i18.acknowledgementSuccess.actionLabelText),
       ),
       bottomNavigationBar: Offstage(
         offstage: !widget.isDataRecordSuccess,

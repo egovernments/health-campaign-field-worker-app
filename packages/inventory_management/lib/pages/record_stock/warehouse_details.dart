@@ -295,7 +295,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                             await Navigator.of(context).push(
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                FacilitySelectionPage(
+                                                InventoryFacilitySelectionPage(
                                               facilities: facilities,
                                             ),
                                           ),
@@ -359,7 +359,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                                     .push(
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    FacilitySelectionPage(
+                                                    InventoryFacilitySelectionPage(
                                                   facilities: facilities,
                                                 ),
                                               ),
