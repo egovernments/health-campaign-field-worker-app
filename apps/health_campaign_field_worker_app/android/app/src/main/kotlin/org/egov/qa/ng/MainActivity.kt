@@ -1,4 +1,4 @@
-package org.egov.salama
+package org.egov.qa.ng
 import android.app.NotificationManager
 import android.content.Context
 import io.flutter.embedding.android.FlutterActivity
