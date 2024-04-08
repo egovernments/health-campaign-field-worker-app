@@ -47,13 +47,11 @@ export 'entities/service_attributes.dart';
 export 'entities/service_definition.dart';
 export 'entities/side_effect.dart';
 export 'entities/status.dart';
-export 'entities/stock.dart';
-export 'entities/stock_reconciliation.dart';
+export 'entities/hcm_stock.dart';
+export 'entities/hcm_stock_recon.dart';
 export 'entities/target.dart';
 export 'entities/task.dart';
 export 'entities/task_resource.dart';
-export 'entities/transaction_reason.dart';
-export 'entities/transaction_type.dart';
 export 'entities/user.dart';
 export 'oplog/oplog_entry.dart';
 export 'pgr_complaints/pgr_address.dart';
@@ -80,6 +78,8 @@ abstract class DataModel {
   HCMAttendanceLogModel,
   HCMAttendanceRegisterModel,
   HcmHFReferralModel,
+  HcmStockModel,
+  HcmStockReconciliationModel,
 ])
 abstract class EntityModel extends DataModel with EntityModelMappable {
   final AuditDetails? auditDetails;
@@ -96,6 +96,8 @@ abstract class EntityModel extends DataModel with EntityModelMappable {
   HCMAttendanceLogSearchModel,
   HCMAttendanceSearchModel,
   HcmHFReferralSearchModel,
+  HcmStockSearchModel,
+  HcmStockReconciliationSearchModel,
 ])
 abstract class EntitySearchModel extends DataModel
     with EntitySearchModelMappable {

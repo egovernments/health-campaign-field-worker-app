@@ -1,4 +1,5 @@
 import 'package:attendance_management/blocs/attendance_listeners.dart';
+import 'package:attendance_management/models/attendance_log.dart';
 import 'package:attendance_management/models/attendance_register.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';

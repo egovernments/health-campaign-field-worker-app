@@ -23,6 +23,7 @@ import '../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 
+@RoutePage()
 class DeliverInterventionPage extends LocalizedStatefulWidget {
   final bool isEditing;
 

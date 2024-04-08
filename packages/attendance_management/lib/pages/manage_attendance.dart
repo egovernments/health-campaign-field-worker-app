@@ -1,6 +1,7 @@
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/blocs/date_session_bloc.dart';
 import 'package:attendance_management/pages/session_select.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
@@ -9,10 +10,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
 import '../models/enum_values.dart';
+import '../router/attendance_router.gm.dart';
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
 import '../widgets/no_result_card.dart';
 
+@RoutePage()
 class ManageAttendancePage extends LocalizedStatefulWidget {
   final AttendanceListeners attendanceListeners;
   final String projectId;
@@ -284,13 +287,10 @@ class RegisterCard extends StatelessWidget {
                         ),
                       );
                     } else {
-                      await Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              AttendanceDateSessionSelectionPage(
-                            registers: registers,
-                            registerID: registerId,
-                          ),
+                      await context.router.push(
+                        AttendanceDateSessionSelectionRoute(
+                          registers: registers,
+                          registerID: registerId,
                         ),
                       );
                       attendanceBloc.add(const AttendanceEvents.initial());

@@ -1,3 +1,4 @@
+import 'package:inventory_management/models/entities/stock.dart';
 import 'package:isar/isar.dart';
 
 import '../../../../models/data_model.dart';
@@ -49,15 +50,15 @@ class OpLog {
         return entity;
 
       case "stock":
-        final entity = StockModelMapper.fromJson(entityString);
+        final entity = HcmStockModelMapper.fromJson(entityString);
+        return entity;
+
+      case "stockReconciliation":
+        final entity = HcmStockReconciliationModelMapper.fromJson(entityString);
         return entity;
 
       case "hFReferral":
-        final entity = HcmHFReferralModelMapper.fromJson(entityString);
-        return entity;
-
-      case "service":
-        final entity = ServiceModelMapper.fromJson(entityString);
+        final entity = HFReferralModelMapper.fromJson(entityString);
         return entity;
 
       default:

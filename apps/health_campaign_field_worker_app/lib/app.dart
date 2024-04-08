@@ -1,5 +1,9 @@
 import 'package:attendance_management/blocs/app_localization.dart'
     as attendance_localization;
+import 'blocs/facility/facility.dart';
+import 'blocs/product_variant/product_variant.dart';
+import 'package:inventory_management/blocs/app_localization.dart'
+    as inventory_localization;
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_scanner/blocs/app_localization.dart'
     as scanner_localization;
@@ -247,7 +251,34 @@ class MainApplicationState extends State<MainApplication>
                             attendanceLogRemoteRepository: ctx.read<
                                 RemoteRepository<HCMAttendanceLogModel,
                                     HCMAttendanceLogSearchModel>>(),
+                            stockLocalRepository: ctx.read<
+                                LocalRepository<HcmStockModel,
+                                    HcmStockSearchModel>>(),
+                            stockRemoteRepository: ctx.read<
+                                RemoteRepository<HcmStockModel,
+                                    HcmStockSearchModel>>(),
                             context: context,
+                          ),
+                        ),
+                        BlocProvider(
+                          create: (context) => FacilityBloc(
+                            facilityLocalRepository: context.read<
+                                LocalRepository<FacilityModel,
+                                    FacilitySearchModel>>(),
+                            projectFacilityLocalRepository: context.read<
+                                LocalRepository<ProjectFacilityModel,
+                                    ProjectFacilitySearchModel>>(),
+                          ),
+                        ),
+                        BlocProvider(
+                          create: (context) => ProductVariantBloc(
+                            const ProductVariantEmptyState(),
+                            productVariantDataRepository: context.read<
+                                RemoteRepository<ProductVariantModel,
+                                    ProductVariantSearchModel>>(),
+                            projectResourceDataRepository: context.read<
+                                RemoteRepository<ProjectResourceModel,
+                                    ProjectResourceSearchModel>>(),
                           ),
                         ),
                       ],
@@ -299,6 +330,14 @@ class MainApplicationState extends State<MainApplication>
                               GlobalCupertinoLocalizations.delegate,
                               GlobalMaterialLocalizations.delegate,
                               attendance_localization.AttendanceLocalization
+                                  .getDelegate(
+                                getLocalizationString(
+                                  widget.isar,
+                                  selectedLocale,
+                                ),
+                                appConfig.languages!,
+                              ),
+                              inventory_localization.InventoryLocalization
                                   .getDelegate(
                                 getLocalizationString(
                                   widget.isar,

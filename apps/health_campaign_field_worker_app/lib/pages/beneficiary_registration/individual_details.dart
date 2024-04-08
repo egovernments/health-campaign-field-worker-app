@@ -27,6 +27,7 @@ import '../../widgets/localized.dart';
 import '../../widgets/showcase/config/showcase_constants.dart';
 import '../../widgets/showcase/showcase_button.dart';
 
+@RoutePage()
 class IndividualDetailsPage extends LocalizedStatefulWidget {
   final bool isHeadOfHousehold;
 

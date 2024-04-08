@@ -6,6 +6,7 @@ import '../../../blocs/complaints_inbox/complaints_inbox.dart';
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
 
+@RoutePage()
 class ComplaintsInboxWrapperPage extends StatelessWidget {
   const ComplaintsInboxWrapperPage({
     Key? key,

@@ -29,9 +29,9 @@ typedef ProjectStaffDataRepository
     = DataRepository<ProjectStaffModel, ProjectStaffSearchModel>;
 typedef ProjectTypeDataRepository
     = DataRepository<ProjectTypeModel, ProjectTypeSearchModel>;
-typedef StockDataRepository = DataRepository<StockModel, StockSearchModel>;
+typedef StockDataRepository = DataRepository<HcmStockModel, HcmStockSearchModel>;
 typedef StockReconciliationDataRepository
-    = DataRepository<StockReconciliationModel, StockReconciliationSearchModel>;
+    = DataRepository<HcmStockReconciliationModel, HcmStockReconciliationSearchModel>;
 typedef TaskDataRepository = DataRepository<TaskModel, TaskSearchModel>;
 typedef ServiceDefinitionDataRepository
     = DataRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>;

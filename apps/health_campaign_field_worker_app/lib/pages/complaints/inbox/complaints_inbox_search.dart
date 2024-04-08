@@ -10,6 +10,7 @@ import '../../../utils/utils.dart';
 import '../../../widgets/localized.dart';
 import 'package:flutter/services.dart';
 
+@RoutePage()
 class ComplaintsInboxSearchPage extends LocalizedStatefulWidget {
   const ComplaintsInboxSearchPage({
     super.key,

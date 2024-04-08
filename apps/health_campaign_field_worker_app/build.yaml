@@ -1,0 +1,12 @@
+targets:
+  $default:
+    builders:
+      auto_route_generator:auto_route_generator:
+        options:
+        generate_for:
+          - lib/pages/**.dart
+          - test/pages/**.dart
+      auto_route_generator:auto_router_generator:
+        generate_for:
+          - lib/router/**router.dart
+          - lib/test/router/**router.dart

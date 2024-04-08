@@ -18,6 +18,7 @@ import '../../utils/constants.dart';
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/localizaed.dart';
 
+@RoutePage()
 class RecordReferralDetailsPage extends LocalizedStatefulWidget {
   final bool isEditing;
   final String projectId;

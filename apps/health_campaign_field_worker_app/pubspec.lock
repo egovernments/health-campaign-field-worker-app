@@ -132,18 +132,18 @@ packages:
     dependency: "direct main"
     description:
       name: auto_route
-      sha256: "12047baeca0e01df93165ef33275b32119d72699ab9a49dc64c20e78f586f96d"
+      sha256: eb33554581a0a4aa7e6da0f13a44291a55bf71359012f1d9feb41634ff908ff8
       url: "https://pub.dev"
     source: hosted
-    version: "5.0.4"
+    version: "7.9.2"
   auto_route_generator:
     dependency: "direct dev"
     description:
       name: auto_route_generator
-      sha256: de5bfbc02ae4eebb339dd90d325749ae7536e903f6513ef72b88954072d72b0e
+      sha256: "11067a3bcd643812518fe26c0c9ec073990286cabfd9d74b6da9ef9b913c4d22"
       url: "https://pub.dev"
     source: hosted
-    version: "5.0.3"
+    version: "7.3.2"
   battery_plus:
     dependency: "direct main"
     description:
@@ -1030,6 +1030,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.18.1"
+  inventory_management:
+    dependency: "direct main"
+    description:
+      path: "../../packages/inventory_management"
+      relative: true
+    source: path
+    version: "0.0.1+2"
   io:
     dependency: transitive
     description:

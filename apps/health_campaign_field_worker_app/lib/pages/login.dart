@@ -5,10 +5,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../blocs/auth/auth.dart';
+import '../router/app_router.dart';
 import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/localized.dart';
 
+@RoutePage()
 class LoginPage extends LocalizedStatefulWidget {
   const LoginPage({
     Key? key,
@@ -195,7 +197,7 @@ class _LoginPageState extends LocalizedState<LoginPage> {
 
   FormGroup buildForm() => fb.group(<String, Object>{
         _userId: FormControl<String>(
-          value: '',
+          value: 'WHManager',
           validators: [Validators.required],
         ),
         _password: FormControl<String>(
