@@ -1,39 +1,35 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# Inventory Management Package
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+This package is designed to manage the inventory of your application.
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+- Manage Stocks: Receipt, Issued, Returned, Damaged and Loss of stocks and send the data to parent application.
+- Stock Reconciliation: Reconcile the stock data with the parent application.
+- View Reports: View the reports of the stocks.
 
-## Getting started
+## Getting Started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+To use this package, add the following dependency to your `pubspec.yaml` file:
 
-## Usage
+```yaml
+dependencies:
+  inventory_management: ^0.0.1
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+Here is how inventory package interacts with parent app
 
-```dart
-const like = 'sample';
-```
+![inventory_management](https://github.com/egovernments/health-campaign-field-worker-app/assets/154230258/e22ba6a1-bb73-4ec2-b93d-8aada56590e8)
 
-## Additional information
+New files or changes needed in HCM App:
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+1. Run inventory_imports.sh script to add the localization and add skeleton bloc
+2. Create model classes which import attendance models and add companion class
+3. Create repositories local and remote as per project requirements and structure
+4. Add typedef for repositories in untils/typedef Initialize repo in network manager, and create oplog
+5. Add navigation to manage attendance page from hcm app and pass the required fields
+
+Below are the sequence diagrams on each feature on how it interacts with HCM App:
+
+![record_stock_inventory](https://github.com/egovernments/health-campaign-field-worker-app/assets/154230258/77a3a60b-38de-4aa7-8a00-bd1a3139549e)
+![stock_recon_flow](https://github.com/egovernments/health-campaign-field-worker-app/assets/154230258/60b8037b-ff54-4f42-84d3-298216f70ecf)
+![stock_reports](https://github.com/egovernments/health-campaign-field-worker-app/assets/154230258/1d78b9b2-0816-4e88-8332-12b0cdc8bcdf)
