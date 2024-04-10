@@ -90,494 +90,498 @@ class _StockReconciliationPageState
 
     return widget.projectId.isEmpty
         ? const Center(
-      child: Text('No project selected'),
-    )
+            child: Text('No project selected'),
+          )
         : FacilityBlocWrapper(
-      projectId: widget.projectId,
-      child: ProductVariantBlocWrapper(
-        projectId: widget.projectId,
-        child: BlocProvider(
-          create: (context) => StockReconciliationBloc(
-            StockReconciliationState(
+            projectId: widget.projectId,
+            child: ProductVariantBlocWrapper(
               projectId: widget.projectId,
-              dateOfReconciliation: DateTime.now(),
-            ),
-          ),
-          child: BlocConsumer<StockReconciliationBloc,
-              StockReconciliationState>(
-            listener: (context, stockState) {
-              if (!stockState.persisted) return;
+              child: BlocProvider(
+                create: (context) => StockReconciliationBloc(
+                  StockReconciliationState(
+                    projectId: widget.projectId,
+                    dateOfReconciliation: DateTime.now(),
+                  ),
+                ),
+                child: BlocConsumer<StockReconciliationBloc,
+                    StockReconciliationState>(
+                  listener: (context, stockState) {
+                    if (!stockState.persisted) return;
 
-              context.router.replace(
-                InventoryAcknowledgementRoute(),
-              );
-            },
-            builder: (context, stockState) {
-              return ReactiveFormBuilder(
-                form: () => _form(
-                    widget.isDistributor! && !widget.isWareHouseMgr!),
-                builder: (ctx, form, child) {
-                  return Scaffold(
-                    body: ScrollableContent(
-                      enableFixedButton: true,
-                      header: const BackNavigationHelpHeaderWidget(),
-                      footer: SizedBox(
-                        child: DigitCard(
-                          margin: const EdgeInsets.fromLTRB(
-                              0, kPadding, 0, 0),
-                          padding: const EdgeInsets.fromLTRB(
-                              kPadding, 0, kPadding, 0),
-                          child: ReactiveFormConsumer(
-                            builder: (ctx, form, child) =>
-                                DigitElevatedButton(
-                                  onPressed: !form.valid ||
-                                      (form
-                                          .control(_productVariantKey)
-                                          .value ==
-                                          null)
-                                      ? null
-                                      : () async {
-                                    form.markAllAsTouched();
-                                    FocusManager.instance.primaryFocus
-                                        ?.unfocus();
-                                    if (!form.valid) return;
+                    context.router.replace(
+                      InventoryAcknowledgementRoute(),
+                    );
+                  },
+                  builder: (context, stockState) {
+                    return ReactiveFormBuilder(
+                      form: () => _form(
+                          widget.isDistributor! && !widget.isWareHouseMgr!),
+                      builder: (ctx, form, child) {
+                        return Scaffold(
+                          body: ScrollableContent(
+                            enableFixedButton: true,
+                            header: const BackNavigationHelpHeaderWidget(),
+                            footer: SizedBox(
+                              child: DigitCard(
+                                margin: const EdgeInsets.fromLTRB(
+                                    0, kPadding, 0, 0),
+                                padding: const EdgeInsets.fromLTRB(
+                                    kPadding, 0, kPadding, 0),
+                                child: ReactiveFormConsumer(
+                                  builder: (ctx, form, child) =>
+                                      DigitElevatedButton(
+                                    onPressed: !form.valid ||
+                                            (form
+                                                    .control(_productVariantKey)
+                                                    .value ==
+                                                null)
+                                        ? null
+                                        : () async {
+                                            form.markAllAsTouched();
+                                            FocusManager.instance.primaryFocus
+                                                ?.unfocus();
+                                            if (!form.valid) return;
 
-                                    final bloc = ctx.read<
-                                        StockReconciliationBloc>();
+                                            final bloc = ctx.read<
+                                                StockReconciliationBloc>();
 
-                                    final facilityId =
-                                    widget.isDistributor! &&
-                                        !widget.isWareHouseMgr!
-                                        ? InventoryFacilityModel(
-                                      id: widget
-                                          .loggedInUserUuid!,
-                                    )
-                                        : InventoryFacilityModel(
-                                      id: selectedFacilityId
-                                          .toString(),
-                                    );
+                                            final facilityId =
+                                                widget.isDistributor! &&
+                                                        !widget.isWareHouseMgr!
+                                                    ? InventoryFacilityModel(
+                                                        id: widget
+                                                            .loggedInUserUuid!,
+                                                      )
+                                                    : InventoryFacilityModel(
+                                                        id: selectedFacilityId
+                                                            .toString(),
+                                                      );
 
-                                    final productVariant = form
-                                        .control(_productVariantKey)
-                                        .value as ProductVariantModel;
+                                            final productVariant = form
+                                                .control(_productVariantKey)
+                                                .value as ProductVariantModel;
 
-                                    final calculatedCount = form
-                                        .control(_manualCountKey)
-                                        .value as String;
+                                            final calculatedCount = form
+                                                .control(_manualCountKey)
+                                                .value as String;
 
-                                    final comments = form
-                                        .control(
-                                      _reconciliationCommentsKey,
-                                    )
-                                        .value as String?;
+                                            final comments = form
+                                                .control(
+                                                  _reconciliationCommentsKey,
+                                                )
+                                                .value as String?;
 
-                                    final model =
-                                    StockReconciliationModel(
-                                      clientReferenceId:
-                                      IdGen.i.identifier,
-                                      dateOfReconciliation: stockState
-                                          .dateOfReconciliation
-                                          .millisecondsSinceEpoch,
-                                      facilityId: facilityId.id,
-                                      productVariantId:
-                                      productVariant.id,
-                                      calculatedCount: stockState
-                                          .stockInHand
-                                          .toInt(),
-                                      commentsOnReconciliation:
-                                      comments,
-                                      physicalCount: int.tryParse(
-                                        calculatedCount,
-                                      ) ??
-                                          0,
-                                    );
+                                            final model =
+                                                StockReconciliationModel(
+                                              clientReferenceId:
+                                                  IdGen.i.identifier,
+                                              dateOfReconciliation: stockState
+                                                  .dateOfReconciliation
+                                                  .millisecondsSinceEpoch,
+                                              facilityId: facilityId.id,
+                                              productVariantId:
+                                                  productVariant.id,
+                                              calculatedCount: stockState
+                                                  .stockInHand
+                                                  .toInt(),
+                                              commentsOnReconciliation:
+                                                  comments,
+                                              physicalCount: int.tryParse(
+                                                    calculatedCount,
+                                                  ) ??
+                                                  0,
+                                            );
 
-                                    final submit =
-                                    await DigitDialog.show<bool>(
-                                      context,
-                                      options: DigitDialogOptions(
-                                        titleText:
-                                        localizations.translate(
-                                          i18.stockReconciliationDetails
-                                              .dialogTitle,
-                                        ),
-                                        contentText:
-                                        localizations.translate(
-                                          i18.stockReconciliationDetails
-                                              .dialogContent,
-                                        ),
-                                        primaryAction:
-                                        DigitDialogActions(
-                                          label:
-                                          localizations.translate(
-                                            i18.common.coreCommonSubmit,
-                                          ),
-                                          action: (context) {
-                                            Navigator.of(
+                                            final submit =
+                                                await DigitDialog.show<bool>(
                                               context,
-                                              rootNavigator: true,
-                                            ).pop(true);
-                                          },
-                                        ),
-                                        secondaryAction:
-                                        DigitDialogActions(
-                                          label:
-                                          localizations.translate(
-                                            i18.common.coreCommonCancel,
-                                          ),
-                                          action: (context) =>
-                                              Navigator.of(
-                                                context,
-                                                rootNavigator: true,
-                                              ).pop(false),
-                                        ),
-                                      ),
-                                    );
+                                              options: DigitDialogOptions(
+                                                titleText:
+                                                    localizations.translate(
+                                                  i18.stockReconciliationDetails
+                                                      .dialogTitle,
+                                                ),
+                                                contentText:
+                                                    localizations.translate(
+                                                  i18.stockReconciliationDetails
+                                                      .dialogContent,
+                                                ),
+                                                primaryAction:
+                                                    DigitDialogActions(
+                                                  label:
+                                                      localizations.translate(
+                                                    i18.common.coreCommonSubmit,
+                                                  ),
+                                                  action: (context) {
+                                                    Navigator.of(
+                                                      context,
+                                                      rootNavigator: true,
+                                                    ).pop(true);
+                                                  },
+                                                ),
+                                                secondaryAction:
+                                                    DigitDialogActions(
+                                                  label:
+                                                      localizations.translate(
+                                                    i18.common.coreCommonCancel,
+                                                  ),
+                                                  action: (context) =>
+                                                      Navigator.of(
+                                                    context,
+                                                    rootNavigator: true,
+                                                  ).pop(false),
+                                                ),
+                                              ),
+                                            );
 
-                                    if (submit ?? false) {
-                                      bloc.add(
-                                        StockReconciliationCreateEvent(
-                                          model,
-                                        ),
-                                      );
-                                    }
-                                  },
-                                  child: Center(
-                                    child: Text(
-                                      localizations.translate(
-                                        i18.common.coreCommonSubmit,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                          ),
-                        ),
-                      ),
-                      children: [
-                        DigitCard(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                localizations.translate(
-                                  i18.stockReconciliationDetails
-                                      .reconciliationPageTitle,
-                                ),
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .displayMedium,
-                              ),
-                              if (widget.isWareHouseMgr!)
-                                BlocConsumer<FacilityBloc, FacilityState>(
-                                  listener: (context, state) =>
-                                      state.whenOrNull(
-                                        empty: () =>
-                                            NoFacilitiesAssignedDialog.show(
-                                              context,
-                                            ),
-                                      ),
-                                  builder: (context, state) {
-                                    return state.maybeWhen(
-                                        orElse: () => const Offstage(),
-                                        loading: () => const Center(
-                                          child:
-                                          CircularProgressIndicator(),
-                                        ),
-                                        fetched: (facilities) {
-                                          return InkWell(
-                                            onTap: () async {
-                                              final stockReconciliationBloc =
-                                              context.read<
-                                                  StockReconciliationBloc>();
-                                              final facility = await context
-                                                  .router
-                                                  .push(InventoryFacilitySelectionRoute(
-                                                  facilities:
-                                                  facilities))
-                                              as InventoryFacilityModel?;
-
-                                              if (facility == null)
-                                                return;
-                                              form
-                                                  .control(_facilityKey)
-                                                  .value =
-                                                  localizations.translate(
-                                                    'FAC_${facility.id}',
-                                                  );
-                                              setState(() {
-                                                selectedFacilityId =
-                                                    facility.id;
-                                              });
-                                              stockReconciliationBloc.add(
-                                                StockReconciliationSelectFacilityEvent(
-                                                  facility,
+                                            if (submit ?? false) {
+                                              bloc.add(
+                                                StockReconciliationCreateEvent(
+                                                  model,
                                                 ),
                                               );
-                                            },
-                                            child: IgnorePointer(
-                                              child: DigitTextFormField(
-                                                hideKeyboard: true,
-                                                label: localizations
-                                                    .translate(
-                                                  i18.stockReconciliationDetails
-                                                      .facilityLabel,
-                                                ),
-                                                suffix: const Padding(
-                                                  padding:
-                                                  EdgeInsets.all(8.0),
-                                                  child:
-                                                  Icon(Icons.search),
-                                                ),
-                                                formControlName:
-                                                _facilityKey,
-                                                readOnly: true,
-                                                isRequired: true,
-                                                onTap: () async {
-                                                  final stockReconciliationBloc =
-                                                  context.read<
-                                                      StockReconciliationBloc>();
-
-                                                  final facility = await context
-                                                      .router
-                                                      .push(InventoryFacilitySelectionRoute(
-                                                      facilities:
-                                                      facilities))
-                                                  as InventoryFacilityModel?;
-
-                                                  if (facility == null)
-                                                    return;
-                                                  form
-                                                      .control(
-                                                      _facilityKey)
-                                                      .value =
-                                                      localizations
-                                                          .translate(
-                                                        'FAC_${facility.id}',
-                                                      );
-                                                  setState(() {
-                                                    selectedFacilityId =
-                                                        facility.id;
-                                                  });
-                                                  stockReconciliationBloc
-                                                      .add(
-                                                    StockReconciliationSelectFacilityEvent(
-                                                      facility,
-                                                    ),
-                                                  );
-                                                },
-                                              ),
-                                            ),
-                                          );
-                                        });
-                                  },
-                                ),
-                              BlocBuilder<ProductVariantBloc,
-                                  ProductVariantState>(
-                                builder: (context, state) {
-                                  return state.maybeWhen(
-                                    orElse: () => const Offstage(),
-                                    loading: () => const Center(
-                                      child: CircularProgressIndicator(),
-                                    ),
-                                    fetched: (productVariants) {
-                                      return DigitReactiveSearchDropdown<
-                                          ProductVariantModel>(
-                                        label: localizations.translate(
-                                          i18.stockReconciliationDetails
-                                              .productLabel,
-                                        ),
-                                        form: form,
-                                        menuItems: productVariants,
-                                        formControlName:
-                                        _productVariantKey,
-                                        isRequired: true,
-                                        valueMapper: (value) {
-                                          return localizations.translate(
-                                            value.sku ?? value.id,
-                                          );
-                                        },
-                                        onSelected: (value) {
-                                          ctx
-                                              .read<
-                                              StockReconciliationBloc>()
-                                              .add(
-                                            StockReconciliationSelectProductEvent(
-                                              value.id,
-                                              isDistributor: widget
-                                                  .isDistributor! &&
-                                                  !widget
-                                                      .isWareHouseMgr!,
-                                            ),
-                                          );
-                                        },
-                                        validationMessage:
-                                        localizations.translate(i18
-                                            .common
-                                            .corecommonRequired),
-                                        emptyText:
+                                            }
+                                          },
+                                    child: Center(
+                                      child: Text(
                                         localizations.translate(
-                                          i18.common.noMatchFound,
+                                          i18.common.coreCommonSubmit,
                                         ),
-                                      );
-                                    },
-                                  );
-                                },
-                              ),
-                              DigitTableCard(
-                                fraction: 2.5,
-                                gap: kPadding,
-                                element: {
-                                  localizations.translate(i18
-                                      .stockReconciliationDetails
-                                      .dateOfReconciliation):
-                                  DateFormat('dd MMMM yyyy').format(
-                                    stockState.dateOfReconciliation,
+                                      ),
+                                    ),
                                   ),
-                                },
-                              ),
-                              const DigitDivider(),
-                              DigitTableCard(
-                                fraction: 2.5,
-                                gap: kPadding,
-                                element: {
-                                  localizations.translate(
-                                    i18.stockReconciliationDetails
-                                        .stockReceived,
-                                  ): stockState.stockReceived
-                                      .toStringAsFixed(0),
-                                },
-                              ),
-                              const DigitDivider(),
-                              DigitTableCard(
-                                fraction: 2.5,
-                                gap: kPadding,
-                                element: {
-                                  localizations.translate(
-                                    i18.stockReconciliationDetails
-                                        .stockIssued,
-                                  ): stockState.stockIssued
-                                      .toStringAsFixed(0),
-                                },
-                              ),
-                              const DigitDivider(),
-                              DigitTableCard(
-                                fraction: 2.5,
-                                gap: kPadding,
-                                element: {
-                                  localizations.translate(
-                                    i18.stockReconciliationDetails
-                                        .stockReturned,
-                                  ): stockState.stockReturned
-                                      .toStringAsFixed(0),
-                                },
-                              ),
-                              const DigitDivider(),
-                              DigitTableCard(
-                                fraction: 2.5,
-                                gap: kPadding,
-                                element: {
-                                  localizations.translate(
-                                    i18.stockReconciliationDetails
-                                        .stockLost,
-                                  ): stockState.stockLost
-                                      .toStringAsFixed(0),
-                                },
-                              ),
-                              const DigitDivider(),
-                              DigitTableCard(
-                                fraction: 2.5,
-                                gap: kPadding,
-                                element: {
-                                  localizations.translate(
-                                    i18.stockReconciliationDetails
-                                        .stockDamaged,
-                                  ): stockState.stockDamaged
-                                      .toStringAsFixed(0),
-                                },
-                              ),
-                              const DigitDivider(),
-                              DigitTableCard(
-                                fraction: 2.5,
-                                gap: kPadding,
-                                element: {
-                                  localizations.translate(
-                                    i18.stockReconciliationDetails
-                                        .stockOnHand,
-                                  ): stockState.stockInHand
-                                      .toStringAsFixed(0),
-                                },
-                              ),
-                              DigitInfoCard(
-                                margin: EdgeInsets.zero,
-                                icon: Icons.info,
-                                backgroundColor:
-                                theme.colorScheme.tertiaryContainer,
-                                iconColor: theme.colorScheme.surfaceTint,
-                                description: localizations.translate(
-                                  i18.stockReconciliationDetails
-                                      .infoCardContent,
-                                ),
-                                title: localizations.translate(
-                                  i18.stockReconciliationDetails
-                                      .infoCardTitle,
                                 ),
                               ),
-                              const SizedBox(
-                                height: kPadding * 2,
-                              ),
-                              const DigitDivider(),
-                              const SizedBox(
-                                height: kPadding,
-                              ),
-                              DigitTextFormField(
-                                isRequired: true,
-                                label: localizations.translate(
-                                  i18.stockReconciliationDetails
-                                      .manualCountLabel,
+                            ),
+                            children: [
+                              DigitCard(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      localizations.translate(
+                                        i18.stockReconciliationDetails
+                                            .reconciliationPageTitle,
+                                      ),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .displayMedium,
+                                    ),
+                                    if (widget.isWareHouseMgr!)
+                                      BlocConsumer<FacilityBloc, FacilityState>(
+                                        listener: (context, state) =>
+                                            state.whenOrNull(
+                                          empty: () =>
+                                              NoFacilitiesAssignedDialog.show(
+                                            context,
+                                          ),
+                                        ),
+                                        builder: (context, state) {
+                                          return state.maybeWhen(
+                                              orElse: () => const Offstage(),
+                                              loading: () => const Center(
+                                                    child:
+                                                        CircularProgressIndicator(),
+                                                  ),
+                                              fetched: (facilities) {
+                                                return InkWell(
+                                                  onTap: () async {
+                                                    final stockReconciliationBloc =
+                                                        context.read<
+                                                            StockReconciliationBloc>();
+                                                    final facility = await context
+                                                            .router
+                                                            .push(InventoryFacilitySelectionRoute(
+                                                                facilities:
+                                                                    facilities))
+                                                        as InventoryFacilityModel?;
+
+                                                    if (facility == null)
+                                                      return;
+                                                    form
+                                                            .control(_facilityKey)
+                                                            .value =
+                                                        localizations.translate(
+                                                      'FAC_${facility.id}',
+                                                    );
+                                                    setState(() {
+                                                      selectedFacilityId =
+                                                          facility.id;
+                                                    });
+                                                    stockReconciliationBloc.add(
+                                                      StockReconciliationSelectFacilityEvent(
+                                                        facility,
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: IgnorePointer(
+                                                    child: DigitTextFormField(
+                                                      hideKeyboard: true,
+                                                      label: localizations
+                                                          .translate(
+                                                        i18.stockReconciliationDetails
+                                                            .facilityLabel,
+                                                      ),
+                                                      suffix: const Padding(
+                                                        padding:
+                                                            EdgeInsets.all(8.0),
+                                                        child:
+                                                            Icon(Icons.search),
+                                                      ),
+                                                      formControlName:
+                                                          _facilityKey,
+                                                      readOnly: true,
+                                                      isRequired: true,
+                                                      onTap: () async {
+                                                        final stockReconciliationBloc =
+                                                            context.read<
+                                                                StockReconciliationBloc>();
+
+                                                        final facility = await context
+                                                                .router
+                                                                .push(InventoryFacilitySelectionRoute(
+                                                                    facilities:
+                                                                        facilities))
+                                                            as InventoryFacilityModel?;
+
+                                                        if (facility == null)
+                                                          return;
+                                                        form
+                                                                .control(
+                                                                    _facilityKey)
+                                                                .value =
+                                                            localizations
+                                                                .translate(
+                                                          'FAC_${facility.id}',
+                                                        );
+                                                        setState(() {
+                                                          selectedFacilityId =
+                                                              facility.id;
+                                                        });
+                                                        stockReconciliationBloc
+                                                            .add(
+                                                          StockReconciliationSelectFacilityEvent(
+                                                            facility,
+                                                          ),
+                                                        );
+                                                      },
+                                                    ),
+                                                  ),
+                                                );
+                                              });
+                                        },
+                                      ),
+                                    BlocBuilder<ProductVariantBloc,
+                                        ProductVariantState>(
+                                      builder: (context, state) {
+                                        return state.maybeWhen(
+                                          orElse: () => const Offstage(),
+                                          loading: () => const Center(
+                                            child: CircularProgressIndicator(),
+                                          ),
+                                          empty: () => const Center(
+                                            child: Text(
+                                                'No products found'),
+                                          ),
+                                          fetched: (productVariants) {
+                                            return DigitReactiveSearchDropdown<
+                                                ProductVariantModel>(
+                                              label: localizations.translate(
+                                                i18.stockReconciliationDetails
+                                                    .productLabel,
+                                              ),
+                                              form: form,
+                                              menuItems: productVariants,
+                                              formControlName:
+                                                  _productVariantKey,
+                                              isRequired: true,
+                                              valueMapper: (value) {
+                                                return localizations.translate(
+                                                  value.sku ?? value.id,
+                                                );
+                                              },
+                                              onSelected: (value) {
+                                                ctx
+                                                    .read<
+                                                        StockReconciliationBloc>()
+                                                    .add(
+                                                      StockReconciliationSelectProductEvent(
+                                                        value.id,
+                                                        isDistributor: widget
+                                                                .isDistributor! &&
+                                                            !widget
+                                                                .isWareHouseMgr!,
+                                                      ),
+                                                    );
+                                              },
+                                              validationMessage:
+                                                  localizations.translate(i18
+                                                      .common
+                                                      .corecommonRequired),
+                                              emptyText:
+                                                  localizations.translate(
+                                                i18.common.noMatchFound,
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      },
+                                    ),
+                                    DigitTableCard(
+                                      fraction: 2.5,
+                                      gap: kPadding,
+                                      element: {
+                                        localizations.translate(i18
+                                                .stockReconciliationDetails
+                                                .dateOfReconciliation):
+                                            DateFormat('dd MMMM yyyy').format(
+                                          stockState.dateOfReconciliation,
+                                        ),
+                                      },
+                                    ),
+                                    const DigitDivider(),
+                                    DigitTableCard(
+                                      fraction: 2.5,
+                                      gap: kPadding,
+                                      element: {
+                                        localizations.translate(
+                                          i18.stockReconciliationDetails
+                                              .stockReceived,
+                                        ): stockState.stockReceived
+                                            .toStringAsFixed(0),
+                                      },
+                                    ),
+                                    const DigitDivider(),
+                                    DigitTableCard(
+                                      fraction: 2.5,
+                                      gap: kPadding,
+                                      element: {
+                                        localizations.translate(
+                                          i18.stockReconciliationDetails
+                                              .stockIssued,
+                                        ): stockState.stockIssued
+                                            .toStringAsFixed(0),
+                                      },
+                                    ),
+                                    const DigitDivider(),
+                                    DigitTableCard(
+                                      fraction: 2.5,
+                                      gap: kPadding,
+                                      element: {
+                                        localizations.translate(
+                                          i18.stockReconciliationDetails
+                                              .stockReturned,
+                                        ): stockState.stockReturned
+                                            .toStringAsFixed(0),
+                                      },
+                                    ),
+                                    const DigitDivider(),
+                                    DigitTableCard(
+                                      fraction: 2.5,
+                                      gap: kPadding,
+                                      element: {
+                                        localizations.translate(
+                                          i18.stockReconciliationDetails
+                                              .stockLost,
+                                        ): stockState.stockLost
+                                            .toStringAsFixed(0),
+                                      },
+                                    ),
+                                    const DigitDivider(),
+                                    DigitTableCard(
+                                      fraction: 2.5,
+                                      gap: kPadding,
+                                      element: {
+                                        localizations.translate(
+                                          i18.stockReconciliationDetails
+                                              .stockDamaged,
+                                        ): stockState.stockDamaged
+                                            .toStringAsFixed(0),
+                                      },
+                                    ),
+                                    const DigitDivider(),
+                                    DigitTableCard(
+                                      fraction: 2.5,
+                                      gap: kPadding,
+                                      element: {
+                                        localizations.translate(
+                                          i18.stockReconciliationDetails
+                                              .stockOnHand,
+                                        ): stockState.stockInHand
+                                            .toStringAsFixed(0),
+                                      },
+                                    ),
+                                    DigitInfoCard(
+                                      margin: EdgeInsets.zero,
+                                      icon: Icons.info,
+                                      backgroundColor:
+                                          theme.colorScheme.tertiaryContainer,
+                                      iconColor: theme.colorScheme.surfaceTint,
+                                      description: localizations.translate(
+                                        i18.stockReconciliationDetails
+                                            .infoCardContent,
+                                      ),
+                                      title: localizations.translate(
+                                        i18.stockReconciliationDetails
+                                            .infoCardTitle,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: kPadding * 2,
+                                    ),
+                                    const DigitDivider(),
+                                    const SizedBox(
+                                      height: kPadding,
+                                    ),
+                                    DigitTextFormField(
+                                      isRequired: true,
+                                      label: localizations.translate(
+                                        i18.stockReconciliationDetails
+                                            .manualCountLabel,
+                                      ),
+                                      formControlName: _manualCountKey,
+                                      keyboardType:
+                                          const TextInputType.numberWithOptions(
+                                        decimal: false,
+                                      ),
+                                      validationMessages: {
+                                        "required": (object) => i18
+                                            .stockReconciliationDetails
+                                            .manualCountRequiredError,
+                                        "number": (object) => i18
+                                            .stockReconciliationDetails
+                                            .manualCountInvalidType,
+                                        "min": (object) => i18
+                                            .stockReconciliationDetails
+                                            .manualCountMinError,
+                                        "max": (object) => i18
+                                            .stockReconciliationDetails
+                                            .manualCountMaxError,
+                                      },
+                                    ),
+                                    DigitTextFormField(
+                                      label: localizations.translate(
+                                        i18.stockReconciliationDetails
+                                            .commentsLabel,
+                                      ),
+                                      maxLines: 3,
+                                      minLines: 3,
+                                      formControlName:
+                                          _reconciliationCommentsKey,
+                                    ),
+                                  ],
                                 ),
-                                formControlName: _manualCountKey,
-                                keyboardType:
-                                const TextInputType.numberWithOptions(
-                                  decimal: false,
-                                ),
-                                validationMessages: {
-                                  "required": (object) => i18
-                                      .stockReconciliationDetails
-                                      .manualCountRequiredError,
-                                  "number": (object) => i18
-                                      .stockReconciliationDetails
-                                      .manualCountInvalidType,
-                                  "min": (object) => i18
-                                      .stockReconciliationDetails
-                                      .manualCountMinError,
-                                  "max": (object) => i18
-                                      .stockReconciliationDetails
-                                      .manualCountMaxError,
-                                },
-                              ),
-                              DigitTextFormField(
-                                label: localizations.translate(
-                                  i18.stockReconciliationDetails
-                                      .commentsLabel,
-                                ),
-                                maxLines: 3,
-                                minLines: 3,
-                                formControlName:
-                                _reconciliationCommentsKey,
                               ),
                             ],
                           ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              );
-            },
-          ),
-        ),
-      ),
-    );
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+            ),
+          );
   }
 }
