@@ -88,3 +88,49 @@ else
     sed -i '/^[ \t]*]/i '"$delegate" $dart_file_path
     echo "The delegate was added."
 fi
+
+# Get the current directory
+appDirectory=$(pwd)
+
+# Define the bloc directory
+blocDirectory="$appDirectory/blocs/attendance"
+
+# Ensure the directory exists
+mkdir -p $blocDirectory
+
+# Define the file path
+filePath="$blocDirectory/hcm_attendance_bloc.dart"
+
+# Check if the file already exists
+if [ -f "$filePath" ]; then
+    echo "File $filePath already exists. Not modifying the content."
+else
+    # Write the class definition to the file
+    cat > $filePath << EOF
+import 'package:attendance_management/blocs/attendance_listeners.dart';
+import 'package:attendance_management/models/attendance_register.dart';
+
+class HCMAttendanceBloc extends AttendanceListeners {
+  @override
+  void callSyncMethod() {
+    // TODO: implement callSyncMethod
+  }
+
+  @override
+  void getAttendanceRegisters(Function(List<AttendanceRegisterModel> attendanceRegisterModel) attendanceRegisters) {
+    // TODO: implement getAttendanceRegisters
+  }
+
+  @override
+  void searchAttendanceLog(SearchAttendanceLog searchAttendanceLog) {
+    // TODO: implement searchAttendanceLog
+  }
+
+  @override
+  void submitAttendanceDetails(SubmitAttendanceDetails attendanceLogs) {
+    // TODO: implement submitAttendanceDetails
+  }
+}
+EOF
+    echo "File $filePath created."
+fi

@@ -95,3 +95,76 @@ else
     sed -i '/^[ \t]*]/i '"$delegate" $dart_file_path
     echo "The delegate was added."
 fi
+
+# Get the current directory
+appDirectory=$(pwd)
+
+# Define the bloc directory
+blocDirectory="$appDirectory/blocs/inventory"
+
+# Ensure the directory exists
+mkdir -p $blocDirectory
+
+# Define the file path
+filePath="$blocDirectory/hcm_inventory_bloc.dart"
+
+# Check if the file already exists
+if [ -f "$filePath" ]; then
+    echo "File $filePath already exists. Not modifying the content."
+else
+    # Write the class definition to the file
+    cat > $filePath << EOF
+import 'package:inventory_management/blocs/inventory_report.dart';
+import 'package:inventory_management/inventory_management.dart';
+
+class HcmInventoryBloc extends InventoryListener {
+  @override
+  void callSyncMethod() {
+    // TODO: implement callSyncMethod
+  }
+
+  @override
+  Future<List<InventoryFacilityModel>> fetchFacilitiesForProjectId() {
+    // TODO: implement fetchFacilitiesForProjectId
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Map<String, List<StockModel>>> fetchInventoryReports({InventoryReportType? reportType, String? facilityId, String? productVariantId}) {
+    // TODO: implement fetchInventoryReports
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<ProductVariantModel>> fetchProductVariants() {
+    // TODO: implement fetchProductVariants
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<List<StockModel>>> fetchStockReconciliationDetails({String? productVariantId, String? facilityId}) {
+    // TODO: implement fetchStockReconciliationDetails
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<StockReconciliationReport> handleStockReconciliationReport({String? facilityId, String? productVariantId}) {
+    // TODO: implement handleStockReconciliationReport
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> saveStockDetails(SaveStockDetails saveStockDetails) {
+    // TODO: implement saveStockDetails
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> saveStockReconciliationDetails(SaveStockReconciliationModel stockReconciliationModel) {
+    // TODO: implement saveStockReconciliationDetails
+    throw UnimplementedError();
+  }
+}
+EOF
+    echo "File $filePath created."
+fi
