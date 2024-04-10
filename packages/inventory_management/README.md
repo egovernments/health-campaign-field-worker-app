@@ -15,6 +15,7 @@ To use this package, add the following dependency to your `pubspec.yaml` file:
 ```yaml
 dependencies:
   inventory_management: ^0.0.1
+```
 
 Here is how inventory package interacts with parent app
 
