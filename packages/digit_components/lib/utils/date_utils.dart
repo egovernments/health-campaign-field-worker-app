@@ -3,36 +3,56 @@ import 'package:intl/intl.dart';
 
 class DigitDateUtils {
   // Function to calculate age in years and months based on the selected date.
-  static DigitDOBAge calculateAge(DateTime? selectedDate) {
-    if (selectedDate == null) {
-      return DigitDOBAge();
-    } else {
-      DateTime currentDate = DateTime.now();
+  static DigitDOBAge calculateAge(DateTime selectedDate) {
+    DateTime currentDate = DateTime.now();
+    // Calculate the difference in years, months, and days
+    int ageInYears = currentDate.year - selectedDate.year;
+    int ageInMonths = currentDate.month - selectedDate.month;
+    int ageInDays = currentDate.day - selectedDate.day;
 
-      // Calculate the difference in years, months, and days
-      int ageInYears = currentDate.year - selectedDate.year;
-      int ageInMonths = currentDate.month - selectedDate.month;
-      int ageInDays = currentDate.day - selectedDate.day;
-
-      // If the current day is earlier than the selected day in the same month,
-      // reduce the month count and adjust the days accordingly.
-      if (ageInDays < 0) {
-        ageInMonths--;
-        ageInDays += DateTime(selectedDate.year, selectedDate.month + 1, 0).day;
-      }
-
-      // If the current month is earlier than the selected month, reduce the year count
-      // and adjust the month and day counts accordingly.
-      if (ageInMonths < 0) {
-        ageInYears--;
-        ageInMonths += 12;
-      }
-
-      return DigitDOBAge(
-          years: ageInYears >= 0 ? ageInYears : 0,
-          months: ageInMonths,
-          days: ageInDays);
+    // If the current day is earlier than the selected day in the same month,
+    // reduce the month count and adjust the days accordingly.
+    if (ageInDays < 0) {
+      ageInMonths--;
+      ageInDays += DateTime(selectedDate.year, selectedDate.month + 1, 0).day;
     }
+
+    // If the current month is earlier than the selected month, reduce the year count
+    // and adjust the month and day counts accordingly.
+    if (ageInMonths < 0) {
+      ageInYears--;
+      ageInMonths += 12;
+    }
+
+    return DigitDOBAge(
+      years: ageInYears >= 0 ? ageInYears : 0,
+      months: ageInMonths,
+      days: ageInDays,
+    );
+  }
+
+  static DateTime calculateDob(DigitDOBAge givenDOBAge) {
+    DateTime currentDate = DateTime.now();
+    // Calculate the difference in years, months, and days
+    int birthYear = currentDate.year - givenDOBAge.years;
+    int birthMonth = currentDate.month - givenDOBAge.months;
+    int birthDay = currentDate.day - givenDOBAge.days;
+
+    // If the current day is earlier than the selected day in the same month,
+    // reduce the month count and adjust the days accordingly.
+    if (birthDay < 0) {
+      birthMonth--;
+      birthDay += DateTime(currentDate.year, currentDate.month + 1, 0).day;
+    }
+
+    // If the current month is earlier than the selected month, reduce the year count
+    // and adjust the month and day counts accordingly.
+    if (birthMonth < 0) {
+      birthYear--;
+      birthMonth += 12;
+    }
+
+    return DateTime(birthYear, birthMonth, birthDay);
   }
 
   // Function to get a formatted date string based on the provided date string and date format.

@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../data/data_repository.dart';
 import '../../data/repositories/local/project_beneficiary.dart';
+import '../../data/repositories/local/task.dart';
 import '../../models/data_model.dart';
 import '../../utils/utils.dart';
 import '../progress_indicator/progress_indicator.dart';
@@ -30,10 +31,9 @@ class _BeneficiaryProgressBarState extends State<BeneficiaryProgressBar> {
 
   @override
   void didChangeDependencies() {
-    final repository = context.read<
-            LocalRepository<ProjectBeneficiaryModel,
-                ProjectBeneficiarySearchModel>>()
-        as ProjectBeneficiaryLocalRepository;
+    final taskRepository =
+        context.read<LocalRepository<TaskModel, TaskSearchModel>>()
+            as TaskLocalRepository;
 
     final now = DateTime.now();
     final gte = DateTime(
@@ -52,19 +52,15 @@ class _BeneficiaryProgressBarState extends State<BeneficiaryProgressBar> {
       999,
     );
 
-    repository.listenToChanges(
-      query: ProjectBeneficiarySearchModel(
+    taskRepository.listenToChanges(
+      query: TaskSearchModel(
         projectId: context.projectId,
+        createdBy: context.loggedInUserUuid,
       ),
       listener: (data) {
         if (mounted) {
           setState(() {
-            current = data
-                .where((element) =>
-                    element.dateOfRegistrationTime.isAfter(gte) &&
-                    (element.isDeleted == false || element.isDeleted == null) &&
-                    element.dateOfRegistrationTime.isBefore(lte))
-                .length;
+            current = data.length;
           });
         }
       },
@@ -74,14 +70,15 @@ class _BeneficiaryProgressBarState extends State<BeneficiaryProgressBar> {
 
   @override
   Widget build(BuildContext context) {
-    final selectedProject = context.selectedProject;
-    final beneficiaryType = context.beneficiaryType;
+    // Solution Customization
+    // final selectedProject = context.selectedProject;
+    // final beneficiaryType = context.beneficiaryType;
 
-    final targetModel = selectedProject.targets?.firstWhereOrNull(
-      (element) => element.beneficiaryType == beneficiaryType,
-    );
+    // final targetModel = selectedProject.targets?.firstWhereOrNull(
+    //   (element) => element.beneficiaryType == beneficiaryType,
+    // );
 
-    final target = targetModel?.targetNo ?? 0.0;
+    final target = 250;
 
     return DigitCard(
       child: ProgressIndicatorContainer(

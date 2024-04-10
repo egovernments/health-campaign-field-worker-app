@@ -225,56 +225,57 @@ class _HouseholdOverviewPageState
                                                     );
                                                   },
                                                 ),
-                                                ActionCardModel(
-                                                  icon: Icons.delete,
-                                                  label: localizations.translate(i18
-                                                      .householdOverView
-                                                      .householdOverViewDeleteLabel),
-                                                  action: () =>
-                                                      DigitDialog.show(
-                                                    context,
-                                                    options: DigitDialogOptions(
-                                                      titleText: localizations
-                                                          .translate(i18
-                                                              .householdOverView
-                                                              .householdOverViewActionCardTitle),
-                                                      primaryAction:
-                                                          DigitDialogActions(
-                                                        label: localizations
-                                                            .translate(i18
-                                                                .householdOverView
-                                                                .householdOverViewPrimaryActionLabel),
-                                                        action: (ctx) {
-                                                          Navigator.of(
-                                                            ctx,
-                                                            rootNavigator: true,
-                                                          )
-                                                            ..pop()
-                                                            ..pop();
-                                                          context.router.push(
-                                                            ReasonForDeletionRoute(
-                                                              isHousholdDelete:
-                                                                  true,
-                                                            ),
-                                                          );
-                                                        },
-                                                      ),
-                                                      secondaryAction:
-                                                          DigitDialogActions(
-                                                        label: localizations
-                                                            .translate(i18
-                                                                .householdOverView
-                                                                .householdOverViewSecondaryActionLabel),
-                                                        action: (context) {
-                                                          Navigator.of(
-                                                            context,
-                                                            rootNavigator: true,
-                                                          ).pop();
-                                                        },
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
+                                                // Solution customization
+                                                // ActionCardModel(
+                                                //   icon: Icons.delete,
+                                                //   label: localizations.translate(i18
+                                                //       .householdOverView
+                                                //       .householdOverViewDeleteLabel),
+                                                //   action: () =>
+                                                //       DigitDialog.show(
+                                                //     context,
+                                                //     options: DigitDialogOptions(
+                                                //       titleText: localizations
+                                                //           .translate(i18
+                                                //               .householdOverView
+                                                //               .householdOverViewActionCardTitle),
+                                                //       primaryAction:
+                                                //           DigitDialogActions(
+                                                //         label: localizations
+                                                //             .translate(i18
+                                                //                 .householdOverView
+                                                //                 .householdOverViewPrimaryActionLabel),
+                                                //         action: (ctx) {
+                                                //           Navigator.of(
+                                                //             ctx,
+                                                //             rootNavigator: true,
+                                                //           )
+                                                //             ..pop()
+                                                //             ..pop();
+                                                //           context.router.push(
+                                                //             ReasonForDeletionRoute(
+                                                //               isHousholdDelete:
+                                                //                   true,
+                                                //             ),
+                                                //           );
+                                                //         },
+                                                //       ),
+                                                //       secondaryAction:
+                                                //           DigitDialogActions(
+                                                //         label: localizations
+                                                //             .translate(i18
+                                                //                 .householdOverView
+                                                //                 .householdOverViewSecondaryActionLabel),
+                                                //         action: (context) {
+                                                //           Navigator.of(
+                                                //             context,
+                                                //             rootNavigator: true,
+                                                //           ).pop();
+                                                //         },
+                                                //       ),
+                                                //     ),
+                                                //   ),
+                                                // ),
                                               ],
                                             ),
                                           ),
@@ -481,6 +482,12 @@ class _HouseholdOverviewPageState
                                                 checkIfBeneficiaryRefused(
                                               taskdata,
                                             );
+
+                                            final isBeneficiaryIneligible =
+                                                checkIfBeneficiaryIneligible(
+                                              taskdata,
+                                            );
+
                                             final isBeneficiaryReferred =
                                                 checkIfBeneficiaryReferred(
                                               taskdata,
@@ -702,6 +709,12 @@ class _HouseholdOverviewPageState
                                                       ),
                                               isBeneficiaryReferred:
                                                   isBeneficiaryReferred,
+                                              isBeneficiaryIneligible:
+                                                  isBeneficiaryIneligible &&
+                                                      !checkStatus(
+                                                        taskdata,
+                                                        currentCycle,
+                                                      ),
                                               isDelivered: taskdata == null
                                                   ? false
                                                   : taskdata.isNotEmpty &&

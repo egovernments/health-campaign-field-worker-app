@@ -28,6 +28,18 @@
     {
       "name": "Registrar",
       "value": "REGISTRAR"
+    },
+    {
+      "name": "Community Distributor",
+      "value": "COMMUNITY_DISTRIBUTOR"
+    },
+    {
+      "name": "Health facility Supervisor",
+      "value": "HEALTH_FACILITY_SUPERVISOR"
+    },
+    {
+      "name": "Community Supervisor",
+      "value": "COMMUNITY_SUPERVISOR"
     }
   ],
   "isEnum": true

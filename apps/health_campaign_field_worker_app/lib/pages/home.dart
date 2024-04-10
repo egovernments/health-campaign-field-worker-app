@@ -86,7 +86,8 @@ class _HomePageState extends LocalizedState<HomePage> {
     });
 
     //[TODO: Add below roles to enum]
-    if (!(roles.contains(RolesType.distributor.toValue()) ||
+    if (!(roles.contains(RolesType.communityDistributor.toValue()) ||
+        roles.contains(RolesType.distributor.toValue()) ||
         roles.contains(RolesType.registrar.toValue()))) {
       skipProgressBar = true;
     }

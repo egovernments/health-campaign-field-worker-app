@@ -129,7 +129,7 @@ _$ProductVariantsModelImpl _$$ProductVariantsModelImplFromJson(
         Map<String, dynamic> json) =>
     _$ProductVariantsModelImpl(
       productVariantId: json['productVariantId'] as String?,
-      quantity: json['quantity'] as int?,
+      quantity: (json['quantity'] as num?)?.toDouble(),
     );
 
 Map<String, dynamic> _$$ProductVariantsModelImplToJson(

@@ -63,6 +63,7 @@ class DigitDobPicker extends StatelessWidget {
             // Date picker component to select the date of birth
             DigitDateFormPicker(
               label: datePickerLabel,
+              isRequired: true,
               start: initialDate,
               formControlName: datePickerFormControl,
               cancelText: cancelText,
@@ -90,6 +91,7 @@ class DigitDobPicker extends StatelessWidget {
                           DobValueAccessorYearsString(DobValueAccessor()),
                       formControlName: datePickerFormControl,
                       label: ageFieldLabel,
+                      isRequired: true,
                       keyboardType: TextInputType.number,
                       suffix: Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -129,6 +131,7 @@ class DigitDobPicker extends StatelessWidget {
                 ),
               ],
             ),
+            const SizedBox(height: 8.0),
             ReactiveFormConsumer(
               builder: (context, form, child) {
                 final datePickerControl = form.control(datePickerFormControl);
@@ -166,19 +169,10 @@ class DobValueAccessor extends ControlValueAccessor<DateTime, DigitDOBAge> {
     if (viewValue == null || (viewValue.years == 0 && viewValue.months == 0)) {
       return null;
     } else {
-      final months = viewValue.months;
-      final days = DigitDateUtils.yearsMonthsDaysToDays(
-          viewValue.years, viewValue.months, viewValue.days);
-
-      final calculatedDate = DateTime.now().subtract(Duration(days: days));
-
-      return (viewValue.years == 0 && months == 0) || months > 11
+      return (viewValue.years == 0 && viewValue.months == 0) ||
+              viewValue.months > 11
           ? null
-          : DateTime(
-              calculatedDate.year,
-              calculatedDate.month,
-              1,
-            );
+          : DigitDateUtils.calculateDob(viewValue);
     }
   }
 }
@@ -196,8 +190,6 @@ class DobValueAccessorYearsString
   String? modelToViewValue(DateTime? modelValue) {
     final dobAge = accessor.modelToViewValue(modelValue);
     if (dobAge == null || (dobAge.years == 0 && dobAge.months == 0)) {
-      existingMonth = '';
-      existingDays = '';
       return null;
     }
 
@@ -211,7 +203,9 @@ class DobValueAccessorYearsString
     final years = int.tryParse(viewValue ?? '');
 
     final dobAge = DigitDOBAge(
-        years: years ?? 0, months: int.tryParse(existingMonth) ?? 0, days: 1);
+        years: years ?? 0,
+        months: int.tryParse(existingMonth) ?? 0,
+        days: int.tryParse(existingDays) ?? 0);
     return accessor.viewToModelValue(dobAge);
   }
 }
@@ -229,9 +223,7 @@ class DobValueAccessorMonthString
   String? modelToViewValue(DateTime? modelValue) {
     final dobAge = accessor.modelToViewValue(modelValue);
 
-    if (dobAge == null || (dobAge.years == 0 && (dobAge.months == 0))) {
-      existingYear = '';
-      existingDays = '';
+    if (dobAge == null || (dobAge.years == 0 && dobAge.months == 0)) {
       return null;
     }
 
@@ -245,7 +237,9 @@ class DobValueAccessorMonthString
   DateTime? viewToModelValue(String? viewValue) {
     final months = int.tryParse(viewValue ?? '');
     final dobAge = DigitDOBAge(
-        years: int.tryParse(existingYear) ?? 0, months: months ?? 0, days: 1);
+        years: int.tryParse(existingYear) ?? 0,
+        months: months ?? 0,
+        days: int.tryParse(existingDays) ?? 0);
     return accessor.viewToModelValue(dobAge);
   }
 }

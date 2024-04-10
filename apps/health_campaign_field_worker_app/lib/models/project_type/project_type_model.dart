@@ -85,7 +85,7 @@ class DoseCriteriaModel with _$DoseCriteriaModel {
 class ProductVariantsModel with _$ProductVariantsModel {
   const factory ProductVariantsModel({
     String? productVariantId,
-    int? quantity,
+    double? quantity,
   }) = _ProductVariantsModel;
   factory ProductVariantsModel.fromJson(Map<String, dynamic> json) =>
       _$ProductVariantsModelFromJson(json);

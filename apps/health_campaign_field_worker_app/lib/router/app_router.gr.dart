@@ -31,12 +31,6 @@ class _$AppRouter extends RootStackRouter {
         child: AuthenticatedPageWrapper(key: args.key),
       );
     },
-    LanguageSelectionRoute.name: (routeData) {
-      return MaterialPageX<dynamic>(
-        routeData: routeData,
-        child: const LanguageSelectionPage(),
-      );
-    },
     LoginRoute.name: (routeData) {
       final args = routeData.argsAs<LoginRouteArgs>(
           orElse: () => const LoginRouteArgs());
@@ -416,6 +410,19 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    IneligibilityReasonsRoute.name: (routeData) {
+      final args = routeData.argsAs<IneligibilityReasonsRouteArgs>();
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: IneligibilityReasonsPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          isEditing: args.isEditing,
+          projectBeneficiaryClientRefId: args.projectBeneficiaryClientRefId,
+          individual: args.individual,
+        ),
+      );
+    },
     DoseAdministeredRoute.name: (routeData) {
       final args = routeData.argsAs<DoseAdministeredRouteArgs>(
           orElse: () => const DoseAdministeredRouteArgs());
@@ -691,13 +698,8 @@ class _$AppRouter extends RootStackRouter {
               '#redirect',
               path: '',
               parent: UnauthenticatedRouteWrapper.name,
-              redirectTo: 'language_selection',
+              redirectTo: 'login',
               fullMatch: true,
-            ),
-            RouteConfig(
-              LanguageSelectionRoute.name,
-              path: 'language_selection',
-              parent: UnauthenticatedRouteWrapper.name,
             ),
             RouteConfig(
               LoginRoute.name,
@@ -811,6 +813,11 @@ class _$AppRouter extends RootStackRouter {
                 RouteConfig(
                   ReferBeneficiaryRoute.name,
                   path: 'refer-beneficiary',
+                  parent: BeneficiaryWrapperRoute.name,
+                ),
+                RouteConfig(
+                  IneligibilityReasonsRoute.name,
+                  path: 'ineligibility-reasons',
                   parent: BeneficiaryWrapperRoute.name,
                 ),
                 RouteConfig(
@@ -1102,18 +1109,6 @@ class AuthenticatedRouteWrapperArgs {
   String toString() {
     return 'AuthenticatedRouteWrapperArgs{key: $key}';
   }
-}
-
-/// generated route for
-/// [LanguageSelectionPage]
-class LanguageSelectionRoute extends PageRouteInfo<void> {
-  const LanguageSelectionRoute()
-      : super(
-          LanguageSelectionRoute.name,
-          path: 'language_selection',
-        );
-
-  static const String name = 'LanguageSelectionRoute';
 }
 
 /// generated route for
@@ -2346,6 +2341,56 @@ class ReferBeneficiaryRouteArgs {
   @override
   String toString() {
     return 'ReferBeneficiaryRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing, projectBeneficiaryClientRefId: $projectBeneficiaryClientRefId, individual: $individual}';
+  }
+}
+
+/// generated route for
+/// [IneligibilityReasonsPage]
+class IneligibilityReasonsRoute
+    extends PageRouteInfo<IneligibilityReasonsRouteArgs> {
+  IneligibilityReasonsRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    bool isEditing = false,
+    required String projectBeneficiaryClientRefId,
+    required IndividualModel individual,
+  }) : super(
+          IneligibilityReasonsRoute.name,
+          path: 'ineligibility-reasons',
+          args: IneligibilityReasonsRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            isEditing: isEditing,
+            projectBeneficiaryClientRefId: projectBeneficiaryClientRefId,
+            individual: individual,
+          ),
+        );
+
+  static const String name = 'IneligibilityReasonsRoute';
+}
+
+class IneligibilityReasonsRouteArgs {
+  const IneligibilityReasonsRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.isEditing = false,
+    required this.projectBeneficiaryClientRefId,
+    required this.individual,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final bool isEditing;
+
+  final String projectBeneficiaryClientRefId;
+
+  final IndividualModel individual;
+
+  @override
+  String toString() {
+    return 'IneligibilityReasonsRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing, projectBeneficiaryClientRefId: $projectBeneficiaryClientRefId, individual: $individual}';
   }
 }
 

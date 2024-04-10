@@ -36,31 +36,6 @@ Future<void> initializeService(dio, isar) async {
   }
 
   final service = FlutterBackgroundService();
-  const notificationId = 888;
-  // this will be used as notification channel id
-  const notificationChannelId = 'my_foreground';
-  const AndroidNotificationChannel channel = AndroidNotificationChannel(
-    notificationChannelId, // id
-    'Background Sync', // title
-    description: 'Background sync triggered.', // description
-    importance: Importance.high, // importance must be at low or higher level
-  );
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
-
-flutterLocalNotificationsPlugin
-    .resolvePlatformSpecificImplementation<
-    AndroidFlutterLocalNotificationsPlugin>()
-    ?.requestExactAlarmsPermission();
-  flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
-      ?.requestNotificationsPermission();
-
-  await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(channel);
 
   await service.configure(
     androidConfiguration: AndroidConfiguration(
@@ -70,11 +45,6 @@ flutterLocalNotificationsPlugin
       // auto start service
       autoStart: false,
       isForegroundMode: true,
-      initialNotificationContent:
-          'BackGround Service Started at ${DateTime.now()}',
-      initialNotificationTitle: 'Background service',
-      notificationChannelId: notificationChannelId,
-      foregroundServiceNotificationId: notificationId,
     ),
     iosConfiguration: IosConfiguration(
       // auto start service
@@ -172,19 +142,6 @@ void onStart(ServiceInstance service) async {
                 'userId': userRequestModel!.uuid,
                 'batchSize': configuredBatchSize,
               });
-              flutterLocalNotificationsPlugin.show(
-                888,
-                'Auto Sync',
-                'Speed : ${speedArray.first}Mb/ps - BatchSize : $configuredBatchSize',
-                const NotificationDetails(
-                  android: AndroidNotificationDetails(
-                    "my_foreground",
-                    'AUTO SYNC',
-                    icon: 'ic_bg_service_small',
-                    ongoing: true,
-                  ),
-                ),
-              );
               final isSyncCompleted = await const NetworkManager(
                 configuration: NetworkManagerConfiguration(
                   persistenceConfig: PersistenceConfiguration.offlineFirst,

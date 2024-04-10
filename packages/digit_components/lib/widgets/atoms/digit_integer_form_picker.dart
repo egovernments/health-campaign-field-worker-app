@@ -9,6 +9,7 @@ class DigitIntegerFormPicker extends StatelessWidget {
   final String? hint;
   final String label;
   final FormGroup form;
+  final bool? decimal;
   final String formControlName;
   const DigitIntegerFormPicker({
     super.key,
@@ -19,6 +20,7 @@ class DigitIntegerFormPicker extends StatelessWidget {
     this.hint,
     required this.form,
     required this.label,
+    this.decimal,
   });
 
   @override
@@ -52,9 +54,13 @@ class DigitIntegerFormPicker extends StatelessWidget {
                 onPressed: () => minimum != null
                     ? form.control(formControlName).value > minimum ||
                             form.control(formControlName).value == null
-                        ? form.control(formControlName).value -= 1
-                        : 1
-                    : form.control(formControlName).value -= 1,
+                        ? form.control(formControlName).value -=
+                            decimal != null ? .5 : 1
+                        : decimal != null
+                            ? 0.5
+                            : 1
+                    : form.control(formControlName).value -=
+                        decimal != null ? .5 : 1,
               ),
               Expanded(
                 child: ReactiveTextField(
@@ -74,7 +80,8 @@ class DigitIntegerFormPicker extends StatelessWidget {
                     top: _borderSide,
                   ),
                   icon: Icons.add,
-                  onPressed: () => form.control(formControlName).value += 1),
+                  onPressed: () => form.control(formControlName).value +=
+                      decimal != null ? .5 : 1),
             ],
           ),
         ));

@@ -29,6 +29,7 @@ class MemberCard extends StatelessWidget {
   final List<SideEffectModel>? sideEffects;
   final bool isNotEligible;
   final bool isBeneficiaryRefused;
+  final bool isBeneficiaryIneligible;
   final bool isBeneficiaryReferred;
   final String? projectBeneficiaryClientReferenceId;
 
@@ -49,6 +50,7 @@ class MemberCard extends StatelessWidget {
     this.isNotEligible = false,
     this.projectBeneficiaryClientReferenceId,
     this.isBeneficiaryRefused = false,
+    this.isBeneficiaryIneligible = false,
     this.isBeneficiaryReferred = false,
     this.sideEffects,
   });
@@ -102,13 +104,14 @@ class MemberCard extends StatelessWidget {
                       context,
                       widget: ActionCard(
                         items: [
-                          ActionCardModel(
-                            icon: Icons.person,
-                            label: localizations.translate(
-                              i18.memberCard.assignAsHouseholdhead,
-                            ),
-                            action: isHead ? null : setAsHeadAction,
-                          ),
+                          // Solution customization
+                          // ActionCardModel(
+                          //   icon: Icons.person,
+                          //   label: localizations.translate(
+                          //     i18.memberCard.assignAsHouseholdhead,
+                          //   ),
+                          //   action: isHead ? null : setAsHeadAction,
+                          // ),
                           ActionCardModel(
                             icon: Icons.edit,
                             label: localizations.translate(
@@ -116,13 +119,14 @@ class MemberCard extends StatelessWidget {
                             ),
                             action: editMemberAction,
                           ),
-                          ActionCardModel(
-                            icon: Icons.delete,
-                            label: localizations.translate(
-                              i18.memberCard.deleteIndividualActionText,
-                            ),
-                            action: isHead ? null : deleteMemberAction,
-                          ),
+                          // Solution customization
+                          // ActionCardModel(
+                          //   icon: Icons.delete,
+                          //   label: localizations.translate(
+                          //     i18.memberCard.deleteIndividualActionText,
+                          //   ),
+                          //   action: isHead ? null : deleteMemberAction,
+                          // ),
                         ],
                       ),
                     ),
@@ -168,6 +172,7 @@ class MemberCard extends StatelessWidget {
               child: !isDelivered ||
                       isNotEligible ||
                       isBeneficiaryRefused ||
+                      isBeneficiaryIneligible ||
                       isBeneficiaryReferred
                   ? Align(
                       alignment: Alignment.centerLeft,
@@ -175,7 +180,7 @@ class MemberCard extends StatelessWidget {
                         icon: Icons.info_rounded,
                         iconSize: 20,
                         iconText: localizations.translate(
-                          isNotEligible
+                          (isNotEligible || isBeneficiaryIneligible)
                               ? i18.householdOverView
                                   .householdOverViewNotEligibleIconLabel
                               : isBeneficiaryReferred
@@ -212,12 +217,16 @@ class MemberCard extends StatelessWidget {
             offstage: beneficiaryType != BeneficiaryType.individual ||
                 isNotEligible ||
                 isBeneficiaryRefused ||
+                isBeneficiaryIneligible ||
                 isBeneficiaryReferred,
             child: Padding(
               padding: const EdgeInsets.all(4.0),
               child: Column(
                 children: [
-                  isNotEligible || isBeneficiaryRefused || isBeneficiaryReferred
+                  isNotEligible ||
+                          isBeneficiaryRefused ||
+                          isBeneficiaryReferred ||
+                          isBeneficiaryIneligible
                       ? const Offstage()
                       : !isNotEligible
                           ? DigitElevatedButton(
@@ -287,6 +296,7 @@ class MemberCard extends StatelessWidget {
                   (isNotEligible ||
                           isBeneficiaryRefused ||
                           isBeneficiaryReferred ||
+                          isBeneficiaryIneligible ||
                           (allDosesDelivered(
                                 tasks,
                                 context.selectedCycle,
@@ -455,19 +465,13 @@ class MemberCard extends StatelessWidget {
                                   ),
                                   DigitOutLineButton(
                                     label: localizations.translate(
-                                      i18.memberCard.recordAdverseEventsLabel,
+                                      i18.memberCard.markIneligibleLabel,
                                     ),
                                     buttonStyle: OutlinedButton.styleFrom(
-                                      shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.zero,
-                                      ),
                                       backgroundColor: Colors.white,
                                       side: BorderSide(
                                         width: 1.0,
-                                        color: tasks != null &&
-                                                (tasks ?? []).isNotEmpty
-                                            ? theme.colorScheme.secondary
-                                            : theme.colorScheme.outline,
+                                        color: theme.colorScheme.secondary,
                                       ),
                                       minimumSize: Size(
                                         MediaQuery.of(context).size.width /
@@ -476,20 +480,74 @@ class MemberCard extends StatelessWidget {
                                       ),
                                     ),
                                     onPressed: tasks != null &&
-                                            (tasks ?? []).isNotEmpty
-                                        ? () async {
+                                            (tasks ?? [])
+                                                .where((element) =>
+                                                    element.status !=
+                                                    Status.beneficiaryRefused
+                                                        .toValue())
+                                                .toList()
+                                                .isNotEmpty &&
+                                            !checkStatus(
+                                              tasks,
+                                              context.selectedCycle,
+                                            )
+                                        ? null
+                                        : () async {
                                             Navigator.of(
                                               context,
                                               rootNavigator: true,
                                             ).pop();
                                             await context.router.push(
-                                              SideEffectsRoute(
-                                                tasks: tasks!,
+                                              IneligibilityReasonsRoute(
+                                                projectBeneficiaryClientRefId:
+                                                    projectBeneficiaryClientReferenceId ??
+                                                        '',
+                                                individual: individual,
                                               ),
                                             );
-                                          }
-                                        : null,
+                                          },
                                   ),
+                                  const SizedBox(
+                                    height: kPadding * 2,
+                                  ),
+                                  // Solution customization
+                                  // DigitOutLineButton(
+                                  //   label: localizations.translate(
+                                  //     i18.memberCard.recordAdverseEventsLabel,
+                                  //   ),
+                                  //   buttonStyle: OutlinedButton.styleFrom(
+                                  //     shape: const RoundedRectangleBorder(
+                                  //       borderRadius: BorderRadius.zero,
+                                  //     ),
+                                  //     backgroundColor: Colors.white,
+                                  //     side: BorderSide(
+                                  //       width: 1.0,
+                                  //       color: tasks != null &&
+                                  //               (tasks ?? []).isNotEmpty
+                                  //           ? theme.colorScheme.secondary
+                                  //           : theme.colorScheme.outline,
+                                  //     ),
+                                  //     minimumSize: Size(
+                                  //       MediaQuery.of(context).size.width /
+                                  //           1.25,
+                                  //       50,
+                                  //     ),
+                                  //   ),
+                                  //   onPressed: tasks != null &&
+                                  //           (tasks ?? []).isNotEmpty
+                                  //       ? () async {
+                                  //           Navigator.of(
+                                  //             context,
+                                  //             rootNavigator: true,
+                                  //           ).pop();
+                                  //           await context.router.push(
+                                  //             SideEffectsRoute(
+                                  //               tasks: tasks!,
+                                  //             ),
+                                  //           );
+                                  //         }
+                                  //       : null,
+                                  // ),
                                 ],
                               ),
                             );

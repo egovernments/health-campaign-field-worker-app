@@ -332,7 +332,7 @@ class _SearchBeneficiaryPageState
               ),
             ),
             bottomNavigationBar: SizedBox(
-              height: 150,
+              height: 75,
               child: Card(
                 margin: const EdgeInsets.all(0),
                 child: Container(
@@ -340,50 +340,46 @@ class _SearchBeneficiaryPageState
                   child: Column(
                     children: [
                       DigitElevatedButton(
-                        onPressed: searchHouseholdsState.searchQuery != null &&
-                                searchHouseholdsState.searchQuery!.isNotEmpty
-                            ? () {
-                                FocusManager.instance.primaryFocus?.unfocus();
-                                context.read<ScannerBloc>().add(
-                                      const ScannerEvent.handleScanner([], []),
-                                    );
-                                context.router
-                                    .push(BeneficiaryRegistrationWrapperRoute(
-                                  initialState:
-                                      BeneficiaryRegistrationCreateState(
-                                    searchQuery:
-                                        searchHouseholdsState.searchQuery,
-                                  ),
-                                ));
-                                searchController.clear();
-                                blocWrapper.clearEvent();
-                              }
-                            : null,
+                        onPressed: () {
+                          FocusManager.instance.primaryFocus?.unfocus();
+                          // context.read<ScannerBloc>().add(
+                          //       const ScannerEvent.handleScanner([], []),
+                          //     );
+                          context.router
+                              .push(BeneficiaryRegistrationWrapperRoute(
+                            initialState: BeneficiaryRegistrationCreateState(
+                              searchQuery: searchHouseholdsState.searchQuery,
+                            ),
+                          ));
+                          searchController.clear();
+                          blocWrapper.clearEvent();
+                        },
                         child: Center(
                           child: Text(localizations.translate(
                             i18.searchBeneficiary.beneficiaryAddActionLabel,
                           )),
                         ),
                       ),
-                      DigitOutlineIconButton(
-                        buttonStyle: OutlinedButton.styleFrom(
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.zero,
-                          ),
-                        ),
-                        onPressed: () {
-                          blocWrapper.clearEvent();
-                          context.router.push(QRScannerRoute(
-                            quantity: 1,
-                            isGS1code: false,
-                            sinlgleValue: true,
-                          ));
-                        },
-                        icon: Icons.qr_code,
-                        label: localizations.translate(
-                          i18.deliverIntervention.scannerLabel,
-                        ),
-                      ),
+                      // Solution Customization
+                      // DigitOutlineIconButton(
+                      //   buttonStyle: OutlinedButton.styleFrom(
+                      //     shape: const RoundedRectangleBorder(
+                      //       borderRadius: BorderRadius.zero,
+                      //     ),
+                      //   ),
+                      //   onPressed: () {
+                      //     blocWrapper.clearEvent();
+                      //     context.router.push(QRScannerRoute(
+                      //       quantity: 1,
+                      //       isGS1code: false,
+                      //       sinlgleValue: true,
+                      //     ));
+                      //   },
+                      //   icon: Icons.qr_code,
+                      //   label: localizations.translate(
+                      //     i18.deliverIntervention.scannerLabel,
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),

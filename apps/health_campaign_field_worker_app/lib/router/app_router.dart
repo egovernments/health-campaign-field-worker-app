@@ -23,6 +23,7 @@ import '../pages/beneficiary_registration/beneficiary_acknowledgement.dart';
 import '../pages/beneficiary_registration/beneficiary_registration_wrapper.dart';
 import '../pages/beneficiary_registration/household_details.dart';
 import '../pages/beneficiary_registration/household_location.dart';
+import '../pages/beneficiary/ineligibility_reasons.dart';
 import '../pages/beneficiary_registration/individual_details.dart';
 import '../pages/boundary_selection.dart';
 import '../pages/checklist/checklist.dart';
@@ -79,12 +80,7 @@ part 'app_router.gr.dart';
       page: UnauthenticatedPageWrapper,
       path: '/',
       children: [
-        AutoRoute(
-          page: LanguageSelectionPage,
-          path: 'language_selection',
-          initial: true,
-        ),
-        AutoRoute(page: LoginPage, path: 'login'),
+        AutoRoute(page: LoginPage, path: 'login', initial: true),
       ],
     ),
     AutoRoute(
@@ -140,6 +136,10 @@ part 'app_router.gr.dart';
             AutoRoute(
               page: ReferBeneficiaryPage,
               path: 'refer-beneficiary',
+            ),
+            AutoRoute(
+              page: IneligibilityReasonsPage,
+              path: 'ineligibility-reasons',
             ),
             AutoRoute(
               page: DoseAdministeredPage,

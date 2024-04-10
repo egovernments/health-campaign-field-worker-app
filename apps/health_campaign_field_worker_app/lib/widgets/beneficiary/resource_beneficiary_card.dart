@@ -1,5 +1,6 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -57,8 +58,9 @@ class _ResourceBeneficiaryCardState
                 fetched: (productVariants) {
                   return DigitReactiveSearchDropdown<ProductVariantModel>(
                     label: localizations.translate(
-                      i18.individualDetails.idTypeLabelText,
+                      i18.deliverIntervention.resourceDeliveredLabel,
                     ),
+                    enabled: false,
                     form: widget.form,
                     menuItems: productVariants,
                     formControlName: 'resourceDelivered.${widget.cardIndex}',
@@ -79,62 +81,84 @@ class _ResourceBeneficiaryCardState
           ),
           DigitIntegerFormPicker(
             incrementer: true,
+            decimal: true,
             formControlName: 'quantityDistributed.${widget.cardIndex}',
             form: widget.form,
             label: localizations.translate(
               i18.deliverIntervention.quantityDistributedLabel,
             ),
-            minimum: 1,
+            minimum: 0,
           ),
-          SizedBox(
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: (widget.cardIndex == widget.totalItems - 1 &&
-                      widget.totalItems > 1)
-                  ? DigitIconButton(
-                      onPressed: () async {
-                        final submit = await DigitDialog.show<bool>(
-                          context,
-                          options: DigitDialogOptions(
-                            titleText: localizations.translate(
-                              i18.deliverIntervention
-                                  .resourceDeleteBeneficiaryDialogTitle,
-                            ),
-                            primaryAction: DigitDialogActions(
-                              label: localizations.translate(
-                                i18.deliverIntervention
-                                    .resourceDeleteBeneficiaryPrimaryActionLabel,
-                              ),
-                              action: (context) {
-                                Navigator.of(
-                                  context,
-                                  rootNavigator: true,
-                                ).pop(true);
-                              },
-                            ),
-                            secondaryAction: DigitDialogActions(
-                              label: localizations.translate(
-                                i18.common.coreCommonCancel,
-                              ),
-                              action: (context) => Navigator.of(
-                                context,
-                                rootNavigator: true,
-                              ).pop(false),
-                            ),
-                          ),
-                        );
-                        if (submit == true) {
-                          widget.onDelete(widget.cardIndex);
-                        }
-                      },
-                      iconText: localizations.translate(
-                        i18.deliverIntervention.resourceDeleteBeneficiary,
-                      ),
-                      icon: Icons.delete,
-                    )
-                  : const Offstage(),
+          DigitTextFormField(
+            formControlName: 'quantityWasted.${widget.cardIndex}',
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(
+                RegExp(r'^\d*\.?(0|5)?$'),
+              ),
+            ],
+            label: localizations.translate(
+              i18.deliverIntervention.quantityWastedLabel,
             ),
+            validationMessages: {
+              "required": (control) {
+                return localizations.translate(
+                  i18.common.corecommonRequired,
+                );
+              },
+            },
           ),
+
+          // Solution customization
+          // SizedBox(
+          //   child: Align(
+          //     alignment: Alignment.centerLeft,
+          //     child: (widget.cardIndex == widget.totalItems - 1 &&
+          //             widget.totalItems > 1)
+          //         ? DigitIconButton(
+          //             onPressed: () async {
+          //               final submit = await DigitDialog.show<bool>(
+          //                 context,
+          //                 options: DigitDialogOptions(
+          //                   titleText: localizations.translate(
+          //                     i18.deliverIntervention
+          //                         .resourceDeleteBeneficiaryDialogTitle,
+          //                   ),
+          //                   primaryAction: DigitDialogActions(
+          //                     label: localizations.translate(
+          //                       i18.deliverIntervention
+          //                           .resourceDeleteBeneficiaryPrimaryActionLabel,
+          //                     ),
+          //                     action: (context) {
+          //                       Navigator.of(
+          //                         context,
+          //                         rootNavigator: true,
+          //                       ).pop(true);
+          //                     },
+          //                   ),
+          //                   secondaryAction: DigitDialogActions(
+          //                     label: localizations.translate(
+          //                       i18.common.coreCommonCancel,
+          //                     ),
+          //                     action: (context) => Navigator.of(
+          //                       context,
+          //                       rootNavigator: true,
+          //                     ).pop(false),
+          //                   ),
+          //                 ),
+          //               );
+          //               if (submit == true) {
+          //                 widget.onDelete(widget.cardIndex);
+          //               }
+          //             },
+          //             iconText: localizations.translate(
+          //               i18.deliverIntervention.resourceDeleteBeneficiary,
+          //             ),
+          //             icon: Icons.delete,
+          //           )
+          //         : const Offstage(),
+          //   ),
+          // ),
         ],
       ),
     );

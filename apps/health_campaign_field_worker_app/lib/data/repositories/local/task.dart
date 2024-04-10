@@ -28,6 +28,10 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
             sql.task.projectId.equals(
               query.projectId!,
             ),
+          if (query.createdBy != null)
+            sql.task.createdBy.equals(
+              query.createdBy!,
+            ),
         ]),
       );
 

@@ -58,7 +58,7 @@ Widget buildTableContent(
       top: 0,
     ),
     // [TODO - need to set the height of the card based on the number of items]
-    height: MediaQuery.of(context).size.height / 2.6,
+    height: containerHeight,
     width: MediaQuery.of(context).size.width / 1.25,
     child: BlocBuilder<ProjectBloc, ProjectState>(
       builder: (context, projectState) {
@@ -82,7 +82,9 @@ Widget buildTableContent(
                 ),
               },
             ),
-            const Divider(),
+            const Divider(
+              thickness: 1,
+            ),
             getHeightConditionString(
                       '${fetchProductVariant(item, individualModel)?.condition}',
                     ) !=
@@ -104,7 +106,9 @@ Widget buildTableContent(
                       '${fetchProductVariant(item, individualModel)?.condition}',
                     ) !=
                     null
-                ? const Divider()
+                ? const Divider(
+                    thickness: 1.0,
+                  )
                 : const Offstage(),
             // Build the DigitTable with the data
             DigitTable(

@@ -303,10 +303,16 @@ class KeyValue {
 class StatusKeys {
   bool isNotEligible;
   bool isBeneficiaryRefused;
+  bool isBeneficiaryIneligible;
   bool isBeneficiaryReferred;
   bool isStatusReset;
-  StatusKeys(this.isNotEligible, this.isBeneficiaryRefused,
-      this.isBeneficiaryReferred, this.isStatusReset);
+  StatusKeys(
+    this.isNotEligible,
+    this.isBeneficiaryRefused,
+    this.isBeneficiaryIneligible,
+    this.isBeneficiaryReferred,
+    this.isStatusReset,
+  );
 }
 
 class RequestInfoData {

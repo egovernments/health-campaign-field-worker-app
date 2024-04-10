@@ -276,7 +276,10 @@ class _HouseholdLocationPageState
       _accuracyKey: FormControl<double>(
         value: addressModel?.locationAccuracy,
       ),
-      _landmarkKey: FormControl<String>(value: addressModel?.landmark),
+      _landmarkKey:
+          FormControl<String>(value: addressModel?.landmark, validators: [
+        CustomValidator.requiredMin,
+      ]),
     });
   }
 }

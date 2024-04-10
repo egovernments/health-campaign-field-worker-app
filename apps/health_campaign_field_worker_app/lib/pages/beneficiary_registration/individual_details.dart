@@ -105,13 +105,6 @@ class _IndividualDetailsPageState
                       onPressed: isClicked
                           ? null
                           : () async {
-                              final age = DigitDateUtils.calculateAge(
-                                form.control(_dobKey).value as DateTime?,
-                              );
-                              if ((age.years == 0 && age.months == 0) ||
-                                  age.years >= 150 && age.months > 0) {
-                                form.control(_dobKey).setErrors({'': true});
-                              }
                               final userId = context.loggedInUserUuid;
                               final projectId = context.projectId;
                               form.markAllAsTouched();
@@ -444,7 +437,9 @@ class _IndividualDetailsPageState
                                         DigitDateUtils.calculateAge(value);
                                     if ((age.years == 0 && age.months == 0) ||
                                         age.months > 11 ||
-                                        (age.years >= 150 && age.months >= 0)) {
+                                        (age.years > 150 ||
+                                            (age.years == 150 &&
+                                                age.months > 0))) {
                                       formControl.setErrors({'': true});
                                     } else {
                                       formControl.removeError('');
@@ -492,8 +487,14 @@ class _IndividualDetailsPageState
                                 label: localizations.translate(
                                   i18.individualDetails.mobileNumberLabelText,
                                 ),
+                                maxLength: 11,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                    RegExp("[0-9]"),
+                                  ),
+                                ],
                                 validationMessages: {
-                                  'maxLength': (object) =>
+                                  'mobileNumber': (object) =>
                                       localizations.translate(i18
                                           .individualDetails
                                           .mobileNumberInvalidFormatValidationMessage),

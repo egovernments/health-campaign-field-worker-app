@@ -18,7 +18,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
 
   const BackNavigationHelpHeaderWidget({
     super.key,
-    this.showHelp = true,
+    this.showHelp = false, //hiding help
     this.showBackNavigation = true,
     this.showLogoutCTA = false,
     this.helpClicked,
@@ -77,35 +77,35 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(width: showHelp ? 16 : 0),
-          if (showHelp)
-            TextButton(
-              style: TextButton.styleFrom(padding: EdgeInsets.zero),
-              onPressed: helpClicked,
-              child: Row(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(
-                      kPadding,
-                      kPadding,
-                      kPadding / 1,
-                      kPadding,
-                    ),
-                    child: Text(
-                      AppLocalizations.of(context)
-                          .translate(i18.common.coreCommonHelp),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
+          // SizedBox(width: showHelp ? 16 : 0),
+          // if (showHelp)
+          //   TextButton(
+          //     style: TextButton.styleFrom(padding: EdgeInsets.zero),
+          //     onPressed: helpClicked,
+          //     child: Row(
+          //       children: <Widget>[
+          //         Padding(
+          //           padding: const EdgeInsets.fromLTRB(
+          //             kPadding,
+          //             kPadding,
+          //             kPadding / 1,
+          //             kPadding,
+          //           ),
+          //           child: Text(
+          //             AppLocalizations.of(context)
+          //                 .translate(i18.common.coreCommonHelp),
+          //             overflow: TextOverflow.ellipsis,
+          //           ),
+          //         ),
 
-                  const Icon(
-                    Icons.help_outline_outlined,
-                  ), // Add the icon to the right
-                ],
-              ),
-            ),
-          SizedBox(width: showcaseButton != null ? 16 : 0),
-          if (showcaseButton != null) showcaseButton!,
+          //         const Icon(
+          //           Icons.help_outline_outlined,
+          //         ), // Add the icon to the right
+          //       ],
+          //     ),
+          //   ),
+          // SizedBox(width: showcaseButton != null ? 16 : 0),
+          // if (showcaseButton != null) showcaseButton!,
         ],
       ),
     );

@@ -532,25 +532,26 @@ class _DeliverInterventionPageState
                                                               },
                                                             ))
                                                         .toList(),
-                                                    Center(
-                                                      child: DigitIconButton(
-                                                        onPressed: () async {
-                                                          addController(form);
-                                                          setState(() {
-                                                            _controllers.add(
-                                                              _controllers
-                                                                  .length,
-                                                            );
-                                                          });
-                                                        },
-                                                        icon: Icons.add_circle,
-                                                        iconText: localizations
-                                                            .translate(
-                                                          i18.deliverIntervention
-                                                              .resourceAddBeneficiary,
-                                                        ),
-                                                      ),
-                                                    ),
+                                                    // Solution customization
+                                                    // Center(
+                                                    //   child: DigitIconButton(
+                                                    //     onPressed: () async {
+                                                    //       addController(form);
+                                                    //       setState(() {
+                                                    //         _controllers.add(
+                                                    //           _controllers
+                                                    //               .length,
+                                                    //         );
+                                                    //       });
+                                                    //     },
+                                                    //     icon: Icons.add_circle,
+                                                    //     iconText: localizations
+                                                    //         .translate(
+                                                    //       i18.deliverIntervention
+                                                    //           .resourceAddBeneficiary,
+                                                    //     ),
+                                                    //   ),
+                                                    // ),
                                                   ],
                                                 ),
                                               ),
