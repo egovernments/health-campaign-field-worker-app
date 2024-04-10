@@ -33,4 +33,5 @@ Below are the sequence diagrams on each feature on how it interacts with HCM App
 
 ![record_stock_inventory](https://github.com/egovernments/health-campaign-field-worker-app/assets/154230258/77a3a60b-38de-4aa7-8a00-bd1a3139549e)
 ![stock_recon_flow](https://github.com/egovernments/health-campaign-field-worker-app/assets/154230258/60b8037b-ff54-4f42-84d3-298216f70ecf)
-![stock_reports](https://github.com/egovernments/health-campaign-field-worker-app/assets/154230258/1d78b9b2-0816-4e88-8332-12b0cdc8bcdf)
+![stock_reports](https://github.com/egovernments/health-campaign-field-worker-app/assets/154230258/5ca35c54-af62-49db-a238-fcff8640c9cf)
+
