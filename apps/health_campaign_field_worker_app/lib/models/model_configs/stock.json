@@ -104,6 +104,14 @@
       "includeForTable": false
     }
   ],
+  "dateTimeAttributes": [
+    {
+      "name": "dateOfEntry",
+      "type": "DateTime",
+      "includeForQuery": true,
+      "nullable": true
+    }
+  ],
   "isEnum": false
 }
 

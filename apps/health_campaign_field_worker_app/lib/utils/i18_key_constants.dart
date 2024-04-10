@@ -46,11 +46,14 @@ const complaintsDetailsShowcase = ComplaintsDetailsShowcase();
 const complaintsDetailsViewShowcase = ComplaintsDetailsViewShowcase();
 const complaintsInboxShowcase = ComplaintsInboxShowcase();
 const referBeneficiary = ReferBeneficiary();
+const ineligibilityReasons = IneligibilityReasons();
 
 class Common {
   const Common();
 
   String get coreCommonContinue => 'CORE_COMMON_CONTINUE';
+
+  String get coreCommonSyncInProgress => 'CORE_COMMON_SYNC_IN_PROGRESS';
 
   String get coreCommonAge => 'CORE_COMMON_AGE';
 
@@ -117,6 +120,8 @@ class Common {
 
   String get min2CharsRequired => 'MIN_2_CHARS_REQUIRED';
 
+  String get min3CharsRequired => 'MIN_REQUIRED_3';
+
   String get maxCharsRequired => 'MAX_CHARS_ALLOWED';
 
   String get maxValue => 'MAX_VALUE_ALLOWED';
@@ -124,8 +129,9 @@ class Common {
 
   String get noResultsFound => 'NO_RESULTS_FOUND';
 
-  String get coreCommonSyncInProgress => 'CORE_COMMON_SYNC_IN_PROGRESS';
+  String get coreCommonWarning => 'CORE_COMMON_WARNING';
 
+  String get coreQuantityWasted => 'CORE_QUANTITY_WASTED';
   String get facilitySearchHeaderLabel => 'FACILITY_SEARCH_HEADER_LABEL';
   String get projectFacilitySearchHeaderLabel =>
       'PROJECT_FACILITY_SEARCH_HEADER_LABEL';
@@ -912,9 +918,11 @@ class BeneficiaryDetails {
   String get resourcesTobeProvided => 'RESOURCES_TO_BE_PROVIDED';
 
   String get beneficiaryAge => 'BENEFICIARY_AGE';
+  String get beneficiaryHeight => 'BENEFICIARY_HEIGHT';
   String get ctaProceed => 'PROCEED';
   String get beneficiaryDoseNo => 'BENEFICIARY_DETAILS_DOSE_NO';
   String get beneficiaryDose => 'BENEFICIARY_DETAILS_DOSE';
+  String get beneficiaryDeliveryText => 'DELIVERY';
   String get beneficiaryStatus => 'BENEFICIARY_DETAILS_STATUS';
   String get beneficiaryResources => 'BENEFICIARY_DETAILS_RESOURCES';
   String get beneficiaryQuantity => 'BENEFICIARY_DETAILS_QUANTITY';
@@ -924,6 +932,8 @@ class BeneficiaryDetails {
   String get beneficiaryCycle => 'BENEFICIARY_DETAILS_CYCLE';
   String get currentCycleLabel => 'BENEFICIARY_DETAILS_CURRENT_CYCLE_LABEL';
   String get fromCurrentLocation => 'FROM_CURRENT_LOCATION';
+  String get beneficiary => 'BENEFICIARY';
+  String get beneficiaryCriteria => 'BENEFICIARY_CRITERIA';
   String get unableToScan => 'UNABLE_TO_SCAN';
 
   String get scanValidResource => 'SCAN_VALID_RESOURCE';
@@ -983,7 +993,18 @@ class IndividualDetails {
 
   String get individualsDetailsLabelText => 'INDIVIDUAL_LABEL_TEXT';
 
+  String get childIndividualsDetailsLabelText => 'CHILD_INDIVIDUAL_LABEL_TEXT';
+
   String get nameLabelText => 'INDIVIDUAL_NAME_LABEL_TEXT';
+
+  String get firstNameLabelText => 'INDIVIDUAL_FIRST_NAME_LABEL_TEXT';
+
+  String get lastNameLabelText => 'INDIVIDUAL_LAST_NAME_LABEL_TEXT';
+
+  String get childFirstNameLabelText =>
+      'CHILD_INDIVIDUAL_FIRST_NAME_LABEL_TEXT';
+
+  String get childLastNameLabelText => 'CHILD_INDIVIDUAL_LAST_NAME_LABEL_TEXT';
 
   String get checkboxLabelText => 'HEAD_OF_HOUSEHOLD_LABEL_TEXT';
 
@@ -1021,7 +1042,13 @@ class IndividualDetails {
 
   String get yearsAndMonthsErrorText => 'ERR_YEARS_AND_MONTHS';
 
-  String get linkVoucherToIndividual => 'LINK_VOUCHER_TO_INDIVIDUAL';
+  String get firstNameIsRequiredError => 'FIRST_NAME_REQUIRED_ERROR_MESSAGE';
+
+  String get firstNameLengthError => 'FIRST_NAME_LENGTH_ERROR_MESSAGE';
+
+  String get lastNameLengthError => 'LAST_NAME_LENGTH_ERROR_MESSAGE';
+
+  String get lastNameIsRequiredError => 'LAST_NAME_REQUIRED_ERROR_MESSAGE';
 }
 
 class HouseholdLocation {
@@ -1039,6 +1066,8 @@ class HouseholdLocation {
 
   String get landmarkFormLabel => 'LANDMARK_FORM_LABEL';
 
+  String get accuracyFormLabel => 'ACCURACY_FORM_LABEL';
+
   String get householdAddressLine2LabelText =>
       'HOUSEHOLD_ADDRESS_LINE_2_FORM_LABEL';
 
@@ -1052,10 +1081,16 @@ class AcknowledgementSuccess {
 
   String get actionLabelText => 'ACKNOWLEDGEMENT_SUCCESS_ACTION_LABEL_TEXT';
 
+  String get stockActionLabelText =>
+      'STOCK_ACKNOWLEDGEMENT_SUCCESS_ACTION_LABEL_TEXT';
+
   String get acknowledgementDescriptionText =>
       'ACKNOWLEDGEMENT_SUCCESS_DESCRIPTION_TEXT';
 
   String get acknowledgementLabelText => 'ACKNOWLEDGEMENT_SUCCESS_LABEL_TEXT';
+
+  String get beneficiaryAcknowledgementLabelText =>
+      "BENEFICIARY_ACKNOWLEDGEMENT_SUCCESS_LABEL_TEXT";
 
   String get goToHome => 'GO_TO_HOME_SCREEN';
   String get downloadmoredata => 'DOWNLOAD_MORE_DATA';
@@ -1084,6 +1119,9 @@ class HouseholdOverView {
 
   String get householdOverViewEditLabel =>
       'HOUSEHOLD_OVER_VIEW_EDIT_ICON_LABEL';
+
+  String get householdOverViewHouseholderHeadLabel =>
+      'HOUSEHOLD_OVER_VIEW_HOUSEHOLDER_HEAD_LABEL';
 
   String get householdOverViewDeleteLabel =>
       'HOUSEHOLD_OVER_VIEW_DELETE_ICON_LABEL';
@@ -1160,12 +1198,18 @@ class MemberCard {
   String get recordAdverseEventsLabel =>
       'MEMBER_CARD_RECORD_ADVERSE_EVENTS_LABEL';
   String get referBeneficiaryLabel => 'MEMBER_CARD_REFER_BENEFICIARY_LABEL';
+  String get markIneligibleLabel => 'MEMBER_CARD_MARK_INELIGIBLE_LABEL';
+  String get householdMemberText => "HOUSEHOLD_MEMBER_TEXT";
+  String get householdMembersText => "HOUSEHOLD_MEMBERS_TEXT";
 }
 
 class DeliverIntervention {
   const DeliverIntervention();
 
   String get deliverInterventionLabel => 'DELIVER_INTERVENTION_LABEL';
+
+  String get deliverInteventionAdministeredLabel =>
+      'DELIVER_INTERVENTION_ADMINISTERED_LABEL';
 
   String get deliverInterventionResourceLabel =>
       'DELIVER_INTERVENTION_RESOURCE_LABEL';
@@ -1182,8 +1226,13 @@ class DeliverIntervention {
   String get quantityDistributedLabel =>
       'DELIVER_INTERVENTION_QUANTITY_DISTRIBUTED_LABEL';
 
+  String get quantityWastedLabel =>
+      'DELIVER_INTERVENTION_QUANTITY_WASTED_LABEL';
+
   String get deliveryCommentLabel =>
       'DELIVER_INTERVENTION_DELIVERY_COMMENT_LABEL';
+
+  String get disabilityLabel => 'DELIVER_INTERVENTION_DISABILITY_LABEL';
 
   String get idTypeText => 'DELIVER_INTERVENTION_ID_TYPE_TEXT';
 
@@ -1218,6 +1267,7 @@ class DeliverIntervention {
   String get viewPastCycles => 'DELIVER_INTERVENTION_VIEW_PAST_CYCLES';
   String get currentCycle => 'DELIVER_INTERVENTION_CURRENT_CYCLE';
   String get cycle => 'DELIVERY_CYCLE';
+  String get recordCycle => 'RECORD_CYCLE';
   String get recordPastDeliveryDeatils =>
       'DELIVER_INTERVENTION_PAST_DELIVERY_DETAILS';
   String get wasDosePastDeliveryDetails =>
@@ -1228,6 +1278,8 @@ class DeliverIntervention {
   String get resourceCannotBeZero => 'RESOURCE_QUANTITY_CANNOT_BE_ZERO';
 
   String get resourceDeliveredValidation => 'RESOURCE_DELIVERED_VALIDATION';
+
+  String get deliveryCommentRequired => 'DELIVERY_COMMENT_REQUIRED';
 
   String get unableToScan => 'UNABLE_TO_SCAN';
 
@@ -1300,11 +1352,17 @@ class WarehouseDetails {
 
   String get warehouseDetailsLabel => 'WAREHOUSE_DETAILS_LABEL';
 
+  String get usDetails => 'US_DETAILS';
+
   String get dateOfReceipt => 'WAREHOUSE_DETAILS_DATE_OF_RECEIPT';
 
   String get administrativeUnit => 'WAREHOUSE_DETAILS_ADMINISTRATIVE_UNIT';
 
+  String get organizationUnit => 'WAREHOSUE_DETAILS_ORGANIZATION_UNIT';
+
   String get warehouseNameId => 'WAREHOSUE_DETAILS_WAREHOUSE_NAME_ID';
+
+  String get usNameCommunitySupervisor => 'US_NAME_COMMUNITY_SUPERVISOR';
 }
 
 class StockDetails {
@@ -1380,7 +1438,24 @@ class StockDetails {
 
   String get dialogContent => 'STOCK_DETAILS_DIALOG_CONTENT';
 
+  String get countDialogTitle => 'STOCK_DETAILS_COUNT_DIALOG_TITLE';
+
+  String get countContent => 'STOCK_DETAILS_COUNT_DIALOG_CONTENT';
+
+  String get countDialogSuccess =>
+      'STOCK_DETAILS_COUNT_DIALOG_SUCCESS_ACTION_LABEL';
+
+  String get countDialogCancel =>
+      'STOCK_DETAILS_COUNT_DIALOG_CANCEL_ACTION_LABEL';
+
   String get transportTypeLabel => 'STOCK_DETAILS_TRANSPORT_TYPE';
+
+  String get receivedSpaqDetails => 'RECEIVED_SPAQ_DETAILS';
+  String get selectSpaqVariant => 'SELECT_SPAQ_VARIANT';
+  String get issuedSpaqDetails => 'ISSUED_SPAQ_DETAILS';
+  String get returnedSpaqDetails => 'RETURNED_SPAQ_DETAILS';
+  String get damagedSpaqDetails => 'DAMAGED_SPAQ_DETAILS';
+  String get quantityDamagedCountLabel => 'STOCK_DAMAGED_QUANTITY_LABEL';
 }
 
 class StockReconciliationDetails {
@@ -1389,10 +1464,13 @@ class StockReconciliationDetails {
   String get reconciliationPageTitle => 'STOCK_RECONCILIATION_PAGE_TITLE';
 
   String get facilityLabel => 'STOCK_RECONCILIATION_FACILITY_LABEL';
+  String get facilityName => 'STOCK_RECONCILIATION_FACILITY_NAME';
 
   String get stockLabel => 'STOCK_LABEL';
 
   String get productLabel => 'STOCK_RECONCILIATION_PRODUCT_LABEL';
+
+  String get spaqLabel => 'STOCK_RECONCILIATION_SPAQ_LABEL';
 
   String get dateOfReconciliation => 'STOCK_RECONCILIATION_DATE';
 
@@ -1415,7 +1493,9 @@ class StockReconciliationDetails {
 
   String get infoCardTitle => 'STOCK_RECONCILIATION_INFO_CARD_TITLE';
 
-  String get infoCardContent => 'STOCK_RECONCILIATION_INFO_CARD_CONTENT';
+  String get infoCardContent => 'STOCK_RECONCILIATION_INFO_CARD_CONTENT_SPAQ';
+  String get infoCardDescription =>
+      'STOCK_RECONCILIATION_INFO_CARD_DESCRIPTION_SPAQ';
 
   String get dialogTitle => 'STOCK_RECONCILIATION_DIALOG_TITLE';
 
@@ -1436,6 +1516,22 @@ class StockReconciliationDetails {
   String get fieldRequired => 'STOCK_RECONCILIATION_FILED_REQUIRED';
 
   String get teamCodeLabel => 'STOCK_TEAM_CODE_LABEL';
+
+  String get facilityNameCommunitySupervisor =>
+      'FACILITY_NAME_COMMUNITY_SUPERVISOR';
+
+  String get spaqReconciliation => 'SPAQ_RECONCILIATION';
+  String get spaqReceived => 'SPAQ_RECEIVED';
+  String get spaqIssued => 'SPAQ_ISSUED';
+  String get spaqReturned => 'SPAQ_RETURNED';
+  String get spaqDamaged => 'SPAQ_DAMAGED';
+  String get spaqOnHand => 'SPAQ_ON_HAND';
+  String get manualSpaqCount => 'MANUAL_SPAQ_COUNT';
+  String get physicalSpaqCount => 'PHYSICAL_SPAQ_COUNT';
+  String get reconciliationCommentRequiredError =>
+      'SPAQ_RECONCILIATION_COMMENT_IS_REQUIRED';
+  String get spaqSent => 'SPAQ_SENT';
+  String get spaqTheoretical => 'SPAQ_THEORETICAL';
 }
 
 class ManageStock {
@@ -1470,6 +1566,15 @@ class ManageStock {
 
   String get recordStockLossDescription =>
       'MANAGE_STOCK_RECORDSTOCK_LOSS_DESCRIPTION';
+
+  String get recordSpaqReceipt => 'RECORD_SPAQ_RECEIPT';
+  String get recordSpaqReceivedAtFacility => 'RECORD_SPAQ_RECEIVED_AT_FACILITY';
+  String get recordSpaqIssued => 'RECORD_SPAQ_ISSUED';
+  String get spaqSentFromFacility => 'SPAQ_SENT_FROM_FACILITY';
+  String get recordSpaqReturned => 'RECORD_SPAQ_RETURNED';
+  String get recordSpaqReturnedToFacility => 'RECORD_SPAQ_RETURNED_TO_FACILITY';
+  String get recordSpaqDamaged => 'RECORD_SPAQ_DAMAGED';
+  String get recordListOfSpaqDamaged => 'RECORD_LIST_OF_SPAQ_DAMAGED';
 }
 
 class Complaints {
@@ -1802,4 +1907,13 @@ class ReferBeneficiary {
   String get selectCycle => 'REFERRAL_SELECT_CYCLE';
   String get createReferralLabel => 'CREATE_REFERRAL_LABEL';
   String get noChecklistFound => 'NO_CHECKLISTS_FOUND';
+}
+
+class IneligibilityReasons {
+  const IneligibilityReasons();
+
+  String get dialogTitle => 'INELIGIBILITY_REASONS_DIALOG_TITLE';
+  String get dialogContent => 'INELIGIBILITY_REASONS_DIALOG_CONTENT';
+  String get ineligibilityReasonsLabel => 'INELIGIBILITY_REASONS_LABEL';
+  String get selectReasonsLabel => 'INELIGIBILITY_REASONS_SELECT_LABEL';
 }

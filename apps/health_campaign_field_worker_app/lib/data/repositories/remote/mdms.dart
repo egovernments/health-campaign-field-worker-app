@@ -134,6 +134,10 @@ class MdmsRepository {
             element.backgroundServiceConfig?.batteryPercentCutOff
         ..serviceInterval = element.backgroundServiceConfig?.serviceInterval;
 
+      final firebaseConfig = FirebaseConfig()
+        ..enableCrashlytics = element.firebaseConfig.enableCrashlytics
+        ..enableAnalytics = element.firebaseConfig.enableAnalytics;
+
       appConfiguration
         ..networkDetection = element.networkDetection
         ..persistenceMode = element.persistenceMode
@@ -141,7 +145,8 @@ class MdmsRepository {
         ..syncTrigger = element.syncTrigger
         ..tenantId = element.tenantId
         ..maxRadius = element.maxRadius
-        ..backgroundServiceConfig = backgroundServiceConfig;
+        ..backgroundServiceConfig = backgroundServiceConfig
+        ..firebaseConfig = firebaseConfig;
 
       final List<Languages> languageList = element.languages.map((element) {
         final languages = Languages()
@@ -284,6 +289,26 @@ class MdmsRepository {
     appConfiguration.referralReasons =
         result.referralReasons?.referralReasonList?.map((e) {
       final reasonTypes = ReferralReasons()
+        ..name = e.name
+        ..code = e.code
+        ..active = e.active;
+
+      return reasonTypes;
+    }).toList();
+
+    appConfiguration.ineligibilityReasons =
+        result.ineligibilityReasons?.ineligibilityReasonsList?.map((e) {
+      final reasonTypes = IneligibilityReasons()
+        ..name = e.name
+        ..code = e.code
+        ..active = e.active;
+
+      return reasonTypes;
+    }).toList();
+
+    appConfiguration.disabilityTypes =
+        result.disabilityTypes?.disabilityTypesList?.map((e) {
+      final reasonTypes = DisabilityTypes()
         ..name = e.name
         ..code = e.code
         ..active = e.active;

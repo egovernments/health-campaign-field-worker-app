@@ -10,7 +10,7 @@ part 'project_staff.mapper.dart';
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
 class ProjectStaffSearchModel extends EntitySearchModel with ProjectStaffSearchModelMappable {
   final String? id;
-  final List<String>? staffId;
+  final String? staffId;
   final String? userId;
   final String? projectId;
   final String? tenantId;

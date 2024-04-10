@@ -100,6 +100,18 @@ class AppInitializationBloc
                     MdmsMasterDetailModel('referralReasons'),
                   ],
                 ),
+                const MdmsModuleDetailModel(
+                  moduleName: 'HCM-INELIGIBILITY-REASONS',
+                  masterDetails: [
+                    MdmsMasterDetailModel('ineligibilityReasons'),
+                  ],
+                ),
+                const MdmsModuleDetailModel(
+                  moduleName: 'HCM-DISABILITY-TYPES',
+                  masterDetails: [
+                    MdmsMasterDetailModel('disabilityTypes'),
+                  ],
+                ),
               ],
             ),
           ).toJson(),

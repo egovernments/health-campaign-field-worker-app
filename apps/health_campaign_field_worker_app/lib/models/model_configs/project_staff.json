@@ -23,8 +23,7 @@
       "type": "String",
       "includeForQuery": true,
       "includeForEntity": false,
-      "includeForTable": false,
-      "isList": true
+      "includeForTable": false
     },
     {
       "name": "userId",

@@ -39,6 +39,9 @@ class _BeneficiaryDetailsPageState
     super.initState();
   }
 
+  static const _disabilityTypeKey = 'disabilityType';
+  static const _heightKey = 'height';
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -66,7 +69,8 @@ class _BeneficiaryDetailsPageState
           final taskData = state.householdMemberWrapper.tasks
               ?.where((element) =>
                   element.projectBeneficiaryClientReferenceId ==
-                  projectBeneficiary.first.clientReferenceId)
+                      projectBeneficiary.first.clientReferenceId &&
+                  element.status != Status.beneficiaryRefused.toValue())
               .toList();
           final projectState = context.read<ProjectBloc>().state;
           final bloc = context.read<DeliverInterventionBloc>();
@@ -256,44 +260,10 @@ class _BeneficiaryDetailsPageState
                                       ? householdMemberWrapper
                                           .headOfHousehold.name?.givenName
                                       : state.selectedIndividual?.name
-                                              ?.givenName ??
-                                          '--',
-                                  localizations.translate(
-                                    i18.deliverIntervention.idTypeText,
-                                  ): () {
-                                    final identifiers = context
-                                                .beneficiaryType !=
-                                            BeneficiaryType.individual
-                                        ? householdMemberWrapper
-                                            .headOfHousehold.identifiers
-                                        : state.selectedIndividual?.identifiers;
-                                    if (identifiers == null ||
-                                        identifiers.isEmpty) {
-                                      return '--';
-                                    }
-
-                                    return identifiers.first.identifierType ??
-                                        '--';
-                                  }(),
-                                  localizations.translate(
-                                    i18.deliverIntervention.idNumberText,
-                                  ): () {
-                                    final identifiers = context
-                                                .beneficiaryType !=
-                                            BeneficiaryType.individual
-                                        ? householdMemberWrapper
-                                            .headOfHousehold.identifiers
-                                        : state.selectedIndividual?.identifiers;
-                                    if (identifiers == null ||
-                                        identifiers.isEmpty) {
-                                      return '--';
-                                    }
-
-                                    return maskString(identifiers
-                                            .first.identifierId
-                                            .toString()) ??
-                                        '--';
-                                  }(),
+                                                  ?.givenName !=
+                                              null
+                                          ? '${state.selectedIndividual?.name?.givenName ?? ''} ${state.selectedIndividual?.name?.familyName ?? ''}'
+                                          : '--',
                                   localizations.translate(
                                     i18.common.coreCommonAge,
                                   ): () {
@@ -327,20 +297,54 @@ class _BeneficiaryDetailsPageState
                                     i18.common.coreCommonGender,
                                   ): context.beneficiaryType !=
                                           BeneficiaryType.individual
-                                      ? householdMemberWrapper.headOfHousehold
-                                          .gender?.name.sentenceCase
-                                      : state.selectedIndividual?.gender?.name
-                                              .sentenceCase ??
-                                          '--',
+                                      ? localizations.translate(
+                                          householdMemberWrapper
+                                                  .headOfHousehold.gender?.name
+                                                  .toUpperCase() ??
+                                              '--',
+                                        )
+                                      : localizations.translate(state
+                                              .selectedIndividual?.gender?.name
+                                              .toUpperCase() ??
+                                          '--'),
                                   localizations.translate(
                                     i18.common.coreCommonMobileNumber,
                                   ): context.beneficiaryType !=
                                           BeneficiaryType.individual
-                                      ? householdMemberWrapper
-                                          .headOfHousehold.mobileNumber
-                                      : state.selectedIndividual
-                                              ?.mobileNumber ??
-                                          '--',
+                                      ? localizations.translate(
+                                          householdMemberWrapper.headOfHousehold
+                                                  .mobileNumber ??
+                                              '--',
+                                        )
+                                      : localizations.translate(
+                                          state.selectedIndividual
+                                                  ?.mobileNumber ??
+                                              '--',
+                                        ),
+                                  localizations.translate(i18
+                                      .individualDetails.heightLabelText): () {
+                                    final height = state.selectedIndividual
+                                        ?.additionalFields?.fields
+                                        .firstWhereOrNull((element) =>
+                                            element.key == _heightKey)
+                                        ?.value;
+
+                                    return height;
+                                  }(),
+                                  localizations.translate(i18
+                                      .deliverIntervention
+                                      .disabilityLabel): () {
+                                    final disabilityType = state
+                                        .selectedIndividual
+                                        ?.additionalFields
+                                        ?.fields
+                                        .firstWhereOrNull((element) =>
+                                            element.key == _disabilityTypeKey)
+                                        ?.value;
+
+                                    return localizations
+                                        .translate(disabilityType);
+                                  }(),
                                   localizations.translate(i18
                                       .deliverIntervention
                                       .dateOfRegistrationLabel): () {

@@ -53,7 +53,7 @@ class PgrServiceRemoteRepository
             searchPath,
             queryParameters: {
               'offset': 0,
-              'limit': 100,
+              'limit': 1000,
               'tenantId': envConfig.variables.tenantId,
             }..addAll(query.toMap()),
             data: query.toMap(),

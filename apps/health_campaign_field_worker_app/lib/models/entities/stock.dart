@@ -24,6 +24,7 @@ class StockSearchModel extends EntitySearchModel with StockSearchModelMappable {
   final List<String>? clientReferenceId;
   final List<TransactionType>? transactionType;
   final List<TransactionReason>? transactionReason;
+  final DateTime? dateOfEntryTime;
   
   StockSearchModel({
     this.id,
@@ -41,9 +42,13 @@ class StockSearchModel extends EntitySearchModel with StockSearchModelMappable {
     this.clientReferenceId,
     this.transactionType,
     this.transactionReason,
+    int? dateOfEntry,
     super.boundaryCode,
     super.isDeleted,
-  }):  super();
+  }): dateOfEntryTime = dateOfEntry == null
+      ? null
+      : DateTime.fromMillisecondsSinceEpoch(dateOfEntry),
+   super();
 
   @MappableConstructor()
   StockSearchModel.ignoreDeleted({
@@ -62,8 +67,15 @@ class StockSearchModel extends EntitySearchModel with StockSearchModelMappable {
     this.clientReferenceId,
     this.transactionType,
     this.transactionReason,
+    int? dateOfEntry,
     super.boundaryCode,
-  }):  super(isDeleted: false);
+  }): dateOfEntryTime = dateOfEntry == null
+  ? null
+      : DateTime.fromMillisecondsSinceEpoch(dateOfEntry),
+   super(isDeleted: false);
+
+  int? get dateOfEntry => dateOfEntryTime?.millisecondsSinceEpoch;
+  
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
@@ -90,6 +102,7 @@ class StockModel extends EntityModel with StockModelMappable {
   final int? rowVersion;
   final TransactionType? transactionType;
   final TransactionReason? transactionReason;
+  final DateTime? dateOfEntryTime;
   final StockAdditionalFields? additionalFields;
 
   StockModel({
@@ -113,9 +126,16 @@ class StockModel extends EntityModel with StockModelMappable {
     this.rowVersion,
     this.transactionType,
     this.transactionReason,
+    int? dateOfEntry,
     super.auditDetails,super.clientAuditDetails,
     super.isDeleted = false,
-  }): super();
+  }): dateOfEntryTime = dateOfEntry == null
+          ? null
+          : DateTime.fromMillisecondsSinceEpoch(dateOfEntry),
+      super();
+
+  int?  get dateOfEntry => dateOfEntryTime?.millisecondsSinceEpoch;
+  
 
   StockCompanion get companion {
     return StockCompanion(
@@ -146,6 +166,7 @@ class StockModel extends EntityModel with StockModelMappable {
       nonRecoverableError: Value(nonRecoverableError),
       clientReferenceId: Value(clientReferenceId),
       rowVersion: Value(rowVersion),
+      dateOfEntry: Value(dateOfEntry),
       transactionType: Value(transactionType),
       transactionReason: Value(transactionReason),
       );

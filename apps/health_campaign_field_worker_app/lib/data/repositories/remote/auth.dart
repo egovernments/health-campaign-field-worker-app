@@ -35,4 +35,20 @@ class AuthRepository {
       rethrow;
     }
   }
+
+  Future logOutUser({
+    Map<String, String>? queryParameters,
+    dynamic body,
+    required String logoutPath,
+  }) async {
+    try {
+      await _client.post(
+        logoutPath,
+        queryParameters: queryParameters,
+        data: body ?? {},
+      );
+    } catch (error) {
+      rethrow;
+    }
+  }
 }

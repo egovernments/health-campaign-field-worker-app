@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:digit_components/digit_components.dart';
 import 'package:dio/dio.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../models/request_info/request_info_model.dart';
 import '../../utils/constants.dart';
@@ -21,12 +22,14 @@ class AuthTokenInterceptor extends Interceptor {
     RequestInterceptorHandler handler,
   ) async {
     final authToken = await localSecureStore.accessToken;
+    final info = await PackageInfo.fromPlatform();
+
     if (options.data is Map) {
       options.data = {
         ...options.data,
         "RequestInfo": RequestInfoModel(
           apiId: RequestInfoData.apiId,
-          ver: RequestInfoData.ver,
+          ver: 'App Version: ${info.version}',
           ts: DateTime.now().millisecondsSinceEpoch,
           action: options.path.split('/').last,
           did: RequestInfoData.did,

@@ -6,5 +6,6 @@ part 'beneficiary_type.mapper.dart';
 enum BeneficiaryType {
   @MappableValue("INDIVIDUAL") individual,
   @MappableValue("HOUSEHOLD") household,
+  @MappableValue("PRODUCT") product,
   ;
 }

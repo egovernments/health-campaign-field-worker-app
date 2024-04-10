@@ -24,6 +24,9 @@ class FacilitySearchModelMapper
   static List<String>? _$id(FacilitySearchModel v) => v.id;
   static const Field<FacilitySearchModel, List<String>> _f$id =
       Field('id', _$id, opt: true);
+  static String? _$name(FacilitySearchModel v) => v.name;
+  static const Field<FacilitySearchModel, String> _f$name =
+      Field('name', _$name, opt: true);
   static bool? _$isPermanent(FacilitySearchModel v) => v.isPermanent;
   static const Field<FacilitySearchModel, bool> _f$isPermanent =
       Field('isPermanent', _$isPermanent, opt: true);
@@ -51,6 +54,7 @@ class FacilitySearchModelMapper
   @override
   final MappableFields<FacilitySearchModel> fields = const {
     #id: _f$id,
+    #name: _f$name,
     #isPermanent: _f$isPermanent,
     #usage: _f$usage,
     #storageCapacity: _f$storageCapacity,
@@ -73,6 +77,7 @@ class FacilitySearchModelMapper
   static FacilitySearchModel _instantiate(DecodingData data) {
     return FacilitySearchModel.ignoreDeleted(
         id: data.dec(_f$id),
+        name: data.dec(_f$name),
         isPermanent: data.dec(_f$isPermanent),
         usage: data.dec(_f$usage),
         storageCapacity: data.dec(_f$storageCapacity),
@@ -141,6 +146,7 @@ abstract class FacilitySearchModelCopyWith<$R, $In extends FacilitySearchModel,
   @override
   $R call(
       {List<String>? id,
+      String? name,
       bool? isPermanent,
       String? usage,
       int? storageCapacity,
@@ -167,6 +173,7 @@ class _FacilitySearchModelCopyWithImpl<$R, $Out>
   @override
   $R call(
           {Object? id = $none,
+          Object? name = $none,
           Object? isPermanent = $none,
           Object? usage = $none,
           Object? storageCapacity = $none,
@@ -174,6 +181,7 @@ class _FacilitySearchModelCopyWithImpl<$R, $Out>
           Object? boundaryCode = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
+        if (name != $none) #name: name,
         if (isPermanent != $none) #isPermanent: isPermanent,
         if (usage != $none) #usage: usage,
         if (storageCapacity != $none) #storageCapacity: storageCapacity,
@@ -184,6 +192,7 @@ class _FacilitySearchModelCopyWithImpl<$R, $Out>
   FacilitySearchModel $make(CopyWithData data) =>
       FacilitySearchModel.ignoreDeleted(
           id: data.get(#id, or: $value.id),
+          name: data.get(#name, or: $value.name),
           isPermanent: data.get(#isPermanent, or: $value.isPermanent),
           usage: data.get(#usage, or: $value.usage),
           storageCapacity:
@@ -218,6 +227,9 @@ class FacilityModelMapper extends SubClassMapperBase<FacilityModel> {
       Field('additionalFields', _$additionalFields, opt: true);
   static String _$id(FacilityModel v) => v.id;
   static const Field<FacilityModel, String> _f$id = Field('id', _$id);
+  static String? _$name(FacilityModel v) => v.name;
+  static const Field<FacilityModel, String> _f$name =
+      Field('name', _$name, opt: true);
   static bool? _$isPermanent(FacilityModel v) => v.isPermanent;
   static const Field<FacilityModel, bool> _f$isPermanent =
       Field('isPermanent', _$isPermanent, opt: true);
@@ -255,6 +267,7 @@ class FacilityModelMapper extends SubClassMapperBase<FacilityModel> {
   final MappableFields<FacilityModel> fields = const {
     #additionalFields: _f$additionalFields,
     #id: _f$id,
+    #name: _f$name,
     #isPermanent: _f$isPermanent,
     #usage: _f$usage,
     #storageCapacity: _f$storageCapacity,
@@ -281,6 +294,7 @@ class FacilityModelMapper extends SubClassMapperBase<FacilityModel> {
     return FacilityModel(
         additionalFields: data.dec(_f$additionalFields),
         id: data.dec(_f$id),
+        name: data.dec(_f$name),
         isPermanent: data.dec(_f$isPermanent),
         usage: data.dec(_f$usage),
         storageCapacity: data.dec(_f$storageCapacity),
@@ -360,6 +374,7 @@ abstract class FacilityModelCopyWith<$R, $In extends FacilityModel, $Out>
   $R call(
       {FacilityAdditionalFields? additionalFields,
       String? id,
+      String? name,
       bool? isPermanent,
       String? usage,
       int? storageCapacity,
@@ -400,6 +415,7 @@ class _FacilityModelCopyWithImpl<$R, $Out>
   $R call(
           {Object? additionalFields = $none,
           String? id,
+          Object? name = $none,
           Object? isPermanent = $none,
           Object? usage = $none,
           Object? storageCapacity = $none,
@@ -413,6 +429,7 @@ class _FacilityModelCopyWithImpl<$R, $Out>
       $apply(FieldCopyWithData({
         if (additionalFields != $none) #additionalFields: additionalFields,
         if (id != null) #id: id,
+        if (name != $none) #name: name,
         if (isPermanent != $none) #isPermanent: isPermanent,
         if (usage != $none) #usage: usage,
         if (storageCapacity != $none) #storageCapacity: storageCapacity,
@@ -431,6 +448,7 @@ class _FacilityModelCopyWithImpl<$R, $Out>
       additionalFields:
           data.get(#additionalFields, or: $value.additionalFields),
       id: data.get(#id, or: $value.id),
+      name: data.get(#name, or: $value.name),
       isPermanent: data.get(#isPermanent, or: $value.isPermanent),
       usage: data.get(#usage, or: $value.usage),
       storageCapacity: data.get(#storageCapacity, or: $value.storageCapacity),

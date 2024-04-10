@@ -191,9 +191,9 @@ class _InventoryReportDetailsPageState
                                             builder: (context, state) {
                                               final facilities =
                                                   state.whenOrNull(
-                                                        fetched:
-                                                            (facilities, _) =>
-                                                                facilities,
+                                                        fetched: (facilities, _,
+                                                                __) =>
+                                                            facilities,
                                                       ) ??
                                                       [];
 

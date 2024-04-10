@@ -445,6 +445,7 @@ class MemberCard extends StatelessWidget {
                                           projectBeneficiaryClientRefId:
                                               projectBeneficiaryClientReferenceId ??
                                                   '',
+                                          individual: individual,
                                         ),
                                       );
                                     },

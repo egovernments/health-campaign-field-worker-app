@@ -78,7 +78,7 @@ abstract class RemoteRepository<D extends EntityModel,
             searchPath,
             queryParameters: {
               'offset': offSet ?? 0,
-              'limit': limit ?? 100,
+              'limit': limit ?? 1000,
               'tenantId': envConfig.variables.tenantId,
               if (query.isDeleted ?? false) 'includeDeleted': query.isDeleted,
             },
@@ -97,12 +97,15 @@ abstract class RemoteRepository<D extends EntityModel,
           );
         },
       );
-      AppLogger.instance.info(
-        'search Response Result: ${response.data}',
-        title: 'Data Repo',
-      );
-    } catch (error) {
-      return [];
+    } on DioError catch (error) {
+      if (error.response == null ||
+          error.response!.data['Errors'][0]['message']
+              .toString()
+              .contains(Constants.invalidAccessTokenKey)) {
+        rethrow;
+      } else {
+        return [];
+      }
     }
 
     final responseMap = (response.data);
@@ -453,7 +456,7 @@ abstract class LocalRepository<D extends EntityModel,
       entity,
       operation,
       createdAt: DateTime.now(),
-      createdBy: entity.clientAuditDetails?.lastModifiedBy ?? '',
+      createdBy: auditDetails.lastModifiedBy,
       type: type,
     );
 

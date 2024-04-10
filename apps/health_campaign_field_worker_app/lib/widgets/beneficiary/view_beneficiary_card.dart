@@ -120,23 +120,23 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                     taskdata.last.clientReferenceId)
                 .toList()
             : null;
-  
-    final ageInYears = DigitDateUtils.calculateAge(
-      householdMember.headOfHousehold.dateOfBirth != null
-          ? DigitDateUtils.getFormattedDateToDateTime(
-                householdMember.headOfHousehold.dateOfBirth!,
-              ) ??
-              DateTime.now()
-          : DateTime.now(),
-    ).years;
-    final ageInMonths = DigitDateUtils.calculateAge(
-      householdMember.headOfHousehold.dateOfBirth != null
-          ? DigitDateUtils.getFormattedDateToDateTime(
-                householdMember.headOfHousehold.dateOfBirth!,
-              ) ??
-              DateTime.now()
-          : DateTime.now(),
-    ).months;
+
+        final ageInYears = DigitDateUtils.calculateAge(
+          householdMember.headOfHousehold.dateOfBirth != null
+              ? DigitDateUtils.getFormattedDateToDateTime(
+                    householdMember.headOfHousehold.dateOfBirth!,
+                  ) ??
+                  DateTime.now()
+              : DateTime.now(),
+        ).years;
+        final ageInMonths = DigitDateUtils.calculateAge(
+          householdMember.headOfHousehold.dateOfBirth != null
+              ? DigitDateUtils.getFormattedDateToDateTime(
+                    householdMember.headOfHousehold.dateOfBirth!,
+                  ) ??
+                  DateTime.now()
+              : DateTime.now(),
+        ).months;
 
         final isNotEligible = !checkEligibilityForAgeAndSideEffect(
           DigitDOBAge(
@@ -154,8 +154,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
         );
         final isBeneficiaryRefused = checkIfBeneficiaryRefused(taskdata);
         final isBeneficiaryReferred = checkIfBeneficiaryReferred(
-          referralData,
-          currentCycle ?? const Cycle(),
+          taskdata,
         );
 
 // TODO need to pass the current cycle
@@ -224,7 +223,6 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
         // rowTableData
       },
     ).toList();
-
 
     final ageInYears = DigitDateUtils.calculateAge(
       householdMember.headOfHousehold.dateOfBirth != null

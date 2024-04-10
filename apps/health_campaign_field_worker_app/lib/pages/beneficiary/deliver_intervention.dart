@@ -42,6 +42,7 @@ class _DeliverInterventionPageState
   // Constants for form control keys
   static const _resourceDeliveredKey = 'resourceDelivered';
   static const _quantityDistributedKey = 'quantityDistributed';
+  static const _quantityWastedKey = 'quantityWasted';
   static const _deliveryCommentKey = 'deliveryComment';
   static const _doseAdministrationKey = 'doseAdministered';
   static const _dateOfAdministrationKey = 'dateOfAdministration';
@@ -636,7 +637,9 @@ class _DeliverInterventionPageState
     (form.control(_resourceDeliveredKey) as FormArray)
         .add(FormControl<ProductVariantModel>());
     (form.control(_quantityDistributedKey) as FormArray)
-        .add(FormControl<int>(value: 0, validators: [Validators.min(1)]));
+        .add(FormControl<String>(validators: [Validators.required]));
+    (form.control(_quantityWastedKey) as FormArray)
+        .add(FormControl<String>(validators: [Validators.required]));
   }
 
   // ignore: long-parameter-list
@@ -698,6 +701,15 @@ class _DeliverInterventionPageState
                   createdBy: context.loggedInUserUuid,
                   createdTime: context.millisecondsSinceEpoch(),
                 ),
+                additionalFields:
+                    TaskResourceAdditionalFields(version: 1, fields: [
+                  AdditionalField(
+                    _quantityWastedKey,
+                    (((form.control(_quantityWastedKey) as FormArray)
+                            .value)?[productvariantList.indexOf(e)])
+                        .toString(),
+                  ),
+                ]),
               ))
           .toList(),
       address: address?.copyWith(
@@ -809,16 +821,15 @@ class _DeliverInterventionPageState
               )),
         ],
       ),
-      _quantityDistributedKey: FormArray<int>([
-        ..._controllers.mapIndexed(
-          (i, e) => FormControl<int>(
-            value: context.beneficiaryType != BeneficiaryType.individual
-                ? int.tryParse(
-                    bloc.tasks?.last.resources?.elementAt(i).quantity ?? '0',
-                  )
-                : 0,
-            validators: [Validators.min(1)],
-          ),
+      _quantityDistributedKey: FormArray<double>([
+        ..._controllers.map(
+          (e) =>
+              FormControl<double>(value: 0, validators: [Validators.min(.5)]),
+        ),
+      ]),
+      _quantityWastedKey: FormArray<String>([
+        ..._controllers.map(
+          (e) => FormControl<String>(),
         ),
       ]),
     });

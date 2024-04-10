@@ -1,5 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../data/local_store/no_sql/schema/app_configuration.dart';
+import '../disability_types/disability_types_model.dart';
+import '../ineligibility_reasons/ineligibility_reasons_model.dart';
 import '../referral_reasons/referral_reasons_model.dart';
 import '../symptoms_types/symptoms_types_model.dart';
 
@@ -50,13 +53,16 @@ class MdmsMasterDetailModel with _$MdmsMasterDetailModel {
 class AppConfigPrimaryWrapperModel with _$AppConfigPrimaryWrapperModel {
   const factory AppConfigPrimaryWrapperModel({
     @JsonKey(name: 'HCM-FIELD-APP-CONFIG')
-        final AppConfigSecondaryWrapperModel? appConfig,
-    @JsonKey(name: 'module-version')
-        final RowVersionWrapperModel? rowVersions,
+    final AppConfigSecondaryWrapperModel? appConfig,
+    @JsonKey(name: 'module-version') final RowVersionWrapperModel? rowVersions,
     @JsonKey(name: 'HCM-SYMPTOMS-TYPES')
-        final SymptomsTypesSecondaryWrapperModel? symptomsTypes,
+    final SymptomsTypesSecondaryWrapperModel? symptomsTypes,
     @JsonKey(name: 'HCM-REFERRAL-REASONS')
-        final ReferralReasonsWrapperModel? referralReasons,
+    final ReferralReasonsWrapperModel? referralReasons,
+    @JsonKey(name: 'HCM-INELIGIBILITY-REASONS')
+    final IneligibilityReasonsWrapperModel? ineligibilityReasons,
+    @JsonKey(name: 'HCM-DISABILITY-TYPES')
+    final DisabilityTypesWrapperModel? disabilityTypes,
   }) = _AppConfigPrimaryWrapperModel;
 
   factory AppConfigPrimaryWrapperModel.fromJson(
@@ -128,7 +134,8 @@ class AppConfig with _$AppConfig {
     @JsonKey(name: 'CALL_SUPPORT')
         required List<CallSupportList>? callSupportOptions,
     @JsonKey(name: 'TRANSPORT_TYPES')
-        required List<TransportTypes> transportTypes,
+    required List<TransportTypes> transportTypes,
+    @JsonKey(name: 'FIREBASE_CONFIG') required FirebaseConfig firebaseConfig,
   }) = _AppConfig;
 
   factory AppConfig.fromJson(Map<String, dynamic> json) =>
@@ -296,4 +303,15 @@ class RowVersions with _$RowVersions {
   }) = _RowVersions;
   factory RowVersions.fromJson(Map<String, dynamic> json) =>
       _$RowVersionsFromJson(json);
+}
+
+@freezed
+class FirebaseConfig with _$FirebaseConfig {
+  factory FirebaseConfig({
+    required bool enableCrashlytics,
+    required bool enableAnalytics,
+  }) = _FirebaseConfig;
+
+  factory FirebaseConfig.fromJson(Map<String, dynamic> json) =>
+      _$FirebaseConfigFromJson(json);
 }

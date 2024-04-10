@@ -65,11 +65,15 @@ class AppConfiguration {
   late String? tenantId;
 
   @Name('FIREBASE_CONFIG')
-  FirebaseConfig? firebaseConfig;
+  late FirebaseConfig? firebaseConfig;
 
   late List<SymptomsTypes>? symptomsTypes;
 
   late List<ReferralReasons>? referralReasons;
+
+  late List<IneligibilityReasons>? ineligibilityReasons;
+
+  late List<DisabilityTypes>? disabilityTypes;
 }
 
 @embedded
@@ -174,8 +178,11 @@ class CallSupportList {
 
 @embedded
 class FirebaseConfig {
-  bool? enableCrashlytics;
-  bool? enableAnalytics;
+  @Name("enableCrashlytics")
+  late bool? enableCrashlytics;
+
+  @Name("enableAnalytics")
+  late bool? enableAnalytics;
 }
 
 @embedded
@@ -187,6 +194,20 @@ class SymptomsTypes {
 
 @embedded
 class ReferralReasons {
+  late String code;
+  late String name;
+  late bool active;
+}
+
+@embedded
+class IneligibilityReasons {
+  late String code;
+  late String name;
+  late bool active;
+}
+
+@embedded
+class DisabilityTypes {
   late String code;
   late String name;
   late bool active;

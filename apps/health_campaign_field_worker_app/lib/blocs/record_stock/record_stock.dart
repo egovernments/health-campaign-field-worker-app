@@ -29,15 +29,23 @@ class RecordStockBloc extends Bloc<RecordStockEvent, RecordStockState> {
     RecordStockSaveWarehouseDetailsEvent event,
     RecordStockEmitter emit,
   ) async {
-    state.maybeMap(
+    await state.maybeMap(
       orElse: () {
         throw const InvalidRecordStockStateException();
       },
-      create: (value) {
+      create: (value) async {
+        final facilityId = event.facilityModel.id;
+        final existingStocks = await stockRepository.search(
+          StockSearchModel(
+            facilityId: facilityId,
+          ),
+        );
+
         emit(
           value.copyWith(
             dateOfRecord: event.dateOfRecord,
             facilityModel: event.facilityModel,
+            existingStocks: existingStocks,
           ),
         );
       },
@@ -114,6 +122,7 @@ class RecordStockBloc extends Bloc<RecordStockEvent, RecordStockState> {
               facilityId: facilityModel.id,
               rowVersion: 1,
               tenantId: envConfig.variables.tenantId,
+              dateOfEntry: dateOfRecord.millisecondsSinceEpoch,
             ),
           );
 
@@ -160,7 +169,9 @@ class RecordStockEvent with _$RecordStockEvent {
 
 @freezed
 class RecordStockState with _$RecordStockState {
-  const factory RecordStockState.create({
+  RecordStockState._();
+
+  factory RecordStockState.create({
     required StockRecordEntryType entryType,
     @Default(false) bool loading,
     required String projectId,
@@ -169,9 +180,10 @@ class RecordStockState with _$RecordStockState {
     String? primaryId,
     FacilityModel? facilityModel,
     StockModel? stockModel,
+    @Default([]) List<StockModel> existingStocks,
   }) = RecordStockCreateState;
 
-  const factory RecordStockState.persisted({
+  factory RecordStockState.persisted({
     required StockRecordEntryType entryType,
     required String projectId,
     DateTime? dateOfRecord,
@@ -179,7 +191,51 @@ class RecordStockState with _$RecordStockState {
     String? primaryType,
     String? primaryId,
     StockModel? stockModel,
+    @Default([]) List<StockModel> existingStocks,
   }) = RecordStockPersistedState;
+
+  num get stockReceived => _getQuantityCount(
+        existingStocks.where((e) =>
+            e.transactionType == TransactionType.received &&
+            e.transactionReason == TransactionReason.received),
+      );
+
+  num get stockIssued => _getQuantityCount(
+        existingStocks.where((e) =>
+            e.transactionType == TransactionType.dispatched &&
+            e.transactionReason == null),
+      );
+
+  num get stockReturned => _getQuantityCount(
+        existingStocks.where((e) =>
+            e.transactionType == TransactionType.received &&
+            e.transactionReason == TransactionReason.returned),
+      );
+
+  num get stockLost => _getQuantityCount(
+        existingStocks.where((e) =>
+            e.transactionType == TransactionType.dispatched &&
+            (e.transactionReason == TransactionReason.lostInTransit ||
+                e.transactionReason == TransactionReason.lostInStorage)),
+      );
+
+  num get stockDamaged => _getQuantityCount(
+        existingStocks.where((e) =>
+            e.transactionType == TransactionType.dispatched &&
+            (e.transactionReason == TransactionReason.damagedInTransit ||
+                e.transactionReason == TransactionReason.damagedInStorage)),
+      );
+
+  num get stockInHand =>
+      (stockReceived + stockReturned) -
+      (stockIssued + stockDamaged + stockLost);
+
+  num _getQuantityCount(Iterable<StockModel> stocks) {
+    return stocks.fold<num>(
+      0.0,
+      (old, e) => (num.tryParse(e.quantity ?? '') ?? 0.0) + old,
+    );
+  }
 }
 
 class InvalidRecordStockStateException implements Exception {

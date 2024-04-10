@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../blocs/app_initialization/app_initialization.dart';
+import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/facility/facility.dart';
 import '../../blocs/household_overview/household_overview.dart';
 import '../../blocs/referral_management/referral_management.dart';
@@ -21,12 +22,14 @@ import '../inventory/facility_selection.dart';
 class ReferBeneficiaryPage extends LocalizedStatefulWidget {
   final bool isEditing;
   final String projectBeneficiaryClientRefId;
+  final IndividualModel individual;
 
   const ReferBeneficiaryPage({
     super.key,
     super.appLocalizations,
     this.isEditing = false,
     required this.projectBeneficiaryClientRefId,
+    required this.individual,
   });
   @override
   State<ReferBeneficiaryPage> createState() => _ReferBeneficiaryPageState();
@@ -60,7 +63,7 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
       },
       builder: (ctx, facilityState) {
         final facilities = facilityState.whenOrNull(
-              fetched: (_, facilities) {
+              fetched: (_, facilities, __) {
                 final projectFacilities = facilities
                     .where((e) => e.id != 'N/A' && e.id != 'Delivery Team')
                     .toList();
@@ -365,7 +368,7 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
       _dateOfReferralKey: FormControl<DateTime>(value: DateTime.now()),
       _administrativeUnitKey: FormControl<String>(value: context.boundary.name),
       _referredByKey: FormControl<String>(
-        value: context.loggedInUserUuid,
+        value: context.loggedInUser.userName,
         validators: [Validators.required],
       ),
       _referredToKey:

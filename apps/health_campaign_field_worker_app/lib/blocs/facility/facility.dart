@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -11,10 +12,12 @@ typedef FacilityStateEmitter = Emitter<FacilityState>;
 class FacilityBloc extends Bloc<FacilityEvent, FacilityState> {
   final FacilityDataRepository facilityDataRepository;
   final ProjectFacilityDataRepository projectFacilityDataRepository;
+  final StockDataRepository stockRepository;
 
   FacilityBloc({
     required this.facilityDataRepository,
     required this.projectFacilityDataRepository,
+    required this.stockRepository,
   }) : super(const FacilityEmptyState()) {
     on(_handleLoadFacilitiesForProjectId);
   }
@@ -31,7 +34,8 @@ class FacilityBloc extends Bloc<FacilityEvent, FacilityState> {
 
     List<FacilityModel> allFacilities = [
       FacilityModel(
-        id: 'Delivery Team',
+        id: 'DT',
+        name: 'Delivery Team',
         additionalFields: FacilityAdditionalFields(
           version: 1,
           fields: [const AdditionalField('type', 'DeliveryTeam')],
@@ -58,9 +62,19 @@ class FacilityBloc extends Bloc<FacilityEvent, FacilityState> {
     if (facilities.isEmpty) {
       emit(const FacilityEmptyState());
     } else {
+      final stocks = await stockRepository.search(StockSearchModel());
+      stocks.sort((a, b) =>
+          b.auditDetails!.createdTime.compareTo(a.auditDetails!.createdTime));
+      final latestStock = stocks.firstWhereOrNull(
+        (element) => element.auditDetails?.createdBy == event.userId,
+      );
+      final facility = facilities
+          .firstWhereOrNull((element) => element.id == latestStock?.facilityId);
+
       emit(FacilityFetchedState(
         facilities: facilities,
         allFacilities: allFacilities,
+        facility: facility,
       ));
     }
   }
@@ -71,6 +85,7 @@ class FacilityEvent with _$FacilityEvent {
   const factory FacilityEvent.loadForProjectId({
     required String projectId,
     @Default(true) bool loadAllProjects,
+    required String userId,
   }) = FacilityLoadForProjectEvent;
 }
 
@@ -83,5 +98,6 @@ class FacilityState with _$FacilityState {
   const factory FacilityState.fetched({
     required List<FacilityModel> facilities,
     @Default([]) List<FacilityModel> allFacilities,
+    FacilityModel? facility,
   }) = FacilityFetchedState;
 }

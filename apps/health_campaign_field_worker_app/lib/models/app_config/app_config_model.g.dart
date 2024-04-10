@@ -82,6 +82,14 @@ _$AppConfigPrimaryWrapperModelImpl _$$AppConfigPrimaryWrapperModelImplFromJson(
           ? null
           : ReferralReasonsWrapperModel.fromJson(
               json['HCM-REFERRAL-REASONS'] as Map<String, dynamic>),
+      ineligibilityReasons: json['HCM-INELIGIBILITY-REASONS'] == null
+          ? null
+          : IneligibilityReasonsWrapperModel.fromJson(
+              json['HCM-INELIGIBILITY-REASONS'] as Map<String, dynamic>),
+      disabilityTypes: json['HCM-DISABILITY-TYPES'] == null
+          ? null
+          : DisabilityTypesWrapperModel.fromJson(
+              json['HCM-DISABILITY-TYPES'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$AppConfigPrimaryWrapperModelImplToJson(
@@ -91,6 +99,8 @@ Map<String, dynamic> _$$AppConfigPrimaryWrapperModelImplToJson(
       'module-version': instance.rowVersions,
       'HCM-SYMPTOMS-TYPES': instance.symptomsTypes,
       'HCM-REFERRAL-REASONS': instance.referralReasons,
+      'HCM-INELIGIBILITY-REASONS': instance.ineligibilityReasons,
+      'HCM-DISABILITY-TYPES': instance.disabilityTypes,
     };
 
 _$AppConfigSecondaryWrapperModelImpl
@@ -169,6 +179,8 @@ _$AppConfigImpl _$$AppConfigImplFromJson(Map<String, dynamic> json) =>
       transportTypes: (json['TRANSPORT_TYPES'] as List<dynamic>)
           .map((e) => TransportTypes.fromJson(e as Map<String, dynamic>))
           .toList(),
+      firebaseConfig: FirebaseConfig.fromJson(
+          json['FIREBASE_CONFIG'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$AppConfigImplToJson(_$AppConfigImpl instance) =>
@@ -193,6 +205,7 @@ Map<String, dynamic> _$$AppConfigImplToJson(_$AppConfigImpl instance) =>
       'BACKEND_INTERFACE': instance.backendInterface,
       'CALL_SUPPORT': instance.callSupportOptions,
       'TRANSPORT_TYPES': instance.transportTypes,
+      'FIREBASE_CONFIG': instance.firebaseConfig,
     };
 
 _$IdTypeOptionsImpl _$$IdTypeOptionsImplFromJson(Map<String, dynamic> json) =>
@@ -394,4 +407,17 @@ Map<String, dynamic> _$$RowVersionsImplToJson(_$RowVersionsImpl instance) =>
     <String, dynamic>{
       'module': instance.module,
       'version': instance.version,
+    };
+
+_$FirebaseConfigImpl _$$FirebaseConfigImplFromJson(Map<String, dynamic> json) =>
+    _$FirebaseConfigImpl(
+      enableCrashlytics: json['enableCrashlytics'] as bool,
+      enableAnalytics: json['enableAnalytics'] as bool,
+    );
+
+Map<String, dynamic> _$$FirebaseConfigImplToJson(
+        _$FirebaseConfigImpl instance) =>
+    <String, dynamic>{
+      'enableCrashlytics': instance.enableCrashlytics,
+      'enableAnalytics': instance.enableAnalytics,
     };

@@ -175,7 +175,8 @@ class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                           ),
                                         );
 
-                                        if (shouldSubmit ?? false) {
+                                        if ((shouldSubmit ?? false) &&
+                                            context.mounted) {
                                           final reloadState = context
                                               .read<HouseholdOverviewBloc>();
 

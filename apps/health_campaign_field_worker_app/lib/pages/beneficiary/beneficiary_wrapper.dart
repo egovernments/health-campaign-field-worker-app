@@ -48,6 +48,7 @@ class BeneficiaryWrapperPage extends StatelessWidget {
     final projectFacilityRepository =
         context.repository<ProjectFacilityModel, ProjectFacilitySearchModel>();
     final referral = context.repository<ReferralModel, ReferralSearchModel>();
+    final stockRepository = context.repository<StockModel, StockSearchModel>();
 
     return MultiBlocProvider(
       providers: [
@@ -61,9 +62,11 @@ class BeneficiaryWrapperPage extends StatelessWidget {
           create: (_) => FacilityBloc(
             facilityDataRepository: facilityRepository,
             projectFacilityDataRepository: projectFacilityRepository,
+            stockRepository: stockRepository,
           )..add(
               FacilityLoadForProjectEvent(
                 projectId: context.selectedProject.id,
+                userId: context.loggedInUserUuid,
               ),
             ),
         ),

@@ -15,6 +15,7 @@ import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:formula_parser/formula_parser.dart';
 import 'package:isar/isar.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:uuid/uuid.dart';
@@ -35,6 +36,9 @@ import 'extensions/extensions.dart';
 export 'app_exception.dart';
 export 'constants.dart';
 export 'extensions/extensions.dart';
+
+String lessThanSymbol = '<';
+String greaterThanSymbol = '>';
 
 Expression<bool> buildAnd(Iterable<Expression<bool>> iterable) {
   if (iterable.isEmpty) return const Constant(true);
@@ -77,6 +81,16 @@ class CustomValidator {
         : {'required': true};
   }
 
+  static Map<String, dynamic>? requiredMin3(
+    AbstractControl<dynamic> control,
+  ) {
+    return control.value == null ||
+            control.value.toString().trim().length >= 3 ||
+            control.value.toString().trim().isEmpty
+        ? null
+        : {'min3': true};
+  }
+
   static Map<String, dynamic>? validMobileNumber(
     AbstractControl<dynamic> control,
   ) {
@@ -84,11 +98,13 @@ class CustomValidator {
       return null;
     }
 
-    const pattern = r'^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$';
+    const pattern = r'[0-9]';
+
+    if (control.value.toString().length != 11) {
+      return {'mobileNumber': true};
+    }
 
     if (RegExp(pattern).hasMatch(control.value.toString())) return null;
-
-    if (control.value.toString().length < 10) return {'mobileNumber': true};
 
     return {'mobileNumber': true};
   }
@@ -103,7 +119,7 @@ class CustomValidator {
     var parsed = int.tryParse(control.value) ?? 0;
     if (parsed < 0) {
       return {'min': true};
-    } else if (parsed > 10000) {
+    } else if (parsed > 10000000) {
       return {'max': true};
     }
 
@@ -128,34 +144,16 @@ performBackgroundService({
   final service = FlutterBackgroundService();
   var isRunning = await service.isRunning();
 
-  if (stopService) {
-    if (isRunning) {
-      if (!isBackground && context != null) {
-        if (context.mounted) {
-          DigitToast.show(
-            context,
-            options: DigitToastOptions(
-              'Background Service Stopped',
-              true,
-              DigitTheme.instance.mobileTheme,
-            ),
-          );
-        }
+  if (!stopService) {
+    if (isOnline & !isRunning) {
+      final isStarted = await service.startService();
+      if (!isStarted) {
+        await service.startService();
       }
     }
   } else {
-    if (!isRunning && isOnline) {
-      service.startService();
-      if (context != null) {
-        DigitToast.show(
-          context!,
-          options: DigitToastOptions(
-            'Background Service Started',
-            false,
-            DigitTheme.instance.mobileTheme,
-          ),
-        );
-      }
+    if (isRunning) {
+      service.invoke('stopService');
     }
   }
 }
@@ -336,10 +334,7 @@ bool checkEligibilityForAgeAndSideEffect(
               : false
           : false;
     } else {
-      return totalAgeMonths >= projectType!.validMinAge! &&
-              totalAgeMonths <= projectType.validMaxAge!
-          ? true
-          : false;
+      return true;
     }
   }
 
@@ -356,22 +351,24 @@ bool checkIfBeneficiaryRefused(
   return isBeneficiaryRefused;
 }
 
-bool checkIfBeneficiaryReferred(
-  List<ReferralModel>? referrals,
-  Cycle currentCycle,
+bool checkIfBeneficiaryIneligible(
+  List<TaskModel>? tasks,
 ) {
-  if (currentCycle.startDate != null && currentCycle.endDate != null) {
-    final isBeneficiaryReferred = (referrals != null &&
-        (referrals ?? []).isNotEmpty &&
-        referrals.last.clientAuditDetails!.createdTime >=
-            currentCycle.startDate! &&
-        referrals.last.clientAuditDetails!.createdTime <=
-            currentCycle.endDate!);
+  final isBeneficiaryIneligible = (tasks != null &&
+      (tasks ?? []).isNotEmpty &&
+      tasks.last.status == Status.beneficiaryIneligible.toValue());
 
-    return isBeneficiaryReferred;
-  } else {
-    return false;
-  }
+  return isBeneficiaryIneligible;
+}
+
+bool checkIfBeneficiaryReferred(
+  List<TaskModel>? tasks,
+) {
+  final isBeneficiaryReferred = (tasks != null &&
+      (tasks ?? []).isNotEmpty &&
+      tasks.last.status == Status.beneficiaryReferred.toValue());
+
+  return isBeneficiaryReferred;
 }
 
 bool checkStatus(
@@ -493,16 +490,31 @@ DoseCriteriaModel? fetchProductVariant(
     );
     final individualAgeInMonths =
         individualAge.years * 12 + individualAge.months;
+
+    final height =
+        int.parse(individualModel.additionalFields?.fields.last.value ?? 0);
     final filteredCriteria = currentDelivery.doseCriteria?.where((criteria) {
       final condition = criteria.condition;
       if (condition != null) {
-        //{TODO: Expression package need to be parsed
-        final ageRange = condition.split("<=age<");
-        final minAge = int.parse(ageRange.first);
-        final maxAge = int.parse(ageRange.last);
+        final conditions = condition.split('and');
 
-        return individualAgeInMonths >= minAge &&
-            individualAgeInMonths <= maxAge;
+        List expressionParser = [];
+        for (var element in conditions) {
+          final expression = FormulaParser(
+            element,
+            {
+              'height': height,
+              'age': individualAgeInMonths,
+            },
+          );
+          expressionParser.add(expression.parse.toString().split(':').last);
+        }
+
+        return expressionParser
+                .map((e) => e.toString().trim())
+                .where((element) => element == 'true')
+                .length ==
+            expressionParser.length;
       }
 
       return false;
@@ -512,6 +524,62 @@ DoseCriteriaModel? fetchProductVariant(
   }
 
   return null;
+}
+
+String? getAgeConditionString(String condition) {
+  String? finalCondition;
+  final ageConditions =
+      condition.split('and').where((element) => element.contains('age'));
+  if (ageConditions.length == 2) {
+    String? lessThanCondition = ageConditions.firstWhereOrNull((element) {
+      return element.contains(lessThanSymbol);
+    });
+    String lessThanAge = lessThanCondition?.split(lessThanSymbol).last ?? '0';
+
+    String? greaterThanCondition = ageConditions
+        .firstWhereOrNull((element) => element.contains(greaterThanSymbol));
+
+    String greaterThanAge =
+        greaterThanCondition?.split(greaterThanSymbol).last ?? '0';
+
+    finalCondition =
+        '${(int.parse(greaterThanAge) / 12).round()} - ${(int.parse(lessThanAge) / 12).round()} yrs';
+  } else {
+    if (ageConditions.first.contains(greaterThanSymbol)) {
+      String age = ageConditions.first.split(greaterThanSymbol).last;
+      finalCondition = '${(int.parse(age) / 12).round()} yrs and above';
+    }
+  }
+
+  return finalCondition;
+}
+
+String? getHeightConditionString(String condition) {
+  String? finalCondition;
+  final heightConditions =
+      condition.split('and').where((element) => element.contains('height'));
+  if (heightConditions.length == 2) {
+    String? lessThanCondition = heightConditions
+        .firstWhereOrNull((element) => element.contains(lessThanSymbol));
+    String lessThan = lessThanCondition?.split(lessThanSymbol).last ?? '0';
+
+    String? greaterThanCondition = heightConditions
+        .firstWhereOrNull((element) => element.contains(greaterThanSymbol));
+
+    String greaterThan =
+        greaterThanCondition?.split(greaterThanSymbol).last ?? '0';
+
+    finalCondition =
+        '${int.parse(greaterThan) + 1} - ${int.parse(lessThan) - 1} cm';
+  } else if (heightConditions.length == 1) {
+    if (heightConditions.first.contains(greaterThanSymbol)) {
+      int height =
+          int.parse(heightConditions.first.split(greaterThanSymbol).last) + 1;
+      finalCondition = '$height cm and above';
+    }
+  }
+
+  return finalCondition;
 }
 
 Future<bool> getIsConnected() async {

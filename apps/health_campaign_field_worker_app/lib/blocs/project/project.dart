@@ -4,6 +4,7 @@ import 'dart:core';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -165,15 +166,27 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     List<ProjectStaffModel> projectStaffList;
     try {
       projectStaffList = await projectStaffRemoteRepository.search(
-        ProjectStaffSearchModel(staffId: [uuid.toString()]),
+        ProjectStaffSearchModel(staffId: uuid),
       );
-    } catch (error) {
-      emit(
-        state.copyWith(
-          loading: false,
-          syncError: ProjectSyncErrorType.projectStaff,
-        ),
-      );
+    } on DioException catch (error) {
+      if (error.response != null &&
+          error.response!.data['Errors'][0]['message']
+              .toString()
+              .contains(Constants.invalidAccessTokenKey)) {
+        emit(
+          state.copyWith(
+            loading: false,
+            syncError: ProjectSyncErrorType.sessionExpired,
+          ),
+        );
+      } else {
+        emit(
+          state.copyWith(
+            loading: false,
+            syncError: ProjectSyncErrorType.projectStaff,
+          ),
+        );
+      }
 
       return;
     }
@@ -392,26 +405,45 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       ),
     );
 
+    String? parentProjectId;
+
+    if (projects.isNotEmpty &&
+        projects.first.projectHierarchy != null &&
+        projects.first.projectHierarchy!.split('.').length >= 2) {
+      parentProjectId = projects.first.projectHierarchy?.split('.')[1];
+    }
+
     for (final projectFacility in projectFacilities) {
       await projectFacilityLocalRepository.create(
         projectFacility,
         createOpLog: false,
       );
+    }
 
-      /// Passing [id] as [null] is required to load all facilities associated
-      /// with the tenant
+    /// Passing [id] as [null] is required to load all facilities associated
+    /// with the tenant
+    if (parentProjectId == null) {
       final facilities = await facilityRemoteRepository.search(
         FacilitySearchModel(
           id: null,
         ),
       );
 
-      for (final facility in facilities) {
-        await facilityLocalRepository.create(
-          facility,
-          createOpLog: false,
-        );
-      }
+      await facilityLocalRepository.bulkCreate(facilities);
+    } else {
+      final parentProjectFacilities =
+          await projectFacilityRemoteRepository.search(
+        ProjectFacilitySearchModel(
+          projectId: [parentProjectId],
+        ),
+      );
+      final facilities = await facilityRemoteRepository.search(
+        FacilitySearchModel(
+          id: parentProjectFacilities.map((e) => e.facilityId).toList(),
+        ),
+      );
+
+      await facilityLocalRepository.bulkCreate(facilities);
     }
   }
 
@@ -579,8 +611,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               code: event.model.address?.boundary,
             ),
           );
+          await boundaryLocalRepository.bulkCreate(boundaries);
         }
-        await boundaryLocalRepository.bulkCreate(boundaries);
         await localSecureStore.setSelectedProject(event.model);
         await localSecureStore.setSelectedProjectType(reqProjectType);
       }
@@ -647,5 +679,6 @@ enum ProjectSyncErrorType {
   projectFacilities,
   productVariants,
   serviceDefinitions,
-  boundary
+  boundary,
+  sessionExpired,
 }

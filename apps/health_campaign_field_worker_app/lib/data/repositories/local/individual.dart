@@ -70,13 +70,23 @@ class IndividualLocalRepository
                   query.gender!.index,
                 ),
               if (query.name?.givenName != null)
-                sql.name.givenName.contains(
-                  query.name!.givenName!,
-                ),
+                buildOr([
+                  sql.name.givenName.contains(
+                    query.name!.givenName!,
+                  ),
+                  sql.name.familyName.contains(
+                    query.name!.givenName!,
+                  ),
+                ]),
               if (query.name?.familyName != null)
-                sql.name.familyName.equals(
-                  query.name!.familyName!,
-                ),
+                buildOr([
+                  sql.name.givenName.contains(
+                    query.name!.familyName!,
+                  ),
+                  sql.name.familyName.contains(
+                    query.name!.familyName!,
+                  ),
+                ]),
               if (query.name?.otherNames != null)
                 sql.name.otherNames.equals(
                   query.name!.otherNames!,

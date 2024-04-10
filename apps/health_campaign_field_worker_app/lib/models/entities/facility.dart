@@ -10,6 +10,7 @@ part 'facility.mapper.dart';
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
 class FacilitySearchModel extends EntitySearchModel with FacilitySearchModelMappable {
   final List<String>? id;
+  final String? name;
   final bool? isPermanent;
   final String? usage;
   final int? storageCapacity;
@@ -17,6 +18,7 @@ class FacilitySearchModel extends EntitySearchModel with FacilitySearchModelMapp
   
   FacilitySearchModel({
     this.id,
+    this.name,
     this.isPermanent,
     this.usage,
     this.storageCapacity,
@@ -28,6 +30,7 @@ class FacilitySearchModel extends EntitySearchModel with FacilitySearchModelMapp
   @MappableConstructor()
   FacilitySearchModel.ignoreDeleted({
     this.id,
+    this.name,
     this.isPermanent,
     this.usage,
     this.storageCapacity,
@@ -42,6 +45,7 @@ class FacilityModel extends EntityModel with FacilityModelMappable {
   static const schemaName = 'Facility';
 
   final String id;
+  final String? name;
   final bool? isPermanent;
   final String? usage;
   final int? storageCapacity;
@@ -54,6 +58,7 @@ class FacilityModel extends EntityModel with FacilityModelMappable {
   FacilityModel({
     this.additionalFields,
     required this.id,
+    this.name,
     this.isPermanent,
     this.usage,
     this.storageCapacity,
@@ -78,6 +83,7 @@ class FacilityModel extends EntityModel with FacilityModelMappable {
       additionalFields: Value(additionalFields?.toJson()),
       isDeleted: Value(isDeleted),
       id: Value(id),
+      name: Value(name),
       isPermanent: Value(isPermanent),
       usage: Value(usage),
       storageCapacity: Value(storageCapacity),

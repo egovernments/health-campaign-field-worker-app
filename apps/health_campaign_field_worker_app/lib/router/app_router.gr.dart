@@ -412,6 +412,7 @@ class _$AppRouter extends RootStackRouter {
           appLocalizations: args.appLocalizations,
           isEditing: args.isEditing,
           projectBeneficiaryClientRefId: args.projectBeneficiaryClientRefId,
+          individual: args.individual,
         ),
       );
     },
@@ -2307,6 +2308,7 @@ class ReferBeneficiaryRoute extends PageRouteInfo<ReferBeneficiaryRouteArgs> {
     AppLocalizations? appLocalizations,
     bool isEditing = false,
     required String projectBeneficiaryClientRefId,
+    required IndividualModel individual,
   }) : super(
           ReferBeneficiaryRoute.name,
           path: 'refer-beneficiary',
@@ -2315,6 +2317,7 @@ class ReferBeneficiaryRoute extends PageRouteInfo<ReferBeneficiaryRouteArgs> {
             appLocalizations: appLocalizations,
             isEditing: isEditing,
             projectBeneficiaryClientRefId: projectBeneficiaryClientRefId,
+            individual: individual,
           ),
         );
 
@@ -2327,6 +2330,7 @@ class ReferBeneficiaryRouteArgs {
     this.appLocalizations,
     this.isEditing = false,
     required this.projectBeneficiaryClientRefId,
+    required this.individual,
   });
 
   final Key? key;
@@ -2337,9 +2341,11 @@ class ReferBeneficiaryRouteArgs {
 
   final String projectBeneficiaryClientRefId;
 
+  final IndividualModel individual;
+
   @override
   String toString() {
-    return 'ReferBeneficiaryRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing, projectBeneficiaryClientRefId: $projectBeneficiaryClientRefId}';
+    return 'ReferBeneficiaryRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing, projectBeneficiaryClientRefId: $projectBeneficiaryClientRefId, individual: $individual}';
   }
 }
 

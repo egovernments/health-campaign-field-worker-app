@@ -28,12 +28,12 @@ class LocalSecureStore {
 
   LocalSecureStore._();
 
-  Future<String?> get accessToken {
-    return storage.read(key: accessTokenKey);
+  Future<String?> get accessToken async {
+    return await storage.read(key: accessTokenKey);
   }
 
-  Future<String?> get refreshToken {
-    return storage.read(key: refreshTokenKey);
+  Future<String?> get refreshToken async {
+    return await storage.read(key: refreshTokenKey);
   }
 
   Future<bool> get isBackgroundSerivceRunning async {

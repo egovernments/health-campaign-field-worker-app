@@ -22,6 +22,9 @@ mixin _$StockReconciliationEvent {
         selectFacility,
     required TResult Function(String? productVariantId, bool isDistributor)
         selectProduct,
+    required TResult Function(
+            DateTime? dateOfReconciliation, bool isDistributor)
+        selectDateOfReconciliation,
     required TResult Function(bool isDistributor) calculate,
     required TResult Function(StockReconciliationModel stockReconciliationModel)
         create,
@@ -33,6 +36,8 @@ mixin _$StockReconciliationEvent {
         selectFacility,
     TResult? Function(String? productVariantId, bool isDistributor)?
         selectProduct,
+    TResult? Function(DateTime? dateOfReconciliation, bool isDistributor)?
+        selectDateOfReconciliation,
     TResult? Function(bool isDistributor)? calculate,
     TResult? Function(StockReconciliationModel stockReconciliationModel)?
         create,
@@ -44,6 +49,8 @@ mixin _$StockReconciliationEvent {
         selectFacility,
     TResult Function(String? productVariantId, bool isDistributor)?
         selectProduct,
+    TResult Function(DateTime? dateOfReconciliation, bool isDistributor)?
+        selectDateOfReconciliation,
     TResult Function(bool isDistributor)? calculate,
     TResult Function(StockReconciliationModel stockReconciliationModel)? create,
     required TResult orElse(),
@@ -55,6 +62,9 @@ mixin _$StockReconciliationEvent {
         selectFacility,
     required TResult Function(StockReconciliationSelectProductEvent value)
         selectProduct,
+    required TResult Function(
+            StockReconciliationSelectDateOfReconciliationEvent value)
+        selectDateOfReconciliation,
     required TResult Function(StockReconciliationCalculateEvent value)
         calculate,
     required TResult Function(StockReconciliationCreateEvent value) create,
@@ -66,6 +76,8 @@ mixin _$StockReconciliationEvent {
         selectFacility,
     TResult? Function(StockReconciliationSelectProductEvent value)?
         selectProduct,
+    TResult? Function(StockReconciliationSelectDateOfReconciliationEvent value)?
+        selectDateOfReconciliation,
     TResult? Function(StockReconciliationCalculateEvent value)? calculate,
     TResult? Function(StockReconciliationCreateEvent value)? create,
   }) =>
@@ -76,6 +88,8 @@ mixin _$StockReconciliationEvent {
         selectFacility,
     TResult Function(StockReconciliationSelectProductEvent value)?
         selectProduct,
+    TResult Function(StockReconciliationSelectDateOfReconciliationEvent value)?
+        selectDateOfReconciliation,
     TResult Function(StockReconciliationCalculateEvent value)? calculate,
     TResult Function(StockReconciliationCreateEvent value)? create,
     required TResult orElse(),
@@ -189,6 +203,9 @@ class _$StockReconciliationSelectFacilityEventImpl
         selectFacility,
     required TResult Function(String? productVariantId, bool isDistributor)
         selectProduct,
+    required TResult Function(
+            DateTime? dateOfReconciliation, bool isDistributor)
+        selectDateOfReconciliation,
     required TResult Function(bool isDistributor) calculate,
     required TResult Function(StockReconciliationModel stockReconciliationModel)
         create,
@@ -203,6 +220,8 @@ class _$StockReconciliationSelectFacilityEventImpl
         selectFacility,
     TResult? Function(String? productVariantId, bool isDistributor)?
         selectProduct,
+    TResult? Function(DateTime? dateOfReconciliation, bool isDistributor)?
+        selectDateOfReconciliation,
     TResult? Function(bool isDistributor)? calculate,
     TResult? Function(StockReconciliationModel stockReconciliationModel)?
         create,
@@ -217,6 +236,8 @@ class _$StockReconciliationSelectFacilityEventImpl
         selectFacility,
     TResult Function(String? productVariantId, bool isDistributor)?
         selectProduct,
+    TResult Function(DateTime? dateOfReconciliation, bool isDistributor)?
+        selectDateOfReconciliation,
     TResult Function(bool isDistributor)? calculate,
     TResult Function(StockReconciliationModel stockReconciliationModel)? create,
     required TResult orElse(),
@@ -234,6 +255,9 @@ class _$StockReconciliationSelectFacilityEventImpl
         selectFacility,
     required TResult Function(StockReconciliationSelectProductEvent value)
         selectProduct,
+    required TResult Function(
+            StockReconciliationSelectDateOfReconciliationEvent value)
+        selectDateOfReconciliation,
     required TResult Function(StockReconciliationCalculateEvent value)
         calculate,
     required TResult Function(StockReconciliationCreateEvent value) create,
@@ -248,6 +272,8 @@ class _$StockReconciliationSelectFacilityEventImpl
         selectFacility,
     TResult? Function(StockReconciliationSelectProductEvent value)?
         selectProduct,
+    TResult? Function(StockReconciliationSelectDateOfReconciliationEvent value)?
+        selectDateOfReconciliation,
     TResult? Function(StockReconciliationCalculateEvent value)? calculate,
     TResult? Function(StockReconciliationCreateEvent value)? create,
   }) {
@@ -261,6 +287,8 @@ class _$StockReconciliationSelectFacilityEventImpl
         selectFacility,
     TResult Function(StockReconciliationSelectProductEvent value)?
         selectProduct,
+    TResult Function(StockReconciliationSelectDateOfReconciliationEvent value)?
+        selectDateOfReconciliation,
     TResult Function(StockReconciliationCalculateEvent value)? calculate,
     TResult Function(StockReconciliationCreateEvent value)? create,
     required TResult orElse(),
@@ -373,6 +401,9 @@ class _$StockReconciliationSelectProductEventImpl
         selectFacility,
     required TResult Function(String? productVariantId, bool isDistributor)
         selectProduct,
+    required TResult Function(
+            DateTime? dateOfReconciliation, bool isDistributor)
+        selectDateOfReconciliation,
     required TResult Function(bool isDistributor) calculate,
     required TResult Function(StockReconciliationModel stockReconciliationModel)
         create,
@@ -387,6 +418,8 @@ class _$StockReconciliationSelectProductEventImpl
         selectFacility,
     TResult? Function(String? productVariantId, bool isDistributor)?
         selectProduct,
+    TResult? Function(DateTime? dateOfReconciliation, bool isDistributor)?
+        selectDateOfReconciliation,
     TResult? Function(bool isDistributor)? calculate,
     TResult? Function(StockReconciliationModel stockReconciliationModel)?
         create,
@@ -401,6 +434,8 @@ class _$StockReconciliationSelectProductEventImpl
         selectFacility,
     TResult Function(String? productVariantId, bool isDistributor)?
         selectProduct,
+    TResult Function(DateTime? dateOfReconciliation, bool isDistributor)?
+        selectDateOfReconciliation,
     TResult Function(bool isDistributor)? calculate,
     TResult Function(StockReconciliationModel stockReconciliationModel)? create,
     required TResult orElse(),
@@ -418,6 +453,9 @@ class _$StockReconciliationSelectProductEventImpl
         selectFacility,
     required TResult Function(StockReconciliationSelectProductEvent value)
         selectProduct,
+    required TResult Function(
+            StockReconciliationSelectDateOfReconciliationEvent value)
+        selectDateOfReconciliation,
     required TResult Function(StockReconciliationCalculateEvent value)
         calculate,
     required TResult Function(StockReconciliationCreateEvent value) create,
@@ -432,6 +470,8 @@ class _$StockReconciliationSelectProductEventImpl
         selectFacility,
     TResult? Function(StockReconciliationSelectProductEvent value)?
         selectProduct,
+    TResult? Function(StockReconciliationSelectDateOfReconciliationEvent value)?
+        selectDateOfReconciliation,
     TResult? Function(StockReconciliationCalculateEvent value)? calculate,
     TResult? Function(StockReconciliationCreateEvent value)? create,
   }) {
@@ -445,6 +485,8 @@ class _$StockReconciliationSelectProductEventImpl
         selectFacility,
     TResult Function(StockReconciliationSelectProductEvent value)?
         selectProduct,
+    TResult Function(StockReconciliationSelectDateOfReconciliationEvent value)?
+        selectDateOfReconciliation,
     TResult Function(StockReconciliationCalculateEvent value)? calculate,
     TResult Function(StockReconciliationCreateEvent value)? create,
     required TResult orElse(),
@@ -467,6 +509,217 @@ abstract class StockReconciliationSelectProductEvent
   @JsonKey(ignore: true)
   _$$StockReconciliationSelectProductEventImplCopyWith<
           _$StockReconciliationSelectProductEventImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$StockReconciliationSelectDateOfReconciliationEventImplCopyWith<
+    $Res> {
+  factory _$$StockReconciliationSelectDateOfReconciliationEventImplCopyWith(
+          _$StockReconciliationSelectDateOfReconciliationEventImpl value,
+          $Res Function(
+                  _$StockReconciliationSelectDateOfReconciliationEventImpl)
+              then) =
+      __$$StockReconciliationSelectDateOfReconciliationEventImplCopyWithImpl<
+          $Res>;
+  @useResult
+  $Res call({DateTime? dateOfReconciliation, bool isDistributor});
+}
+
+/// @nodoc
+class __$$StockReconciliationSelectDateOfReconciliationEventImplCopyWithImpl<
+        $Res>
+    extends _$StockReconciliationEventCopyWithImpl<$Res,
+        _$StockReconciliationSelectDateOfReconciliationEventImpl>
+    implements
+        _$$StockReconciliationSelectDateOfReconciliationEventImplCopyWith<
+            $Res> {
+  __$$StockReconciliationSelectDateOfReconciliationEventImplCopyWithImpl(
+      _$StockReconciliationSelectDateOfReconciliationEventImpl _value,
+      $Res Function(_$StockReconciliationSelectDateOfReconciliationEventImpl)
+          _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? dateOfReconciliation = freezed,
+    Object? isDistributor = null,
+  }) {
+    return _then(_$StockReconciliationSelectDateOfReconciliationEventImpl(
+      freezed == dateOfReconciliation
+          ? _value.dateOfReconciliation
+          : dateOfReconciliation // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      isDistributor: null == isDistributor
+          ? _value.isDistributor
+          : isDistributor // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$StockReconciliationSelectDateOfReconciliationEventImpl
+    implements StockReconciliationSelectDateOfReconciliationEvent {
+  const _$StockReconciliationSelectDateOfReconciliationEventImpl(
+      this.dateOfReconciliation,
+      {this.isDistributor = false});
+
+  @override
+  final DateTime? dateOfReconciliation;
+  @override
+  @JsonKey()
+  final bool isDistributor;
+
+  @override
+  String toString() {
+    return 'StockReconciliationEvent.selectDateOfReconciliation(dateOfReconciliation: $dateOfReconciliation, isDistributor: $isDistributor)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$StockReconciliationSelectDateOfReconciliationEventImpl &&
+            (identical(other.dateOfReconciliation, dateOfReconciliation) ||
+                other.dateOfReconciliation == dateOfReconciliation) &&
+            (identical(other.isDistributor, isDistributor) ||
+                other.isDistributor == isDistributor));
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, dateOfReconciliation, isDistributor);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$StockReconciliationSelectDateOfReconciliationEventImplCopyWith<
+          _$StockReconciliationSelectDateOfReconciliationEventImpl>
+      get copyWith =>
+          __$$StockReconciliationSelectDateOfReconciliationEventImplCopyWithImpl<
+                  _$StockReconciliationSelectDateOfReconciliationEventImpl>(
+              this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(FacilityModel facilityModel, bool isDistributor)
+        selectFacility,
+    required TResult Function(String? productVariantId, bool isDistributor)
+        selectProduct,
+    required TResult Function(
+            DateTime? dateOfReconciliation, bool isDistributor)
+        selectDateOfReconciliation,
+    required TResult Function(bool isDistributor) calculate,
+    required TResult Function(StockReconciliationModel stockReconciliationModel)
+        create,
+  }) {
+    return selectDateOfReconciliation(dateOfReconciliation, isDistributor);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(FacilityModel facilityModel, bool isDistributor)?
+        selectFacility,
+    TResult? Function(String? productVariantId, bool isDistributor)?
+        selectProduct,
+    TResult? Function(DateTime? dateOfReconciliation, bool isDistributor)?
+        selectDateOfReconciliation,
+    TResult? Function(bool isDistributor)? calculate,
+    TResult? Function(StockReconciliationModel stockReconciliationModel)?
+        create,
+  }) {
+    return selectDateOfReconciliation?.call(
+        dateOfReconciliation, isDistributor);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(FacilityModel facilityModel, bool isDistributor)?
+        selectFacility,
+    TResult Function(String? productVariantId, bool isDistributor)?
+        selectProduct,
+    TResult Function(DateTime? dateOfReconciliation, bool isDistributor)?
+        selectDateOfReconciliation,
+    TResult Function(bool isDistributor)? calculate,
+    TResult Function(StockReconciliationModel stockReconciliationModel)? create,
+    required TResult orElse(),
+  }) {
+    if (selectDateOfReconciliation != null) {
+      return selectDateOfReconciliation(dateOfReconciliation, isDistributor);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(StockReconciliationSelectFacilityEvent value)
+        selectFacility,
+    required TResult Function(StockReconciliationSelectProductEvent value)
+        selectProduct,
+    required TResult Function(
+            StockReconciliationSelectDateOfReconciliationEvent value)
+        selectDateOfReconciliation,
+    required TResult Function(StockReconciliationCalculateEvent value)
+        calculate,
+    required TResult Function(StockReconciliationCreateEvent value) create,
+  }) {
+    return selectDateOfReconciliation(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(StockReconciliationSelectFacilityEvent value)?
+        selectFacility,
+    TResult? Function(StockReconciliationSelectProductEvent value)?
+        selectProduct,
+    TResult? Function(StockReconciliationSelectDateOfReconciliationEvent value)?
+        selectDateOfReconciliation,
+    TResult? Function(StockReconciliationCalculateEvent value)? calculate,
+    TResult? Function(StockReconciliationCreateEvent value)? create,
+  }) {
+    return selectDateOfReconciliation?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(StockReconciliationSelectFacilityEvent value)?
+        selectFacility,
+    TResult Function(StockReconciliationSelectProductEvent value)?
+        selectProduct,
+    TResult Function(StockReconciliationSelectDateOfReconciliationEvent value)?
+        selectDateOfReconciliation,
+    TResult Function(StockReconciliationCalculateEvent value)? calculate,
+    TResult Function(StockReconciliationCreateEvent value)? create,
+    required TResult orElse(),
+  }) {
+    if (selectDateOfReconciliation != null) {
+      return selectDateOfReconciliation(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class StockReconciliationSelectDateOfReconciliationEvent
+    implements StockReconciliationEvent {
+  const factory StockReconciliationSelectDateOfReconciliationEvent(
+          final DateTime? dateOfReconciliation,
+          {final bool isDistributor}) =
+      _$StockReconciliationSelectDateOfReconciliationEventImpl;
+
+  DateTime? get dateOfReconciliation;
+  bool get isDistributor;
+  @JsonKey(ignore: true)
+  _$$StockReconciliationSelectDateOfReconciliationEventImplCopyWith<
+          _$StockReconciliationSelectDateOfReconciliationEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -546,6 +799,9 @@ class _$StockReconciliationCalculateEventImpl
         selectFacility,
     required TResult Function(String? productVariantId, bool isDistributor)
         selectProduct,
+    required TResult Function(
+            DateTime? dateOfReconciliation, bool isDistributor)
+        selectDateOfReconciliation,
     required TResult Function(bool isDistributor) calculate,
     required TResult Function(StockReconciliationModel stockReconciliationModel)
         create,
@@ -560,6 +816,8 @@ class _$StockReconciliationCalculateEventImpl
         selectFacility,
     TResult? Function(String? productVariantId, bool isDistributor)?
         selectProduct,
+    TResult? Function(DateTime? dateOfReconciliation, bool isDistributor)?
+        selectDateOfReconciliation,
     TResult? Function(bool isDistributor)? calculate,
     TResult? Function(StockReconciliationModel stockReconciliationModel)?
         create,
@@ -574,6 +832,8 @@ class _$StockReconciliationCalculateEventImpl
         selectFacility,
     TResult Function(String? productVariantId, bool isDistributor)?
         selectProduct,
+    TResult Function(DateTime? dateOfReconciliation, bool isDistributor)?
+        selectDateOfReconciliation,
     TResult Function(bool isDistributor)? calculate,
     TResult Function(StockReconciliationModel stockReconciliationModel)? create,
     required TResult orElse(),
@@ -591,6 +851,9 @@ class _$StockReconciliationCalculateEventImpl
         selectFacility,
     required TResult Function(StockReconciliationSelectProductEvent value)
         selectProduct,
+    required TResult Function(
+            StockReconciliationSelectDateOfReconciliationEvent value)
+        selectDateOfReconciliation,
     required TResult Function(StockReconciliationCalculateEvent value)
         calculate,
     required TResult Function(StockReconciliationCreateEvent value) create,
@@ -605,6 +868,8 @@ class _$StockReconciliationCalculateEventImpl
         selectFacility,
     TResult? Function(StockReconciliationSelectProductEvent value)?
         selectProduct,
+    TResult? Function(StockReconciliationSelectDateOfReconciliationEvent value)?
+        selectDateOfReconciliation,
     TResult? Function(StockReconciliationCalculateEvent value)? calculate,
     TResult? Function(StockReconciliationCreateEvent value)? create,
   }) {
@@ -618,6 +883,8 @@ class _$StockReconciliationCalculateEventImpl
         selectFacility,
     TResult Function(StockReconciliationSelectProductEvent value)?
         selectProduct,
+    TResult Function(StockReconciliationSelectDateOfReconciliationEvent value)?
+        selectDateOfReconciliation,
     TResult Function(StockReconciliationCalculateEvent value)? calculate,
     TResult Function(StockReconciliationCreateEvent value)? create,
     required TResult orElse(),
@@ -717,6 +984,9 @@ class _$StockReconciliationCreateEventImpl
         selectFacility,
     required TResult Function(String? productVariantId, bool isDistributor)
         selectProduct,
+    required TResult Function(
+            DateTime? dateOfReconciliation, bool isDistributor)
+        selectDateOfReconciliation,
     required TResult Function(bool isDistributor) calculate,
     required TResult Function(StockReconciliationModel stockReconciliationModel)
         create,
@@ -731,6 +1001,8 @@ class _$StockReconciliationCreateEventImpl
         selectFacility,
     TResult? Function(String? productVariantId, bool isDistributor)?
         selectProduct,
+    TResult? Function(DateTime? dateOfReconciliation, bool isDistributor)?
+        selectDateOfReconciliation,
     TResult? Function(bool isDistributor)? calculate,
     TResult? Function(StockReconciliationModel stockReconciliationModel)?
         create,
@@ -745,6 +1017,8 @@ class _$StockReconciliationCreateEventImpl
         selectFacility,
     TResult Function(String? productVariantId, bool isDistributor)?
         selectProduct,
+    TResult Function(DateTime? dateOfReconciliation, bool isDistributor)?
+        selectDateOfReconciliation,
     TResult Function(bool isDistributor)? calculate,
     TResult Function(StockReconciliationModel stockReconciliationModel)? create,
     required TResult orElse(),
@@ -762,6 +1036,9 @@ class _$StockReconciliationCreateEventImpl
         selectFacility,
     required TResult Function(StockReconciliationSelectProductEvent value)
         selectProduct,
+    required TResult Function(
+            StockReconciliationSelectDateOfReconciliationEvent value)
+        selectDateOfReconciliation,
     required TResult Function(StockReconciliationCalculateEvent value)
         calculate,
     required TResult Function(StockReconciliationCreateEvent value) create,
@@ -776,6 +1053,8 @@ class _$StockReconciliationCreateEventImpl
         selectFacility,
     TResult? Function(StockReconciliationSelectProductEvent value)?
         selectProduct,
+    TResult? Function(StockReconciliationSelectDateOfReconciliationEvent value)?
+        selectDateOfReconciliation,
     TResult? Function(StockReconciliationCalculateEvent value)? calculate,
     TResult? Function(StockReconciliationCreateEvent value)? create,
   }) {
@@ -789,6 +1068,8 @@ class _$StockReconciliationCreateEventImpl
         selectFacility,
     TResult Function(StockReconciliationSelectProductEvent value)?
         selectProduct,
+    TResult Function(StockReconciliationSelectDateOfReconciliationEvent value)?
+        selectDateOfReconciliation,
     TResult Function(StockReconciliationCalculateEvent value)? calculate,
     TResult Function(StockReconciliationCreateEvent value)? create,
     required TResult orElse(),

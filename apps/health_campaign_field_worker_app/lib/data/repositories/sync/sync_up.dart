@@ -8,6 +8,7 @@ import '../../../models/data_model.dart';
 import '../../../utils/environment_config.dart';
 import '../../data_repository.dart';
 import '../oplog/oplog.dart';
+import '../../local_store/no_sql/schema/oplog.dart' hide AdditionalId;
 import '../remote/pgr_service.dart';
 import 'remote_type.dart';
 
@@ -21,6 +22,8 @@ class PerformSyncUp {
     const individualIdentifierIdKey = 'individualIdentifierId';
     const householdAddressIdKey = 'householdAddressId';
     const individualAddressIdKey = 'individualAddressId';
+    const householdIdKey = 'householdId';
+    const individualIdKey = 'individualId';
 
     List<EntityModel> getEntityModel(
       List<OpLogEntry<EntityModel>> opLogList,
@@ -54,6 +57,25 @@ class PerformSyncUp {
                 );
               }
 
+              if (updatedEntity is HouseholdMemberModel) {
+                final hosueholdId = e.additionalIds.firstWhereOrNull(
+                  (element) {
+                    return element.idType == householdIdKey;
+                  },
+                )?.id;
+
+                final individualId = e.additionalIds.firstWhereOrNull(
+                  (element) {
+                    return element.idType == individualIdKey;
+                  },
+                )?.id;
+
+                updatedEntity = updatedEntity.copyWith(
+                  householdId: updatedEntity.householdId ?? hosueholdId,
+                  individualId: updatedEntity.individualId ?? individualId,
+                );
+              }
+
               if (updatedEntity is IndividualModel) {
                 final identifierId = e.additionalIds.firstWhereOrNull(
                   (element) {
@@ -82,14 +104,21 @@ class PerformSyncUp {
               }
 
               if (updatedEntity is TaskModel) {
-                final resourceId = e.additionalIds
-                    .firstWhereOrNull(
-                      (element) => element.idType == taskResourceIdKey,
-                    )
-                    ?.id;
+                final addressId = e.additionalIds.firstWhereOrNull(
+                  (element) {
+                    return element.idType == householdAddressIdKey;
+                  },
+                )?.id;
+
+                final resourceIdMap = {
+                  for (AdditionalId additionalId in e.additionalIds)
+                    additionalId.idType: additionalId.id,
+                };
 
                 updatedEntity = updatedEntity.copyWith(
                   resources: updatedEntity.resources?.map((e) {
+                    final resourceId =
+                        resourceIdMap[e.clientReferenceId + taskResourceIdKey];
                     if (resourceId != null) {
                       return e.copyWith(
                         taskId: serverGeneratedId,
@@ -99,12 +128,9 @@ class PerformSyncUp {
 
                     return e.copyWith(taskId: serverGeneratedId);
                   }).toList(),
-                );
-              }
-
-              if (updatedEntity is HFReferralModel) {
-                updatedEntity = updatedEntity.copyWith(
-                  id: serverGeneratedId,
+                  address: updatedEntity.address?.copyWith(
+                    id: updatedEntity.address?.id ?? addressId,
+                  ),
                 );
               }
 

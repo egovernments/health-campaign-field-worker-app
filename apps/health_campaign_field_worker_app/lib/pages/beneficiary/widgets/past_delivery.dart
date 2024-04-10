@@ -57,7 +57,8 @@ Widget buildTableContent(
       right: kPadding,
       top: 0,
     ),
-    height: containerHeight,
+    // [TODO - need to set the height of the card based on the number of items]
+    height: MediaQuery.of(context).size.height / 2.6,
     width: MediaQuery.of(context).size.width / 1.25,
     child: BlocBuilder<ProjectBloc, ProjectState>(
       builder: (context, projectState) {
@@ -76,13 +77,35 @@ Widget buildTableContent(
               element: {
                 localizations.translate(
                   i18.beneficiaryDetails.beneficiaryAge,
-                  //[TODO: Condition need to be handled in generic way,]
-                ): '${fetchProductVariant(item, individualModel)?.condition?.split('<=age<').first} - ${fetchProductVariant(item, individualModel)?.condition?.split('<=age<').last} ${localizations.translate(i18.memberCard.deliverDetailsMonthsText)}',
+                ): localizations.translate(
+                  '${getAgeConditionString('${fetchProductVariant(item, individualModel)?.condition}')}',
+                ),
               },
             ),
-            const Divider(
-              thickness: 1.0,
-            ),
+            const Divider(),
+            getHeightConditionString(
+                      '${fetchProductVariant(item, individualModel)?.condition}',
+                    ) !=
+                    null
+                ? DigitTableCard(
+                    topPadding: const EdgeInsets.only(top: 0.0),
+                    padding: const EdgeInsets.only(bottom: kPadding / 2),
+                    fraction: 2.5,
+                    element: {
+                      localizations.translate(
+                        i18.beneficiaryDetails.beneficiaryHeight,
+                      ): localizations.translate(
+                        '${getHeightConditionString('${fetchProductVariant(item, individualModel)?.condition}')}',
+                      ),
+                    },
+                  )
+                : const Offstage(),
+            getHeightConditionString(
+                      '${fetchProductVariant(item, individualModel)?.condition}',
+                    ) !=
+                    null
+                ? const Divider()
+                : const Offstage(),
             // Build the DigitTable with the data
             DigitTable(
               headerList: headerListResource,
@@ -108,7 +131,7 @@ Widget buildTableContent(
                                   ?.indexOf(e) ==
                               0
                           ? TableData(
-                              '${localizations.translate(i18.deliverIntervention.dose)} ${deliverInterventionState.dose}',
+                              '${localizations.translate(i18.beneficiaryDetails.beneficiaryDeliveryText)} ${deliverInterventionState.dose}',
                               cellKey: 'dose',
                             )
                           : TableData(''),
@@ -121,7 +144,7 @@ Widget buildTableContent(
                   },
                 ),
               ],
-              columnWidth: 150,
+              columnWidth: 140,
               height: ((fetchProductVariant(item, individualModel)!
                                   .productVariants ??
                               [])

@@ -671,6 +671,12 @@ mixin _$AppConfigPrimaryWrapperModel {
   @JsonKey(name: 'HCM-REFERRAL-REASONS')
   ReferralReasonsWrapperModel? get referralReasons =>
       throw _privateConstructorUsedError;
+  @JsonKey(name: 'HCM-INELIGIBILITY-REASONS')
+  IneligibilityReasonsWrapperModel? get ineligibilityReasons =>
+      throw _privateConstructorUsedError;
+  @JsonKey(name: 'HCM-DISABILITY-TYPES')
+  DisabilityTypesWrapperModel? get disabilityTypes =>
+      throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -693,12 +699,18 @@ abstract class $AppConfigPrimaryWrapperModelCopyWith<$Res> {
       @JsonKey(name: 'HCM-SYMPTOMS-TYPES')
       SymptomsTypesSecondaryWrapperModel? symptomsTypes,
       @JsonKey(name: 'HCM-REFERRAL-REASONS')
-      ReferralReasonsWrapperModel? referralReasons});
+      ReferralReasonsWrapperModel? referralReasons,
+      @JsonKey(name: 'HCM-INELIGIBILITY-REASONS')
+      IneligibilityReasonsWrapperModel? ineligibilityReasons,
+      @JsonKey(name: 'HCM-DISABILITY-TYPES')
+      DisabilityTypesWrapperModel? disabilityTypes});
 
   $AppConfigSecondaryWrapperModelCopyWith<$Res>? get appConfig;
   $RowVersionWrapperModelCopyWith<$Res>? get rowVersions;
   $SymptomsTypesSecondaryWrapperModelCopyWith<$Res>? get symptomsTypes;
   $ReferralReasonsWrapperModelCopyWith<$Res>? get referralReasons;
+  $IneligibilityReasonsWrapperModelCopyWith<$Res>? get ineligibilityReasons;
+  $DisabilityTypesWrapperModelCopyWith<$Res>? get disabilityTypes;
 }
 
 /// @nodoc
@@ -719,6 +731,8 @@ class _$AppConfigPrimaryWrapperModelCopyWithImpl<$Res,
     Object? rowVersions = freezed,
     Object? symptomsTypes = freezed,
     Object? referralReasons = freezed,
+    Object? ineligibilityReasons = freezed,
+    Object? disabilityTypes = freezed,
   }) {
     return _then(_value.copyWith(
       appConfig: freezed == appConfig
@@ -737,6 +751,14 @@ class _$AppConfigPrimaryWrapperModelCopyWithImpl<$Res,
           ? _value.referralReasons
           : referralReasons // ignore: cast_nullable_to_non_nullable
               as ReferralReasonsWrapperModel?,
+      ineligibilityReasons: freezed == ineligibilityReasons
+          ? _value.ineligibilityReasons
+          : ineligibilityReasons // ignore: cast_nullable_to_non_nullable
+              as IneligibilityReasonsWrapperModel?,
+      disabilityTypes: freezed == disabilityTypes
+          ? _value.disabilityTypes
+          : disabilityTypes // ignore: cast_nullable_to_non_nullable
+              as DisabilityTypesWrapperModel?,
     ) as $Val);
   }
 
@@ -790,6 +812,32 @@ class _$AppConfigPrimaryWrapperModelCopyWithImpl<$Res,
       return _then(_value.copyWith(referralReasons: value) as $Val);
     });
   }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $IneligibilityReasonsWrapperModelCopyWith<$Res>? get ineligibilityReasons {
+    if (_value.ineligibilityReasons == null) {
+      return null;
+    }
+
+    return $IneligibilityReasonsWrapperModelCopyWith<$Res>(
+        _value.ineligibilityReasons!, (value) {
+      return _then(_value.copyWith(ineligibilityReasons: value) as $Val);
+    });
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $DisabilityTypesWrapperModelCopyWith<$Res>? get disabilityTypes {
+    if (_value.disabilityTypes == null) {
+      return null;
+    }
+
+    return $DisabilityTypesWrapperModelCopyWith<$Res>(_value.disabilityTypes!,
+        (value) {
+      return _then(_value.copyWith(disabilityTypes: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -808,7 +856,11 @@ abstract class _$$AppConfigPrimaryWrapperModelImplCopyWith<$Res>
       @JsonKey(name: 'HCM-SYMPTOMS-TYPES')
       SymptomsTypesSecondaryWrapperModel? symptomsTypes,
       @JsonKey(name: 'HCM-REFERRAL-REASONS')
-      ReferralReasonsWrapperModel? referralReasons});
+      ReferralReasonsWrapperModel? referralReasons,
+      @JsonKey(name: 'HCM-INELIGIBILITY-REASONS')
+      IneligibilityReasonsWrapperModel? ineligibilityReasons,
+      @JsonKey(name: 'HCM-DISABILITY-TYPES')
+      DisabilityTypesWrapperModel? disabilityTypes});
 
   @override
   $AppConfigSecondaryWrapperModelCopyWith<$Res>? get appConfig;
@@ -818,6 +870,10 @@ abstract class _$$AppConfigPrimaryWrapperModelImplCopyWith<$Res>
   $SymptomsTypesSecondaryWrapperModelCopyWith<$Res>? get symptomsTypes;
   @override
   $ReferralReasonsWrapperModelCopyWith<$Res>? get referralReasons;
+  @override
+  $IneligibilityReasonsWrapperModelCopyWith<$Res>? get ineligibilityReasons;
+  @override
+  $DisabilityTypesWrapperModelCopyWith<$Res>? get disabilityTypes;
 }
 
 /// @nodoc
@@ -837,6 +893,8 @@ class __$$AppConfigPrimaryWrapperModelImplCopyWithImpl<$Res>
     Object? rowVersions = freezed,
     Object? symptomsTypes = freezed,
     Object? referralReasons = freezed,
+    Object? ineligibilityReasons = freezed,
+    Object? disabilityTypes = freezed,
   }) {
     return _then(_$AppConfigPrimaryWrapperModelImpl(
       appConfig: freezed == appConfig
@@ -855,6 +913,14 @@ class __$$AppConfigPrimaryWrapperModelImplCopyWithImpl<$Res>
           ? _value.referralReasons
           : referralReasons // ignore: cast_nullable_to_non_nullable
               as ReferralReasonsWrapperModel?,
+      ineligibilityReasons: freezed == ineligibilityReasons
+          ? _value.ineligibilityReasons
+          : ineligibilityReasons // ignore: cast_nullable_to_non_nullable
+              as IneligibilityReasonsWrapperModel?,
+      disabilityTypes: freezed == disabilityTypes
+          ? _value.disabilityTypes
+          : disabilityTypes // ignore: cast_nullable_to_non_nullable
+              as DisabilityTypesWrapperModel?,
     ));
   }
 }
@@ -867,7 +933,9 @@ class _$AppConfigPrimaryWrapperModelImpl
       {@JsonKey(name: 'HCM-FIELD-APP-CONFIG') this.appConfig,
       @JsonKey(name: 'module-version') this.rowVersions,
       @JsonKey(name: 'HCM-SYMPTOMS-TYPES') this.symptomsTypes,
-      @JsonKey(name: 'HCM-REFERRAL-REASONS') this.referralReasons});
+      @JsonKey(name: 'HCM-REFERRAL-REASONS') this.referralReasons,
+      @JsonKey(name: 'HCM-INELIGIBILITY-REASONS') this.ineligibilityReasons,
+      @JsonKey(name: 'HCM-DISABILITY-TYPES') this.disabilityTypes});
 
   factory _$AppConfigPrimaryWrapperModelImpl.fromJson(
           Map<String, dynamic> json) =>
@@ -885,10 +953,16 @@ class _$AppConfigPrimaryWrapperModelImpl
   @override
   @JsonKey(name: 'HCM-REFERRAL-REASONS')
   final ReferralReasonsWrapperModel? referralReasons;
+  @override
+  @JsonKey(name: 'HCM-INELIGIBILITY-REASONS')
+  final IneligibilityReasonsWrapperModel? ineligibilityReasons;
+  @override
+  @JsonKey(name: 'HCM-DISABILITY-TYPES')
+  final DisabilityTypesWrapperModel? disabilityTypes;
 
   @override
   String toString() {
-    return 'AppConfigPrimaryWrapperModel(appConfig: $appConfig, rowVersions: $rowVersions, symptomsTypes: $symptomsTypes, referralReasons: $referralReasons)';
+    return 'AppConfigPrimaryWrapperModel(appConfig: $appConfig, rowVersions: $rowVersions, symptomsTypes: $symptomsTypes, referralReasons: $referralReasons, ineligibilityReasons: $ineligibilityReasons, disabilityTypes: $disabilityTypes)';
   }
 
   @override
@@ -903,13 +977,17 @@ class _$AppConfigPrimaryWrapperModelImpl
             (identical(other.symptomsTypes, symptomsTypes) ||
                 other.symptomsTypes == symptomsTypes) &&
             (identical(other.referralReasons, referralReasons) ||
-                other.referralReasons == referralReasons));
+                other.referralReasons == referralReasons) &&
+            (identical(other.ineligibilityReasons, ineligibilityReasons) ||
+                other.ineligibilityReasons == ineligibilityReasons) &&
+            (identical(other.disabilityTypes, disabilityTypes) ||
+                other.disabilityTypes == disabilityTypes));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, appConfig, rowVersions, symptomsTypes, referralReasons);
+  int get hashCode => Object.hash(runtimeType, appConfig, rowVersions,
+      symptomsTypes, referralReasons, ineligibilityReasons, disabilityTypes);
 
   @JsonKey(ignore: true)
   @override
@@ -937,7 +1015,11 @@ abstract class _AppConfigPrimaryWrapperModel
           @JsonKey(name: 'HCM-SYMPTOMS-TYPES')
           final SymptomsTypesSecondaryWrapperModel? symptomsTypes,
           @JsonKey(name: 'HCM-REFERRAL-REASONS')
-          final ReferralReasonsWrapperModel? referralReasons}) =
+          final ReferralReasonsWrapperModel? referralReasons,
+          @JsonKey(name: 'HCM-INELIGIBILITY-REASONS')
+          final IneligibilityReasonsWrapperModel? ineligibilityReasons,
+          @JsonKey(name: 'HCM-DISABILITY-TYPES')
+          final DisabilityTypesWrapperModel? disabilityTypes}) =
       _$AppConfigPrimaryWrapperModelImpl;
 
   factory _AppConfigPrimaryWrapperModel.fromJson(Map<String, dynamic> json) =
@@ -955,6 +1037,12 @@ abstract class _AppConfigPrimaryWrapperModel
   @override
   @JsonKey(name: 'HCM-REFERRAL-REASONS')
   ReferralReasonsWrapperModel? get referralReasons;
+  @override
+  @JsonKey(name: 'HCM-INELIGIBILITY-REASONS')
+  IneligibilityReasonsWrapperModel? get ineligibilityReasons;
+  @override
+  @JsonKey(name: 'HCM-DISABILITY-TYPES')
+  DisabilityTypesWrapperModel? get disabilityTypes;
   @override
   @JsonKey(ignore: true)
   _$$AppConfigPrimaryWrapperModelImplCopyWith<
@@ -1335,6 +1423,8 @@ mixin _$AppConfig {
       throw _privateConstructorUsedError;
   @JsonKey(name: 'TRANSPORT_TYPES')
   List<TransportTypes> get transportTypes => throw _privateConstructorUsedError;
+  @JsonKey(name: 'FIREBASE_CONFIG')
+  FirebaseConfig get firebaseConfig => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -1372,10 +1462,12 @@ abstract class $AppConfigCopyWith<$Res> {
       List<DeliveryCommentOptions> deliveryCommentOptions,
       @JsonKey(name: 'BACKEND_INTERFACE') BackendInterface backendInterface,
       @JsonKey(name: 'CALL_SUPPORT') List<CallSupportList>? callSupportOptions,
-      @JsonKey(name: 'TRANSPORT_TYPES') List<TransportTypes> transportTypes});
+      @JsonKey(name: 'TRANSPORT_TYPES') List<TransportTypes> transportTypes,
+      @JsonKey(name: 'FIREBASE_CONFIG') FirebaseConfig firebaseConfig});
 
   $BackgroundServiceConfigCopyWith<$Res>? get backgroundServiceConfig;
   $BackendInterfaceCopyWith<$Res> get backendInterface;
+  $FirebaseConfigCopyWith<$Res> get firebaseConfig;
 }
 
 /// @nodoc
@@ -1409,6 +1501,7 @@ class _$AppConfigCopyWithImpl<$Res, $Val extends AppConfig>
     Object? backendInterface = null,
     Object? callSupportOptions = freezed,
     Object? transportTypes = null,
+    Object? firebaseConfig = null,
   }) {
     return _then(_value.copyWith(
       networkDetection: null == networkDetection
@@ -1484,6 +1577,10 @@ class _$AppConfigCopyWithImpl<$Res, $Val extends AppConfig>
           ? _value.transportTypes
           : transportTypes // ignore: cast_nullable_to_non_nullable
               as List<TransportTypes>,
+      firebaseConfig: null == firebaseConfig
+          ? _value.firebaseConfig
+          : firebaseConfig // ignore: cast_nullable_to_non_nullable
+              as FirebaseConfig,
     ) as $Val);
   }
 
@@ -1505,6 +1602,14 @@ class _$AppConfigCopyWithImpl<$Res, $Val extends AppConfig>
   $BackendInterfaceCopyWith<$Res> get backendInterface {
     return $BackendInterfaceCopyWith<$Res>(_value.backendInterface, (value) {
       return _then(_value.copyWith(backendInterface: value) as $Val);
+    });
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $FirebaseConfigCopyWith<$Res> get firebaseConfig {
+    return $FirebaseConfigCopyWith<$Res>(_value.firebaseConfig, (value) {
+      return _then(_value.copyWith(firebaseConfig: value) as $Val);
     });
   }
 }
@@ -1542,12 +1647,15 @@ abstract class _$$AppConfigImplCopyWith<$Res>
       List<DeliveryCommentOptions> deliveryCommentOptions,
       @JsonKey(name: 'BACKEND_INTERFACE') BackendInterface backendInterface,
       @JsonKey(name: 'CALL_SUPPORT') List<CallSupportList>? callSupportOptions,
-      @JsonKey(name: 'TRANSPORT_TYPES') List<TransportTypes> transportTypes});
+      @JsonKey(name: 'TRANSPORT_TYPES') List<TransportTypes> transportTypes,
+      @JsonKey(name: 'FIREBASE_CONFIG') FirebaseConfig firebaseConfig});
 
   @override
   $BackgroundServiceConfigCopyWith<$Res>? get backgroundServiceConfig;
   @override
   $BackendInterfaceCopyWith<$Res> get backendInterface;
+  @override
+  $FirebaseConfigCopyWith<$Res> get firebaseConfig;
 }
 
 /// @nodoc
@@ -1579,6 +1687,7 @@ class __$$AppConfigImplCopyWithImpl<$Res>
     Object? backendInterface = null,
     Object? callSupportOptions = freezed,
     Object? transportTypes = null,
+    Object? firebaseConfig = null,
   }) {
     return _then(_$AppConfigImpl(
       networkDetection: null == networkDetection
@@ -1654,6 +1763,10 @@ class __$$AppConfigImplCopyWithImpl<$Res>
           ? _value._transportTypes
           : transportTypes // ignore: cast_nullable_to_non_nullable
               as List<TransportTypes>,
+      firebaseConfig: null == firebaseConfig
+          ? _value.firebaseConfig
+          : firebaseConfig // ignore: cast_nullable_to_non_nullable
+              as FirebaseConfig,
     ));
   }
 }
@@ -1689,7 +1802,8 @@ class _$AppConfigImpl implements _AppConfig {
       @JsonKey(name: 'CALL_SUPPORT')
       required final List<CallSupportList>? callSupportOptions,
       @JsonKey(name: 'TRANSPORT_TYPES')
-      required final List<TransportTypes> transportTypes})
+      required final List<TransportTypes> transportTypes,
+      @JsonKey(name: 'FIREBASE_CONFIG') required this.firebaseConfig})
       : _languages = languages,
         _householdDeletionReasonOptions = householdDeletionReasonOptions,
         _bandWidthBatchSize = bandWidthBatchSize,
@@ -1827,8 +1941,12 @@ class _$AppConfigImpl implements _AppConfig {
   }
 
   @override
+  @JsonKey(name: 'FIREBASE_CONFIG')
+  final FirebaseConfig firebaseConfig;
+
+  @override
   String toString() {
-    return 'AppConfig(networkDetection: $networkDetection, persistenceMode: $persistenceMode, syncMethod: $syncMethod, syncTrigger: $syncTrigger, languages: $languages, tenantId: $tenantId, maxRadius: $maxRadius, householdDeletionReasonOptions: $householdDeletionReasonOptions, bandWidthBatchSize: $bandWidthBatchSize, backgroundServiceConfig: $backgroundServiceConfig, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, genderOptions: $genderOptions, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes)';
+    return 'AppConfig(networkDetection: $networkDetection, persistenceMode: $persistenceMode, syncMethod: $syncMethod, syncTrigger: $syncTrigger, languages: $languages, tenantId: $tenantId, maxRadius: $maxRadius, householdDeletionReasonOptions: $householdDeletionReasonOptions, bandWidthBatchSize: $bandWidthBatchSize, backgroundServiceConfig: $backgroundServiceConfig, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, genderOptions: $genderOptions, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, firebaseConfig: $firebaseConfig)';
   }
 
   @override
@@ -1874,32 +1992,36 @@ class _$AppConfigImpl implements _AppConfig {
             const DeepCollectionEquality()
                 .equals(other._callSupportOptions, _callSupportOptions) &&
             const DeepCollectionEquality()
-                .equals(other._transportTypes, _transportTypes));
+                .equals(other._transportTypes, _transportTypes) &&
+            (identical(other.firebaseConfig, firebaseConfig) ||
+                other.firebaseConfig == firebaseConfig));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      networkDetection,
-      persistenceMode,
-      syncMethod,
-      syncTrigger,
-      const DeepCollectionEquality().hash(_languages),
-      tenantId,
-      maxRadius,
-      const DeepCollectionEquality().hash(_householdDeletionReasonOptions),
-      const DeepCollectionEquality().hash(_bandWidthBatchSize),
-      backgroundServiceConfig,
-      const DeepCollectionEquality()
-          .hash(_householdMemberDeletionReasonOptions),
-      const DeepCollectionEquality().hash(_genderOptions),
-      const DeepCollectionEquality().hash(_checklistTypes),
-      const DeepCollectionEquality().hash(_idTypeOptions),
-      const DeepCollectionEquality().hash(_deliveryCommentOptions),
-      backendInterface,
-      const DeepCollectionEquality().hash(_callSupportOptions),
-      const DeepCollectionEquality().hash(_transportTypes));
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        networkDetection,
+        persistenceMode,
+        syncMethod,
+        syncTrigger,
+        const DeepCollectionEquality().hash(_languages),
+        tenantId,
+        maxRadius,
+        const DeepCollectionEquality().hash(_householdDeletionReasonOptions),
+        const DeepCollectionEquality().hash(_bandWidthBatchSize),
+        backgroundServiceConfig,
+        const DeepCollectionEquality()
+            .hash(_householdMemberDeletionReasonOptions),
+        const DeepCollectionEquality().hash(_genderOptions),
+        const DeepCollectionEquality().hash(_checklistTypes),
+        const DeepCollectionEquality().hash(_idTypeOptions),
+        const DeepCollectionEquality().hash(_deliveryCommentOptions),
+        backendInterface,
+        const DeepCollectionEquality().hash(_callSupportOptions),
+        const DeepCollectionEquality().hash(_transportTypes),
+        firebaseConfig
+      ]);
 
   @JsonKey(ignore: true)
   @override
@@ -1947,7 +2069,9 @@ abstract class _AppConfig implements AppConfig {
       @JsonKey(name: 'CALL_SUPPORT')
       required final List<CallSupportList>? callSupportOptions,
       @JsonKey(name: 'TRANSPORT_TYPES')
-      required final List<TransportTypes> transportTypes}) = _$AppConfigImpl;
+      required final List<TransportTypes> transportTypes,
+      @JsonKey(name: 'FIREBASE_CONFIG')
+      required final FirebaseConfig firebaseConfig}) = _$AppConfigImpl;
 
   factory _AppConfig.fromJson(Map<String, dynamic> json) =
       _$AppConfigImpl.fromJson;
@@ -2006,6 +2130,9 @@ abstract class _AppConfig implements AppConfig {
   @override
   @JsonKey(name: 'TRANSPORT_TYPES')
   List<TransportTypes> get transportTypes;
+  @override
+  @JsonKey(name: 'FIREBASE_CONFIG')
+  FirebaseConfig get firebaseConfig;
   @override
   @JsonKey(ignore: true)
   _$$AppConfigImplCopyWith<_$AppConfigImpl> get copyWith =>
@@ -4439,5 +4566,164 @@ abstract class _RowVersions implements RowVersions {
   @override
   @JsonKey(ignore: true)
   _$$RowVersionsImplCopyWith<_$RowVersionsImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+FirebaseConfig _$FirebaseConfigFromJson(Map<String, dynamic> json) {
+  return _FirebaseConfig.fromJson(json);
+}
+
+/// @nodoc
+mixin _$FirebaseConfig {
+  bool get enableCrashlytics => throw _privateConstructorUsedError;
+  bool get enableAnalytics => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $FirebaseConfigCopyWith<FirebaseConfig> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $FirebaseConfigCopyWith<$Res> {
+  factory $FirebaseConfigCopyWith(
+          FirebaseConfig value, $Res Function(FirebaseConfig) then) =
+      _$FirebaseConfigCopyWithImpl<$Res, FirebaseConfig>;
+  @useResult
+  $Res call({bool enableCrashlytics, bool enableAnalytics});
+}
+
+/// @nodoc
+class _$FirebaseConfigCopyWithImpl<$Res, $Val extends FirebaseConfig>
+    implements $FirebaseConfigCopyWith<$Res> {
+  _$FirebaseConfigCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? enableCrashlytics = null,
+    Object? enableAnalytics = null,
+  }) {
+    return _then(_value.copyWith(
+      enableCrashlytics: null == enableCrashlytics
+          ? _value.enableCrashlytics
+          : enableCrashlytics // ignore: cast_nullable_to_non_nullable
+              as bool,
+      enableAnalytics: null == enableAnalytics
+          ? _value.enableAnalytics
+          : enableAnalytics // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$FirebaseConfigImplCopyWith<$Res>
+    implements $FirebaseConfigCopyWith<$Res> {
+  factory _$$FirebaseConfigImplCopyWith(_$FirebaseConfigImpl value,
+          $Res Function(_$FirebaseConfigImpl) then) =
+      __$$FirebaseConfigImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({bool enableCrashlytics, bool enableAnalytics});
+}
+
+/// @nodoc
+class __$$FirebaseConfigImplCopyWithImpl<$Res>
+    extends _$FirebaseConfigCopyWithImpl<$Res, _$FirebaseConfigImpl>
+    implements _$$FirebaseConfigImplCopyWith<$Res> {
+  __$$FirebaseConfigImplCopyWithImpl(
+      _$FirebaseConfigImpl _value, $Res Function(_$FirebaseConfigImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? enableCrashlytics = null,
+    Object? enableAnalytics = null,
+  }) {
+    return _then(_$FirebaseConfigImpl(
+      enableCrashlytics: null == enableCrashlytics
+          ? _value.enableCrashlytics
+          : enableCrashlytics // ignore: cast_nullable_to_non_nullable
+              as bool,
+      enableAnalytics: null == enableAnalytics
+          ? _value.enableAnalytics
+          : enableAnalytics // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$FirebaseConfigImpl implements _FirebaseConfig {
+  _$FirebaseConfigImpl(
+      {required this.enableCrashlytics, required this.enableAnalytics});
+
+  factory _$FirebaseConfigImpl.fromJson(Map<String, dynamic> json) =>
+      _$$FirebaseConfigImplFromJson(json);
+
+  @override
+  final bool enableCrashlytics;
+  @override
+  final bool enableAnalytics;
+
+  @override
+  String toString() {
+    return 'FirebaseConfig(enableCrashlytics: $enableCrashlytics, enableAnalytics: $enableAnalytics)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$FirebaseConfigImpl &&
+            (identical(other.enableCrashlytics, enableCrashlytics) ||
+                other.enableCrashlytics == enableCrashlytics) &&
+            (identical(other.enableAnalytics, enableAnalytics) ||
+                other.enableAnalytics == enableAnalytics));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, enableCrashlytics, enableAnalytics);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$FirebaseConfigImplCopyWith<_$FirebaseConfigImpl> get copyWith =>
+      __$$FirebaseConfigImplCopyWithImpl<_$FirebaseConfigImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$FirebaseConfigImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _FirebaseConfig implements FirebaseConfig {
+  factory _FirebaseConfig(
+      {required final bool enableCrashlytics,
+      required final bool enableAnalytics}) = _$FirebaseConfigImpl;
+
+  factory _FirebaseConfig.fromJson(Map<String, dynamic> json) =
+      _$FirebaseConfigImpl.fromJson;
+
+  @override
+  bool get enableCrashlytics;
+  @override
+  bool get enableAnalytics;
+  @override
+  @JsonKey(ignore: true)
+  _$$FirebaseConfigImplCopyWith<_$FirebaseConfigImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
