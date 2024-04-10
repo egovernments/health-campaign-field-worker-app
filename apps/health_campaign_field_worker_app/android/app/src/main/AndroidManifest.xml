@@ -24,6 +24,9 @@
    <application
         android:label="salama"
         android:name="${applicationName}"
+        android:allowBackup="false"
+        android:fullBackupOnly="false"
+        android:fullBackupContent="false"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:showWhenLocked="false"
@@ -31,8 +34,6 @@
             android:name=".MainActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:allowBackup="false"
-            android:fullBackupContent="false"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"

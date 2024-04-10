@@ -101,12 +101,11 @@ extension ContextUtilityExtensions on BuildContext {
 
     final projectState = projectBloc.state;
 
-    final BeneficiaryType? selectedBeneficiary =
-        projectState.selectedProject?.targets?.firstOrNull?.beneficiaryType;
-
-    if (selectedBeneficiary == null) {
-      throw AppException('No beneficiary type is selected');
-    }
+    final BeneficiaryType selectedBeneficiary =
+        projectState.projectType?.beneficiaryType ==
+                BeneficiaryType.household.toValue()
+            ? BeneficiaryType.household
+            : BeneficiaryType.individual;
 
     return selectedBeneficiary;
   }

@@ -14,34 +14,27 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
     required TaskSearchModel query,
     required void Function(List<TaskModel> data) listener,
   }) {
-    final select = sql.select(sql.task).join([
-      leftOuterJoin(
-        sql.taskResource,
-        sql.taskResource.taskclientReferenceId.equalsExp(
-          sql.task.clientReferenceId,
-        ),
-      ),
-    ])
+    final select = sql.select(sql.task)
       ..where(
-        buildOr([
+        (tbl) => buildAnd([
           if (query.projectId != null)
-            sql.task.projectId.equals(
+            tbl.projectId.equals(
               query.projectId!,
             ),
           if (query.createdBy != null)
-            sql.task.createdBy.equals(
+            tbl.clientCreatedBy.equals(
               query.createdBy!,
+            ),
+          if (query.status != null)
+            tbl.status.equals(
+              query.status!,
             ),
         ]),
       );
 
     select.watch().listen((results) {
       final data = results
-          .map((e) {
-            final task = e.readTableOrNull(sql.task);
-            final resources = e.readTableOrNull(sql.taskResource);
-            if (task == null) return null;
-
+          .map((task) {
             return TaskModel(
               id: task.id,
               createdBy: task.createdBy,
@@ -53,20 +46,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
               projectBeneficiaryId: task.projectBeneficiaryId,
               createdDate: task.createdDate,
               status: task.status,
-              resources: resources == null
-                  ? null
-                  : [
-                      TaskResourceModel(
-                        taskclientReferenceId: resources.taskclientReferenceId,
-                        clientReferenceId: resources.clientReferenceId,
-                        id: resources.id,
-                        productVariantId: resources.productVariantId,
-                        taskId: resources.taskId,
-                        deliveryComment: resources.deliveryComment,
-                        quantity: resources.quantity,
-                        rowVersion: resources.rowVersion,
-                      ),
-                    ],
+              resources: null,
             );
           })
           .whereNotNull()

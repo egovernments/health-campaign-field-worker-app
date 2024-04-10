@@ -56,6 +56,7 @@ class _BeneficiaryProgressBarState extends State<BeneficiaryProgressBar> {
       query: TaskSearchModel(
         projectId: context.projectId,
         createdBy: context.loggedInUserUuid,
+        status: Status.administeredSuccess.toValue(),
       ),
       listener: (data) {
         if (mounted) {
