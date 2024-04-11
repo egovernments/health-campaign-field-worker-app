@@ -53,6 +53,7 @@ class FacilityLocalRepository
         isPermanent: facility.isPermanent,
         storageCapacity: facility.storageCapacity,
         usage: facility.usage,
+        name: facility.name,
         address: address == null
             ? null
             : AddressModel(
@@ -96,6 +97,34 @@ class FacilityLocalRepository
       entity,
       createOpLog: createOpLog,
     );
+  }
+
+  @override
+  FutureOr<void> bulkCreate(
+    List<FacilityModel> entities,
+  ) async {
+    final facilityCompanions = entities.map((e) => e.companion).toList();
+    final addressCompanions = entities
+        .where((entity) => entity.address != null)
+        .map((e) => e.address!.companion)
+        .toList();
+
+    await sql.batch((batch) async {
+      batch.insertAll(
+        sql.facility,
+        facilityCompanions,
+        mode: InsertMode.insertOrReplace,
+      );
+    });
+    if (addressCompanions.isNotEmpty) {
+      await sql.batch((batch) async {
+        batch.insertAll(
+          sql.address,
+          addressCompanions,
+          mode: InsertMode.insertOrReplace,
+        );
+      });
+    }
   }
 
   @override

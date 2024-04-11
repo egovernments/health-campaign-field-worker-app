@@ -125,8 +125,7 @@ class FacilitySelectionPage extends StatelessWidget {
                                 child: Padding(
                                   padding: const EdgeInsets.all(kPadding * 2),
                                   child: Text(
-                                    localizations
-                                        .translate('FAC_${facility.id}'),
+                                    facility.name ?? facility.id,
                                   ),
                                 ),
                               ),
@@ -164,11 +163,13 @@ class FacilityValueAccessor
 
   @override
   String? modelToViewValue(FacilityModel? modelValue) {
-    return modelValue?.id;
+    return modelValue?.name;
   }
 
   @override
   FacilityModel? viewToModelValue(String? viewValue) {
-    return models.firstWhereOrNull((element) => element.id == viewValue);
+    return models.firstWhereOrNull(
+      (element) => element.name == viewValue || element.id == viewValue,
+    );
   }
 }

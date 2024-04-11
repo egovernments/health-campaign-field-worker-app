@@ -65,14 +65,14 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
         final facilities = facilityState.whenOrNull(
               fetched: (_, facilities, __) {
                 final projectFacilities = facilities
-                    .where((e) => e.id != 'N/A' && e.id != 'Delivery Team')
+                    .where((e) => e.id != 'N/A' && e.id != 'DT')
                     .toList();
-                final healthFacilities = [
-                  FacilityModel(id: 'Community Health Worker'),
-                ];
-                healthFacilities.addAll(projectFacilities);
+                // final healthFacilities = [
+                //   FacilityModel(id: 'Community Health Worker'),
+                // ];
+                // healthFacilities.addAll(projectFacilities);
 
-                return healthFacilities;
+                return projectFacilities;
               },
             ) ??
             [];
@@ -172,6 +172,59 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                                   ),
                                   false,
                                 ));
+
+                                final clientReferenceId = IdGen.i.identifier;
+                                context.read<DeliverInterventionBloc>().add(
+                                      DeliverInterventionSubmitEvent(
+                                        TaskModel(
+                                          projectBeneficiaryClientReferenceId:
+                                              widget
+                                                  .projectBeneficiaryClientRefId,
+                                          clientReferenceId: clientReferenceId,
+                                          tenantId:
+                                              envConfig.variables.tenantId,
+                                          rowVersion: 1,
+                                          auditDetails: AuditDetails(
+                                            createdBy: context.loggedInUserUuid,
+                                            createdTime: context
+                                                .millisecondsSinceEpoch(),
+                                          ),
+                                          projectId: context.projectId,
+                                          status: Status.beneficiaryReferred
+                                              .toValue(),
+                                          clientAuditDetails:
+                                              ClientAuditDetails(
+                                            createdBy: context.loggedInUserUuid,
+                                            createdTime: context
+                                                .millisecondsSinceEpoch(),
+                                            lastModifiedBy:
+                                                context.loggedInUserUuid,
+                                            lastModifiedTime: context
+                                                .millisecondsSinceEpoch(),
+                                          ),
+                                          additionalFields:
+                                              TaskAdditionalFields(
+                                            version: 1,
+                                            fields: [
+                                              AdditionalField(
+                                                'taskStatus',
+                                                Status.beneficiaryReferred
+                                                    .toValue(),
+                                              ),
+                                            ],
+                                          ),
+                                          address: widget
+                                              .individual.address?.first
+                                              .copyWith(
+                                            relatedClientReferenceId:
+                                                clientReferenceId,
+                                            id: null,
+                                          ),
+                                        ),
+                                        false,
+                                        context.boundary,
+                                      ),
+                                    );
 
                                 final reloadState =
                                     context.read<HouseholdOverviewBloc>();
