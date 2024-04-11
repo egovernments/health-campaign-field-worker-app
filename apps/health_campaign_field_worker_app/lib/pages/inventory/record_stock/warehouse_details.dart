@@ -314,7 +314,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                       if (facility == null) return;
                                       form.control(_warehouseKey).value =
                                           localizations
-                                              .translate('FAC_${facility.id}');
+                                              .translate('${facility.name}');
 
                                       setState(() {
                                         selectedFacilityId = facility.id;
@@ -373,7 +373,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                           if (facility == null) return;
                                           form.control(_warehouseKey).value =
                                               localizations.translate(
-                                                  'FAC_${facility.id}');
+                                                  '${facility.name}');
 
                                           setState(() {
                                             selectedFacilityId = facility.id;

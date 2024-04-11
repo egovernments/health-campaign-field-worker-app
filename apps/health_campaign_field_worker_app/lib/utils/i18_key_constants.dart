@@ -545,6 +545,8 @@ class Login {
   String get passwordPlaceholder => 'PASSWORD_PLACEHOLDER';
 
   String get actionLabel => 'LOGIN_ACTION_LABEL';
+
+  String get noInternetError => 'ERR_NOT_CONNECTED_TO_INTERNET';
 }
 
 class StockDetailsReturnedShowcase {

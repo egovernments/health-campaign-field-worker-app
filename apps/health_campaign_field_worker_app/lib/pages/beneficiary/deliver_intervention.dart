@@ -596,14 +596,14 @@ class _DeliverInterventionPageState
                                                           menuItems:
                                                               deliveryCommentOptions
                                                                   .map((e) {
-                                                            return localizations
-                                                                .translate(
-                                                                    e.name);
+                                                            return e.code;
                                                           }).toList(),
                                                           formControlName:
                                                               _deliveryCommentKey,
-                                                          valueMapper:
-                                                              (value) => value,
+                                                          valueMapper: (value) =>
+                                                              localizations
+                                                                  .translate(
+                                                                      value),
                                                           emptyText: localizations
                                                               .translate(i18
                                                                   .common

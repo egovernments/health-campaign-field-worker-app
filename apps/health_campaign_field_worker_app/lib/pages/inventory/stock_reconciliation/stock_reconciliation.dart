@@ -337,7 +337,7 @@ class _StockReconciliationPageState
                                               if (facility == null) return;
                                               form.control(_facilityKey).value =
                                                   localizations.translate(
-                                                'FAC_${facility.id}',
+                                                '${facility.name}',
                                               );
                                               setState(() {
                                                 selectedFacilityId =
@@ -381,7 +381,7 @@ class _StockReconciliationPageState
                                                           .control(_facilityKey)
                                                           .value =
                                                       localizations.translate(
-                                                    'FAC_${facility.id}',
+                                                    '${facility.name}',
                                                   );
                                                   setState(() {
                                                     selectedFacilityId =

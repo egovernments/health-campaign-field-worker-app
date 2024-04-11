@@ -611,7 +611,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                           form
                                               .control(_secondaryPartyKey)
                                               .value = localizations.translate(
-                                            'FAC_${facility.id}',
+                                            '${facility.name}',
                                           );
 
                                           setState(() {
@@ -664,7 +664,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                       .control(_secondaryPartyKey)
                                                       .value =
                                                   localizations.translate(
-                                                'FAC_${facility.id}',
+                                                '${facility.name}',
                                               );
 
                                               setState(() {
@@ -826,24 +826,25 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                     maxLines: 3,
                                     formControlName: _commentsKey,
                                   ),
-                                  DigitOutlineIconButton(
-                                    buttonStyle: OutlinedButton.styleFrom(
-                                      shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.zero,
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      context.router.push(QRScannerRoute(
-                                        quantity: 5,
-                                        isGS1code: true,
-                                        sinlgleValue: false,
-                                      ));
-                                    },
-                                    icon: Icons.qr_code,
-                                    label: localizations.translate(
-                                      i18.common.scanBales,
-                                    ),
-                                  ),
+                                  // Impel Customization
+                                  // DigitOutlineIconButton(
+                                  //   buttonStyle: OutlinedButton.styleFrom(
+                                  //     shape: const RoundedRectangleBorder(
+                                  //       borderRadius: BorderRadius.zero,
+                                  //     ),
+                                  //   ),
+                                  //   onPressed: () {
+                                  //     context.router.push(QRScannerRoute(
+                                  //       quantity: 5,
+                                  //       isGS1code: true,
+                                  //       sinlgleValue: false,
+                                  //     ));
+                                  //   },
+                                  //   icon: Icons.qr_code,
+                                  //   label: localizations.translate(
+                                  //     i18.common.scanBales,
+                                  //   ),
+                                  // ),
                                 ],
                               ),
                             ),
