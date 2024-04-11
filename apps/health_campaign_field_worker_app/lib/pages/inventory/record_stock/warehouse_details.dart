@@ -33,6 +33,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
   static const _teamCodeKey = 'teamCode';
   bool deliveryTeamSelected = false;
   String? selectedFacilityId;
+  FacilityModel? prevFacility;
 
   @override
   void initState() {
@@ -52,6 +53,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
         ),
         _warehouseKey: FormControl<String>(
           validators: [Validators.required],
+          value: prevFacility?.name,
         ),
         _teamCodeKey: FormControl<String>(
           value: stockState.primaryId ?? '',
@@ -69,7 +71,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
         .isNotEmpty;
     bool isWareHouseMgr = context.loggedInUserRoles
         .where(
-          (role) => role.code == RolesType.warehouseManager.toValue(),
+          (role) => role.code == RolesType.healthFacilitySupervisor.toValue(),
         )
         .toList()
         .isNotEmpty;
@@ -117,6 +119,14 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                   },
                 ) ??
                 [];
+
+            prevFacility = facilityState.whenOrNull(
+              fetched: (_, __, facility) => facility,
+            );
+
+            if (prevFacility != null) {
+              selectedFacilityId = prevFacility?.id;
+            }
 
             return Scaffold(
               body: GestureDetector(
@@ -216,27 +226,10 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                               context
                                                   .read<RecordStockBloc>()
                                                   .add(
-                                                    RecordStockSaveTransactionDetailsEvent(
+                                                    RecordStockSaveWarehouseDetailsEvent(
                                                       dateOfRecord:
                                                           dateOfRecord,
-                                                      facilityModel:
-                                                          isDistributor &&
-                                                                  !isWareHouseMgr
-                                                              ? FacilityModel(
-                                                                  id: teamCode
-                                                                      .toString(),
-                                                                )
-                                                              : facility,
-                                                      primaryId: facility.id ==
-                                                              "Delivery Team"
-                                                          ? teamCode ?? ''
-                                                          : facility.id,
-                                                      primaryType: (isDistributor &&
-                                                                  !isWareHouseMgr &&
-                                                                  deliveryTeamSelected) ||
-                                                              deliveryTeamSelected
-                                                          ? "STAFF"
-                                                          : "WAREHOUSE",
+                                                      facilityModel: facility,
                                                     ),
                                                   );
                                               context.router.push(
@@ -277,7 +270,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                   ),
                                   Column(children: [
                                     DigitDateFormPicker(
-                                      isEnabled: false,
+                                      isEnabled: true,
                                       formControlName: _dateOfEntryKey,
                                       label: localizations.translate(
                                         i18.warehouseDetails.dateOfReceipt,
@@ -373,7 +366,8 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                           if (facility == null) return;
                                           form.control(_warehouseKey).value =
                                               localizations.translate(
-                                                  '${facility.name}');
+                                            '${facility.name}',
+                                          );
 
                                           setState(() {
                                             selectedFacilityId = facility.id;

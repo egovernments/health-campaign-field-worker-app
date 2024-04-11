@@ -39,6 +39,7 @@ class FacilityBlocWrapper extends StatelessWidget {
                 userId: context.loggedInUserUuid,
               ),
             ),
+          lazy: false,
           child: BlocProvider(
             create: (_) => ProjectFacilityBloc(
               const ProjectFacilityState.empty(),

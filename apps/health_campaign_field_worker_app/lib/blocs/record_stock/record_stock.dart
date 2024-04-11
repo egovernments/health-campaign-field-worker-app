@@ -52,7 +52,7 @@ class RecordStockBloc extends Bloc<RecordStockEvent, RecordStockState> {
     );
   }
 
-    FutureOr<void> _handleSaveTransactionDetails(
+  FutureOr<void> _handleSaveTransactionDetails(
     RecordStockSaveTransactionDetailsEvent event,
     RecordStockEmitter emit,
   ) async {
@@ -60,13 +60,25 @@ class RecordStockBloc extends Bloc<RecordStockEvent, RecordStockState> {
       orElse: () {
         throw const InvalidRecordStockStateException();
       },
-      create: (value) {
+      create: (value) async {
+        final facilityId = event.facilityModel?.id;
+
+        List<StockModel> existingStocks = [];
+        if (facilityId != null) {
+          existingStocks = await stockRepository.search(
+            StockSearchModel(
+              facilityId: facilityId,
+            ),
+          );
+        }
+
         emit(
           value.copyWith(
             dateOfRecord: event.dateOfRecord,
             facilityModel: event.facilityModel,
             primaryType: event.primaryType,
             primaryId: event.primaryId,
+            existingStocks: existingStocks,
           ),
         );
       },
@@ -158,14 +170,13 @@ class RecordStockEvent with _$RecordStockEvent {
   const factory RecordStockEvent.createStockEntry() =
       RecordStockCreateStockEntryEvent;
 
-   const factory RecordStockEvent.saveTransactionDetails({
+  const factory RecordStockEvent.saveTransactionDetails({
     required DateTime dateOfRecord,
     required String primaryType,
     required String primaryId,
     FacilityModel? facilityModel,
   }) = RecordStockSaveTransactionDetailsEvent;
 }
-
 
 @freezed
 class RecordStockState with _$RecordStockState {

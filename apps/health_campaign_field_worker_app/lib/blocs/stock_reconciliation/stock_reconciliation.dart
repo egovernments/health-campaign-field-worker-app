@@ -66,48 +66,28 @@ class StockReconciliationBloc
     final facilityId = state.facilityModel?.id;
     final dateOfReconciliation = state.dateOfReconciliation;
 
-    if ((productVariantId == null) ||
-        (!event.isDistributor && facilityId == null)) return;
+    if (productVariantId == null || facilityId == null) return;
 
-    final user = await LocalSecureStore.instance.userRequestModel;
-
-    final receivedStocks = (await stockRepository.search(
+    final stocks = await stockRepository.search(
       StockSearchModel(
         productVariantId: productVariantId,
-        receiverId: facilityId,
+        facilityId: facilityId,
       ),
-    ))
-        .where((element) =>
-            element.auditDetails != null &&
-            element.auditDetails?.createdBy == user?.uuid)
-        .toList();
-    final sentStocks = (await stockRepository.search(
-      StockSearchModel(
-        productVariantId: productVariantId,
-        senderId: facilityId,
-      ),
-    ))
-        .where((element) =>
-            element.auditDetails != null &&
-            element.auditDetails?.createdBy == user?.uuid)
-        .toList();
+    );
 
-    final dateFilteredStocks = [...receivedStocks, ...sentStocks]
+    final dateFilteredStocks = stocks
         .where(
           (e) =>
-      e.dateOfEntryTime!.year < dateOfReconciliation.year ||
-          e.dateOfEntryTime!.year == dateOfReconciliation.year &&
-              e.dateOfEntryTime!.month < dateOfReconciliation.month ||
-          e.dateOfEntryTime!.year == dateOfReconciliation.year &&
-              e.dateOfEntryTime!.month == dateOfReconciliation.month &&
-              e.dateOfEntryTime!.day <= dateOfReconciliation.day,
-    )
+              e.dateOfEntryTime!.year < dateOfReconciliation.year ||
+              e.dateOfEntryTime!.year == dateOfReconciliation.year &&
+                  e.dateOfEntryTime!.month < dateOfReconciliation.month ||
+              e.dateOfEntryTime!.year == dateOfReconciliation.year &&
+                  e.dateOfEntryTime!.month == dateOfReconciliation.month &&
+                  e.dateOfEntryTime!.day <= dateOfReconciliation.day,
+        )
         .toList();
 
-    emit(state.copyWith(
-      loading: false,
-      stockModels: dateFilteredStocks,
-    ));
+    emit(state.copyWith(loading: false, stockModels: dateFilteredStocks));
   }
 
   FutureOr<void> _handleCreate(
@@ -156,9 +136,9 @@ class StockReconciliationEvent with _$StockReconciliationEvent {
   }) = StockReconciliationSelectProductEvent;
 
   const factory StockReconciliationEvent.selectDateOfReconciliation(
-      DateTime? dateOfReconciliation, {
-        @Default(false) bool isDistributor,
-      } ) = StockReconciliationSelectDateOfReconciliationEvent;
+    DateTime? dateOfReconciliation, {
+    @Default(false) bool isDistributor,
+  }) = StockReconciliationSelectDateOfReconciliationEvent;
 
   const factory StockReconciliationEvent.calculate({
     @Default(false) bool isDistributor,

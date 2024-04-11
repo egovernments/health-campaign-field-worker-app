@@ -56,7 +56,8 @@ class FacilitySelectionPage extends StatelessWidget {
                       color: Colors.white,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: kPadding * 2),
+                          horizontal: kPadding * 2,
+                        ),
                         child: Column(
                           children: [
                             Padding(
@@ -65,7 +66,8 @@ class FacilitySelectionPage extends StatelessWidget {
                                 alignment: Alignment.topLeft,
                                 child: Text(
                                   localizations.translate(
-                                    i18.common.facilitySearchHeaderLabel,
+                                    i18.stockReconciliationDetails
+                                        .facilityLabel,
                                   ),
                                   style: theme.textTheme.displayMedium,
                                   textAlign: TextAlign.left,

@@ -38,6 +38,8 @@ class StockLocalRepository
                 if (query.id != null) sql.stock.id.equals(query.id!),
                 if (query.receiverId != null)
                   sql.stock.receiverId.equals(query.receiverId!),
+                if (query.facilityId != null)
+                  sql.stock.facilityId.equals(query.facilityId!),
                 if (query.senderId != null)
                   sql.stock.senderId.equals(query.senderId!),
                 if (query.productVariantId != null)

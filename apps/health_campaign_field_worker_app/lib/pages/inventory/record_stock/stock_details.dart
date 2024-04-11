@@ -262,20 +262,20 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                               theme,
                                             ),
                                           );
-                                        } else if ((primaryId ==
-                                                secondaryParty?.id) ||
-                                            (primaryId == deliveryTeamName)) {
-                                          DigitToast.show(
-                                            context,
-                                            options: DigitToastOptions(
-                                              localizations.translate(
-                                                i18.stockDetails
-                                                    .senderReceiverValidation,
-                                              ),
-                                              true,
-                                              theme,
-                                            ),
-                                          );
+                                          // } else if ((primaryId ==
+                                          //         secondaryParty?.id) ||
+                                          //     (primaryId == deliveryTeamName)) {
+                                          //   DigitToast.show(
+                                          //     context,
+                                          //     options: DigitToastOptions(
+                                          //       localizations.translate(
+                                          //         i18.stockDetails
+                                          //             .senderReceiverValidation,
+                                          //       ),
+                                          //       true,
+                                          //       theme,
+                                          //     ),
+                                          //   );
                                         } else {
                                           FocusManager.instance.primaryFocus
                                               ?.unfocus();
@@ -382,6 +382,100 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                               break;
                                           }
 
+                                          if (entryType ==
+                                              StockRecordEntryType.dispatch) {
+                                            int issueQuantity = quantity ?? 0;
+
+                                            List<StockModel>
+                                                stocksByProductVAriant =
+                                                stockState.existingStocks
+                                                    .where((element) =>
+                                                        element
+                                                            .productVariantId ==
+                                                        productVariant.id)
+                                                    .toList();
+
+                                            num stockReceived =
+                                                _getQuantityCount(
+                                              stocksByProductVAriant.where(
+                                                (e) =>
+                                                    e.transactionType ==
+                                                        TransactionType
+                                                            .received &&
+                                                    e.transactionReason ==
+                                                        TransactionReason
+                                                            .received,
+                                              ),
+                                            );
+
+                                            num stockIssued = _getQuantityCount(
+                                              stocksByProductVAriant.where(
+                                                (e) =>
+                                                    e.transactionType ==
+                                                        TransactionType
+                                                            .dispatched &&
+                                                    e.transactionReason == null,
+                                              ),
+                                            );
+
+                                            num stockReturned =
+                                                _getQuantityCount(
+                                              stocksByProductVAriant.where(
+                                                (e) =>
+                                                    e.transactionType ==
+                                                        TransactionType
+                                                            .received &&
+                                                    e.transactionReason ==
+                                                        TransactionReason
+                                                            .returned,
+                                              ),
+                                            );
+
+                                            num stockInHand = (stockReceived +
+                                                    stockReturned) -
+                                                (stockIssued);
+                                            if (issueQuantity > stockInHand) {
+                                              final alert =
+                                                  await DigitDialog.show<bool>(
+                                                context,
+                                                options: DigitDialogOptions(
+                                                  titleText:
+                                                      localizations.translate(
+                                                    i18.stockDetails
+                                                        .countDialogTitle,
+                                                  ),
+                                                  contentText: localizations
+                                                      .translate(
+                                                        i18.stockDetails
+                                                            .countContent,
+                                                      )
+                                                      .replaceAll(
+                                                        '{}',
+                                                        stockInHand.toString(),
+                                                      ),
+                                                  primaryAction:
+                                                      DigitDialogActions(
+                                                    label:
+                                                        localizations.translate(
+                                                      i18.stockDetails
+                                                          .countDialogSuccess,
+                                                    ),
+                                                    action: (context) {
+                                                      Navigator.of(
+                                                        context,
+                                                        rootNavigator: true,
+                                                      ).pop(false);
+                                                    },
+                                                  ),
+                                                ),
+                                              );
+
+                                              if (!(alert ?? false)) {
+                                                return;
+                                              }
+                                            }
+                                          }
+
                                           final stockModel = StockModel(
                                             clientReferenceId:
                                                 IdGen.i.identifier,
@@ -397,6 +491,10 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                             receiverType: receiverType,
                                             senderId: senderId,
                                             senderType: senderType,
+                                            facilityId: primaryId,
+                                            transactingPartyId:
+                                                secondaryParty?.id,
+                                            transactingPartyType: "WAREHOUSE",
                                             auditDetails: AuditDetails(
                                               createdBy:
                                                   context.loggedInUserUuid,
@@ -864,5 +962,12 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
 
   void clearQRCodes() {
     context.read<ScannerBloc>().add(const ScannerEvent.handleScanner([], []));
+  }
+
+  num _getQuantityCount(Iterable<StockModel> stocks) {
+    return stocks.fold<num>(
+      0.0,
+      (old, e) => (num.tryParse(e.quantity ?? '') ?? 0.0) + old,
+    );
   }
 }
