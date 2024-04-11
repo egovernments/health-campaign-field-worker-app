@@ -58,11 +58,15 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
 
     final headerList = [
       TableHeader(
-        localizations.translate(i18.beneficiaryDetails.beneficiaryHeader),
+        localizations.translate(
+          i18.beneficiaryDetails.beneficiary,
+        ),
         cellKey: 'beneficiary',
       ),
       TableHeader(
-        localizations.translate(i18.beneficiaryDetails.deliveryHeader),
+        localizations.translate(
+          i18.beneficiaryDetails.beneficiaryStatus,
+        ),
         cellKey: 'delivery',
       ),
       TableHeader(

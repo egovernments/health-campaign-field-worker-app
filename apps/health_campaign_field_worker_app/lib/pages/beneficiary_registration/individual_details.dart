@@ -361,13 +361,18 @@ class _IndividualDetailsPageState
                               child: DigitTextFormField(
                                 formControlName: 'individualName',
                                 label: localizations.translate(
-                                  i18.individualDetails.nameLabelText,
+                                  i18.individualDetails.firstNameLabelText,
                                 ),
                                 isRequired: true,
                                 validationMessages: {
                                   'required': (object) =>
                                       localizations.translate(
-                                        '${i18.individualDetails.nameLabelText}_IS_REQUIRED',
+                                        i18.individualDetails
+                                            .firstNameIsRequiredError,
+                                      ),
+                                  'min3': (object) => localizations.translate(
+                                        i18.individualDetails
+                                            .firstNameLengthError,
                                       ),
                                   'maxLength': (object) => localizations
                                       .translate(i18.common.maxCharsRequired)
