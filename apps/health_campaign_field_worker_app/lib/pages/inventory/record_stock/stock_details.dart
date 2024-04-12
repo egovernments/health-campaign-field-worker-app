@@ -701,6 +701,18 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                           ) ??
                                           [];
 
+                                      String? boundaryType = context
+                                          .selectedProject
+                                          .address
+                                          ?.boundaryType;
+
+                                      print(entryType);
+
+                                      //TODO below pseudocode
+                                      // If entryType is received then filter facilities
+                                      // where childBoundaryType in additional fields is boundaryType
+                                      // for returned or issues parentBoundaryType is boundaryType
+
                                       return InkWell(
                                         onTap: () async {
                                           clearQRCodes();

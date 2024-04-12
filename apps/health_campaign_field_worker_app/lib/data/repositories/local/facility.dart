@@ -106,7 +106,13 @@ class FacilityLocalRepository
     final facilityCompanions = entities.map((e) => e.companion).toList();
     final addressCompanions = entities
         .where((entity) => entity.address != null)
-        .map((e) => e.address!.companion)
+        .map((e) => e.address!
+            .copyWith(
+              relatedClientReferenceId: e.id,
+              clientAuditDetails: e.clientAuditDetails,
+              auditDetails: e.auditDetails,
+            )
+            .companion)
         .toList();
 
     await sql.batch((batch) async {
