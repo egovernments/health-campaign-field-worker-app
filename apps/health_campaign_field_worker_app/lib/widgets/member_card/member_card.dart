@@ -216,7 +216,6 @@ class MemberCard extends StatelessWidget {
           Offstage(
             offstage: beneficiaryType != BeneficiaryType.individual ||
                 isNotEligible ||
-                isBeneficiaryRefused ||
                 isBeneficiaryIneligible ||
                 isBeneficiaryReferred,
             child: Padding(
@@ -224,7 +223,6 @@ class MemberCard extends StatelessWidget {
               child: Column(
                 children: [
                   isNotEligible ||
-                          isBeneficiaryRefused ||
                           isBeneficiaryReferred ||
                           isBeneficiaryIneligible
                       ? const Offstage()
@@ -294,7 +292,6 @@ class MemberCard extends StatelessWidget {
                     height: 10,
                   ),
                   (isNotEligible ||
-                          isBeneficiaryRefused ||
                           isBeneficiaryReferred ||
                           isBeneficiaryIneligible ||
                           (allDosesDelivered(
@@ -347,81 +344,100 @@ class MemberCard extends StatelessWidget {
                                         50,
                                       ),
                                     ),
-                                    onPressed: () {
-                                      Navigator.of(context, rootNavigator: true)
-                                          .pop();
-                                      context
-                                          .read<DeliverInterventionBloc>()
-                                          .add(
-                                            DeliverInterventionSubmitEvent(
-                                              TaskModel(
-                                                projectBeneficiaryClientReferenceId:
-                                                    projectBeneficiaryClientReferenceId,
-                                                clientReferenceId:
-                                                    IdGen.i.identifier,
-                                                tenantId: envConfig
-                                                    .variables.tenantId,
-                                                rowVersion: 1,
-                                                auditDetails: AuditDetails(
-                                                  createdBy:
-                                                      context.loggedInUserUuid,
-                                                  createdTime: context
-                                                      .millisecondsSinceEpoch(),
-                                                ),
-                                                projectId: context.projectId,
-                                                status: Status
-                                                    .beneficiaryRefused
-                                                    .toValue(),
-                                                clientAuditDetails:
-                                                    ClientAuditDetails(
-                                                  createdBy:
-                                                      context.loggedInUserUuid,
-                                                  createdTime: context
-                                                      .millisecondsSinceEpoch(),
-                                                  lastModifiedBy:
-                                                      context.loggedInUserUuid,
-                                                  lastModifiedTime: context
-                                                      .millisecondsSinceEpoch(),
-                                                ),
-                                                additionalFields:
-                                                    TaskAdditionalFields(
-                                                  version: 1,
-                                                  fields: [
-                                                    AdditionalField(
-                                                      'taskStatus',
-                                                      Status.beneficiaryRefused
+                                    onPressed: tasks != null &&
+                                            (tasks ?? [])
+                                                .where((element) =>
+                                                    element.status !=
+                                                    Status.beneficiaryRefused
+                                                        .toValue())
+                                                .toList()
+                                                .isNotEmpty &&
+                                            !checkStatus(
+                                              tasks,
+                                              context.selectedCycle,
+                                            )
+                                        ? null
+                                        : () {
+                                            Navigator.of(
+                                              context,
+                                              rootNavigator: true,
+                                            ).pop();
+                                            context
+                                                .read<DeliverInterventionBloc>()
+                                                .add(
+                                                  DeliverInterventionSubmitEvent(
+                                                    TaskModel(
+                                                      projectBeneficiaryClientReferenceId:
+                                                          projectBeneficiaryClientReferenceId,
+                                                      clientReferenceId:
+                                                          IdGen.i.identifier,
+                                                      tenantId: envConfig
+                                                          .variables.tenantId,
+                                                      rowVersion: 1,
+                                                      auditDetails:
+                                                          AuditDetails(
+                                                        createdBy: context
+                                                            .loggedInUserUuid,
+                                                        createdTime: context
+                                                            .millisecondsSinceEpoch(),
+                                                      ),
+                                                      projectId:
+                                                          context.projectId,
+                                                      status: Status
+                                                          .beneficiaryRefused
                                                           .toValue(),
+                                                      clientAuditDetails:
+                                                          ClientAuditDetails(
+                                                        createdBy: context
+                                                            .loggedInUserUuid,
+                                                        createdTime: context
+                                                            .millisecondsSinceEpoch(),
+                                                        lastModifiedBy: context
+                                                            .loggedInUserUuid,
+                                                        lastModifiedTime: context
+                                                            .millisecondsSinceEpoch(),
+                                                      ),
+                                                      additionalFields:
+                                                          TaskAdditionalFields(
+                                                        version: 1,
+                                                        fields: [
+                                                          AdditionalField(
+                                                            'taskStatus',
+                                                            Status
+                                                                .beneficiaryRefused
+                                                                .toValue(),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      address: individual
+                                                          .address?.first,
                                                     ),
-                                                  ],
+                                                    false,
+                                                    context.boundary,
+                                                  ),
+                                                );
+                                            final reloadState = context
+                                                .read<HouseholdOverviewBloc>();
+                                            Future.delayed(
+                                              const Duration(milliseconds: 500),
+                                              () {
+                                                reloadState.add(
+                                                  HouseholdOverviewReloadEvent(
+                                                    projectId:
+                                                        context.projectId,
+                                                    projectBeneficiaryType:
+                                                        context.beneficiaryType,
+                                                  ),
+                                                );
+                                              },
+                                            ).then(
+                                              (value) => context.router.push(
+                                                HouseholdAcknowledgementRoute(
+                                                  enableViewHousehold: true,
                                                 ),
-                                                address:
-                                                    individual.address?.first,
                                               ),
-                                              false,
-                                              context.boundary,
-                                            ),
-                                          );
-                                      final reloadState =
-                                          context.read<HouseholdOverviewBloc>();
-                                      Future.delayed(
-                                        const Duration(milliseconds: 500),
-                                        () {
-                                          reloadState.add(
-                                            HouseholdOverviewReloadEvent(
-                                              projectId: context.projectId,
-                                              projectBeneficiaryType:
-                                                  context.beneficiaryType,
-                                            ),
-                                          );
-                                        },
-                                      ).then(
-                                        (value) => context.router.push(
-                                          HouseholdAcknowledgementRoute(
-                                            enableViewHousehold: true,
-                                          ),
-                                        ),
-                                      );
-                                    },
+                                            );
+                                          },
                                   ),
                                   const SizedBox(
                                     height: kPadding * 2,

@@ -46,8 +46,8 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
   FormGroup _form(StockRecordEntryType stockType) {
     return fb.group({
       _productVariantKey: FormControl<ProductVariantModel>(
-          // validators: [Validators.required],
-          ),
+        validators: [Validators.required],
+      ),
       _secondaryPartyKey: FormControl<String>(
         validators: [Validators.required],
       ),
@@ -58,10 +58,16 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
         Validators.max(10000),
       ]),
       _transactionReasonKey: FormControl<TransactionReason>(),
-      _waybillNumberKey: FormControl<String>(),
-      _waybillQuantityKey: FormControl<String>(
-        validators: [Validators.number],
-        value: '0',
+      _waybillNumberKey: FormControl<String>(
+        validators: [Validators.required],
+      ),
+      _waybillQuantityKey: FormControl<int>(
+        validators: [
+          Validators.number,
+          Validators.required,
+          Validators.min(0),
+          Validators.max(10000000),
+        ],
       ),
       _vehicleNumberKey: FormControl<String>(),
       _typeOfTransportKey: FormControl<String>(),
@@ -82,10 +88,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    bool isWareHouseMgr = context.loggedInUserRoles
-        .where((role) => role.code == RolesType.warehouseManager.toValue())
-        .toList()
-        .isNotEmpty;
+    bool isWareHouseMgr = true;
 
     return PopScope(
       onPopInvoked: (didPop) {
@@ -318,7 +321,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
 
                                           final waybillQuantity = form
                                               .control(_waybillQuantityKey)
-                                              .value as String?;
+                                              .value;
 
                                           final vehicleNumber = form
                                               .control(_vehicleNumberKey)
@@ -514,7 +517,6 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                             ),
                                             additionalFields: [
                                                       waybillQuantity,
-                                                      vehicleNumber,
                                                       comments,
                                                     ].any((element) =>
                                                         element != null) ||
@@ -523,39 +525,16 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                     version: 1,
                                                     fields: [
                                                       if (waybillQuantity !=
-                                                              null &&
-                                                          waybillQuantity
-                                                              .trim()
-                                                              .isNotEmpty)
+                                                          null)
                                                         AdditionalField(
                                                           'waybill_quantity',
-                                                          waybillQuantity,
+                                                          waybillQuantity
+                                                              .toString(),
                                                         ),
-                                                      if (vehicleNumber !=
-                                                              null &&
-                                                          vehicleNumber
-                                                              .trim()
-                                                              .isNotEmpty)
-                                                        AdditionalField(
-                                                          'vehicle_number',
-                                                          vehicleNumber,
-                                                        ),
-                                                      if (comments != null &&
-                                                          comments
-                                                              .trim()
-                                                              .isNotEmpty)
+                                                      if (comments != null)
                                                         AdditionalField(
                                                           'comments',
                                                           comments,
-                                                        ),
-                                                      if (deliveryTeamName !=
-                                                              null &&
-                                                          deliveryTeamName
-                                                              .trim()
-                                                              .isNotEmpty)
-                                                        AdditionalField(
-                                                          'deliveryTeam',
-                                                          deliveryTeamName,
                                                         ),
                                                       if (hasLocationData) ...[
                                                         AdditionalField(
@@ -662,7 +641,9 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                             menuItems: productVariants,
                                             validationMessages: {
                                               'required': (object) =>
-                                                  '${module.selectProductLabel}_IS_REQUIRED',
+                                                  localizations.translate(
+                                                    '${module.selectProductLabel}_IS_REQUIRED',
+                                                  ),
                                             },
                                           );
                                         },
@@ -735,7 +716,8 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                             validationMessages: {
                                               'required': (object) =>
                                                   localizations.translate(
-                                                    '${i18.individualDetails.nameLabelText}_IS_REQUIRED',
+                                                    i18.common
+                                                        .corecommonRequired,
                                                   ),
                                             },
                                             suffix: const Padding(
@@ -834,7 +816,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                     validationMessages: {
                                       "number": (object) =>
                                           localizations.translate(
-                                            '${quantityCountLabel}_ERROR',
+                                            '${quantityCountLabel}_VALIDATION',
                                           ),
                                       "max": (object) =>
                                           localizations.translate(
@@ -854,7 +836,14 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                       label: localizations.translate(
                                         i18.stockDetails.waybillNumberLabel,
                                       ),
+                                      isRequired: true,
                                       formControlName: _waybillNumberKey,
+                                      validationMessages: {
+                                        'required': (object) =>
+                                            localizations.translate(
+                                              i18.common.corecommonRequired,
+                                            ),
+                                      },
                                     ),
                                   if (isWareHouseMgr)
                                     DigitTextFormField(
@@ -862,60 +851,74 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                         i18.stockDetails
                                             .quantityOfProductIndicatedOnWaybillLabel,
                                       ),
+                                      keyboardType:
+                                          const TextInputType.numberWithOptions(
+                                        decimal: true,
+                                      ),
+                                      isRequired: true,
                                       formControlName: _waybillQuantityKey,
                                       validationMessages: {
                                         "number": (object) =>
                                             localizations.translate(
                                               '${i18.stockDetails.quantityOfProductIndicatedOnWaybillLabel}_ERROR',
                                             ),
+                                        "max": (object) =>
+                                            localizations.translate(
+                                              '${quantityCountLabel}_MAX_ERROR',
+                                            ),
+                                        "min": (object) =>
+                                            localizations.translate(
+                                              '${quantityCountLabel}_MIN_ERROR',
+                                            ),
                                       },
                                     ),
-                                  if (isWareHouseMgr)
-                                    BlocBuilder<AppInitializationBloc,
-                                        AppInitializationState>(
-                                      builder: (context, state) =>
-                                          state.maybeWhen(
-                                        orElse: () => const Offstage(),
-                                        initialized: (appConfiguration, _) {
-                                          final transportTypeOptions =
-                                              appConfiguration.transportTypes ??
-                                                  <TransportTypes>[];
+                                  // Solution Customizations
+                                  // if (isWareHouseMgr)
+                                  //   BlocBuilder<AppInitializationBloc,
+                                  //       AppInitializationState>(
+                                  //     builder: (context, state) =>
+                                  //         state.maybeWhen(
+                                  //       orElse: () => const Offstage(),
+                                  //       initialized: (appConfiguration, _) {
+                                  //         final transportTypeOptions =
+                                  //             appConfiguration.transportTypes ??
+                                  //                 <TransportTypes>[];
 
-                                          return DigitReactiveDropdown<String>(
-                                            isRequired: false,
-                                            label: localizations.translate(
-                                              i18.stockDetails
-                                                  .transportTypeLabel,
-                                            ),
-                                            valueMapper: (e) => e,
-                                            onChanged: (value) {
-                                              setState(() {
-                                                form.control(
-                                                  _typeOfTransportKey,
-                                                );
-                                              });
-                                            },
-                                            initialValue: transportTypeOptions
-                                                .firstOrNull?.name,
-                                            menuItems: transportTypeOptions.map(
-                                              (e) {
-                                                return localizations
-                                                    .translate(e.name);
-                                              },
-                                            ).toList(),
-                                            formControlName:
-                                                _typeOfTransportKey,
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  if (isWareHouseMgr)
-                                    DigitTextFormField(
-                                      label: localizations.translate(
-                                        i18.stockDetails.vehicleNumberLabel,
-                                      ),
-                                      formControlName: _vehicleNumberKey,
-                                    ),
+                                  //         return DigitReactiveDropdown<String>(
+                                  //           isRequired: false,
+                                  //           label: localizations.translate(
+                                  //             i18.stockDetails
+                                  //                 .transportTypeLabel,
+                                  //           ),
+                                  //           valueMapper: (e) => e,
+                                  //           onChanged: (value) {
+                                  //             setState(() {
+                                  //               form.control(
+                                  //                 _typeOfTransportKey,
+                                  //               );
+                                  //             });
+                                  //           },
+                                  //           initialValue: transportTypeOptions
+                                  //               .firstOrNull?.name,
+                                  //           menuItems: transportTypeOptions.map(
+                                  //             (e) {
+                                  //               return localizations
+                                  //                   .translate(e.name);
+                                  //             },
+                                  //           ).toList(),
+                                  //           formControlName:
+                                  //               _typeOfTransportKey,
+                                  //         );
+                                  //       },
+                                  //     ),
+                                  //   ),
+                                  // if (isWareHouseMgr)
+                                  //   DigitTextFormField(
+                                  //     label: localizations.translate(
+                                  //       i18.stockDetails.vehicleNumberLabel,
+                                  //     ),
+                                  //     formControlName: _vehicleNumberKey,
+                                  //   ),
                                   DigitTextFormField(
                                     label: localizations.translate(
                                       i18.stockDetails.commentsLabel,
