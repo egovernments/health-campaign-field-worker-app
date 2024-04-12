@@ -7,3 +7,10 @@ export 'models/attendance_log.dart';
 export 'models/attendance_register.dart';
 export 'models/attendee.dart';
 export 'models/staff.dart';
+
+export 'data/attendance.dart';
+export 'data/attendance_register.dart';
+export 'data/attendee.dart';
+export 'data/staff.dart';
+
+export 'router/attendance_router.dart';

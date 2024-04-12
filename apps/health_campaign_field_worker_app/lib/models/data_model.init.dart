@@ -59,19 +59,13 @@ import 'package:attendance_management/models/staff.dart' as p51;
 import 'package:attendance_management/models/attendance_audit.dart' as p51;
 import 'package:attendance_management/models/attendance_log.dart' as p51;
 import 'package:attendance_management/models/attendee.dart' as p51;
-import 'package:inventory_management/models/entities/transaction_reason.dart'
-    as p52;
-import 'package:inventory_management/models/entities/transaction_type.dart'
-    as p52;
+import 'package:inventory_management/models/entities/transaction_reason.dart' as p52;
+import 'package:inventory_management/models/entities/transaction_type.dart' as p52;
 import 'package:inventory_management/models/entities/stock.dart' as p52;
-import 'package:inventory_management/models/entities/inventory_facility.dart'
-    as p52;
-import 'package:inventory_management/models/entities/stock_reconciliation.dart'
-    as p52;
-import 'package:inventory_management/models/entities/product_variant.dart'
-    as p52;
-import 'package:inventory_management/models/entities/project_product_variant.dart'
-    as p52;
+import 'package:inventory_management/models/entities/inventory_facility.dart' as p52;
+import 'package:inventory_management/models/entities/stock_reconciliation.dart' as p52;
+import 'package:inventory_management/models/entities/product_variant.dart' as p52;
+import 'package:inventory_management/models/entities/project_product_variant.dart' as p52;
 
 void initializeMappers() {
   p0.EntityModelMapper.ensureInitialized();
@@ -216,16 +210,16 @@ void initializeMappers() {
   p50.PgrComplaintResponseModelMapper.ensureInitialized();
   p50.PgrComplainantResponseModelMapper.ensureInitialized();
   p50.PgrServiceResponseModelMapper.ensureInitialized();
-  p51.AttendanceRegisterModelMapper.ensureInitialized();
-  p51.StaffModelMapper.ensureInitialized();
-  p51.AttendanceAuditDetailsMapper.ensureInitialized();
-  p51.AttendanceLogModelMapper.ensureInitialized();
-  p51.AttendeeModelMapper.ensureInitialized();
-  p52.TransactionReasonMapper.ensureInitialized();
-  p52.TransactionTypeMapper.ensureInitialized();
-  p52.StockModelMapper.ensureInitialized();
-  p52.InventoryFacilityModelMapper.ensureInitialized();
-  p52.StockReconciliationModelMapper.ensureInitialized();
-  p52.ProductVariantModelMapper.ensureInitialized();
-  p52.ProjectProductVariantModelMapper.ensureInitialized();
+p51.AttendanceRegisterModelMapper.ensureInitialized();
+p51.StaffModelMapper.ensureInitialized();
+p51.AttendanceAuditDetailsMapper.ensureInitialized();
+p51.AttendanceLogModelMapper.ensureInitialized();
+p51.AttendeeModelMapper.ensureInitialized();
+p52.TransactionReasonMapper.ensureInitialized();
+p52.TransactionTypeMapper.ensureInitialized();
+p52.StockModelMapper.ensureInitialized();
+p52.InventoryFacilityModelMapper.ensureInitialized();
+p52.StockReconciliationModelMapper.ensureInitialized();
+p52.ProductVariantModelMapper.ensureInitialized();
+p52.ProjectProductVariantModelMapper.ensureInitialized();
 }

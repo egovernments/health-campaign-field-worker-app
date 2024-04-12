@@ -1036,7 +1036,7 @@ packages:
       path: "../../packages/inventory_management"
       relative: true
     source: path
-    version: "0.0.1+2"
+    version: "0.0.1"
   io:
     dependency: transitive
     description:
