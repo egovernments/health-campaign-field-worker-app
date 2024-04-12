@@ -14,4 +14,6 @@ export 'data/local_store/sql_store/tables/product_variant.dart';
 export 'data/local_store/sql_store/tables/stock.dart';
 export 'data/local_store/sql_store/tables/stock_reconciliation.dart';
 
+export 'router/inventory_router.dart';
+
 export 'blocs/inventory_listener.dart';
