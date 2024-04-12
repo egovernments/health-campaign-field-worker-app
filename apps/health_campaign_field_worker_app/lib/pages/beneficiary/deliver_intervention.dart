@@ -455,30 +455,31 @@ class _DeliverInterventionPageState
                                                               50) /
                                                           (steps.length - 1),
                                                     ),
-                                                    DigitDateFormPicker(
-                                                      isEnabled: false,
-                                                      formControlName:
-                                                          _dateOfAdministrationKey,
-                                                      label: localizations
-                                                          .translate(
-                                                        i18.householdDetails
-                                                            .dateOfRegistrationLabel,
-                                                      ),
-                                                      confirmText: localizations
-                                                          .translate(
-                                                        i18.common.coreCommonOk,
-                                                      ),
-                                                      cancelText: localizations
-                                                          .translate(
-                                                        i18.common
-                                                            .coreCommonCancel,
-                                                      ),
-                                                      isRequired: false,
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                        top: kPadding,
-                                                      ),
-                                                    ),
+                                                    // Solution Customizations
+                                                    // DigitDateFormPicker(
+                                                    //   isEnabled: false,
+                                                    //   formControlName:
+                                                    //       _dateOfAdministrationKey,
+                                                    //   label: localizations
+                                                    //       .translate(
+                                                    //     i18.householdDetails
+                                                    //         .dateOfRegistrationLabel,
+                                                    //   ),
+                                                    //   confirmText: localizations
+                                                    //       .translate(
+                                                    //     i18.common.coreCommonOk,
+                                                    //   ),
+                                                    //   cancelText: localizations
+                                                    //       .translate(
+                                                    //     i18.common
+                                                    //         .coreCommonCancel,
+                                                    //   ),
+                                                    //   isRequired: false,
+                                                    //   padding:
+                                                    //       const EdgeInsets.only(
+                                                    //     top: kPadding,
+                                                    //   ),
+                                                    // ),
                                                   ],
                                                 ),
                                               ),
