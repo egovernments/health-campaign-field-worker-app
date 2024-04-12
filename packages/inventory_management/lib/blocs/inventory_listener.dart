@@ -19,8 +19,8 @@ abstract class InventoryListener {
 
   // Fetches the stock reconciliation details.
   Future<List<List<StockModel>>> fetchStockReconciliationDetails({
-    final String productVariantId,
-    final String facilityId,
+    required String productVariantId,
+    required final String facilityId,
   });
 
   // Saves the stock reconciliation details.
@@ -29,13 +29,13 @@ abstract class InventoryListener {
 
   // Handles the stock reconciliation report.
   Future<StockReconciliationReport> handleStockReconciliationReport(
-      {String facilityId, String productVariantId});
+      {required String facilityId, required String productVariantId});
 
   // Fetches the inventory reports.
   Future<Map<String, List<StockModel>>> fetchInventoryReports({
-    final InventoryReportType reportType,
-    final String facilityId,
-    final String productVariantId,
+    required final InventoryReportType reportType,
+    required final String facilityId,
+    required final String productVariantId,
   });
 
   // Calls the sync method.

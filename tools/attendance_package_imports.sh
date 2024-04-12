@@ -108,22 +108,25 @@ else
     # Write the class definition to the file
     cat > $filePath << EOF
 import 'package:attendance_management/blocs/attendance_listeners.dart';
+import 'package:attendance_management/models/attendance_log.dart';
 import 'package:attendance_management/models/attendance_register.dart';
 
-class HCMAttendanceBloc extends AttendanceListeners {
+class HcmAttendanceBloc extends AttendanceListeners {
   @override
   void callSyncMethod() {
     // TODO: implement callSyncMethod
   }
 
   @override
-  void getAttendanceRegisters(Function(List<AttendanceRegisterModel> attendanceRegisterModel) attendanceRegisters) {
+  Future<List<AttendanceRegisterModel>> getAttendanceRegisters() {
     // TODO: implement getAttendanceRegisters
+    throw UnimplementedError();
   }
 
   @override
-  void searchAttendanceLog(SearchAttendanceLog searchAttendanceLog) {
+  Future<List<AttendanceLogModel>> searchAttendanceLog({required String registerId, required String tenantId, required int entryTime, required int exitTime, required int currentDate}) {
     // TODO: implement searchAttendanceLog
+    throw UnimplementedError();
   }
 
   @override

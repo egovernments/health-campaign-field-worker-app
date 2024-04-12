@@ -138,7 +138,7 @@ class HcmInventoryBloc extends InventoryListener {
   // Method to fetch stock reconciliation details
   @override
   Future<List<List<StockModel>>> fetchStockReconciliationDetails(
-      {String? productVariantId, String? facilityId}) async {
+      {required String productVariantId, required String facilityId}) async {
     final user = await LocalSecureStore.instance.userRequestModel;
 
     final receivedStocks = (await stockLocalRepository!.search(
@@ -243,9 +243,9 @@ class HcmInventoryBloc extends InventoryListener {
   // Method to fetch inventory reports
   @override
   Future<Map<String, List<StockModel>>> fetchInventoryReports(
-      {InventoryReportType? reportType,
-      String? facilityId,
-      String? productVariantId}) async {
+      {required InventoryReportType reportType,
+      required String facilityId,
+      required String productVariantId}) async {
     if (reportType == InventoryReportType.reconciliation) {
       throw AppException(
         'Invalid report type: $reportType',
@@ -337,7 +337,7 @@ class HcmInventoryBloc extends InventoryListener {
   // Method to handle stock reconciliation report
   @override
   Future<StockReconciliationReport> handleStockReconciliationReport(
-      {String? facilityId, String? productVariantId}) async {
+      {required String facilityId, required String productVariantId}) async {
     final data = await stockReconLocalRepository!.search(
       HcmStockReconciliationSearchModel(
         stockReconciliationSearchModel: StockReconciliationSearchModel(

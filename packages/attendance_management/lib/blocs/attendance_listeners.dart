@@ -3,12 +3,16 @@ import 'package:attendance_management/attendance_management.dart';
 // Abstract class defining the listener to interact with the data through any other application
 abstract class AttendanceListeners {
 // Method to get attendance registers
-  void getAttendanceRegisters(
-      Function(List<AttendanceRegisterModel> attendanceRegisterModel)
-          attendanceRegisters);
+  Future<List<AttendanceRegisterModel>> getAttendanceRegisters();
 
   // Method to search attendance log
-  void searchAttendanceLog(SearchAttendanceLog searchAttendanceLog);
+  Future<List<AttendanceLogModel>> searchAttendanceLog({
+    required final String registerId,
+    required final String tenantId,
+    required final int entryTime,
+    required final int exitTime,
+    required final int currentDate,
+  });
 
   // Method to submit attendance details
   void submitAttendanceDetails(
@@ -51,15 +55,23 @@ class AttendanceSingleton {
   get appVersion => _appVersion;
 
   // Method to get attendance registers
-  void getAttendanceRegisters(
-      Function(List<AttendanceRegisterModel> attendanceRegisterModel)
-          attendanceRegisters) {
-    _attendanceListeners?.getAttendanceRegisters(attendanceRegisters);
+  Future<List<AttendanceRegisterModel>> getAttendanceRegisters() async {
+    return await _attendanceListeners!.getAttendanceRegisters();
   }
 
   // Method to search attendance log
-  void searchAttendanceLog(SearchAttendanceLog searchAttendanceLog) {
-    _attendanceListeners?.searchAttendanceLog(searchAttendanceLog);
+  Future<List<AttendanceLogModel>> searchAttendanceLog(
+      {required final String registerId,
+      required final String tenantId,
+      required final int entryTime,
+      required final int exitTime,
+      required final int currentDate}) async {
+    return await _attendanceListeners!.searchAttendanceLog(
+        registerId: registerId,
+        tenantId: tenantId,
+        entryTime: entryTime,
+        exitTime: exitTime,
+        currentDate: currentDate);
   }
 
   // Method to submit attendance details
@@ -70,24 +82,6 @@ class AttendanceSingleton {
   void callSync() {
     _attendanceListeners?.callSyncMethod();
   }
-}
-
-class SearchAttendanceLog {
-  final String registerId;
-  final String tenantId;
-  final int entryTime;
-  final int exitTime;
-  final int currentDate;
-  final Function(List<AttendanceLogModel> logResponse) onLogLoaded;
-
-  SearchAttendanceLog({
-    required this.registerId,
-    required this.tenantId,
-    required this.entryTime,
-    required this.exitTime,
-    required this.currentDate,
-    required this.onLogLoaded,
-  });
 }
 
 class SubmitAttendanceDetails {

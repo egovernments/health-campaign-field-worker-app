@@ -1,6 +1,6 @@
 name: attendance_management
 description: Digit UI attendance_management specification
-version: 0.0.1
+version: 0.0.1+1
 homepage:
 
 environment:
