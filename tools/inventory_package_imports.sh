@@ -62,8 +62,6 @@ rm "$temp_mappers"
 
 # Adding localization delegates to the localization_delegates.dart file
 
-#!/bin/bash
-
 # Define the path to the Dart file
 dart_file_path="$app_root/utils/localization_delegates.dart"
 
