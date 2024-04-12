@@ -40,6 +40,8 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
   static const _typeOfTransportKey = 'typeOfTransport';
   static const _commentsKey = 'comments';
   static const _deliveryTeamKey = 'deliveryTeam';
+  static const _batchNumberKey = 'batchNumber';
+  static const _dateOfExpiry = 'dateOfExpiry';
   bool deliveryTeamSelected = false;
   String? selectedFacilityId;
 
@@ -74,6 +76,12 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
       _commentsKey: FormControl<String>(),
       _deliveryTeamKey: FormControl<String>(
         validators: deliveryTeamSelected ? [Validators.required] : [],
+      ),
+      _batchNumberKey: FormControl<String>(
+        validators: [Validators.required],
+      ),
+      _dateOfExpiry: FormControl<DateTime>(
+        validators: [Validators.required],
       ),
     });
   }
@@ -327,6 +335,14 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                               .control(_vehicleNumberKey)
                                               .value as String?;
 
+                                          final batchNumber = form
+                                              .control(_batchNumberKey)
+                                              .value as String?;
+
+                                          final expiryDate = form
+                                              .control(_dateOfExpiry)
+                                              .value as DateTime?;
+
                                           final lat = locationState.latitude;
                                           final lng = locationState.longitude;
 
@@ -518,6 +534,8 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                             additionalFields: [
                                                       waybillQuantity,
                                                       comments,
+                                                      batchNumber,
+                                                      expiryDate,
                                                     ].any((element) =>
                                                         element != null) ||
                                                     hasLocationData
@@ -535,6 +553,17 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                         AdditionalField(
                                                           'comments',
                                                           comments,
+                                                        ),
+                                                      if (batchNumber != null)
+                                                        AdditionalField(
+                                                          _batchNumberKey,
+                                                          batchNumber,
+                                                        ),
+                                                      if (expiryDate != null)
+                                                        AdditionalField(
+                                                          _dateOfExpiry,
+                                                          expiryDate
+                                                              .millisecondsSinceEpoch,
                                                         ),
                                                       if (hasLocationData) ...[
                                                         AdditionalField(
@@ -872,6 +901,46 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                             ),
                                       },
                                     ),
+
+                                  DigitTextFormField(
+                                    label: localizations.translate(
+                                      i18.stockDetails.batchNumberLabel,
+                                    ),
+                                    isRequired: true,
+                                    formControlName: _batchNumberKey,
+                                    validationMessages: {
+                                      'required': (object) =>
+                                          localizations.translate(
+                                            i18.common.corecommonRequired,
+                                          ),
+                                    },
+                                  ),
+
+                                  DigitDateFormPicker(
+                                    isEnabled: true,
+                                    formControlName: _dateOfExpiry,
+                                    end: DateTime.now().add(
+                                      const Duration(
+                                        days: 365 * 1000,
+                                      ),
+                                    ),
+                                    label: localizations.translate(
+                                      i18.stockDetails.dateOfExpiryLabel,
+                                    ),
+                                    isRequired: true,
+                                    confirmText: localizations.translate(
+                                      i18.common.coreCommonOk,
+                                    ),
+                                    cancelText: localizations.translate(
+                                      i18.common.coreCommonCancel,
+                                    ),
+                                    validationMessages: {
+                                      'required': (object) =>
+                                          localizations.translate(
+                                            i18.common.corecommonRequired,
+                                          ),
+                                    },
+                                  ),
                                   // Solution Customizations
                                   // if (isWareHouseMgr)
                                   //   BlocBuilder<AppInitializationBloc,

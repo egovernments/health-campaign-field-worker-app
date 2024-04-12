@@ -1422,6 +1422,10 @@ class StockDetails {
   /// Waybill number label
   String get waybillNumberLabel => 'STOCK_DETAILS_WAYBILL_NUMBER';
 
+  String get batchNumberLabel => 'STOCK_DETAILS_BATCH_NUMBER';
+
+  String get dateOfExpiryLabel => 'STOCK_DETAILS_DATE_OF_EXPIRY';
+
   /// Number of product indicated on waybill title
   String get quantityOfProductIndicatedOnWaybillLabel {
     return 'STOCK_DETAILS_WAYBILL_QUANTITY';
