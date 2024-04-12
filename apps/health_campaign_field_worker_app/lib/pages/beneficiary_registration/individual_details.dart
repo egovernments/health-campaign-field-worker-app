@@ -464,22 +464,27 @@ class _IndividualDetailsPageState
 
                                   return individualDetailsShowcaseData.gender
                                       .buildWith(
-                                    child: DigitReactiveSearchDropdown<String>(
+                                    child: DigitDropdown<String>(
                                       label: localizations.translate(
                                         i18.individualDetails.genderLabelText,
                                       ),
-                                      form: form,
+                                      valueMapper: (value) =>
+                                          localizations.translate(value),
+                                      initialValue:
+                                          genderOptions.firstOrNull?.name,
                                       menuItems: genderOptions
                                           .map(
                                             (e) => e.name,
                                           )
                                           .toList(),
                                       formControlName: _genderKey,
-                                      valueMapper: (value) {
-                                        return localizations.translate(value);
+                                      isRequired: true,
+                                      validationMessages: {
+                                        'required': (object) =>
+                                            localizations.translate(
+                                              i18.common.corecommonRequired,
+                                            ),
                                       },
-                                      emptyText: localizations
-                                          .translate(i18.common.noMatchFound),
                                     ),
                                   );
                                 },
