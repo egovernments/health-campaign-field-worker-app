@@ -9,7 +9,6 @@ import 'package:reactive_forms/reactive_forms.dart';
 import '../../../blocs/facility/facility.dart';
 import '../../../blocs/project/project.dart';
 import '../../../blocs/record_stock/record_stock.dart';
-import '../../../blocs/scanner/hcm_scanner_bloc.dart';
 import '../../../models/data_model.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
@@ -419,9 +418,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                           Navigator.of(context).push(
                                             MaterialPageRoute(
                                               builder: (context) =>
-                                                  DigitScannerPage(
-                                                scannerListeners:
-                                                    HCMScannerBloc(),
+                                                  const DigitScannerPage(
                                                 quantity: 1,
                                                 isGS1code: false,
                                                 singleValue: true,

@@ -14,7 +14,6 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
-import '../../blocs/scanner/hcm_scanner_bloc.dart';
 import '../../blocs/search_households/search_bloc_common_wrapper.dart';
 import '../../blocs/search_households/search_households.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
@@ -619,9 +618,7 @@ class _IndividualDetailsPageState
                                             Navigator.of(context).push(
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    DigitScannerPage(
-                                                  scannerListeners:
-                                                      HCMScannerBloc(),
+                                                    const DigitScannerPage(
                                                   quantity: 1,
                                                   isGS1code: false,
                                                   singleValue: true,
@@ -648,8 +645,7 @@ class _IndividualDetailsPageState
                                       Navigator.of(context).push(
                                         MaterialPageRoute(
                                           builder: (context) =>
-                                              DigitScannerPage(
-                                            scannerListeners: HCMScannerBloc(),
+                                              const DigitScannerPage(
                                             quantity: 1,
                                             isGS1code: false,
                                             singleValue: true,

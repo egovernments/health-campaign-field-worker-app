@@ -6,8 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
-// import '../blocs/scanner/scanner.dart';
-import '../blocs/scanner/hcm_scanner_bloc.dart';
 import '../blocs/search_referrals/search_referrals.dart';
 import '../blocs/service/service.dart';
 import '../models/data_model.dart';
@@ -225,8 +223,7 @@ class _SearchReferralsPageState extends LocalizedState<SearchReferralsPage> {
                               );
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => DigitScannerPage(
-                                scannerListeners: HCMScannerBloc(),
+                              builder: (context) => const DigitScannerPage(
                                 quantity: 1,
                                 isGS1code: false,
                                 singleValue: true,

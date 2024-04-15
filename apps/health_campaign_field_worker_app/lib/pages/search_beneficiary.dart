@@ -7,7 +7,6 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/beneficiary_registration/beneficiary_registration.dart';
-import '../blocs/scanner/hcm_scanner_bloc.dart';
 import '../blocs/search_households/search_bloc_common_wrapper.dart';
 import '../blocs/search_households/search_households.dart';
 import '../models/data_model.dart';
@@ -407,8 +406,7 @@ class _SearchBeneficiaryPageState
                           blocWrapper.clearEvent();
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => DigitScannerPage(
-                                scannerListeners: HCMScannerBloc(),
+                              builder: (context) => const DigitScannerPage(
                                 quantity: 1,
                                 isGS1code: false,
                                 singleValue: true,

@@ -13,7 +13,6 @@ import '../../../blocs/app_initialization/app_initialization.dart';
 import '../../../blocs/facility/facility.dart';
 import '../../../blocs/product_variant/product_variant.dart';
 import '../../../blocs/record_stock/record_stock.dart';
-import '../../../blocs/scanner/hcm_scanner_bloc.dart';
 import '../../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../../models/data_model.dart';
 import '../../../router/app_router.dart';
@@ -732,8 +731,6 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                             MaterialPageRoute(
                                               builder: (context) =>
                                                   DigitScannerPage(
-                                                scannerListeners:
-                                                    HCMScannerBloc(),
                                                 quantity: 5,
                                                 isGS1code: false,
                                                 singleValue: false,
@@ -864,9 +861,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                             Navigator.of(context).push(
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    DigitScannerPage(
-                                                  scannerListeners:
-                                                      HCMScannerBloc(),
+                                                    const DigitScannerPage(
                                                   quantity: 5,
                                                   isGS1code: true,
                                                   singleValue: false,
@@ -913,9 +908,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                     Navigator.of(context).push(
                                                       MaterialPageRoute(
                                                         builder: (context) =>
-                                                            DigitScannerPage(
-                                                          scannerListeners:
-                                                              HCMScannerBloc(),
+                                                            const DigitScannerPage(
                                                           quantity: 5,
                                                           isGS1code: true,
                                                           singleValue: false,
