@@ -22,12 +22,10 @@ class DigitScannerPage extends LocalizedStatefulWidget {
   final int quantity;
   final bool isGS1code;
   final bool isEditEnabled;
-  final ScannerListeners scannerListeners;
 
   const DigitScannerPage({
     super.key,
     super.appLocalizations,
-    required this.scannerListeners,
     required this.quantity,
     required this.isGS1code,
     this.singleValue = false,
