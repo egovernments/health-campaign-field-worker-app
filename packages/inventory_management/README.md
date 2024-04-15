@@ -30,7 +30,7 @@ Here is how inventory package interacts with parent app
 New files or changes needed in HCM App:
 
 1. Run inventory_imports.sh script to add the localization and add skeleton bloc
-2. Create model classes which import attendance models and add companion class
+2. Create model classes which import inventory models and add companion class
 3. Create repositories local and remote as per project requirements and structure
 4. Add typedef for repositories in utils/typedef Initialize repo in network manager, and create oplog
 5. Add navigation to manage inventory page, stock recon and view reports from hcm app and pass the required fields
