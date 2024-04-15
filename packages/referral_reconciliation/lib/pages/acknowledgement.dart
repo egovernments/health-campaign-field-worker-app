@@ -3,15 +3,15 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/i18_key_constants.dart' as i18;
-import '../widgets/localized.dart';
+import '../widgets/localizaed.dart';
 
 @RoutePage()
-class InventoryAcknowledgementPage extends LocalizedStatefulWidget {
-  bool isDataRecordSuccess;
-  String? label;
-  String? description;
-  Map<String, dynamic>? descriptionTableData;
-  InventoryAcknowledgementPage({
+class ReferralReconAcknowledgementPage extends LocalizedStatefulWidget {
+  final bool isDataRecordSuccess;
+  final String? label;
+  final String? description;
+  final Map<String, dynamic>? descriptionTableData;
+  const ReferralReconAcknowledgementPage({
     super.key,
     super.appLocalizations,
     this.isDataRecordSuccess = false,
@@ -21,12 +21,12 @@ class InventoryAcknowledgementPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<InventoryAcknowledgementPage> createState() =>
+  State<ReferralReconAcknowledgementPage> createState() =>
       _AcknowledgementPageState();
 }
 
 class _AcknowledgementPageState
-    extends LocalizedState<InventoryAcknowledgementPage> {
+    extends LocalizedState<ReferralReconAcknowledgementPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -39,8 +39,8 @@ class _AcknowledgementPageState
             ),
         descriptionWidget: widget.isDataRecordSuccess
             ? DigitTableCard(
-          element: widget.descriptionTableData ?? {},
-        )
+                element: widget.descriptionTableData ?? {},
+              )
             : null,
         label: widget.label ??
             localizations.translate(
@@ -51,7 +51,7 @@ class _AcknowledgementPageState
         },
         enableBackToSearch: widget.isDataRecordSuccess ? false : true,
         actionLabel:
-        localizations.translate(i18.acknowledgementSuccess.actionLabelText),
+            localizations.translate(i18.acknowledgementSuccess.actionLabelText),
       ),
       bottomNavigationBar: Offstage(
         offstage: !widget.isDataRecordSuccess,

@@ -59,3 +59,112 @@ sed -i ''"$last_mapper_line"'r '"$temp_mappers" "$data_model_file"
 # Remove the temporary files
 rm "$temp_imports"
 rm "$temp_mappers"
+
+# Adding localization delegates to the localization_delegates.dart file
+
+#!/bin/bash
+
+# Define the path to the Dart file
+dart_file_path="$app_root/utils/localization_delegates.dart"
+
+# Define the import statement
+import_statement="import 'package:referral_reconciliation/blocs/app_localization.dart' as referral_reconciliation_localization;"
+
+# Define the delegate
+delegate="referral_reconciliation_localization.ReferralReconciliationLocalization.getDelegate(getLocalizationString(isar,selectedLocale,),appConfig.languages!,),"
+
+# Convert the delegate string into a single line string
+delegate_single_line=$(echo "$delegate" | tr -d '\n')
+
+# Check if the import statement is in the file
+if grep -Fq "$import_statement" $dart_file_path
+then
+    echo "The import statement is already in the file."
+else
+    # If not, add it at the top of the file
+    echo -e "$import_statement\n$(cat $dart_file_path)" > $dart_file_path
+    echo "The import statement was added."
+fi
+
+# Check if the delegate is in the file
+if grep -Fq "$delegate_single_line" $dart_file_path
+then
+    echo "The delegate is already in the file."
+else
+    # If not, add it before the line containing the closing bracket of the list
+    sed -i '/^[ \t]*]/i '"$delegate" $dart_file_path
+    echo "The delegate was added."
+fi
+
+# Get the current directory
+appDirectory=$(pwd)
+
+# Define the bloc directory
+blocDirectory="$appDirectory/blocs/referral_reconciliation"
+
+# Ensure the directory exists
+mkdir -p $blocDirectory
+
+# Define the file path
+filePath="$blocDirectory/hcm_inventory_bloc.dart"
+
+# Check if the file already exists
+if [ -f "$filePath" ]; then
+    echo "File $filePath already exists. Not modifying the content."
+else
+    # Write the class definition to the file
+    cat > $filePath << EOF
+import 'package:inventory_management/blocs/inventory_report.dart';
+import 'package:inventory_management/inventory_management.dart';
+
+class HcmInventoryBloc extends InventoryListener {
+  @override
+  void callSyncMethod() {
+    // TODO: implement callSyncMethod
+  }
+
+  @override
+  Future<List<InventoryFacilityModel>> fetchFacilitiesForProjectId() {
+    // TODO: implement fetchFacilitiesForProjectId
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Map<String, List<StockModel>>> fetchInventoryReports({InventoryReportType? reportType, String? facilityId, String? productVariantId}) {
+    // TODO: implement fetchInventoryReports
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<ProductVariantModel>> fetchProductVariants() {
+    // TODO: implement fetchProductVariants
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<List<StockModel>>> fetchStockReconciliationDetails({String? productVariantId, String? facilityId}) {
+    // TODO: implement fetchStockReconciliationDetails
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<StockReconciliationReport> handleStockReconciliationReport({String? facilityId, String? productVariantId}) {
+    // TODO: implement handleStockReconciliationReport
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> saveStockDetails(SaveStockDetails saveStockDetails) {
+    // TODO: implement saveStockDetails
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> saveStockReconciliationDetails(SaveStockReconciliationModel stockReconciliationModel) {
+    // TODO: implement saveStockReconciliationDetails
+    throw UnimplementedError();
+  }
+}
+EOF
+    echo "File $filePath created."
+fi

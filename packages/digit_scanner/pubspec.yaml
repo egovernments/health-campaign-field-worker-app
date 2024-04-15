@@ -43,7 +43,6 @@ dependencies:
     sdk: flutter
   overlay_builder: ^1.1.0
   flutter_svg: ^2.0.8
-  audioplayers: ^5.2.0
 
 dev_dependencies:
   flutter_test:

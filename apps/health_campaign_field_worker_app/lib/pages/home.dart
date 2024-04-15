@@ -339,14 +339,14 @@ class _HomePageState extends LocalizedState<HomePage> {
                     context.router.push(ManageStocksRoute(
                       isWareHouseMgr: context.loggedInUserRoles
                           .where((role) =>
-                      role.code == RolesType.warehouseManager.toValue())
+                              role.code == RolesType.warehouseManager.toValue())
                           .toList()
                           .isNotEmpty,
                       isDistributor: context.loggedInUserRoles
                           .where(
                             (role) =>
-                        role.code == RolesType.distributor.toValue(),
-                      )
+                                role.code == RolesType.distributor.toValue(),
+                          )
                           .toList()
                           .isNotEmpty,
                       boundaryName: context.boundary.name!,
@@ -366,8 +366,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                       userId: context.loggedInUserUuid,
                       transportType: appConfiguration.transportTypes
                           ?.map((e) => InventoryTransportTypes()
-                        ..name = e.name
-                        ..code = e.code)
+                            ..name = e.name
+                            ..code = e.code)
                           .toList(),
                     ));
                   },
@@ -463,6 +463,45 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.supervised_user_circle_rounded,
           label: i18.home.beneficiaryReferralLabel,
           onPressed: () async {
+            context.read<AppInitializationBloc>().state.maybeWhen(
+                  orElse: () {},
+                  initialized: (AppConfiguration appConfiguration, _) {
+                    context.router.push(ManageStocksRoute(
+                      isWareHouseMgr: context.loggedInUserRoles
+                          .where((role) =>
+                              role.code == RolesType.warehouseManager.toValue())
+                          .toList()
+                          .isNotEmpty,
+                      isDistributor: context.loggedInUserRoles
+                          .where(
+                            (role) =>
+                                role.code == RolesType.distributor.toValue(),
+                          )
+                          .toList()
+                          .isNotEmpty,
+                      boundaryName: context.boundary.name!,
+                      inventoryListener: HcmInventoryBloc(
+                        context: context,
+                        userId: context.loggedInUserUuid,
+                        individualId: context.loggedInIndividualId,
+                        projectId: context.projectId,
+                        stockLocalRepository: context.read<
+                            LocalRepository<HcmStockModel,
+                                HcmStockSearchModel>>(),
+                        stockReconLocalRepository: context.read<
+                            LocalRepository<HcmStockReconciliationModel,
+                                HcmStockReconciliationSearchModel>>(),
+                      ),
+                      projectId: context.projectId,
+                      userId: context.loggedInUserUuid,
+                      transportType: appConfiguration.transportTypes
+                          ?.map((e) => InventoryTransportTypes()
+                            ..name = e.name
+                            ..code = e.code)
+                          .toList(),
+                    ));
+                  },
+                );
             // final searchBloc = context.read<SearchReferralsBloc>();
             // searchBloc.add(const SearchReferralsClearEvent());
             // await context.router.push(SearchReferralsRoute());

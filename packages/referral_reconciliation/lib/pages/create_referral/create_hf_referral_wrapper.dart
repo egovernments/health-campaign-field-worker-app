@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:referral_reconciliation/blocs/referral_recon_record.dart';
@@ -8,6 +9,7 @@ import '../../models/entities/h_f_referral.dart';
 import '../../models/entities/referral_recon_service.dart';
 import '../../widgets/project_facility_bloc_wrapper.dart';
 
+@RoutePage()
 class HFCreateReferralWrapperPage extends StatelessWidget {
   final bool viewOnly;
   final HFReferralModel? hfReferralModel;

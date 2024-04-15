@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_divider.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/localizaed.dart';
 
+@RoutePage()
 class ReferralReasonChecklistPreviewPage extends LocalizedStatefulWidget {
   const ReferralReasonChecklistPreviewPage({
     super.key,

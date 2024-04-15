@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ import '../../utils/constants.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/localizaed.dart';
 
+@RoutePage()
 class ReferralReasonChecklistPage extends LocalizedStatefulWidget {
   final String? referralClientRefId;
   const ReferralReasonChecklistPage({

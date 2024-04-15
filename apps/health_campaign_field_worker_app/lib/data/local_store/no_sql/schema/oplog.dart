@@ -1,4 +1,3 @@
-import 'package:inventory_management/models/entities/stock.dart';
 import 'package:isar/isar.dart';
 
 import '../../../../models/data_model.dart';
@@ -58,7 +57,7 @@ class OpLog {
         return entity;
 
       case "hFReferral":
-        final entity = HFReferralModelMapper.fromJson(entityString);
+        final entity = HcmHFReferralModelMapper.fromJson(entityString);
         return entity;
 
       default:

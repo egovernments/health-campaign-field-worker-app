@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
@@ -13,6 +14,7 @@ import '../widgets/back_navigation_help_header.dart';
 import '../widgets/localizaed.dart';
 import '../widgets/view_referral_card.dart';
 
+@RoutePage()
 class SearchReferralReconciliationsPage extends LocalizedStatefulWidget {
   const SearchReferralReconciliationsPage({
     super.key,

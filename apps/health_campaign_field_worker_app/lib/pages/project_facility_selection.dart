@@ -2,17 +2,18 @@ import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:referral_reconciliation/blocs/app_localization.dart';
-import 'package:auto_route/auto_route.dart';
-import '../../models/entities/referral_project_facility.dart';
+
+import '../../blocs/localization/app_localization.dart';
+import '../../models/data_model.dart';
+import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
-import '../../widgets/back_navigation_help_header.dart';
+import '../../widgets/header/back_navigation_help_header.dart';
 
 @RoutePage()
-class ReferralReconProjectFacilitySelectionPage extends StatelessWidget {
-  final List<ReferralProjectFacilityModel> projectFacilities;
+class ProjectFacilitySelectionPage extends StatelessWidget {
+  final List<ProjectFacilityModel> projectFacilities;
 
-  const ReferralReconProjectFacilitySelectionPage({
+  const ProjectFacilitySelectionPage({
     Key? key,
     required this.projectFacilities,
   }) : super(key: key);
@@ -22,8 +23,7 @@ class ReferralReconProjectFacilitySelectionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ReferralReconLocalization localizations =
-        ReferralReconLocalization.of(context);
+    AppLocalizations localizations = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final BorderSide borderSide = BorderSide(
       color: theme.colorScheme.outline,
@@ -122,7 +122,7 @@ class ReferralReconProjectFacilitySelectionPage extends StatelessWidget {
                             ),
                             child: InkWell(
                               onTap: () {
-                                Navigator.of(context).pop(projectFacility);
+                                context.router.pop(projectFacility);
                               },
                               child: Container(
                                 margin: const EdgeInsets.only(
@@ -175,7 +175,7 @@ class ReferralReconProjectFacilitySelectionPage extends StatelessWidget {
   FormGroup _form() {
     return fb.group({
       _facilityName: FormControl<String>(),
-      _selectedFacility: FormControl<ReferralProjectFacilityModel>(
+      _selectedFacility: FormControl<ProjectFacilityModel>(
         validators: [Validators.required],
       ),
     });
@@ -183,18 +183,18 @@ class ReferralReconProjectFacilitySelectionPage extends StatelessWidget {
 }
 
 class ProjectFacilityValueAccessor
-    extends ControlValueAccessor<ReferralProjectFacilityModel, String> {
-  final List<ReferralProjectFacilityModel> models;
+    extends ControlValueAccessor<ProjectFacilityModel, String> {
+  final List<ProjectFacilityModel> models;
 
   ProjectFacilityValueAccessor(this.models);
 
   @override
-  String? modelToViewValue(ReferralProjectFacilityModel? modelValue) {
+  String? modelToViewValue(ProjectFacilityModel? modelValue) {
     return modelValue?.id;
   }
 
   @override
-  ReferralProjectFacilityModel? viewToModelValue(String? viewValue) {
+  ProjectFacilityModel? viewToModelValue(String? viewValue) {
     return models.firstWhereOrNull((element) => element.id == viewValue);
   }
 }

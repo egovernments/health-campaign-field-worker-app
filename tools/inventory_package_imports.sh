@@ -1,4 +1,4 @@
-# for adding imports and mappers of inventory
+# For adding imports and mappers of inventory
 
 cd ../apps/health_campaign_field_worker_app/lib || exit
 
@@ -60,9 +60,11 @@ sed -i ''"$last_mapper_line"'r '"$temp_mappers" "$data_model_file"
 rm "$temp_imports"
 rm "$temp_mappers"
 
-# Adding localization delegates to the localization_delegates.dart file
 
-#!/bin/bash
+
+
+
+# Adding localization delegates to the localization_delegates.dart file
 
 # Define the path to the Dart file
 dart_file_path="$app_root/utils/localization_delegates.dart"
@@ -95,6 +97,11 @@ else
     sed -i '/^[ \t]*]/i '"$delegate" $dart_file_path
     echo "The delegate was added."
 fi
+
+
+
+
+# Adding the skeleton of the HcmInventoryBloc class extension to the inventory listener
 
 # Get the current directory
 appDirectory=$(pwd)
@@ -130,7 +137,7 @@ class HcmInventoryBloc extends InventoryListener {
   }
 
   @override
-  Future<Map<String, List<StockModel>>> fetchInventoryReports({InventoryReportType? reportType, String? facilityId, String? productVariantId}) {
+  Future<Map<String, List<StockModel>>> fetchInventoryReports({required InventoryReportType reportType, required String facilityId, required String productVariantId}) {
     // TODO: implement fetchInventoryReports
     throw UnimplementedError();
   }
@@ -142,13 +149,13 @@ class HcmInventoryBloc extends InventoryListener {
   }
 
   @override
-  Future<List<List<StockModel>>> fetchStockReconciliationDetails({String? productVariantId, String? facilityId}) {
+  Future<List<List<StockModel>>> fetchStockReconciliationDetails({required String productVariantId, required String facilityId}) {
     // TODO: implement fetchStockReconciliationDetails
     throw UnimplementedError();
   }
 
   @override
-  Future<StockReconciliationReport> handleStockReconciliationReport({String? facilityId, String? productVariantId}) {
+  Future<StockReconciliationReport> handleStockReconciliationReport({required String facilityId, required String productVariantId}) {
     // TODO: implement handleStockReconciliationReport
     throw UnimplementedError();
   }

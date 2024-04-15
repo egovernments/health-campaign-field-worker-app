@@ -13,7 +13,6 @@ import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../widgets/localized.dart';
 import '../../blocs/facility.dart';
 import '../../blocs/record_stock.dart';
-import '../../blocs/scanner.dart';
 import '../../models/entities/inventory_facility.dart';
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/inventory/no_facilities_assigned_dialog.dart';
@@ -417,9 +416,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                             Navigator.of(context).push(
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    DigitScannerPage(
-                                                  scannerListeners:
-                                                      HCMScannerBloc(),
+                                                    const DigitScannerPage(
                                                   quantity: 1,
                                                   isGS1code: true,
                                                   singleValue: false,
