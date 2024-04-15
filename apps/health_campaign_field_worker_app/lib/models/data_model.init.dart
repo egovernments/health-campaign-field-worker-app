@@ -64,6 +64,25 @@ import 'package:inventory_management/models/entities/transaction_reason.dart'
 import 'package:inventory_management/models/entities/transaction_type.dart'
     as p52;
 import 'package:inventory_management/models/entities/stock.dart' as p52;
+import 'package:attendance_management/models/attendance_audit.dart' as p53;
+import 'package:attendance_management/models/staff.dart' as p53;
+import 'package:attendance_management/models/attendee.dart' as p53;
+import 'package:attendance_management/models/attendance_log.dart' as p53;
+import 'package:attendance_management/models/attendance_register.dart' as p53;
+import 'package:referral_reconciliation/models/entities/referral_recon_enums.dart' as p54;
+import 'package:referral_reconciliation/models/entities/referral_recon_service.dart' as p54;
+import 'package:referral_reconciliation/models/entities/referral_recon_service_definition.dart' as p54;
+import 'package:referral_reconciliation/models/entities/referral_recon_service_attributes.dart' as p54;
+import 'package:referral_reconciliation/models/entities/referral_recon_attributes.dart' as p54;
+import 'package:referral_reconciliation/models/entities/h_f_referral.dart' as p54;
+import 'package:referral_reconciliation/models/entities/referral_project_facility.dart' as p54;
+import 'package:inventory_management/models/entities/product_variant.dart' as p55;
+import 'package:inventory_management/models/entities/stock_reconciliation.dart' as p55;
+import 'package:inventory_management/models/entities/stock.dart' as p55;
+import 'package:inventory_management/models/entities/inventory_facility.dart' as p55;
+import 'package:inventory_management/models/entities/transaction_reason.dart' as p55;
+import 'package:inventory_management/models/entities/transaction_type.dart' as p55;
+import 'package:inventory_management/models/entities/project_product_variant.dart' as p55;
 import 'package:inventory_management/models/entities/inventory_facility.dart'
     as p52;
 import 'package:inventory_management/models/entities/stock_reconciliation.dart'
@@ -228,4 +247,23 @@ void initializeMappers() {
   p52.StockReconciliationModelMapper.ensureInitialized();
   p52.ProductVariantModelMapper.ensureInitialized();
   p52.ProjectProductVariantModelMapper.ensureInitialized();
+p53.AttendanceAuditDetailsMapper.ensureInitialized();
+p53.StaffModelMapper.ensureInitialized();
+p53.AttendeeModelMapper.ensureInitialized();
+p53.AttendanceLogModelMapper.ensureInitialized();
+p53.AttendanceRegisterModelMapper.ensureInitialized();
+p54.ReferralReconEnumsMapper.ensureInitialized();
+p54.ReferralReconServiceModelMapper.ensureInitialized();
+p54.ReferralReconServiceDefinitionModelMapper.ensureInitialized();
+p54.ReferralReconServiceAttributesModelMapper.ensureInitialized();
+p54.ReferralReconAttributesModelMapper.ensureInitialized();
+p54.HFReferralModelMapper.ensureInitialized();
+p54.ReferralProjectFacilityModelMapper.ensureInitialized();
+p55.ProductVariantModelMapper.ensureInitialized();
+p55.StockReconciliationModelMapper.ensureInitialized();
+p55.StockModelMapper.ensureInitialized();
+p55.InventoryFacilityModelMapper.ensureInitialized();
+p55.TransactionReasonMapper.ensureInitialized();
+p55.TransactionTypeMapper.ensureInitialized();
+p55.ProjectProductVariantModelMapper.ensureInitialized();
 }
