@@ -432,31 +432,6 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                             if (widget.isGS1code &&
                                 result.length < widget.quantity) {
                               buildDialog();
-                            } else {
-                              // final bloc = context.read<SearchBlocWrapper>();
-                              // final scannerState =
-                              //     context.read<ScannerBloc>().state;
-                              // final hfBloc =
-                              //     context.read<SearchReferralsBloc>();
-                              //
-                              // if (scannerState.qrcodes.isNotEmpty ||
-                              //     manualcode) {
-                              //   if (isHealthFacilityWorker) {
-                              //     hfBloc.add(SearchReferralsEvent.searchByTag(
-                              //       tag: manualcode
-                              //           ? _resourceController.value.text
-                              //           : scannerState.qrcodes.first,
-                              //       projectId: context.projectId,
-                              //     ));
-                              //   } else {
-                              //     bloc.tagSearchBloc
-                              //         .add(SearchHouseholdsEvent.searchByTag(
-                              //       tag: manualcode
-                              //           ? _resourceController.value.text
-                              //           : scannerState.qrcodes.first,
-                              //       projectId: context.projectId,
-                              //     ));
-                              //   }
                             }
                           },
                         ),
