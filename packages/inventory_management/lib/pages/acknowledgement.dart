@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
+
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/localized.dart';
 
@@ -38,19 +39,19 @@ class _AcknowledgementPageState
             ),
         descriptionWidget: widget.isDataRecordSuccess
             ? DigitTableCard(
-                element: widget.descriptionTableData ?? {},
-              )
+          element: widget.descriptionTableData ?? {},
+        )
             : null,
         label: widget.label ??
             localizations.translate(
               i18.acknowledgementSuccess.acknowledgementLabelText,
             ),
         action: () {
-          context.router.maybePop();
+          Navigator.of(context).pop();
         },
         enableBackToSearch: widget.isDataRecordSuccess ? false : true,
         actionLabel:
-            localizations.translate(i18.acknowledgementSuccess.actionLabelText),
+        localizations.translate(i18.acknowledgementSuccess.actionLabelText),
       ),
       bottomNavigationBar: Offstage(
         offstage: !widget.isDataRecordSuccess,
@@ -71,9 +72,7 @@ class _AcknowledgementPageState
                   height: 12,
                 ),
                 DigitOutLineButton(
-                  onPressed: () {
-                    context.router.popUntilRoot();
-                  },
+                  onPressed: () {},
                   label: localizations
                       .translate(i18.acknowledgementSuccess.downloadmoredata),
                   buttonStyle: OutlinedButton.styleFrom(

@@ -1,10 +1,10 @@
-import 'package:auto_route/auto_route.dart';
-import 'package:flutter/material.dart';
-
 import 'package:attendance_management/router/attendance_router.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:flutter/material.dart';
 import 'package:inventory_management/router/inventory_router.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
+import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 
 import '../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../blocs/localization/app_localization.dart';
@@ -45,22 +45,16 @@ import '../pages/complaints/registration/complaints_details.dart';
 import '../pages/complaints/registration/complaints_location.dart';
 import '../pages/complaints/registration/complaints_registration_wrapper.dart';
 import '../pages/complaints_acknowledgement.dart';
-import '../pages/health_field_worker/create_referral/create_hf_referral_wrapper.dart';
-import '../pages/health_field_worker/create_referral/reason_checklist_preview.dart';
-import '../pages/health_field_worker/create_referral/record_facility_details.dart';
-import '../pages/health_field_worker/create_referral/record_reason_checklist.dart';
-import '../pages/health_field_worker/create_referral/record_referral_details.dart';
 import '../pages/home.dart';
-import '../pages/inventory/project_facility_selection.dart';
 import '../pages/language_selection.dart';
 import '../pages/login.dart';
 import '../pages/profile.dart';
+import '../pages/project_facility_selection.dart';
 import '../pages/project_selection.dart';
 import '../pages/qr_details_page.dart';
 import '../pages/reason_for_deletion.dart';
 import '../pages/reports/beneficiary/beneficaries_report.dart';
 import '../pages/search_beneficiary.dart';
-import '../pages/search_referrals.dart';
 import '../pages/unauthenticated.dart';
 
 export 'package:auto_route/auto_route.dart';
@@ -192,31 +186,6 @@ class AppRouter extends _$AppRouter {
           page: ComplaintsAcknowledgementRoute.page,
           path: 'complaints-acknowledgement',
         ),
-
-        AutoRoute(page: SearchReferralsRoute.page, path: 'search-referrals'),
-        AutoRoute(
-          page: HFCreateReferralWrapperRoute.page,
-          path: 'hf-referral',
-          children: [
-            AutoRoute(
-              page: ReferralFacilityRoute.page,
-              path: 'facility-details',
-              initial: true,
-            ),
-            AutoRoute(
-              page: RecordReferralDetailsRoute.page,
-              path: 'referral-details',
-            ),
-            AutoRoute(
-              page: ReferralReasonChecklistRoute.page,
-              path: 'referral-reason',
-            ),
-            AutoRoute(
-              page: ReferralReasonCheckListPreviewRoute.page,
-              path: 'referral-reason-view',
-            ),
-          ],
-        ),
         AutoRoute(
           page: ProjectFacilitySelectionRoute.page,
           path: 'select-project-facilities',
@@ -319,7 +288,9 @@ class AppRouter extends _$AppRouter {
                   initial: true),
               AutoRoute(page: StockDetailsRoute.page, path: 'details'),
             ]),
-        AutoRoute(page: InventoryFacilitySelectionRoute.page, path: 'inventory-select-facilities'),
+        AutoRoute(
+            page: InventoryFacilitySelectionRoute.page,
+            path: 'inventory-select-facilities'),
         AutoRoute(
             page: StockReconciliationRoute.page, path: 'stock-reconciliation'),
         AutoRoute(
@@ -331,6 +302,39 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
             page: InventoryAcknowledgementRoute.page,
             path: 'inventory-acknowledgement'),
+        //Inventory Route
+        AutoRoute(
+          page: SearchReferralReconciliationsRoute.page,
+          path: 'manage-stocks',
+        ),
+        AutoRoute(
+            page: HFCreateReferralWrapperRoute.page,
+            path: 'hf-referral',
+            children: [
+              AutoRoute(
+                  page: ReferralFacilityRoute.page,
+                  path: 'facility-details',
+                  initial: true),
+              AutoRoute(
+                  page: RecordReferralDetailsRoute.page,
+                  path: 'referral-details'),
+            ]),
+        AutoRoute(
+          page: ReferralReasonChecklistRoute.page,
+          path: 'referral-checklist-create',
+        ),
+        AutoRoute(
+          page: ReferralReasonChecklistPreviewRoute.page,
+          path: 'referral-checklist-view',
+        ),
+        AutoRoute(
+          page: ReferralReconAcknowledgementRoute.page,
+          path: 'referral-acknowledgement',
+        ),
+        AutoRoute(
+          page: ReferralReconProjectFacilitySelectionRoute.page,
+          path: 'referral-project-facility',
+        ),
       ],
     ),
   ];

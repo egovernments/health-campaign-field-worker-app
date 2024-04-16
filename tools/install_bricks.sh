@@ -29,6 +29,9 @@ cd tools || exit
 # for adding attendance imports and mappers
 bash attendance_package_imports.sh
 
+#for adding referral reconciliation imports and mappers
+bash referral_reconciliation_imports.sh
+
 # for adding inventory imports and mappers
 bash inventory_package_imports.sh
 

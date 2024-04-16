@@ -16,8 +16,8 @@ import '../data/local_store/sql_store/sql_store.dart';
 import '../data/repositories/local/attendance_logs.dart';
 import '../data/repositories/local/boundary.dart';
 import '../data/repositories/local/facility.dart';
-import '../data/repositories/local/h_f_referral.dart';
 import '../data/repositories/local/hcm_attendance.dart';
+import '../data/repositories/local/hcm_hf_referral.dart';
 import '../data/repositories/local/household.dart';
 import '../data/repositories/local/houshold_member.dart';
 import '../data/repositories/local/individual.dart';
@@ -109,6 +109,8 @@ class Constants {
   }
 
   static const String localizationApiPath = 'localization/messages/v1/_search';
+  static const int validMinAge = 0;
+  static const int validMaxAge = 64;
 
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,

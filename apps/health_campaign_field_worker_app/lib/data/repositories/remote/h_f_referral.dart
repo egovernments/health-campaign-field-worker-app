@@ -3,7 +3,8 @@
 import '../../../models/data_model.dart';
 import '../../data_repository.dart';
 
-class HFReferralRemoteRepository extends RemoteRepository<HFReferralModel, HFReferralSearchModel> {
+class HFReferralRemoteRepository
+    extends RemoteRepository<HcmHFReferralModel, HcmHFReferralSearchModel> {
   HFReferralRemoteRepository(
     super.dio, {
     required super.actionMap,

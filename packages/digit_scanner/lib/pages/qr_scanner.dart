@@ -1,10 +1,8 @@
 import 'dart:io';
 
-import 'package:audioplayers/audioplayers.dart';
 import 'package:camera/camera.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
-import 'package:digit_scanner/blocs/scanner_listeners.dart';
 import 'package:digit_scanner/utils/extensions/extensions.dart';
 import 'package:digit_scanner/widgets/localized.dart';
 import 'package:digit_scanner/widgets/vision_detector_views/painters/barcode_detector_painter.dart';
@@ -22,12 +20,10 @@ class DigitScannerPage extends LocalizedStatefulWidget {
   final int quantity;
   final bool isGS1code;
   final bool isEditEnabled;
-  final ScannerListeners scannerListeners;
 
   const DigitScannerPage({
     super.key,
     super.appLocalizations,
-    required this.scannerListeners,
     required this.quantity,
     required this.isGS1code,
     this.singleValue = false,
@@ -45,7 +41,6 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
   CustomPaint? _customPaint;
   String? _text;
   var _cameraLensDirection = CameraLensDirection.back;
-  AudioPlayer player = AudioPlayer();
   CameraController? _cameraController;
   static List<CameraDescription> _cameras = [];
   int _cameraIndex = -1;
@@ -59,9 +54,6 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
   @override
   void initState() {
     initializeCameras();
-    ScannerSingleton().setScannerListeners(
-      scannerListeners: widget.scannerListeners,
-    );
     if (!widget.isEditEnabled) {
       context
           .read<DigitScannerBloc>()
@@ -618,9 +610,9 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
 // need to remove this
 
   Future handleError(String message) async {
-    player.play(AssetSource("audio/buzzer.wav"));
+    // player.play(AssetSource("audio/buzzer.wav"));
 
-    if (player.state == PlayerState.completed || result.isEmpty) {
+    if (result.isEmpty) {
       DigitToast.show(
         context,
         options: DigitToastOptions(
@@ -642,7 +634,6 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
   Future storeCode(
     String code,
   ) async {
-    player.play(AssetSource("audio/add.wav"));
     final bloc = context.read<DigitScannerBloc>();
     codes = List.from(bloc.state.qrCodes);
     if (widget.singleValue) {
@@ -672,7 +663,6 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
     final parsedResult = scanData;
     final bloc = context.read<DigitScannerBloc>();
 
-    player.play(AssetSource("audio/add.wav"));
     await Future.delayed(const Duration(seconds: 3));
 
     result = List.from(bloc.state.barCodes);

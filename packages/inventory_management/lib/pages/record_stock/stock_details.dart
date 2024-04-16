@@ -6,9 +6,9 @@ import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
+import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recase/recase.dart';
-import 'package:inventory_management/router/inventory_router.gm.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
@@ -53,7 +53,9 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
 
   FormGroup _form(StockRecordEntryType stockType) {
     return fb.group({
-      _productVariantKey: FormControl<ProductVariantModel>(),
+      _productVariantKey: FormControl<ProductVariantModel>(
+          // validators: [Validators.required],
+          ),
       _secondaryPartyKey: FormControl<String>(
         validators: [Validators.required],
       ),
@@ -689,7 +691,6 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                     },
                                     suffix: IconButton(
                                       onPressed: () {
-                                        //[TODO: Add route to auto_route]
                                         Navigator.of(context).push(
                                           MaterialPageRoute(
                                             builder: (context) =>
@@ -816,7 +817,6 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                           ),
                                         ),
                                         onPressed: () {
-                                          //[TODO: Add route to auto_route]
                                           Navigator.of(context).push(
                                             MaterialPageRoute(
                                               builder: (context) =>
@@ -864,7 +864,6 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                     theme.colorScheme.secondary,
                                                 icon: const Icon(Icons.edit),
                                                 onPressed: () {
-                                                  //[TODO: Add route to auto_route]
                                                   Navigator.of(context).push(
                                                     MaterialPageRoute(
                                                       builder: (context) =>
