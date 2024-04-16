@@ -34,27 +34,16 @@ class HCMAttendanceBloc extends AttendanceListeners {
     required this.context,
   });
 
-  late Function(List<AttendanceRegisterModel> registers,
-      {required int offset, required int limit}) _registersLoaded;
-
   @override
   Future<List<AttendanceRegisterModel>> getAttendanceRegisters(
-      Function(List<AttendanceRegisterModel> attendanceRegisterModel,
-              {required int limit, required int offset})
-          attendanceRegisters) async {
-    _registersLoaded = attendanceRegisters;
-    final finalRegisters = await fetchRegisters(offSet: 0, limit: 10);
+      {required int limit, required int offset}) async {
+    final finalRegisters = await fetchRegisters(offSet: offset, limit: limit);
     return finalRegisters ?? [];
   }
 
   @override
   Future<List<AttendanceRegisterModel>> loadMoreAttendanceRegisters(
-    Function(
-      List<AttendanceRegisterModel> attendanceRegisterModel,
-    ) attendanceRegisters, {
-    required int limit,
-    required int offSet,
-  }) async {
+      {required int limit, required int offSet}) async {
     final registers = await fetchRegisters(offSet: offSet, limit: limit);
     return registers ?? [];
   }
@@ -301,9 +290,9 @@ class HCMAttendanceBloc extends AttendanceListeners {
             e.attendanceRegister, registerCompletedLogs);
       }));
 
-      _registersLoaded(attendanceRegisters, limit: limit, offset: offSet);
+      return attendanceRegisters;
     } else {
-      _registersLoaded([], limit: limit, offset: offSet);
+      return [];
     }
   }
 

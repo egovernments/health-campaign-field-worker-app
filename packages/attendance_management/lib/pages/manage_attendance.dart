@@ -60,92 +60,89 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
   @override
   Widget build(BuildContext context) {
     var localization = AttendanceLocalization.of(context);
-    return NotificationListener<ScrollNotification>(
-      onNotification: (scrollNotification) {
-        if (scrollNotification is ScrollUpdateNotification) {
-          final metrics = scrollNotification.metrics;
-          if (metrics.atEdge && metrics.pixels != 0) {
-            setState(() {
-              offSet = offSet + limit;
-            });
-            attendanceBloc.add(AttendanceEvents.loadMoreAttendanceRegisters(
-                limit: limit, offset: offSet + limit));
-          }
-        }
-        return false;
-      },
-      child: BlocProvider<AttendanceBloc>(
-        create: (context) =>
-            attendanceBloc..add(const AttendanceEvents.initial()),
-        child: BlocProvider<DateSessionBloc>(
-          create: (context) => sessionBloc,
-          child: BlocListener<AttendanceBloc, AttendanceStates>(
-            listener: (ctx, states) {
-              if (states is RegisterLoaded) {
-                list.clear();
-                attendanceRegisters = states.registers;
-                for (int i = 0; i < attendanceRegisters.length; i++) {
-                  final register = attendanceRegisters[i];
-                  list.add(RegisterCard(
-                      attendanceBloc: attendanceBloc,
-                      data: {
-                        localization
-                                .translate(i18.attendance.campaignNameLabel):
-                            register.additionalDetails?[
-                                EnumValues.campaignName.toValue()],
-                        localization.translate(i18.attendance.eventTypeLabel):
-                            register.additionalDetails?[
-                                    EnumValues.eventType.toValue()] ??
-                                localization.translate(i18.common.coreCommonNA),
-                        localization.translate(i18.attendance.staffCountLabel):
-                            register.attendees?.length ?? 0,
-                        localization.translate(i18.attendance.startDateLabel):
-                            register.startDate != null
-                                ? DigitDateUtils.getDateFromTimestamp(
-                                    register.startDate!)
-                                : localization
-                                    .translate(i18.common.coreCommonNA),
-                        localization.translate(i18.attendance.endDateLabel):
-                            register.endDate != null
-                                ? DigitDateUtils.getDateFromTimestamp(
-                                    register.endDate!)
-                                : localization
-                                    .translate(i18.common.coreCommonNA),
-                        localization.translate(i18.attendance.statusLabel):
-                            register.endDate != null &&
-                                    register.endDate! >
-                                        DateTime.now().millisecondsSinceEpoch
-                                ? localization
-                                    .translate(register.status.toString())
-                                : localization.translate(i18.common.inactive),
-                        localization.translate(
-                                i18.attendance.attendanceCompletionLabel):
-                            calculateCompletedDays(attendanceRegisters[i]) ??
-                                localization.translate(i18.common.coreCommonNA),
-                      },
-                      registers: attendanceRegisters,
-                      noOfAttendees: register.attendees?.length ?? 0,
-                      registerId: register.id,
-                      tenantId: register.tenantId ??
-                          localization.translate(i18.common.coreCommonNA),
-                      show: register.startDate != null &&
+    return BlocProvider<AttendanceBloc>(
+      create: (context) =>
+          attendanceBloc..add(const AttendanceEvents.initial()),
+      child: BlocProvider<DateSessionBloc>(
+        create: (context) => sessionBloc,
+        child: BlocListener<AttendanceBloc, AttendanceStates>(
+          listener: (ctx, states) {
+            if (states is RegisterLoaded) {
+              list.clear();
+              offSet = states.offset;
+              limit = states.limit;
+              attendanceRegisters = states.registers;
+              for (int i = 0; i < attendanceRegisters.length; i++) {
+                final register = attendanceRegisters[i];
+                list.add(RegisterCard(
+                    attendanceBloc: attendanceBloc,
+                    data: {
+                      localization.translate(i18.attendance.campaignNameLabel):
+                          register.additionalDetails?[
+                              EnumValues.campaignName.toValue()],
+                      localization.translate(i18.attendance.eventTypeLabel):
+                          register.additionalDetails?[
+                                  EnumValues.eventType.toValue()] ??
+                              localization.translate(i18.common.coreCommonNA),
+                      localization.translate(i18.attendance.staffCountLabel):
+                          register.attendees?.length ?? 0,
+                      localization.translate(i18.attendance.startDateLabel):
+                          register.startDate != null
+                              ? DigitDateUtils.getDateFromTimestamp(
+                                  register.startDate!)
+                              : localization.translate(i18.common.coreCommonNA),
+                      localization.translate(i18.attendance.endDateLabel):
+                          register.endDate != null
+                              ? DigitDateUtils.getDateFromTimestamp(
+                                  register.endDate!)
+                              : localization.translate(i18.common.coreCommonNA),
+                      localization.translate(i18.attendance.statusLabel):
                           register.endDate != null &&
-                          attendanceRegisters.isNotEmpty &&
-                          register.endDate! >
-                              DateTime.now().millisecondsSinceEpoch,
-                      startDate: register.startDate != null
-                          ? DateTime.fromMillisecondsSinceEpoch(
-                              register.startDate!,
-                            )
-                          : null,
-                      endDate: register.startDate != null
-                          ? DateTime.fromMillisecondsSinceEpoch(
-                              register.endDate!,
-                            )
-                          : null));
-                }
-                setState(() {});
+                                  register.endDate! >
+                                      DateTime.now().millisecondsSinceEpoch
+                              ? localization
+                                  .translate(register.status.toString())
+                              : localization.translate(i18.common.inactive),
+                      localization.translate(
+                              i18.attendance.attendanceCompletionLabel):
+                          calculateCompletedDays(attendanceRegisters[i]) ??
+                              localization.translate(i18.common.coreCommonNA),
+                    },
+                    registers: attendanceRegisters,
+                    noOfAttendees: register.attendees?.length ?? 0,
+                    registerId: register.id,
+                    tenantId: register.tenantId ??
+                        localization.translate(i18.common.coreCommonNA),
+                    show: register.startDate != null &&
+                        register.endDate != null &&
+                        attendanceRegisters.isNotEmpty &&
+                        register.endDate! >
+                            DateTime.now().millisecondsSinceEpoch,
+                    startDate: register.startDate != null
+                        ? DateTime.fromMillisecondsSinceEpoch(
+                            register.startDate!,
+                          )
+                        : null,
+                    endDate: register.startDate != null
+                        ? DateTime.fromMillisecondsSinceEpoch(
+                            register.endDate!,
+                          )
+                        : null));
               }
+              setState(() {});
+            }
+          },
+          child: NotificationListener<ScrollNotification>(
+            onNotification: (scrollNotification) {
+              if (scrollNotification is ScrollUpdateNotification) {
+                final metrics = scrollNotification.metrics;
+                if (metrics.atEdge && metrics.pixels != 0) {
+                  attendanceBloc.add(
+                      AttendanceEvents.loadMoreAttendanceRegisters(
+                          limit: limit, offset: offSet));
+                }
+              }
+              return false;
             },
             child: Scaffold(
               body: ScrollableContent(
@@ -161,69 +158,66 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
                         version: AttendanceSingleton().appVersion,
                       )
                     : const Offstage(),
-                children: [
-                  BlocBuilder<AttendanceBloc, AttendanceStates>(
-                    builder: (context, blocState) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(kPadding).copyWith(
-                              top: 2,
-                              left: kPadding * 2,
-                            ),
-                            child: Text(
-                              AttendanceLocalization.of(context).translate(
-                                  i18.attendance.attendanceRegistarLabel),
-                              style: DigitTheme
-                                  .instance.mobileTheme.textTheme.displayMedium
-                                  ?.apply(color: const DigitColors().black),
-                              textAlign: TextAlign.left,
-                            ),
-                          ),
-                          blocState.maybeWhen(
-                            orElse: () => const SizedBox.shrink(),
-                            registerLoaded: (
-                              registers,
-                            ) =>
-                                Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                if (list.isEmpty)
-                                  NoResultCard(
-                                    align: Alignment.center,
-                                    label: localization.translate(
-                                      i18.common.noResultsFound,
-                                    ),
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: BlocBuilder<AttendanceBloc, AttendanceStates>(
+                      builder: (context, blocState) {
+                        return blocState.maybeWhen(
+                          orElse: () => const SizedBox.shrink(),
+                          registerLoaded: (
+                            registers,
+                            limit,
+                            offset,
+                          ) =>
+                              Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.all(kPadding).copyWith(
+                                  top: 2,
+                                  left: kPadding * 2,
+                                ),
+                                child: Text(
+                                  AttendanceLocalization.of(context).translate(
+                                      i18.attendance.attendanceRegistarLabel),
+                                  style: DigitTheme.instance.mobileTheme
+                                      .textTheme.displayMedium
+                                      ?.apply(color: const DigitColors().black),
+                                  textAlign: TextAlign.left,
+                                ),
+                              ),
+                              if (list.isEmpty)
+                                NoResultCard(
+                                  align: Alignment.center,
+                                  label: localization.translate(
+                                    i18.common.noResultsFound,
                                   ),
-                                ...list,
-                                if (list.length > 1)
-                                  PoweredByDigit(
-                                      version:
-                                          AttendanceSingleton().appVersion),
-                                const SizedBox(
-                                  height: 16,
                                 ),
-                              ],
-                            ),
-                            registerLoading: () => const Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                            registerError: (message) => Center(
-                              child: Card(
-                                child: SizedBox(
-                                  height: 60,
-                                  width: 200,
-                                  child: Center(child: Text(message)),
-                                ),
+                              ...list,
+                              if (list.length > 1)
+                                PoweredByDigit(
+                                    version: AttendanceSingleton()
+                                        .appVersion), // Show here if more than one register
+                            ],
+                          ),
+                          registerLoading: () => const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                          registerError: (message) => Center(
+                            child: Card(
+                              child: SizedBox(
+                                height: 60,
+                                width: 200,
+                                child: Center(child: Text(message)),
                               ),
                             ),
                           ),
-                        ],
-                      );
-                    },
-                  ),
+                        );
+                      },
+                    ),
+                  )
                 ],
               ),
             ),

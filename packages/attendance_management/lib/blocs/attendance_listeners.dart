@@ -4,16 +4,10 @@ import 'package:attendance_management/attendance_management.dart';
 abstract class AttendanceListeners {
 // Method to get attendance registers
   Future<List<AttendanceRegisterModel>> getAttendanceRegisters(
-    Function(List<AttendanceRegisterModel> attendanceRegisterModel,
-            {required int offset, required int limit})
-        attendanceRegisters,
-  );
+      {required int offset, required int limit});
 
   Future<List<AttendanceRegisterModel>> loadMoreAttendanceRegisters(
-      Function(List<AttendanceRegisterModel> attendanceRegisterModel)
-          attendanceRegisters,
-      {required int limit,
-      required int offSet});
+      {required int limit, required int offSet});
 
   // Method to search attendance log
   Future<void> searchAttendanceLog(SearchAttendanceLog searchAttendanceLog);
@@ -60,25 +54,16 @@ class AttendanceSingleton {
 
   // Method to get attendance registers
   Future<List<AttendanceRegisterModel>?> getAttendanceRegisters(
-    Function(List<AttendanceRegisterModel> attendanceRegisterModel,
-            {required int offset, required int limit})
-        attendanceRegisters,
-  ) async {
+      {required int limit, required int offset}) async {
     return await _attendanceListeners?.getAttendanceRegisters(
-      attendanceRegisters,
-    );
+        offset: offset, limit: limit);
   }
 
   // Method to load more attendance registers
   Future<List<AttendanceRegisterModel>?> loadMoreAttendanceRegisters(
-      Function(List<AttendanceRegisterModel> attendanceRegisterModel)
-          attendanceRegisters,
-      {required int limit,
-      required int offSet}) async {
+      {required int limit, required int offSet}) async {
     return await _attendanceListeners?.loadMoreAttendanceRegisters(
-        attendanceRegisters,
-        limit: limit,
-        offSet: offSet);
+        limit: limit, offSet: offSet);
   }
 
   // Method to search attendance log
