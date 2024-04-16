@@ -7,24 +7,29 @@ import 'package:referral_reconciliation/blocs/referral_reconciliation_listeners.
 
 import '../models/entities/h_f_referral.dart';
 
+// ODE: This file contains the implementation of the RecordHFReferralBloc, which manages the state related to recording and viewing health facility referrals.
+
 part 'referral_recon_record.freezed.dart';
 
+// ODE: This typedef represents an emitter function for emitting states in the RecordHFReferralBloc.
 typedef RecordHFReferralEmitter = Emitter<RecordHFReferralState>;
 
+// ODE: The RecordHFReferralBloc is responsible for managing the state related to recording and viewing health facility referrals.
 class RecordHFReferralBloc
     extends Bloc<RecordHFReferralEvent, RecordHFReferralState> {
   RecordHFReferralBloc(
-    super.initialState,
-  ) {
+      super.initialState,
+      ) {
     on(_handleSaveFacilityDetails);
     on(_handleCreateHFReferralEntry);
     on(_handleViewHFReferralEntry);
   }
 
+  // ODE: This method handles saving facility details in the state.
   FutureOr<void> _handleSaveFacilityDetails(
-    RecordHFReferralSaveFacilityDetailsEvent event,
-    RecordHFReferralEmitter emit,
-  ) async {
+      RecordHFReferralSaveFacilityDetailsEvent event,
+      RecordHFReferralEmitter emit,
+      ) async {
     state.maybeMap(
       orElse: () {
         throw const InvalidRecordHFReferralStateException();
@@ -40,10 +45,11 @@ class RecordHFReferralBloc
     );
   }
 
+  // ODE: This method handles creating a new health facility referral entry.
   FutureOr<void> _handleCreateHFReferralEntry(
-    RecordHFReferralCreateEntryEvent event,
-    RecordHFReferralEmitter emit,
-  ) async {
+      RecordHFReferralCreateEntryEvent event,
+      RecordHFReferralEmitter emit,
+      ) async {
     bool referralSaved = false;
     await state.maybeMap(
       orElse: () {
@@ -75,7 +81,7 @@ class RecordHFReferralBloc
                   .saveReferralReconDetails(ReferralReconciliation(
                 hfReferralModel: event.hfReferralModel,
                 additionalData:
-                    event.additionalData != null ? event.additionalData! : {},
+                event.additionalData != null ? event.additionalData! : {},
               ));
 
               emit(
@@ -106,10 +112,11 @@ class RecordHFReferralBloc
     );
   }
 
+  // ODE: This method handles viewing a health facility referral entry.
   FutureOr<void> _handleViewHFReferralEntry(
-    RecordHFReferralViewEvent event,
-    RecordHFReferralEmitter emit,
-  ) async {
+      RecordHFReferralViewEvent event,
+      RecordHFReferralEmitter emit,
+      ) async {
     await state.maybeMap(
       orElse: () {
         throw const InvalidRecordHFReferralStateException();
@@ -148,6 +155,7 @@ class RecordHFReferralBloc
   }
 }
 
+// ODE: The RecordHFReferralEvent represents the different events that can occur in the RecordHFReferralBloc.
 @freezed
 class RecordHFReferralEvent with _$RecordHFReferralEvent {
   const factory RecordHFReferralEvent.saveFacilityDetails({
@@ -168,6 +176,7 @@ class RecordHFReferralEvent with _$RecordHFReferralEvent {
   }) = RecordHFReferralViewEvent;
 }
 
+// ODE: The RecordHFReferralState represents the different states of the RecordHFReferralBloc.
 @freezed
 class RecordHFReferralState with _$RecordHFReferralState {
   const factory RecordHFReferralState.create({
@@ -207,6 +216,7 @@ class RecordHFReferralState with _$RecordHFReferralState {
   }) = RecordHFReferralErrorState;
 }
 
+// ODE: Represents an exception thrown when the RecordHFReferralBloc encounters an invalid state.
 class InvalidRecordHFReferralStateException implements Exception {
   final String? message;
 
