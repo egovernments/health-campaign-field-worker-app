@@ -71,34 +71,34 @@ sed -i ''"$last_mapper_line"'r '"$temp_mappers" "$data_model_file"
 rm "$temp_imports"
 rm "$temp_mappers"
 
-# Path to the oplog.dart file
-oplog_file_path="$app_root/data/local_store/no_sql/schema/oplog.dart"
-
-# Define the case conditions
-declare -A case_conditions
-case_conditions=(
-  ["stock"]="\t final entity = HcmStockModelMapper.fromJson(entityString);\n    return entity;"
-  ["stockReconciliation"]="final entity = HcmStockReconciliationModelMapper.fromJson(entityString);\n    return entity;"
-)
-
-# Loop through the case conditions
-for case in "${!case_conditions[@]}"; do
-  # Generate the case condition
-  case_condition="case \"$case\":\n    ${case_conditions[$case]}"
-
-  # Delete the existing case condition if it exists
-  sed -i "/$case_condition/d" "$oplog_file_path"
-
-  # Check if the case condition exists in the oplog.dart file
-  if grep -Fq "$case_condition" $oplog_file_path
-  then
-    echo "The case condition for $case already exists in the oplog.dart file."
-  else
-    # If not, add it before the line containing the default case
-    sed -i "/default:/i $case_condition" $oplog_file_path
-    echo "The case condition for $case was added to the oplog.dart file."
-  fi
-done
+## Path to the oplog.dart file
+#oplog_file_path="$app_root/data/local_store/no_sql/schema/oplog.dart"
+#
+## Define the case conditions
+#declare -A case_conditions
+#case_conditions=(
+#  ["stock"]="\t final entity = HcmStockModelMapper.fromJson(entityString);\n    return entity;"
+#  ["stockReconciliation"]="final entity = HcmStockReconciliationModelMapper.fromJson(entityString);\n    return entity;"
+#)
+#
+## Loop through the case conditions
+#for case in "${!case_conditions[@]}"; do
+#  # Generate the case condition
+#  case_condition="case \"$case\":\n    ${case_conditions[$case]}"
+#
+#  # Delete the existing case condition if it exists
+#  sed -i "/$case_condition/d" "$oplog_file_path"
+#
+#  # Check if the case condition exists in the oplog.dart file
+#  if grep -Fq "$case_condition" $oplog_file_path
+#  then
+#    echo "The case condition for $case already exists in the oplog.dart file."
+#  else
+#    # If not, add it before the line containing the default case
+#    sed -i "/default:/i $case_condition" $oplog_file_path
+#    echo "The case condition for $case was added to the oplog.dart file."
+#  fi
+#done
 
 
 # Adding localization delegates to the localization_delegates.dart file
