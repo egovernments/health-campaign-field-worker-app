@@ -65,7 +65,9 @@ class _AcknowledgementPageState
                 DigitElevatedButton(
                   child: Text(localizations
                       .translate(i18.acknowledgementSuccess.goToHome)),
-                  onPressed: () {},
+                  onPressed: () {
+                    context.router.popUntilRoot();
+                  },
                 ),
                 const SizedBox(
                   height: 12,

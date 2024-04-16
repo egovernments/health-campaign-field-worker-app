@@ -86,8 +86,9 @@ class _StockReconciliationPageState
     final theme = Theme.of(context);
 
     return widget.projectId.isEmpty
-        ? const Center(
-            child: Text('No project selected'),
+        ? Center(
+            child: Text(localizations
+                .translate(i18.stockReconciliationDetails.noProjectSelected)),
           )
         : FacilityBlocWrapper(
             projectId: widget.projectId,
@@ -272,6 +273,7 @@ class _StockReconciliationPageState
                                           empty: () =>
                                               NoFacilitiesAssignedDialog.show(
                                             context,
+                                            localizations,
                                           ),
                                         ),
                                         builder: (context, state) {
@@ -377,8 +379,10 @@ class _StockReconciliationPageState
                                           loading: () => const Center(
                                             child: CircularProgressIndicator(),
                                           ),
-                                          empty: () => const Center(
-                                            child: Text('No products found'),
+                                          empty: () => Center(
+                                            child: Text(
+                                              i18.stockDetails.noProductsFound,
+                                            ),
                                           ),
                                           fetched: (productVariants) {
                                             return DigitReactiveSearchDropdown<

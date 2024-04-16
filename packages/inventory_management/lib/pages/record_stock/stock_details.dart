@@ -514,8 +514,10 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                       loading: () => const Center(
                                         child: CircularProgressIndicator(),
                                       ),
-                                      empty: () => const Center(
-                                        child: Text('No products found'),
+                                      empty: () => Center(
+                                        child: Text(localizations.translate(
+                                          i18.stockDetails.noProductsFound,
+                                        )),
                                       ),
                                       fetched: (productVariants) {
                                         return DigitReactiveDropdown<

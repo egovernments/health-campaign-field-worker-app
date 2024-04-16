@@ -103,8 +103,6 @@ class Common {
 
   String get scanBales => 'CORE_COMMON_SCAN_BALES';
   String get ageInMonths => 'AGE_IN_MONTHS_LABEL';
-
-  String get inactive => 'INACTIVE';
 }
 
 class AcknowledgementSuccess {
@@ -122,111 +120,6 @@ class AcknowledgementSuccess {
   String get dataDownloadedSuccessLabel => 'DATA_DOWNLOADED_SUCCESS_LABEL';
 }
 
-class Attendance {
-  const Attendance();
-
-  String get viewAttendanceLabel => 'HOME_VIEW_ATTENDANCE_LABEL';
-
-  String get campaignNameLabel => 'CAMPAIGN_NAME_LABEL';
-
-  String get eventTypeLabel => 'EVENT_TYPE_LABEL';
-
-  String get staffCountLabel => 'STAFF_COUNT_LABEL';
-
-  String get startDateLabel => 'START_DATE_LABEL';
-
-  String get endDateLabel => 'END_DATE_LABEL';
-
-  String get statusLabel => 'STATUS_LABEL';
-
-  String get attendanceCompletionLabel => 'ATTENDANCE_COMPLETION_LABEL';
-
-  String get noAttendeesEnrolledMessage =>
-      'NO_ATTENDEES_ENROLLED_TO_THE_REGISTER';
-
-  String get registerNotStarted => 'REGISTER_NOT_STARTED_MSG';
-
-  String get saveAndMarkLaterLabel => 'SAVE_AND_MARK_LATER_LABEL';
-
-  String get pleaseMarkAttForIndividuals =>
-      'PLZ_MARK_ATTENDANCE_FOR_INDIVIDUALS';
-
-  String get draftSavedMessage => 'DRAFT_SAVED_MESSAGE';
-
-  String get attendanceSubmittedSuccessMsg =>
-      'ATTENDANCE_SUBMITTED_SUCCESS_MSG';
-
-  String get selectSession => 'SESSION_SELECTION_HEADER';
-
-  String get sessionRadioLabel => 'SESSION_SELECT_RADIO_LABEL';
-
-  String get dateOfSession => 'SESSION_DATE_OF_SESSION';
-
-  String get sessionDescForRadio => 'SESSION_RADIO_INFO';
-
-  String get missedAttendanceInfo => 'MISSED_ATTENDANCE_INFO';
-
-  String get missedAttendanceDesc => 'MISSED_ATTENDANCE_DESC';
-
-  String get viewAttendance => 'VIEW_ATTENDANCE';
-
-  String get openRegister => 'ATTENDANCE_OPEN_REGISTER';
-
-  String get markAttendance => 'BUTTON_MARK_ATTENDANCE';
-
-  String get tableHeaderName => 'TABLE_HEADER_NAME';
-
-  String get tableHeaderAttendance => 'TABLE_HEADER_ATTENDANCE';
-
-  String get tableHeaderUserId => 'TABLE_HEADER_USERID';
-
-  String get markAttendanceLabel => "LABEL_MARK_ATTENDANCE";
-
-  String get closeButton => "CLOSE_BUTTON";
-
-  String get retryButton => "RETRY_BUTTON";
-
-  String get proceed => "PROCEED_BUTTON";
-
-  String get confirmationLabel => "CONFIRMATION_LABEL";
-
-  String get confirmationDesc => "CONFIRMATION_DESCRIPTION";
-
-  String get confirmationDescNote => "CONFIRMATION_DESCRIPTION_NOTE";
-
-  String get goBackButton => "GO_BACK_BUTTON";
-
-  String get goHome => "GO_TO_HOME_SCREEN";
-
-  String get morningSession => "MORNING_SESSION";
-
-  String get eveningSession => "EVENING_SESSION";
-
-  String get goToAttendanceRegisters => "GO_TO_ATTENDANCE_REGISTERS";
-
-  String get plzSelectSession => "PLZ_SELECT_THE_SESSION";
-
-  String get checkAttendanceMark => "CHECK_ATTENDANCE_MARK";
-
-  String get backToAttendanceManager => "BACK_TO_ATTENDANCE_MANAGER";
-
-  String get attendanceRegistarLabel => "ATTENDANCE_REGISTAR_LABEL";
-
-  String get somethingWentWrong => "SOMETHING_WENT_WRONG";
-
-  String get pleaseTryAgain => "PLEASE_TRY_AGAIN";
-
-  String get retry => "CORE_COMMON_NULL";
-
-  String get missedAttendanceHeader => "MISSED_ATTENDANCE_HEADER";
-
-  String get missedAttendanceDescription => "MISSED_ATTENDANCE_DESCRIPTION";
-
-  String get halfDay => 'HALF_DAY';
-  String get present => 'PRESENT';
-  String get absent => 'ABSENT';
-}
-
 class WarehouseDetails {
   const WarehouseDetails();
 
@@ -237,6 +130,10 @@ class WarehouseDetails {
   String get administrativeUnit => 'WAREHOUSE_DETAILS_ADMINISTRATIVE_UNIT';
 
   String get warehouseNameId => 'WAREHOSUE_DETAILS_WAREHOUSE_NAME_ID';
+
+  String get noFacilitiesAssigned => 'NO_FACILITIES_ASSIGNED';
+
+  String get noFacilitiesAssignedDescription => 'NO_FACILITIES_ASSIGNED_DESCRIPTION';
 }
 
 class StockDetails {
@@ -257,6 +154,8 @@ class StockDetails {
 
   /// Select Product label
   String get selectProductLabel => 'STOCK_DETAILS_SELECT_PRODUCT';
+
+  String get noProductsFound => 'STOCK_DETAILS_NO_PRODUCTS_FOUND';
 
   /// Select Transacting party label
   String get selectTransactingPartyReceived => 'STOCK_DETAILS_RECEIVED_FROM';

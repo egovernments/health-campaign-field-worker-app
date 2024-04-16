@@ -68,11 +68,14 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
     final recordStockBloc = BlocProvider.of<RecordStockBloc>(context);
 
     return InventorySingleton().projectId.isEmpty
-        ? const Center(child: Text('No project selected'))
+        ? Center(
+            child: Text(localizations
+                .translate(i18.stockReconciliationDetails.noProjectSelected)))
         : BlocConsumer<FacilityBloc, FacilityState>(
             listener: (context, state) {
               state.whenOrNull(
-                empty: () => NoFacilitiesAssignedDialog.show(context),
+                empty: () =>
+                    NoFacilitiesAssignedDialog.show(context, localizations),
               );
             },
             builder: (ctx, facilityState) {
