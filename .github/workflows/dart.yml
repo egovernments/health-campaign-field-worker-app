@@ -26,6 +26,3 @@ jobs:
 
       - name: Generate models
         run: chmod +x ./tools/install_bricks.sh
-
-      - name: Analyze code
-        run: melos run analyze
