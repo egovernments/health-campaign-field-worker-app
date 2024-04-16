@@ -20,10 +20,12 @@ class InventoryAcknowledgementPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<InventoryAcknowledgementPage> createState() => _AcknowledgementPageState();
+  State<InventoryAcknowledgementPage> createState() =>
+      _AcknowledgementPageState();
 }
 
-class _AcknowledgementPageState extends LocalizedState<InventoryAcknowledgementPage> {
+class _AcknowledgementPageState
+    extends LocalizedState<InventoryAcknowledgementPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -36,19 +38,19 @@ class _AcknowledgementPageState extends LocalizedState<InventoryAcknowledgementP
             ),
         descriptionWidget: widget.isDataRecordSuccess
             ? DigitTableCard(
-          element: widget.descriptionTableData ?? {},
-        )
+                element: widget.descriptionTableData ?? {},
+              )
             : null,
         label: widget.label ??
             localizations.translate(
               i18.acknowledgementSuccess.acknowledgementLabelText,
             ),
         action: () {
-          Navigator.of(context).pop();
+          context.router.maybePop();
         },
         enableBackToSearch: widget.isDataRecordSuccess ? false : true,
         actionLabel:
-        localizations.translate(i18.acknowledgementSuccess.actionLabelText),
+            localizations.translate(i18.acknowledgementSuccess.actionLabelText),
       ),
       bottomNavigationBar: Offstage(
         offstage: !widget.isDataRecordSuccess,
@@ -63,16 +65,14 @@ class _AcknowledgementPageState extends LocalizedState<InventoryAcknowledgementP
                 DigitElevatedButton(
                   child: Text(localizations
                       .translate(i18.acknowledgementSuccess.goToHome)),
-                  onPressed: () {
-
-                  },
+                  onPressed: () {},
                 ),
                 const SizedBox(
                   height: 12,
                 ),
                 DigitOutLineButton(
                   onPressed: () {
-
+                    context.router.popUntilRoot();
                   },
                   label: localizations
                       .translate(i18.acknowledgementSuccess.downloadmoredata),

@@ -7,35 +7,48 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:inventory_management/models/entities/stock_reconciliation.dart';
 import 'package:mocktail/mocktail.dart';
 
+class MockStockReconciliationReport extends Mock
+    implements StockReconciliationReport {
+  @override
+  Map<String, List<StockReconciliationModel>> stockReconModel = {
+    'stock1': [
+      StockReconciliationModel(
+        id: '1',
+        clientReferenceId: 'abc123',
+        dateOfReconciliation: DateTime.now().toLocal().day,
+      ),
+    ],
+  };
+
+  @override
+  Iterable<MapEntry<String, String>> additionalData = {
+    const MapEntry("returned", "10"),
+  };
+}
+
+class MockInventoryReport extends Mock {
+  @override
+  Map<String, List<StockModel>> stocksReport = {
+    'stock1': [StockModel(id: '1', clientReferenceId: 'abc123')],
+  };
+}
+
 // Mock class for InventorySingleton
 class MockInventorySingleton extends Mock implements InventorySingleton {
   // Mock method for fetching inventory reports
   @override
   Future<Map<String, List<StockModel>>> fetchInventoryReports(
       {required InventoryReportType reportType,
-        required String facilityId,
-        required String productVariantId}) async {
-    return <String, List<StockModel>>{
-      'stock1': [StockModel(id: '1', clientReferenceId: 'abc123')]
-    };
+      required String facilityId,
+      required String productVariantId}) async {
+    return MockInventoryReport().stocksReport;
   }
 
   // Mock method for handling stock reconciliation report
   @override
   Future<StockReconciliationReport?> handleStockReconciliationReport(
       {required String productVariantId, required String facilityId}) async {
-    return StockReconciliationReport(
-        stockReconModel: <String, List<StockReconciliationModel>>{
-          'stock1': [
-            StockReconciliationModel(
-                id: '1',
-                clientReferenceId: 'abc123',
-                dateOfReconciliation: DateTime.now().toLocal().day)
-          ]
-        },
-        additionalData: {
-          const MapEntry("returned", "10")
-        });
+    return MockStockReconciliationReport();
   }
 }
 
@@ -51,13 +64,19 @@ void main() {
 
   group('InventoryReportBloc', () {
     late MockInventorySingleton mockInventorySingleton;
-    late InventoryReportBloc inventoryReportBloc;
+    late InventoryReportBloc mockInventoryReportBloc;
+    late InventoryReportType mockReportType;
+    late String mockFacilityId;
+    late String mockProductVariantId;
 
     setUp(() {
       // Setting up the mock and the bloc for each test
       mockInventorySingleton = MockInventorySingleton();
-      inventoryReportBloc =
+      mockInventoryReportBloc =
           InventoryReportBloc(inventorySingleton: mockInventorySingleton);
+      mockReportType = InventoryReportType.receipt;
+      mockFacilityId = 'facility1';
+      mockProductVariantId = 'product1';
     });
 
     // Test for loadStockData event
@@ -65,16 +84,14 @@ void main() {
       'emits [InventoryReportLoadingState, InventoryReportStockState] when loadStockData event is added',
       build: () =>
           InventoryReportBloc(inventorySingleton: mockInventorySingleton),
-      act: (bloc) => bloc.add(const InventoryReportEvent.loadStockData(
-          reportType: InventoryReportType.receipt,
-          facilityId: 'facility1',
-          productVariantId:
-          'product1')), // wait for 1 second before checking the states
+      act: (bloc) => bloc.add(InventoryReportEvent.loadStockData(
+          reportType: mockReportType,
+          facilityId: mockFacilityId,
+          productVariantId: mockProductVariantId)),
       expect: () => <InventoryReportState>[
         const InventoryReportLoadingState(),
-        InventoryReportStockState(stockData: {
-          'stock1': [StockModel(id: '1', clientReferenceId: 'abc123')]
-        }),
+        InventoryReportStockState(
+            stockData: MockInventoryReport().stocksReport),
       ],
     );
 
@@ -83,28 +100,20 @@ void main() {
       'emits [InventoryReportLoadingState, InventoryReportStockReconciliationState] when loadStockReconciliationData event is added',
       build: () =>
           InventoryReportBloc(inventorySingleton: mockInventorySingleton),
-      act: (bloc) => bloc.add(
-          const InventoryReportEvent.loadStockReconciliationData(
-              facilityId: 'facility1', productVariantId: 'product1')),
+      act: (bloc) => bloc.add(InventoryReportEvent.loadStockReconciliationData(
+          facilityId: mockFacilityId, productVariantId: mockProductVariantId)),
       expect: () => <InventoryReportState>[
         const InventoryReportLoadingState(),
-        InventoryReportStockReconciliationState(data: {
-          'stock1': [
-            StockReconciliationModel(
-                id: '1',
-                clientReferenceId: 'abc123',
-                dateOfReconciliation: DateTime.now().toLocal().day)
-          ]
-        }, additionalData: {
-          const MapEntry("returned", "10")
-        }),
+        InventoryReportStockReconciliationState(
+            data: MockStockReconciliationReport().stockReconModel,
+            additionalData: MockStockReconciliationReport().additionalData),
       ],
     );
 
     // Test for loading event
     blocTest<InventoryReportBloc, InventoryReportState>(
       'emits [InventoryReportLoadingState] when loading event is added',
-      build: () => inventoryReportBloc,
+      build: () => mockInventoryReportBloc,
       act: (bloc) => bloc.add(const InventoryReportEvent.loading()),
       expect: () => <InventoryReportState>[
         const InventoryReportLoadingState(),

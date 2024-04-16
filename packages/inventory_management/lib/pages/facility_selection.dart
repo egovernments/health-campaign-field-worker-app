@@ -76,7 +76,7 @@ class InventoryFacilitySelectionPage extends StatelessWidget {
                               ),
                               const DigitTextFormField(
                                 suffix: Padding(
-                                  padding: EdgeInsets.all(8.0),
+                                  padding: EdgeInsets.all(kPadding),
                                   child: Icon(Icons.search),
                                 ),
                                 label: '',
@@ -94,13 +94,17 @@ class InventoryFacilitySelectionPage extends StatelessWidget {
 
                           return Container(
                             color: Colors.white,
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: kPadding),
                             child: Container(
-                              margin: const EdgeInsets.symmetric(horizontal: 8),
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: kPadding),
                               decoration: BoxDecoration(
-                                color: DigitTheme.instance.colors.alabasterWhite,
+                                color:
+                                    DigitTheme.instance.colors.alabasterWhite,
                                 border: Border(
-                                  top: index == 0 ? borderSide : BorderSide.none,
+                                  top:
+                                      index == 0 ? borderSide : BorderSide.none,
                                   bottom: index == filteredFacilities.length - 1
                                       ? borderSide
                                       : BorderSide.none,
@@ -115,8 +119,8 @@ class InventoryFacilitySelectionPage extends StatelessWidget {
                                 child: Container(
                                   margin: const EdgeInsets.all(kPadding),
                                   decoration: BoxDecoration(
-                                    color:
-                                        DigitTheme.instance.colors.alabasterWhite,
+                                    color: DigitTheme
+                                        .instance.colors.alabasterWhite,
                                     border: Border(
                                       bottom: BorderSide(
                                         color: theme.colorScheme.outline,

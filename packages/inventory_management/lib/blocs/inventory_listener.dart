@@ -59,8 +59,8 @@ class InventorySingleton {
 
   // Various properties related to the inventory.
   String _projectId = '';
-  String _userId = '';
-  String _boundaryName = '';
+  String? _userId = '';
+  String? _boundaryName = '';
   bool _isDistributor = false;
   bool _isWareHouseMgr = false;
   List<InventoryTransportTypes>? _transportType = [];
@@ -68,12 +68,12 @@ class InventorySingleton {
   // Sets the initial data for the inventory.
   void setInitialData(
       {required InventoryListener inventoryListener,
-      required String userId,
-      required String boundaryName,
+      String? userId,
+      String? boundaryName,
       required String projectId,
       required bool isDistributor,
       required bool isWareHouseMgr,
-      required List<InventoryTransportTypes>? transportTypes}) {
+      List<InventoryTransportTypes>? transportTypes}) {
     _inventoryListener = inventoryListener;
     _projectId = projectId;
     _userId = userId;
@@ -81,6 +81,7 @@ class InventorySingleton {
     _boundaryName = boundaryName;
     _isDistributor = isDistributor;
     _isWareHouseMgr = isWareHouseMgr;
+    _transportType = transportTypes;
   }
 
   // Getters for the properties.

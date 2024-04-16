@@ -74,12 +74,9 @@ class _StockReconciliationPageState
   void initState() {
     InventorySingleton().setInitialData(
       inventoryListener: widget.inventoryListener,
-      transportTypes: [],
-      userId: '',
       projectId: widget.projectId,
       isDistributor: widget.isDistributor!,
       isWareHouseMgr: widget.isWareHouseMgr!,
-      boundaryName: '',
     );
     super.initState();
   }
@@ -381,8 +378,7 @@ class _StockReconciliationPageState
                                             child: CircularProgressIndicator(),
                                           ),
                                           empty: () => const Center(
-                                            child: Text(
-                                                'No products found'),
+                                            child: Text('No products found'),
                                           ),
                                           fetched: (productVariants) {
                                             return DigitReactiveSearchDropdown<

@@ -1,5 +1,5 @@
 name: inventory_management
-description: ""
+description: Provides features to manage inventory.
 version: 0.0.1
 homepage:
 
@@ -30,7 +30,7 @@ dependencies:
   uuid: ^3.0.6
   recase: ^4.1.0
   pluto_grid: ^7.0.1
-  digit_scanner:
+  digit_scanner: ##[TODO: Change to pub version once published]
     git:
       url: https://github.com/egovernments/health-campaign-field-worker-app/
       ref: HLM-5097
@@ -44,7 +44,6 @@ dev_dependencies:
   flutter_lints: ^3.0.1
   dart_code_metrics: ^5.7.6
   freezed: ^2.1.0+1
-  build_runner: ^2.4.7
   json_serializable: ^6.4.0
   drift_dev: ^2.14.1
   bloc_test: ^9.1.0

@@ -10,12 +10,18 @@ import 'package:mocktail/mocktail.dart';
 // Mock class for InventorySingleton
 class MockInventorySingleton extends Mock implements InventorySingleton {}
 
+class MockProductVariantModel extends Mock implements ProductVariantModel {
+  @override
+  String get id => 'product1';
+}
+
 void main() {
   // Grouping tests related to ProductVariantBloc
   group('ProductVariantBloc', () {
     // Declaring variables for mock and bloc
     late MockInventorySingleton mockInventorySingleton;
     late ProductVariantBloc productVariantBloc;
+    late MockProductVariantModel mockProductVariantModel;
 
     // Setting up the mock and the bloc for each test
     setUp(() {
@@ -23,6 +29,7 @@ void main() {
       productVariantBloc = ProductVariantBloc(
           const ProductVariantState.loading(),
           inventorySingleton: mockInventorySingleton);
+      mockProductVariantModel = MockProductVariantModel();
     });
 
     // Test for load event when product variants are returned
@@ -31,7 +38,7 @@ void main() {
       build: () {
         // Mocking the getProductVariants method to return a list with one product variant
         when(() => mockInventorySingleton.getProductVariants())
-            .thenAnswer((_) async => [ProductVariantModel(id: '1')]);
+            .thenAnswer((_) async => [mockProductVariantModel]);
         return productVariantBloc;
       },
       act: (bloc) => bloc
@@ -39,8 +46,7 @@ void main() {
       // Expecting the bloc to emit a loading state and then a fetched state with the returned product variants
       expect: () => <ProductVariantState>[
         const ProductVariantLoadingState(),
-        ProductVariantFetchedState(
-            productVariants: [ProductVariantModel(id: '1')]),
+        ProductVariantFetchedState(productVariants: [mockProductVariantModel]),
       ],
     );
 

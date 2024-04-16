@@ -45,7 +45,7 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
               i18.acknowledgementSuccess.acknowledgementLabelText,
             ),
         action: () {
-          context.router.pop();
+          context.router.maybePop();
         },
         enableBackToSearch: widget.isDataRecordSuccess ? false : true,
         actionLabel:

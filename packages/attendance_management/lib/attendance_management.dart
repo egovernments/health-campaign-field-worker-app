@@ -13,4 +13,8 @@ export 'data/attendance_register.dart';
 export 'data/attendee.dart';
 export 'data/staff.dart';
 
+export 'pages/manage_attendance.dart';
+export 'pages/mark_attendance.dart';
+export 'pages/session_select.dart';
+
 export 'router/attendance_router.dart';

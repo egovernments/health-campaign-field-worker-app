@@ -126,7 +126,7 @@ class _AttendanceDateSessionSelectionPageState
                                                 final session = form
                                                     .control(_sessionRadio)
                                                     .value as KeyValue?;
-                                                DateTime s = form
+                                                DateTime dateSession = form
                                                     .control(_dateOfSession)
                                                     .value;
 
@@ -137,7 +137,7 @@ class _AttendanceDateSessionSelectionPageState
                                                         2
                                                     ? AttendanceDateTimeManagement
                                                         .getMillisecondEpoch(
-                                                        s,
+                                                        dateSession,
                                                         form
                                                                     .control(
                                                                         _sessionRadio)
@@ -151,8 +151,11 @@ class _AttendanceDateSessionSelectionPageState
                                                             : 0,
                                                         "entryTime",
                                                       )
-                                                    : (DateTime(s.year, s.month,
-                                                            s.day, 9)
+                                                    : (DateTime(
+                                                            dateSession.year,
+                                                            dateSession.month,
+                                                            dateSession.day,
+                                                            9)
                                                         .millisecondsSinceEpoch);
 
                                                 final exitTime = selectedRegister
@@ -162,7 +165,7 @@ class _AttendanceDateSessionSelectionPageState
                                                         2
                                                     ? AttendanceDateTimeManagement
                                                         .getMillisecondEpoch(
-                                                        s,
+                                                        dateSession,
                                                         form
                                                                     .control(
                                                                         _sessionRadio)
@@ -176,8 +179,11 @@ class _AttendanceDateSessionSelectionPageState
                                                             : 1,
                                                         "exitTime",
                                                       )
-                                                    : (DateTime(s.year, s.month,
-                                                            s.day, 18)
+                                                    : (DateTime(
+                                                            dateSession.year,
+                                                            dateSession.month,
+                                                            dateSession.day,
+                                                            18)
                                                         .millisecondsSinceEpoch);
 
                                                 final submit =
@@ -197,7 +203,7 @@ class _AttendanceDateSessionSelectionPageState
                                                                     entryTime)
                                                             .toList()
                                                         : [],
-                                                    dateTime: s,
+                                                    dateTime: dateSession,
                                                     session: session?.key,
                                                     entryTime: entryTime,
                                                     exitTime: exitTime,

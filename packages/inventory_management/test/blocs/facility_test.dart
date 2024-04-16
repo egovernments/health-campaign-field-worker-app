@@ -14,6 +14,7 @@ void main() {
     // Declare variables for MockInventorySingleton and FacilityBloc
     late MockInventorySingleton mockInventorySingleton;
     late FacilityBloc facilityBloc;
+    late String mockProjectId;
 
     setUp(() {
       // Initialize MockInventorySingleton and FacilityBloc before each test
@@ -21,6 +22,9 @@ void main() {
       facilityBloc = FacilityBloc(
           inventorySingleton: mockInventorySingleton,
           const FacilityState.empty());
+
+      // Initialize mockProjectId
+      mockProjectId = 'mock-e29cc774';
     });
 
     // Test for when getFacilitiesForProjectId returns a non-null list of facilities
@@ -33,8 +37,8 @@ void main() {
             .thenAnswer((_) async => [InventoryFacilityModel(id: '1')]);
         return facilityBloc;
       },
-      act: (bloc) => bloc.add(const FacilityEvent.loadForProjectId(
-          projectId: 'e29cc774-ab5f-426f-b729-24ecad99c5ba')),
+      act: (bloc) =>
+          bloc.add(FacilityEvent.loadForProjectId(projectId: mockProjectId)),
       expect: () => <FacilityState>[
         // Expected states after the action
         const FacilityLoadingState(),
@@ -52,8 +56,8 @@ void main() {
             .thenAnswer((_) async => null);
         return facilityBloc;
       },
-      act: (bloc) => bloc.add(const FacilityEvent.loadForProjectId(
-          projectId: 'e29cc774-ab5f-426f-b729-24ecad99c5ba')),
+      act: (bloc) =>
+          bloc.add(FacilityEvent.loadForProjectId(projectId: mockProjectId)),
       expect: () => <FacilityState>[
         // Expected states after the action
         const FacilityLoadingState(),
@@ -71,8 +75,8 @@ void main() {
             .thenAnswer((_) async => []);
         return facilityBloc;
       },
-      act: (bloc) => bloc.add(const FacilityEvent.loadForProjectId(
-          projectId: 'e29cc774-ab5f-426f-b729-24ecad99c5ba')),
+      act: (bloc) =>
+          bloc.add(FacilityEvent.loadForProjectId(projectId: mockProjectId)),
       expect: () => <FacilityState>[
         // Expected states after the action
         const FacilityLoadingState(),
@@ -88,8 +92,8 @@ void main() {
             .thenThrow(Exception('Failed to fetch facilities'));
         return facilityBloc;
       },
-      act: (bloc) => bloc.add(const FacilityEvent.loadForProjectId(
-          projectId: 'e29cc774-ab5f-426f-b729-24ecad99c5ba')),
+      act: (bloc) =>
+          bloc.add(FacilityEvent.loadForProjectId(projectId: mockProjectId)),
       expect: () => <FacilityState>[
         const FacilityLoadingState(),
         const FacilityErrorState(),

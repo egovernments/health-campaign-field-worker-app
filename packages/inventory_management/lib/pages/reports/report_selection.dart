@@ -39,12 +39,9 @@ class _InventoryReportSelectionPageState
   void initState() {
     InventorySingleton().setInitialData(
       inventoryListener: widget.inventoryListener,
-      transportTypes: [],
-      userId: '',
       projectId: widget.projectId,
       isDistributor: widget.isDistributor!,
       isWareHouseMgr: widget.isWareHouseMgr!,
-      boundaryName: '',
     );
     super.initState();
   }

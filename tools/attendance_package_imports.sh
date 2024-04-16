@@ -1,4 +1,4 @@
-# for adding imports and mappers of attendance
+# For adding imports and mappers of attendance
 
 cd ../apps/health_campaign_field_worker_app/lib || exit
 
@@ -8,9 +8,6 @@ data_model_file="$app_root/models/data_model.init.dart"
 
 # Get the last number used in the import statements
 last_num=$(grep -oP 'import .* as p\K\d+' "$data_model_file" | sort -nr | head -n 1)
-
-# Increment the last number to get the starting number for our new imports
-start_num=$((last_num + 1))
 
 # Define the new imports
 declare -A new_imports
@@ -28,18 +25,32 @@ temp_mappers=$(mktemp)
 
 # Loop through the new imports
 for file in "${!new_imports[@]}"; do
-  # Generate the import statement
-  import="import 'package:attendance_management/models/$file' as p$start_num;"
-
-  # Write the import statement to the temporary imports file
-  echo "$import" >> "$temp_imports"
-
   # Generate the mapper initialization
-  mapper="p$start_num.${new_imports[$file]}.ensureInitialized();"
+  mapper="p$last_num.${new_imports[$file]}.ensureInitialized();"
 
-  # Write the mapper initialization to the temporary mappers file
-  echo "$mapper" >> "$temp_mappers"
+  # Check if the mapper initialization exists in the data_model_file
+  if grep -Fq "$mapper" $data_model_file
+  then
+    echo "The mapper initialization for ${new_imports[$file]} already exists in the data_model_file."
+  else
+    # If not, increment the last number to get the starting number for our new imports
+    start_num=$((last_num + 1))
 
+    # Generate the import statement
+    import="import 'package:attendance_management/models/$file' as p$start_num;"
+
+    # Write the import statement to the temporary imports file
+    echo "$import" >> "$temp_imports"
+
+    # Update the mapper initialization with the new start_num
+    mapper="p$start_num.${new_imports[$file]}.ensureInitialized();"
+
+    # Write the mapper initialization to the temporary mappers file
+    echo "$mapper" >> "$temp_mappers"
+
+    # Update the last_num for the next iteration
+    last_num=$start_num
+  fi
 done
 
 # Get the line number of the last import statement

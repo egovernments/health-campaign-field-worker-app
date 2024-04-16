@@ -9,9 +9,6 @@ data_model_file="$app_root/models/data_model.init.dart"
 # Get the last number used in the import statements
 last_num=$(grep -oP 'import .* as p\K\d+' "$data_model_file" | sort -nr | head -n 1)
 
-# Increment the last number to get the starting number for our new imports
-start_num=$((last_num + 1))
-
 # Define the new imports
 declare -A new_imports
 new_imports=(
@@ -30,18 +27,32 @@ temp_mappers=$(mktemp)
 
 # Loop through the new imports
 for file in "${!new_imports[@]}"; do
-  # Generate the import statement
-  import="import 'package:inventory_management/models/entities/$file' as p$start_num;"
-
-  # Write the import statement to the temporary imports file
-  echo "$import" >> "$temp_imports"
-
   # Generate the mapper initialization
-  mapper="p$start_num.${new_imports[$file]}.ensureInitialized();"
+  mapper="p$last_num.${new_imports[$file]}.ensureInitialized();"
 
-  # Write the mapper initialization to the temporary mappers file
-  echo "$mapper" >> "$temp_mappers"
+  # Check if the mapper initialization exists in the data_model_file
+  if grep -Fq "$mapper" $data_model_file
+  then
+    echo "The mapper initialization for ${new_imports[$file]} already exists in the data_model_file."
+  else
+    # If not, increment the last number to get the starting number for our new imports
+    start_num=$((last_num + 1))
 
+    # Generate the import statement
+    import="import 'package:inventory_management/models/entities/$file' as p$start_num;"
+
+    # Write the import statement to the temporary imports file
+    echo "$import" >> "$temp_imports"
+
+    # Update the mapper initialization with the new start_num
+    mapper="p$start_num.${new_imports[$file]}.ensureInitialized();"
+
+    # Write the mapper initialization to the temporary mappers file
+    echo "$mapper" >> "$temp_mappers"
+
+    # Update the last_num for the next iteration
+    last_num=$start_num
+  fi
 done
 
 # Get the line number of the last import statement
@@ -60,8 +71,34 @@ sed -i ''"$last_mapper_line"'r '"$temp_mappers" "$data_model_file"
 rm "$temp_imports"
 rm "$temp_mappers"
 
+# Path to the oplog.dart file
+oplog_file_path="$app_root/data/local_store/no_sql/schema/oplog.dart"
 
+# Define the case conditions
+declare -A case_conditions
+case_conditions=(
+  ["stock"]="\t final entity = HcmStockModelMapper.fromJson(entityString);\n    return entity;"
+  ["stockReconciliation"]="final entity = HcmStockReconciliationModelMapper.fromJson(entityString);\n    return entity;"
+)
 
+# Loop through the case conditions
+for case in "${!case_conditions[@]}"; do
+  # Generate the case condition
+  case_condition="case \"$case\":\n    ${case_conditions[$case]}"
+
+  # Delete the existing case condition if it exists
+  sed -i "/$case_condition/d" "$oplog_file_path"
+
+  # Check if the case condition exists in the oplog.dart file
+  if grep -Fq "$case_condition" $oplog_file_path
+  then
+    echo "The case condition for $case already exists in the oplog.dart file."
+  else
+    # If not, add it before the line containing the default case
+    sed -i "/default:/i $case_condition" $oplog_file_path
+    echo "The case condition for $case was added to the oplog.dart file."
+  fi
+done
 
 
 # Adding localization delegates to the localization_delegates.dart file
