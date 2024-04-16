@@ -16,6 +16,7 @@ import '../widgets/beneficiary/view_referral_card.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
 
+@RoutePage()
 class SearchReferralsPage extends LocalizedStatefulWidget {
   const SearchReferralsPage({
     super.key,
@@ -222,6 +223,7 @@ class _SearchReferralsPageState extends LocalizedState<SearchReferralsPage> {
                                 const DigitScannerEvent.handleScanner(),
                               );
                           Navigator.of(context).push(
+                            //[TODO: Add route to auto_route]
                             MaterialPageRoute(
                               builder: (context) => const DigitScannerPage(
                                 quantity: 1,

@@ -39,15 +39,14 @@ class AttendanceIndividualBloc
     try {
       List<AttendeeModel> attendees = [];
       // Searching attendance log using provided parameters
-      AttendanceSingleton().searchAttendanceLog(SearchAttendanceLog(
-          registerId: event.registerId,
-          tenantId: event.tenantId,
-          entryTime: event.entryTime,
-          exitTime: event.exitTime,
-          currentDate: event.currentDate,
-          onLogLoaded: (logResponse) =>
-              checkResponse(logResponse, attendees, event)));
-      // }
+      final logResponse = await AttendanceSingleton().searchAttendanceLog(
+        registerId: event.registerId,
+        tenantId: event.tenantId,
+        entryTime: event.entryTime,
+        exitTime: event.exitTime,
+        currentDate: event.currentDate,
+      );
+      checkResponse(logResponse, attendees, event);
     } catch (ex) {
       String? error = ex as String;
 

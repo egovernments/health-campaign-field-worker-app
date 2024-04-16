@@ -13,6 +13,7 @@ import '../../../widgets/header/back_navigation_help_header.dart';
 import '../../../widgets/localized.dart';
 import '../../../widgets/no_result_card/no_result_card.dart';
 
+@RoutePage()
 class ComplaintsInboxPage extends LocalizedStatefulWidget {
   const ComplaintsInboxPage({
     super.key,

@@ -17,6 +17,7 @@ import '../widgets/beneficiary/view_beneficiary_card.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
 
+@RoutePage()
 class SearchBeneficiaryPage extends LocalizedStatefulWidget {
   const SearchBeneficiaryPage({
     super.key,
@@ -405,6 +406,7 @@ class _SearchBeneficiaryPageState
                         onPressed: () {
                           blocWrapper.clearEvent();
                           Navigator.of(context).push(
+                            //[TODO: Add route to auto_route]
                             MaterialPageRoute(
                               builder: (context) => const DigitScannerPage(
                                 quantity: 1,

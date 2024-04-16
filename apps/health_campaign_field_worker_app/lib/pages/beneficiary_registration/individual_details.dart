@@ -27,6 +27,7 @@ import '../../widgets/localized.dart';
 import '../../widgets/showcase/config/showcase_constants.dart';
 import '../../widgets/showcase/showcase_button.dart';
 
+@RoutePage()
 class IndividualDetailsPage extends LocalizedStatefulWidget {
   final bool isHeadOfHousehold;
 
@@ -616,6 +617,7 @@ class _IndividualDetailsPageState
                                           icon: const Icon(Icons.edit),
                                           onPressed: () {
                                             Navigator.of(context).push(
+                                              //[TODO: Add the route to auto_route]
                                               MaterialPageRoute(
                                                 builder: (context) =>
                                                     const DigitScannerPage(
@@ -643,6 +645,7 @@ class _IndividualDetailsPageState
                                     ),
                                     onPressed: () {
                                       Navigator.of(context).push(
+                                        // [TODO: Add the route to auto_route]
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               const DigitScannerPage(

@@ -1,20 +1,15 @@
-import 'package:attendance_management/blocs/app_localization.dart'
-    as attendance_localization;
+import 'blocs/facility/facility.dart';
+import 'blocs/product_variant/product_variant.dart';
 import 'package:digit_components/digit_components.dart';
-import 'package:digit_scanner/blocs/app_localization.dart'
-    as scanner_localization;
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
-
 import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
 import 'blocs/boundary/boundary.dart';
-import 'blocs/localization/app_localization.dart';
 import 'blocs/localization/localization.dart';
 import 'blocs/project/project.dart';
 import 'blocs/user/user.dart';
@@ -30,6 +25,7 @@ import 'router/app_router.dart';
 import 'utils/environment_config.dart';
 import 'utils/utils.dart';
 import 'widgets/network_manager_provider_wrapper.dart';
+import 'utils/localization_delegates.dart';
 
 class MainApplication extends StatefulWidget {
   final Dio client;
@@ -38,12 +34,12 @@ class MainApplication extends StatefulWidget {
   final LocalSqlDataStore sql;
 
   const MainApplication({
-    Key? key,
+    super.key,
     required this.isar,
     required this.client,
     required this.appRouter,
     required this.sql,
-  }) : super(key: key);
+  });
 
   @override
   State<StatefulWidget> createState() {
@@ -247,7 +243,34 @@ class MainApplicationState extends State<MainApplication>
                             attendanceLogRemoteRepository: ctx.read<
                                 RemoteRepository<HCMAttendanceLogModel,
                                     HCMAttendanceLogSearchModel>>(),
+                            stockLocalRepository: ctx.read<
+                                LocalRepository<HcmStockModel,
+                                    HcmStockSearchModel>>(),
+                            stockRemoteRepository: ctx.read<
+                                RemoteRepository<HcmStockModel,
+                                    HcmStockSearchModel>>(),
                             context: context,
+                          ),
+                        ),
+                        BlocProvider(
+                          create: (context) => FacilityBloc(
+                            facilityLocalRepository: context.read<
+                                LocalRepository<FacilityModel,
+                                    FacilitySearchModel>>(),
+                            projectFacilityLocalRepository: context.read<
+                                LocalRepository<ProjectFacilityModel,
+                                    ProjectFacilitySearchModel>>(),
+                          ),
+                        ),
+                        BlocProvider(
+                          create: (context) => ProductVariantBloc(
+                            const ProductVariantEmptyState(),
+                            productVariantDataRepository: context.read<
+                                RemoteRepository<ProductVariantModel,
+                                    ProductVariantSearchModel>>(),
+                            projectResourceDataRepository: context.read<
+                                RemoteRepository<ProjectResourceModel,
+                                    ProjectResourceSearchModel>>(),
                           ),
                         ),
                       ],
@@ -290,31 +313,11 @@ class MainApplicationState extends State<MainApplication>
                                         : firstLanguage;
                                   })
                                 : [firstLanguage],
-                            localizationsDelegates: [
-                              AppLocalizations.getDelegate(
-                                appConfig,
-                                widget.isar,
-                              ),
-                              GlobalWidgetsLocalizations.delegate,
-                              GlobalCupertinoLocalizations.delegate,
-                              GlobalMaterialLocalizations.delegate,
-                              attendance_localization.AttendanceLocalization
-                                  .getDelegate(
-                                getLocalizationString(
-                                  widget.isar,
-                                  selectedLocale,
-                                ),
-                                appConfig.languages!,
-                              ),
-                              scanner_localization.ScannerLocalization
-                                  .getDelegate(
-                                getLocalizationString(
-                                  widget.isar,
-                                  selectedLocale,
-                                ),
-                                appConfig.languages!,
-                              )
-                            ],
+                            localizationsDelegates: getAppLocalizationDelegates(
+                              isar: widget.isar,
+                              appConfig: appConfig,
+                              selectedLocale: selectedLocale,
+                            ),
                             locale: languages != null
                                 ? Locale(
                                     selectedLocale!.split("_").first,

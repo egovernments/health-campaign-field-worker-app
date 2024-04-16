@@ -202,7 +202,7 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           ProjectStaffOpLogManager(isar),
         ),
       ),
-      RepositoryProvider<LocalRepository<StockModel, StockSearchModel>>(
+      RepositoryProvider<LocalRepository<HcmStockModel, HcmStockSearchModel>>(
         create: (_) => StockLocalRepository(
           sql,
           StockOpLogManager(isar),
@@ -228,8 +228,8 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         ),
       ),
       RepositoryProvider<
-          LocalRepository<StockReconciliationModel,
-              StockReconciliationSearchModel>>(
+          LocalRepository<HcmStockReconciliationModel,
+              HcmStockReconciliationSearchModel>>(
         create: (_) => StockReconciliationLocalRepository(
           sql,
           StockReconciliationOpLogManager(isar),
@@ -425,7 +425,7 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
             ),
           ),
         if (value == DataModelType.stock)
-          RepositoryProvider<RemoteRepository<StockModel, StockSearchModel>>(
+          RepositoryProvider<RemoteRepository<HcmStockModel, HcmStockSearchModel>>(
             create: (_) => StockRemoteRepository(
               dio,
               actionMap: actions,
@@ -448,8 +448,8 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           ),
         if (value == DataModelType.stockReconciliation)
           RepositoryProvider<
-              RemoteRepository<StockReconciliationModel,
-                  StockReconciliationSearchModel>>(
+              RemoteRepository<HcmStockReconciliationModel,
+                  HcmStockReconciliationSearchModel>>(
             create: (_) => StockReconciliationRemoteRepository(
               dio,
               actionMap: actions,

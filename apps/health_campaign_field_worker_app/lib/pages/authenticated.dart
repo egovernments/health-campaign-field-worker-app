@@ -35,6 +35,7 @@ import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
 import '../widgets/sidebar/side_bar.dart';
 
+@RoutePage()
 class AuthenticatedPageWrapper extends StatelessWidget {
   AuthenticatedPageWrapper({Key? key}) : super(key: key);
 

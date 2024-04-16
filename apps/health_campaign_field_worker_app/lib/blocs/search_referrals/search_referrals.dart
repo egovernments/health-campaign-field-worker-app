@@ -1,6 +1,7 @@
 // GENERATED using mason_cli
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:stream_transform/stream_transform.dart';
@@ -57,8 +58,9 @@ class SearchReferralsBloc
       loading: false,
       tag: event.tag,
     ));
-    print('Referral Satte');
-    print(state);
+    if (kDebugMode) {
+      print(state);
+    }
   }
 
   FutureOr<void> _handleSearchByName(

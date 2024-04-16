@@ -1,4 +1,5 @@
 import 'package:attendance_management/blocs/attendance_listeners.dart';
+import 'package:attendance_management/models/attendance_log.dart';
 import 'package:attendance_management/models/attendance_register.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -11,11 +12,11 @@ import '../sync/sync.dart';
 
 class HCMAttendanceBloc extends AttendanceListeners {
   final LocalRepository<HCMAttendanceRegisterModel, HCMAttendanceSearchModel>?
-      attendanceLocalRepository;
+  attendanceLocalRepository;
   final LocalRepository<IndividualModel, IndividualSearchModel>?
-      individualLocalRepository;
+  individualLocalRepository;
   final LocalRepository<HCMAttendanceLogModel, HCMAttendanceLogSearchModel>?
-      attendanceLogLocalRepository;
+  attendanceLogLocalRepository;
   final String? userId;
   final String? individualId;
   final String? projectId;
@@ -31,27 +32,17 @@ class HCMAttendanceBloc extends AttendanceListeners {
     required this.context,
   });
 
-  late Function(List<AttendanceRegisterModel> registers) _registersLoaded;
-
   @override
-  void getAttendanceRegisters(
-    Function(List<AttendanceRegisterModel> registers) attendanceRegisters,
-  ) {
-    _registersLoaded = attendanceRegisters;
-
-    return onRegistersLoaded();
-  }
-
-  void onRegistersLoaded() async {
+  Future<List<AttendanceRegisterModel>> getAttendanceRegisters() async {
     final registers = await attendanceLocalRepository?.search(
       HCMAttendanceSearchModel(staffId: individualId, referenceId: projectId),
     );
 
     if (registers != null) {
       final List<AttendanceRegisterModel> attendanceRegisters =
-          await Future.wait(registers.map((e) async {
+      await Future.wait(registers.map((e) async {
         final registerCompletedLogs =
-            await attendanceLogLocalRepository?.search(
+        await attendanceLogLocalRepository?.search(
           HCMAttendanceLogSearchModel(
             registerId: e.attendanceRegister.id,
             uploadToServer: true,
@@ -66,39 +57,39 @@ class HCMAttendanceBloc extends AttendanceListeners {
         );
 
         var completedDaysCount =
-            e.attendanceRegister.additionalDetails?["sessions"] == 2
-                ? list.length ~/ 2 //for registers with 2 sessions
-                : list.length; ////for registers with single session
+        e.attendanceRegister.additionalDetails?["sessions"] == 2
+            ? list.length ~/ 2 //for registers with 2 sessions
+            : list.length; ////for registers with single session
 
         final individualList = await individualLocalRepository?.search(
           IndividualSearchModel(
             id: e.attendanceRegister.attendees
                 ?.where((att) => (att.denrollmentDate == null ||
-                    (att.denrollmentDate ??
-                            DateTime.now().millisecondsSinceEpoch) >=
-                        DateTime.now().millisecondsSinceEpoch))
+                (att.denrollmentDate ??
+                    DateTime.now().millisecondsSinceEpoch) >=
+                    DateTime.now().millisecondsSinceEpoch))
                 .map((a) => a.individualId!)
                 .toList(),
           ),
         );
         final attendeeList = e.attendanceRegister.attendees
             ?.where((att) => (att.denrollmentDate == null ||
-                (att.denrollmentDate ??
-                        DateTime.now().millisecondsSinceEpoch) >=
-                    DateTime.now().millisecondsSinceEpoch))
+            (att.denrollmentDate ??
+                DateTime.now().millisecondsSinceEpoch) >=
+                DateTime.now().millisecondsSinceEpoch))
             .map(
               (a) => a.copyWith(
-                name: individualList
-                    ?.where((i) => i.id == a.individualId)
-                    .first
-                    .name
-                    ?.givenName,
-                individualNumber: individualList
-                    ?.where((i) => i.id == a.individualId)
-                    .first
-                    .individualId,
-              ),
-            )
+            name: individualList
+                ?.where((i) => i.id == a.individualId)
+                .first
+                .name
+                ?.givenName,
+            individualNumber: individualList
+                ?.where((i) => i.id == a.individualId)
+                .first
+                .individualId,
+          ),
+        )
             .toList();
 
         return e.attendanceRegister.copyWith(
@@ -108,83 +99,83 @@ class HCMAttendanceBloc extends AttendanceListeners {
         );
       }));
 
-      _registersLoaded(
-        attendanceRegisters,
-      );
+      return attendanceRegisters;
     } else {
-      _registersLoaded(
-        [],
-      );
+      return [];
     }
   }
 
   @override
-  void searchAttendanceLog(
-    SearchAttendanceLog searchAttendanceLog,
-  ) async {
+  Future<List<AttendanceLogModel>> searchAttendanceLog(
+      {required String registerId,
+        required String tenantId,
+        required int entryTime,
+        required int exitTime,
+        required int currentDate}) async {
     final attendanceLogs = await attendanceLogLocalRepository?.search(
       HCMAttendanceLogSearchModel(
-        registerId: searchAttendanceLog.registerId,
+        registerId: registerId,
       ),
     );
     final filteredLogs = attendanceLogs
         ?.where((log) {
-          final logTime =
-              DateTime.fromMillisecondsSinceEpoch(log.attendance!.time!);
-          final logDay = DateTime(logTime.year, logTime.month, logTime.day)
+      final logTime =
+      DateTime.fromMillisecondsSinceEpoch(log.attendance!.time!);
+      final logDay = DateTime(logTime.year, logTime.month, logTime.day)
+          .millisecondsSinceEpoch;
+      final currentTime = DateTime.fromMillisecondsSinceEpoch(
+        currentDate!,
+      );
+      final currentDay =
+          DateTime(currentTime.year, currentTime.month, currentTime.day)
               .millisecondsSinceEpoch;
-          final currentTime = DateTime.fromMillisecondsSinceEpoch(
-            searchAttendanceLog.currentDate,
-          );
-          final currentDay =
-              DateTime(currentTime.year, currentTime.month, currentTime.day)
-                  .millisecondsSinceEpoch;
 
-          return logDay == currentDay;
-        })
+      return logDay == currentDay;
+    })
         .map((a) => AttendanceLogModel(
-              registerId: a.attendance?.registerId,
-              tenantId: a.attendance?.tenantId,
-              status: a.attendance?.status,
-              time: a.attendance?.time,
-              individualId: a.attendance?.individualId,
-              id: a.attendance?.id,
-              type: a.attendance?.type,
-              uploadToServer: a.attendance?.uploadToServer,
-            ))
+      registerId: a.attendance?.registerId,
+      tenantId: a.attendance?.tenantId,
+      status: a.attendance?.status,
+      time: a.attendance?.time,
+      individualId: a.attendance?.individualId,
+      id: a.attendance?.id,
+      type: a.attendance?.type,
+      uploadToServer: a.attendance?.uploadToServer,
+    ))
         .toList();
-    searchAttendanceLog.onLogLoaded(filteredLogs ?? []);
+
+    return filteredLogs ?? [];
   }
 
   @override
   Future<void> submitAttendanceDetails(
-    SubmitAttendanceDetails attendanceLogs,
-  ) async {
+      SubmitAttendanceDetails attendanceLogs,
+      ) async {
     final existingLogs = await attendanceLogLocalRepository?.search(
       HCMAttendanceLogSearchModel(
         registerId: attendanceLogs.attendanceLogs.first.registerId,
       ),
     );
     final hcmAttendanceLogs = attendanceLogs.attendanceLogs.map(
-      (e) {
+          (e) {
         final existingLog = existingLogs?.where(
-          (ele) {
+              (ele) {
             return attendanceLogs.isSingleSession == true
                 ? ele.attendance?.individualId == e.individualId &&
-                    ele.attendance?.registerId == e.registerId &&
-                    ((ele.attendance?.type == 'ENTRY' &&
-                            e.type == 'ENTRY' &&
-                            ele.attendance?.time == e.time) ||
-                        (ele.attendance?.type == 'EXIT' &&
-                            e.type == 'EXIT' &&
-                            ele.attendance?.time == e.time))
+                ele.attendance?.registerId == e.registerId &&
+                ((ele.attendance?.type == 'ENTRY' &&
+                    e.type == 'ENTRY' &&
+                    ele.attendance?.time == e.time) ||
+                    (ele.attendance?.type == 'EXIT' &&
+                        e.type == 'EXIT' &&
+                        ele.attendance?.time == e.time))
                 : ele.attendance?.individualId == e.individualId &&
-                        ele.attendance?.registerId == e.registerId &&
-                        ele.attendance?.time == e.time &&
-                        ele.attendance?.type == e.type &&
-                        ele.attendance?.clientReferenceId != null
-                    ? true
-                    : false;
+                ele.attendance?.registerId == e.registerId &&
+                ele.attendance?.time == e.time &&
+                ele.attendance?.type == e.type &&
+                ele.attendance?.clientReferenceId != null
+                ? true
+                : false;
           },
         ).toList();
 
@@ -211,17 +202,17 @@ class HCMAttendanceBloc extends AttendanceListeners {
       },
     ).toList();
     final groupedIndividuals =
-        hcmAttendanceLogs.groupListsBy((ele) => ele.attendance?.individualId);
+    hcmAttendanceLogs.groupListsBy((ele) => ele.attendance?.individualId);
 
     for (final log in groupedIndividuals.entries) {
       await attendanceLogLocalRepository?.create(
         log.value.where((l) => l.attendance?.type == 'ENTRY').last,
         createOpLog: (attendanceLogs.createOplog ?? false) &&
             (log.value
-                    .where((l) => l.attendance?.type == 'ENTRY')
-                    .last
-                    .attendance
-                    ?.time !=
+                .where((l) => l.attendance?.type == 'ENTRY')
+                .last
+                .attendance
+                ?.time !=
                 log.value
                     .where((l) => l.attendance?.type == 'EXIT')
                     .last
@@ -232,10 +223,10 @@ class HCMAttendanceBloc extends AttendanceListeners {
         log.value.where((l) => l.attendance?.type == 'EXIT').last,
         createOpLog: (attendanceLogs.createOplog ?? false) &&
             (log.value
-                    .where((l) => l.attendance?.type == 'ENTRY')
-                    .last
-                    .attendance
-                    ?.time !=
+                .where((l) => l.attendance?.type == 'ENTRY')
+                .last
+                .attendance
+                ?.time !=
                 log.value
                     .where((l) => l.attendance?.type == 'EXIT')
                     .last
@@ -251,11 +242,11 @@ class HCMAttendanceBloc extends AttendanceListeners {
   }
 
   List<Map<DateTime, bool>> generateDateList(
-    int startMillis,
-    int endMillis,
-    List<HCMAttendanceLogModel> completedLogs,
-    bool isSingleSession,
-  ) {
+      int startMillis,
+      int endMillis,
+      List<HCMAttendanceLogModel> completedLogs,
+      bool isSingleSession,
+      ) {
     List<Map<DateTime, bool>> dateList = [];
 
     // Convert milliseconds to DateTime objects
@@ -287,8 +278,8 @@ class HCMAttendanceBloc extends AttendanceListeners {
     );
     // Iterate over each date and add to the list with value set to true
     for (DateTime date = startDate;
-        date.isBefore(endDateStartTime);
-        date = date.add(const Duration(days: 1))) {
+    date.isBefore(endDateStartTime);
+    date = date.add(const Duration(days: 1))) {
       bool hasMorningLog = hasLogWithType(completedLogs, date, "ENTRY");
       bool hasEveningLog = hasLogWithType(completedLogs, date, "EXIT");
       dateList.add({
@@ -300,29 +291,29 @@ class HCMAttendanceBloc extends AttendanceListeners {
   }
 
   bool hasLogWithType(
-    List<HCMAttendanceLogModel> logs,
-    DateTime date,
-    String type,
-  ) {
+      List<HCMAttendanceLogModel> logs,
+      DateTime date,
+      String type,
+      ) {
     final elementTime =
-        DateTime.fromMillisecondsSinceEpoch(date.millisecondsSinceEpoch);
+    DateTime.fromMillisecondsSinceEpoch(date.millisecondsSinceEpoch);
 
     final logTime = type == 'ENTRY'
         ? DateTime(
-            elementTime.year,
-            elementTime.month,
-            elementTime.day,
-            9,
-          ).millisecondsSinceEpoch
+      elementTime.year,
+      elementTime.month,
+      elementTime.day,
+      9,
+    ).millisecondsSinceEpoch
         : DateTime(
-            elementTime.year,
-            elementTime.month,
-            elementTime.day,
-            18,
-          ).millisecondsSinceEpoch;
+      elementTime.year,
+      elementTime.month,
+      elementTime.day,
+      18,
+    ).millisecondsSinceEpoch;
 
     return logs.any((element) =>
-        element.attendance?.time == logTime &&
+    element.attendance?.time == logTime &&
         element.attendance?.type == type);
   }
 }
