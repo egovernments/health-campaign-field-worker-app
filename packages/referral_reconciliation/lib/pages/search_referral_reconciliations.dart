@@ -5,10 +5,13 @@ import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:referral_reconciliation/blocs/referral_reconciliation_listeners.dart';
 
 import '../blocs/referral_recon_service.dart';
 import '../blocs/search_referral_reconciliations.dart';
+import '../models/entities/h_f_referral.dart';
 import '../models/entities/referral_recon_service.dart';
+import '../router/referral_reconciliation_router.gm.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/localizaed.dart';
@@ -16,9 +19,30 @@ import '../widgets/view_referral_card.dart';
 
 @RoutePage()
 class SearchReferralReconciliationsPage extends LocalizedStatefulWidget {
+  final ReferralReconListener referralReconListener;
+  final List<String> cycles;
+  final String projectId;
+  final String boundaryName;
+  final String userName;
+  final String appVersion;
+  final ValidIndividualAgeForCampaign validIndividualAgeForCampaign;
+  final List<String> genders;
+  final List<String> referralReasons;
+  final String tenantId;
+
   const SearchReferralReconciliationsPage({
     super.key,
     super.appLocalizations,
+    required this.referralReconListener,
+    required this.projectId,
+    required this.cycles,
+    required this.validIndividualAgeForCampaign,
+    required this.referralReasons,
+    required this.appVersion,
+    required this.userName,
+    required this.boundaryName,
+    required this.genders,
+    required this.tenantId,
   });
 
   @override
@@ -33,6 +57,16 @@ class _SearchReferralReconciliationsPageState
 
   @override
   void initState() {
+    ReferralReconSingleton().setInitialData(
+        referralReconListener: widget.referralReconListener,
+        userName: widget.userName,
+        boundaryName: widget.boundaryName,
+        projectId: widget.projectId,
+        appVersion: widget.appVersion,
+        tenantId: widget.tenantId,
+        validIndividualAgeForCampaign: widget.validIndividualAgeForCampaign,
+        genderOptions: widget.genders,
+        referralReasons: widget.referralReasons);
     context.read<DigitScannerBloc>().add(
           const DigitScannerEvent.handleScanner(),
         );
@@ -144,12 +178,15 @@ class _SearchReferralReconciliationsPageState
                                           ),
                                         ),
                                       );
-                                  // context.router.push(
-                                  //   HFCreateReferralWrapperRoute(
-                                  //     viewOnly: true,
-                                  //     hfReferralModel: i,
-                                  //   ),
-                                  // );
+                                  context.router.push(
+                                    HFCreateReferralWrapperRoute(
+                                      viewOnly: true,
+                                      hfReferralModel: i.hfReferralModel,
+                                      projectId:
+                                          ReferralReconSingleton().projectId,
+                                      cycles: widget.cycles,
+                                    ),
+                                  );
                                 },
                               ),
                             );
@@ -173,7 +210,7 @@ class _SearchReferralReconciliationsPageState
                       children: [
                         BlocBuilder<SearchReferralsBloc, SearchReferralsState>(
                           builder: (context, state) {
-                            // final router = context.router;
+                            final router = context.router;
 
                             VoidCallback? onPressed;
 
@@ -186,16 +223,19 @@ class _SearchReferralReconciliationsPageState
                                         ?.unfocus();
                                     final bloc =
                                         context.read<SearchReferralsBloc>();
-                                    // router.push(
-                                    //   HFCreateReferralWrapperRoute(
-                                    //     viewOnly: false,
-                                    //     hfReferralModel: HFReferralModel(
-                                    //       clientReferenceId: '',
-                                    //       name: state.searchQuery,
-                                    //       beneficiaryId: state.tag,
-                                    //     ),
-                                    //   ),
-                                    // );
+                                    router.push(
+                                      HFCreateReferralWrapperRoute(
+                                        viewOnly: false,
+                                        hfReferralModel: HFReferralModel(
+                                          clientReferenceId: '',
+                                          name: state.searchQuery,
+                                          beneficiaryId: state.tag,
+                                        ),
+                                        projectId:
+                                            ReferralReconSingleton().projectId,
+                                        cycles: widget.cycles,
+                                      ),
+                                    );
                                     searchController.clear();
                                     bloc.add(
                                       const SearchReferralsClearEvent(),

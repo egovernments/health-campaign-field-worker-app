@@ -12,11 +12,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:inventory_management/models/entities/inventory_transport_type.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
+import 'package:referral_reconciliation/blocs/referral_reconciliation_listeners.dart';
+import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/attendance/hcm_attendance_bloc.dart';
 import '../blocs/auth/auth.dart';
 import '../blocs/inventory/hcm_inventory_bloc.dart';
+import '../blocs/referral_reconciliation/hcm_referral_reconciliation_bloc.dart';
 import '../blocs/search_households/search_bloc_common_wrapper.dart';
 import '../blocs/search_households/search_households.dart';
 import '../blocs/sync/sync.dart';
@@ -27,6 +30,7 @@ import '../data/local_store/sql_store/sql_store.dart';
 import '../models/data_model.dart';
 import '../router/app_router.dart';
 import '../utils/debound.dart';
+import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
 import '../widgets/header/back_navigation_help_header.dart';
@@ -466,45 +470,47 @@ class _HomePageState extends LocalizedState<HomePage> {
             context.read<AppInitializationBloc>().state.maybeWhen(
                   orElse: () {},
                   initialized: (AppConfiguration appConfiguration, _) {
-                    context.router.push(ManageStocksRoute(
-                      isWareHouseMgr: context.loggedInUserRoles
-                          .where((role) =>
-                              role.code == RolesType.warehouseManager.toValue())
-                          .toList()
-                          .isNotEmpty,
-                      isDistributor: context.loggedInUserRoles
-                          .where(
-                            (role) =>
-                                role.code == RolesType.distributor.toValue(),
-                          )
-                          .toList()
-                          .isNotEmpty,
-                      boundaryName: context.boundary.name!,
-                      inventoryListener: HcmInventoryBloc(
-                        context: context,
-                        userId: context.loggedInUserUuid,
-                        individualId: context.loggedInIndividualId,
-                        projectId: context.projectId,
-                        stockLocalRepository: context.read<
-                            LocalRepository<HcmStockModel,
-                                HcmStockSearchModel>>(),
-                        stockReconLocalRepository: context.read<
-                            LocalRepository<HcmStockReconciliationModel,
-                                HcmStockReconciliationSearchModel>>(),
-                      ),
+                    context.router.push(SearchReferralReconciliationsRoute(
                       projectId: context.projectId,
-                      userId: context.loggedInUserUuid,
-                      transportType: appConfiguration.transportTypes
-                          ?.map((e) => InventoryTransportTypes()
-                            ..name = e.name
-                            ..code = e.code)
-                          .toList(),
+                      cycles: context.cycles,
+                      referralReconListener: HcmReferralReconBloc(
+                        context: context,
+                        userName: context.loggedInUser.name ?? '',
+                        userId: context.loggedInUserUuid,
+                        tenantId: envConfig.variables.tenantId,
+                        selectedProject: context.selectedProject,
+                        hfReferralLocalRepository: context.read<
+                            LocalRepository<HcmHFReferralModel,
+                                HcmHFReferralSearchModel>>(),
+                        serviceDefinitionLocalRepository: context.read<
+                            LocalRepository<ServiceDefinitionModel,
+                                ServiceDefinitionSearchModel>>(),
+                        serviceLocalRepository: context.read<
+                            LocalRepository<ServiceModel,
+                                ServiceSearchModel>>(),
+                      ),
+                      validIndividualAgeForCampaign:
+                          ValidIndividualAgeForCampaign(
+                        validMinAge:
+                            context.selectedProjectType?.validMinAge ?? 0,
+                        validMaxAge:
+                            context.selectedProjectType?.validMaxAge ?? 64,
+                      ),
+                      referralReasons: appConfiguration.referralReasons
+                              ?.map((r) => r.code)
+                              .toList() ??
+                          [],
+                      appVersion: Constants().version,
+                      userName: context.loggedInUser.name ?? '',
+                      boundaryName: context.boundary.code ?? '',
+                      genders: appConfiguration.genderOptions
+                              ?.map((g) => g.code)
+                              .toList() ??
+                          [],
+                      tenantId: envConfig.variables.tenantId,
                     ));
                   },
                 );
-            // final searchBloc = context.read<SearchReferralsBloc>();
-            // searchBloc.add(const SearchReferralsClearEvent());
-            // await context.router.push(SearchReferralsRoute());
           },
         ),
       ),

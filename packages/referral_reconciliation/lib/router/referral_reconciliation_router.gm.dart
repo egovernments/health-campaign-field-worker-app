@@ -11,6 +11,8 @@
 import 'package:auto_route/auto_route.dart' as _i9;
 import 'package:flutter/material.dart' as _i10;
 import 'package:referral_reconciliation/blocs/app_localization.dart' as _i12;
+import 'package:referral_reconciliation/blocs/referral_reconciliation_listeners.dart'
+    as _i14;
 import 'package:referral_reconciliation/models/entities/h_f_referral.dart'
     as _i11;
 import 'package:referral_reconciliation/models/entities/referral_project_facility.dart'
@@ -122,13 +124,22 @@ abstract class $ReferralReconciliationRoute extends _i9.AutoRouterModule {
       );
     },
     SearchReferralReconciliationsRoute.name: (routeData) {
-      final args = routeData.argsAs<SearchReferralReconciliationsRouteArgs>(
-          orElse: () => const SearchReferralReconciliationsRouteArgs());
+      final args = routeData.argsAs<SearchReferralReconciliationsRouteArgs>();
       return _i9.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: _i8.SearchReferralReconciliationsPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
+          referralReconListener: args.referralReconListener,
+          projectId: args.projectId,
+          cycles: args.cycles,
+          validIndividualAgeForCampaign: args.validIndividualAgeForCampaign,
+          referralReasons: args.referralReasons,
+          appVersion: args.appVersion,
+          userName: args.userName,
+          boundaryName: args.boundaryName,
+          genders: args.genders,
+          tenantId: args.tenantId,
         ),
       );
     },
@@ -475,12 +486,32 @@ class SearchReferralReconciliationsRoute
   SearchReferralReconciliationsRoute({
     _i10.Key? key,
     _i12.ReferralReconLocalization? appLocalizations,
+    required _i14.ReferralReconListener referralReconListener,
+    required String projectId,
+    required List<String> cycles,
+    required _i14.ValidIndividualAgeForCampaign validIndividualAgeForCampaign,
+    required List<String> referralReasons,
+    required String appVersion,
+    required String userName,
+    required String boundaryName,
+    required List<String> genders,
+    required String tenantId,
     List<_i9.PageRouteInfo>? children,
   }) : super(
           SearchReferralReconciliationsRoute.name,
           args: SearchReferralReconciliationsRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
+            referralReconListener: referralReconListener,
+            projectId: projectId,
+            cycles: cycles,
+            validIndividualAgeForCampaign: validIndividualAgeForCampaign,
+            referralReasons: referralReasons,
+            appVersion: appVersion,
+            userName: userName,
+            boundaryName: boundaryName,
+            genders: genders,
+            tenantId: tenantId,
           ),
           initialChildren: children,
         );
@@ -495,14 +526,44 @@ class SearchReferralReconciliationsRouteArgs {
   const SearchReferralReconciliationsRouteArgs({
     this.key,
     this.appLocalizations,
+    required this.referralReconListener,
+    required this.projectId,
+    required this.cycles,
+    required this.validIndividualAgeForCampaign,
+    required this.referralReasons,
+    required this.appVersion,
+    required this.userName,
+    required this.boundaryName,
+    required this.genders,
+    required this.tenantId,
   });
 
   final _i10.Key? key;
 
   final _i12.ReferralReconLocalization? appLocalizations;
 
+  final _i14.ReferralReconListener referralReconListener;
+
+  final String projectId;
+
+  final List<String> cycles;
+
+  final _i14.ValidIndividualAgeForCampaign validIndividualAgeForCampaign;
+
+  final List<String> referralReasons;
+
+  final String appVersion;
+
+  final String userName;
+
+  final String boundaryName;
+
+  final List<String> genders;
+
+  final String tenantId;
+
   @override
   String toString() {
-    return 'SearchReferralReconciliationsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+    return 'SearchReferralReconciliationsRouteArgs{key: $key, appLocalizations: $appLocalizations, referralReconListener: $referralReconListener, projectId: $projectId, cycles: $cycles, validIndividualAgeForCampaign: $validIndividualAgeForCampaign, referralReasons: $referralReasons, appVersion: $appVersion, userName: $userName, boundaryName: $boundaryName, genders: $genders, tenantId: $tenantId}';
   }
 }
