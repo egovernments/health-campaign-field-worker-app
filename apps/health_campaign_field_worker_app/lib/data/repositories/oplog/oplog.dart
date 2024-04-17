@@ -596,30 +596,34 @@ class ReferralOpLogManager extends OpLogManager<ReferralModel> {
       entity.nonRecoverableError;
 }
 
-class HFReferralOpLogManager extends OpLogManager<HFReferralModel> {
+class HFReferralOpLogManager extends OpLogManager<HcmHFReferralModel> {
   HFReferralOpLogManager(super.isar);
 
   @override
-  HFReferralModel applyServerGeneratedIdToEntity(
-    HFReferralModel entity,
+  HcmHFReferralModel applyServerGeneratedIdToEntity(
+    HcmHFReferralModel entity,
     String serverGeneratedId,
     int rowVersion,
   ) =>
-      entity.copyWith(id: serverGeneratedId, rowVersion: rowVersion);
+      entity.copyWith(
+          hFReferral: entity.hFReferral
+              ?.copyWith(id: serverGeneratedId, rowVersion: rowVersion));
 
   @override
-  String getClientReferenceId(HFReferralModel entity) =>
-      entity.clientReferenceId;
+  String getClientReferenceId(HcmHFReferralModel entity) =>
+      entity.hFReferral!.clientReferenceId;
 
   @override
-  String? getServerGeneratedId(HFReferralModel entity) => entity.id;
+  String? getServerGeneratedId(HcmHFReferralModel entity) =>
+      entity.hFReferral?.id;
 
   @override
-  int? getRowVersion(HFReferralModel entity) => entity.rowVersion;
+  int? getRowVersion(HcmHFReferralModel entity) =>
+      entity.hFReferral?.rowVersion;
 
   @override
-  bool? getNonRecoverableError(HFReferralModel entity) =>
-      entity.nonRecoverableError;
+  bool? getNonRecoverableError(HcmHFReferralModel entity) =>
+      entity.hFReferral?.nonRecoverableError;
 }
 
 class AttendanceOpLogManager extends OpLogManager<HCMAttendanceRegisterModel> {

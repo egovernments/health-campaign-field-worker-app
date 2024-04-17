@@ -4,7 +4,9 @@
 library models;
 
 import 'package:dart_mappable/dart_mappable.dart';
+
 import 'data_model.dart';
+
 export 'entities/additional_fields_type.dart';
 export 'entities/address.dart';
 export 'entities/address_type.dart';
@@ -17,9 +19,11 @@ export 'entities/document.dart';
 export 'entities/downsync.dart';
 export 'entities/facility.dart';
 export 'entities/gender.dart';
-export 'entities/h_f_referral.dart';
 export 'entities/hcm_attendance_log_model.dart';
 export 'entities/hcm_attendance_model.dart';
+export 'entities/hcm_hf_referral.dart';
+export 'entities/hcm_stock.dart';
+export 'entities/hcm_stock_recon.dart';
 export 'entities/household.dart';
 export 'entities/household_member.dart';
 export 'entities/identifier.dart';
@@ -43,8 +47,6 @@ export 'entities/service_attributes.dart';
 export 'entities/service_definition.dart';
 export 'entities/side_effect.dart';
 export 'entities/status.dart';
-export 'entities/hcm_stock.dart';
-export 'entities/hcm_stock_recon.dart';
 export 'entities/target.dart';
 export 'entities/task.dart';
 export 'entities/task_resource.dart';
@@ -72,6 +74,7 @@ abstract class DataModel {
   IndividualModel,
   NameModel,
   HCMAttendanceLogModel,
+  HcmHFReferralModel,
   HCMAttendanceRegisterModel,
   HcmStockModel,
   HcmStockReconciliationModel,
@@ -88,7 +91,7 @@ abstract class EntityModel extends DataModel with EntityModelMappable {
 
 @MappableClass(ignoreNull: true, includeSubClasses: [
   AddressSearchModel,
-  HFReferralSearchModel,
+  HcmHFReferralSearchModel,
   HCMAttendanceLogSearchModel,
   HCMAttendanceSearchModel,
   HcmStockSearchModel,

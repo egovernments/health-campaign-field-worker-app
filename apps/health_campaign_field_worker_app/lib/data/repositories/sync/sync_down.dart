@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:inventory_management/models/entities/stock.dart';
 import 'package:inventory_management/models/entities/stock_reconciliation.dart';
+import 'package:referral_reconciliation/models/entities/h_f_referral.dart';
 
-import './remote_type.dart';
 import '../../../models/bandwidth/bandwidth_model.dart';
 import '../../../models/data_model.dart';
 import '../../../utils/environment_config.dart';
@@ -12,6 +12,7 @@ import '../../data_repository.dart';
 import '../../network_manager.dart';
 import '../oplog/oplog.dart';
 import '../remote/pgr_service.dart';
+import './remote_type.dart';
 
 class PerformSyncDown {
   static FutureOr<void> syncDown({
@@ -457,45 +458,51 @@ class PerformSyncDown {
 
             break;
           case DataModelType.hFReferral:
-            responseEntities = await remote.search(HFReferralSearchModel(
-              clientReferenceId: entities
-                  .whereType<HFReferralModel>()
-                  .map((e) => e.clientReferenceId)
-                  .whereNotNull()
-                  .toList(),
-              isDeleted: true,
-            ));
+            responseEntities = await remote.search(
+              HcmHFReferralSearchModel(
+                hFReferral: HFReferralSearchModel(
+                  clientReferenceId: entities
+                      .whereType<HcmHFReferralModel>()
+                      .map((e) => e.hFReferral?.clientReferenceId)
+                      .whereNotNull()
+                      .toList(),
+                ),
+              ),
+            );
 
             for (var element in operationGroupedEntity.value) {
               if (element.id == null) return;
-              final entity = element.entity as HFReferralModel;
+              final entity = element.entity as HcmHFReferralModel;
               final responseEntity = responseEntities
-                  .whereType<HFReferralModel>()
+                  .whereType<HcmHFReferralModel>()
                   .firstWhereOrNull(
-                    (e) => e.clientReferenceId == entity.clientReferenceId,
+                    (e) =>
+                        e.hFReferral?.clientReferenceId ==
+                        entity.hFReferral?.clientReferenceId,
                   );
 
-              final serverGeneratedId = responseEntity?.id;
-              final rowVersion = responseEntity?.rowVersion;
+              final serverGeneratedId = responseEntity?.hFReferral?.id;
+              final rowVersion = responseEntity?.hFReferral?.rowVersion;
               if (serverGeneratedId != null) {
                 await local.opLogManager.updateServerGeneratedIds(
                   model: UpdateServerGeneratedIdModel(
-                    clientReferenceId: entity.clientReferenceId,
+                    clientReferenceId: entity.hFReferral!.clientReferenceId,
                     serverGeneratedId: serverGeneratedId,
-                    nonRecoverableError: entity.nonRecoverableError,
+                    nonRecoverableError: entity.hFReferral?.nonRecoverableError,
                     dataOperation: element.operation,
                     rowVersion: rowVersion,
                   ),
                 );
               } else {
                 final bool markAsNonRecoverable = await local.opLogManager
-                    .updateSyncDownRetry(entity.clientReferenceId);
+                    .updateSyncDownRetry(entity.hFReferral!.clientReferenceId);
 
                 if (markAsNonRecoverable) {
                   await local.update(
                     entity.copyWith(
+                        hFReferral: entity.hFReferral?.copyWith(
                       nonRecoverableError: true,
-                    ),
+                    )),
                     createOpLog: false,
                   );
                 }
