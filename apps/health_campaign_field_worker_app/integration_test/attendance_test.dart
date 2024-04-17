@@ -21,7 +21,8 @@ void main() {
     testWidgets('Open register', (tester) async {
       app.main();
       await tester.pumpAndSettle(
-          const Duration(seconds: 2)); //wait for the app to load registers
+        const Duration(seconds: 2),
+      ); //wait for the app to load registers
       await tester.tap(find.byKey(const Key('registerCard')));
       await tester.pumpAndSettle(
           const Duration(seconds: 2)); //wait for the app to go to the next page
