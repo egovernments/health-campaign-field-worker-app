@@ -638,6 +638,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
       return Padding(
         padding: const EdgeInsets.all(8.0),
         child: DigitTextField(
+          maxLength: 1000,
           onChange: (value) {
             checklistFormKey.currentState?.validate();
           },

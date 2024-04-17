@@ -722,6 +722,7 @@ class _RecordReferralDetailsPageState
                                         inputFormatters: [
                                           FilteringTextInputFormatter
                                               .digitsOnly,
+                                          LengthLimitingTextInputFormatter(4)
                                         ],
                                         isRequired: true,
                                         validationMessages: {
