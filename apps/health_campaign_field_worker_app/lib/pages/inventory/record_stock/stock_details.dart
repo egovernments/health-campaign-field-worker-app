@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recase/recase.dart';
@@ -729,10 +730,12 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                   DigitTextFormField(
                                     formControlName: _transactionQuantityKey,
                                     keyboardType:
-                                        const TextInputType.numberWithOptions(
-                                      decimal: true,
-                                    ),
+                                        const TextInputType.numberWithOptions(),
                                     isRequired: true,
+                                    inputFormatters: [
+                                      LengthLimitingTextInputFormatter(4),
+                                      FilteringTextInputFormatter.digitsOnly
+                                    ],
                                     validationMessages: {
                                       "number": (object) =>
                                           localizations.translate(
