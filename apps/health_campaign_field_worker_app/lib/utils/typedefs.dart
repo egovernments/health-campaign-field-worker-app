@@ -29,9 +29,6 @@ typedef ProjectStaffDataRepository
     = DataRepository<ProjectStaffModel, ProjectStaffSearchModel>;
 typedef ProjectTypeDataRepository
     = DataRepository<ProjectTypeModel, ProjectTypeSearchModel>;
-typedef StockDataRepository = DataRepository<HcmStockModel, HcmStockSearchModel>;
-typedef StockReconciliationDataRepository
-    = DataRepository<HcmStockReconciliationModel, HcmStockReconciliationSearchModel>;
 typedef TaskDataRepository = DataRepository<TaskModel, TaskSearchModel>;
 typedef ServiceDefinitionDataRepository
     = DataRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>;
@@ -49,7 +46,13 @@ typedef DownsyncDataRepository
     = DataRepository<DownsyncModel, DownsyncSearchModel>;
 typedef HFReferralDataRepository
     = DataRepository<HFReferralModel, HFReferralSearchModel>;
+
 typedef AttendanceDataRepository
     = DataRepository<HCMAttendanceRegisterModel, HCMAttendanceSearchModel>;
-    typedef AttendanceLogDataRepository
+typedef AttendanceLogDataRepository
     = DataRepository<HCMAttendanceLogModel, HCMAttendanceLogSearchModel>;
+
+typedef StockDataRepository
+    = DataRepository<HcmStockModel, HcmStockSearchModel>;
+typedef StockReconciliationDataRepository = DataRepository<
+    HcmStockReconciliationModel, HcmStockReconciliationSearchModel>;

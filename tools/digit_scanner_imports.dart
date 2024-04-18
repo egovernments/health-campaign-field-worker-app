@@ -8,6 +8,16 @@ void main() {
   var localizationDelegatesFilePath =
       '$appRoot/utils/localization_delegates.dart';
 
+  _createLocalizationDelegatesFile(localizationDelegatesFilePath);
+
+  // Run dart format on the localization_delegates.dart file
+  Process.run('dart', ['format', localizationDelegatesFilePath])
+      .then((ProcessResult results) {
+    print(results.stdout);
+  });
+}
+
+void _createLocalizationDelegatesFile(String localizationDelegatesFilePath) {
   // Define the import statement and delegate
   var importStatement =
       "import 'package:digit_scanner/blocs/app_localization.dart'\n    as scanner_localization;";
@@ -34,10 +44,4 @@ void main() {
 
   // Write the updated content back to the file
   localizationDelegatesFile.writeAsStringSync(localizationDelegatesFileContent);
-
-  // Run dart format on the localization_delegates.dart file
-  Process.run('dart', ['format', localizationDelegatesFilePath])
-      .then((ProcessResult results) {
-    print(results.stdout);
-  });
 }
