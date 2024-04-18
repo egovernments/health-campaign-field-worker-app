@@ -4,6 +4,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:inventory_management/router/inventory_router.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
+import 'package:referral_reconciliation/router/referral_reconciliation_router.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 
 import '../blocs/beneficiary_registration/beneficiary_registration.dart';
@@ -65,6 +66,7 @@ part 'app_router.gr.dart';
   modules: [
     InventoryRoute,
     AttendanceRoute,
+    ReferralReconciliationRoute,
   ],
 )
 class AppRouter extends _$AppRouter {
