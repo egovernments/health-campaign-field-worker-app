@@ -132,7 +132,7 @@ void _addRepoToNetworkManagerProviderWrapper(
     "RepositoryProvider<\n          LocalRepository<HcmStockReconciliationModel, HcmStockReconciliationSearchModel>>(\n        create: (_) => StockReconciliationLocalRepository(\n          sql,\n          StockReconciliationOpLogManager(isar),\n        ),\n      ),",
   ];
 
-  // Define the remote repositories of attendance
+  // Define the remote repositories of inventory
   var remoteRepositoriesOfInventory = [
     "if (value == DataModelType.stock)\n"
         "  RepositoryProvider<\n"
@@ -184,7 +184,7 @@ void _addRepoToNetworkManagerProviderWrapper(
     }
   }
 
-  // Normalize the whitespace in the file content and the remote repository of attendance
+  // Normalize the whitespace in the file content and the remote repository of inventory
   var normalizedFileContent =
       networkManagerProviderWrapperFileContent.replaceAll(RegExp(r'\s'), '');
 
@@ -204,14 +204,14 @@ void _addRepoToNetworkManagerProviderWrapper(
     }
   }
 
-  // Check if the remote repositories of attendance already exist in the file
+  // Check if the remote repositories of inventory already exist in the file
   for (var remoteRepositoryOfInventory in remoteRepositoriesOfInventory) {
     var normalizedRemoteRepositoryOfInventory =
         remoteRepositoryOfInventory.replaceAll(RegExp(r'\s'), '');
 
     if (!normalizedFileContent
         .contains(normalizedRemoteRepositoryOfInventory)) {
-      // Add the remote repository of attendance to the _getRemoteRepositories method
+      // Add the remote repository of inventory to the _getRemoteRepositories method
       var replacementString =
           networkManagerProviderWrapperFileContent.contains(']);')
               ? '  $remoteRepositoryOfInventory,\n]);'
@@ -298,7 +298,7 @@ class HcmInventoryBloc extends InventoryListener {
 }
 
 void _createLocalizationDelegatesFile(String localizationDelegatesFilePath) {
-  // Define the import statement and delegate
+  // Define the import statement and delegate for localization
   var importStatement =
       "import 'package:inventory_management/blocs/app_localization.dart'\n    as inventory_localization;";
   var delegate =
@@ -307,19 +307,30 @@ void _createLocalizationDelegatesFile(String localizationDelegatesFilePath) {
   // Read the localization delegates file
   var localizationDelegatesFile = File(localizationDelegatesFilePath);
   var localizationDelegatesFileContent =
-      localizationDelegatesFile.readAsStringSync();
+  localizationDelegatesFile.readAsStringSync();
+
+  var normalizedFileContent =
+  localizationDelegatesFileContent.replaceAll(RegExp(r'\s'), '');
 
   // Check if the import statement and delegate already exist in the file
-  if (!localizationDelegatesFileContent.contains(importStatement)) {
+  // If not, add them to the file
+  if (!normalizedFileContent
+      .contains(importStatement.replaceAll(RegExp(r'\s'), ''))) {
     localizationDelegatesFileContent =
-        '$importStatement\n$localizationDelegatesFileContent';
+    '$importStatement\n$localizationDelegatesFileContent';
     print('The import statement was added.');
   }
 
-  if (!localizationDelegatesFileContent.contains(delegate)) {
-    localizationDelegatesFileContent =
-        localizationDelegatesFileContent.replaceFirst('];', '  $delegate\n];');
-    print('The delegate was added.');
+  if (!normalizedFileContent.contains(delegate.replaceAll(RegExp(r'\s'), ''))) {
+    var lastDelegateIndex =
+    localizationDelegatesFileContent.lastIndexOf(RegExp(r','));
+    if (lastDelegateIndex != -1) {
+      localizationDelegatesFileContent =
+          localizationDelegatesFileContent.substring(0, lastDelegateIndex + 1) +
+              '\n  $delegate' +
+              localizationDelegatesFileContent.substring(lastDelegateIndex + 1);
+      print('The delegate was added.');
+    }
   }
 
   // Write the updated content back to the file
