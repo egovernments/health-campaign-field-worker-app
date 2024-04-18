@@ -304,10 +304,6 @@ class AppRouter extends _$AppRouter {
             path: 'inventory-acknowledgement'),
         //Inventory Route
         AutoRoute(
-          page: SearchReferralReconciliationsRoute.page,
-          path: 'manage-stocks',
-        ),
-        AutoRoute(
             page: HFCreateReferralWrapperRoute.page,
             path: 'hf-referral',
             children: [
@@ -334,6 +330,10 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
           page: ReferralReconProjectFacilitySelectionRoute.page,
           path: 'referral-project-facility',
+        ),
+        AutoRoute(
+          page: SearchReferralReconciliationsRoute.page,
+          path: 'search-referrals',
         ),
       ],
     ),
