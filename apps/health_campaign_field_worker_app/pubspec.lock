@@ -493,13 +493,6 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
-  digit_scanner:
-    dependency: "direct main"
-    description:
-      path: "../../packages/digit_scanner"
-      relative: true
-    source: path
-    version: "0.0.1"
   digit_showcase:
     dependency: "direct main"
     description:

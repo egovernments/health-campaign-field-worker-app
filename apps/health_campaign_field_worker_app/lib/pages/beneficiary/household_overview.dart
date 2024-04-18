@@ -492,14 +492,6 @@ class _HouseholdOverviewPageState
                                               tasks: taskdata,
                                               sideEffects: sideEffectData,
                                               editMemberAction: () async {
-                                                // final scannerbloc =
-                                                //     context.read<ScannerBloc>();
-                                                //
-                                                // scannerbloc.add(
-                                                //   const ScannerEvent
-                                                //       .handleScanner([], []),
-                                                // );
-
                                                 final bloc = ctx.read<
                                                     HouseholdOverviewBloc>();
 
@@ -738,13 +730,6 @@ class _HouseholdOverviewPageState
                                         if (address == null) return;
 
                                         final projectId = context.projectId;
-
-                                        // context.read<ScannerBloc>().add(
-                                        //       const ScannerEvent.handleScanner(
-                                        //         [],
-                                        //         [],
-                                        //       ),
-                                        //     );
                                         await context.router.push(
                                           BeneficiaryRegistrationWrapperRoute(
                                             initialState:
