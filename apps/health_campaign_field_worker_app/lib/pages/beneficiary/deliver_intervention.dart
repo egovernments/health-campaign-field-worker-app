@@ -59,6 +59,7 @@ class _DeliverInterventionPageState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final router = context.router;
 
     List<StepsModel> generateSteps(int numberOfDoses) {
       return List.generate(numberOfDoses, (index) {
@@ -288,98 +289,165 @@ class _DeliverInterventionPageState
                                                                   false) {
                                                                 if (context
                                                                     .mounted) {
-                                                                  context
-                                                                      .read<
-                                                                          DeliverInterventionBloc>()
-                                                                      .add(
-                                                                        DeliverInterventionSubmitEvent(
-                                                                          _getTaskModel(
-                                                                            context,
-                                                                            form:
-                                                                                form,
-                                                                            oldTask:
-                                                                                null,
-                                                                            projectBeneficiaryClientReferenceId:
-                                                                                projectBeneficiary.first.clientReferenceId,
-                                                                            dose:
-                                                                                deliveryInterventionstate.dose,
-                                                                            cycle:
-                                                                                deliveryInterventionstate.cycle,
-                                                                            deliveryStrategy:
-                                                                                DeliverStrategyType.direct.toValue(),
-                                                                            address:
-                                                                                householdMemberWrapper.members.first.address?.first,
-                                                                            latitude:
-                                                                                lat,
-                                                                            longitude:
-                                                                                long,
-                                                                          ),
+                                                                  List<TaskModel>
+                                                                      taskData =
+                                                                      [];
+                                                                  taskData.add(
+                                                                    _getTaskModel(
+                                                                      context,
+                                                                      form:
+                                                                          form,
+                                                                      oldTask:
+                                                                          null,
+                                                                      projectBeneficiaryClientReferenceId: projectBeneficiary
+                                                                          .first
+                                                                          .clientReferenceId,
+                                                                      dose: deliveryInterventionstate
+                                                                          .dose,
+                                                                      cycle: deliveryInterventionstate
+                                                                          .cycle,
+                                                                      deliveryStrategy: DeliverStrategyType
+                                                                          .direct
+                                                                          .toValue(),
+                                                                      address: householdMemberWrapper
+                                                                          .members
+                                                                          .first
+                                                                          .address
+                                                                          ?.first,
+                                                                      latitude:
+                                                                          lat,
+                                                                      longitude:
+                                                                          long,
+                                                                    ),
+                                                                  );
+                                                                  DigitDialog
+                                                                      .show<
+                                                                          bool>(
+                                                                    context,
+                                                                    options:
+                                                                        DigitDialogOptions(
+                                                                      titleText: localizations.translate(i18
+                                                                          .deliverIntervention
+                                                                          .didYouObservePreviousAdvEventsTitle),
+                                                                      barrierDismissible:
                                                                           false,
-                                                                          context
-                                                                              .boundary,
+                                                                      enableRecordPast:
+                                                                          true,
+                                                                      dialogPadding:
+                                                                          const EdgeInsets
+                                                                              .fromLTRB(
+                                                                        kPadding,
+                                                                        kPadding,
+                                                                        kPadding,
+                                                                        0,
+                                                                      ),
+                                                                      primaryAction:
+                                                                          DigitDialogActions(
+                                                                        label: localizations
+                                                                            .translate(
+                                                                          i18.common
+                                                                              .coreCommonNo,
                                                                         ),
-                                                                      );
-
-                                                                  if (state
-                                                                              .futureDeliveries !=
-                                                                          null &&
-                                                                      state
-                                                                          .futureDeliveries!
-                                                                          .isNotEmpty &&
-                                                                      projectState
-                                                                              .projectType
-                                                                              ?.cycles
-                                                                              ?.isNotEmpty ==
-                                                                          true) {
-                                                                    context
-                                                                        .router
-                                                                        .popUntilRouteWithName(
-                                                                      BeneficiaryWrapperRoute
-                                                                          .name,
-                                                                    );
-                                                                    context
-                                                                        .router
-                                                                        .push(
-                                                                      SplashAcknowledgementRoute(
-                                                                        enableBackToSearch:
-                                                                            false,
+                                                                        action:
+                                                                            (ctx) {
+                                                                          context
+                                                                              .read<DeliverInterventionBloc>()
+                                                                              .add(
+                                                                                DeliverInterventionSubmitEvent(
+                                                                                  taskData.first,
+                                                                                  false,
+                                                                                  context.boundary,
+                                                                                ),
+                                                                              );
+                                                                          final reloadState =
+                                                                              context.read<HouseholdOverviewBloc>();
+                                                                          Future
+                                                                              .delayed(
+                                                                            const Duration(
+                                                                              milliseconds: 1000,
+                                                                            ),
+                                                                            () {
+                                                                              reloadState.add(
+                                                                                HouseholdOverviewReloadEvent(
+                                                                                  projectId: context.projectId,
+                                                                                  projectBeneficiaryType: context.beneficiaryType,
+                                                                                ),
+                                                                              );
+                                                                            },
+                                                                          ).then(
+                                                                            (value) {
+                                                                              context.router.popAndPush(
+                                                                                HouseholdAcknowledgementRoute(
+                                                                                  enableViewHousehold: true,
+                                                                                ),
+                                                                              );
+                                                                              Navigator.pop(ctx);
+                                                                            },
+                                                                          );
+                                                                        },
                                                                       ),
-                                                                    );
-                                                                  } else {
-                                                                    final reloadState =
-                                                                        context.read<
-                                                                            HouseholdOverviewBloc>();
+                                                                      secondaryAction:
+                                                                          DigitDialogActions(
+                                                                        label: localizations
+                                                                            .translate(
+                                                                          i18.common
+                                                                              .coreCommonYes,
+                                                                        ),
+                                                                        action:
+                                                                            (ctx) async {
+                                                                          context
+                                                                              .read<DeliverInterventionBloc>()
+                                                                              .add(
+                                                                                DeliverInterventionSubmitEvent(
+                                                                                  taskData.first,
+                                                                                  false,
+                                                                                  context.boundary,
+                                                                                ),
+                                                                              );
+                                                                          Navigator
+                                                                              .pop(
+                                                                            ctx,
+                                                                          );
+                                                                          final reloadState =
+                                                                              context.read<HouseholdOverviewBloc>();
+                                                                          final response =
+                                                                              await router.push(
+                                                                            SideEffectsRoute(
+                                                                              tasks: [
+                                                                                (taskData).last,
+                                                                              ],
+                                                                            ),
+                                                                          );
 
-                                                                    Future
-                                                                        .delayed(
-                                                                      const Duration(
-                                                                        milliseconds:
-                                                                            1000,
+                                                                          if (response ==
+                                                                              null) {
+                                                                            Future.delayed(
+                                                                              const Duration(
+                                                                                milliseconds: 1000,
+                                                                              ),
+                                                                              () {
+                                                                                reloadState.add(
+                                                                                  HouseholdOverviewReloadEvent(
+                                                                                    projectId: context.projectId,
+                                                                                    projectBeneficiaryType: context.beneficiaryType,
+                                                                                  ),
+                                                                                );
+                                                                              },
+                                                                            ).then(
+                                                                              (value) {
+                                                                                context.router.popAndPush(
+                                                                                  HouseholdAcknowledgementRoute(
+                                                                                    enableViewHousehold: true,
+                                                                                  ),
+                                                                                );
+                                                                                Navigator.pop(ctx);
+                                                                              },
+                                                                            );
+                                                                          }
+                                                                        },
                                                                       ),
-                                                                      () {
-                                                                        reloadState
-                                                                            .add(
-                                                                          HouseholdOverviewReloadEvent(
-                                                                            projectId:
-                                                                                context.projectId,
-                                                                            projectBeneficiaryType:
-                                                                                context.beneficiaryType,
-                                                                          ),
-                                                                        );
-                                                                      },
-                                                                    ).then(
-                                                                      (value) {
-                                                                        context
-                                                                            .router
-                                                                            .popAndPush(
-                                                                          HouseholdAcknowledgementRoute(
-                                                                            enableViewHousehold:
-                                                                                true,
-                                                                          ),
-                                                                        );
-                                                                      },
-                                                                    );
-                                                                  }
+                                                                    ),
+                                                                  );
                                                                 }
                                                               }
                                                             }
