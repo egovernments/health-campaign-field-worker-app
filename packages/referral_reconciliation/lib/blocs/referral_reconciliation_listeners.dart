@@ -11,14 +11,17 @@ abstract class ReferralReconListener {
   Future<List<ReferralReconServiceDefinitionModel>> fetchServiceDefinitions(
       String code);
 
+  Future<ReferralReconServiceModel?> fetchSavedChecklist(
+      ReferralReconServiceSearchModel reconServiceSearchModel);
+
   Future<List<ReferralReconciliation>> fetchReferralReconciliations(
       SearchReferralReconciliationClass searchReferralReconciliation);
 
   // Saves the service request details.
-  Future<void> saveServiceRequestDetails(SaveServiceRequest saveServiceRequest);
+  Future<bool> saveServiceRequestDetails(SaveServiceRequest saveServiceRequest);
 
   // Saves the referral details.
-  Future<void> saveReferralReconDetails(
+  Future<bool> saveReferralReconDetails(
       ReferralReconciliation saveReferralReconciliation);
 
   void callSyncMethod();
@@ -41,6 +44,7 @@ class ReferralReconSingleton {
   String _boundaryName = '';
   String _tenantId = '';
   List<String> _genderOptions = [];
+  List<String> _cycles = [];
   List<String> _referralReasons = [];
   ValidIndividualAgeForCampaign _validIndividualAgeForCampaign =
       ValidIndividualAgeForCampaign(validMinAge: 0, validMaxAge: 0);
@@ -54,6 +58,7 @@ class ReferralReconSingleton {
     required String tenantId,
     required ValidIndividualAgeForCampaign validIndividualAgeForCampaign,
     required List<String> genderOptions,
+    required List<String> cycles,
     required List<String> referralReasons,
   }) {
     _referralReconListener = referralReconListener;
@@ -63,6 +68,7 @@ class ReferralReconSingleton {
     _appVersion = appVersion;
     _tenantId = tenantId;
     _genderOptions = genderOptions;
+    _cycles = cycles;
     _validIndividualAgeForCampaign = validIndividualAgeForCampaign;
     _referralReasons = referralReasons;
   }
@@ -76,6 +82,7 @@ class ReferralReconSingleton {
   ValidIndividualAgeForCampaign get validIndividualAgeForCampaign =>
       _validIndividualAgeForCampaign;
   List<String> get referralReasons => _referralReasons;
+  List<String> get cycles => _cycles;
 
   Future<List<ReferralProjectFacilityModel>?>
       getProjectFacilitiesForProjectId() async {
@@ -94,21 +101,23 @@ class ReferralReconSingleton {
   }
 
   // Saves the stock details.
-  Future<void> saveServiceRequestDetails(
+  Future<bool?> saveServiceRequestDetails(
       SaveServiceRequest saveServiceRequest) async {
-    return Future(
-      () =>
-          _referralReconListener?.saveServiceRequestDetails(saveServiceRequest),
-    );
+    return await _referralReconListener
+        ?.saveServiceRequestDetails(saveServiceRequest);
+  }
+
+  Future<ReferralReconServiceModel?> getSavedChecklist(
+      ReferralReconServiceSearchModel reconServiceSearchModel) async {
+    return await _referralReconListener
+        ?.fetchSavedChecklist(reconServiceSearchModel);
   }
 
   // Saves the stock details.
-  Future<void> saveReferralReconDetails(
+  Future<bool?> saveReferralReconDetails(
       ReferralReconciliation saveReferralReconciliation) async {
-    return Future(
-      () => _referralReconListener
-          ?.saveReferralReconDetails(saveReferralReconciliation),
-    );
+    return await _referralReconListener
+        ?.saveReferralReconDetails(saveReferralReconciliation);
   }
 
   void callSync() {
@@ -118,13 +127,12 @@ class ReferralReconSingleton {
 
 class SaveServiceRequest {
   final ReferralReconServiceModel serviceModel;
-  final Map<String, Object> additionalData;
-  final Function(bool isServiceRequestSaved) isServiceRequestSaved;
+  final Map<String, Object>? additionalData;
 
-  SaveServiceRequest(
-      {required this.serviceModel,
-      required this.additionalData,
-      required this.isServiceRequestSaved});
+  SaveServiceRequest({
+    required this.serviceModel,
+    required this.additionalData,
+  });
 }
 
 class ReferralReconciliation {

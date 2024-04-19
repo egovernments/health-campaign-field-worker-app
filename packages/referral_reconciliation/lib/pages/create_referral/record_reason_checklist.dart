@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:group_radio_button/group_radio_button.dart';
 import 'package:referral_reconciliation/blocs/referral_reconciliation_listeners.dart';
+import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 
 import '../../blocs/referral_recon_service.dart';
 import '../../blocs/referral_recon_service_definition.dart';
@@ -92,7 +93,7 @@ class _ReferralReasonChecklistPageState
                         const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
                     child: DigitElevatedButton(
                       onPressed: () async {
-                        // final router = context.router;
+                        final router = context.router;
                         submitTriggered = true;
 
                         context.read<ReferralReconServiceBloc>().add(
@@ -221,9 +222,8 @@ class _ReferralReasonChecklistPageState
                           ),
                         );
                         if (shouldSubmit ?? false) {
-                          // router.navigate(SearchReferralsRoute());
-
-                          // router.push(AcknowledgementRoute());
+                          router.maybePop();
+                          router.push(ReferralReconAcknowledgementRoute());
                         }
                       },
                       child: Text(

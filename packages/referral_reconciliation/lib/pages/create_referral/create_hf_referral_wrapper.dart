@@ -5,21 +5,21 @@ import 'package:referral_reconciliation/blocs/referral_recon_record.dart';
 
 import '../../blocs/referral_recon_service.dart';
 import '../../blocs/referral_recon_service_definition.dart';
-import '../../models/entities/h_f_referral.dart';
+import '../../blocs/referral_reconciliation_listeners.dart';
 import '../../models/entities/referral_recon_service.dart';
 import '../../widgets/project_facility_bloc_wrapper.dart';
 
 @RoutePage()
 class HFCreateReferralWrapperPage extends StatelessWidget {
   final bool viewOnly;
-  final HFReferralModel? hfReferralModel;
+  final ReferralReconciliation? referralReconciliation;
   final List<String> cycles;
   final String projectId;
   const HFCreateReferralWrapperPage({
     super.key,
     required this.projectId,
     this.viewOnly = false,
-    this.hfReferralModel,
+    this.referralReconciliation,
     required this.cycles,
   });
 
@@ -41,17 +41,19 @@ class HFCreateReferralWrapperPage extends StatelessWidget {
               const ReferralReconServiceEmptyState(),
             )..add(ReferralReconServiceSearchEvent(
                   serviceSearchModel: ReferralReconServiceSearchModel(
-                clientId: hfReferralModel?.clientReferenceId,
+                clientId:
+                    referralReconciliation?.hfReferralModel?.clientReferenceId,
               ))),
             child: BlocProvider(
               create: (_) => RecordHFReferralBloc(
                 RecordHFReferralState.create(
                   projectId: projectId,
                   viewOnly: viewOnly,
-                  hfReferralModel: hfReferralModel,
+                  hfReferralModel: referralReconciliation?.hfReferralModel,
+                  additionalData: referralReconciliation?.additionalData,
                 ),
               ),
-              child: this,
+              child: const AutoRouter(),
             ),
           ),
         ),

@@ -12,8 +12,6 @@ import 'package:auto_route/auto_route.dart' as _i9;
 import 'package:flutter/material.dart' as _i10;
 import 'package:referral_reconciliation/blocs/app_localization.dart' as _i12;
 import 'package:referral_reconciliation/blocs/referral_reconciliation_listeners.dart'
-    as _i14;
-import 'package:referral_reconciliation/models/entities/h_f_referral.dart'
     as _i11;
 import 'package:referral_reconciliation/models/entities/referral_project_facility.dart'
     as _i13;
@@ -44,7 +42,7 @@ abstract class $ReferralReconciliationRoute extends _i9.AutoRouterModule {
           key: args.key,
           projectId: args.projectId,
           viewOnly: args.viewOnly,
-          hfReferralModel: args.hfReferralModel,
+          referralReconciliation: args.referralReconciliation,
           cycles: args.cycles,
         ),
       );
@@ -154,7 +152,7 @@ class HFCreateReferralWrapperRoute
     _i10.Key? key,
     required String projectId,
     bool viewOnly = false,
-    _i11.HFReferralModel? hfReferralModel,
+    _i11.ReferralReconciliation? referralReconciliation,
     required List<String> cycles,
     List<_i9.PageRouteInfo>? children,
   }) : super(
@@ -163,7 +161,7 @@ class HFCreateReferralWrapperRoute
             key: key,
             projectId: projectId,
             viewOnly: viewOnly,
-            hfReferralModel: hfReferralModel,
+            referralReconciliation: referralReconciliation,
             cycles: cycles,
           ),
           initialChildren: children,
@@ -180,7 +178,7 @@ class HFCreateReferralWrapperRouteArgs {
     this.key,
     required this.projectId,
     this.viewOnly = false,
-    this.hfReferralModel,
+    this.referralReconciliation,
     required this.cycles,
   });
 
@@ -190,13 +188,13 @@ class HFCreateReferralWrapperRouteArgs {
 
   final bool viewOnly;
 
-  final _i11.HFReferralModel? hfReferralModel;
+  final _i11.ReferralReconciliation? referralReconciliation;
 
   final List<String> cycles;
 
   @override
   String toString() {
-    return 'HFCreateReferralWrapperRouteArgs{key: $key, projectId: $projectId, viewOnly: $viewOnly, hfReferralModel: $hfReferralModel, cycles: $cycles}';
+    return 'HFCreateReferralWrapperRouteArgs{key: $key, projectId: $projectId, viewOnly: $viewOnly, referralReconciliation: $referralReconciliation, cycles: $cycles}';
   }
 }
 
@@ -486,10 +484,10 @@ class SearchReferralReconciliationsRoute
   SearchReferralReconciliationsRoute({
     _i10.Key? key,
     _i12.ReferralReconLocalization? appLocalizations,
-    required _i14.ReferralReconListener referralReconListener,
+    required _i11.ReferralReconListener referralReconListener,
     required String projectId,
     required List<String> cycles,
-    required _i14.ValidIndividualAgeForCampaign validIndividualAgeForCampaign,
+    required _i11.ValidIndividualAgeForCampaign validIndividualAgeForCampaign,
     required List<String> referralReasons,
     required String appVersion,
     required String userName,
@@ -542,13 +540,13 @@ class SearchReferralReconciliationsRouteArgs {
 
   final _i12.ReferralReconLocalization? appLocalizations;
 
-  final _i14.ReferralReconListener referralReconListener;
+  final _i11.ReferralReconListener referralReconListener;
 
   final String projectId;
 
   final List<String> cycles;
 
-  final _i14.ValidIndividualAgeForCampaign validIndividualAgeForCampaign;
+  final _i11.ValidIndividualAgeForCampaign validIndividualAgeForCampaign;
 
   final List<String> referralReasons;
 

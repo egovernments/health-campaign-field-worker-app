@@ -47,7 +47,7 @@ class _AcknowledgementPageState
               i18.acknowledgementSuccess.acknowledgementLabelText,
             ),
         action: () {
-          Navigator.of(context).pop();
+          context.router.popUntilRoot();
         },
         enableBackToSearch: widget.isDataRecordSuccess ? false : true,
         actionLabel:
@@ -66,13 +66,17 @@ class _AcknowledgementPageState
                 DigitElevatedButton(
                   child: Text(localizations
                       .translate(i18.acknowledgementSuccess.goToHome)),
-                  onPressed: () {},
+                  onPressed: () {
+                    context.router.popUntilRoot();
+                  },
                 ),
                 const SizedBox(
                   height: 12,
                 ),
                 DigitOutLineButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    context.router.popUntilRoot();
+                  },
                   label: localizations
                       .translate(i18.acknowledgementSuccess.downloadmoredata),
                   buttonStyle: OutlinedButton.styleFrom(

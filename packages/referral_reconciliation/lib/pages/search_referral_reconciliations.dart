@@ -58,15 +58,17 @@ class _SearchReferralReconciliationsPageState
   @override
   void initState() {
     ReferralReconSingleton().setInitialData(
-        referralReconListener: widget.referralReconListener,
-        userName: widget.userName,
-        boundaryName: widget.boundaryName,
-        projectId: widget.projectId,
-        appVersion: widget.appVersion,
-        tenantId: widget.tenantId,
-        validIndividualAgeForCampaign: widget.validIndividualAgeForCampaign,
-        genderOptions: widget.genders,
-        referralReasons: widget.referralReasons);
+      referralReconListener: widget.referralReconListener,
+      userName: widget.userName,
+      boundaryName: widget.boundaryName,
+      projectId: widget.projectId,
+      appVersion: widget.appVersion,
+      tenantId: widget.tenantId,
+      validIndividualAgeForCampaign: widget.validIndividualAgeForCampaign,
+      genderOptions: widget.genders,
+      referralReasons: widget.referralReasons,
+      cycles: widget.cycles,
+    );
     context.read<DigitScannerBloc>().add(
           const DigitScannerEvent.handleScanner(),
         );
@@ -181,7 +183,11 @@ class _SearchReferralReconciliationsPageState
                                   context.router.push(
                                     HFCreateReferralWrapperRoute(
                                       viewOnly: true,
-                                      hfReferralModel: i.hfReferralModel,
+                                      referralReconciliation:
+                                          ReferralReconciliation(
+                                        hfReferralModel: i.hfReferralModel,
+                                        additionalData: i.additionalData,
+                                      ),
                                       projectId:
                                           ReferralReconSingleton().projectId,
                                       cycles: widget.cycles,
@@ -226,10 +232,14 @@ class _SearchReferralReconciliationsPageState
                                     router.push(
                                       HFCreateReferralWrapperRoute(
                                         viewOnly: false,
-                                        hfReferralModel: HFReferralModel(
-                                          clientReferenceId: '',
-                                          name: state.searchQuery,
-                                          beneficiaryId: state.tag,
+                                        referralReconciliation:
+                                            ReferralReconciliation(
+                                          hfReferralModel: HFReferralModel(
+                                            clientReferenceId: '',
+                                            name: state.searchQuery,
+                                            beneficiaryId: state.tag,
+                                          ),
+                                          additionalData: {},
                                         ),
                                         projectId:
                                             ReferralReconSingleton().projectId,

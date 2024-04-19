@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:referral_reconciliation/blocs/referral_reconciliation_listeners.dart';
 
 import '../models/entities/referral_recon_service.dart';
 
@@ -35,7 +36,12 @@ class ReferralReconServiceBloc
     ReferralReconServiceCreateEvent event,
     ReferralReconServiceEmitter emit,
   ) async {
-    // await serviceDataRepository.create(event.serviceModel);
+    bool? isServiceRequestSaved = false;
+    isServiceRequestSaved = await ReferralReconSingleton()
+        .saveServiceRequestDetails(SaveServiceRequest(
+      serviceModel: event.serviceModel,
+      additionalData: null,
+    ));
   }
 
   FutureOr<void> _handlereset(
@@ -52,9 +58,10 @@ class ReferralReconServiceBloc
     ReferralReconServiceSearchEvent event,
     ReferralReconServiceEmitter emit,
   ) async {
-    final results =
-        // await serviceDataRepository.search(event.serviceSearchModel);
-        emit(ReferralReconServiceSearchState(serviceList: []));
+    final results = await ReferralReconSingleton()
+        .getSavedChecklist(event.serviceSearchModel);
+    emit(ReferralReconServiceSearchState(
+        serviceList: results != null ? [results] : []));
   }
 
   FutureOr<void> _handleSelect(

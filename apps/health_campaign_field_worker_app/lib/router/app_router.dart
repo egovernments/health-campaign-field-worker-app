@@ -316,15 +316,15 @@ class AppRouter extends _$AppRouter {
               AutoRoute(
                   page: RecordReferralDetailsRoute.page,
                   path: 'referral-details'),
+              AutoRoute(
+                page: ReferralReasonChecklistRoute.page,
+                path: 'referral-checklist-create',
+              ),
+              AutoRoute(
+                page: ReferralReasonChecklistPreviewRoute.page,
+                path: 'referral-checklist-view',
+              ),
             ]),
-        AutoRoute(
-          page: ReferralReasonChecklistRoute.page,
-          path: 'referral-checklist-create',
-        ),
-        AutoRoute(
-          page: ReferralReasonChecklistPreviewRoute.page,
-          path: 'referral-checklist-view',
-        ),
         AutoRoute(
           page: ReferralReconAcknowledgementRoute.page,
           path: 'referral-acknowledgement',

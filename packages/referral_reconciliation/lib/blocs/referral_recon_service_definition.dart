@@ -41,7 +41,8 @@ class ReferralReconServiceDefinitionBloc extends Bloc<
             .getServiceDefinitions(event.serviceDefinitionCode);
     emit(ReferralReconServiceDefinitionServiceFetchedState(
         serviceDefinitionList: results ?? [],
-        selectedServiceDefinition: results?.first));
+        selectedServiceDefinition:
+            (results ?? []).isNotEmpty ? results?.first : null));
   }
 }
 

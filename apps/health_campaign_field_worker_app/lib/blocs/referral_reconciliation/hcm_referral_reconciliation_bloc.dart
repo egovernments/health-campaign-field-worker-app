@@ -1,6 +1,4 @@
 // Import statements
-import 'dart:convert';
-
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -113,7 +111,7 @@ class HcmReferralReconBloc extends ReferralReconListener {
       String code) async {
     final selectedServiceDefinition = await serviceDefinitionLocalRepository
         .search(ServiceDefinitionSearchModel(tenantId: tenantId, code: [
-      '${selectedProject.name}.$code.${RolesType.healthFacilityWorker.toValue()}'
+      '${selectedProject.name}.HF_RF_$code.${RolesType.healthFacilityWorker.toValue()}'
     ]));
     return selectedServiceDefinition
         .map((e) => ReferralReconServiceDefinitionModel(
@@ -139,55 +137,78 @@ class HcmReferralReconBloc extends ReferralReconListener {
 
   // Save referral reconciliation details
   @override
-  Future<void> saveReferralReconDetails(
+  Future<bool> saveReferralReconDetails(
       ReferralReconciliation saveReferralReconciliation) async {
-    await hfReferralLocalRepository.create(HcmHFReferralModel(
-      hFReferral: saveReferralReconciliation.hfReferralModel,
-      additionalFields:
-          getAdditionalData(saveReferralReconciliation.additionalData),
-      auditDetails: AuditDetails(
-        createdBy: context.loggedInUserUuid,
-        createdTime: context.millisecondsSinceEpoch(),
-        lastModifiedTime: context.millisecondsSinceEpoch(),
-        lastModifiedBy: context.loggedInUserUuid,
-      ),
-      clientAuditDetails: ClientAuditDetails(
-        createdBy: context.loggedInUserUuid,
-        createdTime: context.millisecondsSinceEpoch(),
-        lastModifiedTime: context.millisecondsSinceEpoch(),
-        lastModifiedBy: context.loggedInUserUuid,
-      ),
-    ));
+    try {
+      await hfReferralLocalRepository.create(HcmHFReferralModel(
+        hFReferral: saveReferralReconciliation.hfReferralModel,
+        additionalFields: HFReferralAdditionalFields(
+          version: 1,
+          fields: getAdditionalData(saveReferralReconciliation.additionalData),
+        ),
+        auditDetails: AuditDetails(
+          createdBy: context.loggedInUserUuid,
+          createdTime: context.millisecondsSinceEpoch(),
+          lastModifiedTime: context.millisecondsSinceEpoch(),
+          lastModifiedBy: context.loggedInUserUuid,
+        ),
+        clientAuditDetails: ClientAuditDetails(
+          createdBy: context.loggedInUserUuid,
+          createdTime: context.millisecondsSinceEpoch(),
+          lastModifiedTime: context.millisecondsSinceEpoch(),
+          lastModifiedBy: context.loggedInUserUuid,
+        ),
+      ));
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   // Save service request details
   @override
-  Future<void> saveServiceRequestDetails(
+  Future<bool> saveServiceRequestDetails(
       SaveServiceRequest saveServiceRequest) async {
-    await serviceLocalRepository.create(ServiceModel(
-        clientId: saveServiceRequest.serviceModel.clientId,
-        isActive: saveServiceRequest.serviceModel.isActive,
-        tenantId: envConfig.variables.tenantId,
-        serviceDefId: saveServiceRequest.serviceModel.serviceDefId,
-        rowVersion: 1,
-        accountId: context.projectId,
-        additionalDetails: context.boundary.code,
-        createdAt: DigitDateUtils.getDateFromTimestamp(
-          DateTime.now().toLocal().millisecondsSinceEpoch,
-          dateFormat: "dd/MM/yyyy hh:mm a",
-        ),
-        auditDetails: AuditDetails(
-          createdTime: DateTime.now().millisecondsSinceEpoch,
-          createdBy: context.loggedInUserUuid,
-          lastModifiedBy: context.loggedInUserUuid,
-          lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
-        ),
-        clientAuditDetails: ClientAuditDetails(
-          createdTime: DateTime.now().millisecondsSinceEpoch,
-          createdBy: context.loggedInUserUuid,
-          lastModifiedBy: context.loggedInUserUuid,
-          lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
-        )));
+    try {
+      await serviceLocalRepository.create(ServiceModel(
+          clientId: saveServiceRequest.serviceModel.clientId,
+          isActive: saveServiceRequest.serviceModel.isActive,
+          tenantId: envConfig.variables.tenantId,
+          serviceDefId: saveServiceRequest.serviceModel.serviceDefId,
+          rowVersion: 1,
+          accountId: context.projectId,
+          attributes: saveServiceRequest.serviceModel.attributes
+              ?.map((a) => ServiceAttributesModel(
+                    clientReferenceId: a.clientReferenceId,
+                    attributeCode: a.attributeCode,
+                    value: a.value,
+                    tenantId: a.tenantId,
+                    additionalDetails: a.additionalDetails,
+                    dataType: a.dataType,
+                    referenceId: a.referenceId,
+                  ))
+              .toList(),
+          additionalDetails: context.boundary.code,
+          createdAt: DigitDateUtils.getDateFromTimestamp(
+            DateTime.now().toLocal().millisecondsSinceEpoch,
+            dateFormat: "dd/MM/yyyy hh:mm a",
+          ),
+          auditDetails: AuditDetails(
+            createdTime: DateTime.now().millisecondsSinceEpoch,
+            createdBy: context.loggedInUserUuid,
+            lastModifiedBy: context.loggedInUserUuid,
+            lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+          ),
+          clientAuditDetails: ClientAuditDetails(
+            createdTime: DateTime.now().millisecondsSinceEpoch,
+            createdBy: context.loggedInUserUuid,
+            lastModifiedBy: context.loggedInUserUuid,
+            lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+          )));
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   // Fetch referral reconciliations
@@ -199,20 +220,24 @@ class HcmReferralReconBloc extends ReferralReconListener {
       HcmHFReferralSearchModel(
         hFReferral: HFReferralSearchModel(
           projectId: context.projectId,
+          name: searchReferralReconciliation.name,
           beneficiaryId: searchReferralReconciliation.tag,
         ),
       ),
     );
 
-    return beneficiaries
-        .map((e) => ReferralReconciliation(
-            hfReferralModel: e.hFReferral!,
-            additionalData: jsonDecode(e.additionalFields!.toJson())))
-        .toList();
+    return beneficiaries.map((e) {
+      // Convert additionalFields to Iterable<MapEntry<String, dynamic>>
+      Map<String, Object> additionalFieldsMap = e.additionalFields != null
+          ? {for (var item in e.additionalFields!.fields) item.key: item.value}
+          : {};
+
+      return ReferralReconciliation(
+          hfReferralModel: e.hFReferral!, additionalData: additionalFieldsMap);
+    }).toList();
   }
 
   // Fetch service request for recorded referral
-  @override
   Future<List<ReferralReconServiceModel>>
       fetchServiceRequestForRecordedReferral(
           ReferralReconServiceSearchModel serviceSearchModel) async {
@@ -240,5 +265,32 @@ class HcmReferralReconBloc extends ReferralReconListener {
                     ))
                 .toList()))
         .toList();
+  }
+
+  @override
+  Future<ReferralReconServiceModel?> fetchSavedChecklist(
+      ReferralReconServiceSearchModel reconServiceSearchModel) async {
+    final selectedChecklist = await serviceLocalRepository
+        .search(ServiceSearchModel(clientId: reconServiceSearchModel.clientId));
+    return selectedChecklist.isNotEmpty
+        ? ReferralReconServiceModel(
+            clientId: selectedChecklist.first.clientId,
+            serviceDefId: selectedChecklist.first.serviceDefId,
+            accountId: selectedChecklist.first.accountId,
+            createdAt: selectedChecklist.first.createdAt,
+            tenantId: selectedChecklist.first.tenantId,
+            attributes: selectedChecklist.first.attributes
+                ?.map((e) => ReferralReconServiceAttributesModel(
+                    clientReferenceId: e.clientReferenceId,
+                    attributeCode: e.attributeCode,
+                    value: e.value,
+                    dataType: e.dataType,
+                    referenceId: e.referenceId,
+                    tenantId: e.tenantId,
+                    rowVersion: e.rowVersion,
+                    additionalDetails: e.additionalDetails,
+                    nonRecoverableError: e.nonRecoverableError))
+                .toList())
+        : null;
   }
 }

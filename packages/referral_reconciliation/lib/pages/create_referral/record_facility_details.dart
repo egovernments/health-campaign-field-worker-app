@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
@@ -6,7 +7,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:referral_reconciliation/blocs/referral_reconciliation_listeners.dart';
 import 'package:referral_reconciliation/models/entities/referral_recon_enums.dart';
-import 'package:auto_route/auto_route.dart';
+import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
+
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../blocs/project_facility.dart';
 import '../../blocs/referral_recon_record.dart';
@@ -106,9 +108,13 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
                                 } else {
                                   clickedStatus.value = true;
                                   if (viewOnly) {
-                                    // context.router.push(
-                                    //   RecordReferralDetailsRoute(),
-                                    // );
+                                    context.router.push(
+                                      RecordReferralDetailsRoute(
+                                        projectId:
+                                            ReferralReconSingleton().projectId,
+                                        cycles: ReferralReconSingleton().cycles,
+                                      ),
+                                    );
                                   } else {
                                     final evaluationFacility =
                                         selectedProjectFacilityId;
@@ -144,9 +150,12 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
                                         ),
                                       );
 
-                                      // context.router.push(
-                                      //   RecordReferralDetailsRoute(),
-                                      // );
+                                      context.router
+                                          .push(RecordReferralDetailsRoute(
+                                        projectId:
+                                            ReferralReconSingleton().projectId,
+                                        cycles: ReferralReconSingleton().cycles,
+                                      ));
                                     }
                                   }
                                 }

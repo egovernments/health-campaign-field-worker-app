@@ -18,8 +18,8 @@ typedef RecordHFReferralEmitter = Emitter<RecordHFReferralState>;
 class RecordHFReferralBloc
     extends Bloc<RecordHFReferralEvent, RecordHFReferralState> {
   RecordHFReferralBloc(
-      super.initialState,
-      ) {
+    super.initialState,
+  ) {
     on(_handleSaveFacilityDetails);
     on(_handleCreateHFReferralEntry);
     on(_handleViewHFReferralEntry);
@@ -27,9 +27,9 @@ class RecordHFReferralBloc
 
   // ODE: This method handles saving facility details in the state.
   FutureOr<void> _handleSaveFacilityDetails(
-      RecordHFReferralSaveFacilityDetailsEvent event,
-      RecordHFReferralEmitter emit,
-      ) async {
+    RecordHFReferralSaveFacilityDetailsEvent event,
+    RecordHFReferralEmitter emit,
+  ) async {
     state.maybeMap(
       orElse: () {
         throw const InvalidRecordHFReferralStateException();
@@ -47,9 +47,9 @@ class RecordHFReferralBloc
 
   // ODE: This method handles creating a new health facility referral entry.
   FutureOr<void> _handleCreateHFReferralEntry(
-      RecordHFReferralCreateEntryEvent event,
-      RecordHFReferralEmitter emit,
-      ) async {
+    RecordHFReferralCreateEntryEvent event,
+    RecordHFReferralEmitter emit,
+  ) async {
     bool referralSaved = false;
     await state.maybeMap(
       orElse: () {
@@ -81,7 +81,7 @@ class RecordHFReferralBloc
                   .saveReferralReconDetails(ReferralReconciliation(
                 hfReferralModel: event.hfReferralModel,
                 additionalData:
-                event.additionalData != null ? event.additionalData! : {},
+                    event.additionalData != null ? event.additionalData! : {},
               ));
 
               emit(
@@ -104,6 +104,7 @@ class RecordHFReferralBloc
           emit(
             value.copyWith(
               hfReferralModel: value.hfReferralModel,
+              additionalData: value.additionalData,
               viewOnly: value.viewOnly,
             ),
           );
@@ -114,9 +115,9 @@ class RecordHFReferralBloc
 
   // ODE: This method handles viewing a health facility referral entry.
   FutureOr<void> _handleViewHFReferralEntry(
-      RecordHFReferralViewEvent event,
-      RecordHFReferralEmitter emit,
-      ) async {
+    RecordHFReferralViewEvent event,
+    RecordHFReferralEmitter emit,
+  ) async {
     await state.maybeMap(
       orElse: () {
         throw const InvalidRecordHFReferralStateException();
