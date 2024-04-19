@@ -8,7 +8,17 @@ void main() {
   var localizationDelegatesFilePath =
       '$appRoot/utils/localization_delegates.dart';
 
-  // Define the import statement and delegate
+  _createLocalizationDelegatesFile(localizationDelegatesFilePath);
+
+  // Run dart format on the localization_delegates.dart file
+  Process.run('dart', ['format', localizationDelegatesFilePath])
+      .then((ProcessResult results) {
+    print(results.stdout);
+  });
+}
+
+void _createLocalizationDelegatesFile(String localizationDelegatesFilePath) {
+  // Define the import statement and delegate for localization
   var importStatement =
       "import 'package:digit_scanner/blocs/app_localization.dart'\n    as scanner_localization;";
   var delegate =
@@ -19,25 +29,30 @@ void main() {
   var localizationDelegatesFileContent =
       localizationDelegatesFile.readAsStringSync();
 
+  var normalizedFileContent =
+      localizationDelegatesFileContent.replaceAll(RegExp(r'\s'), '');
+
   // Check if the import statement and delegate already exist in the file
-  if (!localizationDelegatesFileContent.contains(importStatement)) {
+  // If not, add them to the file
+  if (!normalizedFileContent
+      .contains(importStatement.replaceAll(RegExp(r'\s'), ''))) {
     localizationDelegatesFileContent =
         '$importStatement\n$localizationDelegatesFileContent';
     print('The import statement was added.');
   }
 
-  if (!localizationDelegatesFileContent.contains(delegate)) {
-    localizationDelegatesFileContent =
-        localizationDelegatesFileContent.replaceFirst('];', '  $delegate\n];');
-    print('The delegate was added.');
+  if (!normalizedFileContent.contains(delegate.replaceAll(RegExp(r'\s'), ''))) {
+    var lastDelegateIndex =
+        localizationDelegatesFileContent.lastIndexOf(RegExp(r','));
+    if (lastDelegateIndex != -1) {
+      localizationDelegatesFileContent =
+          localizationDelegatesFileContent.substring(0, lastDelegateIndex + 1) +
+              '\n  $delegate' +
+              localizationDelegatesFileContent.substring(lastDelegateIndex + 1);
+      print('The delegate was added.');
+    }
   }
 
   // Write the updated content back to the file
   localizationDelegatesFile.writeAsStringSync(localizationDelegatesFileContent);
-
-  // Run dart format on the localization_delegates.dart file
-  Process.run('dart', ['format', localizationDelegatesFilePath])
-      .then((ProcessResult results) {
-    print(results.stdout);
-  });
 }
