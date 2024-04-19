@@ -2,13 +2,9 @@
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:referral_reconciliation/blocs/referral_reconciliation_listeners.dart';
-import 'package:referral_reconciliation/models/entities/h_f_referral.dart';
-import 'package:referral_reconciliation/models/entities/referral_project_facility.dart';
 import 'package:referral_reconciliation/models/entities/referral_recon_attributes.dart';
-import 'package:referral_reconciliation/models/entities/referral_recon_service.dart';
 import 'package:referral_reconciliation/models/entities/referral_recon_service_attributes.dart';
-import 'package:referral_reconciliation/models/entities/referral_recon_service_definition.dart';
+import 'package:referral_reconciliation/referral_reconciliation.dart';
 
 import '../../data/data_repository.dart';
 import '../../models/data_model.dart';
@@ -235,36 +231,6 @@ class HcmReferralReconBloc extends ReferralReconListener {
       return ReferralReconciliation(
           hfReferralModel: e.hFReferral!, additionalData: additionalFieldsMap);
     }).toList();
-  }
-
-  // Fetch service request for recorded referral
-  Future<List<ReferralReconServiceModel>>
-      fetchServiceRequestForRecordedReferral(
-          ReferralReconServiceSearchModel serviceSearchModel) async {
-    final results = await serviceLocalRepository
-        .search(ServiceSearchModel(clientId: serviceSearchModel.clientId));
-
-    return results
-        .map((e) => ReferralReconServiceModel(
-            id: e.id,
-            clientId: e.clientId,
-            serviceDefId: e.serviceDefId,
-            accountId: e.accountId,
-            tenantId: e.tenantId,
-            attributes: e.attributes
-                ?.map((a) => ReferralReconServiceAttributesModel(
-                      clientReferenceId: a.clientReferenceId,
-                      attributeCode: a.attributeCode,
-                      dataType: a.dataType,
-                      value: a.value,
-                      referenceId: a.referenceId,
-                      tenantId: a.tenantId,
-                      rowVersion: a.rowVersion,
-                      additionalDetails: a.additionalDetails,
-                      nonRecoverableError: a.nonRecoverableError,
-                    ))
-                .toList()))
-        .toList();
   }
 
   @override

@@ -7,7 +7,7 @@ import 'package:inventory_management/blocs/app_localization.dart'
     as inventory_localization;
 import 'package:isar/isar.dart';
 import 'package:referral_reconciliation/blocs/app_localization.dart'
-    as referral_reconciliation;
+    as referral_reconciliation_localization;
 
 import '../blocs/localization/app_localization.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
@@ -26,7 +26,7 @@ getAppLocalizationDelegates({
     GlobalWidgetsLocalizations.delegate,
     GlobalCupertinoLocalizations.delegate,
     GlobalMaterialLocalizations.delegate,
-    referral_reconciliation.ReferralReconLocalization.getDelegate(
+    referral_reconciliation_localization.ReferralReconLocalization.getDelegate(
       getLocalizationString(
         isar,
         selectedLocale,
