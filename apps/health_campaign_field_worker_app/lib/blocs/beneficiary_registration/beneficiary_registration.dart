@@ -364,20 +364,31 @@ class BeneficiaryRegistrationBloc
       addMember: (value) async {
         emit(value.copyWith(loading: true));
         try {
+          final createdAt = DateTime.now().millisecondsSinceEpoch;
+          final initialModifiedAt = DateTime.now().millisecondsSinceEpoch;
+
           await individualRepository.create(
             event.individualModel.copyWith(
               address: [
                 value.addressModel.copyWith(
                   relatedClientReferenceId:
                       event.individualModel.clientReferenceId,
+                  auditDetails: AuditDetails(
+                    createdBy: event.userUuid,
+                    createdTime: createdAt,
+                    lastModifiedTime: createdAt,
+                    lastModifiedBy: event.userUuid,
+                  ),
+                  clientAuditDetails: ClientAuditDetails(
+                    createdTime: createdAt,
+                    lastModifiedTime: initialModifiedAt,
+                    lastModifiedBy: event.userUuid,
+                    createdBy: event.userUuid,
+                  ),
                 ),
               ],
             ),
           );
-
-          final createdAt = DateTime.now().millisecondsSinceEpoch;
-          final initialModifiedAt = DateTime.now().millisecondsSinceEpoch;
-
           if (event.beneficiaryType == BeneficiaryType.individual) {
             await projectBeneficiaryRepository.create(
               ProjectBeneficiaryModel(

@@ -16,6 +16,7 @@ import '../../utils/utils.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 
+@RoutePage()
 class ChecklistViewPage extends LocalizedStatefulWidget {
   final String? referralClientRefId;
   const ChecklistViewPage({

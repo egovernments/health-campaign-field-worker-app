@@ -71,6 +71,8 @@ class BoundaryLocalRepository
           if (query.code != null)
             sql.boundary.materializedPath.like('${query.code}%'),
           sql.boundary.materializedPath.isNotNull(),
+          if (query.boundaryType != null && query.boundaryType!.isNotEmpty)
+            sql.boundary.label.equals(query.boundaryType!),
           if (query.boundaryNum != null)
             sql.boundary.boundaryNum.equals(query.boundaryNum!),
           sql.boundary.materializedPath.isNotIn(['']),
@@ -101,9 +103,11 @@ class BoundaryLocalRepository
 
   @override
   FutureOr<void> delete(BoundaryModel entity, {bool createOpLog = true}) async {
-    sql.delete(
-      sql.boundary,
-    ).go();
+    sql
+        .delete(
+          sql.boundary,
+        )
+        .go();
   }
 
   @override

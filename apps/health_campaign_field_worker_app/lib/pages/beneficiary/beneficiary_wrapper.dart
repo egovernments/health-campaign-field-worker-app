@@ -10,9 +10,12 @@ import '../../blocs/search_households/search_households.dart';
 import '../../blocs/service/service.dart';
 import '../../blocs/service_definition/service_definition.dart';
 import '../../blocs/side_effects/side_effects.dart';
+import '../../data/data_repository.dart';
 import '../../models/data_model.dart';
+import '../../models/entities/hcm_inventory_facility.dart';
 import '../../utils/extensions/extensions.dart';
 
+@RoutePage()
 class BeneficiaryWrapperPage extends StatelessWidget {
   final HouseholdMemberWrapper wrapper;
   final bool isEditing;
@@ -43,10 +46,10 @@ class BeneficiaryWrapperPage extends StatelessWidget {
     final sideEffect =
         context.repository<SideEffectModel, SideEffectSearchModel>();
     final facilityRepository =
-        context.repository<FacilityModel, FacilitySearchModel>();
+        context.read<LocalRepository<FacilityModel, FacilitySearchModel>>();
 
-    final projectFacilityRepository =
-        context.repository<ProjectFacilityModel, ProjectFacilitySearchModel>();
+    final projectFacilityRepository = context.read<
+        LocalRepository<ProjectFacilityModel, ProjectFacilitySearchModel>>();
     final referral = context.repository<ReferralModel, ReferralSearchModel>();
 
     return MultiBlocProvider(
@@ -59,8 +62,8 @@ class BeneficiaryWrapperPage extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => FacilityBloc(
-            facilityDataRepository: facilityRepository,
-            projectFacilityDataRepository: projectFacilityRepository,
+            facilityLocalRepository: facilityRepository,
+            projectFacilityLocalRepository: projectFacilityRepository,
           )..add(
               FacilityLoadForProjectEvent(
                 projectId: context.selectedProject.id,
@@ -75,17 +78,17 @@ class BeneficiaryWrapperPage extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => HouseholdOverviewBloc(
-            HouseholdOverviewState(
-              householdMemberWrapper: wrapper,
-            ),
-            individualRepository: individual,
-            householdRepository: household,
-            householdMemberRepository: householdMember,
-            projectBeneficiaryRepository: projectBeneficiary,
-            taskDataRepository: task,
-            sideEffectDataRepository: sideEffect,
-            referralDataRepository: referral,
-          ),
+              HouseholdOverviewState(
+                householdMemberWrapper: wrapper,
+              ),
+              individualRepository: individual,
+              householdRepository: household,
+              householdMemberRepository: householdMember,
+              projectBeneficiaryRepository: projectBeneficiary,
+              taskDataRepository: task,
+              sideEffectDataRepository: sideEffect,
+              referralDataRepository: referral,
+              beneficiaryType: context.beneficiaryType),
         ),
         BlocProvider(
           create: (_) => DeliverInterventionBloc(

@@ -85,15 +85,15 @@ class _ShowcaseButtonState extends LocalizedState<ShowcaseButton> {
         return deliverInterventionShowcaseData.showcaseData.map(
           (e) => e.showcaseKey,
         );
-      case ManageStocksRoute.name:
+      case "ManageStocksRoute":
         return selectStockShowcaseData.showcaseData.map(
           (e) => e.showcaseKey,
         );
-      case WarehouseDetailsRoute.name:
+      case "WarehouseDetailsRoute":
         return warehouseDetailsShowcaseData.showcaseData.map(
           (e) => e.showcaseKey,
         );
-      case StockReconciliationRoute.name:
+      case "StockReconciliationRoute":
         return stockReconciliationShowcaseData.showcaseData.map(
           (e) => e.showcaseKey,
         );

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:attendance_management/pages/manage_attendance.dart';
+import 'package:attendance_management/router/attendance_router.gm.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
@@ -10,14 +10,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:inventory_management/models/entities/inventory_transport_type.dart';
+import 'package:inventory_management/router/inventory_router.gm.dart';
 
+import '../blocs/app_initialization/app_initialization.dart';
+import '../blocs/attendance/hcm_attendance_bloc.dart';
 import '../blocs/auth/auth.dart';
-import '../blocs/hcm_attendance_bloc.dart';
+import '../blocs/inventory/hcm_inventory_bloc.dart';
 import '../blocs/search_households/search_bloc_common_wrapper.dart';
 import '../blocs/search_households/search_households.dart';
 import '../blocs/search_referrals/search_referrals.dart';
 import '../blocs/sync/sync.dart';
 import '../data/data_repository.dart';
+import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../data/local_store/sql_store/sql_store.dart';
 import '../models/data_model.dart';
@@ -32,6 +37,7 @@ import '../widgets/progress_bar/beneficiary_progress.dart';
 import '../widgets/showcase/config/showcase_constants.dart';
 import '../widgets/showcase/showcase_button.dart';
 
+@RoutePage()
 class HomePage extends LocalizedStatefulWidget {
   const HomePage({
     super.key,
@@ -328,7 +334,45 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.store_mall_directory,
           label: i18.home.manageStockLabel,
           onPressed: () {
-            context.router.push(ManageStocksRoute());
+            context.read<AppInitializationBloc>().state.maybeWhen(
+                  orElse: () {},
+                  initialized: (AppConfiguration appConfiguration, _) {
+                    context.router.push(ManageStocksRoute(
+                      isWareHouseMgr: context.loggedInUserRoles
+                          .where((role) =>
+                      role.code == RolesType.warehouseManager.toValue())
+                          .toList()
+                          .isNotEmpty,
+                      isDistributor: context.loggedInUserRoles
+                          .where(
+                            (role) =>
+                        role.code == RolesType.distributor.toValue(),
+                      )
+                          .toList()
+                          .isNotEmpty,
+                      boundaryName: context.boundary.name!,
+                      inventoryListener: HcmInventoryBloc(
+                        context: context,
+                        userId: context.loggedInUserUuid,
+                        individualId: context.loggedInIndividualId,
+                        projectId: context.projectId,
+                        stockLocalRepository: context.read<
+                            LocalRepository<HcmStockModel,
+                                HcmStockSearchModel>>(),
+                        stockReconLocalRepository: context.read<
+                            LocalRepository<HcmStockReconciliationModel,
+                                HcmStockReconciliationSearchModel>>(),
+                      ),
+                      projectId: context.projectId,
+                      userId: context.loggedInUserUuid,
+                      transportType: appConfiguration.transportTypes
+                          ?.map((e) => InventoryTransportTypes()
+                        ..name = e.name
+                        ..code = e.code)
+                          .toList(),
+                    ));
+                  },
+                );
           },
         ),
       ),
@@ -338,7 +382,33 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.menu_book,
           label: i18.home.stockReconciliationLabel,
           onPressed: () {
-            context.router.push(StockReconciliationRoute());
+            context.router.push(StockReconciliationRoute(
+              inventoryListener: HcmInventoryBloc(
+                context: context,
+                userId: context.loggedInUserUuid,
+                individualId: context.loggedInIndividualId,
+                projectId: context.projectId,
+                stockLocalRepository: context.read<
+                    LocalRepository<HcmStockModel, HcmStockSearchModel>>(),
+                stockReconLocalRepository: context.read<
+                    LocalRepository<HcmStockReconciliationModel,
+                        HcmStockReconciliationSearchModel>>(),
+              ),
+              projectId: context.projectId,
+              isDistributor: context.loggedInUserRoles
+                  .where(
+                    (role) => role.code == RolesType.distributor.toValue(),
+                  )
+                  .toList()
+                  .isNotEmpty,
+              isWareHouseMgr: context.loggedInUserRoles
+                  .where(
+                    (role) => role.code == RolesType.warehouseManager.toValue(),
+                  )
+                  .toList()
+                  .isNotEmpty,
+              loggedInUserUuid: context.loggedInUserUuid,
+            ));
           },
         ),
       ),
@@ -405,9 +475,32 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.announcement,
           label: i18.home.viewReportsLabel,
           onPressed: () {
-            context.router.push(
-              InventoryReportSelectionRoute(),
-            );
+            context.router.push(InventoryReportSelectionRoute(
+              isWareHouseMgr: context.loggedInUserRoles
+                  .where((role) =>
+                      role.code == RolesType.warehouseManager.toValue())
+                  .toList()
+                  .isNotEmpty,
+              isDistributor: context.loggedInUserRoles
+                  .where(
+                    (role) => role.code == RolesType.distributor.toValue(),
+                  )
+                  .toList()
+                  .isNotEmpty,
+              inventoryListener: HcmInventoryBloc(
+                context: context,
+                userId: context.loggedInUserUuid,
+                individualId: context.loggedInIndividualId,
+                projectId: context.projectId,
+                stockLocalRepository: context.read<
+                    LocalRepository<HcmStockModel, HcmStockSearchModel>>(),
+                stockReconLocalRepository: context.read<
+                    LocalRepository<HcmStockReconciliationModel,
+                        HcmStockReconciliationSearchModel>>(),
+              ),
+              projectId: context.projectId,
+              loggedInUserUuid: context.loggedInUserUuid,
+            ));
           },
         ),
       ),
@@ -432,32 +525,25 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.fingerprint_outlined,
           label: i18.home.manageAttendanceLabel,
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ManageAttendancePage(
-                  attendanceListeners: HCMAttendanceBloc(
-                    userId: context.loggedInUserUuid,
-                    projectId: context.projectId,
-                    attendanceLocalRepository: context.read<
-                        LocalRepository<HCMAttendanceRegisterModel,
-                            HCMAttendanceSearchModel>>(),
-                    individualLocalRepository: context.read<
-                        LocalRepository<IndividualModel,
-                            IndividualSearchModel>>(),
-                    attendanceLogLocalRepository: context.read<
-                        LocalRepository<HCMAttendanceLogModel,
-                            HCMAttendanceLogSearchModel>>(),
-                    context: context,
-                    individualId: context.loggedInIndividualId,
-                  ),
-                  projectId: context.projectId,
-                  userId: context.loggedInUserUuid,
-                  appVersion: Constants().version,
-                ),
-                settings: const RouteSettings(name: '/manage-attendance'),
+            context.router.push(ManageAttendanceRoute(
+              attendanceListeners: HCMAttendanceBloc(
+                userId: context.loggedInUserUuid,
+                projectId: context.projectId,
+                attendanceLocalRepository: context.read<
+                    LocalRepository<HCMAttendanceRegisterModel,
+                        HCMAttendanceSearchModel>>(),
+                individualLocalRepository: context.read<
+                    LocalRepository<IndividualModel, IndividualSearchModel>>(),
+                attendanceLogLocalRepository: context.read<
+                    LocalRepository<HCMAttendanceLogModel,
+                        HCMAttendanceLogSearchModel>>(),
+                context: context,
+                individualId: context.loggedInIndividualId,
               ),
-            );
+              projectId: context.projectId,
+              userId: context.loggedInUserUuid,
+              appVersion: Constants().version,
+            ));
           },
         ),
       ),
@@ -539,12 +625,13 @@ class _HomePageState extends LocalizedState<HomePage> {
                     LocalRepository<SideEffectModel, SideEffectSearchModel>>(),
                 context.read<
                     LocalRepository<ReferralModel, ReferralSearchModel>>(),
-                context.read<LocalRepository<StockModel, StockSearchModel>>(),
+                context.read<
+                    LocalRepository<HcmStockModel, HcmStockSearchModel>>(),
                 context
                     .read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
                 context.read<
-                    LocalRepository<StockReconciliationModel,
-                        StockReconciliationSearchModel>>(),
+                    LocalRepository<HcmStockReconciliationModel,
+                        HcmStockReconciliationSearchModel>>(),
                 context.read<
                     LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
                 context.read<
@@ -569,12 +656,13 @@ class _HomePageState extends LocalizedState<HomePage> {
                     RemoteRepository<SideEffectModel, SideEffectSearchModel>>(),
                 context.read<
                     RemoteRepository<ReferralModel, ReferralSearchModel>>(),
-                context.read<RemoteRepository<StockModel, StockSearchModel>>(),
+                context.read<
+                    RemoteRepository<HcmStockModel, HcmStockSearchModel>>(),
                 context
                     .read<RemoteRepository<ServiceModel, ServiceSearchModel>>(),
                 context.read<
-                    RemoteRepository<StockReconciliationModel,
-                        StockReconciliationSearchModel>>(),
+                    RemoteRepository<HcmStockReconciliationModel,
+                        HcmStockReconciliationSearchModel>>(),
                 context.read<
                     RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
                 context.read<

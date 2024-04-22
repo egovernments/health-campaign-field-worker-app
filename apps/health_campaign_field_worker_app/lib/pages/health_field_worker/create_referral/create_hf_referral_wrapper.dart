@@ -13,8 +13,9 @@ import '../../../blocs/hf_referrals/record_referral.dart';
 import '../../../blocs/service/service.dart';
 import '../../../blocs/service_definition/service_definition.dart';
 
+@RoutePage()
 class HFCreateReferralWrapperPage extends StatelessWidget
-    with AutoRouteWrapper {
+    implements AutoRouteWrapper {
   final bool viewOnly;
   final HFReferralModel? hfReferralModel;
   const HFCreateReferralWrapperPage({

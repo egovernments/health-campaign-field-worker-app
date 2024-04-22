@@ -21,6 +21,7 @@ class AuthTokenInterceptor extends Interceptor {
     RequestInterceptorHandler handler,
   ) async {
     final authToken = await localSecureStore.accessToken;
+    final userInfo = await localSecureStore.userRequestModel;
     if (options.data is Map) {
       options.data = {
         ...options.data,
@@ -32,6 +33,7 @@ class AuthTokenInterceptor extends Interceptor {
           did: RequestInfoData.did,
           key: "1",
           authToken: authToken,
+          userInfo: userInfo,
         ).toJson(),
       };
     }

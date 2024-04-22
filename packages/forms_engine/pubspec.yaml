@@ -8,7 +8,7 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
-  auto_route: ^5.0.2
+  auto_route: ^7.3.2
   collection: ^1.16.0
   flutter:
     sdk: flutter

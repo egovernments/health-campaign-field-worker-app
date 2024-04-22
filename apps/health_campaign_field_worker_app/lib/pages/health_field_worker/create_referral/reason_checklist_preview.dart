@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../../../router/app_router.dart';
 import '../../../widgets/localized.dart';
 import '../../checklist/checklist_preview.dart';
 
+@RoutePage()
 class ReferralReasonCheckListPreviewPage extends LocalizedStatefulWidget {
   final bool isEditing;
   final String? referralClientRefId;

@@ -23,6 +23,7 @@ import '../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 
+@RoutePage()
 class DeliverInterventionPage extends LocalizedStatefulWidget {
   final bool isEditing;
 
@@ -742,7 +743,8 @@ class _DeliverInterventionPageState
               AdditionalFieldsType.longitude.toValue(),
               longitude,
             ),
-          if (deliveryComment != null)
+          if (deliveryComment != null &&
+              deliveryComment.trim().toString().isNotEmpty)
             AdditionalField(
               AdditionalFieldsType.deliveryComment.toValue(),
               deliveryComment,

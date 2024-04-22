@@ -4,14 +4,16 @@ import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/digit_checkbox.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_dob_picker.dart';
+import 'package:digit_scanner/blocs/scanner.dart';
+import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
-import '../../blocs/scanner/scanner.dart';
 import '../../blocs/search_households/search_bloc_common_wrapper.dart';
 import '../../blocs/search_households/search_households.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
@@ -25,6 +27,7 @@ import '../../widgets/localized.dart';
 import '../../widgets/showcase/config/showcase_constants.dart';
 import '../../widgets/showcase/showcase_button.dart';
 
+@RoutePage()
 class IndividualDetailsPage extends LocalizedStatefulWidget {
   final bool isHeadOfHousehold;
 
@@ -148,7 +151,7 @@ class _IndividualDetailsPageState
                                     ),
                                   );
                                   final scannerBloc =
-                                      context.read<ScannerBloc>();
+                                      context.read<DigitScannerBloc>();
 
                                   if (scannerBloc.state.duplicate) {
                                     DigitToast.show(
@@ -199,7 +202,7 @@ class _IndividualDetailsPageState
                                     if (submit ?? false) {
                                       if (context.mounted) {
                                         final scannerBloc =
-                                            context.read<ScannerBloc>();
+                                            context.read<DigitScannerBloc>();
 
                                         bloc.add(
                                           BeneficiaryRegistrationCreateEvent(
@@ -207,9 +210,9 @@ class _IndividualDetailsPageState
                                             userUuid: userId,
                                             boundary: boundary,
                                             tag: scannerBloc
-                                                    .state.qrcodes.isNotEmpty
+                                                    .state.qrCodes.isNotEmpty
                                                 ? scannerBloc
-                                                    .state.qrcodes.first
+                                                    .state.qrCodes.first
                                                 : null,
                                           ),
                                         );
@@ -225,15 +228,15 @@ class _IndividualDetailsPageState
                                   loading,
                                 ) {
                                   final scannerBloc =
-                                      context.read<ScannerBloc>();
+                                      context.read<DigitScannerBloc>();
                                   final individual = _getIndividualModel(
                                     context,
                                     form: form,
                                     oldIndividual: individualModel,
                                   );
                                   final tag =
-                                      scannerBloc.state.qrcodes.isNotEmpty
-                                          ? scannerBloc.state.qrcodes.first
+                                      scannerBloc.state.qrCodes.isNotEmpty
+                                          ? scannerBloc.state.qrCodes.first
                                           : null;
 
                                   if (tag != null &&
@@ -278,8 +281,8 @@ class _IndividualDetailsPageState
                                               : null,
                                         ),
                                         tag: scannerBloc
-                                                .state.qrcodes.isNotEmpty
-                                            ? scannerBloc.state.qrcodes.first
+                                                .state.qrCodes.isNotEmpty
+                                            ? scannerBloc.state.qrCodes.first
                                             : null,
                                       ),
                                     );
@@ -297,7 +300,7 @@ class _IndividualDetailsPageState
 
                                   if (context.mounted) {
                                     final scannerBloc =
-                                        context.read<ScannerBloc>();
+                                        context.read<DigitScannerBloc>();
 
                                     if (scannerBloc.state.duplicate) {
                                       DigitToast.show(
@@ -322,8 +325,8 @@ class _IndividualDetailsPageState
                                           userUuid: userId,
                                           projectId: context.projectId,
                                           tag: scannerBloc
-                                                  .state.qrcodes.isNotEmpty
-                                              ? scannerBloc.state.qrcodes.first
+                                                  .state.qrCodes.isNotEmpty
+                                              ? scannerBloc.state.qrCodes.first
                                               : null,
                                         ),
                                       );
@@ -567,6 +570,9 @@ class _IndividualDetailsPageState
                                           .individualDetails
                                           .mobileNumberInvalidFormatValidationMessage),
                                 },
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                ],
                               ),
                             ),
                           ],
@@ -577,9 +583,9 @@ class _IndividualDetailsPageState
                                 widget.isHeadOfHousehold) ||
                             (context.beneficiaryType ==
                                 BeneficiaryType.individual))
-                          BlocBuilder<ScannerBloc, ScannerState>(
+                          BlocBuilder<DigitScannerBloc, DigitScannerState>(
                             builder: (context, state) => state
-                                    .qrcodes.isNotEmpty
+                                    .qrCodes.isNotEmpty
                                 ? Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -599,7 +605,7 @@ class _IndividualDetailsPageState
                                         child: Text(
                                           overflow: TextOverflow.ellipsis,
                                           localizations
-                                              .translate(state.qrcodes.first),
+                                              .translate(state.qrCodes.first),
                                         ),
                                       ),
                                       Padding(
@@ -610,14 +616,20 @@ class _IndividualDetailsPageState
                                           color: theme.colorScheme.secondary,
                                           icon: const Icon(Icons.edit),
                                           onPressed: () {
-                                            // TODO : [Need to handle the Scanner event];
-                                            // context.read<ScannerBloc>().add(ScannerScanEvent())
-                                            context.router.push(QRScannerRoute(
-                                              quantity: 1,
-                                              isGS1code: false,
-                                              sinlgleValue: true,
-                                              isEditEnabled: true,
-                                            ));
+                                            Navigator.of(context).push(
+                                              //[TODO: Add the route to auto_route]
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const DigitScannerPage(
+                                                  quantity: 1,
+                                                  isGS1code: false,
+                                                  singleValue: true,
+                                                  isEditEnabled: true,
+                                                ),
+                                                settings: const RouteSettings(
+                                                    name: '/qr-scanner'),
+                                              ),
+                                            );
                                           },
                                         ),
                                       ),
@@ -632,11 +644,19 @@ class _IndividualDetailsPageState
                                       ),
                                     ),
                                     onPressed: () {
-                                      context.router.push(QRScannerRoute(
-                                        quantity: 1,
-                                        isGS1code: false,
-                                        sinlgleValue: true,
-                                      ));
+                                      Navigator.of(context).push(
+                                        // [TODO: Add the route to auto_route]
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const DigitScannerPage(
+                                            quantity: 1,
+                                            isGS1code: false,
+                                            singleValue: true,
+                                          ),
+                                          settings: const RouteSettings(
+                                              name: '/qr-scanner'),
+                                        ),
+                                      );
                                     },
                                     icon: Icons.qr_code,
                                     label: localizations.translate(
@@ -753,9 +773,8 @@ class _IndividualDetailsPageState
     final individual = state.mapOrNull<IndividualModel>(
       editIndividual: (value) {
         if (value.projectBeneficiaryModel?.tag != null) {
-          context
-              .read<ScannerBloc>()
-              .add(ScannerScanEvent([], [value.projectBeneficiaryModel!.tag!]));
+          context.read<DigitScannerBloc>().add(DigitScannerScanEvent(
+              barCode: [], qrCode: [value.projectBeneficiaryModel!.tag!]));
         }
 
         return value.individualModel;

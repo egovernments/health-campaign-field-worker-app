@@ -8,7 +8,6 @@ import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
 import '../../blocs/project/project.dart';
-import '../../blocs/scanner/scanner.dart';
 import '../../blocs/search_households/search_bloc_common_wrapper.dart';
 import '../../blocs/search_households/search_households.dart';
 import '../../models/data_model.dart';
@@ -21,6 +20,7 @@ import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 import '../../widgets/member_card/member_card.dart';
 
+@RoutePage()
 class HouseholdOverviewPage extends LocalizedStatefulWidget {
   const HouseholdOverviewPage({super.key, super.appLocalizations});
 
@@ -493,13 +493,13 @@ class _HouseholdOverviewPageState
                                               tasks: taskdata,
                                               sideEffects: sideEffectData,
                                               editMemberAction: () async {
-                                                final scannerbloc =
-                                                    context.read<ScannerBloc>();
-
-                                                scannerbloc.add(
-                                                  const ScannerEvent
-                                                      .handleScanner([], []),
-                                                );
+                                                // final scannerbloc =
+                                                //     context.read<ScannerBloc>();
+                                                //
+                                                // scannerbloc.add(
+                                                //   const ScannerEvent
+                                                //       .handleScanner([], []),
+                                                // );
 
                                                 final bloc = ctx.read<
                                                     HouseholdOverviewBloc>();
@@ -740,12 +740,12 @@ class _HouseholdOverviewPageState
 
                                         final projectId = context.projectId;
 
-                                        context.read<ScannerBloc>().add(
-                                              const ScannerEvent.handleScanner(
-                                                [],
-                                                [],
-                                              ),
-                                            );
+                                        // context.read<ScannerBloc>().add(
+                                        //       const ScannerEvent.handleScanner(
+                                        //         [],
+                                        //         [],
+                                        //       ),
+                                        //     );
                                         await context.router.push(
                                           BeneficiaryRegistrationWrapperRoute(
                                             initialState:

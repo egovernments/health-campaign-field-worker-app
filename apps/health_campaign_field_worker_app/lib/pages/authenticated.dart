@@ -14,8 +14,8 @@ import '../blocs/localization/app_localization.dart';
 import '../blocs/search_households/project_beneficiaries_downsync.dart';
 import '../blocs/search_households/proximity_search.dart';
 import '../blocs/search_households/search_bloc_common_wrapper.dart';
-import '../blocs/search_households/search_households.dart';
 import '../blocs/search_households/search_by_head.dart';
+import '../blocs/search_households/search_households.dart';
 import '../blocs/search_households/tag_by_search.dart';
 import '../blocs/search_referrals/search_referrals.dart';
 import '../blocs/service/service.dart';
@@ -35,6 +35,7 @@ import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
 import '../widgets/sidebar/side_bar.dart';
 
+@RoutePage()
 class AuthenticatedPageWrapper extends StatelessWidget {
   AuthenticatedPageWrapper({Key? key}) : super(key: key);
 
@@ -232,7 +233,6 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                       ),
                       BlocProvider(
                         create: (context) {
-
                           return SearchBlocWrapper(
                             searchHouseholdsBloc:
                                 context.read<SearchHouseholdsBloc>(),
@@ -404,7 +404,6 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                             switch (context.router.topRoute.name) {
                               case ProjectSelectionRoute.name:
                               case BoundarySelectionRoute.name:
-                              case QRScannerRoute.name:
                                 shouldShowDrawer = false;
                                 break;
                               default:
