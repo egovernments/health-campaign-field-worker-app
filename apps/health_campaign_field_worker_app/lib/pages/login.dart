@@ -80,6 +80,7 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                         style: theme.textTheme.displayMedium,
                       ),
                       DigitTextFormField(
+                        key: const Key('username'),
                         label: localizations.translate(
                           i18.login.userIdPlaceholder,
                         ),
@@ -96,6 +97,7 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                         keyboardType: TextInputType.text,
                       ),
                       DigitTextFormField(
+                        key: const Key('password'),
                         label: localizations.translate(
                           i18.login.passwordPlaceholder,
                         ),
@@ -117,6 +119,7 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                       BlocBuilder<AuthBloc, AuthState>(
                         builder: (context, state) {
                           return DigitElevatedButton(
+                            key: const Key('login'),
                             onPressed: state.maybeWhen(
                               orElse: () => () {
                                 form.markAllAsTouched();
