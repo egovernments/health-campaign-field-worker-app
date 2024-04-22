@@ -105,6 +105,9 @@ class _IndividualDetailsPageState
                       onPressed: isClicked
                           ? null
                           : () async {
+                              if (form.control(_dobKey).value == null) {
+                                form.control(_dobKey).setErrors({'': true});
+                              }
                               final userId = context.loggedInUserUuid;
                               final projectId = context.projectId;
                               form.markAllAsTouched();
