@@ -110,7 +110,6 @@ class _DeliverInterventionPageState
                                       state.selectedIndividual,
                                     )?.productVariants)
                                   : projectState.projectType?.resources;
-
                           final int numberOfDoses = (projectState
                                       .projectType?.cycles?.isNotEmpty ==
                                   true)
@@ -425,36 +424,25 @@ class _DeliverInterventionPageState
                                                             .beneficiaryType ==
                                                         BeneficiaryType
                                                             .individual)
-                                                      DigitTextFormField(
-                                                        readOnly: true,
-                                                        formControlName:
-                                                            _doseAdministrationKey,
-                                                        keyboardType:
-                                                            TextInputType
-                                                                .number,
-                                                        label: localizations
-                                                            .translate(i18
-                                                                .deliverIntervention
-                                                                .currentCycle),
+                                                      DigitStepper(
+                                                        activeStep:
+                                                            deliveryInterventionstate
+                                                                    .dose -
+                                                                1,
+                                                        stepRadius: 12.5,
+                                                        steps: steps,
+                                                        maxStepReached: 3,
+                                                        lineLength: (MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width -
+                                                                12.5 *
+                                                                    2 *
+                                                                    steps
+                                                                        .length -
+                                                                50) /
+                                                            (steps.length - 1),
                                                       ),
-                                                    DigitStepper(
-                                                      activeStep:
-                                                          deliveryInterventionstate
-                                                                  .dose -
-                                                              1,
-                                                      stepRadius: 12.5,
-                                                      steps: steps,
-                                                      maxStepReached: 3,
-                                                      lineLength: (MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width -
-                                                              12.5 *
-                                                                  2 *
-                                                                  steps.length -
-                                                              50) /
-                                                          (steps.length - 1),
-                                                    ),
                                                     // Solution Customizations
                                                     // DigitDateFormPicker(
                                                     //   isEnabled: false,
