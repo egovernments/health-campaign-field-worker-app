@@ -1083,6 +1083,9 @@ class AcknowledgementSuccess {
 
   String get actionLabelText => 'ACKNOWLEDGEMENT_SUCCESS_ACTION_LABEL_TEXT';
 
+  String get actionLabelTextHousehold =>
+      'HOUSEHOLD_ACKNOWLEDGEMENT_SUCCESS_ACTION_LABEL_TEXT';
+
   String get stockActionLabelText =>
       'STOCK_ACKNOWLEDGEMENT_SUCCESS_ACTION_LABEL_TEXT';
 
