@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'referral_project_facility.dart';
@@ -96,11 +96,8 @@ mixin ReferralProjectFacilitySearchModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ReferralProjectFacilitySearchModelMapper.ensureInitialized()
-                .isValueEqual(
-                    this as ReferralProjectFacilitySearchModel, other));
+    return ReferralProjectFacilitySearchModelMapper.ensureInitialized()
+        .equalsValue(this as ReferralProjectFacilitySearchModel, other);
   }
 
   @override
@@ -285,10 +282,8 @@ mixin ReferralProjectFacilityModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ReferralProjectFacilityModelMapper.ensureInitialized()
-                .isValueEqual(this as ReferralProjectFacilityModel, other));
+    return ReferralProjectFacilityModelMapper.ensureInitialized()
+        .equalsValue(this as ReferralProjectFacilityModel, other);
   }
 
   @override

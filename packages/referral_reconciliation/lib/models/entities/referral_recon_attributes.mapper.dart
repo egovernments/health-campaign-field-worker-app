@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'referral_recon_attributes.dart';
@@ -120,11 +120,8 @@ mixin ReferralReconAttributesSearchModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ReferralReconAttributesSearchModelMapper.ensureInitialized()
-                .isValueEqual(
-                    this as ReferralReconAttributesSearchModel, other));
+    return ReferralReconAttributesSearchModelMapper.ensureInitialized()
+        .equalsValue(this as ReferralReconAttributesSearchModel, other);
   }
 
   @override
@@ -340,10 +337,8 @@ mixin ReferralReconAttributesModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ReferralReconAttributesModelMapper.ensureInitialized()
-                .isValueEqual(this as ReferralReconAttributesModel, other));
+    return ReferralReconAttributesModelMapper.ensureInitialized()
+        .equalsValue(this as ReferralReconAttributesModel, other);
   }
 
   @override

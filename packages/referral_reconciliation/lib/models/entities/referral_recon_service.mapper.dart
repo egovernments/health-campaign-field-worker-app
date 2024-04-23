@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'referral_recon_service.dart';
@@ -102,10 +102,8 @@ mixin ReferralReconServiceSearchModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ReferralReconServiceSearchModelMapper.ensureInitialized()
-                .isValueEqual(this as ReferralReconServiceSearchModel, other));
+    return ReferralReconServiceSearchModelMapper.ensureInitialized()
+        .equalsValue(this as ReferralReconServiceSearchModel, other);
   }
 
   @override
@@ -191,6 +189,7 @@ class ReferralReconServiceModelMapper
     if (_instance == null) {
       MapperContainer.globals
           .use(_instance = ReferralReconServiceModelMapper._());
+      ReferralReconServiceAttributesModelMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -307,10 +306,8 @@ mixin ReferralReconServiceModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ReferralReconServiceModelMapper.ensureInitialized()
-                .isValueEqual(this as ReferralReconServiceModel, other));
+    return ReferralReconServiceModelMapper.ensureInitialized()
+        .equalsValue(this as ReferralReconServiceModel, other);
   }
 
   @override

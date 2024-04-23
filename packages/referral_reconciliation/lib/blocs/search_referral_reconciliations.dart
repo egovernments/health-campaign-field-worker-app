@@ -18,9 +18,7 @@ EventTransformer<Event> debounce<Event>(Duration duration) {
 
 class SearchReferralsBloc
     extends Bloc<SearchReferralsEvent, SearchReferralsState> {
-
-  SearchReferralsBloc({
-  }) : super(const SearchReferralsState()) {
+  SearchReferralsBloc() : super(const SearchReferralsState()) {
     on(_handleSearchByName);
     on(_handleClear);
     on(_handleSearchByTag);
