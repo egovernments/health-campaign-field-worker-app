@@ -605,6 +605,7 @@ class _DeliverInterventionPageState
                                                               localizations
                                                                   .translate(
                                                                       value),
+                                                          initialValue: null,
                                                           emptyText: localizations
                                                               .translate(i18
                                                                   .common

@@ -8,6 +8,7 @@ class DigitReactiveSearchDropdown<T> extends StatefulWidget {
   final String label;
   final List<T> menuItems;
   final FormGroup form;
+  final T? initialValue;
   final String formControlName;
   final bool isRequired;
   final bool enabled;
@@ -27,6 +28,7 @@ class DigitReactiveSearchDropdown<T> extends StatefulWidget {
     this.isRequired = false,
     required this.valueMapper,
     this.validationMessage,
+    this.initialValue,
     this.padding,
     this.onSelected,
     this.onFieldTap,
