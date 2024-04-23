@@ -707,6 +707,26 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                           ?.boundaryType;
 
                                       print(entryType);
+                                      List<FacilityModel> filteredFacility = [];
+                                      if (entryType ==
+                                          StockRecordEntryType.receipt) {
+                                        filteredFacility =
+                                            getFilteredFacilities(
+                                          facilities,
+                                          boundaryType,
+                                          "childBoundaryType",
+                                        );
+                                      } else if (entryType ==
+                                              StockRecordEntryType.returned ||
+                                          entryType ==
+                                              StockRecordEntryType.dispatch) {
+                                        filteredFacility =
+                                            getFilteredFacilities(
+                                          facilities,
+                                          boundaryType,
+                                          "parentBoundaryType",
+                                        );
+                                      }
 
                                       //TODO below pseudocode
                                       // If entryType is received then filter facilities
@@ -723,7 +743,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                           final facility =
                                               await parent.push<FacilityModel>(
                                             FacilitySelectionRoute(
-                                              facilities: facilities,
+                                              facilities: filteredFacility,
                                             ),
                                           );
 
@@ -776,7 +796,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                               final facility = await parent
                                                   .push<FacilityModel>(
                                                 FacilitySelectionRoute(
-                                                  facilities: facilities,
+                                                  facilities: filteredFacility,
                                                 ),
                                               );
 
@@ -1042,6 +1062,29 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
         ),
       ),
     );
+  }
+
+  List<FacilityModel> getFilteredFacilities(
+    List<FacilityModel> facilities,
+    String? boundaryType,
+    String requiredBoundaryType,
+  ) {
+    List<FacilityModel> filteredFacilities = [];
+
+    if (facilities != null && boundaryType != null) {
+      for (FacilityModel facility in facilities) {
+        FacilityAdditionalFields? additionalFields = facility.additionalFields;
+        if (additionalFields != null && additionalFields.fields != null) {
+          bool hasBoundaryType = additionalFields.fields.any((field) =>
+              field.key == requiredBoundaryType && field.value == boundaryType);
+          if (hasBoundaryType) {
+            filteredFacilities.add(facility);
+          }
+        }
+      }
+    }
+
+    return filteredFacilities;
   }
 
   void clearQRCodes() {
