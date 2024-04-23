@@ -488,29 +488,29 @@ class _DeliverInterventionPageState
                                                       style: theme.textTheme
                                                           .displayMedium,
                                                     ),
-                                                    if (context
-                                                            .beneficiaryType ==
-                                                        BeneficiaryType
-                                                            .individual)
-                                                      DigitStepper(
-                                                        activeStep:
-                                                            deliveryInterventionstate
-                                                                    .dose -
-                                                                1,
-                                                        stepRadius: 12.5,
-                                                        steps: steps,
-                                                        maxStepReached: 3,
-                                                        lineLength: (MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width -
-                                                                12.5 *
-                                                                    2 *
-                                                                    steps
-                                                                        .length -
-                                                                50) /
-                                                            (steps.length - 1),
-                                                      ),
+                                                    // if (context
+                                                    //         .beneficiaryType ==
+                                                    //     BeneficiaryType
+                                                    //         .individual)
+                                                    //   DigitStepper(
+                                                    //     activeStep:
+                                                    //         deliveryInterventionstate
+                                                    //                 .dose -
+                                                    //             1,
+                                                    //     stepRadius: 12.5,
+                                                    //     steps: steps,
+                                                    //     maxStepReached: 3,
+                                                    //     lineLength: (MediaQuery.of(
+                                                    //                     context)
+                                                    //                 .size
+                                                    //                 .width -
+                                                    //             12.5 *
+                                                    //                 2 *
+                                                    //                 steps
+                                                    //                     .length -
+                                                    //             50) /
+                                                    //         (steps.length - 1),
+                                                    //   ),
                                                     // Solution Customizations
                                                     // DigitDateFormPicker(
                                                     //   isEnabled: false,
