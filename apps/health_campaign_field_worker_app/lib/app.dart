@@ -286,9 +286,7 @@ class MainApplicationState extends State<MainApplication>
                           ),
                         ),
                         BlocProvider(
-                          create: (context) => SearchReferralsBloc(
-                            userUid: context.loggedInUserUuid,
-                          ),
+                          create: (context) => SearchReferralsBloc(),
                         ),
                         BlocProvider(
                           create: (context) => ReferralReconServiceBloc(
