@@ -140,7 +140,7 @@ class _HouseholdOverviewPageState
                                   BlocBuilder<ProjectBloc, ProjectState>(
                                     builder: (context, projectState) {
                                       return Align(
-                                        alignment: Alignment.centerLeft,
+                                        alignment: Alignment.centerRight,
                                         child: DigitIconButton(
                                           onPressed: () =>
                                               DigitActionDialog.show(
@@ -677,7 +677,8 @@ class _HouseholdOverviewPageState
                                                       sideEffectData,
                                                     )
                                                   : false,
-                                              name: e.name?.givenName ?? ' - ',
+                                              name:
+                                                  '${e.name?.givenName ?? ' - '} ${e.name?.familyName ?? ' - '}',
                                               years: (e.dateOfBirth == null
                                                       ? null
                                                       : DigitDateUtils
