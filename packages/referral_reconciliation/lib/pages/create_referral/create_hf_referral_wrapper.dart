@@ -33,28 +33,23 @@ class HFCreateReferralWrapperPage extends StatelessWidget {
       return ProjectFacilityBlocWrapper(
         projectId: projectId,
         child: BlocProvider(
-          create: (_) => ReferralReconServiceDefinitionBloc(
-            const ReferralReconServiceDefinitionEmptyState(),
-          )..add(const ReferralReconServiceDefinitionFetchEvent()),
+          create: (_) => ReferralReconServiceBloc(
+            const ReferralReconServiceEmptyState(),
+          )..add(ReferralReconServiceSearchEvent(
+                serviceSearchModel: ReferralReconServiceSearchModel(
+              clientId:
+                  referralReconciliation?.hfReferralModel?.clientReferenceId,
+            ))),
           child: BlocProvider(
-            create: (_) => ReferralReconServiceBloc(
-              const ReferralReconServiceEmptyState(),
-            )..add(ReferralReconServiceSearchEvent(
-                  serviceSearchModel: ReferralReconServiceSearchModel(
-                clientId:
-                    referralReconciliation?.hfReferralModel?.clientReferenceId,
-              ))),
-            child: BlocProvider(
-              create: (_) => RecordHFReferralBloc(
-                RecordHFReferralState.create(
-                  projectId: projectId,
-                  viewOnly: viewOnly,
-                  hfReferralModel: referralReconciliation?.hfReferralModel,
-                  additionalData: referralReconciliation?.additionalData,
-                ),
+            create: (_) => RecordHFReferralBloc(
+              RecordHFReferralState.create(
+                projectId: projectId,
+                viewOnly: viewOnly,
+                hfReferralModel: referralReconciliation?.hfReferralModel,
+                additionalData: referralReconciliation?.additionalData,
               ),
-              child: const AutoRouter(),
             ),
+            child: const AutoRouter(),
           ),
         ),
       );

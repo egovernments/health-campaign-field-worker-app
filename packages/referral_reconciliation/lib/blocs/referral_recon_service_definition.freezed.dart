@@ -16,30 +16,26 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$ReferralReconServiceDefinitionEvent {
+  String get serviceDefinitionCode => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() fetch,
     required TResult Function(String serviceDefinitionCode)
         selectServiceDefinition,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? fetch,
     TResult? Function(String serviceDefinitionCode)? selectServiceDefinition,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? fetch,
     TResult Function(String serviceDefinitionCode)? selectServiceDefinition,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(ReferralReconServiceDefinitionFetchEvent value)
-        fetch,
     required TResult Function(
             ReferralReconServiceDefinitionSelectionEvent value)
         selectServiceDefinition,
@@ -47,19 +43,22 @@ mixin _$ReferralReconServiceDefinitionEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(ReferralReconServiceDefinitionFetchEvent value)? fetch,
     TResult? Function(ReferralReconServiceDefinitionSelectionEvent value)?
         selectServiceDefinition,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(ReferralReconServiceDefinitionFetchEvent value)? fetch,
     TResult Function(ReferralReconServiceDefinitionSelectionEvent value)?
         selectServiceDefinition,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
+
+  @JsonKey(ignore: true)
+  $ReferralReconServiceDefinitionEventCopyWith<
+          ReferralReconServiceDefinitionEvent>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -69,6 +68,8 @@ abstract class $ReferralReconServiceDefinitionEventCopyWith<$Res> {
           $Res Function(ReferralReconServiceDefinitionEvent) then) =
       _$ReferralReconServiceDefinitionEventCopyWithImpl<$Res,
           ReferralReconServiceDefinitionEvent>;
+  @useResult
+  $Res call({String serviceDefinitionCode});
 }
 
 /// @nodoc
@@ -81,131 +82,30 @@ class _$ReferralReconServiceDefinitionEventCopyWithImpl<$Res,
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? serviceDefinitionCode = null,
+  }) {
+    return _then(_value.copyWith(
+      serviceDefinitionCode: null == serviceDefinitionCode
+          ? _value.serviceDefinitionCode
+          : serviceDefinitionCode // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
 }
 
 /// @nodoc
-abstract class _$$ReferralReconServiceDefinitionFetchEventImplCopyWith<$Res> {
-  factory _$$ReferralReconServiceDefinitionFetchEventImplCopyWith(
-          _$ReferralReconServiceDefinitionFetchEventImpl value,
-          $Res Function(_$ReferralReconServiceDefinitionFetchEventImpl) then) =
-      __$$ReferralReconServiceDefinitionFetchEventImplCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$ReferralReconServiceDefinitionFetchEventImplCopyWithImpl<$Res>
-    extends _$ReferralReconServiceDefinitionEventCopyWithImpl<$Res,
-        _$ReferralReconServiceDefinitionFetchEventImpl>
-    implements _$$ReferralReconServiceDefinitionFetchEventImplCopyWith<$Res> {
-  __$$ReferralReconServiceDefinitionFetchEventImplCopyWithImpl(
-      _$ReferralReconServiceDefinitionFetchEventImpl _value,
-      $Res Function(_$ReferralReconServiceDefinitionFetchEventImpl) _then)
-      : super(_value, _then);
-}
-
-/// @nodoc
-
-class _$ReferralReconServiceDefinitionFetchEventImpl
-    implements ReferralReconServiceDefinitionFetchEvent {
-  const _$ReferralReconServiceDefinitionFetchEventImpl();
-
-  @override
-  String toString() {
-    return 'ReferralReconServiceDefinitionEvent.fetch()';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$ReferralReconServiceDefinitionFetchEventImpl);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() fetch,
-    required TResult Function(String serviceDefinitionCode)
-        selectServiceDefinition,
-  }) {
-    return fetch();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? fetch,
-    TResult? Function(String serviceDefinitionCode)? selectServiceDefinition,
-  }) {
-    return fetch?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? fetch,
-    TResult Function(String serviceDefinitionCode)? selectServiceDefinition,
-    required TResult orElse(),
-  }) {
-    if (fetch != null) {
-      return fetch();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(ReferralReconServiceDefinitionFetchEvent value)
-        fetch,
-    required TResult Function(
-            ReferralReconServiceDefinitionSelectionEvent value)
-        selectServiceDefinition,
-  }) {
-    return fetch(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(ReferralReconServiceDefinitionFetchEvent value)? fetch,
-    TResult? Function(ReferralReconServiceDefinitionSelectionEvent value)?
-        selectServiceDefinition,
-  }) {
-    return fetch?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(ReferralReconServiceDefinitionFetchEvent value)? fetch,
-    TResult Function(ReferralReconServiceDefinitionSelectionEvent value)?
-        selectServiceDefinition,
-    required TResult orElse(),
-  }) {
-    if (fetch != null) {
-      return fetch(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class ReferralReconServiceDefinitionFetchEvent
-    implements ReferralReconServiceDefinitionEvent {
-  const factory ReferralReconServiceDefinitionFetchEvent() =
-      _$ReferralReconServiceDefinitionFetchEventImpl;
-}
-
-/// @nodoc
-abstract class _$$ReferralReconServiceDefinitionSelectionEventImplCopyWith<
-    $Res> {
+abstract class _$$ReferralReconServiceDefinitionSelectionEventImplCopyWith<$Res>
+    implements $ReferralReconServiceDefinitionEventCopyWith<$Res> {
   factory _$$ReferralReconServiceDefinitionSelectionEventImplCopyWith(
           _$ReferralReconServiceDefinitionSelectionEventImpl value,
           $Res Function(_$ReferralReconServiceDefinitionSelectionEventImpl)
               then) =
       __$$ReferralReconServiceDefinitionSelectionEventImplCopyWithImpl<$Res>;
+  @override
   @useResult
   $Res call({String serviceDefinitionCode});
 }
@@ -275,7 +175,6 @@ class _$ReferralReconServiceDefinitionSelectionEventImpl
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() fetch,
     required TResult Function(String serviceDefinitionCode)
         selectServiceDefinition,
   }) {
@@ -285,7 +184,6 @@ class _$ReferralReconServiceDefinitionSelectionEventImpl
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? fetch,
     TResult? Function(String serviceDefinitionCode)? selectServiceDefinition,
   }) {
     return selectServiceDefinition?.call(serviceDefinitionCode);
@@ -294,7 +192,6 @@ class _$ReferralReconServiceDefinitionSelectionEventImpl
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? fetch,
     TResult Function(String serviceDefinitionCode)? selectServiceDefinition,
     required TResult orElse(),
   }) {
@@ -307,8 +204,6 @@ class _$ReferralReconServiceDefinitionSelectionEventImpl
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(ReferralReconServiceDefinitionFetchEvent value)
-        fetch,
     required TResult Function(
             ReferralReconServiceDefinitionSelectionEvent value)
         selectServiceDefinition,
@@ -319,7 +214,6 @@ class _$ReferralReconServiceDefinitionSelectionEventImpl
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(ReferralReconServiceDefinitionFetchEvent value)? fetch,
     TResult? Function(ReferralReconServiceDefinitionSelectionEvent value)?
         selectServiceDefinition,
   }) {
@@ -329,7 +223,6 @@ class _$ReferralReconServiceDefinitionSelectionEventImpl
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(ReferralReconServiceDefinitionFetchEvent value)? fetch,
     TResult Function(ReferralReconServiceDefinitionSelectionEvent value)?
         selectServiceDefinition,
     required TResult orElse(),
@@ -347,7 +240,9 @@ abstract class ReferralReconServiceDefinitionSelectionEvent
           {required final String serviceDefinitionCode}) =
       _$ReferralReconServiceDefinitionSelectionEventImpl;
 
+  @override
   String get serviceDefinitionCode;
+  @override
   @JsonKey(ignore: true)
   _$$ReferralReconServiceDefinitionSelectionEventImplCopyWith<
           _$ReferralReconServiceDefinitionSelectionEventImpl>

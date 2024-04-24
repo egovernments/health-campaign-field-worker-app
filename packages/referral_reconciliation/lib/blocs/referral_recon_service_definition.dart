@@ -16,22 +16,8 @@ class ReferralReconServiceDefinitionBloc extends Bloc<
   ReferralReconServiceDefinitionBloc(
     super.initialState,
   ) {
-    on(_handleFetch);
     on(_handleSelect);
   }
-
-  FutureOr<void> _handleFetch(
-    ReferralReconServiceDefinitionFetchEvent event,
-    ReferralReconServiceDefinitionEmitter emit,
-  ) async {
-    List<ReferralReconServiceDefinitionModel>? results =
-        await ReferralReconSingleton().getServiceDefinitions('');
-
-    emit(ReferralReconServiceDefinitionServiceFetchedState(
-      serviceDefinitionList: results ?? [],
-    ));
-  }
-
   FutureOr<void> _handleSelect(
     ReferralReconServiceDefinitionSelectionEvent event,
     ReferralReconServiceDefinitionEmitter emit,
@@ -49,8 +35,6 @@ class ReferralReconServiceDefinitionBloc extends Bloc<
 @freezed
 class ReferralReconServiceDefinitionEvent
     with _$ReferralReconServiceDefinitionEvent {
-  const factory ReferralReconServiceDefinitionEvent.fetch() =
-      ReferralReconServiceDefinitionFetchEvent;
   const factory ReferralReconServiceDefinitionEvent.selectServiceDefinition({
     required String serviceDefinitionCode,
   }) = ReferralReconServiceDefinitionSelectionEvent;
