@@ -604,8 +604,8 @@ class _DeliverInterventionPageState
                                                           valueMapper: (value) =>
                                                               localizations
                                                                   .translate(
-                                                                      value),
-                                                          initialValue: null,
+                                                            value,
+                                                          ),
                                                           emptyText: localizations
                                                               .translate(i18
                                                                   .common
@@ -791,19 +791,6 @@ class _DeliverInterventionPageState
         validators: [],
       ),
       _deliveryCommentKey: FormControl<String>(
-        value: (bloc.tasks?.last.additionalFields?.fields
-                        .where((a) =>
-                            a.key ==
-                            AdditionalFieldsType.deliveryComment.toValue())
-                        .toList() ??
-                    [])
-                .isNotEmpty
-            ? bloc.tasks?.last.additionalFields?.fields
-                .where((a) =>
-                    a.key == AdditionalFieldsType.deliveryComment.toValue())
-                .first
-                .value
-            : '',
         validators: [],
       ),
       _dateOfAdministrationKey:
