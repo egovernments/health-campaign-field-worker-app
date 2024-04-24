@@ -170,11 +170,14 @@ class _BoundarySelectionPageState
                                         // Call the resetChildDropdowns function when a parent dropdown is selected
                                         resetChildDropdowns(label, state);
                                       },
-                                      isRequired: true,
+                                      isRequired:
+                                          context.isAllBoundaryMandatory,
                                       validationMessage:
-                                          localizations.translate(
-                                        i18.common.corecommonRequired,
-                                      ),
+                                          context.isAllBoundaryMandatory
+                                              ? localizations.translate(
+                                                  i18.common.corecommonRequired,
+                                                )
+                                              : null,
                                       emptyText: localizations
                                           .translate(i18.common.noMatchFound),
                                     ),
@@ -495,11 +498,18 @@ class _BoundarySelectionPageState
                                       builder: (context, bool isClicked, _) {
                                         return DigitElevatedButton(
                                           onPressed: selectedBoundary == null ||
-                                                  isClicked
+                                                  isClicked ||
+                                                  validateAllBoundarySelection(
+                                                    context
+                                                        .isAllBoundaryMandatory,
+                                                  )
                                               ? null
                                               : () async {
                                                   if (!form.valid ||
-                                                      validateAllBoundarySelection()) {
+                                                      validateAllBoundarySelection(
+                                                        context
+                                                            .isAllBoundaryMandatory,
+                                                      )) {
                                                     clickedStatus.value = false;
                                                     await DigitToast.show(
                                                       context,
@@ -611,22 +621,26 @@ class _BoundarySelectionPageState
     return fb.group(formControls);
   }
 
-  bool validateAllBoundarySelection() {
-    // Iterate through the map entries
-    for (final entry in formControls.entries) {
-      // Access the form control
-      final formControl = entry.value;
+  bool validateAllBoundarySelection(bool mandateAllBoundarySelection) {
+    if (mandateAllBoundarySelection) {
+      // Iterate through the map entries
+      for (final entry in formControls.entries) {
+        // Access the form control
+        final formControl = entry.value;
 
-      // Check if the form control value is null
-      if (formControl.value == null) {
-        formControl.setErrors({'': true});
+        // Check if the form control value is null
+        if (formControl.value == null) {
+          formControl.setErrors({'': true});
+          // Return true if any form control has a null value
 
-        // Return true if any form control has a null value
-        return true;
+          return true;
+        }
       }
-    }
 
-    // Return false if none of the form controls have a null value
-    return false;
+      // Return false if none of the form controls have a null value
+      return false;
+    } else {
+      return false;
+    }
   }
 }

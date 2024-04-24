@@ -118,6 +118,21 @@ extension ContextUtilityExtensions on BuildContext {
     }
   }
 
+  bool get isAllBoundaryMandatory {
+    try {
+      bool isAllBoundaryMandatory = loggedInUserRoles
+          .where((role) =>
+              role.code == RolesType.distributor.toValue() ||
+              role.code == RolesType.registrar.toValue())
+          .toList()
+          .isNotEmpty;
+
+      return isAllBoundaryMandatory;
+    } catch (_) {
+      return false;
+    }
+  }
+
   List<UserRoleModel> get loggedInUserRoles {
     final authBloc = _get<AuthBloc>();
     final userRequestObject = authBloc.state.whenOrNull(
