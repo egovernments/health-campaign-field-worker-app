@@ -21,6 +21,7 @@ class HcmReferralReconBloc extends ReferralReconListener {
   final String userId;
   final String tenantId;
   final ProjectModel selectedProject;
+  final List<String> checklistTypes;
   final LocalRepository<HcmHFReferralModel, HcmHFReferralSearchModel>
       hfReferralLocalRepository;
   final LocalRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
@@ -38,6 +39,7 @@ class HcmReferralReconBloc extends ReferralReconListener {
     required this.hfReferralLocalRepository,
     required this.serviceDefinitionLocalRepository,
     required this.serviceLocalRepository,
+    required this.checklistTypes,
   });
 
   // Method to call the sync method
@@ -103,8 +105,8 @@ class HcmReferralReconBloc extends ReferralReconListener {
 
   // Fetch service definitions
   @override
-  Future<List<ReferralReconServiceDefinitionModel>> fetchServiceDefinitions(
-      String code) async {
+  Future<List<ReferralReconServiceDefinitionModel>>
+      fetchSelectedServiceDefinitions(String code) async {
     final selectedServiceDefinition = await serviceDefinitionLocalRepository
         .search(ServiceDefinitionSearchModel(tenantId: tenantId, code: [
       '${selectedProject.name}.HF_RF_$code.${RolesType.healthFacilityWorker.toValue()}'
@@ -258,5 +260,37 @@ class HcmReferralReconBloc extends ReferralReconListener {
                     nonRecoverableError: e.nonRecoverableError))
                 .toList())
         : null;
+  }
+
+  @override
+  Future<List<ReferralReconServiceDefinitionModel>>
+      fetchAllServiceDefinitions() async {
+    List<String> codes = [];
+    checklistTypes.map((e) => e).forEach((element) {
+      codes.add(
+          '${selectedProject.name}.$element.${RolesType.healthFacilityWorker.toValue()}');
+    });
+    final allServiceDefinitions = await serviceDefinitionLocalRepository
+        .search(ServiceDefinitionSearchModel(tenantId: tenantId, code: codes));
+    return allServiceDefinitions
+        .map((e) => ReferralReconServiceDefinitionModel(
+            id: e.id,
+            tenantId: e.tenantId,
+            code: e.code,
+            attributes: e.attributes
+                ?.map((a) => ReferralReconAttributesModel(
+                      id: a.id,
+                      code: a.code,
+                      tenantId: a.tenantId,
+                      isActive: a.isActive,
+                      dataType: a.dataType,
+                      referenceId: a.referenceId,
+                      required: a.required,
+                      values: a.values,
+                      order: a.order,
+                      regex: a.regex,
+                    ))
+                .toList()))
+        .toList();
   }
 }

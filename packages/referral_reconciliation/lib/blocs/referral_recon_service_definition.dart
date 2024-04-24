@@ -25,7 +25,7 @@ class ReferralReconServiceDefinitionBloc extends Bloc<
     ReferralReconServiceDefinitionEmitter emit,
   ) async {
     List<ReferralReconServiceDefinitionModel>? results =
-        await ReferralReconSingleton().getServiceDefinitions('');
+        await ReferralReconSingleton().getServiceDefinitionsList();
 
     emit(ReferralReconServiceDefinitionServiceFetchedState(
       serviceDefinitionList: results ?? [],

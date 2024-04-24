@@ -8,8 +8,11 @@ abstract class ReferralReconListener {
   Future<List<ReferralProjectFacilityModel>>
       fetchProjectFacilitiesForProjectId();
 
-  Future<List<ReferralReconServiceDefinitionModel>> fetchServiceDefinitions(
-      String code);
+  Future<List<ReferralReconServiceDefinitionModel>>
+      fetchSelectedServiceDefinitions(String code);
+
+  Future<List<ReferralReconServiceDefinitionModel>>
+      fetchAllServiceDefinitions();
 
   Future<ReferralReconServiceModel?> fetchSavedChecklist(
       ReferralReconServiceSearchModel reconServiceSearchModel);
@@ -45,6 +48,7 @@ class ReferralReconSingleton {
   String _tenantId = '';
   List<String> _genderOptions = [];
   List<String> _cycles = [];
+  List<String> _checklistTypes = [];
   List<String> _referralReasons = [];
   ValidIndividualAgeForCampaign _validIndividualAgeForCampaign =
       ValidIndividualAgeForCampaign(validMinAge: 0, validMaxAge: 0);
@@ -60,6 +64,7 @@ class ReferralReconSingleton {
     required List<String> genderOptions,
     required List<String> cycles,
     required List<String> referralReasons,
+    required List<String> checklistTypes,
   }) {
     _referralReconListener = referralReconListener;
     _projectId = projectId;
@@ -71,6 +76,7 @@ class ReferralReconSingleton {
     _cycles = cycles;
     _validIndividualAgeForCampaign = validIndividualAgeForCampaign;
     _referralReasons = referralReasons;
+    _checklistTypes = checklistTypes;
   }
 
   String get projectId => _projectId;
@@ -83,6 +89,7 @@ class ReferralReconSingleton {
       _validIndividualAgeForCampaign;
   List<String> get referralReasons => _referralReasons;
   List<String> get cycles => _cycles;
+  List<String> get checklistTypes => _checklistTypes;
 
   Future<List<ReferralProjectFacilityModel>?>
       getProjectFacilitiesForProjectId() async {
@@ -97,7 +104,12 @@ class ReferralReconSingleton {
 
   Future<List<ReferralReconServiceDefinitionModel>?> getServiceDefinitions(
       String code) async {
-    return await _referralReconListener?.fetchServiceDefinitions(code);
+    return await _referralReconListener?.fetchSelectedServiceDefinitions(code);
+  }
+
+  Future<List<ReferralReconServiceDefinitionModel>?>
+      getServiceDefinitionsList() async {
+    return await _referralReconListener?.fetchAllServiceDefinitions();
   }
 
   // Saves the stock details.

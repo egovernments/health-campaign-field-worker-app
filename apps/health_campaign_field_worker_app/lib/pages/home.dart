@@ -488,6 +488,10 @@ class _HomePageState extends LocalizedState<HomePage> {
                         serviceLocalRepository: context.read<
                             LocalRepository<ServiceModel,
                                 ServiceSearchModel>>(),
+                        checklistTypes: appConfiguration.checklistTypes
+                                ?.map((e) => e.code)
+                                .toList() ??
+                            [],
                       ),
                       validIndividualAgeForCampaign:
                           ValidIndividualAgeForCampaign(
@@ -508,6 +512,10 @@ class _HomePageState extends LocalizedState<HomePage> {
                               .toList() ??
                           [],
                       tenantId: envConfig.variables.tenantId,
+                      checklistTypes: appConfiguration.checklistTypes
+                              ?.map((e) => e.code)
+                              .toList() ??
+                          [],
                     ));
                   },
                 );

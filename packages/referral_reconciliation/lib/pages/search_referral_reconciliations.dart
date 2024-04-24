@@ -29,6 +29,7 @@ class SearchReferralReconciliationsPage extends LocalizedStatefulWidget {
   final List<String> genders;
   final List<String> referralReasons;
   final String tenantId;
+  final List<String> checklistTypes;
 
   const SearchReferralReconciliationsPage({
     super.key,
@@ -43,6 +44,7 @@ class SearchReferralReconciliationsPage extends LocalizedStatefulWidget {
     required this.boundaryName,
     required this.genders,
     required this.tenantId,
+    required this.checklistTypes,
   });
 
   @override
@@ -68,6 +70,7 @@ class _SearchReferralReconciliationsPageState
       genderOptions: widget.genders,
       referralReasons: widget.referralReasons,
       cycles: widget.cycles,
+      checklistTypes: widget.checklistTypes,
     );
     context.read<DigitScannerBloc>().add(
           const DigitScannerEvent.handleScanner(),
