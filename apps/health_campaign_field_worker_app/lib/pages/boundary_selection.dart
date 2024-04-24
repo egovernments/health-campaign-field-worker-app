@@ -498,11 +498,7 @@ class _BoundarySelectionPageState
                                       builder: (context, bool isClicked, _) {
                                         return DigitElevatedButton(
                                           onPressed: selectedBoundary == null ||
-                                                  isClicked ||
-                                                  validateAllBoundarySelection(
-                                                    context
-                                                        .isAllBoundaryMandatory,
-                                                  )
+                                                  isClicked
                                               ? null
                                               : () async {
                                                   if (!form.valid ||
