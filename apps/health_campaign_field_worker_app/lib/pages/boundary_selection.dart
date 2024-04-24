@@ -171,9 +171,13 @@ class _BoundarySelectionPageState
                                         resetChildDropdowns(label, state);
                                       },
                                       isRequired:
-                                          context.isAllBoundaryMandatory,
+                                          context.isAllBoundaryMandatory ||
+                                                  labelIndex == 0
+                                              ? true
+                                              : false,
                                       validationMessage:
-                                          context.isAllBoundaryMandatory
+                                          context.isAllBoundaryMandatory ||
+                                                  labelIndex == 0
                                               ? localizations.translate(
                                                   i18.common.corecommonRequired,
                                                 )

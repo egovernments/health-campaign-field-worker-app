@@ -123,7 +123,8 @@ extension ContextUtilityExtensions on BuildContext {
       bool isAllBoundaryMandatory = loggedInUserRoles
           .where((role) =>
               role.code == RolesType.distributor.toValue() ||
-              role.code == RolesType.registrar.toValue())
+              role.code == RolesType.registrar.toValue() ||
+              role.code == RolesType.communityDistributor.toValue())
           .toList()
           .isNotEmpty;
 
