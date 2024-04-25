@@ -81,13 +81,13 @@ class HCMAttendanceBloc extends AttendanceListeners {
               (a) => a.copyWith(
                 name: individualList
                     ?.where((i) => i.id == a.individualId)
-                    .first
-                    .name
+                    .firstOrNull
+                    ?.name
                     ?.givenName,
                 individualNumber: individualList
                     ?.where((i) => i.id == a.individualId)
-                    .first
-                    .individualId,
+                    .firstOrNull
+                    ?.individualId,
               ),
             )
             .toList();

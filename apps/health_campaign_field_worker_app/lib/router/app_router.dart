@@ -1,11 +1,9 @@
-import 'package:auto_route/auto_route.dart';
-import 'package:flutter/material.dart';
-
 import 'package:attendance_management/router/attendance_router.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
-import 'package:inventory_management/router/digit_scanner_router.dart';
-import 'package:inventory_management/router/inventory_router.gm.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:digit_scanner/router/digit_scanner_router.gm.dart';
+import 'package:flutter/material.dart';
+import 'package:inventory_management/router/inventory_router.gm.dart';
 
 import '../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../blocs/localization/app_localization.dart';
