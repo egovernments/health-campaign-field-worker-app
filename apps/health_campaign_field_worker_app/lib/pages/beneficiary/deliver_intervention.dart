@@ -86,9 +86,14 @@ class _DeliverInterventionPageState
           (form.control(_quantityDistributedKey) as FormArray).value;
       if (productVariants != null) {
         for (var element in productVariants) {
-          var indexOfResource =
-              resourcesDelivered!.indexOf(element.productVariantId);
-          if (indexOfResource > 0) {
+          var indexOfResource = -1;
+          for (int i = 0; i < resourcesDelivered!.length; i++) {
+            if (resourcesDelivered[i].id == element.productVariantId) {
+              indexOfResource = i;
+              break;
+            }
+          }
+          if (indexOfResource >= 0) {
             List<double?> suggestedAndDistributed = [];
             suggestedAndDistributed.add(element.quantity);
             suggestedAndDistributed.add(quantityDistributed![indexOfResource]);
@@ -659,7 +664,12 @@ class _DeliverInterventionPageState
                                                           formControlName:
                                                               _deliveryCommentKey,
                                                           isRequired:
-                                                              isCommentRequired,
+                                                              isCommentMandatory(
+                                                            isCommentRequired,
+                                                            productVariants,
+                                                            form,
+                                                            idVsSuggestedAndDistributedQuantity,
+                                                          ),
                                                           valueMapper: (value) =>
                                                               localizations
                                                                   .translate(
