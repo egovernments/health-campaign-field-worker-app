@@ -1,6 +1,7 @@
 import 'package:attendance_management/pages/manage_attendance.dart';
 import 'package:attendance_management/pages/mark_attendance.dart';
 import 'package:attendance_management/pages/session_select.dart';
+import 'package:attendance_management/widgets/attendance_acknowledgement.dart';
 import 'package:attendance_management/widgets/circular_button.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
@@ -98,6 +99,8 @@ void main() {
       reason: 'Manage Attendance Page not found',
     );
 
+    expect(find.text('Open Register'), findsAtLeast(1));
+
     await widgetTester.scrollUntilVisible(
       find.text('Open Register').at(3),
       1,
@@ -120,7 +123,7 @@ void main() {
     await widgetTester.pumpAndSettle(const Duration(milliseconds: 500));
     expect(find.byType(DigitDateFormPicker), findsAny);
 
-    await widgetTester.tap(find.text('22').last);
+    await widgetTester.tap(find.text('25').last);
     await widgetTester.pumpAndSettle(const Duration(milliseconds: 500));
     await widgetTester.tap(find.text('Ok'));
     await widgetTester.pumpAndSettle(const Duration(milliseconds: 500));
@@ -157,22 +160,53 @@ void main() {
     await widgetTester.tap(find.byType(CircularButton).first);
     await widgetTester.pumpAndSettle(const Duration(seconds: 2));
     expect(find.text('Present'), findsOneWidget);
-
     await widgetTester.pumpAndSettle(const Duration(seconds: 1));
 
     //save and mark later option
     await widgetTester.tap(find.text('Save and mark later'));
     await widgetTester.pumpAndSettle(const Duration(seconds: 1));
 
+    //check if records are saved when we go back
+    await widgetTester.tap(find.text('Back'));
+    await widgetTester.pumpAndSettle(const Duration(seconds: 1));
+    await widgetTester.tap(find.text('Evening session'));
+    await widgetTester.pumpAndSettle(const Duration(seconds: 1));
+    await widgetTester.tap(find.text('Mark Attendance'));
+    await widgetTester.pumpAndSettle(const Duration(seconds: 2));
+
     //try to use the input field
     await widgetTester.enterText(find.byType(DigitSearchBar), 'Ram');
     await widgetTester.pumpAndSettle(const Duration(seconds: 1));
-
     expect(find.text('Ram'), findsAtLeastNWidgets(2));
     expect(find.text('Syed'), findsNothing);
 
     //Submit
     await widgetTester.tap(find.text('Submit'));
     await widgetTester.pumpAndSettle(const Duration(seconds: 2));
+
+    //since only one user is marked, do not confirm
+    expect(find.text('Please mark attendance for the staffs'), findsOneWidget);
+    expect(find.byType(AttendanceAcknowledgementPage), findsNothing);
+
+    //reset the text field to empty
+    await widgetTester.enterText(find.byType(DigitSearchBar), '');
+    await widgetTester.pumpAndSettle(const Duration(seconds: 1));
+    await widgetTester.testTextInput.receiveAction(TextInputAction.done);
+
+    //mark attendance for all attendees and submit
+    for (int i = 0; i < 2; i++) {
+      await widgetTester.tap(find.byType(CircularButton).at(i));
+      await widgetTester.pumpAndSettle(const Duration(seconds: 1));
+    }
+
+    await widgetTester.tap(find.text('Submit'));
+    await widgetTester.pumpAndSettle(const Duration(seconds: 2));
+
+    //tap on Proceed
+    await widgetTester.tap(find.text('Proceed'));
+    await widgetTester.pumpAndSettle(const Duration(seconds: 2));
+
+    //confirm the submission
+    expect(find.byType(AttendanceAcknowledgementPage), findsOneWidget);
   });
 }
