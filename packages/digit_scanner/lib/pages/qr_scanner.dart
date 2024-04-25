@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:camera/camera.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
@@ -16,6 +17,7 @@ import '../../utils/i18_key_constants.dart' as i18;
 import '../blocs/scanner.dart';
 import '../widgets/vision_detector_views/detector_view.dart';
 
+@RoutePage()
 class DigitScannerPage extends LocalizedStatefulWidget {
   final bool singleValue;
   final int quantity;

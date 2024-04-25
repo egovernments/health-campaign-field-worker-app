@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 
 import 'package:attendance_management/router/attendance_router.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
-import 'package:inventory_management/router/inventory_router.dart';
+import 'package:inventory_management/router/digit_scanner_router.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
+import 'package:digit_scanner/router/digit_scanner_router.gm.dart';
 
 import '../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../blocs/localization/app_localization.dart';
@@ -71,6 +72,7 @@ part 'app_router.gr.dart';
   modules: [
     InventoryRoute,
     AttendanceRoute,
+    DigitScannerPackageRoute,
   ],
 )
 class AppRouter extends _$AppRouter {
@@ -302,6 +304,12 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
           page: MarkAttendanceRoute.page,
           path: 'mark-attendance',
+        ),
+
+        //DigitScanner Route
+        AutoRoute(
+          page: DigitScannerRoute.page,
+          path: 'digit-scanner',
         ),
 
         //Inventory Route

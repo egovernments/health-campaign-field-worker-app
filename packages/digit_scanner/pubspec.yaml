@@ -44,6 +44,7 @@ dependencies:
   overlay_builder: ^1.1.0
   flutter_svg: ^2.0.8
   audioplayers: ^5.2.0
+  auto_route: ^7.8.4
 
 dev_dependencies:
   flutter_test:
@@ -54,6 +55,7 @@ dev_dependencies:
   bloc_test: ^9.1.0
   mocktail: ^0.3.0
   build_runner: ^2.4.7
+  auto_route_generator: ^7.3.2
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
