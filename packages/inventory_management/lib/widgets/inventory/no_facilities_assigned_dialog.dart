@@ -1,8 +1,12 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
+import '../../../utils/i18_key_constants.dart' as i18;
+import '../../blocs/app_localization.dart';
 
 class NoFacilitiesAssignedDialog {
-  static Future<void> show(BuildContext context) {
+  static Future<void> show(
+      BuildContext context, InventoryLocalization localizations) {
     return DigitDialog.show(
       context,
       options: DigitDialogOptions(
@@ -10,15 +14,19 @@ class NoFacilitiesAssignedDialog {
           Icons.warning,
           color: Theme.of(context).colorScheme.error,
         ),
-        titleText: 'No facilities assigned',
-        contentText: 'Please select another boundary or '
-            'contact the system administrator to assign '
-            'a facility.',
+        titleText: localizations.translate(
+          i18.warehouseDetails.noFacilitiesAssigned,
+        ),
+        contentText: localizations.translate(
+          i18.warehouseDetails.noFacilitiesAssignedDescription,
+        ),
         primaryAction: DigitDialogActions(
-          label: 'Close',
+          label: localizations.translate(
+            i18.common.corecommonclose,
+          ),
           action: (dialogContext) {
             Navigator.of(context, rootNavigator: true).pop();
-            Navigator.of(context).pop();
+            context.router.maybePop();
           },
         ),
       ),

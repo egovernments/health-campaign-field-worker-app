@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
@@ -5,9 +6,9 @@ import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
-import 'package:inventory_management/pages/acknowledgement.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recase/recase.dart';
+import 'package:inventory_management/router/inventory_router.gm.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
@@ -16,21 +17,19 @@ import '../../blocs/facility.dart';
 import '../../blocs/inventory_listener.dart';
 import '../../blocs/product_variant.dart';
 import '../../blocs/record_stock.dart';
-import '../../blocs/scanner.dart';
 import '../../models/entities/inventory_facility.dart';
+import '../../models/entities/inventory_transport_type.dart';
 import '../../models/entities/product_variant.dart';
 import '../../models/entities/stock.dart';
 import '../../models/entities/transaction_reason.dart';
 import '../../models/entities/transaction_type.dart';
 import '../../widgets/back_navigation_help_header.dart';
-import '../facility_selection.dart';
 
+@RoutePage()
 class StockDetailsPage extends LocalizedStatefulWidget {
-  final StockRecordEntryType entryType;
   const StockDetailsPage({
     super.key,
     super.appLocalizations,
-    required this.entryType,
   });
 
   @override
@@ -54,9 +53,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
 
   FormGroup _form(StockRecordEntryType stockType) {
     return fb.group({
-      _productVariantKey: FormControl<ProductVariantModel>(
-          // validators: [Validators.required],
-          ),
+      _productVariantKey: FormControl<ProductVariantModel>(),
       _secondaryPartyKey: FormControl<String>(
         validators: [Validators.required],
       ),
@@ -111,10 +108,9 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
               listener: (context, stockState) {
                 stockState.mapOrNull(
                   persisted: (value) {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => InventoryAcknowledgementPage(),
-                      ),
+                    final parent = context.router.parent() as StackRouter;
+                    parent.replace(
+                      InventoryAcknowledgementRoute(),
                     );
                   },
                 );
@@ -489,14 +485,6 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                             const RecordStockCreateStockEntryEvent(),
                                           );
                                         }
-
-                                        bloc.state.maybeMap(
-                                          orElse: () {},
-                                          persisted: (value) {},
-                                          create: (value) {
-                                            if (value.stockModel != null) {}
-                                          },
-                                        );
                                       }
                                     },
                               child: Center(
@@ -525,6 +513,11 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                       orElse: () => const Offstage(),
                                       loading: () => const Center(
                                         child: CircularProgressIndicator(),
+                                      ),
+                                      empty: () => Center(
+                                        child: Text(localizations.translate(
+                                          i18.stockDetails.noProductsFound,
+                                        )),
                                       ),
                                       fetched: (productVariants) {
                                         return DigitReactiveDropdown<
@@ -579,16 +572,13 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                   .control(_deliveryTeamKey)
                                                   .value = '';
 
-                                              final facility = await Navigator
-                                                      .of(context)
-                                                  .push<InventoryFacilityModel>(
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      FacilitySelectionPage(
-                                                    facilities: facilities,
-                                                  ),
-                                                ),
-                                              );
+                                              final facility = await context
+                                                      .router
+                                                      .push(
+                                                          InventoryFacilitySelectionRoute(
+                                                              facilities:
+                                                                  facilities))
+                                                  as InventoryFacilityModel?;
 
                                               if (facility == null) return;
                                               form
@@ -639,16 +629,11 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                       .value = '';
 
                                                   final facility =
-                                                      await Navigator.of(
-                                                    context,
-                                                  ).push<InventoryFacilityModel>(
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          FacilitySelectionPage(
-                                                        facilities: facilities,
-                                                      ),
+                                                      await context.router.push(
+                                                    InventoryFacilitySelectionRoute(
+                                                      facilities: facilities,
                                                     ),
-                                                  );
+                                                  ) as InventoryFacilityModel?;
 
                                                   if (facility == null) return;
                                                   form
@@ -706,12 +691,11 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                     },
                                     suffix: IconButton(
                                       onPressed: () {
+                                        //[TODO: Add route to auto_route]
                                         Navigator.of(context).push(
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                DigitScannerPage(
-                                              scannerListeners:
-                                                  HCMScannerBloc(),
+                                                const DigitScannerPage(
                                               quantity: 5,
                                               isGS1code: false,
                                               singleValue: false,
@@ -834,12 +818,11 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                           ),
                                         ),
                                         onPressed: () {
+                                          //[TODO: Add route to auto_route]
                                           Navigator.of(context).push(
                                             MaterialPageRoute(
                                               builder: (context) =>
-                                                  DigitScannerPage(
-                                                scannerListeners:
-                                                    HCMScannerBloc(),
+                                                  const DigitScannerPage(
                                                 quantity: 5,
                                                 isGS1code: true,
                                                 singleValue: false,
@@ -883,12 +866,11 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                     theme.colorScheme.secondary,
                                                 icon: const Icon(Icons.edit),
                                                 onPressed: () {
+                                                  //[TODO: Add route to auto_route]
                                                   Navigator.of(context).push(
                                                     MaterialPageRoute(
                                                       builder: (context) =>
-                                                          DigitScannerPage(
-                                                        scannerListeners:
-                                                            HCMScannerBloc(),
+                                                          const DigitScannerPage(
                                                         quantity: 5,
                                                         isGS1code: true,
                                                         singleValue: false,
@@ -936,12 +918,26 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
         ));
   }
 
-  addBarCodesToFields(List<GS1Barcode> barCodes) {
+  /// This function processes a list of GS1 barcodes and returns a map where the keys and values are joined by '|'.
+  ///
+  /// It takes a list of GS1Barcode objects as a parameter. Each GS1Barcode object represents a barcode that has been scanned.
+  ///
+  /// The function first initializes two empty lists: one for the keys and one for the values.
+  ///
+  /// It then iterates over each barcode in the list. For each barcode, it iterates over each element in the barcode.
+  /// Each element is a MapEntry object, where the key is the identifier of the data field and the value is the data itself.
+  ///
+  /// The function adds the key and value of each element to the respective lists. The key and value are both converted to strings.
+  ///
+  /// After all barcodes have been processed, the function returns a map where the keys and values are joined by '|'.
+  ///
+  /// @param barCodes The list of GS1Barcode objects to be processed.
+  /// @return A map where the keys and values are joined by '|'.
+  Map<String, String> addBarCodesToFields(List<GS1Barcode> barCodes) {
     List<String> keys = [];
     List<String> values = [];
     for (var element in barCodes) {
       for (var e in element.elements.entries) {
-        e.value.rawData;
         keys.add(e.key.toString());
         values.add(e.value.data.toString());
       }

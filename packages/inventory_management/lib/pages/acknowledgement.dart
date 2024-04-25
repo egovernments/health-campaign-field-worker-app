@@ -1,8 +1,10 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/localized.dart';
 
+@RoutePage()
 class InventoryAcknowledgementPage extends LocalizedStatefulWidget {
   bool isDataRecordSuccess;
   String? label;
@@ -18,10 +20,12 @@ class InventoryAcknowledgementPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<InventoryAcknowledgementPage> createState() => _AcknowledgementPageState();
+  State<InventoryAcknowledgementPage> createState() =>
+      _AcknowledgementPageState();
 }
 
-class _AcknowledgementPageState extends LocalizedState<InventoryAcknowledgementPage> {
+class _AcknowledgementPageState
+    extends LocalizedState<InventoryAcknowledgementPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -42,7 +46,7 @@ class _AcknowledgementPageState extends LocalizedState<InventoryAcknowledgementP
               i18.acknowledgementSuccess.acknowledgementLabelText,
             ),
         action: () {
-          Navigator.of(context).pop();
+          context.router.maybePop();
         },
         enableBackToSearch: widget.isDataRecordSuccess ? false : true,
         actionLabel:
@@ -62,7 +66,7 @@ class _AcknowledgementPageState extends LocalizedState<InventoryAcknowledgementP
                   child: Text(localizations
                       .translate(i18.acknowledgementSuccess.goToHome)),
                   onPressed: () {
-
+                    context.router.popUntilRoot();
                   },
                 ),
                 const SizedBox(
@@ -70,7 +74,7 @@ class _AcknowledgementPageState extends LocalizedState<InventoryAcknowledgementP
                 ),
                 DigitOutLineButton(
                   onPressed: () {
-
+                    context.router.popUntilRoot();
                   },
                   label: localizations
                       .translate(i18.acknowledgementSuccess.downloadmoredata),

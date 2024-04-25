@@ -3,9 +3,6 @@ import 'package:digit_components/widgets/atoms/digit_radio_button_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_management/models/entities/inventory_facility.dart';
-import 'package:inventory_management/pages/facility_selection.dart' as inv;
-import 'package:inventory_management/models/entities/inventory_facility.dart'
-    as inv;
 import 'package:inventory_management/pages/facility_selection.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -22,6 +19,7 @@ import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/inventory/no_facilities_assigned_dialog.dart';
 import '../../widgets/localized.dart';
 
+@RoutePage()
 class ReferBeneficiaryPage extends LocalizedStatefulWidget {
   final bool isEditing;
   final String projectBeneficiaryClientRefId;
@@ -261,16 +259,16 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                           ),
                           InkWell(
                             onTap: () async {
-                              // final parent =
-                              //     context.router.parent() as StackRouter;
-                              // final facility = await parent.push<FacilityModel>(
-                              //   FacilitySelectionRoute(
-                              //     facilities: facilities,
-                              //   ),
-                              // );
-                              //
-                              // if (facility == null) return;
-                              // form.control(_referredToKey).value = facility;
+                              final parent =
+                                  context.router.parent() as StackRouter;
+                              final facility = await parent.push<FacilityModel>(
+                                FacilitySelectionRoute(
+                                  facilities: facilities,
+                                ),
+                              );
+
+                              if (facility == null) return;
+                              form.control(_referredToKey).value = facility;
                             },
                             child: IgnorePointer(
                               child: DigitTextFormField(
@@ -295,17 +293,17 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                                       ),
                                 },
                                 onTap: () async {
-                                  // final parent =
-                                  //     context.router.parent() as StackRouter;
-                                  // final facility =
-                                  //     await parent.push<FacilityModel>(
-                                  //   FacilitySelectionRoute(
-                                  //     facilities: facilities,
-                                  //   ),
-                                  // );
-                                  //
-                                  // if (facility == null) return;
-                                  // form.control(_referredToKey).value = facility;
+                                  final parent =
+                                      context.router.parent() as StackRouter;
+                                  final facility =
+                                      await parent.push<FacilityModel>(
+                                    FacilitySelectionRoute(
+                                      facilities: facilities,
+                                    ),
+                                  );
+
+                                  if (facility == null) return;
+                                  form.control(_referredToKey).value = facility;
                                 },
                               ),
                             ),

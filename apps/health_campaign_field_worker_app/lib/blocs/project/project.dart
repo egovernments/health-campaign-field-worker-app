@@ -2,8 +2,6 @@
 import 'dart:async';
 import 'dart:core';
 
-import 'package:attendance_management/models/attendance_log.dart';
-import 'package:attendance_management/models/attendance_register.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/cupertino.dart';
@@ -72,10 +70,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       facilityLocalRepository;
 
   /// Stock Repositories
-  final RemoteRepository<HcmStockModel, HcmStockSearchModel>
-      stockRemoteRepository;
-  final LocalRepository<HcmStockModel, HcmStockSearchModel>
-      stockLocalRepository;
+  final RemoteRepository<HcmStockModel, HcmStockSearchModel> stockRemoteRepository;
+  final LocalRepository<HcmStockModel, HcmStockSearchModel> stockLocalRepository;
 
   final RemoteRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
       serviceDefinitionRemoteRepository;
@@ -224,10 +220,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           );
           final attendanceRegisters = await attendanceRemoteRepository.search(
             HCMAttendanceSearchModel(
-              attendanceRegisterSearchModel: AttendanceRegisterSearchModel(
-                staffId: individual.first.id,
-                referenceId: projectStaff.projectId,
-              ),
+              staffId: individual.first.id,
+              referenceId: projectStaff.projectId,
             ),
           );
           await attendanceLocalRepository.bulkCreate(attendanceRegisters);
@@ -246,9 +240,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                 await individualLocalRepository.bulkCreate(individuals);
                 final logs = await attendanceLogRemoteRepository.search(
                   HCMAttendanceLogSearchModel(
-                    attendanceSearchModel: AttendanceLogSearchModel(
-                      registerId: register.attendanceRegister.id,
-                    ),
+                    registerId: register.attendanceRegister.id,
                   ),
                 );
                 await attendanceLogLocalRepository.bulkCreate(logs);

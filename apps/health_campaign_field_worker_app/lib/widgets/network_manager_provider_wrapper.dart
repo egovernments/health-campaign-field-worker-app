@@ -14,12 +14,10 @@ import '../blocs/app_initialization/app_initialization.dart';
 import '../data/data_repository.dart';
 import '../data/local_store/sql_store/sql_store.dart';
 import '../data/network_manager.dart';
-import '../data/repositories/local/attendance_logs.dart';
 import '../data/repositories/local/boundary.dart';
 import '../data/repositories/local/downsync.dart';
 import '../data/repositories/local/facility.dart';
 import '../data/repositories/local/h_f_referral.dart';
-import '../data/repositories/local/hcm_attendance.dart';
 import '../data/repositories/local/household.dart';
 import '../data/repositories/local/houshold_member.dart';
 import '../data/repositories/local/individual.dart';
@@ -34,17 +32,13 @@ import '../data/repositories/local/referral.dart';
 import '../data/repositories/local/service.dart';
 import '../data/repositories/local/service_definition.dart';
 import '../data/repositories/local/side_effect.dart';
-import '../data/repositories/local/stock.dart';
-import '../data/repositories/local/stock_reconciliation.dart';
 import '../data/repositories/local/task.dart';
 import '../data/repositories/oplog/oplog.dart';
-import '../data/repositories/remote/attendance_logs.dart';
 import '../data/repositories/remote/auth.dart';
 import '../data/repositories/remote/boundary.dart';
 import '../data/repositories/remote/downsync.dart';
 import '../data/repositories/remote/facility.dart';
 import '../data/repositories/remote/h_f_referral.dart';
-import '../data/repositories/remote/hcm_attendance.dart';
 import '../data/repositories/remote/household.dart';
 import '../data/repositories/remote/household_member.dart';
 import '../data/repositories/remote/individual.dart';
@@ -62,11 +56,17 @@ import '../data/repositories/remote/referral.dart';
 import '../data/repositories/remote/service.dart';
 import '../data/repositories/remote/service_definition.dart';
 import '../data/repositories/remote/side_effect.dart';
-import '../data/repositories/remote/stock.dart';
-import '../data/repositories/remote/stock_reconciliation.dart';
 import '../data/repositories/remote/task.dart';
 import '../data/repositories/remote/user.dart';
 import '../models/data_model.dart';
+import '../data/repositories/local/attendance_logs.dart';
+import '../data/repositories/local/hcm_attendance.dart';
+import '../data/repositories/remote/attendance_logs.dart';
+import '../data/repositories/remote/hcm_attendance.dart';
+import '../data/repositories/local/stock.dart';
+import '../data/repositories/local/stock_reconciliation.dart';
+import '../data/repositories/remote/stock.dart';
+import '../data/repositories/remote/stock_reconciliation.dart';
 
 class NetworkManagerProviderWrapper extends StatelessWidget {
   final LocalSqlDataStore sql;
@@ -202,12 +202,6 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           ProjectStaffOpLogManager(isar),
         ),
       ),
-      RepositoryProvider<LocalRepository<HcmStockModel, HcmStockSearchModel>>(
-        create: (_) => StockLocalRepository(
-          sql,
-          StockOpLogManager(isar),
-        ),
-      ),
       RepositoryProvider<LocalRepository<TaskModel, TaskSearchModel>>(
         create: (_) => TaskLocalRepository(
           sql,
@@ -225,14 +219,6 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         create: (_) => SideEffectLocalRepository(
           sql,
           SideEffectOpLogManager(isar),
-        ),
-      ),
-      RepositoryProvider<
-          LocalRepository<HcmStockReconciliationModel,
-              HcmStockReconciliationSearchModel>>(
-        create: (_) => StockReconciliationLocalRepository(
-          sql,
-          StockReconciliationOpLogManager(isar),
         ),
       ),
       RepositoryProvider<
@@ -304,6 +290,20 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         create: (_) => AttendanceLogsLocalRepository(
           sql,
           AttendanceLogOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<LocalRepository<HcmStockModel, HcmStockSearchModel>>(
+        create: (_) => StockLocalRepository(
+          sql,
+          StockOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<
+          LocalRepository<HcmStockReconciliationModel,
+              HcmStockReconciliationSearchModel>>(
+        create: (_) => StockReconciliationLocalRepository(
+          sql,
+          StockReconciliationOpLogManager(isar),
         ),
       ),
     ];
@@ -424,13 +424,6 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
               actionMap: actions,
             ),
           ),
-        if (value == DataModelType.stock)
-          RepositoryProvider<RemoteRepository<HcmStockModel, HcmStockSearchModel>>(
-            create: (_) => StockRemoteRepository(
-              dio,
-              actionMap: actions,
-            ),
-          ),
         if (value == DataModelType.task)
           RepositoryProvider<RemoteRepository<TaskModel, TaskSearchModel>>(
             create: (_) => TaskRemoteRepository(
@@ -442,15 +435,6 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           RepositoryProvider<
               RemoteRepository<ReferralModel, ReferralSearchModel>>(
             create: (_) => ReferralRemoteRepository(
-              dio,
-              actionMap: actions,
-            ),
-          ),
-        if (value == DataModelType.stockReconciliation)
-          RepositoryProvider<
-              RemoteRepository<HcmStockReconciliationModel,
-                  HcmStockReconciliationSearchModel>>(
-            create: (_) => StockReconciliationRemoteRepository(
               dio,
               actionMap: actions,
             ),
@@ -540,19 +524,26 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           RepositoryProvider<
               RemoteRepository<HCMAttendanceRegisterModel,
                   HCMAttendanceSearchModel>>(
-            create: (_) => AttendanceRemoteRepository(
-              dio,
-              actionMap: actions,
-            ),
+            create: (_) => AttendanceRemoteRepository(dio, actionMap: actions),
           ),
         if (value == DataModelType.attendance)
           RepositoryProvider<
               RemoteRepository<HCMAttendanceLogModel,
                   HCMAttendanceLogSearchModel>>(
-            create: (_) => AttendanceLogRemoteRepository(
-              dio,
-              actionMap: actions,
-            ),
+            create: (_) =>
+                AttendanceLogRemoteRepository(dio, actionMap: actions),
+          ),
+        if (value == DataModelType.stock)
+          RepositoryProvider<
+              RemoteRepository<HcmStockModel, HcmStockSearchModel>>(
+            create: (_) => StockRemoteRepository(dio, actionMap: actions),
+          ),
+        if (value == DataModelType.stockReconciliation)
+          RepositoryProvider<
+              RemoteRepository<HcmStockReconciliationModel,
+                  HcmStockReconciliationSearchModel>>(
+            create: (_) =>
+                StockReconciliationRemoteRepository(dio, actionMap: actions),
           ),
       ]);
     }

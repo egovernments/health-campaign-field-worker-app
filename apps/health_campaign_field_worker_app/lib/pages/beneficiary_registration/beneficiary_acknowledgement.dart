@@ -9,6 +9,7 @@ import '../../blocs/search_households/search_bloc_common_wrapper.dart';
 import '../../blocs/search_households/search_households.dart';
 import '../../blocs/search_households/search_by_head.dart';
 
+@RoutePage()
 class BeneficiaryAcknowledgementPage extends LocalizedStatefulWidget {
   final bool? enableViewHousehold;
 

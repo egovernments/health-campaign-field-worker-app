@@ -4,3 +4,11 @@ targets:
       dart_mappable_builder:
         generate_for:
           - lib/models/*.dart
+      auto_route_generator:auto_route_generator:
+        options:
+        generate_for:
+          - lib/pages/**.dart
+          - lib/widgets/**.dart
+      auto_route_generator:auto_router_generator:
+        generate_for:
+          - lib/router/**router.dart

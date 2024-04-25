@@ -29,6 +29,7 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
     Emitter<AttendanceStates> emit,
   ) async {
     emit(const RegisterLoading());
+    // Getting attendance registers using a singleton instance
     final registers = await AttendanceSingleton().getAttendanceRegisters(
       limit: 10,
       offset: 0,

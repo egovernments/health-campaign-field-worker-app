@@ -15,6 +15,7 @@ import '../../models/data_model.dart';
 import '../../models/entities/hcm_inventory_facility.dart';
 import '../../utils/extensions/extensions.dart';
 
+@RoutePage()
 class BeneficiaryWrapperPage extends StatelessWidget {
   final HouseholdMemberWrapper wrapper;
   final bool isEditing;

@@ -14,7 +14,6 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
-import '../../blocs/scanner/hcm_scanner_bloc.dart';
 import '../../blocs/search_households/search_bloc_common_wrapper.dart';
 import '../../blocs/search_households/search_households.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
@@ -28,6 +27,7 @@ import '../../widgets/localized.dart';
 import '../../widgets/showcase/config/showcase_constants.dart';
 import '../../widgets/showcase/showcase_button.dart';
 
+@RoutePage()
 class IndividualDetailsPage extends LocalizedStatefulWidget {
   final bool isHeadOfHousehold;
 
@@ -617,11 +617,10 @@ class _IndividualDetailsPageState
                                           icon: const Icon(Icons.edit),
                                           onPressed: () {
                                             Navigator.of(context).push(
+                                              //[TODO: Add the route to auto_route]
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    DigitScannerPage(
-                                                  scannerListeners:
-                                                      HCMScannerBloc(),
+                                                    const DigitScannerPage(
                                                   quantity: 1,
                                                   isGS1code: false,
                                                   singleValue: true,
@@ -646,10 +645,10 @@ class _IndividualDetailsPageState
                                     ),
                                     onPressed: () {
                                       Navigator.of(context).push(
+                                        // [TODO: Add the route to auto_route]
                                         MaterialPageRoute(
                                           builder: (context) =>
-                                              DigitScannerPage(
-                                            scannerListeners: HCMScannerBloc(),
+                                              const DigitScannerPage(
                                             quantity: 1,
                                             isGS1code: false,
                                             singleValue: true,

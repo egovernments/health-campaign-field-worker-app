@@ -1,11 +1,12 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_management/blocs/inventory_listener.dart';
+import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
-import '../../../utils/utils.dart';
 import '../../../widgets/component_wrapper/facility_bloc_wrapper.dart';
 import '../../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import '../../../widgets/inventory/no_facilities_assigned_dialog.dart';
@@ -17,22 +18,17 @@ import '../../blocs/product_variant.dart';
 import '../../blocs/stock_reconciliation.dart';
 import '../../models/entities/inventory_facility.dart';
 import '../../models/entities/product_variant.dart';
-import '../../models/entities/stock.dart';
-import '../../models/entities/stock_reconciliation.dart';
 import '../../widgets/back_navigation_help_header.dart';
-import '../acknowledgement.dart';
 import '../facility_selection.dart';
 
+@RoutePage()
 class InventoryReportDetailsPage extends LocalizedStatefulWidget {
-  final bool? isDistributor;
   final InventoryReportType reportType;
 
   const InventoryReportDetailsPage({
-    required this.isDistributor,
     super.key,
     super.appLocalizations,
     required this.reportType,
-    required String projectId,
   });
 
   @override
@@ -45,6 +41,24 @@ class _InventoryReportDetailsPageState
   static const _productVariantKey = 'productVariant';
   static const _facilityKey = 'facilityKey';
 
+  /// Handles the selection of a facility and product variant from the form and triggers the loading of the corresponding inventory report data.
+  ///
+  /// This function takes a [FormGroup] and an [InventoryReportBloc] as parameters.
+  /// The [FormGroup] should contain controls for the facility and product variant.
+  /// The [InventoryReportBloc] is used to dispatch events to load the inventory report data.
+  ///
+  /// The function first checks the report type of the widget.
+  /// If the report type is reconciliation, it creates an [InventoryReportLoadStockReconciliationDataEvent].
+  /// Otherwise, it creates an [InventoryReportLoadStockDataEvent].
+  /// The facility ID and product variant ID are retrieved from the form controls.
+  /// If the form control values are not null, the IDs of the facility and product variant are used.
+  /// Otherwise, an empty string is used.
+  ///
+  /// The function then dispatches an [InventoryReportLoadingEvent] to the [InventoryReportBloc].
+  /// After a delay of 500 milliseconds, it dispatches the previously created event to the [InventoryReportBloc].
+  ///
+  /// @param form The [FormGroup] that contains the controls for the facility and product variant.
+  /// @param inventoryReportBloc The [InventoryReportBloc] to which the events are dispatched.
   void handleSelection(
       FormGroup form, InventoryReportBloc inventoryReportBloc) {
     final event = widget.reportType == InventoryReportType.reconciliation
@@ -92,14 +106,16 @@ class _InventoryReportDetailsPageState
 
   @override
   Widget build(BuildContext context) {
+    bool isDistributor = InventorySingleton().isDistributor;
+
     return BlocProvider<InventoryReportBloc>(
-      create: (context) => InventoryReportBloc(),
+      create: (context) =>
+          InventoryReportBloc(inventorySingleton: InventorySingleton()),
       child: Scaffold(
         bottomNavigationBar: DigitCard(
           padding: const EdgeInsets.all(8.0),
           child: DigitElevatedButton(
-            onPressed: () =>
-                Navigator.of(context).popUntil((route) => route.isFirst),
+            onPressed: () => context.router.popUntilRoot(),
             child: Text(
               localizations.translate(
                 i18.inventoryReportDetails.backToHomeButtonLabel,
@@ -154,22 +170,8 @@ class _InventoryReportDetailsPageState
                               listener: (context, stockState) {
                                 if (!stockState.persisted) return;
 
-                                Navigator.pushReplacement(context,
-                                    MaterialPageRoute(
-                                  builder: (context) {
-                                    return InventoryAcknowledgementPage(
-                                      isDataRecordSuccess: true,
-                                      label: localizations.translate(
-                                        i18.acknowledgementSuccess
-                                            .acknowledgementLabelText,
-                                      ),
-                                      description: localizations.translate(
-                                        i18.acknowledgementSuccess
-                                            .acknowledgementDescriptionText,
-                                      ),
-                                    );
-                                  },
-                                ));
+                                context.router
+                                    .replace(InventoryAcknowledgementRoute());
                               },
                               builder: (context, stockState) {
                                 return Column(
@@ -177,7 +179,7 @@ class _InventoryReportDetailsPageState
                                     DigitCard(
                                       child: Column(
                                         children: [
-                                          if (!widget.isDistributor!)
+                                          if (!isDistributor)
                                             BlocConsumer<FacilityBloc,
                                                 FacilityState>(
                                               listener: (context, state) =>
@@ -186,6 +188,7 @@ class _InventoryReportDetailsPageState
                                                     NoFacilitiesAssignedDialog
                                                         .show(
                                                   context,
+                                                  localizations,
                                                 ),
                                               ),
                                               builder: (context, state) {
@@ -204,19 +207,12 @@ class _InventoryReportDetailsPageState
                                                         context.read<
                                                             StockReconciliationBloc>();
 
-                                                    final facility =
-                                                        await Navigator.of(
-                                                      context,
-                                                      rootNavigator: true,
-                                                    ).push(
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            FacilitySelectionPage(
-                                                          facilities:
-                                                              facilities,
-                                                        ),
-                                                      ),
-                                                    );
+                                                    final facility = await context
+                                                            .router
+                                                            .push(InventoryFacilitySelectionRoute(
+                                                                facilities:
+                                                                    facilities))
+                                                        as InventoryFacilityModel?;
 
                                                     if (facility == null)
                                                       return;
@@ -260,19 +256,12 @@ class _InventoryReportDetailsPageState
                                                             context.read<
                                                                 StockReconciliationBloc>();
 
-                                                        final facility =
-                                                            await Navigator.of(
-                                                          context,
-                                                          rootNavigator: true,
-                                                        ).push(
-                                                          MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                FacilitySelectionPage(
-                                                              facilities:
-                                                                  facilities,
-                                                            ),
-                                                          ),
-                                                        );
+                                                        final facility = await context
+                                                                .router
+                                                                .push(InventoryFacilitySelectionRoute(
+                                                                    facilities:
+                                                                        facilities))
+                                                            as InventoryFacilityModel?;
 
                                                         if (facility == null)
                                                           return;
@@ -302,6 +291,16 @@ class _InventoryReportDetailsPageState
                                             builder: (context, state) {
                                               return state.maybeWhen(
                                                 orElse: () => const Offstage(),
+                                                loading: () => const Center(
+                                                  child:
+                                                      CircularProgressIndicator(),
+                                                ),
+                                                empty: () => Center(
+                                                  child: Text(
+                                                    i18.stockDetails
+                                                        .noProductsFound,
+                                                  ),
+                                                ),
                                                 fetched: (productVariants) {
                                                   return DigitReactiveSearchDropdown<
                                                       ProductVariantModel>(
@@ -468,7 +467,8 @@ class _InventoryReportDetailsPageState
                                               ),
                                             );
                                           },
-                                          stockReconciliation: (data) {
+                                          stockReconciliation:
+                                              (data, additionalData) {
                                             if (data.isEmpty) {
                                               return Padding(
                                                 padding: const EdgeInsets.all(
@@ -584,7 +584,7 @@ class _InventoryReportDetailsPageState
                                                             key: receivedKey,
                                                             value:
                                                                 _getCountFromAdditionalDetails(
-                                                              model,
+                                                              additionalData,
                                                               'received',
                                                             ),
                                                           ),
@@ -592,7 +592,7 @@ class _InventoryReportDetailsPageState
                                                             key: dispatchedKey,
                                                             value:
                                                                 _getCountFromAdditionalDetails(
-                                                              model,
+                                                              additionalData,
                                                               'issued',
                                                             ),
                                                           ),
@@ -600,7 +600,7 @@ class _InventoryReportDetailsPageState
                                                             key: returnedKey,
                                                             value:
                                                                 _getCountFromAdditionalDetails(
-                                                              model,
+                                                              additionalData,
                                                               'returned',
                                                             ),
                                                           ),
@@ -608,7 +608,7 @@ class _InventoryReportDetailsPageState
                                                             key: lossKey,
                                                             value:
                                                                 _getCountFromAdditionalDetails(
-                                                              model,
+                                                              additionalData,
                                                               'lost',
                                                             ),
                                                           ),
@@ -616,7 +616,7 @@ class _InventoryReportDetailsPageState
                                                             key: damagedKey,
                                                             value:
                                                                 _getCountFromAdditionalDetails(
-                                                              model,
+                                                              additionalData,
                                                               'damaged',
                                                             ),
                                                           ),
@@ -624,7 +624,7 @@ class _InventoryReportDetailsPageState
                                                             key: stockInHandKey,
                                                             value:
                                                                 _getCountFromAdditionalDetails(
-                                                              model,
+                                                              additionalData,
                                                               'inHand',
                                                             ),
                                                           ),
@@ -736,24 +736,33 @@ class _InventoryReportDetailsPageState
     return localizations.translate(value);
   }
 
+  /// This function retrieves the count of a specific key from the additional data.
+  ///
+  /// It takes an iterable of MapEntry objects, which represent the additional data,
+  /// and a string key, which represents the key to be searched for in the additional data.
+  ///
+  /// It first filters the additional data to get the entries that have the specified key.
+  /// If there are any entries with the specified key, it tries to parse the value of the first entry as a double.
+  /// If the parsing is successful, it returns the value as a string with no decimal places.
+  /// If the parsing is not successful, it returns '0'.
+  /// If there are no entries with the specified key, it also returns '0'.
+  ///
+  /// @param additionalData The iterable of MapEntry objects representing the additional data.
+  /// @param key The key to be searched for in the additional data.
+  /// @return The count of the specified key in the additional data, as a string.
   String _getCountFromAdditionalDetails(
-    StockReconciliationModel model,
+    Iterable<MapEntry<String, dynamic>> additionalData,
     String key,
   ) {
-    var count;
+    final additionalDetails =
+        additionalData.where((element) => element.key == key);
 
-    // final additionalDetails = model.additionalFields;
-    // if (additionalDetails == null) {
-    //   return '0';
-    // }
-    // final count = additionalDetails.fields.firstWhereOrNull(
-    //   (e) => e.key == key,
-    // );
-    // if (count == null) {
-    //   return '0';
-    // }
+    final cost = additionalDetails.isNotEmpty
+        ? (double.tryParse(additionalDetails.first.value.toString()) ?? 0.0)
+            .toStringAsFixed(0)
+        : '0';
 
-    return (double.tryParse(count.value.toString()) ?? 0.0).toStringAsFixed(0);
+    return cost;
   }
 }
 

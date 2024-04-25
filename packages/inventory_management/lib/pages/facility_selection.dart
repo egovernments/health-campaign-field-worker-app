@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
@@ -8,10 +9,11 @@ import '../../models/entities/inventory_facility.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../widgets/back_navigation_help_header.dart';
 
-class FacilitySelectionPage extends StatelessWidget {
+@RoutePage()
+class InventoryFacilitySelectionPage extends StatelessWidget {
   final List<InventoryFacilityModel> facilities;
 
-  const FacilitySelectionPage({
+  const InventoryFacilitySelectionPage({
     super.key,
     required this.facilities,
   });
@@ -74,7 +76,7 @@ class FacilitySelectionPage extends StatelessWidget {
                               ),
                               const DigitTextFormField(
                                 suffix: Padding(
-                                  padding: EdgeInsets.all(8.0),
+                                  padding: EdgeInsets.all(kPadding),
                                   child: Icon(Icons.search),
                                 ),
                                 label: '',
@@ -92,13 +94,17 @@ class FacilitySelectionPage extends StatelessWidget {
 
                           return Container(
                             color: Colors.white,
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: kPadding),
                             child: Container(
-                              margin: const EdgeInsets.symmetric(horizontal: 8),
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: kPadding),
                               decoration: BoxDecoration(
-                                color: DigitTheme.instance.colors.alabasterWhite,
+                                color:
+                                    DigitTheme.instance.colors.alabasterWhite,
                                 border: Border(
-                                  top: index == 0 ? borderSide : BorderSide.none,
+                                  top:
+                                      index == 0 ? borderSide : BorderSide.none,
                                   bottom: index == filteredFacilities.length - 1
                                       ? borderSide
                                       : BorderSide.none,
@@ -113,8 +119,8 @@ class FacilitySelectionPage extends StatelessWidget {
                                 child: Container(
                                   margin: const EdgeInsets.all(kPadding),
                                   decoration: BoxDecoration(
-                                    color:
-                                        DigitTheme.instance.colors.alabasterWhite,
+                                    color: DigitTheme
+                                        .instance.colors.alabasterWhite,
                                     border: Border(
                                       bottom: BorderSide(
                                         color: theme.colorScheme.outline,

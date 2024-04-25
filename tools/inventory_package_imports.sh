@@ -1,4 +1,4 @@
-# for adding imports and mappers of attendance
+# For adding imports and mappers of inventory
 
 cd ../apps/health_campaign_field_worker_app/lib || exit
 
@@ -30,18 +30,23 @@ temp_mappers=$(mktemp)
 
 # Loop through the new imports
 for file in "${!new_imports[@]}"; do
-  # Generate the import statement
-  import="import 'package:inventory_management/models/entities/$file' as p$start_num;"
-
-  # Write the import statement to the temporary imports file
-  echo "$import" >> "$temp_imports"
-
   # Generate the mapper initialization
   mapper="p$start_num.${new_imports[$file]}.ensureInitialized();"
 
-  # Write the mapper initialization to the temporary mappers file
-  echo "$mapper" >> "$temp_mappers"
+  # Check if the mapper initialization exists in the data_model_file
+  if grep -Fq "$mapper" $data_model_file
+  then
+    echo "The mapper initialization for ${new_imports[$file]} already exists in the data_model_file."
+  else
+    # Generate the import statement
+    import="import 'package:inventory_management/models/entities/$file' as p$start_num;"
 
+    # Write the import statement to the temporary imports file
+    echo "$import" >> "$temp_imports"
+
+    # Write the mapper initialization to the temporary mappers file
+    echo "$mapper" >> "$temp_mappers"
+  fi
 done
 
 # Get the line number of the last import statement

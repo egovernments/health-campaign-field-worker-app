@@ -16,6 +16,7 @@ import '../../utils/utils.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 
+@RoutePage()
 class ChecklistViewPage extends LocalizedStatefulWidget {
   final String? referralClientRefId;
   const ChecklistViewPage({
@@ -63,7 +64,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
       onWillPop: isHealthFacilityWorker && widget.referralClientRefId != null
           ? () async => false
           : () async => _onBackPressed(context),
-        child: Scaffold(
+      child: Scaffold(
         body: BlocBuilder<ServiceDefinitionBloc, ServiceDefinitionState>(
           builder: (context, state) {
             state.mapOrNull(
@@ -641,6 +642,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
       return Padding(
         padding: const EdgeInsets.all(8.0),
         child: DigitTextField(
+          maxLength: 1000,
           onChange: (value) {
             checklistFormKey.currentState?.validate();
           },

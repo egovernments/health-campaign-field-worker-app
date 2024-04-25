@@ -1,10 +1,11 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:inventory_management/pages/facility_selection.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:inventory_management/router/inventory_router.gm.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
@@ -20,8 +21,8 @@ import '../../models/entities/stock_reconciliation.dart';
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/component_wrapper/facility_bloc_wrapper.dart';
 import '../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
-import '../acknowledgement.dart';
 
+@RoutePage()
 class StockReconciliationPage extends LocalizedStatefulWidget {
   final InventoryListener inventoryListener;
   final String projectId;
@@ -73,12 +74,9 @@ class _StockReconciliationPageState
   void initState() {
     InventorySingleton().setInitialData(
       inventoryListener: widget.inventoryListener,
-      transportTypes: [],
-      userId: '',
       projectId: widget.projectId,
       isDistributor: widget.isDistributor!,
       isWareHouseMgr: widget.isWareHouseMgr!,
-      boundaryName: '',
     );
     super.initState();
   }
@@ -88,8 +86,9 @@ class _StockReconciliationPageState
     final theme = Theme.of(context);
 
     return widget.projectId.isEmpty
-        ? const Center(
-            child: Text('No project selected'),
+        ? Center(
+            child: Text(localizations
+                .translate(i18.stockReconciliationDetails.noProjectSelected)),
           )
         : FacilityBlocWrapper(
             projectId: widget.projectId,
@@ -107,10 +106,8 @@ class _StockReconciliationPageState
                   listener: (context, stockState) {
                     if (!stockState.persisted) return;
 
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => InventoryAcknowledgementPage(),
-                      ),
+                    context.router.replace(
+                      InventoryAcknowledgementRoute(),
                     );
                   },
                   builder: (context, stockState) {
@@ -270,7 +267,15 @@ class _StockReconciliationPageState
                                           .displayMedium,
                                     ),
                                     if (widget.isWareHouseMgr!)
-                                      BlocBuilder<FacilityBloc, FacilityState>(
+                                      BlocConsumer<FacilityBloc, FacilityState>(
+                                        listener: (context, state) =>
+                                            state.whenOrNull(
+                                          empty: () =>
+                                              NoFacilitiesAssignedDialog.show(
+                                            context,
+                                            localizations,
+                                          ),
+                                        ),
                                         builder: (context, state) {
                                           return state.maybeWhen(
                                               orElse: () => const Offstage(),
@@ -284,19 +289,12 @@ class _StockReconciliationPageState
                                                     final stockReconciliationBloc =
                                                         context.read<
                                                             StockReconciliationBloc>();
-                                                    final facility =
-                                                        await Navigator.of(
-                                                                context)
-                                                            .push<
-                                                                InventoryFacilityModel>(
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            FacilitySelectionPage(
-                                                          facilities:
-                                                              facilities,
-                                                        ),
-                                                      ),
-                                                    );
+                                                    final facility = await context
+                                                            .router
+                                                            .push(InventoryFacilitySelectionRoute(
+                                                                facilities:
+                                                                    facilities))
+                                                        as InventoryFacilityModel?;
 
                                                     if (facility == null)
                                                       return;
@@ -339,19 +337,12 @@ class _StockReconciliationPageState
                                                             context.read<
                                                                 StockReconciliationBloc>();
 
-                                                        final facility =
-                                                            await Navigator.of(
-                                                          context,
-                                                          rootNavigator: true,
-                                                        ).push(
-                                                          MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                FacilitySelectionPage(
-                                                              facilities:
-                                                                  facilities,
-                                                            ),
-                                                          ),
-                                                        );
+                                                        final facility = await context
+                                                                .router
+                                                                .push(InventoryFacilitySelectionRoute(
+                                                                    facilities:
+                                                                        facilities))
+                                                            as InventoryFacilityModel?;
 
                                                         if (facility == null)
                                                           return;
@@ -387,6 +378,11 @@ class _StockReconciliationPageState
                                           orElse: () => const Offstage(),
                                           loading: () => const Center(
                                             child: CircularProgressIndicator(),
+                                          ),
+                                          empty: () => Center(
+                                            child: Text(
+                                              i18.stockDetails.noProductsFound,
+                                            ),
                                           ),
                                           fetched: (productVariants) {
                                             return DigitReactiveSearchDropdown<

@@ -1,21 +1,47 @@
-import 'package:collection/collection.dart';
 import 'package:digit_components/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:pluto_grid/pluto_grid.dart';
+import '../../../utils/i18_key_constants.dart' as i18;
+import '../localized.dart';
 
-class ReadonlyDigitGrid extends StatelessWidget {
+// Extension on List to add a mapIndexed method
+extension ListExtensions<E> on List<E> {
+  // This method takes a function as an argument, which itself takes two arguments:
+  // the index of the current item and the item itself.
+  Iterable<T> mapIndexed<T>(T Function(int index, E item) function) sync* {
+    for (var index = 0; index < length; index++) {
+      yield function(index, this[index]);
+    }
+  }
+}
+
+/// ReadonlyDigitGrid widget class
+class ReadonlyDigitGrid extends LocalizedStatefulWidget {
+  /// Data for the grid
   final DigitGridData data;
 
+  /// Constructor for ReadonlyDigitGrid
   const ReadonlyDigitGrid({
-    Key? key,
+    super.key,
     required this.data,
-  }) : super(key: key);
+  });
 
+  /// Creating the state for ReadonlyDigitGrid
+  @override
+  State<StatefulWidget> createState() => _ReadonlyDigitGridState();
+}
+
+/// State class for ReadonlyDigitGrid
+class _ReadonlyDigitGridState extends LocalizedState<ReadonlyDigitGrid> {
   @override
   Widget build(BuildContext context) {
+    // Returns a PlutoGrid with the given configuration and data
     return PlutoGrid(
       mode: PlutoGridMode.readOnly,
-      noRowsWidget: const Center(child: Text('No data found')),
+      noRowsWidget: Center(
+          child: Text(localizations.translate(
+        i18.common.noResultsFound,
+      ))),
       configuration: PlutoGridConfiguration(
         scrollbar: const PlutoGridScrollbarConfig(
           isAlwaysShown: true,
@@ -40,7 +66,8 @@ class ReadonlyDigitGrid extends StatelessWidget {
         ),
       ),
       columns: [
-        ...data.columns.mapIndexed(
+        // Mapping the columns data to PlutoColumn
+        ...widget.data.columns.mapIndexed(
           (index, element) {
             final first = index == 0;
 
@@ -66,7 +93,8 @@ class ReadonlyDigitGrid extends StatelessWidget {
         ),
       ],
       rows: [
-        ...data.rows.map(
+        // Mapping the rows data to PlutoRow
+        ...widget.data.rows.map(
           (e) => PlutoRow(
             cells: Map.fromEntries(
               e.cells.map(
@@ -83,21 +111,27 @@ class ReadonlyDigitGrid extends StatelessWidget {
   }
 }
 
+/// Class for the grid data
 class DigitGridData {
+  /// Columns and rows for the grid
   final List<DigitGridColumn> columns;
   final List<DigitGridRow> rows;
 
+  /// Constructor for DigitGridData
   DigitGridData({
     required this.columns,
     this.rows = const [],
   }) : assert(rows.every((e) => e.cells.length == columns.length));
 }
 
+/// Class for the grid column
 class DigitGridColumn {
+  /// Label, key and width for the column
   final String label;
   final String key;
   final double width;
 
+  /// Constructor for DigitGridColumn
   const DigitGridColumn({
     required this.label,
     required this.key,
@@ -105,16 +139,22 @@ class DigitGridColumn {
   });
 }
 
+/// Class for the grid row
 class DigitGridRow {
+  /// Cells for the row
   final List<DigitGridCell> cells;
 
+  /// Constructor for DigitGridRow
   DigitGridRow(this.cells);
 }
 
+/// Class for the grid cell
 class DigitGridCell {
+  /// Key and value for the cell
   final String key;
   final String value;
 
+  /// Constructor for DigitGridCell
   const DigitGridCell({
     required this.key,
     required this.value,

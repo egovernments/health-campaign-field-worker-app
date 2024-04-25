@@ -49,13 +49,15 @@ class HCMAttendanceBloc extends AttendanceListeners {
   }
 
   @override
-  Future<void> searchAttendanceLog(
-      SearchAttendanceLog searchAttendanceLog) async {
+  Future<List<AttendanceLogModel>> searchAttendanceLog(
+      {required String registerId,
+      required String tenantId,
+      required int entryTime,
+      required int exitTime,
+      required int currentDate}) async {
     final attendanceLogs = await attendanceLogLocalRepository?.search(
       HCMAttendanceLogSearchModel(
-        attendanceSearchModel: AttendanceLogSearchModel(
-          registerId: searchAttendanceLog.registerId,
-        ),
+        registerId: registerId,
       ),
     );
 
@@ -67,7 +69,7 @@ class HCMAttendanceBloc extends AttendanceListeners {
           final logDay = DateTime(logTime.year, logTime.month, logTime.day)
               .millisecondsSinceEpoch;
           final currentTime = DateTime.fromMillisecondsSinceEpoch(
-            searchAttendanceLog.currentDate,
+            currentDate!,
           );
           final currentDay =
               DateTime(currentTime.year, currentTime.month, currentTime.day)
@@ -86,7 +88,8 @@ class HCMAttendanceBloc extends AttendanceListeners {
               uploadToServer: a.attendance?.uploadToServer,
             ))
         .toList();
-    searchAttendanceLog.onLogLoaded(filteredLogs ?? []);
+
+    return filteredLogs ?? [];
   }
 
   @override
