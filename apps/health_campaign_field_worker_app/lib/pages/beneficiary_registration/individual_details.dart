@@ -617,7 +617,6 @@ class _IndividualDetailsPageState
                                           icon: const Icon(Icons.edit),
                                           onPressed: () {
                                             Navigator.of(context).push(
-                                              //[TODO: Add the route to auto_route]
                                               MaterialPageRoute(
                                                 builder: (context) =>
                                                     const DigitScannerPage(
@@ -645,7 +644,6 @@ class _IndividualDetailsPageState
                                     ),
                                     onPressed: () {
                                       Navigator.of(context).push(
-                                        // [TODO: Add the route to auto_route]
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               const DigitScannerPage(

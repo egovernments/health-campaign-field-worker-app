@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:remove_emoji_input_formatter/remove_emoji_input_formatter.dart';
 
 class DigitTextFormField extends StatelessWidget {
   final bool readOnly;
@@ -73,9 +74,7 @@ class DigitTextFormField extends StatelessWidget {
         child: Column(
           children: [
             Container(
-              color: (readOnly && hideKeyboard == false)
-                  ? const DigitColors().seaShellGray
-                  : null,
+              color: (readOnly) ? const DigitColors().seaShellGray : null,
               child: ReactiveTextField(
                   onChanged: onChanged,
                   readOnly: readOnly,
@@ -95,7 +94,10 @@ class DigitTextFormField extends StatelessWidget {
                   obscureText: obscureText,
                   focusNode: focusNode,
                   keyboardType: keyboardType,
-                  inputFormatters: inputFormatters,
+                  inputFormatters: [
+                    RemoveEmojiInputFormatter(),
+                    ...?inputFormatters
+                  ],
                   valueAccessor: valueAccessor,
                   decoration: (readOnly && hideKeyboard == false)
                       ? InputDecoration(

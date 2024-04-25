@@ -1,8 +1,9 @@
-import 'package:auto_route/auto_route.dart';
-import 'package:flutter/material.dart';
-
 import 'package:attendance_management/router/attendance_router.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:digit_scanner/router/digit_scanner_router.dart';
+import 'package:digit_scanner/router/digit_scanner_router.gm.dart';
+import 'package:flutter/material.dart';
 import 'package:inventory_management/router/inventory_router.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 
@@ -71,6 +72,7 @@ part 'app_router.gr.dart';
   modules: [
     InventoryRoute,
     AttendanceRoute,
+    DigitScannerPackageRoute,
   ],
 )
 class AppRouter extends _$AppRouter {
@@ -304,6 +306,12 @@ class AppRouter extends _$AppRouter {
           path: 'mark-attendance',
         ),
 
+        //DigitScanner Route
+        AutoRoute(
+          page: DigitScannerRoute.page,
+          path: 'digit-scanner',
+        ),
+
         //Inventory Route
         AutoRoute(
           page: ManageStocksRoute.page,
@@ -319,7 +327,9 @@ class AppRouter extends _$AppRouter {
                   initial: true),
               AutoRoute(page: StockDetailsRoute.page, path: 'details'),
             ]),
-        AutoRoute(page: InventoryFacilitySelectionRoute.page, path: 'inventory-select-facilities'),
+        AutoRoute(
+            page: InventoryFacilitySelectionRoute.page,
+            path: 'inventory-select-facilities'),
         AutoRoute(
             page: StockReconciliationRoute.page, path: 'stock-reconciliation'),
         AutoRoute(

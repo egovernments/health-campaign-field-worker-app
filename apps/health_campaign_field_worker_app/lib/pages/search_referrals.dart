@@ -223,7 +223,6 @@ class _SearchReferralsPageState extends LocalizedState<SearchReferralsPage> {
                                 const DigitScannerEvent.handleScanner(),
                               );
                           Navigator.of(context).push(
-                            //[TODO: Add route to auto_route]
                             MaterialPageRoute(
                               builder: (context) => const DigitScannerPage(
                                 quantity: 1,
