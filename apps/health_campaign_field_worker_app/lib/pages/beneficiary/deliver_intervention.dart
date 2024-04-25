@@ -50,8 +50,12 @@ class _DeliverInterventionPageState
   // Variable to track dose administration status
   bool doseAdministered = false;
 
+  bool isCommentRequired = false;
+
   // List of controllers for form elements
   final List _controllers = [];
+
+  Map<String?, List<double?>> idVsSuggestedAndDistributedQuantity = {};
 
 // Initialize the currentStep variable to keep track of the current step in a process.
   int currentStep = 0;
@@ -70,6 +74,45 @@ class _DeliverInterventionPageState
         );
       });
     }
+
+    bool isCommentMandatory(
+      bool isCommentRequired,
+      List<ProductVariantsModel>? productVariants,
+      FormGroup form,
+      Map<String?, List<double?>> idVsSuggestedAndDistributedQuantity,
+    ) {
+      final resourcesDelivered =
+          (form.control(_resourceDeliveredKey) as FormArray).value;
+      final quantityDistributed =
+          (form.control(_quantityDistributedKey) as FormArray).value;
+      if (productVariants != null) {
+        for (var element in productVariants) {
+          var indexOfResource = -1;
+          for (int i = 0; i < resourcesDelivered!.length; i++) {
+            if (resourcesDelivered[i].id == element.productVariantId) {
+              indexOfResource = i;
+              break;
+            }
+          }
+          if (indexOfResource >= 0) {
+            List<double?> suggestedAndDistributed = [];
+            suggestedAndDistributed.add(element.quantity);
+            suggestedAndDistributed.add(quantityDistributed![indexOfResource]);
+            idVsSuggestedAndDistributedQuantity[element.productVariantId] =
+                suggestedAndDistributed;
+          }
+        }
+      }
+      for (var quantities in idVsSuggestedAndDistributedQuantity.values) {
+        if (quantities.length >= 2 && quantities[0] != quantities[1]) {
+          isCommentRequired = true;
+        }
+      }
+
+      return isCommentRequired;
+    }
+
+    ;
 
     return BlocBuilder<LocationBloc, LocationState>(
       builder: (context, locationState) {
@@ -215,6 +258,25 @@ class _DeliverInterventionPageState
                                                                       .translate(i18
                                                                           .deliverIntervention
                                                                           .resourceCannotBeZero),
+                                                                  true,
+                                                                  theme,
+                                                                ),
+                                                              );
+                                                            } else if (isCommentMandatory(
+                                                              isCommentRequired,
+                                                              productVariants,
+                                                              form,
+                                                              idVsSuggestedAndDistributedQuantity,
+                                                            )) {
+                                                              await DigitToast
+                                                                  .show(
+                                                                context,
+                                                                options:
+                                                                    DigitToastOptions(
+                                                                  localizations
+                                                                      .translate(i18
+                                                                          .deliverIntervention
+                                                                          .deliveryCommentRequired),
                                                                   true,
                                                                   theme,
                                                                 ),
@@ -658,6 +720,13 @@ class _DeliverInterventionPageState
                                                           }).toList(),
                                                           formControlName:
                                                               _deliveryCommentKey,
+                                                          isRequired:
+                                                              isCommentMandatory(
+                                                            isCommentRequired,
+                                                            productVariants,
+                                                            form,
+                                                            idVsSuggestedAndDistributedQuantity,
+                                                          ),
                                                           valueMapper: (value) =>
                                                               localizations
                                                                   .translate(
