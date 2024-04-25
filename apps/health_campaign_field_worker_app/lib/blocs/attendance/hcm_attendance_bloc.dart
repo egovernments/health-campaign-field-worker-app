@@ -98,17 +98,18 @@ class HCMAttendanceBloc extends AttendanceListeners {
     SubmitAttendanceDetails attendanceLogs,
   ) async {
     final existingLogs = await attendanceLogLocalRepository?.search(
-      HCMAttendanceLogSearchModel(
-        attendanceSearchModel: AttendanceLogSearchModel(
-          registerId: attendanceLogs.attendanceLogs.first.registerId,
-        ),
-      ),
-    );
+          HCMAttendanceLogSearchModel(
+            attendanceSearchModel: AttendanceLogSearchModel(
+              registerId: attendanceLogs.attendanceLogs.first.registerId,
+            ),
+          ),
+        ) ??
+        [];
 
     // Mapping attendance logs for submission
     final hcmAttendanceLogs = attendanceLogs.attendanceLogs.map(
       (e) {
-        final existingLog = existingLogs?.where(
+        final existingLog = existingLogs.where(
           (ele) {
             return attendanceLogs.isSingleSession == true
                 ? ele.attendance?.individualId == e.individualId &&
@@ -132,8 +133,8 @@ class HCMAttendanceBloc extends AttendanceListeners {
         return HCMAttendanceLogModel(
           rowVersion: 1,
           attendance: e.copyWith(
-            clientReferenceId: (existingLog ?? []).isNotEmpty
-                ? existingLog?.last.attendance?.clientReferenceId
+            clientReferenceId: (existingLog).isNotEmpty
+                ? existingLog.last.attendance?.clientReferenceId
                 : IdGen.i.identifier,
           ),
           clientAuditDetails: ClientAuditDetails(
@@ -160,13 +161,13 @@ class HCMAttendanceBloc extends AttendanceListeners {
       final createOpLog = (attendanceLogs.createOplog ?? false) &&
           (log.value
                   .where((l) => l.attendance?.type == 'ENTRY')
-                  .last
-                  .attendance
+                  .lastOrNull
+                  ?.attendance
                   ?.time !=
               log.value
                   .where((l) => l.attendance?.type == 'EXIT')
-                  .last
-                  .attendance
+                  .lastOrNull
+                  ?.attendance
                   ?.time);
       await createAttendanceLog(
         log.value,
@@ -317,16 +318,17 @@ class HCMAttendanceBloc extends AttendanceListeners {
         : list.length; // for registers with single session
 
     final individualList = await individualLocalRepository?.search(
-      IndividualSearchModel(
-        id: register.attendees
-            ?.where((att) => (att.denrollmentDate == null ||
-                (att.denrollmentDate ??
-                        DateTime.now().millisecondsSinceEpoch) >=
-                    DateTime.now().millisecondsSinceEpoch))
-            .map((a) => a.individualId!)
-            .toList(),
-      ),
-    );
+          IndividualSearchModel(
+            id: register.attendees
+                ?.where((att) => (att.denrollmentDate == null ||
+                    (att.denrollmentDate ??
+                            DateTime.now().millisecondsSinceEpoch) >=
+                        DateTime.now().millisecondsSinceEpoch))
+                .map((a) => a.individualId!)
+                .toList(),
+          ),
+        ) ??
+        [];
 
     // Map attendees
     final attendeeList = register.attendees
@@ -336,14 +338,14 @@ class HCMAttendanceBloc extends AttendanceListeners {
         .map(
           (a) => a.copyWith(
             name: individualList
-                ?.where((i) => i.id == a.individualId)
-                .first
-                .name
+                .where((i) => i.id == a.individualId)
+                .firstOrNull
+                ?.name
                 ?.givenName,
             individualNumber: individualList
-                ?.where((i) => i.id == a.individualId)
-                .first
-                .individualId,
+                .where((i) => i.id == a.individualId)
+                .firstOrNull
+                ?.individualId,
           ),
         )
         .toList();
