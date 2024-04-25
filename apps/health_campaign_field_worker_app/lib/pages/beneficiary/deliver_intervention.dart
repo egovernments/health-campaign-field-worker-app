@@ -415,6 +415,7 @@ class _DeliverInterventionPageState
                                                                               tasks: [
                                                                                 (taskData).last,
                                                                               ],
+                                                                              fromSurvey: true,
                                                                             ),
                                                                           );
 

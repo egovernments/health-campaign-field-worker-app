@@ -21,12 +21,14 @@ import '../../widgets/localized.dart';
 class SideEffectsPage extends LocalizedStatefulWidget {
   final bool isEditing;
   final List<TaskModel> tasks;
+  final bool fromSurvey;
 
   const SideEffectsPage({
     super.key,
     super.appLocalizations,
     required this.tasks,
     this.isEditing = false,
+    this.fromSurvey = false,
   });
 
   @override
@@ -62,8 +64,10 @@ class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                         body: state.loading
                             ? const Center(child: CircularProgressIndicator())
                             : ScrollableContent(
-                                header: const BackNavigationHelpHeaderWidget(
+                                header: BackNavigationHelpHeaderWidget(
                                   showHelp: false,
+                                  showBackNavigation:
+                                      widget.fromSurvey ? false : true,
                                 ),
                                 footer: DigitCard(
                                   margin: const EdgeInsets.fromLTRB(
