@@ -4,6 +4,8 @@ export 'data/data_repository.dart';
 export 'data/repositories/local/address.dart';
 export 'data/repositories/local/boundary.dart';
 export 'data/local_store/no_sql/schema/oplog.dart' hide AdditionalId;
+export 'data/sql_store/sql_store.dart';
+
 export 'models/oplog/oplog_entry.dart' show OpLogEntry;
 
 @MappableLib(
@@ -13,8 +15,9 @@ import 'package:dart_mappable/dart_mappable.dart';
 
 import 'data_model.dart';
 
-// export 'package:registration_delivery/models/entities/household.dart';
-// export 'package:registration_delivery/models/entities/task.dart';
+export 'package:registration_delivery/models/entities/household.dart';
+export 'package:registration_delivery/models/entities/task.dart';
+export 'package:registration_delivery/models/entities/downsync.dart';
 
 export 'models/entities/address.dart';
 export 'models/entities/boundary.dart';
@@ -36,8 +39,9 @@ abstract class DataModel {
   AddressModel,
   BoundaryModel,
   LocalityModel,
-  // HouseholdModel,
-  // TaskModel,
+  DownsyncModel,
+  HouseholdModel,
+  TaskModel,
 ])
 abstract class EntityModel extends DataModel with EntityModelMappable {
   final AuditDetails? auditDetails;
@@ -52,8 +56,9 @@ abstract class EntityModel extends DataModel with EntityModelMappable {
 @MappableClass(ignoreNull: true, includeSubClasses: [
   AddressSearchModel,
   LocalitySearchModel,
-  // HouseholdSearchModel,
-  // TaskSearchModel
+  HouseholdSearchModel,
+  DownsyncSearchModel,
+  TaskSearchModel
 ])
 abstract class EntitySearchModel extends DataModel
     with EntitySearchModelMappable {
@@ -76,7 +81,9 @@ abstract class EntitySearchModel extends DataModel
 }
 
 @MappableClass(
-  includeSubClasses: [],
+  includeSubClasses: [
+    DownsyncAdditionalFields,
+  ],
 )
 abstract class AdditionalFields with AdditionalFieldsMappable {
   final String schema;

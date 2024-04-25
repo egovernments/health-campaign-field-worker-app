@@ -8,13 +8,10 @@ import '../../../models/entities/household.dart';
 import '../../../models/entities/individual.dart';
 import '../../../models/entities/name.dart';
 import '../../../utils/utils.dart';
-import '../../local_store/sql_store.dart';
 
-class RegistrationDeliveryAddress extends AddressLocalRepository {
-  final RegistrationLocalSqlDataStore registrationDeliverySql;
-
-  RegistrationDeliveryAddress(
-      super.sql, super.opLogManager, this.registrationDeliverySql);
+class RegistrationDeliveryAddressRepo extends AddressLocalRepository {
+  RegistrationDeliveryAddressRepo(
+      super.sql, super.opLogManager,);
 
   FutureOr<List<HouseholdModel>> searchHouseHoldbyAddress(
     AddressSearchModel query, [
@@ -23,8 +20,8 @@ class RegistrationDeliveryAddress extends AddressLocalRepository {
     final selectQuery = sql.select(sql.address).join(
       [
         leftOuterJoin(
-          registrationDeliverySql.household,
-          registrationDeliverySql.household.clientReferenceId.equalsExp(
+          sql.household,
+          sql.household.clientReferenceId.equalsExp(
             sql.address.relatedClientReferenceId,
           ),
         ),
@@ -34,7 +31,7 @@ class RegistrationDeliveryAddress extends AddressLocalRepository {
     (selectQuery
           ..where(buildAnd([
             sql.address.relatedClientReferenceId.isNotNull(),
-            registrationDeliverySql.household.clientReferenceId.isNotNull(),
+            sql.household.clientReferenceId.isNotNull(),
             if (query.latitude != null &&
                 query.longitude != null &&
                 query.maxRadius != null)
@@ -74,7 +71,7 @@ class RegistrationDeliveryAddress extends AddressLocalRepository {
     return results
         .map((e) {
           final household =
-              e.readTableOrNull(registrationDeliverySql.household);
+              e.readTableOrNull(sql.household);
           final address = e.readTableOrNull(sql.address);
 
           return HouseholdModel(
@@ -133,8 +130,8 @@ class RegistrationDeliveryAddress extends AddressLocalRepository {
     final selectQuery = sql.select(sql.address).join(
       [
         leftOuterJoin(
-          registrationDeliverySql.individual,
-          registrationDeliverySql.individual.clientReferenceId.equalsExp(
+          sql.individual,
+          sql.individual.clientReferenceId.equalsExp(
             sql.address.relatedClientReferenceId,
           ),
         ),
@@ -144,7 +141,7 @@ class RegistrationDeliveryAddress extends AddressLocalRepository {
     (selectQuery
           ..where(buildAnd([
             sql.address.relatedClientReferenceId.isNotNull(),
-            registrationDeliverySql.individual.clientReferenceId.isNotNull(),
+            sql.individual.clientReferenceId.isNotNull(),
             if (query.latitude != null &&
                 query.longitude != null &&
                 query.maxRadius != null)
@@ -184,9 +181,9 @@ class RegistrationDeliveryAddress extends AddressLocalRepository {
     return results
         .map((e) {
           final individual =
-              e.readTableOrNull(registrationDeliverySql.individual);
+              e.readTableOrNull(sql.individual);
           final address = e.readTableOrNull(sql.address);
-          final name = e.readTableOrNull(registrationDeliverySql.name);
+          final name = e.readTableOrNull(sql.name);
 
           return IndividualModel(
             id: individual?.id,

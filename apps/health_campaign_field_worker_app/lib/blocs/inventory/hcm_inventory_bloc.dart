@@ -239,7 +239,7 @@ class HcmInventoryBloc extends InventoryListener {
               stockReconciliationModel.stockReconciliationModel.referenceIdType,
           rowVersion:
               stockReconciliationModel.stockReconciliationModel.rowVersion,
-          tenantId: stockReconciliationModel.stockReconciliationModel.tenantId,
+          tenantId: envConfig.variables.tenantId,
           calculatedCount:
               stockReconciliationModel.stockReconciliationModel.calculatedCount,
           commentsOnReconciliation: stockReconciliationModel

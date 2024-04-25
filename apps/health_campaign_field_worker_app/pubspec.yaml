@@ -70,7 +70,7 @@ dependencies:
   digit_scanner: ##[TODO: Change to pub version once published]
     git:
       url: https://github.com/egovernments/health-campaign-field-worker-app/
-      ref: HLM-5097
+      ref: develop
       path: ./packages/digit_scanner
   inventory_management: ^0.0.1
   referral_reconciliation: ^0.0.1

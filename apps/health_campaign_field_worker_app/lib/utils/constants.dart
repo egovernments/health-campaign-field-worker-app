@@ -2,23 +2,21 @@ import 'package:collection/collection.dart';
 import 'package:digit_data_model/data/sql_store/sql_store.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/oplog/oplog_entry.dart';
+import 'package:digit_data_model/utils/utils.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:inventory_management/data/repositories/local/stock.dart';
 import 'package:inventory_management/data/repositories/local/stock_reconciliation.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:digit_data_model/data/sql_store/sql_store.dart' as dataModelSql;
 import 'package:digit_data_model/data_model.init.dart' as digitDataModel;
 
 import '../blocs/app_initialization/app_initialization.dart';
-import '../data/data_repository.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/no_sql/schema/localization.dart';
 import '../data/local_store/no_sql/schema/project_types.dart';
 import '../data/local_store/no_sql/schema/row_versions.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
-import '../data/local_store/sql_store/sql_store.dart';
 import '../data/repositories/local/attendance_logs.dart';
 import '../data/repositories/local/facility.dart';
 import '../data/repositories/local/hcm_attendance.dart';
@@ -57,9 +55,8 @@ import '../data/repositories/remote/side_effect.dart';
 import '../data/repositories/remote/stock.dart';
 import '../data/repositories/remote/stock_reconciliation.dart';
 import '../data/repositories/remote/task.dart';
-import '../models/data_model.dart';
 import '../models/data_model.init.dart';
-// import '../models/data_model.init.dart';
+import 'environment_config.dart';
 
 class Constants {
   late Future<Isar> _isar;
@@ -74,6 +71,11 @@ class Constants {
   Future initialize(version) async {
     initializeMappers();
     digitDataModel.initializeMappers();
+    DigitDataModelSingleton().setData(
+        syncDownRetryCount: envConfig.variables.syncDownRetryCount,
+        retryTimeInterval: envConfig.variables.retryTimeInterval,
+        tenantId: envConfig.variables.tenantId,
+        errorDumpApiPath: envConfig.variables.dumpErrorApiPath);
     await _initializeIsar(version);
   }
 

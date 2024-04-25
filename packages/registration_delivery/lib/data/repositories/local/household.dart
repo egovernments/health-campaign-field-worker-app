@@ -8,24 +8,22 @@ import 'package:drift/drift.dart';
 
 import '../../../models/entities/household.dart';
 import '../../../utils/utils.dart';
-import '../../local_store/sql_store.dart';
 
 class HouseholdLocalRepository
     extends LocalRepository<HouseholdModel, HouseholdSearchModel> {
-  final RegistrationLocalSqlDataStore registrationLocalSqlDataStore;
-  HouseholdLocalRepository(super.sql, super.opLogManager, this.registrationLocalSqlDataStore);
+  HouseholdLocalRepository(super.sql, super.opLogManager);
 
   @override
   FutureOr<List<HouseholdModel>> search(
     HouseholdSearchModel query, [
     String? userId,
   ]) async {
-    final selectQuery = sql.select(registrationLocalSqlDataStore.household).join(
+    final selectQuery = sql.select(sql.household).join(
       [
         leftOuterJoin(
           sql.address,
           sql.address.relatedClientReferenceId.equalsExp(
-            registrationLocalSqlDataStore.household.clientReferenceId,
+            sql.household.clientReferenceId,
           ),
         ),
       ],
@@ -36,17 +34,17 @@ class HouseholdLocalRepository
         buildAnd(
           [
             if (query.clientReferenceId != null)
-              registrationLocalSqlDataStore.household.clientReferenceId.isIn(query.clientReferenceId!),
+              sql.household.clientReferenceId.isIn(query.clientReferenceId!),
             if (query.id != null)
-              registrationLocalSqlDataStore.household.id.equals(
+              sql.household.id.equals(
                 query.id!,
               ),
             if (query.tenantId != null)
-              registrationLocalSqlDataStore.household.tenantId.equals(
+              sql.household.tenantId.equals(
                 query.tenantId!,
               ),
             if (userId != null)
-              registrationLocalSqlDataStore.household.auditCreatedBy.equals(
+              sql.household.auditCreatedBy.equals(
                 userId,
               ),
             if (query.latitude != null &&
@@ -68,7 +66,7 @@ class HouseholdLocalRepository
 
     return results
         .map((e) {
-          final household = e.readTable(registrationLocalSqlDataStore.household);
+          final household = e.readTable(sql.household);
           final address = e.readTableOrNull(sql.address);
 
           return HouseholdModel(
@@ -156,7 +154,7 @@ class HouseholdLocalRepository
 
     await sql.batch((batch) async {
       batch.insert(
-        registrationLocalSqlDataStore.household,
+        sql.household,
         householdCompanion,
         mode: InsertMode.insertOrReplace,
       );
@@ -208,7 +206,7 @@ class HouseholdLocalRepository
       }
 
       batch.insertAll(
-        registrationLocalSqlDataStore.household,
+        sql.household,
         householdCompanions,
         mode: InsertMode.insertOrReplace,
       );
@@ -231,7 +229,7 @@ class HouseholdLocalRepository
 
     await sql.batch((batch) async {
       batch.update(
-        registrationLocalSqlDataStore.household,
+        sql.household,
         householdCompanion,
         where: (table) => table.clientReferenceId.equals(
           entity.clientReferenceId,
@@ -272,7 +270,7 @@ class HouseholdLocalRepository
     );
     await sql.batch((batch) {
       batch.update(
-        registrationLocalSqlDataStore.household,
+        sql.household,
         updated.companion,
         where: (table) => table.clientReferenceId.equals(
           entity.clientReferenceId,

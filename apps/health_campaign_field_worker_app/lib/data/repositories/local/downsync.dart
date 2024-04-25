@@ -5,10 +5,7 @@ import 'package:digit_data_model/models/oplog/oplog_entry.dart';
 import 'package:drift/drift.dart';
 import 'package:registration_delivery/models/entities/downsync.dart';
 
-import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
-import '../../data_repository.dart';
-import '../../local_store/sql_store/sql_store.dart';
 
 class DownsyncLocalRepository
     extends LocalRepository<DownsyncModel, DownsyncSearchModel> {

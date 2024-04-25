@@ -7,27 +7,25 @@ import 'package:drift/drift.dart';
 import 'package:registration_delivery/models/entities/referral.dart';
 
 import '../../../utils/utils.dart';
-import '../../local_store/sql_store.dart';
 
 class ReferralLocalRepository
     extends LocalRepository<ReferralModel, ReferralSearchModel> {
-  final RegistrationLocalSqlDataStore registrationLocalSqlDataStore;
   ReferralLocalRepository(
-      super.sql, super.opLogManager, this.registrationLocalSqlDataStore);
+      super.sql, super.opLogManager,);
 
   void listenToChanges({
     required ReferralSearchModel query,
     required void Function(List<ReferralModel> data) listener,
   }) {
-    final select = sql.select(registrationLocalSqlDataStore.referral).join([])
+    final select = sql.select(sql.referral).join([])
       ..where(
         buildOr([
           if (query.id != null)
-            registrationLocalSqlDataStore.referral.id.equals(
+            sql.referral.id.equals(
               query.id!,
             ),
           if (query.projectBeneficiaryClientReferenceId != null)
-            registrationLocalSqlDataStore
+            sql
                 .referral.projectBeneficiaryClientReferenceId
                 .isIn(
               query.projectBeneficiaryClientReferenceId!,
@@ -39,7 +37,7 @@ class ReferralLocalRepository
       final data = results
           .map((e) {
             final referral =
-                e.readTableOrNull(registrationLocalSqlDataStore.referral);
+                e.readTableOrNull(sql.referral);
             if (referral == null) return null;
 
             return ReferralModel(
@@ -66,22 +64,22 @@ class ReferralLocalRepository
     String? userId,
   ]) async {
     final selectQuery =
-        sql.select(registrationLocalSqlDataStore.referral).join([]);
+        sql.select(sql.referral).join([]);
 
     final results = await (selectQuery
           ..where(buildAnd([
             if (query.clientReferenceId != null)
-              registrationLocalSqlDataStore.referral.clientReferenceId.isIn(
+              sql.referral.clientReferenceId.isIn(
                 query.clientReferenceId!,
               ),
             if (query.projectBeneficiaryClientReferenceId != null)
-              registrationLocalSqlDataStore
+              sql
                   .referral.projectBeneficiaryClientReferenceId
                   .isIn(
                 query.projectBeneficiaryClientReferenceId!,
               ),
             if (userId != null)
-              registrationLocalSqlDataStore.referral.auditCreatedBy.equals(
+              sql.referral.auditCreatedBy.equals(
                 userId,
               ),
           ])))
@@ -90,7 +88,7 @@ class ReferralLocalRepository
     return results
         .map((e) {
           final referral =
-              e.readTableOrNull(registrationLocalSqlDataStore.referral);
+              e.readTableOrNull(sql.referral);
           if (referral == null) return null;
 
           return ReferralModel(
@@ -131,7 +129,7 @@ class ReferralLocalRepository
   }) async {
     final referralCompanion = entity.companion;
     await sql.batch((batch) async {
-      batch.insert(registrationLocalSqlDataStore.referral, referralCompanion);
+      batch.insert(sql.referral, referralCompanion);
       await super.create(entity);
     });
   }
@@ -144,7 +142,7 @@ class ReferralLocalRepository
 
     await sql.batch((batch) async {
       batch.insertAll(
-        registrationLocalSqlDataStore.referral,
+        sql.referral,
         referralCompanions,
         mode: InsertMode.insertOrReplace,
       );
@@ -160,7 +158,7 @@ class ReferralLocalRepository
 
     await sql.batch((batch) {
       batch.update(
-        registrationLocalSqlDataStore.referral,
+        sql.referral,
         referralCompanion,
         where: (table) => table.clientReferenceId.equals(
           entity.clientReferenceId,

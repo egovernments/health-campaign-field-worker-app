@@ -5,8 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:registration_delivery/models/entities/referral.dart';
 
-import '../../data/data_repository.dart';
-
 part 'referral_management.freezed.dart';
 
 typedef BeneficiaryRegistrationEmitter = Emitter<ReferralState>;

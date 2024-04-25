@@ -2,7 +2,6 @@
 
 import 'package:digit_data_model/data_model.dart';
 import '../../../models/entities/project_type.dart';
-import '../../data_repository.dart';
 
 class ProjectTypeRemoteRepository extends RemoteRepository<ProjectTypeModel, ProjectTypeSearchModel> {
   ProjectTypeRemoteRepository(

@@ -15,14 +15,12 @@ import 'package:recase/recase.dart';
 import 'package:registration_delivery/models/entities/individual.dart';
 
 import '../../../models/app_config/app_config_model.dart' as app_configuration;
-import '../../data/data_repository.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/no_sql/schema/row_versions.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/repositories/remote/mdms.dart';
 import '../../models/app_config/app_config_model.dart';
 import '../../models/auth/auth_model.dart';
-import '../../models/data_model.dart';
 import '../../models/entities/facility.dart';
 // import '../../models/entities/hcm_attendance_log_model.dart';
 // import '../../models/entities/hcm_attendance_model.dart';

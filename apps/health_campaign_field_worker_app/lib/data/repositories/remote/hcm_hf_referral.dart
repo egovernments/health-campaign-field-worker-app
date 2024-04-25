@@ -6,11 +6,9 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:dio/dio.dart';
 import 'package:referral_reconciliation/models/entities/h_f_referral.dart';
 
-import '../../../models/data_model.dart';
 import '../../../models/entities/hcm_hf_referral.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/environment_config.dart';
-import '../../data_repository.dart';
 
 class HFReferralRemoteRepository
     extends RemoteRepository<HcmHFReferralModel, HcmHFReferralSearchModel> {

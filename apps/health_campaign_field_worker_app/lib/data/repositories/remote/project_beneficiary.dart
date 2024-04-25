@@ -2,7 +2,6 @@
 
 import 'package:digit_data_model/data_model.dart';
 import '../../../models/entities/project_beneficiary.dart';
-import '../../data_repository.dart';
 
 class ProjectBeneficiaryRemoteRepository extends RemoteRepository<ProjectBeneficiaryModel, ProjectBeneficiarySearchModel> {
   ProjectBeneficiaryRemoteRepository(

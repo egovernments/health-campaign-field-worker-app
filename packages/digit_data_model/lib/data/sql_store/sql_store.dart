@@ -20,7 +20,6 @@ import 'tables/attributes.dart';
 import 'tables/document.dart';
 import 'tables/downsync.dart';
 import 'tables/downsync_criteria.dart';
-import 'tables/name.dart';
 import 'tables/package_tables.dart';
 import 'tables/pgr_service.dart';
 import 'tables/product.dart';
@@ -32,7 +31,6 @@ import 'tables/project_product_variant.dart';
 import 'tables/project_resource.dart';
 import 'tables/project_staff.dart';
 import 'tables/project_type.dart';
-import 'tables/referral.dart';
 import 'tables/service.dart';
 import 'tables/service_attributes.dart';
 import 'tables/service_definition.dart';
@@ -77,6 +75,11 @@ part 'sql_store.g.dart';
   Downsync,
   DownsyncCriteria,
   HFReferral,
+  Household,
+  HouseholdMember,
+  Task,
+  TaskResource,
+  SideEffect,
 ])
 class LocalSqlDataStore extends _$LocalSqlDataStore {
   LocalSqlDataStore() : super(_openConnection());

@@ -5,7 +5,6 @@ import 'package:drift/drift.dart';
 
 import 'package:digit_data_model/data_model.dart';
 import 'package:health_campaign_field_worker_app/models/entities/service_attributes.dart';
-import '../../data/local_store/sql_store/sql_store.dart';
 
 part 'service.mapper.dart';
 

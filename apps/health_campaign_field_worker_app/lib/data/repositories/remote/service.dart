@@ -2,7 +2,6 @@
 
 import 'package:digit_data_model/data_model.dart';
 import '../../../models/entities/service.dart';
-import '../../data_repository.dart';
 
 class ServiceRemoteRepository extends RemoteRepository<ServiceModel, ServiceSearchModel> {
   ServiceRemoteRepository(

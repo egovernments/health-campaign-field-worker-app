@@ -8,23 +8,21 @@ import 'package:drift/drift.dart';
 import 'package:registration_delivery/models/entities/side_effect.dart';
 
 import '../../../utils/utils.dart';
-import '../../local_store/sql_store.dart';
 
 
 class SideEffectLocalRepository
     extends LocalRepository<SideEffectModel, SideEffectSearchModel> {
-  final RegistrationLocalSqlDataStore registrationDeliverySql;
-  SideEffectLocalRepository(super.sql, super.opLogManager, this.registrationDeliverySql);
+  SideEffectLocalRepository(super.sql, super.opLogManager,);
 
   void listenToChanges({
     required SideEffectSearchModel query,
     required void Function(List<SideEffectModel> data) listener,
   }) {
-    final select = sql.select(registrationDeliverySql.sideEffect).join([])
+    final select = sql.select(sql.sideEffect).join([])
       ..where(
         buildOr([
           if (query.id != null)
-            registrationDeliverySql.sideEffect.id.equals(
+            sql.sideEffect.id.equals(
               query.id!,
             ),
         ]),
@@ -33,7 +31,7 @@ class SideEffectLocalRepository
     select.watch().listen((results) {
       final data = results
           .map((e) {
-            final sideEffect = e.readTableOrNull(registrationDeliverySql.sideEffect);
+            final sideEffect = e.readTableOrNull(sql.sideEffect);
             if (sideEffect == null) return null;
 
             return SideEffectModel(
@@ -59,20 +57,20 @@ class SideEffectLocalRepository
     SideEffectSearchModel query, [
     String? userId,
   ]) async {
-    final selectQuery = sql.select(registrationDeliverySql.sideEffect).join([]);
+    final selectQuery = sql.select(sql.sideEffect).join([]);
 
     final results = await (selectQuery
           ..where(buildAnd([
             if (query.clientReferenceId != null)
-              registrationDeliverySql.sideEffect.clientReferenceId.isIn(
+              sql.sideEffect.clientReferenceId.isIn(
                 query.clientReferenceId!,
               ),
             if (query.taskClientReferenceId != null)
-              registrationDeliverySql.sideEffect.taskClientReferenceId.isIn(
+              sql.sideEffect.taskClientReferenceId.isIn(
                 query.taskClientReferenceId!,
               ),
             if (userId != null)
-              registrationDeliverySql.sideEffect.auditCreatedBy.equals(
+              sql.sideEffect.auditCreatedBy.equals(
                 userId,
               ),
           ])))
@@ -80,7 +78,7 @@ class SideEffectLocalRepository
 
     return results
         .map((e) {
-          final sideEffect = e.readTableOrNull(registrationDeliverySql.sideEffect);
+          final sideEffect = e.readTableOrNull(sql.sideEffect);
           if (sideEffect == null) return null;
 
           return SideEffectModel(
@@ -120,7 +118,7 @@ class SideEffectLocalRepository
   }) async {
     final sideEffectsCompanion = entity.companion;
     await sql.batch((batch) async {
-      batch.insert(registrationDeliverySql.sideEffect, sideEffectsCompanion);
+      batch.insert(sql.sideEffect, sideEffectsCompanion);
       await super.create(entity);
     });
   }
@@ -133,7 +131,7 @@ class SideEffectLocalRepository
 
     await sql.batch((batch) async {
       batch.insertAll(
-        registrationDeliverySql.sideEffect,
+        sql.sideEffect,
         sideEffectCompanions,
         mode: InsertMode.insertOrReplace,
       );
@@ -149,7 +147,7 @@ class SideEffectLocalRepository
 
     await sql.batch((batch) {
       batch.update(
-        registrationDeliverySql.sideEffect,
+        sql.sideEffect,
         sideEffectsCompanion,
         where: (table) => table.clientReferenceId.equals(
           entity.clientReferenceId,

@@ -4,12 +4,9 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/models/entities/boundary.dart';
 import 'package:dio/dio.dart';
 
-import '../../../models/data_model.dart';
 import '../../../utils/environment_config.dart';
-import '../../data_repository.dart';
 
 class BoundaryRemoteRepository
     extends RemoteRepository<BoundaryModel, BoundarySearchModel> {

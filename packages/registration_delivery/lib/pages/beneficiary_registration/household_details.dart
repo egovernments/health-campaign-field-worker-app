@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 
+import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';

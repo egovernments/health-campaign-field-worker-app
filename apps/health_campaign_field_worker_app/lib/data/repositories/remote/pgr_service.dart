@@ -3,11 +3,9 @@ import 'dart:async';
 import 'package:digit_data_model/data_model.dart';
 import 'package:dio/dio.dart';
 
-import '../../../models/data_model.dart';
 import '../../../models/pgr_complaints/pgr_complaints.dart';
 import '../../../models/pgr_complaints/pgr_complaints_response.dart';
 import '../../../utils/environment_config.dart';
-import '../../data_repository.dart';
 
 class PgrServiceRemoteRepository
     extends RemoteRepository<PgrServiceModel, PgrServiceSearchModel> {

@@ -4,11 +4,8 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/oplog/oplog_entry.dart';
 import 'package:drift/drift.dart';
 
-import '../../../models/data_model.dart';
 import '../../../models/entities/project_staff.dart';
 import '../../../utils/utils.dart';
-import '../../data_repository.dart';
-import '../../local_store/sql_store/sql_store.dart';
 
 class ProjectStaffLocalRepository
     extends LocalRepository<ProjectStaffModel, ProjectStaffSearchModel> {

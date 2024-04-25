@@ -30482,6 +30482,4993 @@ class HFReferralCompanion extends UpdateCompanion<HFReferralData> {
   }
 }
 
+class $HouseholdTable extends Household
+    with TableInfo<$HouseholdTable, HouseholdData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $HouseholdTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _memberCountMeta =
+      const VerificationMeta('memberCount');
+  @override
+  late final GeneratedColumn<int> memberCount = GeneratedColumn<int>(
+      'member_count', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _latitudeMeta =
+      const VerificationMeta('latitude');
+  @override
+  late final GeneratedColumn<double> latitude = GeneratedColumn<double>(
+      'latitude', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _longitudeMeta =
+      const VerificationMeta('longitude');
+  @override
+  late final GeneratedColumn<double> longitude = GeneratedColumn<double>(
+      'longitude', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _auditCreatedByMeta =
+      const VerificationMeta('auditCreatedBy');
+  @override
+  late final GeneratedColumn<String> auditCreatedBy = GeneratedColumn<String>(
+      'audit_created_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _nonRecoverableErrorMeta =
+      const VerificationMeta('nonRecoverableError');
+  @override
+  late final GeneratedColumn<bool> nonRecoverableError = GeneratedColumn<bool>(
+      'non_recoverable_error', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("non_recoverable_error" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  static const VerificationMeta _auditCreatedTimeMeta =
+      const VerificationMeta('auditCreatedTime');
+  @override
+  late final GeneratedColumn<int> auditCreatedTime = GeneratedColumn<int>(
+      'audit_created_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _clientCreatedTimeMeta =
+      const VerificationMeta('clientCreatedTime');
+  @override
+  late final GeneratedColumn<int> clientCreatedTime = GeneratedColumn<int>(
+      'client_created_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String> clientModifiedBy = GeneratedColumn<String>(
+      'client_modified_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String> clientCreatedBy = GeneratedColumn<String>(
+      'client_created_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _clientModifiedTimeMeta =
+      const VerificationMeta('clientModifiedTime');
+  @override
+  late final GeneratedColumn<int> clientModifiedTime = GeneratedColumn<int>(
+      'client_modified_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _auditModifiedByMeta =
+      const VerificationMeta('auditModifiedBy');
+  @override
+  late final GeneratedColumn<String> auditModifiedBy = GeneratedColumn<String>(
+      'audit_modified_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _auditModifiedTimeMeta =
+      const VerificationMeta('auditModifiedTime');
+  @override
+  late final GeneratedColumn<int> auditModifiedTime = GeneratedColumn<int>(
+      'audit_modified_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _clientReferenceIdMeta =
+      const VerificationMeta('clientReferenceId');
+  @override
+  late final GeneratedColumn<String> clientReferenceId =
+      GeneratedColumn<String>('client_reference_id', aliasedName, false,
+          type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _tenantIdMeta =
+      const VerificationMeta('tenantId');
+  @override
+  late final GeneratedColumn<String> tenantId = GeneratedColumn<String>(
+      'tenant_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _isDeletedMeta =
+      const VerificationMeta('isDeleted');
+  @override
+  late final GeneratedColumn<bool> isDeleted = GeneratedColumn<bool>(
+      'is_deleted', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_deleted" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  static const VerificationMeta _rowVersionMeta =
+      const VerificationMeta('rowVersion');
+  @override
+  late final GeneratedColumn<int> rowVersion = GeneratedColumn<int>(
+      'row_version', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _additionalFieldsMeta =
+      const VerificationMeta('additionalFields');
+  @override
+  late final GeneratedColumn<String> additionalFields = GeneratedColumn<String>(
+      'additional_fields', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        memberCount,
+        latitude,
+        longitude,
+        auditCreatedBy,
+        nonRecoverableError,
+        auditCreatedTime,
+        clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
+        clientModifiedTime,
+        auditModifiedBy,
+        auditModifiedTime,
+        clientReferenceId,
+        tenantId,
+        isDeleted,
+        rowVersion,
+        additionalFields
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'household';
+  @override
+  VerificationContext validateIntegrity(Insertable<HouseholdData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('member_count')) {
+      context.handle(
+          _memberCountMeta,
+          memberCount.isAcceptableOrUnknown(
+              data['member_count']!, _memberCountMeta));
+    }
+    if (data.containsKey('latitude')) {
+      context.handle(_latitudeMeta,
+          latitude.isAcceptableOrUnknown(data['latitude']!, _latitudeMeta));
+    }
+    if (data.containsKey('longitude')) {
+      context.handle(_longitudeMeta,
+          longitude.isAcceptableOrUnknown(data['longitude']!, _longitudeMeta));
+    }
+    if (data.containsKey('audit_created_by')) {
+      context.handle(
+          _auditCreatedByMeta,
+          auditCreatedBy.isAcceptableOrUnknown(
+              data['audit_created_by']!, _auditCreatedByMeta));
+    }
+    if (data.containsKey('non_recoverable_error')) {
+      context.handle(
+          _nonRecoverableErrorMeta,
+          nonRecoverableError.isAcceptableOrUnknown(
+              data['non_recoverable_error']!, _nonRecoverableErrorMeta));
+    }
+    if (data.containsKey('audit_created_time')) {
+      context.handle(
+          _auditCreatedTimeMeta,
+          auditCreatedTime.isAcceptableOrUnknown(
+              data['audit_created_time']!, _auditCreatedTimeMeta));
+    }
+    if (data.containsKey('client_created_time')) {
+      context.handle(
+          _clientCreatedTimeMeta,
+          clientCreatedTime.isAcceptableOrUnknown(
+              data['client_created_time']!, _clientCreatedTimeMeta));
+    }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
+    }
+    if (data.containsKey('client_modified_time')) {
+      context.handle(
+          _clientModifiedTimeMeta,
+          clientModifiedTime.isAcceptableOrUnknown(
+              data['client_modified_time']!, _clientModifiedTimeMeta));
+    }
+    if (data.containsKey('audit_modified_by')) {
+      context.handle(
+          _auditModifiedByMeta,
+          auditModifiedBy.isAcceptableOrUnknown(
+              data['audit_modified_by']!, _auditModifiedByMeta));
+    }
+    if (data.containsKey('audit_modified_time')) {
+      context.handle(
+          _auditModifiedTimeMeta,
+          auditModifiedTime.isAcceptableOrUnknown(
+              data['audit_modified_time']!, _auditModifiedTimeMeta));
+    }
+    if (data.containsKey('client_reference_id')) {
+      context.handle(
+          _clientReferenceIdMeta,
+          clientReferenceId.isAcceptableOrUnknown(
+              data['client_reference_id']!, _clientReferenceIdMeta));
+    } else if (isInserting) {
+      context.missing(_clientReferenceIdMeta);
+    }
+    if (data.containsKey('tenant_id')) {
+      context.handle(_tenantIdMeta,
+          tenantId.isAcceptableOrUnknown(data['tenant_id']!, _tenantIdMeta));
+    }
+    if (data.containsKey('is_deleted')) {
+      context.handle(_isDeletedMeta,
+          isDeleted.isAcceptableOrUnknown(data['is_deleted']!, _isDeletedMeta));
+    }
+    if (data.containsKey('row_version')) {
+      context.handle(
+          _rowVersionMeta,
+          rowVersion.isAcceptableOrUnknown(
+              data['row_version']!, _rowVersionMeta));
+    }
+    if (data.containsKey('additional_fields')) {
+      context.handle(
+          _additionalFieldsMeta,
+          additionalFields.isAcceptableOrUnknown(
+              data['additional_fields']!, _additionalFieldsMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {auditCreatedBy, clientReferenceId};
+  @override
+  HouseholdData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return HouseholdData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id']),
+      memberCount: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}member_count']),
+      latitude: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}latitude']),
+      longitude: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}longitude']),
+      auditCreatedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}audit_created_by']),
+      nonRecoverableError: attachedDatabase.typeMapping.read(
+          DriftSqlType.bool, data['${effectivePrefix}non_recoverable_error']),
+      auditCreatedTime: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}audit_created_time']),
+      clientCreatedTime: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}client_created_time']),
+      clientModifiedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}client_modified_by']),
+      clientCreatedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}client_created_by']),
+      clientModifiedTime: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}client_modified_time']),
+      auditModifiedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}audit_modified_by']),
+      auditModifiedTime: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}audit_modified_time']),
+      clientReferenceId: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}client_reference_id'])!,
+      tenantId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}tenant_id']),
+      isDeleted: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_deleted']),
+      rowVersion: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}row_version']),
+      additionalFields: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}additional_fields']),
+    );
+  }
+
+  @override
+  $HouseholdTable createAlias(String alias) {
+    return $HouseholdTable(attachedDatabase, alias);
+  }
+}
+
+class HouseholdData extends DataClass implements Insertable<HouseholdData> {
+  final String? id;
+  final int? memberCount;
+  final double? latitude;
+  final double? longitude;
+  final String? auditCreatedBy;
+  final bool? nonRecoverableError;
+  final int? auditCreatedTime;
+  final int? clientCreatedTime;
+  final String? clientModifiedBy;
+  final String? clientCreatedBy;
+  final int? clientModifiedTime;
+  final String? auditModifiedBy;
+  final int? auditModifiedTime;
+  final String clientReferenceId;
+  final String? tenantId;
+  final bool? isDeleted;
+  final int? rowVersion;
+  final String? additionalFields;
+  const HouseholdData(
+      {this.id,
+      this.memberCount,
+      this.latitude,
+      this.longitude,
+      this.auditCreatedBy,
+      this.nonRecoverableError,
+      this.auditCreatedTime,
+      this.clientCreatedTime,
+      this.clientModifiedBy,
+      this.clientCreatedBy,
+      this.clientModifiedTime,
+      this.auditModifiedBy,
+      this.auditModifiedTime,
+      required this.clientReferenceId,
+      this.tenantId,
+      this.isDeleted,
+      this.rowVersion,
+      this.additionalFields});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (!nullToAbsent || id != null) {
+      map['id'] = Variable<String>(id);
+    }
+    if (!nullToAbsent || memberCount != null) {
+      map['member_count'] = Variable<int>(memberCount);
+    }
+    if (!nullToAbsent || latitude != null) {
+      map['latitude'] = Variable<double>(latitude);
+    }
+    if (!nullToAbsent || longitude != null) {
+      map['longitude'] = Variable<double>(longitude);
+    }
+    if (!nullToAbsent || auditCreatedBy != null) {
+      map['audit_created_by'] = Variable<String>(auditCreatedBy);
+    }
+    if (!nullToAbsent || nonRecoverableError != null) {
+      map['non_recoverable_error'] = Variable<bool>(nonRecoverableError);
+    }
+    if (!nullToAbsent || auditCreatedTime != null) {
+      map['audit_created_time'] = Variable<int>(auditCreatedTime);
+    }
+    if (!nullToAbsent || clientCreatedTime != null) {
+      map['client_created_time'] = Variable<int>(clientCreatedTime);
+    }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String>(clientCreatedBy);
+    }
+    if (!nullToAbsent || clientModifiedTime != null) {
+      map['client_modified_time'] = Variable<int>(clientModifiedTime);
+    }
+    if (!nullToAbsent || auditModifiedBy != null) {
+      map['audit_modified_by'] = Variable<String>(auditModifiedBy);
+    }
+    if (!nullToAbsent || auditModifiedTime != null) {
+      map['audit_modified_time'] = Variable<int>(auditModifiedTime);
+    }
+    map['client_reference_id'] = Variable<String>(clientReferenceId);
+    if (!nullToAbsent || tenantId != null) {
+      map['tenant_id'] = Variable<String>(tenantId);
+    }
+    if (!nullToAbsent || isDeleted != null) {
+      map['is_deleted'] = Variable<bool>(isDeleted);
+    }
+    if (!nullToAbsent || rowVersion != null) {
+      map['row_version'] = Variable<int>(rowVersion);
+    }
+    if (!nullToAbsent || additionalFields != null) {
+      map['additional_fields'] = Variable<String>(additionalFields);
+    }
+    return map;
+  }
+
+  HouseholdCompanion toCompanion(bool nullToAbsent) {
+    return HouseholdCompanion(
+      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      memberCount: memberCount == null && nullToAbsent
+          ? const Value.absent()
+          : Value(memberCount),
+      latitude: latitude == null && nullToAbsent
+          ? const Value.absent()
+          : Value(latitude),
+      longitude: longitude == null && nullToAbsent
+          ? const Value.absent()
+          : Value(longitude),
+      auditCreatedBy: auditCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditCreatedBy),
+      nonRecoverableError: nonRecoverableError == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nonRecoverableError),
+      auditCreatedTime: auditCreatedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditCreatedTime),
+      clientCreatedTime: clientCreatedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedTime),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
+      clientModifiedTime: clientModifiedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedTime),
+      auditModifiedBy: auditModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditModifiedBy),
+      auditModifiedTime: auditModifiedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditModifiedTime),
+      clientReferenceId: Value(clientReferenceId),
+      tenantId: tenantId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(tenantId),
+      isDeleted: isDeleted == null && nullToAbsent
+          ? const Value.absent()
+          : Value(isDeleted),
+      rowVersion: rowVersion == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rowVersion),
+      additionalFields: additionalFields == null && nullToAbsent
+          ? const Value.absent()
+          : Value(additionalFields),
+    );
+  }
+
+  factory HouseholdData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return HouseholdData(
+      id: serializer.fromJson<String?>(json['id']),
+      memberCount: serializer.fromJson<int?>(json['memberCount']),
+      latitude: serializer.fromJson<double?>(json['latitude']),
+      longitude: serializer.fromJson<double?>(json['longitude']),
+      auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
+      nonRecoverableError:
+          serializer.fromJson<bool?>(json['nonRecoverableError']),
+      auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
+      clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
+      clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
+      auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
+      auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
+      clientReferenceId: serializer.fromJson<String>(json['clientReferenceId']),
+      tenantId: serializer.fromJson<String?>(json['tenantId']),
+      isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
+      rowVersion: serializer.fromJson<int?>(json['rowVersion']),
+      additionalFields: serializer.fromJson<String?>(json['additionalFields']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String?>(id),
+      'memberCount': serializer.toJson<int?>(memberCount),
+      'latitude': serializer.toJson<double?>(latitude),
+      'longitude': serializer.toJson<double?>(longitude),
+      'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
+      'nonRecoverableError': serializer.toJson<bool?>(nonRecoverableError),
+      'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
+      'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
+      'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
+      'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
+      'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
+      'clientReferenceId': serializer.toJson<String>(clientReferenceId),
+      'tenantId': serializer.toJson<String?>(tenantId),
+      'isDeleted': serializer.toJson<bool?>(isDeleted),
+      'rowVersion': serializer.toJson<int?>(rowVersion),
+      'additionalFields': serializer.toJson<String?>(additionalFields),
+    };
+  }
+
+  HouseholdData copyWith(
+          {Value<String?> id = const Value.absent(),
+          Value<int?> memberCount = const Value.absent(),
+          Value<double?> latitude = const Value.absent(),
+          Value<double?> longitude = const Value.absent(),
+          Value<String?> auditCreatedBy = const Value.absent(),
+          Value<bool?> nonRecoverableError = const Value.absent(),
+          Value<int?> auditCreatedTime = const Value.absent(),
+          Value<int?> clientCreatedTime = const Value.absent(),
+          Value<String?> clientModifiedBy = const Value.absent(),
+          Value<String?> clientCreatedBy = const Value.absent(),
+          Value<int?> clientModifiedTime = const Value.absent(),
+          Value<String?> auditModifiedBy = const Value.absent(),
+          Value<int?> auditModifiedTime = const Value.absent(),
+          String? clientReferenceId,
+          Value<String?> tenantId = const Value.absent(),
+          Value<bool?> isDeleted = const Value.absent(),
+          Value<int?> rowVersion = const Value.absent(),
+          Value<String?> additionalFields = const Value.absent()}) =>
+      HouseholdData(
+        id: id.present ? id.value : this.id,
+        memberCount: memberCount.present ? memberCount.value : this.memberCount,
+        latitude: latitude.present ? latitude.value : this.latitude,
+        longitude: longitude.present ? longitude.value : this.longitude,
+        auditCreatedBy:
+            auditCreatedBy.present ? auditCreatedBy.value : this.auditCreatedBy,
+        nonRecoverableError: nonRecoverableError.present
+            ? nonRecoverableError.value
+            : this.nonRecoverableError,
+        auditCreatedTime: auditCreatedTime.present
+            ? auditCreatedTime.value
+            : this.auditCreatedTime,
+        clientCreatedTime: clientCreatedTime.present
+            ? clientCreatedTime.value
+            : this.clientCreatedTime,
+        clientModifiedBy: clientModifiedBy.present
+            ? clientModifiedBy.value
+            : this.clientModifiedBy,
+        clientCreatedBy: clientCreatedBy.present
+            ? clientCreatedBy.value
+            : this.clientCreatedBy,
+        clientModifiedTime: clientModifiedTime.present
+            ? clientModifiedTime.value
+            : this.clientModifiedTime,
+        auditModifiedBy: auditModifiedBy.present
+            ? auditModifiedBy.value
+            : this.auditModifiedBy,
+        auditModifiedTime: auditModifiedTime.present
+            ? auditModifiedTime.value
+            : this.auditModifiedTime,
+        clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+        tenantId: tenantId.present ? tenantId.value : this.tenantId,
+        isDeleted: isDeleted.present ? isDeleted.value : this.isDeleted,
+        rowVersion: rowVersion.present ? rowVersion.value : this.rowVersion,
+        additionalFields: additionalFields.present
+            ? additionalFields.value
+            : this.additionalFields,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('HouseholdData(')
+          ..write('id: $id, ')
+          ..write('memberCount: $memberCount, ')
+          ..write('latitude: $latitude, ')
+          ..write('longitude: $longitude, ')
+          ..write('auditCreatedBy: $auditCreatedBy, ')
+          ..write('nonRecoverableError: $nonRecoverableError, ')
+          ..write('auditCreatedTime: $auditCreatedTime, ')
+          ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
+          ..write('clientModifiedTime: $clientModifiedTime, ')
+          ..write('auditModifiedBy: $auditModifiedBy, ')
+          ..write('auditModifiedTime: $auditModifiedTime, ')
+          ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('rowVersion: $rowVersion, ')
+          ..write('additionalFields: $additionalFields')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      id,
+      memberCount,
+      latitude,
+      longitude,
+      auditCreatedBy,
+      nonRecoverableError,
+      auditCreatedTime,
+      clientCreatedTime,
+      clientModifiedBy,
+      clientCreatedBy,
+      clientModifiedTime,
+      auditModifiedBy,
+      auditModifiedTime,
+      clientReferenceId,
+      tenantId,
+      isDeleted,
+      rowVersion,
+      additionalFields);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is HouseholdData &&
+          other.id == this.id &&
+          other.memberCount == this.memberCount &&
+          other.latitude == this.latitude &&
+          other.longitude == this.longitude &&
+          other.auditCreatedBy == this.auditCreatedBy &&
+          other.nonRecoverableError == this.nonRecoverableError &&
+          other.auditCreatedTime == this.auditCreatedTime &&
+          other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientCreatedBy == this.clientCreatedBy &&
+          other.clientModifiedTime == this.clientModifiedTime &&
+          other.auditModifiedBy == this.auditModifiedBy &&
+          other.auditModifiedTime == this.auditModifiedTime &&
+          other.clientReferenceId == this.clientReferenceId &&
+          other.tenantId == this.tenantId &&
+          other.isDeleted == this.isDeleted &&
+          other.rowVersion == this.rowVersion &&
+          other.additionalFields == this.additionalFields);
+}
+
+class HouseholdCompanion extends UpdateCompanion<HouseholdData> {
+  final Value<String?> id;
+  final Value<int?> memberCount;
+  final Value<double?> latitude;
+  final Value<double?> longitude;
+  final Value<String?> auditCreatedBy;
+  final Value<bool?> nonRecoverableError;
+  final Value<int?> auditCreatedTime;
+  final Value<int?> clientCreatedTime;
+  final Value<String?> clientModifiedBy;
+  final Value<String?> clientCreatedBy;
+  final Value<int?> clientModifiedTime;
+  final Value<String?> auditModifiedBy;
+  final Value<int?> auditModifiedTime;
+  final Value<String> clientReferenceId;
+  final Value<String?> tenantId;
+  final Value<bool?> isDeleted;
+  final Value<int?> rowVersion;
+  final Value<String?> additionalFields;
+  final Value<int> rowid;
+  const HouseholdCompanion({
+    this.id = const Value.absent(),
+    this.memberCount = const Value.absent(),
+    this.latitude = const Value.absent(),
+    this.longitude = const Value.absent(),
+    this.auditCreatedBy = const Value.absent(),
+    this.nonRecoverableError = const Value.absent(),
+    this.auditCreatedTime = const Value.absent(),
+    this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
+    this.clientModifiedTime = const Value.absent(),
+    this.auditModifiedBy = const Value.absent(),
+    this.auditModifiedTime = const Value.absent(),
+    this.clientReferenceId = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.rowVersion = const Value.absent(),
+    this.additionalFields = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  HouseholdCompanion.insert({
+    this.id = const Value.absent(),
+    this.memberCount = const Value.absent(),
+    this.latitude = const Value.absent(),
+    this.longitude = const Value.absent(),
+    this.auditCreatedBy = const Value.absent(),
+    this.nonRecoverableError = const Value.absent(),
+    this.auditCreatedTime = const Value.absent(),
+    this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
+    this.clientModifiedTime = const Value.absent(),
+    this.auditModifiedBy = const Value.absent(),
+    this.auditModifiedTime = const Value.absent(),
+    required String clientReferenceId,
+    this.tenantId = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.rowVersion = const Value.absent(),
+    this.additionalFields = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : clientReferenceId = Value(clientReferenceId);
+  static Insertable<HouseholdData> custom({
+    Expression<String>? id,
+    Expression<int>? memberCount,
+    Expression<double>? latitude,
+    Expression<double>? longitude,
+    Expression<String>? auditCreatedBy,
+    Expression<bool>? nonRecoverableError,
+    Expression<int>? auditCreatedTime,
+    Expression<int>? clientCreatedTime,
+    Expression<String>? clientModifiedBy,
+    Expression<String>? clientCreatedBy,
+    Expression<int>? clientModifiedTime,
+    Expression<String>? auditModifiedBy,
+    Expression<int>? auditModifiedTime,
+    Expression<String>? clientReferenceId,
+    Expression<String>? tenantId,
+    Expression<bool>? isDeleted,
+    Expression<int>? rowVersion,
+    Expression<String>? additionalFields,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (memberCount != null) 'member_count': memberCount,
+      if (latitude != null) 'latitude': latitude,
+      if (longitude != null) 'longitude': longitude,
+      if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
+      if (nonRecoverableError != null)
+        'non_recoverable_error': nonRecoverableError,
+      if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
+      if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
+      if (clientModifiedTime != null)
+        'client_modified_time': clientModifiedTime,
+      if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
+      if (auditModifiedTime != null) 'audit_modified_time': auditModifiedTime,
+      if (clientReferenceId != null) 'client_reference_id': clientReferenceId,
+      if (tenantId != null) 'tenant_id': tenantId,
+      if (isDeleted != null) 'is_deleted': isDeleted,
+      if (rowVersion != null) 'row_version': rowVersion,
+      if (additionalFields != null) 'additional_fields': additionalFields,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  HouseholdCompanion copyWith(
+      {Value<String?>? id,
+      Value<int?>? memberCount,
+      Value<double?>? latitude,
+      Value<double?>? longitude,
+      Value<String?>? auditCreatedBy,
+      Value<bool?>? nonRecoverableError,
+      Value<int?>? auditCreatedTime,
+      Value<int?>? clientCreatedTime,
+      Value<String?>? clientModifiedBy,
+      Value<String?>? clientCreatedBy,
+      Value<int?>? clientModifiedTime,
+      Value<String?>? auditModifiedBy,
+      Value<int?>? auditModifiedTime,
+      Value<String>? clientReferenceId,
+      Value<String?>? tenantId,
+      Value<bool?>? isDeleted,
+      Value<int?>? rowVersion,
+      Value<String?>? additionalFields,
+      Value<int>? rowid}) {
+    return HouseholdCompanion(
+      id: id ?? this.id,
+      memberCount: memberCount ?? this.memberCount,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
+      auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
+      nonRecoverableError: nonRecoverableError ?? this.nonRecoverableError,
+      auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
+      clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
+      clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
+      auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
+      auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
+      clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+      tenantId: tenantId ?? this.tenantId,
+      isDeleted: isDeleted ?? this.isDeleted,
+      rowVersion: rowVersion ?? this.rowVersion,
+      additionalFields: additionalFields ?? this.additionalFields,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (memberCount.present) {
+      map['member_count'] = Variable<int>(memberCount.value);
+    }
+    if (latitude.present) {
+      map['latitude'] = Variable<double>(latitude.value);
+    }
+    if (longitude.present) {
+      map['longitude'] = Variable<double>(longitude.value);
+    }
+    if (auditCreatedBy.present) {
+      map['audit_created_by'] = Variable<String>(auditCreatedBy.value);
+    }
+    if (nonRecoverableError.present) {
+      map['non_recoverable_error'] = Variable<bool>(nonRecoverableError.value);
+    }
+    if (auditCreatedTime.present) {
+      map['audit_created_time'] = Variable<int>(auditCreatedTime.value);
+    }
+    if (clientCreatedTime.present) {
+      map['client_created_time'] = Variable<int>(clientCreatedTime.value);
+    }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String>(clientModifiedBy.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String>(clientCreatedBy.value);
+    }
+    if (clientModifiedTime.present) {
+      map['client_modified_time'] = Variable<int>(clientModifiedTime.value);
+    }
+    if (auditModifiedBy.present) {
+      map['audit_modified_by'] = Variable<String>(auditModifiedBy.value);
+    }
+    if (auditModifiedTime.present) {
+      map['audit_modified_time'] = Variable<int>(auditModifiedTime.value);
+    }
+    if (clientReferenceId.present) {
+      map['client_reference_id'] = Variable<String>(clientReferenceId.value);
+    }
+    if (tenantId.present) {
+      map['tenant_id'] = Variable<String>(tenantId.value);
+    }
+    if (isDeleted.present) {
+      map['is_deleted'] = Variable<bool>(isDeleted.value);
+    }
+    if (rowVersion.present) {
+      map['row_version'] = Variable<int>(rowVersion.value);
+    }
+    if (additionalFields.present) {
+      map['additional_fields'] = Variable<String>(additionalFields.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('HouseholdCompanion(')
+          ..write('id: $id, ')
+          ..write('memberCount: $memberCount, ')
+          ..write('latitude: $latitude, ')
+          ..write('longitude: $longitude, ')
+          ..write('auditCreatedBy: $auditCreatedBy, ')
+          ..write('nonRecoverableError: $nonRecoverableError, ')
+          ..write('auditCreatedTime: $auditCreatedTime, ')
+          ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
+          ..write('clientModifiedTime: $clientModifiedTime, ')
+          ..write('auditModifiedBy: $auditModifiedBy, ')
+          ..write('auditModifiedTime: $auditModifiedTime, ')
+          ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('rowVersion: $rowVersion, ')
+          ..write('additionalFields: $additionalFields, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $HouseholdMemberTable extends HouseholdMember
+    with TableInfo<$HouseholdMemberTable, HouseholdMemberData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $HouseholdMemberTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _householdIdMeta =
+      const VerificationMeta('householdId');
+  @override
+  late final GeneratedColumn<String> householdId = GeneratedColumn<String>(
+      'household_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _householdClientReferenceIdMeta =
+      const VerificationMeta('householdClientReferenceId');
+  @override
+  late final GeneratedColumn<String> householdClientReferenceId =
+      GeneratedColumn<String>(
+          'household_client_reference_id', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _individualIdMeta =
+      const VerificationMeta('individualId');
+  @override
+  late final GeneratedColumn<String> individualId = GeneratedColumn<String>(
+      'individual_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _individualClientReferenceIdMeta =
+      const VerificationMeta('individualClientReferenceId');
+  @override
+  late final GeneratedColumn<String> individualClientReferenceId =
+      GeneratedColumn<String>(
+          'individual_client_reference_id', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _isHeadOfHouseholdMeta =
+      const VerificationMeta('isHeadOfHousehold');
+  @override
+  late final GeneratedColumn<bool> isHeadOfHousehold = GeneratedColumn<bool>(
+      'is_head_of_household', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("is_head_of_household" IN (0, 1))'));
+  static const VerificationMeta _auditCreatedByMeta =
+      const VerificationMeta('auditCreatedBy');
+  @override
+  late final GeneratedColumn<String> auditCreatedBy = GeneratedColumn<String>(
+      'audit_created_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _nonRecoverableErrorMeta =
+      const VerificationMeta('nonRecoverableError');
+  @override
+  late final GeneratedColumn<bool> nonRecoverableError = GeneratedColumn<bool>(
+      'non_recoverable_error', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("non_recoverable_error" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  static const VerificationMeta _auditCreatedTimeMeta =
+      const VerificationMeta('auditCreatedTime');
+  @override
+  late final GeneratedColumn<int> auditCreatedTime = GeneratedColumn<int>(
+      'audit_created_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _clientCreatedTimeMeta =
+      const VerificationMeta('clientCreatedTime');
+  @override
+  late final GeneratedColumn<int> clientCreatedTime = GeneratedColumn<int>(
+      'client_created_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String> clientModifiedBy = GeneratedColumn<String>(
+      'client_modified_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String> clientCreatedBy = GeneratedColumn<String>(
+      'client_created_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _clientModifiedTimeMeta =
+      const VerificationMeta('clientModifiedTime');
+  @override
+  late final GeneratedColumn<int> clientModifiedTime = GeneratedColumn<int>(
+      'client_modified_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _auditModifiedByMeta =
+      const VerificationMeta('auditModifiedBy');
+  @override
+  late final GeneratedColumn<String> auditModifiedBy = GeneratedColumn<String>(
+      'audit_modified_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _auditModifiedTimeMeta =
+      const VerificationMeta('auditModifiedTime');
+  @override
+  late final GeneratedColumn<int> auditModifiedTime = GeneratedColumn<int>(
+      'audit_modified_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _clientReferenceIdMeta =
+      const VerificationMeta('clientReferenceId');
+  @override
+  late final GeneratedColumn<String> clientReferenceId =
+      GeneratedColumn<String>('client_reference_id', aliasedName, false,
+          type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _tenantIdMeta =
+      const VerificationMeta('tenantId');
+  @override
+  late final GeneratedColumn<String> tenantId = GeneratedColumn<String>(
+      'tenant_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _isDeletedMeta =
+      const VerificationMeta('isDeleted');
+  @override
+  late final GeneratedColumn<bool> isDeleted = GeneratedColumn<bool>(
+      'is_deleted', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_deleted" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  static const VerificationMeta _rowVersionMeta =
+      const VerificationMeta('rowVersion');
+  @override
+  late final GeneratedColumn<int> rowVersion = GeneratedColumn<int>(
+      'row_version', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _additionalFieldsMeta =
+      const VerificationMeta('additionalFields');
+  @override
+  late final GeneratedColumn<String> additionalFields = GeneratedColumn<String>(
+      'additional_fields', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        householdId,
+        householdClientReferenceId,
+        individualId,
+        individualClientReferenceId,
+        isHeadOfHousehold,
+        auditCreatedBy,
+        nonRecoverableError,
+        auditCreatedTime,
+        clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
+        clientModifiedTime,
+        auditModifiedBy,
+        auditModifiedTime,
+        clientReferenceId,
+        tenantId,
+        isDeleted,
+        rowVersion,
+        additionalFields
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'household_member';
+  @override
+  VerificationContext validateIntegrity(
+      Insertable<HouseholdMemberData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('household_id')) {
+      context.handle(
+          _householdIdMeta,
+          householdId.isAcceptableOrUnknown(
+              data['household_id']!, _householdIdMeta));
+    }
+    if (data.containsKey('household_client_reference_id')) {
+      context.handle(
+          _householdClientReferenceIdMeta,
+          householdClientReferenceId.isAcceptableOrUnknown(
+              data['household_client_reference_id']!,
+              _householdClientReferenceIdMeta));
+    }
+    if (data.containsKey('individual_id')) {
+      context.handle(
+          _individualIdMeta,
+          individualId.isAcceptableOrUnknown(
+              data['individual_id']!, _individualIdMeta));
+    }
+    if (data.containsKey('individual_client_reference_id')) {
+      context.handle(
+          _individualClientReferenceIdMeta,
+          individualClientReferenceId.isAcceptableOrUnknown(
+              data['individual_client_reference_id']!,
+              _individualClientReferenceIdMeta));
+    }
+    if (data.containsKey('is_head_of_household')) {
+      context.handle(
+          _isHeadOfHouseholdMeta,
+          isHeadOfHousehold.isAcceptableOrUnknown(
+              data['is_head_of_household']!, _isHeadOfHouseholdMeta));
+    } else if (isInserting) {
+      context.missing(_isHeadOfHouseholdMeta);
+    }
+    if (data.containsKey('audit_created_by')) {
+      context.handle(
+          _auditCreatedByMeta,
+          auditCreatedBy.isAcceptableOrUnknown(
+              data['audit_created_by']!, _auditCreatedByMeta));
+    }
+    if (data.containsKey('non_recoverable_error')) {
+      context.handle(
+          _nonRecoverableErrorMeta,
+          nonRecoverableError.isAcceptableOrUnknown(
+              data['non_recoverable_error']!, _nonRecoverableErrorMeta));
+    }
+    if (data.containsKey('audit_created_time')) {
+      context.handle(
+          _auditCreatedTimeMeta,
+          auditCreatedTime.isAcceptableOrUnknown(
+              data['audit_created_time']!, _auditCreatedTimeMeta));
+    }
+    if (data.containsKey('client_created_time')) {
+      context.handle(
+          _clientCreatedTimeMeta,
+          clientCreatedTime.isAcceptableOrUnknown(
+              data['client_created_time']!, _clientCreatedTimeMeta));
+    }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
+    }
+    if (data.containsKey('client_modified_time')) {
+      context.handle(
+          _clientModifiedTimeMeta,
+          clientModifiedTime.isAcceptableOrUnknown(
+              data['client_modified_time']!, _clientModifiedTimeMeta));
+    }
+    if (data.containsKey('audit_modified_by')) {
+      context.handle(
+          _auditModifiedByMeta,
+          auditModifiedBy.isAcceptableOrUnknown(
+              data['audit_modified_by']!, _auditModifiedByMeta));
+    }
+    if (data.containsKey('audit_modified_time')) {
+      context.handle(
+          _auditModifiedTimeMeta,
+          auditModifiedTime.isAcceptableOrUnknown(
+              data['audit_modified_time']!, _auditModifiedTimeMeta));
+    }
+    if (data.containsKey('client_reference_id')) {
+      context.handle(
+          _clientReferenceIdMeta,
+          clientReferenceId.isAcceptableOrUnknown(
+              data['client_reference_id']!, _clientReferenceIdMeta));
+    } else if (isInserting) {
+      context.missing(_clientReferenceIdMeta);
+    }
+    if (data.containsKey('tenant_id')) {
+      context.handle(_tenantIdMeta,
+          tenantId.isAcceptableOrUnknown(data['tenant_id']!, _tenantIdMeta));
+    }
+    if (data.containsKey('is_deleted')) {
+      context.handle(_isDeletedMeta,
+          isDeleted.isAcceptableOrUnknown(data['is_deleted']!, _isDeletedMeta));
+    }
+    if (data.containsKey('row_version')) {
+      context.handle(
+          _rowVersionMeta,
+          rowVersion.isAcceptableOrUnknown(
+              data['row_version']!, _rowVersionMeta));
+    }
+    if (data.containsKey('additional_fields')) {
+      context.handle(
+          _additionalFieldsMeta,
+          additionalFields.isAcceptableOrUnknown(
+              data['additional_fields']!, _additionalFieldsMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {auditCreatedBy, clientReferenceId};
+  @override
+  HouseholdMemberData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return HouseholdMemberData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id']),
+      householdId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}household_id']),
+      householdClientReferenceId: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}household_client_reference_id']),
+      individualId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}individual_id']),
+      individualClientReferenceId: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}individual_client_reference_id']),
+      isHeadOfHousehold: attachedDatabase.typeMapping.read(
+          DriftSqlType.bool, data['${effectivePrefix}is_head_of_household'])!,
+      auditCreatedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}audit_created_by']),
+      nonRecoverableError: attachedDatabase.typeMapping.read(
+          DriftSqlType.bool, data['${effectivePrefix}non_recoverable_error']),
+      auditCreatedTime: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}audit_created_time']),
+      clientCreatedTime: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}client_created_time']),
+      clientModifiedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}client_modified_by']),
+      clientCreatedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}client_created_by']),
+      clientModifiedTime: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}client_modified_time']),
+      auditModifiedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}audit_modified_by']),
+      auditModifiedTime: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}audit_modified_time']),
+      clientReferenceId: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}client_reference_id'])!,
+      tenantId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}tenant_id']),
+      isDeleted: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_deleted']),
+      rowVersion: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}row_version']),
+      additionalFields: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}additional_fields']),
+    );
+  }
+
+  @override
+  $HouseholdMemberTable createAlias(String alias) {
+    return $HouseholdMemberTable(attachedDatabase, alias);
+  }
+}
+
+class HouseholdMemberData extends DataClass
+    implements Insertable<HouseholdMemberData> {
+  final String? id;
+  final String? householdId;
+  final String? householdClientReferenceId;
+  final String? individualId;
+  final String? individualClientReferenceId;
+  final bool isHeadOfHousehold;
+  final String? auditCreatedBy;
+  final bool? nonRecoverableError;
+  final int? auditCreatedTime;
+  final int? clientCreatedTime;
+  final String? clientModifiedBy;
+  final String? clientCreatedBy;
+  final int? clientModifiedTime;
+  final String? auditModifiedBy;
+  final int? auditModifiedTime;
+  final String clientReferenceId;
+  final String? tenantId;
+  final bool? isDeleted;
+  final int? rowVersion;
+  final String? additionalFields;
+  const HouseholdMemberData(
+      {this.id,
+      this.householdId,
+      this.householdClientReferenceId,
+      this.individualId,
+      this.individualClientReferenceId,
+      required this.isHeadOfHousehold,
+      this.auditCreatedBy,
+      this.nonRecoverableError,
+      this.auditCreatedTime,
+      this.clientCreatedTime,
+      this.clientModifiedBy,
+      this.clientCreatedBy,
+      this.clientModifiedTime,
+      this.auditModifiedBy,
+      this.auditModifiedTime,
+      required this.clientReferenceId,
+      this.tenantId,
+      this.isDeleted,
+      this.rowVersion,
+      this.additionalFields});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (!nullToAbsent || id != null) {
+      map['id'] = Variable<String>(id);
+    }
+    if (!nullToAbsent || householdId != null) {
+      map['household_id'] = Variable<String>(householdId);
+    }
+    if (!nullToAbsent || householdClientReferenceId != null) {
+      map['household_client_reference_id'] =
+          Variable<String>(householdClientReferenceId);
+    }
+    if (!nullToAbsent || individualId != null) {
+      map['individual_id'] = Variable<String>(individualId);
+    }
+    if (!nullToAbsent || individualClientReferenceId != null) {
+      map['individual_client_reference_id'] =
+          Variable<String>(individualClientReferenceId);
+    }
+    map['is_head_of_household'] = Variable<bool>(isHeadOfHousehold);
+    if (!nullToAbsent || auditCreatedBy != null) {
+      map['audit_created_by'] = Variable<String>(auditCreatedBy);
+    }
+    if (!nullToAbsent || nonRecoverableError != null) {
+      map['non_recoverable_error'] = Variable<bool>(nonRecoverableError);
+    }
+    if (!nullToAbsent || auditCreatedTime != null) {
+      map['audit_created_time'] = Variable<int>(auditCreatedTime);
+    }
+    if (!nullToAbsent || clientCreatedTime != null) {
+      map['client_created_time'] = Variable<int>(clientCreatedTime);
+    }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String>(clientCreatedBy);
+    }
+    if (!nullToAbsent || clientModifiedTime != null) {
+      map['client_modified_time'] = Variable<int>(clientModifiedTime);
+    }
+    if (!nullToAbsent || auditModifiedBy != null) {
+      map['audit_modified_by'] = Variable<String>(auditModifiedBy);
+    }
+    if (!nullToAbsent || auditModifiedTime != null) {
+      map['audit_modified_time'] = Variable<int>(auditModifiedTime);
+    }
+    map['client_reference_id'] = Variable<String>(clientReferenceId);
+    if (!nullToAbsent || tenantId != null) {
+      map['tenant_id'] = Variable<String>(tenantId);
+    }
+    if (!nullToAbsent || isDeleted != null) {
+      map['is_deleted'] = Variable<bool>(isDeleted);
+    }
+    if (!nullToAbsent || rowVersion != null) {
+      map['row_version'] = Variable<int>(rowVersion);
+    }
+    if (!nullToAbsent || additionalFields != null) {
+      map['additional_fields'] = Variable<String>(additionalFields);
+    }
+    return map;
+  }
+
+  HouseholdMemberCompanion toCompanion(bool nullToAbsent) {
+    return HouseholdMemberCompanion(
+      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      householdId: householdId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(householdId),
+      householdClientReferenceId:
+          householdClientReferenceId == null && nullToAbsent
+              ? const Value.absent()
+              : Value(householdClientReferenceId),
+      individualId: individualId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(individualId),
+      individualClientReferenceId:
+          individualClientReferenceId == null && nullToAbsent
+              ? const Value.absent()
+              : Value(individualClientReferenceId),
+      isHeadOfHousehold: Value(isHeadOfHousehold),
+      auditCreatedBy: auditCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditCreatedBy),
+      nonRecoverableError: nonRecoverableError == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nonRecoverableError),
+      auditCreatedTime: auditCreatedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditCreatedTime),
+      clientCreatedTime: clientCreatedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedTime),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
+      clientModifiedTime: clientModifiedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedTime),
+      auditModifiedBy: auditModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditModifiedBy),
+      auditModifiedTime: auditModifiedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditModifiedTime),
+      clientReferenceId: Value(clientReferenceId),
+      tenantId: tenantId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(tenantId),
+      isDeleted: isDeleted == null && nullToAbsent
+          ? const Value.absent()
+          : Value(isDeleted),
+      rowVersion: rowVersion == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rowVersion),
+      additionalFields: additionalFields == null && nullToAbsent
+          ? const Value.absent()
+          : Value(additionalFields),
+    );
+  }
+
+  factory HouseholdMemberData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return HouseholdMemberData(
+      id: serializer.fromJson<String?>(json['id']),
+      householdId: serializer.fromJson<String?>(json['householdId']),
+      householdClientReferenceId:
+          serializer.fromJson<String?>(json['householdClientReferenceId']),
+      individualId: serializer.fromJson<String?>(json['individualId']),
+      individualClientReferenceId:
+          serializer.fromJson<String?>(json['individualClientReferenceId']),
+      isHeadOfHousehold: serializer.fromJson<bool>(json['isHeadOfHousehold']),
+      auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
+      nonRecoverableError:
+          serializer.fromJson<bool?>(json['nonRecoverableError']),
+      auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
+      clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
+      clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
+      auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
+      auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
+      clientReferenceId: serializer.fromJson<String>(json['clientReferenceId']),
+      tenantId: serializer.fromJson<String?>(json['tenantId']),
+      isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
+      rowVersion: serializer.fromJson<int?>(json['rowVersion']),
+      additionalFields: serializer.fromJson<String?>(json['additionalFields']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String?>(id),
+      'householdId': serializer.toJson<String?>(householdId),
+      'householdClientReferenceId':
+          serializer.toJson<String?>(householdClientReferenceId),
+      'individualId': serializer.toJson<String?>(individualId),
+      'individualClientReferenceId':
+          serializer.toJson<String?>(individualClientReferenceId),
+      'isHeadOfHousehold': serializer.toJson<bool>(isHeadOfHousehold),
+      'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
+      'nonRecoverableError': serializer.toJson<bool?>(nonRecoverableError),
+      'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
+      'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
+      'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
+      'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
+      'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
+      'clientReferenceId': serializer.toJson<String>(clientReferenceId),
+      'tenantId': serializer.toJson<String?>(tenantId),
+      'isDeleted': serializer.toJson<bool?>(isDeleted),
+      'rowVersion': serializer.toJson<int?>(rowVersion),
+      'additionalFields': serializer.toJson<String?>(additionalFields),
+    };
+  }
+
+  HouseholdMemberData copyWith(
+          {Value<String?> id = const Value.absent(),
+          Value<String?> householdId = const Value.absent(),
+          Value<String?> householdClientReferenceId = const Value.absent(),
+          Value<String?> individualId = const Value.absent(),
+          Value<String?> individualClientReferenceId = const Value.absent(),
+          bool? isHeadOfHousehold,
+          Value<String?> auditCreatedBy = const Value.absent(),
+          Value<bool?> nonRecoverableError = const Value.absent(),
+          Value<int?> auditCreatedTime = const Value.absent(),
+          Value<int?> clientCreatedTime = const Value.absent(),
+          Value<String?> clientModifiedBy = const Value.absent(),
+          Value<String?> clientCreatedBy = const Value.absent(),
+          Value<int?> clientModifiedTime = const Value.absent(),
+          Value<String?> auditModifiedBy = const Value.absent(),
+          Value<int?> auditModifiedTime = const Value.absent(),
+          String? clientReferenceId,
+          Value<String?> tenantId = const Value.absent(),
+          Value<bool?> isDeleted = const Value.absent(),
+          Value<int?> rowVersion = const Value.absent(),
+          Value<String?> additionalFields = const Value.absent()}) =>
+      HouseholdMemberData(
+        id: id.present ? id.value : this.id,
+        householdId: householdId.present ? householdId.value : this.householdId,
+        householdClientReferenceId: householdClientReferenceId.present
+            ? householdClientReferenceId.value
+            : this.householdClientReferenceId,
+        individualId:
+            individualId.present ? individualId.value : this.individualId,
+        individualClientReferenceId: individualClientReferenceId.present
+            ? individualClientReferenceId.value
+            : this.individualClientReferenceId,
+        isHeadOfHousehold: isHeadOfHousehold ?? this.isHeadOfHousehold,
+        auditCreatedBy:
+            auditCreatedBy.present ? auditCreatedBy.value : this.auditCreatedBy,
+        nonRecoverableError: nonRecoverableError.present
+            ? nonRecoverableError.value
+            : this.nonRecoverableError,
+        auditCreatedTime: auditCreatedTime.present
+            ? auditCreatedTime.value
+            : this.auditCreatedTime,
+        clientCreatedTime: clientCreatedTime.present
+            ? clientCreatedTime.value
+            : this.clientCreatedTime,
+        clientModifiedBy: clientModifiedBy.present
+            ? clientModifiedBy.value
+            : this.clientModifiedBy,
+        clientCreatedBy: clientCreatedBy.present
+            ? clientCreatedBy.value
+            : this.clientCreatedBy,
+        clientModifiedTime: clientModifiedTime.present
+            ? clientModifiedTime.value
+            : this.clientModifiedTime,
+        auditModifiedBy: auditModifiedBy.present
+            ? auditModifiedBy.value
+            : this.auditModifiedBy,
+        auditModifiedTime: auditModifiedTime.present
+            ? auditModifiedTime.value
+            : this.auditModifiedTime,
+        clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+        tenantId: tenantId.present ? tenantId.value : this.tenantId,
+        isDeleted: isDeleted.present ? isDeleted.value : this.isDeleted,
+        rowVersion: rowVersion.present ? rowVersion.value : this.rowVersion,
+        additionalFields: additionalFields.present
+            ? additionalFields.value
+            : this.additionalFields,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('HouseholdMemberData(')
+          ..write('id: $id, ')
+          ..write('householdId: $householdId, ')
+          ..write('householdClientReferenceId: $householdClientReferenceId, ')
+          ..write('individualId: $individualId, ')
+          ..write('individualClientReferenceId: $individualClientReferenceId, ')
+          ..write('isHeadOfHousehold: $isHeadOfHousehold, ')
+          ..write('auditCreatedBy: $auditCreatedBy, ')
+          ..write('nonRecoverableError: $nonRecoverableError, ')
+          ..write('auditCreatedTime: $auditCreatedTime, ')
+          ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
+          ..write('clientModifiedTime: $clientModifiedTime, ')
+          ..write('auditModifiedBy: $auditModifiedBy, ')
+          ..write('auditModifiedTime: $auditModifiedTime, ')
+          ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('rowVersion: $rowVersion, ')
+          ..write('additionalFields: $additionalFields')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      id,
+      householdId,
+      householdClientReferenceId,
+      individualId,
+      individualClientReferenceId,
+      isHeadOfHousehold,
+      auditCreatedBy,
+      nonRecoverableError,
+      auditCreatedTime,
+      clientCreatedTime,
+      clientModifiedBy,
+      clientCreatedBy,
+      clientModifiedTime,
+      auditModifiedBy,
+      auditModifiedTime,
+      clientReferenceId,
+      tenantId,
+      isDeleted,
+      rowVersion,
+      additionalFields);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is HouseholdMemberData &&
+          other.id == this.id &&
+          other.householdId == this.householdId &&
+          other.householdClientReferenceId == this.householdClientReferenceId &&
+          other.individualId == this.individualId &&
+          other.individualClientReferenceId ==
+              this.individualClientReferenceId &&
+          other.isHeadOfHousehold == this.isHeadOfHousehold &&
+          other.auditCreatedBy == this.auditCreatedBy &&
+          other.nonRecoverableError == this.nonRecoverableError &&
+          other.auditCreatedTime == this.auditCreatedTime &&
+          other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientCreatedBy == this.clientCreatedBy &&
+          other.clientModifiedTime == this.clientModifiedTime &&
+          other.auditModifiedBy == this.auditModifiedBy &&
+          other.auditModifiedTime == this.auditModifiedTime &&
+          other.clientReferenceId == this.clientReferenceId &&
+          other.tenantId == this.tenantId &&
+          other.isDeleted == this.isDeleted &&
+          other.rowVersion == this.rowVersion &&
+          other.additionalFields == this.additionalFields);
+}
+
+class HouseholdMemberCompanion extends UpdateCompanion<HouseholdMemberData> {
+  final Value<String?> id;
+  final Value<String?> householdId;
+  final Value<String?> householdClientReferenceId;
+  final Value<String?> individualId;
+  final Value<String?> individualClientReferenceId;
+  final Value<bool> isHeadOfHousehold;
+  final Value<String?> auditCreatedBy;
+  final Value<bool?> nonRecoverableError;
+  final Value<int?> auditCreatedTime;
+  final Value<int?> clientCreatedTime;
+  final Value<String?> clientModifiedBy;
+  final Value<String?> clientCreatedBy;
+  final Value<int?> clientModifiedTime;
+  final Value<String?> auditModifiedBy;
+  final Value<int?> auditModifiedTime;
+  final Value<String> clientReferenceId;
+  final Value<String?> tenantId;
+  final Value<bool?> isDeleted;
+  final Value<int?> rowVersion;
+  final Value<String?> additionalFields;
+  final Value<int> rowid;
+  const HouseholdMemberCompanion({
+    this.id = const Value.absent(),
+    this.householdId = const Value.absent(),
+    this.householdClientReferenceId = const Value.absent(),
+    this.individualId = const Value.absent(),
+    this.individualClientReferenceId = const Value.absent(),
+    this.isHeadOfHousehold = const Value.absent(),
+    this.auditCreatedBy = const Value.absent(),
+    this.nonRecoverableError = const Value.absent(),
+    this.auditCreatedTime = const Value.absent(),
+    this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
+    this.clientModifiedTime = const Value.absent(),
+    this.auditModifiedBy = const Value.absent(),
+    this.auditModifiedTime = const Value.absent(),
+    this.clientReferenceId = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.rowVersion = const Value.absent(),
+    this.additionalFields = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  HouseholdMemberCompanion.insert({
+    this.id = const Value.absent(),
+    this.householdId = const Value.absent(),
+    this.householdClientReferenceId = const Value.absent(),
+    this.individualId = const Value.absent(),
+    this.individualClientReferenceId = const Value.absent(),
+    required bool isHeadOfHousehold,
+    this.auditCreatedBy = const Value.absent(),
+    this.nonRecoverableError = const Value.absent(),
+    this.auditCreatedTime = const Value.absent(),
+    this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
+    this.clientModifiedTime = const Value.absent(),
+    this.auditModifiedBy = const Value.absent(),
+    this.auditModifiedTime = const Value.absent(),
+    required String clientReferenceId,
+    this.tenantId = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.rowVersion = const Value.absent(),
+    this.additionalFields = const Value.absent(),
+    this.rowid = const Value.absent(),
+  })  : isHeadOfHousehold = Value(isHeadOfHousehold),
+        clientReferenceId = Value(clientReferenceId);
+  static Insertable<HouseholdMemberData> custom({
+    Expression<String>? id,
+    Expression<String>? householdId,
+    Expression<String>? householdClientReferenceId,
+    Expression<String>? individualId,
+    Expression<String>? individualClientReferenceId,
+    Expression<bool>? isHeadOfHousehold,
+    Expression<String>? auditCreatedBy,
+    Expression<bool>? nonRecoverableError,
+    Expression<int>? auditCreatedTime,
+    Expression<int>? clientCreatedTime,
+    Expression<String>? clientModifiedBy,
+    Expression<String>? clientCreatedBy,
+    Expression<int>? clientModifiedTime,
+    Expression<String>? auditModifiedBy,
+    Expression<int>? auditModifiedTime,
+    Expression<String>? clientReferenceId,
+    Expression<String>? tenantId,
+    Expression<bool>? isDeleted,
+    Expression<int>? rowVersion,
+    Expression<String>? additionalFields,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (householdId != null) 'household_id': householdId,
+      if (householdClientReferenceId != null)
+        'household_client_reference_id': householdClientReferenceId,
+      if (individualId != null) 'individual_id': individualId,
+      if (individualClientReferenceId != null)
+        'individual_client_reference_id': individualClientReferenceId,
+      if (isHeadOfHousehold != null) 'is_head_of_household': isHeadOfHousehold,
+      if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
+      if (nonRecoverableError != null)
+        'non_recoverable_error': nonRecoverableError,
+      if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
+      if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
+      if (clientModifiedTime != null)
+        'client_modified_time': clientModifiedTime,
+      if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
+      if (auditModifiedTime != null) 'audit_modified_time': auditModifiedTime,
+      if (clientReferenceId != null) 'client_reference_id': clientReferenceId,
+      if (tenantId != null) 'tenant_id': tenantId,
+      if (isDeleted != null) 'is_deleted': isDeleted,
+      if (rowVersion != null) 'row_version': rowVersion,
+      if (additionalFields != null) 'additional_fields': additionalFields,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  HouseholdMemberCompanion copyWith(
+      {Value<String?>? id,
+      Value<String?>? householdId,
+      Value<String?>? householdClientReferenceId,
+      Value<String?>? individualId,
+      Value<String?>? individualClientReferenceId,
+      Value<bool>? isHeadOfHousehold,
+      Value<String?>? auditCreatedBy,
+      Value<bool?>? nonRecoverableError,
+      Value<int?>? auditCreatedTime,
+      Value<int?>? clientCreatedTime,
+      Value<String?>? clientModifiedBy,
+      Value<String?>? clientCreatedBy,
+      Value<int?>? clientModifiedTime,
+      Value<String?>? auditModifiedBy,
+      Value<int?>? auditModifiedTime,
+      Value<String>? clientReferenceId,
+      Value<String?>? tenantId,
+      Value<bool?>? isDeleted,
+      Value<int?>? rowVersion,
+      Value<String?>? additionalFields,
+      Value<int>? rowid}) {
+    return HouseholdMemberCompanion(
+      id: id ?? this.id,
+      householdId: householdId ?? this.householdId,
+      householdClientReferenceId:
+          householdClientReferenceId ?? this.householdClientReferenceId,
+      individualId: individualId ?? this.individualId,
+      individualClientReferenceId:
+          individualClientReferenceId ?? this.individualClientReferenceId,
+      isHeadOfHousehold: isHeadOfHousehold ?? this.isHeadOfHousehold,
+      auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
+      nonRecoverableError: nonRecoverableError ?? this.nonRecoverableError,
+      auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
+      clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
+      clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
+      auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
+      auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
+      clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+      tenantId: tenantId ?? this.tenantId,
+      isDeleted: isDeleted ?? this.isDeleted,
+      rowVersion: rowVersion ?? this.rowVersion,
+      additionalFields: additionalFields ?? this.additionalFields,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (householdId.present) {
+      map['household_id'] = Variable<String>(householdId.value);
+    }
+    if (householdClientReferenceId.present) {
+      map['household_client_reference_id'] =
+          Variable<String>(householdClientReferenceId.value);
+    }
+    if (individualId.present) {
+      map['individual_id'] = Variable<String>(individualId.value);
+    }
+    if (individualClientReferenceId.present) {
+      map['individual_client_reference_id'] =
+          Variable<String>(individualClientReferenceId.value);
+    }
+    if (isHeadOfHousehold.present) {
+      map['is_head_of_household'] = Variable<bool>(isHeadOfHousehold.value);
+    }
+    if (auditCreatedBy.present) {
+      map['audit_created_by'] = Variable<String>(auditCreatedBy.value);
+    }
+    if (nonRecoverableError.present) {
+      map['non_recoverable_error'] = Variable<bool>(nonRecoverableError.value);
+    }
+    if (auditCreatedTime.present) {
+      map['audit_created_time'] = Variable<int>(auditCreatedTime.value);
+    }
+    if (clientCreatedTime.present) {
+      map['client_created_time'] = Variable<int>(clientCreatedTime.value);
+    }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String>(clientModifiedBy.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String>(clientCreatedBy.value);
+    }
+    if (clientModifiedTime.present) {
+      map['client_modified_time'] = Variable<int>(clientModifiedTime.value);
+    }
+    if (auditModifiedBy.present) {
+      map['audit_modified_by'] = Variable<String>(auditModifiedBy.value);
+    }
+    if (auditModifiedTime.present) {
+      map['audit_modified_time'] = Variable<int>(auditModifiedTime.value);
+    }
+    if (clientReferenceId.present) {
+      map['client_reference_id'] = Variable<String>(clientReferenceId.value);
+    }
+    if (tenantId.present) {
+      map['tenant_id'] = Variable<String>(tenantId.value);
+    }
+    if (isDeleted.present) {
+      map['is_deleted'] = Variable<bool>(isDeleted.value);
+    }
+    if (rowVersion.present) {
+      map['row_version'] = Variable<int>(rowVersion.value);
+    }
+    if (additionalFields.present) {
+      map['additional_fields'] = Variable<String>(additionalFields.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('HouseholdMemberCompanion(')
+          ..write('id: $id, ')
+          ..write('householdId: $householdId, ')
+          ..write('householdClientReferenceId: $householdClientReferenceId, ')
+          ..write('individualId: $individualId, ')
+          ..write('individualClientReferenceId: $individualClientReferenceId, ')
+          ..write('isHeadOfHousehold: $isHeadOfHousehold, ')
+          ..write('auditCreatedBy: $auditCreatedBy, ')
+          ..write('nonRecoverableError: $nonRecoverableError, ')
+          ..write('auditCreatedTime: $auditCreatedTime, ')
+          ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
+          ..write('clientModifiedTime: $clientModifiedTime, ')
+          ..write('auditModifiedBy: $auditModifiedBy, ')
+          ..write('auditModifiedTime: $auditModifiedTime, ')
+          ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('rowVersion: $rowVersion, ')
+          ..write('additionalFields: $additionalFields, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $TaskTable extends Task with TableInfo<$TaskTable, TaskData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TaskTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _projectIdMeta =
+      const VerificationMeta('projectId');
+  @override
+  late final GeneratedColumn<String> projectId = GeneratedColumn<String>(
+      'project_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _projectBeneficiaryIdMeta =
+      const VerificationMeta('projectBeneficiaryId');
+  @override
+  late final GeneratedColumn<String> projectBeneficiaryId =
+      GeneratedColumn<String>('project_beneficiary_id', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _projectBeneficiaryClientReferenceIdMeta =
+      const VerificationMeta('projectBeneficiaryClientReferenceId');
+  @override
+  late final GeneratedColumn<String> projectBeneficiaryClientReferenceId =
+      GeneratedColumn<String>(
+          'project_beneficiary_client_reference_id', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _createdByMeta =
+      const VerificationMeta('createdBy');
+  @override
+  late final GeneratedColumn<String> createdBy = GeneratedColumn<String>(
+      'created_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<String> status = GeneratedColumn<String>(
+      'status', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _auditCreatedByMeta =
+      const VerificationMeta('auditCreatedBy');
+  @override
+  late final GeneratedColumn<String> auditCreatedBy = GeneratedColumn<String>(
+      'audit_created_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _nonRecoverableErrorMeta =
+      const VerificationMeta('nonRecoverableError');
+  @override
+  late final GeneratedColumn<bool> nonRecoverableError = GeneratedColumn<bool>(
+      'non_recoverable_error', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("non_recoverable_error" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  static const VerificationMeta _auditCreatedTimeMeta =
+      const VerificationMeta('auditCreatedTime');
+  @override
+  late final GeneratedColumn<int> auditCreatedTime = GeneratedColumn<int>(
+      'audit_created_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _clientCreatedTimeMeta =
+      const VerificationMeta('clientCreatedTime');
+  @override
+  late final GeneratedColumn<int> clientCreatedTime = GeneratedColumn<int>(
+      'client_created_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String> clientModifiedBy = GeneratedColumn<String>(
+      'client_modified_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String> clientCreatedBy = GeneratedColumn<String>(
+      'client_created_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _clientModifiedTimeMeta =
+      const VerificationMeta('clientModifiedTime');
+  @override
+  late final GeneratedColumn<int> clientModifiedTime = GeneratedColumn<int>(
+      'client_modified_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _auditModifiedByMeta =
+      const VerificationMeta('auditModifiedBy');
+  @override
+  late final GeneratedColumn<String> auditModifiedBy = GeneratedColumn<String>(
+      'audit_modified_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _auditModifiedTimeMeta =
+      const VerificationMeta('auditModifiedTime');
+  @override
+  late final GeneratedColumn<int> auditModifiedTime = GeneratedColumn<int>(
+      'audit_modified_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _clientReferenceIdMeta =
+      const VerificationMeta('clientReferenceId');
+  @override
+  late final GeneratedColumn<String> clientReferenceId =
+      GeneratedColumn<String>('client_reference_id', aliasedName, false,
+          type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _tenantIdMeta =
+      const VerificationMeta('tenantId');
+  @override
+  late final GeneratedColumn<String> tenantId = GeneratedColumn<String>(
+      'tenant_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _isDeletedMeta =
+      const VerificationMeta('isDeleted');
+  @override
+  late final GeneratedColumn<bool> isDeleted = GeneratedColumn<bool>(
+      'is_deleted', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_deleted" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  static const VerificationMeta _rowVersionMeta =
+      const VerificationMeta('rowVersion');
+  @override
+  late final GeneratedColumn<int> rowVersion = GeneratedColumn<int>(
+      'row_version', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _plannedStartDateMeta =
+      const VerificationMeta('plannedStartDate');
+  @override
+  late final GeneratedColumn<int> plannedStartDate = GeneratedColumn<int>(
+      'planned_start_date', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _plannedEndDateMeta =
+      const VerificationMeta('plannedEndDate');
+  @override
+  late final GeneratedColumn<int> plannedEndDate = GeneratedColumn<int>(
+      'planned_end_date', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _actualStartDateMeta =
+      const VerificationMeta('actualStartDate');
+  @override
+  late final GeneratedColumn<int> actualStartDate = GeneratedColumn<int>(
+      'actual_start_date', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _actualEndDateMeta =
+      const VerificationMeta('actualEndDate');
+  @override
+  late final GeneratedColumn<int> actualEndDate = GeneratedColumn<int>(
+      'actual_end_date', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _createdDateMeta =
+      const VerificationMeta('createdDate');
+  @override
+  late final GeneratedColumn<int> createdDate = GeneratedColumn<int>(
+      'created_date', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _additionalFieldsMeta =
+      const VerificationMeta('additionalFields');
+  @override
+  late final GeneratedColumn<String> additionalFields = GeneratedColumn<String>(
+      'additional_fields', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        projectId,
+        projectBeneficiaryId,
+        projectBeneficiaryClientReferenceId,
+        createdBy,
+        status,
+        auditCreatedBy,
+        nonRecoverableError,
+        auditCreatedTime,
+        clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
+        clientModifiedTime,
+        auditModifiedBy,
+        auditModifiedTime,
+        clientReferenceId,
+        tenantId,
+        isDeleted,
+        rowVersion,
+        plannedStartDate,
+        plannedEndDate,
+        actualStartDate,
+        actualEndDate,
+        createdDate,
+        additionalFields
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'task';
+  @override
+  VerificationContext validateIntegrity(Insertable<TaskData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('project_id')) {
+      context.handle(_projectIdMeta,
+          projectId.isAcceptableOrUnknown(data['project_id']!, _projectIdMeta));
+    }
+    if (data.containsKey('project_beneficiary_id')) {
+      context.handle(
+          _projectBeneficiaryIdMeta,
+          projectBeneficiaryId.isAcceptableOrUnknown(
+              data['project_beneficiary_id']!, _projectBeneficiaryIdMeta));
+    }
+    if (data.containsKey('project_beneficiary_client_reference_id')) {
+      context.handle(
+          _projectBeneficiaryClientReferenceIdMeta,
+          projectBeneficiaryClientReferenceId.isAcceptableOrUnknown(
+              data['project_beneficiary_client_reference_id']!,
+              _projectBeneficiaryClientReferenceIdMeta));
+    }
+    if (data.containsKey('created_by')) {
+      context.handle(_createdByMeta,
+          createdBy.isAcceptableOrUnknown(data['created_by']!, _createdByMeta));
+    }
+    if (data.containsKey('status')) {
+      context.handle(_statusMeta,
+          status.isAcceptableOrUnknown(data['status']!, _statusMeta));
+    }
+    if (data.containsKey('audit_created_by')) {
+      context.handle(
+          _auditCreatedByMeta,
+          auditCreatedBy.isAcceptableOrUnknown(
+              data['audit_created_by']!, _auditCreatedByMeta));
+    }
+    if (data.containsKey('non_recoverable_error')) {
+      context.handle(
+          _nonRecoverableErrorMeta,
+          nonRecoverableError.isAcceptableOrUnknown(
+              data['non_recoverable_error']!, _nonRecoverableErrorMeta));
+    }
+    if (data.containsKey('audit_created_time')) {
+      context.handle(
+          _auditCreatedTimeMeta,
+          auditCreatedTime.isAcceptableOrUnknown(
+              data['audit_created_time']!, _auditCreatedTimeMeta));
+    }
+    if (data.containsKey('client_created_time')) {
+      context.handle(
+          _clientCreatedTimeMeta,
+          clientCreatedTime.isAcceptableOrUnknown(
+              data['client_created_time']!, _clientCreatedTimeMeta));
+    }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
+    }
+    if (data.containsKey('client_modified_time')) {
+      context.handle(
+          _clientModifiedTimeMeta,
+          clientModifiedTime.isAcceptableOrUnknown(
+              data['client_modified_time']!, _clientModifiedTimeMeta));
+    }
+    if (data.containsKey('audit_modified_by')) {
+      context.handle(
+          _auditModifiedByMeta,
+          auditModifiedBy.isAcceptableOrUnknown(
+              data['audit_modified_by']!, _auditModifiedByMeta));
+    }
+    if (data.containsKey('audit_modified_time')) {
+      context.handle(
+          _auditModifiedTimeMeta,
+          auditModifiedTime.isAcceptableOrUnknown(
+              data['audit_modified_time']!, _auditModifiedTimeMeta));
+    }
+    if (data.containsKey('client_reference_id')) {
+      context.handle(
+          _clientReferenceIdMeta,
+          clientReferenceId.isAcceptableOrUnknown(
+              data['client_reference_id']!, _clientReferenceIdMeta));
+    } else if (isInserting) {
+      context.missing(_clientReferenceIdMeta);
+    }
+    if (data.containsKey('tenant_id')) {
+      context.handle(_tenantIdMeta,
+          tenantId.isAcceptableOrUnknown(data['tenant_id']!, _tenantIdMeta));
+    }
+    if (data.containsKey('is_deleted')) {
+      context.handle(_isDeletedMeta,
+          isDeleted.isAcceptableOrUnknown(data['is_deleted']!, _isDeletedMeta));
+    }
+    if (data.containsKey('row_version')) {
+      context.handle(
+          _rowVersionMeta,
+          rowVersion.isAcceptableOrUnknown(
+              data['row_version']!, _rowVersionMeta));
+    }
+    if (data.containsKey('planned_start_date')) {
+      context.handle(
+          _plannedStartDateMeta,
+          plannedStartDate.isAcceptableOrUnknown(
+              data['planned_start_date']!, _plannedStartDateMeta));
+    }
+    if (data.containsKey('planned_end_date')) {
+      context.handle(
+          _plannedEndDateMeta,
+          plannedEndDate.isAcceptableOrUnknown(
+              data['planned_end_date']!, _plannedEndDateMeta));
+    }
+    if (data.containsKey('actual_start_date')) {
+      context.handle(
+          _actualStartDateMeta,
+          actualStartDate.isAcceptableOrUnknown(
+              data['actual_start_date']!, _actualStartDateMeta));
+    }
+    if (data.containsKey('actual_end_date')) {
+      context.handle(
+          _actualEndDateMeta,
+          actualEndDate.isAcceptableOrUnknown(
+              data['actual_end_date']!, _actualEndDateMeta));
+    }
+    if (data.containsKey('created_date')) {
+      context.handle(
+          _createdDateMeta,
+          createdDate.isAcceptableOrUnknown(
+              data['created_date']!, _createdDateMeta));
+    }
+    if (data.containsKey('additional_fields')) {
+      context.handle(
+          _additionalFieldsMeta,
+          additionalFields.isAcceptableOrUnknown(
+              data['additional_fields']!, _additionalFieldsMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {auditCreatedBy, clientReferenceId};
+  @override
+  TaskData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return TaskData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id']),
+      projectId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}project_id']),
+      projectBeneficiaryId: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}project_beneficiary_id']),
+      projectBeneficiaryClientReferenceId: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}project_beneficiary_client_reference_id']),
+      createdBy: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}created_by']),
+      status: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}status']),
+      auditCreatedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}audit_created_by']),
+      nonRecoverableError: attachedDatabase.typeMapping.read(
+          DriftSqlType.bool, data['${effectivePrefix}non_recoverable_error']),
+      auditCreatedTime: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}audit_created_time']),
+      clientCreatedTime: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}client_created_time']),
+      clientModifiedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}client_modified_by']),
+      clientCreatedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}client_created_by']),
+      clientModifiedTime: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}client_modified_time']),
+      auditModifiedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}audit_modified_by']),
+      auditModifiedTime: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}audit_modified_time']),
+      clientReferenceId: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}client_reference_id'])!,
+      tenantId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}tenant_id']),
+      isDeleted: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_deleted']),
+      rowVersion: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}row_version']),
+      plannedStartDate: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}planned_start_date']),
+      plannedEndDate: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}planned_end_date']),
+      actualStartDate: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}actual_start_date']),
+      actualEndDate: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}actual_end_date']),
+      createdDate: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}created_date']),
+      additionalFields: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}additional_fields']),
+    );
+  }
+
+  @override
+  $TaskTable createAlias(String alias) {
+    return $TaskTable(attachedDatabase, alias);
+  }
+}
+
+class TaskData extends DataClass implements Insertable<TaskData> {
+  final String? id;
+  final String? projectId;
+  final String? projectBeneficiaryId;
+  final String? projectBeneficiaryClientReferenceId;
+  final String? createdBy;
+  final String? status;
+  final String? auditCreatedBy;
+  final bool? nonRecoverableError;
+  final int? auditCreatedTime;
+  final int? clientCreatedTime;
+  final String? clientModifiedBy;
+  final String? clientCreatedBy;
+  final int? clientModifiedTime;
+  final String? auditModifiedBy;
+  final int? auditModifiedTime;
+  final String clientReferenceId;
+  final String? tenantId;
+  final bool? isDeleted;
+  final int? rowVersion;
+  final int? plannedStartDate;
+  final int? plannedEndDate;
+  final int? actualStartDate;
+  final int? actualEndDate;
+  final int? createdDate;
+  final String? additionalFields;
+  const TaskData(
+      {this.id,
+      this.projectId,
+      this.projectBeneficiaryId,
+      this.projectBeneficiaryClientReferenceId,
+      this.createdBy,
+      this.status,
+      this.auditCreatedBy,
+      this.nonRecoverableError,
+      this.auditCreatedTime,
+      this.clientCreatedTime,
+      this.clientModifiedBy,
+      this.clientCreatedBy,
+      this.clientModifiedTime,
+      this.auditModifiedBy,
+      this.auditModifiedTime,
+      required this.clientReferenceId,
+      this.tenantId,
+      this.isDeleted,
+      this.rowVersion,
+      this.plannedStartDate,
+      this.plannedEndDate,
+      this.actualStartDate,
+      this.actualEndDate,
+      this.createdDate,
+      this.additionalFields});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (!nullToAbsent || id != null) {
+      map['id'] = Variable<String>(id);
+    }
+    if (!nullToAbsent || projectId != null) {
+      map['project_id'] = Variable<String>(projectId);
+    }
+    if (!nullToAbsent || projectBeneficiaryId != null) {
+      map['project_beneficiary_id'] = Variable<String>(projectBeneficiaryId);
+    }
+    if (!nullToAbsent || projectBeneficiaryClientReferenceId != null) {
+      map['project_beneficiary_client_reference_id'] =
+          Variable<String>(projectBeneficiaryClientReferenceId);
+    }
+    if (!nullToAbsent || createdBy != null) {
+      map['created_by'] = Variable<String>(createdBy);
+    }
+    if (!nullToAbsent || status != null) {
+      map['status'] = Variable<String>(status);
+    }
+    if (!nullToAbsent || auditCreatedBy != null) {
+      map['audit_created_by'] = Variable<String>(auditCreatedBy);
+    }
+    if (!nullToAbsent || nonRecoverableError != null) {
+      map['non_recoverable_error'] = Variable<bool>(nonRecoverableError);
+    }
+    if (!nullToAbsent || auditCreatedTime != null) {
+      map['audit_created_time'] = Variable<int>(auditCreatedTime);
+    }
+    if (!nullToAbsent || clientCreatedTime != null) {
+      map['client_created_time'] = Variable<int>(clientCreatedTime);
+    }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String>(clientCreatedBy);
+    }
+    if (!nullToAbsent || clientModifiedTime != null) {
+      map['client_modified_time'] = Variable<int>(clientModifiedTime);
+    }
+    if (!nullToAbsent || auditModifiedBy != null) {
+      map['audit_modified_by'] = Variable<String>(auditModifiedBy);
+    }
+    if (!nullToAbsent || auditModifiedTime != null) {
+      map['audit_modified_time'] = Variable<int>(auditModifiedTime);
+    }
+    map['client_reference_id'] = Variable<String>(clientReferenceId);
+    if (!nullToAbsent || tenantId != null) {
+      map['tenant_id'] = Variable<String>(tenantId);
+    }
+    if (!nullToAbsent || isDeleted != null) {
+      map['is_deleted'] = Variable<bool>(isDeleted);
+    }
+    if (!nullToAbsent || rowVersion != null) {
+      map['row_version'] = Variable<int>(rowVersion);
+    }
+    if (!nullToAbsent || plannedStartDate != null) {
+      map['planned_start_date'] = Variable<int>(plannedStartDate);
+    }
+    if (!nullToAbsent || plannedEndDate != null) {
+      map['planned_end_date'] = Variable<int>(plannedEndDate);
+    }
+    if (!nullToAbsent || actualStartDate != null) {
+      map['actual_start_date'] = Variable<int>(actualStartDate);
+    }
+    if (!nullToAbsent || actualEndDate != null) {
+      map['actual_end_date'] = Variable<int>(actualEndDate);
+    }
+    if (!nullToAbsent || createdDate != null) {
+      map['created_date'] = Variable<int>(createdDate);
+    }
+    if (!nullToAbsent || additionalFields != null) {
+      map['additional_fields'] = Variable<String>(additionalFields);
+    }
+    return map;
+  }
+
+  TaskCompanion toCompanion(bool nullToAbsent) {
+    return TaskCompanion(
+      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      projectId: projectId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(projectId),
+      projectBeneficiaryId: projectBeneficiaryId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(projectBeneficiaryId),
+      projectBeneficiaryClientReferenceId:
+          projectBeneficiaryClientReferenceId == null && nullToAbsent
+              ? const Value.absent()
+              : Value(projectBeneficiaryClientReferenceId),
+      createdBy: createdBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(createdBy),
+      status:
+          status == null && nullToAbsent ? const Value.absent() : Value(status),
+      auditCreatedBy: auditCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditCreatedBy),
+      nonRecoverableError: nonRecoverableError == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nonRecoverableError),
+      auditCreatedTime: auditCreatedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditCreatedTime),
+      clientCreatedTime: clientCreatedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedTime),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
+      clientModifiedTime: clientModifiedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedTime),
+      auditModifiedBy: auditModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditModifiedBy),
+      auditModifiedTime: auditModifiedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditModifiedTime),
+      clientReferenceId: Value(clientReferenceId),
+      tenantId: tenantId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(tenantId),
+      isDeleted: isDeleted == null && nullToAbsent
+          ? const Value.absent()
+          : Value(isDeleted),
+      rowVersion: rowVersion == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rowVersion),
+      plannedStartDate: plannedStartDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(plannedStartDate),
+      plannedEndDate: plannedEndDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(plannedEndDate),
+      actualStartDate: actualStartDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(actualStartDate),
+      actualEndDate: actualEndDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(actualEndDate),
+      createdDate: createdDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(createdDate),
+      additionalFields: additionalFields == null && nullToAbsent
+          ? const Value.absent()
+          : Value(additionalFields),
+    );
+  }
+
+  factory TaskData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return TaskData(
+      id: serializer.fromJson<String?>(json['id']),
+      projectId: serializer.fromJson<String?>(json['projectId']),
+      projectBeneficiaryId:
+          serializer.fromJson<String?>(json['projectBeneficiaryId']),
+      projectBeneficiaryClientReferenceId: serializer
+          .fromJson<String?>(json['projectBeneficiaryClientReferenceId']),
+      createdBy: serializer.fromJson<String?>(json['createdBy']),
+      status: serializer.fromJson<String?>(json['status']),
+      auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
+      nonRecoverableError:
+          serializer.fromJson<bool?>(json['nonRecoverableError']),
+      auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
+      clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
+      clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
+      auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
+      auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
+      clientReferenceId: serializer.fromJson<String>(json['clientReferenceId']),
+      tenantId: serializer.fromJson<String?>(json['tenantId']),
+      isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
+      rowVersion: serializer.fromJson<int?>(json['rowVersion']),
+      plannedStartDate: serializer.fromJson<int?>(json['plannedStartDate']),
+      plannedEndDate: serializer.fromJson<int?>(json['plannedEndDate']),
+      actualStartDate: serializer.fromJson<int?>(json['actualStartDate']),
+      actualEndDate: serializer.fromJson<int?>(json['actualEndDate']),
+      createdDate: serializer.fromJson<int?>(json['createdDate']),
+      additionalFields: serializer.fromJson<String?>(json['additionalFields']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String?>(id),
+      'projectId': serializer.toJson<String?>(projectId),
+      'projectBeneficiaryId': serializer.toJson<String?>(projectBeneficiaryId),
+      'projectBeneficiaryClientReferenceId':
+          serializer.toJson<String?>(projectBeneficiaryClientReferenceId),
+      'createdBy': serializer.toJson<String?>(createdBy),
+      'status': serializer.toJson<String?>(status),
+      'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
+      'nonRecoverableError': serializer.toJson<bool?>(nonRecoverableError),
+      'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
+      'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
+      'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
+      'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
+      'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
+      'clientReferenceId': serializer.toJson<String>(clientReferenceId),
+      'tenantId': serializer.toJson<String?>(tenantId),
+      'isDeleted': serializer.toJson<bool?>(isDeleted),
+      'rowVersion': serializer.toJson<int?>(rowVersion),
+      'plannedStartDate': serializer.toJson<int?>(plannedStartDate),
+      'plannedEndDate': serializer.toJson<int?>(plannedEndDate),
+      'actualStartDate': serializer.toJson<int?>(actualStartDate),
+      'actualEndDate': serializer.toJson<int?>(actualEndDate),
+      'createdDate': serializer.toJson<int?>(createdDate),
+      'additionalFields': serializer.toJson<String?>(additionalFields),
+    };
+  }
+
+  TaskData copyWith(
+          {Value<String?> id = const Value.absent(),
+          Value<String?> projectId = const Value.absent(),
+          Value<String?> projectBeneficiaryId = const Value.absent(),
+          Value<String?> projectBeneficiaryClientReferenceId =
+              const Value.absent(),
+          Value<String?> createdBy = const Value.absent(),
+          Value<String?> status = const Value.absent(),
+          Value<String?> auditCreatedBy = const Value.absent(),
+          Value<bool?> nonRecoverableError = const Value.absent(),
+          Value<int?> auditCreatedTime = const Value.absent(),
+          Value<int?> clientCreatedTime = const Value.absent(),
+          Value<String?> clientModifiedBy = const Value.absent(),
+          Value<String?> clientCreatedBy = const Value.absent(),
+          Value<int?> clientModifiedTime = const Value.absent(),
+          Value<String?> auditModifiedBy = const Value.absent(),
+          Value<int?> auditModifiedTime = const Value.absent(),
+          String? clientReferenceId,
+          Value<String?> tenantId = const Value.absent(),
+          Value<bool?> isDeleted = const Value.absent(),
+          Value<int?> rowVersion = const Value.absent(),
+          Value<int?> plannedStartDate = const Value.absent(),
+          Value<int?> plannedEndDate = const Value.absent(),
+          Value<int?> actualStartDate = const Value.absent(),
+          Value<int?> actualEndDate = const Value.absent(),
+          Value<int?> createdDate = const Value.absent(),
+          Value<String?> additionalFields = const Value.absent()}) =>
+      TaskData(
+        id: id.present ? id.value : this.id,
+        projectId: projectId.present ? projectId.value : this.projectId,
+        projectBeneficiaryId: projectBeneficiaryId.present
+            ? projectBeneficiaryId.value
+            : this.projectBeneficiaryId,
+        projectBeneficiaryClientReferenceId:
+            projectBeneficiaryClientReferenceId.present
+                ? projectBeneficiaryClientReferenceId.value
+                : this.projectBeneficiaryClientReferenceId,
+        createdBy: createdBy.present ? createdBy.value : this.createdBy,
+        status: status.present ? status.value : this.status,
+        auditCreatedBy:
+            auditCreatedBy.present ? auditCreatedBy.value : this.auditCreatedBy,
+        nonRecoverableError: nonRecoverableError.present
+            ? nonRecoverableError.value
+            : this.nonRecoverableError,
+        auditCreatedTime: auditCreatedTime.present
+            ? auditCreatedTime.value
+            : this.auditCreatedTime,
+        clientCreatedTime: clientCreatedTime.present
+            ? clientCreatedTime.value
+            : this.clientCreatedTime,
+        clientModifiedBy: clientModifiedBy.present
+            ? clientModifiedBy.value
+            : this.clientModifiedBy,
+        clientCreatedBy: clientCreatedBy.present
+            ? clientCreatedBy.value
+            : this.clientCreatedBy,
+        clientModifiedTime: clientModifiedTime.present
+            ? clientModifiedTime.value
+            : this.clientModifiedTime,
+        auditModifiedBy: auditModifiedBy.present
+            ? auditModifiedBy.value
+            : this.auditModifiedBy,
+        auditModifiedTime: auditModifiedTime.present
+            ? auditModifiedTime.value
+            : this.auditModifiedTime,
+        clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+        tenantId: tenantId.present ? tenantId.value : this.tenantId,
+        isDeleted: isDeleted.present ? isDeleted.value : this.isDeleted,
+        rowVersion: rowVersion.present ? rowVersion.value : this.rowVersion,
+        plannedStartDate: plannedStartDate.present
+            ? plannedStartDate.value
+            : this.plannedStartDate,
+        plannedEndDate:
+            plannedEndDate.present ? plannedEndDate.value : this.plannedEndDate,
+        actualStartDate: actualStartDate.present
+            ? actualStartDate.value
+            : this.actualStartDate,
+        actualEndDate:
+            actualEndDate.present ? actualEndDate.value : this.actualEndDate,
+        createdDate: createdDate.present ? createdDate.value : this.createdDate,
+        additionalFields: additionalFields.present
+            ? additionalFields.value
+            : this.additionalFields,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('TaskData(')
+          ..write('id: $id, ')
+          ..write('projectId: $projectId, ')
+          ..write('projectBeneficiaryId: $projectBeneficiaryId, ')
+          ..write(
+              'projectBeneficiaryClientReferenceId: $projectBeneficiaryClientReferenceId, ')
+          ..write('createdBy: $createdBy, ')
+          ..write('status: $status, ')
+          ..write('auditCreatedBy: $auditCreatedBy, ')
+          ..write('nonRecoverableError: $nonRecoverableError, ')
+          ..write('auditCreatedTime: $auditCreatedTime, ')
+          ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
+          ..write('clientModifiedTime: $clientModifiedTime, ')
+          ..write('auditModifiedBy: $auditModifiedBy, ')
+          ..write('auditModifiedTime: $auditModifiedTime, ')
+          ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('rowVersion: $rowVersion, ')
+          ..write('plannedStartDate: $plannedStartDate, ')
+          ..write('plannedEndDate: $plannedEndDate, ')
+          ..write('actualStartDate: $actualStartDate, ')
+          ..write('actualEndDate: $actualEndDate, ')
+          ..write('createdDate: $createdDate, ')
+          ..write('additionalFields: $additionalFields')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+        id,
+        projectId,
+        projectBeneficiaryId,
+        projectBeneficiaryClientReferenceId,
+        createdBy,
+        status,
+        auditCreatedBy,
+        nonRecoverableError,
+        auditCreatedTime,
+        clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
+        clientModifiedTime,
+        auditModifiedBy,
+        auditModifiedTime,
+        clientReferenceId,
+        tenantId,
+        isDeleted,
+        rowVersion,
+        plannedStartDate,
+        plannedEndDate,
+        actualStartDate,
+        actualEndDate,
+        createdDate,
+        additionalFields
+      ]);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TaskData &&
+          other.id == this.id &&
+          other.projectId == this.projectId &&
+          other.projectBeneficiaryId == this.projectBeneficiaryId &&
+          other.projectBeneficiaryClientReferenceId ==
+              this.projectBeneficiaryClientReferenceId &&
+          other.createdBy == this.createdBy &&
+          other.status == this.status &&
+          other.auditCreatedBy == this.auditCreatedBy &&
+          other.nonRecoverableError == this.nonRecoverableError &&
+          other.auditCreatedTime == this.auditCreatedTime &&
+          other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientCreatedBy == this.clientCreatedBy &&
+          other.clientModifiedTime == this.clientModifiedTime &&
+          other.auditModifiedBy == this.auditModifiedBy &&
+          other.auditModifiedTime == this.auditModifiedTime &&
+          other.clientReferenceId == this.clientReferenceId &&
+          other.tenantId == this.tenantId &&
+          other.isDeleted == this.isDeleted &&
+          other.rowVersion == this.rowVersion &&
+          other.plannedStartDate == this.plannedStartDate &&
+          other.plannedEndDate == this.plannedEndDate &&
+          other.actualStartDate == this.actualStartDate &&
+          other.actualEndDate == this.actualEndDate &&
+          other.createdDate == this.createdDate &&
+          other.additionalFields == this.additionalFields);
+}
+
+class TaskCompanion extends UpdateCompanion<TaskData> {
+  final Value<String?> id;
+  final Value<String?> projectId;
+  final Value<String?> projectBeneficiaryId;
+  final Value<String?> projectBeneficiaryClientReferenceId;
+  final Value<String?> createdBy;
+  final Value<String?> status;
+  final Value<String?> auditCreatedBy;
+  final Value<bool?> nonRecoverableError;
+  final Value<int?> auditCreatedTime;
+  final Value<int?> clientCreatedTime;
+  final Value<String?> clientModifiedBy;
+  final Value<String?> clientCreatedBy;
+  final Value<int?> clientModifiedTime;
+  final Value<String?> auditModifiedBy;
+  final Value<int?> auditModifiedTime;
+  final Value<String> clientReferenceId;
+  final Value<String?> tenantId;
+  final Value<bool?> isDeleted;
+  final Value<int?> rowVersion;
+  final Value<int?> plannedStartDate;
+  final Value<int?> plannedEndDate;
+  final Value<int?> actualStartDate;
+  final Value<int?> actualEndDate;
+  final Value<int?> createdDate;
+  final Value<String?> additionalFields;
+  final Value<int> rowid;
+  const TaskCompanion({
+    this.id = const Value.absent(),
+    this.projectId = const Value.absent(),
+    this.projectBeneficiaryId = const Value.absent(),
+    this.projectBeneficiaryClientReferenceId = const Value.absent(),
+    this.createdBy = const Value.absent(),
+    this.status = const Value.absent(),
+    this.auditCreatedBy = const Value.absent(),
+    this.nonRecoverableError = const Value.absent(),
+    this.auditCreatedTime = const Value.absent(),
+    this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
+    this.clientModifiedTime = const Value.absent(),
+    this.auditModifiedBy = const Value.absent(),
+    this.auditModifiedTime = const Value.absent(),
+    this.clientReferenceId = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.rowVersion = const Value.absent(),
+    this.plannedStartDate = const Value.absent(),
+    this.plannedEndDate = const Value.absent(),
+    this.actualStartDate = const Value.absent(),
+    this.actualEndDate = const Value.absent(),
+    this.createdDate = const Value.absent(),
+    this.additionalFields = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  TaskCompanion.insert({
+    this.id = const Value.absent(),
+    this.projectId = const Value.absent(),
+    this.projectBeneficiaryId = const Value.absent(),
+    this.projectBeneficiaryClientReferenceId = const Value.absent(),
+    this.createdBy = const Value.absent(),
+    this.status = const Value.absent(),
+    this.auditCreatedBy = const Value.absent(),
+    this.nonRecoverableError = const Value.absent(),
+    this.auditCreatedTime = const Value.absent(),
+    this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
+    this.clientModifiedTime = const Value.absent(),
+    this.auditModifiedBy = const Value.absent(),
+    this.auditModifiedTime = const Value.absent(),
+    required String clientReferenceId,
+    this.tenantId = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.rowVersion = const Value.absent(),
+    this.plannedStartDate = const Value.absent(),
+    this.plannedEndDate = const Value.absent(),
+    this.actualStartDate = const Value.absent(),
+    this.actualEndDate = const Value.absent(),
+    this.createdDate = const Value.absent(),
+    this.additionalFields = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : clientReferenceId = Value(clientReferenceId);
+  static Insertable<TaskData> custom({
+    Expression<String>? id,
+    Expression<String>? projectId,
+    Expression<String>? projectBeneficiaryId,
+    Expression<String>? projectBeneficiaryClientReferenceId,
+    Expression<String>? createdBy,
+    Expression<String>? status,
+    Expression<String>? auditCreatedBy,
+    Expression<bool>? nonRecoverableError,
+    Expression<int>? auditCreatedTime,
+    Expression<int>? clientCreatedTime,
+    Expression<String>? clientModifiedBy,
+    Expression<String>? clientCreatedBy,
+    Expression<int>? clientModifiedTime,
+    Expression<String>? auditModifiedBy,
+    Expression<int>? auditModifiedTime,
+    Expression<String>? clientReferenceId,
+    Expression<String>? tenantId,
+    Expression<bool>? isDeleted,
+    Expression<int>? rowVersion,
+    Expression<int>? plannedStartDate,
+    Expression<int>? plannedEndDate,
+    Expression<int>? actualStartDate,
+    Expression<int>? actualEndDate,
+    Expression<int>? createdDate,
+    Expression<String>? additionalFields,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (projectId != null) 'project_id': projectId,
+      if (projectBeneficiaryId != null)
+        'project_beneficiary_id': projectBeneficiaryId,
+      if (projectBeneficiaryClientReferenceId != null)
+        'project_beneficiary_client_reference_id':
+            projectBeneficiaryClientReferenceId,
+      if (createdBy != null) 'created_by': createdBy,
+      if (status != null) 'status': status,
+      if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
+      if (nonRecoverableError != null)
+        'non_recoverable_error': nonRecoverableError,
+      if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
+      if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
+      if (clientModifiedTime != null)
+        'client_modified_time': clientModifiedTime,
+      if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
+      if (auditModifiedTime != null) 'audit_modified_time': auditModifiedTime,
+      if (clientReferenceId != null) 'client_reference_id': clientReferenceId,
+      if (tenantId != null) 'tenant_id': tenantId,
+      if (isDeleted != null) 'is_deleted': isDeleted,
+      if (rowVersion != null) 'row_version': rowVersion,
+      if (plannedStartDate != null) 'planned_start_date': plannedStartDate,
+      if (plannedEndDate != null) 'planned_end_date': plannedEndDate,
+      if (actualStartDate != null) 'actual_start_date': actualStartDate,
+      if (actualEndDate != null) 'actual_end_date': actualEndDate,
+      if (createdDate != null) 'created_date': createdDate,
+      if (additionalFields != null) 'additional_fields': additionalFields,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  TaskCompanion copyWith(
+      {Value<String?>? id,
+      Value<String?>? projectId,
+      Value<String?>? projectBeneficiaryId,
+      Value<String?>? projectBeneficiaryClientReferenceId,
+      Value<String?>? createdBy,
+      Value<String?>? status,
+      Value<String?>? auditCreatedBy,
+      Value<bool?>? nonRecoverableError,
+      Value<int?>? auditCreatedTime,
+      Value<int?>? clientCreatedTime,
+      Value<String?>? clientModifiedBy,
+      Value<String?>? clientCreatedBy,
+      Value<int?>? clientModifiedTime,
+      Value<String?>? auditModifiedBy,
+      Value<int?>? auditModifiedTime,
+      Value<String>? clientReferenceId,
+      Value<String?>? tenantId,
+      Value<bool?>? isDeleted,
+      Value<int?>? rowVersion,
+      Value<int?>? plannedStartDate,
+      Value<int?>? plannedEndDate,
+      Value<int?>? actualStartDate,
+      Value<int?>? actualEndDate,
+      Value<int?>? createdDate,
+      Value<String?>? additionalFields,
+      Value<int>? rowid}) {
+    return TaskCompanion(
+      id: id ?? this.id,
+      projectId: projectId ?? this.projectId,
+      projectBeneficiaryId: projectBeneficiaryId ?? this.projectBeneficiaryId,
+      projectBeneficiaryClientReferenceId:
+          projectBeneficiaryClientReferenceId ??
+              this.projectBeneficiaryClientReferenceId,
+      createdBy: createdBy ?? this.createdBy,
+      status: status ?? this.status,
+      auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
+      nonRecoverableError: nonRecoverableError ?? this.nonRecoverableError,
+      auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
+      clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
+      clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
+      auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
+      auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
+      clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+      tenantId: tenantId ?? this.tenantId,
+      isDeleted: isDeleted ?? this.isDeleted,
+      rowVersion: rowVersion ?? this.rowVersion,
+      plannedStartDate: plannedStartDate ?? this.plannedStartDate,
+      plannedEndDate: plannedEndDate ?? this.plannedEndDate,
+      actualStartDate: actualStartDate ?? this.actualStartDate,
+      actualEndDate: actualEndDate ?? this.actualEndDate,
+      createdDate: createdDate ?? this.createdDate,
+      additionalFields: additionalFields ?? this.additionalFields,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (projectId.present) {
+      map['project_id'] = Variable<String>(projectId.value);
+    }
+    if (projectBeneficiaryId.present) {
+      map['project_beneficiary_id'] =
+          Variable<String>(projectBeneficiaryId.value);
+    }
+    if (projectBeneficiaryClientReferenceId.present) {
+      map['project_beneficiary_client_reference_id'] =
+          Variable<String>(projectBeneficiaryClientReferenceId.value);
+    }
+    if (createdBy.present) {
+      map['created_by'] = Variable<String>(createdBy.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
+    if (auditCreatedBy.present) {
+      map['audit_created_by'] = Variable<String>(auditCreatedBy.value);
+    }
+    if (nonRecoverableError.present) {
+      map['non_recoverable_error'] = Variable<bool>(nonRecoverableError.value);
+    }
+    if (auditCreatedTime.present) {
+      map['audit_created_time'] = Variable<int>(auditCreatedTime.value);
+    }
+    if (clientCreatedTime.present) {
+      map['client_created_time'] = Variable<int>(clientCreatedTime.value);
+    }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String>(clientModifiedBy.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String>(clientCreatedBy.value);
+    }
+    if (clientModifiedTime.present) {
+      map['client_modified_time'] = Variable<int>(clientModifiedTime.value);
+    }
+    if (auditModifiedBy.present) {
+      map['audit_modified_by'] = Variable<String>(auditModifiedBy.value);
+    }
+    if (auditModifiedTime.present) {
+      map['audit_modified_time'] = Variable<int>(auditModifiedTime.value);
+    }
+    if (clientReferenceId.present) {
+      map['client_reference_id'] = Variable<String>(clientReferenceId.value);
+    }
+    if (tenantId.present) {
+      map['tenant_id'] = Variable<String>(tenantId.value);
+    }
+    if (isDeleted.present) {
+      map['is_deleted'] = Variable<bool>(isDeleted.value);
+    }
+    if (rowVersion.present) {
+      map['row_version'] = Variable<int>(rowVersion.value);
+    }
+    if (plannedStartDate.present) {
+      map['planned_start_date'] = Variable<int>(plannedStartDate.value);
+    }
+    if (plannedEndDate.present) {
+      map['planned_end_date'] = Variable<int>(plannedEndDate.value);
+    }
+    if (actualStartDate.present) {
+      map['actual_start_date'] = Variable<int>(actualStartDate.value);
+    }
+    if (actualEndDate.present) {
+      map['actual_end_date'] = Variable<int>(actualEndDate.value);
+    }
+    if (createdDate.present) {
+      map['created_date'] = Variable<int>(createdDate.value);
+    }
+    if (additionalFields.present) {
+      map['additional_fields'] = Variable<String>(additionalFields.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TaskCompanion(')
+          ..write('id: $id, ')
+          ..write('projectId: $projectId, ')
+          ..write('projectBeneficiaryId: $projectBeneficiaryId, ')
+          ..write(
+              'projectBeneficiaryClientReferenceId: $projectBeneficiaryClientReferenceId, ')
+          ..write('createdBy: $createdBy, ')
+          ..write('status: $status, ')
+          ..write('auditCreatedBy: $auditCreatedBy, ')
+          ..write('nonRecoverableError: $nonRecoverableError, ')
+          ..write('auditCreatedTime: $auditCreatedTime, ')
+          ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
+          ..write('clientModifiedTime: $clientModifiedTime, ')
+          ..write('auditModifiedBy: $auditModifiedBy, ')
+          ..write('auditModifiedTime: $auditModifiedTime, ')
+          ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('rowVersion: $rowVersion, ')
+          ..write('plannedStartDate: $plannedStartDate, ')
+          ..write('plannedEndDate: $plannedEndDate, ')
+          ..write('actualStartDate: $actualStartDate, ')
+          ..write('actualEndDate: $actualEndDate, ')
+          ..write('createdDate: $createdDate, ')
+          ..write('additionalFields: $additionalFields, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $TaskResourceTable extends TaskResource
+    with TableInfo<$TaskResourceTable, TaskResourceData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TaskResourceTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _clientReferenceIdMeta =
+      const VerificationMeta('clientReferenceId');
+  @override
+  late final GeneratedColumn<String> clientReferenceId =
+      GeneratedColumn<String>('client_reference_id', aliasedName, false,
+          type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _taskclientReferenceIdMeta =
+      const VerificationMeta('taskclientReferenceId');
+  @override
+  late final GeneratedColumn<String> taskclientReferenceId =
+      GeneratedColumn<String>('taskclient_reference_id', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _taskIdMeta = const VerificationMeta('taskId');
+  @override
+  late final GeneratedColumn<String> taskId = GeneratedColumn<String>(
+      'task_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _productVariantIdMeta =
+      const VerificationMeta('productVariantId');
+  @override
+  late final GeneratedColumn<String> productVariantId = GeneratedColumn<String>(
+      'product_variant_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _quantityMeta =
+      const VerificationMeta('quantity');
+  @override
+  late final GeneratedColumn<String> quantity = GeneratedColumn<String>(
+      'quantity', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _isDeliveredMeta =
+      const VerificationMeta('isDelivered');
+  @override
+  late final GeneratedColumn<bool> isDelivered = GeneratedColumn<bool>(
+      'is_delivered', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("is_delivered" IN (0, 1))'));
+  static const VerificationMeta _deliveryCommentMeta =
+      const VerificationMeta('deliveryComment');
+  @override
+  late final GeneratedColumn<String> deliveryComment = GeneratedColumn<String>(
+      'delivery_comment', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _auditCreatedByMeta =
+      const VerificationMeta('auditCreatedBy');
+  @override
+  late final GeneratedColumn<String> auditCreatedBy = GeneratedColumn<String>(
+      'audit_created_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _nonRecoverableErrorMeta =
+      const VerificationMeta('nonRecoverableError');
+  @override
+  late final GeneratedColumn<bool> nonRecoverableError = GeneratedColumn<bool>(
+      'non_recoverable_error', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("non_recoverable_error" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  static const VerificationMeta _auditCreatedTimeMeta =
+      const VerificationMeta('auditCreatedTime');
+  @override
+  late final GeneratedColumn<int> auditCreatedTime = GeneratedColumn<int>(
+      'audit_created_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _clientCreatedTimeMeta =
+      const VerificationMeta('clientCreatedTime');
+  @override
+  late final GeneratedColumn<int> clientCreatedTime = GeneratedColumn<int>(
+      'client_created_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String> clientModifiedBy = GeneratedColumn<String>(
+      'client_modified_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String> clientCreatedBy = GeneratedColumn<String>(
+      'client_created_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _clientModifiedTimeMeta =
+      const VerificationMeta('clientModifiedTime');
+  @override
+  late final GeneratedColumn<int> clientModifiedTime = GeneratedColumn<int>(
+      'client_modified_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _auditModifiedByMeta =
+      const VerificationMeta('auditModifiedBy');
+  @override
+  late final GeneratedColumn<String> auditModifiedBy = GeneratedColumn<String>(
+      'audit_modified_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _auditModifiedTimeMeta =
+      const VerificationMeta('auditModifiedTime');
+  @override
+  late final GeneratedColumn<int> auditModifiedTime = GeneratedColumn<int>(
+      'audit_modified_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _tenantIdMeta =
+      const VerificationMeta('tenantId');
+  @override
+  late final GeneratedColumn<String> tenantId = GeneratedColumn<String>(
+      'tenant_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _isDeletedMeta =
+      const VerificationMeta('isDeleted');
+  @override
+  late final GeneratedColumn<bool> isDeleted = GeneratedColumn<bool>(
+      'is_deleted', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_deleted" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  static const VerificationMeta _rowVersionMeta =
+      const VerificationMeta('rowVersion');
+  @override
+  late final GeneratedColumn<int> rowVersion = GeneratedColumn<int>(
+      'row_version', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _additionalFieldsMeta =
+      const VerificationMeta('additionalFields');
+  @override
+  late final GeneratedColumn<String> additionalFields = GeneratedColumn<String>(
+      'additional_fields', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        clientReferenceId,
+        taskclientReferenceId,
+        taskId,
+        id,
+        productVariantId,
+        quantity,
+        isDelivered,
+        deliveryComment,
+        auditCreatedBy,
+        nonRecoverableError,
+        auditCreatedTime,
+        clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
+        clientModifiedTime,
+        auditModifiedBy,
+        auditModifiedTime,
+        tenantId,
+        isDeleted,
+        rowVersion,
+        additionalFields
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'task_resource';
+  @override
+  VerificationContext validateIntegrity(Insertable<TaskResourceData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('client_reference_id')) {
+      context.handle(
+          _clientReferenceIdMeta,
+          clientReferenceId.isAcceptableOrUnknown(
+              data['client_reference_id']!, _clientReferenceIdMeta));
+    } else if (isInserting) {
+      context.missing(_clientReferenceIdMeta);
+    }
+    if (data.containsKey('taskclient_reference_id')) {
+      context.handle(
+          _taskclientReferenceIdMeta,
+          taskclientReferenceId.isAcceptableOrUnknown(
+              data['taskclient_reference_id']!, _taskclientReferenceIdMeta));
+    }
+    if (data.containsKey('task_id')) {
+      context.handle(_taskIdMeta,
+          taskId.isAcceptableOrUnknown(data['task_id']!, _taskIdMeta));
+    }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('product_variant_id')) {
+      context.handle(
+          _productVariantIdMeta,
+          productVariantId.isAcceptableOrUnknown(
+              data['product_variant_id']!, _productVariantIdMeta));
+    }
+    if (data.containsKey('quantity')) {
+      context.handle(_quantityMeta,
+          quantity.isAcceptableOrUnknown(data['quantity']!, _quantityMeta));
+    }
+    if (data.containsKey('is_delivered')) {
+      context.handle(
+          _isDeliveredMeta,
+          isDelivered.isAcceptableOrUnknown(
+              data['is_delivered']!, _isDeliveredMeta));
+    }
+    if (data.containsKey('delivery_comment')) {
+      context.handle(
+          _deliveryCommentMeta,
+          deliveryComment.isAcceptableOrUnknown(
+              data['delivery_comment']!, _deliveryCommentMeta));
+    }
+    if (data.containsKey('audit_created_by')) {
+      context.handle(
+          _auditCreatedByMeta,
+          auditCreatedBy.isAcceptableOrUnknown(
+              data['audit_created_by']!, _auditCreatedByMeta));
+    }
+    if (data.containsKey('non_recoverable_error')) {
+      context.handle(
+          _nonRecoverableErrorMeta,
+          nonRecoverableError.isAcceptableOrUnknown(
+              data['non_recoverable_error']!, _nonRecoverableErrorMeta));
+    }
+    if (data.containsKey('audit_created_time')) {
+      context.handle(
+          _auditCreatedTimeMeta,
+          auditCreatedTime.isAcceptableOrUnknown(
+              data['audit_created_time']!, _auditCreatedTimeMeta));
+    }
+    if (data.containsKey('client_created_time')) {
+      context.handle(
+          _clientCreatedTimeMeta,
+          clientCreatedTime.isAcceptableOrUnknown(
+              data['client_created_time']!, _clientCreatedTimeMeta));
+    }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
+    }
+    if (data.containsKey('client_modified_time')) {
+      context.handle(
+          _clientModifiedTimeMeta,
+          clientModifiedTime.isAcceptableOrUnknown(
+              data['client_modified_time']!, _clientModifiedTimeMeta));
+    }
+    if (data.containsKey('audit_modified_by')) {
+      context.handle(
+          _auditModifiedByMeta,
+          auditModifiedBy.isAcceptableOrUnknown(
+              data['audit_modified_by']!, _auditModifiedByMeta));
+    }
+    if (data.containsKey('audit_modified_time')) {
+      context.handle(
+          _auditModifiedTimeMeta,
+          auditModifiedTime.isAcceptableOrUnknown(
+              data['audit_modified_time']!, _auditModifiedTimeMeta));
+    }
+    if (data.containsKey('tenant_id')) {
+      context.handle(_tenantIdMeta,
+          tenantId.isAcceptableOrUnknown(data['tenant_id']!, _tenantIdMeta));
+    }
+    if (data.containsKey('is_deleted')) {
+      context.handle(_isDeletedMeta,
+          isDeleted.isAcceptableOrUnknown(data['is_deleted']!, _isDeletedMeta));
+    }
+    if (data.containsKey('row_version')) {
+      context.handle(
+          _rowVersionMeta,
+          rowVersion.isAcceptableOrUnknown(
+              data['row_version']!, _rowVersionMeta));
+    }
+    if (data.containsKey('additional_fields')) {
+      context.handle(
+          _additionalFieldsMeta,
+          additionalFields.isAcceptableOrUnknown(
+              data['additional_fields']!, _additionalFieldsMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {clientReferenceId, auditCreatedBy};
+  @override
+  TaskResourceData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return TaskResourceData(
+      clientReferenceId: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}client_reference_id'])!,
+      taskclientReferenceId: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}taskclient_reference_id']),
+      taskId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}task_id']),
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id']),
+      productVariantId: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}product_variant_id']),
+      quantity: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}quantity']),
+      isDelivered: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_delivered']),
+      deliveryComment: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}delivery_comment']),
+      auditCreatedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}audit_created_by']),
+      nonRecoverableError: attachedDatabase.typeMapping.read(
+          DriftSqlType.bool, data['${effectivePrefix}non_recoverable_error']),
+      auditCreatedTime: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}audit_created_time']),
+      clientCreatedTime: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}client_created_time']),
+      clientModifiedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}client_modified_by']),
+      clientCreatedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}client_created_by']),
+      clientModifiedTime: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}client_modified_time']),
+      auditModifiedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}audit_modified_by']),
+      auditModifiedTime: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}audit_modified_time']),
+      tenantId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}tenant_id']),
+      isDeleted: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_deleted']),
+      rowVersion: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}row_version']),
+      additionalFields: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}additional_fields']),
+    );
+  }
+
+  @override
+  $TaskResourceTable createAlias(String alias) {
+    return $TaskResourceTable(attachedDatabase, alias);
+  }
+}
+
+class TaskResourceData extends DataClass
+    implements Insertable<TaskResourceData> {
+  final String clientReferenceId;
+  final String? taskclientReferenceId;
+  final String? taskId;
+  final String? id;
+  final String? productVariantId;
+  final String? quantity;
+  final bool? isDelivered;
+  final String? deliveryComment;
+  final String? auditCreatedBy;
+  final bool? nonRecoverableError;
+  final int? auditCreatedTime;
+  final int? clientCreatedTime;
+  final String? clientModifiedBy;
+  final String? clientCreatedBy;
+  final int? clientModifiedTime;
+  final String? auditModifiedBy;
+  final int? auditModifiedTime;
+  final String? tenantId;
+  final bool? isDeleted;
+  final int? rowVersion;
+  final String? additionalFields;
+  const TaskResourceData(
+      {required this.clientReferenceId,
+      this.taskclientReferenceId,
+      this.taskId,
+      this.id,
+      this.productVariantId,
+      this.quantity,
+      this.isDelivered,
+      this.deliveryComment,
+      this.auditCreatedBy,
+      this.nonRecoverableError,
+      this.auditCreatedTime,
+      this.clientCreatedTime,
+      this.clientModifiedBy,
+      this.clientCreatedBy,
+      this.clientModifiedTime,
+      this.auditModifiedBy,
+      this.auditModifiedTime,
+      this.tenantId,
+      this.isDeleted,
+      this.rowVersion,
+      this.additionalFields});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['client_reference_id'] = Variable<String>(clientReferenceId);
+    if (!nullToAbsent || taskclientReferenceId != null) {
+      map['taskclient_reference_id'] = Variable<String>(taskclientReferenceId);
+    }
+    if (!nullToAbsent || taskId != null) {
+      map['task_id'] = Variable<String>(taskId);
+    }
+    if (!nullToAbsent || id != null) {
+      map['id'] = Variable<String>(id);
+    }
+    if (!nullToAbsent || productVariantId != null) {
+      map['product_variant_id'] = Variable<String>(productVariantId);
+    }
+    if (!nullToAbsent || quantity != null) {
+      map['quantity'] = Variable<String>(quantity);
+    }
+    if (!nullToAbsent || isDelivered != null) {
+      map['is_delivered'] = Variable<bool>(isDelivered);
+    }
+    if (!nullToAbsent || deliveryComment != null) {
+      map['delivery_comment'] = Variable<String>(deliveryComment);
+    }
+    if (!nullToAbsent || auditCreatedBy != null) {
+      map['audit_created_by'] = Variable<String>(auditCreatedBy);
+    }
+    if (!nullToAbsent || nonRecoverableError != null) {
+      map['non_recoverable_error'] = Variable<bool>(nonRecoverableError);
+    }
+    if (!nullToAbsent || auditCreatedTime != null) {
+      map['audit_created_time'] = Variable<int>(auditCreatedTime);
+    }
+    if (!nullToAbsent || clientCreatedTime != null) {
+      map['client_created_time'] = Variable<int>(clientCreatedTime);
+    }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String>(clientCreatedBy);
+    }
+    if (!nullToAbsent || clientModifiedTime != null) {
+      map['client_modified_time'] = Variable<int>(clientModifiedTime);
+    }
+    if (!nullToAbsent || auditModifiedBy != null) {
+      map['audit_modified_by'] = Variable<String>(auditModifiedBy);
+    }
+    if (!nullToAbsent || auditModifiedTime != null) {
+      map['audit_modified_time'] = Variable<int>(auditModifiedTime);
+    }
+    if (!nullToAbsent || tenantId != null) {
+      map['tenant_id'] = Variable<String>(tenantId);
+    }
+    if (!nullToAbsent || isDeleted != null) {
+      map['is_deleted'] = Variable<bool>(isDeleted);
+    }
+    if (!nullToAbsent || rowVersion != null) {
+      map['row_version'] = Variable<int>(rowVersion);
+    }
+    if (!nullToAbsent || additionalFields != null) {
+      map['additional_fields'] = Variable<String>(additionalFields);
+    }
+    return map;
+  }
+
+  TaskResourceCompanion toCompanion(bool nullToAbsent) {
+    return TaskResourceCompanion(
+      clientReferenceId: Value(clientReferenceId),
+      taskclientReferenceId: taskclientReferenceId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(taskclientReferenceId),
+      taskId:
+          taskId == null && nullToAbsent ? const Value.absent() : Value(taskId),
+      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      productVariantId: productVariantId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(productVariantId),
+      quantity: quantity == null && nullToAbsent
+          ? const Value.absent()
+          : Value(quantity),
+      isDelivered: isDelivered == null && nullToAbsent
+          ? const Value.absent()
+          : Value(isDelivered),
+      deliveryComment: deliveryComment == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deliveryComment),
+      auditCreatedBy: auditCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditCreatedBy),
+      nonRecoverableError: nonRecoverableError == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nonRecoverableError),
+      auditCreatedTime: auditCreatedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditCreatedTime),
+      clientCreatedTime: clientCreatedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedTime),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
+      clientModifiedTime: clientModifiedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedTime),
+      auditModifiedBy: auditModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditModifiedBy),
+      auditModifiedTime: auditModifiedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditModifiedTime),
+      tenantId: tenantId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(tenantId),
+      isDeleted: isDeleted == null && nullToAbsent
+          ? const Value.absent()
+          : Value(isDeleted),
+      rowVersion: rowVersion == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rowVersion),
+      additionalFields: additionalFields == null && nullToAbsent
+          ? const Value.absent()
+          : Value(additionalFields),
+    );
+  }
+
+  factory TaskResourceData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return TaskResourceData(
+      clientReferenceId: serializer.fromJson<String>(json['clientReferenceId']),
+      taskclientReferenceId:
+          serializer.fromJson<String?>(json['taskclientReferenceId']),
+      taskId: serializer.fromJson<String?>(json['taskId']),
+      id: serializer.fromJson<String?>(json['id']),
+      productVariantId: serializer.fromJson<String?>(json['productVariantId']),
+      quantity: serializer.fromJson<String?>(json['quantity']),
+      isDelivered: serializer.fromJson<bool?>(json['isDelivered']),
+      deliveryComment: serializer.fromJson<String?>(json['deliveryComment']),
+      auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
+      nonRecoverableError:
+          serializer.fromJson<bool?>(json['nonRecoverableError']),
+      auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
+      clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
+      clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
+      auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
+      auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
+      tenantId: serializer.fromJson<String?>(json['tenantId']),
+      isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
+      rowVersion: serializer.fromJson<int?>(json['rowVersion']),
+      additionalFields: serializer.fromJson<String?>(json['additionalFields']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'clientReferenceId': serializer.toJson<String>(clientReferenceId),
+      'taskclientReferenceId':
+          serializer.toJson<String?>(taskclientReferenceId),
+      'taskId': serializer.toJson<String?>(taskId),
+      'id': serializer.toJson<String?>(id),
+      'productVariantId': serializer.toJson<String?>(productVariantId),
+      'quantity': serializer.toJson<String?>(quantity),
+      'isDelivered': serializer.toJson<bool?>(isDelivered),
+      'deliveryComment': serializer.toJson<String?>(deliveryComment),
+      'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
+      'nonRecoverableError': serializer.toJson<bool?>(nonRecoverableError),
+      'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
+      'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
+      'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
+      'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
+      'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
+      'tenantId': serializer.toJson<String?>(tenantId),
+      'isDeleted': serializer.toJson<bool?>(isDeleted),
+      'rowVersion': serializer.toJson<int?>(rowVersion),
+      'additionalFields': serializer.toJson<String?>(additionalFields),
+    };
+  }
+
+  TaskResourceData copyWith(
+          {String? clientReferenceId,
+          Value<String?> taskclientReferenceId = const Value.absent(),
+          Value<String?> taskId = const Value.absent(),
+          Value<String?> id = const Value.absent(),
+          Value<String?> productVariantId = const Value.absent(),
+          Value<String?> quantity = const Value.absent(),
+          Value<bool?> isDelivered = const Value.absent(),
+          Value<String?> deliveryComment = const Value.absent(),
+          Value<String?> auditCreatedBy = const Value.absent(),
+          Value<bool?> nonRecoverableError = const Value.absent(),
+          Value<int?> auditCreatedTime = const Value.absent(),
+          Value<int?> clientCreatedTime = const Value.absent(),
+          Value<String?> clientModifiedBy = const Value.absent(),
+          Value<String?> clientCreatedBy = const Value.absent(),
+          Value<int?> clientModifiedTime = const Value.absent(),
+          Value<String?> auditModifiedBy = const Value.absent(),
+          Value<int?> auditModifiedTime = const Value.absent(),
+          Value<String?> tenantId = const Value.absent(),
+          Value<bool?> isDeleted = const Value.absent(),
+          Value<int?> rowVersion = const Value.absent(),
+          Value<String?> additionalFields = const Value.absent()}) =>
+      TaskResourceData(
+        clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+        taskclientReferenceId: taskclientReferenceId.present
+            ? taskclientReferenceId.value
+            : this.taskclientReferenceId,
+        taskId: taskId.present ? taskId.value : this.taskId,
+        id: id.present ? id.value : this.id,
+        productVariantId: productVariantId.present
+            ? productVariantId.value
+            : this.productVariantId,
+        quantity: quantity.present ? quantity.value : this.quantity,
+        isDelivered: isDelivered.present ? isDelivered.value : this.isDelivered,
+        deliveryComment: deliveryComment.present
+            ? deliveryComment.value
+            : this.deliveryComment,
+        auditCreatedBy:
+            auditCreatedBy.present ? auditCreatedBy.value : this.auditCreatedBy,
+        nonRecoverableError: nonRecoverableError.present
+            ? nonRecoverableError.value
+            : this.nonRecoverableError,
+        auditCreatedTime: auditCreatedTime.present
+            ? auditCreatedTime.value
+            : this.auditCreatedTime,
+        clientCreatedTime: clientCreatedTime.present
+            ? clientCreatedTime.value
+            : this.clientCreatedTime,
+        clientModifiedBy: clientModifiedBy.present
+            ? clientModifiedBy.value
+            : this.clientModifiedBy,
+        clientCreatedBy: clientCreatedBy.present
+            ? clientCreatedBy.value
+            : this.clientCreatedBy,
+        clientModifiedTime: clientModifiedTime.present
+            ? clientModifiedTime.value
+            : this.clientModifiedTime,
+        auditModifiedBy: auditModifiedBy.present
+            ? auditModifiedBy.value
+            : this.auditModifiedBy,
+        auditModifiedTime: auditModifiedTime.present
+            ? auditModifiedTime.value
+            : this.auditModifiedTime,
+        tenantId: tenantId.present ? tenantId.value : this.tenantId,
+        isDeleted: isDeleted.present ? isDeleted.value : this.isDeleted,
+        rowVersion: rowVersion.present ? rowVersion.value : this.rowVersion,
+        additionalFields: additionalFields.present
+            ? additionalFields.value
+            : this.additionalFields,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('TaskResourceData(')
+          ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('taskclientReferenceId: $taskclientReferenceId, ')
+          ..write('taskId: $taskId, ')
+          ..write('id: $id, ')
+          ..write('productVariantId: $productVariantId, ')
+          ..write('quantity: $quantity, ')
+          ..write('isDelivered: $isDelivered, ')
+          ..write('deliveryComment: $deliveryComment, ')
+          ..write('auditCreatedBy: $auditCreatedBy, ')
+          ..write('nonRecoverableError: $nonRecoverableError, ')
+          ..write('auditCreatedTime: $auditCreatedTime, ')
+          ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
+          ..write('clientModifiedTime: $clientModifiedTime, ')
+          ..write('auditModifiedBy: $auditModifiedBy, ')
+          ..write('auditModifiedTime: $auditModifiedTime, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('rowVersion: $rowVersion, ')
+          ..write('additionalFields: $additionalFields')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+        clientReferenceId,
+        taskclientReferenceId,
+        taskId,
+        id,
+        productVariantId,
+        quantity,
+        isDelivered,
+        deliveryComment,
+        auditCreatedBy,
+        nonRecoverableError,
+        auditCreatedTime,
+        clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
+        clientModifiedTime,
+        auditModifiedBy,
+        auditModifiedTime,
+        tenantId,
+        isDeleted,
+        rowVersion,
+        additionalFields
+      ]);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TaskResourceData &&
+          other.clientReferenceId == this.clientReferenceId &&
+          other.taskclientReferenceId == this.taskclientReferenceId &&
+          other.taskId == this.taskId &&
+          other.id == this.id &&
+          other.productVariantId == this.productVariantId &&
+          other.quantity == this.quantity &&
+          other.isDelivered == this.isDelivered &&
+          other.deliveryComment == this.deliveryComment &&
+          other.auditCreatedBy == this.auditCreatedBy &&
+          other.nonRecoverableError == this.nonRecoverableError &&
+          other.auditCreatedTime == this.auditCreatedTime &&
+          other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientCreatedBy == this.clientCreatedBy &&
+          other.clientModifiedTime == this.clientModifiedTime &&
+          other.auditModifiedBy == this.auditModifiedBy &&
+          other.auditModifiedTime == this.auditModifiedTime &&
+          other.tenantId == this.tenantId &&
+          other.isDeleted == this.isDeleted &&
+          other.rowVersion == this.rowVersion &&
+          other.additionalFields == this.additionalFields);
+}
+
+class TaskResourceCompanion extends UpdateCompanion<TaskResourceData> {
+  final Value<String> clientReferenceId;
+  final Value<String?> taskclientReferenceId;
+  final Value<String?> taskId;
+  final Value<String?> id;
+  final Value<String?> productVariantId;
+  final Value<String?> quantity;
+  final Value<bool?> isDelivered;
+  final Value<String?> deliveryComment;
+  final Value<String?> auditCreatedBy;
+  final Value<bool?> nonRecoverableError;
+  final Value<int?> auditCreatedTime;
+  final Value<int?> clientCreatedTime;
+  final Value<String?> clientModifiedBy;
+  final Value<String?> clientCreatedBy;
+  final Value<int?> clientModifiedTime;
+  final Value<String?> auditModifiedBy;
+  final Value<int?> auditModifiedTime;
+  final Value<String?> tenantId;
+  final Value<bool?> isDeleted;
+  final Value<int?> rowVersion;
+  final Value<String?> additionalFields;
+  final Value<int> rowid;
+  const TaskResourceCompanion({
+    this.clientReferenceId = const Value.absent(),
+    this.taskclientReferenceId = const Value.absent(),
+    this.taskId = const Value.absent(),
+    this.id = const Value.absent(),
+    this.productVariantId = const Value.absent(),
+    this.quantity = const Value.absent(),
+    this.isDelivered = const Value.absent(),
+    this.deliveryComment = const Value.absent(),
+    this.auditCreatedBy = const Value.absent(),
+    this.nonRecoverableError = const Value.absent(),
+    this.auditCreatedTime = const Value.absent(),
+    this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
+    this.clientModifiedTime = const Value.absent(),
+    this.auditModifiedBy = const Value.absent(),
+    this.auditModifiedTime = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.rowVersion = const Value.absent(),
+    this.additionalFields = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  TaskResourceCompanion.insert({
+    required String clientReferenceId,
+    this.taskclientReferenceId = const Value.absent(),
+    this.taskId = const Value.absent(),
+    this.id = const Value.absent(),
+    this.productVariantId = const Value.absent(),
+    this.quantity = const Value.absent(),
+    this.isDelivered = const Value.absent(),
+    this.deliveryComment = const Value.absent(),
+    this.auditCreatedBy = const Value.absent(),
+    this.nonRecoverableError = const Value.absent(),
+    this.auditCreatedTime = const Value.absent(),
+    this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
+    this.clientModifiedTime = const Value.absent(),
+    this.auditModifiedBy = const Value.absent(),
+    this.auditModifiedTime = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.rowVersion = const Value.absent(),
+    this.additionalFields = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : clientReferenceId = Value(clientReferenceId);
+  static Insertable<TaskResourceData> custom({
+    Expression<String>? clientReferenceId,
+    Expression<String>? taskclientReferenceId,
+    Expression<String>? taskId,
+    Expression<String>? id,
+    Expression<String>? productVariantId,
+    Expression<String>? quantity,
+    Expression<bool>? isDelivered,
+    Expression<String>? deliveryComment,
+    Expression<String>? auditCreatedBy,
+    Expression<bool>? nonRecoverableError,
+    Expression<int>? auditCreatedTime,
+    Expression<int>? clientCreatedTime,
+    Expression<String>? clientModifiedBy,
+    Expression<String>? clientCreatedBy,
+    Expression<int>? clientModifiedTime,
+    Expression<String>? auditModifiedBy,
+    Expression<int>? auditModifiedTime,
+    Expression<String>? tenantId,
+    Expression<bool>? isDeleted,
+    Expression<int>? rowVersion,
+    Expression<String>? additionalFields,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (clientReferenceId != null) 'client_reference_id': clientReferenceId,
+      if (taskclientReferenceId != null)
+        'taskclient_reference_id': taskclientReferenceId,
+      if (taskId != null) 'task_id': taskId,
+      if (id != null) 'id': id,
+      if (productVariantId != null) 'product_variant_id': productVariantId,
+      if (quantity != null) 'quantity': quantity,
+      if (isDelivered != null) 'is_delivered': isDelivered,
+      if (deliveryComment != null) 'delivery_comment': deliveryComment,
+      if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
+      if (nonRecoverableError != null)
+        'non_recoverable_error': nonRecoverableError,
+      if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
+      if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
+      if (clientModifiedTime != null)
+        'client_modified_time': clientModifiedTime,
+      if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
+      if (auditModifiedTime != null) 'audit_modified_time': auditModifiedTime,
+      if (tenantId != null) 'tenant_id': tenantId,
+      if (isDeleted != null) 'is_deleted': isDeleted,
+      if (rowVersion != null) 'row_version': rowVersion,
+      if (additionalFields != null) 'additional_fields': additionalFields,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  TaskResourceCompanion copyWith(
+      {Value<String>? clientReferenceId,
+      Value<String?>? taskclientReferenceId,
+      Value<String?>? taskId,
+      Value<String?>? id,
+      Value<String?>? productVariantId,
+      Value<String?>? quantity,
+      Value<bool?>? isDelivered,
+      Value<String?>? deliveryComment,
+      Value<String?>? auditCreatedBy,
+      Value<bool?>? nonRecoverableError,
+      Value<int?>? auditCreatedTime,
+      Value<int?>? clientCreatedTime,
+      Value<String?>? clientModifiedBy,
+      Value<String?>? clientCreatedBy,
+      Value<int?>? clientModifiedTime,
+      Value<String?>? auditModifiedBy,
+      Value<int?>? auditModifiedTime,
+      Value<String?>? tenantId,
+      Value<bool?>? isDeleted,
+      Value<int?>? rowVersion,
+      Value<String?>? additionalFields,
+      Value<int>? rowid}) {
+    return TaskResourceCompanion(
+      clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+      taskclientReferenceId:
+          taskclientReferenceId ?? this.taskclientReferenceId,
+      taskId: taskId ?? this.taskId,
+      id: id ?? this.id,
+      productVariantId: productVariantId ?? this.productVariantId,
+      quantity: quantity ?? this.quantity,
+      isDelivered: isDelivered ?? this.isDelivered,
+      deliveryComment: deliveryComment ?? this.deliveryComment,
+      auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
+      nonRecoverableError: nonRecoverableError ?? this.nonRecoverableError,
+      auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
+      clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
+      clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
+      auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
+      auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
+      tenantId: tenantId ?? this.tenantId,
+      isDeleted: isDeleted ?? this.isDeleted,
+      rowVersion: rowVersion ?? this.rowVersion,
+      additionalFields: additionalFields ?? this.additionalFields,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (clientReferenceId.present) {
+      map['client_reference_id'] = Variable<String>(clientReferenceId.value);
+    }
+    if (taskclientReferenceId.present) {
+      map['taskclient_reference_id'] =
+          Variable<String>(taskclientReferenceId.value);
+    }
+    if (taskId.present) {
+      map['task_id'] = Variable<String>(taskId.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (productVariantId.present) {
+      map['product_variant_id'] = Variable<String>(productVariantId.value);
+    }
+    if (quantity.present) {
+      map['quantity'] = Variable<String>(quantity.value);
+    }
+    if (isDelivered.present) {
+      map['is_delivered'] = Variable<bool>(isDelivered.value);
+    }
+    if (deliveryComment.present) {
+      map['delivery_comment'] = Variable<String>(deliveryComment.value);
+    }
+    if (auditCreatedBy.present) {
+      map['audit_created_by'] = Variable<String>(auditCreatedBy.value);
+    }
+    if (nonRecoverableError.present) {
+      map['non_recoverable_error'] = Variable<bool>(nonRecoverableError.value);
+    }
+    if (auditCreatedTime.present) {
+      map['audit_created_time'] = Variable<int>(auditCreatedTime.value);
+    }
+    if (clientCreatedTime.present) {
+      map['client_created_time'] = Variable<int>(clientCreatedTime.value);
+    }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String>(clientModifiedBy.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String>(clientCreatedBy.value);
+    }
+    if (clientModifiedTime.present) {
+      map['client_modified_time'] = Variable<int>(clientModifiedTime.value);
+    }
+    if (auditModifiedBy.present) {
+      map['audit_modified_by'] = Variable<String>(auditModifiedBy.value);
+    }
+    if (auditModifiedTime.present) {
+      map['audit_modified_time'] = Variable<int>(auditModifiedTime.value);
+    }
+    if (tenantId.present) {
+      map['tenant_id'] = Variable<String>(tenantId.value);
+    }
+    if (isDeleted.present) {
+      map['is_deleted'] = Variable<bool>(isDeleted.value);
+    }
+    if (rowVersion.present) {
+      map['row_version'] = Variable<int>(rowVersion.value);
+    }
+    if (additionalFields.present) {
+      map['additional_fields'] = Variable<String>(additionalFields.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TaskResourceCompanion(')
+          ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('taskclientReferenceId: $taskclientReferenceId, ')
+          ..write('taskId: $taskId, ')
+          ..write('id: $id, ')
+          ..write('productVariantId: $productVariantId, ')
+          ..write('quantity: $quantity, ')
+          ..write('isDelivered: $isDelivered, ')
+          ..write('deliveryComment: $deliveryComment, ')
+          ..write('auditCreatedBy: $auditCreatedBy, ')
+          ..write('nonRecoverableError: $nonRecoverableError, ')
+          ..write('auditCreatedTime: $auditCreatedTime, ')
+          ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
+          ..write('clientModifiedTime: $clientModifiedTime, ')
+          ..write('auditModifiedBy: $auditModifiedBy, ')
+          ..write('auditModifiedTime: $auditModifiedTime, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('rowVersion: $rowVersion, ')
+          ..write('additionalFields: $additionalFields, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $SideEffectTable extends SideEffect
+    with TableInfo<$SideEffectTable, SideEffectData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SideEffectTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _projectIdMeta =
+      const VerificationMeta('projectId');
+  @override
+  late final GeneratedColumn<String> projectId = GeneratedColumn<String>(
+      'project_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _taskClientReferenceIdMeta =
+      const VerificationMeta('taskClientReferenceId');
+  @override
+  late final GeneratedColumn<String> taskClientReferenceId =
+      GeneratedColumn<String>('task_client_reference_id', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _reAttemptsMeta =
+      const VerificationMeta('reAttempts');
+  @override
+  late final GeneratedColumn<int> reAttempts = GeneratedColumn<int>(
+      're_attempts', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _symptomsMeta =
+      const VerificationMeta('symptoms');
+  @override
+  late final GeneratedColumn<String> symptoms = GeneratedColumn<String>(
+      'symptoms', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _auditCreatedByMeta =
+      const VerificationMeta('auditCreatedBy');
+  @override
+  late final GeneratedColumn<String> auditCreatedBy = GeneratedColumn<String>(
+      'audit_created_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _nonRecoverableErrorMeta =
+      const VerificationMeta('nonRecoverableError');
+  @override
+  late final GeneratedColumn<bool> nonRecoverableError = GeneratedColumn<bool>(
+      'non_recoverable_error', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("non_recoverable_error" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  static const VerificationMeta _auditCreatedTimeMeta =
+      const VerificationMeta('auditCreatedTime');
+  @override
+  late final GeneratedColumn<int> auditCreatedTime = GeneratedColumn<int>(
+      'audit_created_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _clientCreatedTimeMeta =
+      const VerificationMeta('clientCreatedTime');
+  @override
+  late final GeneratedColumn<int> clientCreatedTime = GeneratedColumn<int>(
+      'client_created_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String> clientModifiedBy = GeneratedColumn<String>(
+      'client_modified_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String> clientCreatedBy = GeneratedColumn<String>(
+      'client_created_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _clientModifiedTimeMeta =
+      const VerificationMeta('clientModifiedTime');
+  @override
+  late final GeneratedColumn<int> clientModifiedTime = GeneratedColumn<int>(
+      'client_modified_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _auditModifiedByMeta =
+      const VerificationMeta('auditModifiedBy');
+  @override
+  late final GeneratedColumn<String> auditModifiedBy = GeneratedColumn<String>(
+      'audit_modified_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _auditModifiedTimeMeta =
+      const VerificationMeta('auditModifiedTime');
+  @override
+  late final GeneratedColumn<int> auditModifiedTime = GeneratedColumn<int>(
+      'audit_modified_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _clientReferenceIdMeta =
+      const VerificationMeta('clientReferenceId');
+  @override
+  late final GeneratedColumn<String> clientReferenceId =
+      GeneratedColumn<String>('client_reference_id', aliasedName, false,
+          type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _tenantIdMeta =
+      const VerificationMeta('tenantId');
+  @override
+  late final GeneratedColumn<String> tenantId = GeneratedColumn<String>(
+      'tenant_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _isDeletedMeta =
+      const VerificationMeta('isDeleted');
+  @override
+  late final GeneratedColumn<bool> isDeleted = GeneratedColumn<bool>(
+      'is_deleted', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_deleted" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  static const VerificationMeta _rowVersionMeta =
+      const VerificationMeta('rowVersion');
+  @override
+  late final GeneratedColumn<int> rowVersion = GeneratedColumn<int>(
+      'row_version', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _additionalFieldsMeta =
+      const VerificationMeta('additionalFields');
+  @override
+  late final GeneratedColumn<String> additionalFields = GeneratedColumn<String>(
+      'additional_fields', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        projectId,
+        taskClientReferenceId,
+        reAttempts,
+        symptoms,
+        auditCreatedBy,
+        nonRecoverableError,
+        auditCreatedTime,
+        clientCreatedTime,
+        clientModifiedBy,
+        clientCreatedBy,
+        clientModifiedTime,
+        auditModifiedBy,
+        auditModifiedTime,
+        clientReferenceId,
+        tenantId,
+        isDeleted,
+        rowVersion,
+        additionalFields
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'side_effect';
+  @override
+  VerificationContext validateIntegrity(Insertable<SideEffectData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('project_id')) {
+      context.handle(_projectIdMeta,
+          projectId.isAcceptableOrUnknown(data['project_id']!, _projectIdMeta));
+    }
+    if (data.containsKey('task_client_reference_id')) {
+      context.handle(
+          _taskClientReferenceIdMeta,
+          taskClientReferenceId.isAcceptableOrUnknown(
+              data['task_client_reference_id']!, _taskClientReferenceIdMeta));
+    }
+    if (data.containsKey('re_attempts')) {
+      context.handle(
+          _reAttemptsMeta,
+          reAttempts.isAcceptableOrUnknown(
+              data['re_attempts']!, _reAttemptsMeta));
+    }
+    if (data.containsKey('symptoms')) {
+      context.handle(_symptomsMeta,
+          symptoms.isAcceptableOrUnknown(data['symptoms']!, _symptomsMeta));
+    }
+    if (data.containsKey('audit_created_by')) {
+      context.handle(
+          _auditCreatedByMeta,
+          auditCreatedBy.isAcceptableOrUnknown(
+              data['audit_created_by']!, _auditCreatedByMeta));
+    }
+    if (data.containsKey('non_recoverable_error')) {
+      context.handle(
+          _nonRecoverableErrorMeta,
+          nonRecoverableError.isAcceptableOrUnknown(
+              data['non_recoverable_error']!, _nonRecoverableErrorMeta));
+    }
+    if (data.containsKey('audit_created_time')) {
+      context.handle(
+          _auditCreatedTimeMeta,
+          auditCreatedTime.isAcceptableOrUnknown(
+              data['audit_created_time']!, _auditCreatedTimeMeta));
+    }
+    if (data.containsKey('client_created_time')) {
+      context.handle(
+          _clientCreatedTimeMeta,
+          clientCreatedTime.isAcceptableOrUnknown(
+              data['client_created_time']!, _clientCreatedTimeMeta));
+    }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
+    }
+    if (data.containsKey('client_modified_time')) {
+      context.handle(
+          _clientModifiedTimeMeta,
+          clientModifiedTime.isAcceptableOrUnknown(
+              data['client_modified_time']!, _clientModifiedTimeMeta));
+    }
+    if (data.containsKey('audit_modified_by')) {
+      context.handle(
+          _auditModifiedByMeta,
+          auditModifiedBy.isAcceptableOrUnknown(
+              data['audit_modified_by']!, _auditModifiedByMeta));
+    }
+    if (data.containsKey('audit_modified_time')) {
+      context.handle(
+          _auditModifiedTimeMeta,
+          auditModifiedTime.isAcceptableOrUnknown(
+              data['audit_modified_time']!, _auditModifiedTimeMeta));
+    }
+    if (data.containsKey('client_reference_id')) {
+      context.handle(
+          _clientReferenceIdMeta,
+          clientReferenceId.isAcceptableOrUnknown(
+              data['client_reference_id']!, _clientReferenceIdMeta));
+    } else if (isInserting) {
+      context.missing(_clientReferenceIdMeta);
+    }
+    if (data.containsKey('tenant_id')) {
+      context.handle(_tenantIdMeta,
+          tenantId.isAcceptableOrUnknown(data['tenant_id']!, _tenantIdMeta));
+    }
+    if (data.containsKey('is_deleted')) {
+      context.handle(_isDeletedMeta,
+          isDeleted.isAcceptableOrUnknown(data['is_deleted']!, _isDeletedMeta));
+    }
+    if (data.containsKey('row_version')) {
+      context.handle(
+          _rowVersionMeta,
+          rowVersion.isAcceptableOrUnknown(
+              data['row_version']!, _rowVersionMeta));
+    }
+    if (data.containsKey('additional_fields')) {
+      context.handle(
+          _additionalFieldsMeta,
+          additionalFields.isAcceptableOrUnknown(
+              data['additional_fields']!, _additionalFieldsMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {auditCreatedBy, clientReferenceId};
+  @override
+  SideEffectData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SideEffectData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id']),
+      projectId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}project_id']),
+      taskClientReferenceId: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}task_client_reference_id']),
+      reAttempts: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}re_attempts']),
+      symptoms: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}symptoms']),
+      auditCreatedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}audit_created_by']),
+      nonRecoverableError: attachedDatabase.typeMapping.read(
+          DriftSqlType.bool, data['${effectivePrefix}non_recoverable_error']),
+      auditCreatedTime: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}audit_created_time']),
+      clientCreatedTime: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}client_created_time']),
+      clientModifiedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}client_modified_by']),
+      clientCreatedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}client_created_by']),
+      clientModifiedTime: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}client_modified_time']),
+      auditModifiedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}audit_modified_by']),
+      auditModifiedTime: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}audit_modified_time']),
+      clientReferenceId: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}client_reference_id'])!,
+      tenantId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}tenant_id']),
+      isDeleted: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_deleted']),
+      rowVersion: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}row_version']),
+      additionalFields: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}additional_fields']),
+    );
+  }
+
+  @override
+  $SideEffectTable createAlias(String alias) {
+    return $SideEffectTable(attachedDatabase, alias);
+  }
+}
+
+class SideEffectData extends DataClass implements Insertable<SideEffectData> {
+  final String? id;
+  final String? projectId;
+  final String? taskClientReferenceId;
+  final int? reAttempts;
+  final String? symptoms;
+  final String? auditCreatedBy;
+  final bool? nonRecoverableError;
+  final int? auditCreatedTime;
+  final int? clientCreatedTime;
+  final String? clientModifiedBy;
+  final String? clientCreatedBy;
+  final int? clientModifiedTime;
+  final String? auditModifiedBy;
+  final int? auditModifiedTime;
+  final String clientReferenceId;
+  final String? tenantId;
+  final bool? isDeleted;
+  final int? rowVersion;
+  final String? additionalFields;
+  const SideEffectData(
+      {this.id,
+      this.projectId,
+      this.taskClientReferenceId,
+      this.reAttempts,
+      this.symptoms,
+      this.auditCreatedBy,
+      this.nonRecoverableError,
+      this.auditCreatedTime,
+      this.clientCreatedTime,
+      this.clientModifiedBy,
+      this.clientCreatedBy,
+      this.clientModifiedTime,
+      this.auditModifiedBy,
+      this.auditModifiedTime,
+      required this.clientReferenceId,
+      this.tenantId,
+      this.isDeleted,
+      this.rowVersion,
+      this.additionalFields});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (!nullToAbsent || id != null) {
+      map['id'] = Variable<String>(id);
+    }
+    if (!nullToAbsent || projectId != null) {
+      map['project_id'] = Variable<String>(projectId);
+    }
+    if (!nullToAbsent || taskClientReferenceId != null) {
+      map['task_client_reference_id'] = Variable<String>(taskClientReferenceId);
+    }
+    if (!nullToAbsent || reAttempts != null) {
+      map['re_attempts'] = Variable<int>(reAttempts);
+    }
+    if (!nullToAbsent || symptoms != null) {
+      map['symptoms'] = Variable<String>(symptoms);
+    }
+    if (!nullToAbsent || auditCreatedBy != null) {
+      map['audit_created_by'] = Variable<String>(auditCreatedBy);
+    }
+    if (!nullToAbsent || nonRecoverableError != null) {
+      map['non_recoverable_error'] = Variable<bool>(nonRecoverableError);
+    }
+    if (!nullToAbsent || auditCreatedTime != null) {
+      map['audit_created_time'] = Variable<int>(auditCreatedTime);
+    }
+    if (!nullToAbsent || clientCreatedTime != null) {
+      map['client_created_time'] = Variable<int>(clientCreatedTime);
+    }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String>(clientCreatedBy);
+    }
+    if (!nullToAbsent || clientModifiedTime != null) {
+      map['client_modified_time'] = Variable<int>(clientModifiedTime);
+    }
+    if (!nullToAbsent || auditModifiedBy != null) {
+      map['audit_modified_by'] = Variable<String>(auditModifiedBy);
+    }
+    if (!nullToAbsent || auditModifiedTime != null) {
+      map['audit_modified_time'] = Variable<int>(auditModifiedTime);
+    }
+    map['client_reference_id'] = Variable<String>(clientReferenceId);
+    if (!nullToAbsent || tenantId != null) {
+      map['tenant_id'] = Variable<String>(tenantId);
+    }
+    if (!nullToAbsent || isDeleted != null) {
+      map['is_deleted'] = Variable<bool>(isDeleted);
+    }
+    if (!nullToAbsent || rowVersion != null) {
+      map['row_version'] = Variable<int>(rowVersion);
+    }
+    if (!nullToAbsent || additionalFields != null) {
+      map['additional_fields'] = Variable<String>(additionalFields);
+    }
+    return map;
+  }
+
+  SideEffectCompanion toCompanion(bool nullToAbsent) {
+    return SideEffectCompanion(
+      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      projectId: projectId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(projectId),
+      taskClientReferenceId: taskClientReferenceId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(taskClientReferenceId),
+      reAttempts: reAttempts == null && nullToAbsent
+          ? const Value.absent()
+          : Value(reAttempts),
+      symptoms: symptoms == null && nullToAbsent
+          ? const Value.absent()
+          : Value(symptoms),
+      auditCreatedBy: auditCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditCreatedBy),
+      nonRecoverableError: nonRecoverableError == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nonRecoverableError),
+      auditCreatedTime: auditCreatedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditCreatedTime),
+      clientCreatedTime: clientCreatedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedTime),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
+      clientModifiedTime: clientModifiedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedTime),
+      auditModifiedBy: auditModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditModifiedBy),
+      auditModifiedTime: auditModifiedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditModifiedTime),
+      clientReferenceId: Value(clientReferenceId),
+      tenantId: tenantId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(tenantId),
+      isDeleted: isDeleted == null && nullToAbsent
+          ? const Value.absent()
+          : Value(isDeleted),
+      rowVersion: rowVersion == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rowVersion),
+      additionalFields: additionalFields == null && nullToAbsent
+          ? const Value.absent()
+          : Value(additionalFields),
+    );
+  }
+
+  factory SideEffectData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SideEffectData(
+      id: serializer.fromJson<String?>(json['id']),
+      projectId: serializer.fromJson<String?>(json['projectId']),
+      taskClientReferenceId:
+          serializer.fromJson<String?>(json['taskClientReferenceId']),
+      reAttempts: serializer.fromJson<int?>(json['reAttempts']),
+      symptoms: serializer.fromJson<String?>(json['symptoms']),
+      auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
+      nonRecoverableError:
+          serializer.fromJson<bool?>(json['nonRecoverableError']),
+      auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
+      clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
+      clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
+      auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
+      auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
+      clientReferenceId: serializer.fromJson<String>(json['clientReferenceId']),
+      tenantId: serializer.fromJson<String?>(json['tenantId']),
+      isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
+      rowVersion: serializer.fromJson<int?>(json['rowVersion']),
+      additionalFields: serializer.fromJson<String?>(json['additionalFields']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String?>(id),
+      'projectId': serializer.toJson<String?>(projectId),
+      'taskClientReferenceId':
+          serializer.toJson<String?>(taskClientReferenceId),
+      'reAttempts': serializer.toJson<int?>(reAttempts),
+      'symptoms': serializer.toJson<String?>(symptoms),
+      'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
+      'nonRecoverableError': serializer.toJson<bool?>(nonRecoverableError),
+      'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
+      'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
+      'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
+      'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
+      'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
+      'clientReferenceId': serializer.toJson<String>(clientReferenceId),
+      'tenantId': serializer.toJson<String?>(tenantId),
+      'isDeleted': serializer.toJson<bool?>(isDeleted),
+      'rowVersion': serializer.toJson<int?>(rowVersion),
+      'additionalFields': serializer.toJson<String?>(additionalFields),
+    };
+  }
+
+  SideEffectData copyWith(
+          {Value<String?> id = const Value.absent(),
+          Value<String?> projectId = const Value.absent(),
+          Value<String?> taskClientReferenceId = const Value.absent(),
+          Value<int?> reAttempts = const Value.absent(),
+          Value<String?> symptoms = const Value.absent(),
+          Value<String?> auditCreatedBy = const Value.absent(),
+          Value<bool?> nonRecoverableError = const Value.absent(),
+          Value<int?> auditCreatedTime = const Value.absent(),
+          Value<int?> clientCreatedTime = const Value.absent(),
+          Value<String?> clientModifiedBy = const Value.absent(),
+          Value<String?> clientCreatedBy = const Value.absent(),
+          Value<int?> clientModifiedTime = const Value.absent(),
+          Value<String?> auditModifiedBy = const Value.absent(),
+          Value<int?> auditModifiedTime = const Value.absent(),
+          String? clientReferenceId,
+          Value<String?> tenantId = const Value.absent(),
+          Value<bool?> isDeleted = const Value.absent(),
+          Value<int?> rowVersion = const Value.absent(),
+          Value<String?> additionalFields = const Value.absent()}) =>
+      SideEffectData(
+        id: id.present ? id.value : this.id,
+        projectId: projectId.present ? projectId.value : this.projectId,
+        taskClientReferenceId: taskClientReferenceId.present
+            ? taskClientReferenceId.value
+            : this.taskClientReferenceId,
+        reAttempts: reAttempts.present ? reAttempts.value : this.reAttempts,
+        symptoms: symptoms.present ? symptoms.value : this.symptoms,
+        auditCreatedBy:
+            auditCreatedBy.present ? auditCreatedBy.value : this.auditCreatedBy,
+        nonRecoverableError: nonRecoverableError.present
+            ? nonRecoverableError.value
+            : this.nonRecoverableError,
+        auditCreatedTime: auditCreatedTime.present
+            ? auditCreatedTime.value
+            : this.auditCreatedTime,
+        clientCreatedTime: clientCreatedTime.present
+            ? clientCreatedTime.value
+            : this.clientCreatedTime,
+        clientModifiedBy: clientModifiedBy.present
+            ? clientModifiedBy.value
+            : this.clientModifiedBy,
+        clientCreatedBy: clientCreatedBy.present
+            ? clientCreatedBy.value
+            : this.clientCreatedBy,
+        clientModifiedTime: clientModifiedTime.present
+            ? clientModifiedTime.value
+            : this.clientModifiedTime,
+        auditModifiedBy: auditModifiedBy.present
+            ? auditModifiedBy.value
+            : this.auditModifiedBy,
+        auditModifiedTime: auditModifiedTime.present
+            ? auditModifiedTime.value
+            : this.auditModifiedTime,
+        clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+        tenantId: tenantId.present ? tenantId.value : this.tenantId,
+        isDeleted: isDeleted.present ? isDeleted.value : this.isDeleted,
+        rowVersion: rowVersion.present ? rowVersion.value : this.rowVersion,
+        additionalFields: additionalFields.present
+            ? additionalFields.value
+            : this.additionalFields,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('SideEffectData(')
+          ..write('id: $id, ')
+          ..write('projectId: $projectId, ')
+          ..write('taskClientReferenceId: $taskClientReferenceId, ')
+          ..write('reAttempts: $reAttempts, ')
+          ..write('symptoms: $symptoms, ')
+          ..write('auditCreatedBy: $auditCreatedBy, ')
+          ..write('nonRecoverableError: $nonRecoverableError, ')
+          ..write('auditCreatedTime: $auditCreatedTime, ')
+          ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
+          ..write('clientModifiedTime: $clientModifiedTime, ')
+          ..write('auditModifiedBy: $auditModifiedBy, ')
+          ..write('auditModifiedTime: $auditModifiedTime, ')
+          ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('rowVersion: $rowVersion, ')
+          ..write('additionalFields: $additionalFields')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      id,
+      projectId,
+      taskClientReferenceId,
+      reAttempts,
+      symptoms,
+      auditCreatedBy,
+      nonRecoverableError,
+      auditCreatedTime,
+      clientCreatedTime,
+      clientModifiedBy,
+      clientCreatedBy,
+      clientModifiedTime,
+      auditModifiedBy,
+      auditModifiedTime,
+      clientReferenceId,
+      tenantId,
+      isDeleted,
+      rowVersion,
+      additionalFields);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SideEffectData &&
+          other.id == this.id &&
+          other.projectId == this.projectId &&
+          other.taskClientReferenceId == this.taskClientReferenceId &&
+          other.reAttempts == this.reAttempts &&
+          other.symptoms == this.symptoms &&
+          other.auditCreatedBy == this.auditCreatedBy &&
+          other.nonRecoverableError == this.nonRecoverableError &&
+          other.auditCreatedTime == this.auditCreatedTime &&
+          other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientCreatedBy == this.clientCreatedBy &&
+          other.clientModifiedTime == this.clientModifiedTime &&
+          other.auditModifiedBy == this.auditModifiedBy &&
+          other.auditModifiedTime == this.auditModifiedTime &&
+          other.clientReferenceId == this.clientReferenceId &&
+          other.tenantId == this.tenantId &&
+          other.isDeleted == this.isDeleted &&
+          other.rowVersion == this.rowVersion &&
+          other.additionalFields == this.additionalFields);
+}
+
+class SideEffectCompanion extends UpdateCompanion<SideEffectData> {
+  final Value<String?> id;
+  final Value<String?> projectId;
+  final Value<String?> taskClientReferenceId;
+  final Value<int?> reAttempts;
+  final Value<String?> symptoms;
+  final Value<String?> auditCreatedBy;
+  final Value<bool?> nonRecoverableError;
+  final Value<int?> auditCreatedTime;
+  final Value<int?> clientCreatedTime;
+  final Value<String?> clientModifiedBy;
+  final Value<String?> clientCreatedBy;
+  final Value<int?> clientModifiedTime;
+  final Value<String?> auditModifiedBy;
+  final Value<int?> auditModifiedTime;
+  final Value<String> clientReferenceId;
+  final Value<String?> tenantId;
+  final Value<bool?> isDeleted;
+  final Value<int?> rowVersion;
+  final Value<String?> additionalFields;
+  final Value<int> rowid;
+  const SideEffectCompanion({
+    this.id = const Value.absent(),
+    this.projectId = const Value.absent(),
+    this.taskClientReferenceId = const Value.absent(),
+    this.reAttempts = const Value.absent(),
+    this.symptoms = const Value.absent(),
+    this.auditCreatedBy = const Value.absent(),
+    this.nonRecoverableError = const Value.absent(),
+    this.auditCreatedTime = const Value.absent(),
+    this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
+    this.clientModifiedTime = const Value.absent(),
+    this.auditModifiedBy = const Value.absent(),
+    this.auditModifiedTime = const Value.absent(),
+    this.clientReferenceId = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.rowVersion = const Value.absent(),
+    this.additionalFields = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  SideEffectCompanion.insert({
+    this.id = const Value.absent(),
+    this.projectId = const Value.absent(),
+    this.taskClientReferenceId = const Value.absent(),
+    this.reAttempts = const Value.absent(),
+    this.symptoms = const Value.absent(),
+    this.auditCreatedBy = const Value.absent(),
+    this.nonRecoverableError = const Value.absent(),
+    this.auditCreatedTime = const Value.absent(),
+    this.clientCreatedTime = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
+    this.clientModifiedTime = const Value.absent(),
+    this.auditModifiedBy = const Value.absent(),
+    this.auditModifiedTime = const Value.absent(),
+    required String clientReferenceId,
+    this.tenantId = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.rowVersion = const Value.absent(),
+    this.additionalFields = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : clientReferenceId = Value(clientReferenceId);
+  static Insertable<SideEffectData> custom({
+    Expression<String>? id,
+    Expression<String>? projectId,
+    Expression<String>? taskClientReferenceId,
+    Expression<int>? reAttempts,
+    Expression<String>? symptoms,
+    Expression<String>? auditCreatedBy,
+    Expression<bool>? nonRecoverableError,
+    Expression<int>? auditCreatedTime,
+    Expression<int>? clientCreatedTime,
+    Expression<String>? clientModifiedBy,
+    Expression<String>? clientCreatedBy,
+    Expression<int>? clientModifiedTime,
+    Expression<String>? auditModifiedBy,
+    Expression<int>? auditModifiedTime,
+    Expression<String>? clientReferenceId,
+    Expression<String>? tenantId,
+    Expression<bool>? isDeleted,
+    Expression<int>? rowVersion,
+    Expression<String>? additionalFields,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (projectId != null) 'project_id': projectId,
+      if (taskClientReferenceId != null)
+        'task_client_reference_id': taskClientReferenceId,
+      if (reAttempts != null) 're_attempts': reAttempts,
+      if (symptoms != null) 'symptoms': symptoms,
+      if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
+      if (nonRecoverableError != null)
+        'non_recoverable_error': nonRecoverableError,
+      if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
+      if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
+      if (clientModifiedTime != null)
+        'client_modified_time': clientModifiedTime,
+      if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
+      if (auditModifiedTime != null) 'audit_modified_time': auditModifiedTime,
+      if (clientReferenceId != null) 'client_reference_id': clientReferenceId,
+      if (tenantId != null) 'tenant_id': tenantId,
+      if (isDeleted != null) 'is_deleted': isDeleted,
+      if (rowVersion != null) 'row_version': rowVersion,
+      if (additionalFields != null) 'additional_fields': additionalFields,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  SideEffectCompanion copyWith(
+      {Value<String?>? id,
+      Value<String?>? projectId,
+      Value<String?>? taskClientReferenceId,
+      Value<int?>? reAttempts,
+      Value<String?>? symptoms,
+      Value<String?>? auditCreatedBy,
+      Value<bool?>? nonRecoverableError,
+      Value<int?>? auditCreatedTime,
+      Value<int?>? clientCreatedTime,
+      Value<String?>? clientModifiedBy,
+      Value<String?>? clientCreatedBy,
+      Value<int?>? clientModifiedTime,
+      Value<String?>? auditModifiedBy,
+      Value<int?>? auditModifiedTime,
+      Value<String>? clientReferenceId,
+      Value<String?>? tenantId,
+      Value<bool?>? isDeleted,
+      Value<int?>? rowVersion,
+      Value<String?>? additionalFields,
+      Value<int>? rowid}) {
+    return SideEffectCompanion(
+      id: id ?? this.id,
+      projectId: projectId ?? this.projectId,
+      taskClientReferenceId:
+          taskClientReferenceId ?? this.taskClientReferenceId,
+      reAttempts: reAttempts ?? this.reAttempts,
+      symptoms: symptoms ?? this.symptoms,
+      auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
+      nonRecoverableError: nonRecoverableError ?? this.nonRecoverableError,
+      auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
+      clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
+      clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
+      auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
+      auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
+      clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+      tenantId: tenantId ?? this.tenantId,
+      isDeleted: isDeleted ?? this.isDeleted,
+      rowVersion: rowVersion ?? this.rowVersion,
+      additionalFields: additionalFields ?? this.additionalFields,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (projectId.present) {
+      map['project_id'] = Variable<String>(projectId.value);
+    }
+    if (taskClientReferenceId.present) {
+      map['task_client_reference_id'] =
+          Variable<String>(taskClientReferenceId.value);
+    }
+    if (reAttempts.present) {
+      map['re_attempts'] = Variable<int>(reAttempts.value);
+    }
+    if (symptoms.present) {
+      map['symptoms'] = Variable<String>(symptoms.value);
+    }
+    if (auditCreatedBy.present) {
+      map['audit_created_by'] = Variable<String>(auditCreatedBy.value);
+    }
+    if (nonRecoverableError.present) {
+      map['non_recoverable_error'] = Variable<bool>(nonRecoverableError.value);
+    }
+    if (auditCreatedTime.present) {
+      map['audit_created_time'] = Variable<int>(auditCreatedTime.value);
+    }
+    if (clientCreatedTime.present) {
+      map['client_created_time'] = Variable<int>(clientCreatedTime.value);
+    }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String>(clientModifiedBy.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String>(clientCreatedBy.value);
+    }
+    if (clientModifiedTime.present) {
+      map['client_modified_time'] = Variable<int>(clientModifiedTime.value);
+    }
+    if (auditModifiedBy.present) {
+      map['audit_modified_by'] = Variable<String>(auditModifiedBy.value);
+    }
+    if (auditModifiedTime.present) {
+      map['audit_modified_time'] = Variable<int>(auditModifiedTime.value);
+    }
+    if (clientReferenceId.present) {
+      map['client_reference_id'] = Variable<String>(clientReferenceId.value);
+    }
+    if (tenantId.present) {
+      map['tenant_id'] = Variable<String>(tenantId.value);
+    }
+    if (isDeleted.present) {
+      map['is_deleted'] = Variable<bool>(isDeleted.value);
+    }
+    if (rowVersion.present) {
+      map['row_version'] = Variable<int>(rowVersion.value);
+    }
+    if (additionalFields.present) {
+      map['additional_fields'] = Variable<String>(additionalFields.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SideEffectCompanion(')
+          ..write('id: $id, ')
+          ..write('projectId: $projectId, ')
+          ..write('taskClientReferenceId: $taskClientReferenceId, ')
+          ..write('reAttempts: $reAttempts, ')
+          ..write('symptoms: $symptoms, ')
+          ..write('auditCreatedBy: $auditCreatedBy, ')
+          ..write('nonRecoverableError: $nonRecoverableError, ')
+          ..write('auditCreatedTime: $auditCreatedTime, ')
+          ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
+          ..write('clientModifiedTime: $clientModifiedTime, ')
+          ..write('auditModifiedBy: $auditModifiedBy, ')
+          ..write('auditModifiedTime: $auditModifiedTime, ')
+          ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('rowVersion: $rowVersion, ')
+          ..write('additionalFields: $additionalFields, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$LocalSqlDataStore extends GeneratedDatabase {
   _$LocalSqlDataStore(QueryExecutor e) : super(e);
   late final $AddressTable address = $AddressTable(this);
@@ -30523,6 +35510,12 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
   late final $DownsyncCriteriaTable downsyncCriteria =
       $DownsyncCriteriaTable(this);
   late final $HFReferralTable hFReferral = $HFReferralTable(this);
+  late final $HouseholdTable household = $HouseholdTable(this);
+  late final $HouseholdMemberTable householdMember =
+      $HouseholdMemberTable(this);
+  late final $TaskTable task = $TaskTable(this);
+  late final $TaskResourceTable taskResource = $TaskResourceTable(this);
+  late final $SideEffectTable sideEffect = $SideEffectTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -30558,6 +35551,11 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
         user,
         downsync,
         downsyncCriteria,
-        hFReferral
+        hFReferral,
+        household,
+        householdMember,
+        task,
+        taskResource,
+        sideEffect
       ];
 }

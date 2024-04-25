@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
 
-import '../../data/data_repository.dart';
 import '../../data/network_manager.dart';
 import '../../models/bandwidth/bandwidth_model.dart';
 

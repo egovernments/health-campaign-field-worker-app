@@ -5,8 +5,6 @@ import 'package:digit_data_model/data/data_repository.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import '../../data/data_repository.dart';
-import '../../models/data_model.dart';
 import '../../models/entities/user.dart';
 part 'user.freezed.dart';
 

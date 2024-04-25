@@ -4,7 +4,6 @@ import 'package:drift/drift.dart';
 
 import 'package:digit_data_model/data_model.dart';
 
-import '../../data/local_store/sql_store.dart';
 import 'blood_group.dart';
 import 'gender.dart';
 import 'identifier.dart';

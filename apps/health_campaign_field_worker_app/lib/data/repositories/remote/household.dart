@@ -2,7 +2,6 @@
 
 import 'package:digit_data_model/data_model.dart';
 import 'package:registration_delivery/models/entities/household.dart';
-import '../../data_repository.dart';
 
 class HouseholdRemoteRepository extends RemoteRepository<HouseholdModel, HouseholdSearchModel> {
   HouseholdRemoteRepository(

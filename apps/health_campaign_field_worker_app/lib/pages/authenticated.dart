@@ -18,8 +18,6 @@ import '../blocs/boundary/boundary.dart';
 import '../blocs/localization/app_localization.dart';
 import '../blocs/service/service.dart';
 import '../blocs/sync/sync.dart';
-import '../data/data_repository.dart';
-import '../data/local_store/sql_store/sql_store.dart';
 import '../data/remote_client.dart';
 import '../data/repositories/oplog/hcm_oplog.dart';
 import '../data/repositories/remote/bandwidth_check.dart';

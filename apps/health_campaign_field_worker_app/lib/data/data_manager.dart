@@ -2,8 +2,6 @@ import 'dart:async';
 
 import 'package:digit_data_model/data_model.dart';
 
-import 'data_repository.dart';
-
 class DataManager<D extends EntityModel, R extends EntitySearchModel> {
   final RemoteRepository<D, R> remoteRepository;
   final LocalRepository<D, R> localRepository;

@@ -12,7 +12,6 @@ import 'package:isar/isar.dart';
 import 'package:location/location.dart';
 import 'package:referral_reconciliation/blocs/referral_recon_service.dart';
 import 'package:referral_reconciliation/blocs/search_referral_reconciliations.dart';
-import 'package:registration_delivery/data/local_store/sql_store.dart';
 import 'package:registration_delivery/models/entities/individual.dart';
 
 import 'blocs/app_initialization/app_initialization.dart';
@@ -24,9 +23,7 @@ import 'blocs/product_variant/product_variant.dart';
 import 'blocs/project/project.dart';
 import 'blocs/project_facility/project_facility.dart';
 import 'blocs/user/user.dart';
-import 'data/data_repository.dart';
 import 'data/local_store/app_shared_preferences.dart';
-import 'data/local_store/sql_store/sql_store.dart';
 import 'data/network_manager.dart';
 import 'data/repositories/remote/localization.dart';
 import 'data/repositories/remote/mdms.dart';
@@ -79,11 +76,6 @@ class MainApplicationState extends State<MainApplication>
   initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    DigitDataModelSingleton().setData(
-        syncDownRetryCount: envConfig.variables.syncDownRetryCount,
-        retryTimeInterval: envConfig.variables.retryTimeInterval,
-        tenantId: envConfig.variables.tenantId,
-        errorDumpApiPath: envConfig.variables.dumpErrorApiPath);
   }
 
   @override

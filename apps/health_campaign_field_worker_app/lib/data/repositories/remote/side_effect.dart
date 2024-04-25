@@ -2,7 +2,6 @@
 
 import 'package:digit_data_model/data_model.dart';
 import 'package:registration_delivery/models/entities/side_effect.dart';
-import '../../data_repository.dart';
 
 class SideEffectRemoteRepository extends RemoteRepository<SideEffectModel, SideEffectSearchModel> {
   SideEffectRemoteRepository(

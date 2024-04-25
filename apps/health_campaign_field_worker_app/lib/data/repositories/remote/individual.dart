@@ -2,7 +2,6 @@
 
 import 'package:digit_data_model/data_model.dart';
 import 'package:registration_delivery/models/entities/individual.dart';
-import '../../data_repository.dart';
 
 class IndividualRemoteRepository extends RemoteRepository<IndividualModel, IndividualSearchModel> {
   IndividualRemoteRepository(

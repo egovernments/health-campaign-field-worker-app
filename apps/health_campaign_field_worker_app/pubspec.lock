@@ -504,8 +504,8 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/digit_scanner"
-      ref: HLM-5097
-      resolved-ref: "66ce4ff5fe6bcb6ad3982bd49a10dd036fc90460"
+      ref: develop
+      resolved-ref: f685baaa76fd4fe841812c27d02828ab47b78b48
       url: "https://github.com/egovernments/health-campaign-field-worker-app/"
     source: git
     version: "0.0.1+1"

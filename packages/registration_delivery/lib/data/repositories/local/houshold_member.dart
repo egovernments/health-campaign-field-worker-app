@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/oplog/oplog_entry.dart';
 import 'package:drift/drift.dart';
-import 'package:registration_delivery/data/local_store/sql_store.dart';
 import 'package:registration_delivery/models/entities/household_member.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 
@@ -11,9 +10,8 @@ import '../../../utils/utils.dart';
 
 class HouseholdMemberLocalRepository
     extends LocalRepository<HouseholdMemberModel, HouseholdMemberSearchModel> {
-  final RegistrationLocalSqlDataStore registrationLocalSqlDataStore;
   HouseholdMemberLocalRepository(
-      super.sql, super.opLogManager, this.registrationLocalSqlDataStore);
+      super.sql, super.opLogManager,);
 
   @override
   FutureOr<List<HouseholdMemberModel>> search(
@@ -21,53 +19,53 @@ class HouseholdMemberLocalRepository
     String? userId,
   ]) async {
     final selectQuery =
-        sql.select(registrationLocalSqlDataStore.householdMember).join([]);
+        sql.select(sql.householdMember).join([]);
     final results = await (selectQuery
           ..where(
             buildAnd(
               [
                 if (query.householdClientReferenceIds != null)
-                  registrationLocalSqlDataStore
+                  sql
                       .householdMember.householdClientReferenceId
                       .isIn(
                     query.householdClientReferenceIds!,
                   ),
                 if (query.individualClientReferenceIds != null)
-                  registrationLocalSqlDataStore
+                  sql
                       .householdMember.individualClientReferenceId
                       .isIn(
                     query.individualClientReferenceIds!,
                   ),
                 if (query.householdClientReferenceId != null)
-                  registrationLocalSqlDataStore
+                  sql
                       .householdMember.householdClientReferenceId
                       .equals(
                     query.householdClientReferenceId!,
                   ),
                 if (query.individualClientReferenceId != null)
-                  registrationLocalSqlDataStore
+                  sql
                       .householdMember.individualClientReferenceId
                       .equals(
                     query.individualClientReferenceId!,
                   ),
                 if (query.householdId != null)
-                  registrationLocalSqlDataStore.householdMember.householdId
+                  sql.householdMember.householdId
                       .equals(
                     query.householdId!,
                   ),
                 if (query.individualId != null)
-                  registrationLocalSqlDataStore.householdMember.individualId
+                  sql.householdMember.individualId
                       .equals(
                     query.individualId!,
                   ),
                 if (query.isHeadOfHousehold != null)
-                  registrationLocalSqlDataStore
+                  sql
                       .householdMember.isHeadOfHousehold
                       .equals(
                     query.isHeadOfHousehold!,
                   ),
                 if (userId != null)
-                  registrationLocalSqlDataStore.householdMember.auditCreatedBy
+                  sql.householdMember.auditCreatedBy
                       .equals(
                     userId,
                   ),
@@ -79,7 +77,7 @@ class HouseholdMemberLocalRepository
     return results
         .map((e) {
           final householdMember =
-              e.readTable(registrationLocalSqlDataStore.householdMember);
+              e.readTable(sql.householdMember);
 
           return HouseholdMemberModel(
             id: householdMember.id,
@@ -126,7 +124,7 @@ class HouseholdMemberLocalRepository
   }) async {
     final householdMemberCompanion = entity.companion;
     await sql.batch((batch) {
-      batch.insert(registrationLocalSqlDataStore.householdMember,
+      batch.insert(sql.householdMember,
           householdMemberCompanion);
     });
 
@@ -141,7 +139,7 @@ class HouseholdMemberLocalRepository
 
     await sql.batch((batch) async {
       batch.insertAll(
-        registrationLocalSqlDataStore.householdMember,
+        sql.householdMember,
         householdMemberCompanions,
         mode: InsertMode.insertOrReplace,
       );
@@ -157,7 +155,7 @@ class HouseholdMemberLocalRepository
 
     await sql.batch((batch) {
       batch.update(
-        registrationLocalSqlDataStore.householdMember,
+        sql.householdMember,
         householdMemberCompanion,
         where: (table) => table.clientReferenceId.equals(
           entity.clientReferenceId,
@@ -188,7 +186,7 @@ class HouseholdMemberLocalRepository
     );
     await sql.batch((batch) {
       batch.update(
-        registrationLocalSqlDataStore.householdMember,
+        sql.householdMember,
         updated.companion,
         where: (table) => table.clientReferenceId.equals(
           entity.clientReferenceId,

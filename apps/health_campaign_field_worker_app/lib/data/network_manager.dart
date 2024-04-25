@@ -16,7 +16,6 @@ import 'package:provider/provider.dart';
 
 import '../models/bandwidth/bandwidth_model.dart';
 import '../utils/constants.dart';
-import 'data_repository.dart';
 import 'local_store/secure_store/secure_store.dart';
 import 'repositories/sync/sync_down.dart';
 import 'repositories/sync/sync_up.dart';

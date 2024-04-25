@@ -7,7 +7,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:registration_delivery/models/entities/individual.dart';
 
-import '../../data/data_repository.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/repositories/remote/auth.dart';
 import '../../data/repositories/remote/mdms.dart';

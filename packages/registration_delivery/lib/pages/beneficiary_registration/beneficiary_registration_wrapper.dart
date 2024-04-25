@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 
+import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../../models/entities/household.dart';
 import '../../models/entities/household_member.dart';
 import '../../models/entities/individual.dart';

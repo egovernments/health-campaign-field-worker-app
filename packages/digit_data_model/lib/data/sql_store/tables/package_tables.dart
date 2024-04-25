@@ -10,9 +10,20 @@ import 'package:referral_reconciliation/data/local_store/sql_store/tables/h_f_re
 
 import 'package:registration_delivery/data/local_store/tables/individual.dart'
     as ind;
-
 import 'package:registration_delivery/data/local_store/tables/identifier.dart'
-as ide;
+    as ide;
+import 'package:registration_delivery/data/local_store/tables/household.dart'
+    as household;
+import 'package:registration_delivery/data/local_store/tables/household_member.dart'
+    as household_member;
+import 'package:registration_delivery/data/local_store/tables/referral.dart'
+    as ref;
+import 'package:registration_delivery/data/local_store/tables/task.dart' as tas;
+import 'package:registration_delivery/data/local_store/tables/side_effect.dart'
+    as se;
+import 'package:registration_delivery/data/local_store/tables/name.dart' as nam;
+import 'package:registration_delivery/data/local_store/tables/task_resource.dart'
+    as tas_res;
 
 class HFReferral extends hfRef.HFReferral {
   HFReferral() : super();
@@ -36,6 +47,34 @@ class Individual extends ind.Individual {
 
 class Identifier extends ide.Identifier {
   Identifier() : super();
+}
+
+class Household extends household.Household {
+  Household() : super();
+}
+
+class HouseholdMember extends household_member.HouseholdMember {
+  HouseholdMember() : super();
+}
+
+class Referral extends ref.Referral {
+  Referral() : super();
+}
+
+class Task extends tas.Task {
+  Task() : super();
+}
+
+class SideEffect extends se.SideEffect {
+  SideEffect() : super();
+}
+
+class Name extends nam.Name {
+  Name() : super();
+}
+
+class TaskResource extends tas_res.TaskResource {
+  TaskResource() : super();
 }
 
 // class Attendance extends att.Attendance {

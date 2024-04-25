@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data/repositories/oplog/oplog.dart';
-import 'package:digit_data_model/data/sql_store/sql_store.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/utils/utils.dart';
 import 'package:dio/dio.dart';

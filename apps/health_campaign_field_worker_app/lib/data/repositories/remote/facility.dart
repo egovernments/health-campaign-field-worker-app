@@ -2,9 +2,7 @@
 
 import 'package:digit_data_model/data_model.dart';
 
-import '../../../models/data_model.dart';
 import '../../../models/entities/facility.dart';
-import '../../data_repository.dart';
 
 class FacilityRemoteRepository extends RemoteRepository<FacilityModel, FacilitySearchModel> {
   FacilityRemoteRepository(

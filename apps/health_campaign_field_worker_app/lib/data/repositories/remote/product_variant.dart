@@ -2,7 +2,6 @@
 
 import 'package:digit_data_model/data_model.dart';
 import '../../../models/entities/product_variant.dart';
-import '../../data_repository.dart';
 
 class ProductVariantRemoteRepository extends RemoteRepository<ProductVariantModel, ProductVariantSearchModel> {
   ProductVariantRemoteRepository(

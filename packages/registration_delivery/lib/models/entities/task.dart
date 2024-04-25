@@ -5,8 +5,6 @@ import 'package:drift/drift.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:registration_delivery/models/entities/task_resource.dart';
 
-import '../../data/local_store/sql_store.dart';
-
 part 'task.mapper.dart';
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)

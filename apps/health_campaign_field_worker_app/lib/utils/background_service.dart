@@ -19,7 +19,6 @@ import 'package:recase/recase.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/local_store/secure_store/secure_store.dart';
-import '../data/local_store/sql_store/sql_store.dart';
 import '../data/network_manager.dart';
 import '../data/remote_client.dart';
 import '../data/repositories/remote/bandwidth_check.dart';
@@ -28,7 +27,6 @@ import '../models/data_model.dart';
 import '../widgets/network_manager_provider_wrapper.dart';
 import 'environment_config.dart';
 import 'utils.dart';
-import 'package:digit_data_model/data/sql_store/sql_store.dart' as dataModelSql;
 
 final LocalSqlDataStore _sql = LocalSqlDataStore();
 late Dio _dio;
@@ -37,11 +35,6 @@ Future<Isar> isarFuture = Constants().isar;
 Future<void> initializeService(dio, isar) async {
   if (Isar.getInstance('HCM') == null) {
     final info = await PackageInfo.fromPlatform();
-    DigitDataModelSingleton().setData(
-        syncDownRetryCount: envConfig.variables.syncDownRetryCount,
-        retryTimeInterval: envConfig.variables.retryTimeInterval,
-        tenantId: envConfig.variables.tenantId,
-        errorDumpApiPath: envConfig.variables.dumpErrorApiPath);
     await Constants().initialize(info.version);
   }
 
@@ -114,11 +107,11 @@ void onStart(ServiceInstance service) async {
   service.on('stopService').listen((event) {
     service.stopSelf();
   });
+  await envConfig.initialize();
   if (Isar.getInstance('HCM') == null) {
     final info = await PackageInfo.fromPlatform();
     await Constants().initialize(info.version);
   }
-  await envConfig.initialize();
 
   _dio = DioClient().dio;
   final _isar = await isarFuture;

@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:stream_transform/stream_transform.dart';
 
+import '../../data/repositories/local/registration_delivery_address.dart';
 import '../../models/entities/beneficiary_type.dart';
 import '../../models/entities/household.dart';
 import '../../models/entities/household_member.dart';
@@ -33,7 +34,7 @@ class SearchHouseholdsBloc
   final String userUid;
   final IndividualDataRepository individual;
   final HouseholdDataRepository household;
-  final AddressLocalRepository addressRepository;
+  final RegistrationDeliveryAddressRepo addressRepository;
   final HouseholdMemberDataRepository householdMember;
   final ProjectBeneficiaryDataRepository projectBeneficiary;
   final TaskDataRepository taskDataRepository;

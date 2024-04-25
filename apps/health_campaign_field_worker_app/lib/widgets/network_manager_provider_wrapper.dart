@@ -26,13 +26,9 @@ import 'package:registration_delivery/models/entities/individual.dart';
 import 'package:registration_delivery/models/entities/referral.dart';
 import 'package:registration_delivery/models/entities/side_effect.dart';
 import 'package:registration_delivery/models/entities/task.dart';
-import 'package:digit_data_model/models/entities/boundary.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
-import '../data/data_repository.dart';
-import '../data/local_store/sql_store/sql_store.dart';
 import '../data/network_manager.dart';
-import '../data/repositories/local/boundary.dart';
 import '../data/repositories/local/downsync.dart';
 import '../data/repositories/local/facility.dart';
 import '../data/repositories/local/hcm_attendance.dart';

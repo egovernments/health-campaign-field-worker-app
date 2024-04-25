@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'package:digit_data_model/data/sql_store/sql_store.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/oplog/oplog_entry.dart';
 import 'package:drift/drift.dart';
@@ -9,30 +8,28 @@ import 'package:registration_delivery/models/entities/task_resource.dart';
 
 import '../../../models/entities/task.dart';
 import '../../../utils/utils.dart';
-import '../../local_store/sql_store.dart';
 
 class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
-  final RegistrationLocalSqlDataStore registrationLocalSqlDataStore;
   TaskLocalRepository(
-      super.sql, super.opLogManager, this.registrationLocalSqlDataStore);
+      super.sql, super.opLogManager,);
 
   void listenToChanges({
     required TaskSearchModel query,
     required void Function(List<TaskModel> data) listener,
   }) {
-    final select = sql.select(registrationLocalSqlDataStore.task).join([
+    final select = sql.select(sql.task).join([
       leftOuterJoin(
-        registrationLocalSqlDataStore.taskResource,
-        registrationLocalSqlDataStore.taskResource.taskclientReferenceId
+        sql.taskResource,
+        sql.taskResource.taskclientReferenceId
             .equalsExp(
-          registrationLocalSqlDataStore.task.clientReferenceId,
+          sql.task.clientReferenceId,
         ),
       ),
     ])
       ..where(
         buildOr([
           if (query.projectId != null)
-            registrationLocalSqlDataStore.task.projectId.equals(
+            sql.task.projectId.equals(
               query.projectId!,
             ),
         ]),
@@ -41,9 +38,9 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
     select.watch().listen((results) {
       final data = results
           .map((e) {
-            final task = e.readTableOrNull(registrationLocalSqlDataStore.task);
+            final task = e.readTableOrNull(sql.task);
             final resources =
-                e.readTableOrNull(registrationLocalSqlDataStore.taskResource);
+                e.readTableOrNull(sql.taskResource);
             if (task == null) return null;
 
             return TaskModel(
@@ -86,19 +83,19 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
     TaskSearchModel query, [
     String? userId,
   ]) async {
-    final selectQuery = sql.select(registrationLocalSqlDataStore.task).join([
+    final selectQuery = sql.select(sql.task).join([
       leftOuterJoin(
         sql.address,
         sql.address.relatedClientReferenceId.equalsExp(
-          registrationLocalSqlDataStore.task.clientReferenceId,
+          sql.task.clientReferenceId,
         ),
       ),
       // TODO :[Need to change this to taskclient reference Id]
       leftOuterJoin(
-        registrationLocalSqlDataStore.taskResource,
-        registrationLocalSqlDataStore.taskResource.taskclientReferenceId
+        sql.taskResource,
+        sql.taskResource.taskclientReferenceId
             .equalsExp(
-          registrationLocalSqlDataStore.task.clientReferenceId,
+          sql.task.clientReferenceId,
         ),
       ),
     ]);
@@ -106,17 +103,17 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
     final results = await (selectQuery
           ..where(buildAnd([
             if (query.clientReferenceId != null)
-              registrationLocalSqlDataStore.task.clientReferenceId.isIn(
+              sql.task.clientReferenceId.isIn(
                 query.clientReferenceId!,
               ),
             if (query.projectBeneficiaryClientReferenceId != null)
-              registrationLocalSqlDataStore
+              sql
                   .task.projectBeneficiaryClientReferenceId
                   .isIn(
                 query.projectBeneficiaryClientReferenceId!,
               ),
             if (userId != null)
-              registrationLocalSqlDataStore.task.auditCreatedBy.equals(
+              sql.task.auditCreatedBy.equals(
                 userId,
               ),
           ])))
@@ -125,9 +122,9 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
     final tasksMap = <String, TaskModel>{};
 
     for (final e in results) {
-      final task = e.readTableOrNull(registrationLocalSqlDataStore.task);
+      final task = e.readTableOrNull(sql.task);
       final resources =
-          e.readTableOrNull(registrationLocalSqlDataStore.taskResource);
+          e.readTableOrNull(sql.taskResource);
       final address = e.readTableOrNull(sql.address);
 
       if (task == null) continue;
@@ -279,7 +276,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
     );
     final resources = entity.resources;
     await sql.batch((batch) async {
-      batch.insert(registrationLocalSqlDataStore.task, taskCompanion);
+      batch.insert(sql.task, taskCompanion);
 
       if (resources != null) {
         final resourcesCompanions = resources.map((e) {
@@ -287,7 +284,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
         }).toList();
 
         batch.insertAll(
-          registrationLocalSqlDataStore.taskResource,
+          sql.taskResource,
           resourcesCompanions,
           mode: InsertMode.insertOrReplace,
         );
@@ -343,7 +340,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
 
     await sql.batch((batch) async {
       batch.insertAll(
-        registrationLocalSqlDataStore.task,
+        sql.task,
         taskCompanions,
         mode: InsertMode.insertOrReplace,
       );
@@ -357,7 +354,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
       }
 
       batch.insertAllOnConflictUpdate(
-          registrationLocalSqlDataStore.taskResource, resourceCompanions);
+          sql.taskResource, resourceCompanions);
     });
   }
 
@@ -388,7 +385,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
 
     await sql.batch((batch) {
       batch.update(
-        registrationLocalSqlDataStore.task,
+        sql.task,
         taskCompanion,
         where: (table) => table.clientReferenceId.equals(
           entity.clientReferenceId,
@@ -406,7 +403,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
       }
 
       batch.insertAllOnConflictUpdate(
-          registrationLocalSqlDataStore.taskResource, resourcesCompanions);
+          sql.taskResource, resourcesCompanions);
     });
 
     await super.update(entity, createOpLog: createOpLog);
@@ -423,7 +420,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
     );
     await sql.batch((batch) {
       batch.update(
-        registrationLocalSqlDataStore.task,
+        sql.task,
         updated.companion,
         where: (table) => table.clientReferenceId.equals(
           entity.clientReferenceId,
