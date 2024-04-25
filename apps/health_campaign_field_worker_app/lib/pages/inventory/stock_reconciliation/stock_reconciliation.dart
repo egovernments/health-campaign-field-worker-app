@@ -50,7 +50,6 @@ class _StockReconciliationPageState
       _dateOfReconciliationKey: FormControl<DateTime>(value: DateTime.now()),
       _productVariantKey: FormControl<ProductVariantModel>(),
       _manualCountKey: FormControl<String>(
-        value: '0',
         validators: [
           Validators.number,
           Validators.required,
