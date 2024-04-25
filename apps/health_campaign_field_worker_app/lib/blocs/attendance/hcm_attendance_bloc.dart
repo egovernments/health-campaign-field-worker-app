@@ -57,8 +57,9 @@ class HCMAttendanceBloc extends AttendanceListeners {
       required int currentDate}) async {
     final attendanceLogs = await attendanceLogLocalRepository?.search(
       HCMAttendanceLogSearchModel(
+          attendanceSearchModel: AttendanceLogSearchModel(
         registerId: registerId,
-      ),
+      )),
     );
 
     // Filtering attendance logs for the current day
@@ -69,7 +70,7 @@ class HCMAttendanceBloc extends AttendanceListeners {
           final logDay = DateTime(logTime.year, logTime.month, logTime.day)
               .millisecondsSinceEpoch;
           final currentTime = DateTime.fromMillisecondsSinceEpoch(
-            currentDate!,
+            currentDate,
           );
           final currentDay =
               DateTime(currentTime.year, currentTime.month, currentTime.day)
