@@ -1,6 +1,7 @@
 // GENERATED using mason_cli
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:referral_reconciliation/blocs/referral_reconciliation_listeners.dart';
@@ -39,6 +40,9 @@ class SearchReferralsBloc
       loading: false,
       tag: event.tag,
     ));
+    if (kDebugMode) {
+      print(state);
+    }
   }
 
   FutureOr<void> _handleSearchByName(

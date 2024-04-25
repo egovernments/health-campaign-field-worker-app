@@ -1,6 +1,8 @@
 import 'package:attendance_management/router/attendance_router.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:digit_scanner/router/digit_scanner_router.dart';
+import 'package:digit_scanner/router/digit_scanner_router.gm.dart';
 import 'package:flutter/material.dart';
 import 'package:inventory_management/router/inventory_router.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
@@ -47,6 +49,7 @@ import '../pages/complaints/registration/complaints_location.dart';
 import '../pages/complaints/registration/complaints_registration_wrapper.dart';
 import '../pages/complaints_acknowledgement.dart';
 import '../pages/home.dart';
+import '../pages/inventory/project_facility_selection.dart';
 import '../pages/language_selection.dart';
 import '../pages/login.dart';
 import '../pages/profile.dart';
@@ -67,6 +70,7 @@ part 'app_router.gr.dart';
     InventoryRoute,
     AttendanceRoute,
     ReferralReconciliationRoute,
+    DigitScannerPackageRoute,
   ],
 )
 class AppRouter extends _$AppRouter {
