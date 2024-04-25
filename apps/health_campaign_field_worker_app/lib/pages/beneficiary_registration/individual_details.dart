@@ -383,26 +383,32 @@ class _IndividualDetailsPageState
                                 },
                               ),
                             ),
-                            DigitTextFormField(
-                              formControlName: _individualLastNameKey,
-                              label: localizations.translate(
-                                i18.individualDetails.lastNameLabelText,
+                            individualDetailsShowcaseData.lastNameOfIndividual
+                                .buildWith(
+                              child: DigitTextFormField(
+                                formControlName: _individualLastNameKey,
+                                label: localizations.translate(
+                                  i18.individualDetails.lastNameLabelText,
+                                ),
+                                maxLength: 200,
+                                isRequired: true,
+                                validationMessages: {
+                                  'required': (object) =>
+                                      localizations.translate(
+                                        i18.individualDetails
+                                            .lastNameIsRequiredError,
+                                      ),
+                                  'min3': (object) => localizations.translate(
+                                        i18.individualDetails
+                                            .lastNameLengthError,
+                                      ),
+                                  'maxLength': (object) =>
+                                      localizations.translate(
+                                        i18.individualDetails
+                                            .lastNameLengthError,
+                                      ),
+                                },
                               ),
-                              maxLength: 200,
-                              isRequired: true,
-                              validationMessages: {
-                                'required': (object) => localizations.translate(
-                                      i18.individualDetails
-                                          .lastNameIsRequiredError,
-                                    ),
-                                'min3': (object) => localizations.translate(
-                                      i18.individualDetails.lastNameLengthError,
-                                    ),
-                                'maxLength': (object) =>
-                                    localizations.translate(
-                                      i18.individualDetails.lastNameLengthError,
-                                    ),
-                              },
                             ),
                             Offstage(
                               offstage: !widget.isHeadOfHousehold,
@@ -516,54 +522,57 @@ class _IndividualDetailsPageState
                             ),
                           ],
                         ),
-                        const SizedBox(height: 16),
-                        DigitTextFormField(
-                          keyboardType: TextInputType.number,
-                          isRequired: true,
-                          formControlName: _heightKey,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.allow(
-                              RegExp("[0-9]"),
-                            ),
-                          ],
-                          label: localizations.translate(
-                            i18.individualDetails.heightLabelText,
-                          ),
-                          maxLength: 3,
-                          validationMessages: {
-                            'required': (object) => localizations
-                                .translate(i18.common.corecommonRequired),
-                          },
-                        ),
-                        BlocBuilder<AppInitializationBloc,
-                            AppInitializationState>(
-                          builder: (context, state) {
-                            if (state is! AppInitialized) {
-                              return const Offstage();
-                            }
-
-                            final disabilityTypes =
-                                state.appConfiguration.disabilityTypes ??
-                                    <DisabilityTypes>[];
-
-                            return DigitReactiveDropdown<String>(
-                              label: localizations.translate(
-                                i18.deliverIntervention.disabilityLabel,
+                        individualDetailsShowcaseData.height.buildWith(
+                          child: DigitTextFormField(
+                            keyboardType: TextInputType.number,
+                            isRequired: true,
+                            formControlName: _heightKey,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                RegExp("[0-9]"),
                               ),
-                              isRequired: true,
-                              valueMapper: (value) =>
-                                  localizations.translate(value),
-                              initialValue: disabilityTypes.firstOrNull?.code,
-                              menuItems: disabilityTypes.map((e) {
-                                return e.code;
-                              }).toList(),
-                              formControlName: _disabilityTypeKey,
-                              validationMessages: {
-                                'required': (object) => localizations
-                                    .translate(i18.common.corecommonRequired),
-                              },
-                            );
-                          },
+                            ],
+                            label: localizations.translate(
+                              i18.individualDetails.heightLabelText,
+                            ),
+                            maxLength: 3,
+                            validationMessages: {
+                              'required': (object) => localizations
+                                  .translate(i18.common.corecommonRequired),
+                            },
+                          ),
+                        ),
+                        individualDetailsShowcaseData.disability.buildWith(
+                          child: BlocBuilder<AppInitializationBloc,
+                              AppInitializationState>(
+                            builder: (context, state) {
+                              if (state is! AppInitialized) {
+                                return const Offstage();
+                              }
+
+                              final disabilityTypes =
+                                  state.appConfiguration.disabilityTypes ??
+                                      <DisabilityTypes>[];
+
+                              return DigitReactiveDropdown<String>(
+                                label: localizations.translate(
+                                  i18.deliverIntervention.disabilityLabel,
+                                ),
+                                isRequired: true,
+                                valueMapper: (value) =>
+                                    localizations.translate(value),
+                                initialValue: disabilityTypes.firstOrNull?.code,
+                                menuItems: disabilityTypes.map((e) {
+                                  return e.code;
+                                }).toList(),
+                                formControlName: _disabilityTypeKey,
+                                validationMessages: {
+                                  'required': (object) => localizations
+                                      .translate(i18.common.corecommonRequired),
+                                },
+                              );
+                            },
+                          ),
                         ),
                       ],
                     ),
