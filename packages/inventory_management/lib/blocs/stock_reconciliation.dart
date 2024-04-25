@@ -116,7 +116,7 @@ class StockReconciliationBloc
 class StockReconciliationEvent with _$StockReconciliationEvent {
   // Event for selecting a facility
   const factory StockReconciliationEvent.selectFacility(
-    InventoryFacilityModel facilityModel, {
+    FacilityModel facilityModel, {
     @Default(false) bool isDistributor,
   }) = StockReconciliationSelectFacilityEvent;
 
@@ -148,7 +148,7 @@ class StockReconciliationState with _$StockReconciliationState {
     @Default(false) bool persisted,
     required String projectId,
     required DateTime dateOfReconciliation,
-    InventoryFacilityModel? facilityModel,
+    FacilityModel? facilityModel,
     String? productVariantId,
     @Default([]) List<StockModel> stockModels,
     StockReconciliationModel? stockReconciliationModel,

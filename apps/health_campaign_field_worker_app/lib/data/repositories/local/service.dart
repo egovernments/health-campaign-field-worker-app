@@ -1,11 +1,16 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/oplog/oplog_entry.dart';
 import 'package:drift/drift.dart';
 
 import '../../../models/data_model.dart';
+import '../../../models/entities/service.dart';
+import '../../../models/entities/service_attributes.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
+import '../../local_store/sql_store/sql_store.dart';
 
 class ServiceLocalRepository
     extends LocalRepository<ServiceModel, ServiceSearchModel> {
@@ -111,7 +116,8 @@ class ServiceLocalRepository
     final List<ServiceModel> serviceList = [];
     for (final e in results) {
       final data = e.readTable(sql.service);
-      final selectattributeQuery = sql.select(sql.serviceAttributes).join([]);
+      final selectattributeQuery =
+          sql.select(sql.serviceAttributes).join([]);
 
       final val = await (selectattributeQuery
             ..where(buildAnd([

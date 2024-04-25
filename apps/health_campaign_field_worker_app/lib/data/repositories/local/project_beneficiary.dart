@@ -1,10 +1,14 @@
 import 'dart:async';
 
+import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/oplog/oplog_entry.dart';
 import 'package:drift/drift.dart';
 
 import '../../../models/data_model.dart';
+import '../../../models/entities/project_beneficiary.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
+import '../../local_store/sql_store/sql_store.dart';
 
 class ProjectBeneficiaryLocalRepository extends LocalRepository<
     ProjectBeneficiaryModel, ProjectBeneficiarySearchModel> {
@@ -87,7 +91,8 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
                     query.clientReferenceId!,
                   ),
                 if (query.beneficiaryClientReferenceId != null)
-                  sql.projectBeneficiary.beneficiaryClientReferenceId
+                  sql
+                      .projectBeneficiary.beneficiaryClientReferenceId
                       .isIn(query.beneficiaryClientReferenceId!),
                 if (query.id != null)
                   sql.projectBeneficiary.id.equals(
@@ -116,7 +121,8 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
 
     return results
         .map((e) {
-          final projectBeneficiary = e.readTable(sql.projectBeneficiary);
+          final projectBeneficiary =
+              e.readTable(sql.projectBeneficiary);
 
           return ProjectBeneficiaryModel(
             clientReferenceId: projectBeneficiary.clientReferenceId,
@@ -159,7 +165,8 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
   }) async {
     final projectBeneficiaryCompanion = entity.companion;
     await sql.batch((batch) {
-      batch.insert(sql.projectBeneficiary, projectBeneficiaryCompanion);
+      batch.insert(
+          sql.projectBeneficiary, projectBeneficiaryCompanion);
     });
 
     await super.create(entity);

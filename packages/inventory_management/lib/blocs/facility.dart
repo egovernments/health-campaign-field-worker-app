@@ -28,7 +28,7 @@ class FacilityBloc extends Bloc<FacilityEvent, FacilityState> {
       // Emitting the loading state
       emit(const FacilityLoadingState());
       // Fetching the facilities for the project ID
-      List<InventoryFacilityModel>? facilities =
+      List<FacilityModel>? facilities =
           await inventorySingleton.getFacilitiesForProjectId();
       // Checking if the facilities are null
       if (facilities == null) {
@@ -66,7 +66,7 @@ class FacilityState with _$FacilityState {
 
   // State for when the facilities have been fetched
   const factory FacilityState.fetched({
-    required List<InventoryFacilityModel> facilities,
+    required List<FacilityModel> facilities,
   }) = FacilityFetchedState;
 
   const factory FacilityState.error() = FacilityErrorState;

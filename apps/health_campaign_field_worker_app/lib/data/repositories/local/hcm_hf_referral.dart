@@ -2,12 +2,17 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
+import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/oplog/oplog_entry.dart';
 import 'package:drift/drift.dart';
 import 'package:referral_reconciliation/models/entities/h_f_referral.dart';
 
 import '../../../models/data_model.dart';
+import '../../../models/entities/additional_fields_type.dart';
+import '../../../models/entities/hcm_hf_referral.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
+import '../../local_store/sql_store/sql_store.dart';
 
 class HFReferralLocalRepository
     extends LocalRepository<HcmHFReferralModel, HcmHFReferralSearchModel> {

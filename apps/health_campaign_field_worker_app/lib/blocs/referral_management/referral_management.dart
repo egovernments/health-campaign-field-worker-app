@@ -1,10 +1,11 @@
 import 'dart:async';
 
+import 'package:digit_data_model/data/data_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:registration_delivery/models/entities/referral.dart';
 
 import '../../data/data_repository.dart';
-import '../../models/entities/referral.dart';
 
 part 'referral_management.freezed.dart';
 

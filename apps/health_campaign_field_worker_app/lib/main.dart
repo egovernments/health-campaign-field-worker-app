@@ -1,11 +1,14 @@
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_data_model/data/sql_store/sql_store.dart';
+import 'package:digit_data_model/utils/utils.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:isar/isar.dart';
+import 'package:registration_delivery/data/local_store/sql_store.dart';
 import 'app.dart';
 import 'blocs/app_bloc_observer.dart';
 import 'data/local_store/app_shared_preferences.dart';
@@ -13,12 +16,14 @@ import 'data/local_store/secure_store/secure_store.dart';
 import 'data/local_store/sql_store/sql_store.dart';
 import 'data/remote_client.dart';
 import 'firebase_options.dart';
+// import 'models/data_model.init.dart';
 import 'models/data_model.init.dart';
 import 'models/entities/target.dart';
 import 'router/app_router.dart';
 import 'utils/background_service.dart';
 import 'utils/environment_config.dart';
 import 'utils/utils.dart';
+import 'package:digit_data_model/data_model.init.dart' as digitDataModel;
 
 final LocalSqlDataStore _sql = LocalSqlDataStore();
 late Dio _dio;
@@ -29,6 +34,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   initializeMappers();
+  digitDataModel.initializeMappers();
   final info = await PackageInfo.fromPlatform();
 
   Bloc.observer = AppBlocObserver();

@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
@@ -229,7 +230,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                       ).state.primaryId;
                                       final secondaryParty =
                                           selectedFacilityId != null
-                                              ? InventoryFacilityModel(
+                                              ? FacilityModel(
                                                   id: selectedFacilityId
                                                       .toString(),
                                                 )
@@ -394,55 +395,68 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                           receiverType: receiverType,
                                           senderId: senderId,
                                           senderType: senderType,
-                                        );
-
-                                        bloc.add(
-                                          RecordStockSaveStockDetailsEvent(
-                                            stockModel: stockModel,
-                                            additionalData: [
-                                                      waybillQuantity,
-                                                      vehicleNumber,
-                                                      comments,
-                                                    ].any((element) =>
-                                                        element != null) ||
-                                                    hasLocationData
-                                                ? {
+                                          additionalFields: [
+                                                    waybillQuantity,
+                                                    vehicleNumber,
+                                                    comments,
+                                                  ].any((element) =>
+                                                      element != null) ||
+                                                  hasLocationData
+                                              ? StockAdditionalFields(
+                                                  version: 1,
+                                                  fields: [
                                                     if (waybillQuantity !=
                                                             null &&
                                                         waybillQuantity
                                                             .trim()
                                                             .isNotEmpty)
-                                                      'waybill_quantity':
-                                                          waybillQuantity,
+                                                      AdditionalField(
+                                                        'waybill_quantity',
+                                                        waybillQuantity,
+                                                      ),
                                                     if (vehicleNumber != null &&
                                                         vehicleNumber
                                                             .trim()
                                                             .isNotEmpty)
-                                                      'vehicle_number':
-                                                          vehicleNumber,
+                                                      AdditionalField(
+                                                        'vehicle_number',
+                                                        vehicleNumber,
+                                                      ),
                                                     if (comments != null &&
                                                         comments
                                                             .trim()
                                                             .isNotEmpty)
-                                                      'comments': comments,
+                                                      AdditionalField(
+                                                        'comments',
+                                                        comments,
+                                                      ),
                                                     if (deliveryTeamName !=
                                                             null &&
                                                         deliveryTeamName
                                                             .trim()
                                                             .isNotEmpty)
-                                                      'deliveryTeam':
-                                                          deliveryTeamName,
-                                                    if (hasLocationData) ...{
-                                                      'lat': lat,
-                                                      'lng': lng,
-                                                    },
-                                                    if (scannerState
-                                                        .barCodes.isNotEmpty)
-                                                      ...addBarCodesToFields(
-                                                          scannerState
-                                                              .barCodes),
-                                                  }
-                                                : null,
+                                                      AdditionalField(
+                                                        'deliveryTeam',
+                                                        deliveryTeamName,
+                                                      ),
+                                                    if (hasLocationData) ...[
+                                                      AdditionalField(
+                                                        'lat',
+                                                        lat,
+                                                      ),
+                                                      AdditionalField(
+                                                        'lng',
+                                                        lng,
+                                                      ),
+                                                    ],
+                                                  ],
+                                                )
+                                              : null,
+                                        );
+
+                                        bloc.add(
+                                          RecordStockSaveStockDetailsEvent(
+                                            stockModel: stockModel,
                                           ),
                                         );
 
@@ -572,13 +586,12 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                   .control(_deliveryTeamKey)
                                                   .value = '';
 
-                                              final facility = await context
-                                                      .router
-                                                      .push(
+                                              final facility =
+                                                  await context.router.push(
                                                           InventoryFacilitySelectionRoute(
                                                               facilities:
                                                                   facilities))
-                                                  as InventoryFacilityModel?;
+                                                      as FacilityModel?;
 
                                               if (facility == null) return;
                                               form
@@ -633,7 +646,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                     InventoryFacilitySelectionRoute(
                                                       facilities: facilities,
                                                     ),
-                                                  ) as InventoryFacilityModel?;
+                                                  ) as FacilityModel?;
 
                                                   if (facility == null) return;
                                                   form

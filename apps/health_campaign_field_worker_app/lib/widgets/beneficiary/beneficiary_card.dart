@@ -2,7 +2,7 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
 import '../../blocs/localization/app_localization.dart';
-import '../../models/data_model.dart';
+import '../../models/entities/status.dart';
 
 class BeneficiaryCard extends StatelessWidget {
   final String title;

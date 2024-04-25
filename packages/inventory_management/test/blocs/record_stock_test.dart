@@ -16,7 +16,7 @@ class MockInventorySingleton extends Mock implements InventorySingleton {
   }
 }
 
-class MockFacilityModel extends Mock implements InventoryFacilityModel {
+class MockFacilityModel extends Mock implements FacilityModel {
   @override
   String get id => 'facility1';
 }
@@ -96,15 +96,14 @@ void main() {
               entryType: mockEntryType, projectId: mockProjectId),
           inventorySingleton: mockInventorySingleton),
       act: (bloc) => bloc.add(RecordStockEvent.saveStockDetails(
-          stockModel: SaveStockDetailsFake().stockModel,
-          additionalData: SaveStockDetailsFake().additionalData)),
+        stockModel: SaveStockDetailsFake().stockModel,
+      )),
       // Expecting the bloc to emit a state with the saved stock details
       expect: () => <RecordStockState>[
         RecordStockState.create(
           entryType: mockEntryType,
           projectId: mockProjectId,
           stockModel: SaveStockDetailsFake().stockModel,
-          additionalData: SaveStockDetailsFake().additionalData,
         ),
       ],
     );
@@ -114,17 +113,17 @@ void main() {
       'emits persisted state when createStockEntry event is added and stock details are saved successfully',
       build: () => RecordStockBloc(
           RecordStockState.create(
-              entryType: mockEntryType,
-              projectId: mockProjectId,
-              dateOfRecord: mockDateOfRecord,
-              facilityModel: mockFacilityModel,
-              stockModel: SaveStockDetailsFake().stockModel,
-              additionalData: SaveStockDetailsFake().additionalData),
+            entryType: mockEntryType,
+            projectId: mockProjectId,
+            dateOfRecord: mockDateOfRecord,
+            facilityModel: mockFacilityModel,
+            stockModel: SaveStockDetailsFake().stockModel,
+          ),
           inventorySingleton: mockInventorySingleton),
       act: (bloc) {
         bloc.add(RecordStockEvent.saveStockDetails(
-            stockModel: SaveStockDetailsFake().stockModel,
-            additionalData: SaveStockDetailsFake().additionalData));
+          stockModel: SaveStockDetailsFake().stockModel,
+        ));
         bloc.add(const RecordStockEvent.createStockEntry());
       },
       // Expecting the bloc to emit a persisted state after the stock entry is created
@@ -135,7 +134,6 @@ void main() {
           dateOfRecord: mockDateOfRecord,
           facilityModel: mockFacilityModel,
           stockModel: SaveStockDetailsFake().stockModel,
-          additionalData: SaveStockDetailsFake().additionalData,
         ),
         RecordStockPersistedState(
           entryType: mockEntryType,
@@ -143,7 +141,6 @@ void main() {
           dateOfRecord: mockDateOfRecord,
           facilityModel: mockFacilityModel,
           stockModel: SaveStockDetailsFake().stockModel,
-          additionalData: SaveStockDetailsFake().additionalData,
         ),
       ],
     );

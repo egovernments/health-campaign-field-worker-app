@@ -1,3 +1,4 @@
+import 'package:digit_data_model/data/data_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -5,6 +6,8 @@ import '../../blocs/facility/facility.dart';
 import '../../blocs/project_facility/project_facility.dart';
 import '../../data/data_repository.dart';
 import '../../models/data_model.dart';
+import '../../models/entities/facility.dart';
+import '../../models/entities/project_facility.dart';
 import '../../utils/extensions/extensions.dart';
 import 'selected_project_builder.dart';
 

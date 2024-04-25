@@ -1,15 +1,14 @@
 // GENERATED using mason_cli
 import 'dart:async';
 
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
 
 import '../../data/data_repository.dart';
-import '../../data/local_store/no_sql/schema/oplog.dart';
 import '../../data/network_manager.dart';
 import '../../models/bandwidth/bandwidth_model.dart';
-import '../../models/data_model.dart';
 
 part 'sync.freezed.dart';
 

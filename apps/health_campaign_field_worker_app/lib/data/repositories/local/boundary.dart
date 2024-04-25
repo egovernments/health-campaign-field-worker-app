@@ -1,14 +1,14 @@
 import 'dart:async';
 
+import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/oplog/oplog_entry.dart';
 import 'package:drift/drift.dart';
 
-import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
-import '../../data_repository.dart';
+import '../oplog/hcm_oplog.dart';
 
-class BoundaryLocalRepository
-    extends LocalRepository<BoundaryModel, BoundarySearchModel> {
-  BoundaryLocalRepository(super.sql, super.opLogManager);
+class HCMBoundaryLocalRepository extends BoundaryLocalRepository {
+  HCMBoundaryLocalRepository(super.sql, super.opLogManager);
 
   @override
   FutureOr<void> create(

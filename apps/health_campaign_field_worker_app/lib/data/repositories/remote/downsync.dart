@@ -1,6 +1,7 @@
 // Generated using mason. Do not modify by hand
 
-import '../../../models/data_model.dart';
+import 'package:digit_data_model/data_model.dart';
+import 'package:registration_delivery/models/entities/downsync.dart';
 import '../../data_repository.dart';
 
 class DownsyncRemoteRepository extends RemoteRepository<DownsyncModel, DownsyncSearchModel> {

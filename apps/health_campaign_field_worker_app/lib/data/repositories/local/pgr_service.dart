@@ -1,8 +1,13 @@
 import 'dart:async';
 
+import 'package:digit_data_model/data/sql_store/sql_store.dart';
+import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/locality.dart';
+import 'package:digit_data_model/models/oplog/oplog_entry.dart';
 import 'package:drift/drift.dart';
 
-import '../../../models/data_model.dart';
+import '../../../models/pgr_complaints/pgr_address.dart';
+import '../../../models/pgr_complaints/pgr_complaints.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
 import '../../local_store/sql_store/sql_store.dart';
@@ -122,13 +127,17 @@ class PgrServiceLocalRepository
                 if (query.complaintAssignedTo != null) ...[
                   if (query.complaintAssignedTo ==
                       "COMPLAINTS_ASSIGNED_TO_SELF") ...[
-                    sql.pgrComplainant.name.equals(query.currentUserName!),
+                    sql.pgrComplainant.name
+                        .equals(query.currentUserName!),
                   ] else ...[
-                    sql.pgrComplainant.name.equals(query.currentUserName!).not(),
+                    sql.pgrComplainant.name
+                        .equals(query.currentUserName!)
+                        .not(),
                   ],
                 ],
                 if (query.complaintTypeCode != null)
-                  sql.pgrService.serviceCode.equals(query.complaintTypeCode!),
+                  sql.pgrService.serviceCode
+                      .equals(query.complaintTypeCode!),
                 if (query.locality != null)
                   sql.address.boundary.equals(query.locality!),
                 if (query.complaintStatus != null)
@@ -207,7 +216,6 @@ class PgrServiceLocalRepository
         active: pgrService.active,
         source: pgrService.source,
         additionalDetail: pgrService.additionalFields,
-    
       );
     }).toList();
   }

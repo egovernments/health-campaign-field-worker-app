@@ -27,7 +27,7 @@ void main() {
   var networkManagerProviderWrapperFilePath =
       '$appRoot/widgets/network_manager_provider_wrapper.dart';
   var opLogPath =
-      '$appDir/apps/health_campaign_field_worker_app/lib/data/local_store/no_sql/schema/oplog.dart';
+      '$appDir/apps/health_campaign_field_worker_app/lib/data/local_store/no_sql/schema/hcm_oplog.dart';
   var typeDefPath = '$appRoot/utils/typedefs.dart';
 
   _createLocalizationDelegatesFile(localizationDelegatesFilePath);
@@ -54,7 +54,7 @@ void main() {
     print(results.stdout);
   });
 
-  // Run dart format on the oplog.dart file
+  // Run dart format on the hcm_oplog.dart file
   Process.run('dart', ['format', opLogPath]).then((ProcessResult results) {
     print(results.stdout);
   });

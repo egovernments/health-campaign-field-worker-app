@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -6,9 +7,8 @@ import 'package:inventory_management/blocs/inventory_report.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/models/entities/product_variant.dart'
     as invProdVar;
-import '../../data/data_repository.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
-import '../../models/data_model.dart';
+import '../../models/entities/project_resource.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/utils.dart';
 import '../facility/facility.dart';
@@ -21,10 +21,9 @@ class HcmInventoryBloc extends InventoryListener {
   final String? userId;
   final String? individualId;
   final String? projectId;
-  final LocalRepository<HcmStockModel, HcmStockSearchModel>?
-      stockLocalRepository;
-  final LocalRepository<HcmStockReconciliationModel,
-      HcmStockReconciliationSearchModel>? stockReconLocalRepository;
+  final LocalRepository<StockModel, StockSearchModel>? stockLocalRepository;
+  final LocalRepository<StockReconciliationModel,
+      StockReconciliationSearchModel>? stockReconLocalRepository;
 
   // Constructor for the HcmInventoryBloc
   HcmInventoryBloc({
@@ -44,7 +43,7 @@ class HcmInventoryBloc extends InventoryListener {
 
   // Method to fetch facilities for a given project ID
   @override
-  Future<List<InventoryFacilityModel>> fetchFacilitiesForProjectId() async {
+  Future<List<FacilityModel>> fetchFacilitiesForProjectId() async {
     final facilitiesBloc = context!.read<FacilityBloc>();
     facilitiesBloc.add(FacilityLoadForProjectEvent(projectId: projectId!));
 
@@ -55,12 +54,12 @@ class HcmInventoryBloc extends InventoryListener {
       ),
     );
 
-    List<InventoryFacilityModel> hcmInventoryFacilityModel = [];
+    List<FacilityModel> hcmFacilityModel = [];
     facilitiesState.maybeWhen(
       fetched: (facilities, _) {
         for (var element in facilities) {
-          hcmInventoryFacilityModel.add(
-            InventoryFacilityModel(
+          hcmFacilityModel.add(
+            FacilityModel(
               id: element.id,
               isPermanent: element.isPermanent,
               nonRecoverableError: element.nonRecoverableError,
@@ -75,7 +74,7 @@ class HcmInventoryBloc extends InventoryListener {
       orElse: () {},
     );
 
-    return hcmInventoryFacilityModel;
+    return hcmFacilityModel;
   }
 
   // Method to fetch product variants
@@ -142,11 +141,9 @@ class HcmInventoryBloc extends InventoryListener {
     final user = await LocalSecureStore.instance.userRequestModel;
 
     final receivedStocks = (await stockLocalRepository!.search(
-      HcmStockSearchModel(
-        stock: StockSearchModel(
-          productVariantId: productVariantId,
-          receiverId: facilityId,
-        ),
+      StockSearchModel(
+        productVariantId: productVariantId,
+        receiverId: facilityId,
       ),
     ))
         .where((element) =>
@@ -154,11 +151,9 @@ class HcmInventoryBloc extends InventoryListener {
             element.auditDetails?.createdBy == user?.uuid)
         .toList();
     final sentStocks = (await stockLocalRepository!.search(
-      HcmStockSearchModel(
-        stock: StockSearchModel(
-          productVariantId: productVariantId,
-          senderId: facilityId,
-        ),
+      StockSearchModel(
+        productVariantId: productVariantId,
+        senderId: facilityId,
       ),
     ))
         .where((element) =>
@@ -166,8 +161,8 @@ class HcmInventoryBloc extends InventoryListener {
             element.auditDetails?.createdBy == user?.uuid)
         .toList();
 
-    var received = receivedStocks.map((e) => e.stock!).toList();
-    var sent = sentStocks.map((e) => e.stock!).toList();
+    var received = receivedStocks.map((e) => e).toList();
+    var sent = sentStocks.map((e) => e).toList();
 
     return [received, sent];
   }
@@ -176,27 +171,43 @@ class HcmInventoryBloc extends InventoryListener {
   @override
   Future<bool> saveStockDetails(SaveStockDetails saveStockDetails) async {
     try {
-      await stockLocalRepository!.create(HcmStockModel(
-        stock: saveStockDetails.stockModel.copyWith(
-          facilityId: saveStockDetails.stockModel.facilityId,
-          rowVersion: 1,
-          tenantId: envConfig.variables.tenantId,
-        ),
-        additionalFields: StockAdditionalFields(
-          version: 1,
-          fields: getAdditionalData(saveStockDetails.additionalData),
-        ),
-        auditDetails: AuditDetails(
-          createdBy: context!.loggedInUserUuid,
-          createdTime: context!.millisecondsSinceEpoch(),
-        ),
-        clientAuditDetails: ClientAuditDetails(
-          createdBy: context!.loggedInUserUuid,
-          createdTime: context!.millisecondsSinceEpoch(),
-          lastModifiedBy: context!.loggedInUserUuid,
-          lastModifiedTime: context!.millisecondsSinceEpoch(),
-        ),
-      ));
+      await stockLocalRepository!.create(
+          StockModel(
+            clientReferenceId: saveStockDetails.stockModel.clientReferenceId,
+            facilityId: saveStockDetails.stockModel.facilityId,
+            id: saveStockDetails.stockModel.id,
+            isDeleted: saveStockDetails.stockModel.isDeleted,
+            nonRecoverableError:
+                saveStockDetails.stockModel.nonRecoverableError,
+            productVariantId: saveStockDetails.stockModel.productVariantId,
+            quantity: saveStockDetails.stockModel.quantity,
+            receiverId: saveStockDetails.stockModel.receiverId,
+            receiverType: saveStockDetails.stockModel.receiverType,
+            referenceId: saveStockDetails.stockModel.referenceId,
+            referenceIdType: saveStockDetails.stockModel.referenceIdType,
+            rowVersion: saveStockDetails.stockModel.rowVersion,
+            senderId: saveStockDetails.stockModel.senderId,
+            senderType: saveStockDetails.stockModel.senderType,
+            tenantId: envConfig.variables.tenantId,
+            transactingPartyId: saveStockDetails.stockModel.transactingPartyId,
+            transactingPartyType:
+                saveStockDetails.stockModel.transactingPartyType,
+            transactionReason: saveStockDetails.stockModel.transactionReason,
+            transactionType: saveStockDetails.stockModel.transactionType,
+            waybillNumber: saveStockDetails.stockModel.waybillNumber,
+            additionalFields: saveStockDetails.stockModel.additionalFields,
+            auditDetails: AuditDetails(
+              createdBy: context!.loggedInUserUuid,
+              createdTime: context!.millisecondsSinceEpoch(),
+            ),
+            clientAuditDetails: ClientAuditDetails(
+              createdBy: context!.loggedInUserUuid,
+              createdTime: context!.millisecondsSinceEpoch(),
+              lastModifiedBy: context!.loggedInUserUuid,
+              lastModifiedTime: context!.millisecondsSinceEpoch(),
+            ),
+          ),
+          createOpLog: true);
       return true;
     } catch (e) {
       return false;
@@ -210,13 +221,33 @@ class HcmInventoryBloc extends InventoryListener {
   ) async {
     try {
       await stockReconLocalRepository!.create(
-        HcmStockReconciliationModel(
-          stockReconciliation:
-              stockReconciliationModel.stockReconciliationModel.copyWith(
-            tenantId: envConfig.variables.tenantId,
-            referenceId: projectId,
-            referenceIdType: 'PROJECT',
-          ),
+        StockReconciliationModel(
+          clientReferenceId: stockReconciliationModel
+              .stockReconciliationModel.clientReferenceId,
+          facilityId:
+              stockReconciliationModel.stockReconciliationModel.facilityId,
+          id: stockReconciliationModel.stockReconciliationModel.id,
+          isDeleted:
+              stockReconciliationModel.stockReconciliationModel.isDeleted,
+          nonRecoverableError: stockReconciliationModel
+              .stockReconciliationModel.nonRecoverableError,
+          productVariantId: stockReconciliationModel
+              .stockReconciliationModel.productVariantId,
+          referenceId:
+              stockReconciliationModel.stockReconciliationModel.referenceId,
+          referenceIdType:
+              stockReconciliationModel.stockReconciliationModel.referenceIdType,
+          rowVersion:
+              stockReconciliationModel.stockReconciliationModel.rowVersion,
+          tenantId: stockReconciliationModel.stockReconciliationModel.tenantId,
+          calculatedCount:
+              stockReconciliationModel.stockReconciliationModel.calculatedCount,
+          commentsOnReconciliation: stockReconciliationModel
+              .stockReconciliationModel.commentsOnReconciliation,
+          physicalCount:
+              stockReconciliationModel.stockReconciliationModel.physicalCount,
+          dateOfReconciliation: stockReconciliationModel
+              .stockReconciliationModel.dateOfReconciliation,
           additionalFields: StockReconciliationAdditionalFields(
             version: 1,
             fields: getAdditionalData(stockReconciliationModel.additionalData),
@@ -232,6 +263,7 @@ class HcmInventoryBloc extends InventoryListener {
             lastModifiedTime: context!.millisecondsSinceEpoch(),
           ),
         ),
+        createOpLog: true,
       );
 
       return true;
@@ -293,25 +325,21 @@ class HcmInventoryBloc extends InventoryListener {
 
     final data = (receiverId != null
             ? await stockLocalRepository!.search(
-                HcmStockSearchModel(
-                  stock: StockSearchModel(
-                    transactionType: transactionType,
-                    tenantId: envConfig.variables.tenantId,
-                    receiverId: receiverId,
-                    productVariantId: productVariantId,
-                    transactionReason: transactionReason,
-                  ),
+                StockSearchModel(
+                  transactionType: transactionType,
+                  tenantId: envConfig.variables.tenantId,
+                  receiverId: receiverId,
+                  productVariantId: productVariantId,
+                  transactionReason: transactionReason,
                 ),
               )
             : await stockLocalRepository!.search(
-                HcmStockSearchModel(
-                  stock: StockSearchModel(
-                    transactionType: transactionType,
-                    tenantId: envConfig.variables.tenantId,
-                    senderId: senderId,
-                    productVariantId: productVariantId,
-                    transactionReason: transactionReason,
-                  ),
+                StockSearchModel(
+                  transactionType: transactionType,
+                  tenantId: envConfig.variables.tenantId,
+                  senderId: senderId,
+                  productVariantId: productVariantId,
+                  transactionReason: transactionReason,
                 ),
               ))
         .where((element) =>
@@ -329,7 +357,7 @@ class HcmInventoryBloc extends InventoryListener {
     return groupedData.map((key, value) {
       return MapEntry(
         key,
-        value.map((e) => e.stock!).toList(),
+        value.map((e) => e).toList(),
       );
     });
   }
@@ -339,23 +367,21 @@ class HcmInventoryBloc extends InventoryListener {
   Future<StockReconciliationReport> handleStockReconciliationReport(
       {required String facilityId, required String productVariantId}) async {
     final data = await stockReconLocalRepository!.search(
-      HcmStockReconciliationSearchModel(
-        stockReconciliationSearchModel: StockReconciliationSearchModel(
-          tenantId: envConfig.variables.tenantId,
-          facilityId: facilityId,
-          productVariantId: productVariantId,
-        ),
+      StockReconciliationSearchModel(
+        tenantId: envConfig.variables.tenantId,
+        facilityId: facilityId,
+        productVariantId: productVariantId,
       ),
     );
 
     final groupedData = data
         .groupListsBy(
       (element) => DateFormat('dd MMM yyyy').format(
-        element.stockReconciliation!.dateOfReconciliationTime,
+        element.dateOfReconciliationTime,
       ),
     )
         .map((key, value) {
-      return MapEntry(key, value.map((e) => e.stockReconciliation!).toList());
+      return MapEntry(key, value.map((e) => e).toList());
     });
 
     final additionalData = data.map((e) => e.additionalFields).map((e) {

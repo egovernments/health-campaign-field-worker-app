@@ -1,10 +1,12 @@
 // Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:drift/drift.dart';
+import 'package:digit_data_model/data_model.dart';
 
 part 'product_variant.mapper.dart';
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class ProductVariantSearchModel with ProductVariantSearchModelMappable {
+class ProductVariantSearchModel extends EntitySearchModel with ProductVariantSearchModelMappable {
   final List<String>? id;
   final String? productId;
   final String? sku;
@@ -17,7 +19,9 @@ class ProductVariantSearchModel with ProductVariantSearchModelMappable {
     this.sku,
     this.variation,
     this.tenantId,
-  }) : super();
+    super.boundaryCode,
+    super.isDeleted,
+  }):  super();
 
   @MappableConstructor()
   ProductVariantSearchModel.ignoreDeleted({
@@ -26,11 +30,13 @@ class ProductVariantSearchModel with ProductVariantSearchModelMappable {
     this.sku,
     this.variation,
     this.tenantId,
-  }) : super();
+    super.boundaryCode,
+  }):  super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class ProductVariantModel with ProductVariantModelMappable {
+class ProductVariantModel extends EntityModel with ProductVariantModelMappable {
+
   static const schemaName = 'ProductVariant';
 
   final String id;
@@ -40,8 +46,10 @@ class ProductVariantModel with ProductVariantModelMappable {
   final bool? nonRecoverableError;
   final String? tenantId;
   final int? rowVersion;
+  final ProductVariantAdditionalFields? additionalFields;
 
   ProductVariantModel({
+    this.additionalFields,
     required this.id,
     this.productId,
     this.sku,
@@ -49,5 +57,38 @@ class ProductVariantModel with ProductVariantModelMappable {
     this.nonRecoverableError = false,
     this.tenantId,
     this.rowVersion,
-  }) : super();
+    super.auditDetails,super.clientAuditDetails,
+    super.isDeleted = false,
+  }): super();
+
+  // ProductVariantCompanion get companion {
+  //   return ProductVariantCompanion(
+  //     auditCreatedBy: Value(auditDetails?.createdBy),
+  //     auditCreatedTime: Value(auditDetails?.createdTime),
+  //     auditModifiedBy: Value(auditDetails?.lastModifiedBy),
+  //     clientCreatedTime: Value(clientAuditDetails?.createdTime),
+  //     clientModifiedTime: Value(clientAuditDetails?.lastModifiedTime),
+  //     clientCreatedBy: Value(clientAuditDetails?.createdBy),
+  //     clientModifiedBy: Value(clientAuditDetails?.lastModifiedBy),
+  //     auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+  //     additionalFields: Value(additionalFields?.toJson()),
+  //     isDeleted: Value(isDeleted),
+  //     id: Value(id),
+  //     productId: Value(productId),
+  //     sku: Value(sku),
+  //     variation: Value(variation),
+  //     nonRecoverableError: Value(nonRecoverableError),
+  //     tenantId: Value(tenantId),
+  //     rowVersion: Value(rowVersion),
+  //   );
+  // }
+}
+
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class ProductVariantAdditionalFields extends AdditionalFields with ProductVariantAdditionalFieldsMappable {
+  ProductVariantAdditionalFields({
+    super.schema = 'ProductVariant',
+    required super.version,
+    super.fields,
+  });
 }

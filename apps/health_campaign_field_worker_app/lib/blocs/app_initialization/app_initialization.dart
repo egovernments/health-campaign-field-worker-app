@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/oplog/oplog_entry.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
@@ -10,7 +12,6 @@ import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/no_sql/schema/service_registry.dart';
 import '../../data/repositories/remote/mdms.dart';
 import '../../models/app_config/app_config_model.dart';
-import '../../models/data_model.dart';
 import '../../utils/environment_config.dart';
 import '../../widgets/network_manager_provider_wrapper.dart';
 

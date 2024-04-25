@@ -220,7 +220,7 @@ class InventoryFacilitySelectionRoute
     extends _i10.PageRouteInfo<InventoryFacilitySelectionRouteArgs> {
   InventoryFacilitySelectionRoute({
     _i11.Key? key,
-    required List<_i13.InventoryFacilityModel> facilities,
+    required List<_i13.FacilityModel> facilities,
     List<_i10.PageRouteInfo>? children,
   }) : super(
           InventoryFacilitySelectionRoute.name,
@@ -245,7 +245,7 @@ class InventoryFacilitySelectionRouteArgs {
 
   final _i11.Key? key;
 
-  final List<_i13.InventoryFacilityModel> facilities;
+  final List<_i13.FacilityModel> facilities;
 
   @override
   String toString() {

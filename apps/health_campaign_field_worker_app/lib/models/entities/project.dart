@@ -1,9 +1,12 @@
 // Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:digit_data_model/data/sql_store/sql_store.dart';
 import 'package:drift/drift.dart';
 
-import '../data_model.dart';
+import 'package:digit_data_model/data_model.dart';
+import 'package:health_campaign_field_worker_app/models/entities/target.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
+import 'document.dart';
 
 part 'project.mapper.dart';
 

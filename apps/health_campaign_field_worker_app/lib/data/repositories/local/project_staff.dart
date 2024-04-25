@@ -1,10 +1,14 @@
 import 'dart:async';
 
+import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/oplog/oplog_entry.dart';
 import 'package:drift/drift.dart';
 
 import '../../../models/data_model.dart';
+import '../../../models/entities/project_staff.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
+import '../../local_store/sql_store/sql_store.dart';
 
 class ProjectStaffLocalRepository
     extends LocalRepository<ProjectStaffModel, ProjectStaffSearchModel> {
@@ -17,18 +21,22 @@ class ProjectStaffLocalRepository
     DataOperation dataOperation = DataOperation.create,
   }) async {
     final companion = entity.companion;
-    await sql.batch((batch) {
-      batch.insert(
-        sql.projectStaff,
-        companion,
-        mode: InsertMode.insertOrReplace,
-      );
-    });
+    try {
+      await sql.batch((batch) {
+        batch.insert(
+          sql.projectStaff,
+          companion,
+          mode: InsertMode.insertOrReplace,
+        );
+      });
 
-    await super.create(
-      entity,
-      createOpLog: createOpLog,
-    );
+      await super.create(
+        entity,
+        createOpLog: createOpLog,
+      );
+    } catch (e) {
+      print('Error creating project staff table: $e');
+    }
   }
 
   @override

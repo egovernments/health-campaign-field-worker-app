@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_checkbox.dart';
+import 'package:digit_data_model/models/entities/pgr_application_status.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:group_radio_button/group_radio_button.dart';

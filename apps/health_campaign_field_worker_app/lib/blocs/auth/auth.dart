@@ -1,16 +1,17 @@
 import 'dart:async';
 
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_data_model/data/data_repository.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:registration_delivery/models/entities/individual.dart';
 
 import '../../data/data_repository.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/repositories/remote/auth.dart';
 import '../../data/repositories/remote/mdms.dart';
 import '../../models/auth/auth_model.dart';
-import '../../models/entities/individual.dart';
 import '../../models/entities/roles_type.dart';
 import '../../models/role_actions/role_actions_model.dart';
 import '../../utils/environment_config.dart';

@@ -34,7 +34,7 @@ void main() {
       build: () {
         // Mock the method getFacilitiesForProjectId to return a non-null list
         when(() => mockInventorySingleton.getFacilitiesForProjectId())
-            .thenAnswer((_) async => [InventoryFacilityModel(id: '1')]);
+            .thenAnswer((_) async => [FacilityModel(id: '1')]);
         return facilityBloc;
       },
       act: (bloc) =>
@@ -42,7 +42,7 @@ void main() {
       expect: () => <FacilityState>[
         // Expected states after the action
         const FacilityLoadingState(),
-        FacilityFetchedState(facilities: [InventoryFacilityModel(id: '1')]),
+        FacilityFetchedState(facilities: [FacilityModel(id: '1')]),
       ],
     );
 

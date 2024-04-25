@@ -254,7 +254,7 @@ mixin _$FacilityState {
   TResult when<TResult extends Object?>({
     required TResult Function() empty,
     required TResult Function() loading,
-    required TResult Function(List<InventoryFacilityModel> facilities) fetched,
+    required TResult Function(List<FacilityModel> facilities) fetched,
     required TResult Function() error,
   }) =>
       throw _privateConstructorUsedError;
@@ -262,7 +262,7 @@ mixin _$FacilityState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? empty,
     TResult? Function()? loading,
-    TResult? Function(List<InventoryFacilityModel> facilities)? fetched,
+    TResult? Function(List<FacilityModel> facilities)? fetched,
     TResult? Function()? error,
   }) =>
       throw _privateConstructorUsedError;
@@ -270,7 +270,7 @@ mixin _$FacilityState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? empty,
     TResult Function()? loading,
-    TResult Function(List<InventoryFacilityModel> facilities)? fetched,
+    TResult Function(List<FacilityModel> facilities)? fetched,
     TResult Function()? error,
     required TResult orElse(),
   }) =>
@@ -360,7 +360,7 @@ class _$FacilityEmptyStateImpl implements FacilityEmptyState {
   TResult when<TResult extends Object?>({
     required TResult Function() empty,
     required TResult Function() loading,
-    required TResult Function(List<InventoryFacilityModel> facilities) fetched,
+    required TResult Function(List<FacilityModel> facilities) fetched,
     required TResult Function() error,
   }) {
     return empty();
@@ -371,7 +371,7 @@ class _$FacilityEmptyStateImpl implements FacilityEmptyState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? empty,
     TResult? Function()? loading,
-    TResult? Function(List<InventoryFacilityModel> facilities)? fetched,
+    TResult? Function(List<FacilityModel> facilities)? fetched,
     TResult? Function()? error,
   }) {
     return empty?.call();
@@ -382,7 +382,7 @@ class _$FacilityEmptyStateImpl implements FacilityEmptyState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? empty,
     TResult Function()? loading,
-    TResult Function(List<InventoryFacilityModel> facilities)? fetched,
+    TResult Function(List<FacilityModel> facilities)? fetched,
     TResult Function()? error,
     required TResult orElse(),
   }) {
@@ -475,7 +475,7 @@ class _$FacilityLoadingStateImpl implements FacilityLoadingState {
   TResult when<TResult extends Object?>({
     required TResult Function() empty,
     required TResult Function() loading,
-    required TResult Function(List<InventoryFacilityModel> facilities) fetched,
+    required TResult Function(List<FacilityModel> facilities) fetched,
     required TResult Function() error,
   }) {
     return loading();
@@ -486,7 +486,7 @@ class _$FacilityLoadingStateImpl implements FacilityLoadingState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? empty,
     TResult? Function()? loading,
-    TResult? Function(List<InventoryFacilityModel> facilities)? fetched,
+    TResult? Function(List<FacilityModel> facilities)? fetched,
     TResult? Function()? error,
   }) {
     return loading?.call();
@@ -497,7 +497,7 @@ class _$FacilityLoadingStateImpl implements FacilityLoadingState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? empty,
     TResult Function()? loading,
-    TResult Function(List<InventoryFacilityModel> facilities)? fetched,
+    TResult Function(List<FacilityModel> facilities)? fetched,
     TResult Function()? error,
     required TResult orElse(),
   }) {
@@ -555,7 +555,7 @@ abstract class _$$FacilityFetchedStateImplCopyWith<$Res> {
           $Res Function(_$FacilityFetchedStateImpl) then) =
       __$$FacilityFetchedStateImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({List<InventoryFacilityModel> facilities});
+  $Res call({List<FacilityModel> facilities});
 }
 
 /// @nodoc
@@ -575,7 +575,7 @@ class __$$FacilityFetchedStateImplCopyWithImpl<$Res>
       facilities: null == facilities
           ? _value._facilities
           : facilities // ignore: cast_nullable_to_non_nullable
-              as List<InventoryFacilityModel>,
+              as List<FacilityModel>,
     ));
   }
 }
@@ -584,12 +584,12 @@ class __$$FacilityFetchedStateImplCopyWithImpl<$Res>
 
 class _$FacilityFetchedStateImpl implements FacilityFetchedState {
   const _$FacilityFetchedStateImpl(
-      {required final List<InventoryFacilityModel> facilities})
+      {required final List<FacilityModel> facilities})
       : _facilities = facilities;
 
-  final List<InventoryFacilityModel> _facilities;
+  final List<FacilityModel> _facilities;
   @override
-  List<InventoryFacilityModel> get facilities {
+  List<FacilityModel> get facilities {
     if (_facilities is EqualUnmodifiableListView) return _facilities;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_facilities);
@@ -626,7 +626,7 @@ class _$FacilityFetchedStateImpl implements FacilityFetchedState {
   TResult when<TResult extends Object?>({
     required TResult Function() empty,
     required TResult Function() loading,
-    required TResult Function(List<InventoryFacilityModel> facilities) fetched,
+    required TResult Function(List<FacilityModel> facilities) fetched,
     required TResult Function() error,
   }) {
     return fetched(facilities);
@@ -637,7 +637,7 @@ class _$FacilityFetchedStateImpl implements FacilityFetchedState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? empty,
     TResult? Function()? loading,
-    TResult? Function(List<InventoryFacilityModel> facilities)? fetched,
+    TResult? Function(List<FacilityModel> facilities)? fetched,
     TResult? Function()? error,
   }) {
     return fetched?.call(facilities);
@@ -648,7 +648,7 @@ class _$FacilityFetchedStateImpl implements FacilityFetchedState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? empty,
     TResult Function()? loading,
-    TResult Function(List<InventoryFacilityModel> facilities)? fetched,
+    TResult Function(List<FacilityModel> facilities)? fetched,
     TResult Function()? error,
     required TResult orElse(),
   }) {
@@ -698,10 +698,10 @@ class _$FacilityFetchedStateImpl implements FacilityFetchedState {
 
 abstract class FacilityFetchedState implements FacilityState {
   const factory FacilityFetchedState(
-          {required final List<InventoryFacilityModel> facilities}) =
+          {required final List<FacilityModel> facilities}) =
       _$FacilityFetchedStateImpl;
 
-  List<InventoryFacilityModel> get facilities;
+  List<FacilityModel> get facilities;
   @JsonKey(ignore: true)
   _$$FacilityFetchedStateImplCopyWith<_$FacilityFetchedStateImpl>
       get copyWith => throw _privateConstructorUsedError;
@@ -747,7 +747,7 @@ class _$FacilityErrorStateImpl implements FacilityErrorState {
   TResult when<TResult extends Object?>({
     required TResult Function() empty,
     required TResult Function() loading,
-    required TResult Function(List<InventoryFacilityModel> facilities) fetched,
+    required TResult Function(List<FacilityModel> facilities) fetched,
     required TResult Function() error,
   }) {
     return error();
@@ -758,7 +758,7 @@ class _$FacilityErrorStateImpl implements FacilityErrorState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? empty,
     TResult? Function()? loading,
-    TResult? Function(List<InventoryFacilityModel> facilities)? fetched,
+    TResult? Function(List<FacilityModel> facilities)? fetched,
     TResult? Function()? error,
   }) {
     return error?.call();
@@ -769,7 +769,7 @@ class _$FacilityErrorStateImpl implements FacilityErrorState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? empty,
     TResult Function()? loading,
-    TResult Function(List<InventoryFacilityModel> facilities)? fetched,
+    TResult Function(List<FacilityModel> facilities)? fetched,
     TResult Function()? error,
     required TResult orElse(),
   }) {

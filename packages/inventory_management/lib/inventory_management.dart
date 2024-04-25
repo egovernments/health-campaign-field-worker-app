@@ -14,6 +14,9 @@ export 'data/local_store/sql_store/tables/product_variant.dart';
 export 'data/local_store/sql_store/tables/stock.dart';
 export 'data/local_store/sql_store/tables/stock_reconciliation.dart';
 
+export 'data/repositories/local/stock.dart';
+export 'data/repositories/local/stock_reconciliation.dart';
+
 export 'pages/record_stock/record_stock_wrapper.dart';
 export 'pages/record_stock/stock_details.dart';
 export 'pages/record_stock/warehouse_details.dart';

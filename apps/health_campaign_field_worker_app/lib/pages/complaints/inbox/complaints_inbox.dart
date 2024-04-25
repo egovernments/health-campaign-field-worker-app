@@ -6,6 +6,7 @@ import 'package:recase/recase.dart';
 import '../../../blocs/complaints_inbox/complaints_inbox.dart';
 import '../../../blocs/localization/app_localization.dart';
 import '../../../models/data_model.dart';
+import '../../../models/pgr_complaints/pgr_complaints.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';

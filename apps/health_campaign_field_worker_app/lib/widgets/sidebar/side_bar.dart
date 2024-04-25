@@ -12,6 +12,7 @@ import '../../blocs/boundary/boundary.dart';
 import '../../blocs/localization/localization.dart';
 import '../../blocs/user/user.dart';
 import '../../models/data_model.dart';
+import '../../models/entities/roles_type.dart';
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
@@ -216,17 +217,17 @@ class SideBar extends StatelessWidget {
               },
             );
           }),
-          if (isDistributor)
-            DigitIconTile(
-              title: AppLocalizations.of(context).translate(
-                i18.common.coreCommonViewDownloadedData,
-              ),
-              icon: Icons.download,
-              onPressed: () {
-                Navigator.of(context, rootNavigator: true).pop();
-                context.router.push(const BeneficiariesReportRoute());
-              },
-            ),
+          // if (isDistributor)
+          //   DigitIconTile(
+          //     title: AppLocalizations.of(context).translate(
+          //       i18.common.coreCommonViewDownloadedData,
+          //     ),
+          //     icon: Icons.download,
+          //     onPressed: () {
+          //       Navigator.of(context, rootNavigator: true).pop();
+          //       context.router.push(const BeneficiariesReportRoute());
+          //     },
+          //   ),
           DigitIconTile(
             title: AppLocalizations.of(context)
                 .translate(i18.common.coreCommonLogout),

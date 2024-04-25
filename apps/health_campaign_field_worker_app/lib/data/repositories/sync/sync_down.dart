@@ -1,16 +1,30 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:digit_data_model/data/repositories/oplog/oplog.dart';
+import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/pgr_application_status.dart';
+import 'package:digit_data_model/models/oplog/oplog_entry.dart';
 import 'package:inventory_management/models/entities/stock.dart';
 import 'package:inventory_management/models/entities/stock_reconciliation.dart';
 import 'package:referral_reconciliation/models/entities/h_f_referral.dart';
+import 'package:registration_delivery/models/entities/household.dart';
+import 'package:registration_delivery/models/entities/household_member.dart';
+import 'package:registration_delivery/models/entities/individual.dart';
+import 'package:registration_delivery/models/entities/referral.dart';
+import 'package:registration_delivery/models/entities/side_effect.dart';
+import 'package:registration_delivery/models/entities/task.dart';
 
 import '../../../models/bandwidth/bandwidth_model.dart';
-import '../../../models/data_model.dart';
+import '../../../models/entities/hcm_hf_referral.dart';
+import '../../../models/entities/project_beneficiary.dart';
+import '../../../models/pgr_complaints/pgr_address.dart';
+import '../../../models/pgr_complaints/pgr_complaints.dart';
+import '../../../models/pgr_complaints/pgr_complaints_response.dart';
 import '../../../utils/environment_config.dart';
 import '../../data_repository.dart';
 import '../../network_manager.dart';
-import '../oplog/oplog.dart';
+import '../oplog/hcm_oplog.dart';
 import '../remote/pgr_service.dart';
 import './remote_type.dart';
 
@@ -512,45 +526,93 @@ class PerformSyncDown {
             break;
 
           case DataModelType.attendance:
-            responseEntities = await remote.search(HCMAttendanceLogSearchModel(
-              clientReferenceId: entities
-                  .whereType<HCMAttendanceLogModel>()
-                  .map((e) => e.attendance?.clientReferenceId!)
-                  .whereNotNull()
-                  .toList(),
-              isDeleted: true,
-              tenantId: envConfig.variables.tenantId,
-            ));
+          // responseEntities = await remote.search(HCMAttendanceLogSearchModel(
+          //   clientReferenceId: entities
+          //       .whereType<HCMAttendanceLogModel>()
+          //       .map((e) => e.attendance?.clientReferenceId!)
+          //       .whereNotNull()
+          //       .toList(),
+          //   isDeleted: true,
+          //   tenantId: envConfig.variables.tenantId,
+          // ));
+          //
+          // for (var element in operationGroupedEntity.value) {
+          //   if (element.id == null) return;
+          //   final entity = element.entity as HCMAttendanceLogModel;
+          //   final responseEntity = responseEntities
+          //       .whereType<HCMAttendanceLogModel>()
+          //       .firstWhereOrNull(
+          //         (e) =>
+          //             e.attendance?.clientReferenceId ==
+          //             entity.attendance?.clientReferenceId,
+          //       );
+          //
+          //   final serverGeneratedId = responseEntity?.attendance?.id;
+          //   final rowVersion = responseEntity?.rowVersion;
+          //   if (serverGeneratedId != null) {
+          //     await local.opLogManager.updateServerGeneratedIds(
+          //       model: UpdateServerGeneratedIdModel(
+          //         clientReferenceId:
+          //             entity.attendance!.clientReferenceId.toString(),
+          //         serverGeneratedId: serverGeneratedId,
+          //         nonRecoverableError: entity.nonRecoverableError,
+          //         dataOperation: element.operation,
+          //         rowVersion: rowVersion,
+          //       ),
+          //     );
+          //   } else {
+          //     final bool markAsNonRecoverable =
+          //         await local.opLogManager.updateSyncDownRetry(
+          //       entity.attendance!.clientReferenceId.toString(),
+          //     );
+          //
+          //     if (markAsNonRecoverable) {
+          //       await local.update(
+          //         entity.copyWith(
+          //           nonRecoverableError: true,
+          //         ),
+          //         createOpLog: false,
+          //       );
+          //     }
+          //   }
+          // }
+          //
+          // break;
+
+          case DataModelType.stock:
+            responseEntities = await remote.search(
+              StockSearchModel(
+                clientReferenceId: entities
+                    .whereType<StockModel>()
+                    .map((e) => e.clientReferenceId)
+                    .whereNotNull()
+                    .toList(),
+              ),
+            );
 
             for (var element in operationGroupedEntity.value) {
               if (element.id == null) return;
-              final entity = element.entity as HCMAttendanceLogModel;
-              final responseEntity = responseEntities
-                  .whereType<HCMAttendanceLogModel>()
-                  .firstWhereOrNull(
-                    (e) =>
-                        e.attendance?.clientReferenceId ==
-                        entity.attendance?.clientReferenceId,
-                  );
+              final entity = element.entity as StockModel;
+              final responseEntity =
+                  responseEntities.whereType<StockModel>().firstWhereOrNull(
+                        (e) => e.clientReferenceId == entity.clientReferenceId,
+                      );
 
-              final serverGeneratedId = responseEntity?.attendance?.id;
+              final serverGeneratedId = responseEntity?.id;
               final rowVersion = responseEntity?.rowVersion;
+
               if (serverGeneratedId != null) {
                 await local.opLogManager.updateServerGeneratedIds(
                   model: UpdateServerGeneratedIdModel(
-                    clientReferenceId:
-                        entity.attendance!.clientReferenceId.toString(),
+                    clientReferenceId: entity.clientReferenceId!,
                     serverGeneratedId: serverGeneratedId,
-                    nonRecoverableError: entity.nonRecoverableError,
                     dataOperation: element.operation,
                     rowVersion: rowVersion,
                   ),
                 );
               } else {
-                final bool markAsNonRecoverable =
-                    await local.opLogManager.updateSyncDownRetry(
-                  entity.attendance!.clientReferenceId.toString(),
-                );
+                final bool markAsNonRecoverable = await local.opLogManager
+                    .updateSyncDownRetry(entity.clientReferenceId);
 
                 if (markAsNonRecoverable) {
                   await local.update(
@@ -565,92 +627,32 @@ class PerformSyncDown {
 
             break;
 
-          case DataModelType.stock:
-            responseEntities = await remote.search(
-              HcmStockSearchModel(
-                stock: StockSearchModel(
-                  clientReferenceId: entities
-                      .whereType<HcmStockModel>()
-                      .map((e) => e.stock?.clientReferenceId)
-                      .whereNotNull()
-                      .toList(),
-                ),
-              ),
-            );
-
-            for (var element in operationGroupedEntity.value) {
-              if (element.id == null) return;
-              final entity = element.entity as HcmStockModel;
-              final responseEntity =
-                  responseEntities.whereType<HcmStockModel>().firstWhereOrNull(
-                        (e) =>
-                            e.stock?.clientReferenceId ==
-                            entity.stock?.clientReferenceId,
-                      );
-
-              final serverGeneratedId = responseEntity?.stock?.id;
-              final rowVersion = responseEntity?.stock?.rowVersion;
-
-              if (serverGeneratedId != null) {
-                await local.opLogManager.updateServerGeneratedIds(
-                  model: UpdateServerGeneratedIdModel(
-                    clientReferenceId: entity.stock!.clientReferenceId!,
-                    serverGeneratedId: serverGeneratedId,
-                    dataOperation: element.operation,
-                    rowVersion: rowVersion,
-                  ),
-                );
-              } else {
-                final bool markAsNonRecoverable = await local.opLogManager
-                    .updateSyncDownRetry(entity.stock!.clientReferenceId!);
-
-                if (markAsNonRecoverable) {
-                  await local.update(
-                    entity.copyWith(
-                      stock: entity.stock!.copyWith(
-                        nonRecoverableError: true,
-                      ),
-                    ),
-                    createOpLog: false,
-                  );
-                }
-              }
-            }
-
-            break;
-
           case DataModelType.stockReconciliation:
             responseEntities =
-                await remote.search(HcmStockReconciliationSearchModel(
-              stockReconciliationSearchModel: StockReconciliationSearchModel(
-                clientReferenceId: entities
-                    .whereType<HcmStockReconciliationModel>()
-                    .map((e) => e.stockReconciliation?.clientReferenceId)
-                    .whereNotNull()
-                    .toList(),
-              ),
+                await remote.search(StockReconciliationSearchModel(
+              clientReferenceId: entities
+                  .whereType<StockReconciliationModel>()
+                  .map((e) => e.clientReferenceId)
+                  .whereNotNull()
+                  .toList(),
             ));
 
             for (var element in operationGroupedEntity.value) {
               if (element.id == null) return;
-              final entity = element.entity as HcmStockReconciliationModel;
+              final entity = element.entity as StockReconciliationModel;
               final responseEntity = responseEntities
-                  .whereType<HcmStockReconciliationModel>()
+                  .whereType<StockReconciliationModel>()
                   .firstWhereOrNull(
-                    (e) =>
-                        e.stockReconciliation?.clientReferenceId ==
-                        entity.stockReconciliation?.clientReferenceId,
+                    (e) => e.clientReferenceId == entity.clientReferenceId,
                   );
 
-              final serverGeneratedId = responseEntity?.stockReconciliation?.id;
-              final rowVersion =
-                  responseEntity?.stockReconciliation?.rowVersion;
+              final serverGeneratedId = responseEntity?.id;
+              final rowVersion = responseEntity?.rowVersion;
 
               if (serverGeneratedId != null) {
                 await local.opLogManager.updateServerGeneratedIds(
                   model: UpdateServerGeneratedIdModel(
-                    clientReferenceId:
-                        entity.stockReconciliation!.clientReferenceId,
+                    clientReferenceId: entity.clientReferenceId,
                     serverGeneratedId: serverGeneratedId,
                     dataOperation: element.operation,
                     rowVersion: rowVersion,
@@ -658,15 +660,12 @@ class PerformSyncDown {
                 );
               } else {
                 final bool markAsNonRecoverable = await local.opLogManager
-                    .updateSyncDownRetry(
-                        entity.stockReconciliation!.clientReferenceId);
+                    .updateSyncDownRetry(entity.clientReferenceId);
 
                 if (markAsNonRecoverable) {
                   await local.update(
                     entity.copyWith(
-                      stockReconciliation: entity.stockReconciliation!.copyWith(
-                        nonRecoverableError: true,
-                      ),
+                      nonRecoverableError: true,
                     ),
                     createOpLog: false,
                   );

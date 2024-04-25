@@ -2,7 +2,7 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:health_campaign_field_worker_app/blocs/household_details/household_details.dart';
+// import 'package:health_campaign_field_worker_app/blocs/household_details/household_details.dart';
 import 'package:health_campaign_field_worker_app/blocs/localization/app_localization.dart';
 import 'package:health_campaign_field_worker_app/router/app_router.dart';
 
@@ -41,16 +41,16 @@ void main() {
     Future<void> buildTester(WidgetTester tester) async {
       await tester.pumpWidget(MultiBlocProvider(
         providers: [
-          BlocProvider(
-            create: (_) => HouseholdDetailsBloc(const HouseholdDetailsState()),
-          ),
+          // BlocProvider(
+          //   create: (_) => HouseholdDetailsBloc(const HouseholdDetailsState()),
+          // ),
         ],
         child: MaterialApp.router(
           routerDelegate: AutoRouterDelegate.declarative(
             appRouter,
             navigatorObservers: () => [mockObserver],
             routes: (PendingRoutesHandler handler) => [
-              HouseHoldDetailsRoute(appLocalizations: mockLocalization),
+              // HouseHoldDetailsRoute(appLocalizations: mockLocalization),
             ],
           ),
         ),

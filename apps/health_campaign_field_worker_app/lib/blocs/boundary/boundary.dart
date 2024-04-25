@@ -2,6 +2,8 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:digit_data_model/data/data_repository.dart';
+import 'package:digit_data_model/models/entities/boundary.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -45,8 +47,7 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
       ),
     );
 
-    int?  boundaryNum = boundaryList.first.boundaryNum;
-
+    int? boundaryNum = boundaryList.first.boundaryNum;
 
     final List<String> boundaryLabelList = [];
     for (var element in boundaryList) {

@@ -1,32 +1,31 @@
 import 'dart:async';
 
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_showcase/showcase_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_portal/flutter_portal.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
+import 'package:registration_delivery/models/entities/household.dart';
+import 'package:registration_delivery/models/entities/household_member.dart';
+import 'package:registration_delivery/models/entities/referral.dart';
+import 'package:registration_delivery/models/entities/side_effect.dart';
+import 'package:registration_delivery/models/entities/task.dart';
 
 import '../blocs/boundary/boundary.dart';
-import '../blocs/household_details/household_details.dart';
 import '../blocs/localization/app_localization.dart';
-import '../blocs/search_households/project_beneficiaries_downsync.dart';
-import '../blocs/search_households/proximity_search.dart';
-import '../blocs/search_households/search_bloc_common_wrapper.dart';
-import '../blocs/search_households/search_by_head.dart';
-import '../blocs/search_households/search_households.dart';
-import '../blocs/search_households/tag_by_search.dart';
 import '../blocs/service/service.dart';
 import '../blocs/sync/sync.dart';
 import '../data/data_repository.dart';
-import '../data/local_store/no_sql/schema/oplog.dart';
 import '../data/local_store/sql_store/sql_store.dart';
 import '../data/remote_client.dart';
-import '../data/repositories/local/address.dart';
-import '../data/repositories/oplog/oplog.dart';
+import '../data/repositories/oplog/hcm_oplog.dart';
 import '../data/repositories/remote/bandwidth_check.dart';
 import '../models/data_model.dart';
+import '../models/entities/project_beneficiary.dart';
+import '../models/entities/service.dart';
 import '../router/app_router.dart';
 import '../router/authenticated_route_observer.dart';
 import '../utils/environment_config.dart';
@@ -106,142 +105,142 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                   drawer: showDrawer ? const Drawer(child: SideBar()) : null,
                   body: MultiBlocProvider(
                     providers: [
-                      BlocProvider(
-                        create: (context) {
-                          final isar = context.read<Isar>();
-
-                          return SearchHouseholdsBloc(
-                            beneficiaryType: context.beneficiaryType,
-                            userUid: context.loggedInUserUuid,
-                            projectId: context.projectId,
-                            addressRepository: AddressLocalRepository(
-                              context.read<LocalSqlDataStore>(),
-                              AddressOpLogManager(isar),
-                            ),
-                            projectBeneficiary: context.repository<
-                                ProjectBeneficiaryModel,
-                                ProjectBeneficiarySearchModel>(),
-                            householdMember: context.repository<
-                                HouseholdMemberModel,
-                                HouseholdMemberSearchModel>(),
-                            household: context.repository<HouseholdModel,
-                                HouseholdSearchModel>(),
-                            individual: context.repository<IndividualModel,
-                                IndividualSearchModel>(),
-                            taskDataRepository: context
-                                .repository<TaskModel, TaskSearchModel>(),
-                            sideEffectDataRepository: context.repository<
-                                SideEffectModel, SideEffectSearchModel>(),
-                            referralDataRepository: context.repository<
-                                ReferralModel, ReferralSearchModel>(),
-                          );
-                        },
-                      ),
-                      BlocProvider(
-                        create: (context) {
-                          final isar = context.read<Isar>();
-
-                          return SearchByHeadBloc(
-                            beneficiaryType: context.beneficiaryType,
-                            userUid: context.loggedInUserUuid,
-                            projectId: context.projectId,
-                            addressRepository: AddressLocalRepository(
-                              context.read<LocalSqlDataStore>(),
-                              AddressOpLogManager(isar),
-                            ),
-                            projectBeneficiary: context.repository<
-                                ProjectBeneficiaryModel,
-                                ProjectBeneficiarySearchModel>(),
-                            householdMember: context.repository<
-                                HouseholdMemberModel,
-                                HouseholdMemberSearchModel>(),
-                            household: context.repository<HouseholdModel,
-                                HouseholdSearchModel>(),
-                            individual: context.repository<IndividualModel,
-                                IndividualSearchModel>(),
-                            taskDataRepository: context
-                                .repository<TaskModel, TaskSearchModel>(),
-                            sideEffectDataRepository: context.repository<
-                                SideEffectModel, SideEffectSearchModel>(),
-                            referralDataRepository: context.repository<
-                                ReferralModel, ReferralSearchModel>(),
-                          );
-                        },
-                      ),
-                      BlocProvider(
-                        create: (context) {
-                          final isar = context.read<Isar>();
-
-                          return ProximitySearchBloc(
-                            beneficiaryType: context.beneficiaryType,
-                            userUid: context.loggedInUserUuid,
-                            projectId: context.projectId,
-                            addressRepository: AddressLocalRepository(
-                              context.read<LocalSqlDataStore>(),
-                              AddressOpLogManager(isar),
-                            ),
-                            projectBeneficiary: context.repository<
-                                ProjectBeneficiaryModel,
-                                ProjectBeneficiarySearchModel>(),
-                            householdMember: context.repository<
-                                HouseholdMemberModel,
-                                HouseholdMemberSearchModel>(),
-                            household: context.repository<HouseholdModel,
-                                HouseholdSearchModel>(),
-                            individual: context.repository<IndividualModel,
-                                IndividualSearchModel>(),
-                            taskDataRepository: context
-                                .repository<TaskModel, TaskSearchModel>(),
-                            sideEffectDataRepository: context.repository<
-                                SideEffectModel, SideEffectSearchModel>(),
-                            referralDataRepository: context.repository<
-                                ReferralModel, ReferralSearchModel>(),
-                          );
-                        },
-                      ),
-                      BlocProvider(
-                        create: (context) {
-                          final isar = context.read<Isar>();
-
-                          return TagSearchBloc(
-                            beneficiaryType: context.beneficiaryType,
-                            userUid: context.loggedInUserUuid,
-                            projectId: context.projectId,
-                            addressRepository: AddressLocalRepository(
-                              context.read<LocalSqlDataStore>(),
-                              AddressOpLogManager(isar),
-                            ),
-                            projectBeneficiary: context.repository<
-                                ProjectBeneficiaryModel,
-                                ProjectBeneficiarySearchModel>(),
-                            householdMember: context.repository<
-                                HouseholdMemberModel,
-                                HouseholdMemberSearchModel>(),
-                            household: context.repository<HouseholdModel,
-                                HouseholdSearchModel>(),
-                            individual: context.repository<IndividualModel,
-                                IndividualSearchModel>(),
-                            taskDataRepository: context
-                                .repository<TaskModel, TaskSearchModel>(),
-                            sideEffectDataRepository: context.repository<
-                                SideEffectModel, SideEffectSearchModel>(),
-                            referralDataRepository: context.repository<
-                                ReferralModel, ReferralSearchModel>(),
-                          );
-                        },
-                      ),
-                      BlocProvider(
-                        create: (context) {
-                          return SearchBlocWrapper(
-                            searchHouseholdsBloc:
-                                context.read<SearchHouseholdsBloc>(),
-                            searchByHeadBloc: context.read<SearchByHeadBloc>(),
-                            proximitySearchBloc:
-                                context.read<ProximitySearchBloc>(),
-                            tagSearchBloc: context.read<TagSearchBloc>(),
-                          );
-                        },
-                      ),
+                      // BlocProvider(
+                      //   create: (context) {
+                      //     final isar = context.read<Isar>();
+                      //
+                      //     return SearchHouseholdsBloc(
+                      //       beneficiaryType: context.beneficiaryType,
+                      //       userUid: context.loggedInUserUuid,
+                      //       projectId: context.projectId,
+                      //       addressRepository: AddressLocalRepository(
+                      //         context.read<LocalSqlDataStore>(),
+                      //         AddressOpLogManager(isar),
+                      //       ),
+                      //       projectBeneficiary: context.repository<
+                      //           ProjectBeneficiaryModel,
+                      //           ProjectBeneficiarySearchModel>(),
+                      //       householdMember: context.repository<
+                      //           HouseholdMemberModel,
+                      //           HouseholdMemberSearchModel>(),
+                      //       household: context.repository<HouseholdModel,
+                      //           HouseholdSearchModel>(),
+                      //       individual: context.repository<IndividualModel,
+                      //           IndividualSearchModel>(),
+                      //       taskDataRepository: context
+                      //           .repository<TaskModel, TaskSearchModel>(),
+                      //       sideEffectDataRepository: context.repository<
+                      //           SideEffectModel, SideEffectSearchModel>(),
+                      //       referralDataRepository: context.repository<
+                      //           ReferralModel, ReferralSearchModel>(),
+                      //     );
+                      //   },
+                      // ),
+                      // BlocProvider(
+                      //   create: (context) {
+                      //     final isar = context.read<Isar>();
+                      //
+                      //     return SearchByHeadBloc(
+                      //       beneficiaryType: context.beneficiaryType,
+                      //       userUid: context.loggedInUserUuid,
+                      //       projectId: context.projectId,
+                      //       addressRepository: AddressLocalRepository(
+                      //         context.read<LocalSqlDataStore>(),
+                      //         AddressOpLogManager(isar),
+                      //       ),
+                      //       projectBeneficiary: context.repository<
+                      //           ProjectBeneficiaryModel,
+                      //           ProjectBeneficiarySearchModel>(),
+                      //       householdMember: context.repository<
+                      //           HouseholdMemberModel,
+                      //           HouseholdMemberSearchModel>(),
+                      //       household: context.repository<HouseholdModel,
+                      //           HouseholdSearchModel>(),
+                      //       individual: context.repository<IndividualModel,
+                      //           IndividualSearchModel>(),
+                      //       taskDataRepository: context
+                      //           .repository<TaskModel, TaskSearchModel>(),
+                      //       sideEffectDataRepository: context.repository<
+                      //           SideEffectModel, SideEffectSearchModel>(),
+                      //       referralDataRepository: context.repository<
+                      //           ReferralModel, ReferralSearchModel>(),
+                      //     );
+                      //   },
+                      // ),
+                      // BlocProvider(
+                      //   create: (context) {
+                      //     final isar = context.read<Isar>();
+                      //
+                      //     return ProximitySearchBloc(
+                      //       beneficiaryType: context.beneficiaryType,
+                      //       userUid: context.loggedInUserUuid,
+                      //       projectId: context.projectId,
+                      //       addressRepository: AddressLocalRepository(
+                      //         context.read<LocalSqlDataStore>(),
+                      //         AddressOpLogManager(isar),
+                      //       ),
+                      //       projectBeneficiary: context.repository<
+                      //           ProjectBeneficiaryModel,
+                      //           ProjectBeneficiarySearchModel>(),
+                      //       householdMember: context.repository<
+                      //           HouseholdMemberModel,
+                      //           HouseholdMemberSearchModel>(),
+                      //       household: context.repository<HouseholdModel,
+                      //           HouseholdSearchModel>(),
+                      //       individual: context.repository<IndividualModel,
+                      //           IndividualSearchModel>(),
+                      //       taskDataRepository: context
+                      //           .repository<TaskModel, TaskSearchModel>(),
+                      //       sideEffectDataRepository: context.repository<
+                      //           SideEffectModel, SideEffectSearchModel>(),
+                      //       referralDataRepository: context.repository<
+                      //           ReferralModel, ReferralSearchModel>(),
+                      //     );
+                      //   },
+                      // ),
+                      // BlocProvider(
+                      //   create: (context) {
+                      //     final isar = context.read<Isar>();
+                      //
+                      //     return TagSearchBloc(
+                      //       beneficiaryType: context.beneficiaryType,
+                      //       userUid: context.loggedInUserUuid,
+                      //       projectId: context.projectId,
+                      //       addressRepository: AddressLocalRepository(
+                      //         context.read<LocalSqlDataStore>(),
+                      //         AddressOpLogManager(isar),
+                      //       ),
+                      //       projectBeneficiary: context.repository<
+                      //           ProjectBeneficiaryModel,
+                      //           ProjectBeneficiarySearchModel>(),
+                      //       householdMember: context.repository<
+                      //           HouseholdMemberModel,
+                      //           HouseholdMemberSearchModel>(),
+                      //       household: context.repository<HouseholdModel,
+                      //           HouseholdSearchModel>(),
+                      //       individual: context.repository<IndividualModel,
+                      //           IndividualSearchModel>(),
+                      //       taskDataRepository: context
+                      //           .repository<TaskModel, TaskSearchModel>(),
+                      //       sideEffectDataRepository: context.repository<
+                      //           SideEffectModel, SideEffectSearchModel>(),
+                      //       referralDataRepository: context.repository<
+                      //           ReferralModel, ReferralSearchModel>(),
+                      //     );
+                      //   },
+                      // ),
+                      // BlocProvider(
+                      //   create: (context) {
+                      //     return SearchBlocWrapper(
+                      //       searchHouseholdsBloc:
+                      //           context.read<SearchHouseholdsBloc>(),
+                      //       searchByHeadBloc: context.read<SearchByHeadBloc>(),
+                      //       proximitySearchBloc:
+                      //           context.read<ProximitySearchBloc>(),
+                      //       tagSearchBloc: context.read<TagSearchBloc>(),
+                      //     );
+                      //   },
+                      // ),
                       BlocProvider(
                         create: (context) {
                           final userId = context.loggedInUserUuid;
@@ -338,46 +337,46 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                         create: (_) => LocationBloc(location: Location())
                           ..add(const LoadLocationEvent()),
                       ),
-                      BlocProvider(
-                        create: (_) =>
-                            HouseholdDetailsBloc(const HouseholdDetailsState()),
-                      ),
-                      BlocProvider(
-                        create: (ctx) => BeneficiaryDownSyncBloc(
-                          bandwidthCheckRepository: BandwidthCheckRepository(
-                            DioClient().dio,
-                            bandwidthPath:
-                                envConfig.variables.checkBandwidthApiPath,
-                          ),
-                          householdLocalRepository: ctx.read<
-                              LocalRepository<HouseholdModel,
-                                  HouseholdSearchModel>>(),
-                          householdMemberLocalRepository: ctx.read<
-                              LocalRepository<HouseholdMemberModel,
-                                  HouseholdMemberSearchModel>>(),
-                          individualLocalRepository: ctx.read<
-                              LocalRepository<IndividualModel,
-                                  IndividualSearchModel>>(),
-                          projectBeneficiaryLocalRepository: ctx.read<
-                              LocalRepository<ProjectBeneficiaryModel,
-                                  ProjectBeneficiarySearchModel>>(),
-                          taskLocalRepository: ctx.read<
-                              LocalRepository<TaskModel, TaskSearchModel>>(),
-                          sideEffectLocalRepository: ctx.read<
-                              LocalRepository<SideEffectModel,
-                                  SideEffectSearchModel>>(),
-                          referralLocalRepository: ctx.read<
-                              LocalRepository<ReferralModel,
-                                  ReferralSearchModel>>(),
-                          downSyncRemoteRepository: ctx.read<
-                              RemoteRepository<DownsyncModel,
-                                  DownsyncSearchModel>>(),
-                          downSyncLocalRepository: ctx.read<
-                              LocalRepository<DownsyncModel,
-                                  DownsyncSearchModel>>(),
-                          networkManager: ctx.read(),
-                        ),
-                      ),
+                      // BlocProvider(
+                      //   create: (_) =>
+                      //       HouseholdDetailsBloc(const HouseholdDetailsState()),
+                      // ),
+                      // BlocProvider(
+                      //   create: (ctx) => BeneficiaryDownSyncBloc(
+                      //     bandwidthCheckRepository: BandwidthCheckRepository(
+                      //       DioClient().dio,
+                      //       bandwidthPath:
+                      //           envConfig.variables.checkBandwidthApiPath,
+                      //     ),
+                      //     householdLocalRepository: ctx.read<
+                      //         LocalRepository<HouseholdModel,
+                      //             HouseholdSearchModel>>(),
+                      //     householdMemberLocalRepository: ctx.read<
+                      //         LocalRepository<HouseholdMemberModel,
+                      //             HouseholdMemberSearchModel>>(),
+                      //     individualLocalRepository: ctx.read<
+                      //         LocalRepository<IndividualModel,
+                      //             IndividualSearchModel>>(),
+                      //     projectBeneficiaryLocalRepository: ctx.read<
+                      //         LocalRepository<ProjectBeneficiaryModel,
+                      //             ProjectBeneficiarySearchModel>>(),
+                      //     taskLocalRepository: ctx.read<
+                      //         LocalRepository<TaskModel, TaskSearchModel>>(),
+                      //     sideEffectLocalRepository: ctx.read<
+                      //         LocalRepository<SideEffectModel,
+                      //             SideEffectSearchModel>>(),
+                      //     referralLocalRepository: ctx.read<
+                      //         LocalRepository<ReferralModel,
+                      //             ReferralSearchModel>>(),
+                      //     downSyncRemoteRepository: ctx.read<
+                      //         RemoteRepository<DownsyncModel,
+                      //             DownsyncSearchModel>>(),
+                      //     downSyncLocalRepository: ctx.read<
+                      //         LocalRepository<DownsyncModel,
+                      //             DownsyncSearchModel>>(),
+                      //     networkManager: ctx.read(),
+                      //   ),
+                      // ),
                       BlocProvider(
                         create: (_) => ServiceBloc(
                           const ServiceEmptyState(),

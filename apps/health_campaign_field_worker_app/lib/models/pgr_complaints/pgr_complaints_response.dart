@@ -1,6 +1,8 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
-import '../data_model.dart';
+import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/pgr_application_status.dart';
+import 'pgr_complaints.dart';
 
 part 'pgr_complaints_response.mapper.dart';
 

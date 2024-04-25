@@ -4,11 +4,15 @@ import 'dart:core';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_data_model/data/data_repository.dart';
+import 'package:digit_data_model/models/entities/boundary.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:inventory_management/models/entities/stock.dart';
 import 'package:isar/isar.dart';
 import 'package:recase/recase.dart';
+import 'package:registration_delivery/models/entities/individual.dart';
 
 import '../../../models/app_config/app_config_model.dart' as app_configuration;
 import '../../data/data_repository.dart';
@@ -19,6 +23,16 @@ import '../../data/repositories/remote/mdms.dart';
 import '../../models/app_config/app_config_model.dart';
 import '../../models/auth/auth_model.dart';
 import '../../models/data_model.dart';
+import '../../models/entities/facility.dart';
+// import '../../models/entities/hcm_attendance_log_model.dart';
+// import '../../models/entities/hcm_attendance_model.dart';
+import '../../models/entities/product_variant.dart';
+import '../../models/entities/project.dart';
+import '../../models/entities/project_facility.dart';
+import '../../models/entities/project_resource.dart';
+import '../../models/entities/project_staff.dart';
+import '../../models/entities/roles_type.dart';
+import '../../models/entities/service_definition.dart';
 import '../../models/project_type/project_type_model.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/utils.dart';
@@ -44,16 +58,16 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   final LocalRepository<ProjectModel, ProjectSearchModel>
       projectLocalRepository;
 
-  final RemoteRepository<HCMAttendanceRegisterModel, HCMAttendanceSearchModel>
-      attendanceRemoteRepository;
-  final LocalRepository<HCMAttendanceRegisterModel, HCMAttendanceSearchModel>
-      attendanceLocalRepository;
+  // final RemoteRepository<HCMAttendanceRegisterModel, HCMAttendanceSearchModel>
+  //     attendanceRemoteRepository;
+  // final LocalRepository<HCMAttendanceRegisterModel, HCMAttendanceSearchModel>
+  //     attendanceLocalRepository;
   final RemoteRepository<IndividualModel, IndividualSearchModel>
       individualRemoteRepository;
-  final LocalRepository<HCMAttendanceLogModel, HCMAttendanceLogSearchModel>
-      attendanceLogLocalRepository;
-  final RemoteRepository<HCMAttendanceLogModel, HCMAttendanceLogSearchModel>
-      attendanceLogRemoteRepository;
+  // final LocalRepository<HCMAttendanceLogModel, HCMAttendanceLogSearchModel>
+  //     attendanceLogLocalRepository;
+  // final RemoteRepository<HCMAttendanceLogModel, HCMAttendanceLogSearchModel>
+  //     attendanceLogRemoteRepository;
   final LocalRepository<IndividualModel, IndividualSearchModel>
       individualLocalRepository;
 
@@ -70,8 +84,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       facilityLocalRepository;
 
   /// Stock Repositories
-  final RemoteRepository<HcmStockModel, HcmStockSearchModel> stockRemoteRepository;
-  final LocalRepository<HcmStockModel, HcmStockSearchModel> stockLocalRepository;
+  final RemoteRepository<StockModel, StockSearchModel> stockRemoteRepository;
+  final LocalRepository<StockModel, StockSearchModel> stockLocalRepository;
 
   final RemoteRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
       serviceDefinitionRemoteRepository;
@@ -119,12 +133,12 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     required this.productVariantLocalRepository,
     required this.productVariantRemoteRepository,
     required this.mdmsRepository,
-    required this.attendanceLocalRepository,
-    required this.attendanceRemoteRepository,
+    // required this.attendanceLocalRepository,
+    // required this.attendanceRemoteRepository,
     required this.individualLocalRepository,
     required this.individualRemoteRepository,
-    required this.attendanceLogLocalRepository,
-    required this.attendanceLogRemoteRepository,
+    // required this.attendanceLogLocalRepository,
+    // required this.attendanceLogRemoteRepository,
     required this.context,
   })  : localSecureStore = localSecureStore ?? LocalSecureStore.instance,
         super(const ProjectState()) {
@@ -218,42 +232,40 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               userUuid: [projectStaff.userId.toString()],
             ),
           );
-          final attendanceRegisters = await attendanceRemoteRepository.search(
-            HCMAttendanceSearchModel(
-              staffId: individual.first.id,
-              referenceId: projectStaff.projectId,
+          // final attendanceRegisters = await attendanceRemoteRepository.search(
+          //   HCMAttendanceSearchModel(
+          //     staffId: individual.first.id,
+          //     referenceId: projectStaff.projectId,
+          //   ),
+          // );
+          // await attendanceLocalRepository.bulkCreate(attendanceRegisters);
+          //
+          // for (final register in attendanceRegisters) {
+          //   if (register.attendanceRegister.attendees != null &&
+          //       (register.attendanceRegister.attendees ?? []).isNotEmpty) {
+          //     try {
+          final individuals = await individualRemoteRepository.search(
+            IndividualSearchModel(
+              id: [individual.first.id!],
             ),
           );
-          await attendanceLocalRepository.bulkCreate(attendanceRegisters);
-
-          for (final register in attendanceRegisters) {
-            if (register.attendanceRegister.attendees != null &&
-                (register.attendanceRegister.attendees ?? []).isNotEmpty) {
-              try {
-                final individuals = await individualRemoteRepository.search(
-                  IndividualSearchModel(
-                    id: register.attendanceRegister.attendees!
-                        .map((e) => e.individualId!)
-                        .toList(),
-                  ),
-                );
-                await individualLocalRepository.bulkCreate(individuals);
-                final logs = await attendanceLogRemoteRepository.search(
-                  HCMAttendanceLogSearchModel(
-                    registerId: register.attendanceRegister.id,
-                  ),
-                );
-                await attendanceLogLocalRepository.bulkCreate(logs);
-              } catch (_) {
-                emit(state.copyWith(
-                  loading: false,
-                  syncError: ProjectSyncErrorType.project,
-                ));
-
-                return;
-              }
-            }
-          }
+          await individualLocalRepository.bulkCreate(individuals);
+          //       final logs = await attendanceLogRemoteRepository.search(
+          //         HCMAttendanceLogSearchModel(
+          //           registerId: register.attendanceRegister.id,
+          //         ),
+          //       );
+          //       await attendanceLogLocalRepository.bulkCreate(logs);
+          //     } catch (_) {
+          //       emit(state.copyWith(
+          //         loading: false,
+          //         syncError: ProjectSyncErrorType.project,
+          //       ));
+          //
+          //       return;
+          //     }
+          //   }
+          // }
         }
         staffProjects = await projectRemoteRepository.search(
           ProjectSearchModel(

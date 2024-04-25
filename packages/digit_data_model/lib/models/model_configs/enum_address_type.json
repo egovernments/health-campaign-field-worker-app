@@ -1,0 +1,22 @@
+{
+  "name": "AddressType",
+  "enumValues": [
+    {
+      "name": "permanent",
+      "value": "PERMANENT"
+    },
+    {
+      "name": "correspondence",
+      "value": "CORRESPONDENCE"
+    },
+    {
+      "name": "other",
+      "value": "OTHER"
+    },
+    {
+      "name": "string",
+      "value": "string"
+    }
+  ],
+  "isEnum": true
+}

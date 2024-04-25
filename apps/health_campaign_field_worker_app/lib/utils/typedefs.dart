@@ -1,5 +1,32 @@
+import 'package:digit_data_model/data_model.dart';
+import 'package:inventory_management/models/entities/stock.dart';
+import 'package:inventory_management/models/entities/stock_reconciliation.dart';
+import 'package:registration_delivery/models/entities/downsync.dart';
+import 'package:registration_delivery/models/entities/household.dart';
+import 'package:registration_delivery/models/entities/household_member.dart';
+import 'package:registration_delivery/models/entities/individual.dart';
+import 'package:registration_delivery/models/entities/referral.dart';
+import 'package:registration_delivery/models/entities/side_effect.dart';
+import 'package:registration_delivery/models/entities/task.dart';
+
 import '../data/data_repository.dart';
-import '../models/data_model.dart';
+import '../models/entities/facility.dart';
+// import '../models/entities/hcm_attendance_log_model.dart';
+// import '../models/entities/hcm_attendance_model.dart';
+import '../models/entities/hcm_hf_referral.dart';
+import '../models/entities/product.dart';
+import '../models/entities/product_variant.dart';
+import '../models/entities/project.dart';
+import '../models/entities/project_beneficiary.dart';
+import '../models/entities/project_facility.dart';
+import '../models/entities/project_product_variant.dart';
+import '../models/entities/project_resource.dart';
+import '../models/entities/project_staff.dart';
+import '../models/entities/project_type.dart';
+import '../models/entities/service.dart';
+import '../models/entities/service_definition.dart';
+import '../models/entities/user.dart';
+import '../models/pgr_complaints/pgr_complaints.dart';
 
 typedef FacilityDataRepository
     = DataRepository<FacilityModel, FacilitySearchModel>;
@@ -46,12 +73,12 @@ typedef DownsyncDataRepository
     = DataRepository<DownsyncModel, DownsyncSearchModel>;
 typedef HFReferralDataRepository
     = DataRepository<HcmHFReferralModel, HcmHFReferralSearchModel>;
-typedef AttendanceDataRepository
-    = DataRepository<HCMAttendanceRegisterModel, HCMAttendanceSearchModel>;
-typedef AttendanceLogDataRepository
-    = DataRepository<HCMAttendanceLogModel, HCMAttendanceLogSearchModel>;
+// typedef AttendanceDataRepository
+//     = DataRepository<HCMAttendanceRegisterModel, HCMAttendanceSearchModel>;
+// typedef AttendanceLogDataRepository
+//     = DataRepository<HCMAttendanceLogModel, HCMAttendanceLogSearchModel>;
 
 typedef StockDataRepository
-    = DataRepository<HcmStockModel, HcmStockSearchModel>;
+    = DataRepository<StockModel, StockSearchModel>;
 typedef StockReconciliationDataRepository = DataRepository<
-    HcmStockReconciliationModel, HcmStockReconciliationSearchModel>;
+    StockReconciliationModel, StockReconciliationSearchModel>;

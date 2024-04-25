@@ -11,7 +11,7 @@ import '../widgets/back_navigation_help_header.dart';
 
 @RoutePage()
 class InventoryFacilitySelectionPage extends StatelessWidget {
-  final List<InventoryFacilityModel> facilities;
+  final List<FacilityModel> facilities;
 
   const InventoryFacilitySelectionPage({
     super.key,
@@ -156,7 +156,7 @@ class InventoryFacilitySelectionPage extends StatelessWidget {
   FormGroup _form() {
     return fb.group({
       _facilityName: FormControl<String>(),
-      _selectedFacility: FormControl<InventoryFacilityModel>(
+      _selectedFacility: FormControl<FacilityModel>(
         validators: [Validators.required],
       ),
     });
@@ -164,18 +164,18 @@ class InventoryFacilitySelectionPage extends StatelessWidget {
 }
 
 class FacilityValueAccessor
-    extends ControlValueAccessor<InventoryFacilityModel, String> {
-  final List<InventoryFacilityModel> models;
+    extends ControlValueAccessor<FacilityModel, String> {
+  final List<FacilityModel> models;
 
   FacilityValueAccessor(this.models);
 
   @override
-  String? modelToViewValue(InventoryFacilityModel? modelValue) {
+  String? modelToViewValue(FacilityModel? modelValue) {
     return modelValue?.id;
   }
 
   @override
-  InventoryFacilityModel? viewToModelValue(String? viewValue) {
+  FacilityModel? viewToModelValue(String? viewValue) {
     return models.firstWhereOrNull((element) => element.id == viewValue);
   }
 }

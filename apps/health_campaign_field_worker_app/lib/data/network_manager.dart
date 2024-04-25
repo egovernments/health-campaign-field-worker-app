@@ -1,13 +1,20 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:health_campaign_field_worker_app/data/repositories/sync/remote_type.dart';
+import 'package:registration_delivery/models/entities/household.dart';
+import 'package:registration_delivery/models/entities/household_member.dart';
+import 'package:registration_delivery/models/entities/individual.dart';
+import 'package:registration_delivery/models/entities/referral.dart';
+import 'package:registration_delivery/models/entities/side_effect.dart';
+import 'package:registration_delivery/models/entities/task.dart';
+import '../models/entities/project_beneficiary.dart';
+import 'repositories/sync/remote_type.dart';
 import 'package:provider/provider.dart';
 
 import '../models/bandwidth/bandwidth_model.dart';
-import '../models/data_model.dart';
 import '../utils/constants.dart';
 import 'data_repository.dart';
 import 'local_store/secure_store/secure_store.dart';

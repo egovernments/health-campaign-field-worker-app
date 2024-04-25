@@ -1,7 +1,7 @@
+import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
 
-import '../../../../models/data_model.dart';
-import '../../../data_repository.dart';
+import '../../../../models/entities/product_variant.dart';
 
 abstract class ProductVariantLocalBaseRepository
     extends LocalRepository<ProductVariantModel, ProductVariantSearchModel> {

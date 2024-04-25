@@ -1,6 +1,7 @@
 // Generated using mason. Do not modify by hand
 
-import '../../../models/data_model.dart';
+import 'package:digit_data_model/data_model.dart';
+import '../../../models/entities/service_attributes.dart';
 import '../../data_repository.dart';
 
 class ServiceAttributesRemoteRepository extends RemoteRepository<ServiceAttributesModel, ServiceAttributesSearchModel> {

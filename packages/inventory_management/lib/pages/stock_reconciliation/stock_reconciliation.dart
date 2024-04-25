@@ -146,11 +146,11 @@ class _StockReconciliationPageState
                                             final facilityId =
                                                 widget.isDistributor! &&
                                                         !widget.isWareHouseMgr!
-                                                    ? InventoryFacilityModel(
+                                                    ? FacilityModel(
                                                         id: widget
                                                             .loggedInUserUuid!,
                                                       )
-                                                    : InventoryFacilityModel(
+                                                    : FacilityModel(
                                                         id: selectedFacilityId
                                                             .toString(),
                                                       );
@@ -294,7 +294,7 @@ class _StockReconciliationPageState
                                                             .push(InventoryFacilitySelectionRoute(
                                                                 facilities:
                                                                     facilities))
-                                                        as InventoryFacilityModel?;
+                                                        as FacilityModel?;
 
                                                     if (facility == null)
                                                       return;
@@ -342,7 +342,7 @@ class _StockReconciliationPageState
                                                                 .push(InventoryFacilitySelectionRoute(
                                                                     facilities:
                                                                         facilities))
-                                                            as InventoryFacilityModel?;
+                                                            as FacilityModel?;
 
                                                         if (facility == null)
                                                           return;

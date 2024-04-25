@@ -3,6 +3,10 @@ import 'dart:ui';
 
 import 'package:battery_plus/battery_plus.dart';
 import 'package:collection/collection.dart';
+import 'package:digit_data_model/data/sql_store/sql_store.dart';
+import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/oplog/oplog_entry.dart';
+import 'package:digit_data_model/utils/utils.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +28,7 @@ import '../models/data_model.dart';
 import '../widgets/network_manager_provider_wrapper.dart';
 import 'environment_config.dart';
 import 'utils.dart';
+import 'package:digit_data_model/data/sql_store/sql_store.dart' as dataModelSql;
 
 final LocalSqlDataStore _sql = LocalSqlDataStore();
 late Dio _dio;
@@ -32,6 +37,11 @@ Future<Isar> isarFuture = Constants().isar;
 Future<void> initializeService(dio, isar) async {
   if (Isar.getInstance('HCM') == null) {
     final info = await PackageInfo.fromPlatform();
+    DigitDataModelSingleton().setData(
+        syncDownRetryCount: envConfig.variables.syncDownRetryCount,
+        retryTimeInterval: envConfig.variables.retryTimeInterval,
+        tenantId: envConfig.variables.tenantId,
+        errorDumpApiPath: envConfig.variables.dumpErrorApiPath);
     await Constants().initialize(info.version);
   }
 
@@ -48,10 +58,10 @@ Future<void> initializeService(dio, isar) async {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
-flutterLocalNotificationsPlugin
-    .resolvePlatformSpecificImplementation<
-    AndroidFlutterLocalNotificationsPlugin>()
-    ?.requestExactAlarmsPermission();
+  flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>()
+      ?.requestExactAlarmsPermission();
   flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>()
@@ -190,8 +200,10 @@ void onStart(ServiceInstance service) async {
                   persistenceConfig: PersistenceConfiguration.offlineFirst,
                 ),
               ).performSync(
-                localRepositories:
-                    Constants.getLocalRepositories(_sql, _isar).toList(),
+                localRepositories: Constants.getLocalRepositories(
+                  _sql,
+                  _isar,
+                ).toList(),
                 remoteRepositories: Constants.getRemoteRepositories(
                   _dio,
                   getActionMap(serviceRegistryList),

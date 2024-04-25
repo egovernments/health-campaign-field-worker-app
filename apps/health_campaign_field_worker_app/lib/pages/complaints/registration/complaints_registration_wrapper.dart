@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../blocs/complaints_registration/complaints_registration.dart';
 import '../../../models/complaints/complaints.dart';
 import '../../../models/data_model.dart';
+import '../../../models/pgr_complaints/pgr_complaints.dart';
 import '../../../utils/utils.dart';
 import '../../../widgets/boundary_selection_wrapper.dart';
 

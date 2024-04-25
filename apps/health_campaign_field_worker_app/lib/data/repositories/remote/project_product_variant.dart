@@ -1,6 +1,7 @@
 // Generated using mason. Do not modify by hand
 
-import '../../../models/data_model.dart';
+import 'package:digit_data_model/data_model.dart';
+import '../../../models/entities/project_product_variant.dart';
 import '../../data_repository.dart';
 
 class ProjectProductVariantRemoteRepository extends RemoteRepository<ProjectProductVariantModel, ProjectProductVariantSearchModel> {

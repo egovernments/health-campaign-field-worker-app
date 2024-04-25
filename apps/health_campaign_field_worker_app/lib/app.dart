@@ -1,12 +1,19 @@
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_data_model/data/data_repository.dart';
+import 'package:digit_data_model/data/sql_store/sql_store.dart';
+import 'package:digit_data_model/models/entities/boundary.dart';
+import 'package:digit_data_model/utils/utils.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:inventory_management/models/entities/stock.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
 import 'package:referral_reconciliation/blocs/referral_recon_service.dart';
 import 'package:referral_reconciliation/blocs/search_referral_reconciliations.dart';
+import 'package:registration_delivery/data/local_store/sql_store.dart';
+import 'package:registration_delivery/models/entities/individual.dart';
 
 import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
@@ -24,6 +31,21 @@ import 'data/network_manager.dart';
 import 'data/repositories/remote/localization.dart';
 import 'data/repositories/remote/mdms.dart';
 import 'models/data_model.dart';
+import 'models/entities/facility.dart';
+// import 'models/entities/hcm_attendance_log_model.dart';
+// import 'models/entities/hcm_attendance_model.dart';
+import 'models/entities/product_variant.dart';
+import 'models/entities/project.dart';
+import 'models/entities/project_facility.dart';
+import 'models/entities/project_resource.dart';
+import 'models/entities/project_staff.dart';
+import 'models/entities/service_definition.dart';
+import 'models/entities/user.dart';
+
+import 'models/pgr_complaints/pgr_complaints.dart';
+import 'models/pgr_complaints/pgr_address.dart';
+import 'models/pgr_complaints/pgr_complaints_response.dart';
+
 import 'router/app_navigator_observer.dart';
 import 'router/app_router.dart';
 import 'utils/environment_config.dart';
@@ -53,6 +75,17 @@ class MainApplication extends StatefulWidget {
 
 class MainApplicationState extends State<MainApplication>
     with WidgetsBindingObserver {
+  @override
+  initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    DigitDataModelSingleton().setData(
+        syncDownRetryCount: envConfig.variables.syncDownRetryCount,
+        retryTimeInterval: envConfig.variables.retryTimeInterval,
+        tenantId: envConfig.variables.tenantId,
+        errorDumpApiPath: envConfig.variables.dumpErrorApiPath);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
@@ -229,30 +262,30 @@ class MainApplicationState extends State<MainApplication>
                             projectResourceRemoteRepository: ctx.read<
                                 RemoteRepository<ProjectResourceModel,
                                     ProjectResourceSearchModel>>(),
-                            attendanceLocalRepository: ctx.read<
-                                LocalRepository<HCMAttendanceRegisterModel,
-                                    HCMAttendanceSearchModel>>(),
-                            attendanceRemoteRepository: ctx.read<
-                                RemoteRepository<HCMAttendanceRegisterModel,
-                                    HCMAttendanceSearchModel>>(),
+                            // attendanceLocalRepository: ctx.read<
+                            //     LocalRepository<HCMAttendanceRegisterModel,
+                            //         HCMAttendanceSearchModel>>(),
+                            // attendanceRemoteRepository: ctx.read<
+                            //     RemoteRepository<HCMAttendanceRegisterModel,
+                            //         HCMAttendanceSearchModel>>(),
                             individualLocalRepository: ctx.read<
                                 LocalRepository<IndividualModel,
                                     IndividualSearchModel>>(),
                             individualRemoteRepository: ctx.read<
                                 RemoteRepository<IndividualModel,
                                     IndividualSearchModel>>(),
-                            attendanceLogLocalRepository: ctx.read<
-                                LocalRepository<HCMAttendanceLogModel,
-                                    HCMAttendanceLogSearchModel>>(),
-                            attendanceLogRemoteRepository: ctx.read<
-                                RemoteRepository<HCMAttendanceLogModel,
-                                    HCMAttendanceLogSearchModel>>(),
+                            // attendanceLogLocalRepository: ctx.read<
+                            //     LocalRepository<HCMAttendanceLogModel,
+                            //         HCMAttendanceLogSearchModel>>(),
+                            // attendanceLogRemoteRepository: ctx.read<
+                            //     RemoteRepository<HCMAttendanceLogModel,
+                            //         HCMAttendanceLogSearchModel>>(),
                             stockLocalRepository: ctx.read<
-                                LocalRepository<HcmStockModel,
-                                    HcmStockSearchModel>>(),
+                                LocalRepository<StockModel,
+                                    StockSearchModel>>(),
                             stockRemoteRepository: ctx.read<
-                                RemoteRepository<HcmStockModel,
-                                    HcmStockSearchModel>>(),
+                                RemoteRepository<StockModel,
+                                    StockSearchModel>>(),
                             context: context,
                           ),
                         ),

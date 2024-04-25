@@ -80,8 +80,8 @@ class RecordStockBloc extends Bloc<RecordStockEvent, RecordStockState> {
       },
       create: (value) {
         emit(value.copyWith(
-            stockModel: event.stockModel,
-            additionalData: event.additionalData));
+          stockModel: event.stockModel,
+        ));
       },
     );
   }
@@ -120,8 +120,8 @@ class RecordStockBloc extends Bloc<RecordStockEvent, RecordStockState> {
           SaveStockDetails(
             stockModel: stockModel.copyWith(
               facilityId: facilityModel.id,
+              rowVersion: 1,
             ),
-            additionalData: value.additionalData ?? {},
           ),
         );
 
@@ -133,7 +133,6 @@ class RecordStockBloc extends Bloc<RecordStockEvent, RecordStockState> {
               stockModel: value.stockModel,
               facilityModel: value.facilityModel,
               dateOfRecord: value.dateOfRecord,
-              additionalData: value.additionalData,
             ),
           );
         }
@@ -148,13 +147,12 @@ class RecordStockEvent with _$RecordStockEvent {
   // Event for saving warehouse details
   const factory RecordStockEvent.saveWarehouseDetails({
     required DateTime dateOfRecord,
-    required InventoryFacilityModel facilityModel,
+    required FacilityModel facilityModel,
   }) = RecordStockSaveWarehouseDetailsEvent;
 
   // Event for saving stock details
   const factory RecordStockEvent.saveStockDetails({
     required StockModel stockModel,
-    required Map<String, Object>? additionalData,
   }) = RecordStockSaveStockDetailsEvent;
 
   // Event for creating a stock entry
@@ -166,7 +164,7 @@ class RecordStockEvent with _$RecordStockEvent {
     required DateTime dateOfRecord,
     required String primaryType,
     required String primaryId,
-    InventoryFacilityModel? facilityModel,
+    FacilityModel? facilityModel,
   }) = RecordStockSaveTransactionDetailsEvent;
 }
 
@@ -181,21 +179,20 @@ class RecordStockState with _$RecordStockState {
     DateTime? dateOfRecord,
     String? primaryType,
     String? primaryId,
-    InventoryFacilityModel? facilityModel,
+    FacilityModel? facilityModel,
     StockModel? stockModel,
-    Map<String, Object>? additionalData,
   }) = RecordStockCreateState;
 
   // State for a persisted record stock
-  const factory RecordStockState.persisted(
-      {required StockRecordEntryType entryType,
-      required String projectId,
-      DateTime? dateOfRecord,
-      InventoryFacilityModel? facilityModel,
-      String? primaryType,
-      String? primaryId,
-      StockModel? stockModel,
-      Map<String, Object>? additionalData}) = RecordStockPersistedState;
+  const factory RecordStockState.persisted({
+    required StockRecordEntryType entryType,
+    required String projectId,
+    DateTime? dateOfRecord,
+    FacilityModel? facilityModel,
+    String? primaryType,
+    String? primaryId,
+    StockModel? stockModel,
+  }) = RecordStockPersistedState;
 }
 
 // Exception for invalid record stock state

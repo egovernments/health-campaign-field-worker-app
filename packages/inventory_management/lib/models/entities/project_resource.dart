@@ -1,12 +1,14 @@
 // Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:drift/drift.dart';
+
+import 'package:digit_data_model/data_model.dart';
 import 'package:inventory_management/models/entities/project_product_variant.dart';
 
 part 'project_resource.mapper.dart';
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class ProjectResourceSearchModel with ProjectResourceSearchModelMappable {
+class ProjectResourceSearchModel extends EntitySearchModel with ProjectResourceSearchModelMappable {
   final List<String>? id;
   final String? projectId;
   final String? tenantId;
@@ -15,18 +17,22 @@ class ProjectResourceSearchModel with ProjectResourceSearchModelMappable {
     this.id,
     this.projectId,
     this.tenantId,
-  }) : super();
+    super.boundaryCode,
+    super.isDeleted,
+  }):  super();
 
   @MappableConstructor()
   ProjectResourceSearchModel.ignoreDeleted({
     this.id,
     this.projectId,
     this.tenantId,
-  }) : super();
+    super.boundaryCode,
+  }):  super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class ProjectResourceModel with ProjectResourceModelMappable {
+class ProjectResourceModel extends EntityModel with ProjectResourceModelMappable {
+
   static const schemaName = 'ProjectResource';
 
   final String? id;
@@ -45,11 +51,37 @@ class ProjectResourceModel with ProjectResourceModelMappable {
     this.tenantId,
     this.rowVersion,
     required this.resource,
-  }) : super();
+    super.auditDetails,super.clientAuditDetails,
+    super.isDeleted = false,
+  }): super();
+
+  // ProjectResourceCompanion get companion {
+  //   return ProjectResourceCompanion(
+  //     auditCreatedBy: Value(auditDetails?.createdBy),
+  //     auditCreatedTime: Value(auditDetails?.createdTime),
+  //     auditModifiedBy: Value(auditDetails?.lastModifiedBy),
+  //     clientCreatedTime: Value(clientAuditDetails?.createdTime),
+  //     clientModifiedTime: Value(clientAuditDetails?.lastModifiedTime),
+  //     clientCreatedBy: Value(clientAuditDetails?.createdBy),
+  //     clientModifiedBy: Value(clientAuditDetails?.lastModifiedBy),
+  //     auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+  //     additionalFields: Value(additionalFields?.toJson()),
+  //     isDeleted: Value(isDeleted),
+  //     id: Value(id),
+  //     projectId: Value(projectId),
+  //     nonRecoverableError: Value(nonRecoverableError),
+  //     tenantId: Value(tenantId),
+  //     rowVersion: Value(rowVersion),
+  //     resource: Value(resource.productVariantId),
+  //   );
+  // }
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class ProjectResourceAdditionalFields
-    with ProjectResourceAdditionalFieldsMappable {
-  ProjectResourceAdditionalFields();
+class ProjectResourceAdditionalFields extends AdditionalFields with ProjectResourceAdditionalFieldsMappable {
+  ProjectResourceAdditionalFields({
+    super.schema = 'ProjectResource',
+    required super.version,
+    super.fields,
+  });
 }

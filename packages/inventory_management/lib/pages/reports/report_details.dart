@@ -64,7 +64,7 @@ class _InventoryReportDetailsPageState
     final event = widget.reportType == InventoryReportType.reconciliation
         ? InventoryReportLoadStockReconciliationDataEvent(
             facilityId: form.control(_facilityKey).value != null
-                ? (form.control(_facilityKey).value as InventoryFacilityModel)
+                ? (form.control(_facilityKey).value as FacilityModel)
                     .id
                 : '',
             productVariantId: form.control(_productVariantKey).value != null
@@ -76,7 +76,7 @@ class _InventoryReportDetailsPageState
         : InventoryReportLoadStockDataEvent(
             reportType: widget.reportType,
             facilityId: form.control(_facilityKey).value != null
-                ? (form.control(_facilityKey).value as InventoryFacilityModel)
+                ? (form.control(_facilityKey).value as FacilityModel)
                     .id
                 : '',
             productVariantId: form.control(_productVariantKey).value != null
@@ -97,7 +97,7 @@ class _InventoryReportDetailsPageState
 
   FormGroup _form() {
     return fb.group({
-      _facilityKey: FormControl<InventoryFacilityModel>(
+      _facilityKey: FormControl<FacilityModel>(
         validators: [Validators.required],
       ),
       _productVariantKey: FormControl<ProductVariantModel>(),
@@ -212,7 +212,7 @@ class _InventoryReportDetailsPageState
                                                             .push(InventoryFacilitySelectionRoute(
                                                                 facilities:
                                                                     facilities))
-                                                        as InventoryFacilityModel?;
+                                                        as FacilityModel?;
 
                                                     if (facility == null)
                                                       return;
@@ -261,7 +261,7 @@ class _InventoryReportDetailsPageState
                                                                 .push(InventoryFacilitySelectionRoute(
                                                                     facilities:
                                                                         facilities))
-                                                            as InventoryFacilityModel?;
+                                                            as FacilityModel?;
 
                                                         if (facility == null)
                                                           return;

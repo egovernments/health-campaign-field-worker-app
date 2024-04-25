@@ -1,11 +1,16 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/oplog/oplog_entry.dart';
 import 'package:drift/drift.dart';
 
 import '../../../models/data_model.dart';
+import '../../../models/entities/project.dart';
+import '../../../models/entities/target.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
+import '../../local_store/sql_store/sql_store.dart';
 
 class ProjectLocalRepository
     extends LocalRepository<ProjectModel, ProjectSearchModel> {
@@ -70,13 +75,16 @@ class ProjectLocalRepository
 
     final results = await (selectQuery
           ..where(
-            buildAnd([if (query.id != null) sql.project.id.equals(query.id!)]),
+            buildAnd([
+              if (query.id != null) sql.project.id.equals(query.id!)
+            ]),
           ))
         .get();
 
     final targetResults = await (selectQuery
           ..where(buildAnd([
-            if (query.id != null) sql.target.clientReferenceId.equals(query.id!),
+            if (query.id != null)
+              sql.target.clientReferenceId.equals(query.id!),
           ])))
         .get();
 

@@ -1,11 +1,15 @@
 // GENERATED using mason_cli
 import 'dart:async';
 
+import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/pgr_application_status.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../models/complaints/complaints.dart';
 import '../../models/data_model.dart';
+import '../../models/pgr_complaints/pgr_address.dart';
+import '../../models/pgr_complaints/pgr_complaints.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/typedefs.dart';
 import '../../utils/utils.dart';

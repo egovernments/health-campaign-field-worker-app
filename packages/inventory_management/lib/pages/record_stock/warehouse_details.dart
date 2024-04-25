@@ -84,7 +84,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                       facilities,
                     ) {
                       final teamFacilities = [
-                        InventoryFacilityModel(
+                        FacilityModel(
                           id: 'Delivery Team',
                         ),
                       ];
@@ -152,12 +152,12 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                                   .value as String?;
 
                                               final facility = deliveryTeamSelected
-                                                  ? InventoryFacilityModel(
+                                                  ? FacilityModel(
                                                       id: teamCode ??
                                                           'Delivery Team',
                                                     )
                                                   : selectedFacilityId != null
-                                                      ? InventoryFacilityModel(
+                                                      ? FacilityModel(
                                                           id: selectedFacilityId
                                                               .toString(),
                                                         )
@@ -207,7 +207,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                                                 .isDistributor! &&
                                                             !InventorySingleton()
                                                                 .isWareHouseMgr!
-                                                        ? InventoryFacilityModel(
+                                                        ? FacilityModel(
                                                             id: teamCode
                                                                 .toString(),
                                                           )

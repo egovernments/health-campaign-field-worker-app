@@ -1,5 +1,8 @@
 // Importing necessary packages and files
 import 'package:collection/collection.dart';
+import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/beneficiary_type.dart';
+import 'package:digit_data_model/models/entities/boundary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -11,6 +14,7 @@ import '../../data/data_repository.dart';
 import '../../data/network_manager.dart';
 import '../../models/auth/auth_model.dart';
 import '../../models/data_model.dart';
+import '../../models/entities/project.dart';
 import '../../models/project_type/project_type_model.dart';
 import '../app_exception.dart';
 

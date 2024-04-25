@@ -74,6 +74,8 @@ dependencies:
       path: ./packages/digit_scanner
   inventory_management: ^0.0.1
   referral_reconciliation: ^0.0.1
+  digit_data_model: ^0.0.1
+  registration_delivery: ^0.0.1
 
 dev_dependencies:
   flutter_test:

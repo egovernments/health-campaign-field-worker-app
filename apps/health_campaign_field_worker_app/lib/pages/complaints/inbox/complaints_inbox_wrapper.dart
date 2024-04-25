@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../blocs/complaints_inbox/complaints_inbox.dart';
 import '../../../models/data_model.dart';
+import '../../../models/pgr_complaints/pgr_complaints.dart';
 import '../../../utils/utils.dart';
 
 @RoutePage()

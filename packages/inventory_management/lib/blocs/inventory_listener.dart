@@ -9,7 +9,7 @@ import 'inventory_report.dart';
 // This is an abstract class that defines the methods for inventory operations.
 abstract class InventoryListener {
   // Fetches the facilities for a given project ID.
-  Future<List<InventoryFacilityModel>> fetchFacilitiesForProjectId();
+  Future<List<FacilityModel>> fetchFacilitiesForProjectId();
 
   // Fetches the product variants.
   Future<List<ProductVariantModel>> fetchProductVariants();
@@ -93,7 +93,7 @@ class InventorySingleton {
   get transportType => _transportType;
 
   // Fetches the facilities for a given project ID.
-  Future<List<InventoryFacilityModel>?> getFacilitiesForProjectId() async {
+  Future<List<FacilityModel>?> getFacilitiesForProjectId() async {
     return await _inventoryListener?.fetchFacilitiesForProjectId();
   }
 
@@ -158,11 +158,9 @@ class InventorySingleton {
 // Class to hold the details for saving stock.
 class SaveStockDetails {
   final StockModel stockModel;
-  final Map<String, Object> additionalData;
 
   SaveStockDetails({
     required this.stockModel,
-    required this.additionalData,
   });
 }
 

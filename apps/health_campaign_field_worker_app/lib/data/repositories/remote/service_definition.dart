@@ -1,6 +1,7 @@
 // Generated using mason. Do not modify by hand
 
-import '../../../models/data_model.dart';
+import 'package:digit_data_model/data_model.dart';
+import '../../../models/entities/service_definition.dart';
 import '../../data_repository.dart';
 
 class ServiceDefinitionRemoteRepository extends RemoteRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel> {

@@ -28,6 +28,7 @@ dependencies:
   path: ^1.8.2
   drift_db_viewer: ^2.0.0
   auto_route: ^7.8.4
+  digit_data_model: ^0.0.1
 
 dev_dependencies:
   flutter_test:

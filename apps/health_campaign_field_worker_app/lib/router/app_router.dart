@@ -7,28 +7,9 @@ import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 
-import '../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../blocs/localization/app_localization.dart';
-import '../blocs/search_households/search_households.dart';
-import '../models/data_model.dart';
 import '../pages/acknowledgement.dart';
 import '../pages/authenticated.dart';
-import '../pages/beneficiary/beneficiary_details.dart';
-import '../pages/beneficiary/beneficiary_wrapper.dart';
-import '../pages/beneficiary/deliver_intervention.dart';
-import '../pages/beneficiary/dose_administered.dart';
-import '../pages/beneficiary/facility_selection.dart';
-import '../pages/beneficiary/household_overview.dart';
-import '../pages/beneficiary/record_past_delivery_details.dart';
-import '../pages/beneficiary/refer_beneficiary.dart';
-import '../pages/beneficiary/side_effects.dart';
-import '../pages/beneficiary/widgets/household_acknowledgement.dart';
-import '../pages/beneficiary/widgets/splash_acknowledgement.dart';
-import '../pages/beneficiary_registration/beneficiary_acknowledgement.dart';
-import '../pages/beneficiary_registration/beneficiary_registration_wrapper.dart';
-import '../pages/beneficiary_registration/household_details.dart';
-import '../pages/beneficiary_registration/household_location.dart';
-import '../pages/beneficiary_registration/individual_details.dart';
 import '../pages/boundary_selection.dart';
 import '../pages/checklist/checklist.dart';
 import '../pages/checklist/checklist_boundary_view.dart';
@@ -53,10 +34,10 @@ import '../pages/profile.dart';
 import '../pages/project_facility_selection.dart';
 import '../pages/project_selection.dart';
 import '../pages/qr_details_page.dart';
-import '../pages/reason_for_deletion.dart';
-import '../pages/reports/beneficiary/beneficaries_report.dart';
-import '../pages/search_beneficiary.dart';
 import '../pages/unauthenticated.dart';
+import '../../models/entities/project_facility.dart';
+import '../../models/pgr_complaints/pgr_complaints.dart';
+
 
 export 'package:auto_route/auto_route.dart';
 
@@ -94,77 +75,77 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: HomeRoute.page, path: 'home'),
         AutoRoute(page: ProfileRoute.page, path: 'profile'),
         AutoRoute(page: UserQRDetailsRoute.page, path: 'user-qr-code'),
-        AutoRoute(
-            page: SearchBeneficiaryRoute.page, path: 'search-beneficiary'),
-        AutoRoute(
-          page: BeneficiariesReportRoute.page,
-          path: 'beneficiary-downsync-report',
-        ),
+        // AutoRoute(
+        //     page: SearchBeneficiaryRoute.page, path: 'search-beneficiary'),
+        // AutoRoute(
+        //   page: BeneficiariesReportRoute.page,
+        //   path: 'beneficiary-downsync-report',
+        // ),
 
         /// Beneficiary Registration
-        AutoRoute(
-          page: BeneficiaryRegistrationWrapperRoute.page,
-          path: 'beneficiary-registration',
-          children: [
-            AutoRoute(
-                page: IndividualDetailsRoute.page, path: 'individual-details'),
-            AutoRoute(
-                page: HouseHoldDetailsRoute.page, path: 'household-details'),
-            AutoRoute(
-              page: HouseholdLocationRoute.page,
-              path: 'household-location',
-              initial: true,
-            ),
-          ],
-        ),
-        AutoRoute(
-          page: BeneficiaryWrapperRoute.page,
-          path: 'beneficiary',
-          children: [
-            AutoRoute(
-              page: HouseholdOverviewRoute.page,
-              path: 'overview',
-              initial: true,
-            ),
-            AutoRoute(
-              page: BeneficiaryDetailsRoute.page,
-              path: 'beneficiary-details',
-            ),
-            AutoRoute(
-              page: DeliverInterventionRoute.page,
-              path: 'deliver-intervention',
-            ),
-            AutoRoute(
-              page: SideEffectsRoute.page,
-              path: 'side-effects',
-            ),
-            AutoRoute(
-              page: ReferBeneficiaryRoute.page,
-              path: 'refer-beneficiary',
-            ),
-            AutoRoute(
-              page: DoseAdministeredRoute.page,
-              path: 'dose-administered',
-            ),
-            AutoRoute(
-              page: SplashAcknowledgementRoute.page,
-              path: 'splash-acknowledgement',
-            ),
-            AutoRoute(
-              page: ReasonForDeletionRoute.page,
-              path: 'reason-for-deletion',
-            ),
-            AutoRoute(
-              page: RecordPastDeliveryDetailsRoute.page,
-              path: 'record-past-delivery-details',
-            ),
-            AutoRoute(
-              page: HouseholdAcknowledgementRoute.page,
-              path: 'household-acknowledgement',
-            ),
-            AutoRoute(page: ChecklistViewRoute.page, path: 'view'),
-          ],
-        ),
+        // AutoRoute(
+        //   page: BeneficiaryRegistrationWrapperRoute.page,
+        //   path: 'beneficiary-registration',
+        //   children: [
+        //     AutoRoute(
+        //         page: IndividualDetailsRoute.page, path: 'individual-details'),
+        //     AutoRoute(
+        //         page: HouseHoldDetailsRoute.page, path: 'household-details'),
+        //     AutoRoute(
+        //       page: HouseholdLocationRoute.page,
+        //       path: 'household-location',
+        //       initial: true,
+        //     ),
+        //   ],
+        // ),
+        // AutoRoute(
+        //   page: BeneficiaryWrapperRoute.page,
+        //   path: 'beneficiary',
+        //   children: [
+        //     AutoRoute(
+        //       page: HouseholdOverviewRoute.page,
+        //       path: 'overview',
+        //       initial: true,
+        //     ),
+        //     AutoRoute(
+        //       page: BeneficiaryDetailsRoute.page,
+        //       path: 'beneficiary-details',
+        //     ),
+        //     AutoRoute(
+        //       page: DeliverInterventionRoute.page,
+        //       path: 'deliver-intervention',
+        //     ),
+        //     AutoRoute(
+        //       page: SideEffectsRoute.page,
+        //       path: 'side-effects',
+        //     ),
+        //     AutoRoute(
+        //       page: ReferBeneficiaryRoute.page,
+        //       path: 'refer-beneficiary',
+        //     ),
+        //     AutoRoute(
+        //       page: DoseAdministeredRoute.page,
+        //       path: 'dose-administered',
+        //     ),
+        //     AutoRoute(
+        //       page: SplashAcknowledgementRoute.page,
+        //       path: 'splash-acknowledgement',
+        //     ),
+        //     AutoRoute(
+        //       page: ReasonForDeletionRoute.page,
+        //       path: 'reason-for-deletion',
+        //     ),
+        //     AutoRoute(
+        //       page: RecordPastDeliveryDetailsRoute.page,
+        //       path: 'record-past-delivery-details',
+        //     ),
+        //     AutoRoute(
+        //       page: HouseholdAcknowledgementRoute.page,
+        //       path: 'household-acknowledgement',
+        //     ),
+        //     AutoRoute(page: ChecklistViewRoute.page, path: 'view'),
+        //   ],
+        // ),
 
         AutoRoute(
             page: ChecklistWrapperRoute.page,
@@ -179,10 +160,10 @@ class AppRouter extends _$AppRouter {
               AutoRoute(page: ChecklistViewRoute.page, path: 'view'),
               AutoRoute(page: ChecklistPreviewRoute.page, path: 'preview'),
             ]),
-        AutoRoute(
-          page: BeneficiaryAcknowledgementRoute.page,
-          path: 'beneficiary-acknowledgement',
-        ),
+        // AutoRoute(
+        //   page: BeneficiaryAcknowledgementRoute.page,
+        //   path: 'beneficiary-acknowledgement',
+        // ),
         AutoRoute(page: AcknowledgementRoute.page, path: 'acknowledgement'),
         AutoRoute(
           page: ComplaintsAcknowledgementRoute.page,
@@ -193,10 +174,10 @@ class AppRouter extends _$AppRouter {
           path: 'select-project-facilities',
         ),
 
-        AutoRoute(
-          page: FacilitySelectionRoute.page,
-          path: 'select-facilities',
-        ),
+        // AutoRoute(
+        //   page: FacilitySelectionRoute.page,
+        //   path: 'select-facilities',
+        // ),
 
         /// Project Selection
         AutoRoute(
