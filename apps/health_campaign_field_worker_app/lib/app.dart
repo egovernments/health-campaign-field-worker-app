@@ -1,6 +1,8 @@
 import 'blocs/facility/facility.dart';
 import 'blocs/product_variant/product_variant.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_scanner/blocs/app_localization.dart'
+    as scanner_localization;
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';

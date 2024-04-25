@@ -406,7 +406,6 @@ class _SearchBeneficiaryPageState
                         onPressed: () {
                           blocWrapper.clearEvent();
                           Navigator.of(context).push(
-                            //[TODO: Add route to auto_route]
                             MaterialPageRoute(
                               builder: (context) => const DigitScannerPage(
                                 quantity: 1,

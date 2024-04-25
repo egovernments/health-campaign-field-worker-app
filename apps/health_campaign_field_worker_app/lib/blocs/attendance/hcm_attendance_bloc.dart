@@ -134,7 +134,7 @@ class HCMAttendanceBloc extends AttendanceListeners {
           rowVersion: 1,
           attendance: e.copyWith(
             clientReferenceId: (existingLog).isNotEmpty
-                ? existingLog.last.attendance?.clientReferenceId
+                ? existingLog.lastOrNull?.attendance?.clientReferenceId
                 : IdGen.i.identifier,
           ),
           clientAuditDetails: ClientAuditDetails(
@@ -185,19 +185,19 @@ class HCMAttendanceBloc extends AttendanceListeners {
   // Method to create attendance log
   Future<void> createAttendanceLog(
       List<HCMAttendanceLogModel> logs, String type, bool createOpLog) async {
-    final lastLog = logs.where((l) => l.attendance?.type == type).last;
+    final lastLog = logs.where((l) => l.attendance?.type == type).lastOrNull;
     await attendanceLogLocalRepository?.create(
-      lastLog,
+      lastLog!,
       createOpLog: createOpLog &&
           (logs
                   .where((l) => l.attendance?.type == 'ENTRY')
-                  .last
-                  .attendance
+                  .lastOrNull
+                  ?.attendance
                   ?.time !=
               logs
                   .where((l) => l.attendance?.type == 'EXIT')
-                  .last
-                  .attendance
+                  .lastOrNull
+                  ?.attendance
                   ?.time),
     );
   }

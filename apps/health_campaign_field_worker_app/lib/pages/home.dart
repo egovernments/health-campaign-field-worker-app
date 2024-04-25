@@ -13,6 +13,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:inventory_management/models/entities/inventory_transport_type.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 
+import '../blocs/attendance/hcm_attendance_bloc.dart';
+import '../blocs/auth/auth.dart';
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/attendance/hcm_attendance_bloc.dart';
 import '../blocs/auth/auth.dart';
@@ -340,14 +342,14 @@ class _HomePageState extends LocalizedState<HomePage> {
                     context.router.push(ManageStocksRoute(
                       isWareHouseMgr: context.loggedInUserRoles
                           .where((role) =>
-                      role.code == RolesType.warehouseManager.toValue())
+                              role.code == RolesType.warehouseManager.toValue())
                           .toList()
                           .isNotEmpty,
                       isDistributor: context.loggedInUserRoles
                           .where(
                             (role) =>
-                        role.code == RolesType.distributor.toValue(),
-                      )
+                                role.code == RolesType.distributor.toValue(),
+                          )
                           .toList()
                           .isNotEmpty,
                       boundaryName: context.boundary.name!,
@@ -367,8 +369,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                       userId: context.loggedInUserUuid,
                       transportType: appConfiguration.transportTypes
                           ?.map((e) => InventoryTransportTypes()
-                        ..name = e.name
-                        ..code = e.code)
+                            ..name = e.name
+                            ..code = e.code)
                           .toList(),
                     ));
                   },
@@ -504,21 +506,6 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
-      i18.home.db: homeShowcaseData.db.buildWith(
-        child: HomeItemCard(
-          icon: Icons.table_chart,
-          label: i18.home.db,
-          onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => DriftDbViewer(
-                  context.read<LocalSqlDataStore>(),
-                ),
-              ),
-            );
-          },
-        ),
-      ),
       i18.home.manageAttendanceLabel:
           homeShowcaseData.manageAttendance.buildWith(
         child: HomeItemCard(
@@ -547,6 +534,21 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
+      i18.home.db: homeShowcaseData.db.buildWith(
+        child: HomeItemCard(
+          icon: Icons.table_chart,
+          label: i18.home.db,
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => DriftDbViewer(
+                  context.read<LocalSqlDataStore>(),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
     };
 
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
@@ -561,11 +563,11 @@ class _HomePageState extends LocalizedState<HomePage> {
           homeShowcaseData.distributorFileComplaint.showcaseKey,
       i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.showcaseKey,
       i18.home.viewReportsLabel: homeShowcaseData.inventoryReport.showcaseKey,
-      i18.home.db: homeShowcaseData.inventoryReport.showcaseKey,
       i18.home.beneficiaryReferralLabel:
           homeShowcaseData.hfBeneficiaryReferral.showcaseKey,
       i18.home.manageAttendanceLabel:
           homeShowcaseData.manageAttendance.showcaseKey,
+      // i18.home.db: homeShowcaseData.db.showcaseKey,
     };
 
     final homeItemsLabel = <String>[
@@ -576,9 +578,9 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.fileComplaint,
       i18.home.syncDataLabel,
       i18.home.viewReportsLabel,
-      i18.home.db,
       i18.home.beneficiaryReferralLabel,
       i18.home.manageAttendanceLabel,
+      i18.home.db,
     ];
 
     final List<String> filteredLabels = homeItemsLabel
@@ -590,8 +592,10 @@ class _HomePageState extends LocalizedState<HomePage> {
             element == i18.home.db)
         .toList();
 
-    final showcaseKeys =
-        filteredLabels.map((label) => homeItemsShowcaseMap[label]!).toList();
+    final showcaseKeys = filteredLabels
+        .where((f) => f != i18.home.db)
+        .map((label) => homeItemsShowcaseMap[label]!)
+        .toList();
 
     final List<Widget> widgetList =
         filteredLabels.map((label) => homeItemsMap[label]!).toList();
