@@ -1,3 +1,9 @@
+import 'tables/task_resource.dart';
+import 'tables/target.dart';
+import 'tables/individual.dart';
+import 'tables/household_member.dart';
+import 'tables/household.dart';
+import 'tables/address.dart';
 import 'dart:io';
 
 import 'package:digit_components/digit_components.dart';

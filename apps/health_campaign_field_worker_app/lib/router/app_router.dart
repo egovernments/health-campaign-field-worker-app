@@ -49,7 +49,7 @@ import '../pages/complaints/registration/complaints_location.dart';
 import '../pages/complaints/registration/complaints_registration_wrapper.dart';
 import '../pages/complaints_acknowledgement.dart';
 import '../pages/home.dart';
-import '../pages/inventory/project_facility_selection.dart';
+import '../pages/project_facility_selection.dart';
 import '../pages/language_selection.dart';
 import '../pages/login.dart';
 import '../pages/profile.dart';

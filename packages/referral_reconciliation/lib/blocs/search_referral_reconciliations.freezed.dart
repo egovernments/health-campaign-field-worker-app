@@ -109,12 +109,20 @@ class __$$SearchReferralsInitializedEventImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$SearchReferralsInitializedEventImpl
+    with DiagnosticableTreeMixin
     implements SearchReferralsInitializedEvent {
   const _$SearchReferralsInitializedEventImpl();
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'SearchReferralsEvent.initialize()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+        .add(DiagnosticsProperty('type', 'SearchReferralsEvent.initialize'));
   }
 
   @override
@@ -243,15 +251,25 @@ class __$$SearchReferralsByNameEventImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$SearchReferralsByNameEventImpl implements SearchReferralsByNameEvent {
+class _$SearchReferralsByNameEventImpl
+    with DiagnosticableTreeMixin
+    implements SearchReferralsByNameEvent {
   const _$SearchReferralsByNameEventImpl({required this.searchText});
 
   @override
   final String searchText;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'SearchReferralsEvent.searchByName(searchText: $searchText)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'SearchReferralsEvent.searchByName'))
+      ..add(DiagnosticsProperty('searchText', searchText));
   }
 
   @override
@@ -394,15 +412,25 @@ class __$$SearchReferralsByTagEventImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$SearchReferralsByTagEventImpl implements SearchReferralsByTagEvent {
+class _$SearchReferralsByTagEventImpl
+    with DiagnosticableTreeMixin
+    implements SearchReferralsByTagEvent {
   const _$SearchReferralsByTagEventImpl({required this.tag});
 
   @override
   final String tag;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'SearchReferralsEvent.searchByTag(tag: $tag)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'SearchReferralsEvent.searchByTag'))
+      ..add(DiagnosticsProperty('tag', tag));
   }
 
   @override
@@ -529,12 +557,20 @@ class __$$SearchReferralsClearEventImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$SearchReferralsClearEventImpl implements SearchReferralsClearEvent {
+class _$SearchReferralsClearEventImpl
+    with DiagnosticableTreeMixin
+    implements SearchReferralsClearEvent {
   const _$SearchReferralsClearEventImpl();
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'SearchReferralsEvent.clear()';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty('type', 'SearchReferralsEvent.clear'));
   }
 
   @override
@@ -746,7 +782,8 @@ class __$$SearchReferralsStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$SearchReferralsStateImpl extends _SearchReferralsState {
+class _$SearchReferralsStateImpl extends _SearchReferralsState
+    with DiagnosticableTreeMixin {
   const _$SearchReferralsStateImpl(
       {this.loading = false,
       this.searchQuery,
@@ -772,8 +809,19 @@ class _$SearchReferralsStateImpl extends _SearchReferralsState {
   }
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'SearchReferralsState(loading: $loading, searchQuery: $searchQuery, tag: $tag, referrals: $referrals)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'SearchReferralsState'))
+      ..add(DiagnosticsProperty('loading', loading))
+      ..add(DiagnosticsProperty('searchQuery', searchQuery))
+      ..add(DiagnosticsProperty('tag', tag))
+      ..add(DiagnosticsProperty('referrals', referrals));
   }
 
   @override

@@ -426,11 +426,9 @@ packages:
   digit_scanner:
     dependency: "direct main"
     description:
-      path: "packages/digit_scanner"
-      ref: HLM-5097
-      resolved-ref: "66ce4ff5fe6bcb6ad3982bd49a10dd036fc90460"
-      url: "https://github.com/egovernments/health-campaign-field-worker-app/"
-    source: git
+      path: "../digit_scanner"
+      relative: true
+    source: path
     version: "0.0.1+1"
   drift:
     dependency: "direct main"
@@ -1434,5 +1432,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.2.3 <4.0.0"
+  dart: ">=3.2.0 <4.0.0"
   flutter: ">=3.16.0"
