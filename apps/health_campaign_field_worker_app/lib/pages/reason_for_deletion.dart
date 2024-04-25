@@ -12,6 +12,7 @@ import '../utils/utils.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
 
+@RoutePage()
 class ReasonForDeletionPage extends LocalizedStatefulWidget {
   final bool isHousholdDelete;
   const ReasonForDeletionPage({
@@ -75,10 +76,10 @@ class _ReasonForDeletionPageState
                                 ),
                               );
 
-                      context.router.pop();
+                      context.router.maybePop();
 
                       if (widget.isHousholdDelete) {
-                        (context.router.parent() as StackRouter).pop();
+                        (context.router.parent() as StackRouter).maybePop();
                       }
                       context.router.push(AcknowledgementRoute());
                     },

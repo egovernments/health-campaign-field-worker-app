@@ -1,4 +1,5 @@
 import 'package:attendance_management/blocs/attendance_listeners.dart';
+import 'package:attendance_management/models/attendance_log.dart';
 import 'package:attendance_management/models/attendance_register.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -31,18 +32,8 @@ class HCMAttendanceBloc extends AttendanceListeners {
     required this.context,
   });
 
-  late Function(List<AttendanceRegisterModel> registers) _registersLoaded;
-
   @override
-  void getAttendanceRegisters(
-    Function(List<AttendanceRegisterModel> registers) attendanceRegisters,
-  ) {
-    _registersLoaded = attendanceRegisters;
-
-    return onRegistersLoaded();
-  }
-
-  void onRegistersLoaded() async {
+  Future<List<AttendanceRegisterModel>> getAttendanceRegisters() async {
     final registers = await attendanceLocalRepository?.search(
       HCMAttendanceSearchModel(staffId: individualId, referenceId: projectId),
     );
@@ -108,23 +99,22 @@ class HCMAttendanceBloc extends AttendanceListeners {
         );
       }));
 
-      _registersLoaded(
-        attendanceRegisters,
-      );
+      return attendanceRegisters;
     } else {
-      _registersLoaded(
-        [],
-      );
+      return [];
     }
   }
 
   @override
-  void searchAttendanceLog(
-    SearchAttendanceLog searchAttendanceLog,
-  ) async {
+  Future<List<AttendanceLogModel>> searchAttendanceLog(
+      {required String registerId,
+      required String tenantId,
+      required int entryTime,
+      required int exitTime,
+      required int currentDate}) async {
     final attendanceLogs = await attendanceLogLocalRepository?.search(
       HCMAttendanceLogSearchModel(
-        registerId: searchAttendanceLog.registerId,
+        registerId: registerId,
       ),
     );
     final filteredLogs = attendanceLogs
@@ -134,7 +124,7 @@ class HCMAttendanceBloc extends AttendanceListeners {
           final logDay = DateTime(logTime.year, logTime.month, logTime.day)
               .millisecondsSinceEpoch;
           final currentTime = DateTime.fromMillisecondsSinceEpoch(
-            searchAttendanceLog.currentDate,
+            currentDate!,
           );
           final currentDay =
               DateTime(currentTime.year, currentTime.month, currentTime.day)
@@ -153,7 +143,8 @@ class HCMAttendanceBloc extends AttendanceListeners {
               uploadToServer: a.attendance?.uploadToServer,
             ))
         .toList();
-    searchAttendanceLog.onLogLoaded(filteredLogs ?? []);
+
+    return filteredLogs ?? [];
   }
 
   @override

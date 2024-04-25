@@ -49,7 +49,11 @@ class OpLog {
         return entity;
 
       case "stock":
-        final entity = StockModelMapper.fromJson(entityString);
+        final entity = HcmStockModelMapper.fromJson(entityString);
+        return entity;
+
+      case "stockReconciliation":
+        final entity = HcmStockReconciliationModelMapper.fromJson(entityString);
         return entity;
 
       case "hFReferral":

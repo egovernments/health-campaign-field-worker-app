@@ -7,6 +7,7 @@ import '../../../router/app_router.dart';
 import '../../../widgets/localized.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 
+@RoutePage()
 class SplashAcknowledgementPage extends LocalizedStatefulWidget {
   final bool? enableBackToSearch;
   const SplashAcknowledgementPage({

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:attendance_management/models/attendance_log.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:drift/drift.dart';
 
