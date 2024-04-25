@@ -14,12 +14,16 @@ import 'package:health_campaign_field_worker_app/pages/login.dart';
 import 'package:health_campaign_field_worker_app/widgets/home/home_item_card.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:hrk_flutter_test_batteries/hrk_flutter_test_batteries.dart';
+import './test_variables.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   final _username = find.byKey(const Key('username'));
   final _password = find.byKey(const Key('password'));
+
+  final testVariables = getTestData();
+
   testWidgets('Get to the manage Attendance Page', (widgetTester) async {
     disableOverflowError();
     app.main();
@@ -42,11 +46,11 @@ void main() {
 
     await widgetTester.enterText(
       _username,
-      'ATTD17',
+      testVariables['username'],
     ); //enter the username to test
     await widgetTester.enterText(
       _password,
-      'eGov@1234',
+      testVariables['password'],
     ); //enter the password to test
 
     await widgetTester
@@ -123,13 +127,13 @@ void main() {
     await widgetTester.pumpAndSettle(const Duration(milliseconds: 500));
     expect(find.byType(DigitDateFormPicker), findsAny);
 
-    await widgetTester.tap(find.text('25').last);
+    await widgetTester.tap(find.text(testVariables['date']).last);
     await widgetTester.pumpAndSettle(const Duration(milliseconds: 500));
     await widgetTester.tap(find.text('Ok'));
     await widgetTester.pumpAndSettle(const Duration(milliseconds: 500));
 
     // select session
-    await widgetTester.tap(find.text('Evening session'));
+    await widgetTester.tap(find.text(testVariables['session']));
 
     await widgetTester.pumpAndSettle(const Duration(milliseconds: 500));
     // // tap on the submit
@@ -175,10 +179,11 @@ void main() {
     await widgetTester.pumpAndSettle(const Duration(seconds: 2));
 
     //try to use the input field
-    await widgetTester.enterText(find.byType(DigitSearchBar), 'Ram');
+    await widgetTester.enterText(
+        find.byType(DigitSearchBar), testVariables['attendees'][0]);
     await widgetTester.pumpAndSettle(const Duration(seconds: 1));
-    expect(find.text('Ram'), findsAtLeastNWidgets(2));
-    expect(find.text('Syed'), findsNothing);
+    expect(find.text(testVariables['attendees'][0]), findsAtLeastNWidgets(2));
+    expect(find.text(testVariables['attendees'][1]), findsNothing);
 
     //Submit
     await widgetTester.tap(find.text('Submit'));
@@ -194,7 +199,7 @@ void main() {
     await widgetTester.testTextInput.receiveAction(TextInputAction.done);
 
     //mark attendance for all attendees and submit
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < testVariables['attendees'].length; i++) {
       await widgetTester.tap(find.byType(CircularButton).at(i));
       await widgetTester.pumpAndSettle(const Duration(seconds: 1));
     }
