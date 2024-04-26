@@ -10,6 +10,7 @@ const memberCard = MemberCard();
 const deliverIntervention = DeliverIntervention();
 const referBeneficiary = ReferBeneficiary();
 const adverseEvents = AdverseEvents();
+const reasonForDeletion = ReasonForDeletion();
 
 class Common {
   const Common();
@@ -538,6 +539,12 @@ class ReferBeneficiary {
   String get selectCycle => 'REFERRAL_SELECT_CYCLE';
   String get createReferralLabel => 'CREATE_REFERRAL_LABEL';
   String get noChecklistFound => 'NO_CHECKLISTS_FOUND';
+}
+
+class ReasonForDeletion {
+  const ReasonForDeletion();
+
+  String get reasonForDeletionLabel => 'REASON_FOR_DELETION_LABEL';
 }
 
 class AdverseEvents {

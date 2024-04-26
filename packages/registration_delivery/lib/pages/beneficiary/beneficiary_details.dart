@@ -6,10 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:registration_delivery/blocs/app_localization.dart';
-import 'package:registration_delivery/utils/extensions/extensions.dart';
+import 'package:digit_data_model/data_model.dart';
+import 'package:recase/recase.dart';
+import 'package:registration_delivery/pages/beneficiary/widgets/past_delivery.dart';
 
+import '../../blocs/delivery_intervention/deliver_intervention.dart';
+import '../../blocs/household_overview/household_overview.dart';
 import '../../models/entities/additional_fields_type.dart';
 import '../../models/entities/beneficiary_type.dart';
+import '../../router/registration_delivery_router.gm.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
@@ -47,7 +52,8 @@ class _BeneficiaryDetailsPageState
           final householdMemberWrapper = state.householdMemberWrapper;
           // Filtering project beneficiaries based on the selected individual
           final projectBeneficiary =
-              context.beneficiaryType != BeneficiaryType.individual
+              RegistrationDeliverySingleton().beneficiaryType !=
+                      BeneficiaryType.individual
                   ? [householdMemberWrapper.projectBeneficiaries.first]
                   : householdMemberWrapper.projectBeneficiaries
                       .where(
@@ -86,7 +92,7 @@ class _BeneficiaryDetailsPageState
               : '1';
 
           // [TODO] Need to move this to Bloc Lisitner or consumer
-          if (projectState.projectType != null) {
+          if (RegistrationDeliverySingleton().projectType != null) {
             bloc.add(
               DeliverInterventionEvent.setActiveCycleDose(
                 taskData != null && taskData.isNotEmpty
@@ -102,7 +108,7 @@ class _BeneficiaryDetailsPageState
                         1
                     : 1,
                 state.selectedIndividual,
-                projectState.projectType!,
+                RegistrationDeliverySingleton().projectType!,
               ),
             );
           }
@@ -129,7 +135,8 @@ class _BeneficiaryDetailsPageState
                       footer: BlocBuilder<DeliverInterventionBloc,
                           DeliverInterventionState>(
                         builder: (context, deliverState) {
-                          final projectType = projectState.projectType;
+                          final projectType =
+                              RegistrationDeliverySingleton().projectType;
                           final cycles = projectType?.cycles;
 
                           return cycles != null && cycles.isNotEmpty
@@ -242,12 +249,14 @@ class _BeneficiaryDetailsPageState
                               DigitTableCard(
                                 element: {
                                   localizations.translate(
-                                    context.beneficiaryType !=
+                                    RegistrationDeliverySingleton()
+                                                .beneficiaryType !=
                                             BeneficiaryType.individual
                                         ? i18.householdOverView
                                             .householdOverViewHouseholdHeadLabel
                                         : i18.common.coreCommonName,
-                                  ): context.beneficiaryType !=
+                                  ): RegistrationDeliverySingleton()
+                                              .beneficiaryType !=
                                           BeneficiaryType.individual
                                       ? householdMemberWrapper
                                           .headOfHousehold.name?.givenName
@@ -257,12 +266,14 @@ class _BeneficiaryDetailsPageState
                                   localizations.translate(
                                     i18.deliverIntervention.idTypeText,
                                   ): () {
-                                    final identifiers = context
-                                                .beneficiaryType !=
-                                            BeneficiaryType.individual
-                                        ? householdMemberWrapper
-                                            .headOfHousehold.identifiers
-                                        : state.selectedIndividual?.identifiers;
+                                    final identifiers =
+                                        RegistrationDeliverySingleton()
+                                                    .beneficiaryType !=
+                                                BeneficiaryType.individual
+                                            ? householdMemberWrapper
+                                                .headOfHousehold.identifiers
+                                            : state.selectedIndividual
+                                                ?.identifiers;
                                     if (identifiers == null ||
                                         identifiers.isEmpty) {
                                       return '--';
@@ -274,12 +285,14 @@ class _BeneficiaryDetailsPageState
                                   localizations.translate(
                                     i18.deliverIntervention.idNumberText,
                                   ): () {
-                                    final identifiers = context
-                                                .beneficiaryType !=
-                                            BeneficiaryType.individual
-                                        ? householdMemberWrapper
-                                            .headOfHousehold.identifiers
-                                        : state.selectedIndividual?.identifiers;
+                                    final identifiers =
+                                        RegistrationDeliverySingleton()
+                                                    .beneficiaryType !=
+                                                BeneficiaryType.individual
+                                            ? householdMemberWrapper
+                                                .headOfHousehold.identifiers
+                                            : state.selectedIndividual
+                                                ?.identifiers;
                                     if (identifiers == null ||
                                         identifiers.isEmpty) {
                                       return '--';
@@ -293,7 +306,8 @@ class _BeneficiaryDetailsPageState
                                   localizations.translate(
                                     i18.common.coreCommonAge,
                                   ): () {
-                                    final dob = context.beneficiaryType !=
+                                    final dob = RegistrationDeliverySingleton()
+                                                .beneficiaryType !=
                                             BeneficiaryType.individual
                                         ? householdMemberWrapper
                                             .headOfHousehold.dateOfBirth
@@ -321,7 +335,8 @@ class _BeneficiaryDetailsPageState
                                   }(),
                                   localizations.translate(
                                     i18.common.coreCommonGender,
-                                  ): context.beneficiaryType !=
+                                  ): RegistrationDeliverySingleton()
+                                              .beneficiaryType !=
                                           BeneficiaryType.individual
                                       ? householdMemberWrapper.headOfHousehold
                                           .gender?.name.sentenceCase
@@ -330,7 +345,8 @@ class _BeneficiaryDetailsPageState
                                           '--',
                                   localizations.translate(
                                     i18.common.coreCommonMobileNumber,
-                                  ): context.beneficiaryType !=
+                                  ): RegistrationDeliverySingleton()
+                                              .beneficiaryType !=
                                           BeneficiaryType.individual
                                       ? householdMemberWrapper
                                           .headOfHousehold.mobileNumber
@@ -356,47 +372,49 @@ class _BeneficiaryDetailsPageState
                             ],
                           ),
                         ),
-                        if ((projectState.projectType?.cycles ?? []).isNotEmpty)
-                          BlocBuilder<ProjectBloc, ProjectState>(
-                            builder: (context, projectState) {
-                              return DigitCard(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: projectState.projectType?.cycles !=
-                                          null
-                                      ? [
-                                          BlocBuilder<DeliverInterventionBloc,
-                                              DeliverInterventionState>(
-                                            builder: (context, deliverState) {
-                                              return Column(
-                                                children: [
-                                                  (projectState.projectType
+                        if ((RegistrationDeliverySingleton()
+                                    .projectType
+                                    ?.cycles ??
+                                [])
+                            .isNotEmpty)
+                          DigitCard(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: RegistrationDeliverySingleton()
+                                          .projectType
+                                          ?.cycles !=
+                                      null
+                                  ? [
+                                      BlocBuilder<DeliverInterventionBloc,
+                                          DeliverInterventionState>(
+                                        builder: (context, deliverState) {
+                                          return Column(
+                                            children: [
+                                              (RegistrationDeliverySingleton()
+                                                              .projectType
+                                                              ?.cycles ??
+                                                          [])
+                                                      .isNotEmpty
+                                                  ? RecordDeliveryCycle(
+                                                      projectCycles:
+                                                          projectState
+                                                                  .projectType
                                                                   ?.cycles ??
-                                                              [])
-                                                          .isNotEmpty
-                                                      ? RecordDeliveryCycle(
-                                                          projectCycles:
-                                                              projectState
-                                                                      .projectType
-                                                                      ?.cycles ??
-                                                                  [],
-                                                          taskData:
-                                                              taskData ?? [],
-                                                          individualModel: state
-                                                              .selectedIndividual,
-                                                        )
-                                                      : const Offstage(),
-                                                ],
-                                              );
-                                            },
-                                          ),
-                                        ]
-                                      : [],
-                                ),
-                              );
-                            },
-                          ),
+                                                              [],
+                                                      taskData: taskData ?? [],
+                                                      individualModel: state
+                                                          .selectedIndividual,
+                                                    )
+                                                  : const Offstage(),
+                                            ],
+                                          );
+                                        },
+                                      ),
+                                    ]
+                                  : [],
+                            ),
+                          )
                       ],
                     ),
                   );

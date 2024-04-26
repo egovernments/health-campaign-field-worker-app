@@ -12,7 +12,6 @@ dependencies:
     sdk: flutter
   flutter_bloc: ^8.1.1
   freezed_annotation: ^2.1.0
-  build_runner: ^2.2.1
   dart_mappable: ^4.2.0
   drift: ^2.0.0
   sqlite3_flutter_libs: ^0.5.10
@@ -23,7 +22,7 @@ dependencies:
   recase: ^4.1.0
   referral_reconciliation: 0.0.1
   registration_delivery: 0.0.1
-#  attendance_management: 0.0.1
+  attendance_management: 0.0.1
   inventory_management: 0.0.1
   isar: ^3.0.5
   isar_flutter_libs: ^3.0.5
@@ -35,6 +34,7 @@ dev_dependencies:
   flutter_lints: ^3.0.1
   dart_code_metrics: ^5.7.6
   freezed: ^2.1.0+1
+  build_runner: ^2.4.9
   json_serializable: ^6.4.0
   drift_dev: ^2.14.1
   bloc_test: ^9.1.0

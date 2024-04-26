@@ -1,5 +1,4 @@
 import 'package:collection/collection.dart';
-import 'package:digit_data_model/data/sql_store/sql_store.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/oplog/oplog_entry.dart';
 import 'package:digit_data_model/utils/utils.dart';

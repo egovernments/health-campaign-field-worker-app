@@ -16,11 +16,9 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
+import '../../blocs/search_households/search_bloc_common_wrapper.dart';
+import '../../blocs/search_households/search_households.dart';
 import '../../models/entities/beneficiary_type.dart';
-import '../../models/entities/gender.dart';
-import '../../models/entities/identifier.dart';
-import '../../models/entities/individual.dart';
-import '../../models/entities/name.dart';
 import '../../router/registration_delivery_router.gm.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
@@ -70,13 +68,13 @@ class _IndividualDetailsPageState
             state.mapOrNull(
               persisted: (value) {
                 if (value.navigateToRoot) {
-                  (router.parent() as StackRouter).pop();
+                  (router.parent() as StackRouter).maybePop();
                 } else {
-                  (router.parent() as StackRouter).pop();
+                  (router.parent() as StackRouter).maybePop();
                   context.read<SearchBlocWrapper>().searchHouseholdsBloc.add(
                         SearchHouseholdsEvent.searchByHousehold(
                           householdModel: value.householdModel,
-                          projectId: context.projectId,
+                          projectId: RegistrationDeliverySingleton().projectId!,
                           isProximityEnabled: false,
                         ),
                       );
@@ -116,8 +114,10 @@ class _IndividualDetailsPageState
                               if (form.control(_idTypeKey).value == null) {
                                 form.control(_idTypeKey).setErrors({'': true});
                               }
-                              final userId = context.loggedInUserUuid;
-                              final projectId = context.projectId;
+                              final userId = RegistrationDeliverySingleton()
+                                  .loggedInUserUuid;
+                              final projectId =
+                                  RegistrationDeliverySingleton().projectId;
                               form.markAllAsTouched();
                               if (!form.valid) return;
                               FocusManager.instance.primaryFocus?.unfocus();
@@ -141,7 +141,8 @@ class _IndividualDetailsPageState
                                     oldIndividual: null,
                                   );
 
-                                  final boundary = context.boundary;
+                                  final boundary =
+                                      RegistrationDeliverySingleton().boundary;
 
                                   bloc.add(
                                     BeneficiaryRegistrationSaveIndividualDetailsEvent(
@@ -206,9 +207,15 @@ class _IndividualDetailsPageState
 
                                         bloc.add(
                                           BeneficiaryRegistrationCreateEvent(
-                                            projectId: projectId,
-                                            userUuid: userId,
-                                            boundary: boundary,
+                                            projectId:
+                                                RegistrationDeliverySingleton()
+                                                    .projectId!,
+                                            userUuid:
+                                                RegistrationDeliverySingleton()
+                                                    .loggedInUserUuid!,
+                                            boundary:
+                                                RegistrationDeliverySingleton()
+                                                    .boundary!,
                                             tag: scannerBloc
                                                     .state.qrCodes.isNotEmpty
                                                 ? scannerBloc
@@ -274,7 +281,8 @@ class _IndividualDetailsPageState
                                                       .clientAuditDetails!
                                                       .createdTime,
                                                   lastModifiedBy:
-                                                      context.loggedInUserUuid,
+                                                      RegistrationDeliverySingleton()
+                                                          .loggedInUserUuid,
                                                   lastModifiedTime: context
                                                       .millisecondsSinceEpoch(),
                                                 )
@@ -318,12 +326,17 @@ class _IndividualDetailsPageState
                                       bloc.add(
                                         BeneficiaryRegistrationAddMemberEvent(
                                           beneficiaryType:
-                                              context.beneficiaryType,
+                                              RegistrationDeliverySingleton()
+                                                  .beneficiaryType!,
                                           householdModel: householdModel,
                                           individualModel: individual,
                                           addressModel: addressModel,
-                                          userUuid: userId,
-                                          projectId: context.projectId,
+                                          userUuid:
+                                              RegistrationDeliverySingleton()
+                                                  .loggedInUserUuid!,
+                                          projectId:
+                                              RegistrationDeliverySingleton()
+                                                  .projectId!,
                                           tag: scannerBloc
                                                   .state.qrCodes.isNotEmpty
                                               ? scannerBloc.state.qrCodes.first
@@ -578,10 +591,10 @@ class _IndividualDetailsPageState
                           ],
                         ),
                         const SizedBox(height: 16),
-                        if ((context.beneficiaryType ==
+                        if ((RegistrationDeliverySingleton().beneficiaryType ==
                                     BeneficiaryType.household &&
                                 widget.isHeadOfHousehold) ||
-                            (context.beneficiaryType ==
+                            (RegistrationDeliverySingleton().beneficiaryType ==
                                 BeneficiaryType.individual))
                           BlocBuilder<DigitScannerBloc, DigitScannerState>(
                             builder: (context, state) => state
@@ -691,18 +704,18 @@ class _IndividualDetailsPageState
     var individual = oldIndividual;
     individual ??= IndividualModel(
       clientReferenceId: IdGen.i.identifier,
-      tenantId: envConfig.variables.tenantId,
+      tenantId: RegistrationDeliverySingleton().tenantId,
       rowVersion: 1,
       auditDetails: AuditDetails(
-        createdBy: context.loggedInUserUuid,
+        createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
         createdTime: context.millisecondsSinceEpoch(),
-        lastModifiedBy: context.loggedInUserUuid,
+        lastModifiedBy: RegistrationDeliverySingleton().loggedInUserUuid,
         lastModifiedTime: context.millisecondsSinceEpoch(),
       ),
       clientAuditDetails: ClientAuditDetails(
-        createdBy: context.loggedInUserUuid,
+        createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
         createdTime: context.millisecondsSinceEpoch(),
-        lastModifiedBy: context.loggedInUserUuid,
+        lastModifiedBy: RegistrationDeliverySingleton().loggedInUserUuid,
         lastModifiedTime: context.millisecondsSinceEpoch(),
       ),
     );
@@ -710,18 +723,18 @@ class _IndividualDetailsPageState
     var name = individual.name;
     name ??= NameModel(
       individualClientReferenceId: individual.clientReferenceId,
-      tenantId: envConfig.variables.tenantId,
+      tenantId: RegistrationDeliverySingleton().tenantId,
       rowVersion: 1,
       auditDetails: AuditDetails(
-        createdBy: context.loggedInUserUuid,
+        createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
         createdTime: context.millisecondsSinceEpoch(),
-        lastModifiedBy: context.loggedInUserUuid,
+        lastModifiedBy: RegistrationDeliverySingleton().loggedInUserUuid,
         lastModifiedTime: context.millisecondsSinceEpoch(),
       ),
       clientAuditDetails: ClientAuditDetails(
-        createdBy: context.loggedInUserUuid,
+        createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
         createdTime: context.millisecondsSinceEpoch(),
-        lastModifiedBy: context.loggedInUserUuid,
+        lastModifiedBy: RegistrationDeliverySingleton().loggedInUserUuid,
         lastModifiedTime: context.millisecondsSinceEpoch(),
       ),
     );
@@ -732,18 +745,18 @@ class _IndividualDetailsPageState
 
     identifier ??= IdentifierModel(
       clientReferenceId: individual.clientReferenceId,
-      tenantId: envConfig.variables.tenantId,
+      tenantId: RegistrationDeliverySingleton().tenantId,
       rowVersion: 1,
       auditDetails: AuditDetails(
-        createdBy: context.loggedInUserUuid,
+        createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
         createdTime: context.millisecondsSinceEpoch(),
-        lastModifiedBy: context.loggedInUserUuid,
+        lastModifiedBy: RegistrationDeliverySingleton().loggedInUserUuid,
         lastModifiedTime: context.millisecondsSinceEpoch(),
       ),
       clientAuditDetails: ClientAuditDetails(
-        createdBy: context.loggedInUserUuid,
+        createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
         createdTime: context.millisecondsSinceEpoch(),
-        lastModifiedBy: context.loggedInUserUuid,
+        lastModifiedBy: RegistrationDeliverySingleton().loggedInUserUuid,
         lastModifiedTime: context.millisecondsSinceEpoch(),
       ),
     );

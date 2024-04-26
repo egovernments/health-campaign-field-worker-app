@@ -1,4 +1,11 @@
+@MappableLib(
+  generateInitializerForScope: InitializerScope.package,
+)
 library data_model;
+
+import 'package:dart_mappable/dart_mappable.dart';
+
+import 'data_model.dart';
 
 export 'data/data_repository.dart';
 export 'data/repositories/local/address.dart';
@@ -8,13 +15,6 @@ export 'data/sql_store/sql_store.dart';
 
 export 'models/oplog/oplog_entry.dart' show OpLogEntry;
 
-@MappableLib(
-  generateInitializerForScope: InitializerScope.package,
-)
-import 'package:dart_mappable/dart_mappable.dart';
-
-import 'data_model.dart';
-
 export 'package:registration_delivery/models/entities/household.dart';
 export 'package:registration_delivery/models/entities/task.dart';
 export 'package:registration_delivery/models/entities/downsync.dart';
@@ -22,6 +22,15 @@ export 'package:registration_delivery/models/entities/downsync.dart';
 export 'models/entities/address.dart';
 export 'models/entities/boundary.dart';
 export 'models/entities/locality.dart';
+export 'models/entities/blood_group.dart';
+export 'models/entities/gender.dart';
+export 'models/entities/identifier.dart';
+export 'models/entities/individual.dart';
+export 'models/entities/name.dart';
+export 'models/project_type/project_type_model.dart';
+export 'models/pgr_complaints/pgr_address.dart';
+export 'models/pgr_complaints/pgr_complaints.dart';
+export 'models/pgr_complaints/pgr_complaints_response.dart';
 
 part 'data_model.mapper.dart';
 

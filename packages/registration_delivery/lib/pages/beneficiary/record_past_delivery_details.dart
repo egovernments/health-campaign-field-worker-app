@@ -6,11 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/blocs/app_localization.dart';
+import 'package:registration_delivery/utils/utils.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
+import '../../blocs/delivery_intervention/deliver_intervention.dart';
+import '../../blocs/household_overview/household_overview.dart';
 import '../../models/entities/additional_fields_type.dart';
 import '../../models/entities/status.dart';
 import '../../models/entities/task.dart';
+import '../../router/registration_delivery_router.gm.dart';
 import '../../utils/constants.dart';
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
@@ -122,14 +126,17 @@ class _RecordPastDeliveryDetailsPageState
                               event.add(DeliverInterventionSubmitEvent(
                                 result,
                                 true,
-                                context.boundary,
+                                RegistrationDeliverySingleton().boundary!,
                               ));
                             }
                             final bloc = context.read<HouseholdOverviewBloc>();
 
                             bloc.add(HouseholdOverviewReloadEvent(
-                              projectId: context.projectId,
-                              projectBeneficiaryType: context.beneficiaryType,
+                              projectId:
+                                  RegistrationDeliverySingleton().projectId!,
+                              projectBeneficiaryType:
+                                  RegistrationDeliverySingleton()
+                                      .beneficiaryType!,
                             ));
 
                             event.add(DeliverInterventionSearchEvent(
@@ -144,8 +151,11 @@ class _RecordPastDeliveryDetailsPageState
                               SearchBeneficiaryRoute.name,
                             );
                             bloc.add(HouseholdOverviewReloadEvent(
-                              projectId: context.projectId,
-                              projectBeneficiaryType: context.beneficiaryType,
+                              projectId:
+                                  RegistrationDeliverySingleton().projectId!,
+                              projectBeneficiaryType:
+                                  RegistrationDeliverySingleton()
+                                      .beneficiaryType!,
                             ));
                             Navigator.of(ctx).pop();
 
@@ -159,7 +169,7 @@ class _RecordPastDeliveryDetailsPageState
                             i18.common.coreCommonYes,
                           ),
                           action: (ctx) async {
-                            router.pop();
+                            router.maybePop();
                             final event =
                                 context.read<DeliverInterventionBloc>();
                             final bloc = context.read<HouseholdOverviewBloc>();
@@ -189,7 +199,7 @@ class _RecordPastDeliveryDetailsPageState
                               event.add(DeliverInterventionSubmitEvent(
                                 result,
                                 true,
-                                context.boundary,
+                                RegistrationDeliverySingleton().boundary!,
                               ));
                             }
                             context.router.popUntilRouteWithName(
@@ -203,8 +213,11 @@ class _RecordPastDeliveryDetailsPageState
                             );
                             if (response == null) {
                               bloc.add(HouseholdOverviewReloadEvent(
-                                projectId: context.projectId,
-                                projectBeneficiaryType: context.beneficiaryType,
+                                projectId:
+                                    RegistrationDeliverySingleton().projectId!,
+                                projectBeneficiaryType:
+                                    RegistrationDeliverySingleton()
+                                        .beneficiaryType!,
                               ));
                             }
                           },

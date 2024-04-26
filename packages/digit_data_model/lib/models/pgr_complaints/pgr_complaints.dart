@@ -1,8 +1,6 @@
 import 'dart:convert';
 
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:digit_data_model/data/sql_store/sql_store.dart';
-import 'package:digit_data_model/models/entities/pgr_application_status.dart';
 import 'package:drift/drift.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'pgr_address.dart';
@@ -203,6 +201,20 @@ class PgrWorkflowModel extends EntityModel with PgrWorkflowModelMappable {
     super.auditDetails,
   super.isDeleted  = false,
   }) : super();
+}
+
+@MappableEnum()
+enum PgrServiceApplicationStatus {
+  @MappableValue('CREATED')
+  created,
+  @MappableValue('PENDING_ASSIGNMENT')
+  pendingAssignment,
+  @MappableValue('RESOLVED')
+  resolved,
+  @MappableValue('REJECTED')
+  rejected,
+  @MappableValue('CANCELLED')
+  cancelled,
 }
 
 @MappableClass(ignoreNull: true)

@@ -1,11 +1,10 @@
 import 'dart:async';
 
 import 'package:digit_components/digit_components.dart';
-import 'package:digit_data_model/data/data_repository.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:registration_delivery/models/entities/individual.dart';
+import 'package:digit_data_model/data_model.dart';
 
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/repositories/remote/auth.dart';

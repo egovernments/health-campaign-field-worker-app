@@ -5,14 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/blocs/app_localization.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
+import 'package:digit_data_model/data_model.dart';
 
+import '../../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../../blocs/product_variant/product_variant.dart';
 import '../../../models/entities/additional_fields_type.dart';
 import '../../../models/entities/deliver_strategy_type.dart';
-import '../../../models/entities/individual.dart';
 import '../../../models/entities/status.dart';
-import '../../../models/entities/task.dart';
-import '../../../models/project_type/project_type_model.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../widgets/localized.dart';
 

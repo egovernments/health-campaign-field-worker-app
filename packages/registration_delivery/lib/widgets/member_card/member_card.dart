@@ -1,13 +1,19 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/individual.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:registration_delivery/utils/extensions/extensions.dart';
 
+import '../../blocs/app_localization.dart';
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
-import '../../blocs/localization/app_localization.dart';
-import '../../models/data_model.dart';
-import '../../router/app_router.dart';
-import '../../utils/environment_config.dart';
+import '../../models/entities/beneficiary_type.dart';
+import '../../models/entities/side_effect.dart';
+import '../../models/entities/status.dart';
+import '../../models/entities/task.dart';
+import '../../router/registration_delivery_router.gm.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../action_card/action_card.dart';
@@ -24,7 +30,7 @@ class MemberCard extends StatelessWidget {
   final VoidCallback setAsHeadAction;
   final VoidCallback editMemberAction;
   final VoidCallback deleteMemberAction;
-  final AppLocalizations localizations;
+  final RegistrationDeliveryLocalization localizations;
   final List<TaskModel>? tasks;
   final List<SideEffectModel>? sideEffects;
   final bool isNotEligible;
@@ -56,7 +62,7 @@ class MemberCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final beneficiaryType = context.beneficiaryType;
+    final beneficiaryType = RegistrationDeliverySingleton().beneficiaryType;
 
     return Container(
       decoration: BoxDecoration(
@@ -235,9 +241,11 @@ class MemberCard extends StatelessWidget {
                                   ),
                                 );
                                 bloc.add(HouseholdOverviewReloadEvent(
-                                  projectId: context.projectId,
+                                  projectId: RegistrationDeliverySingleton()
+                                      .projectId!,
                                   projectBeneficiaryType:
-                                      context.beneficiaryType,
+                                      RegistrationDeliverySingleton()
+                                          .beneficiaryType!,
                                 ));
 
                                 final futureTaskList = tasks
@@ -349,27 +357,33 @@ class MemberCard extends StatelessWidget {
                                                     projectBeneficiaryClientReferenceId,
                                                 clientReferenceId:
                                                     IdGen.i.identifier,
-                                                tenantId: envConfig
-                                                    .variables.tenantId,
+                                                tenantId:
+                                                    RegistrationDeliverySingleton()
+                                                        .tenantId,
                                                 rowVersion: 1,
                                                 auditDetails: AuditDetails(
                                                   createdBy:
-                                                      context.loggedInUserUuid,
+                                                      RegistrationDeliverySingleton()
+                                                          .loggedInUserUuid!,
                                                   createdTime: context
                                                       .millisecondsSinceEpoch(),
                                                 ),
-                                                projectId: context.projectId,
+                                                projectId:
+                                                    RegistrationDeliverySingleton()
+                                                        .projectId,
                                                 status: Status
                                                     .beneficiaryRefused
                                                     .toValue(),
                                                 clientAuditDetails:
                                                     ClientAuditDetails(
                                                   createdBy:
-                                                      context.loggedInUserUuid,
+                                                      RegistrationDeliverySingleton()
+                                                          .loggedInUserUuid!,
                                                   createdTime: context
                                                       .millisecondsSinceEpoch(),
                                                   lastModifiedBy:
-                                                      context.loggedInUserUuid,
+                                                      RegistrationDeliverySingleton()
+                                                          .loggedInUserUuid,
                                                   lastModifiedTime: context
                                                       .millisecondsSinceEpoch(),
                                                 ),
@@ -388,7 +402,8 @@ class MemberCard extends StatelessWidget {
                                                     individual.address?.first,
                                               ),
                                               false,
-                                              context.boundary,
+                                              RegistrationDeliverySingleton()
+                                                  .boundary!,
                                             ),
                                           );
                                       final reloadState =
@@ -398,9 +413,12 @@ class MemberCard extends StatelessWidget {
                                         () {
                                           reloadState.add(
                                             HouseholdOverviewReloadEvent(
-                                              projectId: context.projectId,
+                                              projectId:
+                                                  RegistrationDeliverySingleton()
+                                                      .projectId!,
                                               projectBeneficiaryType:
-                                                  context.beneficiaryType,
+                                                  RegistrationDeliverySingleton()
+                                                      .beneficiaryType!,
                                             ),
                                           );
                                         },

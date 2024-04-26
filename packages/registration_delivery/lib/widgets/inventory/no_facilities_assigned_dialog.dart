@@ -1,7 +1,6 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
-
-import '../../router/app_router.dart';
 
 class NoFacilitiesAssignedDialog {
   static Future<void> show(BuildContext context) {
@@ -20,7 +19,7 @@ class NoFacilitiesAssignedDialog {
           label: 'Close',
           action: (dialogContext) {
             Navigator.of(context, rootNavigator: true).pop();
-            context.router.pop();
+            context.router.maybePop();
           },
         ),
       ),

@@ -14,7 +14,6 @@
 // export 'entities/beneficiary_type.dart';
 // export 'entities/blood_group.dart';
 // export 'entities/boundary.dart';
-// export 'entities/deliver_strategy_type.dart';
 // export 'entities/document.dart';
 // export 'entities/downsync.dart';
 // export 'entities/facility.dart';

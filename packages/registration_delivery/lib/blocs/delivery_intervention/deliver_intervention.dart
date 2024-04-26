@@ -6,10 +6,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../models/entities/additional_fields_type.dart';
 import '../../models/entities/deliver_strategy_type.dart';
-import '../../models/entities/individual.dart';
 import '../../models/entities/status.dart';
 import '../../models/entities/task.dart';
-import '../../models/project_type/project_type_model.dart';
 
 part 'deliver_intervention.freezed.dart';
 

@@ -16,7 +16,6 @@ import 'data/remote_client.dart';
 import 'firebase_options.dart';
 // import 'models/data_model.init.dart';
 import 'models/data_model.init.dart';
-import 'models/entities/target.dart';
 import 'router/app_router.dart';
 import 'utils/background_service.dart';
 import 'utils/environment_config.dart';

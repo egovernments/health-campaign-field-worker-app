@@ -15,7 +15,6 @@ import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 
-
 @RoutePage()
 class HouseholdLocationPage extends LocalizedStatefulWidget {
   const HouseholdLocationPage({
@@ -138,19 +137,28 @@ class _HouseholdLocationPageState
                                     form.control(_accuracyKey).value ??
                                         locationState.accuracy,
                                 locality: LocalityModel(
-                                  code: context.boundary.code!,
-                                  name: context.boundary.name,
+                                  code: RegistrationDeliverySingleton()
+                                      .boundary!
+                                      .code!,
+                                  name: RegistrationDeliverySingleton()
+                                      .boundary!
+                                      .name,
                                 ),
-                                tenantId: envConfig.variables.tenantId,
+                                tenantId:
+                                    RegistrationDeliverySingleton().tenantId,
                                 rowVersion: 1,
                                 auditDetails: AuditDetails(
-                                  createdBy: context.loggedInUserUuid,
+                                  createdBy: RegistrationDeliverySingleton()
+                                      .loggedInUserUuid!,
                                   createdTime: context.millisecondsSinceEpoch(),
                                 ),
                                 clientAuditDetails: ClientAuditDetails(
-                                  createdBy: context.loggedInUserUuid,
+                                  createdBy: RegistrationDeliverySingleton()
+                                      .loggedInUserUuid!,
                                   createdTime: context.millisecondsSinceEpoch(),
-                                  lastModifiedBy: context.loggedInUserUuid,
+                                  lastModifiedBy:
+                                      RegistrationDeliverySingleton()
+                                          .loggedInUserUuid,
                                   lastModifiedTime:
                                       context.millisecondsSinceEpoch(),
                                 ),
@@ -347,7 +355,7 @@ class _HouseholdLocationPageState
 
     return fb.group(<String, Object>{
       _administrationAreaKey: FormControl<String>(
-        value: context.boundary.name,
+        value: RegistrationDeliverySingleton().boundary!.name,
         validators: [Validators.required],
       ),
       _addressLine1Key:

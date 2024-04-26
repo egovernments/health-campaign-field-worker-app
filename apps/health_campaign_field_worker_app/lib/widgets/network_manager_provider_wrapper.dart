@@ -4,8 +4,6 @@ import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_components/widgets/digit_card.dart';
 import 'package:digit_components/widgets/digit_elevated_button.dart';
 import 'package:digit_components/widgets/scrollable_content.dart';
-import 'package:digit_data_model/data/sql_store/sql_store.dart' as dataModelSql;
-import 'package:digit_data_model/data/sql_store/sql_store.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/oplog/oplog_entry.dart';
 
@@ -19,13 +17,9 @@ import 'package:inventory_management/models/entities/stock_reconciliation.dart';
 import 'package:isar/isar.dart';
 import 'package:provider/provider.dart';
 import 'package:registration_delivery/data/repositories/local/individual.dart';
-import 'package:registration_delivery/models/entities/downsync.dart';
-import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/models/entities/household_member.dart';
-import 'package:registration_delivery/models/entities/individual.dart';
 import 'package:registration_delivery/models/entities/referral.dart';
 import 'package:registration_delivery/models/entities/side_effect.dart';
-import 'package:registration_delivery/models/entities/task.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../data/network_manager.dart';
@@ -88,7 +82,6 @@ import '../models/entities/project_type.dart';
 import '../models/entities/service.dart';
 import '../models/entities/service_definition.dart';
 import '../models/entities/user.dart';
-import '../models/pgr_complaints/pgr_complaints.dart';
 
 class NetworkManagerProviderWrapper extends StatelessWidget {
   final LocalSqlDataStore sql;

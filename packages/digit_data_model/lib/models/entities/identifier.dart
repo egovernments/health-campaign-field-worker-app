@@ -5,7 +5,6 @@ import 'package:drift/drift.dart';
 import 'package:digit_data_model/data_model.dart';
 
 part 'identifier.mapper.dart';
-
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
 class IdentifierSearchModel extends EntitySearchModel with IdentifierSearchModelMappable {
   final String? id;

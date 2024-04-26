@@ -16,10 +16,14 @@ import 'package:registration_delivery/blocs/app_localization.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
+import '../../blocs/delivery_intervention/deliver_intervention.dart';
+import '../../blocs/household_overview/household_overview.dart';
+import '../../blocs/product_variant/product_variant.dart';
 import '../../models/entities/additional_fields_type.dart';
 import '../../models/entities/status.dart';
 import '../../models/entities/task.dart';
 import '../../models/entities/task_resource.dart';
+import '../../router/registration_delivery_router.gm.dart';
 import '../../utils/constants.dart';
 import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
@@ -132,7 +136,9 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                         event
                                             .add(DeliverInterventionSubmitEvent(
                                           TaskModel(
-                                            projectId: context.projectId,
+                                            projectId:
+                                                RegistrationDeliverySingleton()
+                                                    .projectId,
                                             address: address?.copyWith(
                                               relatedClientReferenceId:
                                                   clientReferenceId,
@@ -145,18 +151,21 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                                 bloc.oldTask
                                                     ?.projectBeneficiaryClientReferenceId,
                                             tenantId:
-                                                envConfig.variables.tenantId,
+                                                RegistrationDeliverySingleton()
+                                                    .tenantId,
                                             rowVersion: 1,
                                             auditDetails: AuditDetails(
                                               createdBy:
-                                                  context.loggedInUserUuid,
+                                                  RegistrationDeliverySingleton()
+                                                      .loggedInUserUuid!,
                                               createdTime: context
                                                   .millisecondsSinceEpoch(),
                                             ),
                                             clientAuditDetails:
                                                 ClientAuditDetails(
                                               createdBy:
-                                                  context.loggedInUserUuid,
+                                                  RegistrationDeliverySingleton()
+                                                      .loggedInUserUuid!,
                                               createdTime: context
                                                   .millisecondsSinceEpoch(),
                                             ),
@@ -169,8 +178,9 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                                     TaskResourceModel(
                                                       clientReferenceId:
                                                           IdGen.i.identifier,
-                                                      tenantId: envConfig
-                                                          .variables.tenantId,
+                                                      tenantId:
+                                                          RegistrationDeliverySingleton()
+                                                              .tenantId,
                                                       taskclientReferenceId:
                                                           clientReferenceId,
                                                       quantity: variant.quantity
@@ -180,15 +190,17 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                                       isDelivered: true,
                                                       auditDetails:
                                                           AuditDetails(
-                                                        createdBy: context
-                                                            .loggedInUserUuid,
+                                                        createdBy:
+                                                            RegistrationDeliverySingleton()
+                                                                .loggedInUserUuid!,
                                                         createdTime: context
                                                             .millisecondsSinceEpoch(),
                                                       ),
                                                       clientAuditDetails:
                                                           ClientAuditDetails(
-                                                        createdBy: context
-                                                            .loggedInUserUuid,
+                                                        createdBy:
+                                                            RegistrationDeliverySingleton()
+                                                                .loggedInUserUuid!,
                                                         createdTime: context
                                                             .millisecondsSinceEpoch(),
                                                       ),
@@ -257,7 +269,8 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                             ),
                                           ),
                                           false,
-                                          context.boundary,
+                                          RegistrationDeliverySingleton()
+                                              .boundary!,
                                         ));
                                       }
                                     }
@@ -270,9 +283,12 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                       () {
                                         reloadState
                                             .add(HouseholdOverviewReloadEvent(
-                                          projectId: context.projectId,
+                                          projectId:
+                                              RegistrationDeliverySingleton()
+                                                  .projectId!,
                                           projectBeneficiaryType:
-                                              context.beneficiaryType,
+                                              RegistrationDeliverySingleton()
+                                                  .beneficiaryType!,
                                         ));
                                       },
                                     ).then((value) => context.router.popAndPush(

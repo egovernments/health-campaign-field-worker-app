@@ -1,29 +1,22 @@
 // GENERATED using mason_cli
 import 'dart:async';
 
-import 'package:digit_data_model/data/data_repository.dart';
 import 'package:disk_space/disk_space.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:digit_data_model/data_model.dart';
+import 'package:registration_delivery/models/entities/household_member.dart';
+import 'package:registration_delivery/models/entities/referral.dart';
+import 'package:registration_delivery/models/entities/side_effect.dart';
 
-import '../../data/data_repository.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/network_manager.dart';
 import '../../data/repositories/remote/bandwidth_check.dart';
 import '../../models/data_model.dart';
-import '../../models/entities/downsync.dart';
-import '../../models/entities/household.dart';
-import '../../models/entities/household_member.dart';
-import '../../models/entities/individual.dart';
 import '../../models/entities/project_beneficiary.dart';
-import '../../models/entities/referral.dart';
-import '../../models/entities/side_effect.dart';
-import '../../models/entities/task.dart';
 import '../../utils/background_service.dart';
 import '../../utils/environment_config.dart';
-import '../../utils/utils.dart';
-import 'search_households.dart';
 
 part 'project_beneficiaries_downsync.freezed.dart';
 
@@ -137,7 +130,7 @@ class BeneficiaryDownSyncBloc
           limit: 1,
           isDeleted: true,
           lastSyncedTime: lastSyncedTime,
-          tenantId: RegistrationDeliverySingleton().tenantId,
+          tenantId: envConfig.variables.tenantId,
           projectId: event.projectId,
         ),
       );
@@ -205,7 +198,7 @@ class BeneficiaryDownSyncBloc
                 offset: offset,
                 limit: event.batchSize,
                 totalCount: totalCount,
-                tenantId: RegistrationDeliverySingleton().tenantId,
+                tenantId: envConfig.variables.tenantId,
                 projectId: event.projectId,
                 lastSyncedTime: lastSyncedTime,
                 isDeleted: true,

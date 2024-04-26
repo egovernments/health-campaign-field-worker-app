@@ -4,15 +4,13 @@ import 'dart:core';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
-import 'package:digit_data_model/data/data_repository.dart';
-import 'package:digit_data_model/models/entities/boundary.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:inventory_management/models/entities/stock.dart';
 import 'package:isar/isar.dart';
 import 'package:recase/recase.dart';
-import 'package:registration_delivery/models/entities/individual.dart';
+import 'package:digit_data_model/data_model.dart';
 
 import '../../../models/app_config/app_config_model.dart' as app_configuration;
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
@@ -31,7 +29,6 @@ import '../../models/entities/project_resource.dart';
 import '../../models/entities/project_staff.dart';
 import '../../models/entities/roles_type.dart';
 import '../../models/entities/service_definition.dart';
-import '../../models/project_type/project_type_model.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/utils.dart';
 

@@ -11,28 +11,27 @@ import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_dialog.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:registration_delivery/models/entities/individual.dart';
 import 'package:registration_delivery/models/entities/referral.dart';
 import 'package:registration_delivery/models/entities/side_effect.dart';
-import 'package:registration_delivery/models/entities/task.dart';
 import 'package:uuid/uuid.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 // import '../blocs/search_households/project_beneficiaries_downsync.dart';
 // import '../blocs/search_households/search_households.dart';
+import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/localization.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../models/data_model.dart';
 import '../models/entities/additional_fields_type.dart';
 import '../models/entities/status.dart';
-import '../models/project_type/project_type_model.dart';
 import '../router/app_router.dart';
 import '../widgets/progress_indicator/progress_indicator.dart';
 import 'constants.dart';
@@ -533,134 +532,134 @@ Future<bool> getIsConnected() async {
   }
 }
 
-// void showDownloadDialog(
-//   BuildContext context, {
-//   required DownloadBeneficiary model,
-//   required DigitProgressDialogType dialogType,
-//   bool isPop = true,
-//   StreamController<double>? downloadProgressController,
-// }) {
-//   if (isPop) {
-//     Navigator.of(context, rootNavigator: true).pop();
-//   }
-//
-//   switch (dialogType) {
-//     case DigitProgressDialogType.failed:
-//     case DigitProgressDialogType.checkFailed:
-//       DigitSyncDialog.show(
-//         context,
-//         type: DigitSyncDialogType.failed,
-//         label: model.title,
-//         primaryAction: DigitDialogActions(
-//           label: model.primaryButtonLabel ?? '',
-//           action: (ctx) {
-//             if (dialogType == DigitProgressDialogType.failed ||
-//                 dialogType == DigitProgressDialogType.checkFailed) {
-//               Navigator.of(context, rootNavigator: true).pop();
-//               context.read<BeneficiaryDownSyncBloc>().add(
-//                     DownSyncGetBatchSizeEvent(
-//                       appConfiguration: [model.appConfiguartion!],
-//                       projectId: context.projectId,
-//                       boundaryCode: model.boundary,
-//                       pendingSyncCount: model.pendingSyncCount ?? 0,
-//                       boundaryName: model.boundaryName,
-//                     ),
-//                   );
-//             } else {
-//               Navigator.of(context, rootNavigator: true).pop();
-//               context.router.pop();
-//             }
-//           },
-//         ),
-//         secondaryAction: DigitDialogActions(
-//           label: model.secondaryButtonLabel ?? '',
-//           action: (ctx) {
-//             Navigator.of(context, rootNavigator: true).pop();
-//             context.router.pop();
-//           },
-//         ),
-//       );
-//     case DigitProgressDialogType.dataFound:
-//     case DigitProgressDialogType.pendingSync:
-//     case DigitProgressDialogType.insufficientStorage:
-//       DigitDialog.show(
-//         context,
-//         options: DigitDialogOptions(
-//           titleText: model.title,
-//           titleIcon: Icon(
-//             dialogType == DigitProgressDialogType.insufficientStorage
-//                 ? Icons.warning
-//                 : Icons.info_outline_rounded,
-//             color: dialogType == DigitProgressDialogType.insufficientStorage
-//                 ? DigitTheme.instance.colorScheme.error
-//                 : DigitTheme.instance.colorScheme.surfaceTint,
-//           ),
-//           contentText: model.content,
-//           primaryAction: DigitDialogActions(
-//             label: model.primaryButtonLabel ?? '',
-//             action: (ctx) {
-//               if (dialogType == DigitProgressDialogType.pendingSync) {
-//                 Navigator.of(context, rootNavigator: true).pop();
-//                 context.router.popUntilRouteWithName(HomeRoute.name);
-//               } else {
-//                 if ((model.totalCount ?? 0) > 0) {
-//                   context.read<BeneficiaryDownSyncBloc>().add(
-//                         DownSyncBeneficiaryEvent(
-//                           projectId: context.projectId,
-//                           boundaryCode: model.boundary,
-//                           // Batch Size need to be defined based on Internet speed.
-//                           batchSize: model.batchSize ?? 1,
-//                           initialServerCount: model.totalCount ?? 0,
-//                           boundaryName: model.boundaryName,
-//                         ),
-//                       );
-//                 } else {
-//                   Navigator.of(context, rootNavigator: true).pop();
-//                   context.read<BeneficiaryDownSyncBloc>().add(
-//                         const DownSyncResetStateEvent(),
-//                       );
-//                 }
-//               }
-//             },
-//           ),
-//           secondaryAction: model.secondaryButtonLabel != null
-//               ? DigitDialogActions(
-//                   label: model.secondaryButtonLabel ?? '',
-//                   action: (ctx) {
-//                     Navigator.of(context, rootNavigator: true).pop();
-//                     context.router.popUntilRouteWithName(HomeRoute.name);
-//                   },
-//                 )
-//               : null,
-//         ),
-//       );
-//     case DigitProgressDialogType.inProgress:
-//       DigitDialog.show(
-//         context,
-//         options: DigitDialogOptions(
-//           title: StreamBuilder<double>(
-//             stream: downloadProgressController?.stream,
-//             builder: (context, snapshot) {
-//               return ProgressIndicatorContainer(
-//                 label: '',
-//                 prefixLabel: '',
-//                 suffixLabel:
-//                     '${(snapshot.data == null ? 0 : snapshot.data! * model.totalCount!.toDouble()).toInt()}/${model.suffixLabel}' ??
-//                         '',
-//                 value: snapshot.data ?? 0,
-//                 valueColor: AlwaysStoppedAnimation<Color>(
-//                   DigitTheme.instance.colorScheme.secondary,
-//                 ),
-//                 subLabel: model.title,
-//               );
-//             },
-//           ),
-//         ),
-//       );
-//     default:
-//       return;
-//   }
-// }
+void showDownloadDialog(
+  BuildContext context, {
+  required DownloadBeneficiary model,
+  required DigitProgressDialogType dialogType,
+  bool isPop = true,
+  StreamController<double>? downloadProgressController,
+}) {
+  if (isPop) {
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+
+  switch (dialogType) {
+    case DigitProgressDialogType.failed:
+    case DigitProgressDialogType.checkFailed:
+      DigitSyncDialog.show(
+        context,
+        type: DigitSyncDialogType.failed,
+        label: model.title,
+        primaryAction: DigitDialogActions(
+          label: model.primaryButtonLabel ?? '',
+          action: (ctx) {
+            if (dialogType == DigitProgressDialogType.failed ||
+                dialogType == DigitProgressDialogType.checkFailed) {
+              Navigator.of(context, rootNavigator: true).pop();
+              context.read<BeneficiaryDownSyncBloc>().add(
+                    DownSyncGetBatchSizeEvent(
+                      appConfiguration: [model.appConfiguartion!],
+                      projectId: context.projectId,
+                      boundaryCode: model.boundary,
+                      pendingSyncCount: model.pendingSyncCount ?? 0,
+                      boundaryName: model.boundaryName,
+                    ),
+                  );
+            } else {
+              Navigator.of(context, rootNavigator: true).pop();
+              context.router.pop();
+            }
+          },
+        ),
+        secondaryAction: DigitDialogActions(
+          label: model.secondaryButtonLabel ?? '',
+          action: (ctx) {
+            Navigator.of(context, rootNavigator: true).pop();
+            context.router.pop();
+          },
+        ),
+      );
+    case DigitProgressDialogType.dataFound:
+    case DigitProgressDialogType.pendingSync:
+    case DigitProgressDialogType.insufficientStorage:
+      DigitDialog.show(
+        context,
+        options: DigitDialogOptions(
+          titleText: model.title,
+          titleIcon: Icon(
+            dialogType == DigitProgressDialogType.insufficientStorage
+                ? Icons.warning
+                : Icons.info_outline_rounded,
+            color: dialogType == DigitProgressDialogType.insufficientStorage
+                ? DigitTheme.instance.colorScheme.error
+                : DigitTheme.instance.colorScheme.surfaceTint,
+          ),
+          contentText: model.content,
+          primaryAction: DigitDialogActions(
+            label: model.primaryButtonLabel ?? '',
+            action: (ctx) {
+              if (dialogType == DigitProgressDialogType.pendingSync) {
+                Navigator.of(context, rootNavigator: true).pop();
+                context.router.popUntilRouteWithName(HomeRoute.name);
+              } else {
+                if ((model.totalCount ?? 0) > 0) {
+                  context.read<BeneficiaryDownSyncBloc>().add(
+                        DownSyncBeneficiaryEvent(
+                          projectId: context.projectId,
+                          boundaryCode: model.boundary,
+                          // Batch Size need to be defined based on Internet speed.
+                          batchSize: model.batchSize ?? 1,
+                          initialServerCount: model.totalCount ?? 0,
+                          boundaryName: model.boundaryName,
+                        ),
+                      );
+                } else {
+                  Navigator.of(context, rootNavigator: true).pop();
+                  context.read<BeneficiaryDownSyncBloc>().add(
+                        const DownSyncResetStateEvent(),
+                      );
+                }
+              }
+            },
+          ),
+          secondaryAction: model.secondaryButtonLabel != null
+              ? DigitDialogActions(
+                  label: model.secondaryButtonLabel ?? '',
+                  action: (ctx) {
+                    Navigator.of(context, rootNavigator: true).pop();
+                    context.router.popUntilRouteWithName(HomeRoute.name);
+                  },
+                )
+              : null,
+        ),
+      );
+    case DigitProgressDialogType.inProgress:
+      DigitDialog.show(
+        context,
+        options: DigitDialogOptions(
+          title: StreamBuilder<double>(
+            stream: downloadProgressController?.stream,
+            builder: (context, snapshot) {
+              return ProgressIndicatorContainer(
+                label: '',
+                prefixLabel: '',
+                suffixLabel:
+                    '${(snapshot.data == null ? 0 : snapshot.data! * model.totalCount!.toDouble()).toInt()}/${model.suffixLabel}' ??
+                        '',
+                value: snapshot.data ?? 0,
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  DigitTheme.instance.colorScheme.secondary,
+                ),
+                subLabel: model.title,
+              );
+            },
+          ),
+        ),
+      );
+    default:
+      return;
+  }
+}
 
 // Returns value of the Additional Field Model, by passing the key and additional Fields list as <Map<String, dynamic>>
 dynamic getValueByKey(List<Map<String, dynamic>> data, String key) {

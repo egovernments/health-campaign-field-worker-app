@@ -6,13 +6,12 @@ import 'package:inventory_management/models/entities/transaction_reason.dart';
 import 'package:inventory_management/models/entities/transaction_type.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import 'package:registration_delivery/models/entities/blood_group.dart';
-import 'package:registration_delivery/models/entities/gender.dart';
-
+import 'package:registration_delivery/models/entities/beneficiary_type.dart';
 import '../../models/entities/address_type.dart';
 
-import '../../models/entities/beneficiary_type.dart';
-import '../../models/entities/pgr_application_status.dart';
+import '../../models/entities/blood_group.dart';
+import '../../models/entities/gender.dart';
+import '../../models/pgr_complaints/pgr_complaints.dart';
 import 'tables/address.dart' as at;
 import 'tables/boundary.dart';
 import 'tables/locality.dart';
@@ -34,8 +33,10 @@ import 'tables/project_type.dart';
 import 'tables/service.dart';
 import 'tables/service_attributes.dart';
 import 'tables/service_definition.dart';
-import 'tables/target.dart';
 import 'tables/user.dart';
+import 'tables/individual.dart';
+import 'tables/identifier.dart';
+import 'tables/name.dart';
 
 part 'sql_store.g.dart';
 

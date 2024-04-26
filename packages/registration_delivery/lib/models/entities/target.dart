@@ -1,10 +1,9 @@
 // Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:digit_data_model/data/sql_store/sql_store.dart';
-import 'package:digit_data_model/models/entities/beneficiary_type.dart';
 import 'package:drift/drift.dart';
-
 import 'package:digit_data_model/data_model.dart';
+
+import 'beneficiary_type.dart';
 
 part 'target.mapper.dart';
 

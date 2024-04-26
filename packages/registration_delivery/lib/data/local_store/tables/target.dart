@@ -2,8 +2,7 @@
 
 import 'package:drift/drift.dart';
 
-import '../../../models/entities/beneficiary_type.dart';
-
+import '../../../../models/entities/beneficiary_type.dart';
 
 class Target extends Table {
   TextColumn get id => text()();

@@ -1,11 +1,16 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:digit_data_model/models/entities/individual.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:registration_delivery/utils/utils.dart';
 
+import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
+import '../../blocs/referral_management/referral_management.dart';
+import '../../blocs/search_households/search_households.dart';
+import '../../blocs/side_effects/side_effects.dart';
 import '../../models/entities/household.dart';
 import '../../models/entities/household_member.dart';
-import '../../models/entities/individual.dart';
 import '../../models/entities/referral.dart';
 import '../../models/entities/side_effect.dart';
 import '../../models/entities/task.dart';
@@ -51,28 +56,6 @@ class BeneficiaryWrapperPage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => ServiceBloc(
-            const ServiceEmptyState(),
-            serviceDataRepository: service,
-          ),
-        ),
-        BlocProvider(
-          create: (_) => FacilityBloc(
-            facilityLocalRepository: facilityRepository,
-            projectFacilityLocalRepository: projectFacilityRepository,
-          )..add(
-              FacilityLoadForProjectEvent(
-                projectId: context.selectedProject.id,
-              ),
-            ),
-        ),
-        BlocProvider(
-          create: (_) => ServiceDefinitionBloc(
-            const ServiceDefinitionEmptyState(),
-            serviceDefinitionDataRepository: serviceDefinition,
-          )..add(const ServiceDefinitionFetchEvent()),
-        ),
-        BlocProvider(
           create: (_) => HouseholdOverviewBloc(
               HouseholdOverviewState(
                 householdMemberWrapper: wrapper,
@@ -84,7 +67,7 @@ class BeneficiaryWrapperPage extends StatelessWidget {
               taskDataRepository: task,
               sideEffectDataRepository: sideEffect,
               referralDataRepository: referral,
-              beneficiaryType: context.beneficiaryType),
+              beneficiaryType: RegistrationDeliverySingleton().beneficiaryType),
         ),
         BlocProvider(
           create: (_) => DeliverInterventionBloc(

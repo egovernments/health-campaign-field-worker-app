@@ -1,9 +1,9 @@
 // Generated using mason. Do not modify by hand
 
+import 'package:digit_data_model/models/entities/blood_group.dart';
+import 'package:digit_data_model/models/entities/gender.dart';
 import 'package:drift/drift.dart';
 
-import '../../../../models/entities/blood_group.dart';
-import '../../../../models/entities/gender.dart';
 
 class Individual extends Table {
   TextColumn get id => text().nullable()();

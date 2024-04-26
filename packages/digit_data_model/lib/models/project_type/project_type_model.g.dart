@@ -50,8 +50,8 @@ _$ProjectTypeImpl _$$ProjectTypeImplFromJson(Map<String, dynamic> json) =>
       resources: (json['resources'] as List<dynamic>?)
           ?.map((e) => ProductVariantsModel.fromJson(e as Map<String, dynamic>))
           .toList(),
-      validMinAge: json['validMinAge'] as int?,
-      validMaxAge: json['validMaxAge'] as int?,
+      validMinAge: (json['validMinAge'] as num?)?.toInt(),
+      validMaxAge: (json['validMaxAge'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$$ProjectTypeImplToJson(_$ProjectTypeImpl instance) =>
@@ -71,9 +71,9 @@ Map<String, dynamic> _$$ProjectTypeImplToJson(_$ProjectTypeImpl instance) =>
 _$CycleImpl _$$CycleImplFromJson(Map<String, dynamic> json) => _$CycleImpl(
       mandatoryWaitSinceLastCycleInDays:
           json['mandatoryWaitSinceLastCycleInDays'] as String?,
-      startDate: json['startDate'] as int?,
-      endDate: json['endDate'] as int?,
-      id: json['id'] as int? ?? 0,
+      startDate: (json['startDate'] as num?)?.toInt(),
+      endDate: (json['endDate'] as num?)?.toInt(),
+      id: (json['id'] as num?)?.toInt() ?? 0,
       deliveries: (json['deliveries'] as List<dynamic>?)
           ?.map((e) => DeliveryModel.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -97,7 +97,7 @@ _$DeliveryModelImpl _$$DeliveryModelImplFromJson(Map<String, dynamic> json) =>
       mandatoryWaitSinceLastDeliveryInDays:
           json['mandatoryWaitSinceLastDeliveryInDays'] as String?,
       deliveryStrategy: json['deliveryStrategy'] as String?,
-      id: json['id'] as int? ?? 0,
+      id: (json['id'] as num?)?.toInt() ?? 0,
     );
 
 Map<String, dynamic> _$$DeliveryModelImplToJson(_$DeliveryModelImpl instance) =>
@@ -129,7 +129,7 @@ _$ProductVariantsModelImpl _$$ProductVariantsModelImplFromJson(
         Map<String, dynamic> json) =>
     _$ProductVariantsModelImpl(
       productVariantId: json['productVariantId'] as String?,
-      quantity: json['quantity'] as int?,
+      quantity: (json['quantity'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$$ProductVariantsModelImplToJson(

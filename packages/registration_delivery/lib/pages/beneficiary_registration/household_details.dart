@@ -7,6 +7,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
+import '../../router/registration_delivery_router.gm.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
@@ -75,19 +76,23 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                       ) {
                         var household = householdModel;
                         household ??= HouseholdModel(
-                          tenantId: envConfig.variables.tenantId,
+                          tenantId: RegistrationDeliverySingleton().tenantId,
                           clientReferenceId: IdGen.i.identifier,
                           rowVersion: 1,
                           clientAuditDetails: ClientAuditDetails(
-                            createdBy: context.loggedInUserUuid,
+                            createdBy: RegistrationDeliverySingleton()
+                                .loggedInUserUuid!,
                             createdTime: context.millisecondsSinceEpoch(),
-                            lastModifiedBy: context.loggedInUserUuid,
+                            lastModifiedBy: RegistrationDeliverySingleton()
+                                .loggedInUserUuid,
                             lastModifiedTime: context.millisecondsSinceEpoch(),
                           ),
                           auditDetails: AuditDetails(
-                            createdBy: context.loggedInUserUuid,
+                            createdBy: RegistrationDeliverySingleton()
+                                .loggedInUserUuid!,
                             createdTime: context.millisecondsSinceEpoch(),
-                            lastModifiedBy: context.loggedInUserUuid,
+                            lastModifiedBy: RegistrationDeliverySingleton()
+                                .loggedInUserUuid,
                             lastModifiedTime: context.millisecondsSinceEpoch(),
                           ),
                         );
@@ -141,40 +146,44 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                         bloc.add(
                           BeneficiaryRegistrationUpdateHouseholdDetailsEvent(
                             household: household.copyWith(
-                              clientAuditDetails: (addressModel
-                                              .clientAuditDetails?.createdBy !=
-                                          null &&
-                                      addressModel.clientAuditDetails
-                                              ?.createdTime !=
-                                          null)
-                                  ? ClientAuditDetails(
-                                      createdBy: addressModel
-                                          .clientAuditDetails!.createdBy,
-                                      createdTime: addressModel
-                                          .clientAuditDetails!.createdTime,
-                                      lastModifiedBy: context.loggedInUserUuid,
-                                      lastModifiedTime:
-                                          context.millisecondsSinceEpoch(),
-                                    )
-                                  : null,
+                              clientAuditDetails:
+                                  (addressModel.clientAuditDetails?.createdBy !=
+                                              null &&
+                                          addressModel.clientAuditDetails
+                                                  ?.createdTime !=
+                                              null)
+                                      ? ClientAuditDetails(
+                                          createdBy: addressModel
+                                              .clientAuditDetails!.createdBy,
+                                          createdTime: addressModel
+                                              .clientAuditDetails!.createdTime,
+                                          lastModifiedBy:
+                                              RegistrationDeliverySingleton()
+                                                  .loggedInUserUuid,
+                                          lastModifiedTime:
+                                              context.millisecondsSinceEpoch(),
+                                        )
+                                      : null,
                             ),
                             addressModel: addressModel.copyWith(
-                              clientAuditDetails: (addressModel
-                                              .clientAuditDetails?.createdBy !=
-                                          null &&
-                                      addressModel.clientAuditDetails
-                                              ?.createdTime !=
-                                          null)
-                                  ? ClientAuditDetails(
-                                      createdBy: addressModel
-                                          .clientAuditDetails!.createdBy,
-                                      createdTime: addressModel
-                                          .clientAuditDetails!.createdTime,
-                                      lastModifiedBy: context.loggedInUserUuid,
-                                      lastModifiedTime:
-                                          context.millisecondsSinceEpoch(),
-                                    )
-                                  : null,
+                              clientAuditDetails:
+                                  (addressModel.clientAuditDetails?.createdBy !=
+                                              null &&
+                                          addressModel.clientAuditDetails
+                                                  ?.createdTime !=
+                                              null)
+                                      ? ClientAuditDetails(
+                                          createdBy: addressModel
+                                              .clientAuditDetails!.createdBy,
+                                          createdTime: addressModel
+                                              .clientAuditDetails!.createdTime,
+                                          lastModifiedBy:
+                                              RegistrationDeliverySingleton()
+                                                  .loggedInUserUuid,
+                                          lastModifiedTime:
+                                              context.millisecondsSinceEpoch(),
+                                        )
+                                      : null,
                             ),
                           ),
                         );

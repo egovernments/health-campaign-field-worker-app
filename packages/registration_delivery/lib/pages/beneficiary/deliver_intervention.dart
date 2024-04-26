@@ -9,15 +9,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 
+import '../../blocs/delivery_intervention/deliver_intervention.dart';
+import '../../blocs/household_overview/household_overview.dart';
+import '../../blocs/product_variant/product_variant.dart';
 import '../../models/entities/additional_fields_type.dart';
-import '../../models/entities/address.dart';
 import '../../models/entities/beneficiary_type.dart';
 import '../../models/entities/deliver_strategy_type.dart';
 import '../../models/entities/product_variant.dart';
 import '../../models/entities/status.dart';
-import '../../models/entities/task.dart';
 import '../../models/entities/task_resource.dart';
-import '../../models/project_type/project_type_model.dart';
+import '../../router/registration_delivery_router.gm.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
@@ -79,7 +80,8 @@ class _DeliverInterventionPageState
               final householdMemberWrapper = state.householdMemberWrapper;
 
               final projectBeneficiary =
-                  context.beneficiaryType != BeneficiaryType.individual
+                  RegistrationDeliverySingleton().beneficiaryType !=
+                          BeneficiaryType.individual
                       ? [householdMemberWrapper.projectBeneficiaries.first]
                       : householdMemberWrapper.projectBeneficiaries
                           .where(
@@ -89,8 +91,6 @@ class _DeliverInterventionPageState
                           )
                           .toList();
 
-              final projectState = context.read<ProjectBloc>().state;
-
               return Scaffold(
                 body: state.loading
                     ? const Center(child: CircularProgressIndicator())
@@ -98,10 +98,13 @@ class _DeliverInterventionPageState
                         DeliverInterventionState>(
                         builder: (context, deliveryInterventionState) {
                           List<ProductVariantsModel>? productVariants =
-                              projectState.projectType?.cycles?.isNotEmpty ==
+                              RegistrationDeliverySingleton()
+                                          .projectType
+                                          ?.cycles
+                                          ?.isNotEmpty ==
                                       true
                                   ? (fetchProductVariant(
-                                      projectState
+                                      RegistrationDeliverySingleton()
                                               .projectType!
                                               .cycles![deliveryInterventionState
                                                       .cycle -
@@ -110,19 +113,25 @@ class _DeliverInterventionPageState
                                           deliveryInterventionState.dose - 1],
                                       state.selectedIndividual,
                                     )?.productVariants)
-                                  : projectState.projectType?.resources;
-
-                          final int numberOfDoses = (projectState
-                                      .projectType?.cycles?.isNotEmpty ==
-                                  true)
-                              ? (projectState
+                                  : RegistrationDeliverySingleton()
                                       .projectType
-                                      ?.cycles?[
-                                          deliveryInterventionState.cycle - 1]
-                                      .deliveries
-                                      ?.length) ??
-                                  0
-                              : 0;
+                                      ?.resources;
+
+                          final int numberOfDoses =
+                              (RegistrationDeliverySingleton()
+                                          .projectType
+                                          ?.cycles
+                                          ?.isNotEmpty ==
+                                      true)
+                                  ? (RegistrationDeliverySingleton()
+                                          .projectType
+                                          ?.cycles?[
+                                              deliveryInterventionState.cycle -
+                                                  1]
+                                          .deliveries
+                                          ?.length) ??
+                                      0
+                                  : 0;
 
                           final steps = generateSteps(numberOfDoses);
                           if ((productVariants ?? []).isEmpty) {
@@ -316,8 +325,8 @@ class _DeliverInterventionPageState
                                                                                 long,
                                                                           ),
                                                                           false,
-                                                                          context
-                                                                              .boundary,
+                                                                          RegistrationDeliverySingleton()
+                                                                              .boundary!,
                                                                         ),
                                                                       );
 
@@ -327,7 +336,7 @@ class _DeliverInterventionPageState
                                                                       state
                                                                           .futureDeliveries!
                                                                           .isNotEmpty &&
-                                                                      projectState
+                                                                      RegistrationDeliverySingleton()
                                                                               .projectType
                                                                               ?.cycles
                                                                               ?.isNotEmpty ==
@@ -362,9 +371,9 @@ class _DeliverInterventionPageState
                                                                             .add(
                                                                           HouseholdOverviewReloadEvent(
                                                                             projectId:
-                                                                                context.projectId,
+                                                                                RegistrationDeliverySingleton().projectId!,
                                                                             projectBeneficiaryType:
-                                                                                context.beneficiaryType,
+                                                                                RegistrationDeliverySingleton().beneficiaryType!,
                                                                           ),
                                                                         );
                                                                       },
@@ -422,7 +431,7 @@ class _DeliverInterventionPageState
                                                       style: theme.textTheme
                                                           .displayMedium,
                                                     ),
-                                                    if (context
+                                                    if (RegistrationDeliverySingleton()
                                                             .beneficiaryType ==
                                                         BeneficiaryType
                                                             .individual)
@@ -660,14 +669,14 @@ class _DeliverInterventionPageState
     task ??= TaskModel(
       projectBeneficiaryClientReferenceId: projectBeneficiaryClientReferenceId,
       clientReferenceId: clientReferenceId,
-      tenantId: envConfig.variables.tenantId,
+      tenantId: RegistrationDeliverySingleton().tenantId,
       rowVersion: 1,
       auditDetails: AuditDetails(
-        createdBy: context.loggedInUserUuid,
+        createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
         createdTime: context.millisecondsSinceEpoch(),
       ),
       clientAuditDetails: ClientAuditDetails(
-        createdBy: context.loggedInUserUuid,
+        createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
         createdTime: context.millisecondsSinceEpoch(),
       ),
     );
@@ -679,7 +688,7 @@ class _DeliverInterventionPageState
     final deliveryComment = form.control(_deliveryCommentKey).value as String?;
     // Update the task with information from the form and other context
     task = task.copyWith(
-      projectId: context.projectId,
+      projectId: RegistrationDeliverySingleton().projectId,
       resources: productvariantList
           .map((e) => TaskResourceModel(
                 taskclientReferenceId: clientReferenceId,
@@ -687,17 +696,17 @@ class _DeliverInterventionPageState
                 productVariantId: e?.id,
                 isDelivered: true,
                 taskId: task?.id,
-                tenantId: envConfig.variables.tenantId,
+                tenantId: RegistrationDeliverySingleton().tenantId,
                 rowVersion: oldTask?.rowVersion ?? 1,
                 quantity: (((form.control(_quantityDistributedKey) as FormArray)
                         .value)?[productvariantList.indexOf(e)])
                     .toString(),
                 clientAuditDetails: ClientAuditDetails(
-                  createdBy: context.loggedInUserUuid,
+                  createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
                   createdTime: context.millisecondsSinceEpoch(),
                 ),
                 auditDetails: AuditDetails(
-                  createdBy: context.loggedInUserUuid,
+                  createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
                   createdTime: context.millisecondsSinceEpoch(),
                 ),
               ))
@@ -815,7 +824,8 @@ class _DeliverInterventionPageState
       _quantityDistributedKey: FormArray<int>([
         ..._controllers.mapIndexed(
           (i, e) => FormControl<int>(
-            value: context.beneficiaryType != BeneficiaryType.individual
+            value: RegistrationDeliverySingleton().beneficiaryType !=
+                    BeneficiaryType.individual
                 ? int.tryParse(
                     bloc.tasks?.last.resources?.elementAt(i).quantity ?? '0',
                   )

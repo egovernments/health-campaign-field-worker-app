@@ -4,11 +4,6 @@ import 'package:drift/drift.dart';
 
 import 'package:digit_data_model/data_model.dart';
 
-import 'blood_group.dart';
-import 'gender.dart';
-import 'identifier.dart';
-import 'name.dart';
-
 part 'individual.mapper.dart';
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)

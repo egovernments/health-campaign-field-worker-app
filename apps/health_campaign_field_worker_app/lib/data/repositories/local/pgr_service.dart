@@ -1,12 +1,9 @@
 import 'dart:async';
 
-import 'package:digit_data_model/data/sql_store/sql_store.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/oplog/oplog_entry.dart';
 import 'package:drift/drift.dart';
 
-import '../../../models/pgr_complaints/pgr_address.dart';
-import '../../../models/pgr_complaints/pgr_complaints.dart';
 import '../../../utils/utils.dart';
 
 class PgrServiceLocalRepository

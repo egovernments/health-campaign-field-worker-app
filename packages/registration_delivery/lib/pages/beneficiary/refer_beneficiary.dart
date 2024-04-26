@@ -6,8 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
+import '../../blocs/household_overview/household_overview.dart';
+import '../../blocs/referral_management/referral_management.dart';
 import '../../models/entities/additional_fields_type.dart';
 import '../../models/entities/referral.dart';
+import '../../router/registration_delivery_router.gm.dart';
 import '../../utils/constants.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
@@ -114,7 +117,8 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                                         : 'FACILITY';
                                 final recipientId =
                                     recipient.id == 'Community Health Worker'
-                                        ? context.loggedInUserUuid
+                                        ? RegistrationDeliverySingleton()
+                                            .loggedInUserUuid
                                         : recipient.id;
                                 final referralComment =
                                     form.control(_referralComments).value;
@@ -123,28 +127,37 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                                 event.add(ReferralSubmitEvent(
                                   ReferralModel(
                                     clientReferenceId: IdGen.i.identifier,
-                                    projectId: context.projectId,
+                                    projectId: RegistrationDeliverySingleton()
+                                        .projectId,
                                     projectBeneficiaryClientReferenceId:
                                         widget.projectBeneficiaryClientRefId,
-                                    referrerId: context.loggedInUserUuid,
+                                    referrerId: RegistrationDeliverySingleton()
+                                        .loggedInUserUuid,
                                     recipientId: recipientId,
                                     recipientType: recipientType,
                                     reasons: [reason.key],
-                                    tenantId: envConfig.variables.tenantId,
+                                    tenantId: RegistrationDeliverySingleton()
+                                        .tenantId,
                                     rowVersion: 1,
                                     auditDetails: AuditDetails(
-                                      createdBy: context.loggedInUserUuid,
+                                      createdBy: RegistrationDeliverySingleton()
+                                          .loggedInUserUuid!,
                                       createdTime:
                                           context.millisecondsSinceEpoch(),
-                                      lastModifiedBy: context.loggedInUserUuid,
+                                      lastModifiedBy:
+                                          RegistrationDeliverySingleton()
+                                              .loggedInUserUuid,
                                       lastModifiedTime:
                                           context.millisecondsSinceEpoch(),
                                     ),
                                     clientAuditDetails: ClientAuditDetails(
-                                      createdBy: context.loggedInUserUuid,
+                                      createdBy: RegistrationDeliverySingleton()
+                                          .loggedInUserUuid!,
                                       createdTime:
                                           context.millisecondsSinceEpoch(),
-                                      lastModifiedBy: context.loggedInUserUuid,
+                                      lastModifiedBy:
+                                          RegistrationDeliverySingleton()
+                                              .loggedInUserUuid!,
                                       lastModifiedTime:
                                           context.millisecondsSinceEpoch(),
                                     ),
@@ -176,9 +189,9 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                                   () {
                                     reloadState
                                         .add(HouseholdOverviewReloadEvent(
-                                      projectId: context.projectId,
+                                      projectId: RegistrationDeliverySingleton().projectId!,
                                       projectBeneficiaryType:
-                                          context.beneficiaryType,
+                                      RegistrationDeliverySingleton().beneficiaryType!,
                                     ));
                                   },
                                 ).then((value) => context.router.popAndPush(
@@ -361,9 +374,9 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
   FormGroup buildForm() {
     return fb.group(<String, Object>{
       _dateOfReferralKey: FormControl<DateTime>(value: DateTime.now()),
-      _administrativeUnitKey: FormControl<String>(value: context.boundary.name),
+      _administrativeUnitKey: FormControl<String>(value: RegistrationDeliverySingleton().boundary!.name),
       _referredByKey: FormControl<String>(
-        value: context.loggedInUserUuid,
+        value: RegistrationDeliverySingleton().loggedInUserUuid,
         validators: [Validators.required],
       ),
       _referredToKey:

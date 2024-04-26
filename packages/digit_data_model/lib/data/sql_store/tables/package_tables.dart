@@ -1,4 +1,5 @@
-// import 'package:attendance_management/attendance_management.dart' as att;
+import 'package:attendance_management/attendance_management.dart' as att;
+
 import 'package:inventory_management/data/local_store/sql_store/tables/facility.dart'
     as fac;
 import 'package:inventory_management/data/local_store/sql_store/tables/stock.dart'
@@ -8,10 +9,8 @@ import 'package:inventory_management/data/local_store/sql_store/tables/stock_rec
 import 'package:referral_reconciliation/data/local_store/sql_store/tables/h_f_referral.dart'
     as hfRef;
 
-import 'package:registration_delivery/data/local_store/tables/individual.dart'
-    as ind;
-import 'package:registration_delivery/data/local_store/tables/identifier.dart'
-    as ide;
+import 'package:registration_delivery/data/local_store/tables/target.dart'
+    as tar;
 import 'package:registration_delivery/data/local_store/tables/household.dart'
     as household;
 import 'package:registration_delivery/data/local_store/tables/household_member.dart'
@@ -21,7 +20,6 @@ import 'package:registration_delivery/data/local_store/tables/referral.dart'
 import 'package:registration_delivery/data/local_store/tables/task.dart' as tas;
 import 'package:registration_delivery/data/local_store/tables/side_effect.dart'
     as se;
-import 'package:registration_delivery/data/local_store/tables/name.dart' as nam;
 import 'package:registration_delivery/data/local_store/tables/task_resource.dart'
     as tas_res;
 
@@ -41,12 +39,8 @@ class Facility extends fac.Facility {
   Facility() : super();
 }
 
-class Individual extends ind.Individual {
-  Individual() : super();
-}
-
-class Identifier extends ide.Identifier {
-  Identifier() : super();
+class Target extends tar.Target {
+  Target() : super();
 }
 
 class Household extends household.Household {
@@ -69,26 +63,22 @@ class SideEffect extends se.SideEffect {
   SideEffect() : super();
 }
 
-class Name extends nam.Name {
-  Name() : super();
-}
-
 class TaskResource extends tas_res.TaskResource {
   TaskResource() : super();
 }
 
-// class Attendance extends att.Attendance {
-//   Attendance() : super();
-// }
-//
-// class AttendanceRegister extends att.AttendanceRegister {
-//   AttendanceRegister() : super();
-// }
-//
-// class Attendee extends att.Attendee {
-//   Attendee() : super();
-// }
-//
-// class Staff extends att.Staff {
-//   Staff() : super();
-// }
+class Attendance extends att.Attendance {
+  Attendance() : super();
+}
+
+class AttendanceRegister extends att.AttendanceRegister {
+  AttendanceRegister() : super();
+}
+
+class Attendee extends att.Attendee {
+  Attendee() : super();
+}
+
+class Staff extends att.Staff {
+  Staff() : super();
+}

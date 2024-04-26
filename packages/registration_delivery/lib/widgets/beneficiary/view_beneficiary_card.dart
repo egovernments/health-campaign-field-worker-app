@@ -2,15 +2,14 @@ import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_table_model.dart';
 import 'package:digit_components/utils/date_utils.dart';
+import 'package:digit_data_model/models/project_type/project_type_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:registration_delivery/utils/extensions/extensions.dart';
 
 import '../../blocs/search_households/search_households.dart';
 import '../../models/entities/beneficiary_type.dart';
 import '../../models/entities/status.dart';
 import '../../models/entities/task.dart';
-import '../../models/project_type/project_type_model.dart';
 import '../../utils/constants.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
@@ -77,22 +76,24 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
         cellKey: 'gender',
       ),
     ];
-    final filteredHeaderList = context.beneficiaryType !=
+    final filteredHeaderList = RegistrationDeliverySingleton()
+                .beneficiaryType !=
             BeneficiaryType.individual
         ? headerList.where((element) => element.cellKey != 'delivery').toList()
         : headerList;
-    final bloc = context.read<ProjectBloc>().state;
-    final currentCycle = bloc.projectType?.cycles?.firstWhereOrNull(
-      (e) =>
-          (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
-          (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
-      // Return null when no matching cycle is found
-    );
+    final currentCycle =
+        RegistrationDeliverySingleton().projectType?.cycles?.firstWhereOrNull(
+              (e) =>
+                  (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
+                  (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
+              // Return null when no matching cycle is found
+            );
 
     final tableData = householdMember.members.map(
       (e) {
         final projectBeneficiary =
-            context.beneficiaryType != BeneficiaryType.individual
+            RegistrationDeliverySingleton().beneficiaryType !=
+                    BeneficiaryType.individual
                 ? [householdMember.projectBeneficiaries.first]
                 : householdMember.projectBeneficiaries
                     .where(
@@ -123,30 +124,30 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                     taskData.last.clientReferenceId)
                 .toList()
             : null;
-  
-    final ageInYears = DigitDateUtils.calculateAge(
-      householdMember.headOfHousehold.dateOfBirth != null
-          ? DigitDateUtils.getFormattedDateToDateTime(
-                householdMember.headOfHousehold.dateOfBirth!,
-              ) ??
-              DateTime.now()
-          : DateTime.now(),
-    ).years;
-    final ageInMonths = DigitDateUtils.calculateAge(
-      householdMember.headOfHousehold.dateOfBirth != null
-          ? DigitDateUtils.getFormattedDateToDateTime(
-                householdMember.headOfHousehold.dateOfBirth!,
-              ) ??
-              DateTime.now()
-          : DateTime.now(),
-    ).months;
+
+        final ageInYears = DigitDateUtils.calculateAge(
+          householdMember.headOfHousehold.dateOfBirth != null
+              ? DigitDateUtils.getFormattedDateToDateTime(
+                    householdMember.headOfHousehold.dateOfBirth!,
+                  ) ??
+                  DateTime.now()
+              : DateTime.now(),
+        ).years;
+        final ageInMonths = DigitDateUtils.calculateAge(
+          householdMember.headOfHousehold.dateOfBirth != null
+              ? DigitDateUtils.getFormattedDateToDateTime(
+                    householdMember.headOfHousehold.dateOfBirth!,
+                  ) ??
+                  DateTime.now()
+              : DateTime.now(),
+        ).months;
 
         final isNotEligible = !checkEligibilityForAgeAndSideEffect(
           DigitDOBAge(
             years: ageInYears,
             months: ageInMonths,
           ),
-          bloc.projectType,
+          RegistrationDeliverySingleton().projectType,
           (taskData ?? []).isNotEmpty ? taskData?.last : null,
           sideEffects,
         );
@@ -218,7 +219,8 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
         ];
 
         return TableDataRow(
-          context.beneficiaryType != BeneficiaryType.individual
+          RegistrationDeliverySingleton().beneficiaryType !=
+                  BeneficiaryType.individual
               ? rowTableData
                   .where((element) => element.cellKey != 'delivery')
                   .toList()
@@ -227,7 +229,6 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
         // rowTableData
       },
     ).toList();
-
 
     final ageInYears = DigitDateUtils.calculateAge(
       householdMember.headOfHousehold.dateOfBirth != null
@@ -251,7 +252,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
         years: ageInYears,
         months: ageInMonths,
       ),
-      bloc.projectType,
+      RegistrationDeliverySingleton().projectType,
       householdMember.tasks?.last,
       householdMember.sideEffects,
     );
@@ -280,7 +281,8 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                   subtitle: widget.distance != null
                       ? '${householdMember.members.length ?? 1} ${householdMember.members.length == 1 ? 'Household Member' : 'Household Members'}\n${((widget.distance!) * 1000).round() > 999 ? '(${((widget.distance!).round())} km)' : '(${((widget.distance!) * 1000).round()} mts) ${localizations.translate(i18.beneficiaryDetails.fromCurrentLocation)}'}'
                       : '${householdMember.members.length ?? 1} ${householdMember.members.length == 1 ? 'Household Member' : 'Household Members'}',
-                  status: context.beneficiaryType == BeneficiaryType.individual
+                  status: RegistrationDeliverySingleton().beneficiaryType ==
+                          BeneficiaryType.individual
                       ? (householdMember.tasks ?? []).isNotEmpty &&
                               !isNotEligible &&
                               !isBeneficiaryRefused

@@ -1,8 +1,5 @@
 import 'package:digit_components/digit_components.dart';
-import 'package:digit_data_model/data/data_repository.dart';
-import 'package:digit_data_model/data/sql_store/sql_store.dart';
-import 'package:digit_data_model/models/entities/boundary.dart';
-import 'package:digit_data_model/utils/utils.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +9,6 @@ import 'package:isar/isar.dart';
 import 'package:location/location.dart';
 import 'package:referral_reconciliation/blocs/referral_recon_service.dart';
 import 'package:referral_reconciliation/blocs/search_referral_reconciliations.dart';
-import 'package:registration_delivery/models/entities/individual.dart';
 
 import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
@@ -38,10 +34,6 @@ import 'models/entities/project_resource.dart';
 import 'models/entities/project_staff.dart';
 import 'models/entities/service_definition.dart';
 import 'models/entities/user.dart';
-
-import 'models/pgr_complaints/pgr_complaints.dart';
-import 'models/pgr_complaints/pgr_address.dart';
-import 'models/pgr_complaints/pgr_complaints_response.dart';
 
 import 'router/app_navigator_observer.dart';
 import 'router/app_router.dart';

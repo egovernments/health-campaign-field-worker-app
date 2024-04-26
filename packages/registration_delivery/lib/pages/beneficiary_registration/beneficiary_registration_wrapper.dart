@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:digit_data_model/models/entities/individual.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
@@ -6,8 +7,8 @@ import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../../models/entities/household.dart';
 import '../../models/entities/household_member.dart';
-import '../../models/entities/individual.dart';
 import '../../utils/extensions/extensions.dart';
+import '../../utils/utils.dart';
 
 @RoutePage()
 class BeneficiaryRegistrationWrapperPage extends StatelessWidget
@@ -26,7 +27,7 @@ class BeneficiaryRegistrationWrapperPage extends StatelessWidget
 
   @override
   Widget wrappedRoute(BuildContext context) {
-    final beneficiaryType = context.beneficiaryType;
+    final beneficiaryType = RegistrationDeliverySingleton().beneficiaryType;
     final individual =
         context.repository<IndividualModel, IndividualSearchModel>();
 
@@ -46,7 +47,7 @@ class BeneficiaryRegistrationWrapperPage extends StatelessWidget
         householdRepository: household,
         householdMemberRepository: householdMember,
         projectBeneficiaryRepository: projectBeneficiary,
-        beneficiaryType: beneficiaryType,
+        beneficiaryType: RegistrationDeliverySingleton().beneficiaryType!,
       ),
       child: this,
     );

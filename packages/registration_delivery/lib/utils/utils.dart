@@ -1,16 +1,20 @@
 // Importing necessary packages and modules
+import 'dart:math';
+
 import 'package:digit_components/utils/date_utils.dart';
+import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/individual.dart';
 import 'package:drift/drift.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:uuid/uuid.dart';
 import 'package:collection/collection.dart';
 
-import '../models/entities/individual.dart';
+import '../models/entities/additional_fields_type.dart';
+import '../models/entities/beneficiary_type.dart';
 import '../models/entities/referral.dart';
 import '../models/entities/side_effect.dart';
 import '../models/entities/status.dart';
 import '../models/entities/task.dart';
-import '../models/project_type/project_type_model.dart';
 
 /// This function takes an iterable of boolean expressions and builds an AND expression from them.
 /// If the iterable is empty, it returns a constant true expression.
@@ -259,6 +263,43 @@ String maskString(String input) {
   return maskedString;
 }
 
+class Coordinate {
+  final double? latitude;
+  final double? longitude;
+
+  Coordinate(this.latitude, this.longitude);
+}
+
+double? calculateDistance(Coordinate? start, Coordinate? end) {
+  const double earthRadius = 6371.0; // Earth's radius in kilometers
+
+  double toRadians(double degrees) {
+    return degrees * pi / 180.0;
+  }
+
+  if (start?.latitude != null &&
+      start?.longitude != null &&
+      end?.latitude != null &&
+      end?.longitude != null) {
+    double lat1Rad = toRadians(start!.latitude!);
+    double lon1Rad = toRadians(start.longitude!);
+    double lat2Rad = toRadians(end!.latitude!);
+    double lon2Rad = toRadians(end.longitude!);
+
+    double dLat = lat2Rad - lat1Rad;
+    double dLon = lon2Rad - lon1Rad;
+
+    double a = pow(sin(dLat / 2), 2) +
+        cos(lat1Rad) * cos(lat2Rad) * pow(sin(dLon / 2), 2);
+    double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+    double distance = earthRadius * c;
+
+    return distance;
+  }
+
+  return null;
+}
+
 // create a singleton class for RegistrationDelivery package where set data and get data methods are defined
 
 class RegistrationDeliverySingleton {
@@ -271,11 +312,87 @@ class RegistrationDeliverySingleton {
 
   RegistrationDeliverySingleton._internal();
 
-  String _tenantId = '';
+  String? _tenantId;
+  String? _loggedInUserId;
+  String? _loggedInUserUuid;
 
-  void setInitialData({required String tenantId}) {
+  double? _maxRadius;
+  String? _projectId;
+  BeneficiaryType? _beneficiaryType;
+  ProjectType? _projectType;
+  BoundaryModel? _boundaryModel;
+
+  void setInitialData(
+      {required String tenantId,
+      required String loggedInUserId,
+      required String loggedInUserUuid,
+      required double maxRadius,
+      required String projectId,
+      required BeneficiaryType selectedBeneficiaryType,
+      required ProjectType projectType,
+      required BoundaryModel boundaryModel}) {
     _tenantId = tenantId;
+    _loggedInUserId = loggedInUserId;
+    _loggedInUserUuid = loggedInUserUuid;
+    _maxRadius = maxRadius;
+    _projectId = projectId;
+    _beneficiaryType = selectedBeneficiaryType;
+    _projectType = projectType;
+    _boundaryModel = boundaryModel;
   }
 
-  String get tenantId => _tenantId;
+  String? get tenantId => _tenantId;
+  String? get loggedInUserId => _loggedInUserId;
+  String? get loggedInUserUuid => _loggedInUserUuid;
+  double? get maxRadius => _maxRadius;
+  String? get projectId => _projectId;
+  BeneficiaryType? get beneficiaryType => _beneficiaryType;
+  ProjectType? get projectType => _projectType;
+  BoundaryModel? get boundary => _boundaryModel;
+}
+
+bool allDosesDelivered(
+  List<TaskModel>? tasks,
+  Cycle? selectedCycle,
+  List<SideEffectModel>? sideEffects,
+  IndividualModel? individualModel,
+) {
+  if (selectedCycle == null ||
+      selectedCycle.id == 0 ||
+      (selectedCycle.deliveries ?? []).isEmpty) {
+    return true;
+  } else {
+    if ((tasks ?? []).isNotEmpty) {
+      final lastCycle = int.tryParse(tasks?.last.additionalFields?.fields
+              .where(
+                (e) => e.key == AdditionalFieldsType.cycleIndex.name,
+              )
+              .firstOrNull
+              ?.value ??
+          '');
+      final lastDose = int.tryParse(tasks?.last.additionalFields?.fields
+              .where(
+                (e) => e.key == AdditionalFieldsType.doseIndex.name,
+              )
+              .firstOrNull
+              ?.value ??
+          '');
+      if (lastDose != null &&
+          lastDose == selectedCycle.deliveries?.length &&
+          lastCycle != null &&
+          lastCycle == selectedCycle.id &&
+          tasks?.last.status != Status.delivered.name) {
+        return true;
+      } else if (selectedCycle.id == lastCycle &&
+          tasks?.last.status == Status.delivered.name) {
+        return false;
+      } else if ((sideEffects ?? []).isNotEmpty) {
+        return recordedSideEffect(selectedCycle, tasks?.last, sideEffects);
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
 }

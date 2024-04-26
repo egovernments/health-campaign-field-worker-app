@@ -122,34 +122,39 @@ class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                                               widget.tasks.last
                                                                   .clientReferenceId,
                                                           projectId:
-                                                              context.projectId,
+                                                              RegistrationDeliverySingleton()
+                                                                  .projectId,
                                                           symptoms: symptoms,
                                                           clientReferenceId:
                                                               clientReferenceId,
-                                                          tenantId: envConfig
-                                                              .variables
-                                                              .tenantId,
+                                                          tenantId:
+                                                              RegistrationDeliverySingleton()
+                                                                  .tenantId,
                                                           rowVersion: 1,
                                                           auditDetails:
                                                               AuditDetails(
-                                                            createdBy: context
-                                                                .loggedInUserUuid,
+                                                            createdBy:
+                                                                RegistrationDeliverySingleton()
+                                                                    .loggedInUserUuid!,
                                                             createdTime: context
                                                                 .millisecondsSinceEpoch(),
-                                                            lastModifiedBy: context
-                                                                .loggedInUserUuid,
+                                                            lastModifiedBy:
+                                                                RegistrationDeliverySingleton()
+                                                                    .loggedInUserUuid,
                                                             lastModifiedTime:
                                                                 context
                                                                     .millisecondsSinceEpoch(),
                                                           ),
                                                           clientAuditDetails:
                                                               ClientAuditDetails(
-                                                            createdBy: context
-                                                                .loggedInUserUuid,
+                                                            createdBy:
+                                                                RegistrationDeliverySingleton()
+                                                                    .loggedInUserUuid!,
                                                             createdTime: context
                                                                 .millisecondsSinceEpoch(),
-                                                            lastModifiedBy: context
-                                                                .loggedInUserUuid,
+                                                            lastModifiedBy:
+                                                                RegistrationDeliverySingleton()
+                                                                    .loggedInUserUuid,
                                                             lastModifiedTime:
                                                                 context
                                                                     .millisecondsSinceEpoch(),
@@ -185,9 +190,9 @@ class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                             () {
                                               reloadState.add(
                                                 HouseholdOverviewReloadEvent(
-                                                  projectId: context.projectId,
+                                                  projectId: RegistrationDeliverySingleton().projectId!,
                                                   projectBeneficiaryType:
-                                                      context.beneficiaryType,
+                                                  RegistrationDeliverySingleton().beneficiaryType!,
                                                 ),
                                               );
                                             },

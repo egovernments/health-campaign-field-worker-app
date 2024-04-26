@@ -3,18 +3,13 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data/repositories/oplog/oplog.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/models/entities/pgr_application_status.dart';
 import 'package:digit_data_model/models/oplog/oplog_entry.dart';
 import 'package:inventory_management/models/entities/stock.dart';
 import 'package:inventory_management/models/entities/stock_reconciliation.dart';
 import 'package:isar/isar.dart';
-import 'package:registration_delivery/models/entities/downsync.dart';
-import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/models/entities/household_member.dart';
-import 'package:registration_delivery/models/entities/individual.dart';
 import 'package:registration_delivery/models/entities/referral.dart';
 import 'package:registration_delivery/models/entities/side_effect.dart';
-import 'package:registration_delivery/models/entities/task.dart';
 
 import '../../../models/entities/facility.dart';
 // import '../../../models/entities/hcm_attendance_log_model.dart';
@@ -28,7 +23,6 @@ import '../../../models/entities/project_resource.dart';
 import '../../../models/entities/project_staff.dart';
 import '../../../models/entities/service.dart';
 import '../../../models/entities/service_definition.dart';
-import '../../../models/pgr_complaints/pgr_complaints.dart';
 
 class IndividualOpLogManager extends OpLogManager<IndividualModel> {
   IndividualOpLogManager(super.isar);
