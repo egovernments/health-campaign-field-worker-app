@@ -9,7 +9,8 @@ import '../../models/entities/service_definition.dart';
 import '../../utils/extensions/extensions.dart';
 import '../../widgets/boundary_selection_wrapper.dart';
 
-class ChecklistWrapperPage extends StatelessWidget with AutoRouteWrapper {
+@RoutePage()
+class ChecklistWrapperPage extends StatelessWidget implements AutoRouteWrapper {
   final bool isEditing;
 
   const ChecklistWrapperPage({

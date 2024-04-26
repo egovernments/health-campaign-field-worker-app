@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:attendance_management/models/attendance_log.dart';
 import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
 

@@ -1,10 +1,11 @@
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_scanner/blocs/scanner.dart';
+import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
-import '../blocs/scanner/scanner.dart';
 import '../blocs/search_referrals/search_referrals.dart';
 import '../blocs/service/service.dart';
 import '../models/data_model.dart';
@@ -15,6 +16,7 @@ import '../widgets/beneficiary/view_referral_card.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
 
+@RoutePage()
 class SearchReferralsPage extends LocalizedStatefulWidget {
   const SearchReferralsPage({
     super.key,
@@ -31,6 +33,9 @@ class _SearchReferralsPageState extends LocalizedState<SearchReferralsPage> {
 
   @override
   void initState() {
+    context.read<DigitScannerBloc>().add(
+          const DigitScannerEvent.handleScanner(),
+        );
     context.read<SearchReferralsBloc>().add(const SearchReferralsClearEvent());
     super.initState();
   }
@@ -46,7 +51,17 @@ class _SearchReferralsPageState extends LocalizedState<SearchReferralsPage> {
           if (state is! AppInitialized) return const Offstage();
 
           return Scaffold(
-            body: BlocBuilder<SearchReferralsBloc, SearchReferralsState>(
+            body: BlocListener<DigitScannerBloc, DigitScannerState>(
+                listener: (context, scannerState) {
+              if (scannerState.qrCodes.isNotEmpty) {
+                context
+                    .read<SearchReferralsBloc>()
+                    .add(SearchReferralsEvent.searchByTag(
+                      tag: scannerState.qrCodes.last,
+                      projectId: context.projectId,
+                    ));
+              }
+            }, child: BlocBuilder<SearchReferralsBloc, SearchReferralsState>(
               builder: (context, searchState) {
                 return ScrollableContent(
                   header: const Column(children: [
@@ -147,7 +162,7 @@ class _SearchReferralsPageState extends LocalizedState<SearchReferralsPage> {
                   ],
                 );
               },
-            ),
+            )),
             bottomNavigationBar: SizedBox(
               height: 150,
               child: Card(
@@ -203,18 +218,21 @@ class _SearchReferralsPageState extends LocalizedState<SearchReferralsPage> {
                             borderRadius: BorderRadius.zero,
                           ),
                         ),
-                        onPressed: () {
-                          context.read<ScannerBloc>().add(
-                                const ScannerEvent.handleScanner(
-                                  [],
-                                  [],
-                                ),
+                        onPressed: () async {
+                          context.read<DigitScannerBloc>().add(
+                                const DigitScannerEvent.handleScanner(),
                               );
-                          context.router.push(QRScannerRoute(
-                            quantity: 1,
-                            isGS1code: false,
-                            sinlgleValue: true,
-                          ));
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const DigitScannerPage(
+                                quantity: 1,
+                                isGS1code: false,
+                                singleValue: true,
+                              ),
+                              settings:
+                                  const RouteSettings(name: '/qr-scanner'),
+                            ),
+                          );
                         },
                         icon: Icons.qr_code,
                         label: localizations.translate(

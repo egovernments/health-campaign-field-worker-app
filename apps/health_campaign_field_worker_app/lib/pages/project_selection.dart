@@ -14,6 +14,7 @@ import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
 
+@RoutePage()
 class ProjectSelectionPage extends LocalizedStatefulWidget {
   const ProjectSelectionPage({
     super.key,

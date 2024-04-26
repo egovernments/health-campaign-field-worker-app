@@ -20,6 +20,7 @@ import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 import '../../widgets/member_card/member_card.dart';
 
+@RoutePage()
 class HouseholdOverviewPage extends LocalizedStatefulWidget {
   const HouseholdOverviewPage({super.key, super.appLocalizations});
 

@@ -1,6 +1,7 @@
 // GENERATED using mason_cli
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:stream_transform/stream_transform.dart';
@@ -38,6 +39,9 @@ class SearchReferralsBloc
     SearchReferralsByTagEvent event,
     SearchReferralsEmitter emit,
   ) async {
+    emit(state.copyWith(
+      loading: true,
+    ));
     List<HFReferralModel> beneficiaries = await hfReferralDataRepository.search(
       HFReferralSearchModel(
         projectId: event.projectId,
@@ -54,6 +58,9 @@ class SearchReferralsBloc
       loading: false,
       tag: event.tag,
     ));
+    if (kDebugMode) {
+      print(state);
+    }
   }
 
   FutureOr<void> _handleSearchByName(
@@ -134,5 +141,9 @@ class SearchReferralsState with _$SearchReferralsState {
     if (searchQuery?.isEmpty ?? true && tag == null) return false;
 
     return referrals.isEmpty;
+  }
+
+  bool get screenLoading {
+    return loading;
   }
 }

@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:attendance_management/models/attendance_log.dart';
 import 'package:dio/dio.dart';
 
 import '../../../models/data_model.dart';

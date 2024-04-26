@@ -1,16 +1,18 @@
 import 'dart:async';
 
+import 'package:inventory_management/models/entities/stock_reconciliation.dart';
+
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
 
 class StockReconciliationLocalRepository extends LocalRepository<
-    StockReconciliationModel, StockReconciliationSearchModel> {
+    HcmStockReconciliationModel, HcmStockReconciliationSearchModel> {
   StockReconciliationLocalRepository(super.sql, super.opLogManager);
 
   @override
   FutureOr<void> create(
-    StockReconciliationModel entity, {
+    HcmStockReconciliationModel entity, {
     bool createOpLog = true,
     DataOperation dataOperation = DataOperation.create,
   }) async {
@@ -22,8 +24,8 @@ class StockReconciliationLocalRepository extends LocalRepository<
   }
 
   @override
-  FutureOr<List<StockReconciliationModel>> search(
-    StockReconciliationSearchModel query, [
+  FutureOr<List<HcmStockReconciliationModel>> search(
+    HcmStockReconciliationSearchModel query, [
     String? userId,
   ]) async {
     final selectQuery = sql.select(sql.stockReconciliation).join([]);
@@ -31,22 +33,26 @@ class StockReconciliationLocalRepository extends LocalRepository<
           ..where(
             buildAnd(
               [
-                if (query.facilityId != null)
-                  sql.stockReconciliation.facilityId.equals(query.facilityId!),
-                if (query.productVariantId != null)
-                  sql.stockReconciliation.productVariantId
-                      .equals(query.productVariantId!),
-                if (query.clientReferenceId != null)
-                  sql.stockReconciliation.id.equals(
-                    query.id!,
-                  ),
-                if (query.productVariantId != null)
-                  sql.stockReconciliation.productVariantId.equals(
-                    query.productVariantId!,
-                  ),
-                if (query.facilityId != null)
+                if (query.stockReconciliationSearchModel!.facilityId != null)
                   sql.stockReconciliation.facilityId.equals(
-                    query.facilityId!,
+                      query.stockReconciliationSearchModel!.facilityId!),
+                if (query.stockReconciliationSearchModel!.productVariantId !=
+                    null)
+                  sql.stockReconciliation.productVariantId.equals(
+                      query.stockReconciliationSearchModel!.productVariantId!),
+                if (query.stockReconciliationSearchModel!.clientReferenceId !=
+                    null)
+                  sql.stockReconciliation.id.equals(
+                    query.stockReconciliationSearchModel!.id!,
+                  ),
+                if (query.stockReconciliationSearchModel!.productVariantId !=
+                    null)
+                  sql.stockReconciliation.productVariantId.equals(
+                    query.stockReconciliationSearchModel!.productVariantId!,
+                  ),
+                if (query.stockReconciliationSearchModel!.facilityId != null)
+                  sql.stockReconciliation.facilityId.equals(
+                    query.stockReconciliationSearchModel!.facilityId!,
                   ),
                 if (userId != null)
                   sql.stockReconciliation.auditCreatedBy.equals(
@@ -60,32 +66,34 @@ class StockReconciliationLocalRepository extends LocalRepository<
     return results.map((e) {
       final data = e.readTable(sql.stockReconciliation);
 
-      return StockReconciliationModel(
-        id: data.id,
-        tenantId: data.tenantId,
-        facilityId: data.facilityId,
-        productVariantId: data.productVariantId,
-        referenceId: data.referenceId,
-        referenceIdType: data.referenceIdType,
-        physicalCount: data.physicalCount,
-        calculatedCount: data.calculatedCount,
-        commentsOnReconciliation: data.commentsOnReconciliation,
-        dateOfReconciliation: data.dateOfReconciliation,
-        clientReferenceId: data.clientReferenceId,
+      return HcmStockReconciliationModel(
+        stockReconciliation: StockReconciliationModel(
+          id: data.id,
+          tenantId: data.tenantId,
+          facilityId: data.facilityId,
+          productVariantId: data.productVariantId,
+          referenceId: data.referenceId,
+          referenceIdType: data.referenceIdType,
+          physicalCount: data.physicalCount,
+          calculatedCount: data.calculatedCount,
+          commentsOnReconciliation: data.commentsOnReconciliation,
+          dateOfReconciliation: data.dateOfReconciliation,
+          clientReferenceId: data.clientReferenceId,
+          rowVersion: data.rowVersion,
+        ),
         additionalFields: data.additionalFields == null
             ? null
             : StockReconciliationAdditionalFieldsMapper.fromJson(
                 data.additionalFields!,
               ),
         isDeleted: data.isDeleted,
-        rowVersion: data.rowVersion,
       );
     }).toList();
   }
 
   @override
   FutureOr<void> update(
-    StockReconciliationModel entity, {
+    HcmStockReconciliationModel entity, {
     bool createOpLog = true,
   }) async {
     final stockReconciliationCompanion = entity.companion;
@@ -95,7 +103,7 @@ class StockReconciliationLocalRepository extends LocalRepository<
         sql.stockReconciliation,
         stockReconciliationCompanion,
         where: (table) => table.clientReferenceId.equals(
-          entity.clientReferenceId,
+          entity.stockReconciliation!.clientReferenceId,
         ),
       );
     });

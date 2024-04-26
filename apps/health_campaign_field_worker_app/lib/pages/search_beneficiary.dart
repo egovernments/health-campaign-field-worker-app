@@ -1,11 +1,12 @@
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_scanner/blocs/scanner.dart';
+import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/beneficiary_registration/beneficiary_registration.dart';
-import '../blocs/scanner/scanner.dart';
 import '../blocs/search_households/search_bloc_common_wrapper.dart';
 import '../blocs/search_households/search_households.dart';
 import '../models/data_model.dart';
@@ -16,6 +17,7 @@ import '../widgets/beneficiary/view_beneficiary_card.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
 
+@RoutePage()
 class SearchBeneficiaryPage extends LocalizedStatefulWidget {
   const SearchBeneficiaryPage({
     super.key,
@@ -283,60 +285,68 @@ class _SearchBeneficiaryPageState
                         child: CircularProgressIndicator(),
                       ),
                     ),
-                  BlocBuilder<LocationBloc, LocationState>(
-                    builder: (context, locationState) {
-                      return SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (ctx, index) {
-                            final i = searchHouseholdsState.householdMembers
-                                .elementAt(index);
-                            final distance = calculateDistance(
-                              Coordinate(
-                                lat,
-                                long,
-                              ),
-                              Coordinate(
-                                i.household.address?.latitude,
-                                i.household.address?.longitude,
-                              ),
-                            );
-
-                            return Container(
-                              margin: const EdgeInsets.only(bottom: kPadding),
-                              child: ViewBeneficiaryCard(
-                                distance: isProximityEnabled ? distance : null,
-                                householdMember: i,
-                                onOpenPressed: () async {
-                                  final scannerBloc =
-                                      context.read<ScannerBloc>();
-
-                                  scannerBloc.add(
-                                    const ScannerEvent.handleScanner(
-                                      [],
-                                      [],
-                                    ),
-                                  );
-
-                                  await context.router.push(
-                                    BeneficiaryWrapperRoute(
-                                      wrapper: i,
-                                    ),
-                                  );
-                                  setState(() {
-                                    isProximityEnabled = false;
-                                  });
-                                  searchController.clear();
-
-                                  blocWrapper.clearEvent();
-                                },
-                              ),
-                            );
-                          },
-                          childCount:
-                              searchHouseholdsState.householdMembers.length,
-                        ),
-                      );
+                  BlocListener<DigitScannerBloc, DigitScannerState>(
+                    listener: (context, scannerState) {
+                      context.read<SearchBlocWrapper>().tagSearchBloc.add(
+                            SearchHouseholdsEvent.searchByTag(
+                              tag: scannerState.qrCodes.last,
+                              projectId: context.projectId,
+                            ),
+                          );
                     },
+                    child: BlocBuilder<LocationBloc, LocationState>(
+                      builder: (context, locationState) {
+                        return SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                            (ctx, index) {
+                              final i = searchHouseholdsState.householdMembers
+                                  .elementAt(index);
+                              final distance = calculateDistance(
+                                Coordinate(
+                                  lat,
+                                  long,
+                                ),
+                                Coordinate(
+                                  i.household.address?.latitude,
+                                  i.household.address?.longitude,
+                                ),
+                              );
+
+                              return Container(
+                                margin: const EdgeInsets.only(bottom: kPadding),
+                                child: ViewBeneficiaryCard(
+                                  distance:
+                                      isProximityEnabled ? distance : null,
+                                  householdMember: i,
+                                  onOpenPressed: () async {
+                                    final scannerBloc =
+                                        context.read<DigitScannerBloc>();
+
+                                    scannerBloc.add(
+                                      const DigitScannerEvent.handleScanner(),
+                                    );
+
+                                    await context.router.push(
+                                      BeneficiaryWrapperRoute(
+                                        wrapper: i,
+                                      ),
+                                    );
+                                    setState(() {
+                                      isProximityEnabled = false;
+                                    });
+                                    searchController.clear();
+
+                                    blocWrapper.clearEvent();
+                                  },
+                                ),
+                              );
+                            },
+                            childCount:
+                                searchHouseholdsState.householdMembers.length,
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ],
               ),
@@ -354,8 +364,8 @@ class _SearchBeneficiaryPageState
                                 searchHouseholdsState.searchQuery!.isNotEmpty
                             ? () {
                                 FocusManager.instance.primaryFocus?.unfocus();
-                                context.read<ScannerBloc>().add(
-                                      const ScannerEvent.handleScanner([], []),
+                                context.read<DigitScannerBloc>().add(
+                                      const DigitScannerEvent.handleScanner(),
                                     );
                                 context.router
                                     .push(BeneficiaryRegistrationWrapperRoute(
@@ -383,11 +393,17 @@ class _SearchBeneficiaryPageState
                         ),
                         onPressed: () {
                           blocWrapper.clearEvent();
-                          context.router.push(QRScannerRoute(
-                            quantity: 1,
-                            isGS1code: false,
-                            sinlgleValue: true,
-                          ));
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const DigitScannerPage(
+                                quantity: 1,
+                                isGS1code: false,
+                                singleValue: true,
+                              ),
+                              settings:
+                                  const RouteSettings(name: '/qr-scanner'),
+                            ),
+                          );
                         },
                         icon: Icons.qr_code,
                         label: localizations.translate(

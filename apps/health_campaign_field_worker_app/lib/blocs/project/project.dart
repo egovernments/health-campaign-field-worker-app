@@ -69,6 +69,10 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   final LocalRepository<FacilityModel, FacilitySearchModel>
       facilityLocalRepository;
 
+  /// Stock Repositories
+  final RemoteRepository<HcmStockModel, HcmStockSearchModel> stockRemoteRepository;
+  final LocalRepository<HcmStockModel, HcmStockSearchModel> stockLocalRepository;
+
   final RemoteRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
       serviceDefinitionRemoteRepository;
   final LocalRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
@@ -103,6 +107,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     required this.projectFacilityLocalRepository,
     required this.facilityRemoteRepository,
     required this.facilityLocalRepository,
+    required this.stockRemoteRepository,
+    required this.stockLocalRepository,
     required this.serviceDefinitionRemoteRepository,
     required this.boundaryRemoteRepository,
     required this.boundaryLocalRepository,
