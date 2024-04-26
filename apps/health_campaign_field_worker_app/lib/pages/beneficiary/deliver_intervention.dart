@@ -263,11 +263,23 @@ class _DeliverInterventionPageState
                                                                 ),
                                                               );
                                                             } else if (isCommentMandatory(
-                                                              isCommentRequired,
-                                                              productVariants,
-                                                              form,
-                                                              idVsSuggestedAndDistributedQuantity,
-                                                            )) {
+                                                                  isCommentRequired,
+                                                                  productVariants,
+                                                                  form,
+                                                                  idVsSuggestedAndDistributedQuantity,
+                                                                ) &&
+                                                                (form
+                                                                            .control(
+                                                                              _deliveryCommentKey,
+                                                                            )
+                                                                            .value ==
+                                                                        null ||
+                                                                    (form
+                                                                            .control(
+                                                                              _deliveryCommentKey,
+                                                                            )
+                                                                            .value as String)
+                                                                        .isEmpty)) {
                                                               await DigitToast
                                                                   .show(
                                                                 context,
@@ -721,12 +733,7 @@ class _DeliverInterventionPageState
                                                           formControlName:
                                                               _deliveryCommentKey,
                                                           isRequired:
-                                                              isCommentMandatory(
-                                                            isCommentRequired,
-                                                            productVariants,
-                                                            form,
-                                                            idVsSuggestedAndDistributedQuantity,
-                                                          ),
+                                                              isCommentRequired,
                                                           valueMapper: (value) =>
                                                               localizations
                                                                   .translate(
