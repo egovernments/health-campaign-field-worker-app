@@ -533,6 +533,10 @@ class AdverseEvents {
   String get didYouReAdministerLabel => 'DID_YOU_RE_ADMINISTER';
 
   String get noOfTimesReAdministered => 'NO_OF_TIMES_RE_ADMINISTERED';
+
+  String get sideEffectsAlertTitle => 'SIDE_EFFECTS_ALERT_TITLE';
+
+  String get sideEffectsAlertContent => 'SIDE_EFFECTS_ALERT_CONTENT';
 }
 
 class Login {
