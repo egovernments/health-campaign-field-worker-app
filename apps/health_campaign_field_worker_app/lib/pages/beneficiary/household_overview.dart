@@ -184,17 +184,23 @@ class _HouseholdOverviewPageState
                                     ),
                                   ),
                                   Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                          left: kPadding - 1,
-                                          right: kPadding + 1,
-                                        ),
-                                        child: Text(
-                                          localizations.translate(i18
-                                              .householdOverView
-                                              .householdOverViewLabel),
-                                          style: theme.textTheme.displayMedium,
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                            left: kPadding - 1,
+                                            right: kPadding + 1,
+                                          ),
+                                          child: Text(
+                                            localizations.translate(i18
+                                                .householdOverView
+                                                .householdOverViewLabel),
+                                            style:
+                                                theme.textTheme.displayMedium,
+                                          ),
                                         ),
                                       ),
                                       BlocBuilder<ProjectBloc, ProjectState>(

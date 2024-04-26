@@ -341,14 +341,6 @@ class IndividualDetailsShowcase {
     return 'INDIVIDUAL_DETAILS_SHOWCASE_MOBILE';
   }
 
-  String get height {
-    return 'BENEFICIARY_HEIGHT';
-  }
-
-  String get disability {
-    return 'DELIVER_INTERVENTION_DISABILITY_LABEL';
-  }
-
   String get idType {
     return 'INDIVIDUAL_DETAILS_SHOWCASE_ID_TYPE';
   }

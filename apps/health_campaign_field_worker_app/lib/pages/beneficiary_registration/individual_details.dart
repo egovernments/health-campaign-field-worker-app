@@ -499,7 +499,13 @@ class _IndividualDetailsPageState
                                 },
                               ),
                             ),
-                            individualDetailsShowcaseData.mobile.buildWith(
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                kPadding / 2,
+                                0,
+                                kPadding / 2,
+                                0,
+                              ),
                               child: DigitTextFormField(
                                 keyboardType: TextInputType.number,
                                 formControlName: _mobileNumberKey,
@@ -522,7 +528,13 @@ class _IndividualDetailsPageState
                             ),
                           ],
                         ),
-                        individualDetailsShowcaseData.height.buildWith(
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(
+                            kPadding / 2,
+                            0,
+                            kPadding / 2,
+                            0,
+                          ),
                           child: DigitTextFormField(
                             keyboardType: TextInputType.number,
                             isRequired: true,
@@ -542,7 +554,13 @@ class _IndividualDetailsPageState
                             },
                           ),
                         ),
-                        individualDetailsShowcaseData.disability.buildWith(
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(
+                            kPadding / 2,
+                            0,
+                            kPadding / 2,
+                            0,
+                          ),
                           child: BlocBuilder<AppInitializationBloc,
                               AppInitializationState>(
                             builder: (context, state) {
