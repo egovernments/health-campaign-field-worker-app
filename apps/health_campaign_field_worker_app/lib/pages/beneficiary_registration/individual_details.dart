@@ -502,7 +502,7 @@ class _IndividualDetailsPageState
                             Padding(
                               padding: const EdgeInsets.fromLTRB(
                                 kPadding / 2,
-                                0,
+                                kPadding,
                                 kPadding / 2,
                                 0,
                               ),
