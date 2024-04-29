@@ -16,26 +16,29 @@ import 'package:inventory_management/models/entities/stock.dart';
 import 'package:inventory_management/models/entities/stock_reconciliation.dart';
 import 'package:isar/isar.dart';
 import 'package:provider/provider.dart';
+import 'package:registration_delivery/data/repositories/local/facility.dart';
+import 'package:registration_delivery/data/repositories/local/household.dart';
+import 'package:registration_delivery/data/repositories/local/houshold_member.dart';
 import 'package:registration_delivery/data/repositories/local/individual.dart';
+import 'package:registration_delivery/data/repositories/local/project_beneficiary.dart';
+import 'package:registration_delivery/data/repositories/local/project_facility.dart';
+import 'package:registration_delivery/data/repositories/local/referral.dart';
+import 'package:registration_delivery/data/repositories/local/side_effect.dart';
+import 'package:registration_delivery/data/repositories/local/task.dart';
 import 'package:registration_delivery/models/entities/household_member.dart';
+import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 import 'package:registration_delivery/models/entities/referral.dart';
 import 'package:registration_delivery/models/entities/side_effect.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../data/network_manager.dart';
 import '../data/repositories/local/downsync.dart';
-import '../data/repositories/local/facility.dart';
 import '../data/repositories/local/hcm_attendance.dart';
 import '../data/repositories/local/hcm_hf_referral.dart';
 import '../data/repositories/local/pgr_service.dart';
 import '../data/repositories/local/product_variant.dart';
-import '../data/repositories/local/project.dart';
-import '../data/repositories/local/project_beneficiary.dart';
-import '../data/repositories/local/project_facility.dart';
 import '../data/repositories/local/project_resource.dart';
 import '../data/repositories/local/project_staff.dart';
-import '../data/repositories/local/service.dart';
-import '../data/repositories/local/service_definition.dart';
 import '../data/repositories/oplog/hcm_oplog.dart';
 import '../data/repositories/remote/auth.dart';
 import '../data/repositories/remote/boundary.dart';
@@ -49,7 +52,6 @@ import '../data/repositories/remote/individual.dart';
 import '../data/repositories/remote/pgr_service.dart';
 import '../data/repositories/remote/product.dart';
 import '../data/repositories/remote/product_variant.dart';
-import '../data/repositories/remote/project.dart';
 import '../data/repositories/remote/project_beneficiary.dart';
 import '../data/repositories/remote/project_facility.dart';
 import '../data/repositories/remote/project_product_variant.dart';
@@ -57,8 +59,6 @@ import '../data/repositories/remote/project_resource.dart';
 import '../data/repositories/remote/project_staff.dart';
 import '../data/repositories/remote/project_type.dart';
 import '../data/repositories/remote/referral.dart';
-import '../data/repositories/remote/service.dart';
-import '../data/repositories/remote/service_definition.dart';
 import '../data/repositories/remote/side_effect.dart';
 import '../data/repositories/remote/task.dart';
 import '../data/repositories/remote/user.dart';
@@ -66,21 +66,15 @@ import '../data/repositories/local/attendance_logs.dart';
 import '../data/repositories/remote/attendance_logs.dart';
 import '../data/repositories/remote/stock.dart';
 import '../data/repositories/remote/stock_reconciliation.dart';
-import '../models/entities/facility.dart';
 // import '../models/entities/hcm_attendance_log_model.dart';
 // import '../models/entities/hcm_attendance_model.dart';
 import '../models/entities/hcm_hf_referral.dart';
 import '../models/entities/product.dart';
 import '../models/entities/product_variant.dart';
-import '../models/entities/project.dart';
-import '../models/entities/project_beneficiary.dart';
-import '../models/entities/project_facility.dart';
 import '../models/entities/project_product_variant.dart';
 import '../models/entities/project_resource.dart';
 import '../models/entities/project_staff.dart';
 import '../models/entities/project_type.dart';
-import '../models/entities/service.dart';
-import '../models/entities/service_definition.dart';
 import '../models/entities/user.dart';
 
 class NetworkManagerProviderWrapper extends StatelessWidget {
@@ -176,19 +170,19 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           FacilityOpLogManager(isar),
         ),
       ),
-      // RepositoryProvider<
-      //     LocalRepository<HouseholdMemberModel, HouseholdMemberSearchModel>>(
-      //   create: (_) => HouseholdMemberLocalRepository(
-      //     sql,
-      //     HouseholdMemberOpLogManager(isar),
-      //   ),
-      // ),
-      // RepositoryProvider<LocalRepository<HouseholdModel, HouseholdSearchModel>>(
-      //   create: (_) => HouseholdLocalRepository(
-      //     sql,
-      //     HouseholdOpLogManager(isar),
-      //   ),
-      // ),
+      RepositoryProvider<
+          LocalRepository<HouseholdMemberModel, HouseholdMemberSearchModel>>(
+        create: (_) => HouseholdMemberLocalRepository(
+          sql,
+          HouseholdMemberOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<LocalRepository<HouseholdModel, HouseholdSearchModel>>(
+        create: (_) => HouseholdLocalRepository(
+          sql,
+          HouseholdOpLogManager(isar),
+        ),
+      ),
       RepositoryProvider<LocalRepository<ProjectModel, ProjectSearchModel>>(
         create: (_) => ProjectLocalRepository(
           sql,
@@ -217,31 +211,31 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           ProjectStaffOpLogManager(isar),
         ),
       ),
-      // RepositoryProvider<LocalRepository<TaskModel, TaskSearchModel>>(
-      //   create: (_) => TaskLocalRepository(
-      //     sql,
-      //     TaskOpLogManager(isar),
-      //   ),
-      // ),
-      // RepositoryProvider<LocalRepository<TaskModel, TaskSearchModel>>(
-      //   create: (_) => TaskLocalRepository(
-      //     sql,
-      //     TaskOpLogManager(isar),
-      //   ),
-      // ),
-      // RepositoryProvider<LocalRepository<ReferralModel, ReferralSearchModel>>(
-      //   create: (_) => ReferralLocalRepository(
-      //     sql,
-      //     ReferralOpLogManager(isar),
-      //   ),
-      // ),
-      // RepositoryProvider<
-      //     LocalRepository<SideEffectModel, SideEffectSearchModel>>(
-      //   create: (_) => SideEffectLocalRepository(
-      //     sql,
-      //     SideEffectOpLogManager(isar),
-      //   ),
-      // ),
+      RepositoryProvider<LocalRepository<TaskModel, TaskSearchModel>>(
+        create: (_) => TaskLocalRepository(
+          sql,
+          TaskOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<LocalRepository<TaskModel, TaskSearchModel>>(
+        create: (_) => TaskLocalRepository(
+          sql,
+          TaskOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<LocalRepository<ReferralModel, ReferralSearchModel>>(
+        create: (_) => ReferralLocalRepository(
+          sql,
+          ReferralOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<
+          LocalRepository<SideEffectModel, SideEffectSearchModel>>(
+        create: (_) => SideEffectLocalRepository(
+          sql,
+          SideEffectOpLogManager(isar),
+        ),
+      ),
       RepositoryProvider<
           LocalRepository<ServiceDefinitionModel,
               ServiceDefinitionSearchModel>>(

@@ -24,6 +24,7 @@ import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/beneficiary/resource_beneficiary_card.dart';
 import '../../widgets/localized.dart';
+import '../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 
 @RoutePage()
 class DeliverInterventionPage extends LocalizedStatefulWidget {
@@ -579,47 +580,71 @@ class _DeliverInterventionPageState
                                                       style: theme.textTheme
                                                           .headlineLarge,
                                                     ),
-                                                    BlocBuilder<
-                                                        AppInitializationBloc,
-                                                        AppInitializationState>(
-                                                      builder:
-                                                          (context, state) {
-                                                        if (state
-                                                            is! AppInitialized) {
-                                                          return const Offstage();
-                                                        }
-
-                                                        final deliveryCommentOptions = state
-                                                                .appConfiguration
-                                                                .deliveryCommentOptions ??
-                                                            <DeliveryCommentOptions>[];
-
-                                                        return DigitReactiveSearchDropdown<
-                                                            String>(
-                                                          label: localizations
-                                                              .translate(
-                                                            i18.deliverIntervention
-                                                                .deliveryCommentLabel,
-                                                          ),
-                                                          form: form,
-                                                          menuItems:
-                                                              deliveryCommentOptions
-                                                                  .map((e) {
-                                                            return localizations
-                                                                .translate(
-                                                                    e.name);
-                                                          }).toList(),
-                                                          formControlName:
-                                                              _deliveryCommentKey,
-                                                          valueMapper:
-                                                              (value) => value,
-                                                          emptyText: localizations
-                                                              .translate(i18
-                                                                  .common
-                                                                  .noMatchFound),
-                                                        );
-                                                      },
-                                                    ),
+                                                    // BlocBuilder<
+                                                    //     AppInitializationBloc,
+                                                    //     AppInitializationState>(
+                                                    //   builder:
+                                                    //       (context, state) {
+                                                    //     if (state
+                                                    //         is! AppInitialized) {
+                                                    //       return const Offstage();
+                                                    //     }
+                                                    //
+                                                    //     final deliveryCommentOptions = state
+                                                    //             .appConfiguration
+                                                    //             .deliveryCommentOptions ??
+                                                    //         <DeliveryCommentOptions>[];
+                                                    //
+                                                    //     return DigitReactiveSearchDropdown<
+                                                    //         String>(
+                                                    //       label: localizations
+                                                    //           .translate(
+                                                    //         i18.deliverIntervention
+                                                    //             .deliveryCommentLabel,
+                                                    //       ),
+                                                    //       form: form,
+                                                    //       menuItems:
+                                                    //           deliveryCommentOptions
+                                                    //               .map((e) {
+                                                    //         return localizations
+                                                    //             .translate(
+                                                    //                 e.name);
+                                                    //       }).toList(),
+                                                    //       formControlName:
+                                                    //           _deliveryCommentKey,
+                                                    //       valueMapper:
+                                                    //           (value) => value,
+                                                    //       emptyText: localizations
+                                                    //           .translate(i18
+                                                    //               .common
+                                                    //               .noMatchFound),
+                                                    //     );
+                                                    //   },
+                                                    // ),
+                                                    DigitReactiveSearchDropdown<
+                                                        String>(
+                                                      label: localizations
+                                                          .translate(
+                                                        i18.deliverIntervention
+                                                            .deliveryCommentLabel,
+                                                      ),
+                                                      form: form,
+                                                      menuItems:
+                                                          RegistrationDeliverySingleton()
+                                                              .deliveryCommentOptions!
+                                                              .map((e) {
+                                                        return localizations
+                                                            .translate(
+                                                                e['name']!);
+                                                      }).toList(),
+                                                      formControlName:
+                                                          _deliveryCommentKey,
+                                                      valueMapper: (value) =>
+                                                          value,
+                                                      emptyText: localizations
+                                                          .translate(i18.common
+                                                              .noMatchFound),
+                                                    )
                                                   ],
                                                 ),
                                               ),

@@ -9,7 +9,7 @@ import 'package:registration_delivery/models/entities/household_member.dart';
 import '../../models/entities/beneficiary_type.dart';
 import '../../models/entities/project_beneficiary.dart';
 import '../../utils/utils.dart';
-import '../household_overiew_listeners.dart';
+import '../../utils/typedefs.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 
 part 'beneficiary_registration.freezed.dart';

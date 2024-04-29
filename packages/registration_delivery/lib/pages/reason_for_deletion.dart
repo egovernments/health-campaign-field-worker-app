@@ -11,7 +11,6 @@ import '../widgets/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 
-
 @RoutePage()
 class ReasonForDeletionPage extends LocalizedStatefulWidget {
   final bool isHousholdDelete;
@@ -53,17 +52,20 @@ class _ReasonForDeletionPageState
                       !widget.isHousholdDelete
                           ? context.read<HouseholdOverviewBloc>().add(
                                 HouseholdOverviewDeleteIndividualEvent(
-                                  projectId: RegistrationDeliverySingleton().projectId,
+                                  projectId: RegistrationDeliverySingleton()
+                                      .projectId!,
                                   householdModel:
                                       state.householdMemberWrapper.household,
                                   individualModel: state.selectedIndividual!,
                                   projectBeneficiaryType:
-                                      RegistrationDeliverySingleton().beneficiaryType,
+                                      RegistrationDeliverySingleton()
+                                          .beneficiaryType!,
                                 ),
                               )
                           : context.read<HouseholdOverviewBloc>().add(
                                 HouseholdOverviewDeleteHouseholdEvent(
-                                  projectId: RegistrationDeliverySingleton().projectId,
+                                  projectId: RegistrationDeliverySingleton()
+                                      .projectId!,
                                   householdModel:
                                       state.householdMemberWrapper.household,
                                   members: state.householdMemberWrapper.members,
@@ -72,7 +74,8 @@ class _ReasonForDeletionPageState
                                       .projectBeneficiaries
                                       .first,
                                   projectBeneficiaryType:
-                                      RegistrationDeliverySingleton().beneficiaryType!,
+                                      RegistrationDeliverySingleton()
+                                          .beneficiaryType!,
                                 ),
                               );
 
@@ -98,60 +101,44 @@ class _ReasonForDeletionPageState
             ]),
             children: [
               DigitCard(
-                child:
-                    BlocBuilder<AppInitializationBloc, AppInitializationState>(
-                  builder: (context, state) {
-                    if (state is! AppInitialized) return const Offstage();
-
-                    final householdMemberDeletionReasonOptions = state
-                            .appConfiguration
-                            .householdMemberDeletionReasonOptions ??
-                        <HouseholdMemberDeletionReasonOptions>[];
-
-                    final householdDeletionReasonOptions =
-                        state.appConfiguration.householdDeletionReasonOptions ??
-                            <HouseholdDeletionReasonOptions>[];
-
-                    return Column(
-                      children: [
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            localizations.translate(
-                              i18.reasonForDeletion.reasonForDeletionLabel,
-                            ),
-                            style: theme.textTheme.displayMedium,
-                          ),
+                child: Column(
+                  children: [
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        localizations.translate(
+                          i18.reasonForDeletion.reasonForDeletionLabel,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 10.0),
-                          child: Column(
-                            children: widget.isHousholdDelete
-                                ? householdDeletionReasonOptions
-                                    .map((e) => ReactiveRadioListTile(
-                                          title: Text(
-                                            localizations.translate(e.name),
-                                          ),
-                                          value: e.code,
-                                          formControlName:
-                                              _reasonForDeletionKey,
-                                        ))
-                                    .toList()
-                                : householdMemberDeletionReasonOptions
-                                    .map((e) => ReactiveRadioListTile(
-                                          title: Text(
-                                            localizations.translate(e.name),
-                                          ),
-                                          value: e.code,
-                                          formControlName:
-                                              _reasonForDeletionKey,
-                                        ))
-                                    .toList(),
-                          ),
-                        ),
-                      ],
-                    );
-                  },
+                        style: theme.textTheme.displayMedium,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10.0),
+                      child: Column(
+                        children: widget.isHousholdDelete
+                            ? RegistrationDeliverySingleton()
+                                .householdDeletionReasonOptions!
+                                .map((e) => ReactiveRadioListTile(
+                                      title: Text(
+                                        localizations.translate(e['name']!),
+                                      ),
+                                      value: e['code']!,
+                                      formControlName: _reasonForDeletionKey,
+                                    ))
+                                .toList()
+                            : RegistrationDeliverySingleton()
+                                .householdMemberDeletionReasonOptions!
+                                .map((e) => ReactiveRadioListTile(
+                                      title: Text(
+                                        localizations.translate(e['name']!),
+                                      ),
+                                      value: e['code']!,
+                                      formControlName: _reasonForDeletionKey,
+                                    ))
+                                .toList(),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],

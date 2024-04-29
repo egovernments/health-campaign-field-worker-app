@@ -3,9 +3,9 @@ import 'package:digit_components/widgets/atoms/digit_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:registration_delivery/blocs/service/service.dart';
+import 'package:registration_delivery/blocs/service_definition/service_definition.dart';
 
-import '../../blocs/service/service.dart';
-import '../../blocs/service_definition/service_definition.dart';
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/header/back_navigation_help_header.dart';

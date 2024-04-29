@@ -7,8 +7,7 @@ import 'package:inventory_management/blocs/inventory_listener.dart';
 import 'package:inventory_management/models/entities/stock.dart';
 import 'package:inventory_management/models/entities/transaction_reason.dart';
 import 'package:inventory_management/models/entities/transaction_type.dart';
-
-import '../models/entities/inventory_facility.dart';
+import 'package:digit_data_model/data_model.dart';
 import '../models/entities/stock_reconciliation.dart';
 
 part 'stock_reconciliation.freezed.dart';

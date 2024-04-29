@@ -28,6 +28,7 @@ import '../../utils/constants.dart';
 import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
+import '../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 
 @RoutePage()
 class DoseAdministeredPage extends LocalizedStatefulWidget {

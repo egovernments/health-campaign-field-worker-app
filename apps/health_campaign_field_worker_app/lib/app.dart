@@ -9,30 +9,28 @@ import 'package:isar/isar.dart';
 import 'package:location/location.dart';
 import 'package:referral_reconciliation/blocs/referral_recon_service.dart';
 import 'package:referral_reconciliation/blocs/search_referral_reconciliations.dart';
+import 'package:registration_delivery/blocs/facility/facility.dart';
+import 'package:registration_delivery/blocs/project_facility/project_facility.dart';
+import 'package:registration_delivery/utils/utils.dart';
 
 import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
 import 'blocs/boundary/boundary.dart';
-import 'blocs/facility/facility.dart';
 import 'blocs/localization/localization.dart';
 import 'blocs/product_variant/product_variant.dart';
 import 'blocs/project/project.dart';
-import 'blocs/project_facility/project_facility.dart';
 import 'blocs/user/user.dart';
 import 'data/local_store/app_shared_preferences.dart';
+import 'data/local_store/no_sql/schema/app_configuration.dart';
 import 'data/network_manager.dart';
 import 'data/repositories/remote/localization.dart';
 import 'data/repositories/remote/mdms.dart';
 import 'models/data_model.dart';
-import 'models/entities/facility.dart';
 // import 'models/entities/hcm_attendance_log_model.dart';
 // import 'models/entities/hcm_attendance_model.dart';
 import 'models/entities/product_variant.dart';
-import 'models/entities/project.dart';
-import 'models/entities/project_facility.dart';
 import 'models/entities/project_resource.dart';
 import 'models/entities/project_staff.dart';
-import 'models/entities/service_definition.dart';
 import 'models/entities/user.dart';
 
 import 'router/app_navigator_observer.dart';
@@ -157,6 +155,66 @@ class MainApplicationState extends State<MainApplication>
                     var firstLanguage;
                     firstLanguage = appConfig.languages?.last.value;
                     final languages = appConfig.languages;
+
+                    RegistrationDeliverySingleton().setInitialData(
+                      tenantId: envConfig.variables.tenantId,
+                      loggedInUserUuid: context.loggedInUserUuid,
+                      maxRadius: appConfig.maxRadius!,
+                      projectId: context.projectId,
+                      selectedBeneficiaryType: context.beneficiaryType,
+                      projectType: context.selectedProjectType!,
+                      selectedProject: context.selectedProject,
+                      boundaryModel: context.boundary,
+                      genderOptions: appConfig.genderOptions!.map((option) {
+                        return {
+                          'label': option.name,
+                          'value': option.code,
+                        };
+                      }).toList(),
+                      idTypeOptions: appConfig.idTypeOptions!.map((option) {
+                        return {
+                          'label': option.name,
+                          'value': option.code,
+                        };
+                      }).toList(),
+                      householdDeletionReasonOptions: appConfig
+                          .householdDeletionReasonOptions!
+                          .map((option) {
+                        return {
+                          'label': option.name,
+                          'value': option.code,
+                        };
+                      }).toList(),
+                      householdMemberDeletionReasonOptions: appConfig
+                          .householdMemberDeletionReasonOptions!
+                          .map((option) {
+                        return {
+                          'label': option.name,
+                          'value': option.code,
+                        };
+                      }).toList(),
+                      deliveryCommentOptions:
+                      appConfig.deliveryCommentOptions!.map((option) {
+                        return {
+                          'label': option.name,
+                          'value': option.code,
+                        };
+                      }).toList(),
+                      symptomsTypes: appConfig.symptomsTypes!.map((option) {
+                        return {
+                          'label': option.name,
+                          'value': option.code,
+                          'bool': option.active,
+                        };
+                      }).toList(),
+                      referralReasons: appConfig.referralReasons!.map((option) {
+                        return {
+                          'label': option.name,
+                          'value': option.code,
+                          'bool': option.active,
+                        };
+                      }).toList(),
+                    );
 
                     return MultiBlocProvider(
                       providers: [

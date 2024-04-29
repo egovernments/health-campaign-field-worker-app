@@ -244,96 +244,101 @@ class _HouseholdLocationPageState
                             ),
                           ),
                           Column(children: [
-                            householdLocationShowcaseData.administrativeArea
-                                .buildWith(
-                              child: DigitTextFormField(
-                                formControlName: _administrationAreaKey,
-                                label: localizations.translate(
-                                  i18.householdLocation
-                                      .administrationAreaFormLabel,
-                                ),
-                                readOnly: true,
-                                isRequired: true,
-                                validationMessages: {
-                                  'required': (_) => localizations.translate(
-                                        i18.householdLocation
-                                            .administrationAreaRequiredValidation,
-                                      ),
-                                },
+                            // householdLocationShowcaseData.administrativeArea
+                            //     .buildWith(
+                            //   child:
+                            DigitTextFormField(
+                              formControlName: _administrationAreaKey,
+                              label: localizations.translate(
+                                i18.householdLocation
+                                    .administrationAreaFormLabel,
                               ),
+                              readOnly: true,
+                              isRequired: true,
+                              validationMessages: {
+                                'required': (_) => localizations.translate(
+                                      i18.householdLocation
+                                          .administrationAreaRequiredValidation,
+                                    ),
+                              },
                             ),
-                            householdLocationShowcaseData.addressLine1
-                                .buildWith(
-                              child: DigitTextFormField(
-                                formControlName: _addressLine1Key,
-                                label: localizations.translate(
-                                  i18.householdLocation
-                                      .householdAddressLine1LabelText,
-                                ),
-                                validationMessages: {
-                                  'required': (_) => localizations.translate(
-                                        i18.common.min2CharsRequired,
-                                      ),
-                                  'maxLength': (object) => localizations
-                                      .translate(i18.common.maxCharsRequired)
-                                      .replaceAll('{}', maxLength.toString()),
-                                },
+                            // ),
+                            // householdLocationShowcaseData.addressLine1
+                            //     .buildWith(
+                            //   child:
+                            DigitTextFormField(
+                              formControlName: _addressLine1Key,
+                              label: localizations.translate(
+                                i18.householdLocation
+                                    .householdAddressLine1LabelText,
                               ),
+                              validationMessages: {
+                                'required': (_) => localizations.translate(
+                                      i18.common.min2CharsRequired,
+                                    ),
+                                'maxLength': (object) => localizations
+                                    .translate(i18.common.maxCharsRequired)
+                                    .replaceAll('{}', maxLength.toString()),
+                              },
                             ),
-                            householdLocationShowcaseData.addressLine2
-                                .buildWith(
-                              child: DigitTextFormField(
-                                formControlName: _addressLine2Key,
-                                label: localizations.translate(
-                                  i18.householdLocation
-                                      .householdAddressLine2LabelText,
-                                ),
-                                validationMessages: {
-                                  'required': (_) => localizations.translate(
-                                        i18.common.min2CharsRequired,
-                                      ),
-                                  'maxLength': (object) => localizations
-                                      .translate(i18.common.maxCharsRequired)
-                                      .replaceAll('{}', maxLength.toString()),
-                                },
+                            // ),
+                            // householdLocationShowcaseData.addressLine2
+                            //     .buildWith(
+                            //   child:
+                            DigitTextFormField(
+                              formControlName: _addressLine2Key,
+                              label: localizations.translate(
+                                i18.householdLocation
+                                    .householdAddressLine2LabelText,
                               ),
+                              validationMessages: {
+                                'required': (_) => localizations.translate(
+                                      i18.common.min2CharsRequired,
+                                    ),
+                                'maxLength': (object) => localizations
+                                    .translate(i18.common.maxCharsRequired)
+                                    .replaceAll('{}', maxLength.toString()),
+                              },
                             ),
-                            householdLocationShowcaseData.landmark.buildWith(
-                              child: DigitTextFormField(
-                                formControlName: _landmarkKey,
-                                label: localizations.translate(
-                                  i18.householdLocation.landmarkFormLabel,
-                                ),
-                                validationMessages: {
-                                  'required': (_) => localizations.translate(
-                                        i18.common.min2CharsRequired,
-                                      ),
-                                  'maxLength': (object) => localizations
-                                      .translate(i18.common.maxCharsRequired)
-                                      .replaceAll('{}', maxLength.toString()),
-                                },
+                            // ),
+                            // householdLocationShowcaseData.landmark.buildWith(
+                            //   child:
+                            DigitTextFormField(
+                              formControlName: _landmarkKey,
+                              label: localizations.translate(
+                                i18.householdLocation.landmarkFormLabel,
                               ),
+                              validationMessages: {
+                                'required': (_) => localizations.translate(
+                                      i18.common.min2CharsRequired,
+                                    ),
+                                'maxLength': (object) => localizations
+                                    .translate(i18.common.maxCharsRequired)
+                                    .replaceAll('{}', maxLength.toString()),
+                              },
                             ),
-                            householdLocationShowcaseData.postalCode.buildWith(
-                              child: DigitTextFormField(
-                                keyboardType: TextInputType.text,
-                                formControlName: _postalCodeKey,
-                                label: localizations.translate(
-                                  i18.householdLocation.postalCodeFormLabel,
-                                ),
-                                validationMessages: {
-                                  'required': (_) => localizations.translate(
-                                        i18.common.min2CharsRequired,
-                                      ),
-                                  'maxLength': (object) => localizations
-                                      .translate(i18.common.maxCharsRequired)
-                                      .replaceAll('{}', '6'),
-                                },
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly,
-                                ],
+                            // ),
+                            // householdLocationShowcaseData.postalCode.buildWith(
+                            //   child:
+                            DigitTextFormField(
+                              keyboardType: TextInputType.text,
+                              formControlName: _postalCodeKey,
+                              label: localizations.translate(
+                                i18.householdLocation.postalCodeFormLabel,
                               ),
+                              validationMessages: {
+                                'required': (_) => localizations.translate(
+                                      i18.common.min2CharsRequired,
+                                    ),
+                                'maxLength': (object) => localizations
+                                    .translate(i18.common.maxCharsRequired)
+                                    .replaceAll('{}', '6'),
+                              },
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
                             ),
+                            // ),
                           ]),
                         ],
                       ),

@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_management/blocs/inventory_listener.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:digit_data_model/data_model.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../widgets/component_wrapper/facility_bloc_wrapper.dart';
@@ -16,7 +17,6 @@ import '../../blocs/facility.dart';
 import '../../blocs/inventory_report.dart';
 import '../../blocs/product_variant.dart';
 import '../../blocs/stock_reconciliation.dart';
-import '../../models/entities/inventory_facility.dart';
 import '../../models/entities/product_variant.dart';
 import '../../widgets/back_navigation_help_header.dart';
 import '../facility_selection.dart';

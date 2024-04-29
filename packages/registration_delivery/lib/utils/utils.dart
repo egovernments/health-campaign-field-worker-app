@@ -6,6 +6,7 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/individual.dart';
 import 'package:drift/drift.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:registration_delivery/utils/constants.dart';
 import 'package:uuid/uuid.dart';
 import 'package:collection/collection.dart';
 
@@ -15,6 +16,7 @@ import '../models/entities/referral.dart';
 import '../models/entities/side_effect.dart';
 import '../models/entities/status.dart';
 import '../models/entities/task.dart';
+import 'extensions/extensions.dart';
 
 /// This function takes an iterable of boolean expressions and builds an AND expression from them.
 /// If the iterable is empty, it returns a constant true expression.
@@ -313,42 +315,80 @@ class RegistrationDeliverySingleton {
   RegistrationDeliverySingleton._internal();
 
   String? _tenantId;
-  String? _loggedInUserId;
   String? _loggedInUserUuid;
 
   double? _maxRadius;
   String? _projectId;
   BeneficiaryType? _beneficiaryType;
   ProjectType? _projectType;
+  ProjectModel? _selectedProject;
   BoundaryModel? _boundaryModel;
+  PersistenceConfiguration _persistenceConfiguration =
+      PersistenceConfiguration.offlineFirst;
+  List<Map<String, String>>? _genderOptions;
+  List<Map<String, String>>? _idTypeOptions;
+  List<Map<String, String>>? _householdDeletionReasonOptions;
+  List<Map<String, String>>? _householdMemberDeletionReasonOptions;
+  List<Map<String, String>>? _deliveryCommentOptions;
+  Iterable<dynamic>? _symptomsTypes;
+  Iterable<dynamic>? _referralReasons;
 
   void setInitialData(
       {required String tenantId,
-      required String loggedInUserId,
       required String loggedInUserUuid,
       required double maxRadius,
       required String projectId,
       required BeneficiaryType selectedBeneficiaryType,
       required ProjectType projectType,
-      required BoundaryModel boundaryModel}) {
+      required ProjectModel selectedProject,
+      required BoundaryModel boundaryModel,
+      PersistenceConfiguration? persistenceConfiguration,
+      required List<Map<String, String>> genderOptions,
+      required List<Map<String, String>> idTypeOptions,
+      required List<Map<String, String>> householdDeletionReasonOptions,
+      required List<Map<String, String>> householdMemberDeletionReasonOptions,
+      required List<Map<String, String>> deliveryCommentOptions,
+      required Iterable<dynamic> symptomsTypes,
+      required Iterable<dynamic> referralReasons}) {
     _tenantId = tenantId;
-    _loggedInUserId = loggedInUserId;
     _loggedInUserUuid = loggedInUserUuid;
     _maxRadius = maxRadius;
     _projectId = projectId;
     _beneficiaryType = selectedBeneficiaryType;
     _projectType = projectType;
+    _selectedProject = selectedProject;
     _boundaryModel = boundaryModel;
+    _persistenceConfiguration = persistenceConfiguration!;
+    _genderOptions = genderOptions;
+    _idTypeOptions = idTypeOptions;
+    _householdDeletionReasonOptions = householdDeletionReasonOptions;
+    _householdMemberDeletionReasonOptions =
+        householdMemberDeletionReasonOptions;
+    _deliveryCommentOptions = deliveryCommentOptions;
+    _symptomsTypes = symptomsTypes;
+    _referralReasons = referralReasons;
   }
 
   String? get tenantId => _tenantId;
-  String? get loggedInUserId => _loggedInUserId;
   String? get loggedInUserUuid => _loggedInUserUuid;
   double? get maxRadius => _maxRadius;
   String? get projectId => _projectId;
   BeneficiaryType? get beneficiaryType => _beneficiaryType;
   ProjectType? get projectType => _projectType;
+  ProjectModel? get selectedProject => _selectedProject;
   BoundaryModel? get boundary => _boundaryModel;
+  PersistenceConfiguration? get persistenceConfiguration =>
+      _persistenceConfiguration;
+  List<Map<String, String>>? get genderOptions => _genderOptions;
+  List<Map<String, String>>? get idTypeOptions => _idTypeOptions;
+  List<Map<String, String>>? get householdDeletionReasonOptions =>
+      _householdDeletionReasonOptions;
+  List<Map<String, String>>? get householdMemberDeletionReasonOptions =>
+      _householdMemberDeletionReasonOptions;
+  List<Map<String, String>>? get deliveryCommentOptions =>
+      _deliveryCommentOptions;
+  Iterable<dynamic>? get symptomsTypes => _symptomsTypes;
+  Iterable<dynamic>? get referralReasons => _referralReasons;
 }
 
 bool allDosesDelivered(

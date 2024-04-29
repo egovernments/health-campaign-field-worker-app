@@ -8,21 +8,16 @@ import 'package:inventory_management/models/entities/stock.dart';
 import 'package:inventory_management/models/entities/stock_reconciliation.dart';
 import 'package:isar/isar.dart';
 import 'package:registration_delivery/models/entities/household_member.dart';
+import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 import 'package:registration_delivery/models/entities/referral.dart';
 import 'package:registration_delivery/models/entities/side_effect.dart';
 
-import '../../../models/entities/facility.dart';
 // import '../../../models/entities/hcm_attendance_log_model.dart';
 // import '../../../models/entities/hcm_attendance_model.dart';
 import '../../../models/entities/hcm_hf_referral.dart';
 import '../../../models/entities/product_variant.dart';
-import '../../../models/entities/project.dart';
-import '../../../models/entities/project_beneficiary.dart';
-import '../../../models/entities/project_facility.dart';
 import '../../../models/entities/project_resource.dart';
 import '../../../models/entities/project_staff.dart';
-import '../../../models/entities/service.dart';
-import '../../../models/entities/service_definition.dart';
 
 class IndividualOpLogManager extends OpLogManager<IndividualModel> {
   IndividualOpLogManager(super.isar);

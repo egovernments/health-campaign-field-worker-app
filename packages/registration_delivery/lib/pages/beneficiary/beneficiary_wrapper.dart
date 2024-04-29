@@ -1,16 +1,20 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:digit_data_model/models/entities/individual.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/utils/utils.dart';
 
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
+import '../../blocs/facility/facility.dart';
 import '../../blocs/household_overview/household_overview.dart';
 import '../../blocs/referral_management/referral_management.dart';
 import '../../blocs/search_households/search_households.dart';
+import '../../blocs/service/service.dart';
+import '../../blocs/service_definition/service_definition.dart';
 import '../../blocs/side_effects/side_effects.dart';
 import '../../models/entities/household.dart';
 import '../../models/entities/household_member.dart';
+import '../../models/entities/project_beneficiary.dart';
 import '../../models/entities/referral.dart';
 import '../../models/entities/side_effect.dart';
 import '../../models/entities/task.dart';
@@ -29,32 +33,56 @@ class BeneficiaryWrapperPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final task = context.repository<TaskModel, TaskSearchModel>();
+    final task = context.repository<TaskModel, TaskSearchModel>(context);
     final individual =
-        context.repository<IndividualModel, IndividualSearchModel>();
+        context.repository<IndividualModel, IndividualSearchModel>(context);
 
     final household =
-        context.repository<HouseholdModel, HouseholdSearchModel>();
+        context.repository<HouseholdModel, HouseholdSearchModel>(context);
 
-    final householdMember =
-        context.repository<HouseholdMemberModel, HouseholdMemberSearchModel>();
+    final householdMember = context
+        .repository<HouseholdMemberModel, HouseholdMemberSearchModel>(context);
 
-    final projectBeneficiary = context
-        .repository<ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>();
-    final serviceDefinition = context
-        .repository<ServiceDefinitionModel, ServiceDefinitionSearchModel>();
-    final service = context.repository<ServiceModel, ServiceSearchModel>();
+    final projectBeneficiary = context.repository<ProjectBeneficiaryModel,
+        ProjectBeneficiarySearchModel>(context);
+    final serviceDefinition = context.repository<ServiceDefinitionModel,
+        ServiceDefinitionSearchModel>(context);
+    final service =
+        context.repository<ServiceModel, ServiceSearchModel>(context);
     final sideEffect =
-        context.repository<SideEffectModel, SideEffectSearchModel>();
+        context.repository<SideEffectModel, SideEffectSearchModel>(context);
     final facilityRepository =
         context.read<LocalRepository<FacilityModel, FacilitySearchModel>>();
 
     final projectFacilityRepository = context.read<
         LocalRepository<ProjectFacilityModel, ProjectFacilitySearchModel>>();
-    final referral = context.repository<ReferralModel, ReferralSearchModel>();
+    final referral =
+        context.repository<ReferralModel, ReferralSearchModel>(context);
 
     return MultiBlocProvider(
       providers: [
+        BlocProvider(
+          create: (_) => ServiceBloc(
+            const ServiceEmptyState(),
+            serviceDataRepository: service,
+          ),
+        ),
+        BlocProvider(
+          create: (_) => FacilityBloc(
+            facilityLocalRepository: facilityRepository,
+            projectFacilityLocalRepository: projectFacilityRepository,
+          )..add(
+              FacilityLoadForProjectEvent(
+                projectId: RegistrationDeliverySingleton().projectId!,
+              ),
+            ),
+        ),
+        BlocProvider(
+          create: (_) => ServiceDefinitionBloc(
+            const ServiceDefinitionEmptyState(),
+            serviceDefinitionDataRepository: serviceDefinition,
+          )..add(const ServiceDefinitionFetchEvent()),
+        ),
         BlocProvider(
           create: (_) => HouseholdOverviewBloc(
               HouseholdOverviewState(
@@ -67,7 +95,8 @@ class BeneficiaryWrapperPage extends StatelessWidget {
               taskDataRepository: task,
               sideEffectDataRepository: sideEffect,
               referralDataRepository: referral,
-              beneficiaryType: RegistrationDeliverySingleton().beneficiaryType),
+              beneficiaryType:
+                  RegistrationDeliverySingleton().beneficiaryType!),
         ),
         BlocProvider(
           create: (_) => DeliverInterventionBloc(

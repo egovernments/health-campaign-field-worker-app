@@ -20,7 +20,6 @@ import 'router/app_router.dart';
 import 'utils/background_service.dart';
 import 'utils/environment_config.dart';
 import 'utils/utils.dart';
-import 'package:digit_data_model/data_model.init.dart' as digitDataModel;
 
 final LocalSqlDataStore _sql = LocalSqlDataStore();
 late Dio _dio;
@@ -30,8 +29,7 @@ int i = 0;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  initializeMappers();
-  digitDataModel.initializeMappers();
+  initializeAllMappers();
   final info = await PackageInfo.fromPlatform();
 
   Bloc.observer = AppBlocObserver();

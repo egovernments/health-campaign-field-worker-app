@@ -18,7 +18,6 @@ import '../../blocs/facility.dart';
 import '../../blocs/inventory_listener.dart';
 import '../../blocs/product_variant.dart';
 import '../../blocs/record_stock.dart';
-import '../../models/entities/inventory_facility.dart';
 import '../../models/entities/inventory_transport_type.dart';
 import '../../models/entities/product_variant.dart';
 import '../../models/entities/stock.dart';

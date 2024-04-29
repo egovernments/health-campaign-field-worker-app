@@ -7,11 +7,12 @@ import 'package:inventory_management/blocs/inventory_report.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/models/entities/product_variant.dart'
     as invProdVar;
+import 'package:registration_delivery/blocs/facility/facility.dart';
+
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../models/entities/project_resource.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/utils.dart';
-import '../facility/facility.dart';
 import '../product_variant/product_variant.dart';
 import '../sync/sync.dart';
 

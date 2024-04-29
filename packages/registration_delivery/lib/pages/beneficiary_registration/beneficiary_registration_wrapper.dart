@@ -22,23 +22,23 @@ class BeneficiaryRegistrationWrapperPage extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    return const BoundarySelectionWrapper(child: AutoRouter());
+    return const AutoRouter();
   }
 
   @override
   Widget wrappedRoute(BuildContext context) {
     final beneficiaryType = RegistrationDeliverySingleton().beneficiaryType;
     final individual =
-        context.repository<IndividualModel, IndividualSearchModel>();
+        context.repository<IndividualModel, IndividualSearchModel>(context);
 
     final household =
-        context.repository<HouseholdModel, HouseholdSearchModel>();
+        context.repository<HouseholdModel, HouseholdSearchModel>(context);
 
-    final householdMember =
-        context.repository<HouseholdMemberModel, HouseholdMemberSearchModel>();
+    final householdMember = context
+        .repository<HouseholdMemberModel, HouseholdMemberSearchModel>(context);
 
-    final projectBeneficiary = context
-        .repository<ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>();
+    final projectBeneficiary = context.repository<ProjectBeneficiaryModel,
+        ProjectBeneficiarySearchModel>(context);
 
     return BlocProvider(
       create: (context) => BeneficiaryRegistrationBloc(
@@ -47,7 +47,7 @@ class BeneficiaryRegistrationWrapperPage extends StatelessWidget
         householdRepository: household,
         householdMemberRepository: householdMember,
         projectBeneficiaryRepository: projectBeneficiary,
-        beneficiaryType: RegistrationDeliverySingleton().beneficiaryType!,
+        beneficiaryType: beneficiaryType!,
       ),
       child: this,
     );

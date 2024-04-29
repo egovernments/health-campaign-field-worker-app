@@ -16,10 +16,15 @@ import 'package:inventory_management/models/entities/stock_reconciliation.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
+import 'package:registration_delivery/blocs/search_households/search_bloc_common_wrapper.dart';
+import 'package:registration_delivery/blocs/search_households/search_households.dart';
 import 'package:registration_delivery/models/entities/household_member.dart';
+import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 import 'package:registration_delivery/models/entities/referral.dart';
 import 'package:registration_delivery/models/entities/side_effect.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
+import 'package:registration_delivery/widgets/progress_bar/beneficiary_progress.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/attendance/hcm_attendance_bloc.dart';
@@ -35,10 +40,7 @@ import 'package:digit_data_model/data_model.dart';
 // import '../models/entities/hcm_attendance_log_model.dart';
 // import '../models/entities/hcm_attendance_model.dart';
 import '../models/entities/hcm_hf_referral.dart';
-import '../models/entities/project_beneficiary.dart';
 import '../models/entities/roles_type.dart';
-import '../models/entities/service.dart';
-import '../models/entities/service_definition.dart';
 import '../router/app_router.dart';
 import '../utils/debound.dart';
 import '../utils/environment_config.dart';
@@ -47,7 +49,6 @@ import '../utils/utils.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/home/home_item_card.dart';
 import '../widgets/localized.dart';
-import '../widgets/progress_bar/beneficiary_progress.dart';
 import '../widgets/showcase/config/showcase_constants.dart';
 import '../widgets/showcase/showcase_button.dart';
 
@@ -170,18 +171,18 @@ class _HomePageState extends LocalizedState<HomePage> {
                     showcaseFor: showcaseKeys.toSet().toList(),
                   ),
                 ),
-                // skipProgressBar
-                //     ? const SizedBox.shrink()
-                //     : homeShowcaseData.distributorProgressBar.buildWith(
-                //         child: BeneficiaryProgressBar(
-                //           label: localizations.translate(
-                //             i18.home.progressIndicatorTitle,
-                //           ),
-                //           prefixLabel: localizations.translate(
-                //             i18.home.progressIndicatorPrefixLabel,
-                //           ),
-                //         ),
-                //       ),
+                skipProgressBar
+                    ? const SizedBox.shrink()
+                    : homeShowcaseData.distributorProgressBar.buildWith(
+                        child: BeneficiaryProgressBar(
+                          label: localizations.translate(
+                            i18.home.progressIndicatorTitle,
+                          ),
+                          prefixLabel: localizations.translate(
+                            i18.home.progressIndicatorPrefixLabel,
+                          ),
+                        ),
+                      ),
               ],
             ),
             footer: PoweredByDigit(
@@ -333,12 +334,12 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.all_inbox,
           label: i18.home.beneficiaryLabel,
           onPressed: () async {
-            // final searchBloc = context.read<SearchBlocWrapper>();
-            // await context.router.push(
-            //   SearchBeneficiaryRoute(),
-            // );
-            // searchBloc.searchHouseholdsBloc
-            //     .add(const SearchHouseholdsClearEvent());
+            final searchBloc = context.read<SearchBlocWrapper>();
+            await context.router.push(
+              SearchBeneficiaryRoute(),
+            );
+            searchBloc.searchHouseholdsBloc
+                .add(const SearchHouseholdsClearEvent());
           },
         ),
       ),

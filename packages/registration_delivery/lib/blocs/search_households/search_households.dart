@@ -13,8 +13,7 @@ import '../../models/entities/household_member.dart';
 import '../../models/entities/project_beneficiary.dart';
 import '../../models/entities/referral.dart';
 import '../../models/entities/side_effect.dart';
-import '../household_overiew_listeners.dart';
-
+import '../../utils/typedefs.dart';
 
 part 'search_households.freezed.dart';
 

@@ -2,7 +2,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:inventory_management/blocs/facility.dart';
 import 'package:inventory_management/blocs/inventory_listener.dart';
-import 'package:inventory_management/models/entities/inventory_facility.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:mocktail/mocktail.dart';
 

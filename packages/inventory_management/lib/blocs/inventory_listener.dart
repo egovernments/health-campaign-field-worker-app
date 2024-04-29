@@ -1,7 +1,7 @@
 import 'package:inventory_management/models/entities/product_variant.dart';
 import 'package:inventory_management/models/entities/stock_reconciliation.dart';
+import 'package:digit_data_model/data_model.dart';
 
-import '../models/entities/inventory_facility.dart';
 import '../models/entities/inventory_transport_type.dart';
 import '../models/entities/stock.dart';
 import 'inventory_report.dart';

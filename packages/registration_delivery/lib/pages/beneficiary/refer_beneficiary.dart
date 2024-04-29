@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
+import 'package:digit_data_model/data_model.dart';
+
+import '../../blocs/facility/facility.dart';
 import '../../blocs/household_overview/household_overview.dart';
 import '../../blocs/referral_management/referral_management.dart';
 import '../../models/entities/additional_fields_type.dart';
@@ -17,6 +20,7 @@ import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/inventory/no_facilities_assigned_dialog.dart';
 import '../../widgets/localized.dart';
+import 'facility_selection.dart';
 
 @RoutePage()
 class ReferBeneficiaryPage extends LocalizedStatefulWidget {
@@ -41,6 +45,15 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
   static const _referralReason = 'referralReason';
   static const _referralComments = 'referralComments';
   final clickedStatus = ValueNotifier<bool>(false);
+  late final List<KeyValue> reasons;
+
+  @override
+  void initState() {
+    reasons = (RegistrationDeliverySingleton().referralReasons ?? [])
+        .map((e) => KeyValue(e.code, e.code))
+        .toList();
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -189,9 +202,11 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                                   () {
                                     reloadState
                                         .add(HouseholdOverviewReloadEvent(
-                                      projectId: RegistrationDeliverySingleton().projectId!,
+                                      projectId: RegistrationDeliverySingleton()
+                                          .projectId!,
                                       projectBeneficiaryType:
-                                      RegistrationDeliverySingleton().beneficiaryType!,
+                                          RegistrationDeliverySingleton()
+                                              .beneficiaryType!,
                                     ));
                                   },
                                 ).then((value) => context.router.popAndPush(
@@ -283,7 +298,7 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                               child: DigitTextFormField(
                                 hideKeyboard: true,
                                 valueAccessor: FacilityValueAccessor(
-                                  facilities as List<InventoryFacilityModel>,
+                                  facilities,
                                 ),
                                 label: localizations.translate(
                                   i18.referBeneficiary.referredToLabel,
@@ -317,37 +332,22 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                               ),
                             ),
                           ),
-                          BlocBuilder<AppInitializationBloc,
-                              AppInitializationState>(
-                            builder: (context, state) {
-                              return state.maybeWhen(
-                                orElse: () => const Offstage(),
-                                initialized: (appConfiguration, _) {
-                                  final List<KeyValue> reasons =
-                                      (appConfiguration.referralReasons ?? [])
-                                          .map((e) => KeyValue(e.code, e.code))
-                                          .toList();
-
-                                  return DigitRadioButtonList<KeyValue>(
-                                    labelStyle: DigitTheme.instance.mobileTheme
-                                        .textTheme.bodyLarge,
-                                    formControlName: _referralReason,
-                                    valueMapper: (val) =>
-                                        localizations.translate(val.label),
-                                    options: reasons,
-                                    labelText: localizations.translate(
-                                      i18.referBeneficiary.reasonForReferral,
-                                    ),
-                                    isRequired: true,
-                                    errorMessage: localizations.translate(
-                                      i18.common.corecommonRequired,
-                                    ),
-                                    onValueChange: (val) {
-                                      form.control(_referralReason).value = val;
-                                    },
-                                  );
-                                },
-                              );
+                          DigitRadioButtonList<KeyValue>(
+                            labelStyle: DigitTheme
+                                .instance.mobileTheme.textTheme.bodyLarge,
+                            formControlName: _referralReason,
+                            valueMapper: (val) =>
+                                localizations.translate(val.label),
+                            options: reasons,
+                            labelText: localizations.translate(
+                              i18.referBeneficiary.reasonForReferral,
+                            ),
+                            isRequired: true,
+                            errorMessage: localizations.translate(
+                              i18.common.corecommonRequired,
+                            ),
+                            onValueChange: (val) {
+                              form.control(_referralReason).value = val;
                             },
                           ),
                           DigitTextFormField(
@@ -374,7 +374,8 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
   FormGroup buildForm() {
     return fb.group(<String, Object>{
       _dateOfReferralKey: FormControl<DateTime>(value: DateTime.now()),
-      _administrativeUnitKey: FormControl<String>(value: RegistrationDeliverySingleton().boundary!.name),
+      _administrativeUnitKey: FormControl<String>(
+          value: RegistrationDeliverySingleton().boundary!.name),
       _referredByKey: FormControl<String>(
         value: RegistrationDeliverySingleton().loggedInUserUuid,
         validators: [Validators.required],

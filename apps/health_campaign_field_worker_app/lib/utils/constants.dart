@@ -4,11 +4,21 @@ import 'package:digit_data_model/models/oplog/oplog_entry.dart';
 import 'package:digit_data_model/utils/utils.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:health_campaign_field_worker_app/utils/utils.dart';
 import 'package:inventory_management/data/repositories/local/stock.dart';
 import 'package:inventory_management/data/repositories/local/stock_reconciliation.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:digit_data_model/data_model.init.dart' as digitDataModel;
+import 'package:registration_delivery/data/repositories/local/facility.dart';
+import 'package:registration_delivery/data/repositories/local/household.dart';
+import 'package:registration_delivery/data/repositories/local/houshold_member.dart';
+import 'package:registration_delivery/data/repositories/local/individual.dart';
+import 'package:registration_delivery/data/repositories/local/project_beneficiary.dart';
+import 'package:registration_delivery/data/repositories/local/project_facility.dart';
+import 'package:registration_delivery/data/repositories/local/referral.dart';
+import 'package:registration_delivery/data/repositories/local/side_effect.dart';
+import 'package:registration_delivery/data/repositories/local/task.dart';
+import 'package:registration_delivery/registration_delivery.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
@@ -17,18 +27,12 @@ import '../data/local_store/no_sql/schema/project_types.dart';
 import '../data/local_store/no_sql/schema/row_versions.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/repositories/local/attendance_logs.dart';
-import '../data/repositories/local/facility.dart';
 import '../data/repositories/local/hcm_attendance.dart';
 import '../data/repositories/local/hcm_hf_referral.dart';
 import '../data/repositories/local/pgr_service.dart';
 import '../data/repositories/local/product_variant.dart';
-import '../data/repositories/local/project.dart';
-import '../data/repositories/local/project_beneficiary.dart';
-import '../data/repositories/local/project_facility.dart';
 import '../data/repositories/local/project_resource.dart';
 import '../data/repositories/local/project_staff.dart';
-import '../data/repositories/local/service.dart';
-import '../data/repositories/local/service_definition.dart';
 import '../data/repositories/oplog/hcm_oplog.dart';
 import '../data/repositories/remote/attendance_logs.dart';
 import '../data/repositories/remote/boundary.dart';
@@ -48,8 +52,6 @@ import '../data/repositories/remote/project_resource.dart';
 import '../data/repositories/remote/project_staff.dart';
 import '../data/repositories/remote/project_type.dart';
 import '../data/repositories/remote/referral.dart';
-import '../data/repositories/remote/service.dart';
-import '../data/repositories/remote/service_definition.dart';
 import '../data/repositories/remote/side_effect.dart';
 import '../data/repositories/remote/stock.dart';
 import '../data/repositories/remote/stock_reconciliation.dart';
@@ -68,8 +70,7 @@ class Constants {
     return _instance;
   }
   Future initialize(version) async {
-    initializeMappers();
-    digitDataModel.initializeMappers();
+    initializeAllMappers();
     DigitDataModelSingleton().setData(
         syncDownRetryCount: envConfig.variables.syncDownRetryCount,
         retryTimeInterval: envConfig.variables.retryTimeInterval,
@@ -115,10 +116,10 @@ class Constants {
     Isar isar,
   ) {
     return [
-      // IndividualLocalRepository(sql, IndividualOpLogManager(isar)),
+      IndividualLocalRepository(sql, IndividualOpLogManager(isar)),
       FacilityLocalRepository(sql, FacilityOpLogManager(isar)),
-      // HouseholdMemberLocalRepository(sql, HouseholdMemberOpLogManager(isar)),
-      // HouseholdLocalRepository(sql, HouseholdOpLogManager(isar)),
+      HouseholdMemberLocalRepository(sql, HouseholdMemberOpLogManager(isar)),
+      HouseholdLocalRepository(sql, HouseholdOpLogManager(isar)),
       ProjectLocalRepository(sql, ProjectOpLogManager(isar)),
       ProjectBeneficiaryLocalRepository(
         sql,
@@ -129,9 +130,9 @@ class Constants {
       ProjectFacilityLocalRepository(sql, ProjectFacilityOpLogManager(isar)),
       ProjectStaffLocalRepository(sql, ProjectStaffOpLogManager(isar)),
       StockLocalRepository(sql, StockOpLogManager(isar)),
-      // TaskLocalRepository(sql, TaskOpLogManager(isar)),
-      // SideEffectLocalRepository(sql, SideEffectOpLogManager(isar)),
-      // ReferralLocalRepository(sql, ReferralOpLogManager(isar)),
+      TaskLocalRepository(sql, TaskOpLogManager(isar)),
+      SideEffectLocalRepository(sql, SideEffectOpLogManager(isar)),
+      ReferralLocalRepository(sql, ReferralOpLogManager(isar)),
       StockReconciliationLocalRepository(
         sql,
         StockReconciliationOpLogManager(isar),

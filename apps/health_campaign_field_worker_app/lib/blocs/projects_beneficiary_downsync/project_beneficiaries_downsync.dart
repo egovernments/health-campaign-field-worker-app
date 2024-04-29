@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:registration_delivery/models/entities/household_member.dart';
+import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 import 'package:registration_delivery/models/entities/referral.dart';
 import 'package:registration_delivery/models/entities/side_effect.dart';
 
@@ -14,7 +15,6 @@ import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/network_manager.dart';
 import '../../data/repositories/remote/bandwidth_check.dart';
 import '../../models/data_model.dart';
-import '../../models/entities/project_beneficiary.dart';
 import '../../utils/background_service.dart';
 import '../../utils/environment_config.dart';
 

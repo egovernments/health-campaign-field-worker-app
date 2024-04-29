@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../models/entities/product_variant.dart';
 import '../../models/entities/project_resource.dart';
+import '../../utils/typedefs.dart';
 
 part 'product_variant.freezed.dart';
 
@@ -12,9 +13,14 @@ typedef ProductVariantEmitter = Emitter<ProductVariantState>;
 
 class ProductVariantBloc
     extends Bloc<ProductVariantEvent, ProductVariantState> {
+  final ProjectResourceDataRepository projectResourceDataRepository;
+  final ProductVariantDataRepository productVariantDataRepository;
 
   ProductVariantBloc(
-    super.initialState,) {
+    super.initialState,
+    this.productVariantDataRepository,
+    this.projectResourceDataRepository,
+  ) {
     on(_handleLoad);
   }
 
@@ -23,23 +29,23 @@ class ProductVariantBloc
     ProductVariantEmitter emit,
   ) async {
     emit(const ProductVariantLoadingState());
-    // final projectResources = await projectResourceDataRepository.search(
-    //   event.query,
-    // );
-    //
-    // final variants = await productVariantDataRepository.search(
-    //   ProductVariantSearchModel(
-    //     id: projectResources.map((e) {
-    //       return e.resource.productVariantId;
-    //     }).toList(),
-    //   ),
-    // );
+    final projectResources = await projectResourceDataRepository.search(
+      event.query,
+    );
 
-    // if (variants.isEmpty) {
-    //   emit(const ProductVariantEmptyState());
-    // } else {
-    //   emit(ProductVariantFetchedState(productVariants: variants));
-    // }
+    final variants = await productVariantDataRepository.search(
+      ProductVariantSearchModel(
+        id: projectResources.map((e) {
+          return e.resource.productVariantId;
+        }).toList(),
+      ),
+    );
+
+    if (variants.isEmpty) {
+      emit(const ProductVariantEmptyState());
+    } else {
+      emit(ProductVariantFetchedState(productVariants: variants));
+    }
   }
 }
 

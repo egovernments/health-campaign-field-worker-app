@@ -4,8 +4,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:inventory_management/inventory_management.dart';
-
-import '../models/entities/inventory_facility.dart';
+import 'package:digit_data_model/data_model.dart';
 
 part 'record_stock.freezed.dart';
 

@@ -38,6 +38,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: AuthenticatedPageWrapper(key: args.key),
       );
     },
+    BeneficiariesReportRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const BeneficiariesReportPage(),
+      );
+    },
     BoundarySelectionRoute.name: (routeData) {
       final args = routeData.argsAs<BoundarySelectionRouteArgs>(
           orElse: () => const BoundarySelectionRouteArgs());
@@ -302,6 +308,7 @@ abstract class _$AppRouter extends RootStackRouter {
     ...InventoryRoute().pagesMap,
     ...AttendanceRoute().pagesMap,
     ...ReferralReconciliationRoute().pagesMap,
+    ...RegistrationDeliveryRoute().pagesMap,
   };
 }
 
@@ -391,6 +398,20 @@ class AuthenticatedRouteWrapperArgs {
   String toString() {
     return 'AuthenticatedRouteWrapperArgs{key: $key}';
   }
+}
+
+/// generated route for
+/// [BeneficiariesReportPage]
+class BeneficiariesReportRoute extends PageRouteInfo<void> {
+  const BeneficiariesReportRoute({List<PageRouteInfo>? children})
+      : super(
+          BeneficiariesReportRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'BeneficiariesReportRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for

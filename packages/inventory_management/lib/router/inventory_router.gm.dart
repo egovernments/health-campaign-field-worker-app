@@ -14,8 +14,7 @@ import 'package:inventory_management/blocs/app_localization.dart' as _i12;
 import 'package:inventory_management/blocs/inventory_listener.dart' as _i15;
 import 'package:inventory_management/blocs/inventory_report.dart' as _i14;
 import 'package:inventory_management/blocs/record_stock.dart' as _i17;
-import 'package:inventory_management/models/entities/inventory_facility.dart'
-    as _i13;
+import 'package:digit_data_model/models/entities/facility.dart' as _i13;
 import 'package:inventory_management/models/entities/inventory_transport_type.dart'
     as _i16;
 import 'package:inventory_management/pages/acknowledgement.dart' as _i1;

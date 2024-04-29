@@ -12,6 +12,7 @@ import 'package:registration_delivery/pages/beneficiary/widgets/past_delivery.da
 
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
+import '../../blocs/product_variant/product_variant.dart';
 import '../../models/entities/additional_fields_type.dart';
 import '../../models/entities/beneficiary_type.dart';
 import '../../router/registration_delivery_router.gm.dart';
@@ -19,6 +20,7 @@ import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
+import '../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import 'widgets/record_delivery_cycle.dart';
 
 @RoutePage()
@@ -70,7 +72,6 @@ class _BeneficiaryDetailsPageState
                   element.projectBeneficiaryClientReferenceId ==
                   projectBeneficiary.first.clientReferenceId)
               .toList();
-          final projectState = context.read<ProjectBloc>().state;
           final bloc = context.read<DeliverInterventionBloc>();
           final lastDose = taskData != null && taskData.isNotEmpty
               ? taskData.last.additionalFields?.fields
@@ -156,8 +157,9 @@ class _BeneficiaryDetailsPageState
                                               DeliverInterventionEvent
                                                   .selectFutureCycleDose(
                                                 deliverState.dose,
-                                                projectState
-                                                    .projectType!.cycles!
+                                                RegistrationDeliverySingleton()
+                                                    .projectType!
+                                                    .cycles!
                                                     .firstWhere((c) =>
                                                         c.id ==
                                                         deliverState.cycle),
@@ -398,7 +400,7 @@ class _BeneficiaryDetailsPageState
                                                       .isNotEmpty
                                                   ? RecordDeliveryCycle(
                                                       projectCycles:
-                                                          projectState
+                                                          RegistrationDeliverySingleton()
                                                                   .projectType
                                                                   ?.cycles ??
                                                               [],

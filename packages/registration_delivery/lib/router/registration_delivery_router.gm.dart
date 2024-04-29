@@ -9,14 +9,14 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i20;
-import 'package:digit_data_model/data_model.dart' as _i26;
+import 'package:digit_data_model/data_model.dart' as _i25;
 import 'package:flutter/material.dart' as _i21;
 import 'package:registration_delivery/blocs/app_localization.dart' as _i22;
 import 'package:registration_delivery/blocs/beneficiary_registration/beneficiary_registration.dart'
     as _i23;
 import 'package:registration_delivery/blocs/search_households/search_households.dart'
     as _i24;
-import 'package:registration_delivery/models/entities/task.dart' as _i25;
+import 'package:registration_delivery/models/entities/task.dart' as _i26;
 import 'package:registration_delivery/pages/acknowledgement.dart' as _i1;
 import 'package:registration_delivery/pages/beneficiary/beneficiary_details.dart'
     as _i3;
@@ -594,7 +594,7 @@ class FacilitySelectionRoute
     extends _i20.PageRouteInfo<FacilitySelectionRouteArgs> {
   FacilitySelectionRoute({
     _i21.Key? key,
-    required List<void> facilities,
+    required List<_i25.FacilityModel> facilities,
     List<_i20.PageRouteInfo>? children,
   }) : super(
           FacilitySelectionRoute.name,
@@ -619,7 +619,7 @@ class FacilitySelectionRouteArgs {
 
   final _i21.Key? key;
 
-  final List<void> facilities;
+  final List<_i25.FacilityModel> facilities;
 
   @override
   String toString() {
@@ -883,7 +883,7 @@ class RecordPastDeliveryDetailsRoute
   RecordPastDeliveryDetailsRoute({
     _i21.Key? key,
     _i22.RegistrationDeliveryLocalization? appLocalizations,
-    List<_i25.TaskModel>? tasks,
+    List<_i26.TaskModel>? tasks,
     List<_i20.PageRouteInfo>? children,
   }) : super(
           RecordPastDeliveryDetailsRoute.name,
@@ -912,7 +912,7 @@ class RecordPastDeliveryDetailsRouteArgs {
 
   final _i22.RegistrationDeliveryLocalization? appLocalizations;
 
-  final List<_i25.TaskModel>? tasks;
+  final List<_i26.TaskModel>? tasks;
 
   @override
   String toString() {
@@ -1014,7 +1014,7 @@ class SideEffectsRoute extends _i20.PageRouteInfo<SideEffectsRouteArgs> {
   SideEffectsRoute({
     _i21.Key? key,
     _i22.RegistrationDeliveryLocalization? appLocalizations,
-    required List<_i26.TaskModel> tasks,
+    required List<_i25.TaskModel> tasks,
     bool isEditing = false,
     List<_i20.PageRouteInfo>? children,
   }) : super(
@@ -1046,7 +1046,7 @@ class SideEffectsRouteArgs {
 
   final _i22.RegistrationDeliveryLocalization? appLocalizations;
 
-  final List<_i26.TaskModel> tasks;
+  final List<_i25.TaskModel> tasks;
 
   final bool isEditing;
 

@@ -80,6 +80,21 @@ extension ContextUtilityExtensions on BuildContext {
     }
   }
 
+  BeneficiaryType get beneficiaryType {
+    final projectBloc = _get<ProjectBloc>();
+
+    final projectState = projectBloc.state;
+
+    final BeneficiaryType? selectedBeneficiary =
+        projectState.selectedProject?.targets?.firstOrNull?.beneficiaryType;
+
+    if (selectedBeneficiary == null) {
+      throw AppException('No beneficiary type is selected');
+    }
+
+    return selectedBeneficiary;
+  }
+
   BoundaryModel get boundary {
     final boundaryBloc = _get<BoundaryBloc>();
     final boundaryState = boundaryBloc.state;

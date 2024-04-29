@@ -10,6 +10,14 @@ import 'data_model.dart';
 export 'data/data_repository.dart';
 export 'data/repositories/local/address.dart';
 export 'data/repositories/local/boundary.dart';
+export 'data/repositories/local/service.dart';
+export 'data/repositories/local/service_definition.dart';
+export 'data/repositories/local/project.dart';
+
+export 'data/repositories/remote/service.dart';
+export 'data/repositories/remote/service_definition.dart';
+export 'data/repositories/remote/project.dart';
+
 export 'data/local_store/no_sql/schema/oplog.dart' hide AdditionalId;
 export 'data/sql_store/sql_store.dart';
 
@@ -17,6 +25,7 @@ export 'models/oplog/oplog_entry.dart' show OpLogEntry;
 
 export 'package:registration_delivery/models/entities/household.dart';
 export 'package:registration_delivery/models/entities/task.dart';
+export 'package:registration_delivery/models/entities/target.dart';
 export 'package:registration_delivery/models/entities/downsync.dart';
 
 export 'models/entities/address.dart';
@@ -27,6 +36,15 @@ export 'models/entities/gender.dart';
 export 'models/entities/identifier.dart';
 export 'models/entities/individual.dart';
 export 'models/entities/name.dart';
+export 'models/entities/facility.dart';
+export 'models/entities/project_facility.dart';
+export 'models/entities/attributes.dart';
+export 'models/entities/name_model_converter.dart';
+export 'models/entities/service.dart';
+export 'models/entities/service_definition.dart';
+export 'models/entities/service_attributes.dart';
+export 'models/entities/project.dart';
+export 'models/entities/document.dart';
 export 'models/project_type/project_type_model.dart';
 export 'models/pgr_complaints/pgr_address.dart';
 export 'models/pgr_complaints/pgr_complaints.dart';

@@ -21,6 +21,8 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/models/entities/referral.dart';
 import 'package:registration_delivery/models/entities/side_effect.dart';
 import 'package:uuid/uuid.dart';
+import 'package:digit_data_model/data_model.init.dart' as digitDataModel;
+import 'package:registration_delivery/registration_delivery.init.dart' as registrationDelivery;
 
 import '../blocs/app_initialization/app_initialization.dart';
 // import '../blocs/search_households/project_beneficiaries_downsync.dart';
@@ -30,6 +32,7 @@ import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/localization.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../models/data_model.dart';
+import '../models/data_model.init.dart';
 import '../models/entities/additional_fields_type.dart';
 import '../models/entities/status.dart';
 import '../router/app_router.dart';
@@ -700,4 +703,10 @@ getSelectedLanguage(AppInitialized state, int index) {
       state.appConfiguration.languages![index].value == selectedLanguage;
 
   return isSelected;
+}
+
+initializeAllMappers() {
+  initializeMappers();
+  digitDataModel.initializeMappers();
+  registrationDelivery.initializeMappers();
 }

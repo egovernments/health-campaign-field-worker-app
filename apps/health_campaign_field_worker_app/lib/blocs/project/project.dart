@@ -4,6 +4,8 @@ import 'dart:core';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_data_model/models/entities/facility.dart';
+import 'package:digit_data_model/models/entities/project_facility.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -19,16 +21,12 @@ import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/repositories/remote/mdms.dart';
 import '../../models/app_config/app_config_model.dart';
 import '../../models/auth/auth_model.dart';
-import '../../models/entities/facility.dart';
 // import '../../models/entities/hcm_attendance_log_model.dart';
 // import '../../models/entities/hcm_attendance_model.dart';
 import '../../models/entities/product_variant.dart';
-import '../../models/entities/project.dart';
-import '../../models/entities/project_facility.dart';
 import '../../models/entities/project_resource.dart';
 import '../../models/entities/project_staff.dart';
 import '../../models/entities/roles_type.dart';
-import '../../models/entities/service_definition.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/utils.dart';
 

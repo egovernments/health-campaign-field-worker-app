@@ -1,6 +1,5 @@
 library inventory_management;
 
-export 'models/entities/inventory_facility.dart';
 export 'models/entities/product_variant.dart';
 export 'models/entities/project_product_variant.dart';
 export 'models/entities/stock.dart';

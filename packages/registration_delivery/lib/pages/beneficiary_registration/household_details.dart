@@ -221,36 +221,38 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                           ),
                         ),
                         Column(children: [
-                          householdDetailsShowcaseData.dateOfRegistration
-                              .buildWith(
-                            child: DigitDateFormPicker(
-                              isEnabled: false,
-                              formControlName: _dateOfRegistrationKey,
-                              label: localizations.translate(
-                                i18.householdDetails.dateOfRegistrationLabel,
-                              ),
-                              isRequired: false,
-                              confirmText: localizations.translate(
-                                i18.common.coreCommonOk,
-                              ),
-                              cancelText: localizations.translate(
-                                i18.common.coreCommonCancel,
-                              ),
+                          // householdDetailsShowcaseData.dateOfRegistration
+                          //     .buildWith(
+                          //   child:
+                          DigitDateFormPicker(
+                            isEnabled: false,
+                            formControlName: _dateOfRegistrationKey,
+                            label: localizations.translate(
+                              i18.householdDetails.dateOfRegistrationLabel,
+                            ),
+                            isRequired: false,
+                            confirmText: localizations.translate(
+                              i18.common.coreCommonOk,
+                            ),
+                            cancelText: localizations.translate(
+                              i18.common.coreCommonCancel,
                             ),
                           ),
-                          householdDetailsShowcaseData
-                              .numberOfMembersLivingInHousehold
-                              .buildWith(
-                            child: DigitIntegerFormPicker(
-                              minimum: 1,
-                              form: form,
-                              formControlName: _memberCountKey,
-                              label: localizations.translate(
-                                i18.householdDetails.noOfMembersCountLabel,
-                              ),
-                              incrementer: true,
+                          // ),
+                          // householdDetailsShowcaseData
+                          //     .numberOfMembersLivingInHousehold
+                          //     .buildWith(
+                          //   child:
+                          DigitIntegerFormPicker(
+                            minimum: 1,
+                            form: form,
+                            formControlName: _memberCountKey,
+                            label: localizations.translate(
+                              i18.householdDetails.noOfMembersCountLabel,
                             ),
+                            incrementer: true,
                           ),
+                          // ),
                         ]),
                         const SizedBox(height: 16),
                       ],

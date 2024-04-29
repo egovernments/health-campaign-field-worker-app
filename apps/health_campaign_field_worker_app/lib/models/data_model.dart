@@ -27,7 +27,6 @@
 // export 'entities/household_member.dart';
 // export 'entities/identifier.dart';
 // export 'entities/individual.dart';
-// export 'entities/name.dart';
 // export 'entities/product.dart';
 // export 'entities/product_variant.dart';
 // export 'entities/project.dart';
