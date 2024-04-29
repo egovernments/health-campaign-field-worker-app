@@ -26,7 +26,7 @@ class DigitDateUtils {
 
     return DigitDOBAge(
       years: ageInYears >= 0 ? ageInYears : 0,
-      months: ageInMonths,
+      months: ageInYears == 0 && ageInMonths == 0 ? 1 : ageInMonths,
       days: ageInDays,
     );
   }
