@@ -72,7 +72,9 @@ class _StockReconciliationPageState
 
     bool isWareHouseMgr = context.loggedInUserRoles
         .where(
-          (role) => role.code == RolesType.healthFacilitySupervisor.toValue(),
+          (role) =>
+              role.code == RolesType.healthFacilitySupervisor.toValue() ||
+              role.code == RolesType.warehouseManager.toValue(),
         )
         .toList()
         .isNotEmpty;
