@@ -1,8 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:referral_reconciliation/blocs/app_localization.dart';
 import 'package:referral_reconciliation/blocs/referral_recon_record.dart';
 
+import '../../../utils/i18_key_constants.dart' as i18;
 import '../../blocs/referral_recon_service.dart';
 import '../../blocs/referral_recon_service_definition.dart';
 import '../../blocs/referral_reconciliation_listeners.dart';
@@ -26,8 +28,9 @@ class HFCreateReferralWrapperPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (cycles.isEmpty) {
-      return const Center(
-        child: Text('No Cycles exists for the project'),
+      return Center(
+        child: Text(ReferralReconLocalization.of(context)
+            .translate(i18.referralReconciliation.noCyclesFound)),
       );
     } else {
       return ProjectFacilityBlocWrapper(
