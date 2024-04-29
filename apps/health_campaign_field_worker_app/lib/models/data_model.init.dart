@@ -136,6 +136,18 @@ import 'package:inventory_management/models/entities/inventory_facility.dart' as
 import 'package:inventory_management/models/entities/transaction_reason.dart' as p64;
 import 'package:inventory_management/models/entities/transaction_type.dart' as p64;
 import 'package:inventory_management/models/entities/project_product_variant.dart' as p64;
+import 'package:attendance_management/models/attendance_audit.dart' as p65;
+import 'package:attendance_management/models/staff.dart' as p65;
+import 'package:attendance_management/models/attendee.dart' as p65;
+import 'package:attendance_management/models/attendance_log.dart' as p65;
+import 'package:attendance_management/models/attendance_register.dart' as p65;
+import 'package:inventory_management/models/entities/product_variant.dart' as p66;
+import 'package:inventory_management/models/entities/stock_reconciliation.dart' as p66;
+import 'package:inventory_management/models/entities/stock.dart' as p66;
+import 'package:inventory_management/models/entities/inventory_facility.dart' as p66;
+import 'package:inventory_management/models/entities/transaction_reason.dart' as p66;
+import 'package:inventory_management/models/entities/transaction_type.dart' as p66;
+import 'package:inventory_management/models/entities/project_product_variant.dart' as p66;
 import 'package:inventory_management/models/entities/inventory_facility.dart'
     as p52;
 import 'package:inventory_management/models/entities/stock_reconciliation.dart'
@@ -372,4 +384,16 @@ p64.InventoryFacilityModelMapper.ensureInitialized();
 p64.TransactionReasonMapper.ensureInitialized();
 p64.TransactionTypeMapper.ensureInitialized();
 p64.ProjectProductVariantModelMapper.ensureInitialized();
+p65.AttendanceAuditDetailsMapper.ensureInitialized();
+p65.StaffModelMapper.ensureInitialized();
+p65.AttendeeModelMapper.ensureInitialized();
+p65.AttendanceLogModelMapper.ensureInitialized();
+p65.AttendanceRegisterModelMapper.ensureInitialized();
+p66.ProductVariantModelMapper.ensureInitialized();
+p66.StockReconciliationModelMapper.ensureInitialized();
+p66.StockModelMapper.ensureInitialized();
+p66.InventoryFacilityModelMapper.ensureInitialized();
+p66.TransactionReasonMapper.ensureInitialized();
+p66.TransactionTypeMapper.ensureInitialized();
+p66.ProjectProductVariantModelMapper.ensureInitialized();
 }

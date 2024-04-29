@@ -59,10 +59,6 @@ class _SearchBeneficiaryPageState
       }
     });
 
-    setState(() {
-      offset = 0;
-      limit = 10;
-    });
     super.initState();
   }
 
@@ -99,12 +95,10 @@ class _SearchBeneficiaryPageState
                       longititude: long,
                       projectId: context.projectId,
                       maxRadius: appConfig.maxRadius!,
-                      offset: offset + limit,
-                      limit: limit,
+                      offset:
+                          blocWrapper.state.offset + blocWrapper.state.limit,
+                      limit: blocWrapper.state.limit,
                     ));
-                    setState(() {
-                      offset = (offset + limit);
-                    });
                   } else if (metrics.atEdge &&
                       searchController.text != '' &&
                       metrics.pixels != 0) {
@@ -113,12 +107,10 @@ class _SearchBeneficiaryPageState
                       searchText: searchController.text,
                       projectId: context.projectId,
                       isProximityEnabled: isProximityEnabled,
-                      offset: offset + limit,
-                      limit: limit,
+                      offset:
+                          blocWrapper.state.offset + blocWrapper.state.limit,
+                      limit: blocWrapper.state.limit,
                     ));
-                    setState(() {
-                      offset = (offset + limit);
-                    });
                   }
                 }
                 // Return true to allow the notification to continue to be dispatched to further ancestors.
@@ -184,15 +176,12 @@ class _SearchBeneficiaryPageState
                                                 locationState.longitude!,
                                             projectId: context.projectId,
                                             maxRadius: appConfig.maxRadius!,
-                                            offset: offset,
-                                            limit: limit,
+                                            offset: blocWrapper.state.offset +
+                                                blocWrapper.state.limit,
+                                            limit: blocWrapper.state.limit,
                                           ),
                                         );
                                       } else {
-                                        setState(() {
-                                          offset = 0;
-                                          limit = limit;
-                                        });
                                         blocWrapper.searchHouseholdsBloc.add(
                                           const SearchHouseholdsClearEvent(),
                                         );
@@ -226,8 +215,6 @@ class _SearchBeneficiaryPageState
                                                   lat = locationState.latitude!;
                                                   long =
                                                       locationState.longitude!;
-                                                  offset = 0;
-                                                  limit = 10;
                                                 });
 
                                                 if (locationState
@@ -253,8 +240,9 @@ class _SearchBeneficiaryPageState
                                                           context.projectId,
                                                       maxRadius:
                                                           appConfig.maxRadius!,
-                                                      offset: offset,
-                                                      limit: limit,
+                                                      offset: 0,
+                                                      limit: blocWrapper
+                                                          .state.limit,
                                                     ),
                                                   );
                                                 } else {

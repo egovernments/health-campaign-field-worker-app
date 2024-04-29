@@ -166,6 +166,8 @@ class ProximitySearchBloc extends SearchHouseholdsBloc {
     emit(state.copyWith(
       householdMembers: containers,
       loading: false,
+      offset: event.offset + event.limit,
+      limit: event.limit,
     ));
   }
 }

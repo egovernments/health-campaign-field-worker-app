@@ -731,13 +731,6 @@ class _HouseholdOverviewPageState
                                         if (address == null) return;
 
                                         final projectId = context.projectId;
-
-                                        // context.read<ScannerBloc>().add(
-                                        //       const ScannerEvent.handleScanner(
-                                        //         [],
-                                        //         [],
-                                        //       ),
-                                        //     );
                                         await context.router.push(
                                           BeneficiaryRegistrationWrapperRoute(
                                             initialState:
