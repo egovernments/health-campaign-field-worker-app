@@ -133,6 +133,35 @@ class _IndividualDetailsPageState
                                     oldIndividual: null,
                                   );
 
+                                  final locationBloc =
+                                      context.read<LocationBloc>();
+                                  final locationInitialState =
+                                      locationBloc.state;
+                                  final initialLat =
+                                      locationInitialState.latitude;
+                                  final initialLng =
+                                      locationInitialState.longitude;
+                                  final initialAccuracy =
+                                      locationInitialState.accuracy;
+                                  if (addressModel != null &&
+                                      (addressModel.latitude == null ||
+                                          addressModel.longitude == null ||
+                                          addressModel.locationAccuracy ==
+                                              null)) {
+                                    bloc.add(
+                                      BeneficiaryRegistrationSaveAddressEvent(
+                                        addressModel.copyWith(
+                                          latitude: initialLat ??
+                                              addressModel.locationAccuracy,
+                                          longitude: initialLng ??
+                                              addressModel.locationAccuracy,
+                                          locationAccuracy: initialAccuracy ??
+                                              addressModel.locationAccuracy,
+                                        ),
+                                      ),
+                                    );
+                                  }
+
                                   final boundary = context.boundary;
 
                                   bloc.add(
