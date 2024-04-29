@@ -71,7 +71,9 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
         .isNotEmpty;
     bool isWareHouseMgr = context.loggedInUserRoles
         .where(
-          (role) => role.code == RolesType.healthFacilitySupervisor.toValue(),
+          (role) =>
+              role.code == RolesType.healthFacilitySupervisor.toValue() ||
+              role.code == RolesType.warehouseManager.toValue(),
         )
         .toList()
         .isNotEmpty;
