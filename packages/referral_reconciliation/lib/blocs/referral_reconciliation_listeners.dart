@@ -112,31 +112,34 @@ class ReferralReconSingleton {
     return await _referralReconListener?.fetchAllServiceDefinitions();
   }
 
-  // Saves the stock details.
+  // Saves the service request details.
   Future<bool?> saveServiceRequestDetails(
       SaveServiceRequest saveServiceRequest) async {
     return await _referralReconListener
         ?.saveServiceRequestDetails(saveServiceRequest);
   }
 
+  //Searches for the recorded service requests for the given referral
   Future<ReferralReconServiceModel?> getSavedChecklist(
       ReferralReconServiceSearchModel reconServiceSearchModel) async {
     return await _referralReconListener
         ?.fetchSavedChecklist(reconServiceSearchModel);
   }
 
-  // Saves the stock details.
+  // Saves the referral reconciliation details.
   Future<bool?> saveReferralReconDetails(
       ReferralReconciliation saveReferralReconciliation) async {
     return await _referralReconListener
         ?.saveReferralReconDetails(saveReferralReconciliation);
   }
 
+  // Calls the main sync method on Go to Home
   void callSync() {
     _referralReconListener?.callSyncMethod();
   }
 }
 
+// Class to store the service request recorded data
 class SaveServiceRequest {
   final ReferralReconServiceModel serviceModel;
   final Map<String, Object>? additionalData;
@@ -147,6 +150,7 @@ class SaveServiceRequest {
   });
 }
 
+//Class to store the referral details
 class ReferralReconciliation {
   final HFReferralModel hfReferralModel;
   final Map<String, Object> additionalData;
@@ -157,6 +161,7 @@ class ReferralReconciliation {
   });
 }
 
+// Class to store the search referral reconciliation parameters
 class SearchReferralReconciliationClass {
   final String? tag;
   final String? name;
@@ -167,6 +172,7 @@ class SearchReferralReconciliationClass {
   });
 }
 
+// Class to store the valid max and min age for a campaign
 class ValidIndividualAgeForCampaign {
   final int validMinAge;
   final int validMaxAge;

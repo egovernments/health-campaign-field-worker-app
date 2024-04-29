@@ -8,22 +8,26 @@ import '../models/entities/referral_recon_service_definition.dart';
 
 part 'referral_recon_service_definition.freezed.dart';
 
+// Define a typedef for the emitter function used to emit state changes.
 typedef ReferralReconServiceDefinitionEmitter
     = Emitter<ReferralReconServiceDefinitionState>;
 
+// Define the Bloc responsible for managing ReferralReconServiceDefinition events and states.
 class ReferralReconServiceDefinitionBloc extends Bloc<
     ReferralReconServiceDefinitionEvent, ReferralReconServiceDefinitionState> {
+  // Constructor initializes the Bloc with an initial state and sets up event handlers.
   ReferralReconServiceDefinitionBloc(
     super.initialState,
   ) {
     on(_handleFetch);
     on(_handleSelect);
   }
-
+  // Event handler for fetching service definitions.
   FutureOr<void> _handleFetch(
     ReferralReconServiceDefinitionFetchEvent event,
     ReferralReconServiceDefinitionEmitter emit,
   ) async {
+    // Logic for fetching all service definitions and updating state with the results.
     List<ReferralReconServiceDefinitionModel>? results =
         await ReferralReconSingleton().getServiceDefinitionsList();
 
@@ -32,10 +36,13 @@ class ReferralReconServiceDefinitionBloc extends Bloc<
     ));
   }
 
+  // Event handler for selecting a service definition.
   FutureOr<void> _handleSelect(
     ReferralReconServiceDefinitionSelectionEvent event,
     ReferralReconServiceDefinitionEmitter emit,
   ) async {
+    // Logic for selecting a service definition and updating state accordingly.
+
     List<ReferralReconServiceDefinitionModel>? results =
         await ReferralReconSingleton()
             .getServiceDefinitions(event.serviceDefinitionCode);
@@ -46,6 +53,8 @@ class ReferralReconServiceDefinitionBloc extends Bloc<
   }
 }
 
+// Define freezed classes for the ReferralReconServiceDefinition events.
+
 @freezed
 class ReferralReconServiceDefinitionEvent
     with _$ReferralReconServiceDefinitionEvent {
@@ -55,6 +64,8 @@ class ReferralReconServiceDefinitionEvent
     required String serviceDefinitionCode,
   }) = ReferralReconServiceDefinitionSelectionEvent;
 }
+
+// Define freezed classes for the ReferralReconServiceDefinition states.
 
 @freezed
 class ReferralReconServiceDefinitionState
