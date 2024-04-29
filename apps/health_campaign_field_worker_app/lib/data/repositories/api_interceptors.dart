@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:digit_components/digit_components.dart';
 import 'package:dio/dio.dart';
@@ -36,7 +37,17 @@ class AuthTokenInterceptor extends Interceptor {
           userInfo: userInfo,
         ).toJson(),
       };
+      options.headers = {
+        'Accept': 'application/gzip, application/json',
+        'Accept-encoding': 'gzip'
+      };
     }
+    print('options:  ');
+    print(options);
+    print('options.headers:  ');
+    print(options.headers);
+    print('options.contentType: ');
+    print(options.contentType);
     super.onRequest(options, handler);
   }
 }
@@ -63,15 +74,30 @@ class ApiLoggerInterceptor extends Interceptor {
     if (response.requestOptions.path.contains('boundarys')) return;
 
     try {
-      AppLogger.instance.info(
-        _getIndentedJson(json.encode(response.data)),
-        title:
-            '[RESPONSE - ${response.statusCode}] ${response.requestOptions.uri.toString()}',
-      );
+      // Check if the response is compressed
+      if (response.headers[HttpHeaders.contentEncodingHeader]
+              ?.contains('gzip') ??
+          false) {
+        // Decompress the data using GZIP decoder
+        final decodedData = GZipCodec().decode(response.data);
+        // Log the decompressed data
+        AppLogger.instance.info(
+          _getIndentedJson(json.encode(decodedData)),
+          title:
+              '[DECOMPRESSED RESPONSE - ${response.statusCode}] ${response.requestOptions.uri.toString()}',
+        );
+      } else {
+        // If not compressed, log the response data as is
+        AppLogger.instance.info(
+          _getIndentedJson(json.encode(response.data)),
+          title:
+              '[RESPONSE - ${response.statusCode}] ${response.requestOptions.uri.toString()}',
+        );
+      }
     } catch (error) {
       AppLogger.instance.info(
-        // ignore: avoid_dynamic_calls
-        '${response.data.runtimeType} ${response.statusCode.toString()}',
+        // Log the error if any occurs during decompression or encoding
+        '$error ${response.statusCode.toString()}',
         title: '[RESPONSE (error)] ${response.requestOptions.path}',
       );
     }
