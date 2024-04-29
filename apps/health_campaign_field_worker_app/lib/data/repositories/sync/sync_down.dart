@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:attendance_management/attendance_management.dart';
 import 'package:collection/collection.dart';
 import 'package:inventory_management/models/entities/stock.dart';
 import 'package:inventory_management/models/entities/stock_reconciliation.dart';
@@ -506,13 +507,15 @@ class PerformSyncDown {
 
           case DataModelType.attendance:
             responseEntities = await remote.search(HCMAttendanceLogSearchModel(
-              clientReferenceId: entities
-                  .whereType<HCMAttendanceLogModel>()
-                  .map((e) => e.attendance?.clientReferenceId!)
-                  .whereNotNull()
-                  .toList(),
+              attendanceSearchModel: AttendanceLogSearchModel(
+                clientReferenceId: entities
+                    .whereType<HCMAttendanceLogModel>()
+                    .map((e) => e.attendance?.clientReferenceId!)
+                    .whereNotNull()
+                    .toList(),
+                tenantId: envConfig.variables.tenantId,
+              ),
               isDeleted: true,
-              tenantId: envConfig.variables.tenantId,
             ));
 
             for (var element in operationGroupedEntity.value) {

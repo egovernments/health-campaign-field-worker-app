@@ -35,19 +35,25 @@ class AttendanceLocalRepository extends LocalRepository<
       ),
     ]);
 
+    if (query.attendanceRegisterSearchModel.limit != null &&
+        query.attendanceRegisterSearchModel.offSet != null) {
+      selectQuery.limit(query.attendanceRegisterSearchModel.limit!,
+          offset: query.attendanceRegisterSearchModel.offSet);
+    }
+
     final results = await (selectQuery
           ..where(buildAnd([
-            if (query.id != null)
+            if (query.attendanceRegisterSearchModel.id != null)
               sql.attendanceRegister.id.equals(
-                query.id!,
+                query.attendanceRegisterSearchModel.id!,
               ),
-            if (query.staffId != null)
+            if (query.attendanceRegisterSearchModel.staffId != null)
               sql.attendanceRegister.id.equalsExp(
                 sql.staff.registerId,
               ),
-            if (query.referenceId != null)
+            if (query.attendanceRegisterSearchModel.referenceId != null)
               sql.attendanceRegister.referenceId.equals(
-                query.referenceId!,
+                query.attendanceRegisterSearchModel.referenceId!,
               ),
           ])))
         .get();

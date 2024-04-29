@@ -228,10 +228,11 @@ packages:
   digit_components:
     dependency: "direct main"
     description:
-      path: "../digit_components"
-      relative: true
-    source: path
-    version: "0.0.1+8"
+      name: digit_components
+      sha256: "25b30da927d5be9d96ca0df1c0fb4dc99092dee6f2c98aec2ef457e7c907e431"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.2+1"
   easy_stepper:
     dependency: transitive
     description:

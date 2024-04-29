@@ -1,3 +1,4 @@
+import 'package:inventory_management/models/entities/stock.dart';
 import 'package:isar/isar.dart';
 
 import '../../../../models/data_model.dart';
