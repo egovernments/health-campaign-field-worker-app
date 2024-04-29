@@ -4,14 +4,12 @@ import 'package:attendance_management/pages/session_select.dart';
 import 'package:attendance_management/widgets/attendance_acknowledgement.dart';
 import 'package:attendance_management/widgets/circular_button.dart';
 import 'package:digit_components/digit_components.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:health_campaign_field_worker_app/main.dart' as app;
 import 'package:health_campaign_field_worker_app/models/entities/boundary.dart';
 import 'package:health_campaign_field_worker_app/pages/boundary_selection.dart';
 import 'package:health_campaign_field_worker_app/pages/home.dart';
 import 'package:health_campaign_field_worker_app/pages/login.dart';
-import 'package:health_campaign_field_worker_app/widgets/home/home_item_card.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:hrk_flutter_test_batteries/hrk_flutter_test_batteries.dart';
 import './test_variables.dart';
@@ -19,10 +17,8 @@ import './test_variables.dart';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  final _username = find.byKey(const Key('username'));
-  final _password = find.byKey(const Key('password'));
-
   final testVariables = getTestData();
+  final widgetSelector = getWidgets();
 
   testWidgets('Get to the manage Attendance Page', (widgetTester) async {
     disableOverflowError();
@@ -33,7 +29,7 @@ void main() {
     ); //wait for the app to load languages
 
     await widgetTester
-        .tap(find.widgetWithText(DigitElevatedButton, 'Continue'));
+        .tap(widgetSelector['continue']!); //tap on the continue button
 
     await widgetTester.pumpAndSettle(
       const Duration(milliseconds: 500),
@@ -45,16 +41,15 @@ void main() {
     ); //check if the login page is loaded
 
     await widgetTester.enterText(
-      _username,
+      widgetSelector['username']!,
       testVariables['username'],
     ); //enter the username to test
     await widgetTester.enterText(
-      _password,
+      widgetSelector['password']!,
       testVariables['password'],
     ); //enter the password to test
 
-    await widgetTester
-        .tap(find.byKey(const Key('login'))); //tap on the login button
+    await widgetTester.tap(widgetSelector['login']!); //tap on the login button
     await widgetTester.pumpAndSettle(const Duration(seconds: 5));
 
     expect(
@@ -81,18 +76,16 @@ void main() {
     }
 
     //submit
-    await widgetTester.tap(find.widgetWithText(
-      DigitElevatedButton,
-      'Submit',
-    ));
+    await widgetTester.tap(widgetSelector['submit']!);
 
     //go to home page after boundary selection
     await widgetTester.pumpAndSettle(const Duration(seconds: 1));
     expect(find.byType(HomePage), findsOneWidget);
 
     //tap on manage attendance
-    await widgetTester
-        .tap(find.widgetWithText(HomeItemCard, 'Manage Attendance'));
+    await widgetTester.tap(
+      widgetSelector['manageAttendance']!,
+    ); //tap on the manage attendance
 
     await widgetTester.pumpAndSettle(const Duration(seconds: 1));
 
@@ -103,14 +96,14 @@ void main() {
       reason: 'Manage Attendance Page not found',
     );
 
-    expect(find.text('Open Register'), findsAtLeast(1));
+    expect(find.byType(DigitElevatedButton), findsAtLeast(1));
 
     await widgetTester.scrollUntilVisible(
-      find.text('Open Register').at(3),
+      widgetSelector['openRegister']!,
       1,
     );
     await widgetTester.pumpAndSettle(const Duration(seconds: 3));
-    await widgetTester.tap(find.text('Open Register').at(3));
+    await widgetTester.tap(widgetSelector['openRegister']!);
 
     await widgetTester.pumpAndSettle(
       const Duration(seconds: 1),
@@ -137,7 +130,8 @@ void main() {
 
     await widgetTester.pumpAndSettle(const Duration(milliseconds: 500));
     // // tap on the submit
-    await widgetTester.tap(find.text('Mark Attendance'));
+    await widgetTester
+        .tap(widgetSelector['markAttendance']!); //tap on the mark attendance
 
     await widgetTester.pumpAndSettle(const Duration(seconds: 2));
 
@@ -176,6 +170,9 @@ void main() {
     await widgetTester.tap(find.text('Evening session'));
     await widgetTester.pumpAndSettle(const Duration(seconds: 1));
     await widgetTester.tap(find.text('Mark Attendance'));
+    await widgetTester.pumpAndSettle(const Duration(seconds: 2));
+
+    expect(find.text('Present'), findsOneWidget);
     await widgetTester.pumpAndSettle(const Duration(seconds: 2));
 
     //try to use the input field

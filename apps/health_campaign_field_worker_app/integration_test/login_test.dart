@@ -8,11 +8,13 @@ import 'package:health_campaign_field_worker_app/pages/project_selection.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:health_campaign_field_worker_app/main.dart' as app;
 
+import 'test_variables.dart';
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  final _username = find.byKey(const Key('username'));
-  final _password = find.byKey(const Key('password'));
+  final testVariables = getTestData();
+  final widgetSelector = getWidgets();
 
   group('Login Tests', () {
     Future<void> init(WidgetTester tester) async {
@@ -36,8 +38,8 @@ void main() {
         findsOneWidget,
       ); //check if the login page is loaded
 
-      await tester.enterText(_username, 'testusername');
-      await tester.enterText(_password, '');
+      await tester.enterText(widgetSelector['username']!, 'testusername');
+      await tester.enterText(widgetSelector['password']!, '');
 
       await tester.tap(find.byKey(const Key('login')));
       await tester.pumpAndSettle(const Duration(seconds: 5));
@@ -63,8 +65,8 @@ void main() {
       expect(find.byType(LoginPage),
           findsOneWidget); //check if the login page is loaded
 
-      await tester.enterText(_username, '');
-      await tester.enterText(_password, 'testpassword');
+      await tester.enterText(widgetSelector['username']!, '');
+      await tester.enterText(widgetSelector['password']!, 'testpassword');
 
       await tester.tap(find.byKey(const Key('login')));
       await tester.pumpAndSettle(const Duration(seconds: 5));
@@ -89,10 +91,12 @@ void main() {
       expect(find.byType(LoginPage),
           findsOneWidget); //check if the login page is loaded
 
+      await tester.enterText(widgetSelector['username']!,
+          'wrong-user'); //enter the username to test
       await tester.enterText(
-          _username, 'wrong-user'); //enter the username to test
-      await tester.enterText(
-          _password, 'eGov@1234'); //enter the password to test
+        widgetSelector['password']!,
+        testVariables['password'],
+      ); //enter the password to test
 
       await tester
           .tap(find.byKey(const Key('login'))); //tap on the login button
@@ -115,9 +119,10 @@ void main() {
       expect(find.byType(LoginPage),
           findsOneWidget); //check if the login page is loaded
 
-      await tester.enterText(_username, 'D-5550'); //enter the username to test
-      await tester.enterText(
-          _password, 'wrong-password'); //enter the password to test
+      await tester.enterText(widgetSelector['username']!,
+          testVariables['username']); //enter the username to test
+      await tester.enterText(widgetSelector['password']!,
+          'wrong-password'); //enter the password to test
 
       await tester
           .tap(find.byKey(const Key('login'))); //tap on the login button
@@ -141,10 +146,10 @@ void main() {
           findsOneWidget); //check if the login page is loaded
 
       // Enter SQL Injection payload into the username and password fields
-      await tester.enterText(
-          _username, "' OR '1'='1'; --"); //enter the username to test
-      await tester.enterText(
-          _password, "' OR '1'='1'; --"); //enter the password to test
+      await tester.enterText(widgetSelector['username']!,
+          "' OR '1'='1'; --"); //enter the username to test
+      await tester.enterText(widgetSelector['password']!,
+          "' OR '1'='1'; --"); //enter the password to test
 
       await tester
           .tap(find.byKey(const Key('login'))); //tap on the login button
@@ -168,9 +173,14 @@ void main() {
       expect(find.byType(LoginPage),
           findsOneWidget); //check if the login page is loaded
 
-      await tester.enterText(_username, 'ATTD17'); //enter the username to test
       await tester.enterText(
-          _password, 'eGov@1234'); //enter the password to test
+        widgetSelector['username']!,
+        testVariables['username'],
+      ); //enter the username to test
+      await tester.enterText(
+        widgetSelector['password']!,
+        testVariables['password'],
+      ); //enter the password to test
 
       await tester
           .tap(find.byKey(const Key('login'))); //tap on the login button
