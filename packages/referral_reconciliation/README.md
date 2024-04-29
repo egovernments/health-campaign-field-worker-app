@@ -1,13 +1,27 @@
 # Referral Reconciliation Package
 
-This enables the user to manage the stocks of the health campaign. The user can record the stocks received, issued, returned, damaged and lost. The user can also reconcile the stock data with the parent application and view the reports of the stocks.
+This enables the user to track referrals made by on field health workers to different Health Facilities digitally via the Digit HCM app capturing all the cases of
+
+Beneficiary being referred
+
+Referral details of the Beneficiary
+
+Reason for Referrals and its diagnosis
+
+Based on the diagnosis chosen further details if applicable 
 
 ## Features
 
 - Beneficiary Referral: This module will enable the health facility supervisors to track referrals made by on-field health workers to different health facilities digitally.
-  ![manage_stocks](https://github.com/egovernments/health-campaign-field-worker-app/assets/154230258/884566db-51c1-4712-b09c-cda508adb401)
-  ![warehouse_details](https://github.com/egovernments/health-campaign-field-worker-app/assets/154230258/48b272b5-45f5-401c-b775-2fa5ded07602)
-  ![record_stock](https://github.com/egovernments/health-campaign-field-worker-app/assets/154230258/9202691e-550c-4a6c-9c3f-56c95a2f3479)
+ <img width="322" alt="Screenshot 2023-11-16 at 5 05 13 PM" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/94eb0e4d-91dd-4ed3-a6ba-58cd8f642a9c">
+ <img width="311" alt="Screenshot 2023-11-16 at 5 12 14 PM" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/9b13522c-35f2-42b8-b7f9-fcdd77f18789">
+ <img width="316" alt="Screenshot 2023-11-16 at 5 12 37 PM" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/2502b94b-470d-4b71-aa24-c21e70ac1a59">
+<img width="364" alt="Screenshot 2023-11-17 at 10 40 58 AM" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/17ac8b75-7f62-4c06-b79a-2aa82c207e05">
+
+<img width="252" alt="Screenshot 2023-11-17 at 2 21 40 PM" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/fdaf32e7-4eb4-4677-805d-7255c658b10b">
+
+<img width="254" alt="Screenshot 2023-11-17 at 2 36 33 PM" src="https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/8eea8202-abff-422e-ac65-2684a016710a">
+
 
 ## Getting Started
 
@@ -18,10 +32,6 @@ dependencies:
   referral_reconciliation: ^0.0.1
 ```
 
-Here is how referral reconciliation package interacts with parent app
-
-![inventory_management](https://github.com/egovernments/health-campaign-field-worker-app/assets/154230258/e22ba6a1-bb73-4ec2-b93d-8aada56590e8)
-
 New files or changes needed in HCM App:
 
 1. Create model classes which import referral reconciliation models and add companion class
@@ -31,6 +41,7 @@ New files or changes needed in HCM App:
 
 Below are the sequence diagrams on each feature on how it interacts with HCM App:
 
-![record_stock_inventory](https://github.com/egovernments/health-campaign-field-worker-app/assets/154230258/f60a1106-f077-400f-b234-bc7634daf4dc)
+![referral_reconciliation sequence diagram](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/c095d55c-6752-4c24-a121-47511c226fd8)
+
 
 
