@@ -148,7 +148,7 @@ class _SearchReferralReconciliationsPageState
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 16),
+                              const SizedBox(height: kPadding * 2),
                               if (searchState.resultsNotFound)
                                 DigitInfoCard(
                                   description: localizations.translate(

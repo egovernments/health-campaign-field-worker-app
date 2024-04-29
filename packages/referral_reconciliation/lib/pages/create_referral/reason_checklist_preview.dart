@@ -39,14 +39,14 @@ class _ReferralReasonChecklistPreviewPageState
           builder: (context, state) {
             return state.maybeWhen(
               orElse: () => const Offstage(),
-              serviceSearch: (value1, value2, value3) {
-                return value2 != null
+              serviceSearch: (serviceList, selectedService, loading) {
+                return selectedService != null
                     ? DigitCard(
                         child: DigitElevatedButton(
                           onPressed: () {
                             context.read<ReferralReconServiceBloc>().add(
                                   ReferralReconServiceResetEvent(
-                                      serviceList: value1),
+                                      serviceList: serviceList),
                                 );
                           },
                           child: Text(

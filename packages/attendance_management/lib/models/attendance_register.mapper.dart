@@ -162,6 +162,200 @@ class _RegisterAuditDetailsCopyWithImpl<$R, $Out>
           _RegisterAuditDetailsCopyWithImpl($value, $cast, t);
 }
 
+class AttendanceRegisterSearchModelMapper
+    extends ClassMapperBase<AttendanceRegisterSearchModel> {
+  AttendanceRegisterSearchModelMapper._();
+
+  static AttendanceRegisterSearchModelMapper? _instance;
+  static AttendanceRegisterSearchModelMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals
+          .use(_instance = AttendanceRegisterSearchModelMapper._());
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'AttendanceRegisterSearchModel';
+
+  static String? _$id(AttendanceRegisterSearchModel v) => v.id;
+  static const Field<AttendanceRegisterSearchModel, String> _f$id =
+      Field('id', _$id, opt: true);
+  static String? _$staffId(AttendanceRegisterSearchModel v) => v.staffId;
+  static const Field<AttendanceRegisterSearchModel, String> _f$staffId =
+      Field('staffId', _$staffId, opt: true);
+  static String? _$registerNumber(AttendanceRegisterSearchModel v) =>
+      v.registerNumber;
+  static const Field<AttendanceRegisterSearchModel, String> _f$registerNumber =
+      Field('registerNumber', _$registerNumber, opt: true);
+  static String? _$status(AttendanceRegisterSearchModel v) => v.status;
+  static const Field<AttendanceRegisterSearchModel, String> _f$status =
+      Field('status', _$status, opt: true);
+  static String? _$serviceCode(AttendanceRegisterSearchModel v) =>
+      v.serviceCode;
+  static const Field<AttendanceRegisterSearchModel, String> _f$serviceCode =
+      Field('serviceCode', _$serviceCode, opt: true);
+  static String? _$referenceId(AttendanceRegisterSearchModel v) =>
+      v.referenceId;
+  static const Field<AttendanceRegisterSearchModel, String> _f$referenceId =
+      Field('referenceId', _$referenceId, opt: true);
+  static int? _$offSet(AttendanceRegisterSearchModel v) => v.offSet;
+  static const Field<AttendanceRegisterSearchModel, int> _f$offSet =
+      Field('offSet', _$offSet, opt: true);
+  static int? _$limit(AttendanceRegisterSearchModel v) => v.limit;
+  static const Field<AttendanceRegisterSearchModel, int> _f$limit =
+      Field('limit', _$limit, opt: true);
+
+  @override
+  final MappableFields<AttendanceRegisterSearchModel> fields = const {
+    #id: _f$id,
+    #staffId: _f$staffId,
+    #registerNumber: _f$registerNumber,
+    #status: _f$status,
+    #serviceCode: _f$serviceCode,
+    #referenceId: _f$referenceId,
+    #offSet: _f$offSet,
+    #limit: _f$limit,
+  };
+  @override
+  final bool ignoreNull = true;
+
+  static AttendanceRegisterSearchModel _instantiate(DecodingData data) {
+    return AttendanceRegisterSearchModel(
+        id: data.dec(_f$id),
+        staffId: data.dec(_f$staffId),
+        registerNumber: data.dec(_f$registerNumber),
+        status: data.dec(_f$status),
+        serviceCode: data.dec(_f$serviceCode),
+        referenceId: data.dec(_f$referenceId),
+        offSet: data.dec(_f$offSet),
+        limit: data.dec(_f$limit));
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static AttendanceRegisterSearchModel fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<AttendanceRegisterSearchModel>(map);
+  }
+
+  static AttendanceRegisterSearchModel fromJson(String json) {
+    return ensureInitialized().decodeJson<AttendanceRegisterSearchModel>(json);
+  }
+}
+
+mixin AttendanceRegisterSearchModelMappable {
+  String toJson() {
+    return AttendanceRegisterSearchModelMapper.ensureInitialized()
+        .encodeJson<AttendanceRegisterSearchModel>(
+            this as AttendanceRegisterSearchModel);
+  }
+
+  Map<String, dynamic> toMap() {
+    return AttendanceRegisterSearchModelMapper.ensureInitialized()
+        .encodeMap<AttendanceRegisterSearchModel>(
+            this as AttendanceRegisterSearchModel);
+  }
+
+  AttendanceRegisterSearchModelCopyWith<AttendanceRegisterSearchModel,
+          AttendanceRegisterSearchModel, AttendanceRegisterSearchModel>
+      get copyWith => _AttendanceRegisterSearchModelCopyWithImpl(
+          this as AttendanceRegisterSearchModel, $identity, $identity);
+  @override
+  String toString() {
+    return AttendanceRegisterSearchModelMapper.ensureInitialized()
+        .stringifyValue(this as AttendanceRegisterSearchModel);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            AttendanceRegisterSearchModelMapper.ensureInitialized()
+                .isValueEqual(this as AttendanceRegisterSearchModel, other));
+  }
+
+  @override
+  int get hashCode {
+    return AttendanceRegisterSearchModelMapper.ensureInitialized()
+        .hashValue(this as AttendanceRegisterSearchModel);
+  }
+}
+
+extension AttendanceRegisterSearchModelValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, AttendanceRegisterSearchModel, $Out> {
+  AttendanceRegisterSearchModelCopyWith<$R, AttendanceRegisterSearchModel, $Out>
+      get $asAttendanceRegisterSearchModel => $base.as(
+          (v, t, t2) => _AttendanceRegisterSearchModelCopyWithImpl(v, t, t2));
+}
+
+abstract class AttendanceRegisterSearchModelCopyWith<
+    $R,
+    $In extends AttendanceRegisterSearchModel,
+    $Out> implements ClassCopyWith<$R, $In, $Out> {
+  $R call(
+      {String? id,
+      String? staffId,
+      String? registerNumber,
+      String? status,
+      String? serviceCode,
+      String? referenceId,
+      int? offSet,
+      int? limit});
+  AttendanceRegisterSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
+      Then<$Out2, $R2> t);
+}
+
+class _AttendanceRegisterSearchModelCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, AttendanceRegisterSearchModel, $Out>
+    implements
+        AttendanceRegisterSearchModelCopyWith<$R, AttendanceRegisterSearchModel,
+            $Out> {
+  _AttendanceRegisterSearchModelCopyWithImpl(
+      super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<AttendanceRegisterSearchModel> $mapper =
+      AttendanceRegisterSearchModelMapper.ensureInitialized();
+  @override
+  $R call(
+          {Object? id = $none,
+          Object? staffId = $none,
+          Object? registerNumber = $none,
+          Object? status = $none,
+          Object? serviceCode = $none,
+          Object? referenceId = $none,
+          Object? offSet = $none,
+          Object? limit = $none}) =>
+      $apply(FieldCopyWithData({
+        if (id != $none) #id: id,
+        if (staffId != $none) #staffId: staffId,
+        if (registerNumber != $none) #registerNumber: registerNumber,
+        if (status != $none) #status: status,
+        if (serviceCode != $none) #serviceCode: serviceCode,
+        if (referenceId != $none) #referenceId: referenceId,
+        if (offSet != $none) #offSet: offSet,
+        if (limit != $none) #limit: limit
+      }));
+  @override
+  AttendanceRegisterSearchModel $make(CopyWithData data) =>
+      AttendanceRegisterSearchModel(
+          id: data.get(#id, or: $value.id),
+          staffId: data.get(#staffId, or: $value.staffId),
+          registerNumber: data.get(#registerNumber, or: $value.registerNumber),
+          status: data.get(#status, or: $value.status),
+          serviceCode: data.get(#serviceCode, or: $value.serviceCode),
+          referenceId: data.get(#referenceId, or: $value.referenceId),
+          offSet: data.get(#offSet, or: $value.offSet),
+          limit: data.get(#limit, or: $value.limit));
+
+  @override
+  AttendanceRegisterSearchModelCopyWith<$R2, AttendanceRegisterSearchModel,
+      $Out2> $chain<$R2, $Out2>(
+          Then<$Out2, $R2> t) =>
+      _AttendanceRegisterSearchModelCopyWithImpl($value, $cast, t);
+}
+
 class AttendanceRegisterModelMapper
     extends ClassMapperBase<AttendanceRegisterModel> {
   AttendanceRegisterModelMapper._();

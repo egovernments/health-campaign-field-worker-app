@@ -75,6 +75,8 @@ class SearchByHeadBloc extends SearchHouseholdsBloc {
         latitude: event.latitude,
         longitude: event.longitude,
         maxRadius: event.maxRadius,
+        offset: event.offset,
+        limit: event.limit,
       ));
     }
     // Extract individual IDs from proximity-based individual results.
@@ -241,6 +243,8 @@ class SearchByHeadBloc extends SearchHouseholdsBloc {
       searchQuery: event.searchText,
       householdMembers: [...state.householdMembers, ...containers],
       loading: false,
+      offset: event.offset + event.limit,
+      limit: event.limit,
     ));
   }
 }

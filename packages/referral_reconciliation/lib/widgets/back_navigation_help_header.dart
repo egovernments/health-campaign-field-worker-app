@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:digit_components/theme/digit_theme.dart';
 import 'package:flutter/material.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
@@ -25,7 +26,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Padding(
-      padding: const EdgeInsets.all(4.0),
+      padding: const EdgeInsets.all(kPadding/2),
       child: Row(
         children: [
           Expanded(
@@ -54,7 +55,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(width: showHelp ? 16 : 0),
+          SizedBox(width: showHelp ? kPadding *2 : 0),
           if (showHelp)
             TextButton(
               style: TextButton.styleFrom(padding: EdgeInsets.zero),

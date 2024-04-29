@@ -33,7 +33,7 @@ class AttendanceRemoteRepository extends RemoteRepository<
           searchPath,
           queryParameters: {
             'tenantId': envConfig.variables.tenantId,
-            ...query.toMap(),
+            ...query.attendanceRegisterSearchModel.toMap(),
           },
           data: {},
         );
@@ -44,7 +44,7 @@ class AttendanceRemoteRepository extends RemoteRepository<
 
     if (responseMap is! Map<String, dynamic>) {
       throw InvalidApiResponseException(
-        data: query.toMap(),
+        data: query.attendanceRegisterSearchModel.toMap(),
         path: searchPath,
         response: responseMap,
       );
@@ -54,7 +54,7 @@ class AttendanceRemoteRepository extends RemoteRepository<
       EntityPlurals.getPluralForEntityName(entityName),
     )) {
       throw InvalidApiResponseException(
-        data: query.toMap(),
+        data: query.attendanceRegisterSearchModel.toMap(),
         path: searchPath,
         response: responseMap,
       );
@@ -65,7 +65,7 @@ class AttendanceRemoteRepository extends RemoteRepository<
 
     if (entityResponse is! List) {
       throw InvalidApiResponseException(
-        data: query.toMap(),
+        data: query.attendanceRegisterSearchModel.toMap(),
         path: searchPath,
         response: responseMap,
       );

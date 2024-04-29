@@ -31,20 +31,23 @@ class AttendanceLogRemoteRepository extends RemoteRepository<
       future: () async {
         return await dio.post(
           searchPath,
-          queryParameters: query.clientReferenceId != null &&
-                  (query.clientReferenceId ?? []).isNotEmpty
-              ? {
-                  'tenantId': envConfig.variables.tenantId,
-                }
-              : {
-                  'tenantId': envConfig.variables.tenantId,
-                  ...query.toMap(),
-                },
-          data: query.clientReferenceId != null &&
-                  (query.clientReferenceId ?? []).isNotEmpty
+          queryParameters:
+              query.attendanceSearchModel!.clientReferenceId != null &&
+                      (query.attendanceSearchModel!.clientReferenceId ?? [])
+                          .isNotEmpty
+                  ? {
+                      'tenantId': envConfig.variables.tenantId,
+                    }
+                  : {
+                      'tenantId': envConfig.variables.tenantId,
+                      ...query.attendanceSearchModel!.toMap(),
+                    },
+          data: query.attendanceSearchModel!.clientReferenceId != null &&
+                  (query.attendanceSearchModel!.clientReferenceId ?? [])
+                      .isNotEmpty
               ? {
                   EntityPlurals.getPluralForEntityName(entityName):
-                      query.toMap(),
+                      query.attendanceSearchModel!.toMap(),
                 }
               : {},
         );
@@ -55,7 +58,7 @@ class AttendanceLogRemoteRepository extends RemoteRepository<
 
     if (responseMap is! Map<String, dynamic>) {
       throw InvalidApiResponseException(
-        data: query.toMap(),
+        data: query.attendanceSearchModel!.toMap(),
         path: searchPath,
         response: responseMap,
       );
@@ -65,7 +68,7 @@ class AttendanceLogRemoteRepository extends RemoteRepository<
       EntityPlurals.getPluralForEntityName(entityName),
     )) {
       throw InvalidApiResponseException(
-        data: query.toMap(),
+        data: query.attendanceSearchModel!.toMap(),
         path: searchPath,
         response: responseMap,
       );
@@ -76,7 +79,7 @@ class AttendanceLogRemoteRepository extends RemoteRepository<
 
     if (entityResponse is! List) {
       throw InvalidApiResponseException(
-        data: query.toMap(),
+        data: query.attendanceSearchModel!.toMap(),
         path: searchPath,
         response: responseMap,
       );
@@ -88,8 +91,9 @@ class AttendanceLogRemoteRepository extends RemoteRepository<
         .map((e) => HCMAttendanceLogModel(
               attendance: AttendanceLogModelMapper.fromMap(e),
               auditDetails: AuditDetailsMapper.fromMap(e['auditDetails']),
-              clientAuditDetails: ClientAuditDetailsMapper.fromMap(e['clientAuditDetails']),
-    ))
+              clientAuditDetails:
+                  ClientAuditDetailsMapper.fromMap(e['clientAuditDetails']),
+            ))
         .toList();
   }
 
@@ -103,7 +107,7 @@ class AttendanceLogRemoteRepository extends RemoteRepository<
       var transformedLog = {
         ...attendanceLog,
         "auditDetails": log["auditDetails"],
-        "clientAuditDetails": log ["clientAuditDetails"],
+        "clientAuditDetails": log["clientAuditDetails"],
       };
       transformedLogs.add(transformedLog);
     }

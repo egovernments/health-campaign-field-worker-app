@@ -1753,6 +1753,8 @@ abstract class SearchHouseholdsClearEvent implements SearchHouseholdsEvent {
 
 /// @nodoc
 mixin _$SearchHouseholdsState {
+  int get offset => throw _privateConstructorUsedError;
+  int get limit => throw _privateConstructorUsedError;
   bool get loading => throw _privateConstructorUsedError;
   String? get searchQuery => throw _privateConstructorUsedError;
   String? get tag => throw _privateConstructorUsedError;
@@ -1771,7 +1773,9 @@ abstract class $SearchHouseholdsStateCopyWith<$Res> {
       _$SearchHouseholdsStateCopyWithImpl<$Res, SearchHouseholdsState>;
   @useResult
   $Res call(
-      {bool loading,
+      {int offset,
+      int limit,
+      bool loading,
       String? searchQuery,
       String? tag,
       List<HouseholdMemberWrapper> householdMembers});
@@ -1791,12 +1795,22 @@ class _$SearchHouseholdsStateCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? offset = null,
+    Object? limit = null,
     Object? loading = null,
     Object? searchQuery = freezed,
     Object? tag = freezed,
     Object? householdMembers = null,
   }) {
     return _then(_value.copyWith(
+      offset: null == offset
+          ? _value.offset
+          : offset // ignore: cast_nullable_to_non_nullable
+              as int,
+      limit: null == limit
+          ? _value.limit
+          : limit // ignore: cast_nullable_to_non_nullable
+              as int,
       loading: null == loading
           ? _value.loading
           : loading // ignore: cast_nullable_to_non_nullable
@@ -1827,7 +1841,9 @@ abstract class _$$SearchHouseholdsStateImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {bool loading,
+      {int offset,
+      int limit,
+      bool loading,
       String? searchQuery,
       String? tag,
       List<HouseholdMemberWrapper> householdMembers});
@@ -1845,12 +1861,22 @@ class __$$SearchHouseholdsStateImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? offset = null,
+    Object? limit = null,
     Object? loading = null,
     Object? searchQuery = freezed,
     Object? tag = freezed,
     Object? householdMembers = null,
   }) {
     return _then(_$SearchHouseholdsStateImpl(
+      offset: null == offset
+          ? _value.offset
+          : offset // ignore: cast_nullable_to_non_nullable
+              as int,
+      limit: null == limit
+          ? _value.limit
+          : limit // ignore: cast_nullable_to_non_nullable
+              as int,
       loading: null == loading
           ? _value.loading
           : loading // ignore: cast_nullable_to_non_nullable
@@ -1875,13 +1901,21 @@ class __$$SearchHouseholdsStateImplCopyWithImpl<$Res>
 
 class _$SearchHouseholdsStateImpl extends _SearchHouseholdsState {
   const _$SearchHouseholdsStateImpl(
-      {this.loading = false,
+      {this.offset = 0,
+      this.limit = 10,
+      this.loading = false,
       this.searchQuery,
       this.tag,
       final List<HouseholdMemberWrapper> householdMembers = const []})
       : _householdMembers = householdMembers,
         super._();
 
+  @override
+  @JsonKey()
+  final int offset;
+  @override
+  @JsonKey()
+  final int limit;
   @override
   @JsonKey()
   final bool loading;
@@ -1901,7 +1935,7 @@ class _$SearchHouseholdsStateImpl extends _SearchHouseholdsState {
 
   @override
   String toString() {
-    return 'SearchHouseholdsState(loading: $loading, searchQuery: $searchQuery, tag: $tag, householdMembers: $householdMembers)';
+    return 'SearchHouseholdsState(offset: $offset, limit: $limit, loading: $loading, searchQuery: $searchQuery, tag: $tag, householdMembers: $householdMembers)';
   }
 
   @override
@@ -1909,6 +1943,8 @@ class _$SearchHouseholdsStateImpl extends _SearchHouseholdsState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$SearchHouseholdsStateImpl &&
+            (identical(other.offset, offset) || other.offset == offset) &&
+            (identical(other.limit, limit) || other.limit == limit) &&
             (identical(other.loading, loading) || other.loading == loading) &&
             (identical(other.searchQuery, searchQuery) ||
                 other.searchQuery == searchQuery) &&
@@ -1918,8 +1954,8 @@ class _$SearchHouseholdsStateImpl extends _SearchHouseholdsState {
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, loading, searchQuery, tag,
-      const DeepCollectionEquality().hash(_householdMembers));
+  int get hashCode => Object.hash(runtimeType, offset, limit, loading,
+      searchQuery, tag, const DeepCollectionEquality().hash(_householdMembers));
 
   @JsonKey(ignore: true)
   @override
@@ -1931,13 +1967,19 @@ class _$SearchHouseholdsStateImpl extends _SearchHouseholdsState {
 
 abstract class _SearchHouseholdsState extends SearchHouseholdsState {
   const factory _SearchHouseholdsState(
-          {final bool loading,
+          {final int offset,
+          final int limit,
+          final bool loading,
           final String? searchQuery,
           final String? tag,
           final List<HouseholdMemberWrapper> householdMembers}) =
       _$SearchHouseholdsStateImpl;
   const _SearchHouseholdsState._() : super._();
 
+  @override
+  int get offset;
+  @override
+  int get limit;
   @override
   bool get loading;
   @override
