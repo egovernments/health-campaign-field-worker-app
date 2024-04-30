@@ -706,20 +706,26 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                           .address
                                           ?.boundaryType;
 
-                                      print(entryType);
+                                      // print(entryType);
                                       List<FacilityModel> filteredFacility = [];
                                       if (entryType ==
-                                          StockRecordEntryType.receipt) {
+                                              StockRecordEntryType.receipt &&
+                                          (boundaryType != null &&
+                                              boundaryType.isNotEmpty)) {
                                         filteredFacility =
                                             getFilteredFacilities(
                                           facilities,
                                           boundaryType,
                                           "childBoundaryType",
                                         );
-                                      } else if (entryType ==
-                                              StockRecordEntryType.returned ||
-                                          entryType ==
-                                              StockRecordEntryType.dispatch) {
+                                      } else if ((entryType ==
+                                                  StockRecordEntryType
+                                                      .returned ||
+                                              entryType ==
+                                                  StockRecordEntryType
+                                                      .dispatch) &&
+                                          (boundaryType != null &&
+                                              boundaryType.isNotEmpty)) {
                                         filteredFacility =
                                             getFilteredFacilities(
                                           facilities,
@@ -1071,16 +1077,22 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
   ) {
     List<FacilityModel> filteredFacilities = [];
 
-    if (facilities != null && boundaryType != null) {
-      for (FacilityModel facility in facilities) {
-        FacilityAdditionalFields? additionalFields = facility.additionalFields;
-        if (additionalFields != null && additionalFields.fields != null) {
+    for (FacilityModel facility in facilities) {
+      FacilityAdditionalFields? additionalFields = facility.additionalFields;
+      if (additionalFields != null) {
+        bool hasRequiredKey = additionalFields.fields
+            .any((field) => field.key == requiredBoundaryType);
+        if (hasRequiredKey) {
           bool hasBoundaryType = additionalFields.fields.any((field) =>
               field.key == requiredBoundaryType && field.value == boundaryType);
           if (hasBoundaryType) {
             filteredFacilities.add(facility);
           }
+        } else {
+          filteredFacilities.add(facility);
         }
+      } else {
+        filteredFacilities.add(facility);
       }
     }
 
