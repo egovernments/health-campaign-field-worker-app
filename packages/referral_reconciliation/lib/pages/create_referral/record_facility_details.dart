@@ -15,7 +15,6 @@ import '../../blocs/referral_recon_record.dart';
 import '../../models/entities/referral_project_facility.dart';
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/localizaed.dart';
-import '../project_facility/project_facility_selection.dart';
 
 @RoutePage()
 class ReferralFacilityPage extends LocalizedStatefulWidget {
@@ -232,16 +231,13 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
                                     onTap: viewOnly
                                         ? null
                                         : () async {
-                                            final facility =
-                                                await Navigator.of(context)
-                                                    .push(
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ReferralReconProjectFacilitySelectionPage(
-                                                  projectFacilities: facilities,
-                                                ),
-                                              ),
-                                            );
+                                            final parent = context.router
+                                                .parent() as StackRouter;
+                                            final facility = await parent.push(
+                                              ReferralReconProjectFacilitySelectionRoute(
+                                                  projectFacilities:
+                                                      projectFacilities),
+                                            ) as ReferralProjectFacilityModel?;
 
                                             if (facility == null) return;
                                             form
@@ -280,17 +276,14 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
                                         onTap: viewOnly
                                             ? null
                                             : () async {
+                                                final parent = context.router
+                                                    .parent() as StackRouter;
                                                 final facility =
-                                                    await Navigator.of(context)
-                                                        .push(
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        ReferralReconProjectFacilitySelectionPage(
+                                                    await parent.push(
+                                                  ReferralReconProjectFacilitySelectionRoute(
                                                       projectFacilities:
-                                                          facilities,
-                                                    ),
-                                                  ),
-                                                );
+                                                          projectFacilities),
+                                                ) as ReferralProjectFacilityModel?;
 
                                                 if (facility == null) return;
                                                 form
