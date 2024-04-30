@@ -54,6 +54,11 @@ class ServiceDefinitionLocalRepository extends LocalRepository<
               sql.serviceDefinition.id.equals(
                 query.id!,
               ),
+            // To fetch service definition of a single checklist with the code
+            if (query.code != null)
+              sql.serviceDefinition.code.equals(
+                query.code!.first,
+              ),
           ])))
         .get();
 

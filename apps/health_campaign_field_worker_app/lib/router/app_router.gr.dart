@@ -306,18 +306,6 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    HFCreateReferralWrapperRoute.name: (routeData) {
-      final args = routeData.argsAs<HFCreateReferralWrapperRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: WrappedRoute(
-            child: HFCreateReferralWrapperPage(
-          key: args.key,
-          viewOnly: args.viewOnly,
-          hfReferralModel: args.hfReferralModel,
-        )),
-      );
-    },
     HomeRoute.name: (routeData) {
       final args =
           routeData.argsAs<HomeRouteArgs>(orElse: () => const HomeRouteArgs());
@@ -459,18 +447,6 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    RecordReferralDetailsRoute.name: (routeData) {
-      final args = routeData.argsAs<RecordReferralDetailsRouteArgs>(
-          orElse: () => const RecordReferralDetailsRouteArgs());
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: RecordReferralDetailsPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-          isEditing: args.isEditing,
-        ),
-      );
-    },
     ReferBeneficiaryRoute.name: (routeData) {
       final args = routeData.argsAs<ReferBeneficiaryRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -483,61 +459,12 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    ReferralFacilityRoute.name: (routeData) {
-      final args = routeData.argsAs<ReferralFacilityRouteArgs>(
-          orElse: () => const ReferralFacilityRouteArgs());
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: ReferralFacilityPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-          isEditing: args.isEditing,
-        ),
-      );
-    },
-    ReferralReasonCheckListPreviewRoute.name: (routeData) {
-      final args = routeData.argsAs<ReferralReasonCheckListPreviewRouteArgs>(
-          orElse: () => const ReferralReasonCheckListPreviewRouteArgs());
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: ReferralReasonCheckListPreviewPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-          isEditing: args.isEditing,
-          referralClientRefId: args.referralClientRefId,
-        ),
-      );
-    },
-    ReferralReasonChecklistRoute.name: (routeData) {
-      final args = routeData.argsAs<ReferralReasonChecklistRouteArgs>(
-          orElse: () => const ReferralReasonChecklistRouteArgs());
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: ReferralReasonChecklistPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-          isEditing: args.isEditing,
-          referralClientRefId: args.referralClientRefId,
-        ),
-      );
-    },
     SearchBeneficiaryRoute.name: (routeData) {
       final args = routeData.argsAs<SearchBeneficiaryRouteArgs>(
           orElse: () => const SearchBeneficiaryRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: SearchBeneficiaryPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-        ),
-      );
-    },
-    SearchReferralsRoute.name: (routeData) {
-      final args = routeData.argsAs<SearchReferralsRouteArgs>(
-          orElse: () => const SearchReferralsRouteArgs());
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: SearchReferralsPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -586,6 +513,8 @@ abstract class _$AppRouter extends RootStackRouter {
     },
     ...InventoryRoute().pagesMap,
     ...AttendanceRoute().pagesMap,
+    ...ReferralReconciliationRoute().pagesMap,
+    ...DigitScannerPackageRoute().pagesMap,
   };
 }
 
@@ -1613,50 +1542,6 @@ class FacilitySelectionRouteArgs {
 }
 
 /// generated route for
-/// [HFCreateReferralWrapperPage]
-class HFCreateReferralWrapperRoute
-    extends PageRouteInfo<HFCreateReferralWrapperRouteArgs> {
-  HFCreateReferralWrapperRoute({
-    Key? key,
-    required bool viewOnly,
-    HFReferralModel? hfReferralModel,
-    List<PageRouteInfo>? children,
-  }) : super(
-          HFCreateReferralWrapperRoute.name,
-          args: HFCreateReferralWrapperRouteArgs(
-            key: key,
-            viewOnly: viewOnly,
-            hfReferralModel: hfReferralModel,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'HFCreateReferralWrapperRoute';
-
-  static const PageInfo<HFCreateReferralWrapperRouteArgs> page =
-      PageInfo<HFCreateReferralWrapperRouteArgs>(name);
-}
-
-class HFCreateReferralWrapperRouteArgs {
-  const HFCreateReferralWrapperRouteArgs({
-    this.key,
-    required this.viewOnly,
-    this.hfReferralModel,
-  });
-
-  final Key? key;
-
-  final bool viewOnly;
-
-  final HFReferralModel? hfReferralModel;
-
-  @override
-  String toString() {
-    return 'HFCreateReferralWrapperRouteArgs{key: $key, viewOnly: $viewOnly, hfReferralModel: $hfReferralModel}';
-  }
-}
-
-/// generated route for
 /// [HomePage]
 class HomeRoute extends PageRouteInfo<HomeRouteArgs> {
   HomeRoute({
@@ -2148,50 +2033,6 @@ class RecordPastDeliveryDetailsRouteArgs {
 }
 
 /// generated route for
-/// [RecordReferralDetailsPage]
-class RecordReferralDetailsRoute
-    extends PageRouteInfo<RecordReferralDetailsRouteArgs> {
-  RecordReferralDetailsRoute({
-    Key? key,
-    AppLocalizations? appLocalizations,
-    bool isEditing = false,
-    List<PageRouteInfo>? children,
-  }) : super(
-          RecordReferralDetailsRoute.name,
-          args: RecordReferralDetailsRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-            isEditing: isEditing,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'RecordReferralDetailsRoute';
-
-  static const PageInfo<RecordReferralDetailsRouteArgs> page =
-      PageInfo<RecordReferralDetailsRouteArgs>(name);
-}
-
-class RecordReferralDetailsRouteArgs {
-  const RecordReferralDetailsRouteArgs({
-    this.key,
-    this.appLocalizations,
-    this.isEditing = false,
-  });
-
-  final Key? key;
-
-  final AppLocalizations? appLocalizations;
-
-  final bool isEditing;
-
-  @override
-  String toString() {
-    return 'RecordReferralDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing}';
-  }
-}
-
-/// generated route for
 /// [ReferBeneficiaryPage]
 class ReferBeneficiaryRoute extends PageRouteInfo<ReferBeneficiaryRouteArgs> {
   ReferBeneficiaryRoute({
@@ -2240,147 +2081,6 @@ class ReferBeneficiaryRouteArgs {
 }
 
 /// generated route for
-/// [ReferralFacilityPage]
-class ReferralFacilityRoute extends PageRouteInfo<ReferralFacilityRouteArgs> {
-  ReferralFacilityRoute({
-    Key? key,
-    AppLocalizations? appLocalizations,
-    bool isEditing = false,
-    List<PageRouteInfo>? children,
-  }) : super(
-          ReferralFacilityRoute.name,
-          args: ReferralFacilityRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-            isEditing: isEditing,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'ReferralFacilityRoute';
-
-  static const PageInfo<ReferralFacilityRouteArgs> page =
-      PageInfo<ReferralFacilityRouteArgs>(name);
-}
-
-class ReferralFacilityRouteArgs {
-  const ReferralFacilityRouteArgs({
-    this.key,
-    this.appLocalizations,
-    this.isEditing = false,
-  });
-
-  final Key? key;
-
-  final AppLocalizations? appLocalizations;
-
-  final bool isEditing;
-
-  @override
-  String toString() {
-    return 'ReferralFacilityRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing}';
-  }
-}
-
-/// generated route for
-/// [ReferralReasonCheckListPreviewPage]
-class ReferralReasonCheckListPreviewRoute
-    extends PageRouteInfo<ReferralReasonCheckListPreviewRouteArgs> {
-  ReferralReasonCheckListPreviewRoute({
-    Key? key,
-    AppLocalizations? appLocalizations,
-    bool isEditing = false,
-    String? referralClientRefId,
-    List<PageRouteInfo>? children,
-  }) : super(
-          ReferralReasonCheckListPreviewRoute.name,
-          args: ReferralReasonCheckListPreviewRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-            isEditing: isEditing,
-            referralClientRefId: referralClientRefId,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'ReferralReasonCheckListPreviewRoute';
-
-  static const PageInfo<ReferralReasonCheckListPreviewRouteArgs> page =
-      PageInfo<ReferralReasonCheckListPreviewRouteArgs>(name);
-}
-
-class ReferralReasonCheckListPreviewRouteArgs {
-  const ReferralReasonCheckListPreviewRouteArgs({
-    this.key,
-    this.appLocalizations,
-    this.isEditing = false,
-    this.referralClientRefId,
-  });
-
-  final Key? key;
-
-  final AppLocalizations? appLocalizations;
-
-  final bool isEditing;
-
-  final String? referralClientRefId;
-
-  @override
-  String toString() {
-    return 'ReferralReasonCheckListPreviewRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing, referralClientRefId: $referralClientRefId}';
-  }
-}
-
-/// generated route for
-/// [ReferralReasonChecklistPage]
-class ReferralReasonChecklistRoute
-    extends PageRouteInfo<ReferralReasonChecklistRouteArgs> {
-  ReferralReasonChecklistRoute({
-    Key? key,
-    AppLocalizations? appLocalizations,
-    bool isEditing = false,
-    String? referralClientRefId,
-    List<PageRouteInfo>? children,
-  }) : super(
-          ReferralReasonChecklistRoute.name,
-          args: ReferralReasonChecklistRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-            isEditing: isEditing,
-            referralClientRefId: referralClientRefId,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'ReferralReasonChecklistRoute';
-
-  static const PageInfo<ReferralReasonChecklistRouteArgs> page =
-      PageInfo<ReferralReasonChecklistRouteArgs>(name);
-}
-
-class ReferralReasonChecklistRouteArgs {
-  const ReferralReasonChecklistRouteArgs({
-    this.key,
-    this.appLocalizations,
-    this.isEditing = false,
-    this.referralClientRefId,
-  });
-
-  final Key? key;
-
-  final AppLocalizations? appLocalizations;
-
-  final bool isEditing;
-
-  final String? referralClientRefId;
-
-  @override
-  String toString() {
-    return 'ReferralReasonChecklistRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing, referralClientRefId: $referralClientRefId}';
-  }
-}
-
-/// generated route for
 /// [SearchBeneficiaryPage]
 class SearchBeneficiaryRoute extends PageRouteInfo<SearchBeneficiaryRouteArgs> {
   SearchBeneficiaryRoute({
@@ -2415,44 +2115,6 @@ class SearchBeneficiaryRouteArgs {
   @override
   String toString() {
     return 'SearchBeneficiaryRouteArgs{key: $key, appLocalizations: $appLocalizations}';
-  }
-}
-
-/// generated route for
-/// [SearchReferralsPage]
-class SearchReferralsRoute extends PageRouteInfo<SearchReferralsRouteArgs> {
-  SearchReferralsRoute({
-    Key? key,
-    AppLocalizations? appLocalizations,
-    List<PageRouteInfo>? children,
-  }) : super(
-          SearchReferralsRoute.name,
-          args: SearchReferralsRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'SearchReferralsRoute';
-
-  static const PageInfo<SearchReferralsRouteArgs> page =
-      PageInfo<SearchReferralsRouteArgs>(name);
-}
-
-class SearchReferralsRouteArgs {
-  const SearchReferralsRouteArgs({
-    this.key,
-    this.appLocalizations,
-  });
-
-  final Key? key;
-
-  final AppLocalizations? appLocalizations;
-
-  @override
-  String toString() {
-    return 'SearchReferralsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 

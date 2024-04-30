@@ -1,3 +1,8 @@
+import 'tables/task_resource.dart';
+import 'tables/target.dart';
+import 'tables/individual.dart';
+import 'tables/household_member.dart';
+import 'tables/household.dart';
 import 'tables/address.dart';
 import 'dart:io';
 
@@ -20,13 +25,10 @@ import 'tables/boundary.dart';
 import 'tables/document.dart';
 import 'tables/downsync.dart';
 import 'tables/downsync_criteria.dart';
-import 'tables/h_f_referral.dart';
-import 'tables/household.dart';
-import 'tables/household_member.dart';
 import 'tables/identifier.dart';
-import 'tables/individual.dart';
 import 'tables/locality.dart';
 import 'tables/name.dart';
+import 'tables/package_tables.dart';
 import 'tables/pgr_service.dart';
 import 'tables/product.dart';
 import 'tables/product_variant.dart';
@@ -42,10 +44,7 @@ import 'tables/service.dart';
 import 'tables/service_attributes.dart';
 import 'tables/service_definition.dart';
 import 'tables/side_effect.dart';
-import 'tables/package_tables.dart';
-import 'tables/target.dart';
 import 'tables/task.dart';
-import 'tables/task_resource.dart';
 import 'tables/user.dart';
 
 part 'sql_store.g.dart';

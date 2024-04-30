@@ -58,7 +58,7 @@ class OpLog {
         return entity;
 
       case "hFReferral":
-        final entity = HFReferralModelMapper.fromJson(entityString);
+        final entity = HcmHFReferralModelMapper.fromJson(entityString);
         return entity;
 
       case "service":

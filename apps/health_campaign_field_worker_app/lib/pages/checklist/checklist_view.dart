@@ -269,12 +269,8 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                           ),
                         );
                         if (shouldSubmit ?? false) {
-                          if (isHealthFacilityWorker &&
-                              widget.referralClientRefId != null) {
-                            router.navigate(SearchReferralsRoute());
-                          } else {
-                            router.navigate(ChecklistRoute());
-                          }
+                          router.navigate(ChecklistRoute());
+
                           router.push(AcknowledgementRoute());
                         }
                       },

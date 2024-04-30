@@ -17,7 +17,8 @@ import '../data/network_manager.dart';
 import '../data/repositories/local/boundary.dart';
 import '../data/repositories/local/downsync.dart';
 import '../data/repositories/local/facility.dart';
-import '../data/repositories/local/h_f_referral.dart';
+import '../data/repositories/local/hcm_attendance.dart';
+import '../data/repositories/local/hcm_hf_referral.dart';
 import '../data/repositories/local/household.dart';
 import '../data/repositories/local/houshold_member.dart';
 import '../data/repositories/local/individual.dart';
@@ -38,7 +39,8 @@ import '../data/repositories/remote/auth.dart';
 import '../data/repositories/remote/boundary.dart';
 import '../data/repositories/remote/downsync.dart';
 import '../data/repositories/remote/facility.dart';
-import '../data/repositories/remote/h_f_referral.dart';
+import '../data/repositories/remote/hcm_attendance.dart';
+import '../data/repositories/remote/hcm_hf_referral.dart';
 import '../data/repositories/remote/household.dart';
 import '../data/repositories/remote/household_member.dart';
 import '../data/repositories/remote/individual.dart';
@@ -60,9 +62,7 @@ import '../data/repositories/remote/task.dart';
 import '../data/repositories/remote/user.dart';
 import '../models/data_model.dart';
 import '../data/repositories/local/attendance_logs.dart';
-import '../data/repositories/local/hcm_attendance.dart';
 import '../data/repositories/remote/attendance_logs.dart';
-import '../data/repositories/remote/hcm_attendance.dart';
 import '../data/repositories/local/stock.dart';
 import '../data/repositories/local/stock_reconciliation.dart';
 import '../data/repositories/remote/stock.dart';
@@ -271,7 +271,7 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         ),
       ),
       RepositoryProvider<
-          LocalRepository<HFReferralModel, HFReferralSearchModel>>(
+          LocalRepository<HcmHFReferralModel, HcmHFReferralSearchModel>>(
         create: (_) => HFReferralLocalRepository(
           sql,
           HFReferralOpLogManager(isar),
@@ -424,6 +424,14 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
               actionMap: actions,
             ),
           ),
+        if (value == DataModelType.stock)
+          RepositoryProvider<
+              RemoteRepository<HcmStockModel, HcmStockSearchModel>>(
+            create: (_) => StockRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
         if (value == DataModelType.task)
           RepositoryProvider<RemoteRepository<TaskModel, TaskSearchModel>>(
             create: (_) => TaskRemoteRepository(
@@ -514,7 +522,7 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           ),
         if (value == DataModelType.hFReferral)
           RepositoryProvider<
-              RemoteRepository<HFReferralModel, HFReferralSearchModel>>(
+              RemoteRepository<HcmHFReferralModel, HcmHFReferralSearchModel>>(
             create: (_) => HFReferralRemoteRepository(
               dio,
               actionMap: actions,
