@@ -138,6 +138,7 @@ abstract class $ReferralReconciliationRoute extends _i9.AutoRouterModule {
           boundaryName: args.boundaryName,
           genders: args.genders,
           tenantId: args.tenantId,
+          checklistTypes: args.checklistTypes,
         ),
       );
     },
@@ -494,6 +495,7 @@ class SearchReferralReconciliationsRoute
     required String boundaryName,
     required List<String> genders,
     required String tenantId,
+    required List<String> checklistTypes,
     List<_i9.PageRouteInfo>? children,
   }) : super(
           SearchReferralReconciliationsRoute.name,
@@ -510,6 +512,7 @@ class SearchReferralReconciliationsRoute
             boundaryName: boundaryName,
             genders: genders,
             tenantId: tenantId,
+            checklistTypes: checklistTypes,
           ),
           initialChildren: children,
         );
@@ -534,6 +537,7 @@ class SearchReferralReconciliationsRouteArgs {
     required this.boundaryName,
     required this.genders,
     required this.tenantId,
+    required this.checklistTypes,
   });
 
   final _i10.Key? key;
@@ -560,8 +564,10 @@ class SearchReferralReconciliationsRouteArgs {
 
   final String tenantId;
 
+  final List<String> checklistTypes;
+
   @override
   String toString() {
-    return 'SearchReferralReconciliationsRouteArgs{key: $key, appLocalizations: $appLocalizations, referralReconListener: $referralReconListener, projectId: $projectId, cycles: $cycles, validIndividualAgeForCampaign: $validIndividualAgeForCampaign, referralReasons: $referralReasons, appVersion: $appVersion, userName: $userName, boundaryName: $boundaryName, genders: $genders, tenantId: $tenantId}';
+    return 'SearchReferralReconciliationsRouteArgs{key: $key, appLocalizations: $appLocalizations, referralReconListener: $referralReconListener, projectId: $projectId, cycles: $cycles, validIndividualAgeForCampaign: $validIndividualAgeForCampaign, referralReasons: $referralReasons, appVersion: $appVersion, userName: $userName, boundaryName: $boundaryName, genders: $genders, tenantId: $tenantId, checklistTypes: $checklistTypes}';
   }
 }

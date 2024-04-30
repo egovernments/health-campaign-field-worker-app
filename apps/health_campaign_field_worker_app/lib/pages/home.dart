@@ -499,6 +499,10 @@ class _HomePageState extends LocalizedState<HomePage> {
                         serviceLocalRepository: context.read<
                             LocalRepository<ServiceModel,
                                 ServiceSearchModel>>(),
+                        checklistTypes: appConfiguration.checklistTypes
+                                ?.map((e) => e.code)
+                                .toList() ??
+                            [],
                       ),
                       validIndividualAgeForCampaign:
                           ValidIndividualAgeForCampaign(
@@ -519,6 +523,10 @@ class _HomePageState extends LocalizedState<HomePage> {
                               .toList() ??
                           [],
                       tenantId: envConfig.variables.tenantId,
+                      checklistTypes: appConfiguration.checklistTypes
+                              ?.map((e) => e.code)
+                              .toList() ??
+                          [],
                     ));
                   },
                 );
@@ -602,6 +610,49 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
+      i18.home.manageAttendanceLabel:
+          homeShowcaseData.manageAttendance.buildWith(
+        child: HomeItemCard(
+          icon: Icons.fingerprint_outlined,
+          label: i18.home.manageAttendanceLabel,
+          onPressed: () {
+            context.router.push(ManageAttendanceRoute(
+              attendanceListeners: HCMAttendanceBloc(
+                userId: context.loggedInUserUuid,
+                projectId: context.projectId,
+                attendanceLocalRepository: context.read<
+                    LocalRepository<HCMAttendanceRegisterModel,
+                        HCMAttendanceSearchModel>>(),
+                individualLocalRepository: context.read<
+                    LocalRepository<IndividualModel, IndividualSearchModel>>(),
+                attendanceLogLocalRepository: context.read<
+                    LocalRepository<HCMAttendanceLogModel,
+                        HCMAttendanceLogSearchModel>>(),
+                context: context,
+                individualId: context.loggedInIndividualId,
+              ),
+              projectId: context.projectId,
+              userId: context.loggedInUserUuid,
+              appVersion: Constants().version,
+            ));
+          },
+        ),
+      ),
+      i18.home.db: homeShowcaseData.db.buildWith(
+        child: HomeItemCard(
+          icon: Icons.table_chart,
+          label: i18.home.db,
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => DriftDbViewer(
+                  context.read<LocalSqlDataStore>(),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
     };
 
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
@@ -620,7 +671,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           homeShowcaseData.hfBeneficiaryReferral.showcaseKey,
       i18.home.manageAttendanceLabel:
           homeShowcaseData.manageAttendance.showcaseKey,
-      i18.home.db: homeShowcaseData.db.showcaseKey,
+      // i18.home.db: homeShowcaseData.db.showcaseKey,
     };
 
     final homeItemsLabel = <String>[

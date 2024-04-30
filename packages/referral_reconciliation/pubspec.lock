@@ -388,11 +388,10 @@ packages:
   dart_mappable_builder:
     dependency: "direct dev"
     description:
-      name: dart_mappable_builder
-      sha256: ab5cf9086862d3fceb9773e945b5f95cc5471a28c782a4fc451bd400a4e0c64e
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.2.3"
+      path: "../dart_mappable_builder"
+      relative: true
+    source: path
+    version: "4.2.0"
   dart_style:
     dependency: transitive
     description:
@@ -420,19 +419,16 @@ packages:
   digit_components:
     dependency: "direct main"
     description:
-      name: digit_components
-      sha256: "25b30da927d5be9d96ca0df1c0fb4dc99092dee6f2c98aec2ef457e7c907e431"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.2+1"
+      path: "../digit_components"
+      relative: true
+    source: path
+    version: "0.0.1+8"
   digit_scanner:
     dependency: "direct main"
     description:
-      path: "packages/digit_scanner"
-      ref: develop
-      resolved-ref: f685baaa76fd4fe841812c27d02828ab47b78b48
-      url: "https://github.com/egovernments/health-campaign-field-worker-app/"
-    source: git
+      path: "../digit_scanner"
+      relative: true
+    source: path
     version: "0.0.1+1"
   drift:
     dependency: "direct main"
@@ -1110,6 +1106,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.0"
+  remove_emoji_input_formatter:
+    dependency: transitive
+    description:
+      name: remove_emoji_input_formatter
+      sha256: "82d195984f890de7a8fea936c698848e78c1a67ccefe18db3baf9f7a3bc0177f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1+1"
   rxdart:
     dependency: transitive
     description:
@@ -1428,5 +1432,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.2.3 <4.0.0"
+  dart: ">=3.2.0 <4.0.0"
   flutter: ">=3.16.0"

@@ -13,9 +13,9 @@ class ChecklistWrapperPage extends StatelessWidget implements AutoRouteWrapper {
   final bool isEditing;
 
   const ChecklistWrapperPage({
-    Key? key,
+    super.key,
     this.isEditing = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

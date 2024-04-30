@@ -262,6 +262,8 @@ class SearchHouseholdsState with _$SearchHouseholdsState {
   const SearchHouseholdsState._();
 
   const factory SearchHouseholdsState({
+    @Default(0) int offset,
+    @Default(10) int limit,
     @Default(false) bool loading,
     String? searchQuery,
     String? tag,

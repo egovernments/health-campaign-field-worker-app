@@ -63,12 +63,6 @@ class MainApplication extends StatefulWidget {
 class MainApplicationState extends State<MainApplication>
     with WidgetsBindingObserver {
   @override
-  initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-  }
-
-  @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
@@ -301,9 +295,7 @@ class MainApplicationState extends State<MainApplication>
                           ),
                         ),
                         BlocProvider(
-                          create: (context) => SearchReferralsBloc(
-                            userUid: context.loggedInUserUuid,
-                          ),
+                          create: (context) => SearchReferralsBloc(),
                         ),
                         BlocProvider(
                           create: (context) => ReferralReconServiceBloc(

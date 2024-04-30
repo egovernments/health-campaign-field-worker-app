@@ -246,7 +246,14 @@ class HcmReferralReconBloc extends ReferralReconListener {
   }
 
   @override
-  Future<List<ReferralReconServiceDefinitionModel>> fetchServiceDefinitions(
+  Future<List<ReferralReconServiceDefinitionModel>> fetchSelectedServiceDefinitions(
+      String code) async {
+    // TODO: implement search service definitions
+    throw UnimplementedError();
+  }
+  
+   @override
+  Future<List<ReferralReconServiceDefinitionModel>> fetchAllServiceDefinitions(
       String code) async {
     // TODO: implement search service definitions
     throw UnimplementedError();

@@ -184,6 +184,7 @@ class ReferralReconciliation {
   String get createReferralLabel => 'CREATE_REFERRAL_LABEL';
   String get noChecklistFound => 'NO_CHECKLISTS_FOUND';
   String get cycle => 'CYCLE';
+  String get noCyclesFound => 'NO_CYCLES_FOUND';
   String get iconLabel => 'ICON_LABEL';
   String get beneficiarySearchHintText => 'BENEFICIARY_SEARCH_HINT_TEXT';
   String get beneficiaryInfoDescription => 'BENEFICIARY_INFO_DESCRIPTION';

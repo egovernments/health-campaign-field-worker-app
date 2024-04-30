@@ -26,6 +26,29 @@ class RegisterAuditDetails extends AttendanceAuditDetails
 }
 
 @MappableClass(ignoreNull: true)
+class AttendanceRegisterSearchModel with AttendanceRegisterSearchModelMappable {
+  final String? id;
+  final String? staffId;
+  final String? registerNumber;
+  final String? status;
+  final String? referenceId;
+  final String? serviceCode;
+  final int? offSet;
+  final int? limit;
+
+  AttendanceRegisterSearchModel({
+    this.id,
+    this.staffId,
+    this.registerNumber,
+    this.status,
+    this.serviceCode,
+    this.referenceId,
+    this.offSet,
+    this.limit,
+  });
+}
+
+@MappableClass(ignoreNull: true)
 class AttendanceRegisterModel with AttendanceRegisterModelMappable {
   static const schemaName = 'AttendanceRegister';
 

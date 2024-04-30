@@ -45,6 +45,13 @@ import 'package:inventory_management/models/entities/product_variant.dart'
     as p52;
 import 'package:inventory_management/models/entities/project_product_variant.dart'
     as p52;
+import 'package:referral_reconciliation/models/entities/referral_recon_enums.dart' as p53;
+import 'package:referral_reconciliation/models/entities/referral_recon_service.dart' as p53;
+import 'package:referral_reconciliation/models/entities/referral_recon_service_definition.dart' as p53;
+import 'package:referral_reconciliation/models/entities/referral_recon_service_attributes.dart' as p53;
+import 'package:referral_reconciliation/models/entities/referral_recon_attributes.dart' as p53;
+import 'package:referral_reconciliation/models/entities/h_f_referral.dart' as p53;
+import 'package:referral_reconciliation/models/entities/referral_project_facility.dart' as p53;
 
 void initializeMappers() {
   p1.AdditionalFieldsTypeMapper.ensureInitialized();
@@ -113,4 +120,11 @@ void initializeMappers() {
   p52.TransactionTypeMapper.ensureInitialized();
   p52.ProductVariantModelMapper.ensureInitialized();
   p52.ProjectProductVariantModelMapper.ensureInitialized();
+  p53.ReferralReconEnumsMapper.ensureInitialized();
+  p53.ReferralReconServiceModelMapper.ensureInitialized();
+  p53.ReferralReconServiceDefinitionModelMapper.ensureInitialized();
+  p53.ReferralReconServiceAttributesModelMapper.ensureInitialized();
+  p53.ReferralReconAttributesModelMapper.ensureInitialized();
+  p53.HFReferralModelMapper.ensureInitialized();
+  p53.ReferralProjectFacilityModelMapper.ensureInitialized();
 }

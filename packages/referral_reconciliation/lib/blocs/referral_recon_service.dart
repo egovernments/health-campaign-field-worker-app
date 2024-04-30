@@ -8,10 +8,13 @@ import '../models/entities/referral_recon_service.dart';
 
 part 'referral_recon_service.freezed.dart';
 
+// Define a typedef for the emitter function used to emit state changes.
 typedef ReferralReconServiceEmitter = Emitter<ReferralReconServiceState>;
 
+// Define the Bloc responsible for managing ReferralReconService events and states.
 class ReferralReconServiceBloc
     extends Bloc<ReferralReconServiceEvent, ReferralReconServiceState> {
+  // Constructor initializes the Bloc with an initial state and sets up event handlers.
   ReferralReconServiceBloc(
     super.initialState,
   ) {
@@ -22,6 +25,7 @@ class ReferralReconServiceBloc
     on(_handleSelect);
   }
 
+  // Event handler for when the multichecklist changes.
   FutureOr<void> _multichecklistChanged(
     ReferralReconServiceChecklistEvent event,
     ReferralReconServiceEmitter emit,
@@ -32,6 +36,7 @@ class ReferralReconServiceBloc
     ));
   }
 
+  // Event handler for creating a new service.
   FutureOr<void> _handleCreate(
     ReferralReconServiceCreateEvent event,
     ReferralReconServiceEmitter emit,
@@ -44,6 +49,7 @@ class ReferralReconServiceBloc
     ));
   }
 
+  // Event handler for resetting selected services.
   FutureOr<void> _handlereset(
     ReferralReconServiceResetEvent event,
     ReferralReconServiceEmitter emit,
@@ -54,6 +60,7 @@ class ReferralReconServiceBloc
     ));
   }
 
+  // Event handler for searching services.
   FutureOr<void> _handleSearch(
     ReferralReconServiceSearchEvent event,
     ReferralReconServiceEmitter emit,
@@ -64,6 +71,7 @@ class ReferralReconServiceBloc
         serviceList: results != null ? [results] : []));
   }
 
+  // Event handler for selecting a service.
   FutureOr<void> _handleSelect(
     ReferralReconServiceSelectionEvent event,
     ReferralReconServiceEmitter emit,
@@ -76,6 +84,7 @@ class ReferralReconServiceBloc
   }
 }
 
+// Define freezed classes for the ReferralReconService events.
 @freezed
 class ReferralReconServiceEvent with _$ReferralReconServiceEvent {
   const factory ReferralReconServiceEvent.create(
@@ -99,6 +108,7 @@ class ReferralReconServiceEvent with _$ReferralReconServiceEvent {
   }) = ReferralReconServiceResetEvent;
 }
 
+// Define freezed classes for the ReferralReconService states.
 @freezed
 class ReferralReconServiceState with _$ReferralReconServiceState {
   const factory ReferralReconServiceState.empty() =

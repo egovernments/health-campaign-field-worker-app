@@ -32,6 +32,9 @@ bash attendance_package_imports.sh
 # for adding inventory imports and mappers in data_model.init.dart
 bash inventory_package_imports.sh
 
+# for adding referral reconciliation imports and mappers in data_model.init.dart
+bash referral_reconciliation_imports.sh
+
 # for adding import as at.Address in sql_store.g.dart for resolving conflict with Address created inside sql_store.g.dart
 cd ../apps/health_campaign_field_worker_app/lib/data/local_store/sql_store/ || exit
 

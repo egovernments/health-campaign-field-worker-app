@@ -10,14 +10,12 @@ part 'facility.freezed.dart';
 typedef FacilityStateEmitter = Emitter<FacilityState>;
 
 class FacilityBloc extends Bloc<FacilityEvent, FacilityState> {
-  final LocalRepository<FacilityModel, FacilitySearchModel>
-      facilityLocalRepository;
-  final LocalRepository<ProjectFacilityModel, ProjectFacilitySearchModel>
-      projectFacilityLocalRepository;
+  final FacilityDataRepository facilityDataRepository;
+  final ProjectFacilityDataRepository projectFacilityDataRepository;
 
   FacilityBloc({
-    required this.facilityLocalRepository,
-    required this.projectFacilityLocalRepository,
+    required this.facilityDataRepository,
+    required this.projectFacilityDataRepository,
   }) : super(const FacilityEmptyState()) {
     on(_handleLoadFacilitiesForProjectId);
   }
@@ -28,7 +26,7 @@ class FacilityBloc extends Bloc<FacilityEvent, FacilityState> {
   ) async {
     emit(const FacilityLoadingState());
 
-    final projectFacilities = await projectFacilityLocalRepository.search(
+    final projectFacilities = await projectFacilityDataRepository.search(
       ProjectFacilitySearchModel(projectId: [event.projectId]),
     );
 
@@ -45,14 +43,13 @@ class FacilityBloc extends Bloc<FacilityEvent, FacilityState> {
     List<FacilityModel> facilities = [];
 
     if (event.loadAllProjects) {
-      var searchResult = await facilityLocalRepository.search(
+      allFacilities.addAll(await facilityDataRepository.search(
         FacilitySearchModel(id: null),
-      );
-      allFacilities.addAll(searchResult);
+      ));
     }
 
     for (final projectFacility in projectFacilities) {
-      var results = await facilityLocalRepository.search(
+      final results = await facilityDataRepository.search(
         FacilitySearchModel(id: [projectFacility.facilityId]),
       );
 

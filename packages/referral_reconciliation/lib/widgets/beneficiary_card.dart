@@ -29,7 +29,7 @@ class ReferralBeneficiaryCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.all(4),
+          padding: const EdgeInsets.all(kPadding / 2),
           child: Text(
             title,
             style: theme.textTheme.headlineSmall,
@@ -54,14 +54,14 @@ class ReferralBeneficiaryCard extends StatelessWidget {
                 ),
         ),
         Padding(
-          padding: const EdgeInsets.all(4),
+          padding: const EdgeInsets.all(kPadding / 2),
           child: Text(
             subtitle,
             style: theme.textTheme.bodyMedium,
           ),
         ),
         Padding(
-          padding: const EdgeInsets.all(4),
+          padding: const EdgeInsets.all(kPadding / 2),
           child: Text(
             description,
             style: theme.textTheme.bodySmall,

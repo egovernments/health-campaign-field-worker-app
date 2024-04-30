@@ -56,6 +56,8 @@ Future<void> _addImportStatement(String tableName) async {
   );
   final file = File(path);
 
+  print('Adding import statement to $path');
+
   if (await file.exists()) {
     var content = await file.readAsString();
     final importStatement = "import 'tables/${tableName.snakeCase}.dart';";

@@ -2,26 +2,58 @@ import 'package:dart_mappable/dart_mappable.dart';
 
 part 'attendance_log.mapper.dart';
 
-@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault,)
+@MappableClass(
+  ignoreNull: true,
+  discriminatorValue: MappableClass.useAsDefault,
+)
 class AttendanceLogSearchModel with AttendanceLogSearchModelMappable {
   final String? id;
+  final String? tenantId;
   final String? registerId;
+  final String? individualId;
+  final int? time;
+  final int? entryTime;
+  final int? exitTime;
+  final String? type;
+  final String? status;
+  final List<String>? clientReferenceId;
+  final bool? uploadToServer;
 
   AttendanceLogSearchModel({
     this.id,
     this.registerId,
+    this.individualId,
+    this.status,
+    this.type,
+    this.tenantId,
+    this.time,
+    this.entryTime,
+    this.exitTime,
+    this.clientReferenceId,
+    this.uploadToServer,
   }) : super();
 
   @MappableConstructor()
   AttendanceLogSearchModel.ignoreDeleted({
     this.id,
     this.registerId,
+    this.individualId,
+    this.status,
+    this.type,
+    this.tenantId,
+    this.time,
+    this.entryTime,
+    this.exitTime,
+    this.clientReferenceId,
+    this.uploadToServer,
   });
 }
 
-@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault,)
+@MappableClass(
+  ignoreNull: true,
+  discriminatorValue: MappableClass.useAsDefault,
+)
 class AttendanceLogModel with AttendanceLogModelMappable {
-
   final String? id;
   final String? tenantId;
   final String? registerId;

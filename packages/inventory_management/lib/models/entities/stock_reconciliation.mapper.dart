@@ -7,7 +7,7 @@
 part of 'stock_reconciliation.dart';
 
 class StockReconciliationSearchModelMapper
-    extends SubClassMapperBase<StockReconciliationSearchModel> {
+    extends ClassMapperBase<StockReconciliationSearchModel> {
   StockReconciliationSearchModelMapper._();
 
   static StockReconciliationSearchModelMapper? _instance;
@@ -46,21 +46,6 @@ class StockReconciliationSearchModelMapper
   static const Field<StockReconciliationSearchModel, int>
       _f$dateOfReconciliation =
       Field('dateOfReconciliation', _$dateOfReconciliation, opt: true);
-  static String? _$boundaryCode(StockReconciliationSearchModel v) =>
-      v.boundaryCode;
-  static const Field<StockReconciliationSearchModel, String> _f$boundaryCode =
-      Field('boundaryCode', _$boundaryCode, opt: true);
-  static AuditDetails? _$auditDetails(StockReconciliationSearchModel v) =>
-      v.auditDetails;
-  static const Field<StockReconciliationSearchModel, AuditDetails>
-      _f$auditDetails =
-      Field('auditDetails', _$auditDetails, mode: FieldMode.member);
-  static AdditionalFields? _$additionalFields(
-          StockReconciliationSearchModel v) =>
-      v.additionalFields;
-  static const Field<StockReconciliationSearchModel, AdditionalFields>
-      _f$additionalFields =
-      Field('additionalFields', _$additionalFields, mode: FieldMode.member);
   static DateTime? _$dateOfReconciliationTime(
           StockReconciliationSearchModel v) =>
       v.dateOfReconciliationTime;
@@ -77,21 +62,10 @@ class StockReconciliationSearchModelMapper
     #productVariantId: _f$productVariantId,
     #clientReferenceId: _f$clientReferenceId,
     #dateOfReconciliation: _f$dateOfReconciliation,
-    #boundaryCode: _f$boundaryCode,
-    #auditDetails: _f$auditDetails,
-    #additionalFields: _f$additionalFields,
     #dateOfReconciliationTime: _f$dateOfReconciliationTime,
   };
   @override
   final bool ignoreNull = true;
-
-  @override
-  final String discriminatorKey = 'type';
-  @override
-  final dynamic discriminatorValue = MappableClass.useAsDefault;
-  @override
-  late final ClassMapperBase superMapper =
-      EntitySearchModelMapper.ensureInitialized();
 
   static StockReconciliationSearchModel _instantiate(DecodingData data) {
     return StockReconciliationSearchModel.ignoreDeleted(
@@ -100,8 +74,7 @@ class StockReconciliationSearchModelMapper
         facilityId: data.dec(_f$facilityId),
         productVariantId: data.dec(_f$productVariantId),
         clientReferenceId: data.dec(_f$clientReferenceId),
-        dateOfReconciliation: data.dec(_f$dateOfReconciliation),
-        boundaryCode: data.dec(_f$boundaryCode));
+        dateOfReconciliation: data.dec(_f$dateOfReconciliation));
   }
 
   @override
@@ -165,18 +138,16 @@ extension StockReconciliationSearchModelValueCopy<$R, $Out>
 abstract class StockReconciliationSearchModelCopyWith<
     $R,
     $In extends StockReconciliationSearchModel,
-    $Out> implements EntitySearchModelCopyWith<$R, $In, $Out> {
+    $Out> implements ClassCopyWith<$R, $In, $Out> {
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get clientReferenceId;
-  @override
   $R call(
       {String? id,
       String? tenantId,
       String? facilityId,
       String? productVariantId,
       List<String>? clientReferenceId,
-      int? dateOfReconciliation,
-      String? boundaryCode});
+      int? dateOfReconciliation});
   StockReconciliationSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -207,8 +178,7 @@ class _StockReconciliationSearchModelCopyWithImpl<$R, $Out>
           Object? facilityId = $none,
           Object? productVariantId = $none,
           Object? clientReferenceId = $none,
-          Object? dateOfReconciliation = $none,
-          Object? boundaryCode = $none}) =>
+          Object? dateOfReconciliation = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
         if (tenantId != $none) #tenantId: tenantId,
@@ -216,8 +186,7 @@ class _StockReconciliationSearchModelCopyWithImpl<$R, $Out>
         if (productVariantId != $none) #productVariantId: productVariantId,
         if (clientReferenceId != $none) #clientReferenceId: clientReferenceId,
         if (dateOfReconciliation != $none)
-          #dateOfReconciliation: dateOfReconciliation,
-        if (boundaryCode != $none) #boundaryCode: boundaryCode
+          #dateOfReconciliation: dateOfReconciliation
       }));
   @override
   StockReconciliationSearchModel $make(CopyWithData data) =>
@@ -230,8 +199,7 @@ class _StockReconciliationSearchModelCopyWithImpl<$R, $Out>
           clientReferenceId:
               data.get(#clientReferenceId, or: $value.clientReferenceId),
           dateOfReconciliation:
-              data.get(#dateOfReconciliation, or: $value.dateOfReconciliation),
-          boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
+              data.get(#dateOfReconciliation, or: $value.dateOfReconciliation));
 
   @override
   StockReconciliationSearchModelCopyWith<$R2, StockReconciliationSearchModel,
@@ -241,7 +209,7 @@ class _StockReconciliationSearchModelCopyWithImpl<$R, $Out>
 }
 
 class StockReconciliationModelMapper
-    extends SubClassMapperBase<StockReconciliationModel> {
+    extends ClassMapperBase<StockReconciliationModel> {
   StockReconciliationModelMapper._();
 
   static StockReconciliationModelMapper? _instance;
@@ -256,12 +224,6 @@ class StockReconciliationModelMapper
   @override
   final String id = 'StockReconciliationModel';
 
-  static StockReconciliationAdditionalFields? _$additionalFields(
-          StockReconciliationModel v) =>
-      v.additionalFields;
-  static const Field<StockReconciliationModel,
-          StockReconciliationAdditionalFields> _f$additionalFields =
-      Field('additionalFields', _$additionalFields, opt: true);
   static String? _$id(StockReconciliationModel v) => v.id;
   static const Field<StockReconciliationModel, String> _f$id =
       Field('id', _$id, opt: true);
@@ -310,18 +272,6 @@ class StockReconciliationModelMapper
       v.dateOfReconciliation;
   static const Field<StockReconciliationModel, int> _f$dateOfReconciliation =
       Field('dateOfReconciliation', _$dateOfReconciliation);
-  static AuditDetails? _$auditDetails(StockReconciliationModel v) =>
-      v.auditDetails;
-  static const Field<StockReconciliationModel, AuditDetails> _f$auditDetails =
-      Field('auditDetails', _$auditDetails, opt: true);
-  static ClientAuditDetails? _$clientAuditDetails(StockReconciliationModel v) =>
-      v.clientAuditDetails;
-  static const Field<StockReconciliationModel, ClientAuditDetails>
-      _f$clientAuditDetails =
-      Field('clientAuditDetails', _$clientAuditDetails, opt: true);
-  static bool? _$isDeleted(StockReconciliationModel v) => v.isDeleted;
-  static const Field<StockReconciliationModel, bool> _f$isDeleted =
-      Field('isDeleted', _$isDeleted, opt: true, def: false);
   static DateTime _$dateOfReconciliationTime(StockReconciliationModel v) =>
       v.dateOfReconciliationTime;
   static const Field<StockReconciliationModel, DateTime>
@@ -331,7 +281,6 @@ class StockReconciliationModelMapper
 
   @override
   final MappableFields<StockReconciliationModel> fields = const {
-    #additionalFields: _f$additionalFields,
     #id: _f$id,
     #tenantId: _f$tenantId,
     #facilityId: _f$facilityId,
@@ -345,25 +294,13 @@ class StockReconciliationModelMapper
     #clientReferenceId: _f$clientReferenceId,
     #rowVersion: _f$rowVersion,
     #dateOfReconciliation: _f$dateOfReconciliation,
-    #auditDetails: _f$auditDetails,
-    #clientAuditDetails: _f$clientAuditDetails,
-    #isDeleted: _f$isDeleted,
     #dateOfReconciliationTime: _f$dateOfReconciliationTime,
   };
   @override
   final bool ignoreNull = true;
 
-  @override
-  final String discriminatorKey = 'type';
-  @override
-  final dynamic discriminatorValue = MappableClass.useAsDefault;
-  @override
-  late final ClassMapperBase superMapper =
-      EntityModelMapper.ensureInitialized();
-
   static StockReconciliationModel _instantiate(DecodingData data) {
     return StockReconciliationModel(
-        additionalFields: data.dec(_f$additionalFields),
         id: data.dec(_f$id),
         tenantId: data.dec(_f$tenantId),
         facilityId: data.dec(_f$facilityId),
@@ -376,10 +313,7 @@ class StockReconciliationModelMapper
         nonRecoverableError: data.dec(_f$nonRecoverableError),
         clientReferenceId: data.dec(_f$clientReferenceId),
         rowVersion: data.dec(_f$rowVersion),
-        dateOfReconciliation: data.dec(_f$dateOfReconciliation),
-        auditDetails: data.dec(_f$auditDetails),
-        clientAuditDetails: data.dec(_f$clientAuditDetails),
-        isDeleted: data.dec(_f$isDeleted));
+        dateOfReconciliation: data.dec(_f$dateOfReconciliation));
   }
 
   @override
@@ -440,20 +374,9 @@ extension StockReconciliationModelValueCopy<$R, $Out>
 abstract class StockReconciliationModelCopyWith<
     $R,
     $In extends StockReconciliationModel,
-    $Out> implements EntityModelCopyWith<$R, $In, $Out> {
-  StockReconciliationAdditionalFieldsCopyWith<
-      $R,
-      StockReconciliationAdditionalFields,
-      StockReconciliationAdditionalFields>? get additionalFields;
-  @override
-  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
-  @override
-  ClientAuditDetailsCopyWith<$R, ClientAuditDetails, ClientAuditDetails>?
-      get clientAuditDetails;
-  @override
+    $Out> implements ClassCopyWith<$R, $In, $Out> {
   $R call(
-      {StockReconciliationAdditionalFields? additionalFields,
-      String? id,
+      {String? id,
       String? tenantId,
       String? facilityId,
       String? productVariantId,
@@ -465,10 +388,7 @@ abstract class StockReconciliationModelCopyWith<
       bool? nonRecoverableError,
       String? clientReferenceId,
       int? rowVersion,
-      int? dateOfReconciliation,
-      AuditDetails? auditDetails,
-      ClientAuditDetails? clientAuditDetails,
-      bool? isDeleted});
+      int? dateOfReconciliation});
   StockReconciliationModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -483,23 +403,8 @@ class _StockReconciliationModelCopyWithImpl<$R, $Out>
   late final ClassMapperBase<StockReconciliationModel> $mapper =
       StockReconciliationModelMapper.ensureInitialized();
   @override
-  StockReconciliationAdditionalFieldsCopyWith<
-          $R,
-          StockReconciliationAdditionalFields,
-          StockReconciliationAdditionalFields>?
-      get additionalFields => $value.additionalFields?.copyWith
-          .$chain((v) => call(additionalFields: v));
-  @override
-  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
-      $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
-  @override
-  ClientAuditDetailsCopyWith<$R, ClientAuditDetails, ClientAuditDetails>?
-      get clientAuditDetails => $value.clientAuditDetails?.copyWith
-          .$chain((v) => call(clientAuditDetails: v));
-  @override
   $R call(
-          {Object? additionalFields = $none,
-          Object? id = $none,
+          {Object? id = $none,
           Object? tenantId = $none,
           Object? facilityId = $none,
           Object? productVariantId = $none,
@@ -511,12 +416,8 @@ class _StockReconciliationModelCopyWithImpl<$R, $Out>
           Object? nonRecoverableError = $none,
           String? clientReferenceId,
           Object? rowVersion = $none,
-          int? dateOfReconciliation,
-          Object? auditDetails = $none,
-          Object? clientAuditDetails = $none,
-          Object? isDeleted = $none}) =>
+          int? dateOfReconciliation}) =>
       $apply(FieldCopyWithData({
-        if (additionalFields != $none) #additionalFields: additionalFields,
         if (id != $none) #id: id,
         if (tenantId != $none) #tenantId: tenantId,
         if (facilityId != $none) #facilityId: facilityId,
@@ -532,16 +433,10 @@ class _StockReconciliationModelCopyWithImpl<$R, $Out>
         if (clientReferenceId != null) #clientReferenceId: clientReferenceId,
         if (rowVersion != $none) #rowVersion: rowVersion,
         if (dateOfReconciliation != null)
-          #dateOfReconciliation: dateOfReconciliation,
-        if (auditDetails != $none) #auditDetails: auditDetails,
-        if (clientAuditDetails != $none)
-          #clientAuditDetails: clientAuditDetails,
-        if (isDeleted != $none) #isDeleted: isDeleted
+          #dateOfReconciliation: dateOfReconciliation
       }));
   @override
   StockReconciliationModel $make(CopyWithData data) => StockReconciliationModel(
-      additionalFields:
-          data.get(#additionalFields, or: $value.additionalFields),
       id: data.get(#id, or: $value.id),
       tenantId: data.get(#tenantId, or: $value.tenantId),
       facilityId: data.get(#facilityId, or: $value.facilityId),
@@ -559,179 +454,10 @@ class _StockReconciliationModelCopyWithImpl<$R, $Out>
           data.get(#clientReferenceId, or: $value.clientReferenceId),
       rowVersion: data.get(#rowVersion, or: $value.rowVersion),
       dateOfReconciliation:
-          data.get(#dateOfReconciliation, or: $value.dateOfReconciliation),
-      auditDetails: data.get(#auditDetails, or: $value.auditDetails),
-      clientAuditDetails:
-          data.get(#clientAuditDetails, or: $value.clientAuditDetails),
-      isDeleted: data.get(#isDeleted, or: $value.isDeleted));
+          data.get(#dateOfReconciliation, or: $value.dateOfReconciliation));
 
   @override
   StockReconciliationModelCopyWith<$R2, StockReconciliationModel, $Out2>
       $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
           _StockReconciliationModelCopyWithImpl($value, $cast, t);
-}
-
-class StockReconciliationAdditionalFieldsMapper
-    extends SubClassMapperBase<StockReconciliationAdditionalFields> {
-  StockReconciliationAdditionalFieldsMapper._();
-
-  static StockReconciliationAdditionalFieldsMapper? _instance;
-  static StockReconciliationAdditionalFieldsMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals
-          .use(_instance = StockReconciliationAdditionalFieldsMapper._());
-    }
-    return _instance!;
-  }
-
-  @override
-  final String id = 'StockReconciliationAdditionalFields';
-
-  static String _$schema(StockReconciliationAdditionalFields v) => v.schema;
-  static const Field<StockReconciliationAdditionalFields, String> _f$schema =
-      Field('schema', _$schema, opt: true, def: 'StockReconciliation');
-  static int _$version(StockReconciliationAdditionalFields v) => v.version;
-  static const Field<StockReconciliationAdditionalFields, int> _f$version =
-      Field('version', _$version);
-  static List<AdditionalField> _$fields(
-          StockReconciliationAdditionalFields v) =>
-      v.fields;
-  static const Field<StockReconciliationAdditionalFields, List<AdditionalField>>
-      _f$fields = Field('fields', _$fields, opt: true, def: const []);
-
-  @override
-  final MappableFields<StockReconciliationAdditionalFields> fields = const {
-    #schema: _f$schema,
-    #version: _f$version,
-    #fields: _f$fields,
-  };
-  @override
-  final bool ignoreNull = true;
-
-  @override
-  final String discriminatorKey = 'type';
-  @override
-  final dynamic discriminatorValue = MappableClass.useAsDefault;
-  @override
-  late final ClassMapperBase superMapper =
-      AdditionalFieldsMapper.ensureInitialized();
-
-  static StockReconciliationAdditionalFields _instantiate(DecodingData data) {
-    return StockReconciliationAdditionalFields(
-        schema: data.dec(_f$schema),
-        version: data.dec(_f$version),
-        fields: data.dec(_f$fields));
-  }
-
-  @override
-  final Function instantiate = _instantiate;
-
-  static StockReconciliationAdditionalFields fromMap(Map<String, dynamic> map) {
-    return ensureInitialized()
-        .decodeMap<StockReconciliationAdditionalFields>(map);
-  }
-
-  static StockReconciliationAdditionalFields fromJson(String json) {
-    return ensureInitialized()
-        .decodeJson<StockReconciliationAdditionalFields>(json);
-  }
-}
-
-mixin StockReconciliationAdditionalFieldsMappable {
-  String toJson() {
-    return StockReconciliationAdditionalFieldsMapper.ensureInitialized()
-        .encodeJson<StockReconciliationAdditionalFields>(
-            this as StockReconciliationAdditionalFields);
-  }
-
-  Map<String, dynamic> toMap() {
-    return StockReconciliationAdditionalFieldsMapper.ensureInitialized()
-        .encodeMap<StockReconciliationAdditionalFields>(
-            this as StockReconciliationAdditionalFields);
-  }
-
-  StockReconciliationAdditionalFieldsCopyWith<
-          StockReconciliationAdditionalFields,
-          StockReconciliationAdditionalFields,
-          StockReconciliationAdditionalFields>
-      get copyWith => _StockReconciliationAdditionalFieldsCopyWithImpl(
-          this as StockReconciliationAdditionalFields, $identity, $identity);
-  @override
-  String toString() {
-    return StockReconciliationAdditionalFieldsMapper.ensureInitialized()
-        .stringifyValue(this as StockReconciliationAdditionalFields);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            StockReconciliationAdditionalFieldsMapper.ensureInitialized()
-                .isValueEqual(
-                    this as StockReconciliationAdditionalFields, other));
-  }
-
-  @override
-  int get hashCode {
-    return StockReconciliationAdditionalFieldsMapper.ensureInitialized()
-        .hashValue(this as StockReconciliationAdditionalFields);
-  }
-}
-
-extension StockReconciliationAdditionalFieldsValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, StockReconciliationAdditionalFields, $Out> {
-  StockReconciliationAdditionalFieldsCopyWith<$R,
-          StockReconciliationAdditionalFields, $Out>
-      get $asStockReconciliationAdditionalFields => $base.as((v, t, t2) =>
-          _StockReconciliationAdditionalFieldsCopyWithImpl(v, t, t2));
-}
-
-abstract class StockReconciliationAdditionalFieldsCopyWith<
-    $R,
-    $In extends StockReconciliationAdditionalFields,
-    $Out> implements AdditionalFieldsCopyWith<$R, $In, $Out> {
-  @override
-  ListCopyWith<$R, AdditionalField,
-      AdditionalFieldCopyWith<$R, AdditionalField, AdditionalField>> get fields;
-  @override
-  $R call({String? schema, int? version, List<AdditionalField>? fields});
-  StockReconciliationAdditionalFieldsCopyWith<$R2, $In, $Out2>
-      $chain<$R2, $Out2>(Then<$Out2, $R2> t);
-}
-
-class _StockReconciliationAdditionalFieldsCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, StockReconciliationAdditionalFields, $Out>
-    implements
-        StockReconciliationAdditionalFieldsCopyWith<$R,
-            StockReconciliationAdditionalFields, $Out> {
-  _StockReconciliationAdditionalFieldsCopyWithImpl(
-      super.value, super.then, super.then2);
-
-  @override
-  late final ClassMapperBase<StockReconciliationAdditionalFields> $mapper =
-      StockReconciliationAdditionalFieldsMapper.ensureInitialized();
-  @override
-  ListCopyWith<$R, AdditionalField,
-          AdditionalFieldCopyWith<$R, AdditionalField, AdditionalField>>
-      get fields => ListCopyWith($value.fields, (v, t) => v.copyWith.$chain(t),
-          (v) => call(fields: v));
-  @override
-  $R call({String? schema, int? version, List<AdditionalField>? fields}) =>
-      $apply(FieldCopyWithData({
-        if (schema != null) #schema: schema,
-        if (version != null) #version: version,
-        if (fields != null) #fields: fields
-      }));
-  @override
-  StockReconciliationAdditionalFields $make(CopyWithData data) =>
-      StockReconciliationAdditionalFields(
-          schema: data.get(#schema, or: $value.schema),
-          version: data.get(#version, or: $value.version),
-          fields: data.get(#fields, or: $value.fields));
-
-  @override
-  StockReconciliationAdditionalFieldsCopyWith<$R2,
-      StockReconciliationAdditionalFields, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _StockReconciliationAdditionalFieldsCopyWithImpl($value, $cast, t);
 }
