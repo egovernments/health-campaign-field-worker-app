@@ -706,7 +706,33 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                           .address
                                           ?.boundaryType;
 
-                                      print(entryType);
+                                      // print(entryType);
+                                      List<FacilityModel> filteredFacility = [];
+                                      if (entryType ==
+                                              StockRecordEntryType.receipt &&
+                                          (boundaryType != null &&
+                                              boundaryType.isNotEmpty)) {
+                                        filteredFacility =
+                                            getFilteredFacilities(
+                                          facilities,
+                                          boundaryType,
+                                          "childBoundaryType",
+                                        );
+                                      } else if ((entryType ==
+                                                  StockRecordEntryType
+                                                      .returned ||
+                                              entryType ==
+                                                  StockRecordEntryType
+                                                      .dispatch) &&
+                                          (boundaryType != null &&
+                                              boundaryType.isNotEmpty)) {
+                                        filteredFacility =
+                                            getFilteredFacilities(
+                                          facilities,
+                                          boundaryType,
+                                          "parentBoundaryType",
+                                        );
+                                      }
 
                                       //TODO below pseudocode
                                       // If entryType is received then filter facilities
@@ -723,7 +749,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                           final facility =
                                               await parent.push<FacilityModel>(
                                             FacilitySelectionRoute(
-                                              facilities: facilities,
+                                              facilities: filteredFacility,
                                             ),
                                           );
 
@@ -776,7 +802,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                               final facility = await parent
                                                   .push<FacilityModel>(
                                                 FacilitySelectionRoute(
-                                                  facilities: facilities,
+                                                  facilities: filteredFacility,
                                                 ),
                                               );
 
@@ -1042,6 +1068,35 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
         ),
       ),
     );
+  }
+
+  List<FacilityModel> getFilteredFacilities(
+    List<FacilityModel> facilities,
+    String? boundaryType,
+    String requiredBoundaryType,
+  ) {
+    List<FacilityModel> filteredFacilities = [];
+
+    for (FacilityModel facility in facilities) {
+      FacilityAdditionalFields? additionalFields = facility.additionalFields;
+      if (additionalFields != null) {
+        bool hasRequiredKey = additionalFields.fields
+            .any((field) => field.key == requiredBoundaryType);
+        if (hasRequiredKey) {
+          bool hasBoundaryType = additionalFields.fields.any((field) =>
+              field.key == requiredBoundaryType && field.value == boundaryType);
+          if (hasBoundaryType) {
+            filteredFacilities.add(facility);
+          }
+        } else {
+          filteredFacilities.add(facility);
+        }
+      } else {
+        filteredFacilities.add(facility);
+      }
+    }
+
+    return filteredFacilities;
   }
 
   void clearQRCodes() {
