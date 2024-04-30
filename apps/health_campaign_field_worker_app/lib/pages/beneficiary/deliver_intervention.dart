@@ -548,70 +548,76 @@ class _DeliverInterventionPageState
                                         children: [
                                           Column(
                                             children: [
-                                              DigitCard(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  children: [
-                                                    Text(
-                                                      localizations.translate(
-                                                        i18.deliverIntervention
-                                                            .deliverInterventionLabel,
+                                              SizedBox(
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                child: DigitCard(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Text(
+                                                        localizations.translate(
+                                                          i18.deliverIntervention
+                                                              .deliverInterventionLabel,
+                                                        ),
+                                                        style: theme.textTheme
+                                                            .displayMedium,
                                                       ),
-                                                      style: theme.textTheme
-                                                          .displayMedium,
-                                                    ),
-                                                    // if (context
-                                                    //         .beneficiaryType ==
-                                                    //     BeneficiaryType
-                                                    //         .individual)
-                                                    //   DigitStepper(
-                                                    //     activeStep:
-                                                    //         deliveryInterventionstate
-                                                    //                 .dose -
-                                                    //             1,
-                                                    //     stepRadius: 12.5,
-                                                    //     steps: steps,
-                                                    //     maxStepReached: 3,
-                                                    //     lineLength: (MediaQuery.of(
-                                                    //                     context)
-                                                    //                 .size
-                                                    //                 .width -
-                                                    //             12.5 *
-                                                    //                 2 *
-                                                    //                 steps
-                                                    //                     .length -
-                                                    //             50) /
-                                                    //         (steps.length - 1),
-                                                    //   ),
-                                                    // Solution Customizations
-                                                    // DigitDateFormPicker(
-                                                    //   isEnabled: false,
-                                                    //   formControlName:
-                                                    //       _dateOfAdministrationKey,
-                                                    //   label: localizations
-                                                    //       .translate(
-                                                    //     i18.householdDetails
-                                                    //         .dateOfRegistrationLabel,
-                                                    //   ),
-                                                    //   confirmText: localizations
-                                                    //       .translate(
-                                                    //     i18.common.coreCommonOk,
-                                                    //   ),
-                                                    //   cancelText: localizations
-                                                    //       .translate(
-                                                    //     i18.common
-                                                    //         .coreCommonCancel,
-                                                    //   ),
-                                                    //   isRequired: false,
-                                                    //   padding:
-                                                    //       const EdgeInsets.only(
-                                                    //     top: kPadding,
-                                                    //   ),
-                                                    // ),
-                                                  ],
+                                                      // if (context
+                                                      //         .beneficiaryType ==
+                                                      //     BeneficiaryType
+                                                      //         .individual)
+                                                      //   DigitStepper(
+                                                      //     activeStep:
+                                                      //         deliveryInterventionstate
+                                                      //                 .dose -
+                                                      //             1,
+                                                      //     stepRadius: 12.5,
+                                                      //     steps: steps,
+                                                      //     maxStepReached: 3,
+                                                      //     lineLength: (MediaQuery.of(
+                                                      //                     context)
+                                                      //                 .size
+                                                      //                 .width -
+                                                      //             12.5 *
+                                                      //                 2 *
+                                                      //                 steps
+                                                      //                     .length -
+                                                      //             50) /
+                                                      //         (steps.length - 1),
+                                                      //   ),
+                                                      // Solution Customizations
+                                                      // DigitDateFormPicker(
+                                                      //   isEnabled: false,
+                                                      //   formControlName:
+                                                      //       _dateOfAdministrationKey,
+                                                      //   label: localizations
+                                                      //       .translate(
+                                                      //     i18.householdDetails
+                                                      //         .dateOfRegistrationLabel,
+                                                      //   ),
+                                                      //   confirmText: localizations
+                                                      //       .translate(
+                                                      //     i18.common.coreCommonOk,
+                                                      //   ),
+                                                      //   cancelText: localizations
+                                                      //       .translate(
+                                                      //     i18.common
+                                                      //         .coreCommonCancel,
+                                                      //   ),
+                                                      //   isRequired: false,
+                                                      //   padding:
+                                                      //       const EdgeInsets.only(
+                                                      //     top: kPadding,
+                                                      //   ),
+                                                      // ),
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
                                               DigitCard(
