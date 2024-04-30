@@ -24,6 +24,8 @@ import 'package:registration_delivery/models/entities/referral.dart';
 import 'package:registration_delivery/models/entities/side_effect.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
+import 'package:registration_delivery/utils/extensions/extensions.dart';
+import 'package:registration_delivery/utils/utils.dart';
 import 'package:registration_delivery/widgets/progress_bar/beneficiary_progress.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
@@ -31,12 +33,9 @@ import '../blocs/attendance/hcm_attendance_bloc.dart';
 import '../blocs/auth/auth.dart';
 import '../blocs/inventory/hcm_inventory_bloc.dart';
 import '../blocs/referral_reconciliation/hcm_referral_reconciliation_bloc.dart';
-// import '../blocs/search_households/search_bloc_common_wrapper.dart';
-// import '../blocs/search_households/search_households.dart';
 import '../blocs/sync/sync.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/secure_store/secure_store.dart';
-import 'package:digit_data_model/data_model.dart';
 // import '../models/entities/hcm_attendance_log_model.dart';
 // import '../models/entities/hcm_attendance_model.dart';
 import '../models/entities/hcm_hf_referral.dart';
@@ -85,6 +84,7 @@ class _HomePageState extends LocalizedState<HomePage> {
         }
       }
     });
+    setRegistrationDeliverySingleton(context);
   }
 
   //  Be sure to cancel subscription after you are done
@@ -620,7 +620,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           homeShowcaseData.hfBeneficiaryReferral.showcaseKey,
       i18.home.manageAttendanceLabel:
           homeShowcaseData.manageAttendance.showcaseKey,
-      // i18.home.db: homeShowcaseData.db.showcaseKey,
+      i18.home.db: homeShowcaseData.db.showcaseKey,
     };
 
     final homeItemsLabel = <String>[
@@ -732,6 +732,71 @@ class _HomePageState extends LocalizedState<HomePage> {
           );
     }
   }
+}
+
+void setRegistrationDeliverySingleton(BuildContext context) {
+  context.read<AppInitializationBloc>().state.maybeWhen(
+      orElse: () {},
+      initialized: (AppConfiguration appConfiguration, _) {
+        RegistrationDeliverySingleton().setInitialData(
+          tenantId: envConfig.variables.tenantId,
+          loggedInUserUuid: context.loggedInUserUuid,
+          maxRadius: appConfiguration.maxRadius!,
+          projectId: context.projectId,
+          selectedBeneficiaryType: context.beneficiaryType,
+          projectType: context.selectedProjectType,
+          selectedProject: context.selectedProject,
+          persistenceConfiguration: PersistenceConfiguration.offlineFirst,
+          genderOptions: appConfiguration.genderOptions!.map((option) {
+            return {
+              'label': option.name,
+              'value': option.code,
+            };
+          }).toList(),
+          idTypeOptions: appConfiguration.idTypeOptions!.map((option) {
+            return {
+              'label': option.name,
+              'value': option.code,
+            };
+          }).toList(),
+          householdDeletionReasonOptions:
+          appConfiguration.householdDeletionReasonOptions!.map((option) {
+            return {
+              'label': option.name,
+              'value': option.code,
+            };
+          }).toList(),
+          householdMemberDeletionReasonOptions: appConfiguration
+              .householdMemberDeletionReasonOptions!
+              .map((option) {
+            return {
+              'label': option.name,
+              'value': option.code,
+            };
+          }).toList(),
+          deliveryCommentOptions:
+          appConfiguration.deliveryCommentOptions!.map((option) {
+            return {
+              'label': option.name,
+              'value': option.code,
+            };
+          }).toList(),
+          symptomsTypes: appConfiguration.symptomsTypes!.map((option) {
+            return {
+              'label': option.name,
+              'value': option.code,
+              'bool': option.active,
+            };
+          }).toList(),
+          referralReasons: appConfiguration.referralReasons!.map((option) {
+            return {
+              'label': option.name,
+              'value': option.code,
+              'bool': option.active,
+            };
+          }).toList(),
+        );
+      });
 }
 
 class _HomeItemDataModel {

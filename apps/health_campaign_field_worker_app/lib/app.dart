@@ -156,66 +156,6 @@ class MainApplicationState extends State<MainApplication>
                     firstLanguage = appConfig.languages?.last.value;
                     final languages = appConfig.languages;
 
-                    RegistrationDeliverySingleton().setInitialData(
-                      tenantId: envConfig.variables.tenantId,
-                      loggedInUserUuid: context.loggedInUserUuid,
-                      maxRadius: appConfig.maxRadius!,
-                      projectId: context.projectId,
-                      selectedBeneficiaryType: context.beneficiaryType,
-                      projectType: context.selectedProjectType!,
-                      selectedProject: context.selectedProject,
-                      boundaryModel: context.boundary,
-                      genderOptions: appConfig.genderOptions!.map((option) {
-                        return {
-                          'label': option.name,
-                          'value': option.code,
-                        };
-                      }).toList(),
-                      idTypeOptions: appConfig.idTypeOptions!.map((option) {
-                        return {
-                          'label': option.name,
-                          'value': option.code,
-                        };
-                      }).toList(),
-                      householdDeletionReasonOptions: appConfig
-                          .householdDeletionReasonOptions!
-                          .map((option) {
-                        return {
-                          'label': option.name,
-                          'value': option.code,
-                        };
-                      }).toList(),
-                      householdMemberDeletionReasonOptions: appConfig
-                          .householdMemberDeletionReasonOptions!
-                          .map((option) {
-                        return {
-                          'label': option.name,
-                          'value': option.code,
-                        };
-                      }).toList(),
-                      deliveryCommentOptions:
-                      appConfig.deliveryCommentOptions!.map((option) {
-                        return {
-                          'label': option.name,
-                          'value': option.code,
-                        };
-                      }).toList(),
-                      symptomsTypes: appConfig.symptomsTypes!.map((option) {
-                        return {
-                          'label': option.name,
-                          'value': option.code,
-                          'bool': option.active,
-                        };
-                      }).toList(),
-                      referralReasons: appConfig.referralReasons!.map((option) {
-                        return {
-                          'label': option.name,
-                          'value': option.code,
-                          'bool': option.active,
-                        };
-                      }).toList(),
-                    );
-
                     return MultiBlocProvider(
                       providers: [
                         BlocProvider(

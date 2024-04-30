@@ -333,15 +333,18 @@ class RegistrationDeliverySingleton {
   Iterable<dynamic>? _symptomsTypes;
   Iterable<dynamic>? _referralReasons;
 
+  void setBoundary({required BoundaryModel boundary}) {
+    _boundaryModel = boundary;
+  }
+
   void setInitialData(
       {required String tenantId,
       required String loggedInUserUuid,
       required double maxRadius,
       required String projectId,
       required BeneficiaryType selectedBeneficiaryType,
-      required ProjectType projectType,
+      required ProjectType? projectType,
       required ProjectModel selectedProject,
-      required BoundaryModel boundaryModel,
       PersistenceConfiguration? persistenceConfiguration,
       required List<Map<String, String>> genderOptions,
       required List<Map<String, String>> idTypeOptions,
@@ -357,7 +360,6 @@ class RegistrationDeliverySingleton {
     _beneficiaryType = selectedBeneficiaryType;
     _projectType = projectType;
     _selectedProject = selectedProject;
-    _boundaryModel = boundaryModel;
     _persistenceConfiguration = persistenceConfiguration!;
     _genderOptions = genderOptions;
     _idTypeOptions = idTypeOptions;

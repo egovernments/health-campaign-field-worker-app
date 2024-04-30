@@ -90,7 +90,7 @@ class _SearchBeneficiaryPageState
                     .add(SearchHouseholdsEvent.searchByProximity(
                   latitude: lat,
                   longititude: long,
-                  projectId: RegistrationDeliverySingleton().projectId!!,
+                  projectId: RegistrationDeliverySingleton().projectId!,
                   maxRadius: RegistrationDeliverySingleton().maxRadius!,
                   offset: offset + limit,
                   limit: limit,
@@ -101,14 +101,15 @@ class _SearchBeneficiaryPageState
               } else if (metrics.atEdge &&
                   searchController.text != '' &&
                   metrics.pixels != 0) {
-                final bloc = context.read<SearchHouseholdsBloc>();
-                bloc.add(SearchHouseholdsEvent.searchByHouseholdHead(
-                  searchText: searchController.text,
-                  projectId: RegistrationDeliverySingleton().projectId!!,
-                  isProximityEnabled: isProximityEnabled,
-                  offset: offset + limit,
-                  limit: limit,
-                ));
+                blocWrapper.searchByHeadBloc.add(
+                  SearchHouseholdsEvent.searchByHouseholdHead(
+                    searchText: searchController.text,
+                    projectId: RegistrationDeliverySingleton().projectId!,
+                    isProximityEnabled: isProximityEnabled,
+                    offset: offset + limit,
+                    limit: limit,
+                  ),
+                );
                 setState(() {
                   offset = (offset + limit);
                 });
@@ -296,7 +297,7 @@ class _SearchBeneficiaryPageState
                 listener: (context, scannerState) {
                   context.read<SearchBlocWrapper>().tagSearchBloc.add(
                         SearchHouseholdsEvent.searchByTag(
-                          tag: scannerState.qrCodes.last,
+                          tag: scannerState.qrCodes.firstOrNull ?? '',
                           projectId: RegistrationDeliverySingleton().projectId!,
                         ),
                       );

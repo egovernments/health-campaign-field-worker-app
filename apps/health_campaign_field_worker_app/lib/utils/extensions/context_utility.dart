@@ -108,6 +108,8 @@ extension ContextUtilityExtensions on BuildContext {
       throw AppException('No boundary is selected');
     }
 
+    RegistrationDeliverySingleton().setBoundary(boundary: selectedBoundary);
+
     return selectedBoundary;
   }
 

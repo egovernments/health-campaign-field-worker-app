@@ -471,7 +471,7 @@ class _IndividualDetailsPageState
                                   .idTypeOptions!
                                   .map(
                                 (e) {
-                                  return localizations.translate(e['name']!);
+                                  return localizations.translate(e['label']!);
                                 },
                               ).toList(),
                               formControlName: _idTypeKey,
@@ -623,7 +623,7 @@ class _IndividualDetailsPageState
                               menuItems: RegistrationDeliverySingleton()
                                   .genderOptions!
                                   .map(
-                                    (e) => e['name']!,
+                                    (e) => e['label']!,
                                   )
                                   .toList(),
                               formControlName: _genderKey,
