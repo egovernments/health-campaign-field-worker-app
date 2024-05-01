@@ -77,7 +77,7 @@ class _IneligibilityReasonsPageState
                                     showHelp: false,
                                   ),
                                   footer: SizedBox(
-                                    height: 100,
+                                    height: 120,
                                     child: DigitCard(
                                       child: DigitElevatedButton(
                                         onPressed: () async {
