@@ -304,41 +304,43 @@ bool checkEligibilityForAgeAndSideEffect(
   TaskModel? tasks,
   List<SideEffectModel>? sideEffects,
 ) {
-  int totalAgeMonths = age.years * 12 + age.months;
-  final currentCycle = projectType?.cycles?.firstWhereOrNull(
-    (e) =>
-        (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
-        (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
-    // Return null when no matching cycle is found
-  );
-  if (currentCycle != null &&
-      currentCycle.startDate != null &&
-      currentCycle.endDate != null) {
-    bool recordedSideEffect = false;
-    if ((tasks != null) && sideEffects != null && sideEffects.isNotEmpty) {
-      final lastTaskTime =
-          tasks.clientReferenceId == sideEffects.last.taskClientReferenceId
-              ? tasks.clientAuditDetails?.createdTime
-              : null;
-      recordedSideEffect = lastTaskTime != null &&
-          (lastTaskTime >= currentCycle.startDate! &&
-              lastTaskTime <= currentCycle.endDate!);
+  return true;
 
-      return projectType?.validMinAge != null &&
-              projectType?.validMaxAge != null
-          ? totalAgeMonths >= projectType!.validMinAge! &&
-                  totalAgeMonths <= projectType.validMaxAge!
-              ? recordedSideEffect && !checkStatus([tasks], currentCycle)
-                  ? false
-                  : true
-              : false
-          : false;
-    } else {
-      return true;
-    }
-  }
+  // int totalAgeMonths = age.years * 12 + age.months;
+  // final currentCycle = projectType?.cycles?.firstWhereOrNull(
+  //   (e) =>
+  //       (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
+  //       (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
+  //   // Return null when no matching cycle is found
+  // );
+  // if (currentCycle != null &&
+  //     currentCycle.startDate != null &&
+  //     currentCycle.endDate != null) {
+  //   bool recordedSideEffect = false;
+  //   if ((tasks != null) && sideEffects != null && sideEffects.isNotEmpty) {
+  //     final lastTaskTime =
+  //         tasks.clientReferenceId == sideEffects.last.taskClientReferenceId
+  //             ? tasks.clientAuditDetails?.createdTime
+  //             : null;
+  //     recordedSideEffect = lastTaskTime != null &&
+  //         (lastTaskTime >= currentCycle.startDate! &&
+  //             lastTaskTime <= currentCycle.endDate!);
 
-  return false;
+  //     return projectType?.validMinAge != null &&
+  //             projectType?.validMaxAge != null
+  //         ? totalAgeMonths >= projectType!.validMinAge! &&
+  //                 totalAgeMonths <= projectType.validMaxAge!
+  //             ? recordedSideEffect && !checkStatus([tasks], currentCycle)
+  //                 ? false
+  //                 : true
+  //             : false
+  //         : false;
+  //   } else {
+  //     return true;
+  //   }
+  // }
+
+  // return false;
 }
 
 bool checkIfBeneficiaryRefused(
