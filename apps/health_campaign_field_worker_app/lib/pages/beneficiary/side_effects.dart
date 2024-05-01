@@ -39,6 +39,8 @@ class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
   List<bool> symptomsValues = [];
   List<String> symptomsTypes = [];
   bool symptomsSelected = true;
+  bool showOtherTextField = false;
+  final TextEditingController otherController = TextEditingController();
 
   @override
   void initState() {
@@ -111,9 +113,16 @@ class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                                       i < symptomsValues.length;
                                                       i++) {
                                                     if (symptomsValues[i]) {
-                                                      symptoms.add(
-                                                        symptomsTypes[i],
-                                                      );
+                                                      if (symptomsTypes[i] ==
+                                                          'OTHER') {
+                                                        symptoms.add(
+                                                          otherController.text,
+                                                        );
+                                                      } else {
+                                                        symptoms.add(
+                                                          symptomsTypes[i],
+                                                        );
+                                                      }
                                                     }
                                                   }
 
@@ -324,6 +333,9 @@ class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                                                               symptomsSelected = symptomsValues.any(
                                                                                 (e) => e,
                                                                               );
+                                                                              setState(() {
+                                                                                showOtherTextField = symptomsValues[symptomsTypes.indexOf('OTHER')] ? true : false;
+                                                                              });
                                                                             },
                                                                           );
                                                                         },
@@ -331,6 +343,12 @@ class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                                                     )
                                                                     .toList(),
                                                           ),
+                                                          if (showOtherTextField)
+                                                            TextField(
+                                                              controller:
+                                                                  otherController,
+                                                              maxLength: 64,
+                                                            ),
                                                           Visibility(
                                                             visible:
                                                                 !symptomsSelected,
