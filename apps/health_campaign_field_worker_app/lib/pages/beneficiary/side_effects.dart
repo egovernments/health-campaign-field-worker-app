@@ -41,6 +41,7 @@ class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
   bool symptomsSelected = true;
   bool showOtherTextField = false;
   final TextEditingController otherController = TextEditingController();
+  bool symptomsSubmitted = false;
 
   @override
   void initState() {
@@ -106,82 +107,90 @@ class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                                   i18.common.coreCommonSubmit,
                                                 ),
                                                 action: (ctx) {
-                                                  final List<String> symptoms =
-                                                      [];
+                                                  if (!symptomsSubmitted) {
+                                                    symptomsSubmitted = true;
+                                                    final List<String>
+                                                        symptoms = [];
 
-                                                  for (int i = 0;
-                                                      i < symptomsValues.length;
-                                                      i++) {
-                                                    if (symptomsValues[i]) {
-                                                      if (symptomsTypes[i] ==
-                                                          'OTHER') {
-                                                        symptoms.add(
-                                                          otherController.text,
-                                                        );
-                                                      } else {
-                                                        symptoms.add(
-                                                          symptomsTypes[i],
-                                                        );
+                                                    for (int i = 0;
+                                                        i <
+                                                            symptomsValues
+                                                                .length;
+                                                        i++) {
+                                                      if (symptomsValues[i]) {
+                                                        if (symptomsTypes[i] ==
+                                                            'OTHER') {
+                                                          symptoms.add(
+                                                            otherController
+                                                                .text,
+                                                          );
+                                                        } else {
+                                                          symptoms.add(
+                                                            symptomsTypes[i],
+                                                          );
+                                                        }
                                                       }
                                                     }
-                                                  }
 
-                                                  final clientReferenceId =
-                                                      IdGen.i.identifier;
-                                                  context
-                                                      .read<SideEffectsBloc>()
-                                                      .add(
-                                                        SideEffectsSubmitEvent(
-                                                          SideEffectModel(
-                                                            id: null,
-                                                            taskClientReferenceId:
-                                                                widget
-                                                                    .tasks
-                                                                    .last
-                                                                    .clientReferenceId,
-                                                            projectId: context
-                                                                .projectId,
-                                                            symptoms: symptoms,
-                                                            clientReferenceId:
-                                                                clientReferenceId,
-                                                            tenantId: envConfig
-                                                                .variables
-                                                                .tenantId,
-                                                            rowVersion: 1,
-                                                            auditDetails:
-                                                                AuditDetails(
-                                                              createdBy: context
-                                                                  .loggedInUserUuid,
-                                                              createdTime: context
-                                                                  .millisecondsSinceEpoch(),
-                                                              lastModifiedBy:
-                                                                  context
-                                                                      .loggedInUserUuid,
-                                                              lastModifiedTime:
-                                                                  context
-                                                                      .millisecondsSinceEpoch(),
+                                                    final clientReferenceId =
+                                                        IdGen.i.identifier;
+                                                    context
+                                                        .read<SideEffectsBloc>()
+                                                        .add(
+                                                          SideEffectsSubmitEvent(
+                                                            SideEffectModel(
+                                                              id: null,
+                                                              taskClientReferenceId:
+                                                                  widget
+                                                                      .tasks
+                                                                      .last
+                                                                      .clientReferenceId,
+                                                              projectId: context
+                                                                  .projectId,
+                                                              symptoms:
+                                                                  symptoms,
+                                                              clientReferenceId:
+                                                                  clientReferenceId,
+                                                              tenantId:
+                                                                  envConfig
+                                                                      .variables
+                                                                      .tenantId,
+                                                              rowVersion: 1,
+                                                              auditDetails:
+                                                                  AuditDetails(
+                                                                createdBy: context
+                                                                    .loggedInUserUuid,
+                                                                createdTime: context
+                                                                    .millisecondsSinceEpoch(),
+                                                                lastModifiedBy:
+                                                                    context
+                                                                        .loggedInUserUuid,
+                                                                lastModifiedTime:
+                                                                    context
+                                                                        .millisecondsSinceEpoch(),
+                                                              ),
+                                                              clientAuditDetails:
+                                                                  ClientAuditDetails(
+                                                                createdBy: context
+                                                                    .loggedInUserUuid,
+                                                                createdTime: context
+                                                                    .millisecondsSinceEpoch(),
+                                                                lastModifiedBy:
+                                                                    context
+                                                                        .loggedInUserUuid,
+                                                                lastModifiedTime:
+                                                                    context
+                                                                        .millisecondsSinceEpoch(),
+                                                              ),
                                                             ),
-                                                            clientAuditDetails:
-                                                                ClientAuditDetails(
-                                                              createdBy: context
-                                                                  .loggedInUserUuid,
-                                                              createdTime: context
-                                                                  .millisecondsSinceEpoch(),
-                                                              lastModifiedBy:
-                                                                  context
-                                                                      .loggedInUserUuid,
-                                                              lastModifiedTime:
-                                                                  context
-                                                                      .millisecondsSinceEpoch(),
-                                                            ),
+                                                            false,
                                                           ),
-                                                          false,
-                                                        ),
-                                                      );
-                                                  Navigator.of(
-                                                    context,
-                                                    rootNavigator: true,
-                                                  ).pop(true);
+                                                        );
+                                                    Navigator.of(
+                                                      context,
+                                                      rootNavigator: true,
+                                                    ).pop(true);
+                                                  }
                                                 },
                                               ),
                                               secondaryAction:
