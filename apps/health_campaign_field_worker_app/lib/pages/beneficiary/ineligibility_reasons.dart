@@ -45,6 +45,7 @@ class _IneligibilityReasonsPageState
   bool stateChanged = false;
   bool reasonsSelected = true;
   static const _ineligibleReason = "ineligibleReason";
+  bool isReasonSubmitted = false;
 
   @override
   void initState() {
@@ -80,173 +81,193 @@ class _IneligibilityReasonsPageState
                                     height: 120,
                                     child: DigitCard(
                                       child: DigitElevatedButton(
-                                        onPressed: () async {
-                                          if (form
-                                                  .control(_ineligibleReason)
-                                                  .value !=
-                                              null) {
-                                            setState(() {
-                                              reasonsSelected = true;
-                                            });
-                                            final router = context.router;
-
-                                            final shouldSubmit =
-                                                await DigitDialog.show<bool>(
-                                              context,
-                                              options: DigitDialogOptions(
-                                                titleText:
-                                                    localizations.translate(
-                                                  i18.ineligibilityReasons
-                                                      .dialogTitle,
-                                                ),
-                                                contentText:
-                                                    localizations.translate(
-                                                  i18.ineligibilityReasons
-                                                      .dialogContent,
-                                                ),
-                                                primaryAction:
-                                                    DigitDialogActions(
-                                                  label:
-                                                      localizations.translate(
-                                                    i18.common.coreCommonSubmit,
-                                                  ),
-                                                  action: (ctx) {
-                                                    final dynamic reason = form
+                                        onPressed: isReasonSubmitted
+                                            ? null
+                                            : () async {
+                                                if (form
                                                         .control(
-                                                          _ineligibleReason,
-                                                        )
-                                                        .value;
+                                                            _ineligibleReason)
+                                                        .value !=
+                                                    null) {
+                                                  setState(() {
+                                                    reasonsSelected = true;
+                                                  });
+                                                  final router = context.router;
 
-                                                    final clientReferenceId =
-                                                        IdGen.i.identifier;
-                                                    context
-                                                        .read<
-                                                            DeliverInterventionBloc>()
-                                                        .add(
-                                                          DeliverInterventionSubmitEvent(
-                                                            TaskModel(
-                                                              projectBeneficiaryClientReferenceId:
-                                                                  widget
-                                                                      .projectBeneficiaryClientRefId,
-                                                              clientReferenceId:
-                                                                  clientReferenceId,
-                                                              tenantId:
-                                                                  envConfig
-                                                                      .variables
-                                                                      .tenantId,
-                                                              rowVersion: 1,
-                                                              auditDetails:
-                                                                  AuditDetails(
-                                                                createdBy: context
-                                                                    .loggedInUserUuid,
-                                                                createdTime: context
-                                                                    .millisecondsSinceEpoch(),
-                                                              ),
-                                                              projectId: context
-                                                                  .projectId,
-                                                              status: Status
-                                                                  .beneficiaryIneligible
-                                                                  .toValue(),
-                                                              clientAuditDetails:
-                                                                  ClientAuditDetails(
-                                                                createdBy: context
-                                                                    .loggedInUserUuid,
-                                                                createdTime: context
-                                                                    .millisecondsSinceEpoch(),
-                                                                lastModifiedBy:
-                                                                    context
-                                                                        .loggedInUserUuid,
-                                                                lastModifiedTime:
-                                                                    context
-                                                                        .millisecondsSinceEpoch(),
-                                                              ),
-                                                              additionalFields:
-                                                                  TaskAdditionalFields(
-                                                                version: 1,
-                                                                fields: [
-                                                                  AdditionalField(
-                                                                    'taskStatus',
-                                                                    Status
+                                                  final shouldSubmit =
+                                                      await DigitDialog.show<
+                                                          bool>(
+                                                    context,
+                                                    options: DigitDialogOptions(
+                                                      titleText: localizations
+                                                          .translate(
+                                                        i18.ineligibilityReasons
+                                                            .dialogTitle,
+                                                      ),
+                                                      contentText: localizations
+                                                          .translate(
+                                                        i18.ineligibilityReasons
+                                                            .dialogContent,
+                                                      ),
+                                                      primaryAction:
+                                                          DigitDialogActions(
+                                                        label: localizations
+                                                            .translate(
+                                                          i18.common
+                                                              .coreCommonSubmit,
+                                                        ),
+                                                        action: (ctx) {
+                                                          isReasonSubmitted =
+                                                              true;
+                                                          final dynamic reason =
+                                                              form
+                                                                  .control(
+                                                                    _ineligibleReason,
+                                                                  )
+                                                                  .value;
+
+                                                          final clientReferenceId =
+                                                              IdGen
+                                                                  .i.identifier;
+                                                          context
+                                                              .read<
+                                                                  DeliverInterventionBloc>()
+                                                              .add(
+                                                                DeliverInterventionSubmitEvent(
+                                                                  TaskModel(
+                                                                    projectBeneficiaryClientReferenceId:
+                                                                        widget
+                                                                            .projectBeneficiaryClientRefId,
+                                                                    clientReferenceId:
+                                                                        clientReferenceId,
+                                                                    tenantId: envConfig
+                                                                        .variables
+                                                                        .tenantId,
+                                                                    rowVersion:
+                                                                        1,
+                                                                    auditDetails:
+                                                                        AuditDetails(
+                                                                      createdBy:
+                                                                          context
+                                                                              .loggedInUserUuid,
+                                                                      createdTime:
+                                                                          context
+                                                                              .millisecondsSinceEpoch(),
+                                                                    ),
+                                                                    projectId:
+                                                                        context
+                                                                            .projectId,
+                                                                    status: Status
                                                                         .beneficiaryIneligible
                                                                         .toValue(),
+                                                                    clientAuditDetails:
+                                                                        ClientAuditDetails(
+                                                                      createdBy:
+                                                                          context
+                                                                              .loggedInUserUuid,
+                                                                      createdTime:
+                                                                          context
+                                                                              .millisecondsSinceEpoch(),
+                                                                      lastModifiedBy:
+                                                                          context
+                                                                              .loggedInUserUuid,
+                                                                      lastModifiedTime:
+                                                                          context
+                                                                              .millisecondsSinceEpoch(),
+                                                                    ),
+                                                                    additionalFields:
+                                                                        TaskAdditionalFields(
+                                                                      version:
+                                                                          1,
+                                                                      fields: [
+                                                                        AdditionalField(
+                                                                          'taskStatus',
+                                                                          Status
+                                                                              .beneficiaryIneligible
+                                                                              .toValue(),
+                                                                        ),
+                                                                        AdditionalField(
+                                                                          'ineligibleReasons',
+                                                                          reason
+                                                                              .toString(),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                    address: widget
+                                                                        .individual
+                                                                        .address
+                                                                        ?.first
+                                                                        .copyWith(
+                                                                      relatedClientReferenceId:
+                                                                          clientReferenceId,
+                                                                      id: null,
+                                                                    ),
                                                                   ),
-                                                                  AdditionalField(
-                                                                    'ineligibleReasons',
-                                                                    reason
-                                                                        .toString(),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              address: widget
-                                                                  .individual
-                                                                  .address
-                                                                  ?.first
-                                                                  .copyWith(
-                                                                relatedClientReferenceId:
-                                                                    clientReferenceId,
-                                                                id: null,
-                                                              ),
-                                                            ),
-                                                            false,
-                                                            context.boundary,
+                                                                  false,
+                                                                  context
+                                                                      .boundary,
+                                                                ),
+                                                              );
+                                                          Navigator.of(
+                                                            context,
+                                                            rootNavigator: true,
+                                                          ).pop(true);
+                                                        },
+                                                      ),
+                                                      secondaryAction:
+                                                          DigitDialogActions(
+                                                        label: localizations
+                                                            .translate(
+                                                          i18.common
+                                                              .coreCommonCancel,
+                                                        ),
+                                                        action: (context) =>
+                                                            Navigator.of(
+                                                          context,
+                                                          rootNavigator: true,
+                                                        ).pop(false),
+                                                      ),
+                                                    ),
+                                                  );
+
+                                                  if (shouldSubmit ?? false) {
+                                                    final reloadState =
+                                                        context.read<
+                                                            HouseholdOverviewBloc>();
+                                                    Future.delayed(
+                                                      const Duration(
+                                                        milliseconds: 1000,
+                                                      ),
+                                                      () {
+                                                        reloadState.add(
+                                                          HouseholdOverviewReloadEvent(
+                                                            projectId: context
+                                                                .projectId,
+                                                            projectBeneficiaryType:
+                                                                context
+                                                                    .beneficiaryType,
                                                           ),
                                                         );
-                                                    Navigator.of(
-                                                      context,
-                                                      rootNavigator: true,
-                                                    ).pop(true);
-                                                  },
-                                                ),
-                                                secondaryAction:
-                                                    DigitDialogActions(
-                                                  label:
-                                                      localizations.translate(
-                                                    i18.common.coreCommonCancel,
-                                                  ),
-                                                  action: (context) =>
-                                                      Navigator.of(
-                                                    context,
-                                                    rootNavigator: true,
-                                                  ).pop(false),
-                                                ),
-                                              ),
-                                            );
-
-                                            if (shouldSubmit ?? false) {
-                                              final reloadState = context.read<
-                                                  HouseholdOverviewBloc>();
-                                              Future.delayed(
-                                                const Duration(
-                                                  milliseconds: 1000,
-                                                ),
-                                                () {
-                                                  reloadState.add(
-                                                    HouseholdOverviewReloadEvent(
-                                                      projectId:
-                                                          context.projectId,
-                                                      projectBeneficiaryType:
-                                                          context
-                                                              .beneficiaryType,
-                                                    ),
-                                                  );
-                                                },
-                                              ).then(
-                                                (value) {
-                                                  context.router.popAndPush(
-                                                    HouseholdAcknowledgementRoute(
-                                                      enableViewHousehold: true,
-                                                    ),
-                                                  );
-                                                  Navigator.pop(context);
-                                                },
-                                              );
-                                            }
-                                          } else {
-                                            setState(() {
-                                              reasonsSelected = false;
-                                            });
-                                          }
-                                        },
+                                                      },
+                                                    ).then(
+                                                      (value) {
+                                                        context.router
+                                                            .popAndPush(
+                                                          HouseholdAcknowledgementRoute(
+                                                            enableViewHousehold:
+                                                                true,
+                                                          ),
+                                                        );
+                                                        Navigator.pop(context);
+                                                      },
+                                                    );
+                                                  }
+                                                } else {
+                                                  setState(() {
+                                                    reasonsSelected = false;
+                                                  });
+                                                }
+                                              },
                                         child: Center(
                                           child: Text(
                                             localizations.translate(
