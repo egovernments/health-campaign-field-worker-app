@@ -81,162 +81,184 @@ class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                     padding: const EdgeInsets.fromLTRB(
                                         kPadding, 0, kPadding, 0),
                                     child: DigitElevatedButton(
-                                      onPressed: () async {
-                                        if (symptomsValues.any((e) => e)) {
-                                          setState(() {
-                                            symptomsSelected = true;
-                                          });
-                                          final router = context.router;
+                                      onPressed: symptomsSubmitted
+                                          ? null
+                                          : () async {
+                                              if (symptomsValues
+                                                  .any((e) => e)) {
+                                                setState(() {
+                                                  symptomsSelected = true;
+                                                });
+                                                final router = context.router;
 
-                                          final shouldSubmit =
-                                              await DigitDialog.show<bool>(
-                                            context,
-                                            options: DigitDialogOptions(
-                                              titleText:
-                                                  localizations.translate(
-                                                i18.deliverIntervention
-                                                    .dialogTitle,
-                                              ),
-                                              contentText:
-                                                  localizations.translate(
-                                                i18.deliverIntervention
-                                                    .dialogContent,
-                                              ),
-                                              primaryAction: DigitDialogActions(
-                                                label: localizations.translate(
-                                                  i18.common.coreCommonSubmit,
-                                                ),
-                                                action: (ctx) {
-                                                  if (!symptomsSubmitted) {
-                                                    symptomsSubmitted = true;
-                                                    final List<String>
-                                                        symptoms = [];
-
-                                                    for (int i = 0;
-                                                        i <
-                                                            symptomsValues
-                                                                .length;
-                                                        i++) {
-                                                      if (symptomsValues[i]) {
-                                                        if (symptomsTypes[i] ==
-                                                            'OTHER') {
-                                                          symptoms.add(
-                                                            otherController
-                                                                .text,
-                                                          );
-                                                        } else {
-                                                          symptoms.add(
-                                                            symptomsTypes[i],
-                                                          );
-                                                        }
-                                                      }
-                                                    }
-
-                                                    final clientReferenceId =
-                                                        IdGen.i.identifier;
-                                                    context
-                                                        .read<SideEffectsBloc>()
-                                                        .add(
-                                                          SideEffectsSubmitEvent(
-                                                            SideEffectModel(
-                                                              id: null,
-                                                              taskClientReferenceId:
-                                                                  widget
-                                                                      .tasks
-                                                                      .last
-                                                                      .clientReferenceId,
-                                                              projectId: context
-                                                                  .projectId,
-                                                              symptoms:
-                                                                  symptoms,
-                                                              clientReferenceId:
-                                                                  clientReferenceId,
-                                                              tenantId:
-                                                                  envConfig
-                                                                      .variables
-                                                                      .tenantId,
-                                                              rowVersion: 1,
-                                                              auditDetails:
-                                                                  AuditDetails(
-                                                                createdBy: context
-                                                                    .loggedInUserUuid,
-                                                                createdTime: context
-                                                                    .millisecondsSinceEpoch(),
-                                                                lastModifiedBy:
-                                                                    context
-                                                                        .loggedInUserUuid,
-                                                                lastModifiedTime:
-                                                                    context
-                                                                        .millisecondsSinceEpoch(),
-                                                              ),
-                                                              clientAuditDetails:
-                                                                  ClientAuditDetails(
-                                                                createdBy: context
-                                                                    .loggedInUserUuid,
-                                                                createdTime: context
-                                                                    .millisecondsSinceEpoch(),
-                                                                lastModifiedBy:
-                                                                    context
-                                                                        .loggedInUserUuid,
-                                                                lastModifiedTime:
-                                                                    context
-                                                                        .millisecondsSinceEpoch(),
-                                                              ),
-                                                            ),
-                                                            false,
-                                                          ),
-                                                        );
-                                                    Navigator.of(
-                                                      context,
-                                                      rootNavigator: true,
-                                                    ).pop(true);
-                                                  }
-                                                },
-                                              ),
-                                              secondaryAction:
-                                                  DigitDialogActions(
-                                                label: localizations.translate(
-                                                  i18.common.coreCommonCancel,
-                                                ),
-                                                action: (context) =>
-                                                    Navigator.of(
+                                                final shouldSubmit =
+                                                    await DigitDialog.show<
+                                                        bool>(
                                                   context,
-                                                  rootNavigator: true,
-                                                ).pop(false),
-                                              ),
-                                            ),
-                                          );
+                                                  options: DigitDialogOptions(
+                                                    titleText:
+                                                        localizations.translate(
+                                                      i18.deliverIntervention
+                                                          .dialogTitle,
+                                                    ),
+                                                    contentText:
+                                                        localizations.translate(
+                                                      i18.deliverIntervention
+                                                          .dialogContent,
+                                                    ),
+                                                    primaryAction:
+                                                        DigitDialogActions(
+                                                      label: localizations
+                                                          .translate(
+                                                        i18.common
+                                                            .coreCommonSubmit,
+                                                      ),
+                                                      action: (ctx) {
+                                                        if (!symptomsSubmitted) {
+                                                          symptomsSubmitted =
+                                                              true;
+                                                          final List<String>
+                                                              symptoms = [];
 
-                                          if ((shouldSubmit ?? false) &&
-                                              context.mounted) {
-                                            final reloadState = context
-                                                .read<HouseholdOverviewBloc>();
+                                                          for (int i = 0;
+                                                              i <
+                                                                  symptomsValues
+                                                                      .length;
+                                                              i++) {
+                                                            if (symptomsValues[
+                                                                i]) {
+                                                              if (symptomsTypes[
+                                                                      i] ==
+                                                                  'OTHER') {
+                                                                symptoms.add(
+                                                                  otherController
+                                                                      .text,
+                                                                );
+                                                              } else {
+                                                                symptoms.add(
+                                                                  symptomsTypes[
+                                                                      i],
+                                                                );
+                                                              }
+                                                            }
+                                                          }
 
-                                            Future.delayed(
-                                              const Duration(milliseconds: 500),
-                                              () {
-                                                reloadState.add(
-                                                  HouseholdOverviewReloadEvent(
-                                                    projectId:
-                                                        context.projectId,
-                                                    projectBeneficiaryType:
-                                                        context.beneficiaryType,
+                                                          final clientReferenceId =
+                                                              IdGen
+                                                                  .i.identifier;
+                                                          context
+                                                              .read<
+                                                                  SideEffectsBloc>()
+                                                              .add(
+                                                                SideEffectsSubmitEvent(
+                                                                  SideEffectModel(
+                                                                    id: null,
+                                                                    taskClientReferenceId: widget
+                                                                        .tasks
+                                                                        .last
+                                                                        .clientReferenceId,
+                                                                    projectId:
+                                                                        context
+                                                                            .projectId,
+                                                                    symptoms:
+                                                                        symptoms,
+                                                                    clientReferenceId:
+                                                                        clientReferenceId,
+                                                                    tenantId: envConfig
+                                                                        .variables
+                                                                        .tenantId,
+                                                                    rowVersion:
+                                                                        1,
+                                                                    auditDetails:
+                                                                        AuditDetails(
+                                                                      createdBy:
+                                                                          context
+                                                                              .loggedInUserUuid,
+                                                                      createdTime:
+                                                                          context
+                                                                              .millisecondsSinceEpoch(),
+                                                                      lastModifiedBy:
+                                                                          context
+                                                                              .loggedInUserUuid,
+                                                                      lastModifiedTime:
+                                                                          context
+                                                                              .millisecondsSinceEpoch(),
+                                                                    ),
+                                                                    clientAuditDetails:
+                                                                        ClientAuditDetails(
+                                                                      createdBy:
+                                                                          context
+                                                                              .loggedInUserUuid,
+                                                                      createdTime:
+                                                                          context
+                                                                              .millisecondsSinceEpoch(),
+                                                                      lastModifiedBy:
+                                                                          context
+                                                                              .loggedInUserUuid,
+                                                                      lastModifiedTime:
+                                                                          context
+                                                                              .millisecondsSinceEpoch(),
+                                                                    ),
+                                                                  ),
+                                                                  false,
+                                                                ),
+                                                              );
+                                                          Navigator.of(
+                                                            context,
+                                                            rootNavigator: true,
+                                                          ).pop(true);
+                                                        }
+                                                      },
+                                                    ),
+                                                    secondaryAction:
+                                                        DigitDialogActions(
+                                                      label: localizations
+                                                          .translate(
+                                                        i18.common
+                                                            .coreCommonCancel,
+                                                      ),
+                                                      action: (context) =>
+                                                          Navigator.of(
+                                                        context,
+                                                        rootNavigator: true,
+                                                      ).pop(false),
+                                                    ),
                                                   ),
                                                 );
-                                              },
-                                            ).then((value) =>
-                                                context.router.push(
-                                                  HouseholdAcknowledgementRoute(
-                                                    enableViewHousehold: true,
-                                                  ),
-                                                ));
-                                          }
-                                        } else {
-                                          setState(() {
-                                            symptomsSelected = false;
-                                          });
-                                        }
-                                      },
+
+                                                if ((shouldSubmit ?? false) &&
+                                                    context.mounted) {
+                                                  final reloadState = context.read<
+                                                      HouseholdOverviewBloc>();
+
+                                                  Future.delayed(
+                                                    const Duration(
+                                                        milliseconds: 500),
+                                                    () {
+                                                      reloadState.add(
+                                                        HouseholdOverviewReloadEvent(
+                                                          projectId:
+                                                              context.projectId,
+                                                          projectBeneficiaryType:
+                                                              context
+                                                                  .beneficiaryType,
+                                                        ),
+                                                      );
+                                                    },
+                                                  ).then((value) =>
+                                                      context.router.push(
+                                                        HouseholdAcknowledgementRoute(
+                                                          enableViewHousehold:
+                                                              true,
+                                                        ),
+                                                      ));
+                                                }
+                                              } else {
+                                                setState(() {
+                                                  symptomsSelected = false;
+                                                });
+                                              }
+                                            },
                                       child: Center(
                                         child: Text(
                                           localizations.translate(
