@@ -490,8 +490,15 @@ DoseCriteriaModel? fetchProductVariant(
     final individualAgeInMonths =
         individualAge.years * 12 + individualAge.months;
 
-    final height =
-        int.parse(individualModel.additionalFields?.fields.last.value ?? 0);
+    final height = int.parse(individualModel.additionalFields != null &&
+            individualModel.additionalFields!.fields
+                .where((element) => element.key == "height")
+                .isNotEmpty
+        ? individualModel.additionalFields?.fields
+            .where((element) => element.key == "height")
+            .first
+            .value
+        : 0);
     final filteredCriteria = currentDelivery.doseCriteria?.where((criteria) {
       final condition = criteria.condition;
       if (condition != null) {
