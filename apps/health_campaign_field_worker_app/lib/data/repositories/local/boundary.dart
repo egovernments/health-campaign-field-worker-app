@@ -69,7 +69,7 @@ class BoundaryLocalRepository
       (selectQuery
         ..where(buildAnd([
           if (query.code != null)
-            sql.boundary.materializedPath.like('${query.code}%'),
+            sql.boundary.materializedPath.like('%${query.code}%'),
           sql.boundary.materializedPath.isNotNull(),
           if (query.boundaryNum != null)
             sql.boundary.boundaryNum.equals(query.boundaryNum!),
