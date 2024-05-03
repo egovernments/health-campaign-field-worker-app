@@ -269,6 +269,7 @@ mixin _$ReferralReconProjectFacilityState {
     required TResult Function(
             List<ReferralProjectFacilityModel> projectFacilities)
         fetched,
+    required TResult Function() error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -277,6 +278,7 @@ mixin _$ReferralReconProjectFacilityState {
     TResult? Function()? loading,
     TResult? Function(List<ReferralProjectFacilityModel> projectFacilities)?
         fetched,
+    TResult? Function()? error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -285,6 +287,7 @@ mixin _$ReferralReconProjectFacilityState {
     TResult Function()? loading,
     TResult Function(List<ReferralProjectFacilityModel> projectFacilities)?
         fetched,
+    TResult Function()? error,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -293,6 +296,7 @@ mixin _$ReferralReconProjectFacilityState {
     required TResult Function(ProjectFacilityEmptyState value) empty,
     required TResult Function(ProjectFacilityLoadingState value) loading,
     required TResult Function(ProjectFacilityFetchedState value) fetched,
+    required TResult Function(ProjectFacilityErrorState value) error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -300,6 +304,7 @@ mixin _$ReferralReconProjectFacilityState {
     TResult? Function(ProjectFacilityEmptyState value)? empty,
     TResult? Function(ProjectFacilityLoadingState value)? loading,
     TResult? Function(ProjectFacilityFetchedState value)? fetched,
+    TResult? Function(ProjectFacilityErrorState value)? error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -307,6 +312,7 @@ mixin _$ReferralReconProjectFacilityState {
     TResult Function(ProjectFacilityEmptyState value)? empty,
     TResult Function(ProjectFacilityLoadingState value)? loading,
     TResult Function(ProjectFacilityFetchedState value)? fetched,
+    TResult Function(ProjectFacilityErrorState value)? error,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -380,6 +386,7 @@ class _$ProjectFacilityEmptyStateImpl implements ProjectFacilityEmptyState {
     required TResult Function(
             List<ReferralProjectFacilityModel> projectFacilities)
         fetched,
+    required TResult Function() error,
   }) {
     return empty();
   }
@@ -391,6 +398,7 @@ class _$ProjectFacilityEmptyStateImpl implements ProjectFacilityEmptyState {
     TResult? Function()? loading,
     TResult? Function(List<ReferralProjectFacilityModel> projectFacilities)?
         fetched,
+    TResult? Function()? error,
   }) {
     return empty?.call();
   }
@@ -402,6 +410,7 @@ class _$ProjectFacilityEmptyStateImpl implements ProjectFacilityEmptyState {
     TResult Function()? loading,
     TResult Function(List<ReferralProjectFacilityModel> projectFacilities)?
         fetched,
+    TResult Function()? error,
     required TResult orElse(),
   }) {
     if (empty != null) {
@@ -416,6 +425,7 @@ class _$ProjectFacilityEmptyStateImpl implements ProjectFacilityEmptyState {
     required TResult Function(ProjectFacilityEmptyState value) empty,
     required TResult Function(ProjectFacilityLoadingState value) loading,
     required TResult Function(ProjectFacilityFetchedState value) fetched,
+    required TResult Function(ProjectFacilityErrorState value) error,
   }) {
     return empty(this);
   }
@@ -426,6 +436,7 @@ class _$ProjectFacilityEmptyStateImpl implements ProjectFacilityEmptyState {
     TResult? Function(ProjectFacilityEmptyState value)? empty,
     TResult? Function(ProjectFacilityLoadingState value)? loading,
     TResult? Function(ProjectFacilityFetchedState value)? fetched,
+    TResult? Function(ProjectFacilityErrorState value)? error,
   }) {
     return empty?.call(this);
   }
@@ -436,6 +447,7 @@ class _$ProjectFacilityEmptyStateImpl implements ProjectFacilityEmptyState {
     TResult Function(ProjectFacilityEmptyState value)? empty,
     TResult Function(ProjectFacilityLoadingState value)? loading,
     TResult Function(ProjectFacilityFetchedState value)? fetched,
+    TResult Function(ProjectFacilityErrorState value)? error,
     required TResult orElse(),
   }) {
     if (empty != null) {
@@ -497,6 +509,7 @@ class _$ProjectFacilityLoadingStateImpl implements ProjectFacilityLoadingState {
     required TResult Function(
             List<ReferralProjectFacilityModel> projectFacilities)
         fetched,
+    required TResult Function() error,
   }) {
     return loading();
   }
@@ -508,6 +521,7 @@ class _$ProjectFacilityLoadingStateImpl implements ProjectFacilityLoadingState {
     TResult? Function()? loading,
     TResult? Function(List<ReferralProjectFacilityModel> projectFacilities)?
         fetched,
+    TResult? Function()? error,
   }) {
     return loading?.call();
   }
@@ -519,6 +533,7 @@ class _$ProjectFacilityLoadingStateImpl implements ProjectFacilityLoadingState {
     TResult Function()? loading,
     TResult Function(List<ReferralProjectFacilityModel> projectFacilities)?
         fetched,
+    TResult Function()? error,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -533,6 +548,7 @@ class _$ProjectFacilityLoadingStateImpl implements ProjectFacilityLoadingState {
     required TResult Function(ProjectFacilityEmptyState value) empty,
     required TResult Function(ProjectFacilityLoadingState value) loading,
     required TResult Function(ProjectFacilityFetchedState value) fetched,
+    required TResult Function(ProjectFacilityErrorState value) error,
   }) {
     return loading(this);
   }
@@ -543,6 +559,7 @@ class _$ProjectFacilityLoadingStateImpl implements ProjectFacilityLoadingState {
     TResult? Function(ProjectFacilityEmptyState value)? empty,
     TResult? Function(ProjectFacilityLoadingState value)? loading,
     TResult? Function(ProjectFacilityFetchedState value)? fetched,
+    TResult? Function(ProjectFacilityErrorState value)? error,
   }) {
     return loading?.call(this);
   }
@@ -553,6 +570,7 @@ class _$ProjectFacilityLoadingStateImpl implements ProjectFacilityLoadingState {
     TResult Function(ProjectFacilityEmptyState value)? empty,
     TResult Function(ProjectFacilityLoadingState value)? loading,
     TResult Function(ProjectFacilityFetchedState value)? fetched,
+    TResult Function(ProjectFacilityErrorState value)? error,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -651,6 +669,7 @@ class _$ProjectFacilityFetchedStateImpl implements ProjectFacilityFetchedState {
     required TResult Function(
             List<ReferralProjectFacilityModel> projectFacilities)
         fetched,
+    required TResult Function() error,
   }) {
     return fetched(projectFacilities);
   }
@@ -662,6 +681,7 @@ class _$ProjectFacilityFetchedStateImpl implements ProjectFacilityFetchedState {
     TResult? Function()? loading,
     TResult? Function(List<ReferralProjectFacilityModel> projectFacilities)?
         fetched,
+    TResult? Function()? error,
   }) {
     return fetched?.call(projectFacilities);
   }
@@ -673,6 +693,7 @@ class _$ProjectFacilityFetchedStateImpl implements ProjectFacilityFetchedState {
     TResult Function()? loading,
     TResult Function(List<ReferralProjectFacilityModel> projectFacilities)?
         fetched,
+    TResult Function()? error,
     required TResult orElse(),
   }) {
     if (fetched != null) {
@@ -687,6 +708,7 @@ class _$ProjectFacilityFetchedStateImpl implements ProjectFacilityFetchedState {
     required TResult Function(ProjectFacilityEmptyState value) empty,
     required TResult Function(ProjectFacilityLoadingState value) loading,
     required TResult Function(ProjectFacilityFetchedState value) fetched,
+    required TResult Function(ProjectFacilityErrorState value) error,
   }) {
     return fetched(this);
   }
@@ -697,6 +719,7 @@ class _$ProjectFacilityFetchedStateImpl implements ProjectFacilityFetchedState {
     TResult? Function(ProjectFacilityEmptyState value)? empty,
     TResult? Function(ProjectFacilityLoadingState value)? loading,
     TResult? Function(ProjectFacilityFetchedState value)? fetched,
+    TResult? Function(ProjectFacilityErrorState value)? error,
   }) {
     return fetched?.call(this);
   }
@@ -707,6 +730,7 @@ class _$ProjectFacilityFetchedStateImpl implements ProjectFacilityFetchedState {
     TResult Function(ProjectFacilityEmptyState value)? empty,
     TResult Function(ProjectFacilityLoadingState value)? loading,
     TResult Function(ProjectFacilityFetchedState value)? fetched,
+    TResult Function(ProjectFacilityErrorState value)? error,
     required TResult orElse(),
   }) {
     if (fetched != null) {
@@ -726,4 +750,127 @@ abstract class ProjectFacilityFetchedState
   @JsonKey(ignore: true)
   _$$ProjectFacilityFetchedStateImplCopyWith<_$ProjectFacilityFetchedStateImpl>
       get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$ProjectFacilityErrorStateImplCopyWith<$Res> {
+  factory _$$ProjectFacilityErrorStateImplCopyWith(
+          _$ProjectFacilityErrorStateImpl value,
+          $Res Function(_$ProjectFacilityErrorStateImpl) then) =
+      __$$ProjectFacilityErrorStateImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$ProjectFacilityErrorStateImplCopyWithImpl<$Res>
+    extends _$ReferralReconProjectFacilityStateCopyWithImpl<$Res,
+        _$ProjectFacilityErrorStateImpl>
+    implements _$$ProjectFacilityErrorStateImplCopyWith<$Res> {
+  __$$ProjectFacilityErrorStateImplCopyWithImpl(
+      _$ProjectFacilityErrorStateImpl _value,
+      $Res Function(_$ProjectFacilityErrorStateImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$ProjectFacilityErrorStateImpl implements ProjectFacilityErrorState {
+  const _$ProjectFacilityErrorStateImpl();
+
+  @override
+  String toString() {
+    return 'ReferralReconProjectFacilityState.error()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$ProjectFacilityErrorStateImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() empty,
+    required TResult Function() loading,
+    required TResult Function(
+            List<ReferralProjectFacilityModel> projectFacilities)
+        fetched,
+    required TResult Function() error,
+  }) {
+    return error();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? empty,
+    TResult? Function()? loading,
+    TResult? Function(List<ReferralProjectFacilityModel> projectFacilities)?
+        fetched,
+    TResult? Function()? error,
+  }) {
+    return error?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? empty,
+    TResult Function()? loading,
+    TResult Function(List<ReferralProjectFacilityModel> projectFacilities)?
+        fetched,
+    TResult Function()? error,
+    required TResult orElse(),
+  }) {
+    if (error != null) {
+      return error();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(ProjectFacilityEmptyState value) empty,
+    required TResult Function(ProjectFacilityLoadingState value) loading,
+    required TResult Function(ProjectFacilityFetchedState value) fetched,
+    required TResult Function(ProjectFacilityErrorState value) error,
+  }) {
+    return error(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(ProjectFacilityEmptyState value)? empty,
+    TResult? Function(ProjectFacilityLoadingState value)? loading,
+    TResult? Function(ProjectFacilityFetchedState value)? fetched,
+    TResult? Function(ProjectFacilityErrorState value)? error,
+  }) {
+    return error?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(ProjectFacilityEmptyState value)? empty,
+    TResult Function(ProjectFacilityLoadingState value)? loading,
+    TResult Function(ProjectFacilityFetchedState value)? fetched,
+    TResult Function(ProjectFacilityErrorState value)? error,
+    required TResult orElse(),
+  }) {
+    if (error != null) {
+      return error(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class ProjectFacilityErrorState
+    implements ReferralReconProjectFacilityState {
+  const factory ProjectFacilityErrorState() = _$ProjectFacilityErrorStateImpl;
 }

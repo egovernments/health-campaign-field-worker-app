@@ -55,6 +55,7 @@ class HFCreateReferralWrapperPage extends StatelessWidget {
                   hfReferralModel: referralReconciliation?.hfReferralModel,
                   additionalData: referralReconciliation?.additionalData,
                 ),
+                referralReconSingleton: ReferralReconSingleton(),
               ),
               child: const AutoRouter(),
             ),

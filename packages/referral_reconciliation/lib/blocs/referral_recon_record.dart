@@ -17,9 +17,11 @@ typedef RecordHFReferralEmitter = Emitter<RecordHFReferralState>;
 // ODE: The RecordHFReferralBloc is responsible for managing the state related to recording and viewing health facility referrals.
 class RecordHFReferralBloc
     extends Bloc<RecordHFReferralEvent, RecordHFReferralState> {
+  final ReferralReconSingleton referralReconSingleton;
   RecordHFReferralBloc(
-    super.initialState,
-  ) {
+    super.initialState, {
+    required this.referralReconSingleton,
+  }) {
     on(_handleSaveFacilityDetails);
     on(_handleCreateHFReferralEntry);
     on(_handleViewHFReferralEntry);
@@ -77,7 +79,7 @@ class RecordHFReferralBloc
 
           try {
             if (event.hfReferralModel != null) {
-              ReferralReconSingleton()
+              referralReconSingleton
                   .saveReferralReconDetails(ReferralReconciliation(
                 hfReferralModel: event.hfReferralModel,
                 additionalData:
