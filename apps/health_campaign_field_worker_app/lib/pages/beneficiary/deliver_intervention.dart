@@ -859,6 +859,8 @@ class _DeliverInterventionPageState
               ))
           .toList(),
       address: address?.copyWith(
+        latitude: latitude ?? address.latitude,
+        longitude: longitude ?? address.longitude,
         relatedClientReferenceId: clientReferenceId,
         id: null,
       ),
