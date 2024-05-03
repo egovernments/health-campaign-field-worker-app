@@ -135,6 +135,11 @@ class HouseholdLocalRepository
                           )
                         : null,
                   ),
+            additionalFields: household.additionalFields == null
+                ? null
+                : HouseholdAdditionalFieldsMapper.fromJson(
+                    household.additionalFields!,
+                  ),
           );
         })
         .where((element) => element.isDeleted != true)
