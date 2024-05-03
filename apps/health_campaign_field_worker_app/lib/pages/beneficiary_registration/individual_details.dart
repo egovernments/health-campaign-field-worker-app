@@ -742,6 +742,29 @@ class _IndividualDetailsPageState
             )
           : null,
     );
+    final projectId = context.projectId;
+    final cycleIndex = "0${context.selectedCycle.id}";
+    final projectTypeId = context.selectedProjectType!.id;
+
+    individual = individual.copyWith(
+      additionalFields: individual.additionalFields!.copyWith(
+        fields: [
+          ...individual.additionalFields!.fields,
+          AdditionalField(
+            "projectId",
+            projectId.toString(),
+          ),
+          AdditionalField(
+            "cycleIndex",
+            cycleIndex.toString(),
+          ),
+          AdditionalField(
+            "projectTypeId",
+            projectTypeId.toString(),
+          ),
+        ],
+      ),
+    );
 
     return individual;
   }

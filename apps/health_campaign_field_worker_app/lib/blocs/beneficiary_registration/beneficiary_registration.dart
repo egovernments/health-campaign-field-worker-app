@@ -200,6 +200,11 @@ class BeneficiaryRegistrationBloc
               ),
             ),
           );
+          final cycleIndex = household.additionalFields!.fields
+              .where((element) => element.key == "cycleIndex")
+              .first
+              .value
+              .toString();
 
           await householdMemberRepository.create(
             HouseholdMemberModel(
@@ -218,6 +223,12 @@ class BeneficiaryRegistrationBloc
               auditDetails: AuditDetails(
                 createdBy: event.userUuid,
                 createdTime: createdAt,
+              ),
+              additionalFields: HouseholdMemberAdditionalFields(
+                version: 1,
+                fields: [
+                  AdditionalField("cycleIndex", cycleIndex),
+                ],
               ),
             ),
           );
@@ -406,6 +417,11 @@ class BeneficiaryRegistrationBloc
 
           final createdAt = DateTime.now().millisecondsSinceEpoch;
           final initialModifiedAt = DateTime.now().millisecondsSinceEpoch;
+          final cycleIndex = value.householdModel.additionalFields!.fields
+              .where((element) => element.key == "cycleIndex")
+              .first
+              .value
+              .toString();
 
           if (event.beneficiaryType == BeneficiaryType.individual) {
             await projectBeneficiaryRepository.create(
@@ -451,6 +467,12 @@ class BeneficiaryRegistrationBloc
                 lastModifiedTime: initialModifiedAt,
                 lastModifiedBy: event.userUuid,
                 createdBy: event.userUuid,
+              ),
+              additionalFields: HouseholdMemberAdditionalFields(
+                version: 1,
+                fields: [
+                  AdditionalField("cycleIndex", cycleIndex),
+                ],
               ),
             ),
           );

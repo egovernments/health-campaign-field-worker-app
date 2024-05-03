@@ -124,6 +124,11 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                                 final referralComment =
                                     form.control(_referralComments).value;
 
+                                final cycleIndex =
+                                    "0${context.selectedCycle.id}";
+                                final projectTypeId =
+                                    context.selectedProjectType!.id;
+
                                 final event = context.read<ReferralBloc>();
                                 event.add(ReferralSubmitEvent(
                                   ReferralModel(
@@ -167,6 +172,14 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                                                 .toValue(),
                                             referralComment,
                                           ),
+                                        AdditionalField(
+                                          "cycleIndex",
+                                          cycleIndex.toString(),
+                                        ),
+                                        AdditionalField(
+                                          "projectTypeId",
+                                          projectTypeId.toString(),
+                                        ),
                                       ],
                                     ),
                                   ),
