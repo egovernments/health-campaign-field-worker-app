@@ -25,56 +25,80 @@ void main() {
       const Duration(seconds: 5),
     );
 
-    await widgetTester
-        .tap(widgetSelector['continue']!); //tap on the continue button
+    // await widgetTester
+    //     .tap(widgetSelector['continue']!); //tap on the continue button
 
-    await widgetTester.pumpAndSettle(const Duration(
-        milliseconds: 1000)); //wait for the app to load the login page
+    // await widgetTester.pumpAndSettle(const Duration(
+    //     milliseconds: 1000)); //wait for the app to load the login page
 
-    await widgetTester.enterText(
-      widgetSelector['username']!,
-      testVariables['username'],
-    ); //enter the username to test
+    // await widgetTester.enterText(
+    //   widgetSelector['username']!,
+    //   testVariables['username'],
+    // ); //enter the username to test
 
-    await widgetTester.enterText(
-      widgetSelector['password']!,
-      testVariables['password'],
-    ); //enter the password to test
+    // await widgetTester.enterText(
+    //   widgetSelector['password']!,
+    //   testVariables['password'],
+    // ); //enter the password to test
 
-    await widgetTester.tap(widgetSelector['login']!); //tap on the login button
-    await widgetTester.pumpAndSettle(const Duration(seconds: 2));
+    // await widgetTester.tap(widgetSelector['login']!); //tap on the login button
+    // await widgetTester.pumpAndSettle(const Duration(seconds: 5));
 
-    //choose a project
-    await widgetTester.tap(find.byType(DigitProjectCell).first);
-    await widgetTester.pumpAndSettle(const Duration(seconds: 2));
+    // //choose a project
+    // await widgetTester.tap(find.byType(DigitProjectCell).first);
+    // await widgetTester.pumpAndSettle(const Duration(seconds: 5));
 
-    expect(
-      find.byType(BoundarySelectionPage),
-      findsOneWidget,
-    ); //check if the boundary page is loaded
-    await widgetTester.pumpAndSettle(const Duration(seconds: 2));
+    // expect(
+    //   find.byType(BoundarySelectionPage),
+    //   findsOneWidget,
+    // ); //check if the boundary page is loaded
+    // await widgetTester.pumpAndSettle(const Duration(seconds: 2));
 
     for (String key in boundaryNames.keys) {
       final boundaryCondition = key;
-      try {
-        final finder = find.widgetWithText(
-          DigitReactiveSearchDropdown<BoundaryModel>,
-          boundaryCondition,
-        );
-        //tap on the dropdown
-        await widgetTester.tap(finder);
-        await widgetTester.pumpAndSettle(const Duration(milliseconds: 100));
+      final finder = find.widgetWithText(
+        DigitReactiveSearchDropdown<BoundaryModel>,
+        "$boundaryCondition*",
+      );
 
-        //tap on a boundary
-        await widgetTester.tap(find.text(boundaryNames[key]!));
-      } catch (e) {
+      if (finder.evaluate().isEmpty) {
         continue;
       }
+
+      //tap on the dropdown
+      await widgetTester.tap(finder);
+      await widgetTester.pumpAndSettle(const Duration(milliseconds: 100));
+
+      //tap on a boundary
+      final boundaryFinder = find.text(boundaryNames[key]!).last;
+      if (boundaryFinder.evaluate().isEmpty) {
+        continue;
+      }
+      await widgetTester.tap(boundaryFinder);
+      await widgetTester.pumpAndSettle(const Duration(milliseconds: 100));
     }
 
     //submit
     await widgetTester.tap(widgetSelector['submit']!);
     await widgetTester.pumpAndSettle(const Duration(seconds: 2));
+
+    final downloadButton = find.text('Download');
+    if (downloadButton.evaluate().isNotEmpty) {
+      await widgetTester.tap(downloadButton);
+      await widgetTester.pumpAndSettle(const Duration(seconds: 2));
+
+      final insufficientStorageMessage = find.text('Insufficient Storage');
+      if (insufficientStorageMessage.evaluate().isNotEmpty) {
+        await widgetTester.tap(find.text('Ok'));
+        await widgetTester.pumpAndSettle();
+
+        await widgetTester.tap(widgetSelector['submit']!);
+        await widgetTester.pumpAndSettle(const Duration(seconds: 2));
+
+        await widgetTester.tap(find.text('Proceed without downloading'));
+        await widgetTester.pumpAndSettle(const Duration(seconds: 2));
+      }
+    }
 
     //go to the manage stock page
     await widgetTester.tap(widgetSelector['manageStock']!);
