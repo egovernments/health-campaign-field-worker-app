@@ -97,20 +97,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
           builder: (ctx, facilityState) {
             final facilities = facilityState.whenOrNull(
                   fetched: (facilities, _, __) {
-                    final teamFacilities = [
-                      FacilityModel(
-                        id: 'Delivery Team',
-                        additionalFields: FacilityAdditionalFields(
-                          version: 1,
-                          fields: [
-                            const AdditionalField(
-                              'type',
-                              'DeliveryTeam',
-                            ),
-                          ],
-                        ),
-                      ),
-                    ];
+                    List<FacilityModel> teamFacilities = [];
                     teamFacilities.addAll(
                       facilities,
                     );
