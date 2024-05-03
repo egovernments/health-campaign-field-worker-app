@@ -124,10 +124,13 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                                 final referralComment =
                                     form.control(_referralComments).value;
 
-                                final cycleIndex =
-                                    "0${context.selectedCycle.id}";
+                                final cycleIndex = context.selectedCycle.id == 0
+                                    ? ""
+                                    : "0${context.selectedCycle.id}";
                                 final projectTypeId =
-                                    context.selectedProjectType!.id;
+                                    context.selectedProjectType == null
+                                        ? ""
+                                        : context.selectedProjectType!.id;
 
                                 final event = context.read<ReferralBloc>();
                                 event.add(ReferralSubmitEvent(
@@ -172,14 +175,16 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                                                 .toValue(),
                                             referralComment,
                                           ),
-                                        AdditionalField(
-                                          "cycleIndex",
-                                          cycleIndex.toString(),
-                                        ),
-                                        AdditionalField(
-                                          "projectTypeId",
-                                          projectTypeId.toString(),
-                                        ),
+                                        if (cycleIndex.isNotEmpty)
+                                          AdditionalField(
+                                            "cycleIndex",
+                                            cycleIndex,
+                                          ),
+                                        if (projectTypeId.isNotEmpty)
+                                          AdditionalField(
+                                            "projectTypeId",
+                                            projectTypeId,
+                                          ),
                                       ],
                                     ),
                                   ),

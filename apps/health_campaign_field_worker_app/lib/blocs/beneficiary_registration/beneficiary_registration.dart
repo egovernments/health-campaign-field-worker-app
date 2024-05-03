@@ -200,11 +200,14 @@ class BeneficiaryRegistrationBloc
               ),
             ),
           );
-          final cycleIndex = household.additionalFields!.fields
-              .where((element) => element.key == "cycleIndex")
-              .first
-              .value
-              .toString();
+          var cycleIndex = "";
+          if (household.additionalFields != null) {
+            final fields = household.additionalFields!.fields
+                .where((element) => element.key == "cycleIndex");
+            if (fields.isNotEmpty) {
+              cycleIndex = fields.first.value.toString();
+            }
+          }
 
           await householdMemberRepository.create(
             HouseholdMemberModel(
@@ -227,7 +230,8 @@ class BeneficiaryRegistrationBloc
               additionalFields: HouseholdMemberAdditionalFields(
                 version: 1,
                 fields: [
-                  AdditionalField("cycleIndex", cycleIndex),
+                  if (cycleIndex.isNotEmpty)
+                    AdditionalField("cycleIndex", cycleIndex),
                 ],
               ),
             ),
@@ -417,11 +421,15 @@ class BeneficiaryRegistrationBloc
 
           final createdAt = DateTime.now().millisecondsSinceEpoch;
           final initialModifiedAt = DateTime.now().millisecondsSinceEpoch;
-          final cycleIndex = value.householdModel.additionalFields!.fields
-              .where((element) => element.key == "cycleIndex")
-              .first
-              .value
-              .toString();
+
+          var cycleIndex = "";
+          if (value.householdModel.additionalFields != null) {
+            final fields = value.householdModel.additionalFields!.fields
+                .where((element) => element.key == "cycleIndex");
+            if (fields.isNotEmpty) {
+              cycleIndex = fields.first.value.toString();
+            }
+          }
 
           if (event.beneficiaryType == BeneficiaryType.individual) {
             await projectBeneficiaryRepository.create(
@@ -471,7 +479,8 @@ class BeneficiaryRegistrationBloc
               additionalFields: HouseholdMemberAdditionalFields(
                 version: 1,
                 fields: [
-                  AdditionalField("cycleIndex", cycleIndex),
+                  if (cycleIndex.isNotEmpty)
+                    AdditionalField("cycleIndex", cycleIndex),
                 ],
               ),
             ),

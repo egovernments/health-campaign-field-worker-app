@@ -742,9 +742,12 @@ class _IndividualDetailsPageState
             )
           : null,
     );
-    final projectId = context.projectId;
-    final cycleIndex = "0${context.selectedCycle.id}";
-    final projectTypeId = context.selectedProjectType!.id;
+    final cycleIndex =
+        context.selectedCycle.id == 0 ? "" : "0${context.selectedCycle.id}";
+
+    final projectTypeId = context.selectedProjectType == null
+        ? ""
+        : context.selectedProjectType!.id;
 
     individual = individual.copyWith(
       additionalFields: individual.additionalFields!.copyWith(
@@ -752,16 +755,18 @@ class _IndividualDetailsPageState
           ...individual.additionalFields!.fields,
           AdditionalField(
             "projectId",
-            projectId.toString(),
+            context.projectId,
           ),
-          AdditionalField(
-            "cycleIndex",
-            cycleIndex.toString(),
-          ),
-          AdditionalField(
-            "projectTypeId",
-            projectTypeId.toString(),
-          ),
+          if (cycleIndex.isNotEmpty)
+            AdditionalField(
+              "cycleIndex",
+              cycleIndex,
+            ),
+          if (projectTypeId.isNotEmpty)
+            AdditionalField(
+              "projectTypeId",
+              projectTypeId,
+            ),
         ],
       ),
     );

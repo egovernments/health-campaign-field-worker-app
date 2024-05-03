@@ -61,9 +61,12 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                     final dateOfRegistration =
                         form.control(_dateOfRegistrationKey).value as DateTime;
 
-                    final projectId = context.projectId;
-                    final projectTypeId = context.selectedProjectType!.id;
-                    final cycleIndex = "0${context.selectedCycle.id}";
+                    final projectTypeId = context.selectedProjectType == null
+                        ? ""
+                        : context.selectedProjectType!.id;
+                    final cycleIndex = context.selectedCycle.id == 0
+                        ? ""
+                        : "0${context.selectedCycle.id}";
 
                     registrationState.maybeWhen(
                       orElse: () {
@@ -98,17 +101,19 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                           additionalFields: HouseholdAdditionalFields(
                             version: 1,
                             fields: [
-                              AdditionalField(
-                                'cycleIndex',
-                                cycleIndex,
-                              ),
-                              AdditionalField(
-                                'projectTypeId',
-                                projectTypeId.toString(),
-                              ),
+                              if (cycleIndex.isNotEmpty)
+                                AdditionalField(
+                                  'cycleIndex',
+                                  cycleIndex,
+                                ),
+                              if (projectTypeId.isNotEmpty)
+                                AdditionalField(
+                                  'projectTypeId',
+                                  projectTypeId,
+                                ),
                               AdditionalField(
                                 'projectId',
-                                projectId.toString(),
+                                context.projectId,
                               ),
                             ],
                           ),
