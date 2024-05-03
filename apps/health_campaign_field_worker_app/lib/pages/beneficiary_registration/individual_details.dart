@@ -742,6 +742,34 @@ class _IndividualDetailsPageState
             )
           : null,
     );
+    final cycleIndex =
+        context.selectedCycle.id == 0 ? "" : "0${context.selectedCycle.id}";
+
+    final projectTypeId = context.selectedProjectType == null
+        ? ""
+        : context.selectedProjectType!.id;
+
+    individual = individual.copyWith(
+      additionalFields: individual.additionalFields!.copyWith(
+        fields: [
+          ...individual.additionalFields!.fields,
+          AdditionalField(
+            "projectId",
+            context.projectId,
+          ),
+          if (cycleIndex.isNotEmpty)
+            AdditionalField(
+              "cycleIndex",
+              cycleIndex,
+            ),
+          if (projectTypeId.isNotEmpty)
+            AdditionalField(
+              "projectTypeId",
+              projectTypeId,
+            ),
+        ],
+      ),
+    );
 
     return individual;
   }

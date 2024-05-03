@@ -61,6 +61,13 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                     final dateOfRegistration =
                         form.control(_dateOfRegistrationKey).value as DateTime;
 
+                    final projectTypeId = context.selectedProjectType == null
+                        ? ""
+                        : context.selectedProjectType!.id;
+                    final cycleIndex = context.selectedCycle.id == 0
+                        ? ""
+                        : "0${context.selectedCycle.id}";
+
                     registrationState.maybeWhen(
                       orElse: () {
                         return;
@@ -90,6 +97,25 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                             createdTime: context.millisecondsSinceEpoch(),
                             lastModifiedBy: context.loggedInUserUuid,
                             lastModifiedTime: context.millisecondsSinceEpoch(),
+                          ),
+                          additionalFields: HouseholdAdditionalFields(
+                            version: 1,
+                            fields: [
+                              if (cycleIndex.isNotEmpty)
+                                AdditionalField(
+                                  'cycleIndex',
+                                  cycleIndex,
+                                ),
+                              if (projectTypeId.isNotEmpty)
+                                AdditionalField(
+                                  'projectTypeId',
+                                  projectTypeId,
+                                ),
+                              AdditionalField(
+                                'projectId',
+                                context.projectId,
+                              ),
+                            ],
                           ),
                         );
 
