@@ -139,12 +139,13 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
               final selectedProject = state.selectedProject;
               if (selectedProject != null) {
                 final boundary = selectedProject.address?.boundary;
+                final boundaryType = selectedProject.address?.boundaryType;
 
-                if (boundary != null) {
+                if (boundary != null && boundaryType != null) {
                   context.read<BoundaryBloc>().add(
                         BoundaryFindEvent(
                           code: boundary,
-                        
+                          boundaryType: boundaryType,
                         ),
                       );
 
