@@ -19,8 +19,8 @@ class NoFacilitiesAssignedDialog {
         primaryAction: DigitDialogActions(
           label: 'Close',
           action: (dialogContext) {
-            Navigator.of(context, rootNavigator: true).pop();
-            context.router.pop();
+            context.router.popUntilRoot();
+            context.router.maybePop();
           },
         ),
       ),

@@ -9,12 +9,12 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i10;
+import 'package:digit_data_model/data_model.dart' as _i13;
 import 'package:flutter/material.dart' as _i11;
 import 'package:inventory_management/blocs/app_localization.dart' as _i12;
 import 'package:inventory_management/blocs/inventory_listener.dart' as _i15;
 import 'package:inventory_management/blocs/inventory_report.dart' as _i14;
 import 'package:inventory_management/blocs/record_stock.dart' as _i17;
-import 'package:digit_data_model/models/entities/facility.dart' as _i13;
 import 'package:inventory_management/models/entities/inventory_transport_type.dart'
     as _i16;
 import 'package:inventory_management/pages/acknowledgement.dart' as _i1;

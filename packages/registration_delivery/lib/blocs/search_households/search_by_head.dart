@@ -237,7 +237,7 @@ class SearchByHeadBloc extends SearchHouseholdsBloc {
     }
     super.emit(state.copyWith(
       searchQuery: event.searchText,
-      householdMembers: [...state.householdMembers, ...containers],
+      householdMembers: [...containers],
       loading: false,
       offset: event.offset + event.limit,
       limit: event.limit,

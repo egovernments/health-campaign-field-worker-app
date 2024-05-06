@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mlkit_commons/google_mlkit_commons.dart';
 
+import '../router/app_router.dart';
 import '../widgets/showcase/showcase_wrappers.dart';
 
 class CameraView extends StatefulWidget {
@@ -109,9 +110,9 @@ class _CameraViewState extends State<CameraView> {
           width: 50.0,
           child: FloatingActionButton(
             heroTag: Object(),
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => context.router.maybePop(),
             backgroundColor: Colors.black54,
-            child: Icon(
+            child: const Icon(
               Icons.arrow_back_ios_outlined,
               size: 20,
             ),

@@ -3,7 +3,6 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:drift/drift.dart';
 
 import 'package:digit_data_model/data_model.dart';
-import 'package:registration_delivery/models/entities/project_product_variant.dart';
 
 part 'project_type.mapper.dart';
 

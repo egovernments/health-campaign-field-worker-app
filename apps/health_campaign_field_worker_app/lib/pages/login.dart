@@ -166,8 +166,7 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                                 i18.forgotPassword.primaryActionLabel,
                               ),
                               action: (ctx) =>
-                                  Navigator.of(context, rootNavigator: true)
-                                      .pop(),
+                                  context.router.popUntilRoot()
                             ),
                           ),
                         ),
@@ -197,7 +196,7 @@ class _LoginPageState extends LocalizedState<LoginPage> {
 
   FormGroup buildForm() => fb.group(<String, Object>{
         _userId: FormControl<String>(
-          value: 'Reg-1',
+          value: 'ATTD17',
           validators: [Validators.required],
         ),
         _password: FormControl<String>(

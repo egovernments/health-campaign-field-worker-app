@@ -23,10 +23,10 @@ import 'package:registration_delivery/models/entities/side_effect.dart';
 import 'package:uuid/uuid.dart';
 import 'package:digit_data_model/data_model.init.dart' as digitDataModel;
 import 'package:registration_delivery/registration_delivery.init.dart' as registrationDelivery;
+import 'package:attendance_management/attendance_management.init.dart' as attendance_management;
+import 'package:inventory_management/inventory_management.init.dart' as inventory_management;
 
 import '../blocs/app_initialization/app_initialization.dart';
-// import '../blocs/search_households/project_beneficiaries_downsync.dart';
-// import '../blocs/search_households/search_households.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/localization.dart';
@@ -709,4 +709,6 @@ initializeAllMappers() {
   initializeMappers();
   digitDataModel.initializeMappers();
   registrationDelivery.initializeMappers();
+  attendance_management.initializeMappers();
+  inventory_management.initializeMappers();
 }

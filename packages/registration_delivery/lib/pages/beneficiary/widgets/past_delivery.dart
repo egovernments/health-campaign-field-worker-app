@@ -5,7 +5,6 @@ import 'package:registration_delivery/blocs/app_localization.dart';
 import 'package:digit_data_model/data_model.dart';
 
 import '../../../blocs/delivery_intervention/deliver_intervention.dart';
-import '../../../models/entities/product_variant.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
 

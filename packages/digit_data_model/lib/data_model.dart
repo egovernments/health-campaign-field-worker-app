@@ -8,11 +8,23 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'data_model.dart';
 
 export 'data/data_repository.dart';
+
+export 'data/repositories/local/base/attributes_base.dart';
+export 'data/repositories/local/base/product_variant_base.dart';
+export 'data/repositories/local/base/project_base.dart';
+export 'data/repositories/local/base/project_product_variant_base.dart';
+export 'data/repositories/local/base/project_resource_base.dart';
+export 'data/repositories/local/base/service_attributes_base.dart';
+export 'data/repositories/local/base/service_base.dart';
+export 'data/repositories/local/base/service_definition_base.dart';
+
 export 'data/repositories/local/address.dart';
 export 'data/repositories/local/boundary.dart';
 export 'data/repositories/local/service.dart';
 export 'data/repositories/local/service_definition.dart';
 export 'data/repositories/local/project.dart';
+export 'data/repositories/local/product_variant.dart';
+export 'data/repositories/local/project_resource.dart';
 
 export 'data/repositories/remote/service.dart';
 export 'data/repositories/remote/service_definition.dart';
@@ -27,6 +39,9 @@ export 'package:registration_delivery/models/entities/household.dart';
 export 'package:registration_delivery/models/entities/task.dart';
 export 'package:registration_delivery/models/entities/target.dart';
 export 'package:registration_delivery/models/entities/downsync.dart';
+
+export 'package:attendance_management/models/entities/attendance_log.dart';
+export 'package:attendance_management/models/entities/attendance_register.dart';
 
 export 'models/entities/address.dart';
 export 'models/entities/boundary.dart';
@@ -45,6 +60,9 @@ export 'models/entities/service_definition.dart';
 export 'models/entities/service_attributes.dart';
 export 'models/entities/project.dart';
 export 'models/entities/document.dart';
+export 'models/entities/product_variant.dart';
+export 'models/entities/project_product_variant.dart';
+export 'models/entities/project_resource.dart';
 export 'models/project_type/project_type_model.dart';
 export 'models/pgr_complaints/pgr_address.dart';
 export 'models/pgr_complaints/pgr_complaints.dart';
@@ -64,6 +82,8 @@ abstract class DataModel {
 
 @MappableClass(includeSubClasses: [
   AddressModel,
+  AttendanceRegisterModel,
+  AttendanceLogModel,
   BoundaryModel,
   LocalityModel,
   DownsyncModel,
@@ -82,6 +102,8 @@ abstract class EntityModel extends DataModel with EntityModelMappable {
 
 @MappableClass(ignoreNull: true, includeSubClasses: [
   AddressSearchModel,
+  AttendanceRegisterSearchModel,
+  AttendanceLogSearchModel,
   LocalitySearchModel,
   HouseholdSearchModel,
   DownsyncSearchModel,
@@ -110,6 +132,8 @@ abstract class EntitySearchModel extends DataModel
 @MappableClass(
   includeSubClasses: [
     DownsyncAdditionalFields,
+    AddressAdditionalFields,
+    AttendanceRegisterAdditionalFields,
   ],
 )
 abstract class AdditionalFields with AdditionalFieldsMappable {

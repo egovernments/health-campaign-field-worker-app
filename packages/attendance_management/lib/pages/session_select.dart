@@ -1,9 +1,9 @@
 import 'package:attendance_management/blocs/date_session_bloc.dart';
-import 'package:attendance_management/models/enum_values.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/digit_radio_button_list.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -12,7 +12,7 @@ import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/localized.dart';
 import '../blocs/app_localization.dart';
 import '../blocs/attendance_individual_bloc.dart';
-import '../models/attendance_register.dart';
+import '../models/entities/attendance_register.dart';
 import '../router/attendance_router.gm.dart';
 import '../utils/date_util_attendance.dart';
 import '../widgets/back_navigation_help_header.dart';
@@ -106,10 +106,9 @@ class _AttendanceDateSessionSelectionPageState
                                           )),
                                           onPressed: () async {
                                             if (selectedRegister
-                                                            .additionalDetails?[
-                                                        EnumValues.sessions
-                                                            .toValue()] ==
-                                                    2 &&
+                                                    .additionalDetails!.fields
+                                                    .every((element) =>
+                                                        element.value == 2) &&
                                                 form
                                                         .control(_sessionRadio)
                                                         .value ==
@@ -131,10 +130,10 @@ class _AttendanceDateSessionSelectionPageState
                                                     .value;
 
                                                 final entryTime = selectedRegister
-                                                                .additionalDetails?[
-                                                            EnumValues.sessions
-                                                                .toValue()] ==
-                                                        2
+                                                        .additionalDetails!
+                                                        .fields
+                                                        .every((element) =>
+                                                            element.value == 2)
                                                     ? AttendanceDateTimeManagement
                                                         .getMillisecondEpoch(
                                                         dateSession,
@@ -159,10 +158,10 @@ class _AttendanceDateSessionSelectionPageState
                                                         .millisecondsSinceEpoch);
 
                                                 final exitTime = selectedRegister
-                                                                .additionalDetails?[
-                                                            EnumValues.sessions
-                                                                .toValue()] ==
-                                                        2
+                                                        .additionalDetails!
+                                                        .fields
+                                                        .every((element) =>
+                                                            element.value == 2)
                                                     ? AttendanceDateTimeManagement
                                                         .getMillisecondEpoch(
                                                         dateSession,
@@ -263,9 +262,10 @@ class _AttendanceDateSessionSelectionPageState
                                         confirmText: localizations
                                             .translate(i18.common.coreCommonOk),
                                       ),
-                                      if (selectedRegister.additionalDetails?[
-                                              EnumValues.sessions.toValue()] ==
-                                          2)
+                                      if (selectedRegister
+                                          .additionalDetails!.fields
+                                          .every(
+                                              (element) => element.value == 2))
                                         DigitRadioButtonList<KeyValue>(
                                           labelText: localizations.translate(i18
                                               .attendance.sessionDescForRadio),

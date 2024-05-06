@@ -12,13 +12,13 @@ import 'dart:ui' as _i8;
 
 import 'package:attendance_management/attendance_management.dart' as _i10;
 import 'package:attendance_management/blocs/app_localization.dart' as _i7;
-import 'package:attendance_management/models/attendance_register.dart' as _i9;
 import 'package:attendance_management/pages/manage_attendance.dart' as _i3;
 import 'package:attendance_management/pages/mark_attendance.dart' as _i4;
 import 'package:attendance_management/pages/session_select.dart' as _i2;
 import 'package:attendance_management/widgets/attendance_acknowledgement.dart'
     as _i1;
 import 'package:auto_route/auto_route.dart' as _i5;
+import 'package:digit_data_model/data_model.dart' as _i9;
 import 'package:flutter/material.dart' as _i6;
 
 abstract class $AttendanceRoute extends _i5.AutoRouterModule {

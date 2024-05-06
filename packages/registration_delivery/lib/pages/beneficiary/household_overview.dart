@@ -54,7 +54,7 @@ class _HouseholdOverviewPageState
             .read<SearchBlocWrapper>()
             .searchHouseholdsBloc
             .add(const SearchHouseholdsClearEvent());
-        Navigator.of(context).pop();
+        context.router.maybePop();
       },
       child: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
         builder: (ctx, state) {
@@ -76,7 +76,6 @@ class _HouseholdOverviewPageState
                                 .read<SearchBlocWrapper>()
                                 .searchHouseholdsBloc
                                 .add(const SearchHouseholdsClearEvent());
-                            Navigator.of(context).pop();
                           },
                         ),
                         enableFixedButton: true,
@@ -359,7 +358,9 @@ class _HouseholdOverviewPageState
                                         localizations.translate(
                                           i18.householdLocation
                                               .administrationAreaFormLabel,
-                                        ): RegistrationDeliverySingleton().boundary!.name,
+                                        ): RegistrationDeliverySingleton()
+                                            .boundary
+                                            ?.name,
                                         localizations.translate(
                                           i18.deliverIntervention
                                               .memberCountText,
@@ -405,7 +406,7 @@ class _HouseholdOverviewPageState
                                                     )
                                                     .toList();
 
-                                        final taskData = projectBeneficiary
+                                        final taskdata = projectBeneficiary
                                                 .isNotEmpty
                                             ? state.householdMemberWrapper.tasks
                                                 ?.where((element) =>
@@ -426,15 +427,15 @@ class _HouseholdOverviewPageState
                                                         .clientReferenceId)
                                                 .toList()
                                             : null;
-                                        final sideEffectData = taskData !=
+                                        final sideEffectData = taskdata !=
                                                     null &&
-                                                taskData.isNotEmpty
+                                                taskdata.isNotEmpty
                                             ? state.householdMemberWrapper
                                                 .sideEffects
                                                 ?.where((element) =>
                                                     element
                                                         .taskClientReferenceId ==
-                                                    taskData
+                                                    taskdata
                                                         .last.clientReferenceId)
                                                 .toList()
                                             : null;
@@ -454,24 +455,22 @@ class _HouseholdOverviewPageState
                                               ) ??
                                               DateTime.now(),
                                         ).months;
-                                        final currentCycle =
-                                            RegistrationDeliverySingleton()
-                                                .projectType
-                                                ?.cycles
-                                                ?.firstWhereOrNull(
-                                                  (e) =>
-                                                      (e.startDate!) <
-                                                          DateTime.now()
-                                                              .millisecondsSinceEpoch &&
-                                                      (e.endDate!) >
-                                                          DateTime.now()
-                                                              .millisecondsSinceEpoch,
-                                                  // Return null when no matching cycle is found
-                                                );
+                                        final currentCycle = RegistrationDeliverySingleton()
+                                            .projectType?.cycles
+                                            ?.firstWhereOrNull(
+                                          (e) =>
+                                              (e.startDate!) <
+                                                  DateTime.now()
+                                                      .millisecondsSinceEpoch &&
+                                              (e.endDate!) >
+                                                  DateTime.now()
+                                                      .millisecondsSinceEpoch,
+                                          // Return null when no matching cycle is found
+                                        );
 
                                         final isBeneficiaryRefused =
                                             checkIfBeneficiaryRefused(
-                                          taskData,
+                                          taskdata,
                                         );
                                         final isBeneficiaryReferred =
                                             checkIfBeneficiaryReferred(
@@ -482,7 +481,7 @@ class _HouseholdOverviewPageState
                                         return MemberCard(
                                           isHead: isHead,
                                           individual: e,
-                                          tasks: taskData,
+                                          tasks: taskdata,
                                           sideEffects: sideEffectData,
                                           editMemberAction: () async {
                                             final bloc = ctx
@@ -519,8 +518,7 @@ class _HouseholdOverviewPageState
                                                     (element) =>
                                                         element
                                                             .beneficiaryClientReferenceId ==
-                                                        (RegistrationDeliverySingleton()
-                                                                    .beneficiaryType! ==
+                                                        (RegistrationDeliverySingleton().beneficiaryType ==
                                                                 BeneficiaryType
                                                                     .individual
                                                             ? e
@@ -553,9 +551,7 @@ class _HouseholdOverviewPageState
                                                 .add(
                                                   HouseholdOverviewSetAsHeadEvent(
                                                     individualModel: e,
-                                                    projectId:
-                                                        RegistrationDeliverySingleton()
-                                                            .projectId!,
+                                                    projectId: RegistrationDeliverySingleton().projectId!,
                                                     householdModel: state
                                                         .householdMemberWrapper
                                                         .household,
@@ -633,25 +629,21 @@ class _HouseholdOverviewPageState
                                               ),
                                             );
                                           },
-                                          isNotEligible:
-                                              RegistrationDeliverySingleton()
-                                                          .projectType
-                                                          ?.cycles !=
-                                                      null
-                                                  ? !checkEligibilityForAgeAndSideEffect(
-                                                      DigitDOBAge(
-                                                        years: ageInYears,
-                                                        months: ageInMonths,
-                                                      ),
-                                                      RegistrationDeliverySingleton()
-                                                          .projectType,
-                                                      (taskData ?? [])
-                                                              .isNotEmpty
-                                                          ? taskData?.last
-                                                          : null,
-                                                      sideEffectData,
-                                                    )
-                                                  : false,
+                                          isNotEligible: RegistrationDeliverySingleton()
+                                                      .projectType?.cycles !=
+                                                  null
+                                              ? !checkEligibilityForAgeAndSideEffect(
+                                                  DigitDOBAge(
+                                                    years: ageInYears,
+                                                    months: ageInMonths,
+                                                  ),
+                                        RegistrationDeliverySingleton().projectType,
+                                                  (taskdata ?? []).isNotEmpty
+                                                      ? taskdata?.last
+                                                      : null,
+                                                  sideEffectData,
+                                                )
+                                              : false,
                                           name: e.name?.givenName ?? ' - ',
                                           years: (e.dateOfBirth == null
                                                   ? null
@@ -677,16 +669,16 @@ class _HouseholdOverviewPageState
                                           isBeneficiaryRefused:
                                               isBeneficiaryRefused &&
                                                   !checkStatus(
-                                                    taskData,
+                                                    taskdata,
                                                     currentCycle,
                                                   ),
                                           isBeneficiaryReferred:
                                               isBeneficiaryReferred,
-                                          isDelivered: taskData == null
+                                          isDelivered: taskdata == null
                                               ? false
-                                              : taskData.isNotEmpty &&
+                                              : taskdata.isNotEmpty &&
                                                       !checkStatus(
-                                                        taskData,
+                                                        taskdata,
                                                         currentCycle,
                                                       )
                                                   // TODO Need to pass the cycle
@@ -718,13 +710,6 @@ class _HouseholdOverviewPageState
                                         final projectId =
                                             RegistrationDeliverySingleton()
                                                 .projectId!;
-
-                                        // context.read<ScannerBloc>().add(
-                                        //       const ScannerEvent.handleScanner(
-                                        //         [],
-                                        //         [],
-                                        //       ),
-                                        //     );
                                         await context.router.push(
                                           BeneficiaryRegistrationWrapperRoute(
                                             initialState:

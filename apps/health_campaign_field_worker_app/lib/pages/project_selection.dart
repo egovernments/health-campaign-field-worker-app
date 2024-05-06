@@ -146,7 +146,6 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                   context.read<BoundaryBloc>().add(
                         BoundaryFindEvent(
                           code: boundary,
-                        
                         ),
                       );
 

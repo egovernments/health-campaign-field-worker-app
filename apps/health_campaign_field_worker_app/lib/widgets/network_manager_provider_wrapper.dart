@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:attendance_management/data/repositories/local/attendance_logs.dart';
+import 'package:attendance_management/data/repositories/local/attendance_register.dart';
 import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_components/widgets/digit_card.dart';
 import 'package:digit_components/widgets/digit_elevated_button.dart';
@@ -33,18 +35,16 @@ import 'package:registration_delivery/models/entities/side_effect.dart';
 import '../blocs/app_initialization/app_initialization.dart';
 import '../data/network_manager.dart';
 import '../data/repositories/local/downsync.dart';
-import '../data/repositories/local/hcm_attendance.dart';
 import '../data/repositories/local/hcm_hf_referral.dart';
 import '../data/repositories/local/pgr_service.dart';
-import '../data/repositories/local/product_variant.dart';
-import '../data/repositories/local/project_resource.dart';
 import '../data/repositories/local/project_staff.dart';
 import '../data/repositories/oplog/hcm_oplog.dart';
+import '../data/repositories/remote/attendance_logs.dart';
+import '../data/repositories/remote/attendance_register.dart';
 import '../data/repositories/remote/auth.dart';
 import '../data/repositories/remote/boundary.dart';
 import '../data/repositories/remote/downsync.dart';
 import '../data/repositories/remote/facility.dart';
-import '../data/repositories/remote/hcm_attendance.dart';
 import '../data/repositories/remote/hcm_hf_referral.dart';
 import '../data/repositories/remote/household.dart';
 import '../data/repositories/remote/household_member.dart';
@@ -62,17 +62,10 @@ import '../data/repositories/remote/referral.dart';
 import '../data/repositories/remote/side_effect.dart';
 import '../data/repositories/remote/task.dart';
 import '../data/repositories/remote/user.dart';
-import '../data/repositories/local/attendance_logs.dart';
-import '../data/repositories/remote/attendance_logs.dart';
 import '../data/repositories/remote/stock.dart';
 import '../data/repositories/remote/stock_reconciliation.dart';
-// import '../models/entities/hcm_attendance_log_model.dart';
-// import '../models/entities/hcm_attendance_model.dart';
 import '../models/entities/hcm_hf_referral.dart';
 import '../models/entities/product.dart';
-import '../models/entities/product_variant.dart';
-import '../models/entities/project_product_variant.dart';
-import '../models/entities/project_resource.dart';
 import '../models/entities/project_staff.dart';
 import '../models/entities/project_type.dart';
 import '../models/entities/user.dart';
@@ -292,17 +285,17 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           HFReferralOpLogManager(isar),
         ),
       ),
-      // RepositoryProvider<
-      //     LocalRepository<HCMAttendanceRegisterModel,
-      //         HCMAttendanceSearchModel>>(
-      //   create: (_) => AttendanceLocalRepository(
-      //       sql, AttendanceOpLogManager(isar), hcmSqlStore),
-      // ),
-      // RepositoryProvider<
-      //     LocalRepository<HCMAttendanceLogModel, HCMAttendanceLogSearchModel>>(
-      //   create: (_) => AttendanceLogsLocalRepository(
-      //       sql, AttendanceLogOpLogManager(isar), hcmSqlStore),
-      // ),
+      RepositoryProvider<
+          LocalRepository<AttendanceRegisterModel,
+              AttendanceRegisterSearchModel>>(
+        create: (_) =>
+            AttendanceLocalRepository(sql, AttendanceOpLogManager(isar)),
+      ),
+      RepositoryProvider<
+          LocalRepository<AttendanceLogModel, AttendanceLogSearchModel>>(
+        create: (_) =>
+            AttendanceLogsLocalRepository(sql, AttendanceLogOpLogManager(isar)),
+      ),
       RepositoryProvider<LocalRepository<StockModel, StockSearchModel>>(
         create: (_) => StockLocalRepository(
           sql,
@@ -538,19 +531,19 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
               actionMap: actions,
             ),
           ),
-        // if (value == DataModelType.attendanceRegister)
-        //   RepositoryProvider<
-        //       RemoteRepository<HCMAttendanceRegisterModel,
-        //           HCMAttendanceSearchModel>>(
-        //     create: (_) => AttendanceRemoteRepository(dio, actionMap: actions),
-        //   ),
-        // if (value == DataModelType.attendance)
-        //   RepositoryProvider<
-        //       RemoteRepository<HCMAttendanceLogModel,
-        //           HCMAttendanceLogSearchModel>>(
-        //     create: (_) =>
-        //         AttendanceLogRemoteRepository(dio, actionMap: actions),
-        //   ),
+        if (value == DataModelType.attendanceRegister)
+          RepositoryProvider<
+              RemoteRepository<AttendanceRegisterModel,
+                  AttendanceRegisterSearchModel>>(
+            create: (_) => AttendanceRemoteRepository(dio, actionMap: actions),
+          ),
+        if (value == DataModelType.attendance)
+          RepositoryProvider<
+              RemoteRepository<AttendanceLogModel,
+                  AttendanceLogSearchModel>>(
+            create: (_) =>
+                AttendanceLogRemoteRepository(dio, actionMap: actions),
+          ),
         if (value == DataModelType.stock)
           RepositoryProvider<RemoteRepository<StockModel, StockSearchModel>>(
             create: (_) => StockRemoteRepository(dio, actionMap: actions),

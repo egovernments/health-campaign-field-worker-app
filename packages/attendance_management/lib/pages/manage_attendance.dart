@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
-import '../models/enum_values.dart';
+import '../models/entities/enum_values.dart';
 import '../router/attendance_router.gm.dart';
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
@@ -80,11 +80,12 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
                     attendanceBloc: attendanceBloc,
                     data: {
                       localization.translate(i18.attendance.campaignNameLabel):
-                          register.additionalDetails?[
-                              EnumValues.campaignName.toValue()],
+                          register.additionalDetails
+                                  ?.fields[EnumValues.campaignName.toValue()] ??
+                              localization.translate(i18.common.coreCommonNA),
                       localization.translate(i18.attendance.eventTypeLabel):
-                          register.additionalDetails?[
-                                  EnumValues.eventType.toValue()] ??
+                          register.additionalDetails
+                                  ?.fields[EnumValues.eventType.toValue()] ??
                               localization.translate(i18.common.coreCommonNA),
                       localization.translate(i18.attendance.staffCountLabel):
                           register.attendees?.length ?? 0,

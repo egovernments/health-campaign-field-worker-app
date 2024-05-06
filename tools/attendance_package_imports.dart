@@ -127,9 +127,9 @@ void _addRepoToNetworkManagerProviderWrapper(
   // Define the import statements and repository providers
   var importStatements = [
     "import '../data/repositories/local/attendance_logs.dart';",
-    "import '../data/repositories/local/hcm_attendance.dart';",
+    "import '../data/repositories/local/attendance_register.dart';",
     "import '../data/repositories/remote/attendance_logs.dart';",
-    "import '../data/repositories/remote/hcm_attendance.dart';"
+    "import '../data/repositories/remote/attendance_register.dart';"
   ];
   var localRepositories = [
     "RepositoryProvider<\n          LocalRepository<HCMAttendanceRegisterModel,\n              HCMAttendanceSearchModel>>(\n        create: (_) => AttendanceLocalRepository(\n          sql,\n          AttendanceOpLogManager(isar),\n        ),\n      ),",

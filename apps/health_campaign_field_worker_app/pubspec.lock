@@ -486,6 +486,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1+8"
+  digit_data_model:
+    dependency: "direct main"
+    description:
+      path: "../../packages/digit_data_model"
+      relative: true
+    source: path
+    version: "0.0.1+1"
   digit_firebase_services:
     dependency: "direct main"
     description:
@@ -1507,6 +1514,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1+1"
+  registration_delivery:
+    dependency: "direct main"
+    description:
+      path: "../../packages/registration_delivery"
+      relative: true
+    source: path
+    version: "0.0.1"
   remove_emoji_input_formatter:
     dependency: transitive
     description:

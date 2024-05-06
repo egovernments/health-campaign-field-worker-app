@@ -69,9 +69,9 @@ class BeneficiaryWrapperPage extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => FacilityBloc(
-            facilityLocalRepository: facilityRepository,
-            projectFacilityLocalRepository: projectFacilityRepository,
-          )..add(
+              facilityDataRepository: facilityRepository,
+              projectFacilityDataRepository: projectFacilityRepository)
+            ..add(
               FacilityLoadForProjectEvent(
                 projectId: RegistrationDeliverySingleton().projectId!,
               ),

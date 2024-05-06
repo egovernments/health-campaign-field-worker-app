@@ -24,10 +24,10 @@ class FacilityBlocWrapper extends StatelessWidget {
     return SelectedProjectBuilder(
       projectBuilder: (context, selectedProject) {
         final facilityRepository =
-            context.repository<FacilityModel, FacilitySearchModel>();
+            context.repository<FacilityModel, FacilitySearchModel>(context);
 
-        final projectFacilityRepository = context
-            .repository<ProjectFacilityModel, ProjectFacilitySearchModel>();
+        final projectFacilityRepository = context.repository<
+            ProjectFacilityModel, ProjectFacilitySearchModel>(context);
 
         return BlocProvider(
           create: (_) => FacilityBloc(

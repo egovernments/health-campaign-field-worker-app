@@ -201,14 +201,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.3"
-  cupertino_icons:
-    dependency: transitive
-    description:
-      name: cupertino_icons
-      sha256: d57953e10f9f8327ce64a508a355f0b1ec902193f66288e8cb5070e7c47eeb2d
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.6"
   dart_style:
     dependency: transitive
     description:
@@ -228,10 +220,11 @@ packages:
   digit_components:
     dependency: "direct main"
     description:
-      path: "../digit_components"
-      relative: true
-    source: path
-    version: "0.0.1+8"
+      name: digit_components
+      sha256: "25b30da927d5be9d96ca0df1c0fb4dc99092dee6f2c98aec2ef457e7c907e431"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.2+1"
   easy_stepper:
     dependency: transitive
     description:
@@ -780,14 +773,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "14.3.0"
-  remove_emoji_input_formatter:
-    dependency: transitive
-    description:
-      name: remove_emoji_input_formatter
-      sha256: "82d195984f890de7a8fea936c698848e78c1a67ccefe18db3baf9f7a3bc0177f"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.1+1"
   shelf:
     dependency: transitive
     description:

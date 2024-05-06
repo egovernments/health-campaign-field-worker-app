@@ -5,12 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:inventory_management/blocs/inventory_report.dart';
 import 'package:inventory_management/inventory_management.dart';
-import 'package:inventory_management/models/entities/product_variant.dart'
-    as invProdVar;
 import 'package:registration_delivery/blocs/facility/facility.dart';
 
 import '../../data/local_store/secure_store/secure_store.dart';
-import '../../models/entities/project_resource.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/utils.dart';
 import '../product_variant/product_variant.dart';
@@ -80,7 +77,7 @@ class HcmInventoryBloc extends InventoryListener {
 
   // Method to fetch product variants
   @override
-  Future<List<invProdVar.ProductVariantModel>> fetchProductVariants() async {
+  Future<List<ProductVariantModel>> fetchProductVariants() async {
     final productsBloc = context!.read<ProductVariantBloc>();
     productsBloc.add(ProductVariantLoadEvent(
       query: ProjectResourceSearchModel(
@@ -96,12 +93,12 @@ class HcmInventoryBloc extends InventoryListener {
       ),
     );
 
-    List<invProdVar.ProductVariantModel> hcmProductVariantModel = [];
+    List<ProductVariantModel> hcmProductVariantModel = [];
     productVariantsState.maybeWhen(
       fetched: (productVariants) {
         for (var element in productVariants) {
           hcmProductVariantModel.add(
-            invProdVar.ProductVariantModel(
+            ProductVariantModel(
               id: element.id,
               variation: element.variation,
               rowVersion: element.rowVersion,

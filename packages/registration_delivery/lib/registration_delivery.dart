@@ -30,9 +30,8 @@ export 'models/entities/household_member.dart';
 export 'models/entities/referral.dart';
 export 'models/entities/project_beneficiary.dart';
 export 'models/entities/task_resource.dart';
-export 'models/entities/product_variant.dart';
-export 'models/entities/project_product_variant.dart';
 export 'models/entities/project_type.dart';
+export 'models/entities/downsync.dart';
 
 export 'blocs/search_households/search_by_head.dart';
 export 'blocs/search_households/search_households.dart';
@@ -47,3 +46,5 @@ export 'widgets/beneficiary/beneficiary_card.dart';
 export 'widgets/beneficiary/beneficiary_statistics_card.dart';
 
 export 'utils/utils.dart';
+
+export 'router/registration_delivery_router.dart';

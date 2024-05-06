@@ -1,4 +1,3 @@
-import 'package:inventory_management/models/entities/product_variant.dart';
 import 'package:inventory_management/models/entities/stock_reconciliation.dart';
 import 'package:digit_data_model/data_model.dart';
 

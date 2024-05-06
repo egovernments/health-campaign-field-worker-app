@@ -12,11 +12,7 @@ import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 import 'package:registration_delivery/models/entities/referral.dart';
 import 'package:registration_delivery/models/entities/side_effect.dart';
 
-// import '../../../models/entities/hcm_attendance_log_model.dart';
-// import '../../../models/entities/hcm_attendance_model.dart';
 import '../../../models/entities/hcm_hf_referral.dart';
-import '../../../models/entities/product_variant.dart';
-import '../../../models/entities/project_resource.dart';
 import '../../../models/entities/project_staff.dart';
 
 class IndividualOpLogManager extends OpLogManager<IndividualModel> {
@@ -316,69 +312,66 @@ class HFReferralOpLogManager extends OpLogManager<HcmHFReferralModel> {
       entity.hFReferral?.nonRecoverableError;
 }
 
-// class AttendanceOpLogManager extends OpLogManager<HCMAttendanceRegisterModel> {
-//   AttendanceOpLogManager(super.isar);
-//
-//   @override
-//   HCMAttendanceRegisterModel applyServerGeneratedIdToEntity(
-//     HCMAttendanceRegisterModel entity,
-//     String serverGeneratedId,
-//     int rowVersion,
-//   ) =>
-//       throw UnimplementedError();
-//
-//   @override
-//   String getClientReferenceId(HCMAttendanceRegisterModel entity) =>
-//       throw UnimplementedError();
-//   //ClientreferenceId is not needed for register
-//
-//   @override
-//   String? getServerGeneratedId(HCMAttendanceRegisterModel entity) =>
-//       throw UnimplementedError();
-//   //Not being used for down sync using client referenceIds
-//
-//   @override
-//   int? getRowVersion(HCMAttendanceRegisterModel entity) =>
-//       throw UnimplementedError();
-//   //Not being used for down sync using client referenceIds
-//
-//   @override
-//   bool? getNonRecoverableError(HCMAttendanceRegisterModel entity) =>
-//       throw UnimplementedError();
-// //Not being used for down sync using client referenceIds
-// }
-//
-// class AttendanceLogOpLogManager extends OpLogManager<HCMAttendanceLogModel> {
-//   AttendanceLogOpLogManager(super.isar);
-//
-//   @override
-//   HCMAttendanceLogModel applyServerGeneratedIdToEntity(
-//     HCMAttendanceLogModel entity,
-//     String serverGeneratedId,
-//     int rowVersion,
-//   ) =>
-//       entity.copyWith(
-//         attendance: entity.attendance?.copyWith(
-//           id: serverGeneratedId,
-//         ),
-//         rowVersion: rowVersion,
-//       );
-//
-//   @override
-//   String getClientReferenceId(HCMAttendanceLogModel entity) =>
-//       entity.attendance!.clientReferenceId.toString();
-//
-//   @override
-//   String? getServerGeneratedId(HCMAttendanceLogModel entity) =>
-//       entity.attendance?.id;
-//
-//   @override
-//   int? getRowVersion(HCMAttendanceLogModel entity) => entity.rowVersion;
-//
-//   @override
-//   bool? getNonRecoverableError(HCMAttendanceLogModel entity) =>
-//       entity.nonRecoverableError;
-// }
+class AttendanceOpLogManager extends OpLogManager<AttendanceRegisterModel> {
+  AttendanceOpLogManager(super.isar);
+
+  @override
+  AttendanceRegisterModel applyServerGeneratedIdToEntity(
+    AttendanceRegisterModel entity,
+    String serverGeneratedId,
+    int rowVersion,
+  ) =>
+      throw UnimplementedError();
+
+  @override
+  String getClientReferenceId(AttendanceRegisterModel entity) =>
+      throw UnimplementedError();
+  //ClientreferenceId is not needed for register
+
+  @override
+  String? getServerGeneratedId(AttendanceRegisterModel entity) =>
+      throw UnimplementedError();
+  //Not being used for down sync using client referenceIds
+
+  @override
+  int? getRowVersion(AttendanceRegisterModel entity) =>
+      throw UnimplementedError();
+  //Not being used for down sync using client referenceIds
+
+  @override
+  bool? getNonRecoverableError(AttendanceRegisterModel entity) =>
+      throw UnimplementedError();
+//Not being used for down sync using client referenceIds
+}
+
+class AttendanceLogOpLogManager extends OpLogManager<AttendanceLogModel> {
+  AttendanceLogOpLogManager(super.isar);
+
+  @override
+  AttendanceLogModel applyServerGeneratedIdToEntity(
+    AttendanceLogModel entity,
+    String serverGeneratedId,
+    int rowVersion,
+  ) =>
+      entity.copyWith(
+        id: serverGeneratedId,
+        rowVersion: rowVersion,
+      );
+
+  @override
+  String getClientReferenceId(AttendanceLogModel entity) =>
+      entity.clientReferenceId.toString();
+
+  @override
+  String? getServerGeneratedId(AttendanceLogModel entity) => entity.id;
+
+  @override
+  int? getRowVersion(AttendanceLogModel entity) => entity.rowVersion;
+
+  @override
+  bool? getNonRecoverableError(AttendanceLogModel entity) =>
+      entity.nonRecoverableError;
+}
 
 class ProjectStaffOpLogManager extends OpLogManager<ProjectStaffModel> {
   ProjectStaffOpLogManager(super.isar);

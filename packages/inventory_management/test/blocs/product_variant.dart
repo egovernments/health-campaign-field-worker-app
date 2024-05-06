@@ -2,10 +2,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:inventory_management/blocs/inventory_listener.dart';
 import 'package:inventory_management/blocs/product_variant.dart';
-import 'package:inventory_management/models/entities/product_variant.dart';
 import 'package:bloc_test/bloc_test.dart';
-import 'package:inventory_management/models/entities/project_resource.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:digit_data_model/data_model.dart';
 
 // Mock class for InventorySingleton
 class MockInventorySingleton extends Mock implements InventorySingleton {}

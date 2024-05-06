@@ -3,8 +3,7 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import '../../models/entities/product_variant.dart';
-import '../../models/entities/project_resource.dart';
+import 'package:digit_data_model/data_model.dart';
 import '../../utils/typedefs.dart';
 
 part 'product_variant.freezed.dart';

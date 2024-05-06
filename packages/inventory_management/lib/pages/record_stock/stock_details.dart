@@ -19,7 +19,6 @@ import '../../blocs/inventory_listener.dart';
 import '../../blocs/product_variant.dart';
 import '../../blocs/record_stock.dart';
 import '../../models/entities/inventory_transport_type.dart';
-import '../../models/entities/product_variant.dart';
 import '../../models/entities/stock.dart';
 import '../../models/entities/transaction_reason.dart';
 import '../../models/entities/transaction_type.dart';

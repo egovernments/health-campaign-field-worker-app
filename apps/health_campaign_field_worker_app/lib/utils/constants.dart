@@ -1,3 +1,5 @@
+import 'package:attendance_management/data/repositories/local/attendance_logs.dart';
+import 'package:attendance_management/data/repositories/local/attendance_register.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/oplog/oplog_entry.dart';
@@ -9,15 +11,9 @@ import 'package:inventory_management/data/repositories/local/stock.dart';
 import 'package:inventory_management/data/repositories/local/stock_reconciliation.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:registration_delivery/data/repositories/local/facility.dart';
-import 'package:registration_delivery/data/repositories/local/household.dart';
 import 'package:registration_delivery/data/repositories/local/houshold_member.dart';
 import 'package:registration_delivery/data/repositories/local/individual.dart';
-import 'package:registration_delivery/data/repositories/local/project_beneficiary.dart';
-import 'package:registration_delivery/data/repositories/local/project_facility.dart';
-import 'package:registration_delivery/data/repositories/local/referral.dart';
 import 'package:registration_delivery/data/repositories/local/side_effect.dart';
-import 'package:registration_delivery/data/repositories/local/task.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
@@ -26,19 +22,15 @@ import '../data/local_store/no_sql/schema/localization.dart';
 import '../data/local_store/no_sql/schema/project_types.dart';
 import '../data/local_store/no_sql/schema/row_versions.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
-import '../data/repositories/local/attendance_logs.dart';
-import '../data/repositories/local/hcm_attendance.dart';
 import '../data/repositories/local/hcm_hf_referral.dart';
 import '../data/repositories/local/pgr_service.dart';
-import '../data/repositories/local/product_variant.dart';
-import '../data/repositories/local/project_resource.dart';
 import '../data/repositories/local/project_staff.dart';
 import '../data/repositories/oplog/hcm_oplog.dart';
 import '../data/repositories/remote/attendance_logs.dart';
+import '../data/repositories/remote/attendance_register.dart';
 import '../data/repositories/remote/boundary.dart';
 import '../data/repositories/remote/downsync.dart';
 import '../data/repositories/remote/facility.dart';
-import '../data/repositories/remote/hcm_attendance.dart';
 import '../data/repositories/remote/hcm_hf_referral.dart';
 import '../data/repositories/remote/household.dart';
 import '../data/repositories/remote/household_member.dart';
@@ -56,7 +48,6 @@ import '../data/repositories/remote/side_effect.dart';
 import '../data/repositories/remote/stock.dart';
 import '../data/repositories/remote/stock_reconciliation.dart';
 import '../data/repositories/remote/task.dart';
-import '../models/data_model.init.dart';
 import 'environment_config.dart';
 
 class Constants {
@@ -165,14 +156,14 @@ class Constants {
         sql,
         HFReferralOpLogManager(isar),
       ),
-      // AttendanceLocalRepository(
-      //   sql,
-      //   AttendanceOpLogManager(isar),
-      // ),
-      // AttendanceLogsLocalRepository(
-      //   sql,
-      //   AttendanceLogOpLogManager(isar),
-      // ),
+      AttendanceLocalRepository(
+        sql,
+        AttendanceOpLogManager(isar),
+      ),
+      AttendanceLogsLocalRepository(
+        sql,
+        AttendanceLogOpLogManager(isar),
+      ),
     ];
   }
 
@@ -246,10 +237,10 @@ class Constants {
           DownsyncRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.hFReferral)
           HFReferralRemoteRepository(dio, actionMap: actions),
-        // if (value == DataModelType.attendanceRegister)
-        //   AttendanceRemoteRepository(dio, actionMap: actions),
-        // if (value == DataModelType.attendance)
-        //   AttendanceLogRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.attendanceRegister)
+          AttendanceRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.attendance)
+          AttendanceLogRemoteRepository(dio, actionMap: actions),
       ]);
     }
 

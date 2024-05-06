@@ -120,9 +120,9 @@ class _ReasonForDeletionPageState
                                 .householdDeletionReasonOptions!
                                 .map((e) => ReactiveRadioListTile(
                                       title: Text(
-                                        localizations.translate(e['name']!),
+                                        localizations.translate(e['label']!),
                                       ),
-                                      value: e['code']!,
+                                      value: e['value']!,
                                       formControlName: _reasonForDeletionKey,
                                     ))
                                 .toList()

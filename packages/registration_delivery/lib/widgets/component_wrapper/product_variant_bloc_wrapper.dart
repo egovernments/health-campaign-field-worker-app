@@ -1,3 +1,4 @@
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
@@ -5,8 +6,6 @@ import 'package:registration_delivery/utils/utils.dart';
 import 'package:registration_delivery/widgets/component_wrapper/selected_project_builder.dart';
 
 import '../../blocs/product_variant/product_variant.dart';
-import '../../models/entities/product_variant.dart';
-import '../../models/entities/project_resource.dart';
 
 class ProductVariantBlocWrapper extends StatelessWidget {
   final Widget child;
@@ -20,11 +19,12 @@ class ProductVariantBlocWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return SelectedProjectBuilder(
       projectBuilder: (context, selectedProject) {
-        final productVariant = context
-            .repository<ProductVariantModel, ProductVariantSearchModel>(context);
+        final productVariant =
+            context.repository<ProductVariantModel, ProductVariantSearchModel>(
+                context);
 
-        final projectResource = context
-            .repository<ProjectResourceModel, ProjectResourceSearchModel>(context);
+        final projectResource = context.repository<ProjectResourceModel,
+            ProjectResourceSearchModel>(context);
 
         return BlocProvider(
           create: (_) => ProductVariantBloc(

@@ -169,20 +169,14 @@ class _ComplaintsDetailsPageState
                                 i18.common.coreCommonSubmit,
                               ),
                               action: (context) {
-                                Navigator.of(
-                                  context,
-                                  rootNavigator: true,
-                                ).pop(true);
+                                context.router.popUntilRoot();
                               },
                             ),
                             secondaryAction: DigitDialogActions(
                               label: localizations.translate(
                                 i18.common.coreCommonCancel,
                               ),
-                              action: (context) => Navigator.of(
-                                context,
-                                rootNavigator: true,
-                              ).pop(false),
+                              action: (context) => context.router.popUntilRoot(),
                             ),
                           ),
                         );

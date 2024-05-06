@@ -5,11 +5,9 @@ import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:registration_delivery/utils/utils.dart';
+import 'package:registration_delivery/registration_delivery.dart';
 
 import '../blocs/beneficiary_registration/beneficiary_registration.dart';
-import '../blocs/search_households/search_bloc_common_wrapper.dart';
-import '../blocs/search_households/search_households.dart';
 import '../models/entities/beneficiary_type.dart';
 import '../router/registration_delivery_router.gm.dart';
 import '../widgets/back_navigation_help_header.dart';
@@ -59,10 +57,6 @@ class _SearchBeneficiaryPageState
       }
     });
 
-    setState(() {
-      offset = 0;
-      limit = 10;
-    });
     super.initState();
   }
 
@@ -92,27 +86,20 @@ class _SearchBeneficiaryPageState
                   longititude: long,
                   projectId: RegistrationDeliverySingleton().projectId!,
                   maxRadius: RegistrationDeliverySingleton().maxRadius!,
-                  offset: offset + limit,
-                  limit: limit,
+                  offset: blocWrapper.state.offset + blocWrapper.state.limit,
+                  limit: blocWrapper.state.limit,
                 ));
-                setState(() {
-                  offset = (offset + limit);
-                });
               } else if (metrics.atEdge &&
                   searchController.text != '' &&
                   metrics.pixels != 0) {
-                blocWrapper.searchByHeadBloc.add(
-                  SearchHouseholdsEvent.searchByHouseholdHead(
-                    searchText: searchController.text,
-                    projectId: RegistrationDeliverySingleton().projectId!,
-                    isProximityEnabled: isProximityEnabled,
-                    offset: offset + limit,
-                    limit: limit,
-                  ),
-                );
-                setState(() {
-                  offset = (offset + limit);
-                });
+                blocWrapper.searchByHeadBloc
+                    .add(SearchHouseholdsEvent.searchByHouseholdHead(
+                  searchText: searchController.text,
+                  projectId: RegistrationDeliverySingleton().projectId!,
+                  isProximityEnabled: isProximityEnabled,
+                  offset: blocWrapper.state.offset + blocWrapper.state.limit,
+                  limit: blocWrapper.state.limit,
+                ));
               }
             }
             // Return true to allow the notification to continue to be dispatched to further ancestors.
@@ -178,15 +165,12 @@ class _SearchBeneficiaryPageState
                                         maxRadius:
                                             RegistrationDeliverySingleton()
                                                 .maxRadius!,
-                                        offset: offset,
-                                        limit: limit,
+                                        offset: blocWrapper.state.offset +
+                                            blocWrapper.state.limit,
+                                        limit: blocWrapper.state.limit,
                                       ),
                                     );
                                   } else {
-                                    setState(() {
-                                      offset = 0;
-                                      limit = limit;
-                                    });
                                     blocWrapper.searchHouseholdsBloc.add(
                                       const SearchHouseholdsClearEvent(),
                                     );
@@ -222,8 +206,6 @@ class _SearchBeneficiaryPageState
                                               isProximityEnabled = value;
                                               lat = locationState.latitude!;
                                               long = locationState.longitude!;
-                                              offset = 0;
-                                              limit = 10;
                                             });
 
                                             if (locationState.hasPermissions &&
@@ -250,8 +232,9 @@ class _SearchBeneficiaryPageState
                                                   maxRadius:
                                                       RegistrationDeliverySingleton()
                                                           .maxRadius!,
-                                                  offset: offset,
-                                                  limit: limit,
+                                                  offset: 0,
+                                                  limit:
+                                                      blocWrapper.state.limit,
                                                 ),
                                               );
                                             } else {
@@ -297,7 +280,9 @@ class _SearchBeneficiaryPageState
                 listener: (context, scannerState) {
                   context.read<SearchBlocWrapper>().tagSearchBloc.add(
                         SearchHouseholdsEvent.searchByTag(
-                          tag: scannerState.qrCodes.firstOrNull ?? '',
+                          tag: scannerState.qrCodes.isNotEmpty
+                              ? scannerState.qrCodes.lastOrNull!
+                              : '',
                           projectId: RegistrationDeliverySingleton().projectId!,
                         ),
                       );
@@ -399,7 +384,6 @@ class _SearchBeneficiaryPageState
                     onPressed: () {
                       blocWrapper.clearEvent();
                       Navigator.of(context).push(
-                        //[TODO: Add route to auto_route]
                         MaterialPageRoute(
                           builder: (context) => const DigitScannerPage(
                             quantity: 1,

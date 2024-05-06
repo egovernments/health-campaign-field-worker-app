@@ -77,10 +77,10 @@ class _$ProductVariantEventCopyWithImpl<$Res, $Val extends ProductVariantEvent>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? query = null,
+    Object? query = freezed,
   }) {
     return _then(_value.copyWith(
-      query: null == query
+      query: freezed == query
           ? _value.query
           : query // ignore: cast_nullable_to_non_nullable
               as ProjectResourceSearchModel,
@@ -113,10 +113,10 @@ class __$$ProductVariantLoadEventImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? query = null,
+    Object? query = freezed,
   }) {
     return _then(_$ProductVariantLoadEventImpl(
-      query: null == query
+      query: freezed == query
           ? _value.query
           : query // ignore: cast_nullable_to_non_nullable
               as ProjectResourceSearchModel,
@@ -142,11 +142,12 @@ class _$ProductVariantLoadEventImpl implements ProductVariantLoadEvent {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ProductVariantLoadEventImpl &&
-            (identical(other.query, query) || other.query == query));
+            const DeepCollectionEquality().equals(other.query, query));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, query);
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(query));
 
   @JsonKey(ignore: true)
   @override

@@ -16,7 +16,6 @@ import '../../blocs/facility.dart';
 import '../../blocs/inventory_listener.dart';
 import '../../blocs/product_variant.dart';
 import '../../blocs/stock_reconciliation.dart';
-import '../../models/entities/product_variant.dart';
 import '../../models/entities/stock_reconciliation.dart';
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/component_wrapper/facility_bloc_wrapper.dart';

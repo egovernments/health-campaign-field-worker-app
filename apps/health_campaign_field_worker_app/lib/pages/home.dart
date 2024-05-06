@@ -567,34 +567,34 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
-      // i18.home.manageAttendanceLabel:
-      //     homeShowcaseData.manageAttendance.buildWith(
-      //   child: HomeItemCard(
-      //     icon: Icons.fingerprint_outlined,
-      //     label: i18.home.manageAttendanceLabel,
-      //     onPressed: () {
-      //       context.router.push(ManageAttendanceRoute(
-      //         attendanceListeners: HCMAttendanceBloc(
-      //           userId: context.loggedInUserUuid,
-      //           projectId: context.projectId,
-      //           attendanceLocalRepository: context.read<
-      //               LocalRepository<HCMAttendanceRegisterModel,
-      //                   HCMAttendanceSearchModel>>(),
-      //           individualLocalRepository: context.read<
-      //               LocalRepository<IndividualModel, IndividualSearchModel>>(),
-      //           attendanceLogLocalRepository: context.read<
-      //               LocalRepository<HCMAttendanceLogModel,
-      //                   HCMAttendanceLogSearchModel>>(),
-      //           context: context,
-      //           individualId: context.loggedInIndividualId,
-      //         ),
-      //         projectId: context.projectId,
-      //         userId: context.loggedInUserUuid,
-      //         appVersion: Constants().version,
-      //       ));
-      //     },
-      //   ),
-      // ),
+      i18.home.manageAttendanceLabel:
+          homeShowcaseData.manageAttendance.buildWith(
+        child: HomeItemCard(
+          icon: Icons.fingerprint_outlined,
+          label: i18.home.manageAttendanceLabel,
+          onPressed: () {
+            context.router.push(ManageAttendanceRoute(
+              attendanceListeners: HCMAttendanceBloc(
+                userId: context.loggedInUserUuid,
+                projectId: context.projectId,
+                attendanceLocalRepository: context.read<
+                    LocalRepository<AttendanceRegisterModel,
+                        AttendanceRegisterSearchModel>>(),
+                individualLocalRepository: context.read<
+                    LocalRepository<IndividualModel, IndividualSearchModel>>(),
+                attendanceLogLocalRepository: context.read<
+                    LocalRepository<AttendanceLogModel,
+                        AttendanceLogSearchModel>>(),
+                context: context,
+                individualId: context.loggedInIndividualId,
+              ),
+              projectId: context.projectId,
+              userId: context.loggedInUserUuid,
+              appVersion: Constants().version,
+            ));
+          },
+        ),
+      ),
       i18.home.db: homeShowcaseData.db.buildWith(
         child: HomeItemCard(
           icon: Icons.table_chart,
@@ -621,13 +621,13 @@ class _HomePageState extends LocalizedState<HomePage> {
                 userId: context.loggedInUserUuid,
                 projectId: context.projectId,
                 attendanceLocalRepository: context.read<
-                    LocalRepository<HCMAttendanceRegisterModel,
-                        HCMAttendanceSearchModel>>(),
+                    LocalRepository<AttendanceRegisterModel,
+                        AttendanceRegisterSearchModel>>(),
                 individualLocalRepository: context.read<
                     LocalRepository<IndividualModel, IndividualSearchModel>>(),
                 attendanceLogLocalRepository: context.read<
-                    LocalRepository<HCMAttendanceLogModel,
-                        HCMAttendanceLogSearchModel>>(),
+                    LocalRepository<AttendanceLogModel,
+                        AttendanceLogSearchModel>>(),
                 context: context,
                 individualId: context.loggedInIndividualId,
               ),
@@ -811,7 +811,7 @@ void setRegistrationDeliverySingleton(BuildContext context) {
             };
           }).toList(),
           householdDeletionReasonOptions:
-          appConfiguration.householdDeletionReasonOptions!.map((option) {
+              appConfiguration.householdDeletionReasonOptions!.map((option) {
             return {
               'label': option.name,
               'value': option.code,
@@ -826,7 +826,7 @@ void setRegistrationDeliverySingleton(BuildContext context) {
             };
           }).toList(),
           deliveryCommentOptions:
-          appConfiguration.deliveryCommentOptions!.map((option) {
+              appConfiguration.deliveryCommentOptions!.map((option) {
             return {
               'label': option.name,
               'value': option.code,

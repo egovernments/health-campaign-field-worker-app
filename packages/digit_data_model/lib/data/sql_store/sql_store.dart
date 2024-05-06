@@ -41,9 +41,9 @@ import 'tables/name.dart';
 part 'sql_store.g.dart';
 
 @DriftDatabase(tables: [
-  // AttendanceRegister,
-  // Attendance,
-  // Attendee,
+  AttendanceRegister,
+  Attendance,
+  Attendee,
   at.Address,
   Name,
   Boundary,
@@ -68,7 +68,7 @@ part 'sql_store.g.dart';
   ServiceAttributes,
   ServiceDefinition,
   Locality,
-  // Staff,
+  Staff,
   Attributes,
   PgrService,
   PgrComplainant,

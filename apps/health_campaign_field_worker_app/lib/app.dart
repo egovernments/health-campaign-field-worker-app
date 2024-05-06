@@ -11,7 +11,6 @@ import 'package:referral_reconciliation/blocs/referral_recon_service.dart';
 import 'package:referral_reconciliation/blocs/search_referral_reconciliations.dart';
 import 'package:registration_delivery/blocs/facility/facility.dart';
 import 'package:registration_delivery/blocs/project_facility/project_facility.dart';
-import 'package:registration_delivery/utils/utils.dart';
 
 import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
@@ -26,10 +25,6 @@ import 'data/network_manager.dart';
 import 'data/repositories/remote/localization.dart';
 import 'data/repositories/remote/mdms.dart';
 import 'models/data_model.dart';
-// import 'models/entities/hcm_attendance_log_model.dart';
-// import 'models/entities/hcm_attendance_model.dart';
-import 'models/entities/product_variant.dart';
-import 'models/entities/project_resource.dart';
 import 'models/entities/project_staff.dart';
 import 'models/entities/user.dart';
 
@@ -238,24 +233,24 @@ class MainApplicationState extends State<MainApplication>
                             projectResourceRemoteRepository: ctx.read<
                                 RemoteRepository<ProjectResourceModel,
                                     ProjectResourceSearchModel>>(),
-                            // attendanceLocalRepository: ctx.read<
-                            //     LocalRepository<HCMAttendanceRegisterModel,
-                            //         HCMAttendanceSearchModel>>(),
-                            // attendanceRemoteRepository: ctx.read<
-                            //     RemoteRepository<HCMAttendanceRegisterModel,
-                            //         HCMAttendanceSearchModel>>(),
+                            attendanceLocalRepository: ctx.read<
+                                LocalRepository<AttendanceRegisterModel,
+                                    AttendanceRegisterSearchModel>>(),
+                            attendanceRemoteRepository: ctx.read<
+                                RemoteRepository<AttendanceRegisterModel,
+                                    AttendanceRegisterSearchModel>>(),
                             individualLocalRepository: ctx.read<
                                 LocalRepository<IndividualModel,
                                     IndividualSearchModel>>(),
                             individualRemoteRepository: ctx.read<
                                 RemoteRepository<IndividualModel,
                                     IndividualSearchModel>>(),
-                            // attendanceLogLocalRepository: ctx.read<
-                            //     LocalRepository<HCMAttendanceLogModel,
-                            //         HCMAttendanceLogSearchModel>>(),
-                            // attendanceLogRemoteRepository: ctx.read<
-                            //     RemoteRepository<HCMAttendanceLogModel,
-                            //         HCMAttendanceLogSearchModel>>(),
+                            attendanceLogLocalRepository: ctx.read<
+                                LocalRepository<AttendanceLogModel,
+                                    AttendanceLogSearchModel>>(),
+                            attendanceLogRemoteRepository: ctx.read<
+                                RemoteRepository<AttendanceLogModel,
+                                    AttendanceLogSearchModel>>(),
                             stockLocalRepository: ctx.read<
                                 LocalRepository<StockModel,
                                     StockSearchModel>>(),
@@ -267,12 +262,11 @@ class MainApplicationState extends State<MainApplication>
                         ),
                         BlocProvider(
                           create: (context) => FacilityBloc(
-                            facilityLocalRepository: context.read<
-                                LocalRepository<FacilityModel,
-                                    FacilitySearchModel>>(),
-                            projectFacilityLocalRepository: context.read<
-                                LocalRepository<ProjectFacilityModel,
-                                    ProjectFacilitySearchModel>>(),
+                            facilityDataRepository: context.repository<
+                                FacilityModel, FacilitySearchModel>(),
+                            projectFacilityDataRepository: context.repository<
+                                ProjectFacilityModel,
+                                ProjectFacilitySearchModel>(),
                           ),
                         ),
                         BlocProvider(

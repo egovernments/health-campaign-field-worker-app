@@ -4,7 +4,7 @@ import 'package:digit_data_model/data/sql_store/sql_store.dart';
 import 'package:drift/drift.dart';
 
 import 'package:digit_data_model/data_model.dart';
-import 'package:health_campaign_field_worker_app/models/entities/project_product_variant.dart';
+import 'package:digit_data_model/models/entities/project_product_variant.dart';
 
 part 'project_type.mapper.dart';
 
