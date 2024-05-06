@@ -14,10 +14,12 @@ typedef ReferralReconServiceEmitter = Emitter<ReferralReconServiceState>;
 // Define the Bloc responsible for managing ReferralReconService events and states.
 class ReferralReconServiceBloc
     extends Bloc<ReferralReconServiceEvent, ReferralReconServiceState> {
+  final ReferralReconSingleton referralReconSingleton;
   // Constructor initializes the Bloc with an initial state and sets up event handlers.
   ReferralReconServiceBloc(
-    super.initialState,
-  ) {
+    super.initialState, {
+    required this.referralReconSingleton,
+  }) {
     on(_handleCreate);
     on(_multichecklistChanged);
     on(_handleSearch);
@@ -42,7 +44,7 @@ class ReferralReconServiceBloc
     ReferralReconServiceEmitter emit,
   ) async {
     bool? isServiceRequestSaved = false;
-    isServiceRequestSaved = await ReferralReconSingleton()
+    isServiceRequestSaved = await referralReconSingleton
         .saveServiceRequestDetails(SaveServiceRequest(
       serviceModel: event.serviceModel,
       additionalData: null,
@@ -65,7 +67,7 @@ class ReferralReconServiceBloc
     ReferralReconServiceSearchEvent event,
     ReferralReconServiceEmitter emit,
   ) async {
-    final results = await ReferralReconSingleton()
+    final results = await referralReconSingleton
         .getSavedChecklist(event.serviceSearchModel);
     emit(ReferralReconServiceSearchState(
         serviceList: results != null ? [results] : []));

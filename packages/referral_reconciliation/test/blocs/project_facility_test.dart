@@ -6,6 +6,8 @@ import 'package:referral_reconciliation/blocs/project_facility.dart';
 import 'package:referral_reconciliation/blocs/referral_reconciliation_listeners.dart';
 import 'package:referral_reconciliation/models/entities/referral_project_facility.dart';
 
+import '../constants/test_constants.dart';
+
 // Mock class for ReferralReconSingleton
 class MockReferralReconSingleton extends Mock
     implements ReferralReconSingleton {}
@@ -26,7 +28,7 @@ void main() {
       );
 
       // Initialize mockProjectId
-      mockProjectId = 'mock-e29cc774';
+      mockProjectId = ReferralReconTestConstants().projectId;
     });
 
     // Test for when getProjectFacilitiesForProjectId returns null
@@ -56,9 +58,9 @@ void main() {
       // Description of the test
       'emits [ProjectFacilityLoadingState, ProjectFacilityFetchedState] when getProjectFacilitiesForProjectId returns non-null list',
       build: () {
-        final List<ReferralProjectFacilityModel> expectedFacilities = [
-          ReferralProjectFacilityModel(id: 'PJ_1')
-        ]; // Mock the method getProjectFacilitiesForProjectId to return a non-null list
+        final List<ReferralProjectFacilityModel> expectedFacilities =
+            ReferralReconTestConstants()
+                .expectedProjectFacilities; // Mock the method getProjectFacilitiesForProjectId to return a non-null list
         when(() =>
                 mockReferralReconSingleton.getProjectFacilitiesForProjectId())
             .thenAnswer((_) async => expectedFacilities);
@@ -68,9 +70,9 @@ void main() {
           ReferralReconProjectFacilityEvent.loadForProjectId(
               projectId: mockProjectId)),
       expect: () {
-        final List<ReferralProjectFacilityModel> expectedFacilities = [
-          ReferralProjectFacilityModel(id: 'PJ_1')
-        ]; // Mock the method getProjectFacilitiesForProjectId to return a non-null list
+        final List<ReferralProjectFacilityModel> expectedFacilities =
+            ReferralReconTestConstants()
+                .expectedProjectFacilities; // Mock the method getProjectFacilitiesForProjectId to return a non-null list
 
         return <ReferralReconProjectFacilityState>[
           // Expected states after the action

@@ -7,6 +7,8 @@ import 'package:referral_reconciliation/blocs/referral_reconciliation_listeners.
 import 'package:referral_reconciliation/models/entities/h_f_referral.dart';
 import 'package:referral_reconciliation/models/entities/referral_project_facility.dart';
 
+import '../constants/test_constants.dart';
+
 // Mock class for InventorySingleton
 class MockReferralReconSingleton extends Mock
     implements ReferralReconSingleton {
@@ -20,23 +22,19 @@ class MockReferralReconSingleton extends Mock
 class MockProjectFacilityModel extends Mock
     implements ReferralProjectFacilityModel {
   @override
-  String get id => 'projectFacility1';
+  String get id => ReferralReconTestConstants().projectFacilityId;
 }
 
 // Fake class for SaveReferralDetails for testing
 class SaveReferralReconDetailsFake extends Fake
     implements ReferralReconciliation {
   @override
-  HFReferralModel get hfReferralModel => HFReferralModel(
-      id: 'referral1',
-      clientReferenceId: 'abc123',
-      projectFacilityId: 'projectFacility1');
+  HFReferralModel get hfReferralModel =>
+      ReferralReconTestConstants().hfReferralModel;
 
   @override
-  Map<String, Object> get additionalData => {
-        'dateOfEvaluation':
-            DateTime(2024, 1, 1).millisecondsSinceEpoch.toString()
-      };
+  Map<String, Object> get additionalData =>
+      ReferralReconTestConstants().additionalDataForReferralRecord;
 }
 
 void main() {
@@ -50,10 +48,11 @@ void main() {
     registerFallbackValue(SaveReferralReconDetailsFake());
 
     // Initializing the entryType and projectId
-    mockProjectId = '1';
-    mockDateOfRecord = DateTime(2024, 1, 1);
+    mockProjectId = ReferralReconTestConstants().projectId;
+    mockDateOfRecord = ReferralReconTestConstants().dateOfReferralRecord;
     mockProjectFacilityModel = MockProjectFacilityModel();
-    mockHealthFacilityCoordinator = 'Mock Coordinator';
+    mockHealthFacilityCoordinator =
+        ReferralReconTestConstants().healthFacilityCoordinator;
   });
 
   // Grouping tests related to RecordStockBloc
