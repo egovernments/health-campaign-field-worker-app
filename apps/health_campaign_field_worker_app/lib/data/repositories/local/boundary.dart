@@ -4,10 +4,9 @@ import 'package:drift/drift.dart';
 
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
-import '../../data_repository.dart';
+import 'base/boundary_base.dart';
 
-class BoundaryLocalRepository
-    extends LocalRepository<BoundaryModel, BoundarySearchModel> {
+class BoundaryLocalRepository extends BoundaryLocalBaseRepository {
   BoundaryLocalRepository(super.sql, super.opLogManager);
 
   @override
@@ -46,41 +45,19 @@ class BoundaryLocalRepository
 
   @override
   FutureOr<List<BoundaryModel>> search(BoundarySearchModel query) async {
-    final selectQuery = sql
-        .select(
-      sql.boundary,
-      distinct: true,
-    )
-        .join([]);
-
-    final sQuery = sql.selectOnly(sql.boundary)
-      ..addColumns([sql.boundary.boundaryNum, sql.boundary.boundaryNum.max()]);
-
-    final result = await sQuery.getSingle();
-    final r = result.read(sql.boundary.boundaryNum);
-
-    if (query.isSingle == true) {
-      (selectQuery
-            ..where(buildAnd([
-              sql.boundary.boundaryNum.isSmallerOrEqualValue(r!),
-            ])))
-          .limit(r);
-    } else {
-      (selectQuery
-        ..where(buildAnd([
-          if (query.code != null)
-            sql.boundary.materializedPath.like('%${query.code}%'),
-          sql.boundary.materializedPath.isNotNull(),
-          if (query.boundaryNum != null)
-            sql.boundary.boundaryNum.equals(query.boundaryNum!),
-          if (query.boundaryType != null && query.boundaryType!.isNotEmpty)
-            sql.boundary.label.equals(query.boundaryType!),
-          sql.boundary.materializedPath.isNotIn(['']),
-          sql.boundary.code.isNotNull(),
-          sql.boundary.code.isNotIn(['']),
-        ])));
-    }
-    final results = await selectQuery.get();
+    final selectQuery = sql.select(sql.boundary).join([]);
+    final results = await (selectQuery
+          ..where(buildAnd([
+            if (query.code != null)
+              sql.boundary.materializedPath.like('%${query.code}%'),
+            if (query.boundaryType != null && query.boundaryType!.isNotEmpty)
+              sql.boundary.label.equals(query.boundaryType!),
+            sql.boundary.materializedPath.isNotNull(),
+            sql.boundary.materializedPath.isNotIn(['']),
+            sql.boundary.code.isNotNull(),
+            sql.boundary.code.isNotIn(['']),
+          ])))
+        .get();
 
     final queriedBoundaries = results.map((e) {
       final data = e.readTable(sql.boundary);
@@ -100,16 +77,4 @@ class BoundaryLocalRepository
 
     return queriedBoundaries;
   }
-
-  @override
-  FutureOr<void> delete(BoundaryModel entity, {bool createOpLog = true}) async {
-    sql
-        .delete(
-          sql.boundary,
-        )
-        .go();
-  }
-
-  @override
-  DataModelType get type => DataModelType.boundary;
 }

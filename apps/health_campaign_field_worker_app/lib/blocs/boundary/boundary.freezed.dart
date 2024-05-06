@@ -22,7 +22,7 @@ mixin _$BoundaryEvent {
     required TResult Function(String code, int boundaryNum) search,
     required TResult Function(String label, BoundaryModel selectedBoundary)
         select,
-    required TResult Function(String code) findBoundary,
+    required TResult Function(String code, String boundaryType) findBoundary,
     required TResult Function() submit,
   }) =>
       throw _privateConstructorUsedError;
@@ -31,7 +31,7 @@ mixin _$BoundaryEvent {
     TResult? Function()? reset,
     TResult? Function(String code, int boundaryNum)? search,
     TResult? Function(String label, BoundaryModel selectedBoundary)? select,
-    TResult? Function(String code)? findBoundary,
+    TResult? Function(String code, String boundaryType)? findBoundary,
     TResult? Function()? submit,
   }) =>
       throw _privateConstructorUsedError;
@@ -40,7 +40,7 @@ mixin _$BoundaryEvent {
     TResult Function()? reset,
     TResult Function(String code, int boundaryNum)? search,
     TResult Function(String label, BoundaryModel selectedBoundary)? select,
-    TResult Function(String code)? findBoundary,
+    TResult Function(String code, String boundaryType)? findBoundary,
     TResult Function()? submit,
     required TResult orElse(),
   }) =>
@@ -135,7 +135,7 @@ class _$BoundaryResetEventImpl implements BoundaryResetEvent {
     required TResult Function(String code, int boundaryNum) search,
     required TResult Function(String label, BoundaryModel selectedBoundary)
         select,
-    required TResult Function(String code) findBoundary,
+    required TResult Function(String code, String boundaryType) findBoundary,
     required TResult Function() submit,
   }) {
     return reset();
@@ -147,7 +147,7 @@ class _$BoundaryResetEventImpl implements BoundaryResetEvent {
     TResult? Function()? reset,
     TResult? Function(String code, int boundaryNum)? search,
     TResult? Function(String label, BoundaryModel selectedBoundary)? select,
-    TResult? Function(String code)? findBoundary,
+    TResult? Function(String code, String boundaryType)? findBoundary,
     TResult? Function()? submit,
   }) {
     return reset?.call();
@@ -159,7 +159,7 @@ class _$BoundaryResetEventImpl implements BoundaryResetEvent {
     TResult Function()? reset,
     TResult Function(String code, int boundaryNum)? search,
     TResult Function(String label, BoundaryModel selectedBoundary)? select,
-    TResult Function(String code)? findBoundary,
+    TResult Function(String code, String boundaryType)? findBoundary,
     TResult Function()? submit,
     required TResult orElse(),
   }) {
@@ -293,7 +293,7 @@ class _$BoundarySearchEventImpl implements BoundarySearchEvent {
     required TResult Function(String code, int boundaryNum) search,
     required TResult Function(String label, BoundaryModel selectedBoundary)
         select,
-    required TResult Function(String code) findBoundary,
+    required TResult Function(String code, String boundaryType) findBoundary,
     required TResult Function() submit,
   }) {
     return search(code, boundaryNum);
@@ -305,7 +305,7 @@ class _$BoundarySearchEventImpl implements BoundarySearchEvent {
     TResult? Function()? reset,
     TResult? Function(String code, int boundaryNum)? search,
     TResult? Function(String label, BoundaryModel selectedBoundary)? select,
-    TResult? Function(String code)? findBoundary,
+    TResult? Function(String code, String boundaryType)? findBoundary,
     TResult? Function()? submit,
   }) {
     return search?.call(code, boundaryNum);
@@ -317,7 +317,7 @@ class _$BoundarySearchEventImpl implements BoundarySearchEvent {
     TResult Function()? reset,
     TResult Function(String code, int boundaryNum)? search,
     TResult Function(String label, BoundaryModel selectedBoundary)? select,
-    TResult Function(String code)? findBoundary,
+    TResult Function(String code, String boundaryType)? findBoundary,
     TResult Function()? submit,
     required TResult orElse(),
   }) {
@@ -459,7 +459,7 @@ class _$BoundarySelectEventImpl implements BoundarySelectEvent {
     required TResult Function(String code, int boundaryNum) search,
     required TResult Function(String label, BoundaryModel selectedBoundary)
         select,
-    required TResult Function(String code) findBoundary,
+    required TResult Function(String code, String boundaryType) findBoundary,
     required TResult Function() submit,
   }) {
     return select(label, selectedBoundary);
@@ -471,7 +471,7 @@ class _$BoundarySelectEventImpl implements BoundarySelectEvent {
     TResult? Function()? reset,
     TResult? Function(String code, int boundaryNum)? search,
     TResult? Function(String label, BoundaryModel selectedBoundary)? select,
-    TResult? Function(String code)? findBoundary,
+    TResult? Function(String code, String boundaryType)? findBoundary,
     TResult? Function()? submit,
   }) {
     return select?.call(label, selectedBoundary);
@@ -483,7 +483,7 @@ class _$BoundarySelectEventImpl implements BoundarySelectEvent {
     TResult Function()? reset,
     TResult Function(String code, int boundaryNum)? search,
     TResult Function(String label, BoundaryModel selectedBoundary)? select,
-    TResult Function(String code)? findBoundary,
+    TResult Function(String code, String boundaryType)? findBoundary,
     TResult Function()? submit,
     required TResult orElse(),
   }) {
@@ -553,7 +553,7 @@ abstract class _$$BoundaryFindEventImplCopyWith<$Res> {
           $Res Function(_$BoundaryFindEventImpl) then) =
       __$$BoundaryFindEventImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({String code});
+  $Res call({String code, String boundaryType});
 }
 
 /// @nodoc
@@ -568,11 +568,16 @@ class __$$BoundaryFindEventImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? code = null,
+    Object? boundaryType = null,
   }) {
     return _then(_$BoundaryFindEventImpl(
       code: null == code
           ? _value.code
           : code // ignore: cast_nullable_to_non_nullable
+              as String,
+      boundaryType: null == boundaryType
+          ? _value.boundaryType
+          : boundaryType // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -581,14 +586,17 @@ class __$$BoundaryFindEventImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$BoundaryFindEventImpl implements BoundaryFindEvent {
-  const _$BoundaryFindEventImpl({required this.code});
+  const _$BoundaryFindEventImpl(
+      {required this.code, required this.boundaryType});
 
   @override
   final String code;
+  @override
+  final String boundaryType;
 
   @override
   String toString() {
-    return 'BoundaryEvent.findBoundary(code: $code)';
+    return 'BoundaryEvent.findBoundary(code: $code, boundaryType: $boundaryType)';
   }
 
   @override
@@ -596,11 +604,13 @@ class _$BoundaryFindEventImpl implements BoundaryFindEvent {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$BoundaryFindEventImpl &&
-            (identical(other.code, code) || other.code == code));
+            (identical(other.code, code) || other.code == code) &&
+            (identical(other.boundaryType, boundaryType) ||
+                other.boundaryType == boundaryType));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, code);
+  int get hashCode => Object.hash(runtimeType, code, boundaryType);
 
   @JsonKey(ignore: true)
   @override
@@ -616,10 +626,10 @@ class _$BoundaryFindEventImpl implements BoundaryFindEvent {
     required TResult Function(String code, int boundaryNum) search,
     required TResult Function(String label, BoundaryModel selectedBoundary)
         select,
-    required TResult Function(String code) findBoundary,
+    required TResult Function(String code, String boundaryType) findBoundary,
     required TResult Function() submit,
   }) {
-    return findBoundary(code);
+    return findBoundary(code, boundaryType);
   }
 
   @override
@@ -628,10 +638,10 @@ class _$BoundaryFindEventImpl implements BoundaryFindEvent {
     TResult? Function()? reset,
     TResult? Function(String code, int boundaryNum)? search,
     TResult? Function(String label, BoundaryModel selectedBoundary)? select,
-    TResult? Function(String code)? findBoundary,
+    TResult? Function(String code, String boundaryType)? findBoundary,
     TResult? Function()? submit,
   }) {
-    return findBoundary?.call(code);
+    return findBoundary?.call(code, boundaryType);
   }
 
   @override
@@ -640,12 +650,12 @@ class _$BoundaryFindEventImpl implements BoundaryFindEvent {
     TResult Function()? reset,
     TResult Function(String code, int boundaryNum)? search,
     TResult Function(String label, BoundaryModel selectedBoundary)? select,
-    TResult Function(String code)? findBoundary,
+    TResult Function(String code, String boundaryType)? findBoundary,
     TResult Function()? submit,
     required TResult orElse(),
   }) {
     if (findBoundary != null) {
-      return findBoundary(code);
+      return findBoundary(code, boundaryType);
     }
     return orElse();
   }
@@ -692,10 +702,12 @@ class _$BoundaryFindEventImpl implements BoundaryFindEvent {
 }
 
 abstract class BoundaryFindEvent implements BoundaryEvent {
-  const factory BoundaryFindEvent({required final String code}) =
-      _$BoundaryFindEventImpl;
+  const factory BoundaryFindEvent(
+      {required final String code,
+      required final String boundaryType}) = _$BoundaryFindEventImpl;
 
   String get code;
+  String get boundaryType;
   @JsonKey(ignore: true)
   _$$BoundaryFindEventImplCopyWith<_$BoundaryFindEventImpl> get copyWith =>
       throw _privateConstructorUsedError;
@@ -744,7 +756,7 @@ class _$BoundarySubmitEventImpl implements BoundarySubmitEvent {
     required TResult Function(String code, int boundaryNum) search,
     required TResult Function(String label, BoundaryModel selectedBoundary)
         select,
-    required TResult Function(String code) findBoundary,
+    required TResult Function(String code, String boundaryType) findBoundary,
     required TResult Function() submit,
   }) {
     return submit();
@@ -756,7 +768,7 @@ class _$BoundarySubmitEventImpl implements BoundarySubmitEvent {
     TResult? Function()? reset,
     TResult? Function(String code, int boundaryNum)? search,
     TResult? Function(String label, BoundaryModel selectedBoundary)? select,
-    TResult? Function(String code)? findBoundary,
+    TResult? Function(String code, String boundaryType)? findBoundary,
     TResult? Function()? submit,
   }) {
     return submit?.call();
@@ -768,7 +780,7 @@ class _$BoundarySubmitEventImpl implements BoundarySubmitEvent {
     TResult Function()? reset,
     TResult Function(String code, int boundaryNum)? search,
     TResult Function(String label, BoundaryModel selectedBoundary)? select,
-    TResult Function(String code)? findBoundary,
+    TResult Function(String code, String boundaryType)? findBoundary,
     TResult Function()? submit,
     required TResult orElse(),
   }) {
