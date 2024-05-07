@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../blocs/record_stock/record_stock.dart';
 import '../../router/app_router.dart';
+import '../../utils/extensions/extensions.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 
@@ -21,6 +22,7 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    bool isCommunityDistributor = context.isCommunityDistributor;
 
     return Scaffold(
       body: ScrollableContent(
@@ -58,33 +60,35 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                     ),
                   ),
                 ),
-                DigitListView(
-                  title: localizations
-                      .translate(i18.manageStock.recordStockIssuedLabel),
-                  description: localizations
-                      .translate(i18.manageStock.recordStockIssuedDescription),
-                  prefixIcon: Icons.file_upload_outlined,
-                  sufixIcon: Icons.arrow_circle_right,
-                  onPressed: () => context.router.push(
-                    RecordStockWrapperRoute(
-                      type: StockRecordEntryType.dispatch,
+                if (!isCommunityDistributor)
+                  DigitListView(
+                    title: localizations
+                        .translate(i18.manageStock.recordStockIssuedLabel),
+                    description: localizations.translate(
+                        i18.manageStock.recordStockIssuedDescription),
+                    prefixIcon: Icons.file_upload_outlined,
+                    sufixIcon: Icons.arrow_circle_right,
+                    onPressed: () => context.router.push(
+                      RecordStockWrapperRoute(
+                        type: StockRecordEntryType.dispatch,
+                      ),
                     ),
                   ),
-                ),
-                DigitListView(
-                  title: localizations
-                      .translate(i18.manageStock.recordStockReturnedLabel),
-                  description: localizations.translate(
-                    i18.manageStock.recordStockReturnedDescription,
-                  ),
-                  prefixIcon: Icons.settings_backup_restore,
-                  sufixIcon: Icons.arrow_circle_right,
-                  onPressed: () => context.router.push(
-                    RecordStockWrapperRoute(
-                      type: StockRecordEntryType.returned,
+                if (!isCommunityDistributor)
+                  DigitListView(
+                    title: localizations
+                        .translate(i18.manageStock.recordStockReturnedLabel),
+                    description: localizations.translate(
+                      i18.manageStock.recordStockReturnedDescription,
+                    ),
+                    prefixIcon: Icons.settings_backup_restore,
+                    sufixIcon: Icons.arrow_circle_right,
+                    onPressed: () => context.router.push(
+                      RecordStockWrapperRoute(
+                        type: StockRecordEntryType.returned,
+                      ),
                     ),
                   ),
-                ),
                 // Solution Customization
                 // DigitListView(
                 //     title: localizations
