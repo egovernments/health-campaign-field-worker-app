@@ -79,6 +79,8 @@ class _StockReconciliationPageState
         .toList()
         .isNotEmpty;
 
+    bool isCommunityDistributor = context.isCommunityDistributor;
+
     return BlocListener<BoundaryBloc, BoundaryState>(
       listener: (context, state) {
         if (state.hasSubmitted) {
@@ -353,6 +355,16 @@ class _StockReconciliationPageState
                                             ) ??
                                             [];
 
+                                        List<FacilityModel> filteredFacility =
+                                            [];
+                                        if (isCommunityDistributor) {
+                                          filteredFacility = facilities
+                                              .where((element) =>
+                                                  element.name ==
+                                                  context.loggedInUser.userName)
+                                              .toList();
+                                        }
+
                                         return InkWell(
                                           onTap: () async {
                                             final stockReconciliationBloc =
@@ -363,7 +375,12 @@ class _StockReconciliationPageState
                                                 .router
                                                 .push<FacilityModel>(
                                               FacilitySelectionRoute(
-                                                facilities: facilities,
+                                                facilities:
+                                                    isCommunityDistributor &&
+                                                            filteredFacility
+                                                                .isNotEmpty
+                                                        ? filteredFacility
+                                                        : facilities,
                                               ),
                                             );
 
@@ -403,7 +420,12 @@ class _StockReconciliationPageState
                                                   .router
                                                   .push<FacilityModel>(
                                                 FacilitySelectionRoute(
-                                                  facilities: facilities,
+                                                  facilities:
+                                                      isCommunityDistributor &&
+                                                              filteredFacility
+                                                                  .isNotEmpty
+                                                          ? filteredFacility
+                                                          : facilities,
                                                 ),
                                               );
 
