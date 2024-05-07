@@ -148,6 +148,7 @@ void initializeMappers() {
   p27.ProjectSearchModelMapper.ensureInitialized();
   p27.ProjectModelMapper.ensureInitialized();
   p27.ProjectAdditionalFieldsMapper.ensureInitialized();
+  p27.ProjectAdditionalDetailsMapper.ensureInitialized();
   p28.ProjectBeneficiarySearchModelMapper.ensureInitialized();
   p28.ProjectBeneficiaryModelMapper.ensureInitialized();
   p28.ProjectBeneficiaryAdditionalFieldsMapper.ensureInitialized();
@@ -163,9 +164,12 @@ void initializeMappers() {
   p32.ProjectStaffSearchModelMapper.ensureInitialized();
   p32.ProjectStaffModelMapper.ensureInitialized();
   p32.ProjectStaffAdditionalFieldsMapper.ensureInitialized();
-  p33.ProjectTypeSearchModelMapper.ensureInitialized();
   p33.ProjectTypeModelMapper.ensureInitialized();
   p33.ProjectTypeAdditionalFieldsMapper.ensureInitialized();
+  p33.ProjectCycleMapper.ensureInitialized();
+  p33.ProjectCycleDeliveryMapper.ensureInitialized();
+  p33.DeliveryDoseCriteriaMapper.ensureInitialized();
+  p33.DeliveryProductVariantMapper.ensureInitialized();
   p34.ReferralSearchModelMapper.ensureInitialized();
   p34.ReferralModelMapper.ensureInitialized();
   p34.ReferralAdditionalFieldsMapper.ensureInitialized();
