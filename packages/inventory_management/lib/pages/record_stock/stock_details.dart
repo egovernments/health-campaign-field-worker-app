@@ -450,6 +450,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                             await DigitDialog.show<bool>(
                                           context,
                                           options: DigitDialogOptions(
+                                            key: const Key('submitDialog'),
                                             titleText: localizations.translate(
                                               i18.stockDetails.dialogTitle,
                                             ),
@@ -522,6 +523,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                       fetched: (productVariants) {
                                         return DigitReactiveDropdown<
                                             ProductVariantModel>(
+                                          key: const Key('selectProduct'),
                                           formControlName: _productVariantKey,
                                           label: localizations.translate(
                                             module.selectProductLabel,
@@ -547,6 +549,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                   StockRecordEntryType.damaged,
                                 ].contains(entryType))
                                   DigitReactiveDropdown<TransactionReason>(
+                                    key: const Key('transactionReason'),
                                     label: localizations.translate(
                                       transactionReasonLabel ?? 'Reason',
                                     ),
@@ -605,6 +608,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                             },
                                             child: IgnorePointer(
                                               child: DigitTextFormField(
+                                                key: const Key('secondParty'),
                                                 hideKeyboard: true,
                                                 label: localizations.translate(
                                                   '${pageTitle}_${i18.stockReconciliationDetails.stockLabel}',
@@ -716,6 +720,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                   ),
                                 ),
                                 DigitTextFormField(
+                                  key: const Key('quantity'),
                                   formControlName: _transactionQuantityKey,
                                   keyboardType:
                                       const TextInputType.numberWithOptions(
@@ -749,6 +754,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                 ),
                                 if (isWareHouseMgr)
                                   DigitTextFormField(
+                                    key: const Key('waybillNumber'),
                                     label: localizations.translate(
                                       i18.stockDetails.waybillNumberLabel,
                                     ),
@@ -772,6 +778,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                 if (isWareHouseMgr)
                                   transportTypes.isNotEmpty
                                       ? DigitReactiveDropdown<String>(
+                                          key: const Key('transportTypes'),
                                           isRequired: false,
                                           label: localizations.translate(
                                             i18.stockDetails.transportTypeLabel,

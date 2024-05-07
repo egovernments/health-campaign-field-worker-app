@@ -304,6 +304,8 @@ class _InventoryReportDetailsPageState
                                                 fetched: (productVariants) {
                                                   return DigitReactiveSearchDropdown<
                                                       ProductVariantModel>(
+                                                    key: const Key(
+                                                        'viewReportSelectProduct'),
                                                     label:
                                                         localizations.translate(
                                                       i18.stockReconciliationDetails

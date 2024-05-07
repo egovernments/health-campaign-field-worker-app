@@ -36,6 +36,9 @@ Map<String, Finder> getWidgets() {
 
   //inventory
   final manageStock = find.widgetWithText(HomeItemCard, 'Manage Stock');
+  final stockReconciliation =
+      find.widgetWithText(HomeItemCard, 'Stock Reconciliation');
+  final viewReports = find.widgetWithText(HomeItemCard, 'View Reports');
 
   return {
     'username': username,
@@ -47,6 +50,8 @@ Map<String, Finder> getWidgets() {
     'markAttendance': markAttendanceButton,
     'openRegister': openRegister,
     'manageStock': manageStock,
+    'stockReconciliation': stockReconciliation,
+    'viewReports': viewReports
   };
 }
 
