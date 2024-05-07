@@ -8,14 +8,13 @@ import '../../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../../blocs/localization/app_localization.dart';
 import '../../../blocs/product_variant/product_variant.dart';
 import '../../../models/data_model.dart';
-import '../../../models/project_type/project_type_model.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
 import '../../../widgets/localized.dart';
 
 class RecordDeliveryCycle extends LocalizedStatefulWidget {
   final List<TaskModel>? taskData;
-  final List<Cycle> projectCycles;
+  final List<ProjectCycle> projectCycles;
   final IndividualModel? individualModel;
   // ignore: prefer_typing_uninitialized_variables
 
@@ -181,7 +180,7 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
   }
 
   Widget buildCycleAndDoseTable(
-    List<Cycle> cycles,
+    List<ProjectCycle> cycles,
     List<TableHeader> headerList,
     int? selectedIndex,
     bool isCurrentCycle,

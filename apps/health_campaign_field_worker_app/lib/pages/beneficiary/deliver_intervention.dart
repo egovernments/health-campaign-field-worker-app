@@ -13,7 +13,6 @@ import '../../blocs/product_variant/product_variant.dart';
 import '../../blocs/project/project.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../models/data_model.dart';
-import '../../models/project_type/project_type_model.dart';
 import '../../router/app_router.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/i18_key_constants.dart' as i18;
@@ -96,26 +95,43 @@ class _DeliverInterventionPageState
                     : BlocBuilder<DeliverInterventionBloc,
                         DeliverInterventionState>(
                         builder: (context, deliveryInterventionstate) {
-                          List<ProductVariantsModel>? productVariants =
-                              projectState.projectType?.cycles?.isNotEmpty ==
+                          List<DeliveryProductVariant>? productVariants =
+                              projectState.selectedProject?.additionalDetails
+                                          ?.projectType?.cycles?.isNotEmpty ==
                                       true
                                   ? (fetchProductVariant(
                                       projectState
-                                              .projectType!
-                                              .cycles![deliveryInterventionstate
-                                                      .cycle -
-                                                  1]
+                                              .selectedProject
+                                              ?.additionalDetails
+                                              ?.projectType
+                                              ?.cycles![
+                                                  deliveryInterventionstate
+                                                          .cycle -
+                                                      1]
                                               .deliveries?[
                                           deliveryInterventionstate.dose - 1],
                                       state.selectedIndividual,
                                     )?.productVariants)
-                                  : projectState.projectType?.resources;
+                                  : projectState
+                                      .selectedProject
+                                      ?.additionalDetails
+                                      ?.projectType
+                                      ?.resources
+                                      ?.map((r) => DeliveryProductVariant(
+                                          productVariantId: r.productVariantId))
+                                      .toList();
 
                           final int numberOfDoses = (projectState
-                                      .projectType?.cycles?.isNotEmpty ==
+                                      .selectedProject
+                                      ?.additionalDetails
+                                      ?.projectType
+                                      ?.cycles
+                                      ?.isNotEmpty ==
                                   true)
                               ? (projectState
-                                      .projectType
+                                      .selectedProject
+                                      ?.additionalDetails
+                                      ?.projectType
                                       ?.cycles?[
                                           deliveryInterventionstate.cycle - 1]
                                       .deliveries
@@ -327,7 +343,9 @@ class _DeliverInterventionPageState
                                                                           .futureDeliveries!
                                                                           .isNotEmpty &&
                                                                       projectState
-                                                                              .projectType
+                                                                              .selectedProject
+                                                                              ?.additionalDetails
+                                                                              ?.projectType
                                                                               ?.cycles
                                                                               ?.isNotEmpty ==
                                                                           true) {
@@ -760,7 +778,7 @@ class _DeliverInterventionPageState
 
   FormGroup buildForm(
     BuildContext context,
-    List<ProductVariantsModel>? productVariants,
+    List<DeliveryProductVariant>? productVariants,
     List<ProductVariantModel>? variants,
   ) {
     final bloc = context.read<DeliverInterventionBloc>().state;
