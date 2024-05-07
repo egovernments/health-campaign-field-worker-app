@@ -81,8 +81,6 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
         .toList()
         .isNotEmpty;
 
-    bool isCommunityDistributor = context.isCommunityDistributor;
-
     return BlocBuilder<ProjectBloc, ProjectState>(
       builder: (ctx, projectState) {
         final selectedProject = projectState.selectedProject;
@@ -120,14 +118,6 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
 
             if (prevFacility != null) {
               selectedFacilityId = prevFacility?.id;
-            }
-            List<FacilityModel> filteredFacility = [];
-            if (isCommunityDistributor) {
-              filteredFacility = facilities
-                  .where(
-                    (element) => element.name == context.loggedInUser.userName,
-                  )
-                  .toList();
             }
 
             return Scaffold(
@@ -317,10 +307,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                       final facility =
                                           await parent.push<FacilityModel>(
                                         FacilitySelectionRoute(
-                                          facilities: isCommunityDistributor &&
-                                                  filteredFacility.isNotEmpty
-                                              ? filteredFacility
-                                              : facilities,
+                                          facilities: facilities,
                                         ),
                                       );
 
