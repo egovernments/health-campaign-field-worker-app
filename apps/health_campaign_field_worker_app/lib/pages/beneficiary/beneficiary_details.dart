@@ -90,7 +90,8 @@ class _BeneficiaryDetailsPageState
               : '1';
 
           // [TODO] Need to move this to Bloc Lisitner or consumer
-          if (projectState.projectType != null) {
+          if (projectState.selectedProject?.additionalDetails?.projectType !=
+              null) {
             bloc.add(
               DeliverInterventionEvent.setActiveCycleDose(
                 taskData != null && taskData.isNotEmpty
@@ -106,7 +107,7 @@ class _BeneficiaryDetailsPageState
                         1
                     : 1,
                 state.selectedIndividual,
-                projectState.projectType!,
+                projectState.selectedProject?.additionalDetails?.projectType,
               ),
             );
           }
@@ -133,7 +134,8 @@ class _BeneficiaryDetailsPageState
                       footer: BlocBuilder<DeliverInterventionBloc,
                           DeliverInterventionState>(
                         builder: (context, deliverState) {
-                          final projectType = projectState.projectType;
+                          final projectType = projectState
+                              .selectedProject?.additionalDetails?.projectType;
                           final cycles = projectType?.cycles;
 
                           return cycles != null && cycles.isNotEmpty
@@ -154,7 +156,10 @@ class _BeneficiaryDetailsPageState
                                                   .selectFutureCycleDose(
                                                 deliverState.dose,
                                                 projectState
-                                                    .projectType!.cycles!
+                                                    .selectedProject
+                                                    ?.additionalDetails
+                                                    ?.projectType!
+                                                    .cycles!
                                                     .firstWhere((c) =>
                                                         c.id ==
                                                         deliverState.cycle),
@@ -360,14 +365,21 @@ class _BeneficiaryDetailsPageState
                             ],
                           ),
                         ),
-                        if ((projectState.projectType?.cycles ?? []).isNotEmpty)
+                        if ((projectState.selectedProject?.additionalDetails
+                                    ?.projectType?.cycles ??
+                                [])
+                            .isNotEmpty)
                           BlocBuilder<ProjectBloc, ProjectState>(
                             builder: (context, projectState) {
                               return DigitCard(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisSize: MainAxisSize.min,
-                                  children: projectState.projectType?.cycles !=
+                                  children: projectState
+                                              .selectedProject
+                                              ?.additionalDetails
+                                              ?.projectType
+                                              ?.cycles !=
                                           null
                                       ? [
                                           BlocBuilder<DeliverInterventionBloc,
@@ -375,16 +387,20 @@ class _BeneficiaryDetailsPageState
                                             builder: (context, deliverState) {
                                               return Column(
                                                 children: [
-                                                  (projectState.projectType
+                                                  (projectState
+                                                                  .selectedProject
+                                                                  ?.additionalDetails
+                                                                  ?.projectType
                                                                   ?.cycles ??
                                                               [])
                                                           .isNotEmpty
                                                       ? RecordDeliveryCycle(
-                                                          projectCycles:
-                                                              projectState
-                                                                      .projectType
-                                                                      ?.cycles ??
-                                                                  [],
+                                                          projectCycles: projectState
+                                                                  .selectedProject
+                                                                  ?.additionalDetails
+                                                                  ?.projectType
+                                                                  ?.cycles ??
+                                                              [],
                                                           taskData:
                                                               taskData ?? [],
                                                           individualModel: state

@@ -2,13 +2,14 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:drift/drift.dart';
 
-import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
+import '../data_model.dart';
 
 part 'project.mapper.dart';
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class ProjectSearchModel extends EntitySearchModel with ProjectSearchModelMappable {
+class ProjectSearchModel extends EntitySearchModel
+    with ProjectSearchModelMappable {
   final String? id;
   final String? projectTypeId;
   final String? projectNumber;
@@ -20,7 +21,7 @@ class ProjectSearchModel extends EntitySearchModel with ProjectSearchModelMappab
   final String? tenantId;
   final DateTime? startDateTime;
   final DateTime? endDateTime;
-  
+
   ProjectSearchModel({
     this.id,
     this.projectTypeId,
@@ -35,13 +36,13 @@ class ProjectSearchModel extends EntitySearchModel with ProjectSearchModelMappab
     int? endDate,
     super.boundaryCode,
     super.isDeleted,
-  }): startDateTime = startDate == null
-      ? null
-      : DateTime.fromMillisecondsSinceEpoch(startDate),
-  endDateTime = endDate == null
-      ? null
-      : DateTime.fromMillisecondsSinceEpoch(endDate),
-   super();
+  })  : startDateTime = startDate == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(startDate),
+        endDateTime = endDate == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(endDate),
+        super();
 
   @MappableConstructor()
   ProjectSearchModel.ignoreDeleted({
@@ -57,24 +58,21 @@ class ProjectSearchModel extends EntitySearchModel with ProjectSearchModelMappab
     int? startDate,
     int? endDate,
     super.boundaryCode,
-  }): startDateTime = startDate == null
-  ? null
-      : DateTime.fromMillisecondsSinceEpoch(startDate),
-  endDateTime = endDate == null
-  ? null
-      : DateTime.fromMillisecondsSinceEpoch(endDate),
-   super(isDeleted: false);
+  })  : startDateTime = startDate == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(startDate),
+        endDateTime = endDate == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(endDate),
+        super(isDeleted: false);
 
   int? get startDate => startDateTime?.millisecondsSinceEpoch;
-  
 
   int? get endDate => endDateTime?.millisecondsSinceEpoch;
-  
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
 class ProjectModel extends EntityModel with ProjectModelMappable {
-
   static const schemaName = 'Project';
 
   final String id;
@@ -97,6 +95,8 @@ class ProjectModel extends EntityModel with ProjectModelMappable {
   final DateTime? startDateTime;
   final DateTime? endDateTime;
   final ProjectAdditionalFields? additionalFields;
+  @MappableField(key: 'additionalDetails')
+  final ProjectAdditionalDetails? additionalDetails;
 
   ProjectModel({
     this.additionalFields,
@@ -117,23 +117,23 @@ class ProjectModel extends EntityModel with ProjectModelMappable {
     this.address,
     this.targets,
     this.documents,
+    this.additionalDetails,
     int? startDate,
     int? endDate,
-    super.auditDetails,super.clientAuditDetails,
+    super.auditDetails,
+    super.clientAuditDetails,
     super.isDeleted = false,
-  }): startDateTime = startDate == null
-          ? null
-          : DateTime.fromMillisecondsSinceEpoch(startDate),
-      endDateTime = endDate == null
-          ? null
-          : DateTime.fromMillisecondsSinceEpoch(endDate),
-      super();
+  })  : startDateTime = startDate == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(startDate),
+        endDateTime = endDate == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(endDate),
+        super();
 
-  int?  get startDate => startDateTime?.millisecondsSinceEpoch;
-  
+  int? get startDate => startDateTime?.millisecondsSinceEpoch;
 
-  int?  get endDate => endDateTime?.millisecondsSinceEpoch;
-  
+  int? get endDate => endDateTime?.millisecondsSinceEpoch;
 
   ProjectCompanion get companion {
     return ProjectCompanion(
@@ -163,12 +163,13 @@ class ProjectModel extends EntityModel with ProjectModelMappable {
       rowVersion: Value(rowVersion),
       startDate: Value(startDate),
       endDate: Value(endDate),
-      );
+    );
   }
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class ProjectAdditionalFields extends AdditionalFields with ProjectAdditionalFieldsMappable {
+class ProjectAdditionalFields extends AdditionalFields
+    with ProjectAdditionalFieldsMappable {
   ProjectAdditionalFields({
     super.schema = 'Project',
     required super.version,
@@ -176,3 +177,11 @@ class ProjectAdditionalFields extends AdditionalFields with ProjectAdditionalFie
   });
 }
 
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class ProjectAdditionalDetails with ProjectAdditionalDetailsMappable {
+  final ProjectTypeModel? projectType;
+
+  ProjectAdditionalDetails({
+    this.projectType,
+  }) : super();
+}
