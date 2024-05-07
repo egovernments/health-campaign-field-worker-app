@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_divider.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
@@ -78,6 +79,8 @@ class _StockReconciliationPageState
         )
         .toList()
         .isNotEmpty;
+
+    bool isCommunityDistributor = context.isCommunityDistributor;
 
     return BlocListener<BoundaryBloc, BoundaryState>(
       listener: (context, state) {
@@ -352,6 +355,15 @@ class _StockReconciliationPageState
                                                   facilities,
                                             ) ??
                                             [];
+                                        List<FacilityModel> filteredFacility =
+                                            [];
+                                        if (isCommunityDistributor) {
+                                          filteredFacility = facilities
+                                              .where((element) =>
+                                                  element.name ==
+                                                  context.loggedInUser.userName)
+                                              .toList();
+                                        }
 
                                         return InkWell(
                                           onTap: () async {
@@ -403,7 +415,12 @@ class _StockReconciliationPageState
                                                   .router
                                                   .push<FacilityModel>(
                                                 FacilitySelectionRoute(
-                                                  facilities: facilities,
+                                                  facilities:
+                                                      isCommunityDistributor &&
+                                                              filteredFacility
+                                                                  .isNotEmpty
+                                                          ? filteredFacility
+                                                          : facilities,
                                                 ),
                                               );
 
