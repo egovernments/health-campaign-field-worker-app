@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:flutter/material.dart';
@@ -36,6 +37,8 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
   String? selectedFacilityId;
   FacilityModel? prevFacility;
   String? entryType;
+  bool isCommunityDistributor = false;
+  FacilityModel? filteredFacility;
 
   @override
   void initState() {
@@ -56,7 +59,9 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
         ),
         _warehouseKey: FormControl<String>(
           validators: [Validators.required],
-          value: prevFacility?.name,
+          value: isCommunityDistributor && filteredFacility != null
+              ? filteredFacility!.name
+              : prevFacility?.name,
         ),
         _teamCodeKey: FormControl<String>(
           value: stockState.primaryId ?? '',
@@ -81,7 +86,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
         .toList()
         .isNotEmpty;
 
-    bool isCommunityDistributor = context.isCommunityDistributor;
+    isCommunityDistributor = context.isCommunityDistributor;
 
     return BlocBuilder<ProjectBloc, ProjectState>(
       builder: (ctx, projectState) {
@@ -113,6 +118,18 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                   },
                 ) ??
                 [];
+            // get distribution facilities for communityDistributor , solution customisation
+            List<FacilityModel> filteredFacilities = [];
+            if (isCommunityDistributor) {
+              filteredFacilities = facilities
+                  .where(
+                    (element) => element.name == context.loggedInUser.userName,
+                  )
+                  .toList();
+              if (filteredFacilities.isNotEmpty) {
+                filteredFacility = filteredFacilities.first;
+              }
+            }
 
             prevFacility = facilityState.whenOrNull(
               fetched: (_, __, facility) => facility,
@@ -120,15 +137,8 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
 
             if (prevFacility != null) {
               selectedFacilityId = prevFacility?.id;
-            }
-
-            List<FacilityModel> filteredFacility = [];
-            if (isCommunityDistributor) {
-              filteredFacility = facilities
-                  .where(
-                    (element) => element.name == context.loggedInUser.userName,
-                  )
-                  .toList();
+            } else if (isCommunityDistributor && filteredFacility != null) {
+              selectedFacilityId = filteredFacility!.id;
             }
 
             return Scaffold(
@@ -319,8 +329,8 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                           await parent.push<FacilityModel>(
                                         FacilitySelectionRoute(
                                           facilities: isCommunityDistributor &&
-                                                  filteredFacility.isNotEmpty
-                                              ? filteredFacility
+                                                  filteredFacility != null
+                                              ? filteredFacilities
                                               : facilities,
                                         ),
                                       );
