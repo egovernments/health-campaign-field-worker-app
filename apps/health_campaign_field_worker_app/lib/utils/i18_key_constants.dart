@@ -1365,6 +1365,8 @@ class WarehouseDetails {
   String get usDetails => 'US_DETAILS';
 
   String get dateOfReceipt => 'WAREHOUSE_DETAILS_DATE_OF_RECEIPT';
+  String get dateOfIssue => 'WAREHOUSE_DETAILS_DATE_OF_ISSUE';
+  String get dateOfReturn => 'WAREHOUSE_DETAILS_DATE_OF_RETURN';
 
   String get administrativeUnit => 'WAREHOUSE_DETAILS_ADMINISTRATIVE_UNIT';
 

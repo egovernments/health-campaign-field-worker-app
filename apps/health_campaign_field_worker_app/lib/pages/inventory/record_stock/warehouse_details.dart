@@ -8,6 +8,7 @@ import '../../../blocs/facility/facility.dart';
 import '../../../blocs/project/project.dart';
 import '../../../blocs/record_stock/record_stock.dart';
 import '../../../blocs/scanner/scanner.dart';
+import '../../../data/local_store/sql_store/tables/stock.dart';
 import '../../../models/data_model.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
@@ -34,6 +35,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
   bool deliveryTeamSelected = false;
   String? selectedFacilityId;
   FacilityModel? prevFacility;
+  String? entryType;
 
   @override
   void initState() {
@@ -41,6 +43,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
     final stockState = context.read<RecordStockBloc>().state;
     setState(() {
       selectedFacilityId = stockState.primaryId;
+      entryType = stockState.entryType.toString();
     });
     super.initState();
   }
@@ -261,9 +264,24 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                     DigitDateFormPicker(
                                       isEnabled: true,
                                       formControlName: _dateOfEntryKey,
-                                      label: localizations.translate(
-                                        i18.warehouseDetails.dateOfReceipt,
-                                      ),
+                                      label: entryType ==
+                                              StockRecordEntryType.receipt
+                                                  .toString()
+                                          ? localizations.translate(
+                                              i18.warehouseDetails
+                                                  .dateOfReceipt,
+                                            )
+                                          : entryType ==
+                                                  StockRecordEntryType.dispatch
+                                                      .toString()
+                                              ? localizations.translate(
+                                                  i18.warehouseDetails
+                                                      .dateOfIssue,
+                                                )
+                                              : localizations.translate(
+                                                  i18.warehouseDetails
+                                                      .dateOfReturn,
+                                                ),
                                       isRequired: false,
                                       confirmText: localizations.translate(
                                         i18.common.coreCommonOk,
