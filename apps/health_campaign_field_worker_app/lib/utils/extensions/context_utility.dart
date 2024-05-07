@@ -34,11 +34,10 @@ extension ContextUtilityExtensions on BuildContext {
         projectState.selectedProject?.additionalDetails?.projectType?.cycles
             ?.where(
               (e) =>
-                  (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
-                  (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
-              // Return null when no matching cycle is found
+                  (e.startDate) < DateTime.now().millisecondsSinceEpoch &&
+                  (e.endDate) > DateTime.now().millisecondsSinceEpoch,
             )
-            .firstOrNull;
+            .first;
 
     return selectedCycle;
   }

@@ -42,7 +42,7 @@ Widget buildTableContent(
 
   final projectState = context.read<ProjectBloc>().state;
   final item = projectState.selectedProject?.additionalDetails?.projectType!
-      .cycles![currentCycle - 1].deliveries![currentDose - 1];
+      .cycles?[currentCycle - 1].deliveries?[currentDose - 1];
   final productVariants =
       fetchProductVariant(item, individualModel)?.productVariants;
   final numRows = productVariants?.length ?? 0;
@@ -65,9 +65,9 @@ Widget buildTableContent(
         final item = projectState
             .selectedProject
             ?.additionalDetails
-            ?.projectType!
-            .cycles![currentCycle - 1]
-            .deliveries![currentDose - 1];
+            ?.projectType
+            ?.cycles?[currentCycle - 1]
+            .deliveries?[currentDose - 1];
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
