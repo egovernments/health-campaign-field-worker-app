@@ -41,7 +41,7 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
     List<BoundaryModel> boundaryList = await boundaryRepository.search(
       BoundarySearchModel(
         code: event.code,
-        isSingle: false,
+        isSingle: true,
       ),
     );
 
