@@ -41,8 +41,8 @@ Widget buildTableContent(
   // Calculate the height of the container based on the number of items in the table
 
   final projectState = context.read<ProjectBloc>().state;
-  final item = projectState
-      .projectType!.cycles![currentCycle - 1].deliveries![currentDose - 1];
+  final item = projectState.selectedProject?.additionalDetails?.projectType!
+      .cycles?[currentCycle - 1].deliveries?[currentDose - 1];
   final productVariants =
       fetchProductVariant(item, individualModel)?.productVariants;
   final numRows = productVariants?.length ?? 0;
@@ -62,8 +62,12 @@ Widget buildTableContent(
     child: BlocBuilder<ProjectBloc, ProjectState>(
       builder: (context, projectState) {
         // BlocBuilder to get project data based on the current cycle and dose
-        final item = projectState.projectType!.cycles![currentCycle - 1]
-            .deliveries![currentDose - 1];
+        final item = projectState
+            .selectedProject
+            ?.additionalDetails
+            ?.projectType
+            ?.cycles?[currentCycle - 1]
+            .deliveries?[currentDose - 1];
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,

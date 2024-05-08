@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+
 import '../../blocs/auth/auth.dart';
 import '../../blocs/boundary/boundary.dart';
 import '../../blocs/project/project.dart';
@@ -11,7 +12,6 @@ import '../../data/data_repository.dart';
 import '../../data/network_manager.dart';
 import '../../models/auth/auth_model.dart';
 import '../../models/data_model.dart';
-import '../../models/project_type/project_type_model.dart';
 import '../app_exception.dart';
 
 // Importing the file 'context_utility.dart' with a 'part' directive.
