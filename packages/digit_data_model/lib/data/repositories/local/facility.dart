@@ -7,6 +7,7 @@ import 'package:drift/drift.dart';
 import '../../../utils/utils.dart';
 
 
+
 class FacilityLocalRepository
     extends LocalRepository<FacilityModel, FacilitySearchModel> {
   FacilityLocalRepository(super.sql, super.opLogManager);

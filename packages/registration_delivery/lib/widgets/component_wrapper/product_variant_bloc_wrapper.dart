@@ -5,8 +5,6 @@ import 'package:registration_delivery/utils/extensions/extensions.dart';
 import 'package:registration_delivery/utils/utils.dart';
 import 'package:registration_delivery/widgets/component_wrapper/selected_project_builder.dart';
 
-import '../../blocs/product_variant/product_variant.dart';
-
 class ProductVariantBlocWrapper extends StatelessWidget {
   final Widget child;
 

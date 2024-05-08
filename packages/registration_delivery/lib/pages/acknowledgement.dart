@@ -2,8 +2,10 @@ import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
+import 'package:registration_delivery/registration_delivery.dart';
 
 import '../utils/i18_key_constants.dart' as i18;
+import '../utils/utils.dart';
 import '../widgets/localized.dart';
 
 @RoutePage()
@@ -74,7 +76,7 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
                 ),
                 DigitOutLineButton(
                   onPressed: () {
-                    // [TODO: Add logic to reroute to boundary page]
+                    RegistrationDeliverySingleton().navigateToBoundaryPage();
                   },
                   label: localizations
                       .translate(i18.acknowledgementSuccess.downloadmoredata),

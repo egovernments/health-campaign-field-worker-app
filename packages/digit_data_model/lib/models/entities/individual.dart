@@ -4,6 +4,8 @@ import 'package:drift/drift.dart';
 
 import 'package:digit_data_model/data_model.dart';
 
+import '../../data/local_store/sql_store/sql_store.dart';
+
 part 'individual.mapper.dart';
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)

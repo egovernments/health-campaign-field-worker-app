@@ -14,6 +14,8 @@ import 'package:flutter/material.dart' as _i21;
 import 'package:registration_delivery/blocs/app_localization.dart' as _i22;
 import 'package:registration_delivery/blocs/beneficiary_registration/beneficiary_registration.dart'
     as _i23;
+import 'package:registration_delivery/blocs/registraton_delivery_listener.dart'
+    as _i27;
 import 'package:registration_delivery/blocs/search_households/search_households.dart'
     as _i24;
 import 'package:registration_delivery/models/entities/task.dart' as _i26;
@@ -243,13 +245,13 @@ abstract class $RegistrationDeliveryRoute extends _i20.AutoRouterModule {
       );
     },
     SearchBeneficiaryRoute.name: (routeData) {
-      final args = routeData.argsAs<SearchBeneficiaryRouteArgs>(
-          orElse: () => const SearchBeneficiaryRouteArgs());
+      final args = routeData.argsAs<SearchBeneficiaryRouteArgs>();
       return _i20.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: _i17.SearchBeneficiaryPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
+          registrationDeliveryListener: args.registrationDeliveryListener,
         ),
       );
     },
@@ -976,12 +978,14 @@ class SearchBeneficiaryRoute
   SearchBeneficiaryRoute({
     _i21.Key? key,
     _i22.RegistrationDeliveryLocalization? appLocalizations,
+    required _i27.RegistrationDeliveryListener registrationDeliveryListener,
     List<_i20.PageRouteInfo>? children,
   }) : super(
           SearchBeneficiaryRoute.name,
           args: SearchBeneficiaryRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
+            registrationDeliveryListener: registrationDeliveryListener,
           ),
           initialChildren: children,
         );
@@ -996,15 +1000,18 @@ class SearchBeneficiaryRouteArgs {
   const SearchBeneficiaryRouteArgs({
     this.key,
     this.appLocalizations,
+    required this.registrationDeliveryListener,
   });
 
   final _i21.Key? key;
 
   final _i22.RegistrationDeliveryLocalization? appLocalizations;
 
+  final _i27.RegistrationDeliveryListener registrationDeliveryListener;
+
   @override
   String toString() {
-    return 'SearchBeneficiaryRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+    return 'SearchBeneficiaryRouteArgs{key: $key, appLocalizations: $appLocalizations, registrationDeliveryListener: $registrationDeliveryListener}';
   }
 }
 
@@ -1014,7 +1021,7 @@ class SideEffectsRoute extends _i20.PageRouteInfo<SideEffectsRouteArgs> {
   SideEffectsRoute({
     _i21.Key? key,
     _i22.RegistrationDeliveryLocalization? appLocalizations,
-    required List<_i25.TaskModel> tasks,
+    required List<_i26.TaskModel> tasks,
     bool isEditing = false,
     List<_i20.PageRouteInfo>? children,
   }) : super(
@@ -1046,7 +1053,7 @@ class SideEffectsRouteArgs {
 
   final _i22.RegistrationDeliveryLocalization? appLocalizations;
 
-  final List<_i25.TaskModel> tasks;
+  final List<_i26.TaskModel> tasks;
 
   final bool isEditing;
 

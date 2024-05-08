@@ -12,7 +12,6 @@ import 'package:registration_delivery/pages/beneficiary/widgets/past_delivery.da
 
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
-import '../../blocs/product_variant/product_variant.dart';
 import '../../models/entities/additional_fields_type.dart';
 import '../../models/entities/beneficiary_type.dart';
 import '../../router/registration_delivery_router.gm.dart';

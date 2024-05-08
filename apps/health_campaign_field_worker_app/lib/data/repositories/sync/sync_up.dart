@@ -2,9 +2,7 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:digit_components/utils/app_logger.dart';
-import 'package:digit_data_model/data/repositories/oplog/oplog.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/models/oplog/oplog_entry.dart';
 
 import '../../../models/bandwidth/bandwidth_model.dart';
 import '../../../utils/environment_config.dart';
@@ -40,19 +38,19 @@ class PerformSyncUp {
                 rowVersion,
               );
 
-              if (updatedEntity is HouseholdModel) {
-                final addressId = e.additionalIds.firstWhereOrNull(
-                  (element) {
-                    return element.idType == householdAddressIdKey;
-                  },
-                )?.id;
-
-                updatedEntity = updatedEntity.copyWith(
-                  address: updatedEntity.address?.copyWith(
-                    id: updatedEntity.address?.id ?? addressId,
-                  ),
-                );
-              }
+              // if (updatedEntity is HouseholdModel) {
+              //   final addressId = e.additionalIds.firstWhereOrNull(
+              //     (element) {
+              //       return element.idType == householdAddressIdKey;
+              //     },
+              //   )?.id;
+              //
+              //   updatedEntity = updatedEntity.copyWith(
+              //     address: updatedEntity.address?.copyWith(
+              //       id: updatedEntity.address?.id ?? addressId,
+              //     ),
+              //   );
+              // }
 
               if (updatedEntity is IndividualModel) {
                 final identifierId = e.additionalIds.firstWhereOrNull(
@@ -81,26 +79,26 @@ class PerformSyncUp {
                 );
               }
 
-              if (updatedEntity is TaskModel) {
-                final resourceId = e.additionalIds
-                    .firstWhereOrNull(
-                      (element) => element.idType == taskResourceIdKey,
-                    )
-                    ?.id;
-
-                updatedEntity = updatedEntity.copyWith(
-                  resources: updatedEntity.resources?.map((e) {
-                    if (resourceId != null) {
-                      return e.copyWith(
-                        taskId: serverGeneratedId,
-                        id: e.id ?? resourceId,
-                      );
-                    }
-
-                    return e.copyWith(taskId: serverGeneratedId);
-                  }).toList(),
-                );
-              }
+              // if (updatedEntity is TaskModel) {
+              //   final resourceId = e.additionalIds
+              //       .firstWhereOrNull(
+              //         (element) => element.idType == taskResourceIdKey,
+              //       )
+              //       ?.id;
+              //
+              //   updatedEntity = updatedEntity.copyWith(
+              //     resources: updatedEntity.resources?.map((e) {
+              //       if (resourceId != null) {
+              //         return e.copyWith(
+              //           taskId: serverGeneratedId,
+              //           id: e.id ?? resourceId,
+              //         );
+              //       }
+              //
+              //       return e.copyWith(taskId: serverGeneratedId);
+              //     }).toList(),
+              //   );
+              // }
 
               return updatedEntity;
             }

@@ -4,7 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/oplog/oplog_entry.dart';
 import 'package:drift/drift.dart';
-import 'package:registration_delivery/models/entities/target.dart';
+// import 'package:registration_delivery/models/entities/target.dart';
 
 import '../../../utils/utils.dart';
 
@@ -21,7 +21,7 @@ class ProjectLocalRepository
   }) async {
     final projectCompanion = entity.companion;
 
-    final targets = entity.targets;
+    // final targets = entity.targets;
     final addressCompanion =
         entity.address?.copyWith(relatedClientReferenceId: entity.id).companion;
     await sql.batch((batch) {
@@ -37,17 +37,17 @@ class ProjectLocalRepository
           mode: InsertMode.insertOrReplace,
         );
       }
-      if (targets != null) {
-        final targetsCompanions = targets.map((e) {
-          return e.copyWith(clientReferenceId: entity.id).companion;
-        }).toList();
-
-        batch.insertAll(
-          sql.target,
-          targetsCompanions,
-          mode: InsertMode.insertOrReplace,
-        );
-      }
+      // if (targets != null) {
+      //   final targetsCompanions = targets.map((e) {
+      //     return e.copyWith(clientReferenceId: entity.id).companion;
+      //   }).toList();
+      //
+      //   batch.insertAll(
+      //     sql.target,
+      //     targetsCompanions,
+      //     mode: InsertMode.insertOrReplace,
+      //   );
+      // }
     });
 
     await super.create(entity, createOpLog: createOpLog);
@@ -78,12 +78,12 @@ class ProjectLocalRepository
           ))
         .get();
 
-    final targetResults = await (selectQuery
-          ..where(buildAnd([
-            if (query.id != null)
-              sql.target.clientReferenceId.equals(query.id!),
-          ])))
-        .get();
+    // final targetResults = await (selectQuery
+    //       ..where(buildAnd([
+    //         if (query.id != null)
+    //           sql.target.clientReferenceId.equals(query.id!),
+    //       ])))
+    //     .get();
 
     return results.map((e) {
       final data = e.readTable(sql.project);
@@ -114,20 +114,20 @@ class ProjectLocalRepository
                 boundaryType: address.boundaryType,
                 rowVersion: address.rowVersion,
               ),
-        targets: targetResults.isEmpty
-            ? null
-            : targetResults
-                .map((e) {
-                  final target = e.readTableOrNull(sql.target);
-                  if (target == null) return null;
-
-                  return TargetModel(
-                    id: target.id,
-                    beneficiaryType: target.beneficiaryType,
-                  );
-                })
-                .whereNotNull()
-                .toList(),
+        // targets: targetResults.isEmpty
+        //     ? null
+        //     : targetResults
+        //         .map((e) {
+        //           final target = e.readTableOrNull(sql.target);
+        //           if (target == null) return null;
+        //
+        //           return TargetModel(
+        //             id: target.id,
+        //             beneficiaryType: target.beneficiaryType,
+        //           );
+        //         })
+        //         .whereNotNull()
+        //         .toList(),
       );
     }).toList();
   }

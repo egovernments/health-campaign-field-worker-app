@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:digit_data_model/data_model.dart';
+import 'package:attendance_management/attendance_management.dart';
 import 'package:dio/dio.dart';
 
 import '../../../utils/constants.dart';
@@ -73,7 +74,7 @@ class AttendanceRemoteRepository extends RemoteRepository<
 
     try {
       attendanceRegisterModel = entityResponse
-          .map((e) => AttendanceRegisterModelMapper.fromJson(
+          .map((e) => AttendanceRegisterModelMapper.fromMap(
                 e,
               ))
           .toList();

@@ -18,10 +18,9 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:registration_delivery/models/entities/referral.dart';
-import 'package:registration_delivery/models/entities/side_effect.dart';
 import 'package:uuid/uuid.dart';
 import 'package:digit_data_model/data_model.init.dart' as digitDataModel;
+import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/registration_delivery.init.dart' as registrationDelivery;
 import 'package:attendance_management/attendance_management.init.dart' as attendance_management;
 import 'package:inventory_management/inventory_management.init.dart' as inventory_management;
@@ -286,24 +285,6 @@ final requestData = {
     // ... Repeat the above structure to reach approximately 100KB in size
   ],
 };
-
-/// This checks for if the active cycle is a new cycle or its the past cycle,
-/// If the active cycle is same as past cycle then all validations for tracking delivery applies, else validations do not get applied
-// bool checkEligibilityForActiveCycle(
-//   int activeCycle,
-//   HouseholdMemberWrapper householdWrapper,
-// ) {
-//   final pastCycle = (householdWrapper.tasks ?? []).isNotEmpty
-//       ? householdWrapper.tasks?.last.additionalFields?.fields
-//               .firstWhereOrNull(
-//                 (e) => e.key == AdditionalFieldsType.cycleIndex.name,
-//               )
-//               ?.value ??
-//           '1'
-//       : '1';
-//
-//   return (activeCycle == int.parse(pastCycle));
-// }
 
 /*Check for if the individual falls on the valid age category*/
 

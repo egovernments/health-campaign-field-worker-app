@@ -8,7 +8,6 @@ import 'package:registration_delivery/utils/extensions/extensions.dart';
 
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
-import '../../blocs/product_variant/product_variant.dart';
 import '../../blocs/side_effects/side_effects.dart';
 import '../../models/entities/side_effect.dart';
 import '../../models/entities/task.dart';

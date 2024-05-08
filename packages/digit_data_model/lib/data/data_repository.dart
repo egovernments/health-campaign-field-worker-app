@@ -11,6 +11,7 @@ import 'package:flutter/cupertino.dart';
 
 import '../models/oplog/oplog_entry.dart';
 import '../utils/constants.dart';
+import 'local_store/sql_store/sql_store.dart';
 
 abstract class DataRepository<D extends EntityModel,
     R extends EntitySearchModel> {

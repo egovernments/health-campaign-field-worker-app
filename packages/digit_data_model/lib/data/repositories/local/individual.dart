@@ -4,7 +4,6 @@ import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/oplog/oplog_entry.dart';
 import 'package:drift/drift.dart';
-import 'package:digit_data_model/data_model.dart';
 
 import '../../../utils/utils.dart';
 

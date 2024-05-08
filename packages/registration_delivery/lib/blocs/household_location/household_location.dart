@@ -6,7 +6,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'household_location.freezed.dart';
 
-typedef HouseholdEmitter = Emitter<HouseholdLocationState>;
+typedef HouseholdLocationEmitter = Emitter<HouseholdLocationState>;
 
 class HouseholdLocationBloc
     extends Bloc<HouseholdLocationEvent, HouseholdLocationState> {
@@ -16,7 +16,7 @@ class HouseholdLocationBloc
 
   FutureOr<void> _onSubmit(
     HouseholdLocationSubmitEvent event,
-    HouseholdEmitter emit,
+    HouseholdLocationEmitter emit,
   ) async {
     emit(state.copyWith(loading: true));
     await Future.delayed(const Duration(seconds: 1));

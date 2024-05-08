@@ -3,9 +3,9 @@ import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/models/oplog/oplog_entry.dart';
 import 'package:drift/drift.dart';
 
+import '../../../models/entities/attendance_log.dart';
 import '../../../utils/utils.dart';
 
 class AttendanceLogsLocalRepository
@@ -51,8 +51,7 @@ class AttendanceLogsLocalRepository
             type: attendeeLog.type,
             uploadToServer: attendeeLog.uploadToServer,
             additionalDetails: attendeeLog.additionalFields != null
-                ? AttendanceLogAdditionalFieldsMapper.fromJson(
-                    attendeeLog.additionalFields!)
+                ? jsonDecode(attendeeLog.additionalFields!.toString())
                 : null,
             auditDetails: AuditDetails(
               createdTime: attendeeLog.auditCreatedTime!,

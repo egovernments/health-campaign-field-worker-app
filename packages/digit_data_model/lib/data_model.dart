@@ -3,7 +3,12 @@
 )
 library data_model;
 
+import 'package:attendance_management/models/entities/attendance_log.dart';
+import 'package:attendance_management/models/entities/attendance_register.dart';
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:registration_delivery/models/entities/downsync.dart';
+import 'package:registration_delivery/models/entities/household.dart';
+import 'package:registration_delivery/models/entities/task.dart';
 
 import 'data_model.dart';
 
@@ -17,6 +22,8 @@ export 'data/repositories/local/base/project_resource_base.dart';
 export 'data/repositories/local/base/service_attributes_base.dart';
 export 'data/repositories/local/base/service_base.dart';
 export 'data/repositories/local/base/service_definition_base.dart';
+export 'data/repositories/local/base/facility_base.dart';
+export 'data/repositories/local/base/project_facility_base.dart';
 
 export 'data/repositories/local/address.dart';
 export 'data/repositories/local/boundary.dart';
@@ -25,23 +32,26 @@ export 'data/repositories/local/service_definition.dart';
 export 'data/repositories/local/project.dart';
 export 'data/repositories/local/product_variant.dart';
 export 'data/repositories/local/project_resource.dart';
+export 'data/repositories/local/facility.dart';
+export 'data/repositories/local/individual.dart';
+export 'data/repositories/local/project_facility.dart';
+export 'data/repositories/oplog/oplog.dart';
+
 
 export 'data/repositories/remote/service.dart';
 export 'data/repositories/remote/service_definition.dart';
 export 'data/repositories/remote/project.dart';
 
 export 'data/local_store/no_sql/schema/oplog.dart' hide AdditionalId;
-export 'data/sql_store/sql_store.dart';
+export 'data/local_store/sql_store/sql_store.dart';
 
 export 'models/oplog/oplog_entry.dart' show OpLogEntry;
 
-export 'package:registration_delivery/models/entities/household.dart';
-export 'package:registration_delivery/models/entities/task.dart';
-export 'package:registration_delivery/models/entities/target.dart';
-export 'package:registration_delivery/models/entities/downsync.dart';
+export 'blocs/facility/facility.dart';
+export 'blocs/project_facility/project_facility.dart';
+export 'blocs/product_variant/product_variant.dart';
 
-export 'package:attendance_management/models/entities/attendance_log.dart';
-export 'package:attendance_management/models/entities/attendance_register.dart';
+export 'utils/constants.dart' hide EntityPlurals;
 
 export 'models/entities/address.dart';
 export 'models/entities/boundary.dart';
@@ -67,6 +77,7 @@ export 'models/project_type/project_type_model.dart';
 export 'models/pgr_complaints/pgr_address.dart';
 export 'models/pgr_complaints/pgr_complaints.dart';
 export 'models/pgr_complaints/pgr_complaints_response.dart';
+export 'models/oplog/oplog_entry.dart';
 
 part 'data_model.mapper.dart';
 
@@ -133,7 +144,6 @@ abstract class EntitySearchModel extends DataModel
   includeSubClasses: [
     DownsyncAdditionalFields,
     AddressAdditionalFields,
-    AttendanceRegisterAdditionalFields,
   ],
 )
 abstract class AdditionalFields with AdditionalFieldsMappable {
@@ -186,6 +196,22 @@ class AuditDetails with AuditDetailsMappable {
     int? lastModifiedTime,
   })  : lastModifiedBy = lastModifiedBy ?? createdBy,
         lastModifiedTime = lastModifiedTime ?? createdTime;
+}
+
+abstract class ModelProvider {
+  List<Type> getModels();
+}
+
+class ModelProviderRegistry {
+  final _providers = <ModelProvider>[];
+
+  void register(ModelProvider provider) {
+    _providers.add(provider);
+  }
+
+  List<Type> getAllModels() {
+    return _providers.expand((p) => p.getModels()).toList();
+  }
 }
 
 enum DataModelType {

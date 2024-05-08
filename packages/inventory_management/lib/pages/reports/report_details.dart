@@ -13,7 +13,6 @@ import '../../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import '../../../widgets/inventory/no_facilities_assigned_dialog.dart';
 import '../../../widgets/localized.dart';
 import '../../../widgets/reports/readonly_pluto_grid.dart';
-import '../../blocs/facility.dart';
 import '../../blocs/inventory_report.dart';
 import '../../blocs/product_variant.dart';
 import '../../blocs/stock_reconciliation.dart';
@@ -63,8 +62,7 @@ class _InventoryReportDetailsPageState
     final event = widget.reportType == InventoryReportType.reconciliation
         ? InventoryReportLoadStockReconciliationDataEvent(
             facilityId: form.control(_facilityKey).value != null
-                ? (form.control(_facilityKey).value as FacilityModel)
-                    .id
+                ? (form.control(_facilityKey).value as FacilityModel).id
                 : '',
             productVariantId: form.control(_productVariantKey).value != null
                 ? (form.control(_productVariantKey).value
@@ -75,8 +73,7 @@ class _InventoryReportDetailsPageState
         : InventoryReportLoadStockDataEvent(
             reportType: widget.reportType,
             facilityId: form.control(_facilityKey).value != null
-                ? (form.control(_facilityKey).value as FacilityModel)
-                    .id
+                ? (form.control(_facilityKey).value as FacilityModel).id
                 : '',
             productVariantId: form.control(_productVariantKey).value != null
                 ? (form.control(_productVariantKey).value
@@ -105,7 +102,7 @@ class _InventoryReportDetailsPageState
 
   @override
   Widget build(BuildContext context) {
-    bool isDistributor = InventorySingleton().isDistributor;
+    bool isWareHouseManager = InventorySingleton().isWareHouseMgr;
 
     return BlocProvider<InventoryReportBloc>(
       create: (context) =>
@@ -178,7 +175,7 @@ class _InventoryReportDetailsPageState
                                     DigitCard(
                                       child: Column(
                                         children: [
-                                          if (!isDistributor)
+                                          if (isWareHouseManager)
                                             BlocConsumer<FacilityBloc,
                                                 FacilityState>(
                                               listener: (context, state) =>
@@ -194,7 +191,7 @@ class _InventoryReportDetailsPageState
                                                 final facilities =
                                                     state.whenOrNull(
                                                           fetched: (
-                                                            facilities,
+                                                            facilities, allFacilities
                                                           ) =>
                                                               facilities,
                                                         ) ??
@@ -285,8 +282,8 @@ class _InventoryReportDetailsPageState
                                                 );
                                               },
                                             ),
-                                          BlocBuilder<ProductVariantBloc,
-                                              ProductVariantState>(
+                                          BlocBuilder<InventoryProductVariantBloc,
+                                              InventoryProductVariantState>(
                                             builder: (context, state) {
                                               return state.maybeWhen(
                                                 orElse: () => const Offstage(),

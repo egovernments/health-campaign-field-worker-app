@@ -5,11 +5,13 @@ import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:registration_delivery/blocs/registraton_delivery_listener.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 
 import '../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../models/entities/beneficiary_type.dart';
 import '../router/registration_delivery_router.gm.dart';
+import '../utils/utils.dart';
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/beneficiary/view_beneficiary_card.dart';
 import '../widgets/localized.dart';
@@ -17,9 +19,11 @@ import '../../utils/i18_key_constants.dart' as i18;
 
 @RoutePage()
 class SearchBeneficiaryPage extends LocalizedStatefulWidget {
+  final RegistrationDeliveryListener registrationDeliveryListener;
   const SearchBeneficiaryPage({
     super.key,
     super.appLocalizations,
+    required this.registrationDeliveryListener,
   });
 
   @override

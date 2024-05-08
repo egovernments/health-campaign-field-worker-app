@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:drift/drift.dart';
 import 'package:digit_data_model/data_model.dart';
+import '../../data/local_store/sql_store/sql_store.dart';
 import 'pgr_address.dart';
 
 part 'pgr_complaints.mapper.dart';

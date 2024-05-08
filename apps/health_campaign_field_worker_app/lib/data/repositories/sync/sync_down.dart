@@ -1,17 +1,10 @@
 import 'dart:async';
 
-import 'package:attendance_management/attendance_management.dart';
 import 'package:collection/collection.dart';
-import 'package:digit_data_model/data/repositories/oplog/oplog.dart';
+import 'package:attendance_management/attendance_management.dart';
+// import 'package:inventory_management/inventory_management.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/models/oplog/oplog_entry.dart';
-import 'package:inventory_management/models/entities/stock.dart';
-import 'package:inventory_management/models/entities/stock_reconciliation.dart';
-import 'package:referral_reconciliation/models/entities/h_f_referral.dart';
-import 'package:registration_delivery/models/entities/household_member.dart';
-import 'package:registration_delivery/models/entities/project_beneficiary.dart';
-import 'package:registration_delivery/models/entities/referral.dart';
-import 'package:registration_delivery/models/entities/side_effect.dart';
+import 'package:referral_reconciliation/referral_reconciliation.dart';
 
 import '../../../models/bandwidth/bandwidth_model.dart';
 import '../../../models/entities/hcm_hf_referral.dart';
@@ -86,109 +79,6 @@ class PerformSyncDown {
         List<EntityModel> responseEntities = [];
 
         switch (typeGroupedEntity.key) {
-          case DataModelType.household:
-            responseEntities = await remote.search(HouseholdSearchModel(
-              clientReferenceId: entities
-                  .whereType<HouseholdModel>()
-                  .map((e) => e.clientReferenceId)
-                  .whereNotNull()
-                  .toList(),
-              isDeleted: true,
-            ));
-
-            for (var element in operationGroupedEntity.value) {
-              if (element.id == null) return;
-              final entity = element.entity as HouseholdModel;
-              final responseEntity =
-                  responseEntities.whereType<HouseholdModel>().firstWhereOrNull(
-                        (e) => e.clientReferenceId == entity.clientReferenceId,
-                      );
-
-              final serverGeneratedId = responseEntity?.id;
-              final rowVersion = responseEntity?.rowVersion;
-              if (serverGeneratedId != null) {
-                final addressAdditionalId = responseEntity?.address?.id == null
-                    ? null
-                    : AdditionalId(
-                        idType: householdAddressIdKey,
-                        id: responseEntity!.address!.id!,
-                      );
-
-                await local.opLogManager.updateServerGeneratedIds(
-                  model: UpdateServerGeneratedIdModel(
-                    clientReferenceId: entity.clientReferenceId,
-                    serverGeneratedId: serverGeneratedId,
-                    additionalIds: [
-                      if (addressAdditionalId != null) addressAdditionalId,
-                    ],
-                    dataOperation: element.operation,
-                    rowVersion: rowVersion,
-                    nonRecoverableError: element.nonRecoverableError,
-                  ),
-                );
-              } else {
-                final bool markAsNonRecoverable = await local.opLogManager
-                    .updateSyncDownRetry(entity.clientReferenceId);
-
-                if (markAsNonRecoverable) {
-                  await local.update(
-                    entity.copyWith(
-                      nonRecoverableError: true,
-                    ),
-                    createOpLog: false,
-                  );
-                }
-              }
-            }
-
-            break;
-
-          case DataModelType.householdMember:
-            responseEntities = await remote.search(HouseholdMemberSearchModel(
-              clientReferenceId: entities
-                  .whereType<HouseholdMemberModel>()
-                  .map((e) => e.clientReferenceId)
-                  .whereNotNull()
-                  .toList(),
-              isDeleted: true,
-            ));
-
-            for (var element in operationGroupedEntity.value) {
-              if (element.id == null) return;
-              final entity = element.entity as HouseholdMemberModel;
-              final responseEntity = responseEntities
-                  .whereType<HouseholdMemberModel>()
-                  .firstWhereOrNull(
-                    (e) => e.clientReferenceId == entity.clientReferenceId,
-                  );
-              final serverGeneratedId = responseEntity?.id;
-              final rowVersion = responseEntity?.rowVersion;
-              if (serverGeneratedId != null) {
-                await local.opLogManager.updateServerGeneratedIds(
-                  model: UpdateServerGeneratedIdModel(
-                    clientReferenceId: entity.clientReferenceId,
-                    serverGeneratedId: serverGeneratedId,
-                    dataOperation: element.operation,
-                    rowVersion: rowVersion,
-                  ),
-                );
-              } else {
-                final bool markAsNonRecoverable = await local.opLogManager
-                    .updateSyncDownRetry(entity.clientReferenceId);
-
-                if (markAsNonRecoverable) {
-                  await local.update(
-                    entity.copyWith(
-                      nonRecoverableError: true,
-                    ),
-                    createOpLog: false,
-                  );
-                }
-              }
-            }
-
-            break;
-
           case DataModelType.individual:
             responseEntities = await remote.search(IndividualSearchModel(
               clientReferenceId: entities
@@ -206,36 +96,36 @@ class PerformSyncDown {
                   .whereType<IndividualModel>()
                   .firstWhereOrNull(
                     (e) => e.clientReferenceId == entity.clientReferenceId,
-                  );
+              );
 
               final serverGeneratedId = responseEntity?.id;
               final rowVersion = responseEntity?.rowVersion;
               if (serverGeneratedId != null) {
                 final identifierAdditionalIds = responseEntity?.identifiers
                     ?.map((e) {
-                      final id = e.id;
+                  final id = e.id;
 
-                      if (id == null) return null;
+                  if (id == null) return null;
 
-                      return AdditionalId(
-                        idType: individualIdentifierIdKey,
-                        id: id,
-                      );
-                    })
+                  return AdditionalId(
+                    idType: individualIdentifierIdKey,
+                    id: id,
+                  );
+                })
                     .whereNotNull()
                     .toList();
 
                 final addressAdditionalIds = responseEntity?.address
                     ?.map((e) {
-                      final id = e.id;
+                  final id = e.id;
 
-                      if (id == null) return null;
+                  if (id == null) return null;
 
-                      return AdditionalId(
-                        idType: individualAddressIdKey,
-                        id: id,
-                      );
-                    })
+                  return AdditionalId(
+                    idType: individualAddressIdKey,
+                    id: id,
+                  );
+                })
                     .whereNotNull()
                     .toList();
 
@@ -270,200 +160,303 @@ class PerformSyncDown {
 
             break;
 
-          case DataModelType.sideEffect:
-            responseEntities = await remote.search(SideEffectSearchModel(
-              clientReferenceId: entities
-                  .whereType<SideEffectModel>()
-                  .map((e) => e.clientReferenceId)
-                  .whereNotNull()
-                  .toList(),
-              isDeleted: true,
-            ));
-
-            for (var element in typeGroupedEntity.value) {
-              if (element.id == null) return;
-              final entity = element.entity as SideEffectModel;
-              var responseEntity = responseEntities
-                  .whereType<SideEffectModel>()
-                  .firstWhereOrNull(
-                    (e) => e.clientReferenceId == entity.clientReferenceId,
-                  );
-
-              final serverGeneratedId = responseEntity?.id;
-              final rowVersion = responseEntity?.rowVersion;
-              if (serverGeneratedId != null) {
-                local.opLogManager.updateServerGeneratedIds(
-                  model: UpdateServerGeneratedIdModel(
-                    clientReferenceId: entity.clientReferenceId,
-                    serverGeneratedId: serverGeneratedId,
-                    dataOperation: element.operation,
-                    rowVersion: rowVersion,
-                  ),
-                );
-              } else {
-                final bool markAsNonRecoverable = await local.opLogManager
-                    .updateSyncDownRetry(entity.clientReferenceId);
-
-                if (markAsNonRecoverable) {
-                  await local.update(
-                    entity.copyWith(
-                      nonRecoverableError: true,
-                    ),
-                    createOpLog: false,
-                  );
-                }
-              }
-            }
-
-          case DataModelType.referral:
-            responseEntities = await remote.search(ReferralSearchModel(
-              clientReferenceId: entities
-                  .whereType<ReferralModel>()
-                  .map((e) => e.clientReferenceId)
-                  .whereNotNull()
-                  .toList(),
-              isDeleted: true,
-            ));
-
-            for (var element in typeGroupedEntity.value) {
-              if (element.id == null) return;
-              final entity = element.entity as ReferralModel;
-              var responseEntity =
-                  responseEntities.whereType<ReferralModel>().firstWhereOrNull(
-                        (e) => e.clientReferenceId == entity.clientReferenceId,
-                      );
-
-              final serverGeneratedId = responseEntity?.id;
-              final rowVersion = responseEntity?.rowVersion;
-              if (serverGeneratedId != null) {
-                local.opLogManager.updateServerGeneratedIds(
-                  model: UpdateServerGeneratedIdModel(
-                    clientReferenceId: entity.clientReferenceId,
-                    serverGeneratedId: serverGeneratedId,
-                    dataOperation: element.operation,
-                    rowVersion: rowVersion,
-                  ),
-                );
-              } else {
-                final bool markAsNonRecoverable = await local.opLogManager
-                    .updateSyncDownRetry(entity.clientReferenceId);
-
-                if (markAsNonRecoverable) {
-                  await local.update(
-                    entity.copyWith(
-                      nonRecoverableError: true,
-                    ),
-                    createOpLog: false,
-                  );
-                }
-              }
-            }
-
-          case DataModelType.projectBeneficiary:
-            responseEntities =
-                await remote.search(ProjectBeneficiarySearchModel(
-              clientReferenceId: entities
-                  .whereType<ProjectBeneficiaryModel>()
-                  .map((e) => e.clientReferenceId)
-                  .whereNotNull()
-                  .toList(),
-              isDeleted: true,
-            ));
-
-            for (var element in operationGroupedEntity.value) {
-              if (element.id == null) return;
-              final entity = element.entity as ProjectBeneficiaryModel;
-              final responseEntity = responseEntities
-                  .whereType<ProjectBeneficiaryModel>()
-                  .firstWhereOrNull(
-                    (e) => e.clientReferenceId == entity.clientReferenceId,
-                  );
-              final serverGeneratedId = responseEntity?.id;
-              final rowVersion = responseEntity?.rowVersion;
-              if (serverGeneratedId != null) {
-                await local.opLogManager.updateServerGeneratedIds(
-                  model: UpdateServerGeneratedIdModel(
-                    clientReferenceId: entity.clientReferenceId,
-                    serverGeneratedId: serverGeneratedId,
-                    dataOperation: element.operation,
-                    rowVersion: rowVersion,
-                  ),
-                );
-              } else {
-                final bool markAsNonRecoverable = await local.opLogManager
-                    .updateSyncDownRetry(entity.clientReferenceId);
-
-                if (markAsNonRecoverable) {
-                  await local.update(
-                    entity.copyWith(
-                      nonRecoverableError: true,
-                    ),
-                    createOpLog: false,
-                  );
-                }
-              }
-            }
-
-            break;
-          case DataModelType.task:
-            responseEntities = await remote.search(TaskSearchModel(
-              clientReferenceId: entities
-                  .whereType<TaskModel>()
-                  .map((e) => e.clientReferenceId)
-                  .whereNotNull()
-                  .toList(),
-              isDeleted: true,
-            ));
-
-            for (var element in operationGroupedEntity.value) {
-              if (element.id == null) return;
-              final taskModel = element.entity as TaskModel;
-              var responseEntity =
-                  responseEntities.whereType<TaskModel>().firstWhereOrNull(
-                        (e) =>
-                            e.clientReferenceId == taskModel.clientReferenceId,
-                      );
-
-              final serverGeneratedId = responseEntity?.id;
-              final rowVersion = responseEntity?.rowVersion;
-
-              if (serverGeneratedId != null) {
-                await local.opLogManager.updateServerGeneratedIds(
-                  model: UpdateServerGeneratedIdModel(
-                    clientReferenceId: taskModel.clientReferenceId,
-                    serverGeneratedId: serverGeneratedId,
-                    additionalIds: responseEntity?.resources
-                        ?.map((e) {
-                          final id = e.id;
-                          if (id == null) return null;
-
-                          return AdditionalId(
-                            idType: taskResourceIdKey,
-                            id: id,
-                          );
-                        })
-                        .whereNotNull()
-                        .toList(),
-                    dataOperation: element.operation,
-                    rowVersion: rowVersion,
-                  ),
-                );
-              } else {
-                final bool markAsNonRecoverable = await local.opLogManager
-                    .updateSyncDownRetry(taskModel.clientReferenceId);
-
-                if (markAsNonRecoverable) {
-                  await local.update(
-                    taskModel.copyWith(
-                      nonRecoverableError: true,
-                    ),
-                    createOpLog: false,
-                  );
-                }
-              }
-            }
-
-            break;
+          // case DataModelType.household:
+          //   responseEntities = await remote.search(HouseholdSearchModel(
+          //     clientReferenceId: entities
+          //         .whereType<HouseholdModel>()
+          //         .map((e) => e.clientReferenceId)
+          //         .whereNotNull()
+          //         .toList(),
+          //     isDeleted: true,
+          //   ));
+          //
+          //   for (var element in operationGroupedEntity.value) {
+          //     if (element.id == null) return;
+          //     final entity = element.entity as HouseholdModel;
+          //     final responseEntity =
+          //         responseEntities.whereType<HouseholdModel>().firstWhereOrNull(
+          //               (e) => e.clientReferenceId == entity.clientReferenceId,
+          //             );
+          //
+          //     final serverGeneratedId = responseEntity?.id;
+          //     final rowVersion = responseEntity?.rowVersion;
+          //     if (serverGeneratedId != null) {
+          //       final addressAdditionalId = responseEntity?.address?.id == null
+          //           ? null
+          //           : AdditionalId(
+          //               idType: householdAddressIdKey,
+          //               id: responseEntity!.address!.id!,
+          //             );
+          //
+          //       await local.opLogManager.updateServerGeneratedIds(
+          //         model: UpdateServerGeneratedIdModel(
+          //           clientReferenceId: entity.clientReferenceId,
+          //           serverGeneratedId: serverGeneratedId,
+          //           additionalIds: [
+          //             if (addressAdditionalId != null) addressAdditionalId,
+          //           ],
+          //           dataOperation: element.operation,
+          //           rowVersion: rowVersion,
+          //           nonRecoverableError: element.nonRecoverableError,
+          //         ),
+          //       );
+          //     } else {
+          //       final bool markAsNonRecoverable = await local.opLogManager
+          //           .updateSyncDownRetry(entity.clientReferenceId);
+          //
+          //       if (markAsNonRecoverable) {
+          //         await local.update(
+          //           entity.copyWith(
+          //             nonRecoverableError: true,
+          //           ),
+          //           createOpLog: false,
+          //         );
+          //       }
+          //     }
+          //   }
+          //
+          //   break;
+          //
+          // case DataModelType.householdMember:
+          //   responseEntities = await remote.search(HouseholdMemberSearchModel(
+          //     clientReferenceId: entities
+          //         .whereType<HouseholdMemberModel>()
+          //         .map((e) => e.clientReferenceId)
+          //         .whereNotNull()
+          //         .toList(),
+          //     isDeleted: true,
+          //   ));
+          //
+          //   for (var element in operationGroupedEntity.value) {
+          //     if (element.id == null) return;
+          //     final entity = element.entity as HouseholdMemberModel;
+          //     final responseEntity = responseEntities
+          //         .whereType<HouseholdMemberModel>()
+          //         .firstWhereOrNull(
+          //           (e) => e.clientReferenceId == entity.clientReferenceId,
+          //         );
+          //     final serverGeneratedId = responseEntity?.id;
+          //     final rowVersion = responseEntity?.rowVersion;
+          //     if (serverGeneratedId != null) {
+          //       await local.opLogManager.updateServerGeneratedIds(
+          //         model: UpdateServerGeneratedIdModel(
+          //           clientReferenceId: entity.clientReferenceId,
+          //           serverGeneratedId: serverGeneratedId,
+          //           dataOperation: element.operation,
+          //           rowVersion: rowVersion,
+          //         ),
+          //       );
+          //     } else {
+          //       final bool markAsNonRecoverable = await local.opLogManager
+          //           .updateSyncDownRetry(entity.clientReferenceId);
+          //
+          //       if (markAsNonRecoverable) {
+          //         await local.update(
+          //           entity.copyWith(
+          //             nonRecoverableError: true,
+          //           ),
+          //           createOpLog: false,
+          //         );
+          //       }
+          //     }
+          //   }
+          //
+          //   break;
+          //
+          // case DataModelType.sideEffect:
+          //   responseEntities = await remote.search(SideEffectSearchModel(
+          //     clientReferenceId: entities
+          //         .whereType<SideEffectModel>()
+          //         .map((e) => e.clientReferenceId)
+          //         .whereNotNull()
+          //         .toList(),
+          //     isDeleted: true,
+          //   ));
+          //
+          //   for (var element in typeGroupedEntity.value) {
+          //     if (element.id == null) return;
+          //     final entity = element.entity as SideEffectModel;
+          //     var responseEntity = responseEntities
+          //         .whereType<SideEffectModel>()
+          //         .firstWhereOrNull(
+          //           (e) => e.clientReferenceId == entity.clientReferenceId,
+          //         );
+          //
+          //     final serverGeneratedId = responseEntity?.id;
+          //     final rowVersion = responseEntity?.rowVersion;
+          //     if (serverGeneratedId != null) {
+          //       local.opLogManager.updateServerGeneratedIds(
+          //         model: UpdateServerGeneratedIdModel(
+          //           clientReferenceId: entity.clientReferenceId,
+          //           serverGeneratedId: serverGeneratedId,
+          //           dataOperation: element.operation,
+          //           rowVersion: rowVersion,
+          //         ),
+          //       );
+          //     } else {
+          //       final bool markAsNonRecoverable = await local.opLogManager
+          //           .updateSyncDownRetry(entity.clientReferenceId);
+          //
+          //       if (markAsNonRecoverable) {
+          //         await local.update(
+          //           entity.copyWith(
+          //             nonRecoverableError: true,
+          //           ),
+          //           createOpLog: false,
+          //         );
+          //       }
+          //     }
+          //   }
+          //
+          // case DataModelType.referral:
+          //   responseEntities = await remote.search(ReferralSearchModel(
+          //     clientReferenceId: entities
+          //         .whereType<ReferralModel>()
+          //         .map((e) => e.clientReferenceId)
+          //         .whereNotNull()
+          //         .toList(),
+          //     isDeleted: true,
+          //   ));
+          //
+          //   for (var element in typeGroupedEntity.value) {
+          //     if (element.id == null) return;
+          //     final entity = element.entity as ReferralModel;
+          //     var responseEntity =
+          //         responseEntities.whereType<ReferralModel>().firstWhereOrNull(
+          //               (e) => e.clientReferenceId == entity.clientReferenceId,
+          //             );
+          //
+          //     final serverGeneratedId = responseEntity?.id;
+          //     final rowVersion = responseEntity?.rowVersion;
+          //     if (serverGeneratedId != null) {
+          //       local.opLogManager.updateServerGeneratedIds(
+          //         model: UpdateServerGeneratedIdModel(
+          //           clientReferenceId: entity.clientReferenceId,
+          //           serverGeneratedId: serverGeneratedId,
+          //           dataOperation: element.operation,
+          //           rowVersion: rowVersion,
+          //         ),
+          //       );
+          //     } else {
+          //       final bool markAsNonRecoverable = await local.opLogManager
+          //           .updateSyncDownRetry(entity.clientReferenceId);
+          //
+          //       if (markAsNonRecoverable) {
+          //         await local.update(
+          //           entity.copyWith(
+          //             nonRecoverableError: true,
+          //           ),
+          //           createOpLog: false,
+          //         );
+          //       }
+          //     }
+          //   }
+          //
+          // case DataModelType.projectBeneficiary:
+          //   responseEntities =
+          //       await remote.search(ProjectBeneficiarySearchModel(
+          //     clientReferenceId: entities
+          //         .whereType<ProjectBeneficiaryModel>()
+          //         .map((e) => e.clientReferenceId)
+          //         .whereNotNull()
+          //         .toList(),
+          //     isDeleted: true,
+          //   ));
+          //
+          //   for (var element in operationGroupedEntity.value) {
+          //     if (element.id == null) return;
+          //     final entity = element.entity as ProjectBeneficiaryModel;
+          //     final responseEntity = responseEntities
+          //         .whereType<ProjectBeneficiaryModel>()
+          //         .firstWhereOrNull(
+          //           (e) => e.clientReferenceId == entity.clientReferenceId,
+          //         );
+          //     final serverGeneratedId = responseEntity?.id;
+          //     final rowVersion = responseEntity?.rowVersion;
+          //     if (serverGeneratedId != null) {
+          //       await local.opLogManager.updateServerGeneratedIds(
+          //         model: UpdateServerGeneratedIdModel(
+          //           clientReferenceId: entity.clientReferenceId,
+          //           serverGeneratedId: serverGeneratedId,
+          //           dataOperation: element.operation,
+          //           rowVersion: rowVersion,
+          //         ),
+          //       );
+          //     } else {
+          //       final bool markAsNonRecoverable = await local.opLogManager
+          //           .updateSyncDownRetry(entity.clientReferenceId);
+          //
+          //       if (markAsNonRecoverable) {
+          //         await local.update(
+          //           entity.copyWith(
+          //             nonRecoverableError: true,
+          //           ),
+          //           createOpLog: false,
+          //         );
+          //       }
+          //     }
+          //   }
+          //
+          //   break;
+          // case DataModelType.task:
+          //   responseEntities = await remote.search(TaskSearchModel(
+          //     clientReferenceId: entities
+          //         .whereType<TaskModel>()
+          //         .map((e) => e.clientReferenceId)
+          //         .whereNotNull()
+          //         .toList(),
+          //     isDeleted: true,
+          //   ));
+          //
+          //   for (var element in operationGroupedEntity.value) {
+          //     if (element.id == null) return;
+          //     final taskModel = element.entity as TaskModel;
+          //     var responseEntity =
+          //         responseEntities.whereType<TaskModel>().firstWhereOrNull(
+          //               (e) =>
+          //                   e.clientReferenceId == taskModel.clientReferenceId,
+          //             );
+          //
+          //     final serverGeneratedId = responseEntity?.id;
+          //     final rowVersion = responseEntity?.rowVersion;
+          //
+          //     if (serverGeneratedId != null) {
+          //       await local.opLogManager.updateServerGeneratedIds(
+          //         model: UpdateServerGeneratedIdModel(
+          //           clientReferenceId: taskModel.clientReferenceId,
+          //           serverGeneratedId: serverGeneratedId,
+          //           additionalIds: responseEntity?.resources
+          //               ?.map((e) {
+          //                 final id = e.id;
+          //                 if (id == null) return null;
+          //
+          //                 return AdditionalId(
+          //                   idType: taskResourceIdKey,
+          //                   id: id,
+          //                 );
+          //               })
+          //               .whereNotNull()
+          //               .toList(),
+          //           dataOperation: element.operation,
+          //           rowVersion: rowVersion,
+          //         ),
+          //       );
+          //     } else {
+          //       final bool markAsNonRecoverable = await local.opLogManager
+          //           .updateSyncDownRetry(taskModel.clientReferenceId);
+          //
+          //       if (markAsNonRecoverable) {
+          //         await local.update(
+          //           taskModel.copyWith(
+          //             nonRecoverableError: true,
+          //           ),
+          //           createOpLog: false,
+          //         );
+          //       }
+          //     }
+          //   }
+          //
+          //   break;
           case DataModelType.hFReferral:
             responseEntities = await remote.search(
               HcmHFReferralSearchModel(
@@ -519,141 +512,41 @@ class PerformSyncDown {
             break;
 
           case DataModelType.attendance:
-          // responseEntities = await remote.search(HCMAttendanceLogSearchModel(
-          //   clientReferenceId: entities
-          //       .whereType<HCMAttendanceLogModel>()
-          //       .map((e) => e.attendance?.clientReferenceId!)
-          //       .whereNotNull()
-          //       .toList(),
-          //   isDeleted: true,
-          //   tenantId: envConfig.variables.tenantId,
-          // ));
-          //
-          // for (var element in operationGroupedEntity.value) {
-          //   if (element.id == null) return;
-          //   final entity = element.entity as HCMAttendanceLogModel;
-          //   final responseEntity = responseEntities
-          //       .whereType<HCMAttendanceLogModel>()
-          //       .firstWhereOrNull(
-          //         (e) =>
-          //             e.attendance?.clientReferenceId ==
-          //             entity.attendance?.clientReferenceId,
-          //       );
-          //
-          //   final serverGeneratedId = responseEntity?.attendance?.id;
-          //   final rowVersion = responseEntity?.rowVersion;
-          //   if (serverGeneratedId != null) {
-          //     await local.opLogManager.updateServerGeneratedIds(
-          //       model: UpdateServerGeneratedIdModel(
-          //         clientReferenceId:
-          //             entity.attendance!.clientReferenceId.toString(),
-          //         serverGeneratedId: serverGeneratedId,
-          //         nonRecoverableError: entity.nonRecoverableError,
-          //         dataOperation: element.operation,
-          //         rowVersion: rowVersion,
-          //       ),
-          //     );
-          //   } else {
-          //     final bool markAsNonRecoverable =
-          //         await local.opLogManager.updateSyncDownRetry(
-          //       entity.attendance!.clientReferenceId.toString(),
-          //     );
-          //
-          //     if (markAsNonRecoverable) {
-          //       await local.update(
-          //         entity.copyWith(
-          //           nonRecoverableError: true,
-          //         ),
-          //         createOpLog: false,
-          //       );
-          //     }
-          //   }
-          // }
-          //
-          // break;
-
-          case DataModelType.stock:
-            responseEntities = await remote.search(
-              StockSearchModel(
-                clientReferenceId: entities
-                    .whereType<StockModel>()
-                    .map((e) => e.clientReferenceId)
-                    .whereNotNull()
-                    .toList(),
-              ),
-            );
-
-            for (var element in operationGroupedEntity.value) {
-              if (element.id == null) return;
-              final entity = element.entity as StockModel;
-              final responseEntity =
-                  responseEntities.whereType<StockModel>().firstWhereOrNull(
-                        (e) => e.clientReferenceId == entity.clientReferenceId,
-                      );
-
-              final serverGeneratedId = responseEntity?.id;
-              final rowVersion = responseEntity?.rowVersion;
-
-              if (serverGeneratedId != null) {
-                await local.opLogManager.updateServerGeneratedIds(
-                  model: UpdateServerGeneratedIdModel(
-                    clientReferenceId: entity.clientReferenceId!,
-                    serverGeneratedId: serverGeneratedId,
-                    dataOperation: element.operation,
-                    rowVersion: rowVersion,
-                  ),
-                );
-              } else {
-                final bool markAsNonRecoverable = await local.opLogManager
-                    .updateSyncDownRetry(entity.clientReferenceId);
-
-                if (markAsNonRecoverable) {
-                  await local.update(
-                    entity.copyWith(
-                      nonRecoverableError: true,
-                    ),
-                    createOpLog: false,
-                  );
-                }
-              }
-            }
-
-            break;
-
-          case DataModelType.stockReconciliation:
-            responseEntities =
-                await remote.search(StockReconciliationSearchModel(
+            responseEntities = await remote.search(AttendanceLogSearchModel(
               clientReferenceId: entities
-                  .whereType<StockReconciliationModel>()
-                  .map((e) => e.clientReferenceId)
+                  .whereType<AttendanceLogModel>()
+                  .map((e) => e.clientReferenceId!)
                   .whereNotNull()
                   .toList(),
+              tenantId: envConfig.variables.tenantId,
             ));
 
             for (var element in operationGroupedEntity.value) {
               if (element.id == null) return;
-              final entity = element.entity as StockReconciliationModel;
+              final entity = element.entity as AttendanceLogModel;
               final responseEntity = responseEntities
-                  .whereType<StockReconciliationModel>()
+                  .whereType<AttendanceLogModel>()
                   .firstWhereOrNull(
                     (e) => e.clientReferenceId == entity.clientReferenceId,
                   );
 
               final serverGeneratedId = responseEntity?.id;
               final rowVersion = responseEntity?.rowVersion;
-
               if (serverGeneratedId != null) {
                 await local.opLogManager.updateServerGeneratedIds(
                   model: UpdateServerGeneratedIdModel(
-                    clientReferenceId: entity.clientReferenceId,
+                    clientReferenceId: entity.clientReferenceId.toString(),
                     serverGeneratedId: serverGeneratedId,
+                    nonRecoverableError: entity.nonRecoverableError,
                     dataOperation: element.operation,
                     rowVersion: rowVersion,
                   ),
                 );
               } else {
-                final bool markAsNonRecoverable = await local.opLogManager
-                    .updateSyncDownRetry(entity.clientReferenceId);
+                final bool markAsNonRecoverable =
+                    await local.opLogManager.updateSyncDownRetry(
+                  entity.clientReferenceId.toString(),
+                );
 
                 if (markAsNonRecoverable) {
                   await local.update(
@@ -667,6 +560,102 @@ class PerformSyncDown {
             }
 
             break;
+
+          // case DataModelType.stock:
+          //   responseEntities = await remote.search(
+          //     StockSearchModel(
+          //       clientReferenceId: entities
+          //           .whereType<StockModel>()
+          //           .map((e) => e.clientReferenceId)
+          //           .whereNotNull()
+          //           .toList(),
+          //     ),
+          //   );
+          //
+          //   for (var element in operationGroupedEntity.value) {
+          //     if (element.id == null) return;
+          //     final entity = element.entity as StockModel;
+          //     final responseEntity =
+          //         responseEntities.whereType<StockModel>().firstWhereOrNull(
+          //               (e) => e.clientReferenceId == entity.clientReferenceId,
+          //             );
+          //
+          //     final serverGeneratedId = responseEntity?.id;
+          //     final rowVersion = responseEntity?.rowVersion;
+          //
+          //     if (serverGeneratedId != null) {
+          //       await local.opLogManager.updateServerGeneratedIds(
+          //         model: UpdateServerGeneratedIdModel(
+          //           clientReferenceId: entity.clientReferenceId!,
+          //           serverGeneratedId: serverGeneratedId,
+          //           dataOperation: element.operation,
+          //           rowVersion: rowVersion,
+          //         ),
+          //       );
+          //     } else {
+          //       final bool markAsNonRecoverable = await local.opLogManager
+          //           .updateSyncDownRetry(entity.clientReferenceId);
+          //
+          //       if (markAsNonRecoverable) {
+          //         await local.update(
+          //           entity.copyWith(
+          //             nonRecoverableError: true,
+          //           ),
+          //           createOpLog: false,
+          //         );
+          //       }
+          //     }
+          //   }
+          //
+          //   break;
+          //
+          // case DataModelType.stockReconciliation:
+          //   responseEntities =
+          //       await remote.search(StockReconciliationSearchModel(
+          //     clientReferenceId: entities
+          //         .whereType<StockReconciliationModel>()
+          //         .map((e) => e.clientReferenceId)
+          //         .whereNotNull()
+          //         .toList(),
+          //   ));
+          //
+          //   for (var element in operationGroupedEntity.value) {
+          //     if (element.id == null) return;
+          //     final entity = element.entity as StockReconciliationModel;
+          //     final responseEntity = responseEntities
+          //         .whereType<StockReconciliationModel>()
+          //         .firstWhereOrNull(
+          //           (e) => e.clientReferenceId == entity.clientReferenceId,
+          //         );
+          //
+          //     final serverGeneratedId = responseEntity?.id;
+          //     final rowVersion = responseEntity?.rowVersion;
+          //
+          //     if (serverGeneratedId != null) {
+          //       await local.opLogManager.updateServerGeneratedIds(
+          //         model: UpdateServerGeneratedIdModel(
+          //           clientReferenceId: entity.clientReferenceId,
+          //           serverGeneratedId: serverGeneratedId,
+          //           dataOperation: element.operation,
+          //           rowVersion: rowVersion,
+          //         ),
+          //       );
+          //     } else {
+          //       final bool markAsNonRecoverable = await local.opLogManager
+          //           .updateSyncDownRetry(entity.clientReferenceId);
+          //
+          //       if (markAsNonRecoverable) {
+          //         await local.update(
+          //           entity.copyWith(
+          //             nonRecoverableError: true,
+          //           ),
+          //           createOpLog: false,
+          //         );
+          //       }
+          //     }
+          //   }
+          //
+          //   break;
 
           case DataModelType.complaints:
             if (remote is! PgrServiceRemoteRepository) continue;

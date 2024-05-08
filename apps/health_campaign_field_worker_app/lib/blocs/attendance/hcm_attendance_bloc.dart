@@ -1,10 +1,9 @@
-import 'package:attendance_management/blocs/attendance_listeners.dart';
+import 'package:attendance_management/attendance_management.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:digit_data_model/data_model.dart';
 
-import '../../models/data_model.dart';
 import '../../utils/utils.dart';
 import '../sync/sync.dart';
 
@@ -129,6 +128,17 @@ class HCMAttendanceBloc extends AttendanceListeners {
           clientReferenceId: (existingLog).isNotEmpty
               ? existingLog.lastOrNull?.clientReferenceId
               : IdGen.i.identifier,
+          registerId: e.registerId,
+          tenantId: e.tenantId,
+          individualId: e.individualId,
+          status: e.status,
+          time: e.time,
+          type: e.type,
+          uploadToServer: e.uploadToServer,
+          additionalDetails: e.additionalDetails,
+          documentIds: e.documentIds,
+          isDeleted: e.isDeleted,
+          nonRecoverableError: e.nonRecoverableError,
           clientAuditDetails: ClientAuditDetails(
             createdBy: userId.toString(),
             createdTime: DateTime.now().millisecondsSinceEpoch,
@@ -277,14 +287,13 @@ class HCMAttendanceBloc extends AttendanceListeners {
       List<AttendanceLogModel>? registerCompletedLogs) async {
     // Generate date list
     var list = generateDateList(
-        register.startDate!,
-        register.endDate!,
-        registerCompletedLogs ?? [],
-        register.additionalDetails!.fields
-            .equals([const AdditionalField('sessions', 2)]));
+      register.startDate!,
+      register.endDate!,
+      registerCompletedLogs ?? [],
+      register.additionalDetails?["sessions"] != 2,
+    );
 
-    var completedDaysCount = register.additionalDetails!.fields
-            .equals([const AdditionalField('sessions', 2)])
+    var completedDaysCount = register.additionalDetails?["sessions"] == 2
         ? list.length ~/ 2 // for registers with 2 sessions
         : list.length; // for registers with single session
 

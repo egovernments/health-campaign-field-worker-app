@@ -2,10 +2,12 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:registration_delivery/registration_delivery.dart';
 
 import '../../../blocs/household_overview/household_overview.dart';
 import '../../../router/registration_delivery_router.gm.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
+import '../../../utils/utils.dart';
 import '../../../widgets/localized.dart';
 
 @RoutePage()
@@ -37,7 +39,10 @@ class _HouseholdAcknowledgementPageState
                 final parent = context.router.parent() as StackRouter;
                 // Pop twice to navigate back to the previous screen
                 parent.popUntilRoot();
-                parent.push(SearchBeneficiaryRoute());
+                parent.push(SearchBeneficiaryRoute(
+                  registrationDeliveryListener: RegistrationDeliverySingleton()
+                      .registrationDeliveryListener!,
+                ));
               },
               secondaryAction: () {
                 final wrapper = context

@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
-import 'package:digit_data_model/data/sql_store/sql_store.dart';
+import 'package:digit_data_model/data/local_store/sql_store/sql_store.dart';
 import 'package:digit_data_model/utils/utils.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -13,9 +13,6 @@ import 'blocs/app_bloc_observer.dart';
 import 'data/local_store/app_shared_preferences.dart';
 import 'data/local_store/secure_store/secure_store.dart';
 import 'data/remote_client.dart';
-import 'firebase_options.dart';
-// import 'models/data_model.init.dart';
-import 'models/data_model.init.dart';
 import 'router/app_router.dart';
 import 'utils/background_service.dart';
 import 'utils/environment_config.dart';

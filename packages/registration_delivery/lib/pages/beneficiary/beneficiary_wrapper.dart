@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/utils/utils.dart';
 
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
-import '../../blocs/facility/facility.dart';
 import '../../blocs/household_overview/household_overview.dart';
 import '../../blocs/referral_management/referral_management.dart';
 import '../../blocs/search_households/search_households.dart';

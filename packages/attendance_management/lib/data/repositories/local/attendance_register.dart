@@ -33,6 +33,10 @@ class AttendanceLocalRepository extends LocalRepository<AttendanceRegisterModel,
       ),
     ]);
 
+    if (query.limit != null && query.offSet != null) {
+      selectQuery.limit(query.limit!, offset: query.offSet);
+    }
+
     final results = await (selectQuery
           ..where(buildAnd([
             if (query.id != null)
@@ -117,9 +121,7 @@ class AttendanceLocalRepository extends LocalRepository<AttendanceRegisterModel,
           endDate: register.endDate,
           additionalDetails: register.additionalFields == null
               ? null
-              : AttendanceRegisterAdditionalFieldsMapper.fromJson(
-                  register.additionalFields!,
-                ),
+              : jsonDecode(register.additionalFields!.toString()),
           auditDetails: AuditDetails(
             createdBy: register.auditCreatedBy ?? '',
             createdTime: register.auditCreatedTime ?? 0,

@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:digit_data_model/data_model.dart';
+import 'package:attendance_management/attendance_management.dart';
 import 'package:dio/dio.dart';
 
 import '../../../utils/constants.dart';
@@ -91,13 +92,7 @@ class AttendanceLogRemoteRepository
     List<Map<String, dynamic>> transformedLogs = [];
 
     for (var log in attendanceLogMapEntities) {
-      var attendanceLog = log["attendance"] as Map<String, dynamic>;
-      var transformedLog = {
-        ...attendanceLog,
-        "auditDetails": log["auditDetails"],
-        "clientAuditDetails": log["clientAuditDetails"],
-      };
-      transformedLogs.add(transformedLog);
+      transformedLogs.add(log);
     }
 
     return executeFuture(

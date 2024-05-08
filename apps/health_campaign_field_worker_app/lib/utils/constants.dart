@@ -7,13 +7,10 @@ import 'package:digit_data_model/utils/utils.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:health_campaign_field_worker_app/utils/utils.dart';
-import 'package:inventory_management/data/repositories/local/stock.dart';
-import 'package:inventory_management/data/repositories/local/stock_reconciliation.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:registration_delivery/data/repositories/local/houshold_member.dart';
-import 'package:registration_delivery/data/repositories/local/individual.dart';
-import 'package:registration_delivery/data/repositories/local/side_effect.dart';
+import 'package:inventory_management/data/repositories/local/stock.dart';
+import 'package:inventory_management/data/repositories/local/stock_reconciliation.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
@@ -107,11 +104,12 @@ class Constants {
     Isar isar,
   ) {
     return [
-      IndividualLocalRepository(sql, IndividualOpLogManager(isar)),
       FacilityLocalRepository(sql, FacilityOpLogManager(isar)),
+      ProjectLocalRepository(sql, ProjectOpLogManager(isar)),
+      ProjectStaffLocalRepository(sql, ProjectStaffOpLogManager(isar)),
+      IndividualLocalRepository(sql, IndividualOpLogManager(isar)),
       HouseholdMemberLocalRepository(sql, HouseholdMemberOpLogManager(isar)),
       HouseholdLocalRepository(sql, HouseholdOpLogManager(isar)),
-      ProjectLocalRepository(sql, ProjectOpLogManager(isar)),
       ProjectBeneficiaryLocalRepository(
         sql,
         ProjectBeneficiaryOpLogManager(
@@ -119,7 +117,6 @@ class Constants {
         ),
       ),
       ProjectFacilityLocalRepository(sql, ProjectFacilityOpLogManager(isar)),
-      ProjectStaffLocalRepository(sql, ProjectStaffOpLogManager(isar)),
       StockLocalRepository(sql, StockOpLogManager(isar)),
       TaskLocalRepository(sql, TaskOpLogManager(isar)),
       SideEffectLocalRepository(sql, SideEffectOpLogManager(isar)),
@@ -195,10 +192,6 @@ class Constants {
       remoteRepositories.addAll([
         if (value == DataModelType.facility)
           FacilityRemoteRepository(dio, actionMap: actions),
-        if (value == DataModelType.household)
-          HouseholdRemoteRepository(dio, actionMap: actions),
-        if (value == DataModelType.projectBeneficiary)
-          ProjectBeneficiaryRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.complaints)
           PgrServiceRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.productVariant)
@@ -211,14 +204,6 @@ class Constants {
           ProjectResourceRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.service)
           ServiceRemoteRepository(dio, actionMap: actions),
-        if (value == DataModelType.stockReconciliation)
-          StockReconciliationRemoteRepository(dio, actionMap: actions),
-        if (value == DataModelType.task)
-          TaskRemoteRepository(dio, actionMap: actions),
-        if (value == DataModelType.stock)
-          StockRemoteRepository(dio, actionMap: actions),
-        if (value == DataModelType.projectType)
-          ProjectTypeRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.projectStaff)
           ProjectStaffRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.projectProductVariant)
@@ -227,6 +212,18 @@ class Constants {
           ProjectFacilityRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.individual)
           IndividualRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.household)
+          HouseholdRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.projectBeneficiary)
+          ProjectBeneficiaryRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.stockReconciliation)
+          StockReconciliationRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.task)
+          TaskRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.stock)
+          StockRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.projectType)
+          ProjectTypeRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.householdMember)
           HouseholdMemberRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.sideEffect)

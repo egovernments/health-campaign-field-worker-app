@@ -2,15 +2,16 @@
 import 'dart:async';
 
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/utils/typedefs.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:registration_delivery/models/entities/household_member.dart';
 
 import '../../models/entities/beneficiary_type.dart';
+import '../../models/entities/household.dart';
 import '../../models/entities/project_beneficiary.dart';
 import '../../utils/utils.dart';
 import '../../utils/typedefs.dart';
-import 'package:registration_delivery/utils/extensions/extensions.dart';
 
 part 'beneficiary_registration.freezed.dart';
 

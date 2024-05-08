@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'inventory_localization_delegate.dart';
+import 'registration_delivery_localization_delegate.dart';
 
 // Class responsible for handling attendance localization
 class RegistrationDeliveryLocalization {
@@ -21,7 +21,7 @@ class RegistrationDeliveryLocalization {
   // Method to get the delegate for localization
   static LocalizationsDelegate<RegistrationDeliveryLocalization> getDelegate(
           Future<dynamic> localizedStrings, List<dynamic> languages) =>
-      InventoryLocalizationDelegate(localizedStrings, languages);
+      RegistrationDeliveryLocalizationDelegate(localizedStrings, languages);
 
   // Method to load localized strings
   Future<bool> load() async {

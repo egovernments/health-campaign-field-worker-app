@@ -16,16 +16,8 @@ import '../widgets/no_result_card.dart';
 
 @RoutePage()
 class ManageAttendancePage extends LocalizedStatefulWidget {
-  final AttendanceListeners attendanceListeners;
-  final String projectId;
-  final String userId;
-  final String appVersion;
 
   const ManageAttendancePage({
-    required this.attendanceListeners,
-    required this.projectId,
-    required this.userId,
-    required this.appVersion,
     super.key,
   });
 
@@ -46,11 +38,6 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
 
   @override
   void initState() {
-    AttendanceSingleton().setAttendanceListeners(
-        attendanceListeners: widget.attendanceListeners,
-        projectId: widget.projectId,
-        userId: widget.userId,
-        appVersion: widget.appVersion);
     super.initState();
   }
 
@@ -80,12 +67,12 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
                     attendanceBloc: attendanceBloc,
                     data: {
                       localization.translate(i18.attendance.campaignNameLabel):
-                          register.additionalDetails
-                                  ?.fields[EnumValues.campaignName.toValue()] ??
+                          register.additionalDetails?[
+                                  EnumValues.campaignName.toValue()] ??
                               localization.translate(i18.common.coreCommonNA),
                       localization.translate(i18.attendance.eventTypeLabel):
-                          register.additionalDetails
-                                  ?.fields[EnumValues.eventType.toValue()] ??
+                          register.additionalDetails?[
+                                  EnumValues.eventType.toValue()] ??
                               localization.translate(i18.common.coreCommonNA),
                       localization.translate(i18.attendance.staffCountLabel):
                           register.attendees?.length ?? 0,

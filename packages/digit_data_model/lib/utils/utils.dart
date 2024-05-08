@@ -10,6 +10,13 @@ Expression<bool> buildAnd(Iterable<Expression<bool>> iterable) {
   return result.equals(true);
 }
 
+Expression<bool> buildOr(Iterable<Expression<bool>> iterable) {
+  if (iterable.isEmpty) return const Constant(true);
+  final result = iterable.reduce((value, element) => value | element);
+
+  return result.equals(true);
+}
+
 // create a singleton class to hold the envConfigVariables
 
 class DigitDataModelSingleton {

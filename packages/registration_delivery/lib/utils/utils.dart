@@ -10,6 +10,7 @@ import 'package:registration_delivery/utils/constants.dart';
 import 'package:uuid/uuid.dart';
 import 'package:collection/collection.dart';
 
+import '../blocs/registraton_delivery_listener.dart';
 import '../models/entities/additional_fields_type.dart';
 import '../models/entities/beneficiary_type.dart';
 import '../models/entities/referral.dart';
@@ -314,6 +315,8 @@ class RegistrationDeliverySingleton {
 
   RegistrationDeliverySingleton._internal();
 
+  RegistrationDeliveryListener? _registrationDeliveryListener;
+
   String? _tenantId;
   String? _loggedInUserUuid;
 
@@ -323,8 +326,8 @@ class RegistrationDeliverySingleton {
   ProjectType? _projectType;
   ProjectModel? _selectedProject;
   BoundaryModel? _boundaryModel;
-  PersistenceConfiguration _persistenceConfiguration =
-      PersistenceConfiguration.offlineFirst;
+  PersistenceConfiguration? _persistenceConfiguration = PersistenceConfiguration
+      .offlineFirst; // Default to offline first persistence configuration
   List<Map<String, String>>? _genderOptions;
   List<Map<String, String>>? _idTypeOptions;
   List<Map<String, String>>? _householdDeletionReasonOptions;
@@ -337,6 +340,16 @@ class RegistrationDeliverySingleton {
     _boundaryModel = boundary;
   }
 
+  void setPersistenceConfiguration(
+      {required PersistenceConfiguration persistenceConfiguration}) {
+    _persistenceConfiguration = persistenceConfiguration;
+  }
+
+  void setRegistrationDeliveryListener(
+      RegistrationDeliveryListener registrationDeliveryListener) {
+    _registrationDeliveryListener = registrationDeliveryListener;
+  }
+
   void setInitialData(
       {required String tenantId,
       required String loggedInUserUuid,
@@ -345,7 +358,6 @@ class RegistrationDeliverySingleton {
       required BeneficiaryType selectedBeneficiaryType,
       required ProjectType? projectType,
       required ProjectModel selectedProject,
-      PersistenceConfiguration? persistenceConfiguration,
       required List<Map<String, String>> genderOptions,
       required List<Map<String, String>> idTypeOptions,
       required List<Map<String, String>> householdDeletionReasonOptions,
@@ -360,7 +372,6 @@ class RegistrationDeliverySingleton {
     _beneficiaryType = selectedBeneficiaryType;
     _projectType = projectType;
     _selectedProject = selectedProject;
-    _persistenceConfiguration = persistenceConfiguration!;
     _genderOptions = genderOptions;
     _idTypeOptions = idTypeOptions;
     _householdDeletionReasonOptions = householdDeletionReasonOptions;
@@ -391,6 +402,12 @@ class RegistrationDeliverySingleton {
       _deliveryCommentOptions;
   Iterable<dynamic>? get symptomsTypes => _symptomsTypes;
   Iterable<dynamic>? get referralReasons => _referralReasons;
+  RegistrationDeliveryListener? get registrationDeliveryListener =>
+      _registrationDeliveryListener;
+
+  void navigateToBoundaryPage() {
+    _registrationDeliveryListener?.navigateToBoundaryPage();
+  }
 }
 
 bool allDosesDelivered(

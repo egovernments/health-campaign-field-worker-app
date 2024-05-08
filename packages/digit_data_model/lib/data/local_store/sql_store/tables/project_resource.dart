@@ -1,6 +1,6 @@
 // Generated using mason. Do not modify by hand
 
-import 'package:digit_data_model/data/sql_store/tables/project_product_variant.dart';
+import 'package:digit_data_model/data/local_store/sql_store/tables/project_product_variant.dart';
 import 'package:drift/drift.dart';
 
 class ProjectResource extends Table {

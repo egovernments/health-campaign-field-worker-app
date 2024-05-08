@@ -1,6 +1,6 @@
 import 'package:drift/drift.dart';
 
-import '../../../models/pgr_complaints/pgr_complaints.dart';
+import '../../../../models/pgr_complaints/pgr_complaints.dart';
 
 
 class PgrService extends Table {

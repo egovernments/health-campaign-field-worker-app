@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'app_localization.dart';
 
-class InventoryLocalizationDelegate
+class RegistrationDeliveryLocalizationDelegate
     extends LocalizationsDelegate<RegistrationDeliveryLocalization> {
   final Future<dynamic> localizedStrings;
   final List<dynamic> languages;
 
-  const InventoryLocalizationDelegate(this.localizedStrings, this.languages);
+  const RegistrationDeliveryLocalizationDelegate(this.localizedStrings, this.languages);
 
   @override
   bool isSupported(Locale locale) {

@@ -137,19 +137,13 @@ class AttendanceIndividualBloc
                         : EnumValues.active.toValue(),
                     time: event.entryTime,
                     uploadToServer: (event.createOplog ?? false),
-                    additionalDetails: event.latitude != null &&
-                            event.longitude != null
-                        ? AttendanceLogAdditionalFields(version: 1, fields: [
-                            AdditionalField(
-                              EnumValues.latitude.toValue(),
-                              event.latitude,
-                            ),
-                            AdditionalField(
-                              EnumValues.longitude.toValue(),
-                              event.longitude,
-                            ),
-                          ])
-                        : null),
+                    additionalDetails:
+                        event.latitude != null && event.longitude != null
+                            ? {
+                                "latitude": event.latitude,
+                                "longitude": event.longitude,
+                              }
+                            : null),
                 AttendanceLogModel(
                     individualId: e.individualId,
                     registerId: e.registerId,
@@ -164,19 +158,13 @@ class AttendanceIndividualBloc
                             ? halfDay
                             : event.exitTime,
                     uploadToServer: (event.createOplog ?? false),
-                    additionalDetails: event.latitude != null &&
-                            event.longitude != null
-                        ? AttendanceLogAdditionalFields(version: 1, fields: [
-                            AdditionalField(
-                              EnumValues.latitude.toValue(),
-                              event.latitude,
-                            ),
-                            AdditionalField(
-                              EnumValues.longitude.toValue(),
-                              event.longitude,
-                            ),
-                          ])
-                        : null)
+                    additionalDetails:
+                        event.latitude != null && event.longitude != null
+                            ? {
+                                EnumValues.latitude.toValue(): event.latitude,
+                                EnumValues.longitude.toValue(): event.longitude,
+                              }
+                            : null)
               ]);
             }
           });

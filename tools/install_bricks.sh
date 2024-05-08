@@ -36,7 +36,7 @@ bash inventory_package_imports.sh
 bash referral_reconciliation_imports.sh
 
 # for adding import as at.Address in sql_store.g.dart for resolving conflict with Address created inside sql_store.g.dart
-cd ../apps/health_campaign_field_worker_app/lib/data/local_store/sql_store/ || exit
+cd ../packages/digit_data_model/lib/data/local_store/sql_store/ || exit
 
 app_root="$PWD"
 

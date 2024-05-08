@@ -73,7 +73,7 @@ class AttendanceLogModel extends EntityModel with AttendanceLogModelMappable {
   final List<String>? documentIds;
   final bool? nonRecoverableError;
   final int? rowVersion;
-  final AttendanceLogAdditionalFields? additionalDetails;
+  final Map<String, dynamic>? additionalDetails;
 
   AttendanceLogModel({
     this.id,
@@ -116,17 +116,7 @@ class AttendanceLogModel extends EntityModel with AttendanceLogModelMappable {
       auditModifiedTime: Value(clientAuditDetails?.lastModifiedTime),
       isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
-      additionalFields: Value(additionalDetails?.toJson()),
+      additionalFields: Value(jsonEncode(additionalDetails)),
     );
   }
-}
-
-@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class AttendanceLogAdditionalFields extends AdditionalFields
-    with AttendanceLogAdditionalFieldsMappable {
-  AttendanceLogAdditionalFields({
-    super.schema = 'AttendanceLog',
-    required int? version,
-    super.fields,
-  }) : super(version: version ?? 1);
 }

@@ -68,7 +68,6 @@ class InventorySingleton {
   void setInitialData(
       {required InventoryListener inventoryListener,
       String? userId,
-      String? boundaryName,
       required String projectId,
       required bool isDistributor,
       required bool isWareHouseMgr,
@@ -77,10 +76,13 @@ class InventorySingleton {
     _projectId = projectId;
     _userId = userId;
     _transportType = transportTypes;
-    _boundaryName = boundaryName;
     _isDistributor = isDistributor;
     _isWareHouseMgr = isWareHouseMgr;
     _transportType = transportTypes;
+  }
+
+  void setBoundaryName({required String boundaryName}) {
+    _boundaryName = boundaryName;
   }
 
   // Getters for the properties.

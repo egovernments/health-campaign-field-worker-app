@@ -4,30 +4,25 @@ import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:inventory_management/models/entities/stock.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
 import 'package:referral_reconciliation/blocs/referral_recon_service.dart';
 import 'package:referral_reconciliation/blocs/search_referral_reconciliations.dart';
-import 'package:registration_delivery/blocs/facility/facility.dart';
-import 'package:registration_delivery/blocs/project_facility/project_facility.dart';
+import 'package:attendance_management/attendance_management.dart';
+import 'package:inventory_management/inventory_management.dart';
+import 'package:registration_delivery/registration_delivery.dart';
 
 import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
 import 'blocs/boundary/boundary.dart';
 import 'blocs/localization/localization.dart';
-import 'blocs/product_variant/product_variant.dart';
 import 'blocs/project/project.dart';
 import 'blocs/user/user.dart';
 import 'data/local_store/app_shared_preferences.dart';
-import 'data/local_store/no_sql/schema/app_configuration.dart';
 import 'data/network_manager.dart';
 import 'data/repositories/remote/localization.dart';
 import 'data/repositories/remote/mdms.dart';
 import 'models/data_model.dart';
-import 'models/entities/project_staff.dart';
-import 'models/entities/user.dart';
-
 import 'router/app_navigator_observer.dart';
 import 'router/app_router.dart';
 import 'utils/environment_config.dart';
@@ -272,12 +267,10 @@ class MainApplicationState extends State<MainApplication>
                         BlocProvider(
                           create: (context) => ProductVariantBloc(
                             const ProductVariantEmptyState(),
-                            productVariantDataRepository: context.read<
-                                RemoteRepository<ProductVariantModel,
-                                    ProductVariantSearchModel>>(),
-                            projectResourceDataRepository: context.read<
-                                RemoteRepository<ProjectResourceModel,
-                                    ProjectResourceSearchModel>>(),
+                            context.repository<ProductVariantModel,
+                                ProductVariantSearchModel>(),
+                            context.repository<ProjectResourceModel,
+                                ProjectResourceSearchModel>(),
                           ),
                         ),
                         BlocProvider(

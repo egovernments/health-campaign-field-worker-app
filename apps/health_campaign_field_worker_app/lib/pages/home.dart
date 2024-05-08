@@ -10,34 +10,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:inventory_management/models/entities/inventory_transport_type.dart';
-import 'package:inventory_management/models/entities/stock.dart';
-import 'package:inventory_management/models/entities/stock_reconciliation.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
-import 'package:referral_reconciliation/referral_reconciliation.dart';
+import 'package:inventory_management/inventory_management.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
-import 'package:registration_delivery/blocs/search_households/search_bloc_common_wrapper.dart';
-import 'package:registration_delivery/blocs/search_households/search_households.dart';
-import 'package:registration_delivery/models/entities/household_member.dart';
-import 'package:registration_delivery/models/entities/project_beneficiary.dart';
-import 'package:registration_delivery/models/entities/referral.dart';
-import 'package:registration_delivery/models/entities/side_effect.dart';
-import 'package:digit_data_model/data_model.dart';
+import 'package:registration_delivery/registration_delivery.dart';
+import 'package:attendance_management/attendance_management.dart';
+import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
-import 'package:registration_delivery/utils/extensions/extensions.dart';
-import 'package:registration_delivery/utils/utils.dart';
-import 'package:registration_delivery/widgets/progress_bar/beneficiary_progress.dart';
+import 'package:digit_data_model/data_model.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/attendance/hcm_attendance_bloc.dart';
 import '../blocs/auth/auth.dart';
 import '../blocs/inventory/hcm_inventory_bloc.dart';
 import '../blocs/referral_reconciliation/hcm_referral_reconciliation_bloc.dart';
+import '../blocs/registration_delivery/hcm_registration_delivery.dart';
 import '../blocs/sync/sync.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/secure_store/secure_store.dart';
-// import '../models/entities/hcm_attendance_log_model.dart';
-// import '../models/entities/hcm_attendance_model.dart';
 import '../models/entities/hcm_hf_referral.dart';
 import '../models/entities/roles_type.dart';
 import '../router/app_router.dart';
@@ -84,7 +74,7 @@ class _HomePageState extends LocalizedState<HomePage> {
         }
       }
     });
-    setRegistrationDeliverySingleton(context);
+    setPackagesSingleton(context);
   }
 
   //  Be sure to cancel subscription after you are done
@@ -336,7 +326,10 @@ class _HomePageState extends LocalizedState<HomePage> {
           onPressed: () async {
             final searchBloc = context.read<SearchBlocWrapper>();
             await context.router.push(
-              SearchBeneficiaryRoute(),
+              SearchBeneficiaryRoute(
+                  registrationDeliveryListener: HcmRegistrationDelivery(
+                context: context,
+              )),
             );
             searchBloc.searchHouseholdsBloc
                 .add(const SearchHouseholdsClearEvent());
@@ -352,39 +345,7 @@ class _HomePageState extends LocalizedState<HomePage> {
             context.read<AppInitializationBloc>().state.maybeWhen(
                   orElse: () {},
                   initialized: (AppConfiguration appConfiguration, _) {
-                    context.router.push(ManageStocksRoute(
-                      isWareHouseMgr: context.loggedInUserRoles
-                          .where((role) =>
-                              role.code == RolesType.warehouseManager.toValue())
-                          .toList()
-                          .isNotEmpty,
-                      isDistributor: context.loggedInUserRoles
-                          .where(
-                            (role) =>
-                                role.code == RolesType.distributor.toValue(),
-                          )
-                          .toList()
-                          .isNotEmpty,
-                      boundaryName: context.boundary.name!,
-                      inventoryListener: HcmInventoryBloc(
-                        context: context,
-                        userId: context.loggedInUserUuid,
-                        individualId: context.loggedInIndividualId,
-                        projectId: context.projectId,
-                        stockLocalRepository: context.read<
-                            LocalRepository<StockModel, StockSearchModel>>(),
-                        stockReconLocalRepository: context.read<
-                            LocalRepository<StockReconciliationModel,
-                                StockReconciliationSearchModel>>(),
-                      ),
-                      projectId: context.projectId,
-                      userId: context.loggedInUserUuid,
-                      transportType: appConfiguration.transportTypes
-                          ?.map((e) => InventoryTransportTypes()
-                            ..name = e.name
-                            ..code = e.code)
-                          .toList(),
-                    ));
+                    context.router.push(ManageStocksRoute());
                   },
                 );
           },
@@ -573,25 +534,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.fingerprint_outlined,
           label: i18.home.manageAttendanceLabel,
           onPressed: () {
-            context.router.push(ManageAttendanceRoute(
-              attendanceListeners: HCMAttendanceBloc(
-                userId: context.loggedInUserUuid,
-                projectId: context.projectId,
-                attendanceLocalRepository: context.read<
-                    LocalRepository<AttendanceRegisterModel,
-                        AttendanceRegisterSearchModel>>(),
-                individualLocalRepository: context.read<
-                    LocalRepository<IndividualModel, IndividualSearchModel>>(),
-                attendanceLogLocalRepository: context.read<
-                    LocalRepository<AttendanceLogModel,
-                        AttendanceLogSearchModel>>(),
-                context: context,
-                individualId: context.loggedInIndividualId,
-              ),
-              projectId: context.projectId,
-              userId: context.loggedInUserUuid,
-              appVersion: Constants().version,
-            ));
+            context.router.push(const ManageAttendanceRoute());
           },
         ),
       ),
@@ -616,25 +559,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.fingerprint_outlined,
           label: i18.home.manageAttendanceLabel,
           onPressed: () {
-            context.router.push(ManageAttendanceRoute(
-              attendanceListeners: HCMAttendanceBloc(
-                userId: context.loggedInUserUuid,
-                projectId: context.projectId,
-                attendanceLocalRepository: context.read<
-                    LocalRepository<AttendanceRegisterModel,
-                        AttendanceRegisterSearchModel>>(),
-                individualLocalRepository: context.read<
-                    LocalRepository<IndividualModel, IndividualSearchModel>>(),
-                attendanceLogLocalRepository: context.read<
-                    LocalRepository<AttendanceLogModel,
-                        AttendanceLogSearchModel>>(),
-                context: context,
-                individualId: context.loggedInIndividualId,
-              ),
-              projectId: context.projectId,
-              userId: context.loggedInUserUuid,
-              appVersion: Constants().version,
-            ));
+            context.router.push(const ManageAttendanceRoute());
           },
         ),
       ),
@@ -671,7 +596,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           homeShowcaseData.hfBeneficiaryReferral.showcaseKey,
       i18.home.manageAttendanceLabel:
           homeShowcaseData.manageAttendance.showcaseKey,
-      // i18.home.db: homeShowcaseData.db.showcaseKey,
+      i18.home.db: homeShowcaseData.db.showcaseKey,
     };
 
     final homeItemsLabel = <String>[
@@ -719,9 +644,9 @@ class _HomePageState extends LocalizedState<HomePage> {
               userId: context.loggedInUserUuid,
               localRepositories: [
                 context.read<
-                    LocalRepository<HouseholdModel, HouseholdSearchModel>>(),
-                context.read<
                     LocalRepository<IndividualModel, IndividualSearchModel>>(),
+                context.read<
+                    LocalRepository<HouseholdModel, HouseholdSearchModel>>(),
                 context.read<
                     LocalRepository<ProjectBeneficiaryModel,
                         ProjectBeneficiarySearchModel>>(),
@@ -733,9 +658,9 @@ class _HomePageState extends LocalizedState<HomePage> {
                     LocalRepository<SideEffectModel, SideEffectSearchModel>>(),
                 context.read<
                     LocalRepository<ReferralModel, ReferralSearchModel>>(),
-                context.read<LocalRepository<StockModel, StockSearchModel>>(),
                 context
                     .read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
+                context.read<LocalRepository<StockModel, StockSearchModel>>(),
                 context.read<
                     LocalRepository<StockReconciliationModel,
                         StockReconciliationSearchModel>>(),
@@ -744,15 +669,15 @@ class _HomePageState extends LocalizedState<HomePage> {
                 context.read<
                     LocalRepository<HcmHFReferralModel,
                         HcmHFReferralSearchModel>>(),
-                // context.read<
-                //     LocalRepository<HCMAttendanceLogModel,
-                //         HCMAttendanceLogSearchModel>>(),
+                context.read<
+                    LocalRepository<AttendanceLogModel,
+                        AttendanceLogSearchModel>>(),
               ],
               remoteRepositories: [
                 context.read<
-                    RemoteRepository<HouseholdModel, HouseholdSearchModel>>(),
-                context.read<
                     RemoteRepository<IndividualModel, IndividualSearchModel>>(),
+                context.read<
+                    RemoteRepository<HouseholdModel, HouseholdSearchModel>>(),
                 context.read<
                     RemoteRepository<ProjectBeneficiaryModel,
                         ProjectBeneficiarySearchModel>>(),
@@ -764,9 +689,9 @@ class _HomePageState extends LocalizedState<HomePage> {
                     RemoteRepository<SideEffectModel, SideEffectSearchModel>>(),
                 context.read<
                     RemoteRepository<ReferralModel, ReferralSearchModel>>(),
-                context.read<RemoteRepository<StockModel, StockSearchModel>>(),
                 context
                     .read<RemoteRepository<ServiceModel, ServiceSearchModel>>(),
+                context.read<RemoteRepository<StockModel, StockSearchModel>>(),
                 context.read<
                     RemoteRepository<StockReconciliationModel,
                         StockReconciliationSearchModel>>(),
@@ -775,9 +700,9 @@ class _HomePageState extends LocalizedState<HomePage> {
                 context.read<
                     RemoteRepository<HcmHFReferralModel,
                         HcmHFReferralSearchModel>>(),
-                // context.read<
-                //     RemoteRepository<HCMAttendanceLogModel,
-                //         HCMAttendanceLogSearchModel>>(),
+                context.read<
+                    RemoteRepository<AttendanceLogModel,
+                        AttendanceLogSearchModel>>(),
               ],
             ),
           );
@@ -785,7 +710,7 @@ class _HomePageState extends LocalizedState<HomePage> {
   }
 }
 
-void setRegistrationDeliverySingleton(BuildContext context) {
+void setPackagesSingleton(BuildContext context) {
   context.read<AppInitializationBloc>().state.maybeWhen(
       orElse: () {},
       initialized: (AppConfiguration appConfiguration, _) {
@@ -797,7 +722,6 @@ void setRegistrationDeliverySingleton(BuildContext context) {
           selectedBeneficiaryType: context.beneficiaryType,
           projectType: context.selectedProjectType,
           selectedProject: context.selectedProject,
-          persistenceConfiguration: PersistenceConfiguration.offlineFirst,
           genderOptions: appConfiguration.genderOptions!.map((option) {
             return {
               'label': option.name,
@@ -846,6 +770,59 @@ void setRegistrationDeliverySingleton(BuildContext context) {
               'bool': option.active,
             };
           }).toList(),
+        );
+
+        AttendanceSingleton().setAttendanceListeners(
+          attendanceListeners: HCMAttendanceBloc(
+            userId: context.loggedInUserUuid,
+            projectId: context.projectId,
+            attendanceLocalRepository: context.read<
+                LocalRepository<AttendanceRegisterModel,
+                    AttendanceRegisterSearchModel>>(),
+            individualLocalRepository: context.read<
+                LocalRepository<IndividualModel, IndividualSearchModel>>(),
+            attendanceLogLocalRepository: context.read<
+                LocalRepository<AttendanceLogModel,
+                    AttendanceLogSearchModel>>(),
+            context: context,
+            individualId: context.loggedInIndividualId,
+          ),
+          projectId: context.projectId,
+          userId: context.loggedInUserUuid,
+          appVersion: Constants().version,
+          tenantId: envConfig.variables.tenantId,
+        );
+
+        InventorySingleton().setInitialData(
+          isWareHouseMgr: context.loggedInUserRoles
+              .where(
+                  (role) => role.code == RolesType.warehouseManager.toValue())
+              .toList()
+              .isNotEmpty,
+          isDistributor: context.loggedInUserRoles
+              .where(
+                (role) => role.code == RolesType.distributor.toValue(),
+              )
+              .toList()
+              .isNotEmpty,
+          inventoryListener: HcmInventoryBloc(
+            context: context,
+            userId: context.loggedInUserUuid,
+            individualId: context.loggedInIndividualId,
+            projectId: context.projectId,
+            stockLocalRepository:
+                context.read<LocalRepository<StockModel, StockSearchModel>>(),
+            stockReconLocalRepository: context.read<
+                LocalRepository<StockReconciliationModel,
+                    StockReconciliationSearchModel>>(),
+          ),
+          projectId: context.projectId,
+          userId: context.loggedInUserUuid,
+          transportTypes: appConfiguration.transportTypes
+              ?.map((e) => InventoryTransportTypes()
+                ..name = e.name
+                ..code = e.code)
+              .toList(),
         );
       });
 }

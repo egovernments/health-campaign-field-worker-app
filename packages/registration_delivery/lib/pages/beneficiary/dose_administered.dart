@@ -18,7 +18,6 @@ import 'package:registration_delivery/utils/extensions/extensions.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
-import '../../blocs/product_variant/product_variant.dart';
 import '../../models/entities/additional_fields_type.dart';
 import '../../models/entities/status.dart';
 import '../../models/entities/task.dart';

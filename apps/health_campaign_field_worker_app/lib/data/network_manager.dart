@@ -4,10 +4,8 @@ import 'dart:convert';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:registration_delivery/models/entities/household_member.dart';
-import 'package:registration_delivery/models/entities/project_beneficiary.dart';
-import 'package:registration_delivery/models/entities/referral.dart';
-import 'package:registration_delivery/models/entities/side_effect.dart';
+import 'package:registration_delivery/registration_delivery.dart';
+
 import 'repositories/sync/remote_type.dart';
 import 'package:provider/provider.dart';
 
@@ -128,6 +126,11 @@ class NetworkManager {
               entityResponse.whereType<Map<String, dynamic>>().toList();
 
           switch (response.keys.elementAt(i)) {
+            case "Individuals":
+              final entity = entityList
+                  .map((e) => IndividualModelMapper.fromJson(jsonEncode(e)))
+                  .toList();
+              await local.bulkCreate(entity);
             case "Households":
               final entity = entityList
                   .map((e) => HouseholdModelMapper.fromJson(jsonEncode(e)))
@@ -140,11 +143,6 @@ class NetworkManager {
                       jsonEncode(e),
                     ),
                   )
-                  .toList();
-              await local.bulkCreate(entity);
-            case "Individuals":
-              final entity = entityList
-                  .map((e) => IndividualModelMapper.fromJson(jsonEncode(e)))
                   .toList();
               await local.bulkCreate(entity);
             case "ProjectBeneficiaries":

@@ -12,7 +12,6 @@ import 'package:digit_data_model/data_model.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../widgets/localized.dart';
-import '../../blocs/facility.dart';
 import '../../blocs/record_stock.dart';
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/inventory/no_facilities_assigned_dialog.dart';
@@ -81,7 +80,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
             builder: (ctx, facilityState) {
               final facilities = facilityState.whenOrNull(
                     fetched: (
-                      facilities,
+                      facilities, allFacilities
                     ) {
                       final teamFacilities = [
                         FacilityModel(
@@ -151,17 +150,19 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                                   .control(_teamCodeKey)
                                                   .value as String?;
 
-                                              final facility = deliveryTeamSelected
-                                                  ? FacilityModel(
-                                                      id: teamCode ??
-                                                          'Delivery Team',
-                                                    )
-                                                  : selectedFacilityId != null
+                                              final facility =
+                                                  deliveryTeamSelected
                                                       ? FacilityModel(
-                                                          id: selectedFacilityId
-                                                              .toString(),
+                                                          id: teamCode ??
+                                                              'Delivery Team',
                                                         )
-                                                      : null;
+                                                      : selectedFacilityId !=
+                                                              null
+                                                          ? FacilityModel(
+                                                              id: selectedFacilityId
+                                                                  .toString(),
+                                                            )
+                                                          : null;
 
                                               context
                                                   .read<DigitScannerBloc>()

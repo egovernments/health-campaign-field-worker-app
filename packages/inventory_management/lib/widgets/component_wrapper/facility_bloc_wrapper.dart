@@ -1,7 +1,6 @@
+import 'package:digit_data_model/blocs/facility/facility.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../blocs/facility.dart';
-import '../../blocs/inventory_listener.dart';
 
 class FacilityBlocWrapper extends StatelessWidget {
   final Widget child;
@@ -16,9 +15,9 @@ class FacilityBlocWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<FacilityBloc>(
-      create: (_) => FacilityBloc(
-        inventorySingleton: InventorySingleton(),
-        const FacilityEmptyState(),
+      create: (context) => FacilityBloc(
+        facilityDataRepository: context.read(),
+        projectFacilityDataRepository: context.read(),
       )..add(FacilityLoadForProjectEvent(projectId: projectId)),
       child: child,
     );

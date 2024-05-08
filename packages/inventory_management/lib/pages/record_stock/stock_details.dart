@@ -14,7 +14,6 @@ import 'package:inventory_management/router/inventory_router.gm.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
 import '../../../widgets/localized.dart';
-import '../../blocs/facility.dart';
 import '../../blocs/inventory_listener.dart';
 import '../../blocs/product_variant.dart';
 import '../../blocs/record_stock.dart';
@@ -518,8 +517,8 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                   localizations.translate(pageTitle),
                                   style: theme.textTheme.displayMedium,
                                 ),
-                                BlocBuilder<ProductVariantBloc,
-                                    ProductVariantState>(
+                                BlocBuilder<InventoryProductVariantBloc,
+                                    InventoryProductVariantState>(
                                   builder: (context, state) {
                                     return state.maybeWhen(
                                       orElse: () => const Offstage(),
@@ -576,7 +575,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                               child:
                                                   CircularProgressIndicator(),
                                             ),
-                                        fetched: (facilities) {
+                                        fetched: (facilities, allFacilities) {
                                           return InkWell(
                                             onTap: () async {
                                               clearQRCodes();

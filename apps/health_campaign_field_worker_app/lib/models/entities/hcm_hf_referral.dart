@@ -1,6 +1,5 @@
 // Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:digit_data_model/data/sql_store/sql_store.dart';
 import 'package:drift/drift.dart';
 import 'package:referral_reconciliation/models/entities/h_f_referral.dart';
 

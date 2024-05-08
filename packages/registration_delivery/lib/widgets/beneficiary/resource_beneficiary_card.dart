@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:digit_data_model/data_model.dart';
 
-import '../../blocs/product_variant/product_variant.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../localized.dart';
 

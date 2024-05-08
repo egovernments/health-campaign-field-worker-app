@@ -12,13 +12,14 @@ import 'dart:ui' as _i8;
 
 import 'package:attendance_management/attendance_management.dart' as _i10;
 import 'package:attendance_management/blocs/app_localization.dart' as _i7;
+import 'package:attendance_management/models/entities/attendance_register.dart'
+    as _i9;
 import 'package:attendance_management/pages/manage_attendance.dart' as _i3;
 import 'package:attendance_management/pages/mark_attendance.dart' as _i4;
 import 'package:attendance_management/pages/session_select.dart' as _i2;
 import 'package:attendance_management/widgets/attendance_acknowledgement.dart'
     as _i1;
 import 'package:auto_route/auto_route.dart' as _i5;
-import 'package:digit_data_model/data_model.dart' as _i9;
 import 'package:flutter/material.dart' as _i6;
 
 abstract class $AttendanceRoute extends _i5.AutoRouterModule {
@@ -58,16 +59,9 @@ abstract class $AttendanceRoute extends _i5.AutoRouterModule {
       );
     },
     ManageAttendanceRoute.name: (routeData) {
-      final args = routeData.argsAs<ManageAttendanceRouteArgs>();
       return _i5.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i3.ManageAttendancePage(
-          attendanceListeners: args.attendanceListeners,
-          projectId: args.projectId,
-          userId: args.userId,
-          appVersion: args.appVersion,
-          key: args.key,
-        ),
+        child: const _i3.ManageAttendancePage(),
       );
     },
     MarkAttendanceRoute.name: (routeData) {
@@ -235,56 +229,16 @@ class AttendanceDateSessionSelectionRouteArgs {
 
 /// generated route for
 /// [_i3.ManageAttendancePage]
-class ManageAttendanceRoute
-    extends _i5.PageRouteInfo<ManageAttendanceRouteArgs> {
-  ManageAttendanceRoute({
-    required _i10.AttendanceListeners attendanceListeners,
-    required String projectId,
-    required String userId,
-    required String appVersion,
-    _i6.Key? key,
-    List<_i5.PageRouteInfo>? children,
-  }) : super(
+class ManageAttendanceRoute extends _i5.PageRouteInfo<void> {
+  const ManageAttendanceRoute({List<_i5.PageRouteInfo>? children})
+      : super(
           ManageAttendanceRoute.name,
-          args: ManageAttendanceRouteArgs(
-            attendanceListeners: attendanceListeners,
-            projectId: projectId,
-            userId: userId,
-            appVersion: appVersion,
-            key: key,
-          ),
           initialChildren: children,
         );
 
   static const String name = 'ManageAttendanceRoute';
 
-  static const _i5.PageInfo<ManageAttendanceRouteArgs> page =
-      _i5.PageInfo<ManageAttendanceRouteArgs>(name);
-}
-
-class ManageAttendanceRouteArgs {
-  const ManageAttendanceRouteArgs({
-    required this.attendanceListeners,
-    required this.projectId,
-    required this.userId,
-    required this.appVersion,
-    this.key,
-  });
-
-  final _i10.AttendanceListeners attendanceListeners;
-
-  final String projectId;
-
-  final String userId;
-
-  final String appVersion;
-
-  final _i6.Key? key;
-
-  @override
-  String toString() {
-    return 'ManageAttendanceRouteArgs{attendanceListeners: $attendanceListeners, projectId: $projectId, userId: $userId, appVersion: $appVersion, key: $key}';
-  }
+  static const _i5.PageInfo<void> page = _i5.PageInfo<void>(name);
 }
 
 /// generated route for

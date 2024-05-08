@@ -8,7 +8,7 @@ import '../../models/entities/side_effect.dart';
 
 part 'side_effects.freezed.dart';
 
-typedef BeneficiaryRegistrationEmitter = Emitter<SideEffectsState>;
+typedef SideEffectsEmitter = Emitter<SideEffectsState>;
 
 class SideEffectsBloc extends Bloc<SideEffectsEvent, SideEffectsState> {
   final DataRepository<SideEffectModel, SideEffectSearchModel>
@@ -24,7 +24,7 @@ class SideEffectsBloc extends Bloc<SideEffectsEvent, SideEffectsState> {
 
   FutureOr<void> _handleSubmit(
     SideEffectsSubmitEvent event,
-    BeneficiaryRegistrationEmitter emit,
+    SideEffectsEmitter emit,
   ) async {
     emit(state.copyWith(loading: true));
     try {
@@ -42,7 +42,7 @@ class SideEffectsBloc extends Bloc<SideEffectsEvent, SideEffectsState> {
 
   FutureOr<void> _handleSearch(
     SideEffectsSearchEvent event,
-    BeneficiaryRegistrationEmitter emit,
+    SideEffectsEmitter emit,
   ) async {
     emit(state.copyWith(loading: true));
     try {

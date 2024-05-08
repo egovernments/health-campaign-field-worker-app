@@ -560,7 +560,7 @@ class _BoundarySelectionPageState
                                                             milliseconds: 100,
                                                           ),
                                                           () => context.router
-                                                              .pop(),
+                                                              .maybePop(),
                                                         );
                                                       }
                                                       clickedStatus.value =

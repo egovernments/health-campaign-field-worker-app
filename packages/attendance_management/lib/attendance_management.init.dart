@@ -13,10 +13,8 @@ import 'models/entities/staff.dart' as p5;
 void initializeMappers() {
   p0.AttendanceLogSearchModelMapper.ensureInitialized();
   p0.AttendanceLogModelMapper.ensureInitialized();
-  p0.AttendanceLogAdditionalFieldsMapper.ensureInitialized();
   p1.AttendanceRegisterSearchModelMapper.ensureInitialized();
   p1.AttendanceRegisterModelMapper.ensureInitialized();
-  p1.AttendanceRegisterAdditionalFieldsMapper.ensureInitialized();
   p2.AttendeeSearchModelMapper.ensureInitialized();
   p2.AttendeeModelMapper.ensureInitialized();
   p2.AttendeeAdditionalFieldsMapper.ensureInitialized();

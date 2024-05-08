@@ -509,6 +509,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                         latitude: latitude,
                         longitude: longitude,
                       ));
+                      Navigator.pop(context);
                       context.router.push(
                         AttendanceAcknowledgementRoute(
                           label: localizations.translate(

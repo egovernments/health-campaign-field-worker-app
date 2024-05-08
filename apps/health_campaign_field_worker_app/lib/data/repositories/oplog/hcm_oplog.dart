@@ -1,16 +1,12 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'package:digit_data_model/data/repositories/oplog/oplog.dart';
+import 'package:attendance_management/attendance_management.dart';
+import 'package:inventory_management/inventory_management.dart';
+import 'package:registration_delivery/registration_delivery.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/models/oplog/oplog_entry.dart';
-import 'package:inventory_management/models/entities/stock.dart';
-import 'package:inventory_management/models/entities/stock_reconciliation.dart';
+
 import 'package:isar/isar.dart';
-import 'package:registration_delivery/models/entities/household_member.dart';
-import 'package:registration_delivery/models/entities/project_beneficiary.dart';
-import 'package:registration_delivery/models/entities/referral.dart';
-import 'package:registration_delivery/models/entities/side_effect.dart';
 
 import '../../../models/entities/hcm_hf_referral.dart';
 import '../../../models/entities/project_staff.dart';
@@ -41,6 +37,56 @@ class IndividualOpLogManager extends OpLogManager<IndividualModel> {
       entity.nonRecoverableError;
 }
 
+class FacilityOpLogManager extends OpLogManager<FacilityModel> {
+  FacilityOpLogManager(super.isar);
+
+  @override
+  FacilityModel applyServerGeneratedIdToEntity(
+    FacilityModel entity,
+    String serverGeneratedId,
+    int rowVersion,
+  ) =>
+      entity.copyWith(id: serverGeneratedId, rowVersion: rowVersion);
+
+  @override
+  String getClientReferenceId(FacilityModel entity) => entity.id;
+
+  @override
+  String? getServerGeneratedId(FacilityModel entity) => entity.id;
+
+  @override
+  int? getRowVersion(FacilityModel entity) => entity.rowVersion;
+
+  @override
+  bool? getNonRecoverableError(FacilityModel entity) =>
+      entity.nonRecoverableError;
+}
+
+class ProjectFacilityOpLogManager extends OpLogManager<ProjectFacilityModel> {
+  ProjectFacilityOpLogManager(super.isar);
+
+  @override
+  ProjectFacilityModel applyServerGeneratedIdToEntity(
+    ProjectFacilityModel entity,
+    String serverGeneratedId,
+    int rowVersion,
+  ) =>
+      entity.copyWith(id: serverGeneratedId, rowVersion: rowVersion);
+
+  @override
+  String getClientReferenceId(ProjectFacilityModel entity) => entity.id;
+
+  @override
+  String? getServerGeneratedId(ProjectFacilityModel entity) => entity.id;
+
+  @override
+  int? getRowVersion(ProjectFacilityModel entity) => entity.rowVersion;
+
+  @override
+  bool? getNonRecoverableError(ProjectFacilityModel entity) =>
+      entity.nonRecoverableError;
+}
+
 class HouseholdOpLogManager extends OpLogManager<HouseholdModel> {
   HouseholdOpLogManager(super.isar);
 
@@ -67,31 +113,6 @@ class HouseholdOpLogManager extends OpLogManager<HouseholdModel> {
 
   @override
   bool? getNonRecoverableError(HouseholdModel entity) =>
-      entity.nonRecoverableError;
-}
-
-class FacilityOpLogManager extends OpLogManager<FacilityModel> {
-  FacilityOpLogManager(super.isar);
-
-  @override
-  FacilityModel applyServerGeneratedIdToEntity(
-    FacilityModel entity,
-    String serverGeneratedId,
-    int rowVersion,
-  ) =>
-      entity.copyWith(id: serverGeneratedId, rowVersion: rowVersion);
-
-  @override
-  String getClientReferenceId(FacilityModel entity) => entity.id;
-
-  @override
-  String? getServerGeneratedId(FacilityModel entity) => entity.id;
-
-  @override
-  int? getRowVersion(FacilityModel entity) => entity.rowVersion;
-
-  @override
-  bool? getNonRecoverableError(FacilityModel entity) =>
       entity.nonRecoverableError;
 }
 
@@ -148,31 +169,6 @@ class ProjectBeneficiaryOpLogManager
       entity.nonRecoverableError;
 }
 
-class ProjectFacilityOpLogManager extends OpLogManager<ProjectFacilityModel> {
-  ProjectFacilityOpLogManager(super.isar);
-
-  @override
-  ProjectFacilityModel applyServerGeneratedIdToEntity(
-    ProjectFacilityModel entity,
-    String serverGeneratedId,
-    int rowVersion,
-  ) =>
-      entity.copyWith(id: serverGeneratedId, rowVersion: rowVersion);
-
-  @override
-  String getClientReferenceId(ProjectFacilityModel entity) => entity.id;
-
-  @override
-  String? getServerGeneratedId(ProjectFacilityModel entity) => entity.id;
-
-  @override
-  int? getRowVersion(ProjectFacilityModel entity) => entity.rowVersion;
-
-  @override
-  bool? getNonRecoverableError(ProjectFacilityModel entity) =>
-      entity.nonRecoverableError;
-}
-
 class TaskOpLogManager extends OpLogManager<TaskModel> {
   TaskOpLogManager(super.isar);
 
@@ -195,6 +191,57 @@ class TaskOpLogManager extends OpLogManager<TaskModel> {
 
   @override
   bool? getNonRecoverableError(TaskModel entity) => entity.nonRecoverableError;
+}
+
+class SideEffectOpLogManager extends OpLogManager<SideEffectModel> {
+  SideEffectOpLogManager(super.isar);
+
+  @override
+  SideEffectModel applyServerGeneratedIdToEntity(
+      SideEffectModel entity,
+      String serverGeneratedId,
+      int rowVersion,
+      ) =>
+      entity.copyWith(id: serverGeneratedId, rowVersion: rowVersion);
+
+  @override
+  String getClientReferenceId(SideEffectModel entity) =>
+      entity.clientReferenceId;
+
+  @override
+  String? getServerGeneratedId(SideEffectModel entity) => entity.id;
+
+  @override
+  int? getRowVersion(SideEffectModel entity) => entity.rowVersion;
+
+  @override
+  bool? getNonRecoverableError(SideEffectModel entity) =>
+      entity.nonRecoverableError;
+}
+
+class ReferralOpLogManager extends OpLogManager<ReferralModel> {
+  ReferralOpLogManager(super.isar);
+
+  @override
+  ReferralModel applyServerGeneratedIdToEntity(
+      ReferralModel entity,
+      String serverGeneratedId,
+      int rowVersion,
+      ) =>
+      entity.copyWith(id: serverGeneratedId, rowVersion: rowVersion);
+
+  @override
+  String getClientReferenceId(ReferralModel entity) => entity.clientReferenceId;
+
+  @override
+  String? getServerGeneratedId(ReferralModel entity) => entity.id;
+
+  @override
+  int? getRowVersion(ReferralModel entity) => entity.rowVersion;
+
+  @override
+  bool? getNonRecoverableError(ReferralModel entity) =>
+      entity.nonRecoverableError;
 }
 
 class AddressOpLogManager extends OpLogManager<AddressModel> {
@@ -228,57 +275,6 @@ class AddressOpLogManager extends OpLogManager<AddressModel> {
 
   @override
   bool? getNonRecoverableError(AddressModel entity) =>
-      entity.nonRecoverableError;
-}
-
-class SideEffectOpLogManager extends OpLogManager<SideEffectModel> {
-  SideEffectOpLogManager(super.isar);
-
-  @override
-  SideEffectModel applyServerGeneratedIdToEntity(
-    SideEffectModel entity,
-    String serverGeneratedId,
-    int rowVersion,
-  ) =>
-      entity.copyWith(id: serverGeneratedId, rowVersion: rowVersion);
-
-  @override
-  String getClientReferenceId(SideEffectModel entity) =>
-      entity.clientReferenceId;
-
-  @override
-  String? getServerGeneratedId(SideEffectModel entity) => entity.id;
-
-  @override
-  int? getRowVersion(SideEffectModel entity) => entity.rowVersion;
-
-  @override
-  bool? getNonRecoverableError(SideEffectModel entity) =>
-      entity.nonRecoverableError;
-}
-
-class ReferralOpLogManager extends OpLogManager<ReferralModel> {
-  ReferralOpLogManager(super.isar);
-
-  @override
-  ReferralModel applyServerGeneratedIdToEntity(
-    ReferralModel entity,
-    String serverGeneratedId,
-    int rowVersion,
-  ) =>
-      entity.copyWith(id: serverGeneratedId, rowVersion: rowVersion);
-
-  @override
-  String getClientReferenceId(ReferralModel entity) => entity.clientReferenceId;
-
-  @override
-  String? getServerGeneratedId(ReferralModel entity) => entity.id;
-
-  @override
-  int? getRowVersion(ReferralModel entity) => entity.rowVersion;
-
-  @override
-  bool? getNonRecoverableError(ReferralModel entity) =>
       entity.nonRecoverableError;
 }
 

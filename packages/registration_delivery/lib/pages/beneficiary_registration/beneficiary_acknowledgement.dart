@@ -30,7 +30,7 @@ class _BeneficiaryAcknowledgementPageState
     return Scaffold(
       body: DigitAcknowledgement.success(
         action: () {
-          context.router.pop();
+          context.router.maybePop();
         },
         secondaryAction: () {
           final bloc = context.read<SearchBlocWrapper>();

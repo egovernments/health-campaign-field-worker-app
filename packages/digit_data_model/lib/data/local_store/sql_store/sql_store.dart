@@ -7,11 +7,11 @@ import 'package:inventory_management/models/entities/transaction_type.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:registration_delivery/models/entities/beneficiary_type.dart';
-import '../../models/entities/address_type.dart';
+import '../../../models/entities/address_type.dart';
 
-import '../../models/entities/blood_group.dart';
-import '../../models/entities/gender.dart';
-import '../../models/pgr_complaints/pgr_complaints.dart';
+import '../../../models/entities/blood_group.dart';
+import '../../../models/entities/gender.dart';
+import '../../../models/pgr_complaints/pgr_complaints.dart';
 import 'tables/address.dart' as at;
 import 'tables/boundary.dart';
 import 'tables/locality.dart';
@@ -19,6 +19,7 @@ import 'tables/attributes.dart';
 import 'tables/document.dart';
 import 'tables/downsync.dart';
 import 'tables/downsync_criteria.dart';
+import 'tables/facility.dart';
 import 'tables/package_tables.dart';
 import 'tables/pgr_service.dart';
 import 'tables/product.dart';
@@ -58,7 +59,6 @@ part 'sql_store.g.dart';
   ProjectResource,
   ProjectStaff,
   ProjectType,
-  Referral,
   Individual,
   Identifier,
   Stock,
@@ -81,6 +81,7 @@ part 'sql_store.g.dart';
   Task,
   TaskResource,
   SideEffect,
+  Referral,
 ])
 class LocalSqlDataStore extends _$LocalSqlDataStore {
   LocalSqlDataStore() : super(_openConnection());

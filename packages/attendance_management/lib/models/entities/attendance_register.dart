@@ -1,12 +1,11 @@
 import 'dart:convert';
 
-import 'package:attendance_management/models/entities/staff.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/data/sql_store/sql_store.dart';
 import 'package:drift/drift.dart';
 
 import 'attendee.dart';
+import 'staff.dart';
 
 part 'attendance_register.mapper.dart';
 
@@ -68,7 +67,7 @@ class AttendanceRegisterModel extends EntityModel
   final List<IndividualModel>? individualList;
   final List<AttendeeModel>? attendees;
   final List<StaffModel>? staff;
-  final AttendanceRegisterAdditionalFields? additionalDetails;
+  final Map<String, dynamic>? additionalDetails;
   final int? completedDays;
   final List<Map<DateTime, bool>>? attendanceLog;
 
@@ -116,16 +115,6 @@ class AttendanceRegisterModel extends EntityModel
         auditModifiedTime: Value(auditDetails?.lastModifiedTime),
         isDeleted: Value(isDeleted),
         rowVersion: Value(rowVersion),
-        additionalFields: Value(additionalDetails?.toJson()),
+        additionalFields: Value(jsonEncode(additionalDetails)),
       );
-}
-
-@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class AttendanceRegisterAdditionalFields extends AdditionalFields
-    with AttendanceRegisterAdditionalFieldsMappable {
-  AttendanceRegisterAdditionalFields({
-    super.schema = 'AttendanceRegister',
-    required int? version,
-    super.fields,
-  }) : super(version: version ?? 1);
 }

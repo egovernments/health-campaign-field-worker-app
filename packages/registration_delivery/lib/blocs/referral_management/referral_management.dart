@@ -7,7 +7,7 @@ import 'package:registration_delivery/models/entities/referral.dart';
 
 part 'referral_management.freezed.dart';
 
-typedef BeneficiaryRegistrationEmitter = Emitter<ReferralState>;
+typedef ReferralEmitter = Emitter<ReferralState>;
 
 class ReferralBloc extends Bloc<ReferralEvent, ReferralState> {
   final DataRepository<ReferralModel, ReferralSearchModel> referralRepository;
@@ -22,7 +22,7 @@ class ReferralBloc extends Bloc<ReferralEvent, ReferralState> {
 
   FutureOr<void> _handleSubmit(
     ReferralSubmitEvent event,
-    BeneficiaryRegistrationEmitter emit,
+    ReferralEmitter emit,
   ) async {
     emit(state.copyWith(loading: true));
     try {
@@ -40,7 +40,7 @@ class ReferralBloc extends Bloc<ReferralEvent, ReferralState> {
 
   FutureOr<void> _handleSearch(
     ReferralSearchEvent event,
-    BeneficiaryRegistrationEmitter emit,
+    ReferralEmitter emit,
   ) async {
     emit(state.copyWith(loading: true));
     try {

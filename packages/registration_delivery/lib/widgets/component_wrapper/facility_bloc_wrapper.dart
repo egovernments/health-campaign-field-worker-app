@@ -1,13 +1,12 @@
-import 'package:digit_data_model/data/data_repository.dart';
+import 'package:digit_data_model/blocs/facility/facility.dart';
+import 'package:digit_data_model/blocs/project_facility/project_facility.dart';
 import 'package:digit_data_model/models/entities/facility.dart';
 import 'package:digit_data_model/models/entities/project_facility.dart';
+import 'package:digit_data_model/utils/typedefs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../blocs/facility/facility.dart';
-import '../../blocs/project_facility/project_facility.dart';
 import '../../utils/extensions/extensions.dart';
-import '../../utils/typedefs.dart';
 import '../../utils/utils.dart';
 import 'selected_project_builder.dart';
 

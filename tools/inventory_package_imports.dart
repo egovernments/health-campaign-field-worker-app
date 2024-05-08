@@ -67,8 +67,8 @@ void main() {
 
 void _createTypeDefFile({required String typeDefPath}) {
   var typeDef = [
-    "typedef StockDataRepository = DataRepository<HcmStockModel, HcmStockSearchModel>;",
-    "typedef StockReconciliationDataRepository = DataRepository<HcmStockReconciliationModel, HcmStockReconciliationSearchModel>;"
+    "typedef StockDataRepository = DataRepository<StockModel, StockSearchModel>;",
+    "typedef StockReconciliationDataRepository = DataRepository<StockReconciliationModel, StockReconciliationSearchModel>;"
   ];
 
   // Read the typedefs file
@@ -102,9 +102,9 @@ void _createOpLogCaseConditions({required String opLogPath}) {
 
   final caseConditions = {
     'stock':
-        'final entity = HcmStockModelMapper.fromJson(entityString);\n    return entity;',
+        'final entity = StockModelMapper.fromJson(entityString);\n    return entity;',
     'stockReconciliation':
-        'final entity = HcmStockReconciliationModelMapper.fromJson(entityString);\n    return entity;',
+        'final entity = StockReconciliationModelMapper.fromJson(entityString);\n    return entity;',
   };
 
   final file = File(filePath);
@@ -122,29 +122,28 @@ void _addRepoToNetworkManagerProviderWrapper(
     {required String networkManagerProviderWrapperFilePath}) {
   // Define the import statements and repository providers
   var importStatements = [
-    "import '../data/repositories/local/stock.dart';",
-    "import '../data/repositories/local/stock_reconciliation.dart';",
+    "import 'package:inventory_management/inventory_management.dart';",
     "import '../data/repositories/remote/stock.dart';",
     "import '../data/repositories/remote/stock_reconciliation.dart';"
   ];
   var localRepositories = [
-    "RepositoryProvider<\n          LocalRepository<HcmStockModel,\n              HcmStockSearchModel>>(\n        create: (_) => StockLocalRepository(\n          sql,\n          StockOpLogManager(isar),\n        ),\n      ),",
-    "RepositoryProvider<\n          LocalRepository<HcmStockReconciliationModel, HcmStockReconciliationSearchModel>>(\n        create: (_) => StockReconciliationLocalRepository(\n          sql,\n          StockReconciliationOpLogManager(isar),\n        ),\n      ),",
+    "RepositoryProvider<\n          LocalRepository<StockModel,\n              StockSearchModel>>(\n        create: (_) => StockLocalRepository(\n          sql,\n          StockOpLogManager(isar),\n        ),\n      ),",
+    "RepositoryProvider<\n          LocalRepository<StockReconciliationModel, StockReconciliationSearchModel>>(\n        create: (_) => StockReconciliationLocalRepository(\n          sql,\n          StockReconciliationOpLogManager(isar),\n        ),\n      ),",
   ];
 
   // Define the remote repositories of inventory
   var remoteRepositoriesOfInventory = [
     "if (value == DataModelType.stock)\n"
         "  RepositoryProvider<\n"
-        "      RemoteRepository<HcmStockModel,\n"
-        "          HcmStockSearchModel>>(\n"
+        "      RemoteRepository<StockModel,\n"
+        "          StockSearchModel>>(\n"
         "    create: (_) =>\n"
         "        StockRemoteRepository(dio, actionMap: actions),\n"
         "  )",
     "if (value == DataModelType.stockReconciliation)\n"
         "  RepositoryProvider<\n"
-        "      RemoteRepository<HcmStockReconciliationModel,\n"
-        "          HcmStockReconciliationSearchModel>>(\n"
+        "      RemoteRepository<StockReconciliationModel,\n"
+        "          StockReconciliationSearchModel>>(\n"
         "    create: (_) =>\n"
         "        StockReconciliationRemoteRepository(dio, actionMap: actions),\n"
         "  )"

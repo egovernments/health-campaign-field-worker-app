@@ -314,10 +314,9 @@ class AttendanceLogModelMapper extends SubClassMapperBase<AttendanceLogModel> {
   static int? _$rowVersion(AttendanceLogModel v) => v.rowVersion;
   static const Field<AttendanceLogModel, int> _f$rowVersion =
       Field('rowVersion', _$rowVersion, opt: true);
-  static AttendanceLogAdditionalFields? _$additionalDetails(
-          AttendanceLogModel v) =>
+  static Map<String, dynamic>? _$additionalDetails(AttendanceLogModel v) =>
       v.additionalDetails;
-  static const Field<AttendanceLogModel, AttendanceLogAdditionalFields>
+  static const Field<AttendanceLogModel, Map<String, dynamic>>
       _f$additionalDetails =
       Field('additionalDetails', _$additionalDetails, opt: true);
   static AuditDetails? _$auditDetails(AttendanceLogModel v) => v.auditDetails;
@@ -440,8 +439,8 @@ extension AttendanceLogModelValueCopy<$R, $Out>
 abstract class AttendanceLogModelCopyWith<$R, $In extends AttendanceLogModel,
     $Out> implements EntityModelCopyWith<$R, $In, $Out> {
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get documentIds;
-  AttendanceLogAdditionalFieldsCopyWith<$R, AttendanceLogAdditionalFields,
-      AttendanceLogAdditionalFields>? get additionalDetails;
+  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>?
+      get additionalDetails;
   @override
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
   @override
@@ -461,7 +460,7 @@ abstract class AttendanceLogModelCopyWith<$R, $In extends AttendanceLogModel,
       List<String>? documentIds,
       bool? nonRecoverableError,
       int? rowVersion,
-      AttendanceLogAdditionalFields? additionalDetails,
+      Map<String, dynamic>? additionalDetails,
       AuditDetails? auditDetails,
       ClientAuditDetails? clientAuditDetails,
       bool? isDeleted});
@@ -486,10 +485,13 @@ class _AttendanceLogModelCopyWithImpl<$R, $Out>
               (v) => call(documentIds: v))
           : null;
   @override
-  AttendanceLogAdditionalFieldsCopyWith<$R, AttendanceLogAdditionalFields,
-          AttendanceLogAdditionalFields>?
-      get additionalDetails => $value.additionalDetails?.copyWith
-          .$chain((v) => call(additionalDetails: v));
+  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>?
+      get additionalDetails => $value.additionalDetails != null
+          ? MapCopyWith(
+              $value.additionalDetails!,
+              (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(additionalDetails: v))
+          : null;
   @override
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
       $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
@@ -562,165 +564,4 @@ class _AttendanceLogModelCopyWithImpl<$R, $Out>
   AttendanceLogModelCopyWith<$R2, AttendanceLogModel, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
       _AttendanceLogModelCopyWithImpl($value, $cast, t);
-}
-
-class AttendanceLogAdditionalFieldsMapper
-    extends SubClassMapperBase<AttendanceLogAdditionalFields> {
-  AttendanceLogAdditionalFieldsMapper._();
-
-  static AttendanceLogAdditionalFieldsMapper? _instance;
-  static AttendanceLogAdditionalFieldsMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals
-          .use(_instance = AttendanceLogAdditionalFieldsMapper._());
-    }
-    return _instance!;
-  }
-
-  @override
-  final String id = 'AttendanceLogAdditionalFields';
-
-  static String _$schema(AttendanceLogAdditionalFields v) => v.schema;
-  static const Field<AttendanceLogAdditionalFields, String> _f$schema =
-      Field('schema', _$schema, opt: true, def: 'AttendanceLog');
-  static int _$version(AttendanceLogAdditionalFields v) => v.version;
-  static const Field<AttendanceLogAdditionalFields, int> _f$version =
-      Field('version', _$version);
-  static List<AdditionalField> _$fields(AttendanceLogAdditionalFields v) =>
-      v.fields;
-  static const Field<AttendanceLogAdditionalFields, List<AdditionalField>>
-      _f$fields = Field('fields', _$fields, opt: true, def: const []);
-
-  @override
-  final MappableFields<AttendanceLogAdditionalFields> fields = const {
-    #schema: _f$schema,
-    #version: _f$version,
-    #fields: _f$fields,
-  };
-  @override
-  final bool ignoreNull = true;
-
-  @override
-  final String discriminatorKey = 'type';
-  @override
-  final dynamic discriminatorValue = MappableClass.useAsDefault;
-  @override
-  late final ClassMapperBase superMapper =
-      AdditionalFieldsMapper.ensureInitialized();
-
-  static AttendanceLogAdditionalFields _instantiate(DecodingData data) {
-    return AttendanceLogAdditionalFields(
-        schema: data.dec(_f$schema),
-        version: data.dec(_f$version),
-        fields: data.dec(_f$fields));
-  }
-
-  @override
-  final Function instantiate = _instantiate;
-
-  static AttendanceLogAdditionalFields fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<AttendanceLogAdditionalFields>(map);
-  }
-
-  static AttendanceLogAdditionalFields fromJson(String json) {
-    return ensureInitialized().decodeJson<AttendanceLogAdditionalFields>(json);
-  }
-}
-
-mixin AttendanceLogAdditionalFieldsMappable {
-  String toJson() {
-    return AttendanceLogAdditionalFieldsMapper.ensureInitialized()
-        .encodeJson<AttendanceLogAdditionalFields>(
-            this as AttendanceLogAdditionalFields);
-  }
-
-  Map<String, dynamic> toMap() {
-    return AttendanceLogAdditionalFieldsMapper.ensureInitialized()
-        .encodeMap<AttendanceLogAdditionalFields>(
-            this as AttendanceLogAdditionalFields);
-  }
-
-  AttendanceLogAdditionalFieldsCopyWith<AttendanceLogAdditionalFields,
-          AttendanceLogAdditionalFields, AttendanceLogAdditionalFields>
-      get copyWith => _AttendanceLogAdditionalFieldsCopyWithImpl(
-          this as AttendanceLogAdditionalFields, $identity, $identity);
-  @override
-  String toString() {
-    return AttendanceLogAdditionalFieldsMapper.ensureInitialized()
-        .stringifyValue(this as AttendanceLogAdditionalFields);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            AttendanceLogAdditionalFieldsMapper.ensureInitialized()
-                .isValueEqual(this as AttendanceLogAdditionalFields, other));
-  }
-
-  @override
-  int get hashCode {
-    return AttendanceLogAdditionalFieldsMapper.ensureInitialized()
-        .hashValue(this as AttendanceLogAdditionalFields);
-  }
-}
-
-extension AttendanceLogAdditionalFieldsValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, AttendanceLogAdditionalFields, $Out> {
-  AttendanceLogAdditionalFieldsCopyWith<$R, AttendanceLogAdditionalFields, $Out>
-      get $asAttendanceLogAdditionalFields => $base.as(
-          (v, t, t2) => _AttendanceLogAdditionalFieldsCopyWithImpl(v, t, t2));
-}
-
-abstract class AttendanceLogAdditionalFieldsCopyWith<
-    $R,
-    $In extends AttendanceLogAdditionalFields,
-    $Out> implements AdditionalFieldsCopyWith<$R, $In, $Out> {
-  @override
-  ListCopyWith<$R, AdditionalField,
-      AdditionalFieldCopyWith<$R, AdditionalField, AdditionalField>> get fields;
-  @override
-  $R call({String? schema, int? version, List<AdditionalField>? fields});
-  AttendanceLogAdditionalFieldsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
-      Then<$Out2, $R2> t);
-}
-
-class _AttendanceLogAdditionalFieldsCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, AttendanceLogAdditionalFields, $Out>
-    implements
-        AttendanceLogAdditionalFieldsCopyWith<$R, AttendanceLogAdditionalFields,
-            $Out> {
-  _AttendanceLogAdditionalFieldsCopyWithImpl(
-      super.value, super.then, super.then2);
-
-  @override
-  late final ClassMapperBase<AttendanceLogAdditionalFields> $mapper =
-      AttendanceLogAdditionalFieldsMapper.ensureInitialized();
-  @override
-  ListCopyWith<$R, AdditionalField,
-          AdditionalFieldCopyWith<$R, AdditionalField, AdditionalField>>
-      get fields => ListCopyWith($value.fields, (v, t) => v.copyWith.$chain(t),
-          (v) => call(fields: v));
-  @override
-  $R call(
-          {String? schema,
-          Object? version = $none,
-          List<AdditionalField>? fields}) =>
-      $apply(FieldCopyWithData({
-        if (schema != null) #schema: schema,
-        if (version != $none) #version: version,
-        if (fields != null) #fields: fields
-      }));
-  @override
-  AttendanceLogAdditionalFields $make(CopyWithData data) =>
-      AttendanceLogAdditionalFields(
-          schema: data.get(#schema, or: $value.schema),
-          version: data.get(#version, or: $value.version),
-          fields: data.get(#fields, or: $value.fields));
-
-  @override
-  AttendanceLogAdditionalFieldsCopyWith<$R2, AttendanceLogAdditionalFields,
-      $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _AttendanceLogAdditionalFieldsCopyWithImpl($value, $cast, t);
 }

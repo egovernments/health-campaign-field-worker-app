@@ -73,8 +73,8 @@ void main() {
 
 void _createTypeDefFile({required String typeDefPath}) {
   var typeDef = [
-    "typedef AttendanceDataRepository = DataRepository<HCMAttendanceRegisterModel, HCMAttendanceSearchModel>;",
-    "typedef AttendanceLogDataRepository = DataRepository<HCMAttendanceLogModel, HCMAttendanceLogSearchModel>;"
+    "typedef AttendanceDataRepository = DataRepository<AttendanceRegisterModel, AttendanceRegisterSearchModel>;",
+    "typedef AttendanceLogDataRepository = DataRepository<AttendanceLogModel, AttendanceLogSearchModel>;"
   ];
 
   // Read the typedefs file
@@ -108,7 +108,7 @@ void _createOpLogCaseConditions({required String opLogPath}) {
 
   final caseConditions = {
     'attendance':
-        'final entity = HCMAttendanceLogModelMapper.fromJson(entityString);\n    return entity;',
+        'final entity = AttendanceLogModelMapper.fromJson(entityString);\n    return entity;',
   };
 
   final file = File(filePath);
@@ -126,29 +126,28 @@ void _addRepoToNetworkManagerProviderWrapper(
     {required String networkManagerProviderWrapperFilePath}) {
   // Define the import statements and repository providers
   var importStatements = [
-    "import '../data/repositories/local/attendance_logs.dart';",
-    "import '../data/repositories/local/attendance_register.dart';",
+    "import 'package:attendance_management/attendance_management.dart';",
     "import '../data/repositories/remote/attendance_logs.dart';",
     "import '../data/repositories/remote/attendance_register.dart';"
   ];
   var localRepositories = [
-    "RepositoryProvider<\n          LocalRepository<HCMAttendanceRegisterModel,\n              HCMAttendanceSearchModel>>(\n        create: (_) => AttendanceLocalRepository(\n          sql,\n          AttendanceOpLogManager(isar),\n        ),\n      ),",
-    "RepositoryProvider<\n          LocalRepository<HCMAttendanceLogModel, HCMAttendanceLogSearchModel>>(\n        create: (_) => AttendanceLogsLocalRepository(\n          sql,\n          AttendanceLogOpLogManager(isar),\n        ),\n      ),",
+    "RepositoryProvider<\n          LocalRepository<AttendanceRegisterModel,\n              AttendanceRegisterSearchModel>>(\n        create: (_) => AttendanceLocalRepository(\n          sql,\n          AttendanceOpLogManager(isar),\n        ),\n      ),",
+    "RepositoryProvider<\n          LocalRepository<AttendanceLogModel, AttendanceLogSearchModel>>(\n        create: (_) => AttendanceLogsLocalRepository(\n          sql,\n          AttendanceLogOpLogManager(isar),\n        ),\n      ),",
   ];
 
 // Define the remote repositories of attendance
-  var remoteRepositoriesOfAttendance = [
+  var remoteRepositoriesOfRegistrationDelivery = [
     "if (value == DataModelType.attendanceRegister)\n"
         "  RepositoryProvider<\n"
-        "      RemoteRepository<HCMAttendanceRegisterModel,\n"
-        "          HCMAttendanceSearchModel>>(\n"
+        "      RemoteRepository<AttendanceRegisterModel,\n"
+        "          AttendanceRegisterSearchModel>>(\n"
         "    create: (_) =>\n"
         "        AttendanceRemoteRepository(dio, actionMap: actions),\n"
         "  )",
     "if (value == DataModelType.attendance)\n"
         "  RepositoryProvider<\n"
-        "      RemoteRepository<HCMAttendanceLogModel,\n"
-        "          HCMAttendanceLogSearchModel>>(\n"
+        "      RemoteRepository<AttendanceLogModel,\n"
+        "          AttendanceLogSearchModel>>(\n"
         "    create: (_) =>\n"
         "        AttendanceLogRemoteRepository(dio, actionMap: actions),\n"
         "  )"
@@ -210,22 +209,22 @@ void _addRepoToNetworkManagerProviderWrapper(
   }
 
 // Check if the remote repository of attendance already exists in the file
-  for (var remoteRepositoryOfAttendance in remoteRepositoriesOfAttendance) {
-    var normalizedRemoteRepositoryOfAttendance =
-        remoteRepositoryOfAttendance.replaceAll(RegExp(r'\s'), '');
+  for (var remoteRepositoryOfRegistrationDelivery in remoteRepositoriesOfRegistrationDelivery) {
+    var normalizedRemoteRepositoryOfRegistrationDelivery =
+        remoteRepositoryOfRegistrationDelivery.replaceAll(RegExp(r'\s'), '');
 
     if (!normalizedFileContent
-        .contains(normalizedRemoteRepositoryOfAttendance)) {
+        .contains(normalizedRemoteRepositoryOfRegistrationDelivery)) {
       // Add the remote repository of attendance to the _getRemoteRepositories method
       var replacementString =
           networkManagerProviderWrapperFileContent.contains(']);')
-              ? '  $remoteRepositoryOfAttendance,\n]);'
-              : '  $remoteRepositoryOfAttendance\n]);';
+              ? '  $remoteRepositoryOfRegistrationDelivery,\n]);'
+              : '  $remoteRepositoryOfRegistrationDelivery\n]);';
       networkManagerProviderWrapperFileContent =
           networkManagerProviderWrapperFileContent.replaceFirst(
               ']);', replacementString);
       print(
-          'The remote repository of attendance was added: $remoteRepositoryOfAttendance');
+          'The remote repository of attendance was added: $remoteRepositoryOfRegistrationDelivery');
     } else {
       print('The remote repository of attendance already exists.');
     }

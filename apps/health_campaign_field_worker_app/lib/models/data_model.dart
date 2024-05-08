@@ -9,7 +9,6 @@ export 'entities/additional_fields_type.dart';
 export 'entities/hcm_hf_referral.dart';
 export 'entities/product.dart';
 export 'entities/project_staff.dart';
-export 'entities/project_type.dart';
 export 'entities/roles.dart';
 export 'entities/roles_type.dart';
 export 'entities/status.dart';

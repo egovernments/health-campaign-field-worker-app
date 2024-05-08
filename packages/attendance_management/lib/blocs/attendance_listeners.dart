@@ -41,22 +41,27 @@ class AttendanceSingleton {
   String _projectId = '';
   String _userId = '';
   String _appVersion = '';
+  String _tenantId = '';
 
   // Method to set attendance listeners and other information
   void setAttendanceListeners(
       {required AttendanceListeners attendanceListeners,
       required String projectId,
       required String userId,
-      required String appVersion}) {
+      required String appVersion,
+      required String tenantId
+      }) {
     _attendanceListeners = attendanceListeners;
     _projectId = projectId;
     _userId = userId;
     _appVersion = appVersion;
+    _tenantId = tenantId;
   }
 
   get projectId => _projectId;
   get userId => _userId;
   get appVersion => _appVersion;
+  get tenantId => _tenantId;
 
   // Method to get attendance registers
   Future<List<AttendanceRegisterModel>?> getAttendanceRegisters(

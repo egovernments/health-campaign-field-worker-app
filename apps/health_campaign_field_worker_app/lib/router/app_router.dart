@@ -81,12 +81,12 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: ProfileRoute.page, path: 'profile'),
         AutoRoute(page: UserQRDetailsRoute.page, path: 'user-qr-code'),
         AutoRoute(
-            page: SearchBeneficiaryRoute.page, path: 'search-beneficiary'),
-        AutoRoute(
           page: BeneficiariesReportRoute.page,
           path: 'beneficiary-downsync-report',
         ),
 
+        AutoRoute(
+            page: SearchBeneficiaryRoute.page, path: 'search-beneficiary'),
         /// Beneficiary Registration
         AutoRoute(
           page: BeneficiaryRegistrationWrapperRoute.page,
@@ -260,6 +260,10 @@ class AppRouter extends _$AppRouter {
           page: MarkAttendanceRoute.page,
           path: 'mark-attendance',
         ),
+        AutoRoute(
+          page: AttendanceAcknowledgementRoute.page,
+          path: 'attendance-acknowledgement',
+        ),
 
         //Inventory Route
         AutoRoute(
@@ -290,7 +294,8 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
             page: InventoryAcknowledgementRoute.page,
             path: 'inventory-acknowledgement'),
-        //Inventory Route
+
+        // Inventory Route
         AutoRoute(
             page: HFCreateReferralWrapperRoute.page,
             path: 'hf-referral',
@@ -324,6 +329,6 @@ class AppRouter extends _$AppRouter {
           path: 'search-referrals',
         ),
       ],
-    ),
+    )
   ];
 }

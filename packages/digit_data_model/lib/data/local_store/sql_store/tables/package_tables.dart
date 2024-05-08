@@ -1,7 +1,5 @@
 import 'package:attendance_management/attendance_management.dart' as att;
 
-import 'package:inventory_management/data/local_store/sql_store/tables/facility.dart'
-    as fac;
 import 'package:inventory_management/data/local_store/sql_store/tables/stock.dart'
     as sto;
 import 'package:inventory_management/data/local_store/sql_store/tables/stock_reconciliation.dart'
@@ -33,10 +31,6 @@ class Stock extends sto.Stock {
 
 class StockReconciliation extends stk_rkn.StockReconciliation {
   StockReconciliation() : super();
-}
-
-class Facility extends fac.Facility {
-  Facility() : super();
 }
 
 class Target extends tar.Target {

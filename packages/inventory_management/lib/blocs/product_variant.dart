@@ -8,15 +8,15 @@ import 'package:digit_data_model/data_model.dart';
 
 part 'product_variant.freezed.dart';
 
-typedef ProductVariantEmitter = Emitter<ProductVariantState>;
+typedef ProductVariantEmitter = Emitter<InventoryProductVariantState>;
 
 // Bloc for handling product variant related events and states
-class ProductVariantBloc
-    extends Bloc<ProductVariantEvent, ProductVariantState> {
+class InventoryProductVariantBloc
+    extends Bloc<InventoryProductVariantEvent, InventoryProductVariantState> {
   final InventorySingleton inventorySingleton;
 
   // Constructor for the bloc
-  ProductVariantBloc(super.initialState, {required this.inventorySingleton}) {
+  InventoryProductVariantBloc(super.initialState, {required this.inventorySingleton}) {
     // Registering the event handler for loading product variants
     on(_handleLoad);
   }
@@ -38,31 +38,31 @@ class ProductVariantBloc
       emit((const ProductVariantEmptyState()));
     } else {
       // Emitting the fetched state with the fetched product variants
-      emit(ProductVariantState.fetched(productVariants: productVariants));
+      emit(InventoryProductVariantState.fetched(productVariants: productVariants));
     }
   }
 }
 
 // Freezed union class for product variant events
 @freezed
-class ProductVariantEvent with _$ProductVariantEvent {
+class InventoryProductVariantEvent with _$InventoryProductVariantEvent {
   // Event for loading product variants
-  const factory ProductVariantEvent.load({
+  const factory InventoryProductVariantEvent.load({
     required ProjectResourceSearchModel query,
   }) = ProductVariantLoadEvent;
 }
 
 // Freezed union class for product variant states
 @freezed
-class ProductVariantState with _$ProductVariantState {
+class InventoryProductVariantState with _$InventoryProductVariantState {
   // State for when the product variants are being loaded
-  const factory ProductVariantState.loading() = ProductVariantLoadingState;
+  const factory InventoryProductVariantState.loading() = ProductVariantLoadingState;
 
   // State for when there are no product variants
-  const factory ProductVariantState.empty() = ProductVariantEmptyState;
+  const factory InventoryProductVariantState.empty() = ProductVariantEmptyState;
 
   // State for when the product variants have been fetched
-  const factory ProductVariantState.fetched({
+  const factory InventoryProductVariantState.fetched({
     required List<ProductVariantModel> productVariants,
   }) = ProductVariantFetchedState;
 }

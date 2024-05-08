@@ -2,7 +2,8 @@
 
 import 'package:drift/drift.dart';
 
-import '../../../models/entities/address_type.dart';
+import '../../../../models/entities/address_type.dart';
+
 
 class Address extends Table {
   TextColumn get id => text().nullable()();

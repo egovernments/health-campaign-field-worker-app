@@ -11,7 +11,6 @@ export 'models/entities/transaction_reason.dart';
 export 'models/entities/transaction_type.dart';
 export 'models/entities/inventory_transport_type.dart';
 
-export 'data/local_store/sql_store/tables/facility.dart';
 export 'data/local_store/sql_store/tables/product_variant.dart';
 export 'data/local_store/sql_store/tables/stock.dart';
 export 'data/local_store/sql_store/tables/stock_reconciliation.dart';

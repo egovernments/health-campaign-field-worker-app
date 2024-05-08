@@ -11,7 +11,7 @@ import '../../models/entities/task.dart';
 
 part 'deliver_intervention.freezed.dart';
 
-typedef BeneficiaryRegistrationEmitter = Emitter<DeliverInterventionState>;
+typedef DeliveryInterventionEmitter = Emitter<DeliverInterventionState>;
 
 class DeliverInterventionBloc
     extends Bloc<DeliverInterventionEvent, DeliverInterventionState> {
@@ -30,7 +30,7 @@ class DeliverInterventionBloc
   // Event handler for submitting a task
   FutureOr<void> _handleSubmit(
     DeliverInterventionSubmitEvent event,
-    BeneficiaryRegistrationEmitter emit,
+    DeliveryInterventionEmitter emit,
   ) async {
     // Update loading state to indicate an operation is in progress
     emit(state.copyWith(loading: true));
@@ -78,7 +78,7 @@ class DeliverInterventionBloc
   // Search for tasks and process the results
   FutureOr<void> _handleSearch(
     DeliverInterventionSearchEvent event,
-    BeneficiaryRegistrationEmitter emit,
+    DeliveryInterventionEmitter emit,
   ) async {
     emit(state.copyWith(loading: true));
     try {
@@ -114,7 +114,7 @@ class DeliverInterventionBloc
 // Event handler for handling active cycle and dose selection
   FutureOr<void> _handleActiveCycleDose(
     DeliverInterventionActiveCycleDoseSelectionEvent event,
-    BeneficiaryRegistrationEmitter emit,
+    DeliveryInterventionEmitter emit,
   ) async {
     // Calculate the current running cycle based on start and end dates
     final currentRunningCycle = (event.projectType.cycles?.firstWhere(
@@ -198,7 +198,7 @@ class DeliverInterventionBloc
   // Event handler for selecting future deliveries
   FutureOr<void> _handleFutureDeliveries(
     DeliverInterventionCycleFutureDoseSelectionEvent event,
-    BeneficiaryRegistrationEmitter emit,
+    DeliveryInterventionEmitter emit,
   ) async {
     // Set the loading state to true to indicate that an operation is in progress.
     emit(state.copyWith(loading: true));

@@ -4,7 +4,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:digit_data_model/data_model.dart';
-
+import 'package:registration_delivery/utils/typedefs.dart';
 import '../../utils/typedefs.dart';
 
 part 'product_variant.freezed.dart';
@@ -17,10 +17,10 @@ class ProductVariantBloc
   final ProductVariantDataRepository productVariantDataRepository;
 
   ProductVariantBloc(
-    super.initialState, {
-    required this.productVariantDataRepository,
-    required this.projectResourceDataRepository,
-  }) {
+    super.initialState,
+    this.productVariantDataRepository,
+    this.projectResourceDataRepository,
+  ) {
     on(_handleLoad);
   }
 

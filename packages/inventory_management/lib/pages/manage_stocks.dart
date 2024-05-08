@@ -12,23 +12,9 @@ import '../widgets/back_navigation_help_header.dart';
 
 @RoutePage()
 class ManageStocksPage extends LocalizedStatefulWidget {
-  final InventoryListener inventoryListener;
-  final String projectId;
-  final String userId;
-  final String boundaryName;
-  final bool isDistributor;
-  final bool isWareHouseMgr;
-  final List<InventoryTransportTypes>? transportType;
   const ManageStocksPage({
     super.key,
     super.appLocalizations,
-    required this.inventoryListener,
-    required this.projectId,
-    required this.userId,
-    required this.boundaryName,
-    required this.isDistributor,
-    required this.isWareHouseMgr,
-    required this.transportType,
   });
 
   @override
@@ -38,15 +24,6 @@ class ManageStocksPage extends LocalizedStatefulWidget {
 class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
   @override
   initState() {
-    InventorySingleton().setInitialData(
-      inventoryListener: widget.inventoryListener,
-      transportTypes: widget.transportType,
-      userId: widget.userId,
-      projectId: widget.projectId,
-      isDistributor: widget.isDistributor,
-      isWareHouseMgr: widget.isWareHouseMgr,
-      boundaryName: widget.boundaryName,
-    );
     super.initState();
   }
 
