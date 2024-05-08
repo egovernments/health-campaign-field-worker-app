@@ -30,10 +30,12 @@ class BoundaryRemoteRepository
         return await dio.post(
           searchPath,
           queryParameters: {
-            'offset': 0,
+            ...query.toMap(),
+            'includeChildren':true,
+            'hierarchyType':'Admin6',
+          'offset': 0,
             'limit': 100,
             'tenantId': envConfig.variables.tenantId,
-            ...query.toMap(),
           },
           data: {},
         );
@@ -84,11 +86,11 @@ class BoundaryRemoteRepository
     final boundaryList = entityList.first['boundary'];
 
     /// We can combine both into one function. But better to keep it separate
-    /// to help with readability
+    /// to help with readabilityxx
     List<BoundaryModel> boundaryModelList = _castToBoundaryModel(
       List.castFrom(boundaryList),
     );
-    boundaryModelList = _flattenBoundaryMap(boundaryModelList);
+    boundaryModelList = _flattenBoundaryMap(boundaryModelList, i: 0,);
 
     return boundaryModelList;
   }
@@ -99,20 +101,25 @@ class BoundaryRemoteRepository
   List<BoundaryModel> _flattenBoundaryMap(
     List<BoundaryModel> boundaryList, {
     BoundaryModel? parent,
+    required int i,
   }) {
     List<BoundaryModel> boundaryModelList = [];
     for (final e in boundaryList) {
       final materializedPath = parent?.materializedPath?.split('.') ?? [];
       final boundary = e.copyWith(
         materializedPath: [...materializedPath, e.code ?? ''].join('.'),
+        boundaryNum: [...materializedPath, e.code ?? ''].length -1,
+        label: e.boundaryType,
       );
 
       boundaryModelList.add(boundary.copyWith(children: []));
       boundaryModelList.addAll(_flattenBoundaryMap(
         boundary.children,
         parent: boundary,
+        i: i,
       ));
     }
+
 
     return boundaryModelList;
   }

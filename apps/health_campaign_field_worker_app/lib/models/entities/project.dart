@@ -83,7 +83,7 @@ class ProjectModel extends EntityModel with ProjectModelMappable {
   final String? subProjectTypeId;
   final bool? isTaskEnabled;
   final String? parent;
-  final String name;
+  final String? name;
   final String? department;
   final String? description;
   final String? referenceId;
@@ -153,7 +153,7 @@ class ProjectModel extends EntityModel with ProjectModelMappable {
       subProjectTypeId: Value(subProjectTypeId),
       isTaskEnabled: Value(isTaskEnabled),
       parent: Value(parent),
-      name: Value(name),
+      name: Value(name?? 'TEST'),
       department: Value(department),
       description: Value(description),
       referenceId: Value(referenceId),

@@ -58,7 +58,7 @@ class MdmsRepository {
       actions.add(Actions()
         ..entityName = 'Boundary'
         ..action = 'search'
-        ..path = '/egov-location/location/v11/boundarys/_search');
+        ..path = '/boundary-service/boundary-relationships/_search?');
 
       newServiceRegistry.actions = actions;
       newServiceRegistryList.add(newServiceRegistry);

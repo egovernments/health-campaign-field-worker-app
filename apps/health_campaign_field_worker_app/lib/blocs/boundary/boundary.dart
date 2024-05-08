@@ -41,7 +41,7 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
     List<BoundaryModel> boundaryList = await boundaryRepository.search(
       BoundarySearchModel(
         code: event.code,
-        isSingle: true,
+        isSingle: false,
       ),
     );
 
@@ -141,7 +141,7 @@ class BoundaryEvent with _$BoundaryEvent {
   const factory BoundaryEvent.reset() = BoundaryResetEvent;
 
   const factory BoundaryEvent.search(
-      {required String code, required int boundaryNum}) = BoundarySearchEvent;
+      {required String code, required int boundaryNum,}) = BoundarySearchEvent;
 
   const factory BoundaryEvent.select({
     required String label,

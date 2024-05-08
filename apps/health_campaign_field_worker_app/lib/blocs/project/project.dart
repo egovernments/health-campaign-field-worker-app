@@ -538,12 +538,12 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           ?.version;
       final boundaryRefetched = await localSecureStore.boundaryRefetched;
 
-      if (rowversionList.firstOrNull?.version != serverVersion ||
-          boundaryRefetched) {
+   if (rowversionList.firstOrNull?.version != serverVersion ||
+    boundaryRefetched) {
         boundaries = await boundaryRemoteRepository.search(
           BoundarySearchModel(
-            boundaryType: event.model.address?.boundaryType,
-            code: event.model.address?.boundary,
+            // TODO Need to change this.
+            hierarchyType: 'Admin6',
           ),
         );
         await boundaryLocalRepository.bulkCreate(boundaries);
