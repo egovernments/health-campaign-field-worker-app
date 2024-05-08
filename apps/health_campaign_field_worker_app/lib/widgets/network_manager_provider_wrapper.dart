@@ -21,31 +21,20 @@ import '../data/repositories/local/hcm_hf_referral.dart';
 import '../data/repositories/local/pgr_service.dart';
 import '../data/repositories/local/project_staff.dart';
 import '../data/repositories/oplog/hcm_oplog.dart';
-import '../data/repositories/remote/attendance_logs.dart';
-import '../data/repositories/remote/attendance_register.dart';
 import '../data/repositories/remote/auth.dart';
-import '../data/repositories/remote/boundary.dart';
 import '../data/repositories/remote/downsync.dart';
-import '../data/repositories/remote/facility.dart';
 import '../data/repositories/remote/hcm_hf_referral.dart';
-import '../data/repositories/remote/household.dart';
-import '../data/repositories/remote/household_member.dart';
-import '../data/repositories/remote/individual.dart';
 import '../data/repositories/remote/pgr_service.dart';
 import '../data/repositories/remote/product.dart';
 import '../data/repositories/remote/product_variant.dart';
 import '../data/repositories/remote/project_beneficiary.dart';
-import '../data/repositories/remote/project_facility.dart';
 import '../data/repositories/remote/project_product_variant.dart';
-import '../data/repositories/remote/project_resource.dart';
 import '../data/repositories/remote/project_staff.dart';
 import '../data/repositories/remote/project_type.dart';
 import '../data/repositories/remote/referral.dart';
 import '../data/repositories/remote/side_effect.dart';
 import '../data/repositories/remote/task.dart';
 import '../data/repositories/remote/user.dart';
-import '../data/repositories/remote/stock.dart';
-import '../data/repositories/remote/stock_reconciliation.dart';
 import '../models/entities/hcm_hf_referral.dart';
 import '../models/entities/product.dart';
 import '../models/entities/project_staff.dart';
@@ -405,13 +394,6 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           RepositoryProvider<
               RemoteRepository<ProjectTypeModel, ProjectTypeSearchModel>>(
             create: (_) => ProjectTypeRemoteRepository(
-              dio,
-              actionMap: actions,
-            ),
-          ),
-        if (value == DataModelType.stock)
-          RepositoryProvider<RemoteRepository<StockModel, StockSearchModel>>(
-            create: (_) => StockRemoteRepository(
               dio,
               actionMap: actions,
             ),

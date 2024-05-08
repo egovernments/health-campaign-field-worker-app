@@ -4,10 +4,8 @@ import 'dart:async';
 
 import 'package:digit_data_model/data_model.dart';
 import 'package:attendance_management/attendance_management.dart';
+import 'package:digit_data_model/utils/constants.dart';
 import 'package:dio/dio.dart';
-
-import '../../../utils/constants.dart';
-import '../../../utils/environment_config.dart';
 
 class AttendanceLogRemoteRepository
     extends RemoteRepository<AttendanceLogModel, AttendanceLogSearchModel> {
@@ -33,10 +31,10 @@ class AttendanceLogRemoteRepository
           queryParameters: query.clientReferenceId != null &&
                   (query.clientReferenceId ?? []).isNotEmpty
               ? {
-                  'tenantId': envConfig.variables.tenantId,
+                  'tenantId': AttendanceSingleton().tenantId,
                 }
               : {
-                  'tenantId': envConfig.variables.tenantId,
+                  'tenantId': AttendanceSingleton().tenantId,
                   ...query.toMap(),
                 },
           data: query.clientReferenceId != null &&

@@ -11,6 +11,12 @@ const deliverIntervention = DeliverIntervention();
 const referBeneficiary = ReferBeneficiary();
 const adverseEvents = AdverseEvents();
 const reasonForDeletion = ReasonForDeletion();
+const searchBeneficiariesShowcase = SearchBeneficiariesShowcase();
+const householdLocationShowcase = HouseholdLocationShowcase();
+const householdDetailsShowcase = HouseholdDetailsShowcase();
+const individualDetailsShowcase = IndividualDetailsShowcase();
+const householdOverviewShowcase = HouseholdOverviewShowcase();
+const deliverInterventionShowcase = DeliverInterventionShowcase();
 
 class Common {
   const Common();
@@ -565,4 +571,192 @@ class AdverseEvents {
   String get didYouReAdministerLabel => 'DID_YOU_RE_ADMINISTER';
 
   String get noOfTimesReAdministered => 'NO_OF_TIMES_RE_ADMINISTERED';
+}
+
+class SearchBeneficiariesShowcase {
+  const SearchBeneficiariesShowcase();
+
+  String get numberOfHouseholdsRegistered {
+    return 'SEARCH_BENEFICIARIES_SHOWCASE_NUMBER_OF_HOUSEHOLDS_REGISTERED';
+  }
+
+  String get numberOfBednetsDelivered {
+    return 'SEARCH_BENEFICIARIES_SHOWCASE_NUMBER_OF_BEDNETS_DELIVERED';
+  }
+
+  String get enterNameOfHouseholdHead {
+    return 'SEARCH_BENEFICIARIES_SHOWCASE_ENTER_NAME_OF_HOUSEHOLD_HEAD';
+  }
+
+  String get registerNewHousehold {
+    return 'SEARCH_BENEFICIARIES_SHOWCASE_REGISTER_NEW_HOUSEHOLD';
+  }
+
+  String get nameOfBeneficiary {
+    return 'SEARCH_BENEFICIARIES_SHOWCASE_NAME_OF_BENEFICIARY';
+  }
+
+  String get deliveryStatus {
+    return 'SEARCH_BENEFICIARIES_SHOWCASE_DELIVERY_STATUS';
+  }
+
+  String get open {
+    return 'SEARCH_BENEFICIARIES_SHOWCASE_OPEN';
+  }
+
+  String get beneficiary {
+    return 'SEARCH_BENEFICIARIES_SHOWCASE_BENEFICIARY';
+  }
+
+  String get age {
+    return 'SEARCH_BENEFICIARIES_SHOWCASE_AGE';
+  }
+
+  String get gender {
+    return 'SEARCH_BENEFICIARIES_SHOWCASE_GENDER';
+  }
+}
+
+String get numberOfHouseholdsRegistered {
+  return 'SEARCH_BENEFICIARIES_SHOWCASE_NUMBER_OF_HOUSEHOLDS_REGISTERED';
+}
+
+String get numberOfBednetsDelivered {
+  return 'SEARCH_BENEFICIARIES_SHOWCASE_NUMBER_OF_BEDNETS_DELIVERED';
+}
+
+String get enterNameOfHouseholdHead {
+  return 'SEARCH_BENEFICIARIES_SHOWCASE_ENTER_NAME_OF_HOUSEHOLD_HEAD';
+}
+
+String get registerNewHousehold {
+  return 'SEARCH_BENEFICIARIES_SHOWCASE_REGISTER_NEW_HOUSEHOLD';
+}
+
+class HouseholdLocationShowcase {
+  const HouseholdLocationShowcase();
+
+  String get administrativeArea {
+    return 'HOUSEHOLD_LOCATION_SHOWCASE_ADMINISTRATIVE_AREA';
+  }
+
+  String get landmark {
+    return 'HOUSEHOLD_LOCATION_SHOWCASE_LANDMARK';
+  }
+
+  String get address {
+    return 'HOUSEHOLD_LOCATION_SHOWCASE_ADDRESS';
+  }
+
+  String get postalCode {
+    return 'HOUSEHOLD_LOCATION_SHOWCASE_POSTAL_CODE';
+  }
+}
+
+class HouseholdDetailsShowcase {
+  const HouseholdDetailsShowcase();
+
+  String get dateOfRegistration {
+    return 'HOUSEHOLD_DETAILS_SHOWCASE_DATE_OF_REGISTRATION';
+  }
+
+  String get numberOfMembersLivingInHousehold {
+    return 'HOUSEHOLD_DETAILS_SHOWCASE_NUMBER_OF_MEMBERS_LIVING_IN_HOUSEHOLD';
+  }
+}
+
+class IndividualDetailsShowcase {
+  const IndividualDetailsShowcase();
+
+  String get firstNameOfIndividual {
+    return 'INDIVIDUAL_DETAILS_SHOWCASE_FIRST_NAME_OF_INDIVIDUAL';
+  }
+
+  String get lastNameOfIndividual {
+    return 'INDIVIDUAL_DETAILS_SHOWCASE_LAST_NAME_OF_INDIVIDUAL';
+  }
+
+  String get headOfHousehold {
+    return 'INDIVIDUAL_DETAILS_SHOWCASE_HEAD_OF_HOUSEHOLD';
+  }
+
+  String get age {
+    return 'INDIVIDUAL_DETAILS_SHOWCASE_AGE';
+  }
+
+  String get dateOfBirth {
+    return 'INDIVIDUAL_DETAILS_SHOWCASE_DATE_OF_BIRTH';
+  }
+
+  String get gender {
+    return 'INDIVIDUAL_DETAILS_SHOWCASE_GENDER';
+  }
+
+  String get mobile {
+    return 'INDIVIDUAL_DETAILS_SHOWCASE_MOBILE';
+  }
+
+  String get idType {
+    return 'INDIVIDUAL_DETAILS_SHOWCASE_ID_TYPE';
+  }
+}
+
+class HouseholdOverviewShowcase {
+  const HouseholdOverviewShowcase();
+
+  String get editHousehold {
+    return 'HOUSEHOLD_OVERVIEW_SHOWCASE_EDIT_HOUSEHOLD';
+  }
+
+  String get deliveryStatus {
+    return 'HOUSEHOLD_OVERVIEW_SHOWCASE_DELIVERY_STATUS';
+  }
+
+  String get householdHead {
+    return 'HOUSEHOLD_OVERVIEW_SHOWCASE_HOUSEHOLD_HEAD';
+  }
+
+  String get administrativeArea {
+    return 'HOUSEHOLD_OVERVIEW_SHOWCASE_ADMINISTRATIVE_AREA';
+  }
+
+  String get memberCount {
+    return 'HOUSEHOLD_OVERVIEW_SHOWCASE_MEMBER_COUNT';
+  }
+
+  String get householdIndividualCardTitle {
+    return 'HOUSEHOLD_OVERVIEW_SHOWCASE_HOUSEHOLD_INDIVIDUAL_CARD_TITLE';
+  }
+
+  String get editMember {
+    return 'HOUSEHOLD_OVERVIEW_SHOWCASE_EDIT_MEMBER';
+  }
+
+  String get addMember {
+    return 'HOUSEHOLD_OVERVIEW_SHOWCASE_ADD_MEMBER';
+  }
+
+  String get deliverIntervention {
+    return 'HOUSEHOLD_OVERVIEW_SHOWCASE_DELIVER_INTERVENTION';
+  }
+}
+
+class DeliverInterventionShowcase {
+  const DeliverInterventionShowcase();
+
+  String get memberCount {
+    return 'DELIVER_INTERVENTION_SHOWCASE_MEMBER_COUNT';
+  }
+
+  String get numberOfBednetsToDeliver {
+    return 'DELIVER_INTERVENTION_SHOWCASE_NUMBER_OF_BEDNETS_TO_DELIVER';
+  }
+
+  String get numberOfBednetsDistributed {
+    return 'DELIVER_INTERVENTION_SHOWCASE_NUMBER_OF_BEDNETS_DISTRIBUTED';
+  }
+
+  String get deliveryComment {
+    return 'DELIVER_INTERVENTION_SHOWCASE_DELIVERY_COMMENT';
+  }
 }

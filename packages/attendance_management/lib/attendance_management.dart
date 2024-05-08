@@ -24,6 +24,9 @@ export 'data/local_store/sql_store/tables/staff.dart';
 export 'data/repositories/local/attendance_register.dart';
 export 'data/repositories/local/attendance_logs.dart';
 
+export 'data/repositories/remote/attendance_register.dart';
+export 'data/repositories/remote/attendance_logs.dart';
+
 export 'pages/manage_attendance.dart';
 export 'pages/mark_attendance.dart';
 export 'pages/session_select.dart';

@@ -4,7 +4,6 @@ import 'package:attendance_management/attendance_management.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_table_model.dart';
-import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -50,7 +49,6 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
   Timer? _debounce;
   late TextEditingController controller;
   AttendanceIndividualBloc individualLogBloc = AttendanceIndividualBloc();
-  OverlayEntry? overlayEntry;
 
   @override
   void initState() {
@@ -75,9 +73,6 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
   void dispose() {
     _debounce?.cancel();
     controller.dispose();
-    if (overlayEntry != null && overlayEntry?.mounted == true) {
-      overlayEntry?.remove();
-    }
     super.dispose();
   }
 
@@ -109,7 +104,6 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                 ),
               ),
             child: PopScope(
-              canPop: overlayEntry == null,
               child: GestureDetector(
                 onTap: () {
                   FocusManager.instance.primaryFocus?.unfocus();
@@ -363,7 +357,6 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
         cellKey: 'name',
       ),
       TableHeader(
-        //DateFormat("dd MMMM yyyy").format(s).toString(),
         localizations.translate(i18.attendance.tableHeaderAttendance),
         cellKey: 'date',
       ),
@@ -438,34 +431,18 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
       String type,
       double? latitude,
       double? longitude) {
-    state.maybeWhen(
-        orElse: () {},
-        loaded: (
-          attendanceSearchModelList,
-          attendanceCollectionModel,
-          offsetData,
-          currentOffset,
-          countData,
-          limitData,
-          flag,
-        ) async {
-          if (((attendanceCollectionModel ?? [])
-                      .any((a) => a.status == -1 || a.status == null) &&
-                  type != EnumValues.draft.toValue()) ||
-              ((attendanceCollectionModel ?? [])
-                      .every((a) => a.status == -1 || a.status == null) &&
-                  type == EnumValues.draft.toValue())) {
-            DigitToast.show(
-              context,
-              options: DigitToastOptions(
-                localizations
-                    .translate(i18.attendance.pleaseMarkAttForIndividuals),
-                true,
-                theme,
-              ),
-            );
-          } else {
-            if (type == EnumValues.draft.toValue()) {
+    DigitDialog.show(context,
+        options: DigitDialogOptions(
+          titleText: localizations.translate(
+            i18.attendance.confirmationLabel,
+          ),
+          contentText:
+              '${localizations.translate(i18.attendance.confirmationDesc)} \n\n${localizations.translate(i18.attendance.confirmationDescNote)}',
+          primaryAction: DigitDialogActions(
+            label: localizations.translate(
+              i18.attendance.proceed,
+            ),
+            action: (context) {
               individualLogBloc.add(SaveAsDraftEvent(
                 entryTime: widget.entryTime,
                 exitTime: widget.exitTime,
@@ -475,170 +452,36 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                 latitude: latitude,
                 longitude: longitude,
               ));
-              DigitToast.show(
-                context,
-                options: DigitToastOptions(
-                  localizations.translate(i18.attendance.draftSavedMessage),
-                  false,
-                  theme,
-                ),
-              );
-            } else {
-              showOverlay(
-                context,
-                DigitDialogOptions(
-                  titleText: localizations.translate(
-                    i18.attendance.confirmationLabel,
-                  ),
-                  contentText:
-                      '${localizations.translate(i18.attendance.confirmationDesc)} \n\n${localizations.translate(i18.attendance.confirmationDescNote)}',
-                  primaryAction: DigitDialogActions(
-                    label: localizations.translate(
-                      i18.attendance.proceed,
-                    ),
-                    action: (context) {
-                      if (overlayEntry != null) {
-                        overlayEntry?.remove();
-                      }
-                      individualLogBloc.add(SaveAsDraftEvent(
-                        entryTime: widget.entryTime,
-                        exitTime: widget.exitTime,
-                        selectedDate: widget.dateTime,
-                        isSingleSession: widget.session == null,
-                        createOplog: type != EnumValues.draft.toValue(),
-                        latitude: latitude,
-                        longitude: longitude,
-                      ));
-                      Navigator.pop(context);
-                      context.router.push(
-                        AttendanceAcknowledgementRoute(
-                          label: localizations.translate(
-                              i18.attendance.attendanceSubmittedSuccessMsg),
-                          actionLabel:
-                              localizations.translate(i18.attendance.goHome),
-                          action: () {
-                            AttendanceSingleton().callSync();
-                            context.router.popUntilRoot();
-                          },
-                          secondaryLabel: localizations.translate(
-                              i18.attendance.goToAttendanceRegisters),
-                          secondaryAction: () {
-                            AttendanceSingleton().callSync();
-                            context.router.maybePop();
-                          },
-                        ),
-                      );
-                    },
-                  ),
-                  secondaryAction: DigitDialogActions(
-                    label: localizations.translate(i18.common.coreCommonGoback),
-                    action: (context) {
-                      if (overlayEntry != null) {
-                        // Remove the overlay when the button is pressed
-                        overlayEntry?.remove();
-                        overlayEntry?.dispose();
-                      }
-                    },
-                  ),
-                ),
-              );
-            }
-          }
-        });
+              Navigator.of(context).pop();
+              navigateToAcknowledgement(localizations);
+            },
+          ),
+          secondaryAction: DigitDialogActions(
+            label: localizations.translate(i18.common.coreCommonGoback),
+            action: (context) {
+              Navigator.of(context).pop();
+            },
+          ),
+        ));
   }
 
-  void showOverlay(
-      BuildContext context, DigitDialogOptions digitDialogOptions) {
-    // Initialize overlayEntry
-    overlayEntry = OverlayEntry(
-      builder: (BuildContext context) => Stack(
-        fit: StackFit.expand,
-        children: [
-          Positioned.fill(
-            child: Container(
-              color: Colors.black.withOpacity(0.75),
-            ),
-          ),
-          Center(
-            child: Material(
-              color: Colors.white.withOpacity(0.25),
-              child: Container(
-                width: MediaQuery.of(context).size.width / 1.25,
-                height: MediaQuery.of(context).size.height / 2.28,
-                color: Colors.white.withOpacity(1),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: digitDialogOptions.dialogPadding != null
-                          ? digitDialogOptions.dialogPadding!
-                          : const EdgeInsets.all(kPadding),
-                      child: digitDialogOptions.title != null
-                          ? digitDialogOptions.title!
-                          : Row(
-                              children: [
-                                if (digitDialogOptions.titleIcon != null) ...[
-                                  digitDialogOptions.titleIcon!,
-                                  const SizedBox(width: 8),
-                                ],
-                                Expanded(
-                                  child: Text(
-                                    digitDialogOptions.titleText ?? '',
-                                    textAlign: TextAlign.left,
-                                    style: DigitTheme.instance.mobileTheme
-                                        .textTheme.headlineMedium,
-                                  ),
-                                ),
-                              ],
-                            ),
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      child: Padding(
-                        padding: const EdgeInsets.all(kPadding),
-                        child: digitDialogOptions.content ??
-                            Text(
-                              digitDialogOptions.contentText ?? '',
-                              textAlign: TextAlign.left,
-                              style: DigitTheme
-                                  .instance.mobileTheme.textTheme.bodyMedium,
-                            ),
-                      ),
-                    ),
-                    const SizedBox(height: kPadding),
-                    if (digitDialogOptions.primaryAction != null)
-                      Padding(
-                        padding: const EdgeInsets.all(kPadding),
-                        child: DigitElevatedButton(
-                          onPressed: () {
-                            digitDialogOptions.primaryAction?.action
-                                ?.call(context);
-                          },
-                          child: Center(
-                              child: Text(
-                                  digitDialogOptions.primaryAction!.label)),
-                        ),
-                      ),
-                    if (digitDialogOptions.secondaryAction != null)
-                      TextButton(
-                        onPressed: () {
-                          digitDialogOptions.secondaryAction?.action
-                              ?.call(context);
-                        },
-                        child: Center(
-                            child: Text(
-                                digitDialogOptions.secondaryAction!.label)),
-                      ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
+  void navigateToAcknowledgement(AttendanceLocalization localizations) {
+    context.router.push(
+      AttendanceAcknowledgementRoute(
+        label: localizations
+            .translate(i18.attendance.attendanceSubmittedSuccessMsg),
+        actionLabel: localizations.translate(i18.attendance.goHome),
+        action: () {
+          AttendanceSingleton().callSync();
+          context.router.popUntilRoot();
+        },
+        secondaryLabel:
+            localizations.translate(i18.attendance.goToAttendanceRegisters),
+        secondaryAction: () {
+          AttendanceSingleton().callSync();
+          context.router.popUntilRouteWithName(ManageAttendanceRoute.name);
+        },
       ),
     );
-
-    // Insert overlayEntry into the overlay stack
-    Overlay.of(context).insert(overlayEntry!);
   }
 }

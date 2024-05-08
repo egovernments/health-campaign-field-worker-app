@@ -4,9 +4,8 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/utils/utils.dart';
 import 'package:dio/dio.dart';
-
-import '../../../utils/environment_config.dart';
 
 class BoundaryRemoteRepository
     extends RemoteRepository<BoundaryModel, BoundarySearchModel> {
@@ -31,7 +30,7 @@ class BoundaryRemoteRepository
           queryParameters: {
             'offset': 0,
             'limit': 100,
-            'tenantId': envConfig.variables.tenantId,
+            'tenantId': DigitDataModelSingleton().tenantId,
             ...query.toMap(),
           },
           data: {},

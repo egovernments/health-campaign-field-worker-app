@@ -86,7 +86,6 @@ class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                         setState(() {
                                           symptomsSelected = true;
                                         });
-                                        final router = context.router;
 
                                         final shouldSubmit =
                                             await DigitDialog.show<bool>(

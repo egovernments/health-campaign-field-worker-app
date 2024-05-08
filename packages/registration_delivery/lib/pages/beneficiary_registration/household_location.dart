@@ -14,6 +14,8 @@ import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
+import '../../widgets/showcase/config/showcase_constants.dart';
+import '../../widgets/showcase/showcase_button.dart';
 
 @RoutePage()
 class HouseholdLocationPage extends LocalizedStatefulWidget {
@@ -74,7 +76,7 @@ class _HouseholdLocationPageState
                 header: const Column(
                   children: [
                     BackNavigationHelpHeaderWidget(
-                      // showcaseButton: ShowcaseButton(),
+                      showcaseButton: ShowcaseButton(),
                       showHelp: false,
                     ),
                   ],
@@ -244,101 +246,96 @@ class _HouseholdLocationPageState
                             ),
                           ),
                           Column(children: [
-                            // householdLocationShowcaseData.administrativeArea
-                            //     .buildWith(
-                            //   child:
-                            DigitTextFormField(
-                              formControlName: _administrationAreaKey,
-                              label: localizations.translate(
-                                i18.householdLocation
-                                    .administrationAreaFormLabel,
+                            householdLocationShowcaseData.administrativeArea
+                                .buildWith(
+                              child: DigitTextFormField(
+                                formControlName: _administrationAreaKey,
+                                label: localizations.translate(
+                                  i18.householdLocation
+                                      .administrationAreaFormLabel,
+                                ),
+                                readOnly: true,
+                                isRequired: true,
+                                validationMessages: {
+                                  'required': (_) => localizations.translate(
+                                        i18.householdLocation
+                                            .administrationAreaRequiredValidation,
+                                      ),
+                                },
                               ),
-                              readOnly: true,
-                              isRequired: true,
-                              validationMessages: {
-                                'required': (_) => localizations.translate(
-                                      i18.householdLocation
-                                          .administrationAreaRequiredValidation,
-                                    ),
-                              },
                             ),
-                            // ),
-                            // householdLocationShowcaseData.addressLine1
-                            //     .buildWith(
-                            //   child:
-                            DigitTextFormField(
-                              formControlName: _addressLine1Key,
-                              label: localizations.translate(
-                                i18.householdLocation
-                                    .householdAddressLine1LabelText,
+                            householdLocationShowcaseData.addressLine1
+                                .buildWith(
+                              child: DigitTextFormField(
+                                formControlName: _addressLine1Key,
+                                label: localizations.translate(
+                                  i18.householdLocation
+                                      .householdAddressLine1LabelText,
+                                ),
+                                validationMessages: {
+                                  'required': (_) => localizations.translate(
+                                        i18.common.min2CharsRequired,
+                                      ),
+                                  'maxLength': (object) => localizations
+                                      .translate(i18.common.maxCharsRequired)
+                                      .replaceAll('{}', maxLength.toString()),
+                                },
                               ),
-                              validationMessages: {
-                                'required': (_) => localizations.translate(
-                                      i18.common.min2CharsRequired,
-                                    ),
-                                'maxLength': (object) => localizations
-                                    .translate(i18.common.maxCharsRequired)
-                                    .replaceAll('{}', maxLength.toString()),
-                              },
                             ),
-                            // ),
-                            // householdLocationShowcaseData.addressLine2
-                            //     .buildWith(
-                            //   child:
-                            DigitTextFormField(
-                              formControlName: _addressLine2Key,
-                              label: localizations.translate(
-                                i18.householdLocation
-                                    .householdAddressLine2LabelText,
+                            householdLocationShowcaseData.addressLine2
+                                .buildWith(
+                              child: DigitTextFormField(
+                                formControlName: _addressLine2Key,
+                                label: localizations.translate(
+                                  i18.householdLocation
+                                      .householdAddressLine2LabelText,
+                                ),
+                                validationMessages: {
+                                  'required': (_) => localizations.translate(
+                                        i18.common.min2CharsRequired,
+                                      ),
+                                  'maxLength': (object) => localizations
+                                      .translate(i18.common.maxCharsRequired)
+                                      .replaceAll('{}', maxLength.toString()),
+                                },
                               ),
-                              validationMessages: {
-                                'required': (_) => localizations.translate(
-                                      i18.common.min2CharsRequired,
-                                    ),
-                                'maxLength': (object) => localizations
-                                    .translate(i18.common.maxCharsRequired)
-                                    .replaceAll('{}', maxLength.toString()),
-                              },
                             ),
-                            // ),
-                            // householdLocationShowcaseData.landmark.buildWith(
-                            //   child:
-                            DigitTextFormField(
-                              formControlName: _landmarkKey,
-                              label: localizations.translate(
-                                i18.householdLocation.landmarkFormLabel,
+                            householdLocationShowcaseData.landmark.buildWith(
+                              child: DigitTextFormField(
+                                formControlName: _landmarkKey,
+                                label: localizations.translate(
+                                  i18.householdLocation.landmarkFormLabel,
+                                ),
+                                validationMessages: {
+                                  'required': (_) => localizations.translate(
+                                        i18.common.min2CharsRequired,
+                                      ),
+                                  'maxLength': (object) => localizations
+                                      .translate(i18.common.maxCharsRequired)
+                                      .replaceAll('{}', maxLength.toString()),
+                                },
                               ),
-                              validationMessages: {
-                                'required': (_) => localizations.translate(
-                                      i18.common.min2CharsRequired,
-                                    ),
-                                'maxLength': (object) => localizations
-                                    .translate(i18.common.maxCharsRequired)
-                                    .replaceAll('{}', maxLength.toString()),
-                              },
                             ),
-                            // ),
-                            // householdLocationShowcaseData.postalCode.buildWith(
-                            //   child:
-                            DigitTextFormField(
-                              keyboardType: TextInputType.text,
-                              formControlName: _postalCodeKey,
-                              label: localizations.translate(
-                                i18.householdLocation.postalCodeFormLabel,
+                            householdLocationShowcaseData.postalCode.buildWith(
+                              child: DigitTextFormField(
+                                keyboardType: TextInputType.text,
+                                formControlName: _postalCodeKey,
+                                label: localizations.translate(
+                                  i18.householdLocation.postalCodeFormLabel,
+                                ),
+                                validationMessages: {
+                                  'required': (_) => localizations.translate(
+                                        i18.common.min2CharsRequired,
+                                      ),
+                                  'maxLength': (object) => localizations
+                                      .translate(i18.common.maxCharsRequired)
+                                      .replaceAll('{}', '6'),
+                                },
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                ],
                               ),
-                              validationMessages: {
-                                'required': (_) => localizations.translate(
-                                      i18.common.min2CharsRequired,
-                                    ),
-                                'maxLength': (object) => localizations
-                                    .translate(i18.common.maxCharsRequired)
-                                    .replaceAll('{}', '6'),
-                              },
-                              inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly,
-                              ],
                             ),
-                            // ),
                           ]),
                         ],
                       ),

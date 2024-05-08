@@ -18,6 +18,12 @@ export 'data/local_store/sql_store/tables/stock_reconciliation.dart';
 export 'data/repositories/local/stock.dart';
 export 'data/repositories/local/stock_reconciliation.dart';
 
+export 'data/repositories/local/base/stock_base.dart';
+export 'data/repositories/local/base/stock_reconciliation_base.dart';
+
+export 'data/repositories/remote/stock.dart';
+export 'data/repositories/remote/stock_reconciliation.dart';
+
 export 'pages/record_stock/record_stock_wrapper.dart';
 export 'pages/record_stock/stock_details.dart';
 export 'pages/record_stock/warehouse_details.dart';

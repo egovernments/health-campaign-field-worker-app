@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:registration_delivery/blocs/app_localization.dart';
+import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
 
@@ -11,6 +12,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
   final bool showLogoutCTA;
   final VoidCallback? helpClicked;
   final VoidCallback? handleBack;
+  final ShowcaseButton? showcaseButton;
 
   const BackNavigationHelpHeaderWidget({
     super.key,
@@ -19,6 +21,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
     this.showLogoutCTA = false,
     this.helpClicked,
     this.handleBack,
+    this.showcaseButton,
   });
 
   @override
@@ -73,6 +76,8 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
                 ],
               ),
             ),
+          SizedBox(width: showcaseButton != null ? 16 : 0),
+          if (showcaseButton != null) showcaseButton!,
         ],
       ),
     );

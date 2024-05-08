@@ -190,7 +190,7 @@ class HCMAttendanceBloc extends AttendanceListeners {
 
   @override
   void callSyncMethod() {
-    context.read<SyncBloc>().add(SyncRefreshEvent(userId!));
+    // context.read<SyncBloc>().add(SyncRefreshEvent(userId!));
   }
 
   // Method to generate date list

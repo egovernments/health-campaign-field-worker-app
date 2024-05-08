@@ -4,10 +4,8 @@ import 'dart:async';
 
 import 'package:digit_data_model/data_model.dart';
 import 'package:attendance_management/attendance_management.dart';
+import 'package:digit_data_model/utils/constants.dart';
 import 'package:dio/dio.dart';
-
-import '../../../utils/constants.dart';
-import '../../../utils/environment_config.dart';
 
 class AttendanceRemoteRepository extends RemoteRepository<
     AttendanceRegisterModel, AttendanceRegisterSearchModel> {
@@ -31,7 +29,7 @@ class AttendanceRemoteRepository extends RemoteRepository<
         return await dio.post(
           searchPath,
           queryParameters: {
-            'tenantId': envConfig.variables.tenantId,
+            'tenantId': AttendanceSingleton().tenantId,
             ...query.toMap(),
           },
           data: {},

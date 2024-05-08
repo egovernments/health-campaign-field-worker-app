@@ -579,47 +579,6 @@ class _DeliverInterventionPageState
                                                       style: theme.textTheme
                                                           .headlineLarge,
                                                     ),
-                                                    // BlocBuilder<
-                                                    //     AppInitializationBloc,
-                                                    //     AppInitializationState>(
-                                                    //   builder:
-                                                    //       (context, state) {
-                                                    //     if (state
-                                                    //         is! AppInitialized) {
-                                                    //       return const Offstage();
-                                                    //     }
-                                                    //
-                                                    //     final deliveryCommentOptions = state
-                                                    //             .appConfiguration
-                                                    //             .deliveryCommentOptions ??
-                                                    //         <DeliveryCommentOptions>[];
-                                                    //
-                                                    //     return DigitReactiveSearchDropdown<
-                                                    //         String>(
-                                                    //       label: localizations
-                                                    //           .translate(
-                                                    //         i18.deliverIntervention
-                                                    //             .deliveryCommentLabel,
-                                                    //       ),
-                                                    //       form: form,
-                                                    //       menuItems:
-                                                    //           deliveryCommentOptions
-                                                    //               .map((e) {
-                                                    //         return localizations
-                                                    //             .translate(
-                                                    //                 e.name);
-                                                    //       }).toList(),
-                                                    //       formControlName:
-                                                    //           _deliveryCommentKey,
-                                                    //       valueMapper:
-                                                    //           (value) => value,
-                                                    //       emptyText: localizations
-                                                    //           .translate(i18
-                                                    //               .common
-                                                    //               .noMatchFound),
-                                                    //     );
-                                                    //   },
-                                                    // ),
                                                     DigitReactiveSearchDropdown<
                                                         String>(
                                                       label: localizations

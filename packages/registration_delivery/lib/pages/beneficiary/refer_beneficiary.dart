@@ -62,7 +62,6 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    // final router = context.router;
 
     return BlocConsumer<FacilityBloc, FacilityState>(
       listener: (context, state) {

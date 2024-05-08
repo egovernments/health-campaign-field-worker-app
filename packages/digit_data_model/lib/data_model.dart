@@ -37,10 +37,16 @@ export 'data/repositories/local/individual.dart';
 export 'data/repositories/local/project_facility.dart';
 export 'data/repositories/oplog/oplog.dart';
 
-
-export 'data/repositories/remote/service.dart';
-export 'data/repositories/remote/service_definition.dart';
+export 'data/repositories/remote/attributes.dart';
+export 'data/repositories/remote/boundary.dart';
+export 'data/repositories/remote/facility.dart';
+export 'data/repositories/remote/individual.dart';
 export 'data/repositories/remote/project.dart';
+export 'data/repositories/remote/project_facility.dart';
+export 'data/repositories/remote/project_resource.dart';
+export 'data/repositories/remote/service.dart';
+export 'data/repositories/remote/service_attributes.dart';
+export 'data/repositories/remote/service_definition.dart';
 
 export 'data/local_store/no_sql/schema/oplog.dart' hide AdditionalId;
 export 'data/local_store/sql_store/sql_store.dart';

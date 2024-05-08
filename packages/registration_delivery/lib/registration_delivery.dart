@@ -24,6 +24,9 @@ export 'data/repositories/local/household_member_base.dart';
 export 'data/repositories/local/side_effect.dart';
 export 'data/repositories/local/side_effect_base.dart';
 
+export 'data/repositories/remote/household.dart';
+export 'data/repositories/remote/household_member.dart';
+
 export 'models/entities/task.dart';
 export 'models/entities/target.dart';
 export 'models/entities/household.dart';
