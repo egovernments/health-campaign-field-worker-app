@@ -57,6 +57,8 @@ class _BeneficiaryProgressBarState extends State<BeneficiaryProgressBar> {
         projectId: context.projectId,
         createdBy: context.loggedInUserUuid,
         status: Status.administeredSuccess.toValue(),
+        plannedEndDate: lte.millisecondsSinceEpoch,
+        plannedStartDate: gte.millisecondsSinceEpoch,
       ),
       listener: (data) {
         if (mounted) {
@@ -79,7 +81,7 @@ class _BeneficiaryProgressBarState extends State<BeneficiaryProgressBar> {
     //   (element) => element.beneficiaryType == beneficiaryType,
     // );
 
-    final target = 250;
+    final target = 75;
 
     return DigitCard(
       child: ProgressIndicatorContainer(
