@@ -362,7 +362,6 @@ class _HomePageState extends LocalizedState<HomePage> {
               inventoryListener: HcmInventoryBloc(
                 context: context,
                 userId: context.loggedInUserUuid,
-                individualId: context.loggedInIndividualId,
                 projectId: context.projectId,
                 stockLocalRepository: context
                     .read<LocalRepository<StockModel, StockSearchModel>>(),
@@ -515,7 +514,6 @@ class _HomePageState extends LocalizedState<HomePage> {
               inventoryListener: HcmInventoryBloc(
                 context: context,
                 userId: context.loggedInUserUuid,
-                individualId: context.loggedInIndividualId,
                 projectId: context.projectId,
                 stockLocalRepository: context
                     .read<LocalRepository<StockModel, StockSearchModel>>(),
@@ -777,7 +775,7 @@ void setPackagesSingleton(BuildContext context) {
             context: context,
           ),
           projectId: context.projectId,
-          userId: context.loggedInIndividualId!,
+          userId: context.loggedInIndividualId ?? '',
           appVersion: Constants().version,
         );
 
@@ -796,7 +794,6 @@ void setPackagesSingleton(BuildContext context) {
           inventoryListener: HcmInventoryBloc(
             context: context,
             userId: context.loggedInUserUuid,
-            individualId: context.loggedInIndividualId,
             projectId: context.projectId,
             stockLocalRepository:
                 context.read<LocalRepository<StockModel, StockSearchModel>>(),

@@ -7,8 +7,6 @@ import 'package:inventory_management/data/local_store/sql_store/tables/stock_rec
 import 'package:referral_reconciliation/data/local_store/sql_store/tables/h_f_referral.dart'
     as hfRef;
 
-import 'package:registration_delivery/data/local_store/tables/target.dart'
-    as tar;
 import 'package:registration_delivery/data/local_store/tables/household.dart'
     as household;
 import 'package:registration_delivery/data/local_store/tables/household_member.dart'
@@ -31,10 +29,6 @@ class Stock extends sto.Stock {
 
 class StockReconciliation extends stk_rkn.StockReconciliation {
   StockReconciliation() : super();
-}
-
-class Target extends tar.Target {
-  Target() : super();
 }
 
 class Household extends household.Household {

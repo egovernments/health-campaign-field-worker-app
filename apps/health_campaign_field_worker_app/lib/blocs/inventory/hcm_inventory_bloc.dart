@@ -15,7 +15,6 @@ import '../sync/sync.dart';
 class HcmInventoryBloc extends InventoryListener {
   BuildContext? context;
   final String? userId;
-  final String? individualId;
   final String? projectId;
   final LocalRepository<StockModel, StockSearchModel>? stockLocalRepository;
   final LocalRepository<StockReconciliationModel,
@@ -25,7 +24,6 @@ class HcmInventoryBloc extends InventoryListener {
   HcmInventoryBloc({
     this.context,
     this.userId,
-    this.individualId,
     this.projectId,
     this.stockLocalRepository,
     this.stockReconLocalRepository,

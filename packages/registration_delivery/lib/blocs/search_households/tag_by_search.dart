@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:digit_data_model/data_model.dart';
 
-import '../../models/entities/beneficiary_type.dart';
 import '../../models/entities/household.dart';
 import '../../models/entities/household_member.dart';
 import '../../models/entities/project_beneficiary.dart';

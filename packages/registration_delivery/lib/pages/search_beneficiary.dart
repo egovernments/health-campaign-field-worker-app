@@ -4,12 +4,12 @@ import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:registration_delivery/blocs/registraton_delivery_listener.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 
 import '../blocs/beneficiary_registration/beneficiary_registration.dart';
-import '../models/entities/beneficiary_type.dart';
 import '../router/registration_delivery_router.gm.dart';
 import '../utils/utils.dart';
 import '../widgets/back_navigation_help_header.dart';

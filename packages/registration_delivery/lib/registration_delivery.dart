@@ -10,7 +10,6 @@ export 'data/local_store/tables/household_member.dart';
 export 'data/local_store/tables/referral.dart';
 export 'data/local_store/tables/task.dart';
 export 'data/local_store/tables/task_resource.dart';
-export 'data/local_store/tables/target.dart';
 
 export 'data/repositories/local/task_base.dart';
 export 'data/repositories/local/task.dart';
@@ -28,7 +27,6 @@ export 'data/repositories/remote/household.dart';
 export 'data/repositories/remote/household_member.dart';
 
 export 'models/entities/task.dart';
-export 'models/entities/target.dart';
 export 'models/entities/household.dart';
 export 'models/entities/household_member.dart';
 export 'models/entities/referral.dart';

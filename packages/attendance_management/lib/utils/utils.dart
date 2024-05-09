@@ -20,7 +20,7 @@ class AttendanceSingleton {
   String _userId = '';
   String _appVersion = '';
   String _tenantId = '';
-  PersistenceConfiguration persistenceConfiguration = PersistenceConfiguration
+  PersistenceConfiguration _persistenceConfiguration = PersistenceConfiguration
       .offlineFirst; // Default to offline first persistence configuration
 
   // Method to set attendance listeners and other information
@@ -39,13 +39,14 @@ class AttendanceSingleton {
   get userId => _userId;
   get appVersion => _appVersion;
   get tenantId => _tenantId;
+  get persistenceConfiguration => _persistenceConfiguration;
 
   void setTenantId(String tenantId) {
     _tenantId = tenantId;
   }
 
   void setPersistenceConfiguration(PersistenceConfiguration configuration) {
-    persistenceConfiguration = configuration;
+    _persistenceConfiguration = configuration;
   }
 
   // Method to get attendance registers

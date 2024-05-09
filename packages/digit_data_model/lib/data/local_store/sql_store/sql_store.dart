@@ -6,9 +6,9 @@ import 'package:inventory_management/models/entities/transaction_reason.dart';
 import 'package:inventory_management/models/entities/transaction_type.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import 'package:registration_delivery/models/entities/beneficiary_type.dart';
-import '../../../models/entities/address_type.dart';
 
+import '../../../models/entities/beneficiary_type.dart';
+import '../../../models/entities/address_type.dart';
 import '../../../models/entities/blood_group.dart';
 import '../../../models/entities/gender.dart';
 import '../../../models/pgr_complaints/pgr_complaints.dart';
@@ -38,6 +38,7 @@ import 'tables/user.dart';
 import 'tables/individual.dart';
 import 'tables/identifier.dart';
 import 'tables/name.dart';
+import 'tables/target.dart';
 
 part 'sql_store.g.dart';
 

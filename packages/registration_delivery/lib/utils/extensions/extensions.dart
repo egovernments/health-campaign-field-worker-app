@@ -8,7 +8,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-import '../../models/entities/beneficiary_type.dart';
 import '../utils.dart';
 
 part 'context_utility.dart';

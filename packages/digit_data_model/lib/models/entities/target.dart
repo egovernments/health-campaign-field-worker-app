@@ -2,7 +2,6 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:drift/drift.dart';
 import 'package:digit_data_model/data_model.dart';
-
 import 'beneficiary_type.dart';
 
 part 'target.mapper.dart';

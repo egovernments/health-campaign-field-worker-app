@@ -9,7 +9,6 @@ import 'package:stream_transform/stream_transform.dart';
 import 'package:digit_data_model/data_model.dart';
 
 import '../../data/repositories/local/registration_delivery_address.dart';
-import '../../models/entities/beneficiary_type.dart';
 import '../../models/entities/household.dart';
 import '../../models/entities/household_member.dart';
 import '../../models/entities/project_beneficiary.dart';

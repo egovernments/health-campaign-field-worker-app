@@ -9,7 +9,6 @@ import 'package:registration_delivery/utils/extensions/extensions.dart';
 import '../../blocs/app_localization.dart';
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
-import '../../models/entities/beneficiary_type.dart';
 import '../../models/entities/side_effect.dart';
 import '../../models/entities/status.dart';
 import '../../models/entities/task.dart';

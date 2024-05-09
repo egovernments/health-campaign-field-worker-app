@@ -3,15 +3,11 @@ import 'dart:math';
 
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/utils/utils.dart';
-import 'package:drift/drift.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:uuid/uuid.dart';
 import 'package:collection/collection.dart';
 
 import '../blocs/registraton_delivery_listener.dart';
 import '../models/entities/additional_fields_type.dart';
-import '../models/entities/beneficiary_type.dart';
 import '../models/entities/referral.dart';
 import '../models/entities/side_effect.dart';
 import '../models/entities/status.dart';
