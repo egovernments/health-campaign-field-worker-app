@@ -139,9 +139,10 @@ class _BoundarySelectionPageState
                                       menuItems: filteredItems,
                                       formControlName: label,
                                       valueMapper: (value) {
-                                        return value.name ??
+                                        return localizations
+                                              .translate (value.name ??
                                             value.code ??
-                                            'No Value';
+                                            'No Value');
                                       },
                                       onFieldTap: (value) {
                                         setState(() {
