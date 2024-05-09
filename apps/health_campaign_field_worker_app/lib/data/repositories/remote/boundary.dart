@@ -113,6 +113,7 @@ class BoundaryRemoteRepository
         materializedPath: [...materializedPath, e.code ?? ''].join('.'),
         boundaryNum: [...materializedPath, e.code ?? ''].length - 1,
         label: e.boundaryType,
+        name: e.code?.split('_').lastOrNull ?? e.code,
       );
 
       boundaryModelList.add(boundary.copyWith(children: []));
