@@ -31,9 +31,9 @@ class BoundaryRemoteRepository
           searchPath,
           queryParameters: {
             ...query.toMap(),
-            'includeChildren':true,
-            'hierarchyType':'Admin6',
-          'offset': 0,
+            'includeChildren': true,
+            'hierarchyType': envConfig.variables.hierarchyType,
+            'offset': 0,
             'limit': 100,
             'tenantId': envConfig.variables.tenantId,
           },
@@ -90,7 +90,10 @@ class BoundaryRemoteRepository
     List<BoundaryModel> boundaryModelList = _castToBoundaryModel(
       List.castFrom(boundaryList),
     );
-    boundaryModelList = _flattenBoundaryMap(boundaryModelList, i: 0,);
+    boundaryModelList = _flattenBoundaryMap(
+      boundaryModelList,
+      i: 0,
+    );
 
     return boundaryModelList;
   }
@@ -108,7 +111,7 @@ class BoundaryRemoteRepository
       final materializedPath = parent?.materializedPath?.split('.') ?? [];
       final boundary = e.copyWith(
         materializedPath: [...materializedPath, e.code ?? ''].join('.'),
-        boundaryNum: [...materializedPath, e.code ?? ''].length -1,
+        boundaryNum: [...materializedPath, e.code ?? ''].length - 1,
         label: e.boundaryType,
       );
 
@@ -119,7 +122,6 @@ class BoundaryRemoteRepository
         i: i,
       ));
     }
-
 
     return boundaryModelList;
   }

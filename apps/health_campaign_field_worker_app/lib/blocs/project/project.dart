@@ -475,8 +475,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     boundaryRefetched) {
         boundaries = await boundaryRemoteRepository.search(
           BoundarySearchModel(
-            // TODO Need to change this.
-            hierarchyType: 'Admin6',
+            hierarchyType: envConfig.variables.hierarchyType,
           ),
         );
         await boundaryLocalRepository.bulkCreate(boundaries);

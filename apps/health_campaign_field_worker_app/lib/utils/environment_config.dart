@@ -114,6 +114,11 @@ class Variables {
     'access/v1/actions/mdms/_get',
   );
 
+    static const _hierarchyType = EnvEntry(
+    'HIERARCHY_TYPE',
+    'ADMIN',
+  );
+
   const Variables({
     this.useFallbackValues = false,
     required DotEnv dotEnv,
@@ -130,6 +135,10 @@ class Variables {
   String get mdmsApiPath => useFallbackValues
       ? _mdmsApi.value
       : _dotEnv.get(_mdmsApi.key, fallback: _mdmsApi.value);
+
+ String get hierarchyType => useFallbackValues
+      ? _hierarchyType.value
+      : _dotEnv.get(_hierarchyType.key, fallback: _hierarchyType.value);
 
   String get actionMapApiPath => useFallbackValues
       ? _actionMapUrl.value
