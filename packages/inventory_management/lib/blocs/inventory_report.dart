@@ -5,6 +5,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:inventory_management/models/entities/stock.dart';
 
 import '../models/entities/stock_reconciliation.dart';
+import '../utils/utils.dart';
 import 'inventory_listener.dart';
 
 part 'inventory_report.freezed.dart';

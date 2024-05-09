@@ -44,8 +44,8 @@ class AttendanceLocalRepository extends LocalRepository<AttendanceRegisterModel,
                 query.id!,
               ),
             if (query.staffId != null)
-              sql.attendanceRegister.id.equalsExp(
-                sql.staff.registerId,
+              sql.staff.userId.equals(
+                query.staffId!,
               ),
             if (query.referenceId != null)
               sql.attendanceRegister.referenceId.equals(

@@ -5,6 +5,7 @@ import 'package:inventory_management/blocs/inventory_report.dart';
 import 'package:inventory_management/models/entities/stock.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:inventory_management/models/entities/stock_reconciliation.dart';
+import 'package:inventory_management/utils/utils.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockStockReconciliationReport extends Mock

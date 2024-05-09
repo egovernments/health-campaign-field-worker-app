@@ -1,6 +1,6 @@
 name: attendance_management
 description: Digit UI attendance_management specification
-version: 0.0.1+1
+version: 0.0.1
 homepage:
 
 environment:
@@ -29,6 +29,7 @@ dependencies:
   drift_db_viewer: ^2.0.0
   auto_route: ^7.8.4
   digit_data_model: ^0.0.1
+  connectivity_plus: ^5.0.2
 
 dev_dependencies:
   flutter_test:

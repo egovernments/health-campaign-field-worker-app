@@ -11,11 +11,8 @@ New files or changes needed in HCM App:
 
 Add attendance package dependency in pubspec
 Create a bloc which extends attendance listener class and create the override methods
-Create model classes which import attendance models and add companion class
-Create repositories local and remote as per project requirements and structure
 Add typedef for repositories in untils/typedef
-Initialize repo in network manager, and create oplog
-Create sql tables in case of offline
+Initialize repo in network manager
 Add navigation to manage attendance page from hcm app and pass the required fields
 
 

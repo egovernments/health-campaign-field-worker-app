@@ -1,3 +1,4 @@
+import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/data/repositories/local/attendance_logs.dart';
 import 'package:attendance_management/data/repositories/local/attendance_register.dart';
 import 'package:attendance_management/data/repositories/remote/attendance_logs.dart';
@@ -58,6 +59,8 @@ class Constants {
         retryTimeInterval: envConfig.variables.retryTimeInterval,
         tenantId: envConfig.variables.tenantId,
         errorDumpApiPath: envConfig.variables.dumpErrorApiPath);
+    AttendanceSingleton().setTenantId(envConfig.variables.tenantId);
+    RegistrationDeliverySingleton().setTenantId(envConfig.variables.tenantId);
     await _initializeIsar(version);
   }
 

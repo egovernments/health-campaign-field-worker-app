@@ -109,7 +109,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           ),
         );
         await localSecureStore
-            .setSelectedIndividual(loggedInIndividual.first.id);
+            .setSelectedIndividual(loggedInIndividual.firstOrNull?.id);
       }
 
       emit(
@@ -118,6 +118,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           refreshToken: result.refreshToken,
           userModel: result.userRequestModel,
           actionsWrapper: actionsWrapper,
+          individualId: await localSecureStore.userIndividualId,
         ),
       );
     } on DioException catch (error) {

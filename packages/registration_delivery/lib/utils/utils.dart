@@ -3,10 +3,9 @@ import 'dart:math';
 
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/models/entities/individual.dart';
+import 'package:digit_data_model/utils/utils.dart';
 import 'package:drift/drift.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:registration_delivery/utils/constants.dart';
 import 'package:uuid/uuid.dart';
 import 'package:collection/collection.dart';
 
@@ -17,41 +16,6 @@ import '../models/entities/referral.dart';
 import '../models/entities/side_effect.dart';
 import '../models/entities/status.dart';
 import '../models/entities/task.dart';
-import 'extensions/extensions.dart';
-
-/// This function takes an iterable of boolean expressions and builds an AND expression from them.
-/// If the iterable is empty, it returns a constant true expression.
-/// Otherwise, it reduces the iterable to a single expression using the & operator, and checks if the result equals true.
-Expression<bool> buildAnd(Iterable<Expression<bool>> iterable) {
-  if (iterable.isEmpty) return const Constant(true);
-  final result = iterable.reduce((value, element) => value & element);
-
-  return result.equals(true);
-}
-
-Expression<bool> buildOr(Iterable<Expression<bool>> iterable) {
-  if (iterable.isEmpty) return const Constant(true);
-  final result = iterable.reduce((value, element) => value | element);
-
-  return result.equals(true);
-}
-
-/// This class is a singleton that generates unique identifiers using the Uuid package.
-class IdGen {
-  static const IdGen _instance = IdGen._internal();
-
-  static IdGen get instance => _instance;
-
-  /// Shorthand for [instance]
-  static IdGen get i => instance;
-
-  final Uuid uuid;
-
-  const IdGen._internal() : uuid = const Uuid();
-
-  /// Generates a new unique identifier.
-  String get identifier => uuid.v1();
-}
 
 /// This class contains custom validators for form controls.
 class CustomValidator {
@@ -351,8 +315,7 @@ class RegistrationDeliverySingleton {
   }
 
   void setInitialData(
-      {required String tenantId,
-      required String loggedInUserUuid,
+      {required String loggedInUserUuid,
       required double maxRadius,
       required String projectId,
       required BeneficiaryType selectedBeneficiaryType,
@@ -365,7 +328,6 @@ class RegistrationDeliverySingleton {
       required List<Map<String, String>> deliveryCommentOptions,
       required Iterable<dynamic> symptomsTypes,
       required Iterable<dynamic> referralReasons}) {
-    _tenantId = tenantId;
     _loggedInUserUuid = loggedInUserUuid;
     _maxRadius = maxRadius;
     _projectId = projectId;
@@ -380,6 +342,10 @@ class RegistrationDeliverySingleton {
     _deliveryCommentOptions = deliveryCommentOptions;
     _symptomsTypes = symptomsTypes;
     _referralReasons = referralReasons;
+  }
+
+  void setTenantId(String tenantId) {
+    _tenantId = tenantId;
   }
 
   String? get tenantId => _tenantId;

@@ -1,23 +1,14 @@
 // Importing necessary packages and files
-import 'package:collection/collection.dart';
+import 'package:attendance_management/attendance_management.dart';
+import 'package:digit_data_model/data/data_repository.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:inventory_management/utils/utils.dart';
-import 'package:package_info_plus/package_info_plus.dart';
-import 'package:inventory_management/blocs/inventory_listener.dart';
-import 'package:registration_delivery/models/entities/beneficiary_type.dart';
-import 'package:registration_delivery/registration_delivery.dart';
 
-import '../../blocs/auth/auth.dart';
-import '../../blocs/boundary/boundary.dart';
-import '../../blocs/project/project.dart';
-import '../../data/network_manager.dart';
-import '../../models/auth/auth_model.dart';
-import '../app_exception.dart';
+import '../utils.dart';
 
-// Importing the file 'context_utility.dart' with a 'part' directive.
 part 'context_utility.dart';
 
 // Extension to calculate age based on a DateTime object.
@@ -75,4 +66,3 @@ extension EpochToDateTime on int? {
     return this == null ? null : DateTime.fromMillisecondsSinceEpoch(this!);
   }
 }
-

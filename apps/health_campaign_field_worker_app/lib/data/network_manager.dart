@@ -226,8 +226,6 @@ class NetworkManagerConfiguration {
   });
 }
 
-enum PersistenceConfiguration { offlineFirst, onlineOnly }
-
 abstract class SyncError implements Exception {
   final dynamic error;
 

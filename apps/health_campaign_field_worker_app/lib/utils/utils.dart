@@ -43,35 +43,6 @@ export 'app_exception.dart';
 export 'constants.dart';
 export 'extensions/extensions.dart';
 
-Expression<bool> buildAnd(Iterable<Expression<bool>> iterable) {
-  if (iterable.isEmpty) return const Constant(true);
-  final result = iterable.reduce((value, element) => value & element);
-
-  return result.equals(true);
-}
-
-Expression<bool> buildOr(Iterable<Expression<bool>> iterable) {
-  if (iterable.isEmpty) return const Constant(true);
-  final result = iterable.reduce((value, element) => value | element);
-
-  return result.equals(true);
-}
-
-class IdGen {
-  static const IdGen _instance = IdGen._internal();
-
-  static IdGen get instance => _instance;
-
-  /// Shorthand for [instance]
-  static IdGen get i => instance;
-
-  final Uuid uuid;
-
-  const IdGen._internal() : uuid = const Uuid();
-
-  String get identifier => uuid.v1();
-}
-
 class CustomValidator {
   /// Validates that control's value must be `true`
   static Map<String, dynamic>? requiredMin(

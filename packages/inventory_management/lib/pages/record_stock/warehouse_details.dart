@@ -13,6 +13,7 @@ import 'package:digit_data_model/data_model.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../widgets/localized.dart';
 import '../../blocs/record_stock.dart';
+import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/inventory/no_facilities_assigned_dialog.dart';
 import '../facility_selection.dart';

@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:inventory_management/blocs/inventory_listener.dart';
 import 'package:inventory_management/blocs/product_variant.dart';
 import 'package:bloc_test/bloc_test.dart';
+import 'package:inventory_management/utils/utils.dart';
 import 'package:mocktail/mocktail.dart';
 
 // Mock class for InventorySingleton

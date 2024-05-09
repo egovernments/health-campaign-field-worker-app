@@ -6,6 +6,7 @@ import 'package:inventory_management/blocs/inventory_listener.dart';
 import 'package:inventory_management/widgets/component_wrapper/facility_bloc_wrapper.dart';
 import 'package:inventory_management/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import '../../blocs/record_stock.dart';
+import '../../utils/utils.dart';
 
 // This class is a wrapper for the RecordStock page.
 // It is a stateless widget that implements the AutoRouteWrapper interface.

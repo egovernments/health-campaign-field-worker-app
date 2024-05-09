@@ -4,6 +4,7 @@ import 'package:inventory_management/blocs/inventory_listener.dart';
 import 'package:inventory_management/blocs/record_stock.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:inventory_management/models/entities/stock.dart';
+import 'package:inventory_management/utils/utils.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:digit_data_model/data_model.dart';
 

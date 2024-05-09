@@ -12,6 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:inventory_management/inventory_management.dart';
+import 'package:inventory_management/utils/utils.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:attendance_management/attendance_management.dart';
@@ -715,7 +716,6 @@ void setPackagesSingleton(BuildContext context) {
       orElse: () {},
       initialized: (AppConfiguration appConfiguration, _) {
         RegistrationDeliverySingleton().setInitialData(
-          tenantId: envConfig.variables.tenantId,
           loggedInUserUuid: context.loggedInUserUuid,
           maxRadius: appConfiguration.maxRadius!,
           projectId: context.projectId,
@@ -774,23 +774,11 @@ void setPackagesSingleton(BuildContext context) {
 
         AttendanceSingleton().setAttendanceListeners(
           attendanceListeners: HCMAttendanceBloc(
-            userId: context.loggedInUserUuid,
-            projectId: context.projectId,
-            attendanceLocalRepository: context.read<
-                LocalRepository<AttendanceRegisterModel,
-                    AttendanceRegisterSearchModel>>(),
-            individualLocalRepository: context.read<
-                LocalRepository<IndividualModel, IndividualSearchModel>>(),
-            attendanceLogLocalRepository: context.read<
-                LocalRepository<AttendanceLogModel,
-                    AttendanceLogSearchModel>>(),
             context: context,
-            individualId: context.loggedInIndividualId,
           ),
           projectId: context.projectId,
-          userId: context.loggedInUserUuid,
+          userId: context.loggedInIndividualId!,
           appVersion: Constants().version,
-          tenantId: envConfig.variables.tenantId,
         );
 
         InventorySingleton().setInitialData(

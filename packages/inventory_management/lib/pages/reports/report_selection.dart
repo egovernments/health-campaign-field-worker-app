@@ -8,6 +8,7 @@ import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../widgets/localized.dart';
 import '../../blocs/inventory_listener.dart';
 import '../../blocs/inventory_report.dart';
+import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
 
 @RoutePage()

@@ -44,8 +44,6 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
       ),
     );
 
-    int? boundaryNum = boundaryList.first.boundaryNum;
-
     final List<String> boundaryLabelList = [];
     for (var element in boundaryList) {
       if (!boundaryLabelList.contains(element.label.toString())) {

@@ -31,4 +31,6 @@ export 'pages/manage_attendance.dart';
 export 'pages/mark_attendance.dart';
 export 'pages/session_select.dart';
 
+export 'utils/utils.dart';
+
 export 'router/attendance_router.dart';

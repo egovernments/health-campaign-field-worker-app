@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../blocs/inventory_listener.dart';
 import '../../blocs/product_variant.dart';
+import '../../utils/utils.dart';
 
 class ProductVariantBlocWrapper extends StatelessWidget {
   final Widget child;

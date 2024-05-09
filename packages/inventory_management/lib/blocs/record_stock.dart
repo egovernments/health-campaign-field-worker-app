@@ -6,6 +6,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:digit_data_model/data_model.dart';
 
+import '../utils/utils.dart';
+
 part 'record_stock.freezed.dart';
 
 typedef RecordStockEmitter = Emitter<RecordStockState>;

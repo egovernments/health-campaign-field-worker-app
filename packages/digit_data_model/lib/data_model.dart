@@ -58,6 +58,7 @@ export 'blocs/project_facility/project_facility.dart';
 export 'blocs/product_variant/product_variant.dart';
 
 export 'utils/constants.dart' hide EntityPlurals;
+export 'utils/utils.dart';
 
 export 'models/entities/address.dart';
 export 'models/entities/boundary.dart';

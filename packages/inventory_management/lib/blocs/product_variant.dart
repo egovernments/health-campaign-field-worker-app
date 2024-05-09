@@ -6,6 +6,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:inventory_management/blocs/inventory_listener.dart';
 import 'package:digit_data_model/data_model.dart';
 
+import '../utils/utils.dart';
+
 part 'product_variant.freezed.dart';
 
 typedef ProductVariantEmitter = Emitter<InventoryProductVariantState>;

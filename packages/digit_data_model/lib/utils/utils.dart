@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+import 'package:uuid/uuid.dart';
 
 /// This function takes an iterable of boolean expressions and builds an AND expression from them.
 /// If the iterable is empty, it returns a constant true expression.
@@ -15,6 +16,21 @@ Expression<bool> buildOr(Iterable<Expression<bool>> iterable) {
   final result = iterable.reduce((value, element) => value | element);
 
   return result.equals(true);
+}
+
+class IdGen {
+  static const IdGen _instance = IdGen._internal();
+
+  static IdGen get instance => _instance;
+
+  /// Shorthand for [instance]
+  static IdGen get i => instance;
+
+  final Uuid uuid;
+
+  const IdGen._internal() : uuid = const Uuid();
+
+  String get identifier => uuid.v1();
 }
 
 // create a singleton class to hold the envConfigVariables
@@ -49,3 +65,5 @@ class DigitDataModelSingleton {
   get tenantId => _tenantId;
   get errorDumpApiPath => _errorDumpApiPath;
 }
+
+enum PersistenceConfiguration { offlineFirst, onlineOnly }

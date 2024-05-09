@@ -1,7 +1,5 @@
 part of 'extensions.dart';
 
-enum PersistenceConfiguration { offlineFirst, onlineOnly }
-
 extension ContextUtilityExtensions on BuildContext {
   int millisecondsSinceEpoch([DateTime? dateTime]) {
     return (dateTime ?? DateTime.now()).millisecondsSinceEpoch;

@@ -1,4 +1,5 @@
 import 'package:attendance_management/blocs/date_session_bloc.dart';
+import 'package:attendance_management/utils/extensions/extensions.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
@@ -12,6 +13,7 @@ import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/localized.dart';
 import '../blocs/app_localization.dart';
 import '../blocs/attendance_individual_bloc.dart';
+import '../models/entities/attendance_log.dart';
 import '../models/entities/attendance_register.dart';
 import '../models/entities/enum_values.dart';
 import '../router/attendance_router.gm.dart';
@@ -43,10 +45,17 @@ class _AttendanceDateSessionSelectionPageState
   List<String> attendeeList = [];
   String missedDays = "";
   DateSessionBloc sessionBloc = DateSessionBloc(const DateSessionLoading());
-  AttendanceIndividualBloc individualLogBloc = AttendanceIndividualBloc();
+  AttendanceIndividualBloc? individualLogBloc;
 
   @override
   void initState() {
+    individualLogBloc = AttendanceIndividualBloc(
+      const AttendanceIndividualState.loading(),
+      attendanceLogDataRepository: context
+          .repository<AttendanceLogModel, AttendanceLogSearchModel>(context),
+      attendanceLogLocalRepository: context.read<
+          LocalRepository<AttendanceLogModel, AttendanceLogSearchModel>>(),
+    );
     super.initState();
   }
 
@@ -74,7 +83,7 @@ class _AttendanceDateSessionSelectionPageState
                 ),
               ),
             child: BlocProvider<AttendanceIndividualBloc>(
-              create: (context) => individualLogBloc,
+              create: (context) => individualLogBloc!,
               child: BlocBuilder<DateSessionBloc, DateSessionStates>(
                   builder: (ctx, registerState) {
                 return registerState.maybeWhen(

@@ -1,9 +1,12 @@
 import 'dart:async';
 
 import 'package:attendance_management/attendance_management.dart';
+import 'package:attendance_management/utils/extensions/extensions.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_table_model.dart';
+import 'package:digit_components/widgets/atoms/digit_toaster.dart';
+import 'package:digit_data_model/data/data_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -14,6 +17,7 @@ import '../../widgets/localized.dart';
 import '../blocs/attendance_individual_bloc.dart';
 import '../models/entities/enum_values.dart';
 import '../router/attendance_router.gm.dart';
+import '../utils/utils.dart';
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/circular_button.dart';
 import '../widgets/no_result_card.dart';
@@ -48,12 +52,19 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
   bool isDialogOpen = false;
   Timer? _debounce;
   late TextEditingController controller;
-  AttendanceIndividualBloc individualLogBloc = AttendanceIndividualBloc();
+  AttendanceIndividualBloc? individualLogBloc;
 
   @override
   void initState() {
     controller = TextEditingController();
     controller.addListener(searchByName);
+    individualLogBloc = AttendanceIndividualBloc(
+      const AttendanceIndividualState.loading(),
+      attendanceLogDataRepository: context
+          .repository<AttendanceLogModel, AttendanceLogSearchModel>(context),
+      attendanceLogLocalRepository: context.read<
+          LocalRepository<AttendanceLogModel, AttendanceLogSearchModel>>(),
+    );
     super.initState();
   }
 
@@ -61,10 +72,10 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
     if (_debounce?.isActive ?? false) _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 500), () {
       if (controller.text.length >= 2) {
-        individualLogBloc
+        individualLogBloc!
             .add(SearchAttendeesEvent(name: controller.text.trim()));
       } else if (controller.text.length < 2) {
-        individualLogBloc.add(const SearchAttendeesEvent(name: ''));
+        individualLogBloc!.add(const SearchAttendeesEvent(name: ''));
       }
     });
   }
@@ -88,7 +99,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
         },
         lazy: false,
         child: BlocProvider<AttendanceIndividualBloc>(
-            create: (context) => individualLogBloc
+            create: (context) => individualLogBloc!
               ..add(
                 AttendanceIndividualLogSearchEvent(
                   attendees:
@@ -332,7 +343,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
           index: double.parse(tableDataModel.status.toString()),
           isNotGreyed: false,
           onTap: () {
-            individualLogBloc.add(
+            individualLogBloc!.add(
               AttendanceMarkEvent(
                 individualId: tableDataModel.individualId!,
                 registerId: tableDataModel.registerId!,
@@ -431,19 +442,35 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
       String type,
       double? latitude,
       double? longitude) {
-    DigitDialog.show(context,
-        options: DigitDialogOptions(
-          titleText: localizations.translate(
-            i18.attendance.confirmationLabel,
-          ),
-          contentText:
-              '${localizations.translate(i18.attendance.confirmationDesc)} \n\n${localizations.translate(i18.attendance.confirmationDescNote)}',
-          primaryAction: DigitDialogActions(
-            label: localizations.translate(
-              i18.attendance.proceed,
-            ),
-            action: (context) {
-              individualLogBloc.add(SaveAsDraftEvent(
+    state.maybeWhen(
+        orElse: () {},
+        loaded: (
+          attendanceSearchModelList,
+          attendanceCollectionModel,
+          offsetData,
+          currentOffset,
+          countData,
+          limitData,
+          flag,
+        ) async {
+          if (((attendanceCollectionModel ?? [])
+                      .any((a) => a.status == -1 || a.status == null) &&
+                  type != EnumValues.draft.toValue()) ||
+              ((attendanceCollectionModel ?? [])
+                      .every((a) => a.status == -1 || a.status == null) &&
+                  type == EnumValues.draft.toValue())) {
+            DigitToast.show(
+              context,
+              options: DigitToastOptions(
+                localizations
+                    .translate(i18.attendance.pleaseMarkAttForIndividuals),
+                true,
+                theme,
+              ),
+            );
+          } else {
+            if (type == EnumValues.draft.toValue()) {
+              individualLogBloc?.add(SaveAsDraftEvent(
                 entryTime: widget.entryTime,
                 exitTime: widget.exitTime,
                 selectedDate: widget.dateTime,
@@ -452,17 +479,51 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                 latitude: latitude,
                 longitude: longitude,
               ));
-              Navigator.of(context).pop();
-              navigateToAcknowledgement(localizations);
-            },
-          ),
-          secondaryAction: DigitDialogActions(
-            label: localizations.translate(i18.common.coreCommonGoback),
-            action: (context) {
-              Navigator.of(context).pop();
-            },
-          ),
-        ));
+              DigitToast.show(
+                context,
+                options: DigitToastOptions(
+                  localizations.translate(i18.attendance.draftSavedMessage),
+                  false,
+                  theme,
+                ),
+              );
+            } else {
+              DigitDialog.show(context,
+                  options: DigitDialogOptions(
+                    titleText: localizations.translate(
+                      i18.attendance.confirmationLabel,
+                    ),
+                    contentText:
+                        '${localizations.translate(i18.attendance.confirmationDesc)} \n\n${localizations.translate(i18.attendance.confirmationDescNote)}',
+                    primaryAction: DigitDialogActions(
+                      label: localizations.translate(
+                        i18.attendance.proceed,
+                      ),
+                      action: (context) {
+                        individualLogBloc?.add(SaveAsDraftEvent(
+                          entryTime: widget.entryTime,
+                          exitTime: widget.exitTime,
+                          selectedDate: widget.dateTime,
+                          isSingleSession: widget.session == null,
+                          createOplog: type != EnumValues.draft.toValue(),
+                          latitude: latitude,
+                          longitude: longitude,
+                        ));
+                        Navigator.of(context).pop();
+                        navigateToAcknowledgement(localizations);
+                      },
+                    ),
+                    secondaryAction: DigitDialogActions(
+                      label:
+                          localizations.translate(i18.common.coreCommonGoback),
+                      action: (context) {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ));
+            }
+          }
+        });
   }
 
   void navigateToAcknowledgement(AttendanceLocalization localizations) {

@@ -5,7 +5,3 @@
   - Manage Attendance: Mark attendance of the employees and send the data to parent application.
   - Select Session: Select the session for which the attendance is to be marked.
   - Mark Attendance: Mark the attendance of the employees.
-
-## 0.0.1+1
-
-* Updated return types of attendance_listener for better implementation
