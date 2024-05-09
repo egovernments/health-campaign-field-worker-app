@@ -11,7 +11,6 @@ import '../../../models/mdms/service_registry/service_registry_model.dart';
 import '../../../models/project_type/project_type_model.dart';
 import '../../../models/role_actions/role_actions_model.dart';
 import '../../local_store/no_sql/schema/app_configuration.dart';
-import '../../local_store/no_sql/schema/project_types.dart';
 import '../../local_store/no_sql/schema/row_versions.dart';
 import '../../local_store/no_sql/schema/service_registry.dart';
 
@@ -127,150 +126,149 @@ class MdmsRepository {
       rowVersionList.add(rowVersion);
     }
 
-    result.appConfig?.appConfiglist?.forEach((element) {
-      final backgroundServiceConfig = BackgroundServiceConfig()
-        ..apiConcurrency = element.backgroundServiceConfig?.apiConcurrency
-        ..batteryPercentCutOff =
-            element.backgroundServiceConfig?.batteryPercentCutOff
-        ..serviceInterval = element.backgroundServiceConfig?.serviceInterval;
+    final element = result.hcmWrapperModel;
+    final appConfig = result.hcmWrapperModel.appConfig.first;
+    final commonMasters = result.commonMasters;
+    final backgroundServiceConfig = BackgroundServiceConfig()
+      ..apiConcurrency = element.backgroundServiceConfig?.apiConcurrency
+      ..batteryPercentCutOff =
+          element.backgroundServiceConfig?.batteryPercentCutOff
+      ..serviceInterval = element.backgroundServiceConfig?.serviceInterval;
 
-      appConfiguration
-        ..networkDetection = element.networkDetection
-        ..persistenceMode = element.persistenceMode
-        ..syncMethod = element.syncMethod
-        ..syncTrigger = element.syncTrigger
-        ..tenantId = element.tenantId
-        ..maxRadius = element.maxRadius
-        ..backgroundServiceConfig = backgroundServiceConfig;
+    appConfiguration
+      ..networkDetection = appConfig.networkDetection
+      ..persistenceMode = appConfig.persistenceMode
+      ..syncMethod = appConfig.syncMethod
+      ..syncTrigger = appConfig.syncTrigger
+      ..tenantId = appConfig.tenantId
+      ..maxRadius = appConfig.maxRadius
+      ..backgroundServiceConfig = backgroundServiceConfig;
 
-      final List<Languages> languageList = element.languages.map((element) {
-        final languages = Languages()
-          ..label = element.label
-          ..value = element.value;
+    final List<Languages> languageList =
+        commonMasters.stateInfo.languages.map((element) {
+      final languages = Languages()
+        ..label = element.label
+        ..value = element.value;
 
-        return languages;
-      }).toList();
+      return languages;
+    }).toList();
 
-      final List<BandwidthBatchSize> bandwidthBatchSize =
-          element.bandWidthBatchSize.map((e) {
-        final bandwithBatchSizeElement = BandwidthBatchSize()
-          ..batchSize = e.batchSize
-          ..maxRange = e.maxRange
-          ..minRange = e.minRange;
+    final List<BandwidthBatchSize> bandwidthBatchSize =
+        element.bandWidthBatchSize.map((e) {
+      final bandwidthBatchSizeElement = BandwidthBatchSize()
+        ..batchSize = e.batchSize
+        ..maxRange = e.maxRange
+        ..minRange = e.minRange;
 
-        return bandwithBatchSizeElement;
-      }).toList();
-      final List<CallSupportList> callSupportList =
-          element.callSupportOptions!.map((element) {
-        final callNumber = CallSupportList()
-          ..name = element.name
-          ..code = element.code;
+      return bandwidthBatchSizeElement;
+    }).toList();
+    final List<CallSupportList> callSupportList =
+        element.callSupportOptions!.map((element) {
+      final callNumber = CallSupportList()
+        ..name = element.name
+        ..code = element.code;
 
-        return callNumber;
-      }).toList();
+      return callNumber;
+    }).toList();
 
-      final List<HouseholdDeletionReasonOptions>
-          householdDeletionReasonOptions =
-          element.householdDeletionReasonOptions.map((element) {
-        final deletionReasonOption = HouseholdDeletionReasonOptions()
-          ..name = element.value
-          ..code = element.code;
+    final List<HouseholdDeletionReasonOptions> householdDeletionReasonOptions =
+        element.householdDeletionReasonOptions.map((element) {
+      final deletionReasonOption = HouseholdDeletionReasonOptions()
+        ..name = element.value
+        ..code = element.code;
 
-        return deletionReasonOption;
-      }).toList();
+      return deletionReasonOption;
+    }).toList();
 
-      final List<HouseholdMemberDeletionReasonOptions>
-          householdMemberDeletionReasonOptions =
-          element.householdMemberDeletionReasonOptions.map((element) {
-        final deletionReasonOption = HouseholdMemberDeletionReasonOptions()
-          ..name = element.value
-          ..code = element.code;
+    final List<HouseholdMemberDeletionReasonOptions>
+        householdMemberDeletionReasonOptions =
+        element.householdMemberDeletionReasonOptions.map((element) {
+      final deletionReasonOption = HouseholdMemberDeletionReasonOptions()
+        ..name = element.value
+        ..code = element.code;
 
-        return deletionReasonOption;
-      }).toList();
+      return deletionReasonOption;
+    }).toList();
 
-      final List<GenderOptions> genderOptions =
-          element.genderOptions.map((element) {
-        final genderOption = GenderOptions()
-          ..name = element.name
-          ..code = element.code;
+    final List<GenderOptions> genderOptions =
+        commonMasters.genderType.map((element) {
+      final genderOption = GenderOptions()
+        ..name = element.name
+        ..code = element.code;
 
-        return genderOption;
-      }).toList();
+      return genderOption;
+    }).toList();
 
-      final List<IdTypeOptions> idTypeOptions =
-          element.idTypeOptions.map((element) {
-        final idOption = IdTypeOptions()
-          ..name = element.name
-          ..code = element.code;
+    final List<IdTypeOptions> idTypeOptions =
+        element.idTypeOptions.map((element) {
+      final idOption = IdTypeOptions()
+        ..name = element.name
+        ..code = element.code;
 
-        return idOption;
-      }).toList();
+      return idOption;
+    }).toList();
 
-      final List<ChecklistTypes> checklistTypes =
-          element.checklistTypes.map((e) {
-        final checklist = ChecklistTypes()
-          ..name = e.name
-          ..code = e.code;
+    final List<ChecklistTypes> checklistTypes = element.checklistTypes.map((e) {
+      final checklist = ChecklistTypes()
+        ..name = e.name
+        ..code = e.code;
 
-        return checklist;
-      }).toList();
+      return checklist;
+    }).toList();
 
-      final List<TransportTypes> transportTypes =
-          element.transportTypes.map((e) {
-        final transportTypes = TransportTypes()
-          ..name = e.name
-          ..code = e.code;
+    final List<TransportTypes> transportTypes = element.transportTypes.map((e) {
+      final transportTypes = TransportTypes()
+        ..name = e.name
+        ..code = e.code;
 
-        return transportTypes;
-      }).toList();
+      return transportTypes;
+    }).toList();
 
-      final List<DeliveryCommentOptions> deliveryCommentOptions =
-          element.deliveryCommentOptions.map((element) {
-        final deliveryCommentOption = DeliveryCommentOptions()
-          ..name = element.name
-          ..code = element.code;
+    final List<DeliveryCommentOptions> deliveryCommentOptions =
+        element.deliveryCommentOptions.map((element) {
+      final deliveryCommentOption = DeliveryCommentOptions()
+        ..name = element.name
+        ..code = element.code;
 
-        return deliveryCommentOption;
-      }).toList();
+      return deliveryCommentOption;
+    }).toList();
 
-      final List<Interfaces> interfaceList =
-          element.backendInterface.interface.map((e) {
-        final config = Config()..localStoreTTL = e.config.localStoreTTL;
+    final List<Interfaces> interfaceList =
+        element.backendInterface.interface.map((e) {
+      final config = Config()..localStoreTTL = e.config.localStoreTTL;
 
-        final interfaces = Interfaces()
-          ..name = e.name
-          ..type = e.type
-          ..confg = config;
+      final interfaces = Interfaces()
+        ..name = e.name
+        ..type = e.type
+        ..confg = config;
 
-        return interfaces;
-      }).toList();
+      return interfaces;
+    }).toList();
 
-      final List<ComplaintTypes>? complaintTypesList =
-          pgrServiceDefinitions.serviceDefinitionWrapper?.definition.map((e) {
-        final types = ComplaintTypes()
-          ..name = e.name
-          ..code = e.serviceCode;
+    final List<ComplaintTypes>? complaintTypesList =
+        pgrServiceDefinitions.serviceDefinitionWrapper?.definition.map((e) {
+      final types = ComplaintTypes()
+        ..name = e.name
+        ..code = e.serviceCode;
 
-        return types;
-      }).toList();
+      return types;
+    }).toList();
 
-      final backendInterface = BackendInterface()..interfaces = interfaceList;
-      appConfiguration.genderOptions = genderOptions;
-      appConfiguration.idTypeOptions = idTypeOptions;
-      appConfiguration.deliveryCommentOptions = deliveryCommentOptions;
-      appConfiguration.householdDeletionReasonOptions =
-          householdDeletionReasonOptions;
-      appConfiguration.householdMemberDeletionReasonOptions =
-          householdMemberDeletionReasonOptions;
-      appConfiguration.checklistTypes = checklistTypes;
-      appConfiguration.transportTypes = transportTypes;
-      appConfiguration.backendInterface = backendInterface;
-      appConfiguration.callSupportOptions = callSupportList;
-      appConfiguration.languages = languageList;
-      appConfiguration.complaintTypes = complaintTypesList;
-      appConfiguration.bandwidthBatchSize = bandwidthBatchSize;
-    });
+    final backendInterface = BackendInterface()..interfaces = interfaceList;
+    appConfiguration.genderOptions = genderOptions;
+    appConfiguration.idTypeOptions = idTypeOptions;
+    appConfiguration.deliveryCommentOptions = deliveryCommentOptions;
+    appConfiguration.householdDeletionReasonOptions =
+        householdDeletionReasonOptions;
+    appConfiguration.householdMemberDeletionReasonOptions =
+        householdMemberDeletionReasonOptions;
+    appConfiguration.checklistTypes = checklistTypes;
+    appConfiguration.transportTypes = transportTypes;
+    appConfiguration.backendInterface = backendInterface;
+    appConfiguration.callSupportOptions = callSupportList;
+    appConfiguration.languages = languageList;
+    appConfiguration.complaintTypes = complaintTypesList;
+    appConfiguration.bandwidthBatchSize = bandwidthBatchSize;
     appConfiguration.symptomsTypes =
         result.symptomsTypes?.symptomsTypeList?.map((e) {
       final symptomTypes = SymptomsTypes()
