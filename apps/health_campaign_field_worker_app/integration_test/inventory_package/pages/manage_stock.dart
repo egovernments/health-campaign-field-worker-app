@@ -1,6 +1,7 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:inventory_management/pages/manage_stocks.dart';
 
 import '../../test_variables.dart';
 
@@ -12,8 +13,9 @@ Future<void> testManageStockPage(WidgetTester widgetTester) async {
   //go to the manage stock page
   await widgetTester.tap(widgetSelector['manageStock']!);
   await widgetTester.pumpAndSettle();
+  expect(find.byType(ManageStocksPage), findsOne);
 
-  for (int i = 0; i <= 5; i++) {
+  for (int i = 0; i < 5; i++) {
     await widgetTester.tap(find.byType(DigitListView).at(i));
     await widgetTester.pumpAndSettle(const Duration(seconds: 2));
 

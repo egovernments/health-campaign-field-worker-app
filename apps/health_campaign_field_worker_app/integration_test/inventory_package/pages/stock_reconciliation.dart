@@ -31,6 +31,12 @@ Future<void> testStockReconciliationPage(WidgetTester widgetTester) async {
   await widgetTester.tap(find.widgetWithText(DigitElevatedButton, 'Submit'));
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 100));
 
+  //TODO test scan bales
+  await widgetTester.tap(find.descendant(
+      of: find.byKey(const Key('submitDialog')),
+      matching: find.byType(DigitElevatedButton).last));
+  await widgetTester.pumpAndSettle(const Duration(milliseconds: 1000));
+
   await widgetTester.tap(find.widgetWithText(DigitElevatedButton, 'Go Back'));
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 1000));
   await widgetTester.tap(find.text('Back'));

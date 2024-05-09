@@ -459,6 +459,7 @@ class _StockReconciliationPageState
                                     ),
                                     const DigitDivider(),
                                     DigitTableCard(
+                                      key: const Key('stockReconStockIssued'),
                                       fraction: 2.5,
                                       gap: kPadding,
                                       element: {
@@ -471,6 +472,7 @@ class _StockReconciliationPageState
                                     ),
                                     const DigitDivider(),
                                     DigitTableCard(
+                                      key: const Key('stockReconStockReturned'),
                                       fraction: 2.5,
                                       gap: kPadding,
                                       element: {
@@ -483,6 +485,7 @@ class _StockReconciliationPageState
                                     ),
                                     const DigitDivider(),
                                     DigitTableCard(
+                                      key: const Key('stockReconStockLost'),
                                       fraction: 2.5,
                                       gap: kPadding,
                                       element: {
@@ -495,6 +498,7 @@ class _StockReconciliationPageState
                                     ),
                                     const DigitDivider(),
                                     DigitTableCard(
+                                      key: const Key('stockReconStockDamaged'),
                                       fraction: 2.5,
                                       gap: kPadding,
                                       element: {
@@ -507,6 +511,7 @@ class _StockReconciliationPageState
                                     ),
                                     const DigitDivider(),
                                     DigitTableCard(
+                                      key: const Key('stockReconStockOnHand'),
                                       fraction: 2.5,
                                       gap: kPadding,
                                       element: {

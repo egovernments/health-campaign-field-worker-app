@@ -106,7 +106,7 @@ class _InventoryReportDetailsPageState
 
   @override
   Widget build(BuildContext context) {
-    bool isDistributor = InventorySingleton().isDistributor;
+    bool isWareHouseManager = InventorySingleton().isWareHouseMgr;
 
     return BlocProvider<InventoryReportBloc>(
       create: (context) =>
@@ -179,7 +179,7 @@ class _InventoryReportDetailsPageState
                                     DigitCard(
                                       child: Column(
                                         children: [
-                                          if (!isDistributor)
+                                          if (isWareHouseManager)
                                             BlocConsumer<FacilityBloc,
                                                 FacilityState>(
                                               listener: (context, state) =>
@@ -232,6 +232,8 @@ class _InventoryReportDetailsPageState
                                                   },
                                                   child: IgnorePointer(
                                                     child: DigitTextFormField(
+                                                      key: const Key(
+                                                          'viewReportsFacility'),
                                                       valueAccessor:
                                                           FacilityValueAccessor(
                                                         facilities,
