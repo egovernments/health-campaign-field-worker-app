@@ -74,9 +74,11 @@ class MdmsRepository {
     try {
       final response = await _client.post(apiEndPoint, data: body);
 
-      return app_configuration.AppConfigPrimaryWrapperModel.fromJson(
+      final appCon = app_configuration.AppConfigPrimaryWrapperModel.fromJson(
         json.decode(response.toString())['MdmsRes'],
       );
+
+      return appCon;
     } on DioError catch (e) {
       AppLogger.instance.error(
         title: 'MDMS Repository',
@@ -126,25 +128,26 @@ class MdmsRepository {
     }
 
     final element = result.hcmWrapperModel;
-    final appConfig = result.hcmWrapperModel.appConfig.first;
+    final appConfig = result.hcmWrapperModel?.appConfig.first;
     final commonMasters = result.commonMasters;
     final backgroundServiceConfig = BackgroundServiceConfig()
-      ..apiConcurrency = element.backgroundServiceConfig?.apiConcurrency
+      ..apiConcurrency = element?.backgroundServiceConfig?.first.apiConcurrency
       ..batteryPercentCutOff =
-          element.backgroundServiceConfig?.batteryPercentCutOff
-      ..serviceInterval = element.backgroundServiceConfig?.serviceInterval;
+          element?.backgroundServiceConfig?.first.batteryPercentCutOff
+      ..serviceInterval =
+          element?.backgroundServiceConfig?.first.serviceInterval;
 
     appConfiguration
-      ..networkDetection = appConfig.networkDetection
-      ..persistenceMode = appConfig.persistenceMode
-      ..syncMethod = appConfig.syncMethod
-      ..syncTrigger = appConfig.syncTrigger
-      ..tenantId = appConfig.tenantId
-      ..maxRadius = appConfig.maxRadius
+      ..networkDetection = appConfig?.networkDetection
+      ..persistenceMode = appConfig?.persistenceMode
+      ..syncMethod = appConfig?.syncMethod
+      ..syncTrigger = appConfig?.syncTrigger
+      ..tenantId = appConfig?.tenantId
+      ..maxRadius = appConfig?.maxRadius
       ..backgroundServiceConfig = backgroundServiceConfig;
 
-    final List<Languages> languageList =
-        commonMasters.stateInfo.languages.map((element) {
+    final List<Languages>? languageList =
+        commonMasters?.stateInfo.first.languages.map((element) {
       final languages = Languages()
         ..label = element.label
         ..value = element.value;
@@ -152,8 +155,8 @@ class MdmsRepository {
       return languages;
     }).toList();
 
-    final List<BandwidthBatchSize> bandwidthBatchSize =
-        element.bandWidthBatchSize.map((e) {
+    final List<BandwidthBatchSize>? bandwidthBatchSize =
+        element?.bandWidthBatchSize.map((e) {
       final bandwidthBatchSizeElement = BandwidthBatchSize()
         ..batchSize = e.batchSize
         ..maxRange = e.maxRange
@@ -161,8 +164,18 @@ class MdmsRepository {
 
       return bandwidthBatchSizeElement;
     }).toList();
-    final List<CallSupportList> callSupportList =
-        element.callSupportOptions!.map((element) {
+
+    final List<BandwidthBatchSize>? downSyncBandWidthBatchSize =
+        element?.downSyncBandWidthBatchSize.map((e) {
+      final bandwidthBatchSizeElement = BandwidthBatchSize()
+        ..batchSize = e.batchSize
+        ..maxRange = e.maxRange
+        ..minRange = e.minRange;
+
+      return bandwidthBatchSizeElement;
+    }).toList();
+    final List<CallSupportList>? callSupportList =
+        element?.callSupportOptions!.map((element) {
       final callNumber = CallSupportList()
         ..name = element.name
         ..code = element.code;
@@ -170,8 +183,8 @@ class MdmsRepository {
       return callNumber;
     }).toList();
 
-    final List<HouseholdDeletionReasonOptions> householdDeletionReasonOptions =
-        element.householdDeletionReasonOptions.map((element) {
+    final List<HouseholdDeletionReasonOptions>? householdDeletionReasonOptions =
+        element?.householdDeletionReasonOptions.map((element) {
       final deletionReasonOption = HouseholdDeletionReasonOptions()
         ..name = element.value
         ..code = element.code;
@@ -179,9 +192,9 @@ class MdmsRepository {
       return deletionReasonOption;
     }).toList();
 
-    final List<HouseholdMemberDeletionReasonOptions>
+    final List<HouseholdMemberDeletionReasonOptions>?
         householdMemberDeletionReasonOptions =
-        element.householdMemberDeletionReasonOptions.map((element) {
+        element?.householdMemberDeletionReasonOptions.map((element) {
       final deletionReasonOption = HouseholdMemberDeletionReasonOptions()
         ..name = element.value
         ..code = element.code;
@@ -189,17 +202,17 @@ class MdmsRepository {
       return deletionReasonOption;
     }).toList();
 
-    final List<GenderOptions> genderOptions =
-        commonMasters.genderType.map((element) {
+    final List<GenderOptions>? genderOptions =
+        commonMasters?.genderType.map((element) {
       final genderOption = GenderOptions()
-        ..name = element.name
+        ..name = element.name ?? ''
         ..code = element.code;
 
       return genderOption;
     }).toList();
 
-    final List<IdTypeOptions> idTypeOptions =
-        element.idTypeOptions.map((element) {
+    final List<IdTypeOptions>? idTypeOptions =
+        element?.idTypeOptions.map((element) {
       final idOption = IdTypeOptions()
         ..name = element.name
         ..code = element.code;
@@ -207,7 +220,8 @@ class MdmsRepository {
       return idOption;
     }).toList();
 
-    final List<ChecklistTypes> checklistTypes = element.checklistTypes.map((e) {
+    final List<ChecklistTypes>? checklistTypes =
+        element?.checklistTypes.map((e) {
       final checklist = ChecklistTypes()
         ..name = e.name
         ..code = e.code;
@@ -215,7 +229,8 @@ class MdmsRepository {
       return checklist;
     }).toList();
 
-    final List<TransportTypes> transportTypes = element.transportTypes.map((e) {
+    final List<TransportTypes>? transportTypes =
+        element?.transportTypes.map((e) {
       final transportTypes = TransportTypes()
         ..name = e.name
         ..code = e.code;
@@ -223,8 +238,8 @@ class MdmsRepository {
       return transportTypes;
     }).toList();
 
-    final List<DeliveryCommentOptions> deliveryCommentOptions =
-        element.deliveryCommentOptions.map((element) {
+    final List<DeliveryCommentOptions>? deliveryCommentOptions =
+        element?.deliveryCommentOptions.map((element) {
       final deliveryCommentOption = DeliveryCommentOptions()
         ..name = element.name
         ..code = element.code;
@@ -232,8 +247,8 @@ class MdmsRepository {
       return deliveryCommentOption;
     }).toList();
 
-    final List<Interfaces> interfaceList =
-        element.backendInterface.interface.map((e) {
+    final List<Interfaces>? interfaceList =
+        element?.backendInterface.first.interface.map((e) {
       final config = Config()..localStoreTTL = e.config.localStoreTTL;
 
       final interfaces = Interfaces()
@@ -253,7 +268,8 @@ class MdmsRepository {
       return types;
     }).toList();
 
-    final backendInterface = BackendInterface()..interfaces = interfaceList;
+    final backendInterface = BackendInterface()
+      ..interfaces = interfaceList ?? [];
     appConfiguration.genderOptions = genderOptions;
     appConfiguration.idTypeOptions = idTypeOptions;
     appConfiguration.deliveryCommentOptions = deliveryCommentOptions;
@@ -268,8 +284,9 @@ class MdmsRepository {
     appConfiguration.languages = languageList;
     appConfiguration.complaintTypes = complaintTypesList;
     appConfiguration.bandwidthBatchSize = bandwidthBatchSize;
+    appConfiguration.downSyncBandwidthBatchSize = downSyncBandWidthBatchSize;
     appConfiguration.symptomsTypes =
-        result.symptomsTypes?.symptomsTypeList?.map((e) {
+        result.hcmWrapperModel?.symptomsTypeList?.map((e) {
       final symptomTypes = SymptomsTypes()
         ..name = e.name
         ..code = e.code
@@ -279,7 +296,7 @@ class MdmsRepository {
     }).toList();
 
     appConfiguration.referralReasons =
-        result.referralReasons?.referralReasonList?.map((e) {
+        result.hcmWrapperModel?.referralReasonList?.map((e) {
       final reasonTypes = ReferralReasons()
         ..name = e.name
         ..code = e.code

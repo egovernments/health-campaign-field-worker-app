@@ -71,7 +71,7 @@ packages:
       path: "../../packages/attendance_management"
       relative: true
     source: path
-    version: "0.0.1+1"
+    version: "0.0.1"
   audioplayers:
     dependency: "direct main"
     description:
@@ -132,18 +132,18 @@ packages:
     dependency: "direct main"
     description:
       name: auto_route
-      sha256: eb33554581a0a4aa7e6da0f13a44291a55bf71359012f1d9feb41634ff908ff8
+      sha256: "12047baeca0e01df93165ef33275b32119d72699ab9a49dc64c20e78f586f96d"
       url: "https://pub.dev"
     source: hosted
-    version: "7.9.2"
+    version: "5.0.4"
   auto_route_generator:
     dependency: "direct dev"
     description:
       name: auto_route_generator
-      sha256: "11067a3bcd643812518fe26c0c9ec073990286cabfd9d74b6da9ef9b913c4d22"
+      sha256: de5bfbc02ae4eebb339dd90d325749ae7536e903f6513ef72b88954072d72b0e
       url: "https://pub.dev"
     source: hosted
-    version: "7.3.2"
+    version: "5.0.3"
   battery_plus:
     dependency: "direct main"
     description:
@@ -400,6 +400,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.3"
+  csslib:
+    dependency: transitive
+    description:
+      name: csslib
+      sha256: "706b5707578e0c1b4b7550f64078f0a0f19dec3f50a178ffae7006b0a9ca58fb"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -408,6 +416,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.8"
+  dart_code_metrics:
+    dependency: "direct dev"
+    description:
+      name: dart_code_metrics
+      sha256: "3dede3f7abc077a4181ec7445448a289a9ce08e2981e6a4d49a3fb5099d47e1f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.7.6"
+  dart_code_metrics_presets:
+    dependency: transitive
+    description:
+      name: dart_code_metrics_presets
+      sha256: b71eadf02a3787ebd5c887623f83f6fdc204d45c75a081bd636c4104b3fd8b73
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.8.0"
   dart_mappable:
     dependency: "direct main"
     description:
@@ -493,13 +517,6 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
-  digit_scanner:
-    dependency: "direct main"
-    description:
-      path: "../../packages/digit_scanner"
-      relative: true
-    source: path
-    version: "0.0.1+1"
   digit_showcase:
     dependency: "direct main"
     description:
@@ -555,14 +572,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.5.2+1"
-  equatable:
-    dependency: transitive
-    description:
-      name: equatable
-      sha256: c2b87cb7756efdf69892005af546c56c0b5037f54d2a88269b4f347a505e3ca2
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.5"
   expandable:
     dependency: "direct main"
     description:
@@ -696,11 +705,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.1.0"
-  flutter_driver:
-    dependency: transitive
-    description: flutter
-    source: sdk
-    version: "0.0.0"
   flutter_focus_watcher:
     dependency: transitive
     description:
@@ -878,10 +882,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_svg
-      sha256: "7b4ca6cf3304575fe9c8ec64813c8d02ee41d2afe60bcfe0678bcb5375d596a2"
+      sha256: d39e7f95621fc84376bc0f7d504f05c3a41488c562f4a8ad410569127507402c
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.10+1"
+    version: "2.0.9"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -939,11 +943,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.2.0"
-  fuchsia_remote_debug_protocol:
-    dependency: transitive
-    description: flutter
-    source: sdk
-    version: "0.0.0"
   glob:
     dependency: transitive
     description:
@@ -956,10 +955,10 @@ packages:
     dependency: transitive
     description:
       name: google_fonts
-      sha256: "2776c66b3e97c6cdd58d1bd3281548b074b64f1fd5c8f82391f7456e38849567"
+      sha256: "6b6f10f0ce3c42f6552d1c70d2c28d764cf22bb487f50f66cca31dcd5194f4d6"
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.5"
+    version: "4.0.4"
   google_mlkit_barcode_scanning:
     dependency: "direct main"
     description:
@@ -1008,38 +1007,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.3.1"
-  hrk_batteries:
+  html:
     dependency: transitive
     description:
-      name: hrk_batteries
-      sha256: "8ecfdee8268d480a700153a006f7c622c922fbfba4d8f576438c8c41ea9efdf2"
+      name: html
+      sha256: "3a7812d5bcd2894edf53dfaf8cd640876cf6cef50a8f238745c8b8120ea74d3a"
       url: "https://pub.dev"
     source: hosted
-    version: "0.9.2"
-  hrk_flutter_test_batteries:
-    dependency: "direct dev"
-    description:
-      name: hrk_flutter_test_batteries
-      sha256: bfdaac0fc6aa1cd2aeffa7db9fc241d615ffdb1d667dd1be8b9a7ff5bc54d364
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.8.0"
-  hrk_logging:
-    dependency: transitive
-    description:
-      name: hrk_logging
-      sha256: "7ea3d02ed46f19533a8cae075cafe636757548a300a0e404193f6dd142c024b5"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.3"
+    version: "0.15.4"
   http:
     dependency: transitive
     description:
       name: http
-      sha256: a2bbf9d017fcced29139daa8ed2bba4ece450ab222871df93ca9eec6f80c34ba
+      sha256: "5895291c13fa8a3bd82e76d5627f69e0d85ca6a30dcac95c4ea19a5d555879c2"
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.0"
+    version: "0.13.6"
   http_multi_server:
     dependency: transitive
     description:
@@ -1064,11 +1047,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.7"
-  integration_test:
-    dependency: "direct dev"
-    description: flutter
-    source: sdk
-    version: "0.0.0"
   intl:
     dependency: "direct main"
     description:
@@ -1077,13 +1055,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.18.1"
-  inventory_management:
-    dependency: "direct main"
-    description:
-      path: "../../packages/inventory_management"
-      relative: true
-    source: path
-    version: "0.0.1"
   io:
     dependency: transitive
     description:
@@ -1444,6 +1415,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
+  pub_updater:
+    dependency: transitive
+    description:
+      name: pub_updater
+      sha256: "05ae70703e06f7fdeb05f7f02dd680b8aad810e87c756a618f33e1794635115c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.0"
   pubspec_parse:
     dependency: transitive
     description:
@@ -1492,21 +1471,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.0"
-  referral_reconciliation:
-    dependency: "direct main"
-    description:
-      path: "../../packages/referral_reconciliation"
-      relative: true
-    source: path
-    version: "0.0.1+1"
-  remove_emoji_input_formatter:
-    dependency: transitive
-    description:
-      name: remove_emoji_input_formatter
-      sha256: "82d195984f890de7a8fea936c698848e78c1a67ccefe18db3baf9f7a3bc0177f"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.1+1"
   rxdart:
     dependency: transitive
     description:
@@ -1728,14 +1692,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
-  sync_http:
-    dependency: transitive
-    description:
-      name: sync_http
-      sha256: "7f0cd72eca000d2e026bcd6f990b81d0ca06022ef4e32fb257b30d3d1014a961"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.3.1"
   synchronized:
     dependency: transitive
     description:
@@ -1900,26 +1856,26 @@ packages:
     dependency: transitive
     description:
       name: vector_graphics
-      sha256: "32c3c684e02f9bc0afb0ae0aa653337a2fe022e8ab064bcd7ffda27a74e288e3"
+      sha256: "4ac59808bbfca6da38c99f415ff2d3a5d7ca0a6b4809c71d9cf30fba5daf9752"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.11+1"
+    version: "1.1.10+1"
   vector_graphics_codec:
     dependency: transitive
     description:
       name: vector_graphics_codec
-      sha256: c86987475f162fadff579e7320c7ddda04cd2fdeffbe1129227a85d9ac9e03da
+      sha256: f3247e7ab0ec77dc759263e68394990edc608fb2b480b80db8aa86ed09279e33
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.11+1"
+    version: "1.1.10+1"
   vector_graphics_compiler:
     dependency: transitive
     description:
       name: vector_graphics_compiler
-      sha256: "12faff3f73b1741a36ca7e31b292ddeb629af819ca9efe9953b70bd63fc8cd81"
+      sha256: "18489bdd8850de3dd7ca8a34e0c446f719ec63e2bab2e7a8cc66a9028dd76c5a"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.11+1"
+    version: "1.1.10+1"
   vector_math:
     dependency: transitive
     description:
@@ -1960,14 +1916,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.0"
-  webdriver:
-    dependency: transitive
-    description:
-      name: webdriver
-      sha256: "3c923e918918feeb90c4c9fdf1fe39220fa4c0e8e2c0fffaded174498ef86c49"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.2"
   webkit_inspection_protocol:
     dependency: transitive
     description:

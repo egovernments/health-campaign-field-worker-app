@@ -12,7 +12,7 @@ part of 'app_config_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 MdmsRequestModel _$MdmsRequestModelFromJson(Map<String, dynamic> json) {
   return _MdmsRequestModel.fromJson(json);
@@ -661,18 +661,12 @@ AppConfigPrimaryWrapperModel _$AppConfigPrimaryWrapperModelFromJson(
 /// @nodoc
 mixin _$AppConfigPrimaryWrapperModel {
   @JsonKey(name: 'HCM')
-  HCMWrapperModel get hcmWrapperModel => throw _privateConstructorUsedError;
+  HCMWrapperModel? get hcmWrapperModel => throw _privateConstructorUsedError;
   @JsonKey(name: 'common-masters')
-  CommonMastersWrapperModel get commonMasters =>
+  CommonMastersWrapperModel? get commonMasters =>
       throw _privateConstructorUsedError;
   @JsonKey(name: 'module-version')
   RowVersionWrapperModel? get rowVersions => throw _privateConstructorUsedError;
-  @JsonKey(name: 'HCM-SYMPTOMS-TYPES')
-  SymptomsTypesSecondaryWrapperModel? get symptomsTypes =>
-      throw _privateConstructorUsedError;
-  @JsonKey(name: 'HCM-REFERRAL-REASONS')
-  ReferralReasonsWrapperModel? get referralReasons =>
-      throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -689,19 +683,13 @@ abstract class $AppConfigPrimaryWrapperModelCopyWith<$Res> {
           AppConfigPrimaryWrapperModel>;
   @useResult
   $Res call(
-      {@JsonKey(name: 'HCM') HCMWrapperModel hcmWrapperModel,
-      @JsonKey(name: 'common-masters') CommonMastersWrapperModel commonMasters,
-      @JsonKey(name: 'module-version') RowVersionWrapperModel? rowVersions,
-      @JsonKey(name: 'HCM-SYMPTOMS-TYPES')
-      SymptomsTypesSecondaryWrapperModel? symptomsTypes,
-      @JsonKey(name: 'HCM-REFERRAL-REASONS')
-      ReferralReasonsWrapperModel? referralReasons});
+      {@JsonKey(name: 'HCM') HCMWrapperModel? hcmWrapperModel,
+      @JsonKey(name: 'common-masters') CommonMastersWrapperModel? commonMasters,
+      @JsonKey(name: 'module-version') RowVersionWrapperModel? rowVersions});
 
-  $HCMWrapperModelCopyWith<$Res> get hcmWrapperModel;
-  $CommonMastersWrapperModelCopyWith<$Res> get commonMasters;
+  $HCMWrapperModelCopyWith<$Res>? get hcmWrapperModel;
+  $CommonMastersWrapperModelCopyWith<$Res>? get commonMasters;
   $RowVersionWrapperModelCopyWith<$Res>? get rowVersions;
-  $SymptomsTypesSecondaryWrapperModelCopyWith<$Res>? get symptomsTypes;
-  $ReferralReasonsWrapperModelCopyWith<$Res>? get referralReasons;
 }
 
 /// @nodoc
@@ -718,48 +706,46 @@ class _$AppConfigPrimaryWrapperModelCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? hcmWrapperModel = null,
-    Object? commonMasters = null,
+    Object? hcmWrapperModel = freezed,
+    Object? commonMasters = freezed,
     Object? rowVersions = freezed,
-    Object? symptomsTypes = freezed,
-    Object? referralReasons = freezed,
   }) {
     return _then(_value.copyWith(
-      hcmWrapperModel: null == hcmWrapperModel
+      hcmWrapperModel: freezed == hcmWrapperModel
           ? _value.hcmWrapperModel
           : hcmWrapperModel // ignore: cast_nullable_to_non_nullable
-              as HCMWrapperModel,
-      commonMasters: null == commonMasters
+              as HCMWrapperModel?,
+      commonMasters: freezed == commonMasters
           ? _value.commonMasters
           : commonMasters // ignore: cast_nullable_to_non_nullable
-              as CommonMastersWrapperModel,
+              as CommonMastersWrapperModel?,
       rowVersions: freezed == rowVersions
           ? _value.rowVersions
           : rowVersions // ignore: cast_nullable_to_non_nullable
               as RowVersionWrapperModel?,
-      symptomsTypes: freezed == symptomsTypes
-          ? _value.symptomsTypes
-          : symptomsTypes // ignore: cast_nullable_to_non_nullable
-              as SymptomsTypesSecondaryWrapperModel?,
-      referralReasons: freezed == referralReasons
-          ? _value.referralReasons
-          : referralReasons // ignore: cast_nullable_to_non_nullable
-              as ReferralReasonsWrapperModel?,
     ) as $Val);
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $HCMWrapperModelCopyWith<$Res> get hcmWrapperModel {
-    return $HCMWrapperModelCopyWith<$Res>(_value.hcmWrapperModel, (value) {
+  $HCMWrapperModelCopyWith<$Res>? get hcmWrapperModel {
+    if (_value.hcmWrapperModel == null) {
+      return null;
+    }
+
+    return $HCMWrapperModelCopyWith<$Res>(_value.hcmWrapperModel!, (value) {
       return _then(_value.copyWith(hcmWrapperModel: value) as $Val);
     });
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $CommonMastersWrapperModelCopyWith<$Res> get commonMasters {
-    return $CommonMastersWrapperModelCopyWith<$Res>(_value.commonMasters,
+  $CommonMastersWrapperModelCopyWith<$Res>? get commonMasters {
+    if (_value.commonMasters == null) {
+      return null;
+    }
+
+    return $CommonMastersWrapperModelCopyWith<$Res>(_value.commonMasters!,
         (value) {
       return _then(_value.copyWith(commonMasters: value) as $Val);
     });
@@ -776,32 +762,6 @@ class _$AppConfigPrimaryWrapperModelCopyWithImpl<$Res,
       return _then(_value.copyWith(rowVersions: value) as $Val);
     });
   }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $SymptomsTypesSecondaryWrapperModelCopyWith<$Res>? get symptomsTypes {
-    if (_value.symptomsTypes == null) {
-      return null;
-    }
-
-    return $SymptomsTypesSecondaryWrapperModelCopyWith<$Res>(
-        _value.symptomsTypes!, (value) {
-      return _then(_value.copyWith(symptomsTypes: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $ReferralReasonsWrapperModelCopyWith<$Res>? get referralReasons {
-    if (_value.referralReasons == null) {
-      return null;
-    }
-
-    return $ReferralReasonsWrapperModelCopyWith<$Res>(_value.referralReasons!,
-        (value) {
-      return _then(_value.copyWith(referralReasons: value) as $Val);
-    });
-  }
 }
 
 /// @nodoc
@@ -814,24 +774,16 @@ abstract class _$$AppConfigPrimaryWrapperModelImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'HCM') HCMWrapperModel hcmWrapperModel,
-      @JsonKey(name: 'common-masters') CommonMastersWrapperModel commonMasters,
-      @JsonKey(name: 'module-version') RowVersionWrapperModel? rowVersions,
-      @JsonKey(name: 'HCM-SYMPTOMS-TYPES')
-      SymptomsTypesSecondaryWrapperModel? symptomsTypes,
-      @JsonKey(name: 'HCM-REFERRAL-REASONS')
-      ReferralReasonsWrapperModel? referralReasons});
+      {@JsonKey(name: 'HCM') HCMWrapperModel? hcmWrapperModel,
+      @JsonKey(name: 'common-masters') CommonMastersWrapperModel? commonMasters,
+      @JsonKey(name: 'module-version') RowVersionWrapperModel? rowVersions});
 
   @override
-  $HCMWrapperModelCopyWith<$Res> get hcmWrapperModel;
+  $HCMWrapperModelCopyWith<$Res>? get hcmWrapperModel;
   @override
-  $CommonMastersWrapperModelCopyWith<$Res> get commonMasters;
+  $CommonMastersWrapperModelCopyWith<$Res>? get commonMasters;
   @override
   $RowVersionWrapperModelCopyWith<$Res>? get rowVersions;
-  @override
-  $SymptomsTypesSecondaryWrapperModelCopyWith<$Res>? get symptomsTypes;
-  @override
-  $ReferralReasonsWrapperModelCopyWith<$Res>? get referralReasons;
 }
 
 /// @nodoc
@@ -847,33 +799,23 @@ class __$$AppConfigPrimaryWrapperModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? hcmWrapperModel = null,
-    Object? commonMasters = null,
+    Object? hcmWrapperModel = freezed,
+    Object? commonMasters = freezed,
     Object? rowVersions = freezed,
-    Object? symptomsTypes = freezed,
-    Object? referralReasons = freezed,
   }) {
     return _then(_$AppConfigPrimaryWrapperModelImpl(
-      hcmWrapperModel: null == hcmWrapperModel
+      hcmWrapperModel: freezed == hcmWrapperModel
           ? _value.hcmWrapperModel
           : hcmWrapperModel // ignore: cast_nullable_to_non_nullable
-              as HCMWrapperModel,
-      commonMasters: null == commonMasters
+              as HCMWrapperModel?,
+      commonMasters: freezed == commonMasters
           ? _value.commonMasters
           : commonMasters // ignore: cast_nullable_to_non_nullable
-              as CommonMastersWrapperModel,
+              as CommonMastersWrapperModel?,
       rowVersions: freezed == rowVersions
           ? _value.rowVersions
           : rowVersions // ignore: cast_nullable_to_non_nullable
               as RowVersionWrapperModel?,
-      symptomsTypes: freezed == symptomsTypes
-          ? _value.symptomsTypes
-          : symptomsTypes // ignore: cast_nullable_to_non_nullable
-              as SymptomsTypesSecondaryWrapperModel?,
-      referralReasons: freezed == referralReasons
-          ? _value.referralReasons
-          : referralReasons // ignore: cast_nullable_to_non_nullable
-              as ReferralReasonsWrapperModel?,
     ));
   }
 }
@@ -883,11 +825,9 @@ class __$$AppConfigPrimaryWrapperModelImplCopyWithImpl<$Res>
 class _$AppConfigPrimaryWrapperModelImpl
     implements _AppConfigPrimaryWrapperModel {
   const _$AppConfigPrimaryWrapperModelImpl(
-      {@JsonKey(name: 'HCM') required this.hcmWrapperModel,
-      @JsonKey(name: 'common-masters') required this.commonMasters,
-      @JsonKey(name: 'module-version') this.rowVersions,
-      @JsonKey(name: 'HCM-SYMPTOMS-TYPES') this.symptomsTypes,
-      @JsonKey(name: 'HCM-REFERRAL-REASONS') this.referralReasons});
+      {@JsonKey(name: 'HCM') this.hcmWrapperModel,
+      @JsonKey(name: 'common-masters') this.commonMasters,
+      @JsonKey(name: 'module-version') this.rowVersions});
 
   factory _$AppConfigPrimaryWrapperModelImpl.fromJson(
           Map<String, dynamic> json) =>
@@ -895,23 +835,17 @@ class _$AppConfigPrimaryWrapperModelImpl
 
   @override
   @JsonKey(name: 'HCM')
-  final HCMWrapperModel hcmWrapperModel;
+  final HCMWrapperModel? hcmWrapperModel;
   @override
   @JsonKey(name: 'common-masters')
-  final CommonMastersWrapperModel commonMasters;
+  final CommonMastersWrapperModel? commonMasters;
   @override
   @JsonKey(name: 'module-version')
   final RowVersionWrapperModel? rowVersions;
-  @override
-  @JsonKey(name: 'HCM-SYMPTOMS-TYPES')
-  final SymptomsTypesSecondaryWrapperModel? symptomsTypes;
-  @override
-  @JsonKey(name: 'HCM-REFERRAL-REASONS')
-  final ReferralReasonsWrapperModel? referralReasons;
 
   @override
   String toString() {
-    return 'AppConfigPrimaryWrapperModel(hcmWrapperModel: $hcmWrapperModel, commonMasters: $commonMasters, rowVersions: $rowVersions, symptomsTypes: $symptomsTypes, referralReasons: $referralReasons)';
+    return 'AppConfigPrimaryWrapperModel(hcmWrapperModel: $hcmWrapperModel, commonMasters: $commonMasters, rowVersions: $rowVersions)';
   }
 
   @override
@@ -924,17 +858,13 @@ class _$AppConfigPrimaryWrapperModelImpl
             (identical(other.commonMasters, commonMasters) ||
                 other.commonMasters == commonMasters) &&
             (identical(other.rowVersions, rowVersions) ||
-                other.rowVersions == rowVersions) &&
-            (identical(other.symptomsTypes, symptomsTypes) ||
-                other.symptomsTypes == symptomsTypes) &&
-            (identical(other.referralReasons, referralReasons) ||
-                other.referralReasons == referralReasons));
+                other.rowVersions == rowVersions));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, hcmWrapperModel, commonMasters,
-      rowVersions, symptomsTypes, referralReasons);
+  int get hashCode =>
+      Object.hash(runtimeType, hcmWrapperModel, commonMasters, rowVersions);
 
   @JsonKey(ignore: true)
   @override
@@ -955,15 +885,11 @@ class _$AppConfigPrimaryWrapperModelImpl
 abstract class _AppConfigPrimaryWrapperModel
     implements AppConfigPrimaryWrapperModel {
   const factory _AppConfigPrimaryWrapperModel(
-          {@JsonKey(name: 'HCM') required final HCMWrapperModel hcmWrapperModel,
+          {@JsonKey(name: 'HCM') final HCMWrapperModel? hcmWrapperModel,
           @JsonKey(name: 'common-masters')
-          required final CommonMastersWrapperModel commonMasters,
+          final CommonMastersWrapperModel? commonMasters,
           @JsonKey(name: 'module-version')
-          final RowVersionWrapperModel? rowVersions,
-          @JsonKey(name: 'HCM-SYMPTOMS-TYPES')
-          final SymptomsTypesSecondaryWrapperModel? symptomsTypes,
-          @JsonKey(name: 'HCM-REFERRAL-REASONS')
-          final ReferralReasonsWrapperModel? referralReasons}) =
+          final RowVersionWrapperModel? rowVersions}) =
       _$AppConfigPrimaryWrapperModelImpl;
 
   factory _AppConfigPrimaryWrapperModel.fromJson(Map<String, dynamic> json) =
@@ -971,19 +897,13 @@ abstract class _AppConfigPrimaryWrapperModel
 
   @override
   @JsonKey(name: 'HCM')
-  HCMWrapperModel get hcmWrapperModel;
+  HCMWrapperModel? get hcmWrapperModel;
   @override
   @JsonKey(name: 'common-masters')
-  CommonMastersWrapperModel get commonMasters;
+  CommonMastersWrapperModel? get commonMasters;
   @override
   @JsonKey(name: 'module-version')
   RowVersionWrapperModel? get rowVersions;
-  @override
-  @JsonKey(name: 'HCM-SYMPTOMS-TYPES')
-  SymptomsTypesSecondaryWrapperModel? get symptomsTypes;
-  @override
-  @JsonKey(name: 'HCM-REFERRAL-REASONS')
-  ReferralReasonsWrapperModel? get referralReasons;
   @override
   @JsonKey(ignore: true)
   _$$AppConfigPrimaryWrapperModelImplCopyWith<
@@ -1012,7 +932,7 @@ mixin _$HCMWrapperModel {
   List<DeletionReasonOptions> get householdMemberDeletionReasonOptions =>
       throw _privateConstructorUsedError;
   @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')
-  BackgroundServiceConfig? get backgroundServiceConfig =>
+  List<BackgroundServiceConfig>? get backgroundServiceConfig =>
       throw _privateConstructorUsedError;
   @JsonKey(name: 'CHECKLIST_TYPES')
   List<CheckListTypes> get checklistTypes => throw _privateConstructorUsedError;
@@ -1022,7 +942,8 @@ mixin _$HCMWrapperModel {
   List<DeliveryCommentOptions> get deliveryCommentOptions =>
       throw _privateConstructorUsedError;
   @JsonKey(name: 'BACKEND_INTERFACE')
-  BackendInterface get backendInterface => throw _privateConstructorUsedError;
+  List<BackendInterface> get backendInterface =>
+      throw _privateConstructorUsedError;
   @JsonKey(name: 'CALL_SUPPORT')
   List<CallSupportList>? get callSupportOptions =>
       throw _privateConstructorUsedError;
@@ -1058,21 +979,19 @@ abstract class $HCMWrapperModelCopyWith<$Res> {
       @JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS')
       List<DeletionReasonOptions> householdMemberDeletionReasonOptions,
       @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')
-      BackgroundServiceConfig? backgroundServiceConfig,
+      List<BackgroundServiceConfig>? backgroundServiceConfig,
       @JsonKey(name: 'CHECKLIST_TYPES') List<CheckListTypes> checklistTypes,
       @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
       List<IdTypeOptions> idTypeOptions,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
       List<DeliveryCommentOptions> deliveryCommentOptions,
-      @JsonKey(name: 'BACKEND_INTERFACE') BackendInterface backendInterface,
+      @JsonKey(name: 'BACKEND_INTERFACE')
+      List<BackendInterface> backendInterface,
       @JsonKey(name: 'CALL_SUPPORT') List<CallSupportList>? callSupportOptions,
       @JsonKey(name: 'TRANSPORT_TYPES') List<TransportTypes> transportTypes,
       @JsonKey(name: 'SYMPTOM_TYPES') List<SymptomsType>? symptomsTypeList,
       @JsonKey(name: 'REFERRAL_REASONS')
       List<ReferralReasonType>? referralReasonList});
-
-  $BackgroundServiceConfigCopyWith<$Res>? get backgroundServiceConfig;
-  $BackendInterfaceCopyWith<$Res> get backendInterface;
 }
 
 /// @nodoc
@@ -1128,7 +1047,7 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
       backgroundServiceConfig: freezed == backgroundServiceConfig
           ? _value.backgroundServiceConfig
           : backgroundServiceConfig // ignore: cast_nullable_to_non_nullable
-              as BackgroundServiceConfig?,
+              as List<BackgroundServiceConfig>?,
       checklistTypes: null == checklistTypes
           ? _value.checklistTypes
           : checklistTypes // ignore: cast_nullable_to_non_nullable
@@ -1144,7 +1063,7 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
       backendInterface: null == backendInterface
           ? _value.backendInterface
           : backendInterface // ignore: cast_nullable_to_non_nullable
-              as BackendInterface,
+              as List<BackendInterface>,
       callSupportOptions: freezed == callSupportOptions
           ? _value.callSupportOptions
           : callSupportOptions // ignore: cast_nullable_to_non_nullable
@@ -1162,27 +1081,6 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
           : referralReasonList // ignore: cast_nullable_to_non_nullable
               as List<ReferralReasonType>?,
     ) as $Val);
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $BackgroundServiceConfigCopyWith<$Res>? get backgroundServiceConfig {
-    if (_value.backgroundServiceConfig == null) {
-      return null;
-    }
-
-    return $BackgroundServiceConfigCopyWith<$Res>(
-        _value.backgroundServiceConfig!, (value) {
-      return _then(_value.copyWith(backgroundServiceConfig: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $BackendInterfaceCopyWith<$Res> get backendInterface {
-    return $BackendInterfaceCopyWith<$Res>(_value.backendInterface, (value) {
-      return _then(_value.copyWith(backendInterface: value) as $Val);
-    });
   }
 }
 
@@ -1205,23 +1103,19 @@ abstract class _$$HCMWrapperModelImplCopyWith<$Res>
       @JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS')
       List<DeletionReasonOptions> householdMemberDeletionReasonOptions,
       @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')
-      BackgroundServiceConfig? backgroundServiceConfig,
+      List<BackgroundServiceConfig>? backgroundServiceConfig,
       @JsonKey(name: 'CHECKLIST_TYPES') List<CheckListTypes> checklistTypes,
       @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
       List<IdTypeOptions> idTypeOptions,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
       List<DeliveryCommentOptions> deliveryCommentOptions,
-      @JsonKey(name: 'BACKEND_INTERFACE') BackendInterface backendInterface,
+      @JsonKey(name: 'BACKEND_INTERFACE')
+      List<BackendInterface> backendInterface,
       @JsonKey(name: 'CALL_SUPPORT') List<CallSupportList>? callSupportOptions,
       @JsonKey(name: 'TRANSPORT_TYPES') List<TransportTypes> transportTypes,
       @JsonKey(name: 'SYMPTOM_TYPES') List<SymptomsType>? symptomsTypeList,
       @JsonKey(name: 'REFERRAL_REASONS')
       List<ReferralReasonType>? referralReasonList});
-
-  @override
-  $BackgroundServiceConfigCopyWith<$Res>? get backgroundServiceConfig;
-  @override
-  $BackendInterfaceCopyWith<$Res> get backendInterface;
 }
 
 /// @nodoc
@@ -1273,9 +1167,9 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
           : householdMemberDeletionReasonOptions // ignore: cast_nullable_to_non_nullable
               as List<DeletionReasonOptions>,
       backgroundServiceConfig: freezed == backgroundServiceConfig
-          ? _value.backgroundServiceConfig
+          ? _value._backgroundServiceConfig
           : backgroundServiceConfig // ignore: cast_nullable_to_non_nullable
-              as BackgroundServiceConfig?,
+              as List<BackgroundServiceConfig>?,
       checklistTypes: null == checklistTypes
           ? _value._checklistTypes
           : checklistTypes // ignore: cast_nullable_to_non_nullable
@@ -1289,9 +1183,9 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
           : deliveryCommentOptions // ignore: cast_nullable_to_non_nullable
               as List<DeliveryCommentOptions>,
       backendInterface: null == backendInterface
-          ? _value.backendInterface
+          ? _value._backendInterface
           : backendInterface // ignore: cast_nullable_to_non_nullable
-              as BackendInterface,
+              as List<BackendInterface>,
       callSupportOptions: freezed == callSupportOptions
           ? _value._callSupportOptions
           : callSupportOptions // ignore: cast_nullable_to_non_nullable
@@ -1326,14 +1220,16 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
       @JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS')
       required final List<DeletionReasonOptions>
           householdMemberDeletionReasonOptions,
-      @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG') this.backgroundServiceConfig,
+      @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')
+      final List<BackgroundServiceConfig>? backgroundServiceConfig,
       @JsonKey(name: 'CHECKLIST_TYPES')
       required final List<CheckListTypes> checklistTypes,
       @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
       required final List<IdTypeOptions> idTypeOptions,
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
       required final List<DeliveryCommentOptions> deliveryCommentOptions,
-      @JsonKey(name: 'BACKEND_INTERFACE') required this.backendInterface,
+      @JsonKey(name: 'BACKEND_INTERFACE')
+      required final List<BackendInterface> backendInterface,
       @JsonKey(name: 'CALL_SUPPORT')
       required final List<CallSupportList>? callSupportOptions,
       @JsonKey(name: 'TRANSPORT_TYPES')
@@ -1348,9 +1244,11 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
         _householdDeletionReasonOptions = householdDeletionReasonOptions,
         _householdMemberDeletionReasonOptions =
             householdMemberDeletionReasonOptions,
+        _backgroundServiceConfig = backgroundServiceConfig,
         _checklistTypes = checklistTypes,
         _idTypeOptions = idTypeOptions,
         _deliveryCommentOptions = deliveryCommentOptions,
+        _backendInterface = backendInterface,
         _callSupportOptions = callSupportOptions,
         _transportTypes = transportTypes,
         _symptomsTypeList = symptomsTypeList,
@@ -1408,9 +1306,18 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
     return EqualUnmodifiableListView(_householdMemberDeletionReasonOptions);
   }
 
+  final List<BackgroundServiceConfig>? _backgroundServiceConfig;
   @override
   @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')
-  final BackgroundServiceConfig? backgroundServiceConfig;
+  List<BackgroundServiceConfig>? get backgroundServiceConfig {
+    final value = _backgroundServiceConfig;
+    if (value == null) return null;
+    if (_backgroundServiceConfig is EqualUnmodifiableListView)
+      return _backgroundServiceConfig;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   final List<CheckListTypes> _checklistTypes;
   @override
   @JsonKey(name: 'CHECKLIST_TYPES')
@@ -1439,9 +1346,16 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
     return EqualUnmodifiableListView(_deliveryCommentOptions);
   }
 
+  final List<BackendInterface> _backendInterface;
   @override
   @JsonKey(name: 'BACKEND_INTERFACE')
-  final BackendInterface backendInterface;
+  List<BackendInterface> get backendInterface {
+    if (_backendInterface is EqualUnmodifiableListView)
+      return _backendInterface;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_backendInterface);
+  }
+
   final List<CallSupportList>? _callSupportOptions;
   @override
   @JsonKey(name: 'CALL_SUPPORT')
@@ -1510,17 +1424,16 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
             const DeepCollectionEquality().equals(
                 other._householdMemberDeletionReasonOptions,
                 _householdMemberDeletionReasonOptions) &&
-            (identical(
-                    other.backgroundServiceConfig, backgroundServiceConfig) ||
-                other.backgroundServiceConfig == backgroundServiceConfig) &&
+            const DeepCollectionEquality().equals(
+                other._backgroundServiceConfig, _backgroundServiceConfig) &&
             const DeepCollectionEquality()
                 .equals(other._checklistTypes, _checklistTypes) &&
             const DeepCollectionEquality()
                 .equals(other._idTypeOptions, _idTypeOptions) &&
             const DeepCollectionEquality().equals(
                 other._deliveryCommentOptions, _deliveryCommentOptions) &&
-            (identical(other.backendInterface, backendInterface) ||
-                other.backendInterface == backendInterface) &&
+            const DeepCollectionEquality()
+                .equals(other._backendInterface, _backendInterface) &&
             const DeepCollectionEquality()
                 .equals(other._callSupportOptions, _callSupportOptions) &&
             const DeepCollectionEquality()
@@ -1541,11 +1454,11 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
       const DeepCollectionEquality().hash(_householdDeletionReasonOptions),
       const DeepCollectionEquality()
           .hash(_householdMemberDeletionReasonOptions),
-      backgroundServiceConfig,
+      const DeepCollectionEquality().hash(_backgroundServiceConfig),
       const DeepCollectionEquality().hash(_checklistTypes),
       const DeepCollectionEquality().hash(_idTypeOptions),
       const DeepCollectionEquality().hash(_deliveryCommentOptions),
-      backendInterface,
+      const DeepCollectionEquality().hash(_backendInterface),
       const DeepCollectionEquality().hash(_callSupportOptions),
       const DeepCollectionEquality().hash(_transportTypes),
       const DeepCollectionEquality().hash(_symptomsTypeList),
@@ -1579,7 +1492,7 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
       required final List<DeletionReasonOptions>
           householdMemberDeletionReasonOptions,
       @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')
-      final BackgroundServiceConfig? backgroundServiceConfig,
+      final List<BackgroundServiceConfig>? backgroundServiceConfig,
       @JsonKey(name: 'CHECKLIST_TYPES')
       required final List<CheckListTypes> checklistTypes,
       @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
@@ -1587,7 +1500,7 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
       @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
       required final List<DeliveryCommentOptions> deliveryCommentOptions,
       @JsonKey(name: 'BACKEND_INTERFACE')
-      required final BackendInterface backendInterface,
+      required final List<BackendInterface> backendInterface,
       @JsonKey(name: 'CALL_SUPPORT')
       required final List<CallSupportList>? callSupportOptions,
       @JsonKey(name: 'TRANSPORT_TYPES')
@@ -1618,7 +1531,7 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
   List<DeletionReasonOptions> get householdMemberDeletionReasonOptions;
   @override
   @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')
-  BackgroundServiceConfig? get backgroundServiceConfig;
+  List<BackgroundServiceConfig>? get backgroundServiceConfig;
   @override
   @JsonKey(name: 'CHECKLIST_TYPES')
   List<CheckListTypes> get checklistTypes;
@@ -1630,7 +1543,7 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
   List<DeliveryCommentOptions> get deliveryCommentOptions;
   @override
   @JsonKey(name: 'BACKEND_INTERFACE')
-  BackendInterface get backendInterface;
+  List<BackendInterface> get backendInterface;
   @override
   @JsonKey(name: 'CALL_SUPPORT')
   List<CallSupportList>? get callSupportOptions;
@@ -1824,7 +1737,7 @@ mixin _$CommonMastersWrapperModel {
   @JsonKey(name: 'GenderType')
   List<CommonMasterModel> get genderType => throw _privateConstructorUsedError;
   @JsonKey(name: 'StateInfo')
-  StateInfoModel get stateInfo => throw _privateConstructorUsedError;
+  List<StateInfoModel> get stateInfo => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -1840,9 +1753,7 @@ abstract class $CommonMastersWrapperModelCopyWith<$Res> {
   @useResult
   $Res call(
       {@JsonKey(name: 'GenderType') List<CommonMasterModel> genderType,
-      @JsonKey(name: 'StateInfo') StateInfoModel stateInfo});
-
-  $StateInfoModelCopyWith<$Res> get stateInfo;
+      @JsonKey(name: 'StateInfo') List<StateInfoModel> stateInfo});
 }
 
 /// @nodoc
@@ -1870,16 +1781,8 @@ class _$CommonMastersWrapperModelCopyWithImpl<$Res,
       stateInfo: null == stateInfo
           ? _value.stateInfo
           : stateInfo // ignore: cast_nullable_to_non_nullable
-              as StateInfoModel,
+              as List<StateInfoModel>,
     ) as $Val);
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $StateInfoModelCopyWith<$Res> get stateInfo {
-    return $StateInfoModelCopyWith<$Res>(_value.stateInfo, (value) {
-      return _then(_value.copyWith(stateInfo: value) as $Val);
-    });
   }
 }
 
@@ -1894,10 +1797,7 @@ abstract class _$$CommonMastersWrapperModelImplCopyWith<$Res>
   @useResult
   $Res call(
       {@JsonKey(name: 'GenderType') List<CommonMasterModel> genderType,
-      @JsonKey(name: 'StateInfo') StateInfoModel stateInfo});
-
-  @override
-  $StateInfoModelCopyWith<$Res> get stateInfo;
+      @JsonKey(name: 'StateInfo') List<StateInfoModel> stateInfo});
 }
 
 /// @nodoc
@@ -1922,9 +1822,9 @@ class __$$CommonMastersWrapperModelImplCopyWithImpl<$Res>
           : genderType // ignore: cast_nullable_to_non_nullable
               as List<CommonMasterModel>,
       stateInfo: null == stateInfo
-          ? _value.stateInfo
+          ? _value._stateInfo
           : stateInfo // ignore: cast_nullable_to_non_nullable
-              as StateInfoModel,
+              as List<StateInfoModel>,
     ));
   }
 }
@@ -1935,8 +1835,10 @@ class _$CommonMastersWrapperModelImpl implements _CommonMastersWrapperModel {
   const _$CommonMastersWrapperModelImpl(
       {@JsonKey(name: 'GenderType')
       required final List<CommonMasterModel> genderType,
-      @JsonKey(name: 'StateInfo') required this.stateInfo})
-      : _genderType = genderType;
+      @JsonKey(name: 'StateInfo')
+      required final List<StateInfoModel> stateInfo})
+      : _genderType = genderType,
+        _stateInfo = stateInfo;
 
   factory _$CommonMastersWrapperModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$CommonMastersWrapperModelImplFromJson(json);
@@ -1950,9 +1852,14 @@ class _$CommonMastersWrapperModelImpl implements _CommonMastersWrapperModel {
     return EqualUnmodifiableListView(_genderType);
   }
 
+  final List<StateInfoModel> _stateInfo;
   @override
   @JsonKey(name: 'StateInfo')
-  final StateInfoModel stateInfo;
+  List<StateInfoModel> get stateInfo {
+    if (_stateInfo is EqualUnmodifiableListView) return _stateInfo;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_stateInfo);
+  }
 
   @override
   String toString() {
@@ -1966,14 +1873,16 @@ class _$CommonMastersWrapperModelImpl implements _CommonMastersWrapperModel {
             other is _$CommonMastersWrapperModelImpl &&
             const DeepCollectionEquality()
                 .equals(other._genderType, _genderType) &&
-            (identical(other.stateInfo, stateInfo) ||
-                other.stateInfo == stateInfo));
+            const DeepCollectionEquality()
+                .equals(other._stateInfo, _stateInfo));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-      runtimeType, const DeepCollectionEquality().hash(_genderType), stateInfo);
+      runtimeType,
+      const DeepCollectionEquality().hash(_genderType),
+      const DeepCollectionEquality().hash(_stateInfo));
 
   @JsonKey(ignore: true)
   @override
@@ -1995,7 +1904,7 @@ abstract class _CommonMastersWrapperModel implements CommonMastersWrapperModel {
           {@JsonKey(name: 'GenderType')
           required final List<CommonMasterModel> genderType,
           @JsonKey(name: 'StateInfo')
-          required final StateInfoModel stateInfo}) =
+          required final List<StateInfoModel> stateInfo}) =
       _$CommonMastersWrapperModelImpl;
 
   factory _CommonMastersWrapperModel.fromJson(Map<String, dynamic> json) =
@@ -2006,7 +1915,7 @@ abstract class _CommonMastersWrapperModel implements CommonMastersWrapperModel {
   List<CommonMasterModel> get genderType;
   @override
   @JsonKey(name: 'StateInfo')
-  StateInfoModel get stateInfo;
+  List<StateInfoModel> get stateInfo;
   @override
   @JsonKey(ignore: true)
   _$$CommonMastersWrapperModelImplCopyWith<_$CommonMastersWrapperModelImpl>
@@ -2022,7 +1931,7 @@ mixin _$CommonMasterModel {
   @JsonKey(name: 'code')
   String get code => throw _privateConstructorUsedError;
   @JsonKey(name: 'name')
-  String get name => throw _privateConstructorUsedError;
+  String? get name => throw _privateConstructorUsedError;
   @JsonKey(name: 'active')
   bool get active => throw _privateConstructorUsedError;
 
@@ -2040,7 +1949,7 @@ abstract class $CommonMasterModelCopyWith<$Res> {
   @useResult
   $Res call(
       {@JsonKey(name: 'code') String code,
-      @JsonKey(name: 'name') String name,
+      @JsonKey(name: 'name') String? name,
       @JsonKey(name: 'active') bool active});
 }
 
@@ -2058,7 +1967,7 @@ class _$CommonMasterModelCopyWithImpl<$Res, $Val extends CommonMasterModel>
   @override
   $Res call({
     Object? code = null,
-    Object? name = null,
+    Object? name = freezed,
     Object? active = null,
   }) {
     return _then(_value.copyWith(
@@ -2066,10 +1975,10 @@ class _$CommonMasterModelCopyWithImpl<$Res, $Val extends CommonMasterModel>
           ? _value.code
           : code // ignore: cast_nullable_to_non_nullable
               as String,
-      name: null == name
+      name: freezed == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       active: null == active
           ? _value.active
           : active // ignore: cast_nullable_to_non_nullable
@@ -2088,7 +1997,7 @@ abstract class _$$CommonMasterModelImplCopyWith<$Res>
   @useResult
   $Res call(
       {@JsonKey(name: 'code') String code,
-      @JsonKey(name: 'name') String name,
+      @JsonKey(name: 'name') String? name,
       @JsonKey(name: 'active') bool active});
 }
 
@@ -2104,7 +2013,7 @@ class __$$CommonMasterModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? code = null,
-    Object? name = null,
+    Object? name = freezed,
     Object? active = null,
   }) {
     return _then(_$CommonMasterModelImpl(
@@ -2112,10 +2021,10 @@ class __$$CommonMasterModelImplCopyWithImpl<$Res>
           ? _value.code
           : code // ignore: cast_nullable_to_non_nullable
               as String,
-      name: null == name
+      name: freezed == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       active: null == active
           ? _value.active
           : active // ignore: cast_nullable_to_non_nullable
@@ -2129,7 +2038,7 @@ class __$$CommonMasterModelImplCopyWithImpl<$Res>
 class _$CommonMasterModelImpl implements _CommonMasterModel {
   const _$CommonMasterModelImpl(
       {@JsonKey(name: 'code') required this.code,
-      @JsonKey(name: 'name') required this.name,
+      @JsonKey(name: 'name') this.name,
       @JsonKey(name: 'active') required this.active});
 
   factory _$CommonMasterModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -2140,7 +2049,7 @@ class _$CommonMasterModelImpl implements _CommonMasterModel {
   final String code;
   @override
   @JsonKey(name: 'name')
-  final String name;
+  final String? name;
   @override
   @JsonKey(name: 'active')
   final bool active;
@@ -2182,7 +2091,7 @@ class _$CommonMasterModelImpl implements _CommonMasterModel {
 abstract class _CommonMasterModel implements CommonMasterModel {
   const factory _CommonMasterModel(
           {@JsonKey(name: 'code') required final String code,
-          @JsonKey(name: 'name') required final String name,
+          @JsonKey(name: 'name') final String? name,
           @JsonKey(name: 'active') required final bool active}) =
       _$CommonMasterModelImpl;
 
@@ -2194,7 +2103,7 @@ abstract class _CommonMasterModel implements CommonMasterModel {
   String get code;
   @override
   @JsonKey(name: 'name')
-  String get name;
+  String? get name;
   @override
   @JsonKey(name: 'active')
   bool get active;
@@ -2210,6 +2119,8 @@ StateInfoModel _$StateInfoModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$StateInfoModel {
+  @JsonKey(name: 'code')
+  String get code => throw _privateConstructorUsedError;
   @JsonKey(name: 'languages')
   List<Languages> get languages => throw _privateConstructorUsedError;
   @JsonKey(name: 'localizationModules')
@@ -2229,7 +2140,8 @@ abstract class $StateInfoModelCopyWith<$Res> {
       _$StateInfoModelCopyWithImpl<$Res, StateInfoModel>;
   @useResult
   $Res call(
-      {@JsonKey(name: 'languages') List<Languages> languages,
+      {@JsonKey(name: 'code') String code,
+      @JsonKey(name: 'languages') List<Languages> languages,
       @JsonKey(name: 'localizationModules')
       List<Languages>? localizationModules});
 }
@@ -2247,10 +2159,15 @@ class _$StateInfoModelCopyWithImpl<$Res, $Val extends StateInfoModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? code = null,
     Object? languages = null,
     Object? localizationModules = freezed,
   }) {
     return _then(_value.copyWith(
+      code: null == code
+          ? _value.code
+          : code // ignore: cast_nullable_to_non_nullable
+              as String,
       languages: null == languages
           ? _value.languages
           : languages // ignore: cast_nullable_to_non_nullable
@@ -2272,7 +2189,8 @@ abstract class _$$StateInfoModelImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'languages') List<Languages> languages,
+      {@JsonKey(name: 'code') String code,
+      @JsonKey(name: 'languages') List<Languages> languages,
       @JsonKey(name: 'localizationModules')
       List<Languages>? localizationModules});
 }
@@ -2288,10 +2206,15 @@ class __$$StateInfoModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? code = null,
     Object? languages = null,
     Object? localizationModules = freezed,
   }) {
     return _then(_$StateInfoModelImpl(
+      code: null == code
+          ? _value.code
+          : code // ignore: cast_nullable_to_non_nullable
+              as String,
       languages: null == languages
           ? _value._languages
           : languages // ignore: cast_nullable_to_non_nullable
@@ -2308,7 +2231,8 @@ class __$$StateInfoModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$StateInfoModelImpl implements _StateInfoModel {
   const _$StateInfoModelImpl(
-      {@JsonKey(name: 'languages') required final List<Languages> languages,
+      {@JsonKey(name: 'code') required this.code,
+      @JsonKey(name: 'languages') required final List<Languages> languages,
       @JsonKey(name: 'localizationModules')
       final List<Languages>? localizationModules})
       : _languages = languages,
@@ -2317,6 +2241,9 @@ class _$StateInfoModelImpl implements _StateInfoModel {
   factory _$StateInfoModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$StateInfoModelImplFromJson(json);
 
+  @override
+  @JsonKey(name: 'code')
+  final String code;
   final List<Languages> _languages;
   @override
   @JsonKey(name: 'languages')
@@ -2340,7 +2267,7 @@ class _$StateInfoModelImpl implements _StateInfoModel {
 
   @override
   String toString() {
-    return 'StateInfoModel(languages: $languages, localizationModules: $localizationModules)';
+    return 'StateInfoModel(code: $code, languages: $languages, localizationModules: $localizationModules)';
   }
 
   @override
@@ -2348,6 +2275,7 @@ class _$StateInfoModelImpl implements _StateInfoModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$StateInfoModelImpl &&
+            (identical(other.code, code) || other.code == code) &&
             const DeepCollectionEquality()
                 .equals(other._languages, _languages) &&
             const DeepCollectionEquality()
@@ -2358,6 +2286,7 @@ class _$StateInfoModelImpl implements _StateInfoModel {
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      code,
       const DeepCollectionEquality().hash(_languages),
       const DeepCollectionEquality().hash(_localizationModules));
 
@@ -2378,13 +2307,17 @@ class _$StateInfoModelImpl implements _StateInfoModel {
 
 abstract class _StateInfoModel implements StateInfoModel {
   const factory _StateInfoModel(
-      {@JsonKey(name: 'languages') required final List<Languages> languages,
+      {@JsonKey(name: 'code') required final String code,
+      @JsonKey(name: 'languages') required final List<Languages> languages,
       @JsonKey(name: 'localizationModules')
       final List<Languages>? localizationModules}) = _$StateInfoModelImpl;
 
   factory _StateInfoModel.fromJson(Map<String, dynamic> json) =
       _$StateInfoModelImpl.fromJson;
 
+  @override
+  @JsonKey(name: 'code')
+  String get code;
   @override
   @JsonKey(name: 'languages')
   List<Languages> get languages;

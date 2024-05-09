@@ -49,14 +49,10 @@ class MdmsMasterDetailModel with _$MdmsMasterDetailModel {
 @freezed
 class AppConfigPrimaryWrapperModel with _$AppConfigPrimaryWrapperModel {
   const factory AppConfigPrimaryWrapperModel({
-    @JsonKey(name: 'HCM') required HCMWrapperModel hcmWrapperModel,
+    @JsonKey(name: 'HCM') HCMWrapperModel? hcmWrapperModel,
     @JsonKey(name: 'common-masters')
-    required CommonMastersWrapperModel commonMasters,
+     CommonMastersWrapperModel? commonMasters,
     @JsonKey(name: 'module-version') final RowVersionWrapperModel? rowVersions,
-    @JsonKey(name: 'HCM-SYMPTOMS-TYPES')
-    final SymptomsTypesSecondaryWrapperModel? symptomsTypes,
-    @JsonKey(name: 'HCM-REFERRAL-REASONS')
-    final ReferralReasonsWrapperModel? referralReasons,
   }) = _AppConfigPrimaryWrapperModel;
 
   factory AppConfigPrimaryWrapperModel.fromJson(
@@ -78,7 +74,7 @@ class HCMWrapperModel with _$HCMWrapperModel {
     @JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS')
     required List<DeletionReasonOptions> householdMemberDeletionReasonOptions,
     @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')
-    BackgroundServiceConfig? backgroundServiceConfig,
+    List<BackgroundServiceConfig>? backgroundServiceConfig,
     @JsonKey(name: 'CHECKLIST_TYPES')
     required List<CheckListTypes> checklistTypes,
     @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
@@ -86,7 +82,7 @@ class HCMWrapperModel with _$HCMWrapperModel {
     @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
     required List<DeliveryCommentOptions> deliveryCommentOptions,
     @JsonKey(name: 'BACKEND_INTERFACE')
-    required BackendInterface backendInterface,
+    required List<BackendInterface> backendInterface,
     @JsonKey(name: 'CALL_SUPPORT')
     required List<CallSupportList>? callSupportOptions,
     @JsonKey(name: 'TRANSPORT_TYPES')
@@ -118,7 +114,7 @@ class AppConfigSecondaryWrapperModel with _$AppConfigSecondaryWrapperModel {
 class CommonMastersWrapperModel with _$CommonMastersWrapperModel {
   const factory CommonMastersWrapperModel({
     @JsonKey(name: 'GenderType') required List<CommonMasterModel> genderType,
-    @JsonKey(name: 'StateInfo') required StateInfoModel stateInfo,
+    @JsonKey(name: 'StateInfo') required List<StateInfoModel> stateInfo,
   }) = _CommonMastersWrapperModel;
 
   factory CommonMastersWrapperModel.fromJson(
@@ -131,7 +127,7 @@ class CommonMastersWrapperModel with _$CommonMastersWrapperModel {
 class CommonMasterModel with _$CommonMasterModel {
   const factory CommonMasterModel({
     @JsonKey(name: 'code') required String code,
-    @JsonKey(name: 'name') required String name,
+    @JsonKey(name: 'name') String? name,
     @JsonKey(name: 'active') required bool active,
   }) = _CommonMasterModel;
 
@@ -144,6 +140,7 @@ class CommonMasterModel with _$CommonMasterModel {
 @freezed
 class StateInfoModel with _$StateInfoModel {
   const factory StateInfoModel({
+    @JsonKey(name: 'code') required String code,
     @JsonKey(name: 'languages') required List<Languages> languages,
     @JsonKey(name: 'localizationModules') List<Languages>? localizationModules,
   }) = _StateInfoModel;

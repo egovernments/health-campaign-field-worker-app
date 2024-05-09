@@ -66,22 +66,17 @@ Map<String, dynamic> _$$MdmsMasterDetailModelImplToJson(
 _$AppConfigPrimaryWrapperModelImpl _$$AppConfigPrimaryWrapperModelImplFromJson(
         Map<String, dynamic> json) =>
     _$AppConfigPrimaryWrapperModelImpl(
-      hcmWrapperModel:
-          HCMWrapperModel.fromJson(json['HCM'] as Map<String, dynamic>),
-      commonMasters: CommonMastersWrapperModel.fromJson(
-          json['common-masters'] as Map<String, dynamic>),
+      hcmWrapperModel: json['HCM'] == null
+          ? null
+          : HCMWrapperModel.fromJson(json['HCM'] as Map<String, dynamic>),
+      commonMasters: json['common-masters'] == null
+          ? null
+          : CommonMastersWrapperModel.fromJson(
+              json['common-masters'] as Map<String, dynamic>),
       rowVersions: json['module-version'] == null
           ? null
           : RowVersionWrapperModel.fromJson(
               json['module-version'] as Map<String, dynamic>),
-      symptomsTypes: json['HCM-SYMPTOMS-TYPES'] == null
-          ? null
-          : SymptomsTypesSecondaryWrapperModel.fromJson(
-              json['HCM-SYMPTOMS-TYPES'] as Map<String, dynamic>),
-      referralReasons: json['HCM-REFERRAL-REASONS'] == null
-          ? null
-          : ReferralReasonsWrapperModel.fromJson(
-              json['HCM-REFERRAL-REASONS'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$AppConfigPrimaryWrapperModelImplToJson(
@@ -90,8 +85,6 @@ Map<String, dynamic> _$$AppConfigPrimaryWrapperModelImplToJson(
       'HCM': instance.hcmWrapperModel,
       'common-masters': instance.commonMasters,
       'module-version': instance.rowVersions,
-      'HCM-SYMPTOMS-TYPES': instance.symptomsTypes,
-      'HCM-REFERRAL-REASONS': instance.referralReasons,
     };
 
 _$HCMWrapperModelImpl _$$HCMWrapperModelImplFromJson(
@@ -115,10 +108,11 @@ _$HCMWrapperModelImpl _$$HCMWrapperModelImplFromJson(
               'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS'] as List<dynamic>)
           .map((e) => DeletionReasonOptions.fromJson(e as Map<String, dynamic>))
           .toList(),
-      backgroundServiceConfig: json['BACKGROUND_SERVICE_CONFIG'] == null
-          ? null
-          : BackgroundServiceConfig.fromJson(
-              json['BACKGROUND_SERVICE_CONFIG'] as Map<String, dynamic>),
+      backgroundServiceConfig:
+          (json['BACKGROUND_SERVICE_CONFIG'] as List<dynamic>?)
+              ?.map((e) =>
+                  BackgroundServiceConfig.fromJson(e as Map<String, dynamic>))
+              .toList(),
       checklistTypes: (json['CHECKLIST_TYPES'] as List<dynamic>)
           .map((e) => CheckListTypes.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -130,8 +124,9 @@ _$HCMWrapperModelImpl _$$HCMWrapperModelImplFromJson(
           .map(
               (e) => DeliveryCommentOptions.fromJson(e as Map<String, dynamic>))
           .toList(),
-      backendInterface: BackendInterface.fromJson(
-          json['BACKEND_INTERFACE'] as Map<String, dynamic>),
+      backendInterface: (json['BACKEND_INTERFACE'] as List<dynamic>)
+          .map((e) => BackendInterface.fromJson(e as Map<String, dynamic>))
+          .toList(),
       callSupportOptions: (json['CALL_SUPPORT'] as List<dynamic>?)
           ?.map((e) => CallSupportList.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -187,8 +182,9 @@ _$CommonMastersWrapperModelImpl _$$CommonMastersWrapperModelImplFromJson(
       genderType: (json['GenderType'] as List<dynamic>)
           .map((e) => CommonMasterModel.fromJson(e as Map<String, dynamic>))
           .toList(),
-      stateInfo:
-          StateInfoModel.fromJson(json['StateInfo'] as Map<String, dynamic>),
+      stateInfo: (json['StateInfo'] as List<dynamic>)
+          .map((e) => StateInfoModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$$CommonMastersWrapperModelImplToJson(
@@ -202,7 +198,7 @@ _$CommonMasterModelImpl _$$CommonMasterModelImplFromJson(
         Map<String, dynamic> json) =>
     _$CommonMasterModelImpl(
       code: json['code'] as String,
-      name: json['name'] as String,
+      name: json['name'] as String?,
       active: json['active'] as bool,
     );
 
@@ -216,6 +212,7 @@ Map<String, dynamic> _$$CommonMasterModelImplToJson(
 
 _$StateInfoModelImpl _$$StateInfoModelImplFromJson(Map<String, dynamic> json) =>
     _$StateInfoModelImpl(
+      code: json['code'] as String,
       languages: (json['languages'] as List<dynamic>)
           .map((e) => Languages.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -227,6 +224,7 @@ _$StateInfoModelImpl _$$StateInfoModelImplFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$$StateInfoModelImplToJson(
         _$StateInfoModelImpl instance) =>
     <String, dynamic>{
+      'code': instance.code,
       'languages': instance.languages,
       'localizationModules': instance.localizationModules,
     };

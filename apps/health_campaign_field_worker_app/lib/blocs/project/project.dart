@@ -456,7 +456,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           ),
         ).toJson(),
       );
-
+      print(configResult);
       final rowversionList = await isar.rowVersionLists
           .filter()
           .moduleEqualTo('egov-location')
@@ -471,8 +471,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           ?.version;
       final boundaryRefetched = await localSecureStore.boundaryRefetched;
 
-   if (rowversionList.firstOrNull?.version != serverVersion ||
-    boundaryRefetched) {
+      if (rowversionList.firstOrNull?.version != serverVersion ||
+          boundaryRefetched) {
         boundaries = await boundaryRemoteRepository.search(
           BoundarySearchModel(
             hierarchyType: envConfig.variables.hierarchyType,
