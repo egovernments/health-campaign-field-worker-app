@@ -567,101 +567,101 @@ class PerformSyncDown {
 
             break;
 
-          // case DataModelType.stock:
-          //   responseEntities = await remote.search(
-          //     StockSearchModel(
-          //       clientReferenceId: entities
-          //           .whereType<StockModel>()
-          //           .map((e) => e.clientReferenceId)
-          //           .whereNotNull()
-          //           .toList(),
-          //     ),
-          //   );
-          //
-          //   for (var element in operationGroupedEntity.value) {
-          //     if (element.id == null) return;
-          //     final entity = element.entity as StockModel;
-          //     final responseEntity =
-          //         responseEntities.whereType<StockModel>().firstWhereOrNull(
-          //               (e) => e.clientReferenceId == entity.clientReferenceId,
-          //             );
-          //
-          //     final serverGeneratedId = responseEntity?.id;
-          //     final rowVersion = responseEntity?.rowVersion;
-          //
-          //     if (serverGeneratedId != null) {
-          //       await local.opLogManager.updateServerGeneratedIds(
-          //         model: UpdateServerGeneratedIdModel(
-          //           clientReferenceId: entity.clientReferenceId!,
-          //           serverGeneratedId: serverGeneratedId,
-          //           dataOperation: element.operation,
-          //           rowVersion: rowVersion,
-          //         ),
-          //       );
-          //     } else {
-          //       final bool markAsNonRecoverable = await local.opLogManager
-          //           .updateSyncDownRetry(entity.clientReferenceId);
-          //
-          //       if (markAsNonRecoverable) {
-          //         await local.update(
-          //           entity.copyWith(
-          //             nonRecoverableError: true,
-          //           ),
-          //           createOpLog: false,
-          //         );
-          //       }
-          //     }
-          //   }
-          //
-          //   break;
-          //
-          // case DataModelType.stockReconciliation:
-          //   responseEntities =
-          //       await remote.search(StockReconciliationSearchModel(
-          //     clientReferenceId: entities
-          //         .whereType<StockReconciliationModel>()
-          //         .map((e) => e.clientReferenceId)
-          //         .whereNotNull()
-          //         .toList(),
-          //   ));
-          //
-          //   for (var element in operationGroupedEntity.value) {
-          //     if (element.id == null) return;
-          //     final entity = element.entity as StockReconciliationModel;
-          //     final responseEntity = responseEntities
-          //         .whereType<StockReconciliationModel>()
-          //         .firstWhereOrNull(
-          //           (e) => e.clientReferenceId == entity.clientReferenceId,
-          //         );
-          //
-          //     final serverGeneratedId = responseEntity?.id;
-          //     final rowVersion = responseEntity?.rowVersion;
-          //
-          //     if (serverGeneratedId != null) {
-          //       await local.opLogManager.updateServerGeneratedIds(
-          //         model: UpdateServerGeneratedIdModel(
-          //           clientReferenceId: entity.clientReferenceId,
-          //           serverGeneratedId: serverGeneratedId,
-          //           dataOperation: element.operation,
-          //           rowVersion: rowVersion,
-          //         ),
-          //       );
-          //     } else {
-          //       final bool markAsNonRecoverable = await local.opLogManager
-          //           .updateSyncDownRetry(entity.clientReferenceId);
-          //
-          //       if (markAsNonRecoverable) {
-          //         await local.update(
-          //           entity.copyWith(
-          //             nonRecoverableError: true,
-          //           ),
-          //           createOpLog: false,
-          //         );
-          //       }
-          //     }
-          //   }
-          //
-          //   break;
+          case DataModelType.stock:
+            responseEntities = await remote.search(
+              StockSearchModel(
+                clientReferenceId: entities
+                    .whereType<StockModel>()
+                    .map((e) => e.clientReferenceId)
+                    .whereNotNull()
+                    .toList(),
+              ),
+            );
+
+            for (var element in operationGroupedEntity.value) {
+              if (element.id == null) return;
+              final entity = element.entity as StockModel;
+              final responseEntity =
+                  responseEntities.whereType<StockModel>().firstWhereOrNull(
+                        (e) => e.clientReferenceId == entity.clientReferenceId,
+                      );
+
+              final serverGeneratedId = responseEntity?.id;
+              final rowVersion = responseEntity?.rowVersion;
+
+              if (serverGeneratedId != null) {
+                await local.opLogManager.updateServerGeneratedIds(
+                  model: UpdateServerGeneratedIdModel(
+                    clientReferenceId: entity.clientReferenceId!,
+                    serverGeneratedId: serverGeneratedId,
+                    dataOperation: element.operation,
+                    rowVersion: rowVersion,
+                  ),
+                );
+              } else {
+                final bool markAsNonRecoverable = await local.opLogManager
+                    .updateSyncDownRetry(entity.clientReferenceId);
+
+                if (markAsNonRecoverable) {
+                  await local.update(
+                    entity.copyWith(
+                      nonRecoverableError: true,
+                    ),
+                    createOpLog: false,
+                  );
+                }
+              }
+            }
+
+            break;
+
+          case DataModelType.stockReconciliation:
+            responseEntities =
+                await remote.search(StockReconciliationSearchModel(
+              clientReferenceId: entities
+                  .whereType<StockReconciliationModel>()
+                  .map((e) => e.clientReferenceId)
+                  .whereNotNull()
+                  .toList(),
+            ));
+
+            for (var element in operationGroupedEntity.value) {
+              if (element.id == null) return;
+              final entity = element.entity as StockReconciliationModel;
+              final responseEntity = responseEntities
+                  .whereType<StockReconciliationModel>()
+                  .firstWhereOrNull(
+                    (e) => e.clientReferenceId == entity.clientReferenceId,
+                  );
+
+              final serverGeneratedId = responseEntity?.id;
+              final rowVersion = responseEntity?.rowVersion;
+
+              if (serverGeneratedId != null) {
+                await local.opLogManager.updateServerGeneratedIds(
+                  model: UpdateServerGeneratedIdModel(
+                    clientReferenceId: entity.clientReferenceId,
+                    serverGeneratedId: serverGeneratedId,
+                    dataOperation: element.operation,
+                    rowVersion: rowVersion,
+                  ),
+                );
+              } else {
+                final bool markAsNonRecoverable = await local.opLogManager
+                    .updateSyncDownRetry(entity.clientReferenceId);
+
+                if (markAsNonRecoverable) {
+                  await local.update(
+                    entity.copyWith(
+                      nonRecoverableError: true,
+                    ),
+                    createOpLog: false,
+                  );
+                }
+              }
+            }
+
+            break;
 
           case DataModelType.complaints:
             if (remote is! PgrServiceRemoteRepository) continue;

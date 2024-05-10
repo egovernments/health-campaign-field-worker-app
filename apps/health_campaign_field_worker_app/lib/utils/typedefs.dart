@@ -37,10 +37,6 @@ typedef PgrServiceDataRepository
 typedef UserDataRepository = DataRepository<UserModel, UserSearchModel>;
 typedef HFReferralDataRepository
     = DataRepository<HcmHFReferralModel, HcmHFReferralSearchModel>;
-typedef AttendanceDataRepository
-    = DataRepository<AttendanceRegisterModel, AttendanceRegisterSearchModel>;
-typedef AttendanceLogDataRepository
-    = DataRepository<AttendanceLogModel, AttendanceLogSearchModel>;
 
 typedef StockDataRepository = DataRepository<StockModel, StockSearchModel>;
 typedef StockReconciliationDataRepository
