@@ -194,6 +194,7 @@ class _StockReconciliationPageState
                                                 await DigitDialog.show<bool>(
                                               context,
                                               options: DigitDialogOptions(
+                                                key: const Key('submitDialog'),
                                                 titleText:
                                                     localizations.translate(
                                                   i18.stockReconciliationDetails
