@@ -1,18 +1,38 @@
 {
-    "name": "BeneficiaryType",
-    "enumValues": [
-      {
-        "name": "individual",
-        "value": "INDIVIDUAL"
-      },
-      {
-        "name": "household",
-        "value": "HOUSEHOLD"
-      },
-      {
-        "name": "product",
-        "value": "PRODUCT"
-      }
-    ],
-    "isEnum": true
-  }
+  "name": "BeneficiaryType",
+  "enumValues": [
+    {
+      "name": "individual",
+      "value": "INDIVIDUAL"
+    },
+    {
+      "name": "household",
+      "value": "HOUSEHOLD"
+    },
+    {
+      "name": "product",
+      "value": "PRODUCT"
+    },
+    {
+      "name": "individual1",
+      "value": "5-14YEARS"
+    },
+    {
+      "name": "individual2",
+      "value": "14+YEARS"
+    },
+    {
+      "name": "individual3",
+      "value": "15+YEARS"
+    },
+    {
+      "name": "ivermectin",
+      "value": "IVERMECTIN"
+    },
+    {
+      "name": "albendazole",
+      "value": "ALBENDAZOLE"
+    }
+  ],
+  "isEnum": true
+}
