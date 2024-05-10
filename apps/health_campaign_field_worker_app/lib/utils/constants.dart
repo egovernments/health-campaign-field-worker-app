@@ -1,12 +1,6 @@
 import 'package:attendance_management/attendance_management.dart';
-import 'package:attendance_management/data/repositories/local/attendance_logs.dart';
-import 'package:attendance_management/data/repositories/local/attendance_register.dart';
-import 'package:attendance_management/data/repositories/remote/attendance_logs.dart';
-import 'package:attendance_management/data/repositories/remote/attendance_register.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/models/oplog/oplog_entry.dart';
-import 'package:digit_data_model/utils/utils.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:health_campaign_field_worker_app/utils/utils.dart';
@@ -16,7 +10,6 @@ import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:inventory_management/data/repositories/local/stock.dart';
 import 'package:inventory_management/data/repositories/local/stock_reconciliation.dart';
-import 'package:registration_delivery/data/repositories/remote/household.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
@@ -29,7 +22,6 @@ import '../data/repositories/local/hcm_hf_referral.dart';
 import '../data/repositories/local/pgr_service.dart';
 import '../data/repositories/local/project_staff.dart';
 import '../data/repositories/oplog/hcm_oplog.dart';
-import '../data/repositories/remote/downsync.dart';
 import '../data/repositories/remote/hcm_hf_referral.dart';
 import '../data/repositories/remote/pgr_service.dart';
 import '../data/repositories/remote/product_variant.dart';
@@ -37,9 +29,6 @@ import '../data/repositories/remote/project_beneficiary.dart';
 import '../data/repositories/remote/project_product_variant.dart';
 import '../data/repositories/remote/project_staff.dart';
 import '../data/repositories/remote/project_type.dart';
-import '../data/repositories/remote/referral.dart';
-import '../data/repositories/remote/side_effect.dart';
-import '../data/repositories/remote/task.dart';
 import 'environment_config.dart';
 
 class Constants {

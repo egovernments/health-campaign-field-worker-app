@@ -5,6 +5,7 @@ import 'dart:core';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:attendance_management/attendance_management.dart';
@@ -247,7 +248,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                 );
                 await attendanceLogLocalRepository.bulkCreate(logs);
               } catch (_) {
-                print('Error in fetching individual data $_}');
                 emit(state.copyWith(
                   loading: false,
                   syncError: ProjectSyncErrorType.project,
