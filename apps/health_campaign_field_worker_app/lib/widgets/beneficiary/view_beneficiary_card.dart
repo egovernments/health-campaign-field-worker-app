@@ -125,31 +125,28 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                 .toList()
             : null;
 
-        final ageInYears = DigitDateUtils.calculateAge(
-          householdMember.headOfHousehold.dateOfBirth != null
-              ? DigitDateUtils.getFormattedDateToDateTime(
-                    householdMember.headOfHousehold.dateOfBirth!,
-                  ) ??
-                  DateTime.now()
-              : DateTime.now(),
-        ).years;
-        final ageInMonths = DigitDateUtils.calculateAge(
-          householdMember.headOfHousehold.dateOfBirth != null
-              ? DigitDateUtils.getFormattedDateToDateTime(
-                    householdMember.headOfHousehold.dateOfBirth!,
-                  ) ??
-                  DateTime.now()
-              : DateTime.now(),
-        ).months;
+        // final ageInYears = DigitDateUtils.calculateAge(
+        //   householdMember.headOfHousehold.dateOfBirth != null
+        //       ? DigitDateUtils.getFormattedDateToDateTime(
+        //             householdMember.headOfHousehold.dateOfBirth!,
+        //           ) ??
+        //           DateTime.now()
+        //       : DateTime.now(),
+        // ).years;
+        // final ageInMonths = DigitDateUtils.calculateAge(
+        //   householdMember.headOfHousehold.dateOfBirth != null
+        //       ? DigitDateUtils.getFormattedDateToDateTime(
+        //             householdMember.headOfHousehold.dateOfBirth!,
+        //           ) ??
+        //           DateTime.now()
+        //       : DateTime.now(),
+        // ).months;
 
         final isNotEligible = !checkEligibilityForAgeAndSideEffect(
-          DigitDOBAge(
-            years: ageInYears,
-            months: ageInMonths,
-          ),
           bloc.projectType,
           (taskdata ?? []).isNotEmpty ? taskdata?.last : null,
           sideEffects,
+          householdMember.headOfHousehold,
         );
         final isSideEffectRecorded = recordedSideEffect(
           currentCycle,
@@ -234,31 +231,28 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
       },
     ).toList();
 
-    final ageInYears = DigitDateUtils.calculateAge(
-      householdMember.headOfHousehold.dateOfBirth != null
-          ? DigitDateUtils.getFormattedDateToDateTime(
-                householdMember.headOfHousehold.dateOfBirth!,
-              ) ??
-              DateTime.now()
-          : DateTime.now(),
-    ).years;
-    final ageInMonths = DigitDateUtils.calculateAge(
-      householdMember.headOfHousehold.dateOfBirth != null
-          ? DigitDateUtils.getFormattedDateToDateTime(
-                householdMember.headOfHousehold.dateOfBirth!,
-              ) ??
-              DateTime.now()
-          : DateTime.now(),
-    ).months;
+    // final ageInYears = DigitDateUtils.calculateAge(
+    //   householdMember.headOfHousehold.dateOfBirth != null
+    //       ? DigitDateUtils.getFormattedDateToDateTime(
+    //             householdMember.headOfHousehold.dateOfBirth!,
+    //           ) ??
+    //           DateTime.now()
+    //       : DateTime.now(),
+    // ).years;
+    // final ageInMonths = DigitDateUtils.calculateAge(
+    //   householdMember.headOfHousehold.dateOfBirth != null
+    //       ? DigitDateUtils.getFormattedDateToDateTime(
+    //             householdMember.headOfHousehold.dateOfBirth!,
+    //           ) ??
+    //           DateTime.now()
+    //       : DateTime.now(),
+    // ).months;
 
     final isNotEligible = !checkEligibilityForAgeAndSideEffect(
-      DigitDOBAge(
-        years: ageInYears,
-        months: ageInMonths,
-      ),
       bloc.projectType,
       householdMember.tasks?.last,
       householdMember.sideEffects,
+      householdMember.headOfHousehold,
     );
 
     final isBeneficiaryRefused =
