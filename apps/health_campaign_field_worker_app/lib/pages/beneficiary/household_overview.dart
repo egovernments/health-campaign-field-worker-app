@@ -11,7 +11,6 @@ import '../../blocs/project/project.dart';
 import '../../blocs/search_households/search_bloc_common_wrapper.dart';
 import '../../blocs/search_households/search_households.dart';
 import '../../models/data_model.dart';
-import '../../models/project_type/project_type_model.dart';
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
@@ -465,7 +464,10 @@ class _HouseholdOverviewPageState
                                                   DateTime.now(),
                                             ).months;
                                             final currentCycle = projectState
-                                                .projectType?.cycles
+                                                .selectedProject
+                                                ?.additionalDetails
+                                                ?.projectType
+                                                ?.cycles
                                                 ?.firstWhereOrNull(
                                               (e) =>
                                                   (e.startDate!) <
@@ -484,7 +486,7 @@ class _HouseholdOverviewPageState
                                             final isBeneficiaryReferred =
                                                 checkIfBeneficiaryReferred(
                                               referralData,
-                                              currentCycle ?? const Cycle(),
+                                              currentCycle,
                                             );
 
                                             return MemberCard(
@@ -647,7 +649,9 @@ class _HouseholdOverviewPageState
                                                 );
                                               },
                                               isNotEligible: projectState
-                                                          .projectType
+                                                          .selectedProject
+                                                          ?.additionalDetails
+                                                          ?.projectType
                                                           ?.cycles !=
                                                       null
                                                   ? !checkEligibilityForAgeAndSideEffect(
@@ -655,7 +659,10 @@ class _HouseholdOverviewPageState
                                                         years: ageInYears,
                                                         months: ageInMonths,
                                                       ),
-                                                      projectState.projectType,
+                                                      projectState
+                                                          .selectedProject
+                                                          ?.additionalDetails
+                                                          ?.projectType,
                                                       (taskdata ?? [])
                                                               .isNotEmpty
                                                           ? taskdata?.last

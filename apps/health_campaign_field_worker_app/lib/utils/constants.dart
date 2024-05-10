@@ -52,7 +52,6 @@ import '../data/repositories/remote/project_facility.dart';
 import '../data/repositories/remote/project_product_variant.dart';
 import '../data/repositories/remote/project_resource.dart';
 import '../data/repositories/remote/project_staff.dart';
-import '../data/repositories/remote/project_type.dart';
 import '../data/repositories/remote/referral.dart';
 import '../data/repositories/remote/service.dart';
 import '../data/repositories/remote/service_definition.dart';
@@ -225,8 +224,6 @@ class Constants {
           TaskRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.stock)
           StockRemoteRepository(dio, actionMap: actions),
-        if (value == DataModelType.projectType)
-          ProjectTypeRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.projectStaff)
           ProjectStaffRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.projectProductVariant)
