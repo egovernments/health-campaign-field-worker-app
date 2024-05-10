@@ -465,22 +465,22 @@ class _HouseholdOverviewPageState
                                                             .clientReferenceId)
                                                     .toList()
                                                 : null;
-                                            final ageInYears =
-                                                DigitDateUtils.calculateAge(
-                                              DigitDateUtils
-                                                      .getFormattedDateToDateTime(
-                                                    e.dateOfBirth!,
-                                                  ) ??
-                                                  DateTime.now(),
-                                            ).years;
-                                            final ageInMonths =
-                                                DigitDateUtils.calculateAge(
-                                              DigitDateUtils
-                                                      .getFormattedDateToDateTime(
-                                                    e.dateOfBirth!,
-                                                  ) ??
-                                                  DateTime.now(),
-                                            ).months;
+                                            // final ageInYears =
+                                            //     DigitDateUtils.calculateAge(
+                                            //   DigitDateUtils
+                                            //           .getFormattedDateToDateTime(
+                                            //         e.dateOfBirth!,
+                                            //       ) ??
+                                            //       DateTime.now(),
+                                            // ).years;
+                                            // final ageInMonths =
+                                            //     DigitDateUtils.calculateAge(
+                                            //   DigitDateUtils
+                                            //           .getFormattedDateToDateTime(
+                                            //         e.dateOfBirth!,
+                                            //       ) ??
+                                            //       DateTime.now(),
+                                            // ).months;
                                             final currentCycle = projectState
                                                 .projectType?.cycles
                                                 ?.firstWhereOrNull(
@@ -681,16 +681,13 @@ class _HouseholdOverviewPageState
                                                           ?.cycles !=
                                                       null
                                                   ? !checkEligibilityForAgeAndSideEffect(
-                                                      DigitDOBAge(
-                                                        years: ageInYears,
-                                                        months: ageInMonths,
-                                                      ),
                                                       projectState.projectType,
                                                       (taskdata ?? [])
                                                               .isNotEmpty
                                                           ? taskdata?.last
                                                           : null,
                                                       sideEffectData,
+                                                      e,
                                                     )
                                                   : false,
                                               name:
