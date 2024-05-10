@@ -13,8 +13,10 @@ typedef ReferralReconProjectFacilityStateEmitter
 // Define the Bloc responsible for managing ReferralReconProjectFacility events and states.
 class ReferralReconProjectFacilityBloc extends Bloc<
     ReferralReconProjectFacilityEvent, ReferralReconProjectFacilityState> {
+  final ReferralReconSingleton referralReconSingleton;
   // Constructor initializes the Bloc with an initial state and sets up event handlers.
-  ReferralReconProjectFacilityBloc(super.initialState) {
+  ReferralReconProjectFacilityBloc(super.initialState,
+      {required this.referralReconSingleton}) {
     on(_handleLoadProjectFacilitiesForProjectId);
   }
 
@@ -24,16 +26,21 @@ class ReferralReconProjectFacilityBloc extends Bloc<
     ReferralReconProjectFacilityStateEmitter emit,
   ) async {
     // Emit loading state.
-    emit(const ProjectFacilityLoadingState());
-    // Fetch project facilities for the specified project ID.
-    List<ReferralProjectFacilityModel>? projectFacilities =
-        await ReferralReconSingleton().getProjectFacilitiesForProjectId();
+    try {
+      emit(const ProjectFacilityLoadingState());
+      // Fetch project facilities for the specified project ID.
+      List<ReferralProjectFacilityModel>? projectFacilities =
+          await referralReconSingleton.getProjectFacilitiesForProjectId();
 
-    // Check if project facilities are fetched successfully.
-    if (projectFacilities == null) {
-      emit(const ProjectFacilityEmptyState());
-    } else {
-      emit(ProjectFacilityFetchedState(projectFacilities: projectFacilities));
+      // Check if project facilities are fetched successfully.
+      if (projectFacilities == null) {
+        emit(const ProjectFacilityEmptyState());
+      } else {
+        emit(ProjectFacilityFetchedState(projectFacilities: projectFacilities));
+      }
+    } catch (e) {
+      // Emitting the error state if an exception occurs
+      emit(const ProjectFacilityErrorState());
     }
   }
 }
@@ -61,4 +68,7 @@ class ReferralReconProjectFacilityState
   const factory ReferralReconProjectFacilityState.fetched({
     required List<ReferralProjectFacilityModel> projectFacilities,
   }) = ProjectFacilityFetchedState;
+
+  const factory ReferralReconProjectFacilityState.error() =
+      ProjectFacilityErrorState;
 }

@@ -15,10 +15,12 @@ typedef ReferralReconServiceDefinitionEmitter
 // Define the Bloc responsible for managing ReferralReconServiceDefinition events and states.
 class ReferralReconServiceDefinitionBloc extends Bloc<
     ReferralReconServiceDefinitionEvent, ReferralReconServiceDefinitionState> {
+  final ReferralReconSingleton referralReconSingleton;
   // Constructor initializes the Bloc with an initial state and sets up event handlers.
   ReferralReconServiceDefinitionBloc(
-    super.initialState,
-  ) {
+    super.initialState, {
+    required this.referralReconSingleton,
+  }) {
     on(_handleFetch);
     on(_handleSelect);
   }
@@ -29,7 +31,7 @@ class ReferralReconServiceDefinitionBloc extends Bloc<
   ) async {
     // Logic for fetching all service definitions and updating state with the results.
     List<ReferralReconServiceDefinitionModel>? results =
-        await ReferralReconSingleton().getServiceDefinitionsList();
+        await referralReconSingleton.getServiceDefinitionsList();
 
     emit(ReferralReconServiceDefinitionServiceFetchedState(
       serviceDefinitionList: results ?? [],
@@ -44,7 +46,7 @@ class ReferralReconServiceDefinitionBloc extends Bloc<
     // Logic for selecting a service definition and updating state accordingly.
 
     List<ReferralReconServiceDefinitionModel>? results =
-        await ReferralReconSingleton()
+        await referralReconSingleton
             .getServiceDefinitions(event.serviceDefinitionCode);
     emit(ReferralReconServiceDefinitionServiceFetchedState(
         serviceDefinitionList: results ?? [],

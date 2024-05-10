@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
 import 'package:referral_reconciliation/blocs/referral_recon_service.dart';
+import 'package:referral_reconciliation/blocs/referral_reconciliation_listeners.dart';
 import 'package:referral_reconciliation/blocs/search_referral_reconciliations.dart';
 
 import 'blocs/app_initialization/app_initialization.dart';
@@ -291,6 +292,7 @@ class MainApplicationState extends State<MainApplication>
                         BlocProvider(
                           create: (context) => ReferralReconServiceBloc(
                             const ReferralReconServiceEmptyState(),
+                            referralReconSingleton: ReferralReconSingleton(),
                           ),
                         ),
                       ],

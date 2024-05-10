@@ -38,10 +38,12 @@ class HFCreateReferralWrapperPage extends StatelessWidget {
         child: BlocProvider(
           create: (_) => ReferralReconServiceDefinitionBloc(
             const ReferralReconServiceDefinitionEmptyState(),
+            referralReconSingleton: ReferralReconSingleton(),
           )..add(const ReferralReconServiceDefinitionFetchEvent()),
           child: BlocProvider(
             create: (_) => ReferralReconServiceBloc(
               const ReferralReconServiceEmptyState(),
+              referralReconSingleton: ReferralReconSingleton(),
             )..add(ReferralReconServiceSearchEvent(
                   serviceSearchModel: ReferralReconServiceSearchModel(
                 clientId:
@@ -55,6 +57,7 @@ class HFCreateReferralWrapperPage extends StatelessWidget {
                   hfReferralModel: referralReconciliation?.hfReferralModel,
                   additionalData: referralReconciliation?.additionalData,
                 ),
+                referralReconSingleton: ReferralReconSingleton(),
               ),
               child: const AutoRouter(),
             ),
