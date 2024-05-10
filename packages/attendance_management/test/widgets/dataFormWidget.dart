@@ -48,12 +48,5 @@ void main() {
     // // Expect to find the confirm button in the date picker
     expect(
         find.text(i18.common.coreCommonOk, findRichText: true), findsOneWidget);
-
-    // // Tap the confirm button to select the date
-    // await tester.tap(find.text(i18.common.coreCommonOk));
-    // await tester.pumpAndSettle();
-
-    // Expect to find the selected date displayed in the text field
-    // expect(find.text('Jan 1,2022'), findsOneWidget);
   });
 }
