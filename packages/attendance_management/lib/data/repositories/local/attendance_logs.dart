@@ -6,7 +6,6 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
 
 import '../../../models/entities/attendance_log.dart';
-import '../../../utils/utils.dart';
 
 class AttendanceLogsLocalRepository
     extends LocalRepository<AttendanceLogModel, AttendanceLogSearchModel> {

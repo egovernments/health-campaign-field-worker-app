@@ -3,10 +3,10 @@
 import 'dart:async';
 
 import 'package:digit_data_model/data_model.dart';
-import 'package:attendance_management/attendance_management.dart';
 import 'package:digit_data_model/utils/constants.dart';
 import 'package:dio/dio.dart';
 
+import '../../../models/entities/attendance_log.dart';
 import '../../../utils/utils.dart';
 
 class AttendanceLogRemoteRepository

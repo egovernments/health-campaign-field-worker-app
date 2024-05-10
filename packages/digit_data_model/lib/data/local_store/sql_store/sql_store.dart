@@ -2,8 +2,6 @@ import 'dart:io';
 
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
-import 'package:inventory_management/models/entities/transaction_reason.dart';
-import 'package:inventory_management/models/entities/transaction_type.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
@@ -62,8 +60,6 @@ part 'sql_store.g.dart';
   ProjectType,
   Individual,
   Identifier,
-  Stock,
-  StockReconciliation,
   Target,
   Service,
   ServiceAttributes,
@@ -76,13 +72,6 @@ part 'sql_store.g.dart';
   User,
   Downsync,
   DownsyncCriteria,
-  HFReferral,
-  Household,
-  HouseholdMember,
-  Task,
-  TaskResource,
-  SideEffect,
-  Referral,
 ])
 class LocalSqlDataStore extends _$LocalSqlDataStore {
   LocalSqlDataStore() : super(_openConnection());

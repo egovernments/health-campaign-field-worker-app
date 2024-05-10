@@ -77,7 +77,10 @@ class AttendanceIndividualBloc
               ))
           .toList();
 
-      checkResponse(filteredLogs!, attendees, event);
+      bool anyLogPresent = checkResponse(filteredLogs!, attendees, event);
+
+      emit(AttendanceIndividualState.loaded(
+          attendanceCollectionModel: attendees, viewOnly: anyLogPresent));
     } catch (ex) {
       String? error = ex as String;
 
@@ -291,9 +294,6 @@ class AttendanceIndividualBloc
                       ? 0.5
                       : 1);
     }).toList();
-
-    emit(AttendanceIndividualState.loaded(
-        attendanceCollectionModel: attendees, viewOnly: anyLogPresent));
   }
 
   void submitAttendanceDetails(
