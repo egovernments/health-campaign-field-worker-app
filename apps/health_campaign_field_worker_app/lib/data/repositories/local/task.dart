@@ -29,7 +29,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
             tbl.status.equals(
               query.status!,
             ),
-          if (query.plannedEndDate != null)
+          if (query.plannedEndDate != null && query.plannedStartDate != null)
             tbl.clientCreatedTime.isBetweenValues(
               query.plannedStartDate!,
               query.plannedEndDate!,
