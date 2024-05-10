@@ -78,7 +78,7 @@ abstract class RemoteRepository<D extends EntityModel,
             searchPath,
             queryParameters: {
               'offset': offSet ?? 0,
-              'limit': limit ?? 1000,
+              'limit': limit ?? 100,
               'tenantId': envConfig.variables.tenantId,
               if (query.isDeleted ?? false) 'includeDeleted': query.isDeleted,
             },
