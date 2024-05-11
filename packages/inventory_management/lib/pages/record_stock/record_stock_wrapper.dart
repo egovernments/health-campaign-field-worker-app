@@ -3,6 +3,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_management/blocs/inventory_listener.dart';
+import 'package:inventory_management/inventory_management.dart';
+import 'package:inventory_management/utils/extensions/extensions.dart';
 import 'package:inventory_management/widgets/component_wrapper/facility_bloc_wrapper.dart';
 import 'package:inventory_management/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import '../../blocs/record_stock.dart';
@@ -41,6 +43,8 @@ class RecordStockWrapperPage extends StatelessWidget
           projectId: InventorySingleton().projectId,
           child: BlocProvider(
             create: (_) => RecordStockBloc(
+              stockRepository:
+                  context.repository<StockModel, StockSearchModel>(context),
               RecordStockCreateState(
                 entryType: type,
                 projectId: InventorySingleton().projectId,

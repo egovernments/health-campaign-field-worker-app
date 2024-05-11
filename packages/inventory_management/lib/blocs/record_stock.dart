@@ -6,6 +6,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:digit_data_model/data_model.dart';
 
+import '../utils/typedefs.dart';
 import '../utils/utils.dart';
 
 part 'record_stock.freezed.dart';
@@ -14,10 +15,12 @@ typedef RecordStockEmitter = Emitter<RecordStockState>;
 
 // Bloc for handling record stock related events and states
 class RecordStockBloc extends Bloc<RecordStockEvent, RecordStockState> {
+  final StockDataRepository stockRepository;
   final InventorySingleton inventorySingleton;
 
   // Constructor for the bloc
-  RecordStockBloc(super.initialState, {required this.inventorySingleton}) {
+  RecordStockBloc(super.initialState,
+      {required this.stockRepository, required this.inventorySingleton}) {
     // Registering the event handlers
     on(_handleSaveWarehouseDetails);
     on(_handleSaveStockDetails);
@@ -117,16 +120,14 @@ class RecordStockBloc extends Bloc<RecordStockEvent, RecordStockState> {
           );
         }
 
-        stockSaved = await inventorySingleton.saveStockDetails(
-          SaveStockDetails(
-            stockModel: stockModel.copyWith(
-              facilityId: facilityModel.id,
-              rowVersion: 1,
-            ),
+        await stockRepository.create(
+          stockModel.copyWith(
+            facilityId: facilityModel.id,
+            rowVersion: 1,
+            tenantId: InventorySingleton().tenantId,
           ),
         );
 
-        if (stockSaved!) {
           emit(
             RecordStockPersistedState(
               entryType: value.entryType,
@@ -136,7 +137,6 @@ class RecordStockBloc extends Bloc<RecordStockEvent, RecordStockState> {
               dateOfRecord: value.dateOfRecord,
             ),
           );
-        }
       },
     );
   }

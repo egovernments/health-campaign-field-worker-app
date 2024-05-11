@@ -63,7 +63,7 @@ packages:
       path: "../attendance_management"
       relative: true
     source: path
-    version: "0.0.1"
+    version: "0.0.0-dev.1"
   audioplayers:
     dependency: transitive
     description:

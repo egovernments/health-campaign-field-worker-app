@@ -119,7 +119,7 @@ class AttendanceBloc extends Bloc<AttendanceEvents, AttendanceStates> {
       AttendanceRegisterSearchModel(
         limit: limit,
         offSet: offSet,
-        staffId: AttendanceSingleton().userId,
+        staffId: AttendanceSingleton().loggedInIndividualId,
         referenceId: AttendanceSingleton().projectId,
       ),
     );

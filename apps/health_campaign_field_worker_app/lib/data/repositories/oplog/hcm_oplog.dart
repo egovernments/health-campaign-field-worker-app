@@ -356,7 +356,7 @@ class AttendanceLogOpLogManager extends OpLogManager<AttendanceLogModel> {
 
   @override
   String getClientReferenceId(AttendanceLogModel entity) =>
-      entity.clientReferenceId.toString();
+      entity.clientReferenceId!;
 
   @override
   String? getServerGeneratedId(AttendanceLogModel entity) => entity.id;

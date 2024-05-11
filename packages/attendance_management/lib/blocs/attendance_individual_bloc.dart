@@ -4,6 +4,7 @@ import 'package:attendance_management/attendance_management.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:collection/collection.dart';
 
 import '../models/entities/enum_values.dart';
 import '../utils/typedefs.dart';
@@ -333,45 +334,30 @@ class AttendanceIndividualBloc
           },
         ).toList();
 
-        return AttendanceLogModel(
+        return e.copyWith(
           rowVersion: 1,
-          clientReferenceId: (existingLog).isNotEmpty
-              ? existingLog.lastOrNull?.clientReferenceId
+          clientReferenceId: (existingLog ?? []).isNotEmpty
+              ? existingLog.last.clientReferenceId
               : IdGen.i.identifier,
-          registerId: e.registerId,
-          tenantId: e.tenantId,
-          individualId: e.individualId,
-          status: e.status,
-          time: e.time,
-          type: e.type,
-          uploadToServer: e.uploadToServer,
-          additionalDetails: e.additionalDetails,
-          documentIds: e.documentIds,
-          isDeleted: e.isDeleted,
-          nonRecoverableError: e.nonRecoverableError,
           clientAuditDetails: ClientAuditDetails(
-            createdBy: AttendanceSingleton().userId.toString(),
+            createdBy: AttendanceSingleton().loggedInUserUuid,
             createdTime: DateTime.now().millisecondsSinceEpoch,
             lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
-            lastModifiedBy: AttendanceSingleton().userId.toString(),
+            lastModifiedBy: AttendanceSingleton().loggedInUserUuid,
           ),
           auditDetails: AuditDetails(
-            createdBy: AttendanceSingleton().userId.toString(),
+            createdBy: AttendanceSingleton().loggedInUserUuid,
             createdTime: DateTime.now().millisecondsSinceEpoch,
             lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
-            lastModifiedBy: AttendanceSingleton().userId.toString(),
+            lastModifiedBy: AttendanceSingleton().loggedInUserUuid,
           ),
         );
       },
     ).toList();
 
     // Grouping individuals and creating attendance logs
-    final groupedIndividuals = hcmAttendanceLogs
-        .fold<Map<String, List<AttendanceLogModel>>>({}, (map, log) {
-      map[log.individualId!] = map[log.individualId] ?? [];
-      map[log.individualId]?.add(log);
-      return map;
-    });
+    final groupedIndividuals =
+        hcmAttendanceLogs.groupListsBy((ele) => ele.individualId);
 
     for (final log in groupedIndividuals.entries) {
       final createOpLog = (createOplog ?? false) &&

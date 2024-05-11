@@ -17,7 +17,8 @@ class AttendanceSingleton {
 
   AttendanceListeners? _attendanceListeners;
   String _projectId = '';
-  String _userId = '';
+  String _loggedInIndividualId = '';
+  String _loggedInUserUuid = '';
   String _appVersion = '';
   String _tenantId = '';
   PersistenceConfiguration _persistenceConfiguration = PersistenceConfiguration
@@ -27,16 +28,19 @@ class AttendanceSingleton {
   void setAttendanceListeners(
       {required AttendanceListeners attendanceListeners,
       required String projectId,
-      required String userId,
+      required String loggedInIndividualId,
+      required String loggedInUserUuid,
       required String appVersion}) {
     _attendanceListeners = attendanceListeners;
     _projectId = projectId;
-    _userId = userId;
+    _loggedInIndividualId = loggedInIndividualId;
+    _loggedInUserUuid = loggedInUserUuid;
     _appVersion = appVersion;
   }
 
   get projectId => _projectId;
-  get userId => _userId;
+  get loggedInIndividualId => _loggedInIndividualId;
+  get loggedInUserUuid => _loggedInUserUuid;
   get appVersion => _appVersion;
   get tenantId => _tenantId;
   get persistenceConfiguration => _persistenceConfiguration;
