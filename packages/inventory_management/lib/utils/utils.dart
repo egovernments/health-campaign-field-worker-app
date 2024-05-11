@@ -61,6 +61,7 @@ class InventorySingleton {
   String _projectId = '';
   String? _userId = '';
   String? _boundaryName = '';
+  String? _tenantId = '';
   bool _isDistributor = false;
   bool _isWareHouseMgr = false;
   List<InventoryTransportTypes>? _transportType = [];
@@ -86,6 +87,10 @@ class InventorySingleton {
     _boundaryName = boundaryName;
   }
 
+  void setTenantId({required String tenantId}) {
+    _tenantId = tenantId;
+  }
+
   // Getters for the properties.
   get projectId => _projectId;
   get userId => _userId;
@@ -93,6 +98,7 @@ class InventorySingleton {
   get isDistributor => _isDistributor;
   get isWareHouseMgr => _isWareHouseMgr;
   get transportType => _transportType;
+  get tenantId => _tenantId;
 
   // Fetches the facilities for a given project ID.
   Future<List<FacilityModel>?> getFacilitiesForProjectId() async {

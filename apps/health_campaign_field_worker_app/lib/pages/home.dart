@@ -775,7 +775,8 @@ void setPackagesSingleton(BuildContext context) {
             context: context,
           ),
           projectId: context.projectId,
-          userId: context.loggedInIndividualId ?? '',
+          loggedInIndividualId: context.loggedInIndividualId!,
+          loggedInUserUuid: context.loggedInUserUuid,
           appVersion: Constants().version,
         );
 

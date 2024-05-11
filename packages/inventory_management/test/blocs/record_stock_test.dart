@@ -3,11 +3,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:inventory_management/blocs/inventory_listener.dart';
 import 'package:inventory_management/blocs/record_stock.dart';
 import 'package:bloc_test/bloc_test.dart';
+import 'package:inventory_management/data/repositories/local/stock.dart';
 import 'package:inventory_management/models/entities/stock.dart';
 import 'package:inventory_management/utils/utils.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:digit_data_model/data_model.dart';
 
+// Mock class for StockRepository
+class MockStockRepository extends Mock implements StockLocalRepository {}
 
 // Mock class for InventorySingleton
 class MockInventorySingleton extends Mock implements InventorySingleton {
@@ -63,6 +66,7 @@ void main() {
     setUp(() {
       mockInventorySingleton = MockInventorySingleton();
       recordStockBloc = RecordStockBloc(
+          stockRepository: MockStockRepository(),
           RecordStockState.create(
             entryType: mockEntryType,
             projectId: mockProjectId,
@@ -74,6 +78,7 @@ void main() {
     blocTest<RecordStockBloc, RecordStockState>(
       'emits updated state with warehouse details when saveWarehouseDetails event is added',
       build: () => RecordStockBloc(
+          stockRepository: MockStockRepository(),
           RecordStockState.create(
               entryType: mockEntryType, projectId: mockProjectId),
           inventorySingleton: mockInventorySingleton),
@@ -94,6 +99,7 @@ void main() {
     blocTest<RecordStockBloc, RecordStockState>(
       'emits updated state with stock details when saveStockDetails event is added',
       build: () => RecordStockBloc(
+          stockRepository: MockStockRepository(),
           RecordStockState.create(
               entryType: mockEntryType, projectId: mockProjectId),
           inventorySingleton: mockInventorySingleton),
@@ -114,6 +120,7 @@ void main() {
     blocTest<RecordStockBloc, RecordStockState>(
       'emits persisted state when createStockEntry event is added and stock details are saved successfully',
       build: () => RecordStockBloc(
+          stockRepository: MockStockRepository(),
           RecordStockState.create(
             entryType: mockEntryType,
             projectId: mockProjectId,

@@ -7,6 +7,7 @@ import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
+import 'package:inventory_management/utils/extensions/extensions.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recase/recase.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
@@ -392,6 +393,23 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                           receiverType: receiverType,
                                           senderId: senderId,
                                           senderType: senderType,
+                                          auditDetails: AuditDetails(
+                                            createdBy:
+                                                InventorySingleton().userId,
+                                            createdTime: context
+                                                .millisecondsSinceEpoch(),
+                                          ),
+                                          clientAuditDetails:
+                                              ClientAuditDetails(
+                                            createdBy:
+                                                InventorySingleton().userId,
+                                            createdTime: context
+                                                .millisecondsSinceEpoch(),
+                                            lastModifiedBy:
+                                                InventorySingleton().userId,
+                                            lastModifiedTime: context
+                                                .millisecondsSinceEpoch(),
+                                          ),
                                           additionalFields: [
                                                     waybillQuantity,
                                                     vehicleNumber,
