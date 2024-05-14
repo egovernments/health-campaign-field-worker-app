@@ -2904,7 +2904,7 @@ class AttendeeCompanion extends UpdateCompanion<AttendeeData> {
   }
 }
 
-class $AddressTable extends at.Address with TableInfo<$AddressTable, Address> {
+class $AddressTable extends Address with TableInfo<$AddressTable, Addres> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -3139,7 +3139,7 @@ class $AddressTable extends at.Address with TableInfo<$AddressTable, Address> {
   String get actualTableName => $name;
   static const String $name = 'address';
   @override
-  VerificationContext validateIntegrity(Insertable<Address> instance,
+  VerificationContext validateIntegrity(Insertable<Addres> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -3309,9 +3309,9 @@ class $AddressTable extends at.Address with TableInfo<$AddressTable, Address> {
   Set<GeneratedColumn> get $primaryKey =>
       {relatedClientReferenceId, auditCreatedBy};
   @override
-  Address map(Map<String, dynamic> data, {String? tablePrefix}) {
+  Addres map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Address(
+    return Addres(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}id']),
       relatedClientReferenceId: attachedDatabase.typeMapping.read(
@@ -3391,7 +3391,7 @@ class $AddressTable extends at.Address with TableInfo<$AddressTable, Address> {
       JsonTypeConverter2.asNullable($convertertype);
 }
 
-class Address extends DataClass implements Insertable<Address> {
+class Addres extends DataClass implements Insertable<Addres> {
   final String? id;
   final String? relatedClientReferenceId;
   final String? doorNo;
@@ -3423,7 +3423,7 @@ class Address extends DataClass implements Insertable<Address> {
   final int? rowVersion;
   final AddressType? type;
   final String? additionalFields;
-  const Address(
+  const Addres(
       {this.id,
       this.relatedClientReferenceId,
       this.doorNo,
@@ -3645,10 +3645,10 @@ class Address extends DataClass implements Insertable<Address> {
     );
   }
 
-  factory Address.fromJson(Map<String, dynamic> json,
+  factory Addres.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Address(
+    return Addres(
       id: serializer.fromJson<String?>(json['id']),
       relatedClientReferenceId:
           serializer.fromJson<String?>(json['relatedClientReferenceId']),
@@ -3727,7 +3727,7 @@ class Address extends DataClass implements Insertable<Address> {
     };
   }
 
-  Address copyWith(
+  Addres copyWith(
           {Value<String?> id = const Value.absent(),
           Value<String?> relatedClientReferenceId = const Value.absent(),
           Value<String?> doorNo = const Value.absent(),
@@ -3759,7 +3759,7 @@ class Address extends DataClass implements Insertable<Address> {
           Value<int?> rowVersion = const Value.absent(),
           Value<AddressType?> type = const Value.absent(),
           Value<String?> additionalFields = const Value.absent()}) =>
-      Address(
+      Addres(
         id: id.present ? id.value : this.id,
         relatedClientReferenceId: relatedClientReferenceId.present
             ? relatedClientReferenceId.value
@@ -3825,7 +3825,7 @@ class Address extends DataClass implements Insertable<Address> {
       );
   @override
   String toString() {
-    return (StringBuffer('Address(')
+    return (StringBuffer('Addres(')
           ..write('id: $id, ')
           ..write('relatedClientReferenceId: $relatedClientReferenceId, ')
           ..write('doorNo: $doorNo, ')
@@ -3898,7 +3898,7 @@ class Address extends DataClass implements Insertable<Address> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Address &&
+      (other is Addres &&
           other.id == this.id &&
           other.relatedClientReferenceId == this.relatedClientReferenceId &&
           other.doorNo == this.doorNo &&
@@ -3932,7 +3932,7 @@ class Address extends DataClass implements Insertable<Address> {
           other.additionalFields == this.additionalFields);
 }
 
-class AddressCompanion extends UpdateCompanion<Address> {
+class AddressCompanion extends UpdateCompanion<Addres> {
   final Value<String?> id;
   final Value<String?> relatedClientReferenceId;
   final Value<String?> doorNo;
@@ -4033,7 +4033,7 @@ class AddressCompanion extends UpdateCompanion<Address> {
     this.additionalFields = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  static Insertable<Address> custom({
+  static Insertable<Addres> custom({
     Expression<String>? id,
     Expression<String>? relatedClientReferenceId,
     Expression<String>? doorNo,
