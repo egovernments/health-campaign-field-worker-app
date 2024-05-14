@@ -10,7 +10,7 @@ import '../../../models/entities/address_type.dart';
 import '../../../models/entities/blood_group.dart';
 import '../../../models/entities/gender.dart';
 import '../../../models/pgr_complaints/pgr_complaints.dart';
-import 'tables/address.dart' as at;
+import 'tables/address.dart';
 import 'tables/boundary.dart';
 import 'tables/locality.dart';
 import 'tables/attributes.dart';
@@ -44,7 +44,7 @@ part 'sql_store.g.dart';
   AttendanceRegister,
   Attendance,
   Attendee,
-  at.Address,
+  Address,
   Name,
   Boundary,
   Document,
