@@ -12,7 +12,7 @@ import 'package:health_campaign_field_worker_app/pages/home.dart';
 import 'package:health_campaign_field_worker_app/pages/login.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:hrk_flutter_test_batteries/hrk_flutter_test_batteries.dart';
-import './test_variables.dart';
+import 'test_variables.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
