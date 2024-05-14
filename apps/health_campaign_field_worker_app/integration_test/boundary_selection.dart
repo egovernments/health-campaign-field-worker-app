@@ -2,7 +2,7 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:health_campaign_field_worker_app/models/data_model.dart';
 
-import '../../test_variables.dart'; // Import test variables and widgets
+import 'test_variables.dart'; // Import test variables and widgets
 
 // Get test data and widgets
 final testVariables = getTestData();
@@ -51,6 +51,8 @@ Future<void> testBoundarySelection(WidgetTester widgetTester) async {
 
   // Find and tap on the 'Download' button if present
   final downloadButton = find.text('Download');
+  final proceedWithoutDownload = find.text('Proceed without downloading');
+
   if (downloadButton.evaluate().isNotEmpty) {
     await widgetTester.tap(downloadButton);
     // Wait for download to settle
@@ -68,12 +70,16 @@ Future<void> testBoundarySelection(WidgetTester widgetTester) async {
       await widgetTester.pumpAndSettle(const Duration(seconds: 2));
 
       // Proceed without downloading
-      await widgetTester.tap(find.text('Proceed without downloading'));
+      await widgetTester.tap(proceedWithoutDownload);
       await widgetTester.pumpAndSettle(const Duration(seconds: 2));
     }
   } else {
     // If no 'Download' button, proceed without downloading
-    await widgetTester.tap(find.text('Proceed without downloading'));
-    await widgetTester.pumpAndSettle(const Duration(seconds: 2));
+    if (proceedWithoutDownload.evaluate().isNotEmpty) {
+      await widgetTester.tap(proceedWithoutDownload);
+      await widgetTester.pumpAndSettle(const Duration(seconds: 2));
+    } else {
+      await widgetTester.pumpAndSettle(const Duration(seconds: 2));
+    }
   }
 }
