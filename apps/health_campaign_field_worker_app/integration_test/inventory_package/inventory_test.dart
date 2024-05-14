@@ -22,8 +22,8 @@ void main() {
 
     // await testLoginPage(widgetTester);
     await testBoundarySelection(widgetTester);
-    await testManageStockPage(widgetTester);
-    await testStockReconciliationPage(widgetTester);
-    // await testViewReportsPage(widgetTester);
+    // await testManageStockPage(widgetTester);
+    // await testStockReconciliationPage(widgetTester);
+    await testViewReportsPage(widgetTester);
   });
 }

@@ -16,7 +16,7 @@ Future<void> testManageStockPage(WidgetTester widgetTester) async {
   await widgetTester.pumpAndSettle();
   expect(find.byType(ManageStocksPage), findsOne);
 
-  for (int i = 0; i < 1; i++) {
+  for (int i = 0; i < 5; i++) {
     await testOnePage(widgetTester, i);
   }
   await widgetTester.tap(find.text('Back'));
