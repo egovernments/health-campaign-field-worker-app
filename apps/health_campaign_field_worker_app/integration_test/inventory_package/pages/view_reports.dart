@@ -1,45 +1,54 @@
-import 'package:digit_components/digit_components.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:intl/intl.dart';
+import 'package:digit_components/digit_components.dart'; // Import components from Digit Components package
+import 'package:flutter/material.dart'; // Import Flutter Material library
+import 'package:flutter_test/flutter_test.dart'; // Import Flutter test library
+import 'package:intl/intl.dart'; // Import intl library for date formatting
 
-import '../../test_variables.dart';
+import '../../test_variables.dart'; // Import test variables and widgets
 
-final testVariables = getTestData();
-final widgetSelector = getWidgets();
-final boundaryNames = getBoundaryName();
+final testVariables = getTestData(); // Get test data
+final widgetSelector = getWidgets(); // Get widget selectors
+final boundaryNames = getBoundaryName(); // Get boundary names
 
+// Function to test view reports page
 Future<void> testViewReportsPage(WidgetTester widgetTester) async {
+  // Tap on view reports button
   await widgetTester.tap(widgetSelector['viewReports']!);
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 1000));
 
+  // Iterate through the pages
   for (int i = 5; i < 6; i++) {
-    await testOnePage(widgetTester, i);
+    await testOnePage(widgetTester, i); // Test each page
+    // Go back to view reports page
     await widgetTester.tap(widgetSelector['viewReports']!);
     await widgetTester.pumpAndSettle(const Duration(milliseconds: 1000));
   }
 }
 
+// Function to test each page
 Future<void> testOnePage(WidgetTester widgetTester, int i) async {
+  // Tap on the DigitListView at index i
   await widgetTester.tap(find.byType(DigitListView).at(i));
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 2000));
 
+  // Tap on facility
   await widgetTester.tap(find.byKey(const Key('viewReportsFacility')));
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 1000));
   await widgetTester.tap(find.bySemanticsLabel(RegExp('FAC_F*')).last);
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 1000));
 
+  // Tap on select product
   await widgetTester.tap(find.byKey(const Key('viewReportSelectProduct')));
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 1000));
   await widgetTester.tap(find.text('Bednet Grade 1'));
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 1000));
 
+  // Verify date text
   expect(
       find.text(
           '${DateTime.now().day} ${DateFormat('MMMM').format(DateTime.now())} ${DateTime.now().year}'),
       findsAtLeast(1));
 
-  //come back to the home page
+  // Go back to the home page
   await widgetTester
       .tap(find.widgetWithText(DigitElevatedButton, 'Back To Home'));
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 1000));
