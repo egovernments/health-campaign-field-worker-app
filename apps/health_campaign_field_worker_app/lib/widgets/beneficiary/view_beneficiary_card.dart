@@ -146,7 +146,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
           bloc.projectType,
           (taskdata ?? []).isNotEmpty ? taskdata?.last : null,
           sideEffects,
-          householdMember.headOfHousehold,
+          e,
         );
         final isSideEffectRecorded = recordedSideEffect(
           currentCycle,
