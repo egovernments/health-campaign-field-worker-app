@@ -546,6 +546,7 @@ class _StockReconciliationPageState
                                       height: kPadding,
                                     ),
                                     DigitTextFormField(
+                                      key: const Key('stockManualCount'),
                                       isRequired: true,
                                       label: localizations.translate(
                                         i18.stockReconciliationDetails

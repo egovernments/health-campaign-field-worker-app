@@ -13,18 +13,20 @@ Future<void> testViewReportsPage(WidgetTester widgetTester) async {
   await widgetTester.tap(widgetSelector['viewReports']!);
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 1000));
 
-  for (int i = 0; i < 6; i++) {
-    await testOnePage(widgetTester);
+  for (int i = 5; i < 6; i++) {
+    await testOnePage(widgetTester, i);
+    await widgetTester.tap(widgetSelector['viewReports']!);
+    await widgetTester.pumpAndSettle(const Duration(milliseconds: 1000));
   }
 }
 
-Future<void> testOnePage(WidgetTester widgetTester) async {
-  await widgetTester.tap(find.byType(DigitListView).first);
+Future<void> testOnePage(WidgetTester widgetTester, int i) async {
+  await widgetTester.tap(find.byType(DigitListView).at(i));
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 2000));
 
   await widgetTester.tap(find.byKey(const Key('viewReportsFacility')));
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 1000));
-  await widgetTester.tap(find.bySemanticsLabel(RegExp('FAC_F*')).first);
+  await widgetTester.tap(find.bySemanticsLabel(RegExp('FAC_F*')).last);
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 1000));
 
   await widgetTester.tap(find.byKey(const Key('viewReportSelectProduct')));

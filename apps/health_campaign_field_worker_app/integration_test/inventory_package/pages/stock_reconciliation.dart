@@ -62,6 +62,9 @@ Future<void> testStockReconciliationPage(WidgetTester widgetTester) async {
 
   expect(expectedStockOnHand == stockParamValues['StockOnHand'], true);
 
+  await widgetTester.enterText(find.byKey(const Key('stockManualCount')), '25');
+  await widgetTester.pumpAndSettle(const Duration(milliseconds: 100));
+
   await widgetTester.tap(find.widgetWithText(DigitElevatedButton, 'Submit'));
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 100));
 

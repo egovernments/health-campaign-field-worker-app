@@ -20,10 +20,10 @@ void main() {
     disableOverflowError();
     app.main();
 
-    // await testLoginPage(widgetTester);
+    await testLoginPage(widgetTester);
     await testBoundarySelection(widgetTester);
-    // await testManageStockPage(widgetTester);
-    // await testStockReconciliationPage(widgetTester);
+    await testManageStockPage(widgetTester);
+    await testStockReconciliationPage(widgetTester);
     await testViewReportsPage(widgetTester);
   });
 }
