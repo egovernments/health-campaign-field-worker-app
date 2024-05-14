@@ -21,9 +21,10 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:uuid/uuid.dart';
 import 'package:digit_data_model/data_model.init.dart' as digitDataModel;
 import 'package:registration_delivery/registration_delivery.dart';
-import 'package:registration_delivery/registration_delivery.init.dart' as registrationDelivery;
-import 'package:attendance_management/attendance_management.init.dart' as attendance_management;
-import 'package:inventory_management/inventory_management.init.dart' as inventory_management;
+import 'package:registration_delivery/registration_delivery.init.dart'
+    as registrationDelivery;
+import 'package:inventory_management/inventory_management.init.dart'
+    as inventory_management;
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
@@ -38,6 +39,8 @@ import '../router/app_router.dart';
 import '../widgets/progress_indicator/progress_indicator.dart';
 import 'constants.dart';
 import 'extensions/extensions.dart';
+import 'package:attendance_management/attendance_management.dart'
+    as attendance_mappers;
 
 export 'app_exception.dart';
 export 'constants.dart';
@@ -661,6 +664,6 @@ initializeAllMappers() {
   initializeMappers();
   digitDataModel.initializeMappers();
   registrationDelivery.initializeMappers();
-  attendance_management.initializeMappers();
   inventory_management.initializeMappers();
+  attendance_mappers.initializeMappers();
 }

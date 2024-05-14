@@ -1,4 +1,3 @@
-import 'package:attendance_management/attendance_management.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:inventory_management/inventory_management.dart';
 

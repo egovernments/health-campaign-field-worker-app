@@ -1,13 +1,13 @@
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:isar/isar.dart';
 import 'package:attendance_management/blocs/app_localization.dart'
-as attendance_localization;
+    as attendance_localization;
 import 'package:digit_scanner/blocs/app_localization.dart'
-as scanner_localization;
+    as scanner_localization;
 import 'package:referral_reconciliation/blocs/app_localization.dart'
     as referral_reconciliation_localization;
 import 'package:inventory_management/blocs/app_localization.dart'
-as inventory_localization;
+    as inventory_localization;
 import 'package:registration_delivery/blocs/app_localization.dart'
     as registration_delivery_localization;
 

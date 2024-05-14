@@ -27,6 +27,8 @@ export 'data/repositories/local/attendance_logs.dart';
 export 'data/repositories/remote/attendance_register.dart';
 export 'data/repositories/remote/attendance_logs.dart';
 
+export 'data/repositories/oplog/oplog.dart';
+
 export 'pages/manage_attendance.dart';
 export 'pages/mark_attendance.dart';
 export 'pages/session_select.dart';
@@ -34,3 +36,5 @@ export 'pages/session_select.dart';
 export 'utils/utils.dart';
 
 export 'router/attendance_router.dart';
+
+export 'attendance_management.init.dart';
