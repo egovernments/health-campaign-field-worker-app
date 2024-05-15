@@ -45,7 +45,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
   bool deliveryTeamSelected = false;
   String? selectedFacilityId;
 
-  FormGroup _form(StockRecordEntryType stockType) {
+  FormGroup _form(StockRecordEntryType stockType, BuildContext context) {
     return fb.group({
       _productVariantKey: FormControl<ProductVariantModel>(
         validators: [Validators.required],
@@ -57,7 +57,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
         Validators.number,
         Validators.required,
         Validators.min(0),
-        Validators.max(10000),
+        Validators.max(context.maximumQuantityAlbendazole),
       ]),
       _transactionReasonKey: FormControl<TransactionReason>(),
       _waybillNumberKey: FormControl<String>(
@@ -188,7 +188,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                 transactionReasonLabel ??= '';
 
                 return ReactiveFormBuilder(
-                  form: () => _form(entryType),
+                  form: () => _form(entryType, context),
                   builder: (context, form, child) {
                     return BlocBuilder<ScannerBloc, ScannerState>(
                       builder: (context, scannerState) {
@@ -886,9 +886,9 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                             '${quantityCountLabel}_VALIDATION',
                                           ),
                                       "max": (object) =>
-                                          localizations.translate(
+                                          "${localizations.translate(
                                             '${quantityCountLabel}_MAX_ERROR',
-                                          ),
+                                          )} ${(form.control(_productVariantKey).value as ProductVariantModel).sku == "Albendazole 400mg" ? context.maximumQuantityAlbendazole : context.maximumQuantityIvermectin}",
                                       "min": (object) =>
                                           localizations.translate(
                                             '${quantityCountLabel}_MIN_ERROR',
@@ -897,6 +897,55 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                     label: localizations.translate(
                                       quantityCountLabel,
                                     ),
+                                    onChanged: (control) {
+                                      if ((form
+                                                  .control(_productVariantKey)
+                                                  .value as ProductVariantModel)
+                                              .sku ==
+                                          "Albendazole 400mg") {
+                                        setState(() {
+                                          form
+                                              .control(
+                                            _productVariantKey,
+                                          )
+                                              .setValidators(
+                                            [
+                                              Validators.required,
+                                              CustomValidator
+                                                  .validAlbendazoleStockCount,
+                                            ],
+                                            updateParent: true,
+                                            autoValidate: true,
+                                          );
+                                          form
+                                              .control(
+                                                _productVariantKey,
+                                              )
+                                              .touched;
+                                        });
+                                      } else {
+                                        setState(() {
+                                          form
+                                              .control(
+                                            _productVariantKey,
+                                          )
+                                              .setValidators(
+                                            [
+                                              Validators.required,
+                                              CustomValidator
+                                                  .validIvermectinStockCount,
+                                            ],
+                                            updateParent: true,
+                                            autoValidate: true,
+                                          );
+                                          form
+                                              .control(
+                                                _productVariantKey,
+                                              )
+                                              .touched;
+                                        });
+                                      }
+                                    },
                                   ),
                                   if (isWareHouseMgr)
                                     DigitTextFormField(
