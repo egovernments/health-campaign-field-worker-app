@@ -125,48 +125,6 @@ class CustomValidator {
 
     return null;
   }
-
-  static Map<String, dynamic>? validAlbendazoleStockCount(
-    AbstractControl<dynamic> control,
-  ) {
-    if (control.value is ProductVariantModel) {
-      if (control.value == null || control.value.toString().isEmpty) {
-        return {'required': true};
-      }
-
-      var parsed = int.tryParse(control.value.sku) ?? 0;
-      if (parsed < 0) {
-        return {'min': true};
-      } else if (parsed > 300000) {
-        return {'max': true};
-      }
-
-      return null;
-    }
-
-    return null;
-  }
-
-  static Map<String, dynamic>? validIvermectinStockCount(
-    AbstractControl<dynamic> control,
-  ) {
-    if (control.value is ProductVariantModel) {
-      if (control.value == null || control.value.toString().isEmpty) {
-        return {'required': true};
-      }
-
-      var parsed = int.tryParse(control.value.sku) ?? 0;
-      if (parsed < 0) {
-        return {'min': true};
-      } else if (parsed > 750000) {
-        return {'max': true};
-      }
-
-      return null;
-    }
-
-    return null;
-  }
 }
 
 setBgRunning(bool isBgRunning) async {
