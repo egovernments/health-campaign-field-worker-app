@@ -45,7 +45,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
   bool deliveryTeamSelected = false;
   String? selectedFacilityId;
 
-  FormGroup _form(StockRecordEntryType stockType, BuildContext context) {
+  FormGroup _form(StockRecordEntryType stockType) {
     return fb.group({
       _productVariantKey: FormControl<ProductVariantModel>(
         validators: [Validators.required],
@@ -186,7 +186,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                 transactionReasonLabel ??= '';
 
                 return ReactiveFormBuilder(
-                  form: () => _form(entryType, context),
+                  form: () => _form(entryType),
                   builder: (context, form, child) {
                     return BlocBuilder<ScannerBloc, ScannerState>(
                       builder: (context, scannerState) {
