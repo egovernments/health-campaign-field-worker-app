@@ -4,12 +4,14 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:health_campaign_field_worker_app/utils/utils.dart';
+import 'package:inventory_management/data/repositories/local/stock.dart';
+import 'package:inventory_management/data/repositories/local/stock_reconciliation.dart';
 import 'package:inventory_management/data/repositories/remote/stock.dart';
 import 'package:inventory_management/data/repositories/remote/stock_reconciliation.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:inventory_management/data/repositories/local/stock.dart';
-import 'package:inventory_management/data/repositories/local/stock_reconciliation.dart';
+import 'package:referral_reconciliation/referral_reconciliation.dart';
+import 'package:referral_reconciliation/utils/utils.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
@@ -18,11 +20,9 @@ import '../data/local_store/no_sql/schema/localization.dart';
 import '../data/local_store/no_sql/schema/project_types.dart';
 import '../data/local_store/no_sql/schema/row_versions.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
-import '../data/repositories/local/hcm_hf_referral.dart';
 import '../data/repositories/local/pgr_service.dart';
 import '../data/repositories/local/project_staff.dart';
 import '../data/repositories/oplog/hcm_oplog.dart';
-import '../data/repositories/remote/hcm_hf_referral.dart';
 import '../data/repositories/remote/pgr_service.dart';
 import '../data/repositories/remote/product_variant.dart';
 import '../data/repositories/remote/project_beneficiary.dart';
@@ -50,6 +50,7 @@ class Constants {
         errorDumpApiPath: envConfig.variables.dumpErrorApiPath);
     AttendanceSingleton().setTenantId(envConfig.variables.tenantId);
     RegistrationDeliverySingleton().setTenantId(envConfig.variables.tenantId);
+    ReferralReconSingleton().setTenantId(envConfig.variables.tenantId);
     await _initializeIsar(version);
   }
 
@@ -96,6 +97,7 @@ class Constants {
       IndividualLocalRepository(sql, IndividualOpLogManager(isar)),
       HouseholdMemberLocalRepository(sql, HouseholdMemberOpLogManager(isar)),
       HouseholdLocalRepository(sql, HouseholdOpLogManager(isar)),
+      HFReferralLocalRepository(sql, HFReferralOpLogManager(isar)),
       ProjectBeneficiaryLocalRepository(
         sql,
         ProjectBeneficiaryOpLogManager(
@@ -134,10 +136,6 @@ class Constants {
       PgrServiceLocalRepository(
         sql,
         PgrServiceOpLogManager(isar),
-      ),
-      HFReferralLocalRepository(
-        sql,
-        HFReferralOpLogManager(isar),
       ),
       AttendanceLocalRepository(
         sql,

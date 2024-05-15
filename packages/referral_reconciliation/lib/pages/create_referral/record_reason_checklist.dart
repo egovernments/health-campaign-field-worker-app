@@ -3,21 +3,17 @@ import 'dart:math';
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:group_radio_button/group_radio_button.dart';
-import 'package:referral_reconciliation/blocs/referral_reconciliation_listeners.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 
 import '../../blocs/referral_recon_service.dart';
 import '../../blocs/referral_recon_service_definition.dart';
-import '../../models/entities/referral_recon_attributes.dart';
-import '../../models/entities/referral_recon_service.dart';
-import '../../models/entities/referral_recon_service_attributes.dart';
-import '../../models/entities/referral_recon_service_definition.dart';
-import '../../utils/constants.dart';
 import '../../utils/i18_key_constants.dart' as i18;
+import '../../utils/utils.dart';
 import '../../widgets/localizaed.dart';
 
 @RoutePage()
@@ -40,8 +36,8 @@ class _ReferralReasonChecklistPageState
   var submitTriggered = false;
   List<TextEditingController> controller = [];
   List<TextEditingController> additionalController = [];
-  List<ReferralReconAttributesModel>? initialAttributes;
-  ReferralReconServiceDefinitionModel? selectedServiceDefinition;
+  List<AttributesModel>? initialAttributes;
+  ServiceDefinitionModel? selectedServiceDefinition;
   bool isControllersInitialized = false;
   List<int> visibleChecklistIndexes = [];
   GlobalKey<FormState> checklistFormKey = GlobalKey<FormState>();
@@ -139,44 +135,34 @@ class _ReferralReasonChecklistPageState
                                 i18.checklist.checklistDialogPrimaryAction,
                               ),
                               action: (ctx) {
-                                List<ReferralReconServiceAttributesModel>
-                                    attributes = [];
+                                List<ServiceAttributesModel> attributes = [];
                                 for (int i = 0; i < controller.length; i++) {
                                   final attribute = initialAttributes;
-                                  attributes.add(
-                                      ReferralReconServiceAttributesModel(
-                                          attributeCode:
-                                              '${attribute?[i].code}',
-                                          dataType: attribute?[i].dataType,
-                                          clientReferenceId: IdGen.i.identifier,
-                                          referenceId:
-                                              widget.referralClientRefId,
-                                          value: attribute?[i].dataType !=
-                                                  'SingleValueList'
-                                              ? controller[i]
-                                                      .text
-                                                      .toString()
-                                                      .trim()
-                                                      .isNotEmpty
-                                                  ? controller[i]
-                                                      .text
-                                                      .toString()
-                                                  : ''
-                                              : visibleChecklistIndexes
-                                                      .contains(i)
-                                                  ? controller[i]
-                                                      .text
-                                                      .toString()
-                                                  : i18
-                                                      .checklist.notSelectedKey,
-                                          rowVersion: 1,
-                                          tenantId: attribute?[i].tenantId,
-                                          additionalDetails: null));
+                                  attributes.add(ServiceAttributesModel(
+                                      attributeCode: '${attribute?[i].code}',
+                                      dataType: attribute?[i].dataType,
+                                      clientReferenceId: IdGen.i.identifier,
+                                      referenceId: widget.referralClientRefId,
+                                      value: attribute?[i].dataType !=
+                                              'SingleValueList'
+                                          ? controller[i]
+                                                  .text
+                                                  .toString()
+                                                  .trim()
+                                                  .isNotEmpty
+                                              ? controller[i].text.toString()
+                                              : ''
+                                          : visibleChecklistIndexes.contains(i)
+                                              ? controller[i].text.toString()
+                                              : i18.checklist.notSelectedKey,
+                                      rowVersion: 1,
+                                      tenantId: attribute?[i].tenantId,
+                                      additionalDetails: null));
                                 }
 
                                 context.read<ReferralReconServiceBloc>().add(
                                       ReferralReconServiceCreateEvent(
-                                        serviceModel: ReferralReconServiceModel(
+                                        serviceModel: ServiceModel(
                                           createdAt: DigitDateUtils
                                               .getDateFromTimestamp(
                                             DateTime.now()
@@ -197,7 +183,7 @@ class _ReferralReasonChecklistPageState
                                               .projectId,
                                           additionalDetails:
                                               ReferralReconSingleton()
-                                                  .boundaryName,
+                                                  .boundaryCode,
                                         ),
                                       ),
                                     );
@@ -413,9 +399,9 @@ class _ReferralReasonChecklistPageState
   }
 
   Widget _buildChecklist(
-    ReferralReconAttributesModel item,
+    AttributesModel item,
     int index,
-    ReferralReconServiceDefinitionModel? selectedServiceDefinition,
+    ServiceDefinitionModel? selectedServiceDefinition,
     BuildContext context,
   ) {
     final theme = Theme.of(context);
@@ -710,9 +696,9 @@ class _ReferralReasonChecklistPageState
   }
 
   // Function to get the next questions (child attributes) based on a parent code
-  List<ReferralReconAttributesModel> getNextQuestions(
+  List<AttributesModel> getNextQuestions(
     String parentCode,
-    List<ReferralReconAttributesModel> checklistItems,
+    List<AttributesModel> checklistItems,
   ) {
     final childCodePrefix = '$parentCode.';
     final nextCheckLists = checklistItems.where((item) {

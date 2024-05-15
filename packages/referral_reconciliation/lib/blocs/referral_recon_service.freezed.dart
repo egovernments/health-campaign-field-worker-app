@@ -18,38 +18,31 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$ReferralReconServiceEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(ReferralReconServiceModel serviceModel) create,
-    required TResult Function(
-            ReferralReconServiceSearchModel serviceSearchModel)
-        search,
+    required TResult Function(ServiceModel serviceModel) create,
+    required TResult Function(ServiceSearchModel serviceSearchModel) search,
     required TResult Function(String value, bool submitTriggered)
         multichecklistChanged,
-    required TResult Function(ReferralReconServiceModel service) selectService,
-    required TResult Function(List<ReferralReconServiceModel> serviceList)
-        resetSelected,
+    required TResult Function(ServiceModel service) selectService,
+    required TResult Function(List<ServiceModel> serviceList) resetSelected,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(ReferralReconServiceModel serviceModel)? create,
-    TResult? Function(ReferralReconServiceSearchModel serviceSearchModel)?
-        search,
+    TResult? Function(ServiceModel serviceModel)? create,
+    TResult? Function(ServiceSearchModel serviceSearchModel)? search,
     TResult? Function(String value, bool submitTriggered)?
         multichecklistChanged,
-    TResult? Function(ReferralReconServiceModel service)? selectService,
-    TResult? Function(List<ReferralReconServiceModel> serviceList)?
-        resetSelected,
+    TResult? Function(ServiceModel service)? selectService,
+    TResult? Function(List<ServiceModel> serviceList)? resetSelected,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(ReferralReconServiceModel serviceModel)? create,
-    TResult Function(ReferralReconServiceSearchModel serviceSearchModel)?
-        search,
+    TResult Function(ServiceModel serviceModel)? create,
+    TResult Function(ServiceSearchModel serviceSearchModel)? search,
     TResult Function(String value, bool submitTriggered)? multichecklistChanged,
-    TResult Function(ReferralReconServiceModel service)? selectService,
-    TResult Function(List<ReferralReconServiceModel> serviceList)?
-        resetSelected,
+    TResult Function(ServiceModel service)? selectService,
+    TResult Function(List<ServiceModel> serviceList)? resetSelected,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -114,7 +107,7 @@ abstract class _$$ReferralReconServiceCreateEventImplCopyWith<$Res> {
           $Res Function(_$ReferralReconServiceCreateEventImpl) then) =
       __$$ReferralReconServiceCreateEventImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({ReferralReconServiceModel serviceModel});
+  $Res call({ServiceModel serviceModel});
 }
 
 /// @nodoc
@@ -136,7 +129,7 @@ class __$$ReferralReconServiceCreateEventImplCopyWithImpl<$Res>
       serviceModel: null == serviceModel
           ? _value.serviceModel
           : serviceModel // ignore: cast_nullable_to_non_nullable
-              as ReferralReconServiceModel,
+              as ServiceModel,
     ));
   }
 }
@@ -148,7 +141,7 @@ class _$ReferralReconServiceCreateEventImpl
   const _$ReferralReconServiceCreateEventImpl({required this.serviceModel});
 
   @override
-  final ReferralReconServiceModel serviceModel;
+  final ServiceModel serviceModel;
 
   @override
   String toString() {
@@ -178,15 +171,12 @@ class _$ReferralReconServiceCreateEventImpl
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(ReferralReconServiceModel serviceModel) create,
-    required TResult Function(
-            ReferralReconServiceSearchModel serviceSearchModel)
-        search,
+    required TResult Function(ServiceModel serviceModel) create,
+    required TResult Function(ServiceSearchModel serviceSearchModel) search,
     required TResult Function(String value, bool submitTriggered)
         multichecklistChanged,
-    required TResult Function(ReferralReconServiceModel service) selectService,
-    required TResult Function(List<ReferralReconServiceModel> serviceList)
-        resetSelected,
+    required TResult Function(ServiceModel service) selectService,
+    required TResult Function(List<ServiceModel> serviceList) resetSelected,
   }) {
     return create(serviceModel);
   }
@@ -194,14 +184,12 @@ class _$ReferralReconServiceCreateEventImpl
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(ReferralReconServiceModel serviceModel)? create,
-    TResult? Function(ReferralReconServiceSearchModel serviceSearchModel)?
-        search,
+    TResult? Function(ServiceModel serviceModel)? create,
+    TResult? Function(ServiceSearchModel serviceSearchModel)? search,
     TResult? Function(String value, bool submitTriggered)?
         multichecklistChanged,
-    TResult? Function(ReferralReconServiceModel service)? selectService,
-    TResult? Function(List<ReferralReconServiceModel> serviceList)?
-        resetSelected,
+    TResult? Function(ServiceModel service)? selectService,
+    TResult? Function(List<ServiceModel> serviceList)? resetSelected,
   }) {
     return create?.call(serviceModel);
   }
@@ -209,13 +197,11 @@ class _$ReferralReconServiceCreateEventImpl
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(ReferralReconServiceModel serviceModel)? create,
-    TResult Function(ReferralReconServiceSearchModel serviceSearchModel)?
-        search,
+    TResult Function(ServiceModel serviceModel)? create,
+    TResult Function(ServiceSearchModel serviceSearchModel)? search,
     TResult Function(String value, bool submitTriggered)? multichecklistChanged,
-    TResult Function(ReferralReconServiceModel service)? selectService,
-    TResult Function(List<ReferralReconServiceModel> serviceList)?
-        resetSelected,
+    TResult Function(ServiceModel service)? selectService,
+    TResult Function(List<ServiceModel> serviceList)? resetSelected,
     required TResult orElse(),
   }) {
     if (create != null) {
@@ -273,10 +259,10 @@ class _$ReferralReconServiceCreateEventImpl
 abstract class ReferralReconServiceCreateEvent
     implements ReferralReconServiceEvent {
   const factory ReferralReconServiceCreateEvent(
-          {required final ReferralReconServiceModel serviceModel}) =
+          {required final ServiceModel serviceModel}) =
       _$ReferralReconServiceCreateEventImpl;
 
-  ReferralReconServiceModel get serviceModel;
+  ServiceModel get serviceModel;
   @JsonKey(ignore: true)
   _$$ReferralReconServiceCreateEventImplCopyWith<
           _$ReferralReconServiceCreateEventImpl>
@@ -290,7 +276,7 @@ abstract class _$$ReferralReconServiceSearchEventImplCopyWith<$Res> {
           $Res Function(_$ReferralReconServiceSearchEventImpl) then) =
       __$$ReferralReconServiceSearchEventImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({ReferralReconServiceSearchModel serviceSearchModel});
+  $Res call({ServiceSearchModel serviceSearchModel});
 }
 
 /// @nodoc
@@ -312,7 +298,7 @@ class __$$ReferralReconServiceSearchEventImplCopyWithImpl<$Res>
       serviceSearchModel: null == serviceSearchModel
           ? _value.serviceSearchModel
           : serviceSearchModel // ignore: cast_nullable_to_non_nullable
-              as ReferralReconServiceSearchModel,
+              as ServiceSearchModel,
     ));
   }
 }
@@ -325,7 +311,7 @@ class _$ReferralReconServiceSearchEventImpl
       {required this.serviceSearchModel});
 
   @override
-  final ReferralReconServiceSearchModel serviceSearchModel;
+  final ServiceSearchModel serviceSearchModel;
 
   @override
   String toString() {
@@ -355,15 +341,12 @@ class _$ReferralReconServiceSearchEventImpl
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(ReferralReconServiceModel serviceModel) create,
-    required TResult Function(
-            ReferralReconServiceSearchModel serviceSearchModel)
-        search,
+    required TResult Function(ServiceModel serviceModel) create,
+    required TResult Function(ServiceSearchModel serviceSearchModel) search,
     required TResult Function(String value, bool submitTriggered)
         multichecklistChanged,
-    required TResult Function(ReferralReconServiceModel service) selectService,
-    required TResult Function(List<ReferralReconServiceModel> serviceList)
-        resetSelected,
+    required TResult Function(ServiceModel service) selectService,
+    required TResult Function(List<ServiceModel> serviceList) resetSelected,
   }) {
     return search(serviceSearchModel);
   }
@@ -371,14 +354,12 @@ class _$ReferralReconServiceSearchEventImpl
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(ReferralReconServiceModel serviceModel)? create,
-    TResult? Function(ReferralReconServiceSearchModel serviceSearchModel)?
-        search,
+    TResult? Function(ServiceModel serviceModel)? create,
+    TResult? Function(ServiceSearchModel serviceSearchModel)? search,
     TResult? Function(String value, bool submitTriggered)?
         multichecklistChanged,
-    TResult? Function(ReferralReconServiceModel service)? selectService,
-    TResult? Function(List<ReferralReconServiceModel> serviceList)?
-        resetSelected,
+    TResult? Function(ServiceModel service)? selectService,
+    TResult? Function(List<ServiceModel> serviceList)? resetSelected,
   }) {
     return search?.call(serviceSearchModel);
   }
@@ -386,13 +367,11 @@ class _$ReferralReconServiceSearchEventImpl
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(ReferralReconServiceModel serviceModel)? create,
-    TResult Function(ReferralReconServiceSearchModel serviceSearchModel)?
-        search,
+    TResult Function(ServiceModel serviceModel)? create,
+    TResult Function(ServiceSearchModel serviceSearchModel)? search,
     TResult Function(String value, bool submitTriggered)? multichecklistChanged,
-    TResult Function(ReferralReconServiceModel service)? selectService,
-    TResult Function(List<ReferralReconServiceModel> serviceList)?
-        resetSelected,
+    TResult Function(ServiceModel service)? selectService,
+    TResult Function(List<ServiceModel> serviceList)? resetSelected,
     required TResult orElse(),
   }) {
     if (search != null) {
@@ -450,10 +429,10 @@ class _$ReferralReconServiceSearchEventImpl
 abstract class ReferralReconServiceSearchEvent
     implements ReferralReconServiceEvent {
   const factory ReferralReconServiceSearchEvent(
-          {required final ReferralReconServiceSearchModel serviceSearchModel}) =
+          {required final ServiceSearchModel serviceSearchModel}) =
       _$ReferralReconServiceSearchEventImpl;
 
-  ReferralReconServiceSearchModel get serviceSearchModel;
+  ServiceSearchModel get serviceSearchModel;
   @JsonKey(ignore: true)
   _$$ReferralReconServiceSearchEventImplCopyWith<
           _$ReferralReconServiceSearchEventImpl>
@@ -540,15 +519,12 @@ class _$ReferralReconServiceChecklistEventImpl
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(ReferralReconServiceModel serviceModel) create,
-    required TResult Function(
-            ReferralReconServiceSearchModel serviceSearchModel)
-        search,
+    required TResult Function(ServiceModel serviceModel) create,
+    required TResult Function(ServiceSearchModel serviceSearchModel) search,
     required TResult Function(String value, bool submitTriggered)
         multichecklistChanged,
-    required TResult Function(ReferralReconServiceModel service) selectService,
-    required TResult Function(List<ReferralReconServiceModel> serviceList)
-        resetSelected,
+    required TResult Function(ServiceModel service) selectService,
+    required TResult Function(List<ServiceModel> serviceList) resetSelected,
   }) {
     return multichecklistChanged(value, submitTriggered);
   }
@@ -556,14 +532,12 @@ class _$ReferralReconServiceChecklistEventImpl
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(ReferralReconServiceModel serviceModel)? create,
-    TResult? Function(ReferralReconServiceSearchModel serviceSearchModel)?
-        search,
+    TResult? Function(ServiceModel serviceModel)? create,
+    TResult? Function(ServiceSearchModel serviceSearchModel)? search,
     TResult? Function(String value, bool submitTriggered)?
         multichecklistChanged,
-    TResult? Function(ReferralReconServiceModel service)? selectService,
-    TResult? Function(List<ReferralReconServiceModel> serviceList)?
-        resetSelected,
+    TResult? Function(ServiceModel service)? selectService,
+    TResult? Function(List<ServiceModel> serviceList)? resetSelected,
   }) {
     return multichecklistChanged?.call(value, submitTriggered);
   }
@@ -571,13 +545,11 @@ class _$ReferralReconServiceChecklistEventImpl
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(ReferralReconServiceModel serviceModel)? create,
-    TResult Function(ReferralReconServiceSearchModel serviceSearchModel)?
-        search,
+    TResult Function(ServiceModel serviceModel)? create,
+    TResult Function(ServiceSearchModel serviceSearchModel)? search,
     TResult Function(String value, bool submitTriggered)? multichecklistChanged,
-    TResult Function(ReferralReconServiceModel service)? selectService,
-    TResult Function(List<ReferralReconServiceModel> serviceList)?
-        resetSelected,
+    TResult Function(ServiceModel service)? selectService,
+    TResult Function(List<ServiceModel> serviceList)? resetSelected,
     required TResult orElse(),
   }) {
     if (multichecklistChanged != null) {
@@ -653,7 +625,7 @@ abstract class _$$ReferralReconServiceSelectionEventImplCopyWith<$Res> {
           $Res Function(_$ReferralReconServiceSelectionEventImpl) then) =
       __$$ReferralReconServiceSelectionEventImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({ReferralReconServiceModel service});
+  $Res call({ServiceModel service});
 }
 
 /// @nodoc
@@ -675,7 +647,7 @@ class __$$ReferralReconServiceSelectionEventImplCopyWithImpl<$Res>
       service: null == service
           ? _value.service
           : service // ignore: cast_nullable_to_non_nullable
-              as ReferralReconServiceModel,
+              as ServiceModel,
     ));
   }
 }
@@ -687,7 +659,7 @@ class _$ReferralReconServiceSelectionEventImpl
   const _$ReferralReconServiceSelectionEventImpl({required this.service});
 
   @override
-  final ReferralReconServiceModel service;
+  final ServiceModel service;
 
   @override
   String toString() {
@@ -716,15 +688,12 @@ class _$ReferralReconServiceSelectionEventImpl
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(ReferralReconServiceModel serviceModel) create,
-    required TResult Function(
-            ReferralReconServiceSearchModel serviceSearchModel)
-        search,
+    required TResult Function(ServiceModel serviceModel) create,
+    required TResult Function(ServiceSearchModel serviceSearchModel) search,
     required TResult Function(String value, bool submitTriggered)
         multichecklistChanged,
-    required TResult Function(ReferralReconServiceModel service) selectService,
-    required TResult Function(List<ReferralReconServiceModel> serviceList)
-        resetSelected,
+    required TResult Function(ServiceModel service) selectService,
+    required TResult Function(List<ServiceModel> serviceList) resetSelected,
   }) {
     return selectService(service);
   }
@@ -732,14 +701,12 @@ class _$ReferralReconServiceSelectionEventImpl
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(ReferralReconServiceModel serviceModel)? create,
-    TResult? Function(ReferralReconServiceSearchModel serviceSearchModel)?
-        search,
+    TResult? Function(ServiceModel serviceModel)? create,
+    TResult? Function(ServiceSearchModel serviceSearchModel)? search,
     TResult? Function(String value, bool submitTriggered)?
         multichecklistChanged,
-    TResult? Function(ReferralReconServiceModel service)? selectService,
-    TResult? Function(List<ReferralReconServiceModel> serviceList)?
-        resetSelected,
+    TResult? Function(ServiceModel service)? selectService,
+    TResult? Function(List<ServiceModel> serviceList)? resetSelected,
   }) {
     return selectService?.call(service);
   }
@@ -747,13 +714,11 @@ class _$ReferralReconServiceSelectionEventImpl
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(ReferralReconServiceModel serviceModel)? create,
-    TResult Function(ReferralReconServiceSearchModel serviceSearchModel)?
-        search,
+    TResult Function(ServiceModel serviceModel)? create,
+    TResult Function(ServiceSearchModel serviceSearchModel)? search,
     TResult Function(String value, bool submitTriggered)? multichecklistChanged,
-    TResult Function(ReferralReconServiceModel service)? selectService,
-    TResult Function(List<ReferralReconServiceModel> serviceList)?
-        resetSelected,
+    TResult Function(ServiceModel service)? selectService,
+    TResult Function(List<ServiceModel> serviceList)? resetSelected,
     required TResult orElse(),
   }) {
     if (selectService != null) {
@@ -811,10 +776,10 @@ class _$ReferralReconServiceSelectionEventImpl
 abstract class ReferralReconServiceSelectionEvent
     implements ReferralReconServiceEvent {
   const factory ReferralReconServiceSelectionEvent(
-          {required final ReferralReconServiceModel service}) =
+          {required final ServiceModel service}) =
       _$ReferralReconServiceSelectionEventImpl;
 
-  ReferralReconServiceModel get service;
+  ServiceModel get service;
   @JsonKey(ignore: true)
   _$$ReferralReconServiceSelectionEventImplCopyWith<
           _$ReferralReconServiceSelectionEventImpl>
@@ -828,7 +793,7 @@ abstract class _$$ReferralReconServiceResetEventImplCopyWith<$Res> {
           $Res Function(_$ReferralReconServiceResetEventImpl) then) =
       __$$ReferralReconServiceResetEventImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({List<ReferralReconServiceModel> serviceList});
+  $Res call({List<ServiceModel> serviceList});
 }
 
 /// @nodoc
@@ -850,7 +815,7 @@ class __$$ReferralReconServiceResetEventImplCopyWithImpl<$Res>
       serviceList: null == serviceList
           ? _value._serviceList
           : serviceList // ignore: cast_nullable_to_non_nullable
-              as List<ReferralReconServiceModel>,
+              as List<ServiceModel>,
     ));
   }
 }
@@ -860,12 +825,12 @@ class __$$ReferralReconServiceResetEventImplCopyWithImpl<$Res>
 class _$ReferralReconServiceResetEventImpl
     implements ReferralReconServiceResetEvent {
   const _$ReferralReconServiceResetEventImpl(
-      {required final List<ReferralReconServiceModel> serviceList})
+      {required final List<ServiceModel> serviceList})
       : _serviceList = serviceList;
 
-  final List<ReferralReconServiceModel> _serviceList;
+  final List<ServiceModel> _serviceList;
   @override
-  List<ReferralReconServiceModel> get serviceList {
+  List<ServiceModel> get serviceList {
     if (_serviceList is EqualUnmodifiableListView) return _serviceList;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_serviceList);
@@ -900,15 +865,12 @@ class _$ReferralReconServiceResetEventImpl
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(ReferralReconServiceModel serviceModel) create,
-    required TResult Function(
-            ReferralReconServiceSearchModel serviceSearchModel)
-        search,
+    required TResult Function(ServiceModel serviceModel) create,
+    required TResult Function(ServiceSearchModel serviceSearchModel) search,
     required TResult Function(String value, bool submitTriggered)
         multichecklistChanged,
-    required TResult Function(ReferralReconServiceModel service) selectService,
-    required TResult Function(List<ReferralReconServiceModel> serviceList)
-        resetSelected,
+    required TResult Function(ServiceModel service) selectService,
+    required TResult Function(List<ServiceModel> serviceList) resetSelected,
   }) {
     return resetSelected(serviceList);
   }
@@ -916,14 +878,12 @@ class _$ReferralReconServiceResetEventImpl
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(ReferralReconServiceModel serviceModel)? create,
-    TResult? Function(ReferralReconServiceSearchModel serviceSearchModel)?
-        search,
+    TResult? Function(ServiceModel serviceModel)? create,
+    TResult? Function(ServiceSearchModel serviceSearchModel)? search,
     TResult? Function(String value, bool submitTriggered)?
         multichecklistChanged,
-    TResult? Function(ReferralReconServiceModel service)? selectService,
-    TResult? Function(List<ReferralReconServiceModel> serviceList)?
-        resetSelected,
+    TResult? Function(ServiceModel service)? selectService,
+    TResult? Function(List<ServiceModel> serviceList)? resetSelected,
   }) {
     return resetSelected?.call(serviceList);
   }
@@ -931,13 +891,11 @@ class _$ReferralReconServiceResetEventImpl
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(ReferralReconServiceModel serviceModel)? create,
-    TResult Function(ReferralReconServiceSearchModel serviceSearchModel)?
-        search,
+    TResult Function(ServiceModel serviceModel)? create,
+    TResult Function(ServiceSearchModel serviceSearchModel)? search,
     TResult Function(String value, bool submitTriggered)? multichecklistChanged,
-    TResult Function(ReferralReconServiceModel service)? selectService,
-    TResult Function(List<ReferralReconServiceModel> serviceList)?
-        resetSelected,
+    TResult Function(ServiceModel service)? selectService,
+    TResult Function(List<ServiceModel> serviceList)? resetSelected,
     required TResult orElse(),
   }) {
     if (resetSelected != null) {
@@ -995,10 +953,10 @@ class _$ReferralReconServiceResetEventImpl
 abstract class ReferralReconServiceResetEvent
     implements ReferralReconServiceEvent {
   const factory ReferralReconServiceResetEvent(
-          {required final List<ReferralReconServiceModel> serviceList}) =
+          {required final List<ServiceModel> serviceList}) =
       _$ReferralReconServiceResetEventImpl;
 
-  List<ReferralReconServiceModel> get serviceList;
+  List<ServiceModel> get serviceList;
   @JsonKey(ignore: true)
   _$$ReferralReconServiceResetEventImplCopyWith<
           _$ReferralReconServiceResetEventImpl>
@@ -1013,14 +971,11 @@ mixin _$ReferralReconServiceState {
     required TResult Function() isLoading,
     required TResult Function(String value, bool submitTriggered)
         multiCheckListChanged,
-    required TResult Function(
-            ReferralReconServiceModel serviceList,
-            ReferralReconServiceModel? selectedService,
-            bool loading,
-            bool isEditing)
+    required TResult Function(ServiceModel serviceList,
+            ServiceModel? selectedService, bool loading, bool isEditing)
         serviceCreate,
-    required TResult Function(List<ReferralReconServiceModel> serviceList,
-            ReferralReconServiceModel? selectedService, bool loading)
+    required TResult Function(List<ServiceModel> serviceList,
+            ServiceModel? selectedService, bool loading)
         serviceSearch,
   }) =>
       throw _privateConstructorUsedError;
@@ -1030,14 +985,11 @@ mixin _$ReferralReconServiceState {
     TResult? Function()? isLoading,
     TResult? Function(String value, bool submitTriggered)?
         multiCheckListChanged,
-    TResult? Function(
-            ReferralReconServiceModel serviceList,
-            ReferralReconServiceModel? selectedService,
-            bool loading,
-            bool isEditing)?
+    TResult? Function(ServiceModel serviceList, ServiceModel? selectedService,
+            bool loading, bool isEditing)?
         serviceCreate,
-    TResult? Function(List<ReferralReconServiceModel> serviceList,
-            ReferralReconServiceModel? selectedService, bool loading)?
+    TResult? Function(List<ServiceModel> serviceList,
+            ServiceModel? selectedService, bool loading)?
         serviceSearch,
   }) =>
       throw _privateConstructorUsedError;
@@ -1046,14 +998,11 @@ mixin _$ReferralReconServiceState {
     TResult Function()? empty,
     TResult Function()? isLoading,
     TResult Function(String value, bool submitTriggered)? multiCheckListChanged,
-    TResult Function(
-            ReferralReconServiceModel serviceList,
-            ReferralReconServiceModel? selectedService,
-            bool loading,
-            bool isEditing)?
+    TResult Function(ServiceModel serviceList, ServiceModel? selectedService,
+            bool loading, bool isEditing)?
         serviceCreate,
-    TResult Function(List<ReferralReconServiceModel> serviceList,
-            ReferralReconServiceModel? selectedService, bool loading)?
+    TResult Function(List<ServiceModel> serviceList,
+            ServiceModel? selectedService, bool loading)?
         serviceSearch,
     required TResult orElse(),
   }) =>
@@ -1161,14 +1110,11 @@ class _$ReferralReconServiceEmptyStateImpl
     required TResult Function() isLoading,
     required TResult Function(String value, bool submitTriggered)
         multiCheckListChanged,
-    required TResult Function(
-            ReferralReconServiceModel serviceList,
-            ReferralReconServiceModel? selectedService,
-            bool loading,
-            bool isEditing)
+    required TResult Function(ServiceModel serviceList,
+            ServiceModel? selectedService, bool loading, bool isEditing)
         serviceCreate,
-    required TResult Function(List<ReferralReconServiceModel> serviceList,
-            ReferralReconServiceModel? selectedService, bool loading)
+    required TResult Function(List<ServiceModel> serviceList,
+            ServiceModel? selectedService, bool loading)
         serviceSearch,
   }) {
     return empty();
@@ -1181,14 +1127,11 @@ class _$ReferralReconServiceEmptyStateImpl
     TResult? Function()? isLoading,
     TResult? Function(String value, bool submitTriggered)?
         multiCheckListChanged,
-    TResult? Function(
-            ReferralReconServiceModel serviceList,
-            ReferralReconServiceModel? selectedService,
-            bool loading,
-            bool isEditing)?
+    TResult? Function(ServiceModel serviceList, ServiceModel? selectedService,
+            bool loading, bool isEditing)?
         serviceCreate,
-    TResult? Function(List<ReferralReconServiceModel> serviceList,
-            ReferralReconServiceModel? selectedService, bool loading)?
+    TResult? Function(List<ServiceModel> serviceList,
+            ServiceModel? selectedService, bool loading)?
         serviceSearch,
   }) {
     return empty?.call();
@@ -1200,14 +1143,11 @@ class _$ReferralReconServiceEmptyStateImpl
     TResult Function()? empty,
     TResult Function()? isLoading,
     TResult Function(String value, bool submitTriggered)? multiCheckListChanged,
-    TResult Function(
-            ReferralReconServiceModel serviceList,
-            ReferralReconServiceModel? selectedService,
-            bool loading,
-            bool isEditing)?
+    TResult Function(ServiceModel serviceList, ServiceModel? selectedService,
+            bool loading, bool isEditing)?
         serviceCreate,
-    TResult Function(List<ReferralReconServiceModel> serviceList,
-            ReferralReconServiceModel? selectedService, bool loading)?
+    TResult Function(List<ServiceModel> serviceList,
+            ServiceModel? selectedService, bool loading)?
         serviceSearch,
     required TResult orElse(),
   }) {
@@ -1318,14 +1258,11 @@ class _$ReferralReconServiceIsloadingStateImpl
     required TResult Function() isLoading,
     required TResult Function(String value, bool submitTriggered)
         multiCheckListChanged,
-    required TResult Function(
-            ReferralReconServiceModel serviceList,
-            ReferralReconServiceModel? selectedService,
-            bool loading,
-            bool isEditing)
+    required TResult Function(ServiceModel serviceList,
+            ServiceModel? selectedService, bool loading, bool isEditing)
         serviceCreate,
-    required TResult Function(List<ReferralReconServiceModel> serviceList,
-            ReferralReconServiceModel? selectedService, bool loading)
+    required TResult Function(List<ServiceModel> serviceList,
+            ServiceModel? selectedService, bool loading)
         serviceSearch,
   }) {
     return isLoading();
@@ -1338,14 +1275,11 @@ class _$ReferralReconServiceIsloadingStateImpl
     TResult? Function()? isLoading,
     TResult? Function(String value, bool submitTriggered)?
         multiCheckListChanged,
-    TResult? Function(
-            ReferralReconServiceModel serviceList,
-            ReferralReconServiceModel? selectedService,
-            bool loading,
-            bool isEditing)?
+    TResult? Function(ServiceModel serviceList, ServiceModel? selectedService,
+            bool loading, bool isEditing)?
         serviceCreate,
-    TResult? Function(List<ReferralReconServiceModel> serviceList,
-            ReferralReconServiceModel? selectedService, bool loading)?
+    TResult? Function(List<ServiceModel> serviceList,
+            ServiceModel? selectedService, bool loading)?
         serviceSearch,
   }) {
     return isLoading?.call();
@@ -1357,14 +1291,11 @@ class _$ReferralReconServiceIsloadingStateImpl
     TResult Function()? empty,
     TResult Function()? isLoading,
     TResult Function(String value, bool submitTriggered)? multiCheckListChanged,
-    TResult Function(
-            ReferralReconServiceModel serviceList,
-            ReferralReconServiceModel? selectedService,
-            bool loading,
-            bool isEditing)?
+    TResult Function(ServiceModel serviceList, ServiceModel? selectedService,
+            bool loading, bool isEditing)?
         serviceCreate,
-    TResult Function(List<ReferralReconServiceModel> serviceList,
-            ReferralReconServiceModel? selectedService, bool loading)?
+    TResult Function(List<ServiceModel> serviceList,
+            ServiceModel? selectedService, bool loading)?
         serviceSearch,
     required TResult orElse(),
   }) {
@@ -1519,14 +1450,11 @@ class _$ReferralReconServiceMultichecklistChangedStateImpl
     required TResult Function() isLoading,
     required TResult Function(String value, bool submitTriggered)
         multiCheckListChanged,
-    required TResult Function(
-            ReferralReconServiceModel serviceList,
-            ReferralReconServiceModel? selectedService,
-            bool loading,
-            bool isEditing)
+    required TResult Function(ServiceModel serviceList,
+            ServiceModel? selectedService, bool loading, bool isEditing)
         serviceCreate,
-    required TResult Function(List<ReferralReconServiceModel> serviceList,
-            ReferralReconServiceModel? selectedService, bool loading)
+    required TResult Function(List<ServiceModel> serviceList,
+            ServiceModel? selectedService, bool loading)
         serviceSearch,
   }) {
     return multiCheckListChanged(value, submitTriggered);
@@ -1539,14 +1467,11 @@ class _$ReferralReconServiceMultichecklistChangedStateImpl
     TResult? Function()? isLoading,
     TResult? Function(String value, bool submitTriggered)?
         multiCheckListChanged,
-    TResult? Function(
-            ReferralReconServiceModel serviceList,
-            ReferralReconServiceModel? selectedService,
-            bool loading,
-            bool isEditing)?
+    TResult? Function(ServiceModel serviceList, ServiceModel? selectedService,
+            bool loading, bool isEditing)?
         serviceCreate,
-    TResult? Function(List<ReferralReconServiceModel> serviceList,
-            ReferralReconServiceModel? selectedService, bool loading)?
+    TResult? Function(List<ServiceModel> serviceList,
+            ServiceModel? selectedService, bool loading)?
         serviceSearch,
   }) {
     return multiCheckListChanged?.call(value, submitTriggered);
@@ -1558,14 +1483,11 @@ class _$ReferralReconServiceMultichecklistChangedStateImpl
     TResult Function()? empty,
     TResult Function()? isLoading,
     TResult Function(String value, bool submitTriggered)? multiCheckListChanged,
-    TResult Function(
-            ReferralReconServiceModel serviceList,
-            ReferralReconServiceModel? selectedService,
-            bool loading,
-            bool isEditing)?
+    TResult Function(ServiceModel serviceList, ServiceModel? selectedService,
+            bool loading, bool isEditing)?
         serviceCreate,
-    TResult Function(List<ReferralReconServiceModel> serviceList,
-            ReferralReconServiceModel? selectedService, bool loading)?
+    TResult Function(List<ServiceModel> serviceList,
+            ServiceModel? selectedService, bool loading)?
         serviceSearch,
     required TResult orElse(),
   }) {
@@ -1645,8 +1567,8 @@ abstract class _$$ReferralReconServiceCreateStateImplCopyWith<$Res> {
       __$$ReferralReconServiceCreateStateImplCopyWithImpl<$Res>;
   @useResult
   $Res call(
-      {ReferralReconServiceModel serviceList,
-      ReferralReconServiceModel? selectedService,
+      {ServiceModel serviceList,
+      ServiceModel? selectedService,
       bool loading,
       bool isEditing});
 }
@@ -1673,11 +1595,11 @@ class __$$ReferralReconServiceCreateStateImplCopyWithImpl<$Res>
       serviceList: null == serviceList
           ? _value.serviceList
           : serviceList // ignore: cast_nullable_to_non_nullable
-              as ReferralReconServiceModel,
+              as ServiceModel,
       selectedService: freezed == selectedService
           ? _value.selectedService
           : selectedService // ignore: cast_nullable_to_non_nullable
-              as ReferralReconServiceModel?,
+              as ServiceModel?,
       loading: null == loading
           ? _value.loading
           : loading // ignore: cast_nullable_to_non_nullable
@@ -1701,9 +1623,9 @@ class _$ReferralReconServiceCreateStateImpl
       this.isEditing = false});
 
   @override
-  final ReferralReconServiceModel serviceList;
+  final ServiceModel serviceList;
   @override
-  final ReferralReconServiceModel? selectedService;
+  final ServiceModel? selectedService;
   @override
   @JsonKey()
   final bool loading;
@@ -1749,14 +1671,11 @@ class _$ReferralReconServiceCreateStateImpl
     required TResult Function() isLoading,
     required TResult Function(String value, bool submitTriggered)
         multiCheckListChanged,
-    required TResult Function(
-            ReferralReconServiceModel serviceList,
-            ReferralReconServiceModel? selectedService,
-            bool loading,
-            bool isEditing)
+    required TResult Function(ServiceModel serviceList,
+            ServiceModel? selectedService, bool loading, bool isEditing)
         serviceCreate,
-    required TResult Function(List<ReferralReconServiceModel> serviceList,
-            ReferralReconServiceModel? selectedService, bool loading)
+    required TResult Function(List<ServiceModel> serviceList,
+            ServiceModel? selectedService, bool loading)
         serviceSearch,
   }) {
     return serviceCreate(serviceList, selectedService, loading, isEditing);
@@ -1769,14 +1688,11 @@ class _$ReferralReconServiceCreateStateImpl
     TResult? Function()? isLoading,
     TResult? Function(String value, bool submitTriggered)?
         multiCheckListChanged,
-    TResult? Function(
-            ReferralReconServiceModel serviceList,
-            ReferralReconServiceModel? selectedService,
-            bool loading,
-            bool isEditing)?
+    TResult? Function(ServiceModel serviceList, ServiceModel? selectedService,
+            bool loading, bool isEditing)?
         serviceCreate,
-    TResult? Function(List<ReferralReconServiceModel> serviceList,
-            ReferralReconServiceModel? selectedService, bool loading)?
+    TResult? Function(List<ServiceModel> serviceList,
+            ServiceModel? selectedService, bool loading)?
         serviceSearch,
   }) {
     return serviceCreate?.call(
@@ -1789,14 +1705,11 @@ class _$ReferralReconServiceCreateStateImpl
     TResult Function()? empty,
     TResult Function()? isLoading,
     TResult Function(String value, bool submitTriggered)? multiCheckListChanged,
-    TResult Function(
-            ReferralReconServiceModel serviceList,
-            ReferralReconServiceModel? selectedService,
-            bool loading,
-            bool isEditing)?
+    TResult Function(ServiceModel serviceList, ServiceModel? selectedService,
+            bool loading, bool isEditing)?
         serviceCreate,
-    TResult Function(List<ReferralReconServiceModel> serviceList,
-            ReferralReconServiceModel? selectedService, bool loading)?
+    TResult Function(List<ServiceModel> serviceList,
+            ServiceModel? selectedService, bool loading)?
         serviceSearch,
     required TResult orElse(),
   }) {
@@ -1857,13 +1770,13 @@ class _$ReferralReconServiceCreateStateImpl
 abstract class ReferralReconServiceCreateState
     implements ReferralReconServiceState {
   const factory ReferralReconServiceCreateState(
-      {required final ReferralReconServiceModel serviceList,
-      final ReferralReconServiceModel? selectedService,
+      {required final ServiceModel serviceList,
+      final ServiceModel? selectedService,
       final bool loading,
       final bool isEditing}) = _$ReferralReconServiceCreateStateImpl;
 
-  ReferralReconServiceModel get serviceList;
-  ReferralReconServiceModel? get selectedService;
+  ServiceModel get serviceList;
+  ServiceModel? get selectedService;
   bool get loading;
   bool get isEditing;
   @JsonKey(ignore: true)
@@ -1880,8 +1793,8 @@ abstract class _$$ReferralReconServiceSearchStateImplCopyWith<$Res> {
       __$$ReferralReconServiceSearchStateImplCopyWithImpl<$Res>;
   @useResult
   $Res call(
-      {List<ReferralReconServiceModel> serviceList,
-      ReferralReconServiceModel? selectedService,
+      {List<ServiceModel> serviceList,
+      ServiceModel? selectedService,
       bool loading});
 }
 
@@ -1906,11 +1819,11 @@ class __$$ReferralReconServiceSearchStateImplCopyWithImpl<$Res>
       serviceList: null == serviceList
           ? _value._serviceList
           : serviceList // ignore: cast_nullable_to_non_nullable
-              as List<ReferralReconServiceModel>,
+              as List<ServiceModel>,
       selectedService: freezed == selectedService
           ? _value.selectedService
           : selectedService // ignore: cast_nullable_to_non_nullable
-              as ReferralReconServiceModel?,
+              as ServiceModel?,
       loading: null == loading
           ? _value.loading
           : loading // ignore: cast_nullable_to_non_nullable
@@ -1924,21 +1837,21 @@ class __$$ReferralReconServiceSearchStateImplCopyWithImpl<$Res>
 class _$ReferralReconServiceSearchStateImpl
     implements ReferralReconServiceSearchState {
   const _$ReferralReconServiceSearchStateImpl(
-      {required final List<ReferralReconServiceModel> serviceList,
+      {required final List<ServiceModel> serviceList,
       this.selectedService,
       this.loading = false})
       : _serviceList = serviceList;
 
-  final List<ReferralReconServiceModel> _serviceList;
+  final List<ServiceModel> _serviceList;
   @override
-  List<ReferralReconServiceModel> get serviceList {
+  List<ServiceModel> get serviceList {
     if (_serviceList is EqualUnmodifiableListView) return _serviceList;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_serviceList);
   }
 
   @override
-  final ReferralReconServiceModel? selectedService;
+  final ServiceModel? selectedService;
   @override
   @JsonKey()
   final bool loading;
@@ -1982,14 +1895,11 @@ class _$ReferralReconServiceSearchStateImpl
     required TResult Function() isLoading,
     required TResult Function(String value, bool submitTriggered)
         multiCheckListChanged,
-    required TResult Function(
-            ReferralReconServiceModel serviceList,
-            ReferralReconServiceModel? selectedService,
-            bool loading,
-            bool isEditing)
+    required TResult Function(ServiceModel serviceList,
+            ServiceModel? selectedService, bool loading, bool isEditing)
         serviceCreate,
-    required TResult Function(List<ReferralReconServiceModel> serviceList,
-            ReferralReconServiceModel? selectedService, bool loading)
+    required TResult Function(List<ServiceModel> serviceList,
+            ServiceModel? selectedService, bool loading)
         serviceSearch,
   }) {
     return serviceSearch(serviceList, selectedService, loading);
@@ -2002,14 +1912,11 @@ class _$ReferralReconServiceSearchStateImpl
     TResult? Function()? isLoading,
     TResult? Function(String value, bool submitTriggered)?
         multiCheckListChanged,
-    TResult? Function(
-            ReferralReconServiceModel serviceList,
-            ReferralReconServiceModel? selectedService,
-            bool loading,
-            bool isEditing)?
+    TResult? Function(ServiceModel serviceList, ServiceModel? selectedService,
+            bool loading, bool isEditing)?
         serviceCreate,
-    TResult? Function(List<ReferralReconServiceModel> serviceList,
-            ReferralReconServiceModel? selectedService, bool loading)?
+    TResult? Function(List<ServiceModel> serviceList,
+            ServiceModel? selectedService, bool loading)?
         serviceSearch,
   }) {
     return serviceSearch?.call(serviceList, selectedService, loading);
@@ -2021,14 +1928,11 @@ class _$ReferralReconServiceSearchStateImpl
     TResult Function()? empty,
     TResult Function()? isLoading,
     TResult Function(String value, bool submitTriggered)? multiCheckListChanged,
-    TResult Function(
-            ReferralReconServiceModel serviceList,
-            ReferralReconServiceModel? selectedService,
-            bool loading,
-            bool isEditing)?
+    TResult Function(ServiceModel serviceList, ServiceModel? selectedService,
+            bool loading, bool isEditing)?
         serviceCreate,
-    TResult Function(List<ReferralReconServiceModel> serviceList,
-            ReferralReconServiceModel? selectedService, bool loading)?
+    TResult Function(List<ServiceModel> serviceList,
+            ServiceModel? selectedService, bool loading)?
         serviceSearch,
     required TResult orElse(),
   }) {
@@ -2089,12 +1993,12 @@ class _$ReferralReconServiceSearchStateImpl
 abstract class ReferralReconServiceSearchState
     implements ReferralReconServiceState {
   const factory ReferralReconServiceSearchState(
-      {required final List<ReferralReconServiceModel> serviceList,
-      final ReferralReconServiceModel? selectedService,
+      {required final List<ServiceModel> serviceList,
+      final ServiceModel? selectedService,
       final bool loading}) = _$ReferralReconServiceSearchStateImpl;
 
-  List<ReferralReconServiceModel> get serviceList;
-  ReferralReconServiceModel? get selectedService;
+  List<ServiceModel> get serviceList;
+  ServiceModel? get selectedService;
   bool get loading;
   @JsonKey(ignore: true)
   _$$ReferralReconServiceSearchStateImplCopyWith<

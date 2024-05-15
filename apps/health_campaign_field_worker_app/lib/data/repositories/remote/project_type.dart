@@ -3,7 +3,8 @@
 import 'package:digit_data_model/data_model.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 
-class ProjectTypeRemoteRepository extends RemoteRepository<ProjectTypeModel, ProjectTypeSearchModel> {
+class ProjectTypeRemoteRepository
+    extends RemoteRepository<ProjectTypeModel, ProjectTypeSearchModel> {
   ProjectTypeRemoteRepository(
     super.dio, {
     required super.actionMap,

@@ -1,8 +1,7 @@
 // Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:drift/drift.dart';
-
 import 'package:digit_data_model/data_model.dart';
+import 'package:drift/drift.dart';
 
 part 'user.mapper.dart';
 
@@ -11,14 +10,14 @@ class UserSearchModel extends EntitySearchModel with UserSearchModelMappable {
   final String? id;
   final String? userName;
   final List<String>? uuid;
-  
+
   UserSearchModel({
     this.id,
     this.userName,
     this.uuid,
     super.boundaryCode,
     super.isDeleted,
-  }):  super();
+  }) : super();
 
   @MappableConstructor()
   UserSearchModel.ignoreDeleted({
@@ -26,12 +25,11 @@ class UserSearchModel extends EntitySearchModel with UserSearchModelMappable {
     this.userName,
     this.uuid,
     super.boundaryCode,
-  }):  super(isDeleted: false);
+  }) : super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
 class UserModel extends EntityModel with UserModelMappable {
-
   static const schemaName = 'User';
 
   final String? id;
@@ -108,9 +106,10 @@ class UserModel extends EntityModel with UserModelMappable {
     this.createdDate,
     this.nonRecoverableError = false,
     this.rowVersion,
-    super.auditDetails,super.clientAuditDetails,
+    super.auditDetails,
+    super.clientAuditDetails,
     super.isDeleted = false,
-  }): super();
+  }) : super();
 
   UserCompanion get companion {
     return UserCompanion(
@@ -159,16 +158,16 @@ class UserModel extends EntityModel with UserModelMappable {
       createdDate: Value(createdDate),
       nonRecoverableError: Value(nonRecoverableError),
       rowVersion: Value(rowVersion),
-      );
+    );
   }
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class UserAdditionalFields extends AdditionalFields with UserAdditionalFieldsMappable {
+class UserAdditionalFields extends AdditionalFields
+    with UserAdditionalFieldsMappable {
   UserAdditionalFields({
     super.schema = 'User',
     required super.version,
     super.fields,
   });
 }
-

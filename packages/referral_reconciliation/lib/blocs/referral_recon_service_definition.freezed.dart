@@ -361,8 +361,8 @@ mixin _$ReferralReconServiceDefinitionState {
     required TResult Function() empty,
     required TResult Function() isloading,
     required TResult Function(
-            List<ReferralReconServiceDefinitionModel> serviceDefinitionList,
-            ReferralReconServiceDefinitionModel? selectedServiceDefinition)
+            List<ServiceDefinitionModel> serviceDefinitionList,
+            ServiceDefinitionModel? selectedServiceDefinition)
         serviceDefinitionFetch,
   }) =>
       throw _privateConstructorUsedError;
@@ -370,9 +370,8 @@ mixin _$ReferralReconServiceDefinitionState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? empty,
     TResult? Function()? isloading,
-    TResult? Function(
-            List<ReferralReconServiceDefinitionModel> serviceDefinitionList,
-            ReferralReconServiceDefinitionModel? selectedServiceDefinition)?
+    TResult? Function(List<ServiceDefinitionModel> serviceDefinitionList,
+            ServiceDefinitionModel? selectedServiceDefinition)?
         serviceDefinitionFetch,
   }) =>
       throw _privateConstructorUsedError;
@@ -380,9 +379,8 @@ mixin _$ReferralReconServiceDefinitionState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? empty,
     TResult Function()? isloading,
-    TResult Function(
-            List<ReferralReconServiceDefinitionModel> serviceDefinitionList,
-            ReferralReconServiceDefinitionModel? selectedServiceDefinition)?
+    TResult Function(List<ServiceDefinitionModel> serviceDefinitionList,
+            ServiceDefinitionModel? selectedServiceDefinition)?
         serviceDefinitionFetch,
     required TResult orElse(),
   }) =>
@@ -487,8 +485,8 @@ class _$ReferralReconServiceDefinitionEmptyStateImpl
     required TResult Function() empty,
     required TResult Function() isloading,
     required TResult Function(
-            List<ReferralReconServiceDefinitionModel> serviceDefinitionList,
-            ReferralReconServiceDefinitionModel? selectedServiceDefinition)
+            List<ServiceDefinitionModel> serviceDefinitionList,
+            ServiceDefinitionModel? selectedServiceDefinition)
         serviceDefinitionFetch,
   }) {
     return empty();
@@ -499,9 +497,8 @@ class _$ReferralReconServiceDefinitionEmptyStateImpl
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? empty,
     TResult? Function()? isloading,
-    TResult? Function(
-            List<ReferralReconServiceDefinitionModel> serviceDefinitionList,
-            ReferralReconServiceDefinitionModel? selectedServiceDefinition)?
+    TResult? Function(List<ServiceDefinitionModel> serviceDefinitionList,
+            ServiceDefinitionModel? selectedServiceDefinition)?
         serviceDefinitionFetch,
   }) {
     return empty?.call();
@@ -512,9 +509,8 @@ class _$ReferralReconServiceDefinitionEmptyStateImpl
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? empty,
     TResult Function()? isloading,
-    TResult Function(
-            List<ReferralReconServiceDefinitionModel> serviceDefinitionList,
-            ReferralReconServiceDefinitionModel? selectedServiceDefinition)?
+    TResult Function(List<ServiceDefinitionModel> serviceDefinitionList,
+            ServiceDefinitionModel? selectedServiceDefinition)?
         serviceDefinitionFetch,
     required TResult orElse(),
   }) {
@@ -623,8 +619,8 @@ class _$ReferralReconServiceDefinitionIsloadingStateImpl
     required TResult Function() empty,
     required TResult Function() isloading,
     required TResult Function(
-            List<ReferralReconServiceDefinitionModel> serviceDefinitionList,
-            ReferralReconServiceDefinitionModel? selectedServiceDefinition)
+            List<ServiceDefinitionModel> serviceDefinitionList,
+            ServiceDefinitionModel? selectedServiceDefinition)
         serviceDefinitionFetch,
   }) {
     return isloading();
@@ -635,9 +631,8 @@ class _$ReferralReconServiceDefinitionIsloadingStateImpl
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? empty,
     TResult? Function()? isloading,
-    TResult? Function(
-            List<ReferralReconServiceDefinitionModel> serviceDefinitionList,
-            ReferralReconServiceDefinitionModel? selectedServiceDefinition)?
+    TResult? Function(List<ServiceDefinitionModel> serviceDefinitionList,
+            ServiceDefinitionModel? selectedServiceDefinition)?
         serviceDefinitionFetch,
   }) {
     return isloading?.call();
@@ -648,9 +643,8 @@ class _$ReferralReconServiceDefinitionIsloadingStateImpl
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? empty,
     TResult Function()? isloading,
-    TResult Function(
-            List<ReferralReconServiceDefinitionModel> serviceDefinitionList,
-            ReferralReconServiceDefinitionModel? selectedServiceDefinition)?
+    TResult Function(List<ServiceDefinitionModel> serviceDefinitionList,
+            ServiceDefinitionModel? selectedServiceDefinition)?
         serviceDefinitionFetch,
     required TResult orElse(),
   }) {
@@ -721,8 +715,8 @@ abstract class _$$ReferralReconServiceDefinitionServiceFetchedStateImplCopyWith<
           $Res>;
   @useResult
   $Res call(
-      {List<ReferralReconServiceDefinitionModel> serviceDefinitionList,
-      ReferralReconServiceDefinitionModel? selectedServiceDefinition});
+      {List<ServiceDefinitionModel> serviceDefinitionList,
+      ServiceDefinitionModel? selectedServiceDefinition});
 }
 
 /// @nodoc
@@ -748,11 +742,11 @@ class __$$ReferralReconServiceDefinitionServiceFetchedStateImplCopyWithImpl<
       serviceDefinitionList: null == serviceDefinitionList
           ? _value._serviceDefinitionList
           : serviceDefinitionList // ignore: cast_nullable_to_non_nullable
-              as List<ReferralReconServiceDefinitionModel>,
+              as List<ServiceDefinitionModel>,
       selectedServiceDefinition: freezed == selectedServiceDefinition
           ? _value.selectedServiceDefinition
           : selectedServiceDefinition // ignore: cast_nullable_to_non_nullable
-              as ReferralReconServiceDefinitionModel?,
+              as ServiceDefinitionModel?,
     ));
   }
 }
@@ -762,14 +756,13 @@ class __$$ReferralReconServiceDefinitionServiceFetchedStateImplCopyWithImpl<
 class _$ReferralReconServiceDefinitionServiceFetchedStateImpl
     implements ReferralReconServiceDefinitionServiceFetchedState {
   const _$ReferralReconServiceDefinitionServiceFetchedStateImpl(
-      {required final List<ReferralReconServiceDefinitionModel>
-          serviceDefinitionList,
+      {required final List<ServiceDefinitionModel> serviceDefinitionList,
       this.selectedServiceDefinition})
       : _serviceDefinitionList = serviceDefinitionList;
 
-  final List<ReferralReconServiceDefinitionModel> _serviceDefinitionList;
+  final List<ServiceDefinitionModel> _serviceDefinitionList;
   @override
-  List<ReferralReconServiceDefinitionModel> get serviceDefinitionList {
+  List<ServiceDefinitionModel> get serviceDefinitionList {
     if (_serviceDefinitionList is EqualUnmodifiableListView)
       return _serviceDefinitionList;
     // ignore: implicit_dynamic_type
@@ -777,7 +770,7 @@ class _$ReferralReconServiceDefinitionServiceFetchedStateImpl
   }
 
   @override
-  final ReferralReconServiceDefinitionModel? selectedServiceDefinition;
+  final ServiceDefinitionModel? selectedServiceDefinition;
 
   @override
   String toString() {
@@ -818,8 +811,8 @@ class _$ReferralReconServiceDefinitionServiceFetchedStateImpl
     required TResult Function() empty,
     required TResult Function() isloading,
     required TResult Function(
-            List<ReferralReconServiceDefinitionModel> serviceDefinitionList,
-            ReferralReconServiceDefinitionModel? selectedServiceDefinition)
+            List<ServiceDefinitionModel> serviceDefinitionList,
+            ServiceDefinitionModel? selectedServiceDefinition)
         serviceDefinitionFetch,
   }) {
     return serviceDefinitionFetch(
@@ -831,9 +824,8 @@ class _$ReferralReconServiceDefinitionServiceFetchedStateImpl
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? empty,
     TResult? Function()? isloading,
-    TResult? Function(
-            List<ReferralReconServiceDefinitionModel> serviceDefinitionList,
-            ReferralReconServiceDefinitionModel? selectedServiceDefinition)?
+    TResult? Function(List<ServiceDefinitionModel> serviceDefinitionList,
+            ServiceDefinitionModel? selectedServiceDefinition)?
         serviceDefinitionFetch,
   }) {
     return serviceDefinitionFetch?.call(
@@ -845,9 +837,8 @@ class _$ReferralReconServiceDefinitionServiceFetchedStateImpl
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? empty,
     TResult Function()? isloading,
-    TResult Function(
-            List<ReferralReconServiceDefinitionModel> serviceDefinitionList,
-            ReferralReconServiceDefinitionModel? selectedServiceDefinition)?
+    TResult Function(List<ServiceDefinitionModel> serviceDefinitionList,
+            ServiceDefinitionModel? selectedServiceDefinition)?
         serviceDefinitionFetch,
     required TResult orElse(),
   }) {
@@ -905,14 +896,12 @@ class _$ReferralReconServiceDefinitionServiceFetchedStateImpl
 abstract class ReferralReconServiceDefinitionServiceFetchedState
     implements ReferralReconServiceDefinitionState {
   const factory ReferralReconServiceDefinitionServiceFetchedState(
-          {required final List<ReferralReconServiceDefinitionModel>
-              serviceDefinitionList,
-          final ReferralReconServiceDefinitionModel?
-              selectedServiceDefinition}) =
+          {required final List<ServiceDefinitionModel> serviceDefinitionList,
+          final ServiceDefinitionModel? selectedServiceDefinition}) =
       _$ReferralReconServiceDefinitionServiceFetchedStateImpl;
 
-  List<ReferralReconServiceDefinitionModel> get serviceDefinitionList;
-  ReferralReconServiceDefinitionModel? get selectedServiceDefinition;
+  List<ServiceDefinitionModel> get serviceDefinitionList;
+  ServiceDefinitionModel? get selectedServiceDefinition;
   @JsonKey(ignore: true)
   _$$ReferralReconServiceDefinitionServiceFetchedStateImplCopyWith<
           _$ReferralReconServiceDefinitionServiceFetchedStateImpl>

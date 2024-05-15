@@ -3,7 +3,8 @@
 import 'package:digit_data_model/data_model.dart';
 import 'package:registration_delivery/models/entities/household.dart';
 
-class HouseholdRemoteRepository extends RemoteRepository<HouseholdModel, HouseholdSearchModel> {
+class HouseholdRemoteRepository
+    extends RemoteRepository<HouseholdModel, HouseholdSearchModel> {
   HouseholdRemoteRepository(
     super.dio, {
     required super.actionMap,

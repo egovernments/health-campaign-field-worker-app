@@ -1,7 +1,6 @@
 import 'package:digit_data_model/data_model.dart';
 import 'package:inventory_management/inventory_management.dart';
 
-import '../models/entities/hcm_hf_referral.dart';
 import '../models/entities/product.dart';
 import '../models/entities/project_staff.dart';
 import '../models/entities/user.dart';
@@ -34,8 +33,6 @@ typedef PgrServiceDataRepository
     = DataRepository<PgrServiceModel, PgrServiceSearchModel>;
 
 typedef UserDataRepository = DataRepository<UserModel, UserSearchModel>;
-typedef HFReferralDataRepository
-    = DataRepository<HcmHFReferralModel, HcmHFReferralSearchModel>;
 
 typedef StockDataRepository = DataRepository<StockModel, StockSearchModel>;
 typedef StockReconciliationDataRepository

@@ -1,11 +1,10 @@
 import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:isar/isar.dart';
 
 import '../../../data_model.dart';
-import '../../../models/oplog/oplog_entry.dart';
 import '../../../utils/app_exception.dart';
-import '../../../utils/utils.dart';
 
 abstract class OpLogManager<T extends EntityModel> {
   final Isar isar;

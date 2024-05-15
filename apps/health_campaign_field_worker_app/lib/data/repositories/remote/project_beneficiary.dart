@@ -3,7 +3,8 @@
 import 'package:digit_data_model/data_model.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 
-class ProjectBeneficiaryRemoteRepository extends RemoteRepository<ProjectBeneficiaryModel, ProjectBeneficiarySearchModel> {
+class ProjectBeneficiaryRemoteRepository extends RemoteRepository<
+    ProjectBeneficiaryModel, ProjectBeneficiarySearchModel> {
   ProjectBeneficiaryRemoteRepository(
     super.dio, {
     required super.actionMap,

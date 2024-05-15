@@ -4,7 +4,6 @@
 // ignore_for_file: unused_element
 
 import 'entities/additional_fields_type.dart' as p0;
-import 'entities/hcm_hf_referral.dart' as p1;
 import 'entities/product.dart' as p2;
 import 'entities/project_staff.dart' as p3;
 import 'entities/roles.dart' as p4;
@@ -15,9 +14,6 @@ import 'entities/user.dart' as p8;
 
 void initializeMappers() {
   p0.AdditionalFieldsTypeMapper.ensureInitialized();
-  p1.HcmHFReferralSearchModelMapper.ensureInitialized();
-  p1.HcmHFReferralModelMapper.ensureInitialized();
-  p1.HFReferralAdditionalFieldsMapper.ensureInitialized();
   p2.ProductSearchModelMapper.ensureInitialized();
   p2.ProductModelMapper.ensureInitialized();
   p2.ProductAdditionalFieldsMapper.ensureInitialized();

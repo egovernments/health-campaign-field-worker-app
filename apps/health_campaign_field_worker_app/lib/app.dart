@@ -1,16 +1,13 @@
+import 'package:attendance_management/attendance_management.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:inventory_management/inventory_management.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
-import 'package:referral_reconciliation/blocs/referral_recon_service.dart';
-import 'package:referral_reconciliation/blocs/search_referral_reconciliations.dart';
-import 'package:attendance_management/attendance_management.dart';
-import 'package:inventory_management/inventory_management.dart';
-import 'package:registration_delivery/registration_delivery.dart';
 
 import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
@@ -279,14 +276,6 @@ class MainApplicationState extends State<MainApplication>
                             projectFacilityDataRepository: context.repository<
                                 ProjectFacilityModel,
                                 ProjectFacilitySearchModel>(),
-                          ),
-                        ),
-                        BlocProvider(
-                          create: (context) => SearchReferralsBloc(),
-                        ),
-                        BlocProvider(
-                          create: (context) => ReferralReconServiceBloc(
-                            const ReferralReconServiceEmptyState(),
                           ),
                         ),
                       ],

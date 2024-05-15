@@ -667,8 +667,7 @@ mixin _$SearchReferralsState {
   bool get loading => throw _privateConstructorUsedError;
   String? get searchQuery => throw _privateConstructorUsedError;
   String? get tag => throw _privateConstructorUsedError;
-  List<ReferralReconciliation> get referrals =>
-      throw _privateConstructorUsedError;
+  List<HFReferralModel> get referrals => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $SearchReferralsStateCopyWith<SearchReferralsState> get copyWith =>
@@ -685,7 +684,7 @@ abstract class $SearchReferralsStateCopyWith<$Res> {
       {bool loading,
       String? searchQuery,
       String? tag,
-      List<ReferralReconciliation> referrals});
+      List<HFReferralModel> referrals});
 }
 
 /// @nodoc
@@ -723,7 +722,7 @@ class _$SearchReferralsStateCopyWithImpl<$Res,
       referrals: null == referrals
           ? _value.referrals
           : referrals // ignore: cast_nullable_to_non_nullable
-              as List<ReferralReconciliation>,
+              as List<HFReferralModel>,
     ) as $Val);
   }
 }
@@ -740,7 +739,7 @@ abstract class _$$SearchReferralsStateImplCopyWith<$Res>
       {bool loading,
       String? searchQuery,
       String? tag,
-      List<ReferralReconciliation> referrals});
+      List<HFReferralModel> referrals});
 }
 
 /// @nodoc
@@ -775,7 +774,7 @@ class __$$SearchReferralsStateImplCopyWithImpl<$Res>
       referrals: null == referrals
           ? _value._referrals
           : referrals // ignore: cast_nullable_to_non_nullable
-              as List<ReferralReconciliation>,
+              as List<HFReferralModel>,
     ));
   }
 }
@@ -788,7 +787,7 @@ class _$SearchReferralsStateImpl extends _SearchReferralsState
       {this.loading = false,
       this.searchQuery,
       this.tag,
-      final List<ReferralReconciliation> referrals = const []})
+      final List<HFReferralModel> referrals = const []})
       : _referrals = referrals,
         super._();
 
@@ -799,10 +798,10 @@ class _$SearchReferralsStateImpl extends _SearchReferralsState
   final String? searchQuery;
   @override
   final String? tag;
-  final List<ReferralReconciliation> _referrals;
+  final List<HFReferralModel> _referrals;
   @override
   @JsonKey()
-  List<ReferralReconciliation> get referrals {
+  List<HFReferralModel> get referrals {
     if (_referrals is EqualUnmodifiableListView) return _referrals;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_referrals);
@@ -852,11 +851,10 @@ class _$SearchReferralsStateImpl extends _SearchReferralsState
 
 abstract class _SearchReferralsState extends SearchReferralsState {
   const factory _SearchReferralsState(
-          {final bool loading,
-          final String? searchQuery,
-          final String? tag,
-          final List<ReferralReconciliation> referrals}) =
-      _$SearchReferralsStateImpl;
+      {final bool loading,
+      final String? searchQuery,
+      final String? tag,
+      final List<HFReferralModel> referrals}) = _$SearchReferralsStateImpl;
   const _SearchReferralsState._() : super._();
 
   @override
@@ -866,7 +864,7 @@ abstract class _SearchReferralsState extends SearchReferralsState {
   @override
   String? get tag;
   @override
-  List<ReferralReconciliation> get referrals;
+  List<HFReferralModel> get referrals;
   @override
   @JsonKey(ignore: true)
   _$$SearchReferralsStateImplCopyWith<_$SearchReferralsStateImpl>

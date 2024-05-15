@@ -67,11 +67,7 @@ dependencies:
   google_mlkit_barcode_scanning: ^0.10.0
   camera: ^0.10.5+7
   attendance_management: ^0.0.0-dev.1
-  digit_scanner: ##[TODO: Change to pub version once published]
-    git:
-      url: https://github.com/egovernments/health-campaign-field-worker-app/
-      ref: develop
-      path: ./packages/digit_scanner
+  digit_scanner: ^0.0.1+1
   inventory_management: ^0.0.1
   referral_reconciliation: ^0.0.1
   digit_data_model: ^0.0.1

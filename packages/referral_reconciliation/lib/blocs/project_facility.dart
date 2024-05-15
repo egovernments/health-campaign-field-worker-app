@@ -1,8 +1,9 @@
+import 'package:digit_data_model/data_model.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:referral_reconciliation/blocs/referral_reconciliation_listeners.dart';
 
-import '../models/entities/referral_project_facility.dart';
+import '../utils/utils.dart';
 
 part 'project_facility.freezed.dart';
 
@@ -13,8 +14,10 @@ typedef ReferralReconProjectFacilityStateEmitter
 // Define the Bloc responsible for managing ReferralReconProjectFacility events and states.
 class ReferralReconProjectFacilityBloc extends Bloc<
     ReferralReconProjectFacilityEvent, ReferralReconProjectFacilityState> {
+  BuildContext context;
   // Constructor initializes the Bloc with an initial state and sets up event handlers.
-  ReferralReconProjectFacilityBloc(super.initialState) {
+  ReferralReconProjectFacilityBloc(super.initialState,
+      {required this.context}) {
     on(_handleLoadProjectFacilitiesForProjectId);
   }
 
@@ -26,8 +29,36 @@ class ReferralReconProjectFacilityBloc extends Bloc<
     // Emit loading state.
     emit(const ProjectFacilityLoadingState());
     // Fetch project facilities for the specified project ID.
-    List<ReferralProjectFacilityModel>? projectFacilities =
-        await ReferralReconSingleton().getProjectFacilitiesForProjectId();
+    final facilitiesBloc = context.read<ProjectFacilityBloc>();
+    facilitiesBloc.add(ProjectFacilityLoadEvent(
+      query: ProjectFacilitySearchModel(
+        projectId: [ReferralReconSingleton().projectId],
+      ),
+    ));
+
+    final facilitiesState = await facilitiesBloc.stream.firstWhere(
+      (state) => state.maybeWhen(
+        fetched: (
+          facilities,
+        ) =>
+            true,
+        orElse: () => false,
+      ),
+    );
+
+    List<ProjectFacilityModel> projectFacilities = [];
+    facilitiesState.maybeWhen(
+      fetched: (
+        facilities,
+      ) {
+        for (var element in facilities) {
+          projectFacilities.add(
+            element,
+          );
+        }
+      },
+      orElse: () {},
+    );
 
     // Check if project facilities are fetched successfully.
     if (projectFacilities == null) {
@@ -59,6 +90,6 @@ class ReferralReconProjectFacilityState
       ProjectFacilityLoadingState;
 
   const factory ReferralReconProjectFacilityState.fetched({
-    required List<ReferralProjectFacilityModel> projectFacilities,
+    required List<ProjectFacilityModel> projectFacilities,
   }) = ProjectFacilityFetchedState;
 }

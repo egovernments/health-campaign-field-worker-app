@@ -1,9 +1,11 @@
 // Generated using mason. Do not modify by hand
 
 import 'package:digit_data_model/data_model.dart';
+
 import '../../../models/entities/user.dart';
 
-class UserRemoteRepository extends RemoteRepository<UserModel, UserSearchModel> {
+class UserRemoteRepository
+    extends RemoteRepository<UserModel, UserSearchModel> {
   UserRemoteRepository(
     super.dio, {
     required super.actionMap,

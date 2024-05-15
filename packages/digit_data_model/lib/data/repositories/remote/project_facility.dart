@@ -2,7 +2,8 @@
 
 import 'package:digit_data_model/data_model.dart';
 
-class ProjectFacilityRemoteRepository extends RemoteRepository<ProjectFacilityModel, ProjectFacilitySearchModel> {
+class ProjectFacilityRemoteRepository
+    extends RemoteRepository<ProjectFacilityModel, ProjectFacilitySearchModel> {
   ProjectFacilityRemoteRepository(
     super.dio, {
     required super.actionMap,

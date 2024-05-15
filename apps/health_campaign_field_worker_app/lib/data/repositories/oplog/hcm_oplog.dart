@@ -1,13 +1,11 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'package:inventory_management/inventory_management.dart';
-import 'package:registration_delivery/registration_delivery.dart';
 import 'package:digit_data_model/data_model.dart';
-
+import 'package:inventory_management/inventory_management.dart';
 import 'package:isar/isar.dart';
+import 'package:registration_delivery/registration_delivery.dart';
 
-import '../../../models/entities/hcm_hf_referral.dart';
 import '../../../models/entities/project_staff.dart';
 
 class IndividualOpLogManager extends OpLogManager<IndividualModel> {
@@ -197,10 +195,10 @@ class SideEffectOpLogManager extends OpLogManager<SideEffectModel> {
 
   @override
   SideEffectModel applyServerGeneratedIdToEntity(
-      SideEffectModel entity,
-      String serverGeneratedId,
-      int rowVersion,
-      ) =>
+    SideEffectModel entity,
+    String serverGeneratedId,
+    int rowVersion,
+  ) =>
       entity.copyWith(id: serverGeneratedId, rowVersion: rowVersion);
 
   @override
@@ -223,10 +221,10 @@ class ReferralOpLogManager extends OpLogManager<ReferralModel> {
 
   @override
   ReferralModel applyServerGeneratedIdToEntity(
-      ReferralModel entity,
-      String serverGeneratedId,
-      int rowVersion,
-      ) =>
+    ReferralModel entity,
+    String serverGeneratedId,
+    int rowVersion,
+  ) =>
       entity.copyWith(id: serverGeneratedId, rowVersion: rowVersion);
 
   @override
@@ -275,36 +273,6 @@ class AddressOpLogManager extends OpLogManager<AddressModel> {
   @override
   bool? getNonRecoverableError(AddressModel entity) =>
       entity.nonRecoverableError;
-}
-
-class HFReferralOpLogManager extends OpLogManager<HcmHFReferralModel> {
-  HFReferralOpLogManager(super.isar);
-
-  @override
-  HcmHFReferralModel applyServerGeneratedIdToEntity(
-    HcmHFReferralModel entity,
-    String serverGeneratedId,
-    int rowVersion,
-  ) =>
-      entity.copyWith(
-          hFReferral: entity.hFReferral
-              ?.copyWith(id: serverGeneratedId, rowVersion: rowVersion));
-
-  @override
-  String getClientReferenceId(HcmHFReferralModel entity) =>
-      entity.hFReferral!.clientReferenceId;
-
-  @override
-  String? getServerGeneratedId(HcmHFReferralModel entity) =>
-      entity.hFReferral?.id;
-
-  @override
-  int? getRowVersion(HcmHFReferralModel entity) =>
-      entity.hFReferral?.rowVersion;
-
-  @override
-  bool? getNonRecoverableError(HcmHFReferralModel entity) =>
-      entity.hFReferral?.nonRecoverableError;
 }
 
 class ProjectStaffOpLogManager extends OpLogManager<ProjectStaffModel> {

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:attendance_management/attendance_management.dart';
 import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_components/widgets/digit_card.dart';
 import 'package:digit_components/widgets/digit_elevated_button.dart';
@@ -8,20 +9,21 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:inventory_management/inventory_management.dart';
 import 'package:isar/isar.dart';
 import 'package:provider/provider.dart';
-import 'package:inventory_management/inventory_management.dart';
+import 'package:referral_reconciliation/data/repositories/local/hf_referral.dart';
+import 'package:referral_reconciliation/data/repositories/oplog/oplog.dart';
+import 'package:referral_reconciliation/data/repositories/remote/hf_referral.dart';
+import 'package:referral_reconciliation/models/entities/h_f_referral.dart';
 import 'package:registration_delivery/registration_delivery.dart';
-import 'package:attendance_management/attendance_management.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../data/network_manager.dart';
-import '../data/repositories/local/hcm_hf_referral.dart';
 import '../data/repositories/local/pgr_service.dart';
 import '../data/repositories/local/project_staff.dart';
 import '../data/repositories/oplog/hcm_oplog.dart';
 import '../data/repositories/remote/auth.dart';
-import '../data/repositories/remote/hcm_hf_referral.dart';
 import '../data/repositories/remote/pgr_service.dart';
 import '../data/repositories/remote/product.dart';
 import '../data/repositories/remote/product_variant.dart';
@@ -30,7 +32,6 @@ import '../data/repositories/remote/project_product_variant.dart';
 import '../data/repositories/remote/project_staff.dart';
 import '../data/repositories/remote/project_type.dart';
 import '../data/repositories/remote/user.dart';
-import '../models/entities/hcm_hf_referral.dart';
 import '../models/entities/product.dart';
 import '../models/entities/project_staff.dart';
 import '../models/entities/user.dart';
@@ -188,6 +189,13 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         ),
       ),
       RepositoryProvider<
+          LocalRepository<HFReferralModel, HFReferralSearchModel>>(
+        create: (_) => HFReferralLocalRepository(
+          sql,
+          HFReferralOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<
           LocalRepository<SideEffectModel, SideEffectSearchModel>>(
         create: (_) => SideEffectLocalRepository(
           sql,
@@ -241,13 +249,6 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         create: (_) => PgrServiceLocalRepository(
           sql,
           PgrServiceOpLogManager(isar),
-        ),
-      ),
-      RepositoryProvider<
-          LocalRepository<HcmHFReferralModel, HcmHFReferralSearchModel>>(
-        create: (_) => HFReferralLocalRepository(
-          sql,
-          HFReferralOpLogManager(isar),
         ),
       ),
       RepositoryProvider<
@@ -498,7 +499,7 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           ),
         if (value == DataModelType.hFReferral)
           RepositoryProvider<
-              RemoteRepository<HcmHFReferralModel, HcmHFReferralSearchModel>>(
+              RemoteRepository<HFReferralModel, HFReferralSearchModel>>(
             create: (_) => HFReferralRemoteRepository(
               dio,
               actionMap: actions,
