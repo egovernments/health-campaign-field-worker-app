@@ -49,3 +49,9 @@ class Localization {
   Localization(
       {required this.locale, required this.code, required this.message});
 }
+
+// Class representing supported languages for attendance localization
+class AttendanceLanguages {
+  late String label;
+  late String value;
+}
