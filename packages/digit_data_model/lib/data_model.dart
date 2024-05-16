@@ -17,6 +17,10 @@ import 'package:registration_delivery/models/entities/task.dart';
 
 import 'data_model.dart';
 
+export 'blocs/facility/facility.dart';
+export 'blocs/product_variant/product_variant.dart';
+export 'blocs/project_facility/project_facility.dart';
+export 'blocs/user/user.dart';
 // Export statements for various files that are part of the data model.
 export 'data/data_repository.dart';
 export 'data/local_store/no_sql/schema/oplog.dart' hide AdditionalId;
