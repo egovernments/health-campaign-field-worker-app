@@ -17,7 +17,6 @@ import '../data/local_store/no_sql/schema/localization.dart';
 import '../data/local_store/no_sql/schema/project_types.dart';
 import '../data/local_store/no_sql/schema/row_versions.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
-import '../data/repositories/oplog/hcm_oplog.dart';
 import 'environment_config.dart';
 
 class Constants {

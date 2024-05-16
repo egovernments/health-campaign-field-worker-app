@@ -20,7 +20,6 @@ import 'package:registration_delivery/registration_delivery.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../data/network_manager.dart';
-import '../data/repositories/oplog/hcm_oplog.dart';
 import '../data/repositories/remote/auth.dart';
 
 class NetworkManagerProviderWrapper extends StatelessWidget {

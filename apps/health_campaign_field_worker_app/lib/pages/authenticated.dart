@@ -17,7 +17,6 @@ import '../blocs/localization/app_localization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
 import '../blocs/sync/sync.dart';
 import '../data/remote_client.dart';
-import '../data/repositories/oplog/hcm_oplog.dart';
 import '../data/repositories/remote/bandwidth_check.dart';
 import '../router/app_router.dart';
 import '../router/authenticated_route_observer.dart';

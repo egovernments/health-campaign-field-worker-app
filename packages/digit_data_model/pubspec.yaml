@@ -44,6 +44,8 @@ dependencies:
   isar_flutter_libs: ^3.0.5
   dio: ^5.1.2
   mocktail: ^1.0.2
+  collection: ^1.16.0
+  digit_components: ^0.0.1
 
 dev_dependencies:
   flutter_test:
