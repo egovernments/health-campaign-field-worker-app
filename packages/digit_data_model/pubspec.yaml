@@ -20,10 +20,26 @@ dependencies:
   drift_db_viewer: ^2.0.0
   uuid: ^3.0.6
   recase: ^4.1.0
-  referral_reconciliation: 0.0.1
-  registration_delivery: 0.0.1
-  attendance_management: 0.0.1
-  inventory_management: 0.0.1
+  referral_reconciliation:
+    git:
+      url: https://github.com/egovernments/health-campaign-field-worker-app/
+      ref: HLM-5575
+      path: ./packages/referral_reconciliation
+  registration_delivery:
+    git:
+      url: https://github.com/egovernments/health-campaign-field-worker-app/
+      ref: HLM-5575
+      path: ./packages/registration_delivery
+  attendance_management:
+    git:
+      url: https://github.com/egovernments/health-campaign-field-worker-app/
+      ref: HLM-5575
+      path: ./packages/attendance_management
+  inventory_management:
+    git:
+      url: https://github.com/egovernments/health-campaign-field-worker-app/
+      ref: HLM-5575
+      path: ./packages/inventory_management
   isar: ^3.0.5
   isar_flutter_libs: ^3.0.5
   dio: ^5.1.2
