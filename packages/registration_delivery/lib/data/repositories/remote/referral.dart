@@ -3,7 +3,8 @@
 import 'package:digit_data_model/data_model.dart';
 import 'package:registration_delivery/models/entities/referral.dart';
 
-class ReferralRemoteRepository extends RemoteRepository<ReferralModel, ReferralSearchModel> {
+class ReferralRemoteRepository
+    extends RemoteRepository<ReferralModel, ReferralSearchModel> {
   ReferralRemoteRepository(
     super.dio, {
     required super.actionMap,

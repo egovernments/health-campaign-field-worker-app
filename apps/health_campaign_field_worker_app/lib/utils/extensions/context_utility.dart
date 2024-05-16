@@ -110,7 +110,7 @@ extension ContextUtilityExtensions on BuildContext {
 
     RegistrationDeliverySingleton().setBoundary(boundary: selectedBoundary);
     InventorySingleton().setBoundaryName(boundaryName: selectedBoundary.name!);
-
+    ReferralReconSingleton().setBoundary(boundary: selectedBoundary);
     return selectedBoundary;
   }
 

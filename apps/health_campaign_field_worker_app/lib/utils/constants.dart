@@ -1,9 +1,14 @@
+import 'package:attendance_management/attendance_management.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:health_campaign_field_worker_app/utils/utils.dart';
+import 'package:inventory_management/inventory_management.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:referral_reconciliation/referral_reconciliation.dart';
+import 'package:referral_reconciliation/utils/utils.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
@@ -12,19 +17,14 @@ import '../data/local_store/no_sql/schema/localization.dart';
 import '../data/local_store/no_sql/schema/project_types.dart';
 import '../data/local_store/no_sql/schema/row_versions.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
-import '../data/repositories/local/hcm_hf_referral.dart';
 import '../data/repositories/local/pgr_service.dart';
-import '../data/repositories/local/project_staff.dart';
 import '../data/repositories/oplog/hcm_oplog.dart';
-import '../data/repositories/remote/hcm_hf_referral.dart';
 import '../data/repositories/remote/pgr_service.dart';
 import '../data/repositories/remote/product_variant.dart';
 import '../data/repositories/remote/project_beneficiary.dart';
 import '../data/repositories/remote/project_product_variant.dart';
-import '../data/repositories/remote/project_staff.dart';
 import '../data/repositories/remote/project_type.dart';
 import 'environment_config.dart';
-import 'utils.dart';
 
 class Constants {
   late Future<Isar> _isar;
@@ -85,6 +85,12 @@ class Constants {
       IndividualLocalRepository(sql, IndividualOpLogManager(isar)),
       HouseholdMemberLocalRepository(sql, HouseholdMemberOpLogManager(isar)),
       HouseholdLocalRepository(sql, HouseholdOpLogManager(isar)),
+      HFReferralLocalRepository(sql, HFReferralOpLogManager(isar)),
+      StockLocalRepository(sql, StockOpLogManager(isar)),
+      StockReconciliationLocalRepository(
+        sql,
+        StockReconciliationOpLogManager(isar),
+      ),
       ProjectBeneficiaryLocalRepository(
         sql,
         ProjectBeneficiaryOpLogManager(
@@ -118,6 +124,14 @@ class Constants {
       PgrServiceLocalRepository(
         sql,
         PgrServiceOpLogManager(isar),
+      ),
+      AttendanceLocalRepository(
+        sql,
+        AttendanceOpLogManager(isar),
+      ),
+      AttendanceLogsLocalRepository(
+        sql,
+        AttendanceLogOpLogManager(isar),
       ),
       HFReferralLocalRepository(
         sql,
@@ -174,6 +188,10 @@ class Constants {
           ProjectFacilityRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.individual)
           IndividualRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.stock)
+          StockRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.stockReconciliation)
+          StockReconciliationRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.household)
           HouseholdRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.projectBeneficiary)
@@ -190,6 +208,10 @@ class Constants {
           ReferralRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.downsync)
           DownsyncRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.attendanceRegister)
+          AttendanceRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.attendance)
+          AttendanceLogRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.hFReferral)
           HFReferralRemoteRepository(dio, actionMap: actions),
       ]);
@@ -225,6 +247,8 @@ class Constants {
         tenantId: envConfig.variables.tenantId,
         errorDumpApiPath: envConfig.variables.dumpErrorApiPath);
     RegistrationDeliverySingleton().setTenantId(envConfig.variables.tenantId);
+    AttendanceSingleton().setTenantId(envConfig.variables.tenantId);
+    ReferralReconSingleton().setTenantId(envConfig.variables.tenantId);
   }
 }
 

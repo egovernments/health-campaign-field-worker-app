@@ -75,426 +75,397 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
         builder: (context, state) {
           return _cameras.isNotEmpty
               ? !manualCode
-              ? Stack(
-            children: <Widget>[
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                color: Colors.green[300],
-                child: DetectorView(
-                  cameraController: _cameraController,
-                  cameras: _cameras,
-                  title: 'Barcode Scanner',
-                  customPaint: _customPaint,
-                  text: _text,
-                  onImage: _processImage,
-                  initialCameraLensDirection: _cameraLensDirection,
-                  onCameraLensDirectionChanged: (value) =>
-                  _cameraLensDirection = value,
-                ),
-              ),
-              Positioned(
-                top: kPadding * 1.5,
-                left: kPadding,
-                child: SizedBox(
-                  child: InkWell(
-                    onTap: () async {
-                      _cameraController?.setFlashMode(
-                        flashStatus ? FlashMode.off : FlashMode.torch,
-                      );
-                      setState(() {
-                        flashStatus = !flashStatus;
-                      });
-                    },
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment:
-                      MainAxisAlignment.spaceAround,
-                      children: [
-                        Icon(
-                          flashStatus
-                              ? Icons.flashlight_off
-                              : Icons.flashlight_on,
-                          color: theme.colorScheme.secondary,
-                        ),
-                        Text(
-                          localizations.translate(
-                            flashStatus
-                                ? i18.scanner.flashOff
-                                : i18.scanner.flashOn,
+                  ? Stack(
+                      children: <Widget>[
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height,
+                          color: Colors.green[300],
+                          child: DetectorView(
+                            cameraController: _cameraController,
+                            cameras: _cameras,
+                            title: 'Barcode Scanner',
+                            customPaint: _customPaint,
+                            text: _text,
+                            onImage: _processImage,
+                            initialCameraLensDirection: _cameraLensDirection,
+                            onCameraLensDirectionChanged: (value) =>
+                                _cameraLensDirection = value,
                           ),
-                          style: TextStyle(
-                            color: theme.colorScheme.secondary,
+                        ),
+                        Positioned(
+                          top: kPadding * 1.5,
+                          left: kPadding,
+                          child: SizedBox(
+                            child: InkWell(
+                              onTap: () async {
+                                _cameraController?.setFlashMode(
+                                  flashStatus ? FlashMode.off : FlashMode.torch,
+                                );
+                                setState(() {
+                                  flashStatus = !flashStatus;
+                                });
+                              },
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Icon(
+                                    flashStatus
+                                        ? Icons.flashlight_off
+                                        : Icons.flashlight_on,
+                                    color: theme.colorScheme.secondary,
+                                  ),
+                                  Text(
+                                    localizations.translate(
+                                      flashStatus
+                                          ? i18.scanner.flashOff
+                                          : i18.scanner.flashOn,
+                                    ),
+                                    style: TextStyle(
+                                      color: theme.colorScheme.secondary,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        // [TODO : Need move to constants]
+                        Positioned(
+                          top: MediaQuery.of(context).size.width / 7.5,
+                          left: MediaQuery.of(context).size.width / 2.6,
+                          width: 250,
+                          height: 250,
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width / 3,
+                            height: MediaQuery.of(context).size.height / 3,
+                            child: Text(
+                              localizations.translate(
+                                i18.scanner.scannerLabel,
+                              ),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          top: MediaQuery.of(context).size.height / 2.4,
+                          left: MediaQuery.of(context).size.width / 5,
+                          width: 300,
+                          height: 250,
+                          child: SizedBox(
+                            width: 150,
+                            height: 50,
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: kPadding),
+                              child: Text(
+                                localizations.translate(
+                                  i18.scanner.manualScan,
+                                ),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        Positioned(
+                          top: MediaQuery.of(context).size.height / 2.2,
+                          left: MediaQuery.of(context).size.width / 5,
+                          width: 250,
+                          height: 50,
+                          child: SizedBox(
+                            width: 150,
+                            height: 50,
+                            child: TextButton(
+                              onPressed: () {
+                                context.read<DigitScannerBloc>().add(
+                                      const DigitScannerEvent.handleScanner(
+                                        barCode: [],
+                                        qrCode: [],
+                                      ),
+                                    );
+                                setState(() {
+                                  manualCode = true;
+                                });
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: kPadding),
+                                child: Text(
+                                  localizations.translate(
+                                    i18.scanner.enterManualCode,
+                                  ),
+                                  style: TextStyle(
+                                    color: theme.colorScheme.secondary,
+                                    fontSize: 20,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        Positioned(
+                          bottom: 0,
+                          width: MediaQuery.of(context).size.width,
+                          child: DigitCard(
+                            margin: const EdgeInsets.only(top: kPadding),
+                            padding: const EdgeInsets.fromLTRB(
+                                kPadding, 0, kPadding, 0),
+                            child: DigitElevatedButton(
+                              child: Text(localizations
+                                  .translate(i18.common.coreCommonSubmit)),
+                              onPressed: () async {
+                                if (widget.isGS1code &&
+                                    result.length < widget.quantity) {
+                                  buildDialog();
+                                } else {
+                                  final bloc = context.read<DigitScannerBloc>();
+                                  bloc.add(DigitScannerEvent.handleScanner(
+                                    barCode: state.barCodes,
+                                    qrCode: state.qrCodes,
+                                  ));
+                                  Navigator.of(
+                                    context,
+                                  ).pop();
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+
+                        Positioned(
+                          bottom: (kPadding * 7.5),
+                          height: widget.isGS1code
+                              ? state.barCodes.length < 10
+                                  ? (state.barCodes.length * 60) + 80
+                                  : MediaQuery.of(context).size.height / 2.2
+                              : state.qrCodes.length < 10
+                                  ? (state.qrCodes.length * 60) + 80
+                                  : MediaQuery.of(context).size.height / 2,
+                          width: MediaQuery.of(context).size.width,
+                          child: Container(
+                            width: 100,
+                            height: 120,
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(12.0),
+                                topRight: Radius.circular(12.0),
+                              ),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.max,
+                              children: <Widget>[
+                                Container(
+                                  decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(kPadding * 2),
+                                      topRight: Radius.circular(kPadding * 2),
+                                    ),
+                                  ),
+                                  padding: const EdgeInsets.only(
+                                    bottom: kPadding * 2,
+                                    top: kPadding * 2,
+                                    left: kPadding * 3,
+                                  ),
+                                  width: MediaQuery.of(context).size.width,
+                                  child: widget.isGS1code
+                                      ? Text(
+                                          '${state.barCodes.length.toString()} ${localizations.translate(i18.scanner.resourcesScanned)}',
+                                          style: theme.textTheme.headlineMedium,
+                                        )
+                                      : Text(
+                                          '${state.qrCodes.length.toString()} ${localizations.translate(i18.scanner.resourcesScanned)}',
+                                          style: theme.textTheme.headlineMedium,
+                                        ),
+                                ),
+                                Expanded(
+                                  child: ListView.builder(
+                                    itemCount: widget.isGS1code
+                                        ? state.barCodes.length
+                                        : state.qrCodes.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return ListTile(
+                                        shape: const Border(),
+                                        title: Container(
+                                          margin: const EdgeInsets.only(
+                                            left: kPadding,
+                                            right: kPadding,
+                                          ),
+                                          height: kPadding * 6,
+                                          decoration: BoxDecoration(
+                                            color: DigitTheme.instance
+                                                .colorScheme.background,
+                                            border: Border.all(
+                                              color: DigitTheme
+                                                  .instance.colorScheme.outline,
+                                              width: 1,
+                                            ),
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                              Radius.circular(4.0),
+                                            ),
+                                          ),
+                                          padding:
+                                              const EdgeInsets.all(kPadding),
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Flexible(
+                                                child: Text(
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  widget.isGS1code
+                                                      ? state
+                                                          .barCodes[index]
+                                                          .elements
+                                                          .entries
+                                                          .last
+                                                          .value
+                                                          .data
+                                                          .toString()
+                                                      : trimString(state
+                                                          .qrCodes[index]
+                                                          .toString()),
+                                                ),
+                                              ),
+                                              IconButton(
+                                                icon: Icon(
+                                                  Icons.delete,
+                                                  color:
+                                                      theme.colorScheme.error,
+                                                  size: 24,
+                                                ),
+                                                onPressed: () {
+                                                  final bloc = context
+                                                      .read<DigitScannerBloc>();
+                                                  if (widget.isGS1code) {
+                                                    result = List.from(
+                                                      state.barCodes,
+                                                    );
+                                                    result.removeAt(index);
+                                                    setState(() {
+                                                      result = result;
+                                                    });
+
+                                                    bloc.add(
+                                                      DigitScannerEvent
+                                                          .handleScanner(
+                                                        barCode: result,
+                                                        qrCode: state.qrCodes,
+                                                      ),
+                                                    );
+                                                  } else {
+                                                    codes = List.from(
+                                                      state.qrCodes,
+                                                    );
+                                                    codes.removeAt(index);
+                                                    setState(() {
+                                                      codes = codes;
+                                                    });
+
+                                                    bloc.add(
+                                                      DigitScannerEvent
+                                                          .handleScanner(
+                                                        barCode: state.barCodes,
+                                                        qrCode: codes,
+                                                      ),
+                                                    );
+                                                  }
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],
-                    ),
-                  ),
-                ),
-              ),
-              // [TODO : Need move to constants]
-              Positioned(
-                top: MediaQuery.of(context).size.width / 7.5,
-                left: MediaQuery.of(context).size.width / 2.6,
-                width: 250,
-                height: 250,
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width / 3,
-                  height: MediaQuery.of(context).size.height / 3,
-                  child: Text(
-                    localizations.translate(
-                      i18.scanner.scannerLabel,
-                    ),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-              ),
-              Positioned(
-                top: MediaQuery.of(context).size.height / 2.4,
-                left: MediaQuery.of(context).size.width / 5,
-                width: 300,
-                height: 250,
-                child: SizedBox(
-                  width: 150,
-                  height: 50,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: kPadding),
-                    child: Text(
-                      localizations.translate(
-                        i18.scanner.manualScan,
-                      ),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-
-              Positioned(
-                top: MediaQuery.of(context).size.height / 2.2,
-                left: MediaQuery.of(context).size.width / 5,
-                width: 250,
-                height: 50,
-                child: SizedBox(
-                  width: 150,
-                  height: 50,
-                  child: TextButton(
-                    onPressed: () {
-                      context.read<DigitScannerBloc>().add(
-                        const DigitScannerEvent.handleScanner(
-                          barCode: [],
-                          qrCode: [],
-                        ),
-                      );
-                      setState(() {
-                        manualCode = true;
-                      });
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: kPadding),
-                      child: Text(
-                        localizations.translate(
-                          i18.scanner.enterManualCode,
-                        ),
-                        style: TextStyle(
-                          color: theme.colorScheme.secondary,
-                          fontSize: 20,
-                          decoration: TextDecoration.underline,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-
-              Positioned(
-                bottom: 0,
-                width: MediaQuery.of(context).size.width,
-                child: DigitCard(
-                  margin: const EdgeInsets.only(top: kPadding),
-                  padding: const EdgeInsets.fromLTRB(
-                      kPadding, 0, kPadding, 0),
-                  child: DigitElevatedButton(
-                    child: Text(localizations
-                        .translate(i18.common.coreCommonSubmit)),
-                    onPressed: () async {
-                      if (widget.isGS1code &&
-                          result.length < widget.quantity) {
-                        buildDialog();
-                      } else {
-                        // final bloc =
-                        //     context.read<SearchBlocWrapper>();
-                        // final hfBloc =
-                        //     context.read<SearchReferralsBloc>();
-
-                        final bloc = context.read<DigitScannerBloc>();
-                        bloc.add(DigitScannerEvent.handleScanner(
-                          barCode: state.barCodes,
-                          qrCode: state.qrCodes,
-                        ));
-                        Navigator.of(
-                          context,
-                        ).pop();
-                      }
-                    },
-                  ),
-                ),
-              ),
-
-              Positioned(
-                bottom: (kPadding * 7.5),
-                height: widget.isGS1code
-                    ? state.barCodes.length < 10
-                    ? (state.barCodes.length * 60) + 80
-                    : MediaQuery.of(context).size.height / 2.2
-                    : state.qrCodes.length < 10
-                    ? (state.qrCodes.length * 60) + 80
-                    : MediaQuery.of(context).size.height / 2,
-                width: MediaQuery.of(context).size.width,
-                child: Container(
-                  width: 100,
-                  height: 120,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(12.0),
-                      topRight: Radius.circular(12.0),
-                    ),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.max,
-                    children: <Widget>[
-                      Container(
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(kPadding * 2),
-                            topRight: Radius.circular(kPadding * 2),
+                    )
+                  : DigitCard(
+                      child: ScrollableContent(
+                        backgroundColor: Colors.white,
+                        header: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              manualCode = false;
+                              initializeCameras();
+                            });
+                          },
+                          child: const Align(
+                            alignment: Alignment.topRight,
+                            child: Icon(Icons.close),
                           ),
                         ),
-                        padding: const EdgeInsets.only(
-                          bottom: kPadding * 2,
-                          top: kPadding * 2,
-                          left: kPadding * 3,
-                        ),
-                        width: MediaQuery.of(context).size.width,
-                        child: widget.isGS1code
-                            ? Text(
-                          '${state.barCodes.length.toString()} ${localizations.translate(i18.scanner.resourcesScanned)}',
-                          style: theme.textTheme.headlineMedium,
-                        )
-                            : Text(
-                          '${state.qrCodes.length.toString()} ${localizations.translate(i18.scanner.resourcesScanned)}',
-                          style: theme.textTheme.headlineMedium,
-                        ),
-                      ),
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: widget.isGS1code
-                              ? state.barCodes.length
-                              : state.qrCodes.length,
-                          itemBuilder:
-                              (BuildContext context, int index) {
-                            return ListTile(
-                              shape: const Border(),
-                              title: Container(
-                                margin: const EdgeInsets.only(
-                                  left: kPadding,
-                                  right: kPadding,
-                                ),
-                                height: kPadding * 6,
-                                decoration: BoxDecoration(
-                                  color: DigitTheme.instance
-                                      .colorScheme.background,
-                                  border: Border.all(
-                                    color: DigitTheme
-                                        .instance.colorScheme.outline,
-                                    width: 1,
-                                  ),
-                                  borderRadius:
-                                  const BorderRadius.all(
-                                    Radius.circular(4.0),
-                                  ),
-                                ),
-                                padding:
-                                const EdgeInsets.all(kPadding),
-                                child: Row(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.end,
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Flexible(
-                                      child: Text(
-                                        overflow:
-                                        TextOverflow.ellipsis,
-                                        widget.isGS1code
-                                            ? state
-                                            .barCodes[index]
-                                            .elements
-                                            .entries
-                                            .last
-                                            .value
-                                            .data
-                                            .toString()
-                                            : trimString(state
-                                            .qrCodes[index]
-                                            .toString()),
-                                      ),
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(
-                                        Icons.delete,
-                                        color: Colors.red,
-                                        size: 24,
-                                      ),
-                                      onPressed: () {
-                                        final bloc = context
-                                            .read<DigitScannerBloc>();
-                                        if (widget.isGS1code) {
-                                          result = List.from(
-                                            state.barCodes,
-                                          );
-                                          result.removeAt(index);
-                                          setState(() {
-                                            result = result;
-                                          });
-
-                                          bloc.add(
-                                            DigitScannerEvent
-                                                .handleScanner(
-                                              barCode: result,
-                                              qrCode: state.qrCodes,
-                                            ),
-                                          );
-                                        } else {
-                                          codes = List.from(
-                                            state.qrCodes,
-                                          );
-                                          codes.removeAt(index);
-                                          setState(() {
-                                            codes = codes;
-                                          });
-
-                                          bloc.add(
-                                            DigitScannerEvent
-                                                .handleScanner(
-                                              barCode: state.barCodes,
-                                              qrCode: codes,
-                                            ),
-                                          );
-                                        }
-                                      },
-                                    ),
-                                  ],
-                                ),
+                        footer: DigitElevatedButton(
+                          child: Text(localizations.translate(
+                            i18.common.coreCommonSubmit,
+                          )),
+                          onPressed: () async {
+                            final bloc = context.read<DigitScannerBloc>();
+                            codes.add(_resourceController.value.text);
+                            bloc.add(
+                              DigitScannerEvent.handleScanner(
+                                barCode: state.barCodes,
+                                qrCode: codes,
                               ),
                             );
+                            if (widget.isGS1code &&
+                                result.length < widget.quantity) {
+                              buildDialog();
+                            }
                           },
                         ),
+                        children: [
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              localizations.translate(
+                                i18.scanner.enterManualCode,
+                              ),
+                              style: theme.textTheme.headlineLarge,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: kPadding * 2,
+                          ),
+                          Text(localizations.translate(
+                            i18.scanner.manualCodeDescription,
+                          )),
+                          const SizedBox(
+                            height: kPadding * 2,
+                          ),
+                          DigitTextField(
+                            label: localizations.translate(
+                              i18.scanner.resourceCode,
+                            ),
+                            controller: _resourceController,
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          )
-              : DigitCard(
-            child: ScrollableContent(
-              backgroundColor: Colors.white,
-              header: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    manualCode = false;
-                    initializeCameras();
-                  });
-                },
-                child: const Align(
-                  alignment: Alignment.topRight,
-                  child: Icon(Icons.close),
-                ),
-              ),
-              footer: DigitElevatedButton(
-                child: Text(localizations.translate(
-                  i18.common.coreCommonSubmit,
-                )),
-                onPressed: () async {
-                  final bloc = context.read<DigitScannerBloc>();
-                  codes.add(_resourceController.value.text);
-                  bloc.add(
-                    DigitScannerEvent.handleScanner(
-                      barCode: state.barCodes,
-                      qrCode: codes,
-                    ),
-                  );
-                  if (widget.isGS1code &&
-                      result.length < widget.quantity) {
-                    buildDialog();
-                  } else {
-                    // final bloc = context.read<SearchBlocWrapper>();
-                    // final scannerState =
-                    //     context.read<ScannerBloc>().state;
-                    // final hfBloc =
-                    //     context.read<SearchReferralsBloc>();
-                    //
-                    // if (scannerState.qrcodes.isNotEmpty ||
-                    //     manualcode) {
-                    //   if (isHealthFacilityWorker) {
-                    //     hfBloc.add(SearchReferralsEvent.searchByTag(
-                    //       tag: manualcode
-                    //           ? _resourceController.value.text
-                    //           : scannerState.qrcodes.first,
-                    //       projectId: context.projectId,
-                    //     ));
-                    //   } else {
-                    //     bloc.tagSearchBloc
-                    //         .add(SearchHouseholdsEvent.searchByTag(
-                    //       tag: manualcode
-                    //           ? _resourceController.value.text
-                    //           : scannerState.qrcodes.first,
-                    //       projectId: context.projectId,
-                    //     ));
-                    //   }
-                  }
-                },
-              ),
-              children: [
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    localizations.translate(
-                      i18.scanner.enterManualCode,
-                    ),
-                    style: theme.textTheme.headlineLarge,
-                  ),
-                ),
-                const SizedBox(
-                  height: kPadding * 2,
-                ),
-                Text(localizations.translate(
-                  i18.scanner.manualCodeDescription,
-                )),
-                const SizedBox(
-                  height: kPadding * 2,
-                ),
-                DigitTextField(
-                  label: localizations.translate(
-                    i18.scanner.resourceCode,
-                  ),
-                  controller: _resourceController,
-                ),
-              ],
-            ),
-          )
+                    )
               : const Center(
-            child: CircularProgressIndicator(),
-          );
+                  child: CircularProgressIndicator(),
+                );
         },
       ),
     );
@@ -557,9 +528,9 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
           try {
             final parser = GS1BarcodeParser.defaultParser();
             final parsedResult =
-            parser.parse(barcodes.first.displayValue.toString());
+                parser.parse(barcodes.first.displayValue.toString());
             final alreadyScanned = bloc.state.barCodes.any((element) =>
-            element.elements.entries.last.value.data ==
+                element.elements.entries.last.value.data ==
                 parsedResult.elements.entries.last.value.data);
             if (alreadyScanned) {
               await handleError(
@@ -636,8 +607,8 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
   }
 
   Future storeCode(
-      String code,
-      ) async {
+    String code,
+  ) async {
     player.play(AssetSource("audio/add.wav"));
     final bloc = context.read<DigitScannerBloc>();
     codes = List.from(bloc.state.qrCodes);
@@ -663,8 +634,8 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
   }
 
   Future storeValue(
-      GS1Barcode scanData,
-      ) async {
+    GS1Barcode scanData,
+  ) async {
     final parsedResult = scanData;
     final bloc = context.read<DigitScannerBloc>();
 
@@ -673,7 +644,7 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
 
     result = List.from(bloc.state.barCodes);
     result.removeDuplicates(
-          (element) => element.elements.entries.last.value.data,
+      (element) => element.elements.entries.last.value.data,
     );
 
     result.add(parsedResult);

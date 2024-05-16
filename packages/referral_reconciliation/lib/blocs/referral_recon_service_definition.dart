@@ -1,10 +1,11 @@
 import 'dart:async';
 
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:referral_reconciliation/blocs/referral_reconciliation_listeners.dart';
+import 'package:referral_reconciliation/utils/typedefs.dart';
 
-import '../models/entities/referral_recon_service_definition.dart';
+import '../utils/utils.dart';
 
 part 'referral_recon_service_definition.freezed.dart';
 
@@ -15,10 +16,12 @@ typedef ReferralReconServiceDefinitionEmitter
 // Define the Bloc responsible for managing ReferralReconServiceDefinition events and states.
 class ReferralReconServiceDefinitionBloc extends Bloc<
     ReferralReconServiceDefinitionEvent, ReferralReconServiceDefinitionState> {
+  final ServiceDefinitionDataRepository serviceDefinitionDataRepository;
   // Constructor initializes the Bloc with an initial state and sets up event handlers.
   ReferralReconServiceDefinitionBloc(
-    super.initialState,
-  ) {
+    super.initialState, {
+    required this.serviceDefinitionDataRepository,
+  }) {
     on(_handleFetch);
     on(_handleSelect);
   }
@@ -27,12 +30,18 @@ class ReferralReconServiceDefinitionBloc extends Bloc<
     ReferralReconServiceDefinitionFetchEvent event,
     ReferralReconServiceDefinitionEmitter emit,
   ) async {
+    List<String> codes = [];
+    ReferralReconSingleton().checklistTypes.map((e) => e).forEach((element) {
+      codes.add(
+          '${ReferralReconSingleton().projectName}.$element.${ReferralReconSingleton().roleCode}');
+    });
+    final allServiceDefinitions = await serviceDefinitionDataRepository.search(
+        ServiceDefinitionSearchModel(
+            tenantId: ReferralReconSingleton().tenantId, code: codes));
     // Logic for fetching all service definitions and updating state with the results.
-    List<ReferralReconServiceDefinitionModel>? results =
-        await ReferralReconSingleton().getServiceDefinitionsList();
 
     emit(ReferralReconServiceDefinitionServiceFetchedState(
-      serviceDefinitionList: results ?? [],
+      serviceDefinitionList: allServiceDefinitions,
     ));
   }
 
@@ -43,13 +52,15 @@ class ReferralReconServiceDefinitionBloc extends Bloc<
   ) async {
     // Logic for selecting a service definition and updating state accordingly.
 
-    List<ReferralReconServiceDefinitionModel>? results =
-        await ReferralReconSingleton()
-            .getServiceDefinitions(event.serviceDefinitionCode);
-    emit(ReferralReconServiceDefinitionServiceFetchedState(
-        serviceDefinitionList: results ?? [],
-        selectedServiceDefinition:
-            (results ?? []).isNotEmpty ? results?.first : null));
+    // List<ServiceDefinitionModel>? results = await ReferralReconSingleton()
+    //     .getServiceDefinitions(event.serviceDefinitionCode);
+    state.mapOrNull(
+      serviceDefinitionFetch: (value) => emit(value.copyWith(
+        selectedServiceDefinition: value.serviceDefinitionList
+            .where((d) => d.code!.contains(event.serviceDefinitionCode))
+            .firstOrNull,
+      )),
+    );
   }
 }
 
@@ -75,7 +86,7 @@ class ReferralReconServiceDefinitionState
   const factory ReferralReconServiceDefinitionState.isloading() =
       ReferralReconServiceDefinitionIsloadingState;
   const factory ReferralReconServiceDefinitionState.serviceDefinitionFetch({
-    required List<ReferralReconServiceDefinitionModel> serviceDefinitionList,
-    ReferralReconServiceDefinitionModel? selectedServiceDefinition,
+    required List<ServiceDefinitionModel> serviceDefinitionList,
+    ServiceDefinitionModel? selectedServiceDefinition,
   }) = ReferralReconServiceDefinitionServiceFetchedState;
 }

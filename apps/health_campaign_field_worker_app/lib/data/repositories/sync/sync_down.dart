@@ -1,9 +1,10 @@
 import 'dart:async';
 
-import 'package:collection/collection.dart';
 import 'package:attendance_management/attendance_management.dart';
-import 'package:inventory_management/inventory_management.dart';
+import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:inventory_management/models/entities/stock.dart';
+import 'package:inventory_management/models/entities/stock_reconciliation.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/models/entities/household_member.dart';
@@ -13,10 +14,8 @@ import 'package:registration_delivery/models/entities/side_effect.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 
 import '../../../models/bandwidth/bandwidth_model.dart';
-import '../../../models/entities/hcm_hf_referral.dart';
 import '../../../utils/environment_config.dart';
 import '../../network_manager.dart';
-import '../oplog/hcm_oplog.dart';
 import '../remote/pgr_service.dart';
 import './remote_type.dart';
 
@@ -465,50 +464,45 @@ class PerformSyncDown {
             break;
           case DataModelType.hFReferral:
             responseEntities = await remote.search(
-              HcmHFReferralSearchModel(
-                hFReferral: HFReferralSearchModel(
-                  clientReferenceId: entities
-                      .whereType<HcmHFReferralModel>()
-                      .map((e) => e.hFReferral?.clientReferenceId)
-                      .whereNotNull()
-                      .toList(),
-                ),
+              HFReferralSearchModel(
+                clientReferenceId: entities
+                    .whereType<HFReferralModel>()
+                    .map((e) => e.clientReferenceId)
+                    .whereNotNull()
+                    .toList(),
               ),
             );
 
             for (var element in operationGroupedEntity.value) {
               if (element.id == null) return;
-              final entity = element.entity as HcmHFReferralModel;
+              final entity = element.entity as HFReferralModel;
               final responseEntity = responseEntities
-                  .whereType<HcmHFReferralModel>()
+                  .whereType<HFReferralModel>()
                   .firstWhereOrNull(
-                    (e) =>
-                        e.hFReferral?.clientReferenceId ==
-                        entity.hFReferral?.clientReferenceId,
+                    (e) => e.clientReferenceId == entity.clientReferenceId,
                   );
 
-              final serverGeneratedId = responseEntity?.hFReferral?.id;
-              final rowVersion = responseEntity?.hFReferral?.rowVersion;
+              final serverGeneratedId = responseEntity?.id;
+              final rowVersion = responseEntity?.rowVersion;
               if (serverGeneratedId != null) {
                 await local.opLogManager.updateServerGeneratedIds(
                   model: UpdateServerGeneratedIdModel(
-                    clientReferenceId: entity.hFReferral!.clientReferenceId,
+                    clientReferenceId: entity.clientReferenceId,
                     serverGeneratedId: serverGeneratedId,
-                    nonRecoverableError: entity.hFReferral?.nonRecoverableError,
+                    nonRecoverableError: entity.nonRecoverableError,
                     dataOperation: element.operation,
                     rowVersion: rowVersion,
                   ),
                 );
               } else {
                 final bool markAsNonRecoverable = await local.opLogManager
-                    .updateSyncDownRetry(entity.hFReferral!.clientReferenceId);
+                    .updateSyncDownRetry(entity.clientReferenceId);
 
                 if (markAsNonRecoverable) {
                   await local.update(
                     entity.copyWith(
-                        hFReferral: entity.hFReferral?.copyWith(
                       nonRecoverableError: true,
-                    )),
+                    ),
                     createOpLog: false,
                   );
                 }

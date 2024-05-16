@@ -2,21 +2,21 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_radio_button_list.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:referral_reconciliation/blocs/referral_reconciliation_listeners.dart';
 import 'package:referral_reconciliation/models/entities/referral_recon_enums.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
+import 'package:referral_reconciliation/utils/extensions/extensions.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../blocs/referral_recon_record.dart';
 import '../../blocs/referral_recon_service.dart';
 import '../../blocs/referral_recon_service_definition.dart';
 import '../../models/entities/h_f_referral.dart';
-import '../../models/entities/referral_recon_service.dart';
-import '../../utils/constants.dart';
+import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/localizaed.dart';
 
@@ -161,7 +161,7 @@ class _RecordReferralDetailsPageState
                                                     .add(
                                                       ReferralReconServiceSearchEvent(
                                                         serviceSearchModel:
-                                                            ReferralReconServiceSearchModel(
+                                                            ServiceSearchModel(
                                                           clientId: recordState
                                                               .mapOrNull(
                                                             create: (value) => value
@@ -265,69 +265,120 @@ class _RecordReferralDetailsPageState
                                                           ReferralReconSingleton()
                                                               .tenantId,
                                                       rowVersion: 1,
+                                                      auditDetails:
+                                                          AuditDetails(
+                                                        createdBy:
+                                                            ReferralReconSingleton()
+                                                                .userUUid,
+                                                        createdTime: context
+                                                            .millisecondsSinceEpoch(),
+                                                        lastModifiedBy:
+                                                            ReferralReconSingleton()
+                                                                .userUUid,
+                                                        lastModifiedTime: context
+                                                            .millisecondsSinceEpoch(),
+                                                      ),
+                                                      clientAuditDetails:
+                                                          ClientAuditDetails(
+                                                        createdBy:
+                                                            ReferralReconSingleton()
+                                                                .userUUid,
+                                                        createdTime: context
+                                                            .millisecondsSinceEpoch(),
+                                                        lastModifiedBy:
+                                                            ReferralReconSingleton()
+                                                                .userUUid,
+                                                        lastModifiedTime: context
+                                                            .millisecondsSinceEpoch(),
+                                                      ),
+                                                      additionalFields:
+                                                          HFReferralAdditionalFields(
+                                                        version: 1,
+                                                        fields: [
+                                                          if (hfCoordinator !=
+                                                                  null &&
+                                                              hfCoordinator
+                                                                  .toString()
+                                                                  .trim()
+                                                                  .isNotEmpty)
+                                                            AdditionalField(
+                                                              ReferralReconEnums
+                                                                  .hFCoordinator
+                                                                  .toValue(),
+                                                              hfCoordinator,
+                                                            ),
+                                                          if (referredBy !=
+                                                                  null &&
+                                                              referredBy
+                                                                  .toString()
+                                                                  .trim()
+                                                                  .isNotEmpty)
+                                                            AdditionalField(
+                                                              ReferralReconEnums
+                                                                  .referredBy
+                                                                  .toValue(),
+                                                              referredBy,
+                                                            ),
+                                                          if (dateOfEvaluation !=
+                                                                  null &&
+                                                              dateOfEvaluation
+                                                                  .toString()
+                                                                  .trim()
+                                                                  .isNotEmpty)
+                                                            AdditionalField(
+                                                              ReferralReconEnums
+                                                                  .dateOfEvaluation
+                                                                  .toValue(),
+                                                              dateOfEvaluation,
+                                                            ),
+                                                          if (nameOfChild !=
+                                                                  null &&
+                                                              nameOfChild
+                                                                  .toString()
+                                                                  .trim()
+                                                                  .isNotEmpty)
+                                                            AdditionalField(
+                                                              ReferralReconEnums
+                                                                  .nameOfReferral
+                                                                  .toValue(),
+                                                              nameOfChild,
+                                                            ),
+                                                          if (age != null &&
+                                                              age
+                                                                  .toString()
+                                                                  .trim()
+                                                                  .isNotEmpty)
+                                                            AdditionalField(
+                                                              ReferralReconEnums
+                                                                  .age
+                                                                  .toValue(),
+                                                              age,
+                                                            ),
+                                                          if (gender != null &&
+                                                              gender
+                                                                  .toString()
+                                                                  .trim()
+                                                                  .isNotEmpty)
+                                                            AdditionalField(
+                                                              ReferralReconEnums
+                                                                  .gender
+                                                                  .toValue(),
+                                                              gender,
+                                                            ),
+                                                          if (cycle != null &&
+                                                              cycle
+                                                                  .toString()
+                                                                  .trim()
+                                                                  .isNotEmpty)
+                                                            AdditionalField(
+                                                              ReferralReconEnums
+                                                                  .cycle
+                                                                  .toValue(),
+                                                              cycle,
+                                                            ),
+                                                        ],
+                                                      ),
                                                     ),
-                                                    additionalData: {
-                                                      if (hfCoordinator !=
-                                                              null &&
-                                                          hfCoordinator
-                                                              .toString()
-                                                              .trim()
-                                                              .isNotEmpty)
-                                                        ReferralReconEnums
-                                                                .hFCoordinator
-                                                                .toValue():
-                                                            hfCoordinator,
-                                                      if (referredBy != null &&
-                                                          referredBy
-                                                              .toString()
-                                                              .trim()
-                                                              .isNotEmpty)
-                                                        ReferralReconEnums
-                                                                .referredBy
-                                                                .toValue():
-                                                            referredBy,
-                                                      if (dateOfEvaluation !=
-                                                              null &&
-                                                          dateOfEvaluation
-                                                              .toString()
-                                                              .trim()
-                                                              .isNotEmpty)
-                                                        ReferralReconEnums
-                                                                .dateOfEvaluation
-                                                                .toValue():
-                                                            dateOfEvaluation,
-                                                      if (nameOfChild != null &&
-                                                          nameOfChild
-                                                              .toString()
-                                                              .trim()
-                                                              .isNotEmpty)
-                                                        ReferralReconEnums
-                                                                .nameOfReferral
-                                                                .toValue():
-                                                            nameOfChild,
-                                                      if (age != null &&
-                                                          age
-                                                              .toString()
-                                                              .trim()
-                                                              .isNotEmpty)
-                                                        ReferralReconEnums.age
-                                                            .toValue(): age,
-                                                      if (gender != null &&
-                                                          gender
-                                                              .toString()
-                                                              .trim()
-                                                              .isNotEmpty)
-                                                        ReferralReconEnums
-                                                            .gender
-                                                            .toValue(): gender,
-                                                      if (cycle != null &&
-                                                          cycle
-                                                              .toString()
-                                                              .trim()
-                                                              .isNotEmpty)
-                                                        ReferralReconEnums.cycle
-                                                            .toValue(): cycle,
-                                                    },
                                                   ),
                                                 );
                                                 context
@@ -338,9 +389,7 @@ class _RecordReferralDetailsPageState
                                                           serviceDefinitionCode:
                                                               symptom),
                                                     );
-                                                final parent = context.router
-                                                    .parent() as StackRouter;
-                                                parent.push(
+                                                context.router.push(
                                                   ReferralReasonChecklistRoute(
                                                     referralClientRefId:
                                                         hfClientRefId,
@@ -426,7 +475,7 @@ class _RecordReferralDetailsPageState
                                                         .add(
                                                           ReferralReconServiceSearchEvent(
                                                             serviceSearchModel:
-                                                                ReferralReconServiceSearchModel(
+                                                                ServiceSearchModel(
                                                               clientId:
                                                                   recordState
                                                                       .mapOrNull(
@@ -459,10 +508,7 @@ class _RecordReferralDetailsPageState
                                                                 symptom,
                                                           ),
                                                         );
-                                                    final parent =
-                                                        context.router.parent()
-                                                            as StackRouter;
-                                                    parent.push(
+                                                    context.router.push(
                                                       ReferralReasonChecklistRoute(
                                                         referralClientRefId:
                                                             hfClientRefId,
@@ -560,74 +606,121 @@ class _RecordReferralDetailsPageState
                                                             ReferralReconSingleton()
                                                                 .tenantId,
                                                         rowVersion: 1,
+                                                        auditDetails:
+                                                            AuditDetails(
+                                                          createdBy:
+                                                              ReferralReconSingleton()
+                                                                  .userUUid,
+                                                          createdTime: context
+                                                              .millisecondsSinceEpoch(),
+                                                          lastModifiedBy:
+                                                              ReferralReconSingleton()
+                                                                  .userUUid,
+                                                          lastModifiedTime: context
+                                                              .millisecondsSinceEpoch(),
+                                                        ),
+                                                        clientAuditDetails:
+                                                            ClientAuditDetails(
+                                                          createdBy:
+                                                              ReferralReconSingleton()
+                                                                  .userUUid,
+                                                          createdTime: context
+                                                              .millisecondsSinceEpoch(),
+                                                          lastModifiedBy:
+                                                              ReferralReconSingleton()
+                                                                  .userUUid,
+                                                          lastModifiedTime: context
+                                                              .millisecondsSinceEpoch(),
+                                                        ),
+                                                        additionalFields:
+                                                            HFReferralAdditionalFields(
+                                                          version: 1,
+                                                          fields: [
+                                                            if (hfCoordinator !=
+                                                                    null &&
+                                                                hfCoordinator
+                                                                    .toString()
+                                                                    .trim()
+                                                                    .isNotEmpty)
+                                                              AdditionalField(
+                                                                ReferralReconEnums
+                                                                    .hFCoordinator
+                                                                    .toValue(),
+                                                                hfCoordinator,
+                                                              ),
+                                                            if (referredBy !=
+                                                                    null &&
+                                                                referredBy
+                                                                    .toString()
+                                                                    .trim()
+                                                                    .isNotEmpty)
+                                                              AdditionalField(
+                                                                ReferralReconEnums
+                                                                    .referredBy
+                                                                    .toValue(),
+                                                                referredBy,
+                                                              ),
+                                                            if (dateOfEvaluation !=
+                                                                    null &&
+                                                                dateOfEvaluation
+                                                                    .toString()
+                                                                    .trim()
+                                                                    .isNotEmpty)
+                                                              AdditionalField(
+                                                                ReferralReconEnums
+                                                                    .dateOfEvaluation
+                                                                    .toValue(),
+                                                                dateOfEvaluation,
+                                                              ),
+                                                            if (nameOfChild !=
+                                                                    null &&
+                                                                nameOfChild
+                                                                    .toString()
+                                                                    .trim()
+                                                                    .isNotEmpty)
+                                                              AdditionalField(
+                                                                ReferralReconEnums
+                                                                    .nameOfReferral
+                                                                    .toValue(),
+                                                                nameOfChild,
+                                                              ),
+                                                            if (age != null &&
+                                                                age
+                                                                    .toString()
+                                                                    .trim()
+                                                                    .isNotEmpty)
+                                                              AdditionalField(
+                                                                ReferralReconEnums
+                                                                    .age
+                                                                    .toValue(),
+                                                                age,
+                                                              ),
+                                                            if (gender !=
+                                                                    null &&
+                                                                gender
+                                                                    .toString()
+                                                                    .trim()
+                                                                    .isNotEmpty)
+                                                              AdditionalField(
+                                                                ReferralReconEnums
+                                                                    .gender
+                                                                    .toValue(),
+                                                                gender,
+                                                              ),
+                                                            if (cycle != null &&
+                                                                cycle
+                                                                    .toString()
+                                                                    .trim()
+                                                                    .isNotEmpty)
+                                                              AdditionalField(
+                                                                ReferralReconEnums
+                                                                    .cycle
+                                                                    .toValue(),
+                                                                cycle,
+                                                              ),
+                                                          ],
+                                                        ),
                                                       ),
-                                                      additionalData: {
-                                                        if (hfCoordinator !=
-                                                                null &&
-                                                            hfCoordinator
-                                                                .toString()
-                                                                .trim()
-                                                                .isNotEmpty)
-                                                          ReferralReconEnums
-                                                                  .hFCoordinator
-                                                                  .toValue():
-                                                              hfCoordinator,
-                                                        if (referredBy !=
-                                                                null &&
-                                                            referredBy
-                                                                .toString()
-                                                                .trim()
-                                                                .isNotEmpty)
-                                                          ReferralReconEnums
-                                                                  .referredBy
-                                                                  .toValue():
-                                                              referredBy,
-                                                        if (dateOfEvaluation !=
-                                                                null &&
-                                                            dateOfEvaluation
-                                                                .toString()
-                                                                .trim()
-                                                                .isNotEmpty)
-                                                          ReferralReconEnums
-                                                                  .dateOfEvaluation
-                                                                  .toValue():
-                                                              dateOfEvaluation,
-                                                        if (nameOfChild !=
-                                                                null &&
-                                                            nameOfChild
-                                                                .toString()
-                                                                .trim()
-                                                                .isNotEmpty)
-                                                          ReferralReconEnums
-                                                                  .nameOfReferral
-                                                                  .toValue():
-                                                              nameOfChild,
-                                                        if (age != null &&
-                                                            age
-                                                                .toString()
-                                                                .trim()
-                                                                .isNotEmpty)
-                                                          ReferralReconEnums.age
-                                                                  .toValue():
-                                                              '0$age',
-                                                        if (gender != null &&
-                                                            gender
-                                                                .toString()
-                                                                .trim()
-                                                                .isNotEmpty)
-                                                          ReferralReconEnums
-                                                                  .gender
-                                                                  .toValue():
-                                                              gender,
-                                                        if (cycle != null &&
-                                                            cycle
-                                                                .toString()
-                                                                .trim()
-                                                                .isNotEmpty)
-                                                          ReferralReconEnums
-                                                              .cycle
-                                                              .toValue(): cycle,
-                                                      },
                                                     ),
                                                   );
                                                   context
@@ -641,9 +734,6 @@ class _RecordReferralDetailsPageState
                                                       );
                                                   final parent = context.router
                                                       .parent() as StackRouter;
-                                                  parent.popUntilRouteWithName(
-                                                      SearchReferralReconciliationsRoute
-                                                          .name);
                                                   parent.push(
                                                     ReferralReasonChecklistRoute(
                                                       referralClientRefId:
@@ -872,11 +962,16 @@ class _RecordReferralDetailsPageState
       _cycleKey: FormControl<String>(
         value: referralState.mapOrNull(
           create: (value) => value.viewOnly &&
-                  value.additionalData?[
-                          ReferralReconEnums.cycle.toValue().toString()] !=
+                  value.hfReferralModel?.additionalFields?.fields
+                          .where((e) =>
+                              e.key == ReferralReconEnums.cycle.toValue())
+                          .firstOrNull
+                          ?.value !=
                       null
-              ? value.additionalData![
-                      ReferralReconEnums.cycle.toValue().toString()]
+              ? value.hfReferralModel?.additionalFields?.fields
+                  .where((e) => e.key == ReferralReconEnums.cycle.toValue())
+                  .firstOrNull
+                  ?.value
                   .toString()
               : null,
         ),
@@ -888,12 +983,18 @@ class _RecordReferralDetailsPageState
       _nameOfChildKey: FormControl<String>(
         value: referralState.mapOrNull(
           create: (value) => value.viewOnly &&
-                  value.additionalData![ReferralReconEnums.nameOfReferral
-                          .toValue()
-                          .toString()] !=
+                  value.hfReferralModel?.additionalFields?.fields
+                          .where((e) =>
+                              e.key ==
+                              ReferralReconEnums.nameOfReferral.toValue())
+                          .firstOrNull
+                          ?.value !=
                       null
-              ? value.additionalData![
-                      ReferralReconEnums.nameOfReferral.toValue().toString()]
+              ? value.hfReferralModel?.additionalFields?.fields
+                  .where((e) =>
+                      e.key == ReferralReconEnums.nameOfReferral.toValue())
+                  .firstOrNull
+                  ?.value
                   .toString()
               : value.hfReferralModel?.name ?? '',
         ),
@@ -927,11 +1028,16 @@ class _RecordReferralDetailsPageState
       _genderKey: FormControl<String>(
         value: referralState.mapOrNull(
           create: (value) => value.viewOnly &&
-                  value.additionalData![
-                          ReferralReconEnums.gender.toValue().toString()] !=
+                  value.hfReferralModel?.additionalFields?.fields
+                          .where((e) =>
+                              e.key == ReferralReconEnums.gender.toValue())
+                          .firstOrNull
+                          ?.value !=
                       null
-              ? value.additionalData![
-                      ReferralReconEnums.gender.toValue().toString()]
+              ? value.hfReferralModel?.additionalFields?.fields
+                  .where((e) => e.key == ReferralReconEnums.gender.toValue())
+                  .firstOrNull
+                  ?.value
                   .toString()
               : null,
         ),
@@ -943,12 +1049,18 @@ class _RecordReferralDetailsPageState
       _ageKey: FormControl<int>(
         value: referralState.mapOrNull(
           create: (value) => value.viewOnly &&
-                  value.additionalData![
-                          ReferralReconEnums.age.toValue().toString()] !=
+                  value.hfReferralModel?.additionalFields?.fields
+                          .where(
+                              (e) => e.key == ReferralReconEnums.age.toValue())
+                          .firstOrNull
+                          ?.value !=
                       null
-              ? int.parse(value
-                  .additionalData![ReferralReconEnums.age.toValue().toString()]
-                  .toString())
+              ? int.tryParse(value.hfReferralModel?.additionalFields?.fields
+                      .where((e) => e.key == ReferralReconEnums.age.toValue())
+                      .firstOrNull
+                      ?.value
+                      .toString() ??
+                  '')
               : null,
         ),
         disabled: referralState.mapOrNull(

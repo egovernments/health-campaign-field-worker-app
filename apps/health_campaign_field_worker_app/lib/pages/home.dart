@@ -1,24 +1,25 @@
 import 'dart:async';
 
+import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:inventory_management/inventory_management.dart';
+import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:inventory_management/utils/utils.dart';
-import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
-import 'package:registration_delivery/registration_delivery.dart';
-import 'package:attendance_management/attendance_management.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
+import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
+import 'package:referral_reconciliation/utils/utils.dart';
+import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
-import 'package:digit_data_model/data_model.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/attendance/hcm_attendance_bloc.dart';
@@ -29,7 +30,6 @@ import '../blocs/registration_delivery/hcm_registration_delivery.dart';
 import '../blocs/sync/sync.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/secure_store/secure_store.dart';
-import '../models/entities/hcm_hf_referral.dart';
 import '../models/entities/roles_type.dart';
 import '../router/app_router.dart';
 import '../utils/debound.dart';
@@ -446,15 +446,6 @@ class _HomePageState extends LocalizedState<HomePage> {
                         userId: context.loggedInUserUuid,
                         tenantId: envConfig.variables.tenantId,
                         selectedProject: context.selectedProject,
-                        hfReferralLocalRepository: context.read<
-                            LocalRepository<HcmHFReferralModel,
-                                HcmHFReferralSearchModel>>(),
-                        serviceDefinitionLocalRepository: context.read<
-                            LocalRepository<ServiceDefinitionModel,
-                                ServiceDefinitionSearchModel>>(),
-                        serviceLocalRepository: context.read<
-                            LocalRepository<ServiceModel,
-                                ServiceSearchModel>>(),
                         checklistTypes: appConfiguration.checklistTypes
                                 ?.map((e) => e.code)
                                 .toList() ??
@@ -483,6 +474,10 @@ class _HomePageState extends LocalizedState<HomePage> {
                               ?.map((e) => e.code)
                               .toList() ??
                           [],
+                      boundaryCode: context.boundary.code ?? '',
+                      roleCode: RolesType.healthFacilityWorker.toValue(),
+                      userUUid: context.loggedInUserUuid,
+                      projectName: context.selectedProject.name,
                     ));
                   },
                 );
@@ -656,8 +651,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                 context.read<
                     LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
                 context.read<
-                    LocalRepository<HcmHFReferralModel,
-                        HcmHFReferralSearchModel>>(),
+                    LocalRepository<HFReferralModel, HFReferralSearchModel>>(),
                 context.read<
                     LocalRepository<AttendanceLogModel,
                         AttendanceLogSearchModel>>(),
@@ -687,8 +681,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                 context.read<
                     RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
                 context.read<
-                    RemoteRepository<HcmHFReferralModel,
-                        HcmHFReferralSearchModel>>(),
+                    RemoteRepository<HFReferralModel, HFReferralSearchModel>>(),
                 context.read<
                     RemoteRepository<AttendanceLogModel,
                         AttendanceLogSearchModel>>(),
@@ -768,6 +761,41 @@ void setPackagesSingleton(BuildContext context) {
           loggedInIndividualId: context.loggedInIndividualId ?? '',
           loggedInUserUuid: context.loggedInUserUuid,
           appVersion: Constants().version,
+        );
+
+        ReferralReconSingleton().setInitialData(
+          referralReconListener: HcmReferralReconBloc(
+            context: context,
+            userName: context.loggedInUser.name ?? '',
+            userId: context.loggedInUserUuid,
+            tenantId: envConfig.variables.tenantId,
+            selectedProject: context.selectedProject,
+            checklistTypes:
+                appConfiguration.checklistTypes?.map((e) => e.code).toList() ??
+                    [],
+          ),
+          userName: context.loggedInUser.name ?? '',
+          userUUid: context.loggedInUserUuid,
+          boundaryName: context.boundary.name ?? '',
+          boundaryCode: context.boundary.code ?? '',
+          projectId: context.selectedProject.id,
+          projectName: context.selectedProject.name,
+          roleCode: RolesType.healthFacilityWorker.toValue(),
+          appVersion: Constants().version,
+          tenantId: envConfig.variables.tenantId,
+          validIndividualAgeForCampaign: ValidIndividualAgeForCampaign(
+            validMinAge: context.selectedProjectType?.validMinAge ?? 3,
+            validMaxAge: context.selectedProjectType?.validMaxAge ?? 64,
+          ),
+          genderOptions:
+              appConfiguration.genderOptions?.map((e) => e.code).toList() ?? [],
+          cycles: context.cycles,
+          referralReasons:
+              appConfiguration.referralReasons?.map((e) => e.code).toList() ??
+                  [],
+          checklistTypes:
+              appConfiguration.checklistTypes?.map((e) => e.code).toList() ??
+                  [],
         );
 
         InventorySingleton().setInitialData(

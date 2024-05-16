@@ -1,18 +1,20 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:referral_reconciliation/blocs/referral_reconciliation_listeners.dart';
+import 'package:referral_reconciliation/utils/extensions/extensions.dart';
 
 import '../blocs/referral_recon_service.dart';
 import '../blocs/search_referral_reconciliations.dart';
 import '../models/entities/h_f_referral.dart';
-import '../models/entities/referral_recon_service.dart';
 import '../router/referral_reconciliation_router.gm.dart';
 import '../utils/i18_key_constants.dart' as i18;
+import '../utils/utils.dart';
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/localizaed.dart';
 import '../widgets/view_referral_card.dart';
@@ -22,8 +24,12 @@ class SearchReferralReconciliationsPage extends LocalizedStatefulWidget {
   final ReferralReconListener referralReconListener;
   final List<String> cycles;
   final String projectId;
+  final String projectName;
   final String boundaryName;
+  final String boundaryCode;
+  final String roleCode;
   final String userName;
+  final String userUUid;
   final String appVersion;
   final ValidIndividualAgeForCampaign validIndividualAgeForCampaign;
   final List<String> genders;
@@ -42,9 +48,13 @@ class SearchReferralReconciliationsPage extends LocalizedStatefulWidget {
     required this.appVersion,
     required this.userName,
     required this.boundaryName,
+    required this.boundaryCode,
+    required this.roleCode,
+    required this.userUUid,
     required this.genders,
     required this.tenantId,
     required this.checklistTypes,
+    required this.projectName,
   });
 
   @override
@@ -56,26 +66,18 @@ class _SearchReferralReconciliationsPageState
     extends LocalizedState<SearchReferralReconciliationsPage> {
   final TextEditingController searchController = TextEditingController();
   bool isProximityEnabled = false;
+  SearchReferralsBloc? searchReferralsBloc;
 
   @override
   void initState() {
-    ReferralReconSingleton().setInitialData(
-      referralReconListener: widget.referralReconListener,
-      userName: widget.userName,
-      boundaryName: widget.boundaryName,
-      projectId: widget.projectId,
-      appVersion: widget.appVersion,
-      tenantId: widget.tenantId,
-      validIndividualAgeForCampaign: widget.validIndividualAgeForCampaign,
-      genderOptions: widget.genders,
-      referralReasons: widget.referralReasons,
-      cycles: widget.cycles,
-      checklistTypes: widget.checklistTypes,
+    searchReferralsBloc = SearchReferralsBloc(
+      const SearchReferralsState(),
+      referralReconDataRepository:
+          context.repository<HFReferralModel, HFReferralSearchModel>(context),
     );
     context.read<DigitScannerBloc>().add(
           const DigitScannerEvent.handleScanner(),
         );
-    context.read<SearchReferralsBloc>().add(const SearchReferralsClearEvent());
     super.initState();
   }
 
@@ -84,129 +86,146 @@ class _SearchReferralReconciliationsPageState
     final theme = Theme.of(context);
 
     return KeyboardVisibilityBuilder(
-        builder: (context, isKeyboardVisible) => Scaffold(
+        builder: (context, isKeyboardVisible) => BlocProvider<
+                SearchReferralsBloc>(
+            create: (context) => searchReferralsBloc!
+              ..add(
+                const SearchReferralsClearEvent(),
+              ),
+            child: Scaffold(
               body: BlocListener<DigitScannerBloc, DigitScannerState>(
                   listener: (context, scannerState) {
-                if (scannerState.qrCodes.isNotEmpty) {
-                  context
-                      .read<SearchReferralsBloc>()
-                      .add(SearchReferralsEvent.searchByTag(
-                        tag: scannerState.qrCodes.last,
-                      ));
-                }
-              }, child: BlocBuilder<SearchReferralsBloc, SearchReferralsState>(
-                builder: (context, searchState) {
-                  return ScrollableContent(
-                    header: const Column(children: [
-                      BackNavigationHelpHeaderWidget(),
-                    ]),
-                    slivers: [
-                      SliverToBoxAdapter(
-                        child: Padding(
-                          padding: const EdgeInsets.all(kPadding),
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(kPadding),
-                                child: Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Text(
-                                    localizations.translate(
-                                      i18.referralReconciliation
-                                          .searchReferralsHeader,
-                                    ),
-                                    style: theme.textTheme.displayMedium,
-                                    textAlign: TextAlign.left,
-                                  ),
-                                ),
-                              ),
-                              Column(
-                                children: [
-                                  DigitSearchBar(
-                                    controller: searchController,
-                                    hintText: localizations.translate(
-                                      i18.referralReconciliation
-                                          .beneficiarySearchHintText,
-                                    ),
-                                    textCapitalization:
-                                        TextCapitalization.words,
-                                    onChanged: (value) {
-                                      final bloc =
-                                          context.read<SearchReferralsBloc>();
-                                      if (value.trim().length < 2) {
-                                        bloc.add(
-                                          const SearchReferralsClearEvent(),
-                                        );
-
-                                        return;
-                                      } else {
-                                        bloc.add(SearchReferralsByNameEvent(
-                                          searchText: value.trim(),
-                                        ));
-                                      }
-                                    },
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: kPadding * 2),
-                              if (searchState.resultsNotFound)
-                                DigitInfoCard(
-                                  description: localizations.translate(
-                                    i18.referralReconciliation
-                                        .beneficiaryInfoDescription,
-                                  ),
-                                  title: localizations.translate(
-                                    i18.referralReconciliation
-                                        .beneficiaryInfoTitle,
-                                  ),
-                                ),
-                            ],
+                    if (scannerState.qrCodes.isNotEmpty) {
+                      context
+                          .read<SearchReferralsBloc>()
+                          .add(SearchReferralsEvent.searchByTag(
+                            tag: scannerState.qrCodes.last,
+                          ));
+                    }
+                  },
+                  child: BlocProvider(
+                      create: (_) => ReferralReconServiceBloc(
+                            const ReferralReconServiceEmptyState(),
+                            serviceDataRepository: context.repository<
+                                ServiceModel, ServiceSearchModel>(context),
                           ),
-                        ),
-                      ),
-                      SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (ctx, index) {
-                            final i = searchState.referrals.elementAt(index);
-
-                            return Container(
-                              margin: const EdgeInsets.only(bottom: kPadding),
-                              child: ViewReferralCard(
-                                hfReferralModel: i,
-                                onOpenPressed: () {
-                                  context.read<ReferralReconServiceBloc>().add(
-                                        ReferralReconServiceSearchEvent(
-                                          serviceSearchModel:
-                                              ReferralReconServiceSearchModel(
-                                            clientId: i.hfReferralModel
-                                                .clientReferenceId,
+                      child: BlocBuilder<SearchReferralsBloc,
+                          SearchReferralsState>(
+                        builder: (context, searchState) {
+                          return ScrollableContent(
+                            header: const Column(children: [
+                              BackNavigationHelpHeaderWidget(),
+                            ]),
+                            slivers: [
+                              SliverToBoxAdapter(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(kPadding),
+                                  child: Column(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(kPadding),
+                                        child: Align(
+                                          alignment: Alignment.topLeft,
+                                          child: Text(
+                                            localizations.translate(
+                                              i18.referralReconciliation
+                                                  .searchReferralsHeader,
+                                            ),
+                                            style:
+                                                theme.textTheme.displayMedium,
+                                            textAlign: TextAlign.left,
                                           ),
                                         ),
-                                      );
-                                  context.router.push(
-                                    HFCreateReferralWrapperRoute(
-                                      viewOnly: true,
-                                      referralReconciliation:
-                                          ReferralReconciliation(
-                                        hfReferralModel: i.hfReferralModel,
-                                        additionalData: i.additionalData,
                                       ),
-                                      projectId:
-                                          ReferralReconSingleton().projectId,
-                                      cycles: widget.cycles,
-                                    ),
-                                  );
-                                },
+                                      Column(
+                                        children: [
+                                          DigitSearchBar(
+                                            controller: searchController,
+                                            hintText: localizations.translate(
+                                              i18.referralReconciliation
+                                                  .beneficiarySearchHintText,
+                                            ),
+                                            textCapitalization:
+                                                TextCapitalization.words,
+                                            onChanged: (value) {
+                                              final bloc = context
+                                                  .read<SearchReferralsBloc>();
+                                              if (value.trim().length < 2) {
+                                                bloc.add(
+                                                  const SearchReferralsClearEvent(),
+                                                );
+
+                                                return;
+                                              } else {
+                                                bloc.add(
+                                                    SearchReferralsByNameEvent(
+                                                  searchText: value.trim(),
+                                                ));
+                                              }
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: kPadding * 2),
+                                      if (searchState.resultsNotFound)
+                                        DigitInfoCard(
+                                          description: localizations.translate(
+                                            i18.referralReconciliation
+                                                .beneficiaryInfoDescription,
+                                          ),
+                                          title: localizations.translate(
+                                            i18.referralReconciliation
+                                                .beneficiaryInfoTitle,
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                ),
                               ),
-                            );
-                          },
-                          childCount: searchState.referrals.length,
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              )),
+                              SliverList(
+                                delegate: SliverChildBuilderDelegate(
+                                  (ctx, index) {
+                                    final i =
+                                        searchState.referrals.elementAt(index);
+
+                                    return Container(
+                                      margin: const EdgeInsets.only(
+                                          bottom: kPadding),
+                                      child: ViewReferralCard(
+                                        hfReferralModel: i,
+                                        onOpenPressed: () {
+                                          context
+                                              .read<ReferralReconServiceBloc>()
+                                              .add(
+                                                ReferralReconServiceSearchEvent(
+                                                  serviceSearchModel:
+                                                      ServiceSearchModel(
+                                                    clientId:
+                                                        i.clientReferenceId,
+                                                  ),
+                                                ),
+                                              );
+                                          context.router.push(
+                                            HFCreateReferralWrapperRoute(
+                                              viewOnly: true,
+                                              referralReconciliation: i,
+                                              projectId:
+                                                  ReferralReconSingleton()
+                                                      .projectId,
+                                              cycles: widget.cycles,
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    );
+                                  },
+                                  childCount: searchState.referrals.length,
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ))),
               bottomNavigationBar: SizedBox(
                 height: 150,
                 child: Card(
@@ -235,14 +254,10 @@ class _SearchReferralReconciliationsPageState
                                     router.push(
                                       HFCreateReferralWrapperRoute(
                                         viewOnly: false,
-                                        referralReconciliation:
-                                            ReferralReconciliation(
-                                          hfReferralModel: HFReferralModel(
-                                            clientReferenceId: '',
-                                            name: state.searchQuery,
-                                            beneficiaryId: state.tag,
-                                          ),
-                                          additionalData: {},
+                                        referralReconciliation: HFReferralModel(
+                                          clientReferenceId: '',
+                                          name: state.searchQuery,
+                                          beneficiaryId: state.tag,
                                         ),
                                         projectId:
                                             ReferralReconSingleton().projectId,
@@ -298,6 +313,6 @@ class _SearchReferralReconciliationsPageState
                   ),
                 ),
               ),
-            ));
+            )));
   }
 }

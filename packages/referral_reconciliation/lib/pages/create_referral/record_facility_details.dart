@@ -2,17 +2,17 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:referral_reconciliation/blocs/referral_reconciliation_listeners.dart';
 import 'package:referral_reconciliation/models/entities/referral_recon_enums.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../blocs/project_facility.dart';
 import '../../blocs/referral_recon_record.dart';
-import '../../models/entities/referral_project_facility.dart';
+import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/localizaed.dart';
 import '../project_facility/project_facility_selection.dart';
@@ -344,21 +344,28 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
 
   FormGroup buildForm(
     RecordHFReferralState referralState,
-    List<ReferralProjectFacilityModel> facilities,
+    List<ProjectFacilityModel> facilities,
   ) {
     final dateOfEvaluation = referralState.mapOrNull(
       create: (value) => value.viewOnly &&
-              value.additionalData?[ReferralReconEnums.dateOfEvaluation
-                      .toValue()
-                      .toString()] !=
+              value.hfReferralModel?.additionalFields?.fields
+                      .where((e) =>
+                          e.key ==
+                          ReferralReconEnums.dateOfEvaluation.toValue())
+                      .firstOrNull
+                      ?.value !=
                   null
           ? DigitDateUtils.getFormattedDateToDateTime(
               DigitDateUtils.getDateFromTimestamp(
-                int.parse(value.additionalData![ReferralReconEnums
-                        .dateOfEvaluation
-                        .toValue()
-                        .toString()]
-                    .toString()),
+                int.tryParse(value.hfReferralModel!.additionalFields!.fields
+                            .where((e) =>
+                                e.key ==
+                                ReferralReconEnums.dateOfEvaluation.toValue())
+                            .firstOrNull
+                            ?.value
+                            .toString() ??
+                        '') ??
+                    DateTime.now().millisecondsSinceEpoch,
                 dateFormat: 'dd/MM/yyyy',
               ),
             )
@@ -371,7 +378,7 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
         validators: [Validators.max(DateTime.now()), Validators.required],
       ),
       _administrativeUnitKey: FormControl<String>(
-        value: ReferralReconSingleton().boundaryName,
+        value: ReferralReconSingleton().boundary?.name,
         validators: [
           Validators.required,
         ],
@@ -379,12 +386,18 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
       _hfCoordinatorKey: FormControl<String>(
         value: referralState.mapOrNull(
           create: (value) => value.viewOnly &&
-                  value.additionalData?[ReferralReconEnums.hFCoordinator
-                          .toValue()
-                          .toString()] !=
+                  value.hfReferralModel?.additionalFields?.fields
+                          .where((e) =>
+                              e.key ==
+                              ReferralReconEnums.hFCoordinator.toValue())
+                          .firstOrNull
+                          ?.value !=
                       null
-              ? value.additionalData![
-                      ReferralReconEnums.hFCoordinator.toValue().toString()]
+              ? value.hfReferralModel?.additionalFields?.fields
+                  .where((e) =>
+                      e.key == ReferralReconEnums.hFCoordinator.toValue())
+                  .firstOrNull
+                  ?.value
                   .toString()
               : ReferralReconSingleton().userName,
         ),
@@ -404,11 +417,17 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
       _referredByKey: FormControl<String>(
         value: referralState.mapOrNull(
           create: (value) => value.viewOnly &&
-                  value.additionalData?[
-                          ReferralReconEnums.referredBy.toValue().toString()] !=
+                  value.hfReferralModel?.additionalFields?.fields
+                          .where((e) =>
+                              e.key == ReferralReconEnums.referredBy.toValue())
+                          .firstOrNull
+                          ?.value !=
                       null
-              ? value.additionalData![
-                      ReferralReconEnums.referredBy.toValue().toString()]
+              ? value.hfReferralModel?.additionalFields?.fields
+                  .where(
+                      (e) => e.key == ReferralReconEnums.referredBy.toValue())
+                  .firstOrNull
+                  ?.value
                   .toString()
               : null,
         ),

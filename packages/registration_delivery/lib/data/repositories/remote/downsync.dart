@@ -3,7 +3,8 @@
 import 'package:digit_data_model/data_model.dart';
 import 'package:registration_delivery/models/entities/downsync.dart';
 
-class DownsyncRemoteRepository extends RemoteRepository<DownsyncModel, DownsyncSearchModel> {
+class DownsyncRemoteRepository
+    extends RemoteRepository<DownsyncModel, DownsyncSearchModel> {
   DownsyncRemoteRepository(
     super.dio, {
     required super.actionMap,

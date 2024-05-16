@@ -2,11 +2,7 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/models/oplog/oplog_entry.dart';
 import 'package:drift/drift.dart';
-
-import '../../../utils/utils.dart';
-
 
 class ServiceDefinitionLocalRepository extends LocalRepository<
     ServiceDefinitionModel, ServiceDefinitionSearchModel> {
@@ -57,8 +53,8 @@ class ServiceDefinitionLocalRepository extends LocalRepository<
               ),
             // To fetch service definition of a single checklist with the code
             if (query.code != null)
-              sql.serviceDefinition.code.equals(
-                query.code!.first,
+              sql.serviceDefinition.code.isIn(
+                query.code!,
               ),
           ])))
         .get();
@@ -66,8 +62,7 @@ class ServiceDefinitionLocalRepository extends LocalRepository<
     final List<ServiceDefinitionModel> serviceDefinitionList = [];
     for (final e in results) {
       final data = e.readTable(sql.serviceDefinition);
-      final selectattributeQuery =
-          sql.select(sql.attributes).join([]);
+      final selectattributeQuery = sql.select(sql.attributes).join([]);
 
       final val = await (selectattributeQuery
             ..where(buildAnd([

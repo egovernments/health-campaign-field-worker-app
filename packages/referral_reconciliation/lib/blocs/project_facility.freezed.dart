@@ -266,8 +266,7 @@ mixin _$ReferralReconProjectFacilityState {
   TResult when<TResult extends Object?>({
     required TResult Function() empty,
     required TResult Function() loading,
-    required TResult Function(
-            List<ReferralProjectFacilityModel> projectFacilities)
+    required TResult Function(List<ProjectFacilityModel> projectFacilities)
         fetched,
   }) =>
       throw _privateConstructorUsedError;
@@ -275,16 +274,14 @@ mixin _$ReferralReconProjectFacilityState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? empty,
     TResult? Function()? loading,
-    TResult? Function(List<ReferralProjectFacilityModel> projectFacilities)?
-        fetched,
+    TResult? Function(List<ProjectFacilityModel> projectFacilities)? fetched,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? empty,
     TResult Function()? loading,
-    TResult Function(List<ReferralProjectFacilityModel> projectFacilities)?
-        fetched,
+    TResult Function(List<ProjectFacilityModel> projectFacilities)? fetched,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -377,8 +374,7 @@ class _$ProjectFacilityEmptyStateImpl implements ProjectFacilityEmptyState {
   TResult when<TResult extends Object?>({
     required TResult Function() empty,
     required TResult Function() loading,
-    required TResult Function(
-            List<ReferralProjectFacilityModel> projectFacilities)
+    required TResult Function(List<ProjectFacilityModel> projectFacilities)
         fetched,
   }) {
     return empty();
@@ -389,8 +385,7 @@ class _$ProjectFacilityEmptyStateImpl implements ProjectFacilityEmptyState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? empty,
     TResult? Function()? loading,
-    TResult? Function(List<ReferralProjectFacilityModel> projectFacilities)?
-        fetched,
+    TResult? Function(List<ProjectFacilityModel> projectFacilities)? fetched,
   }) {
     return empty?.call();
   }
@@ -400,8 +395,7 @@ class _$ProjectFacilityEmptyStateImpl implements ProjectFacilityEmptyState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? empty,
     TResult Function()? loading,
-    TResult Function(List<ReferralProjectFacilityModel> projectFacilities)?
-        fetched,
+    TResult Function(List<ProjectFacilityModel> projectFacilities)? fetched,
     required TResult orElse(),
   }) {
     if (empty != null) {
@@ -494,8 +488,7 @@ class _$ProjectFacilityLoadingStateImpl implements ProjectFacilityLoadingState {
   TResult when<TResult extends Object?>({
     required TResult Function() empty,
     required TResult Function() loading,
-    required TResult Function(
-            List<ReferralProjectFacilityModel> projectFacilities)
+    required TResult Function(List<ProjectFacilityModel> projectFacilities)
         fetched,
   }) {
     return loading();
@@ -506,8 +499,7 @@ class _$ProjectFacilityLoadingStateImpl implements ProjectFacilityLoadingState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? empty,
     TResult? Function()? loading,
-    TResult? Function(List<ReferralProjectFacilityModel> projectFacilities)?
-        fetched,
+    TResult? Function(List<ProjectFacilityModel> projectFacilities)? fetched,
   }) {
     return loading?.call();
   }
@@ -517,8 +509,7 @@ class _$ProjectFacilityLoadingStateImpl implements ProjectFacilityLoadingState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? empty,
     TResult Function()? loading,
-    TResult Function(List<ReferralProjectFacilityModel> projectFacilities)?
-        fetched,
+    TResult Function(List<ProjectFacilityModel> projectFacilities)? fetched,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -575,7 +566,7 @@ abstract class _$$ProjectFacilityFetchedStateImplCopyWith<$Res> {
           $Res Function(_$ProjectFacilityFetchedStateImpl) then) =
       __$$ProjectFacilityFetchedStateImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({List<ReferralProjectFacilityModel> projectFacilities});
+  $Res call({List<ProjectFacilityModel> projectFacilities});
 }
 
 /// @nodoc
@@ -597,7 +588,7 @@ class __$$ProjectFacilityFetchedStateImplCopyWithImpl<$Res>
       projectFacilities: null == projectFacilities
           ? _value._projectFacilities
           : projectFacilities // ignore: cast_nullable_to_non_nullable
-              as List<ReferralProjectFacilityModel>,
+              as List<ProjectFacilityModel>,
     ));
   }
 }
@@ -606,12 +597,12 @@ class __$$ProjectFacilityFetchedStateImplCopyWithImpl<$Res>
 
 class _$ProjectFacilityFetchedStateImpl implements ProjectFacilityFetchedState {
   const _$ProjectFacilityFetchedStateImpl(
-      {required final List<ReferralProjectFacilityModel> projectFacilities})
+      {required final List<ProjectFacilityModel> projectFacilities})
       : _projectFacilities = projectFacilities;
 
-  final List<ReferralProjectFacilityModel> _projectFacilities;
+  final List<ProjectFacilityModel> _projectFacilities;
   @override
-  List<ReferralProjectFacilityModel> get projectFacilities {
+  List<ProjectFacilityModel> get projectFacilities {
     if (_projectFacilities is EqualUnmodifiableListView)
       return _projectFacilities;
     // ignore: implicit_dynamic_type
@@ -648,8 +639,7 @@ class _$ProjectFacilityFetchedStateImpl implements ProjectFacilityFetchedState {
   TResult when<TResult extends Object?>({
     required TResult Function() empty,
     required TResult Function() loading,
-    required TResult Function(
-            List<ReferralProjectFacilityModel> projectFacilities)
+    required TResult Function(List<ProjectFacilityModel> projectFacilities)
         fetched,
   }) {
     return fetched(projectFacilities);
@@ -660,8 +650,7 @@ class _$ProjectFacilityFetchedStateImpl implements ProjectFacilityFetchedState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? empty,
     TResult? Function()? loading,
-    TResult? Function(List<ReferralProjectFacilityModel> projectFacilities)?
-        fetched,
+    TResult? Function(List<ProjectFacilityModel> projectFacilities)? fetched,
   }) {
     return fetched?.call(projectFacilities);
   }
@@ -671,8 +660,7 @@ class _$ProjectFacilityFetchedStateImpl implements ProjectFacilityFetchedState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? empty,
     TResult Function()? loading,
-    TResult Function(List<ReferralProjectFacilityModel> projectFacilities)?
-        fetched,
+    TResult Function(List<ProjectFacilityModel> projectFacilities)? fetched,
     required TResult orElse(),
   }) {
     if (fetched != null) {
@@ -719,10 +707,10 @@ class _$ProjectFacilityFetchedStateImpl implements ProjectFacilityFetchedState {
 abstract class ProjectFacilityFetchedState
     implements ReferralReconProjectFacilityState {
   const factory ProjectFacilityFetchedState(
-      {required final List<ReferralProjectFacilityModel>
-          projectFacilities}) = _$ProjectFacilityFetchedStateImpl;
+          {required final List<ProjectFacilityModel> projectFacilities}) =
+      _$ProjectFacilityFetchedStateImpl;
 
-  List<ReferralProjectFacilityModel> get projectFacilities;
+  List<ProjectFacilityModel> get projectFacilities;
   @JsonKey(ignore: true)
   _$$ProjectFacilityFetchedStateImplCopyWith<_$ProjectFacilityFetchedStateImpl>
       get copyWith => throw _privateConstructorUsedError;

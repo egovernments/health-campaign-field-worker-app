@@ -7,7 +7,7 @@
 part of 'h_f_referral.dart';
 
 class HFReferralSearchModelMapper
-    extends ClassMapperBase<HFReferralSearchModel> {
+    extends SubClassMapperBase<HFReferralSearchModel> {
   HFReferralSearchModelMapper._();
 
   static HFReferralSearchModelMapper? _instance;
@@ -58,6 +58,18 @@ class HFReferralSearchModelMapper
       v.clientReferenceId;
   static const Field<HFReferralSearchModel, List<String>> _f$clientReferenceId =
       Field('clientReferenceId', _$clientReferenceId, opt: true);
+  static String? _$boundaryCode(HFReferralSearchModel v) => v.boundaryCode;
+  static const Field<HFReferralSearchModel, String> _f$boundaryCode =
+      Field('boundaryCode', _$boundaryCode, opt: true);
+  static AuditDetails? _$auditDetails(HFReferralSearchModel v) =>
+      v.auditDetails;
+  static const Field<HFReferralSearchModel, AuditDetails> _f$auditDetails =
+      Field('auditDetails', _$auditDetails, mode: FieldMode.member);
+  static AdditionalFields? _$additionalFields(HFReferralSearchModel v) =>
+      v.additionalFields;
+  static const Field<HFReferralSearchModel, AdditionalFields>
+      _f$additionalFields =
+      Field('additionalFields', _$additionalFields, mode: FieldMode.member);
 
   @override
   final MappableFields<HFReferralSearchModel> fields = const {
@@ -72,9 +84,20 @@ class HFReferralSearchModelMapper
     #nationalLevelId: _f$nationalLevelId,
     #symptom: _f$symptom,
     #clientReferenceId: _f$clientReferenceId,
+    #boundaryCode: _f$boundaryCode,
+    #auditDetails: _f$auditDetails,
+    #additionalFields: _f$additionalFields,
   };
   @override
   final bool ignoreNull = true;
+
+  @override
+  final String discriminatorKey = 'type';
+  @override
+  final dynamic discriminatorValue = MappableClass.useAsDefault;
+  @override
+  late final ClassMapperBase superMapper =
+      EntitySearchModelMapper.ensureInitialized();
 
   static HFReferralSearchModel _instantiate(DecodingData data) {
     return HFReferralSearchModel.ignoreDeleted(
@@ -88,7 +111,8 @@ class HFReferralSearchModelMapper
         referralCode: data.dec(_f$referralCode),
         nationalLevelId: data.dec(_f$nationalLevelId),
         symptom: data.dec(_f$symptom),
-        clientReferenceId: data.dec(_f$clientReferenceId));
+        clientReferenceId: data.dec(_f$clientReferenceId),
+        boundaryCode: data.dec(_f$boundaryCode));
   }
 
   @override
@@ -149,9 +173,10 @@ extension HFReferralSearchModelValueCopy<$R, $Out>
 abstract class HFReferralSearchModelCopyWith<
     $R,
     $In extends HFReferralSearchModel,
-    $Out> implements ClassCopyWith<$R, $In, $Out> {
+    $Out> implements EntitySearchModelCopyWith<$R, $In, $Out> {
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get clientReferenceId;
+  @override
   $R call(
       {String? id,
       String? tenantId,
@@ -163,7 +188,8 @@ abstract class HFReferralSearchModelCopyWith<
       String? referralCode,
       String? nationalLevelId,
       String? symptom,
-      List<String>? clientReferenceId});
+      List<String>? clientReferenceId,
+      String? boundaryCode});
   HFReferralSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -196,7 +222,8 @@ class _HFReferralSearchModelCopyWithImpl<$R, $Out>
           Object? referralCode = $none,
           Object? nationalLevelId = $none,
           Object? symptom = $none,
-          Object? clientReferenceId = $none}) =>
+          Object? clientReferenceId = $none,
+          Object? boundaryCode = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
         if (tenantId != $none) #tenantId: tenantId,
@@ -208,7 +235,8 @@ class _HFReferralSearchModelCopyWithImpl<$R, $Out>
         if (referralCode != $none) #referralCode: referralCode,
         if (nationalLevelId != $none) #nationalLevelId: nationalLevelId,
         if (symptom != $none) #symptom: symptom,
-        if (clientReferenceId != $none) #clientReferenceId: clientReferenceId
+        if (clientReferenceId != $none) #clientReferenceId: clientReferenceId,
+        if (boundaryCode != $none) #boundaryCode: boundaryCode
       }));
   @override
   HFReferralSearchModel $make(
@@ -228,7 +256,8 @@ class _HFReferralSearchModelCopyWithImpl<$R, $Out>
               data.get(#nationalLevelId, or: $value.nationalLevelId),
           symptom: data.get(#symptom, or: $value.symptom),
           clientReferenceId:
-              data.get(#clientReferenceId, or: $value.clientReferenceId));
+              data.get(#clientReferenceId, or: $value.clientReferenceId),
+          boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
 
   @override
   HFReferralSearchModelCopyWith<$R2, HFReferralSearchModel, $Out2>
@@ -236,7 +265,7 @@ class _HFReferralSearchModelCopyWithImpl<$R, $Out>
           _HFReferralSearchModelCopyWithImpl($value, $cast, t);
 }
 
-class HFReferralModelMapper extends ClassMapperBase<HFReferralModel> {
+class HFReferralModelMapper extends SubClassMapperBase<HFReferralModel> {
   HFReferralModelMapper._();
 
   static HFReferralModelMapper? _instance;
@@ -250,6 +279,11 @@ class HFReferralModelMapper extends ClassMapperBase<HFReferralModel> {
   @override
   final String id = 'HFReferralModel';
 
+  static HFReferralAdditionalFields? _$additionalFields(HFReferralModel v) =>
+      v.additionalFields;
+  static const Field<HFReferralModel, HFReferralAdditionalFields>
+      _f$additionalFields =
+      Field('additionalFields', _$additionalFields, opt: true);
   static String? _$id(HFReferralModel v) => v.id;
   static const Field<HFReferralModel, String> _f$id =
       Field('id', _$id, opt: true);
@@ -291,9 +325,21 @@ class HFReferralModelMapper extends ClassMapperBase<HFReferralModel> {
   static int? _$rowVersion(HFReferralModel v) => v.rowVersion;
   static const Field<HFReferralModel, int> _f$rowVersion =
       Field('rowVersion', _$rowVersion, opt: true);
+  static AuditDetails? _$auditDetails(HFReferralModel v) => v.auditDetails;
+  static const Field<HFReferralModel, AuditDetails> _f$auditDetails =
+      Field('auditDetails', _$auditDetails, opt: true);
+  static ClientAuditDetails? _$clientAuditDetails(HFReferralModel v) =>
+      v.clientAuditDetails;
+  static const Field<HFReferralModel, ClientAuditDetails>
+      _f$clientAuditDetails =
+      Field('clientAuditDetails', _$clientAuditDetails, opt: true);
+  static bool? _$isDeleted(HFReferralModel v) => v.isDeleted;
+  static const Field<HFReferralModel, bool> _f$isDeleted =
+      Field('isDeleted', _$isDeleted, opt: true, def: false);
 
   @override
   final MappableFields<HFReferralModel> fields = const {
+    #additionalFields: _f$additionalFields,
     #id: _f$id,
     #tenantId: _f$tenantId,
     #name: _f$name,
@@ -307,12 +353,24 @@ class HFReferralModelMapper extends ClassMapperBase<HFReferralModel> {
     #nonRecoverableError: _f$nonRecoverableError,
     #clientReferenceId: _f$clientReferenceId,
     #rowVersion: _f$rowVersion,
+    #auditDetails: _f$auditDetails,
+    #clientAuditDetails: _f$clientAuditDetails,
+    #isDeleted: _f$isDeleted,
   };
   @override
   final bool ignoreNull = true;
 
+  @override
+  final String discriminatorKey = 'type';
+  @override
+  final dynamic discriminatorValue = MappableClass.useAsDefault;
+  @override
+  late final ClassMapperBase superMapper =
+      EntityModelMapper.ensureInitialized();
+
   static HFReferralModel _instantiate(DecodingData data) {
     return HFReferralModel(
+        additionalFields: data.dec(_f$additionalFields),
         id: data.dec(_f$id),
         tenantId: data.dec(_f$tenantId),
         name: data.dec(_f$name),
@@ -325,7 +383,10 @@ class HFReferralModelMapper extends ClassMapperBase<HFReferralModel> {
         symptom: data.dec(_f$symptom),
         nonRecoverableError: data.dec(_f$nonRecoverableError),
         clientReferenceId: data.dec(_f$clientReferenceId),
-        rowVersion: data.dec(_f$rowVersion));
+        rowVersion: data.dec(_f$rowVersion),
+        auditDetails: data.dec(_f$auditDetails),
+        clientAuditDetails: data.dec(_f$clientAuditDetails),
+        isDeleted: data.dec(_f$isDeleted));
   }
 
   @override
@@ -382,9 +443,18 @@ extension HFReferralModelValueCopy<$R, $Out>
 }
 
 abstract class HFReferralModelCopyWith<$R, $In extends HFReferralModel, $Out>
-    implements ClassCopyWith<$R, $In, $Out> {
+    implements EntityModelCopyWith<$R, $In, $Out> {
+  HFReferralAdditionalFieldsCopyWith<$R, HFReferralAdditionalFields,
+      HFReferralAdditionalFields>? get additionalFields;
+  @override
+  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
+  @override
+  ClientAuditDetailsCopyWith<$R, ClientAuditDetails, ClientAuditDetails>?
+      get clientAuditDetails;
+  @override
   $R call(
-      {String? id,
+      {HFReferralAdditionalFields? additionalFields,
+      String? id,
       String? tenantId,
       String? name,
       String? projectId,
@@ -396,7 +466,10 @@ abstract class HFReferralModelCopyWith<$R, $In extends HFReferralModel, $Out>
       String? symptom,
       bool? nonRecoverableError,
       String? clientReferenceId,
-      int? rowVersion});
+      int? rowVersion,
+      AuditDetails? auditDetails,
+      ClientAuditDetails? clientAuditDetails,
+      bool? isDeleted});
   HFReferralModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -410,8 +483,21 @@ class _HFReferralModelCopyWithImpl<$R, $Out>
   late final ClassMapperBase<HFReferralModel> $mapper =
       HFReferralModelMapper.ensureInitialized();
   @override
+  HFReferralAdditionalFieldsCopyWith<$R, HFReferralAdditionalFields,
+          HFReferralAdditionalFields>?
+      get additionalFields => $value.additionalFields?.copyWith
+          .$chain((v) => call(additionalFields: v));
+  @override
+  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
+      $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
+  @override
+  ClientAuditDetailsCopyWith<$R, ClientAuditDetails, ClientAuditDetails>?
+      get clientAuditDetails => $value.clientAuditDetails?.copyWith
+          .$chain((v) => call(clientAuditDetails: v));
+  @override
   $R call(
-          {Object? id = $none,
+          {Object? additionalFields = $none,
+          Object? id = $none,
           Object? tenantId = $none,
           Object? name = $none,
           Object? projectId = $none,
@@ -423,8 +509,12 @@ class _HFReferralModelCopyWithImpl<$R, $Out>
           Object? symptom = $none,
           Object? nonRecoverableError = $none,
           String? clientReferenceId,
-          Object? rowVersion = $none}) =>
+          Object? rowVersion = $none,
+          Object? auditDetails = $none,
+          Object? clientAuditDetails = $none,
+          Object? isDeleted = $none}) =>
       $apply(FieldCopyWithData({
+        if (additionalFields != $none) #additionalFields: additionalFields,
         if (id != $none) #id: id,
         if (tenantId != $none) #tenantId: tenantId,
         if (name != $none) #name: name,
@@ -438,10 +528,16 @@ class _HFReferralModelCopyWithImpl<$R, $Out>
         if (nonRecoverableError != $none)
           #nonRecoverableError: nonRecoverableError,
         if (clientReferenceId != null) #clientReferenceId: clientReferenceId,
-        if (rowVersion != $none) #rowVersion: rowVersion
+        if (rowVersion != $none) #rowVersion: rowVersion,
+        if (auditDetails != $none) #auditDetails: auditDetails,
+        if (clientAuditDetails != $none)
+          #clientAuditDetails: clientAuditDetails,
+        if (isDeleted != $none) #isDeleted: isDeleted
       }));
   @override
   HFReferralModel $make(CopyWithData data) => HFReferralModel(
+      additionalFields:
+          data.get(#additionalFields, or: $value.additionalFields),
       id: data.get(#id, or: $value.id),
       tenantId: data.get(#tenantId, or: $value.tenantId),
       name: data.get(#name, or: $value.name),
@@ -457,10 +553,170 @@ class _HFReferralModelCopyWithImpl<$R, $Out>
           data.get(#nonRecoverableError, or: $value.nonRecoverableError),
       clientReferenceId:
           data.get(#clientReferenceId, or: $value.clientReferenceId),
-      rowVersion: data.get(#rowVersion, or: $value.rowVersion));
+      rowVersion: data.get(#rowVersion, or: $value.rowVersion),
+      auditDetails: data.get(#auditDetails, or: $value.auditDetails),
+      clientAuditDetails:
+          data.get(#clientAuditDetails, or: $value.clientAuditDetails),
+      isDeleted: data.get(#isDeleted, or: $value.isDeleted));
 
   @override
   HFReferralModelCopyWith<$R2, HFReferralModel, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
       _HFReferralModelCopyWithImpl($value, $cast, t);
+}
+
+class HFReferralAdditionalFieldsMapper
+    extends SubClassMapperBase<HFReferralAdditionalFields> {
+  HFReferralAdditionalFieldsMapper._();
+
+  static HFReferralAdditionalFieldsMapper? _instance;
+  static HFReferralAdditionalFieldsMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals
+          .use(_instance = HFReferralAdditionalFieldsMapper._());
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'HFReferralAdditionalFields';
+
+  static String _$schema(HFReferralAdditionalFields v) => v.schema;
+  static const Field<HFReferralAdditionalFields, String> _f$schema =
+      Field('schema', _$schema, opt: true, def: 'HFReferral');
+  static int _$version(HFReferralAdditionalFields v) => v.version;
+  static const Field<HFReferralAdditionalFields, int> _f$version =
+      Field('version', _$version);
+  static List<AdditionalField> _$fields(HFReferralAdditionalFields v) =>
+      v.fields;
+  static const Field<HFReferralAdditionalFields, List<AdditionalField>>
+      _f$fields = Field('fields', _$fields, opt: true, def: const []);
+
+  @override
+  final MappableFields<HFReferralAdditionalFields> fields = const {
+    #schema: _f$schema,
+    #version: _f$version,
+    #fields: _f$fields,
+  };
+  @override
+  final bool ignoreNull = true;
+
+  @override
+  final String discriminatorKey = 'type';
+  @override
+  final dynamic discriminatorValue = MappableClass.useAsDefault;
+  @override
+  late final ClassMapperBase superMapper =
+      AdditionalFieldsMapper.ensureInitialized();
+
+  static HFReferralAdditionalFields _instantiate(DecodingData data) {
+    return HFReferralAdditionalFields(
+        schema: data.dec(_f$schema),
+        version: data.dec(_f$version),
+        fields: data.dec(_f$fields));
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static HFReferralAdditionalFields fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<HFReferralAdditionalFields>(map);
+  }
+
+  static HFReferralAdditionalFields fromJson(String json) {
+    return ensureInitialized().decodeJson<HFReferralAdditionalFields>(json);
+  }
+}
+
+mixin HFReferralAdditionalFieldsMappable {
+  String toJson() {
+    return HFReferralAdditionalFieldsMapper.ensureInitialized()
+        .encodeJson<HFReferralAdditionalFields>(
+            this as HFReferralAdditionalFields);
+  }
+
+  Map<String, dynamic> toMap() {
+    return HFReferralAdditionalFieldsMapper.ensureInitialized()
+        .encodeMap<HFReferralAdditionalFields>(
+            this as HFReferralAdditionalFields);
+  }
+
+  HFReferralAdditionalFieldsCopyWith<HFReferralAdditionalFields,
+          HFReferralAdditionalFields, HFReferralAdditionalFields>
+      get copyWith => _HFReferralAdditionalFieldsCopyWithImpl(
+          this as HFReferralAdditionalFields, $identity, $identity);
+  @override
+  String toString() {
+    return HFReferralAdditionalFieldsMapper.ensureInitialized()
+        .stringifyValue(this as HFReferralAdditionalFields);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            HFReferralAdditionalFieldsMapper.ensureInitialized()
+                .isValueEqual(this as HFReferralAdditionalFields, other));
+  }
+
+  @override
+  int get hashCode {
+    return HFReferralAdditionalFieldsMapper.ensureInitialized()
+        .hashValue(this as HFReferralAdditionalFields);
+  }
+}
+
+extension HFReferralAdditionalFieldsValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, HFReferralAdditionalFields, $Out> {
+  HFReferralAdditionalFieldsCopyWith<$R, HFReferralAdditionalFields, $Out>
+      get $asHFReferralAdditionalFields => $base
+          .as((v, t, t2) => _HFReferralAdditionalFieldsCopyWithImpl(v, t, t2));
+}
+
+abstract class HFReferralAdditionalFieldsCopyWith<
+    $R,
+    $In extends HFReferralAdditionalFields,
+    $Out> implements AdditionalFieldsCopyWith<$R, $In, $Out> {
+  @override
+  ListCopyWith<$R, AdditionalField,
+      AdditionalFieldCopyWith<$R, AdditionalField, AdditionalField>> get fields;
+  @override
+  $R call({String? schema, int? version, List<AdditionalField>? fields});
+  HFReferralAdditionalFieldsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
+      Then<$Out2, $R2> t);
+}
+
+class _HFReferralAdditionalFieldsCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, HFReferralAdditionalFields, $Out>
+    implements
+        HFReferralAdditionalFieldsCopyWith<$R, HFReferralAdditionalFields,
+            $Out> {
+  _HFReferralAdditionalFieldsCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<HFReferralAdditionalFields> $mapper =
+      HFReferralAdditionalFieldsMapper.ensureInitialized();
+  @override
+  ListCopyWith<$R, AdditionalField,
+          AdditionalFieldCopyWith<$R, AdditionalField, AdditionalField>>
+      get fields => ListCopyWith($value.fields, (v, t) => v.copyWith.$chain(t),
+          (v) => call(fields: v));
+  @override
+  $R call({String? schema, int? version, List<AdditionalField>? fields}) =>
+      $apply(FieldCopyWithData({
+        if (schema != null) #schema: schema,
+        if (version != null) #version: version,
+        if (fields != null) #fields: fields
+      }));
+  @override
+  HFReferralAdditionalFields $make(CopyWithData data) =>
+      HFReferralAdditionalFields(
+          schema: data.get(#schema, or: $value.schema),
+          version: data.get(#version, or: $value.version),
+          fields: data.get(#fields, or: $value.fields));
+
+  @override
+  HFReferralAdditionalFieldsCopyWith<$R2, HFReferralAdditionalFields, $Out2>
+      $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+          _HFReferralAdditionalFieldsCopyWithImpl($value, $cast, t);
 }

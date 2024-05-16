@@ -1,7 +1,7 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:referral_reconciliation/blocs/referral_reconciliation_listeners.dart';
+import 'package:referral_reconciliation/models/entities/h_f_referral.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
 import '../models/entities/referral_recon_enums.dart';
@@ -9,7 +9,7 @@ import 'beneficiary_card.dart';
 import 'localizaed.dart';
 
 class ViewReferralCard extends LocalizedStatefulWidget {
-  final ReferralReconciliation hfReferralModel;
+  final HFReferralModel hfReferralModel;
   final VoidCallback? onOpenPressed;
 
   const ViewReferralCard({
@@ -24,7 +24,7 @@ class ViewReferralCard extends LocalizedStatefulWidget {
 }
 
 class _ViewReferralCardState extends LocalizedState<ViewReferralCard> {
-  late ReferralReconciliation hfReferralModel;
+  late HFReferralModel hfReferralModel;
 
   @override
   void initState() {
@@ -48,9 +48,14 @@ class _ViewReferralCardState extends LocalizedState<ViewReferralCard> {
   Widget build(BuildContext context) {
     // final theme = Theme.of(context);
     // final bloc = context.read<ProjectBloc>().state;
-    final dateOfEvaluation = int.tryParse(hfReferralModel.additionalData[
-            ReferralReconEnums.dateOfEvaluation.toValue().toString()]
-        .toString());
+    final dateOfEvaluation = int.tryParse(hfReferralModel
+            .additionalFields?.fields
+            .where(
+                (e) => e.key == ReferralReconEnums.dateOfEvaluation.toValue())
+            .first
+            .value
+            .toString() ??
+        '');
 
     return DigitCard(
       child: Column(
@@ -65,7 +70,7 @@ class _ViewReferralCardState extends LocalizedState<ViewReferralCard> {
                   description: '',
                   subtitle:
                       '${localizations.translate(i18.referralReconciliation.dateOfEvaluationLabel)}: ${dateOfEvaluation != null ? DigitDateUtils.getDateFromTimestamp(dateOfEvaluation, dateFormat: 'dd/MM/yyyy') : localizations.translate(i18.common.coreCommonNA)}',
-                  title: hfReferralModel.hfReferralModel.name.toString(),
+                  title: hfReferralModel.name.toString(),
                 ),
               ),
               Flexible(

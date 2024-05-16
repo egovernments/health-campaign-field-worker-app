@@ -17,6 +17,7 @@ class ProjectFacilityBlocWrapper extends StatelessWidget {
     return BlocProvider<ReferralReconProjectFacilityBloc>(
       create: (_) => ReferralReconProjectFacilityBloc(
         const ProjectFacilityEmptyState(),
+        context: context,
       )..add(ProjectFacilityLoadForProjectEvent(projectId: projectId)),
       child: child,
     );
