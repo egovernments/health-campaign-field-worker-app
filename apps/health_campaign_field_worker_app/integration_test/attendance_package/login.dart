@@ -21,7 +21,7 @@ Future<void> login(WidgetTester widgetTester) async {
 
   await widgetTester.enterText(
     widgetSelector['username']!,
-    testVariables['username'],
+    testVariables['username']['attendance_management'],
   ); //enter the username to test
   await widgetTester.enterText(
     widgetSelector['password']!,

@@ -77,9 +77,7 @@ Future<void> testBoundarySelection(WidgetTester widgetTester) async {
     // If no 'Download' button, proceed without downloading
     if (proceedWithoutDownload.evaluate().isNotEmpty) {
       await widgetTester.tap(proceedWithoutDownload);
-      await widgetTester.pumpAndSettle(const Duration(seconds: 2));
-    } else {
-      await widgetTester.pumpAndSettle(const Duration(seconds: 2));
     }
+    await widgetTester.pumpAndSettle(const Duration(seconds: 2));
   }
 }

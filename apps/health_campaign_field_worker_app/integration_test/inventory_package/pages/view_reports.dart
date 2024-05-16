@@ -11,17 +11,16 @@ final boundaryNames = getBoundaryName(); // Get boundary names
 
 // Function to test view reports page
 Future<void> testViewReportsPage(WidgetTester widgetTester) async {
-  // Tap on view reports button
-  await widgetTester.tap(widgetSelector['viewReports']!);
-  await widgetTester.pumpAndSettle(const Duration(milliseconds: 1000));
-
   // Iterate through the pages
-  for (int i = 5; i < 6; i++) {
-    await testOnePage(widgetTester, i); // Test each page
+  for (int i = 0; i < 6; i++) {
     // Go back to view reports page
     await widgetTester.tap(widgetSelector['viewReports']!);
     await widgetTester.pumpAndSettle(const Duration(milliseconds: 1000));
+    await testOnePage(widgetTester, i); // Test each page
   }
+
+  await widgetTester.tap(find.text('Back'));
+  await widgetTester.pumpAndSettle(const Duration(milliseconds: 1000));
 }
 
 // Function to test each page
@@ -39,7 +38,7 @@ Future<void> testOnePage(WidgetTester widgetTester, int i) async {
   // Tap on select product
   await widgetTester.tap(find.byKey(const Key('viewReportSelectProduct')));
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 1000));
-  await widgetTester.tap(find.text('Bednet Grade 1'));
+  await widgetTester.tap(find.text(testVariables['productName']));
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 1000));
 
   // Verify date text

@@ -5,6 +5,7 @@ import 'package:health_campaign_field_worker_app/main.dart' as app;
 import '../boundary_selection.dart';
 import '../test_variables.dart';
 import 'pages/login.dart';
+import '../logout.dart';
 import 'pages/manage_stock.dart';
 import 'pages/stock_reconciliation.dart';
 import 'pages/view_reports.dart';
@@ -25,5 +26,6 @@ void main() {
     await testManageStockPage(widgetTester);
     await testStockReconciliationPage(widgetTester);
     await testViewReportsPage(widgetTester);
+    await logout(widgetTester);
   });
 }

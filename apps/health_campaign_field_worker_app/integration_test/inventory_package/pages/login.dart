@@ -22,7 +22,7 @@ Future<void> testLoginPage(WidgetTester widgetTester) async {
 
   await widgetTester.enterText(
     widgetSelector['username']!,
-    testVariables['username'],
+    testVariables['username']['inventory_management'],
   ); //enter the username to test
 
   await widgetTester.enterText(

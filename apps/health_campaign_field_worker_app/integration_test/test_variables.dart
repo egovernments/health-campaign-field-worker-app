@@ -6,12 +6,16 @@ Map<String, dynamic> getTestData() {
   return {
     'session': 'Evening session',
     'date': '25',
-    'username': 'ATTD17',
+    'username': {
+      'attendance_management': 'ATTD17',
+      'inventory_management': 'Reg-2'
+    },
     'password': 'eGov@1234',
     'attendees': [
       'Ram',
       'Syed',
     ],
+    'productName': 'Bednet Grade 1'
   };
 }
 

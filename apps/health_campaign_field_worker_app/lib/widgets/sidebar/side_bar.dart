@@ -21,13 +21,16 @@ class SideBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authBloc = context.read<AuthBloc>();
     final theme = Theme.of(context);
-    bool isDistributor = context.loggedInUserRoles
-        .where(
-          (role) => role.code == RolesType.distributor.toValue(),
-        )
-        .toList()
-        .isNotEmpty;
+    bool isDistributor = authBloc.state != const AuthState.unauthenticated()
+        ? context.loggedInUserRoles
+            .where(
+              (role) => role.code == RolesType.distributor.toValue(),
+            )
+            .toList()
+            .isNotEmpty
+        : false;
 
     return BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
       return Column(

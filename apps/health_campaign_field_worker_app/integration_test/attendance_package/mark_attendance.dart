@@ -9,6 +9,11 @@ final testVariables = getTestData();
 final widgetSelector = getWidgets();
 Future<void> markAttendance(WidgetTester widgetTester) async {
   //mark attendance
+  //if the attendance is marked already then submit button should not work
+  if (find.text('Present').evaluate().isNotEmpty) {
+    await widgetTester.tap(find.text('Submit'));
+    expect(find.byType(AttendanceAcknowledgementPage), findsNothing);
+  }
   //check if present word is displayed
   await widgetTester.tap(find.byType(CircularButton).first);
   await widgetTester.pumpAndSettle(const Duration(seconds: 2));
