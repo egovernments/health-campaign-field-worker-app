@@ -38,5 +38,5 @@ Future<void> manageAttendance(WidgetTester widgetTester) async {
     find.byType(AttendanceDateSessionSelectionPage),
     findsOneWidget,
   ); //check if we go to the next page
-  await widgetTester.pumpAndSettle(const Duration(seconds: 20));
+  await widgetTester.pumpAndSettle(const Duration(seconds: 2));
 }
