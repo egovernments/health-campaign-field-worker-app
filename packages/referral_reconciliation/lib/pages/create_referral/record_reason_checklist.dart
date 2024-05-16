@@ -183,7 +183,8 @@ class _ReferralReasonChecklistPageState
                                               .projectId,
                                           additionalDetails:
                                               ReferralReconSingleton()
-                                                  .boundaryCode,
+                                                  .boundary
+                                                  ?.code,
                                         ),
                                       ),
                                     );

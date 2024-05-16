@@ -30,8 +30,7 @@ class ReferralReconSingleton {
   String _userUUid = '';
   String _roleCode = '';
   String _appVersion = '';
-  String _boundaryName = '';
-  String _boundaryCode = '';
+  BoundaryModel? _boundaryModel;
   String _tenantId = '';
   List<String> _genderOptions = [];
   List<String> _cycles = [];
@@ -64,8 +63,6 @@ class ReferralReconSingleton {
     _projectName = projectName;
     _userName = userName;
     _userUUid = userUUid;
-    _boundaryName = boundaryName;
-    _boundaryCode = boundaryCode;
     _appVersion = appVersion;
     _tenantId = tenantId;
     _genderOptions = genderOptions;
@@ -81,10 +78,9 @@ class ReferralReconSingleton {
   String get userName => _userName;
   String get userUUid => _userUUid;
   String get roleCode => _roleCode;
-  String get boundaryCode => _boundaryCode;
-  String get boundaryName => _boundaryName;
   String get appVersion => _appVersion;
   String get tenantId => _tenantId;
+  BoundaryModel? get boundary => _boundaryModel;
   List<String> get genderOptions => _genderOptions;
   ValidIndividualAgeForCampaign get validIndividualAgeForCampaign =>
       _validIndividualAgeForCampaign;
@@ -99,6 +95,10 @@ class ReferralReconSingleton {
 
   void setPersistenceConfiguration(PersistenceConfiguration configuration) {
     _persistenceConfiguration = configuration;
+  }
+
+  void setBoundary({required BoundaryModel boundary}) {
+    _boundaryModel = boundary;
   }
 
   // Calls the main sync method on Go to Home

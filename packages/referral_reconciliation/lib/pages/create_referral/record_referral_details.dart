@@ -389,8 +389,6 @@ class _RecordReferralDetailsPageState
                                                           serviceDefinitionCode:
                                                               symptom),
                                                     );
-                                                final parent = context.router
-                                                    .parent() as StackRouter;
                                                 context.router.push(
                                                   ReferralReasonChecklistRoute(
                                                     referralClientRefId:
@@ -510,9 +508,6 @@ class _RecordReferralDetailsPageState
                                                                 symptom,
                                                           ),
                                                         );
-                                                    final parent =
-                                                        context.router.parent()
-                                                            as StackRouter;
                                                     context.router.push(
                                                       ReferralReasonChecklistRoute(
                                                         referralClientRefId:
