@@ -39,10 +39,7 @@ Future<void> fetchStockDetails(WidgetTester widgetTester) async {
     // Get value text from widget
     final valueText = (widgetTester.widget(widget) as Text).data;
     final numericValue = double.parse(valueText!); // Parse numeric value
-    print('stockIssued: $numericValue'); // Print stock issued value
     stockParamValues[param] = numericValue; // Store numeric value in map
-    print(
-        'stockParamValues: $stockParamValues'); // Print stock parameter values
   }
 }
 
