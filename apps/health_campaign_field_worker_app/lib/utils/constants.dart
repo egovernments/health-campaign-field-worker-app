@@ -1,15 +1,9 @@
-import 'package:attendance_management/attendance_management.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:health_campaign_field_worker_app/utils/utils.dart';
-import 'package:inventory_management/data/repositories/remote/stock.dart';
-import 'package:inventory_management/data/repositories/remote/stock_reconciliation.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:inventory_management/data/repositories/local/stock.dart';
-import 'package:inventory_management/data/repositories/local/stock_reconciliation.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
@@ -30,6 +24,7 @@ import '../data/repositories/remote/project_product_variant.dart';
 import '../data/repositories/remote/project_staff.dart';
 import '../data/repositories/remote/project_type.dart';
 import 'environment_config.dart';
+import 'utils.dart';
 
 class Constants {
   late Future<Isar> _isar;
@@ -43,13 +38,7 @@ class Constants {
   }
   Future initialize(version) async {
     initializeAllMappers();
-    DigitDataModelSingleton().setData(
-        syncDownRetryCount: envConfig.variables.syncDownRetryCount,
-        retryTimeInterval: envConfig.variables.retryTimeInterval,
-        tenantId: envConfig.variables.tenantId,
-        errorDumpApiPath: envConfig.variables.dumpErrorApiPath);
-    AttendanceSingleton().setTenantId(envConfig.variables.tenantId);
-    RegistrationDeliverySingleton().setTenantId(envConfig.variables.tenantId);
+    setInitialDataOfPackages();
     await _initializeIsar(version);
   }
 
@@ -103,14 +92,9 @@ class Constants {
         ),
       ),
       ProjectFacilityLocalRepository(sql, ProjectFacilityOpLogManager(isar)),
-      StockLocalRepository(sql, StockOpLogManager(isar)),
       TaskLocalRepository(sql, TaskOpLogManager(isar)),
       SideEffectLocalRepository(sql, SideEffectOpLogManager(isar)),
       ReferralLocalRepository(sql, ReferralOpLogManager(isar)),
-      StockReconciliationLocalRepository(
-        sql,
-        StockReconciliationOpLogManager(isar),
-      ),
       ServiceDefinitionLocalRepository(
         sql,
         ServiceDefinitionOpLogManager(isar),
@@ -138,14 +122,6 @@ class Constants {
       HFReferralLocalRepository(
         sql,
         HFReferralOpLogManager(isar),
-      ),
-      AttendanceLocalRepository(
-        sql,
-        AttendanceOpLogManager(isar),
-      ),
-      AttendanceLogsLocalRepository(
-        sql,
-        AttendanceLogOpLogManager(isar),
       ),
     ];
   }
@@ -202,12 +178,8 @@ class Constants {
           HouseholdRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.projectBeneficiary)
           ProjectBeneficiaryRemoteRepository(dio, actionMap: actions),
-        if (value == DataModelType.stockReconciliation)
-          StockReconciliationRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.task)
           TaskRemoteRepository(dio, actionMap: actions),
-        if (value == DataModelType.stock)
-          StockRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.projectType)
           ProjectTypeRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.householdMember)
@@ -220,10 +192,6 @@ class Constants {
           DownsyncRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.hFReferral)
           HFReferralRemoteRepository(dio, actionMap: actions),
-        if (value == DataModelType.attendanceRegister)
-          AttendanceRemoteRepository(dio, actionMap: actions),
-        if (value == DataModelType.attendance)
-          AttendanceLogRemoteRepository(dio, actionMap: actions),
       ]);
     }
 
@@ -249,6 +217,15 @@ class Constants {
     KeyValue('CORE_COMMON_YES', true),
     KeyValue('CORE_COMMON_NO', false),
   ];
+
+  void setInitialDataOfPackages() {
+    DigitDataModelSingleton().setData(
+        syncDownRetryCount: envConfig.variables.syncDownRetryCount,
+        retryTimeInterval: envConfig.variables.retryTimeInterval,
+        tenantId: envConfig.variables.tenantId,
+        errorDumpApiPath: envConfig.variables.dumpErrorApiPath);
+    RegistrationDeliverySingleton().setTenantId(envConfig.variables.tenantId);
+  }
 }
 
 /// By using this key, we can push pages without context
@@ -280,37 +257,6 @@ class RequestInfoData {
 
 class Modules {
   static const String localizationModule = "LOCALIZATION_MODULE";
-}
-
-class EntityPlurals {
-  static String getPluralForEntityName(String entity) {
-    switch (entity) {
-      case 'Beneficiary':
-        return 'Beneficiaries';
-      case 'ProjectBeneficiary':
-        return 'ProjectBeneficiaries';
-      case 'Address':
-        return 'Addresses';
-      case 'Facility':
-        return 'Facilities';
-      case 'ProjectFacility':
-        return 'ProjectFacilities';
-      case 'Project':
-        return 'Projects';
-      case 'Stock':
-        return 'Stock';
-      case 'StockReconciliation':
-        return 'StockReconciliation';
-      case 'User':
-        return 'user';
-      case 'AttendanceRegister':
-        return 'attendanceRegister';
-      case 'Attendance':
-        return 'attendance';
-      default:
-        return '${entity}s';
-    }
-  }
 }
 
 const String noResultSvg = 'assets/icons/svg/no_result.svg';

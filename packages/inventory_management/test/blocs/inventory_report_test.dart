@@ -5,6 +5,7 @@ import 'package:inventory_management/blocs/inventory_report.dart';
 import 'package:inventory_management/models/entities/stock.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:inventory_management/models/entities/stock_reconciliation.dart';
+import 'package:inventory_management/utils/typedefs.dart';
 import 'package:inventory_management/utils/utils.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -33,6 +34,11 @@ class MockInventoryReport extends Mock {
     'stock1': [StockModel(id: '1', clientReferenceId: 'abc123')],
   };
 }
+
+class MockStockDataRepository extends Mock implements StockDataRepository {}
+
+class MockStockReconciliationDataRepository extends Mock
+    implements StockReconciliationDataRepository {}
 
 // Mock class for InventorySingleton
 class MockInventorySingleton extends Mock implements InventorySingleton {
@@ -73,8 +79,10 @@ void main() {
     setUp(() {
       // Setting up the mock and the bloc for each test
       mockInventorySingleton = MockInventorySingleton();
-      mockInventoryReportBloc =
-          InventoryReportBloc(inventorySingleton: mockInventorySingleton);
+      mockInventoryReportBloc = InventoryReportBloc(
+        stockRepository: MockStockDataRepository(),
+        stockReconciliationRepository: MockStockReconciliationDataRepository(),
+      );
       mockReportType = InventoryReportType.receipt;
       mockFacilityId = 'facility1';
       mockProductVariantId = 'product1';
@@ -83,8 +91,10 @@ void main() {
     // Test for loadStockData event
     blocTest<InventoryReportBloc, InventoryReportState>(
       'emits [InventoryReportLoadingState, InventoryReportStockState] when loadStockData event is added',
-      build: () =>
-          InventoryReportBloc(inventorySingleton: mockInventorySingleton),
+      build: () => InventoryReportBloc(
+        stockRepository: MockStockDataRepository(),
+        stockReconciliationRepository: MockStockReconciliationDataRepository(),
+      ),
       act: (bloc) => bloc.add(InventoryReportEvent.loadStockData(
           reportType: mockReportType,
           facilityId: mockFacilityId,
@@ -99,8 +109,10 @@ void main() {
     // Test for loadStockReconciliationData event
     blocTest<InventoryReportBloc, InventoryReportState>(
       'emits [InventoryReportLoadingState, InventoryReportStockReconciliationState] when loadStockReconciliationData event is added',
-      build: () =>
-          InventoryReportBloc(inventorySingleton: mockInventorySingleton),
+      build: () => InventoryReportBloc(
+        stockRepository: MockStockDataRepository(),
+        stockReconciliationRepository: MockStockReconciliationDataRepository(),
+      ),
       act: (bloc) => bloc.add(InventoryReportEvent.loadStockReconciliationData(
           facilityId: mockFacilityId, productVariantId: mockProductVariantId)),
       expect: () => <InventoryReportState>[

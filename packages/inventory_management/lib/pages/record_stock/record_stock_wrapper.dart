@@ -49,7 +49,6 @@ class RecordStockWrapperPage extends StatelessWidget
                 entryType: type,
                 projectId: InventorySingleton().projectId,
               ),
-              inventorySingleton: InventorySingleton(),
             ),
             child: this,
           ),

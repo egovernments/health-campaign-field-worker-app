@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_management/blocs/inventory_listener.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
+import 'package:inventory_management/utils/extensions/extensions.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:digit_data_model/data_model.dart';
 
@@ -16,6 +17,8 @@ import '../../../widgets/reports/readonly_pluto_grid.dart';
 import '../../blocs/inventory_report.dart';
 import '../../blocs/product_variant.dart';
 import '../../blocs/stock_reconciliation.dart';
+import '../../models/entities/stock.dart';
+import '../../models/entities/stock_reconciliation.dart';
 import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
 import '../facility_selection.dart';
@@ -106,8 +109,12 @@ class _InventoryReportDetailsPageState
     bool isWareHouseManager = InventorySingleton().isWareHouseMgr;
 
     return BlocProvider<InventoryReportBloc>(
-      create: (context) =>
-          InventoryReportBloc(inventorySingleton: InventorySingleton()),
+      create: (context) => InventoryReportBloc(
+        stockReconciliationRepository: context.repository<
+            StockReconciliationModel, StockReconciliationSearchModel>(context),
+        stockRepository:
+            context.repository<StockModel, StockSearchModel>(context),
+      ),
       child: Scaffold(
         bottomNavigationBar: DigitCard(
           padding: const EdgeInsets.all(8.0),
@@ -161,6 +168,11 @@ class _InventoryReportDetailsPageState
                                 projectId: InventorySingleton().projectId,
                                 dateOfReconciliation: DateTime.now(),
                               ),
+                              stockRepository: context.repository<StockModel,
+                                  StockSearchModel>(context),
+                              stockReconciliationRepository: context.repository<
+                                  StockReconciliationModel,
+                                  StockReconciliationSearchModel>(context),
                             ),
                             child: BlocConsumer<StockReconciliationBloc,
                                 StockReconciliationState>(
@@ -191,9 +203,8 @@ class _InventoryReportDetailsPageState
                                               builder: (context, state) {
                                                 final facilities =
                                                     state.whenOrNull(
-                                                          fetched: (
-                                                            facilities, allFacilities
-                                                          ) =>
+                                                          fetched: (facilities,
+                                                                  allFacilities) =>
                                                               facilities,
                                                         ) ??
                                                         [];
@@ -283,7 +294,8 @@ class _InventoryReportDetailsPageState
                                                 );
                                               },
                                             ),
-                                          BlocBuilder<InventoryProductVariantBloc,
+                                          BlocBuilder<
+                                              InventoryProductVariantBloc,
                                               InventoryProductVariantState>(
                                             builder: (context, state) {
                                               return state.maybeWhen(

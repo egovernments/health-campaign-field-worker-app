@@ -1,8 +1,13 @@
+/// The `data_model.dart` file contains the definitions of various classes and enums used in the project.
+/// It also exports several other files that are part of the data model.
+
+/// The `MappableLib` annotation is used to generate mapping code for the classes in this library.
 @MappableLib(
   generateInitializerForScope: InitializerScope.package,
 )
 library data_model;
 
+// Import statements for various packages and files used in this file.
 import 'package:attendance_management/models/entities/attendance_log.dart';
 import 'package:attendance_management/models/entities/attendance_register.dart';
 import 'package:dart_mappable/dart_mappable.dart';
@@ -12,6 +17,7 @@ import 'package:registration_delivery/models/entities/task.dart';
 
 import 'data_model.dart';
 
+// Export statements for various files that are part of the data model.
 export 'data/data_repository.dart';
 
 export 'data/repositories/local/base/attributes_base.dart';
@@ -89,8 +95,12 @@ export 'models/pgr_complaints/pgr_complaints.dart';
 export 'models/pgr_complaints/pgr_complaints_response.dart';
 export 'models/oplog/oplog_entry.dart';
 
+// The `part` directive is used to split the library into multiple files.
+// The `data_model.mapper.dart` file contains the generated mapping code.
 part 'data_model.mapper.dart';
 
+/// The `DataModel` class is the base class for all data models in the project.
+/// It contains common properties like `boundaryCode` and `isDeleted`.
 abstract class DataModel {
   final String? boundaryCode;
   final bool? isDeleted;
@@ -101,6 +111,8 @@ abstract class DataModel {
   });
 }
 
+/// The `EntityModel` class extends `DataModel` and adds additional properties like `auditDetails` and `clientAuditDetails`.
+/// It is also annotated with `MappableClass` to generate mapping code.
 @MappableClass(includeSubClasses: [
   AddressModel,
   AttendanceRegisterModel,
@@ -121,6 +133,8 @@ abstract class EntityModel extends DataModel with EntityModelMappable {
   });
 }
 
+/// The `EntitySearchModel` class extends `DataModel` and adds additional properties like `auditDetails` and `additionalFields`.
+/// It is also annotated with `MappableClass` to generate mapping code.
 @MappableClass(ignoreNull: true, includeSubClasses: [
   AddressSearchModel,
   AttendanceRegisterSearchModel,
@@ -150,6 +164,8 @@ abstract class EntitySearchModel extends DataModel
   }) : super(isDeleted: false);
 }
 
+/// The `AdditionalFields` class represents additional fields that can be added to an entity.
+/// It is also annotated with `MappableClass` to generate mapping code.
 @MappableClass(
   includeSubClasses: [
     DownsyncAdditionalFields,
@@ -168,6 +184,8 @@ abstract class AdditionalFields with AdditionalFieldsMappable {
   });
 }
 
+/// The `AdditionalField` class represents a single additional field.
+/// It is also annotated with `MappableClass` to generate mapping code.
 @MappableClass(includeSubClasses: [])
 class AdditionalField with AdditionalFieldMappable {
   final String key;
@@ -176,6 +194,8 @@ class AdditionalField with AdditionalFieldMappable {
   const AdditionalField(this.key, this.value);
 }
 
+/// The `ClientAuditDetails` class represents the audit details for a client.
+/// It is also annotated with `MappableClass` to generate mapping code.
 @MappableClass()
 class ClientAuditDetails with ClientAuditDetailsMappable {
   final int createdTime;
@@ -192,6 +212,8 @@ class ClientAuditDetails with ClientAuditDetailsMappable {
         lastModifiedTime = lastModifiedTime ?? createdTime;
 }
 
+/// The `AuditDetails` class represents the audit details for an entity.
+/// It is also annotated with `MappableClass` to generate mapping code.
 @MappableClass()
 class AuditDetails with AuditDetailsMappable {
   final String createdBy;
@@ -208,10 +230,12 @@ class AuditDetails with AuditDetailsMappable {
         lastModifiedTime = lastModifiedTime ?? createdTime;
 }
 
+/// The `ModelProvider` class is an abstract class that defines a method `getModels` that should be implemented by subclasses.
 abstract class ModelProvider {
   List<Type> getModels();
 }
 
+/// The `ModelProviderRegistry` class is used to register and retrieve all model providers.
 class ModelProviderRegistry {
   final _providers = <ModelProvider>[];
 
@@ -224,6 +248,7 @@ class ModelProviderRegistry {
   }
 }
 
+/// The `DataModelType` enum represents the different types of data models in the project.
 enum DataModelType {
   user,
   facility,

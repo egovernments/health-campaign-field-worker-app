@@ -1,3 +1,4 @@
+// Importing necessary packages and files.
 import 'dart:async';
 import 'dart:convert';
 
@@ -13,23 +14,31 @@ import '../models/oplog/oplog_entry.dart';
 import '../utils/constants.dart';
 import 'local_store/sql_store/sql_store.dart';
 
+/// `DataRepository` is an abstract class that defines the interface for a data repository.
+/// It has two type parameters: `D` for the entity model and `R` for the entity search model.
 abstract class DataRepository<D extends EntityModel,
     R extends EntitySearchModel> {
   const DataRepository();
 
+  /// The `type` getter returns the type of the data model.
   DataModelType get type;
 
+  /// The `search` method searches for entities that match the given query.
   FutureOr<List<D>> search(
     R query,
   );
 
+  /// The `create` method creates a new entity.
   FutureOr<dynamic> create(D entity);
 
+  /// The `update` method updates an existing entity.
   FutureOr<dynamic> update(D entity);
 
+  /// The `delete` method deletes an existing entity.
   FutureOr<dynamic> delete(D entity);
 }
 
+/// `RemoteRepository` is an abstract class that extends `DataRepository` and provides additional functionality for remote repositories.
 abstract class RemoteRepository<D extends EntityModel,
     R extends EntitySearchModel> extends DataRepository<D, R> {
   final Dio dio;
@@ -414,6 +423,7 @@ abstract class RemoteRepository<D extends EntityModel,
   }
 }
 
+/// `LocalRepository` is an abstract class that extends `DataRepository` and provides additional functionality for local repositories.
 abstract class LocalRepository<D extends EntityModel,
     R extends EntitySearchModel> extends DataRepository<D, R> {
   final LocalSqlDataStore sql;
@@ -484,6 +494,7 @@ abstract class LocalRepository<D extends EntityModel,
   }
 }
 
+/// `InvalidApiResponseException` is a class that represents an exception for an invalid API response.
 class InvalidApiResponseException implements Exception {
   final String path;
   final Map<String, dynamic> data;

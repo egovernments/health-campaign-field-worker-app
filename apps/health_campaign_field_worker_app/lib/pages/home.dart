@@ -363,11 +363,6 @@ class _HomePageState extends LocalizedState<HomePage> {
                 context: context,
                 userId: context.loggedInUserUuid,
                 projectId: context.projectId,
-                stockLocalRepository: context
-                    .read<LocalRepository<StockModel, StockSearchModel>>(),
-                stockReconLocalRepository: context.read<
-                    LocalRepository<StockReconciliationModel,
-                        StockReconciliationSearchModel>>(),
               ),
               projectId: context.projectId,
               isDistributor: context.loggedInUserRoles
@@ -515,11 +510,6 @@ class _HomePageState extends LocalizedState<HomePage> {
                 context: context,
                 userId: context.loggedInUserUuid,
                 projectId: context.projectId,
-                stockLocalRepository: context
-                    .read<LocalRepository<StockModel, StockSearchModel>>(),
-                stockReconLocalRepository: context.read<
-                    LocalRepository<StockReconciliationModel,
-                        StockReconciliationSearchModel>>(),
               ),
               projectId: context.projectId,
               loggedInUserUuid: context.loggedInUserUuid,
@@ -775,7 +765,7 @@ void setPackagesSingleton(BuildContext context) {
             context: context,
           ),
           projectId: context.projectId,
-          loggedInIndividualId: context.loggedInIndividualId!,
+          loggedInIndividualId: context.loggedInIndividualId ?? '',
           loggedInUserUuid: context.loggedInUserUuid,
           appVersion: Constants().version,
         );
@@ -796,14 +786,9 @@ void setPackagesSingleton(BuildContext context) {
             context: context,
             userId: context.loggedInUserUuid,
             projectId: context.projectId,
-            stockLocalRepository:
-                context.read<LocalRepository<StockModel, StockSearchModel>>(),
-            stockReconLocalRepository: context.read<
-                LocalRepository<StockReconciliationModel,
-                    StockReconciliationSearchModel>>(),
           ),
           projectId: context.projectId,
-          userId: context.loggedInUserUuid,
+          loggedInUserUuid: context.loggedInUserUuid,
           transportTypes: appConfiguration.transportTypes
               ?.map((e) => InventoryTransportTypes()
                 ..name = e.name

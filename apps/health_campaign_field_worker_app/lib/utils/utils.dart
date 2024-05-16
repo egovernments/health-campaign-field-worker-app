@@ -39,8 +39,7 @@ import '../router/app_router.dart';
 import '../widgets/progress_indicator/progress_indicator.dart';
 import 'constants.dart';
 import 'extensions/extensions.dart';
-import 'package:attendance_management/attendance_management.dart'
-    as attendance_mappers;
+
 
 export 'app_exception.dart';
 export 'constants.dart';
@@ -129,7 +128,7 @@ performBackgroundService({
       service.startService();
       if (context != null) {
         DigitToast.show(
-          context!,
+          context,
           options: DigitToastOptions(
             'Background Service Started',
             false,
@@ -665,5 +664,4 @@ initializeAllMappers() {
   digitDataModel.initializeMappers();
   registrationDelivery.initializeMappers();
   inventory_management.initializeMappers();
-  attendance_mappers.initializeMappers();
 }
