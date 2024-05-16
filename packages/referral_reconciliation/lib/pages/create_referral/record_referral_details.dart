@@ -739,9 +739,6 @@ class _RecordReferralDetailsPageState
                                                       );
                                                   final parent = context.router
                                                       .parent() as StackRouter;
-                                                  // parent.popUntilRouteWithName(
-                                                  //     SearchReferralReconciliationsRoute
-                                                  //         .name);
                                                   parent.push(
                                                     ReferralReasonChecklistRoute(
                                                       referralClientRefId:

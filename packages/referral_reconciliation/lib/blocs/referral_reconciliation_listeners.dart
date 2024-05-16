@@ -2,26 +2,6 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:referral_reconciliation/models/entities/h_f_referral.dart';
 
 abstract class ReferralReconListener {
-  Future<List<ProjectFacilityModel>> fetchProjectFacilitiesForProjectId();
-
-  Future<List<ServiceDefinitionModel>> fetchSelectedServiceDefinitions(
-      String code);
-
-  Future<List<ServiceDefinitionModel>> fetchAllServiceDefinitions();
-
-  Future<ServiceModel?> fetchSavedChecklist(
-      ServiceSearchModel reconServiceSearchModel);
-
-  Future<List<ReferralReconciliation>> fetchReferralReconciliations(
-      SearchReferralReconciliationClass searchReferralReconciliation);
-
-  // Saves the service request details.
-  Future<bool> saveServiceRequestDetails(SaveServiceRequest saveServiceRequest);
-
-  // Saves the referral details.
-  Future<bool> saveReferralReconDetails(
-      ReferralReconciliation saveReferralReconciliation);
-
   void callSyncMethod();
 }
 

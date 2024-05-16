@@ -1,10 +1,6 @@
 import 'package:digit_data_model/data_model.dart';
 import 'package:inventory_management/inventory_management.dart';
 
-import '../models/entities/product.dart';
-import '../models/entities/project_staff.dart';
-import '../models/entities/user.dart';
-
 typedef FacilityDataRepository
     = DataRepository<FacilityModel, FacilitySearchModel>;
 typedef AddressDataRepository

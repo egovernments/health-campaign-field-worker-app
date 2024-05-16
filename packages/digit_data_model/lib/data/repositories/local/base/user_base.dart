@@ -1,6 +1,6 @@
-import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
 
+import '../../../../data_model.dart';
 import '../../../../models/entities/user.dart';
 
 abstract class UserLocalBaseRepository

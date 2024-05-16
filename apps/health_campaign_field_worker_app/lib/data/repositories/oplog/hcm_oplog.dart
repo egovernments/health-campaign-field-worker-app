@@ -6,8 +6,6 @@ import 'package:inventory_management/inventory_management.dart';
 import 'package:isar/isar.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 
-import '../../../models/entities/project_staff.dart';
-
 class IndividualOpLogManager extends OpLogManager<IndividualModel> {
   IndividualOpLogManager(super.isar);
 

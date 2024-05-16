@@ -94,13 +94,6 @@ class RecordHFReferralBloc
           try {
             if (event.hfReferralModel != null) {
               referralReconDataRepository?.create(event.hfReferralModel);
-              // ReferralReconSingleton()
-              //     .saveReferralReconDetails(ReferralReconciliation(
-              //   hfReferralModel: event.hfReferralModel,
-              //   additionalData:
-              //       event.additionalData != null ? event.additionalData! : {},
-              // ));
-
               emit(
                 RecordHFReferralPersistedState(
                   hfReferralModel: event.hfReferralModel,

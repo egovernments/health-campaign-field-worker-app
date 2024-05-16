@@ -22,23 +22,23 @@ class UserSearchModelMapper extends SubClassMapperBase<UserSearchModel> {
 
   static String? _$id(UserSearchModel v) => v.id;
   static const Field<UserSearchModel, String> _f$id =
-      Field('id', _$id, opt: true);
+  Field('id', _$id, opt: true);
   static String? _$userName(UserSearchModel v) => v.userName;
   static const Field<UserSearchModel, String> _f$userName =
-      Field('userName', _$userName, opt: true);
+  Field('userName', _$userName, opt: true);
   static List<String>? _$uuid(UserSearchModel v) => v.uuid;
   static const Field<UserSearchModel, List<String>> _f$uuid =
-      Field('uuid', _$uuid, opt: true);
+  Field('uuid', _$uuid, opt: true);
   static String? _$boundaryCode(UserSearchModel v) => v.boundaryCode;
   static const Field<UserSearchModel, String> _f$boundaryCode =
-      Field('boundaryCode', _$boundaryCode, opt: true);
+  Field('boundaryCode', _$boundaryCode, opt: true);
   static AuditDetails? _$auditDetails(UserSearchModel v) => v.auditDetails;
   static const Field<UserSearchModel, AuditDetails> _f$auditDetails =
-      Field('auditDetails', _$auditDetails, mode: FieldMode.member);
+  Field('auditDetails', _$auditDetails, mode: FieldMode.member);
   static AdditionalFields? _$additionalFields(UserSearchModel v) =>
       v.additionalFields;
   static const Field<UserSearchModel, AdditionalFields> _f$additionalFields =
-      Field('additionalFields', _$additionalFields, mode: FieldMode.member);
+  Field('additionalFields', _$additionalFields, mode: FieldMode.member);
 
   @override
   final MappableFields<UserSearchModel> fields = const {
@@ -58,7 +58,7 @@ class UserSearchModelMapper extends SubClassMapperBase<UserSearchModel> {
   final dynamic discriminatorValue = MappableClass.useAsDefault;
   @override
   late final ClassMapperBase superMapper =
-      EntitySearchModelMapper.ensureInitialized();
+  EntitySearchModelMapper.ensureInitialized();
 
   static UserSearchModel _instantiate(DecodingData data) {
     return UserSearchModel.ignoreDeleted(
@@ -92,8 +92,8 @@ mixin UserSearchModelMappable {
   }
 
   UserSearchModelCopyWith<UserSearchModel, UserSearchModel, UserSearchModel>
-      get copyWith => _UserSearchModelCopyWithImpl(
-          this as UserSearchModel, $identity, $identity);
+  get copyWith => _UserSearchModelCopyWithImpl(
+      this as UserSearchModel, $identity, $identity);
   @override
   String toString() {
     return UserSearchModelMapper.ensureInitialized()
@@ -116,7 +116,7 @@ mixin UserSearchModelMappable {
 }
 
 extension UserSearchModelValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, UserSearchModel, $Out> {
+on ObjectCopyWith<$R, UserSearchModel, $Out> {
   UserSearchModelCopyWith<$R, UserSearchModel, $Out> get $asUserSearchModel =>
       $base.as((v, t, t2) => _UserSearchModelCopyWithImpl(v, t, t2));
 }
@@ -138,7 +138,7 @@ class _UserSearchModelCopyWithImpl<$R, $Out>
 
   @override
   late final ClassMapperBase<UserSearchModel> $mapper =
-      UserSearchModelMapper.ensureInitialized();
+  UserSearchModelMapper.ensureInitialized();
   @override
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get uuid =>
       $value.uuid != null
@@ -147,10 +147,10 @@ class _UserSearchModelCopyWithImpl<$R, $Out>
           : null;
   @override
   $R call(
-          {Object? id = $none,
-          Object? userName = $none,
-          Object? uuid = $none,
-          Object? boundaryCode = $none}) =>
+      {Object? id = $none,
+        Object? userName = $none,
+        Object? uuid = $none,
+        Object? boundaryCode = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
         if (userName != $none) #userName: userName,
@@ -166,7 +166,7 @@ class _UserSearchModelCopyWithImpl<$R, $Out>
 
   @override
   UserSearchModelCopyWith<$R2, UserSearchModel, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
+      Then<$Out2, $R2> t) =>
       _UserSearchModelCopyWithImpl($value, $cast, t);
 }
 
@@ -187,124 +187,124 @@ class UserModelMapper extends SubClassMapperBase<UserModel> {
   static UserAdditionalFields? _$additionalFields(UserModel v) =>
       v.additionalFields;
   static const Field<UserModel, UserAdditionalFields> _f$additionalFields =
-      Field('additionalFields', _$additionalFields, opt: true);
+  Field('additionalFields', _$additionalFields, opt: true);
   static String? _$id(UserModel v) => v.id;
   static const Field<UserModel, String> _f$id = Field('id', _$id, opt: true);
   static String? _$userName(UserModel v) => v.userName;
   static const Field<UserModel, String> _f$userName =
-      Field('userName', _$userName, opt: true);
+  Field('userName', _$userName, opt: true);
   static String? _$salutation(UserModel v) => v.salutation;
   static const Field<UserModel, String> _f$salutation =
-      Field('salutation', _$salutation, opt: true);
+  Field('salutation', _$salutation, opt: true);
   static String? _$name(UserModel v) => v.name;
   static const Field<UserModel, String> _f$name =
-      Field('name', _$name, opt: true);
+  Field('name', _$name, opt: true);
   static String? _$gender(UserModel v) => v.gender;
   static const Field<UserModel, String> _f$gender =
-      Field('gender', _$gender, opt: true);
+  Field('gender', _$gender, opt: true);
   static String? _$mobileNumber(UserModel v) => v.mobileNumber;
   static const Field<UserModel, String> _f$mobileNumber =
-      Field('mobileNumber', _$mobileNumber, opt: true);
+  Field('mobileNumber', _$mobileNumber, opt: true);
   static String? _$emailId(UserModel v) => v.emailId;
   static const Field<UserModel, String> _f$emailId =
-      Field('emailId', _$emailId, opt: true);
+  Field('emailId', _$emailId, opt: true);
   static String? _$altContactNumber(UserModel v) => v.altContactNumber;
   static const Field<UserModel, String> _f$altContactNumber =
-      Field('altContactNumber', _$altContactNumber, opt: true);
+  Field('altContactNumber', _$altContactNumber, opt: true);
   static String? _$pan(UserModel v) => v.pan;
   static const Field<UserModel, String> _f$pan = Field('pan', _$pan, opt: true);
   static String? _$aadhaarNumber(UserModel v) => v.aadhaarNumber;
   static const Field<UserModel, String> _f$aadhaarNumber =
-      Field('aadhaarNumber', _$aadhaarNumber, opt: true);
+  Field('aadhaarNumber', _$aadhaarNumber, opt: true);
   static String? _$permanentAddress(UserModel v) => v.permanentAddress;
   static const Field<UserModel, String> _f$permanentAddress =
-      Field('permanentAddress', _$permanentAddress, opt: true);
+  Field('permanentAddress', _$permanentAddress, opt: true);
   static String? _$permanentCity(UserModel v) => v.permanentCity;
   static const Field<UserModel, String> _f$permanentCity =
-      Field('permanentCity', _$permanentCity, opt: true);
+  Field('permanentCity', _$permanentCity, opt: true);
   static String? _$permanentPinCode(UserModel v) => v.permanentPinCode;
   static const Field<UserModel, String> _f$permanentPinCode =
-      Field('permanentPinCode', _$permanentPinCode, opt: true);
+  Field('permanentPinCode', _$permanentPinCode, opt: true);
   static String? _$correspondenceAddress(UserModel v) =>
       v.correspondenceAddress;
   static const Field<UserModel, String> _f$correspondenceAddress =
-      Field('correspondenceAddress', _$correspondenceAddress, opt: true);
+  Field('correspondenceAddress', _$correspondenceAddress, opt: true);
   static String? _$correspondenceCity(UserModel v) => v.correspondenceCity;
   static const Field<UserModel, String> _f$correspondenceCity =
-      Field('correspondenceCity', _$correspondenceCity, opt: true);
+  Field('correspondenceCity', _$correspondenceCity, opt: true);
   static String? _$correspondencePinCode(UserModel v) =>
       v.correspondencePinCode;
   static const Field<UserModel, String> _f$correspondencePinCode =
-      Field('correspondencePinCode', _$correspondencePinCode, opt: true);
+  Field('correspondencePinCode', _$correspondencePinCode, opt: true);
   static String? _$alternatemobilenumber(UserModel v) =>
       v.alternatemobilenumber;
   static const Field<UserModel, String> _f$alternatemobilenumber =
-      Field('alternatemobilenumber', _$alternatemobilenumber, opt: true);
+  Field('alternatemobilenumber', _$alternatemobilenumber, opt: true);
   static bool? _$active(UserModel v) => v.active;
   static const Field<UserModel, bool> _f$active =
-      Field('active', _$active, opt: true);
+  Field('active', _$active, opt: true);
   static String? _$locale(UserModel v) => v.locale;
   static const Field<UserModel, String> _f$locale =
-      Field('locale', _$locale, opt: true);
+  Field('locale', _$locale, opt: true);
   static String? _$type(UserModel v) => v.type;
   static const Field<UserModel, String> _f$type =
-      Field('type', _$type, opt: true);
+  Field('type', _$type, opt: true);
   static bool? _$accountLocked(UserModel v) => v.accountLocked;
   static const Field<UserModel, bool> _f$accountLocked =
-      Field('accountLocked', _$accountLocked, opt: true);
+  Field('accountLocked', _$accountLocked, opt: true);
   static int? _$accountLockedDate(UserModel v) => v.accountLockedDate;
   static const Field<UserModel, int> _f$accountLockedDate =
-      Field('accountLockedDate', _$accountLockedDate, opt: true);
+  Field('accountLockedDate', _$accountLockedDate, opt: true);
   static String? _$fatherOrHusbandName(UserModel v) => v.fatherOrHusbandName;
   static const Field<UserModel, String> _f$fatherOrHusbandName =
-      Field('fatherOrHusbandName', _$fatherOrHusbandName, opt: true);
+  Field('fatherOrHusbandName', _$fatherOrHusbandName, opt: true);
   static String? _$relationship(UserModel v) => v.relationship;
   static const Field<UserModel, String> _f$relationship =
-      Field('relationship', _$relationship, opt: true);
+  Field('relationship', _$relationship, opt: true);
   static String? _$signature(UserModel v) => v.signature;
   static const Field<UserModel, String> _f$signature =
-      Field('signature', _$signature, opt: true);
+  Field('signature', _$signature, opt: true);
   static String? _$bloodGroup(UserModel v) => v.bloodGroup;
   static const Field<UserModel, String> _f$bloodGroup =
-      Field('bloodGroup', _$bloodGroup, opt: true);
+  Field('bloodGroup', _$bloodGroup, opt: true);
   static String? _$photo(UserModel v) => v.photo;
   static const Field<UserModel, String> _f$photo =
-      Field('photo', _$photo, opt: true);
+  Field('photo', _$photo, opt: true);
   static String? _$identificationMark(UserModel v) => v.identificationMark;
   static const Field<UserModel, String> _f$identificationMark =
-      Field('identificationMark', _$identificationMark, opt: true);
+  Field('identificationMark', _$identificationMark, opt: true);
   static int? _$createdBy(UserModel v) => v.createdBy;
   static const Field<UserModel, int> _f$createdBy =
-      Field('createdBy', _$createdBy, opt: true);
+  Field('createdBy', _$createdBy, opt: true);
   static String? _$lastModifiedBy(UserModel v) => v.lastModifiedBy;
   static const Field<UserModel, String> _f$lastModifiedBy =
-      Field('lastModifiedBy', _$lastModifiedBy, opt: true);
+  Field('lastModifiedBy', _$lastModifiedBy, opt: true);
   static String? _$tenantId(UserModel v) => v.tenantId;
   static const Field<UserModel, String> _f$tenantId =
-      Field('tenantId', _$tenantId, opt: true);
+  Field('tenantId', _$tenantId, opt: true);
   static String? _$uuid(UserModel v) => v.uuid;
   static const Field<UserModel, String> _f$uuid =
-      Field('uuid', _$uuid, opt: true);
+  Field('uuid', _$uuid, opt: true);
   static String? _$createdDate(UserModel v) => v.createdDate;
   static const Field<UserModel, String> _f$createdDate =
-      Field('createdDate', _$createdDate, opt: true);
+  Field('createdDate', _$createdDate, opt: true);
   static bool? _$nonRecoverableError(UserModel v) => v.nonRecoverableError;
   static const Field<UserModel, bool> _f$nonRecoverableError = Field(
       'nonRecoverableError', _$nonRecoverableError,
       opt: true, def: false);
   static int? _$rowVersion(UserModel v) => v.rowVersion;
   static const Field<UserModel, int> _f$rowVersion =
-      Field('rowVersion', _$rowVersion, opt: true);
+  Field('rowVersion', _$rowVersion, opt: true);
   static AuditDetails? _$auditDetails(UserModel v) => v.auditDetails;
   static const Field<UserModel, AuditDetails> _f$auditDetails =
-      Field('auditDetails', _$auditDetails, opt: true);
+  Field('auditDetails', _$auditDetails, opt: true);
   static ClientAuditDetails? _$clientAuditDetails(UserModel v) =>
       v.clientAuditDetails;
   static const Field<UserModel, ClientAuditDetails> _f$clientAuditDetails =
-      Field('clientAuditDetails', _$clientAuditDetails, opt: true);
+  Field('clientAuditDetails', _$clientAuditDetails, opt: true);
   static bool? _$isDeleted(UserModel v) => v.isDeleted;
   static const Field<UserModel, bool> _f$isDeleted =
-      Field('isDeleted', _$isDeleted, opt: true, def: false);
+  Field('isDeleted', _$isDeleted, opt: true, def: false);
 
   @override
   final MappableFields<UserModel> fields = const {
@@ -357,7 +357,7 @@ class UserModelMapper extends SubClassMapperBase<UserModel> {
   final dynamic discriminatorValue = MappableClass.useAsDefault;
   @override
   late final ClassMapperBase superMapper =
-      EntityModelMapper.ensureInitialized();
+  EntityModelMapper.ensureInitialized();
 
   static UserModel _instantiate(DecodingData data) {
     return UserModel(
@@ -455,53 +455,53 @@ extension UserModelValueCopy<$R, $Out> on ObjectCopyWith<$R, UserModel, $Out> {
 abstract class UserModelCopyWith<$R, $In extends UserModel, $Out>
     implements EntityModelCopyWith<$R, $In, $Out> {
   UserAdditionalFieldsCopyWith<$R, UserAdditionalFields, UserAdditionalFields>?
-      get additionalFields;
+  get additionalFields;
   @override
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
   @override
   ClientAuditDetailsCopyWith<$R, ClientAuditDetails, ClientAuditDetails>?
-      get clientAuditDetails;
+  get clientAuditDetails;
   @override
   $R call(
       {UserAdditionalFields? additionalFields,
-      String? id,
-      String? userName,
-      String? salutation,
-      String? name,
-      String? gender,
-      String? mobileNumber,
-      String? emailId,
-      String? altContactNumber,
-      String? pan,
-      String? aadhaarNumber,
-      String? permanentAddress,
-      String? permanentCity,
-      String? permanentPinCode,
-      String? correspondenceAddress,
-      String? correspondenceCity,
-      String? correspondencePinCode,
-      String? alternatemobilenumber,
-      bool? active,
-      String? locale,
-      String? type,
-      bool? accountLocked,
-      int? accountLockedDate,
-      String? fatherOrHusbandName,
-      String? relationship,
-      String? signature,
-      String? bloodGroup,
-      String? photo,
-      String? identificationMark,
-      int? createdBy,
-      String? lastModifiedBy,
-      String? tenantId,
-      String? uuid,
-      String? createdDate,
-      bool? nonRecoverableError,
-      int? rowVersion,
-      AuditDetails? auditDetails,
-      ClientAuditDetails? clientAuditDetails,
-      bool? isDeleted});
+        String? id,
+        String? userName,
+        String? salutation,
+        String? name,
+        String? gender,
+        String? mobileNumber,
+        String? emailId,
+        String? altContactNumber,
+        String? pan,
+        String? aadhaarNumber,
+        String? permanentAddress,
+        String? permanentCity,
+        String? permanentPinCode,
+        String? correspondenceAddress,
+        String? correspondenceCity,
+        String? correspondencePinCode,
+        String? alternatemobilenumber,
+        bool? active,
+        String? locale,
+        String? type,
+        bool? accountLocked,
+        int? accountLockedDate,
+        String? fatherOrHusbandName,
+        String? relationship,
+        String? signature,
+        String? bloodGroup,
+        String? photo,
+        String? identificationMark,
+        int? createdBy,
+        String? lastModifiedBy,
+        String? tenantId,
+        String? uuid,
+        String? createdDate,
+        bool? nonRecoverableError,
+        int? rowVersion,
+        AuditDetails? auditDetails,
+        ClientAuditDetails? clientAuditDetails,
+        bool? isDeleted});
   UserModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -512,59 +512,59 @@ class _UserModelCopyWithImpl<$R, $Out>
 
   @override
   late final ClassMapperBase<UserModel> $mapper =
-      UserModelMapper.ensureInitialized();
+  UserModelMapper.ensureInitialized();
   @override
   UserAdditionalFieldsCopyWith<$R, UserAdditionalFields, UserAdditionalFields>?
-      get additionalFields => $value.additionalFields?.copyWith
-          .$chain((v) => call(additionalFields: v));
+  get additionalFields => $value.additionalFields?.copyWith
+      .$chain((v) => call(additionalFields: v));
   @override
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
       $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
   @override
   ClientAuditDetailsCopyWith<$R, ClientAuditDetails, ClientAuditDetails>?
-      get clientAuditDetails => $value.clientAuditDetails?.copyWith
-          .$chain((v) => call(clientAuditDetails: v));
+  get clientAuditDetails => $value.clientAuditDetails?.copyWith
+      .$chain((v) => call(clientAuditDetails: v));
   @override
   $R call(
-          {Object? additionalFields = $none,
-          Object? id = $none,
-          Object? userName = $none,
-          Object? salutation = $none,
-          Object? name = $none,
-          Object? gender = $none,
-          Object? mobileNumber = $none,
-          Object? emailId = $none,
-          Object? altContactNumber = $none,
-          Object? pan = $none,
-          Object? aadhaarNumber = $none,
-          Object? permanentAddress = $none,
-          Object? permanentCity = $none,
-          Object? permanentPinCode = $none,
-          Object? correspondenceAddress = $none,
-          Object? correspondenceCity = $none,
-          Object? correspondencePinCode = $none,
-          Object? alternatemobilenumber = $none,
-          Object? active = $none,
-          Object? locale = $none,
-          Object? type = $none,
-          Object? accountLocked = $none,
-          Object? accountLockedDate = $none,
-          Object? fatherOrHusbandName = $none,
-          Object? relationship = $none,
-          Object? signature = $none,
-          Object? bloodGroup = $none,
-          Object? photo = $none,
-          Object? identificationMark = $none,
-          Object? createdBy = $none,
-          Object? lastModifiedBy = $none,
-          Object? tenantId = $none,
-          Object? uuid = $none,
-          Object? createdDate = $none,
-          Object? nonRecoverableError = $none,
-          Object? rowVersion = $none,
-          Object? auditDetails = $none,
-          Object? clientAuditDetails = $none,
-          Object? isDeleted = $none}) =>
+      {Object? additionalFields = $none,
+        Object? id = $none,
+        Object? userName = $none,
+        Object? salutation = $none,
+        Object? name = $none,
+        Object? gender = $none,
+        Object? mobileNumber = $none,
+        Object? emailId = $none,
+        Object? altContactNumber = $none,
+        Object? pan = $none,
+        Object? aadhaarNumber = $none,
+        Object? permanentAddress = $none,
+        Object? permanentCity = $none,
+        Object? permanentPinCode = $none,
+        Object? correspondenceAddress = $none,
+        Object? correspondenceCity = $none,
+        Object? correspondencePinCode = $none,
+        Object? alternatemobilenumber = $none,
+        Object? active = $none,
+        Object? locale = $none,
+        Object? type = $none,
+        Object? accountLocked = $none,
+        Object? accountLockedDate = $none,
+        Object? fatherOrHusbandName = $none,
+        Object? relationship = $none,
+        Object? signature = $none,
+        Object? bloodGroup = $none,
+        Object? photo = $none,
+        Object? identificationMark = $none,
+        Object? createdBy = $none,
+        Object? lastModifiedBy = $none,
+        Object? tenantId = $none,
+        Object? uuid = $none,
+        Object? createdDate = $none,
+        Object? nonRecoverableError = $none,
+        Object? rowVersion = $none,
+        Object? auditDetails = $none,
+        Object? clientAuditDetails = $none,
+        Object? isDeleted = $none}) =>
       $apply(FieldCopyWithData({
         if (additionalFields != $none) #additionalFields: additionalFields,
         if (id != $none) #id: id,
@@ -617,7 +617,7 @@ class _UserModelCopyWithImpl<$R, $Out>
   @override
   UserModel $make(CopyWithData data) => UserModel(
       additionalFields:
-          data.get(#additionalFields, or: $value.additionalFields),
+      data.get(#additionalFields, or: $value.additionalFields),
       id: data.get(#id, or: $value.id),
       userName: data.get(#userName, or: $value.userName),
       salutation: data.get(#salutation, or: $value.salutation),
@@ -626,52 +626,52 @@ class _UserModelCopyWithImpl<$R, $Out>
       mobileNumber: data.get(#mobileNumber, or: $value.mobileNumber),
       emailId: data.get(#emailId, or: $value.emailId),
       altContactNumber:
-          data.get(#altContactNumber, or: $value.altContactNumber),
+      data.get(#altContactNumber, or: $value.altContactNumber),
       pan: data.get(#pan, or: $value.pan),
       aadhaarNumber: data.get(#aadhaarNumber, or: $value.aadhaarNumber),
       permanentAddress:
-          data.get(#permanentAddress, or: $value.permanentAddress),
+      data.get(#permanentAddress, or: $value.permanentAddress),
       permanentCity: data.get(#permanentCity, or: $value.permanentCity),
       permanentPinCode:
-          data.get(#permanentPinCode, or: $value.permanentPinCode),
+      data.get(#permanentPinCode, or: $value.permanentPinCode),
       correspondenceAddress:
-          data.get(#correspondenceAddress, or: $value.correspondenceAddress),
+      data.get(#correspondenceAddress, or: $value.correspondenceAddress),
       correspondenceCity:
-          data.get(#correspondenceCity, or: $value.correspondenceCity),
+      data.get(#correspondenceCity, or: $value.correspondenceCity),
       correspondencePinCode:
-          data.get(#correspondencePinCode, or: $value.correspondencePinCode),
+      data.get(#correspondencePinCode, or: $value.correspondencePinCode),
       alternatemobilenumber:
-          data.get(#alternatemobilenumber, or: $value.alternatemobilenumber),
+      data.get(#alternatemobilenumber, or: $value.alternatemobilenumber),
       active: data.get(#active, or: $value.active),
       locale: data.get(#locale, or: $value.locale),
       type: data.get(#type, or: $value.type),
       accountLocked: data.get(#accountLocked, or: $value.accountLocked),
       accountLockedDate:
-          data.get(#accountLockedDate, or: $value.accountLockedDate),
+      data.get(#accountLockedDate, or: $value.accountLockedDate),
       fatherOrHusbandName:
-          data.get(#fatherOrHusbandName, or: $value.fatherOrHusbandName),
+      data.get(#fatherOrHusbandName, or: $value.fatherOrHusbandName),
       relationship: data.get(#relationship, or: $value.relationship),
       signature: data.get(#signature, or: $value.signature),
       bloodGroup: data.get(#bloodGroup, or: $value.bloodGroup),
       photo: data.get(#photo, or: $value.photo),
       identificationMark:
-          data.get(#identificationMark, or: $value.identificationMark),
+      data.get(#identificationMark, or: $value.identificationMark),
       createdBy: data.get(#createdBy, or: $value.createdBy),
       lastModifiedBy: data.get(#lastModifiedBy, or: $value.lastModifiedBy),
       tenantId: data.get(#tenantId, or: $value.tenantId),
       uuid: data.get(#uuid, or: $value.uuid),
       createdDate: data.get(#createdDate, or: $value.createdDate),
       nonRecoverableError:
-          data.get(#nonRecoverableError, or: $value.nonRecoverableError),
+      data.get(#nonRecoverableError, or: $value.nonRecoverableError),
       rowVersion: data.get(#rowVersion, or: $value.rowVersion),
       auditDetails: data.get(#auditDetails, or: $value.auditDetails),
       clientAuditDetails:
-          data.get(#clientAuditDetails, or: $value.clientAuditDetails),
+      data.get(#clientAuditDetails, or: $value.clientAuditDetails),
       isDeleted: data.get(#isDeleted, or: $value.isDeleted));
 
   @override
   UserModelCopyWith<$R2, UserModel, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
+      Then<$Out2, $R2> t) =>
       _UserModelCopyWithImpl($value, $cast, t);
 }
 
@@ -692,13 +692,13 @@ class UserAdditionalFieldsMapper
 
   static String _$schema(UserAdditionalFields v) => v.schema;
   static const Field<UserAdditionalFields, String> _f$schema =
-      Field('schema', _$schema, opt: true, def: 'User');
+  Field('schema', _$schema, opt: true, def: 'User');
   static int _$version(UserAdditionalFields v) => v.version;
   static const Field<UserAdditionalFields, int> _f$version =
-      Field('version', _$version);
+  Field('version', _$version);
   static List<AdditionalField> _$fields(UserAdditionalFields v) => v.fields;
   static const Field<UserAdditionalFields, List<AdditionalField>> _f$fields =
-      Field('fields', _$fields, opt: true, def: const []);
+  Field('fields', _$fields, opt: true, def: const []);
 
   @override
   final MappableFields<UserAdditionalFields> fields = const {
@@ -715,7 +715,7 @@ class UserAdditionalFieldsMapper
   final dynamic discriminatorValue = MappableClass.useAsDefault;
   @override
   late final ClassMapperBase superMapper =
-      AdditionalFieldsMapper.ensureInitialized();
+  AdditionalFieldsMapper.ensureInitialized();
 
   static UserAdditionalFields _instantiate(DecodingData data) {
     return UserAdditionalFields(
@@ -748,9 +748,9 @@ mixin UserAdditionalFieldsMappable {
   }
 
   UserAdditionalFieldsCopyWith<UserAdditionalFields, UserAdditionalFields,
-          UserAdditionalFields>
-      get copyWith => _UserAdditionalFieldsCopyWithImpl(
-          this as UserAdditionalFields, $identity, $identity);
+      UserAdditionalFields>
+  get copyWith => _UserAdditionalFieldsCopyWithImpl(
+      this as UserAdditionalFields, $identity, $identity);
   @override
   String toString() {
     return UserAdditionalFieldsMapper.ensureInitialized()
@@ -773,16 +773,16 @@ mixin UserAdditionalFieldsMappable {
 }
 
 extension UserAdditionalFieldsValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, UserAdditionalFields, $Out> {
+on ObjectCopyWith<$R, UserAdditionalFields, $Out> {
   UserAdditionalFieldsCopyWith<$R, UserAdditionalFields, $Out>
-      get $asUserAdditionalFields =>
-          $base.as((v, t, t2) => _UserAdditionalFieldsCopyWithImpl(v, t, t2));
+  get $asUserAdditionalFields =>
+      $base.as((v, t, t2) => _UserAdditionalFieldsCopyWithImpl(v, t, t2));
 }
 
 abstract class UserAdditionalFieldsCopyWith<
-    $R,
-    $In extends UserAdditionalFields,
-    $Out> implements AdditionalFieldsCopyWith<$R, $In, $Out> {
+$R,
+$In extends UserAdditionalFields,
+$Out> implements AdditionalFieldsCopyWith<$R, $In, $Out> {
   @override
   ListCopyWith<$R, AdditionalField,
       AdditionalFieldCopyWith<$R, AdditionalField, AdditionalField>> get fields;
@@ -799,11 +799,11 @@ class _UserAdditionalFieldsCopyWithImpl<$R, $Out>
 
   @override
   late final ClassMapperBase<UserAdditionalFields> $mapper =
-      UserAdditionalFieldsMapper.ensureInitialized();
+  UserAdditionalFieldsMapper.ensureInitialized();
   @override
   ListCopyWith<$R, AdditionalField,
-          AdditionalFieldCopyWith<$R, AdditionalField, AdditionalField>>
-      get fields => ListCopyWith($value.fields, (v, t) => v.copyWith.$chain(t),
+      AdditionalFieldCopyWith<$R, AdditionalField, AdditionalField>>
+  get fields => ListCopyWith($value.fields, (v, t) => v.copyWith.$chain(t),
           (v) => call(fields: v));
   @override
   $R call({String? schema, int? version, List<AdditionalField>? fields}) =>
@@ -820,6 +820,6 @@ class _UserAdditionalFieldsCopyWithImpl<$R, $Out>
 
   @override
   UserAdditionalFieldsCopyWith<$R2, UserAdditionalFields, $Out2>
-      $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-          _UserAdditionalFieldsCopyWithImpl($value, $cast, t);
+  $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+      _UserAdditionalFieldsCopyWithImpl($value, $cast, t);
 }

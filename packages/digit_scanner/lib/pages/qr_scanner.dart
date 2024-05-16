@@ -227,11 +227,6 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                                     result.length < widget.quantity) {
                                   buildDialog();
                                 } else {
-                                  // final bloc =
-                                  //     context.read<SearchBlocWrapper>();
-                                  // final hfBloc =
-                                  //     context.read<SearchReferralsBloc>();
-
                                   final bloc = context.read<DigitScannerBloc>();
                                   bloc.add(DigitScannerEvent.handleScanner(
                                     barCode: state.barCodes,

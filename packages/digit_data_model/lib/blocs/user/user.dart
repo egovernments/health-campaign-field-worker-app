@@ -1,11 +1,11 @@
 // GENERATED using mason_cli
 import 'dart:async';
 
-import 'package:digit_data_model/data/data_repository.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import '../../models/entities/user.dart';
+
 part 'user.freezed.dart';
 
 typedef UserEmitter = Emitter<UserState>;

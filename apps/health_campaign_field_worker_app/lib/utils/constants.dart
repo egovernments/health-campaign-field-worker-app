@@ -21,13 +21,11 @@ import '../data/local_store/no_sql/schema/project_types.dart';
 import '../data/local_store/no_sql/schema/row_versions.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/repositories/local/pgr_service.dart';
-import '../data/repositories/local/project_staff.dart';
 import '../data/repositories/oplog/hcm_oplog.dart';
 import '../data/repositories/remote/pgr_service.dart';
 import '../data/repositories/remote/product_variant.dart';
 import '../data/repositories/remote/project_beneficiary.dart';
 import '../data/repositories/remote/project_product_variant.dart';
-import '../data/repositories/remote/project_staff.dart';
 import '../data/repositories/remote/project_type.dart';
 import 'environment_config.dart';
 

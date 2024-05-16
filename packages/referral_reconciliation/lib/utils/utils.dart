@@ -101,46 +101,6 @@ class ReferralReconSingleton {
     _persistenceConfiguration = configuration;
   }
 
-  Future<List<ProjectFacilityModel>?> getProjectFacilitiesForProjectId() async {
-    return await _referralReconListener?.fetchProjectFacilitiesForProjectId();
-  }
-
-  Future<List<ReferralReconciliation>?> getReferralReconciliations(
-      SearchReferralReconciliationClass searchReferralReconciliation) async {
-    return await _referralReconListener
-        ?.fetchReferralReconciliations(searchReferralReconciliation);
-  }
-
-  Future<List<ServiceDefinitionModel>?> getServiceDefinitions(
-      String code) async {
-    return await _referralReconListener?.fetchSelectedServiceDefinitions(code);
-  }
-
-  Future<List<ServiceDefinitionModel>?> getServiceDefinitionsList() async {
-    return await _referralReconListener?.fetchAllServiceDefinitions();
-  }
-
-  // Saves the service request details.
-  Future<bool?> saveServiceRequestDetails(
-      SaveServiceRequest saveServiceRequest) async {
-    return await _referralReconListener
-        ?.saveServiceRequestDetails(saveServiceRequest);
-  }
-
-  //Searches for the recorded service requests for the given referral
-  Future<ServiceModel?> getSavedChecklist(
-      ServiceSearchModel reconServiceSearchModel) async {
-    return await _referralReconListener
-        ?.fetchSavedChecklist(reconServiceSearchModel);
-  }
-
-  // Saves the referral reconciliation details.
-  Future<bool?> saveReferralReconDetails(
-      ReferralReconciliation saveReferralReconciliation) async {
-    return await _referralReconListener
-        ?.saveReferralReconDetails(saveReferralReconciliation);
-  }
-
   // Calls the main sync method on Go to Home
   void callSync() {
     _referralReconListener?.callSyncMethod();

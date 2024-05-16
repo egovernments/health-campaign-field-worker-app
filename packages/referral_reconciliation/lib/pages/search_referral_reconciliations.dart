@@ -75,23 +75,6 @@ class _SearchReferralReconciliationsPageState
       referralReconDataRepository:
           context.repository<HFReferralModel, HFReferralSearchModel>(context),
     );
-    // ReferralReconSingleton().setInitialData(
-    //   referralReconListener: widget.referralReconListener,
-    //   userName: widget.userName,
-    //   boundaryName: widget.boundaryName,
-    //   boundaryCode: widget.boundaryCode,
-    //   roleCode: widget.roleCode,
-    //   projectId: widget.projectId,
-    //   appVersion: widget.appVersion,
-    //   tenantId: widget.tenantId,
-    //   validIndividualAgeForCampaign: widget.validIndividualAgeForCampaign,
-    //   genderOptions: widget.genders,
-    //   referralReasons: widget.referralReasons,
-    //   cycles: widget.cycles,
-    //   checklistTypes: widget.checklistTypes,
-    //   userUUid: widget.userUUid,
-    //   projectName: widget.projectName,
-    // );
     context.read<DigitScannerBloc>().add(
           const DigitScannerEvent.handleScanner(),
         );

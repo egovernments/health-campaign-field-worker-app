@@ -791,7 +791,7 @@ void setPackagesSingleton(BuildContext context) {
           projectId: context.selectedProject.id,
           projectName: context.selectedProject.name,
           roleCode: RolesType.healthFacilityWorker.toValue(),
-          appVersion: '1.3.0',
+          appVersion: Constants().version,
           tenantId: envConfig.variables.tenantId,
           validIndividualAgeForCampaign: ValidIndividualAgeForCampaign(
             validMinAge: context.selectedProjectType?.validMinAge ?? 3,

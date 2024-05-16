@@ -1,20 +1,20 @@
 // Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:drift/drift.dart';
-
 import 'package:digit_data_model/data_model.dart';
+import 'package:drift/drift.dart';
 
 part 'product.mapper.dart';
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class ProductSearchModel extends EntitySearchModel with ProductSearchModelMappable {
+class ProductSearchModel extends EntitySearchModel
+    with ProductSearchModelMappable {
   final String? id;
   final String? type;
   final String? name;
   final String? manufacturer;
   final List<String>? clientReferenceId;
   final String? tenantId;
-  
+
   ProductSearchModel({
     this.id,
     this.type,
@@ -24,7 +24,7 @@ class ProductSearchModel extends EntitySearchModel with ProductSearchModelMappab
     this.tenantId,
     super.boundaryCode,
     super.isDeleted,
-  }):  super();
+  }) : super();
 
   @MappableConstructor()
   ProductSearchModel.ignoreDeleted({
@@ -35,12 +35,11 @@ class ProductSearchModel extends EntitySearchModel with ProductSearchModelMappab
     this.clientReferenceId,
     this.tenantId,
     super.boundaryCode,
-  }):  super(isDeleted: false);
+  }) : super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
 class ProductModel extends EntityModel with ProductModelMappable {
-
   static const schemaName = 'Product';
 
   final String? id;
@@ -63,9 +62,10 @@ class ProductModel extends EntityModel with ProductModelMappable {
     required this.clientReferenceId,
     this.tenantId,
     this.rowVersion,
-    super.auditDetails,super.clientAuditDetails,
+    super.auditDetails,
+    super.clientAuditDetails,
     super.isDeleted = false,
-  }): super();
+  }) : super();
 
   ProductCompanion get companion {
     return ProductCompanion(
@@ -87,16 +87,16 @@ class ProductModel extends EntityModel with ProductModelMappable {
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),
-      );
+    );
   }
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class ProductAdditionalFields extends AdditionalFields with ProductAdditionalFieldsMappable {
+class ProductAdditionalFields extends AdditionalFields
+    with ProductAdditionalFieldsMappable {
   ProductAdditionalFields({
     super.schema = 'Product',
     required super.version,
     super.fields,
   });
 }
-

@@ -21,20 +21,13 @@ import 'package:registration_delivery/registration_delivery.dart';
 import '../blocs/app_initialization/app_initialization.dart';
 import '../data/network_manager.dart';
 import '../data/repositories/local/pgr_service.dart';
-import '../data/repositories/local/project_staff.dart';
 import '../data/repositories/oplog/hcm_oplog.dart';
 import '../data/repositories/remote/auth.dart';
 import '../data/repositories/remote/pgr_service.dart';
-import '../data/repositories/remote/product.dart';
 import '../data/repositories/remote/product_variant.dart';
 import '../data/repositories/remote/project_beneficiary.dart';
 import '../data/repositories/remote/project_product_variant.dart';
-import '../data/repositories/remote/project_staff.dart';
 import '../data/repositories/remote/project_type.dart';
-import '../data/repositories/remote/user.dart';
-import '../models/entities/product.dart';
-import '../models/entities/project_staff.dart';
-import '../models/entities/user.dart';
 
 class NetworkManagerProviderWrapper extends StatelessWidget {
   final LocalSqlDataStore sql;
