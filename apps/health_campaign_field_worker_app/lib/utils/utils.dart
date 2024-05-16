@@ -127,7 +127,7 @@ performBackgroundService({
       service.startService();
       if (context != null) {
         DigitToast.show(
-          context!,
+          context,
           options: DigitToastOptions(
             'Background Service Started',
             false,

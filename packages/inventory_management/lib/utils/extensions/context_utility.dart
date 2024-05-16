@@ -9,7 +9,7 @@ extension ContextUtilityExtensions on BuildContext {
       repository<D extends EntityModel, R extends EntitySearchModel>(
     BuildContext context,
   ) {
-    switch (AttendanceSingleton().persistenceConfiguration) {
+    switch (InventorySingleton().persistenceConfiguration) {
       case PersistenceConfiguration.offlineFirst:
         return context.read<LocalRepository<D, R>>();
       case PersistenceConfiguration.onlineOnly:

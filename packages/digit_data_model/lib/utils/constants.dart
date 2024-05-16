@@ -1,4 +1,12 @@
+/// The `EntityPlurals` class provides a utility method to get the plural form of an entity name.
+/// This can be useful when working with collections of entities, for example when naming database tables or generating URLs.
 class EntityPlurals {
+  /// Returns the plural form of the given entity name.
+  ///
+  /// The [entity] parameter is the name of the entity in singular form.
+  ///
+  /// This method handles a predefined list of special cases where the plural form does not simply involve appending an 's' to the singular form.
+  /// For all other entity names, this method returns the entity name with an 's' appended.
   static String getPluralForEntityName(String entity) {
     switch (entity) {
       case 'Beneficiary':

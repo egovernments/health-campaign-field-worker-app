@@ -5,6 +5,8 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:inventory_management/inventory_management.dart';
+import 'package:inventory_management/utils/extensions/extensions.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 
@@ -70,12 +72,6 @@ class _StockReconciliationPageState
 
   @override
   void initState() {
-    InventorySingleton().setInitialData(
-      inventoryListener: widget.inventoryListener,
-      projectId: widget.projectId,
-      isDistributor: widget.isDistributor!,
-      isWareHouseMgr: widget.isWareHouseMgr!,
-    );
     super.initState();
   }
 
@@ -98,6 +94,11 @@ class _StockReconciliationPageState
                     projectId: widget.projectId,
                     dateOfReconciliation: DateTime.now(),
                   ),
+                  stockRepository:
+                      context.repository<StockModel, StockSearchModel>(context),
+                  stockReconciliationRepository: context.repository<
+                      StockReconciliationModel,
+                      StockReconciliationSearchModel>(context),
                 ),
                 child: BlocConsumer<StockReconciliationBloc,
                     StockReconciliationState>(
@@ -281,7 +282,8 @@ class _StockReconciliationPageState
                                                     child:
                                                         CircularProgressIndicator(),
                                                   ),
-                                              fetched: (facilities, allFacilities) {
+                                              fetched:
+                                                  (facilities, allFacilities) {
                                                 return InkWell(
                                                   onTap: () async {
                                                     final stockReconciliationBloc =

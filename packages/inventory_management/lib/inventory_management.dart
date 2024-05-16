@@ -11,12 +11,15 @@ export 'models/entities/transaction_reason.dart';
 export 'models/entities/transaction_type.dart';
 export 'models/entities/inventory_transport_type.dart';
 
-export 'data/local_store/sql_store/tables/product_variant.dart';
 export 'data/local_store/sql_store/tables/stock.dart';
 export 'data/local_store/sql_store/tables/stock_reconciliation.dart';
 
 export 'data/repositories/local/stock.dart';
 export 'data/repositories/local/stock_reconciliation.dart';
+
+export 'data/repositories/oplog/oplog.dart';
+
+export 'utils/utils.dart';
 
 export 'data/repositories/local/base/stock_base.dart';
 export 'data/repositories/local/base/stock_reconciliation_base.dart';

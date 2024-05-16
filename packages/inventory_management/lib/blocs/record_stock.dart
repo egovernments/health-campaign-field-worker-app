@@ -1,39 +1,35 @@
 // GENERATED using mason_cli
 import 'dart:async';
 
+import 'package:digit_data_model/models/entities/facility.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:inventory_management/inventory_management.dart';
-import 'package:digit_data_model/data_model.dart';
 
-import '../utils/typedefs.dart';
+import '../../utils/typedefs.dart';
+import '../models/entities/stock.dart';
 import '../utils/utils.dart';
 
 part 'record_stock.freezed.dart';
 
 typedef RecordStockEmitter = Emitter<RecordStockState>;
 
-// Bloc for handling record stock related events and states
 class RecordStockBloc extends Bloc<RecordStockEvent, RecordStockState> {
   final StockDataRepository stockRepository;
-  final InventorySingleton inventorySingleton;
 
-  // Constructor for the bloc
-  RecordStockBloc(super.initialState,
-      {required this.stockRepository, required this.inventorySingleton}) {
-    // Registering the event handlers
+  RecordStockBloc(
+    super.initialState, {
+    required this.stockRepository,
+  }) {
     on(_handleSaveWarehouseDetails);
     on(_handleSaveStockDetails);
     on(_handleCreateStockEntry);
     on(_handleSaveTransactionDetails);
   }
 
-  // Event handler for saving warehouse details
   FutureOr<void> _handleSaveWarehouseDetails(
     RecordStockSaveWarehouseDetailsEvent event,
     RecordStockEmitter emit,
   ) async {
-    // Emitting the state with the saved warehouse details
     state.maybeMap(
       orElse: () {
         throw const InvalidRecordStockStateException();
@@ -49,12 +45,10 @@ class RecordStockBloc extends Bloc<RecordStockEvent, RecordStockState> {
     );
   }
 
-  // Event handler for saving transaction details
   FutureOr<void> _handleSaveTransactionDetails(
     RecordStockSaveTransactionDetailsEvent event,
     RecordStockEmitter emit,
   ) async {
-    // Emitting the state with the saved transaction details
     state.maybeMap(
       orElse: () {
         throw const InvalidRecordStockStateException();
@@ -72,31 +66,24 @@ class RecordStockBloc extends Bloc<RecordStockEvent, RecordStockState> {
     );
   }
 
-  // Event handler for saving stock details
   FutureOr<void> _handleSaveStockDetails(
     RecordStockSaveStockDetailsEvent event,
     RecordStockEmitter emit,
   ) async {
-    // Emitting the state with the saved stock details
     state.maybeMap(
       orElse: () {
         throw const InvalidRecordStockStateException();
       },
       create: (value) {
-        emit(value.copyWith(
-          stockModel: event.stockModel,
-        ));
+        emit(value.copyWith(stockModel: event.stockModel));
       },
     );
   }
 
-  // Event handler for creating a stock entry
   FutureOr<void> _handleCreateStockEntry(
     RecordStockCreateStockEntryEvent event,
     RecordStockEmitter emit,
   ) async {
-    bool? stockSaved = false;
-
     await state.maybeMap(
       orElse: () {
         throw const InvalidRecordStockStateException();
@@ -120,13 +107,16 @@ class RecordStockBloc extends Bloc<RecordStockEvent, RecordStockState> {
           );
         }
 
-        await stockRepository.create(
-          stockModel.copyWith(
-            facilityId: facilityModel.id,
-            rowVersion: 1,
-            tenantId: InventorySingleton().tenantId,
-          ),
-        );
+        emit(value.copyWith(loading: true));
+
+        try {
+          await stockRepository.create(
+            stockModel.copyWith(
+              facilityId: facilityModel.id,
+              rowVersion: 1,
+              tenantId: InventorySingleton().tenantId,
+            ),
+          );
 
           emit(
             RecordStockPersistedState(
@@ -137,30 +127,29 @@ class RecordStockBloc extends Bloc<RecordStockEvent, RecordStockState> {
               dateOfRecord: value.dateOfRecord,
             ),
           );
+        } catch (error) {
+          emit(value.copyWith(loading: false));
+          rethrow;
+        }
       },
     );
   }
 }
 
-// Freezed union class for record stock events
 @freezed
 class RecordStockEvent with _$RecordStockEvent {
-  // Event for saving warehouse details
   const factory RecordStockEvent.saveWarehouseDetails({
     required DateTime dateOfRecord,
     required FacilityModel facilityModel,
   }) = RecordStockSaveWarehouseDetailsEvent;
 
-  // Event for saving stock details
   const factory RecordStockEvent.saveStockDetails({
     required StockModel stockModel,
   }) = RecordStockSaveStockDetailsEvent;
 
-  // Event for creating a stock entry
   const factory RecordStockEvent.createStockEntry() =
       RecordStockCreateStockEntryEvent;
 
-  // Event for saving transaction details
   const factory RecordStockEvent.saveTransactionDetails({
     required DateTime dateOfRecord,
     required String primaryType,
@@ -169,10 +158,8 @@ class RecordStockEvent with _$RecordStockEvent {
   }) = RecordStockSaveTransactionDetailsEvent;
 }
 
-// Freezed union class for record stock states
 @freezed
 class RecordStockState with _$RecordStockState {
-  // State for creating a record stock
   const factory RecordStockState.create({
     required StockRecordEntryType entryType,
     @Default(false) bool loading,
@@ -184,7 +171,6 @@ class RecordStockState with _$RecordStockState {
     StockModel? stockModel,
   }) = RecordStockCreateState;
 
-  // State for a persisted record stock
   const factory RecordStockState.persisted({
     required StockRecordEntryType entryType,
     required String projectId,
@@ -194,16 +180,14 @@ class RecordStockState with _$RecordStockState {
     String? primaryId,
     StockModel? stockModel,
   }) = RecordStockPersistedState;
-}
+  }
 
-// Exception for invalid record stock state
 class InvalidRecordStockStateException implements Exception {
   final String? message;
 
   const InvalidRecordStockStateException([this.message]);
 }
 
-// Enum for stock record entry type
 enum StockRecordEntryType {
   receipt,
   dispatch,

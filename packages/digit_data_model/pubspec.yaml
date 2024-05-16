@@ -1,6 +1,6 @@
 name: digit_data_model
 description: "A new Flutter package project."
-version: 0.0.1+1
+version: 0.0.0-dev.1
 homepage:
 
 environment:
@@ -27,6 +27,7 @@ dependencies:
   isar: ^3.0.5
   isar_flutter_libs: ^3.0.5
   dio: ^5.1.2
+  mocktail: ^1.0.2
 
 dev_dependencies:
   flutter_test:

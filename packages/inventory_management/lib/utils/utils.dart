@@ -59,28 +59,34 @@ class InventorySingleton {
 
   // Various properties related to the inventory.
   String _projectId = '';
-  String? _userId = '';
+  String? _loggedInUserUuid = '';
   String? _boundaryName = '';
   String? _tenantId = '';
   bool _isDistributor = false;
   bool _isWareHouseMgr = false;
   List<InventoryTransportTypes>? _transportType = [];
+  PersistenceConfiguration _persistenceConfiguration = PersistenceConfiguration
+      .offlineFirst; // Default to offline first persistence configuration
 
   // Sets the initial data for the inventory.
   void setInitialData(
       {required InventoryListener inventoryListener,
-      String? userId,
+      String? loggedInUserUuid,
       required String projectId,
       required bool isDistributor,
       required bool isWareHouseMgr,
       List<InventoryTransportTypes>? transportTypes}) {
     _inventoryListener = inventoryListener;
     _projectId = projectId;
-    _userId = userId;
+    _loggedInUserUuid = loggedInUserUuid;
     _transportType = transportTypes;
     _isDistributor = isDistributor;
     _isWareHouseMgr = isWareHouseMgr;
     _transportType = transportTypes;
+  }
+
+  void setPersistenceConfiguration(PersistenceConfiguration configuration) {
+    _persistenceConfiguration = configuration;
   }
 
   void setBoundaryName({required String boundaryName}) {
@@ -93,12 +99,13 @@ class InventorySingleton {
 
   // Getters for the properties.
   get projectId => _projectId;
-  get userId => _userId;
+  get loggedInUserUuid => _loggedInUserUuid;
   get boundaryName => _boundaryName;
   get isDistributor => _isDistributor;
   get isWareHouseMgr => _isWareHouseMgr;
   get transportType => _transportType;
   get tenantId => _tenantId;
+  get persistenceConfiguration => _persistenceConfiguration;
 
   // Fetches the facilities for a given project ID.
   Future<List<FacilityModel>?> getFacilitiesForProjectId() async {

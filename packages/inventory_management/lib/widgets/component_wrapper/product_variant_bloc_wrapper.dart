@@ -1,6 +1,8 @@
+import 'package:digit_data_model/models/entities/product_variant.dart';
 import 'package:digit_data_model/models/entities/project_resource.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:inventory_management/utils/extensions/extensions.dart';
 import '../../blocs/inventory_listener.dart';
 import '../../blocs/product_variant.dart';
 import '../../utils/utils.dart';
@@ -19,8 +21,11 @@ class ProductVariantBlocWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<InventoryProductVariantBloc>(
       create: (_) => InventoryProductVariantBloc(
-        const ProductVariantEmptyState(),
-        inventorySingleton: InventorySingleton(),
+        productVariantDataRepository:
+            context.repository<ProductVariantModel, ProductVariantSearchModel>(
+                context),
+        projectResourceDataRepository: context.repository<ProjectResourceModel,
+            ProjectResourceSearchModel>(context),
       )..add(
           ProductVariantLoadEvent(
             query: ProjectResourceSearchModel(

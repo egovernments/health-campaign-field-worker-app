@@ -395,18 +395,18 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                           senderType: senderType,
                                           auditDetails: AuditDetails(
                                             createdBy:
-                                                InventorySingleton().userId,
+                                                InventorySingleton().loggedInUserUuid,
                                             createdTime: context
                                                 .millisecondsSinceEpoch(),
                                           ),
                                           clientAuditDetails:
                                               ClientAuditDetails(
                                             createdBy:
-                                                InventorySingleton().userId,
+                                                InventorySingleton().loggedInUserUuid,
                                             createdTime: context
                                                 .millisecondsSinceEpoch(),
                                             lastModifiedBy:
-                                                InventorySingleton().userId,
+                                                InventorySingleton().loggedInUserUuid,
                                             lastModifiedTime: context
                                                 .millisecondsSinceEpoch(),
                                           ),
