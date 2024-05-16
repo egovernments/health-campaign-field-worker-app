@@ -22,7 +22,7 @@ import 'package:inventory_management/inventory_management.init.dart'
     as inventory_management;
 import 'package:isar/isar.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:referral_reconciliation/referral_reconciliation.init.dart'
+import 'package:referral_reconciliation/referral_reconciliation.dart'
     as referral_reconciliation_mappers;
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/registration_delivery.init.dart'
