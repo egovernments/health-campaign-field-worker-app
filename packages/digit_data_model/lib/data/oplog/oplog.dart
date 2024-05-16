@@ -2,19 +2,18 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:inventory_management/inventory_management.dart';
 import 'package:isar/isar.dart';
-import 'package:registration_delivery/registration_delivery.dart';
+
 
 class IndividualOpLogManager extends OpLogManager<IndividualModel> {
   IndividualOpLogManager(super.isar);
 
   @override
   IndividualModel applyServerGeneratedIdToEntity(
-    IndividualModel entity,
-    String serverGeneratedId,
-    int rowVersion,
-  ) =>
+      IndividualModel entity,
+      String serverGeneratedId,
+      int rowVersion,
+      ) =>
       entity.copyWith(id: serverGeneratedId, rowVersion: rowVersion);
 
   @override
@@ -37,10 +36,10 @@ class FacilityOpLogManager extends OpLogManager<FacilityModel> {
 
   @override
   FacilityModel applyServerGeneratedIdToEntity(
-    FacilityModel entity,
-    String serverGeneratedId,
-    int rowVersion,
-  ) =>
+      FacilityModel entity,
+      String serverGeneratedId,
+      int rowVersion,
+      ) =>
       entity.copyWith(id: serverGeneratedId, rowVersion: rowVersion);
 
   @override
@@ -62,10 +61,10 @@ class ProjectFacilityOpLogManager extends OpLogManager<ProjectFacilityModel> {
 
   @override
   ProjectFacilityModel applyServerGeneratedIdToEntity(
-    ProjectFacilityModel entity,
-    String serverGeneratedId,
-    int rowVersion,
-  ) =>
+      ProjectFacilityModel entity,
+      String serverGeneratedId,
+      int rowVersion,
+      ) =>
       entity.copyWith(id: serverGeneratedId, rowVersion: rowVersion);
 
   @override
@@ -82,179 +81,22 @@ class ProjectFacilityOpLogManager extends OpLogManager<ProjectFacilityModel> {
       entity.nonRecoverableError;
 }
 
-class HouseholdOpLogManager extends OpLogManager<HouseholdModel> {
-  HouseholdOpLogManager(super.isar);
-
-  @override
-  HouseholdModel applyServerGeneratedIdToEntity(
-    HouseholdModel entity,
-    String serverGeneratedId,
-    int rowVersion,
-  ) =>
-      entity.copyWith(
-        id: serverGeneratedId,
-        rowVersion: rowVersion,
-      );
-
-  @override
-  String getClientReferenceId(HouseholdModel entity) =>
-      entity.clientReferenceId;
-
-  @override
-  String? getServerGeneratedId(HouseholdModel entity) => entity.id;
-
-  @override
-  int? getRowVersion(HouseholdModel entity) => entity.rowVersion;
-
-  @override
-  bool? getNonRecoverableError(HouseholdModel entity) =>
-      entity.nonRecoverableError;
-}
-
-class HouseholdMemberOpLogManager extends OpLogManager<HouseholdMemberModel> {
-  HouseholdMemberOpLogManager(super.isar);
-
-  @override
-  HouseholdMemberModel applyServerGeneratedIdToEntity(
-    HouseholdMemberModel entity,
-    String serverGeneratedId,
-    int rowVersion,
-  ) =>
-      entity.copyWith(id: serverGeneratedId, rowVersion: rowVersion);
-
-  @override
-  String getClientReferenceId(HouseholdMemberModel entity) =>
-      entity.clientReferenceId;
-
-  @override
-  String? getServerGeneratedId(HouseholdMemberModel entity) => entity.id;
-
-  @override
-  int? getRowVersion(HouseholdMemberModel entity) => entity.rowVersion;
-
-  @override
-  bool? getNonRecoverableError(HouseholdMemberModel entity) =>
-      entity.nonRecoverableError;
-}
-
-class ProjectBeneficiaryOpLogManager
-    extends OpLogManager<ProjectBeneficiaryModel> {
-  ProjectBeneficiaryOpLogManager(super.isar);
-
-  @override
-  ProjectBeneficiaryModel applyServerGeneratedIdToEntity(
-    ProjectBeneficiaryModel entity,
-    String serverGeneratedId,
-    int rowVersion,
-  ) =>
-      entity.copyWith(id: serverGeneratedId, rowVersion: rowVersion);
-
-  @override
-  String getClientReferenceId(ProjectBeneficiaryModel entity) =>
-      entity.clientReferenceId;
-
-  @override
-  String? getServerGeneratedId(ProjectBeneficiaryModel entity) => entity.id;
-
-  @override
-  int? getRowVersion(ProjectBeneficiaryModel entity) => entity.rowVersion;
-
-  @override
-  bool? getNonRecoverableError(ProjectBeneficiaryModel entity) =>
-      entity.nonRecoverableError;
-}
-
-class TaskOpLogManager extends OpLogManager<TaskModel> {
-  TaskOpLogManager(super.isar);
-
-  @override
-  TaskModel applyServerGeneratedIdToEntity(
-    TaskModel entity,
-    String serverGeneratedId,
-    int rowVersion,
-  ) =>
-      entity.copyWith(id: serverGeneratedId, rowVersion: rowVersion);
-
-  @override
-  String getClientReferenceId(TaskModel entity) => entity.clientReferenceId;
-
-  @override
-  String? getServerGeneratedId(TaskModel entity) => entity.id;
-
-  @override
-  int? getRowVersion(TaskModel entity) => entity.rowVersion;
-
-  @override
-  bool? getNonRecoverableError(TaskModel entity) => entity.nonRecoverableError;
-}
-
-class SideEffectOpLogManager extends OpLogManager<SideEffectModel> {
-  SideEffectOpLogManager(super.isar);
-
-  @override
-  SideEffectModel applyServerGeneratedIdToEntity(
-    SideEffectModel entity,
-    String serverGeneratedId,
-    int rowVersion,
-  ) =>
-      entity.copyWith(id: serverGeneratedId, rowVersion: rowVersion);
-
-  @override
-  String getClientReferenceId(SideEffectModel entity) =>
-      entity.clientReferenceId;
-
-  @override
-  String? getServerGeneratedId(SideEffectModel entity) => entity.id;
-
-  @override
-  int? getRowVersion(SideEffectModel entity) => entity.rowVersion;
-
-  @override
-  bool? getNonRecoverableError(SideEffectModel entity) =>
-      entity.nonRecoverableError;
-}
-
-class ReferralOpLogManager extends OpLogManager<ReferralModel> {
-  ReferralOpLogManager(super.isar);
-
-  @override
-  ReferralModel applyServerGeneratedIdToEntity(
-    ReferralModel entity,
-    String serverGeneratedId,
-    int rowVersion,
-  ) =>
-      entity.copyWith(id: serverGeneratedId, rowVersion: rowVersion);
-
-  @override
-  String getClientReferenceId(ReferralModel entity) => entity.clientReferenceId;
-
-  @override
-  String? getServerGeneratedId(ReferralModel entity) => entity.id;
-
-  @override
-  int? getRowVersion(ReferralModel entity) => entity.rowVersion;
-
-  @override
-  bool? getNonRecoverableError(ReferralModel entity) =>
-      entity.nonRecoverableError;
-}
-
 class AddressOpLogManager extends OpLogManager<AddressModel> {
   AddressOpLogManager(super.isar);
 
   @override
   AddressModel applyServerGeneratedIdToEntity(
-    AddressModel entity,
-    String serverGeneratedId,
-    int rowVersion,
-  ) {
+      AddressModel entity,
+      String serverGeneratedId,
+      int rowVersion,
+      ) {
     return entity;
   }
 
   @override
   String getClientReferenceId(
-    AddressModel entity,
-  ) {
+      AddressModel entity,
+      ) {
     return entity.relatedClientReferenceId!;
   }
 
@@ -278,10 +120,10 @@ class ProjectStaffOpLogManager extends OpLogManager<ProjectStaffModel> {
 
   @override
   ProjectStaffModel applyServerGeneratedIdToEntity(
-    ProjectStaffModel entity,
-    String serverGeneratedId,
-    int rowVersion,
-  ) =>
+      ProjectStaffModel entity,
+      String serverGeneratedId,
+      int rowVersion,
+      ) =>
       entity.copyWith(id: serverGeneratedId, rowVersion: rowVersion);
 
   @override
@@ -303,10 +145,10 @@ class ProjectOpLogManager extends OpLogManager<ProjectModel> {
 
   @override
   ProjectModel applyServerGeneratedIdToEntity(
-    ProjectModel entity,
-    String serverGeneratedId,
-    int rowVersion,
-  ) =>
+      ProjectModel entity,
+      String serverGeneratedId,
+      int rowVersion,
+      ) =>
       entity.copyWith(id: serverGeneratedId, rowVersion: rowVersion);
 
   @override
@@ -329,10 +171,10 @@ class ServiceDefinitionOpLogManager
 
   @override
   ServiceDefinitionModel applyServerGeneratedIdToEntity(
-    ServiceDefinitionModel entity,
-    String serverGeneratedId,
-    int rowVersion,
-  ) =>
+      ServiceDefinitionModel entity,
+      String serverGeneratedId,
+      int rowVersion,
+      ) =>
       entity.copyWith(id: serverGeneratedId, rowVersion: rowVersion);
 
   @override
@@ -356,10 +198,10 @@ class ServiceOpLogManager extends OpLogManager<ServiceModel> {
 
   @override
   ServiceModel applyServerGeneratedIdToEntity(
-    ServiceModel entity,
-    String serverGeneratedId,
-    int rowVersion,
-  ) =>
+      ServiceModel entity,
+      String serverGeneratedId,
+      int rowVersion,
+      ) =>
       entity.copyWith(id: serverGeneratedId, rowVersion: rowVersion);
 
   @override
@@ -381,10 +223,10 @@ class ProjectResourceOpLogManager extends OpLogManager<ProjectResourceModel> {
 
   @override
   ProjectResourceModel applyServerGeneratedIdToEntity(
-    ProjectResourceModel entity,
-    String serverGeneratedId,
-    int rowVersion,
-  ) =>
+      ProjectResourceModel entity,
+      String serverGeneratedId,
+      int rowVersion,
+      ) =>
       entity.copyWith(id: serverGeneratedId, rowVersion: rowVersion);
 
   @override
@@ -407,10 +249,10 @@ class ProductVariantOpLogManager extends OpLogManager<ProductVariantModel> {
 
   @override
   ProductVariantModel applyServerGeneratedIdToEntity(
-    ProductVariantModel entity,
-    String serverGeneratedId,
-    int rowVersion,
-  ) =>
+      ProductVariantModel entity,
+      String serverGeneratedId,
+      int rowVersion,
+      ) =>
       entity.copyWith(id: serverGeneratedId, rowVersion: rowVersion);
 
   @override
@@ -432,10 +274,10 @@ class BoundaryOpLogManager extends OpLogManager<BoundaryModel> {
 
   @override
   BoundaryModel applyServerGeneratedIdToEntity(
-    BoundaryModel entity,
-    String serverGeneratedId,
-    int rowVersion,
-  ) =>
+      BoundaryModel entity,
+      String serverGeneratedId,
+      int rowVersion,
+      ) =>
       throw UnimplementedError();
 
   @override
@@ -453,42 +295,15 @@ class BoundaryOpLogManager extends OpLogManager<BoundaryModel> {
       throw UnimplementedError();
 }
 
-class DownsyncOpLogManager extends OpLogManager<DownsyncModel> {
-  DownsyncOpLogManager(super.isar);
-
-  @override
-  DownsyncModel applyServerGeneratedIdToEntity(
-    DownsyncModel entity,
-    String serverGeneratedId,
-    int rowVersion,
-  ) =>
-      throw UnimplementedError();
-
-  @override
-  String getClientReferenceId(DownsyncModel entity) =>
-      throw UnimplementedError();
-
-  @override
-  String? getServerGeneratedId(DownsyncModel entity) =>
-      throw UnimplementedError();
-
-  @override
-  int? getRowVersion(DownsyncModel entity) => throw UnimplementedError();
-
-  @override
-  bool? getNonRecoverableError(DownsyncModel entity) =>
-      throw UnimplementedError();
-}
-
 class PgrServiceOpLogManager extends OpLogManager<PgrServiceModel> {
   PgrServiceOpLogManager(super.isar);
 
   @override
   PgrServiceModel applyServerGeneratedIdToEntity(
-    PgrServiceModel entity,
-    String serverGeneratedId,
-    int rowVersion,
-  ) =>
+      PgrServiceModel entity,
+      String serverGeneratedId,
+      int rowVersion,
+      ) =>
       entity.copyWith(
         serviceRequestId: serverGeneratedId,
         rowVersion: rowVersion,
@@ -513,9 +328,9 @@ class PgrServiceOpLogManager extends OpLogManager<PgrServiceModel> {
 
   @override
   Future<List<OpLogEntry<PgrServiceModel>>> getPendingUpSync(
-    DataModelType type, {
-    required String createdBy,
-  }) async {
+      DataModelType type, {
+        required String createdBy,
+      }) async {
     final pendingEntries = await isar.opLogs
         .filter()
         .entityTypeEqualTo(type)
@@ -536,9 +351,9 @@ class PgrServiceOpLogManager extends OpLogManager<PgrServiceModel> {
 
   @override
   Future<List<OpLogEntry<PgrServiceModel>>> getPendingDownSync(
-    DataModelType type, {
-    required String createdBy,
-  }) async {
+      DataModelType type, {
+        required String createdBy,
+      }) async {
     final pendingEntries = await isar.opLogs
         .filter()
         .entityTypeEqualTo(type)
@@ -551,16 +366,16 @@ class PgrServiceOpLogManager extends OpLogManager<PgrServiceModel> {
 
     final entriesList = pendingEntries
         .map((e) {
-          final entity = e.getEntity<PgrServiceModel>();
-          if ([
-            PgrServiceApplicationStatus.created,
-            PgrServiceApplicationStatus.pendingAssignment,
-          ].contains(entity.applicationStatus)) {
-            return OpLogEntry.fromOpLog<PgrServiceModel>(e);
-          }
+      final entity = e.getEntity<PgrServiceModel>();
+      if ([
+        PgrServiceApplicationStatus.created,
+        PgrServiceApplicationStatus.pendingAssignment,
+      ].contains(entity.applicationStatus)) {
+        return OpLogEntry.fromOpLog<PgrServiceModel>(e);
+      }
 
-          return null;
-        })
+      return null;
+    })
         .whereNotNull()
         .toList();
 

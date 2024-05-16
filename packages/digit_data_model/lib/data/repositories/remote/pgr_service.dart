@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:digit_data_model/data_model.dart';
 import 'package:dio/dio.dart';
 
-import '../../../utils/environment_config.dart';
-
 class PgrServiceRemoteRepository
     extends RemoteRepository<PgrServiceModel, PgrServiceSearchModel> {
   PgrServiceRemoteRepository(
@@ -53,7 +51,7 @@ class PgrServiceRemoteRepository
             queryParameters: {
               'offset': 0,
               'limit': 100,
-              'tenantId': envConfig.variables.tenantId,
+              'tenantId': DigitDataModelSingleton().tenantId,
             }..addAll(query.toMap()),
             data: query.toMap(),
           );

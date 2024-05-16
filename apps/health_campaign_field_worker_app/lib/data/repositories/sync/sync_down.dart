@@ -16,7 +16,6 @@ import 'package:registration_delivery/models/entities/task.dart';
 import '../../../models/bandwidth/bandwidth_model.dart';
 import '../../../utils/environment_config.dart';
 import '../../network_manager.dart';
-import '../remote/pgr_service.dart';
 import './remote_type.dart';
 
 class PerformSyncDown {

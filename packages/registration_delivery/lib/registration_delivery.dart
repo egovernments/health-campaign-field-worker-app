@@ -11,19 +11,20 @@ export 'data/local_store/tables/referral.dart';
 export 'data/local_store/tables/task.dart';
 export 'data/local_store/tables/task_resource.dart';
 
-export 'data/repositories/local/task_base.dart';
+export 'data/repositories/local/base/task_base.dart';
 export 'data/repositories/local/task.dart';
 export 'data/repositories/local/household.dart';
-export 'data/repositories/local/household_base.dart';
+export 'data/repositories/local/base/household_base.dart';
 export 'data/repositories/local/referral.dart';
 export 'data/repositories/local/project_beneficiary.dart';
-export 'data/repositories/local/project_beneficiary_base.dart';
+export 'data/repositories/local/base/project_beneficiary_base.dart';
 export 'data/repositories/local/household_member.dart';
-export 'data/repositories/local/household_member_base.dart';
+export 'data/repositories/local/base/household_member_base.dart';
 export 'data/repositories/local/side_effect.dart';
-export 'data/repositories/local/side_effect_base.dart';
+export 'data/repositories/local/base/side_effect_base.dart';
 export 'data/repositories/local/downsync.dart';
 
+export 'data/repositories/oplog/oplog.dart';
 
 export 'data/repositories/remote/household.dart';
 export 'data/repositories/remote/household_member.dart';
@@ -31,7 +32,8 @@ export 'data/repositories/remote/side_effect.dart';
 export 'data/repositories/remote/task.dart';
 export 'data/repositories/remote/referral.dart';
 export 'data/repositories/remote/downsync.dart';
-
+export 'data/repositories/remote/project_beneficiary.dart';
+export 'data/repositories/remote/project_type.dart';
 
 export 'models/entities/task.dart';
 export 'models/entities/household.dart';

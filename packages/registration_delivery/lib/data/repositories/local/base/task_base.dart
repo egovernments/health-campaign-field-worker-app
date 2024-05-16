@@ -1,7 +1,7 @@
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
 
-import '../../../models/entities/task.dart';
+import '../../../../models/entities/task.dart';
 
 abstract class TaskLocalBaseRepository
     extends LocalRepository<TaskModel, TaskSearchModel> {
