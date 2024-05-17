@@ -5,7 +5,7 @@ import 'package:health_campaign_field_worker_app/widgets/home/home_item_card.dar
 Map<String, dynamic> getTestData() {
   return {
     'session': 'Evening session',
-    'date': '25',
+    'date': '8',
     'username': {
       'attendance_management': 'ATTD17',
       'inventory_management': 'Reg-2'

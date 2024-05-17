@@ -11,7 +11,7 @@ Future<void> manageAttendance(WidgetTester widgetTester) async {
   await widgetTester.tap(
     widgetSelector['manageAttendance']!,
   ); //tap on the manage attendance
-  await widgetTester.pumpAndSettle(const Duration(seconds: 1));
+  await widgetTester.pumpAndSettle(const Duration(milliseconds: 500));
 
   //check if we are on the manage attendance page
   expect(
@@ -27,16 +27,16 @@ Future<void> manageAttendance(WidgetTester widgetTester) async {
     widgetSelector['openRegister']!,
     1,
   );
-  await widgetTester.pumpAndSettle(const Duration(seconds: 3));
+  await widgetTester.pumpAndSettle(const Duration(milliseconds: 1000));
   await widgetTester.tap(widgetSelector['openRegister']!);
 
   await widgetTester.pumpAndSettle(
-    const Duration(seconds: 1),
+    const Duration(milliseconds: 500),
   ); //wait for the app to go to the next page
 
   expect(
     find.byType(AttendanceDateSessionSelectionPage),
     findsOneWidget,
   ); //check if we go to the next page
-  await widgetTester.pumpAndSettle(const Duration(seconds: 2));
+  await widgetTester.pumpAndSettle(const Duration(milliseconds: 1000));
 }
