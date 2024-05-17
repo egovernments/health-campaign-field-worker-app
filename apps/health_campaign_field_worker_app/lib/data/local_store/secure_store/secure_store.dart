@@ -85,19 +85,6 @@ class LocalSecureStore {
     }
   }
 
-  Future<ProjectType?> get selectedProjectType async {
-    final projectBody = await storage.read(key: selectedProjectTypeKey);
-    if (projectBody == null) return null;
-
-    try {
-      final projectType = ProjectType.fromJson(json.decode(projectBody));
-
-      return projectType;
-    } catch (_) {
-      return null;
-    }
-  }
-
   Future<bool> get isAppInActive async {
     final hasRun = await storage.read(key: isAppInActiveKey);
 
@@ -157,13 +144,6 @@ class LocalSecureStore {
     await storage.write(
       key: selectedIndividualKey,
       value: individualId,
-    );
-  }
-
-  Future<void> setSelectedProjectType(ProjectType? projectType) async {
-    await storage.write(
-      key: selectedProjectTypeKey,
-      value: json.encode(projectType),
     );
   }
 
