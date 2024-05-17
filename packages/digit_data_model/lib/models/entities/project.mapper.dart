@@ -22,53 +22,53 @@ class ProjectSearchModelMapper extends SubClassMapperBase<ProjectSearchModel> {
 
   static String? _$id(ProjectSearchModel v) => v.id;
   static const Field<ProjectSearchModel, String> _f$id =
-  Field('id', _$id, opt: true);
+      Field('id', _$id, opt: true);
   static String? _$projectTypeId(ProjectSearchModel v) => v.projectTypeId;
   static const Field<ProjectSearchModel, String> _f$projectTypeId =
-  Field('projectTypeId', _$projectTypeId, opt: true);
+      Field('projectTypeId', _$projectTypeId, opt: true);
   static String? _$projectNumber(ProjectSearchModel v) => v.projectNumber;
   static const Field<ProjectSearchModel, String> _f$projectNumber =
-  Field('projectNumber', _$projectNumber, opt: true);
+      Field('projectNumber', _$projectNumber, opt: true);
   static String? _$subProjectTypeId(ProjectSearchModel v) => v.subProjectTypeId;
   static const Field<ProjectSearchModel, String> _f$subProjectTypeId =
-  Field('subProjectTypeId', _$subProjectTypeId, opt: true);
+      Field('subProjectTypeId', _$subProjectTypeId, opt: true);
   static bool? _$isTaskEnabled(ProjectSearchModel v) => v.isTaskEnabled;
   static const Field<ProjectSearchModel, bool> _f$isTaskEnabled =
-  Field('isTaskEnabled', _$isTaskEnabled, opt: true);
+      Field('isTaskEnabled', _$isTaskEnabled, opt: true);
   static String? _$parent(ProjectSearchModel v) => v.parent;
   static const Field<ProjectSearchModel, String> _f$parent =
-  Field('parent', _$parent, opt: true);
+      Field('parent', _$parent, opt: true);
   static String? _$department(ProjectSearchModel v) => v.department;
   static const Field<ProjectSearchModel, String> _f$department =
-  Field('department', _$department, opt: true);
+      Field('department', _$department, opt: true);
   static String? _$referenceId(ProjectSearchModel v) => v.referenceId;
   static const Field<ProjectSearchModel, String> _f$referenceId =
-  Field('referenceId', _$referenceId, opt: true);
+      Field('referenceId', _$referenceId, opt: true);
   static String? _$tenantId(ProjectSearchModel v) => v.tenantId;
   static const Field<ProjectSearchModel, String> _f$tenantId =
-  Field('tenantId', _$tenantId, opt: true);
+      Field('tenantId', _$tenantId, opt: true);
   static int? _$startDate(ProjectSearchModel v) => v.startDate;
   static const Field<ProjectSearchModel, int> _f$startDate =
-  Field('startDate', _$startDate, opt: true);
+      Field('startDate', _$startDate, opt: true);
   static int? _$endDate(ProjectSearchModel v) => v.endDate;
   static const Field<ProjectSearchModel, int> _f$endDate =
-  Field('endDate', _$endDate, opt: true);
+      Field('endDate', _$endDate, opt: true);
   static String? _$boundaryCode(ProjectSearchModel v) => v.boundaryCode;
   static const Field<ProjectSearchModel, String> _f$boundaryCode =
-  Field('boundaryCode', _$boundaryCode, opt: true);
+      Field('boundaryCode', _$boundaryCode, opt: true);
   static AuditDetails? _$auditDetails(ProjectSearchModel v) => v.auditDetails;
   static const Field<ProjectSearchModel, AuditDetails> _f$auditDetails =
-  Field('auditDetails', _$auditDetails, mode: FieldMode.member);
+      Field('auditDetails', _$auditDetails, mode: FieldMode.member);
   static AdditionalFields? _$additionalFields(ProjectSearchModel v) =>
       v.additionalFields;
   static const Field<ProjectSearchModel, AdditionalFields> _f$additionalFields =
-  Field('additionalFields', _$additionalFields, mode: FieldMode.member);
+      Field('additionalFields', _$additionalFields, mode: FieldMode.member);
   static DateTime? _$startDateTime(ProjectSearchModel v) => v.startDateTime;
   static const Field<ProjectSearchModel, DateTime> _f$startDateTime =
-  Field('startDateTime', _$startDateTime, mode: FieldMode.member);
+      Field('startDateTime', _$startDateTime, mode: FieldMode.member);
   static DateTime? _$endDateTime(ProjectSearchModel v) => v.endDateTime;
   static const Field<ProjectSearchModel, DateTime> _f$endDateTime =
-  Field('endDateTime', _$endDateTime, mode: FieldMode.member);
+      Field('endDateTime', _$endDateTime, mode: FieldMode.member);
 
   @override
   final MappableFields<ProjectSearchModel> fields = const {
@@ -98,7 +98,7 @@ class ProjectSearchModelMapper extends SubClassMapperBase<ProjectSearchModel> {
   final dynamic discriminatorValue = MappableClass.useAsDefault;
   @override
   late final ClassMapperBase superMapper =
-  EntitySearchModelMapper.ensureInitialized();
+      EntitySearchModelMapper.ensureInitialized();
 
   static ProjectSearchModel _instantiate(DecodingData data) {
     return ProjectSearchModel.ignoreDeleted(
@@ -140,9 +140,9 @@ mixin ProjectSearchModelMappable {
   }
 
   ProjectSearchModelCopyWith<ProjectSearchModel, ProjectSearchModel,
-      ProjectSearchModel>
-  get copyWith => _ProjectSearchModelCopyWithImpl(
-      this as ProjectSearchModel, $identity, $identity);
+          ProjectSearchModel>
+      get copyWith => _ProjectSearchModelCopyWithImpl(
+          this as ProjectSearchModel, $identity, $identity);
   @override
   String toString() {
     return ProjectSearchModelMapper.ensureInitialized()
@@ -165,28 +165,28 @@ mixin ProjectSearchModelMappable {
 }
 
 extension ProjectSearchModelValueCopy<$R, $Out>
-on ObjectCopyWith<$R, ProjectSearchModel, $Out> {
+    on ObjectCopyWith<$R, ProjectSearchModel, $Out> {
   ProjectSearchModelCopyWith<$R, ProjectSearchModel, $Out>
-  get $asProjectSearchModel =>
-      $base.as((v, t, t2) => _ProjectSearchModelCopyWithImpl(v, t, t2));
+      get $asProjectSearchModel =>
+          $base.as((v, t, t2) => _ProjectSearchModelCopyWithImpl(v, t, t2));
 }
 
 abstract class ProjectSearchModelCopyWith<$R, $In extends ProjectSearchModel,
-$Out> implements EntitySearchModelCopyWith<$R, $In, $Out> {
+    $Out> implements EntitySearchModelCopyWith<$R, $In, $Out> {
   @override
   $R call(
       {String? id,
-        String? projectTypeId,
-        String? projectNumber,
-        String? subProjectTypeId,
-        bool? isTaskEnabled,
-        String? parent,
-        String? department,
-        String? referenceId,
-        String? tenantId,
-        int? startDate,
-        int? endDate,
-        String? boundaryCode});
+      String? projectTypeId,
+      String? projectNumber,
+      String? subProjectTypeId,
+      bool? isTaskEnabled,
+      String? parent,
+      String? department,
+      String? referenceId,
+      String? tenantId,
+      int? startDate,
+      int? endDate,
+      String? boundaryCode});
   ProjectSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -198,21 +198,21 @@ class _ProjectSearchModelCopyWithImpl<$R, $Out>
 
   @override
   late final ClassMapperBase<ProjectSearchModel> $mapper =
-  ProjectSearchModelMapper.ensureInitialized();
+      ProjectSearchModelMapper.ensureInitialized();
   @override
   $R call(
-      {Object? id = $none,
-        Object? projectTypeId = $none,
-        Object? projectNumber = $none,
-        Object? subProjectTypeId = $none,
-        Object? isTaskEnabled = $none,
-        Object? parent = $none,
-        Object? department = $none,
-        Object? referenceId = $none,
-        Object? tenantId = $none,
-        Object? startDate = $none,
-        Object? endDate = $none,
-        Object? boundaryCode = $none}) =>
+          {Object? id = $none,
+          Object? projectTypeId = $none,
+          Object? projectNumber = $none,
+          Object? subProjectTypeId = $none,
+          Object? isTaskEnabled = $none,
+          Object? parent = $none,
+          Object? department = $none,
+          Object? referenceId = $none,
+          Object? tenantId = $none,
+          Object? startDate = $none,
+          Object? endDate = $none,
+          Object? boundaryCode = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
         if (projectTypeId != $none) #projectTypeId: projectTypeId,
@@ -234,7 +234,7 @@ class _ProjectSearchModelCopyWithImpl<$R, $Out>
           projectTypeId: data.get(#projectTypeId, or: $value.projectTypeId),
           projectNumber: data.get(#projectNumber, or: $value.projectNumber),
           subProjectTypeId:
-          data.get(#subProjectTypeId, or: $value.subProjectTypeId),
+              data.get(#subProjectTypeId, or: $value.subProjectTypeId),
           isTaskEnabled: data.get(#isTaskEnabled, or: $value.isTaskEnabled),
           parent: data.get(#parent, or: $value.parent),
           department: data.get(#department, or: $value.department),
@@ -246,7 +246,7 @@ class _ProjectSearchModelCopyWithImpl<$R, $Out>
 
   @override
   ProjectSearchModelCopyWith<$R2, ProjectSearchModel, $Out2> $chain<$R2, $Out2>(
-      Then<$Out2, $R2> t) =>
+          Then<$Out2, $R2> t) =>
       _ProjectSearchModelCopyWithImpl($value, $cast, t);
 }
 
@@ -267,85 +267,85 @@ class ProjectModelMapper extends SubClassMapperBase<ProjectModel> {
   static ProjectAdditionalFields? _$additionalFields(ProjectModel v) =>
       v.additionalFields;
   static const Field<ProjectModel, ProjectAdditionalFields>
-  _f$additionalFields =
-  Field('additionalFields', _$additionalFields, opt: true);
+      _f$additionalFields =
+      Field('additionalFields', _$additionalFields, opt: true);
   static String _$id(ProjectModel v) => v.id;
   static const Field<ProjectModel, String> _f$id = Field('id', _$id);
   static String? _$projectTypeId(ProjectModel v) => v.projectTypeId;
   static const Field<ProjectModel, String> _f$projectTypeId =
-  Field('projectTypeId', _$projectTypeId, opt: true);
+      Field('projectTypeId', _$projectTypeId, opt: true);
   static String? _$projectNumber(ProjectModel v) => v.projectNumber;
   static const Field<ProjectModel, String> _f$projectNumber =
-  Field('projectNumber', _$projectNumber, opt: true);
+      Field('projectNumber', _$projectNumber, opt: true);
   static String? _$subProjectTypeId(ProjectModel v) => v.subProjectTypeId;
   static const Field<ProjectModel, String> _f$subProjectTypeId =
-  Field('subProjectTypeId', _$subProjectTypeId, opt: true);
+      Field('subProjectTypeId', _$subProjectTypeId, opt: true);
   static bool? _$isTaskEnabled(ProjectModel v) => v.isTaskEnabled;
   static const Field<ProjectModel, bool> _f$isTaskEnabled =
-  Field('isTaskEnabled', _$isTaskEnabled, opt: true);
+      Field('isTaskEnabled', _$isTaskEnabled, opt: true);
   static String? _$parent(ProjectModel v) => v.parent;
   static const Field<ProjectModel, String> _f$parent =
-  Field('parent', _$parent, opt: true);
+      Field('parent', _$parent, opt: true);
   static String _$name(ProjectModel v) => v.name;
   static const Field<ProjectModel, String> _f$name = Field('name', _$name);
   static String? _$department(ProjectModel v) => v.department;
   static const Field<ProjectModel, String> _f$department =
-  Field('department', _$department, opt: true);
+      Field('department', _$department, opt: true);
   static String? _$description(ProjectModel v) => v.description;
   static const Field<ProjectModel, String> _f$description =
-  Field('description', _$description, opt: true);
+      Field('description', _$description, opt: true);
   static String? _$referenceId(ProjectModel v) => v.referenceId;
   static const Field<ProjectModel, String> _f$referenceId =
-  Field('referenceId', _$referenceId, opt: true);
+      Field('referenceId', _$referenceId, opt: true);
   static String? _$projectHierarchy(ProjectModel v) => v.projectHierarchy;
   static const Field<ProjectModel, String> _f$projectHierarchy =
-  Field('projectHierarchy', _$projectHierarchy, opt: true);
+      Field('projectHierarchy', _$projectHierarchy, opt: true);
   static bool? _$nonRecoverableError(ProjectModel v) => v.nonRecoverableError;
   static const Field<ProjectModel, bool> _f$nonRecoverableError = Field(
       'nonRecoverableError', _$nonRecoverableError,
       opt: true, def: false);
   static String? _$tenantId(ProjectModel v) => v.tenantId;
   static const Field<ProjectModel, String> _f$tenantId =
-  Field('tenantId', _$tenantId, opt: true);
+      Field('tenantId', _$tenantId, opt: true);
   static int? _$rowVersion(ProjectModel v) => v.rowVersion;
   static const Field<ProjectModel, int> _f$rowVersion =
-  Field('rowVersion', _$rowVersion, opt: true);
+      Field('rowVersion', _$rowVersion, opt: true);
   static AddressModel? _$address(ProjectModel v) => v.address;
   static const Field<ProjectModel, AddressModel> _f$address =
-  Field('address', _$address, opt: true);
+      Field('address', _$address, opt: true);
   static List<TargetModel>? _$targets(ProjectModel v) => v.targets;
   static const Field<ProjectModel, List<TargetModel>> _f$targets =
-  Field('targets', _$targets, opt: true);
+      Field('targets', _$targets, opt: true);
   static List<DocumentModel>? _$documents(ProjectModel v) => v.documents;
   static const Field<ProjectModel, List<DocumentModel>> _f$documents =
-  Field('documents', _$documents, opt: true);
+      Field('documents', _$documents, opt: true);
   static ProjectAdditionalDetails? _$additionalDetails(ProjectModel v) =>
       v.additionalDetails;
   static const Field<ProjectModel, ProjectAdditionalDetails>
-  _f$additionalDetails =
-  Field('additionalDetails', _$additionalDetails, opt: true);
+      _f$additionalDetails =
+      Field('additionalDetails', _$additionalDetails, opt: true);
   static int? _$startDate(ProjectModel v) => v.startDate;
   static const Field<ProjectModel, int> _f$startDate =
-  Field('startDate', _$startDate, opt: true);
+      Field('startDate', _$startDate, opt: true);
   static int? _$endDate(ProjectModel v) => v.endDate;
   static const Field<ProjectModel, int> _f$endDate =
-  Field('endDate', _$endDate, opt: true);
+      Field('endDate', _$endDate, opt: true);
   static AuditDetails? _$auditDetails(ProjectModel v) => v.auditDetails;
   static const Field<ProjectModel, AuditDetails> _f$auditDetails =
-  Field('auditDetails', _$auditDetails, opt: true);
+      Field('auditDetails', _$auditDetails, opt: true);
   static ClientAuditDetails? _$clientAuditDetails(ProjectModel v) =>
       v.clientAuditDetails;
   static const Field<ProjectModel, ClientAuditDetails> _f$clientAuditDetails =
-  Field('clientAuditDetails', _$clientAuditDetails, opt: true);
+      Field('clientAuditDetails', _$clientAuditDetails, opt: true);
   static bool? _$isDeleted(ProjectModel v) => v.isDeleted;
   static const Field<ProjectModel, bool> _f$isDeleted =
-  Field('isDeleted', _$isDeleted, opt: true, def: false);
+      Field('isDeleted', _$isDeleted, opt: true, def: false);
   static DateTime? _$startDateTime(ProjectModel v) => v.startDateTime;
   static const Field<ProjectModel, DateTime> _f$startDateTime =
-  Field('startDateTime', _$startDateTime, mode: FieldMode.member);
+      Field('startDateTime', _$startDateTime, mode: FieldMode.member);
   static DateTime? _$endDateTime(ProjectModel v) => v.endDateTime;
   static const Field<ProjectModel, DateTime> _f$endDateTime =
-  Field('endDateTime', _$endDateTime, mode: FieldMode.member);
+      Field('endDateTime', _$endDateTime, mode: FieldMode.member);
 
   @override
   final MappableFields<ProjectModel> fields = const {
@@ -385,7 +385,7 @@ class ProjectModelMapper extends SubClassMapperBase<ProjectModel> {
   final dynamic discriminatorValue = MappableClass.useAsDefault;
   @override
   late final ClassMapperBase superMapper =
-  EntityModelMapper.ensureInitialized();
+      EntityModelMapper.ensureInitialized();
 
   static ProjectModel _instantiate(DecodingData data) {
     return ProjectModel(
@@ -462,7 +462,7 @@ mixin ProjectModelMappable {
 }
 
 extension ProjectModelValueCopy<$R, $Out>
-on ObjectCopyWith<$R, ProjectModel, $Out> {
+    on ObjectCopyWith<$R, ProjectModel, $Out> {
   ProjectModelCopyWith<$R, ProjectModel, $Out> get $asProjectModel =>
       $base.as((v, t, t2) => _ProjectModelCopyWithImpl(v, t, t2));
 }
@@ -482,33 +482,33 @@ abstract class ProjectModelCopyWith<$R, $In extends ProjectModel, $Out>
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
   @override
   ClientAuditDetailsCopyWith<$R, ClientAuditDetails, ClientAuditDetails>?
-  get clientAuditDetails;
+      get clientAuditDetails;
   @override
   $R call(
       {ProjectAdditionalFields? additionalFields,
-        String? id,
-        String? projectTypeId,
-        String? projectNumber,
-        String? subProjectTypeId,
-        bool? isTaskEnabled,
-        String? parent,
-        String? name,
-        String? department,
-        String? description,
-        String? referenceId,
-        String? projectHierarchy,
-        bool? nonRecoverableError,
-        String? tenantId,
-        int? rowVersion,
-        AddressModel? address,
-        List<TargetModel>? targets,
-        List<DocumentModel>? documents,
-        ProjectAdditionalDetails? additionalDetails,
-        int? startDate,
-        int? endDate,
-        AuditDetails? auditDetails,
-        ClientAuditDetails? clientAuditDetails,
-        bool? isDeleted});
+      String? id,
+      String? projectTypeId,
+      String? projectNumber,
+      String? subProjectTypeId,
+      bool? isTaskEnabled,
+      String? parent,
+      String? name,
+      String? department,
+      String? description,
+      String? referenceId,
+      String? projectHierarchy,
+      bool? nonRecoverableError,
+      String? tenantId,
+      int? rowVersion,
+      AddressModel? address,
+      List<TargetModel>? targets,
+      List<DocumentModel>? documents,
+      ProjectAdditionalDetails? additionalDetails,
+      int? startDate,
+      int? endDate,
+      AuditDetails? auditDetails,
+      ClientAuditDetails? clientAuditDetails,
+      bool? isDeleted});
   ProjectModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -519,67 +519,67 @@ class _ProjectModelCopyWithImpl<$R, $Out>
 
   @override
   late final ClassMapperBase<ProjectModel> $mapper =
-  ProjectModelMapper.ensureInitialized();
+      ProjectModelMapper.ensureInitialized();
   @override
   ProjectAdditionalFieldsCopyWith<$R, ProjectAdditionalFields,
-      ProjectAdditionalFields>?
-  get additionalFields => $value.additionalFields?.copyWith
-      .$chain((v) => call(additionalFields: v));
+          ProjectAdditionalFields>?
+      get additionalFields => $value.additionalFields?.copyWith
+          .$chain((v) => call(additionalFields: v));
   @override
   AddressModelCopyWith<$R, AddressModel, AddressModel>? get address =>
       $value.address?.copyWith.$chain((v) => call(address: v));
   @override
   ListCopyWith<$R, TargetModel,
-      TargetModelCopyWith<$R, TargetModel, TargetModel>>?
-  get targets => $value.targets != null
-      ? ListCopyWith($value.targets!, (v, t) => v.copyWith.$chain(t),
-          (v) => call(targets: v))
-      : null;
+          TargetModelCopyWith<$R, TargetModel, TargetModel>>?
+      get targets => $value.targets != null
+          ? ListCopyWith($value.targets!, (v, t) => v.copyWith.$chain(t),
+              (v) => call(targets: v))
+          : null;
   @override
   ListCopyWith<$R, DocumentModel,
-      DocumentModelCopyWith<$R, DocumentModel, DocumentModel>>?
-  get documents => $value.documents != null
-      ? ListCopyWith($value.documents!, (v, t) => v.copyWith.$chain(t),
-          (v) => call(documents: v))
-      : null;
+          DocumentModelCopyWith<$R, DocumentModel, DocumentModel>>?
+      get documents => $value.documents != null
+          ? ListCopyWith($value.documents!, (v, t) => v.copyWith.$chain(t),
+              (v) => call(documents: v))
+          : null;
   @override
   ProjectAdditionalDetailsCopyWith<$R, ProjectAdditionalDetails,
-      ProjectAdditionalDetails>?
-  get additionalDetails => $value.additionalDetails?.copyWith
-      .$chain((v) => call(additionalDetails: v));
+          ProjectAdditionalDetails>?
+      get additionalDetails => $value.additionalDetails?.copyWith
+          .$chain((v) => call(additionalDetails: v));
   @override
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
       $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
   @override
   ClientAuditDetailsCopyWith<$R, ClientAuditDetails, ClientAuditDetails>?
-  get clientAuditDetails => $value.clientAuditDetails?.copyWith
-      .$chain((v) => call(clientAuditDetails: v));
+      get clientAuditDetails => $value.clientAuditDetails?.copyWith
+          .$chain((v) => call(clientAuditDetails: v));
   @override
   $R call(
-      {Object? additionalFields = $none,
-        String? id,
-        Object? projectTypeId = $none,
-        Object? projectNumber = $none,
-        Object? subProjectTypeId = $none,
-        Object? isTaskEnabled = $none,
-        Object? parent = $none,
-        String? name,
-        Object? department = $none,
-        Object? description = $none,
-        Object? referenceId = $none,
-        Object? projectHierarchy = $none,
-        Object? nonRecoverableError = $none,
-        Object? tenantId = $none,
-        Object? rowVersion = $none,
-        Object? address = $none,
-        Object? targets = $none,
-        Object? documents = $none,
-        Object? additionalDetails = $none,
-        Object? startDate = $none,
-        Object? endDate = $none,
-        Object? auditDetails = $none,
-        Object? clientAuditDetails = $none,
-        Object? isDeleted = $none}) =>
+          {Object? additionalFields = $none,
+          String? id,
+          Object? projectTypeId = $none,
+          Object? projectNumber = $none,
+          Object? subProjectTypeId = $none,
+          Object? isTaskEnabled = $none,
+          Object? parent = $none,
+          String? name,
+          Object? department = $none,
+          Object? description = $none,
+          Object? referenceId = $none,
+          Object? projectHierarchy = $none,
+          Object? nonRecoverableError = $none,
+          Object? tenantId = $none,
+          Object? rowVersion = $none,
+          Object? address = $none,
+          Object? targets = $none,
+          Object? documents = $none,
+          Object? additionalDetails = $none,
+          Object? startDate = $none,
+          Object? endDate = $none,
+          Object? auditDetails = $none,
+          Object? clientAuditDetails = $none,
+          Object? isDeleted = $none}) =>
       $apply(FieldCopyWithData({
         if (additionalFields != $none) #additionalFields: additionalFields,
         if (id != null) #id: id,
@@ -611,12 +611,12 @@ class _ProjectModelCopyWithImpl<$R, $Out>
   @override
   ProjectModel $make(CopyWithData data) => ProjectModel(
       additionalFields:
-      data.get(#additionalFields, or: $value.additionalFields),
+          data.get(#additionalFields, or: $value.additionalFields),
       id: data.get(#id, or: $value.id),
       projectTypeId: data.get(#projectTypeId, or: $value.projectTypeId),
       projectNumber: data.get(#projectNumber, or: $value.projectNumber),
       subProjectTypeId:
-      data.get(#subProjectTypeId, or: $value.subProjectTypeId),
+          data.get(#subProjectTypeId, or: $value.subProjectTypeId),
       isTaskEnabled: data.get(#isTaskEnabled, or: $value.isTaskEnabled),
       parent: data.get(#parent, or: $value.parent),
       name: data.get(#name, or: $value.name),
@@ -624,26 +624,26 @@ class _ProjectModelCopyWithImpl<$R, $Out>
       description: data.get(#description, or: $value.description),
       referenceId: data.get(#referenceId, or: $value.referenceId),
       projectHierarchy:
-      data.get(#projectHierarchy, or: $value.projectHierarchy),
+          data.get(#projectHierarchy, or: $value.projectHierarchy),
       nonRecoverableError:
-      data.get(#nonRecoverableError, or: $value.nonRecoverableError),
+          data.get(#nonRecoverableError, or: $value.nonRecoverableError),
       tenantId: data.get(#tenantId, or: $value.tenantId),
       rowVersion: data.get(#rowVersion, or: $value.rowVersion),
       address: data.get(#address, or: $value.address),
       targets: data.get(#targets, or: $value.targets),
       documents: data.get(#documents, or: $value.documents),
       additionalDetails:
-      data.get(#additionalDetails, or: $value.additionalDetails),
+          data.get(#additionalDetails, or: $value.additionalDetails),
       startDate: data.get(#startDate, or: $value.startDate),
       endDate: data.get(#endDate, or: $value.endDate),
       auditDetails: data.get(#auditDetails, or: $value.auditDetails),
       clientAuditDetails:
-      data.get(#clientAuditDetails, or: $value.clientAuditDetails),
+          data.get(#clientAuditDetails, or: $value.clientAuditDetails),
       isDeleted: data.get(#isDeleted, or: $value.isDeleted));
 
   @override
   ProjectModelCopyWith<$R2, ProjectModel, $Out2> $chain<$R2, $Out2>(
-      Then<$Out2, $R2> t) =>
+          Then<$Out2, $R2> t) =>
       _ProjectModelCopyWithImpl($value, $cast, t);
 }
 
@@ -665,13 +665,13 @@ class ProjectAdditionalFieldsMapper
 
   static String _$schema(ProjectAdditionalFields v) => v.schema;
   static const Field<ProjectAdditionalFields, String> _f$schema =
-  Field('schema', _$schema, opt: true, def: 'Project');
+      Field('schema', _$schema, opt: true, def: 'Project');
   static int _$version(ProjectAdditionalFields v) => v.version;
   static const Field<ProjectAdditionalFields, int> _f$version =
-  Field('version', _$version);
+      Field('version', _$version);
   static List<AdditionalField> _$fields(ProjectAdditionalFields v) => v.fields;
   static const Field<ProjectAdditionalFields, List<AdditionalField>> _f$fields =
-  Field('fields', _$fields, opt: true, def: const []);
+      Field('fields', _$fields, opt: true, def: const []);
 
   @override
   final MappableFields<ProjectAdditionalFields> fields = const {
@@ -688,7 +688,7 @@ class ProjectAdditionalFieldsMapper
   final dynamic discriminatorValue = MappableClass.useAsDefault;
   @override
   late final ClassMapperBase superMapper =
-  AdditionalFieldsMapper.ensureInitialized();
+      AdditionalFieldsMapper.ensureInitialized();
 
   static ProjectAdditionalFields _instantiate(DecodingData data) {
     return ProjectAdditionalFields(
@@ -721,9 +721,9 @@ mixin ProjectAdditionalFieldsMappable {
   }
 
   ProjectAdditionalFieldsCopyWith<ProjectAdditionalFields,
-      ProjectAdditionalFields, ProjectAdditionalFields>
-  get copyWith => _ProjectAdditionalFieldsCopyWithImpl(
-      this as ProjectAdditionalFields, $identity, $identity);
+          ProjectAdditionalFields, ProjectAdditionalFields>
+      get copyWith => _ProjectAdditionalFieldsCopyWithImpl(
+          this as ProjectAdditionalFields, $identity, $identity);
   @override
   String toString() {
     return ProjectAdditionalFieldsMapper.ensureInitialized()
@@ -746,16 +746,16 @@ mixin ProjectAdditionalFieldsMappable {
 }
 
 extension ProjectAdditionalFieldsValueCopy<$R, $Out>
-on ObjectCopyWith<$R, ProjectAdditionalFields, $Out> {
+    on ObjectCopyWith<$R, ProjectAdditionalFields, $Out> {
   ProjectAdditionalFieldsCopyWith<$R, ProjectAdditionalFields, $Out>
-  get $asProjectAdditionalFields => $base
-      .as((v, t, t2) => _ProjectAdditionalFieldsCopyWithImpl(v, t, t2));
+      get $asProjectAdditionalFields => $base
+          .as((v, t, t2) => _ProjectAdditionalFieldsCopyWithImpl(v, t, t2));
 }
 
 abstract class ProjectAdditionalFieldsCopyWith<
-$R,
-$In extends ProjectAdditionalFields,
-$Out> implements AdditionalFieldsCopyWith<$R, $In, $Out> {
+    $R,
+    $In extends ProjectAdditionalFields,
+    $Out> implements AdditionalFieldsCopyWith<$R, $In, $Out> {
   @override
   ListCopyWith<$R, AdditionalField,
       AdditionalFieldCopyWith<$R, AdditionalField, AdditionalField>> get fields;
@@ -773,11 +773,11 @@ class _ProjectAdditionalFieldsCopyWithImpl<$R, $Out>
 
   @override
   late final ClassMapperBase<ProjectAdditionalFields> $mapper =
-  ProjectAdditionalFieldsMapper.ensureInitialized();
+      ProjectAdditionalFieldsMapper.ensureInitialized();
   @override
   ListCopyWith<$R, AdditionalField,
-      AdditionalFieldCopyWith<$R, AdditionalField, AdditionalField>>
-  get fields => ListCopyWith($value.fields, (v, t) => v.copyWith.$chain(t),
+          AdditionalFieldCopyWith<$R, AdditionalField, AdditionalField>>
+      get fields => ListCopyWith($value.fields, (v, t) => v.copyWith.$chain(t),
           (v) => call(fields: v));
   @override
   $R call({String? schema, int? version, List<AdditionalField>? fields}) =>
@@ -794,8 +794,8 @@ class _ProjectAdditionalFieldsCopyWithImpl<$R, $Out>
 
   @override
   ProjectAdditionalFieldsCopyWith<$R2, ProjectAdditionalFields, $Out2>
-  $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _ProjectAdditionalFieldsCopyWithImpl($value, $cast, t);
+      $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+          _ProjectAdditionalFieldsCopyWithImpl($value, $cast, t);
 }
 
 class ProjectAdditionalDetailsMapper
@@ -817,7 +817,7 @@ class ProjectAdditionalDetailsMapper
   static ProjectTypeModel? _$projectType(ProjectAdditionalDetails v) =>
       v.projectType;
   static const Field<ProjectAdditionalDetails, ProjectTypeModel>
-  _f$projectType = Field('projectType', _$projectType, opt: true);
+      _f$projectType = Field('projectType', _$projectType, opt: true);
 
   @override
   final MappableFields<ProjectAdditionalDetails> fields = const {
@@ -854,9 +854,9 @@ mixin ProjectAdditionalDetailsMappable {
   }
 
   ProjectAdditionalDetailsCopyWith<ProjectAdditionalDetails,
-      ProjectAdditionalDetails, ProjectAdditionalDetails>
-  get copyWith => _ProjectAdditionalDetailsCopyWithImpl(
-      this as ProjectAdditionalDetails, $identity, $identity);
+          ProjectAdditionalDetails, ProjectAdditionalDetails>
+      get copyWith => _ProjectAdditionalDetailsCopyWithImpl(
+          this as ProjectAdditionalDetails, $identity, $identity);
   @override
   String toString() {
     return ProjectAdditionalDetailsMapper.ensureInitialized()
@@ -879,18 +879,18 @@ mixin ProjectAdditionalDetailsMappable {
 }
 
 extension ProjectAdditionalDetailsValueCopy<$R, $Out>
-on ObjectCopyWith<$R, ProjectAdditionalDetails, $Out> {
+    on ObjectCopyWith<$R, ProjectAdditionalDetails, $Out> {
   ProjectAdditionalDetailsCopyWith<$R, ProjectAdditionalDetails, $Out>
-  get $asProjectAdditionalDetails => $base
-      .as((v, t, t2) => _ProjectAdditionalDetailsCopyWithImpl(v, t, t2));
+      get $asProjectAdditionalDetails => $base
+          .as((v, t, t2) => _ProjectAdditionalDetailsCopyWithImpl(v, t, t2));
 }
 
 abstract class ProjectAdditionalDetailsCopyWith<
-$R,
-$In extends ProjectAdditionalDetails,
-$Out> implements ClassCopyWith<$R, $In, $Out> {
+    $R,
+    $In extends ProjectAdditionalDetails,
+    $Out> implements ClassCopyWith<$R, $In, $Out> {
   ProjectTypeModelCopyWith<$R, ProjectTypeModel, ProjectTypeModel>?
-  get projectType;
+      get projectType;
   $R call({ProjectTypeModel? projectType});
   ProjectAdditionalDetailsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
@@ -904,11 +904,11 @@ class _ProjectAdditionalDetailsCopyWithImpl<$R, $Out>
 
   @override
   late final ClassMapperBase<ProjectAdditionalDetails> $mapper =
-  ProjectAdditionalDetailsMapper.ensureInitialized();
+      ProjectAdditionalDetailsMapper.ensureInitialized();
   @override
   ProjectTypeModelCopyWith<$R, ProjectTypeModel, ProjectTypeModel>?
-  get projectType =>
-      $value.projectType?.copyWith.$chain((v) => call(projectType: v));
+      get projectType =>
+          $value.projectType?.copyWith.$chain((v) => call(projectType: v));
   @override
   $R call({Object? projectType = $none}) => $apply(
       FieldCopyWithData({if (projectType != $none) #projectType: projectType}));
@@ -918,6 +918,6 @@ class _ProjectAdditionalDetailsCopyWithImpl<$R, $Out>
 
   @override
   ProjectAdditionalDetailsCopyWith<$R2, ProjectAdditionalDetails, $Out2>
-  $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _ProjectAdditionalDetailsCopyWithImpl($value, $cast, t);
+      $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+          _ProjectAdditionalDetailsCopyWithImpl($value, $cast, t);
 }

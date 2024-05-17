@@ -96,9 +96,10 @@ void initializeMappers() {
   p20.ProjectStaffAdditionalFieldsMapper.ensureInitialized();
   p21.ProjectTypeModelMapper.ensureInitialized();
   p21.ProjectTypeAdditionalFieldsMapper.ensureInitialized();
+  p21.ProjectCycleMapper.ensureInitialized();
+  p21.ProjectCycleDeliveryMapper.ensureInitialized();
   p21.DeliveryDoseCriteriaMapper.ensureInitialized();
   p21.DeliveryProductVariantMapper.ensureInitialized();
-  p21.ProjectCycleDeliveryMapper.ensureInitialized();
   p22.ServiceSearchModelMapper.ensureInitialized();
   p22.ServiceModelMapper.ensureInitialized();
   p22.ServiceAdditionalFieldsMapper.ensureInitialized();

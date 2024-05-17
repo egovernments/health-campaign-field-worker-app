@@ -10,7 +10,6 @@ import 'package:referral_reconciliation/models/entities/referral_recon_enums.dar
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
-import '../../blocs/project_facility.dart';
 import '../../blocs/referral_recon_record.dart';
 import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
@@ -63,8 +62,8 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
     final theme = Theme.of(context);
     // final router = context.router;
 
-    return BlocConsumer<ReferralReconProjectFacilityBloc,
-        ReferralReconProjectFacilityState>(
+    return BlocConsumer<ProjectFacilityBloc,
+        ProjectFacilityState>(
       listener: (context, state) {
         state.whenOrNull(
           empty: () => false,
