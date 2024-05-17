@@ -12,7 +12,6 @@ import 'package:registration_delivery/data/repositories/local/registration_deliv
 import 'package:registration_delivery/registration_delivery.dart';
 
 
-import '../blocs/boundary/boundary.dart';
 import '../blocs/localization/app_localization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
 import '../blocs/sync/sync.dart';

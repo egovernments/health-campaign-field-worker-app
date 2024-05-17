@@ -9,7 +9,6 @@ import 'package:qr_flutter/qr_flutter.dart';
 import '../../../blocs/localization/app_localization.dart';
 import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/auth/auth.dart';
-import '../../blocs/boundary/boundary.dart';
 import '../../blocs/localization/localization.dart';
 import '../../models/data_model.dart';
 import '../../models/entities/roles_type.dart';
@@ -217,17 +216,17 @@ class SideBar extends StatelessWidget {
               },
             );
           }),
-          // if (isDistributor)
-          //   DigitIconTile(
-          //     title: AppLocalizations.of(context).translate(
-          //       i18.common.coreCommonViewDownloadedData,
-          //     ),
-          //     icon: Icons.download,
-          //     onPressed: () {
-          //       Navigator.of(context, rootNavigator: true).pop();
-          //       context.router.push(const BeneficiariesReportRoute());
-          //     },
-          //   ),
+          if (isDistributor)
+            DigitIconTile(
+              title: AppLocalizations.of(context).translate(
+                i18.common.coreCommonViewDownloadedData,
+              ),
+              icon: Icons.download,
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true).pop();
+                context.router.push(const BeneficiariesReportRoute());
+              },
+            ),
           DigitIconTile(
             title: AppLocalizations.of(context)
                 .translate(i18.common.coreCommonLogout),

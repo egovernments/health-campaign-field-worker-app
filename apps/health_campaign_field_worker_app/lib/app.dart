@@ -11,7 +11,6 @@ import 'package:location/location.dart';
 
 import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
-import 'blocs/boundary/boundary.dart';
 import 'blocs/localization/localization.dart';
 import 'blocs/project/project.dart';
 import 'data/local_store/app_shared_preferences.dart';
