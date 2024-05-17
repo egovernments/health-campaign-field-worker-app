@@ -29,34 +29,36 @@ class MockStockReconciliationReport extends Mock
 }
 
 class MockInventoryReport extends Mock {
-  @override
   Map<String, List<StockModel>> stocksReport = {
     'stock1': [StockModel(id: '1', clientReferenceId: 'abc123')],
   };
 }
 
-class MockStockDataRepository extends Mock implements StockDataRepository {}
-
-class MockStockReconciliationDataRepository extends Mock
-    implements StockReconciliationDataRepository {}
-
-// Mock class for InventorySingleton
-class MockInventorySingleton extends Mock implements InventorySingleton {
-  // Mock method for fetching inventory reports
-  @override
-  Future<Map<String, List<StockModel>>> fetchInventoryReports(
-      {required InventoryReportType reportType,
-      required String facilityId,
-      required String productVariantId}) async {
+class MockStockDataRepository extends Mock implements StockDataRepository {
+  Future<Map<String, List<StockModel>>> getStockData({
+    required InventoryReportType reportType,
+    required String facilityId,
+    required String productVariantId,
+  }) async {
     return MockInventoryReport().stocksReport;
   }
+}
 
-  // Mock method for handling stock reconciliation report
-  @override
-  Future<StockReconciliationReport?> handleStockReconciliationReport(
-      {required String productVariantId, required String facilityId}) async {
-    return MockStockReconciliationReport();
+class MockStockReconciliationDataRepository extends Mock
+    implements StockReconciliationDataRepository {
+  Future<Map<String, List<StockReconciliationModel>>>
+      getStockReconciliationData(
+          {required String facilityId,
+          required String productVariantId}) async {
+    return MockStockReconciliationReport().stockReconModel;
   }
+}
+
+class MockInventoryBloc extends Mock implements InventoryReportBloc {
+  MockInventoryBloc({
+    required StockDataRepository stockRepository,
+    required StockReconciliationDataRepository stockReconciliationRepository,
+  }) : super();
 }
 
 // Fake class for StockReconciliationReport for testing
@@ -70,16 +72,14 @@ void main() {
   });
 
   group('InventoryReportBloc', () {
-    late MockInventorySingleton mockInventorySingleton;
-    late InventoryReportBloc mockInventoryReportBloc;
+    late MockInventoryBloc mockInventoryReportBloc;
     late InventoryReportType mockReportType;
     late String mockFacilityId;
     late String mockProductVariantId;
 
     setUp(() {
       // Setting up the mock and the bloc for each test
-      mockInventorySingleton = MockInventorySingleton();
-      mockInventoryReportBloc = InventoryReportBloc(
+      mockInventoryReportBloc = MockInventoryBloc(
         stockRepository: MockStockDataRepository(),
         stockReconciliationRepository: MockStockReconciliationDataRepository(),
       );
@@ -89,9 +89,9 @@ void main() {
     });
 
     // Test for loadStockData event
-    blocTest<InventoryReportBloc, InventoryReportState>(
+    blocTest<MockInventoryBloc, InventoryReportState>(
       'emits [InventoryReportLoadingState, InventoryReportStockState] when loadStockData event is added',
-      build: () => InventoryReportBloc(
+      build: () => MockInventoryBloc(
         stockRepository: MockStockDataRepository(),
         stockReconciliationRepository: MockStockReconciliationDataRepository(),
       ),
@@ -107,9 +107,9 @@ void main() {
     );
 
     // Test for loadStockReconciliationData event
-    blocTest<InventoryReportBloc, InventoryReportState>(
+    blocTest<MockInventoryBloc, InventoryReportState>(
       'emits [InventoryReportLoadingState, InventoryReportStockReconciliationState] when loadStockReconciliationData event is added',
-      build: () => InventoryReportBloc(
+      build: () => MockInventoryBloc(
         stockRepository: MockStockDataRepository(),
         stockReconciliationRepository: MockStockReconciliationDataRepository(),
       ),
@@ -118,8 +118,8 @@ void main() {
       expect: () => <InventoryReportState>[
         const InventoryReportLoadingState(),
         InventoryReportStockReconciliationState(
-            data: MockStockReconciliationReport().stockReconModel,
-            additionalData: MockStockReconciliationReport().additionalData),
+          data: MockStockReconciliationReport().stockReconModel,
+        ),
       ],
     );
 

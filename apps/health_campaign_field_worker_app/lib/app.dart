@@ -269,7 +269,7 @@ class MainApplicationState extends State<MainApplication>
                         ),
                         BlocProvider(
                           create: (context) => ProjectFacilityBloc(
-                            const ProjectFacilityState.empty(),
+                            const ProjectFacilityState.loading(),
                             projectFacilityDataRepository: context.repository<
                                 ProjectFacilityModel,
                                 ProjectFacilitySearchModel>(),

@@ -10,7 +10,6 @@ import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 import 'package:registration_delivery/models/entities/referral.dart';
 import 'package:registration_delivery/models/entities/side_effect.dart';
 import 'package:registration_delivery/models/entities/task.dart';
-import '../../../../models/oplog/oplog_entry.dart';
 
 part 'oplog.g.dart';
 
@@ -25,7 +24,6 @@ class OpLog {
 
   /// The `getEntity` method is used to deserialize the `entityString` into an entity object.
   /// It uses the `entityType` field to determine the type of the entity and the appropriate mapper to use for deserialization.
-  @ignore
   getEntity<T extends EntityModel>() {
     // The switch statement checks the `entityType` and uses the appropriate mapper to deserialize the `entityString`.
     // If the `entityType` does not match any of the predefined types, it uses the `EntityModelMapper` to deserialize the `entityString`.

@@ -15,6 +15,7 @@ import 'package:inventory_management/blocs/app_localization.dart' as _i12;
 import 'package:inventory_management/blocs/inventory_listener.dart' as _i15;
 import 'package:inventory_management/blocs/inventory_report.dart' as _i14;
 import 'package:inventory_management/blocs/record_stock.dart' as _i16;
+import 'package:inventory_management/inventory_management.dart' as _i17;
 import 'package:inventory_management/pages/acknowledgement.dart' as _i1;
 import 'package:inventory_management/pages/facility_selection.dart' as _i2;
 import 'package:inventory_management/pages/manage_stocks.dart' as _i5;
@@ -472,7 +473,7 @@ class StockDetailsRouteArgs {
 class StockReconciliationRoute
     extends _i10.PageRouteInfo<StockReconciliationRouteArgs> {
   StockReconciliationRoute({
-    required _i15.InventoryListener inventoryListener,
+    required _i17.InventoryListener inventoryListener,
     required String projectId,
     required bool? isDistributor,
     required bool? isWareHouseMgr,
@@ -511,7 +512,7 @@ class StockReconciliationRouteArgs {
     this.appLocalizations,
   });
 
-  final _i15.InventoryListener inventoryListener;
+  final _i17.InventoryListener inventoryListener;
 
   final String projectId;
 

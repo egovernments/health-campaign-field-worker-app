@@ -1,7 +1,6 @@
 import 'package:drift/drift.dart';
 
 import '../../../../data_model.dart';
-import '../../../../models/entities/user.dart';
 
 abstract class UserLocalBaseRepository
     extends LocalRepository<UserModel, UserSearchModel> {
@@ -10,6 +9,5 @@ abstract class UserLocalBaseRepository
   @override
   DataModelType get type => DataModelType.user;
 
-  @override
   TableInfo get table => sql.user;
 }

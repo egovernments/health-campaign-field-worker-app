@@ -1,6 +1,5 @@
 // Importing necessary packages and files.
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/models/entities/facility.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../utils/typedefs.dart';

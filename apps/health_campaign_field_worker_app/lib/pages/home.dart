@@ -776,8 +776,6 @@ void setPackagesSingleton(BuildContext context) {
           ),
           userName: context.loggedInUser.name ?? '',
           userUUid: context.loggedInUserUuid,
-          boundaryName: context.boundary.name ?? '',
-          boundaryCode: context.boundary.code ?? '',
           projectId: context.selectedProject.id,
           projectName: context.selectedProject.name,
           roleCode: RolesType.healthFacilityWorker.toValue(),

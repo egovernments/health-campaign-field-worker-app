@@ -8,6 +8,5 @@ abstract class ProductVariantLocalBaseRepository
   @override
   DataModelType get type => DataModelType.productVariant;
 
-  @override
   TableInfo get table => sql.productVariant;
 }

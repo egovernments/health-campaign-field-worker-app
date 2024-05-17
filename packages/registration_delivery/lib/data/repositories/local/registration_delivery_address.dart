@@ -5,11 +5,12 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
 
 import '../../../models/entities/household.dart';
-import '../../../utils/utils.dart';
 
 class RegistrationDeliveryAddressRepo extends AddressLocalRepository {
   RegistrationDeliveryAddressRepo(
-      super.sql, super.opLogManager,);
+    super.sql,
+    super.opLogManager,
+  );
 
   FutureOr<List<HouseholdModel>> searchHouseHoldbyAddress(
     AddressSearchModel query, [
@@ -68,8 +69,7 @@ class RegistrationDeliveryAddressRepo extends AddressLocalRepository {
 
     return results
         .map((e) {
-          final household =
-              e.readTableOrNull(sql.household);
+          final household = e.readTableOrNull(sql.household);
           final address = e.readTableOrNull(sql.address);
 
           return HouseholdModel(
@@ -178,8 +178,7 @@ class RegistrationDeliveryAddressRepo extends AddressLocalRepository {
 
     return results
         .map((e) {
-          final individual =
-              e.readTableOrNull(sql.individual);
+          final individual = e.readTableOrNull(sql.individual);
           final address = e.readTableOrNull(sql.address);
           final name = e.readTableOrNull(sql.name);
 

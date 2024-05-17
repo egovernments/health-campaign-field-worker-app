@@ -141,16 +141,16 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                 final boundary = selectedProject.address?.boundary;
 
                 if (boundary != null) {
-                  context.read<BoundaryBloc>().add(
-                        BoundaryFindEvent(
-                          code: boundary,
-                        ),
-                      );
-
-                  context.router.replaceAll([
-                    HomeRoute(),
-                    BoundarySelectionRoute(),
-                  ]);
+                  BoundaryBloc boundaryBloc = context.read<BoundaryBloc>();
+                  boundaryBloc.add(BoundaryFindEvent(code: boundary));
+                  boundaryBloc.stream
+                      .firstWhere((element) => element.boundaryList.isNotEmpty)
+                      .then((value) {
+                    context.router.replaceAll([
+                      HomeRoute(),
+                      BoundarySelectionRoute(),
+                    ]);
+                  });
                 } else {
                   DigitToast.show(
                     context,

@@ -9,6 +9,5 @@ abstract class FacilityLocalBaseRepository
   @override
   DataModelType get type => DataModelType.facility;
 
-  @override
   TableInfo get table => sql.facility;
 }
