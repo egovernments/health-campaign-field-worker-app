@@ -1,11 +1,11 @@
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_table_model.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/blocs/app_localization.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
-import 'package:digit_data_model/data_model.dart';
 
 import '../../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../../models/entities/additional_fields_type.dart';
@@ -17,7 +17,7 @@ import '../../../widgets/localized.dart';
 
 class RecordDeliveryCycle extends LocalizedStatefulWidget {
   final List<TaskModel>? taskData;
-  final List<Cycle> projectCycles;
+  final List<ProjectCycle> projectCycles;
   final IndividualModel? individualModel;
 
   const RecordDeliveryCycle({
@@ -182,7 +182,7 @@ class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
   }
 
   Widget buildCycleAndDoseTable(
-    List<Cycle> cycles,
+    List<ProjectCycle> cycles,
     List<TableHeader> headerList,
     int? selectedIndex,
     bool isCurrentCycle,

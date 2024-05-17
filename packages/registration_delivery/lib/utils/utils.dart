@@ -1,10 +1,10 @@
 // Importing necessary packages and modules
 import 'dart:math';
 
+import 'package:collection/collection.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:collection/collection.dart';
 
 import '../blocs/registraton_delivery_listener.dart';
 import '../models/entities/additional_fields_type.dart';
@@ -48,7 +48,7 @@ class CustomValidator {
 
 bool checkStatus(
   List<TaskModel>? tasks,
-  Cycle? currentCycle,
+  ProjectCycle? currentCycle,
 ) {
   if (currentCycle != null &&
       currentCycle.startDate != null &&
@@ -96,7 +96,7 @@ bool checkIfBeneficiaryRefused(
 ///  * Returns [true] if the individual is in the same cycle and is eligible for the next dose,
 bool checkEligibilityForAgeAndSideEffect(
   DigitDOBAge age,
-  ProjectType? projectType,
+  ProjectTypeModel? projectType,
   TaskModel? tasks,
   List<SideEffectModel>? sideEffects,
 ) {
@@ -141,7 +141,7 @@ bool checkEligibilityForAgeAndSideEffect(
 }
 
 bool recordedSideEffect(
-  Cycle? selectedCycle,
+  ProjectCycle? selectedCycle,
   TaskModel? task,
   List<SideEffectModel>? sideEffects,
 ) {
@@ -155,8 +155,8 @@ bool recordedSideEffect(
               : null;
 
       return lastTaskCreatedTime != null &&
-          lastTaskCreatedTime >= selectedCycle.startDate! &&
-          lastTaskCreatedTime <= selectedCycle.endDate!;
+          lastTaskCreatedTime >= selectedCycle.startDate &&
+          lastTaskCreatedTime <= selectedCycle.endDate;
     }
   }
 
@@ -165,15 +165,14 @@ bool recordedSideEffect(
 
 bool checkIfBeneficiaryReferred(
   List<ReferralModel>? referrals,
-  Cycle currentCycle,
+  ProjectCycle? currentCycle,
 ) {
-  if (currentCycle.startDate != null && currentCycle.endDate != null) {
+  if (currentCycle?.startDate != null && currentCycle?.endDate != null) {
     final isBeneficiaryReferred = (referrals != null &&
         (referrals ?? []).isNotEmpty &&
         referrals.last.clientAuditDetails!.createdTime >=
-            currentCycle.startDate! &&
-        referrals.last.clientAuditDetails!.createdTime <=
-            currentCycle.endDate!);
+            currentCycle!.startDate &&
+        referrals.last.clientAuditDetails!.createdTime <= currentCycle.endDate);
 
     return isBeneficiaryReferred;
   } else {
@@ -181,8 +180,8 @@ bool checkIfBeneficiaryReferred(
   }
 }
 
-DoseCriteriaModel? fetchProductVariant(
-  DeliveryModel? currentDelivery,
+DeliveryDoseCriteria? fetchProductVariant(
+  ProjectCycleDelivery? currentDelivery,
   IndividualModel? individualModel,
 ) {
   if (currentDelivery != null && individualModel != null) {
@@ -283,7 +282,7 @@ class RegistrationDeliverySingleton {
   double? _maxRadius;
   String? _projectId;
   BeneficiaryType? _beneficiaryType;
-  ProjectType? _projectType;
+  ProjectTypeModel? _projectType;
   ProjectModel? _selectedProject;
   BoundaryModel? _boundaryModel;
   PersistenceConfiguration? _persistenceConfiguration = PersistenceConfiguration
@@ -315,7 +314,7 @@ class RegistrationDeliverySingleton {
       required double maxRadius,
       required String projectId,
       required BeneficiaryType selectedBeneficiaryType,
-      required ProjectType? projectType,
+      required ProjectTypeModel? projectType,
       required ProjectModel selectedProject,
       required List<Map<String, String>> genderOptions,
       required List<Map<String, String>> idTypeOptions,
@@ -349,7 +348,7 @@ class RegistrationDeliverySingleton {
   double? get maxRadius => _maxRadius;
   String? get projectId => _projectId;
   BeneficiaryType? get beneficiaryType => _beneficiaryType;
-  ProjectType? get projectType => _projectType;
+  ProjectTypeModel? get projectType => _projectType;
   ProjectModel? get selectedProject => _selectedProject;
   BoundaryModel? get boundary => _boundaryModel;
   PersistenceConfiguration? get persistenceConfiguration =>
@@ -374,7 +373,7 @@ class RegistrationDeliverySingleton {
 
 bool allDosesDelivered(
   List<TaskModel>? tasks,
-  Cycle? selectedCycle,
+  ProjectCycle? selectedCycle,
   List<SideEffectModel>? sideEffects,
   IndividualModel? individualModel,
 ) {

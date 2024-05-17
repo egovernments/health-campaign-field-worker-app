@@ -23,10 +23,10 @@ mixin _$DeliverInterventionEvent {
         handleSubmit,
     required TResult Function(TaskSearchModel taskSearch) handleSearch,
     required TResult Function(
-            int dose, ProjectCycle? cycle, IndividualModel? individualModel)
+            int dose, ProjectCycle cycle, IndividualModel? individualModel)
         selectFutureCycleDose,
     required TResult Function(int lastDose, int lastCycle,
-            IndividualModel? individualModel, ProjectTypeModel? projectType)
+            IndividualModel? individualModel, ProjectTypeModel projectType)
         setActiveCycleDose,
   }) =>
       throw _privateConstructorUsedError;
@@ -37,10 +37,10 @@ mixin _$DeliverInterventionEvent {
         handleSubmit,
     TResult? Function(TaskSearchModel taskSearch)? handleSearch,
     TResult? Function(
-            int dose, ProjectCycle? cycle, IndividualModel? individualModel)?
+            int dose, ProjectCycle cycle, IndividualModel? individualModel)?
         selectFutureCycleDose,
     TResult? Function(int lastDose, int lastCycle,
-            IndividualModel? individualModel, ProjectTypeModel? projectType)?
+            IndividualModel? individualModel, ProjectTypeModel projectType)?
         setActiveCycleDose,
   }) =>
       throw _privateConstructorUsedError;
@@ -51,10 +51,10 @@ mixin _$DeliverInterventionEvent {
         handleSubmit,
     TResult Function(TaskSearchModel taskSearch)? handleSearch,
     TResult Function(
-            int dose, ProjectCycle? cycle, IndividualModel? individualModel)?
+            int dose, ProjectCycle cycle, IndividualModel? individualModel)?
         selectFutureCycleDose,
     TResult Function(int lastDose, int lastCycle,
-            IndividualModel? individualModel, ProjectTypeModel? projectType)?
+            IndividualModel? individualModel, ProjectTypeModel projectType)?
         setActiveCycleDose,
     required TResult orElse(),
   }) =>
@@ -209,10 +209,10 @@ class _$DeliverInterventionSubmitEventImpl
         handleSubmit,
     required TResult Function(TaskSearchModel taskSearch) handleSearch,
     required TResult Function(
-            int dose, ProjectCycle? cycle, IndividualModel? individualModel)
+            int dose, ProjectCycle cycle, IndividualModel? individualModel)
         selectFutureCycleDose,
     required TResult Function(int lastDose, int lastCycle,
-            IndividualModel? individualModel, ProjectTypeModel? projectType)
+            IndividualModel? individualModel, ProjectTypeModel projectType)
         setActiveCycleDose,
   }) {
     return handleSubmit(task, isEditing, boundaryModel);
@@ -226,10 +226,10 @@ class _$DeliverInterventionSubmitEventImpl
         handleSubmit,
     TResult? Function(TaskSearchModel taskSearch)? handleSearch,
     TResult? Function(
-            int dose, ProjectCycle? cycle, IndividualModel? individualModel)?
+            int dose, ProjectCycle cycle, IndividualModel? individualModel)?
         selectFutureCycleDose,
     TResult? Function(int lastDose, int lastCycle,
-            IndividualModel? individualModel, ProjectTypeModel? projectType)?
+            IndividualModel? individualModel, ProjectTypeModel projectType)?
         setActiveCycleDose,
   }) {
     return handleSubmit?.call(task, isEditing, boundaryModel);
@@ -243,10 +243,10 @@ class _$DeliverInterventionSubmitEventImpl
         handleSubmit,
     TResult Function(TaskSearchModel taskSearch)? handleSearch,
     TResult Function(
-            int dose, ProjectCycle? cycle, IndividualModel? individualModel)?
+            int dose, ProjectCycle cycle, IndividualModel? individualModel)?
         selectFutureCycleDose,
     TResult Function(int lastDose, int lastCycle,
-            IndividualModel? individualModel, ProjectTypeModel? projectType)?
+            IndividualModel? individualModel, ProjectTypeModel projectType)?
         setActiveCycleDose,
     required TResult orElse(),
   }) {
@@ -396,10 +396,10 @@ class _$DeliverInterventionSearchEventImpl
         handleSubmit,
     required TResult Function(TaskSearchModel taskSearch) handleSearch,
     required TResult Function(
-            int dose, ProjectCycle? cycle, IndividualModel? individualModel)
+            int dose, ProjectCycle cycle, IndividualModel? individualModel)
         selectFutureCycleDose,
     required TResult Function(int lastDose, int lastCycle,
-            IndividualModel? individualModel, ProjectTypeModel? projectType)
+            IndividualModel? individualModel, ProjectTypeModel projectType)
         setActiveCycleDose,
   }) {
     return handleSearch(taskSearch);
@@ -413,10 +413,10 @@ class _$DeliverInterventionSearchEventImpl
         handleSubmit,
     TResult? Function(TaskSearchModel taskSearch)? handleSearch,
     TResult? Function(
-            int dose, ProjectCycle? cycle, IndividualModel? individualModel)?
+            int dose, ProjectCycle cycle, IndividualModel? individualModel)?
         selectFutureCycleDose,
     TResult? Function(int lastDose, int lastCycle,
-            IndividualModel? individualModel, ProjectTypeModel? projectType)?
+            IndividualModel? individualModel, ProjectTypeModel projectType)?
         setActiveCycleDose,
   }) {
     return handleSearch?.call(taskSearch);
@@ -430,10 +430,10 @@ class _$DeliverInterventionSearchEventImpl
         handleSubmit,
     TResult Function(TaskSearchModel taskSearch)? handleSearch,
     TResult Function(
-            int dose, ProjectCycle? cycle, IndividualModel? individualModel)?
+            int dose, ProjectCycle cycle, IndividualModel? individualModel)?
         selectFutureCycleDose,
     TResult Function(int lastDose, int lastCycle,
-            IndividualModel? individualModel, ProjectTypeModel? projectType)?
+            IndividualModel? individualModel, ProjectTypeModel projectType)?
         setActiveCycleDose,
     required TResult orElse(),
   }) {
@@ -513,7 +513,7 @@ abstract class _$$DeliverInterventionCycleFutureDoseSelectionEventImplCopyWith<
       __$$DeliverInterventionCycleFutureDoseSelectionEventImplCopyWithImpl<
           $Res>;
   @useResult
-  $Res call({int dose, ProjectCycle? cycle, IndividualModel? individualModel});
+  $Res call({int dose, ProjectCycle cycle, IndividualModel? individualModel});
 }
 
 /// @nodoc
@@ -532,7 +532,7 @@ class __$$DeliverInterventionCycleFutureDoseSelectionEventImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? dose = null,
-    Object? cycle = freezed,
+    Object? cycle = null,
     Object? individualModel = freezed,
   }) {
     return _then(_$DeliverInterventionCycleFutureDoseSelectionEventImpl(
@@ -540,10 +540,10 @@ class __$$DeliverInterventionCycleFutureDoseSelectionEventImplCopyWithImpl<$Res>
           ? _value.dose
           : dose // ignore: cast_nullable_to_non_nullable
               as int,
-      freezed == cycle
+      null == cycle
           ? _value.cycle
           : cycle // ignore: cast_nullable_to_non_nullable
-              as ProjectCycle?,
+              as ProjectCycle,
       freezed == individualModel
           ? _value.individualModel
           : individualModel // ignore: cast_nullable_to_non_nullable
@@ -562,7 +562,7 @@ class _$DeliverInterventionCycleFutureDoseSelectionEventImpl
   @override
   final int dose;
   @override
-  final ProjectCycle? cycle;
+  final ProjectCycle cycle;
   @override
   final IndividualModel? individualModel;
 
@@ -603,10 +603,10 @@ class _$DeliverInterventionCycleFutureDoseSelectionEventImpl
         handleSubmit,
     required TResult Function(TaskSearchModel taskSearch) handleSearch,
     required TResult Function(
-            int dose, ProjectCycle? cycle, IndividualModel? individualModel)
+            int dose, ProjectCycle cycle, IndividualModel? individualModel)
         selectFutureCycleDose,
     required TResult Function(int lastDose, int lastCycle,
-            IndividualModel? individualModel, ProjectTypeModel? projectType)
+            IndividualModel? individualModel, ProjectTypeModel projectType)
         setActiveCycleDose,
   }) {
     return selectFutureCycleDose(dose, cycle, individualModel);
@@ -620,10 +620,10 @@ class _$DeliverInterventionCycleFutureDoseSelectionEventImpl
         handleSubmit,
     TResult? Function(TaskSearchModel taskSearch)? handleSearch,
     TResult? Function(
-            int dose, ProjectCycle? cycle, IndividualModel? individualModel)?
+            int dose, ProjectCycle cycle, IndividualModel? individualModel)?
         selectFutureCycleDose,
     TResult? Function(int lastDose, int lastCycle,
-            IndividualModel? individualModel, ProjectTypeModel? projectType)?
+            IndividualModel? individualModel, ProjectTypeModel projectType)?
         setActiveCycleDose,
   }) {
     return selectFutureCycleDose?.call(dose, cycle, individualModel);
@@ -637,10 +637,10 @@ class _$DeliverInterventionCycleFutureDoseSelectionEventImpl
         handleSubmit,
     TResult Function(TaskSearchModel taskSearch)? handleSearch,
     TResult Function(
-            int dose, ProjectCycle? cycle, IndividualModel? individualModel)?
+            int dose, ProjectCycle cycle, IndividualModel? individualModel)?
         selectFutureCycleDose,
     TResult Function(int lastDose, int lastCycle,
-            IndividualModel? individualModel, ProjectTypeModel? projectType)?
+            IndividualModel? individualModel, ProjectTypeModel projectType)?
         setActiveCycleDose,
     required TResult orElse(),
   }) {
@@ -701,11 +701,11 @@ class _$DeliverInterventionCycleFutureDoseSelectionEventImpl
 abstract class DeliverInterventionCycleFutureDoseSelectionEvent
     implements DeliverInterventionEvent {
   const factory DeliverInterventionCycleFutureDoseSelectionEvent(final int dose,
-          final ProjectCycle? cycle, final IndividualModel? individualModel) =
+          final ProjectCycle cycle, final IndividualModel? individualModel) =
       _$DeliverInterventionCycleFutureDoseSelectionEventImpl;
 
   int get dose;
-  ProjectCycle? get cycle;
+  ProjectCycle get cycle;
   IndividualModel? get individualModel;
   @JsonKey(ignore: true)
   _$$DeliverInterventionCycleFutureDoseSelectionEventImplCopyWith<
@@ -727,7 +727,7 @@ abstract class _$$DeliverInterventionActiveCycleDoseSelectionEventImplCopyWith<
       {int lastDose,
       int lastCycle,
       IndividualModel? individualModel,
-      ProjectTypeModel? projectType});
+      ProjectTypeModel projectType});
 }
 
 /// @nodoc
@@ -748,7 +748,7 @@ class __$$DeliverInterventionActiveCycleDoseSelectionEventImplCopyWithImpl<$Res>
     Object? lastDose = null,
     Object? lastCycle = null,
     Object? individualModel = freezed,
-    Object? projectType = freezed,
+    Object? projectType = null,
   }) {
     return _then(_$DeliverInterventionActiveCycleDoseSelectionEventImpl(
       null == lastDose
@@ -763,10 +763,10 @@ class __$$DeliverInterventionActiveCycleDoseSelectionEventImplCopyWithImpl<$Res>
           ? _value.individualModel
           : individualModel // ignore: cast_nullable_to_non_nullable
               as IndividualModel?,
-      freezed == projectType
+      null == projectType
           ? _value.projectType
           : projectType // ignore: cast_nullable_to_non_nullable
-              as ProjectTypeModel?,
+              as ProjectTypeModel,
     ));
   }
 }
@@ -785,7 +785,7 @@ class _$DeliverInterventionActiveCycleDoseSelectionEventImpl
   @override
   final IndividualModel? individualModel;
   @override
-  final ProjectTypeModel? projectType;
+  final ProjectTypeModel projectType;
 
   @override
   String toString() {
@@ -829,10 +829,10 @@ class _$DeliverInterventionActiveCycleDoseSelectionEventImpl
         handleSubmit,
     required TResult Function(TaskSearchModel taskSearch) handleSearch,
     required TResult Function(
-            int dose, ProjectCycle? cycle, IndividualModel? individualModel)
+            int dose, ProjectCycle cycle, IndividualModel? individualModel)
         selectFutureCycleDose,
     required TResult Function(int lastDose, int lastCycle,
-            IndividualModel? individualModel, ProjectTypeModel? projectType)
+            IndividualModel? individualModel, ProjectTypeModel projectType)
         setActiveCycleDose,
   }) {
     return setActiveCycleDose(
@@ -847,10 +847,10 @@ class _$DeliverInterventionActiveCycleDoseSelectionEventImpl
         handleSubmit,
     TResult? Function(TaskSearchModel taskSearch)? handleSearch,
     TResult? Function(
-            int dose, ProjectCycle? cycle, IndividualModel? individualModel)?
+            int dose, ProjectCycle cycle, IndividualModel? individualModel)?
         selectFutureCycleDose,
     TResult? Function(int lastDose, int lastCycle,
-            IndividualModel? individualModel, ProjectTypeModel? projectType)?
+            IndividualModel? individualModel, ProjectTypeModel projectType)?
         setActiveCycleDose,
   }) {
     return setActiveCycleDose?.call(
@@ -865,10 +865,10 @@ class _$DeliverInterventionActiveCycleDoseSelectionEventImpl
         handleSubmit,
     TResult Function(TaskSearchModel taskSearch)? handleSearch,
     TResult Function(
-            int dose, ProjectCycle? cycle, IndividualModel? individualModel)?
+            int dose, ProjectCycle cycle, IndividualModel? individualModel)?
         selectFutureCycleDose,
     TResult Function(int lastDose, int lastCycle,
-            IndividualModel? individualModel, ProjectTypeModel? projectType)?
+            IndividualModel? individualModel, ProjectTypeModel projectType)?
         setActiveCycleDose,
     required TResult orElse(),
   }) {
@@ -933,13 +933,13 @@ abstract class DeliverInterventionActiveCycleDoseSelectionEvent
           final int lastDose,
           final int lastCycle,
           final IndividualModel? individualModel,
-          final ProjectTypeModel? projectType) =
+          final ProjectTypeModel projectType) =
       _$DeliverInterventionActiveCycleDoseSelectionEventImpl;
 
   int get lastDose;
   int get lastCycle;
   IndividualModel? get individualModel;
-  ProjectTypeModel? get projectType;
+  ProjectTypeModel get projectType;
   @JsonKey(ignore: true)
   _$$DeliverInterventionActiveCycleDoseSelectionEventImplCopyWith<
           _$DeliverInterventionActiveCycleDoseSelectionEventImpl>

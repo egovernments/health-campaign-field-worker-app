@@ -263,7 +263,7 @@ final requestData = {
 ///  * Returns [true] if the individual is in the same cycle and is eligible for the next dose,
 bool checkEligibilityForAgeAndSideEffect(
   DigitDOBAge age,
-  ProjectTypeModel? projectType,
+  ProjectType? projectType,
   TaskModel? tasks,
   List<SideEffectModel>? sideEffects,
 ) {
@@ -319,13 +319,13 @@ bool checkIfBeneficiaryRefused(
 
 bool checkIfBeneficiaryReferred(
   List<ReferralModel>? referrals,
-  ProjectCycle? currentCycle,
+  Cycle currentCycle,
 ) {
-  if (currentCycle?.startDate != null && currentCycle?.endDate != null) {
+  if (currentCycle.startDate != null && currentCycle.endDate != null) {
     final isBeneficiaryReferred = (referrals != null &&
         (referrals ?? []).isNotEmpty &&
         referrals.last.clientAuditDetails!.createdTime >=
-            currentCycle!.startDate! &&
+            currentCycle.startDate! &&
         referrals.last.clientAuditDetails!.createdTime <=
             currentCycle.endDate!);
 
@@ -337,7 +337,7 @@ bool checkIfBeneficiaryReferred(
 
 bool checkStatus(
   List<TaskModel>? tasks,
-  ProjectCycle? currentCycle,
+  Cycle? currentCycle,
 ) {
   if (currentCycle != null &&
       currentCycle.startDate != null &&
@@ -373,7 +373,7 @@ bool checkStatus(
 }
 
 bool recordedSideEffect(
-  ProjectCycle? selectedCycle,
+  Cycle? selectedCycle,
   TaskModel? task,
   List<SideEffectModel>? sideEffects,
 ) {
@@ -397,7 +397,7 @@ bool recordedSideEffect(
 
 bool allDosesDelivered(
   List<TaskModel>? tasks,
-  ProjectCycle? selectedCycle,
+  Cycle? selectedCycle,
   List<SideEffectModel>? sideEffects,
   IndividualModel? individualModel,
 ) {
@@ -441,8 +441,8 @@ bool allDosesDelivered(
   }
 }
 
-DeliveryDoseCriteria? fetchProductVariant(
-  ProjectCycleDelivery? currentDelivery,
+DoseCriteriaModel? fetchProductVariant(
+  DeliveryModel? currentDelivery,
   IndividualModel? individualModel,
 ) {
   if (currentDelivery != null && individualModel != null) {

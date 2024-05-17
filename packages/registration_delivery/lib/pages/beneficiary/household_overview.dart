@@ -5,6 +5,7 @@ import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
@@ -12,12 +13,12 @@ import '../../blocs/search_households/search_bloc_common_wrapper.dart';
 import '../../blocs/search_households/search_households.dart';
 import '../../models/entities/status.dart';
 import '../../router/registration_delivery_router.gm.dart';
+import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/action_card/action_card.dart';
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 import '../../widgets/member_card/member_card.dart';
-import '../../utils/i18_key_constants.dart' as i18;
 
 @RoutePage()
 class HouseholdOverviewPage extends LocalizedStatefulWidget {
@@ -454,18 +455,20 @@ class _HouseholdOverviewPageState
                                               ) ??
                                               DateTime.now(),
                                         ).months;
-                                        final currentCycle = RegistrationDeliverySingleton()
-                                            .projectType?.cycles
-                                            ?.firstWhereOrNull(
-                                          (e) =>
-                                              (e.startDate!) <
-                                                  DateTime.now()
-                                                      .millisecondsSinceEpoch &&
-                                              (e.endDate!) >
-                                                  DateTime.now()
-                                                      .millisecondsSinceEpoch,
-                                          // Return null when no matching cycle is found
-                                        );
+                                        final currentCycle =
+                                            RegistrationDeliverySingleton()
+                                                .projectType
+                                                ?.cycles
+                                                ?.firstWhereOrNull(
+                                                  (e) =>
+                                                      (e.startDate!) <
+                                                          DateTime.now()
+                                                              .millisecondsSinceEpoch &&
+                                                      (e.endDate!) >
+                                                          DateTime.now()
+                                                              .millisecondsSinceEpoch,
+                                                  // Return null when no matching cycle is found
+                                                );
 
                                         final isBeneficiaryRefused =
                                             checkIfBeneficiaryRefused(
@@ -474,7 +477,7 @@ class _HouseholdOverviewPageState
                                         final isBeneficiaryReferred =
                                             checkIfBeneficiaryReferred(
                                           referralData,
-                                          currentCycle ?? const Cycle(),
+                                          currentCycle,
                                         );
 
                                         return MemberCard(
@@ -517,7 +520,8 @@ class _HouseholdOverviewPageState
                                                     (element) =>
                                                         element
                                                             .beneficiaryClientReferenceId ==
-                                                        (RegistrationDeliverySingleton().beneficiaryType ==
+                                                        (RegistrationDeliverySingleton()
+                                                                    .beneficiaryType ==
                                                                 BeneficiaryType
                                                                     .individual
                                                             ? e
@@ -550,7 +554,9 @@ class _HouseholdOverviewPageState
                                                 .add(
                                                   HouseholdOverviewSetAsHeadEvent(
                                                     individualModel: e,
-                                                    projectId: RegistrationDeliverySingleton().projectId!,
+                                                    projectId:
+                                                        RegistrationDeliverySingleton()
+                                                            .projectId!,
                                                     householdModel: state
                                                         .householdMemberWrapper
                                                         .household,
@@ -628,21 +634,25 @@ class _HouseholdOverviewPageState
                                               ),
                                             );
                                           },
-                                          isNotEligible: RegistrationDeliverySingleton()
-                                                      .projectType?.cycles !=
-                                                  null
-                                              ? !checkEligibilityForAgeAndSideEffect(
-                                                  DigitDOBAge(
-                                                    years: ageInYears,
-                                                    months: ageInMonths,
-                                                  ),
-                                        RegistrationDeliverySingleton().projectType,
-                                                  (taskdata ?? []).isNotEmpty
-                                                      ? taskdata?.last
-                                                      : null,
-                                                  sideEffectData,
-                                                )
-                                              : false,
+                                          isNotEligible:
+                                              RegistrationDeliverySingleton()
+                                                          .projectType
+                                                          ?.cycles !=
+                                                      null
+                                                  ? !checkEligibilityForAgeAndSideEffect(
+                                                      DigitDOBAge(
+                                                        years: ageInYears,
+                                                        months: ageInMonths,
+                                                      ),
+                                                      RegistrationDeliverySingleton()
+                                                          .projectType,
+                                                      (taskdata ?? [])
+                                                              .isNotEmpty
+                                                          ? taskdata?.last
+                                                          : null,
+                                                      sideEffectData,
+                                                    )
+                                                  : false,
                                           name: e.name?.givenName ?? ' - ',
                                           years: (e.dateOfBirth == null
                                                   ? null

@@ -1,12 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:inventory_management/blocs/inventory_listener.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:inventory_management/utils/extensions/extensions.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:digit_data_model/data_model.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../widgets/component_wrapper/facility_bloc_wrapper.dart';
@@ -476,8 +475,9 @@ class _InventoryReportDetailsPageState
                                               ),
                                             );
                                           },
-                                          stockReconciliation:
-                                              (data, additionalData) {
+                                          stockReconciliation: (
+                                            data,
+                                          ) {
                                             if (data.isEmpty) {
                                               return Padding(
                                                 padding: const EdgeInsets.all(
@@ -591,51 +591,75 @@ class _InventoryReportDetailsPageState
                                                           ),
                                                           DigitGridCell(
                                                             key: receivedKey,
-                                                            value:
-                                                                _getCountFromAdditionalDetails(
-                                                              additionalData,
-                                                              'received',
-                                                            ),
+                                                            value: model
+                                                                    .additionalFields
+                                                                    ?.fields
+                                                                    .where((e) =>
+                                                                        e.key ==
+                                                                        'received')
+                                                                    .firstOrNull
+                                                                    ?.value ??
+                                                                '0',
                                                           ),
                                                           DigitGridCell(
                                                             key: dispatchedKey,
-                                                            value:
-                                                                _getCountFromAdditionalDetails(
-                                                              additionalData,
-                                                              'issued',
-                                                            ),
+                                                            value: model
+                                                                    .additionalFields
+                                                                    ?.fields
+                                                                    .where((e) =>
+                                                                        e.key ==
+                                                                        'issued')
+                                                                    .firstOrNull
+                                                                    ?.value ??
+                                                                '0',
                                                           ),
                                                           DigitGridCell(
                                                             key: returnedKey,
-                                                            value:
-                                                                _getCountFromAdditionalDetails(
-                                                              additionalData,
-                                                              'returned',
-                                                            ),
+                                                            value: model
+                                                                    .additionalFields
+                                                                    ?.fields
+                                                                    .where((e) =>
+                                                                        e.key ==
+                                                                        'returned')
+                                                                    .firstOrNull
+                                                                    ?.value ??
+                                                                '0',
                                                           ),
                                                           DigitGridCell(
                                                             key: lossKey,
-                                                            value:
-                                                                _getCountFromAdditionalDetails(
-                                                              additionalData,
-                                                              'lost',
-                                                            ),
+                                                            value: model
+                                                                    .additionalFields
+                                                                    ?.fields
+                                                                    .where((e) =>
+                                                                        e.key ==
+                                                                        'lost')
+                                                                    .firstOrNull
+                                                                    ?.value ??
+                                                                '0',
                                                           ),
                                                           DigitGridCell(
                                                             key: damagedKey,
-                                                            value:
-                                                                _getCountFromAdditionalDetails(
-                                                              additionalData,
-                                                              'damaged',
-                                                            ),
+                                                            value: model
+                                                                    .additionalFields
+                                                                    ?.fields
+                                                                    .where((e) =>
+                                                                        e.key ==
+                                                                        'damaged')
+                                                                    .firstOrNull
+                                                                    ?.value ??
+                                                                '0',
                                                           ),
                                                           DigitGridCell(
                                                             key: stockInHandKey,
-                                                            value:
-                                                                _getCountFromAdditionalDetails(
-                                                              additionalData,
-                                                              'inHand',
-                                                            ),
+                                                            value: model
+                                                                    .additionalFields
+                                                                    ?.fields
+                                                                    .where((e) =>
+                                                                        e.key ==
+                                                                        'inHand')
+                                                                    .firstOrNull
+                                                                    ?.value ??
+                                                                '0',
                                                           ),
                                                           DigitGridCell(
                                                             key: manualCountKey,

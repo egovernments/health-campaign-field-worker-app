@@ -21,8 +21,8 @@ import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/beneficiary/resource_beneficiary_card.dart';
-import '../../widgets/localized.dart';
 import '../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
+import '../../widgets/localized.dart';
 
 @RoutePage()
 class DeliverInterventionPage extends LocalizedStatefulWidget {
@@ -96,25 +96,35 @@ class _DeliverInterventionPageState
                     : BlocBuilder<DeliverInterventionBloc,
                         DeliverInterventionState>(
                         builder: (context, deliveryInterventionState) {
-                          List<ProductVariantsModel>? productVariants =
+                          List<DeliveryProductVariant>? productVariants =
                               RegistrationDeliverySingleton()
-                                          .projectType
+                                          .selectedProject
+                                          ?.additionalDetails
+                                          ?.projectType
                                           ?.cycles
                                           ?.isNotEmpty ==
                                       true
                                   ? (fetchProductVariant(
                                       RegistrationDeliverySingleton()
-                                              .projectType!
-                                              .cycles![deliveryInterventionState
-                                                      .cycle -
-                                                  1]
+                                              .selectedProject
+                                              ?.additionalDetails
+                                              ?.projectType
+                                              ?.cycles![
+                                                  deliveryInterventionState
+                                                          .cycle -
+                                                      1]
                                               .deliveries?[
                                           deliveryInterventionState.dose - 1],
                                       state.selectedIndividual,
                                     )?.productVariants)
                                   : RegistrationDeliverySingleton()
-                                      .projectType
-                                      ?.resources;
+                                      .selectedProject
+                                      ?.additionalDetails
+                                      ?.projectType
+                                      ?.resources
+                                      ?.map((r) => DeliveryProductVariant(
+                                          productVariantId: r.productVariantId))
+                                      .toList();
 
                           final int numberOfDoses =
                               (RegistrationDeliverySingleton()
@@ -752,7 +762,7 @@ class _DeliverInterventionPageState
 
   FormGroup buildForm(
     BuildContext context,
-    List<ProductVariantsModel>? productVariants,
+    List<DeliveryProductVariant>? productVariants,
     List<ProductVariantModel>? variants,
   ) {
     final bloc = context.read<DeliverInterventionBloc>().state;
