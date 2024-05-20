@@ -37,7 +37,7 @@ extension ContextUtilityExtensions on BuildContext {
                   (e.startDate) < DateTime.now().millisecondsSinceEpoch &&
                   (e.endDate) > DateTime.now().millisecondsSinceEpoch,
             )
-            .first;
+            .firstOrNull;
 
     return selectedCycle;
   }
@@ -56,21 +56,13 @@ extension ContextUtilityExtensions on BuildContext {
     final projectBloc = _get<ProjectBloc>();
 
     final projectState = projectBloc.state;
+    var projectCycles =
+        projectState.selectedProject?.additionalDetails?.projectType?.cycles;
 
-    if (projectState.selectedProject?.additionalDetails?.projectType?.cycles !=
-            null &&
-        (projectState.selectedProject?.additionalDetails?.projectType?.cycles
-                    ?.length ??
-                0) >
-            0) {
+    if (projectCycles != null && (projectCycles.isNotEmpty)) {
       List<String> resultList = [];
 
-      for (int i = 1;
-          i <=
-              (projectState.selectedProject?.additionalDetails?.projectType
-                      ?.cycles?.length ??
-                  0);
-          i++) {
+      for (int i = 1; i <= (projectCycles.length); i++) {
         resultList.add('0${i.toString()}');
       }
 
