@@ -660,17 +660,13 @@ AppConfigPrimaryWrapperModel _$AppConfigPrimaryWrapperModelFromJson(
 
 /// @nodoc
 mixin _$AppConfigPrimaryWrapperModel {
-  @JsonKey(name: 'HCM-FIELD-APP-CONFIG')
-  AppConfigSecondaryWrapperModel? get appConfig =>
+  @JsonKey(name: 'HCM')
+  HCMWrapperModel? get hcmWrapperModel => throw _privateConstructorUsedError;
+  @JsonKey(name: 'common-masters')
+  CommonMastersWrapperModel? get commonMasters =>
       throw _privateConstructorUsedError;
   @JsonKey(name: 'module-version')
   RowVersionWrapperModel? get rowVersions => throw _privateConstructorUsedError;
-  @JsonKey(name: 'HCM-SYMPTOMS-TYPES')
-  SymptomsTypesSecondaryWrapperModel? get symptomsTypes =>
-      throw _privateConstructorUsedError;
-  @JsonKey(name: 'HCM-REFERRAL-REASONS')
-  ReferralReasonsWrapperModel? get referralReasons =>
-      throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -687,18 +683,13 @@ abstract class $AppConfigPrimaryWrapperModelCopyWith<$Res> {
           AppConfigPrimaryWrapperModel>;
   @useResult
   $Res call(
-      {@JsonKey(name: 'HCM-FIELD-APP-CONFIG')
-      AppConfigSecondaryWrapperModel? appConfig,
-      @JsonKey(name: 'module-version') RowVersionWrapperModel? rowVersions,
-      @JsonKey(name: 'HCM-SYMPTOMS-TYPES')
-      SymptomsTypesSecondaryWrapperModel? symptomsTypes,
-      @JsonKey(name: 'HCM-REFERRAL-REASONS')
-      ReferralReasonsWrapperModel? referralReasons});
+      {@JsonKey(name: 'HCM') HCMWrapperModel? hcmWrapperModel,
+      @JsonKey(name: 'common-masters') CommonMastersWrapperModel? commonMasters,
+      @JsonKey(name: 'module-version') RowVersionWrapperModel? rowVersions});
 
-  $AppConfigSecondaryWrapperModelCopyWith<$Res>? get appConfig;
+  $HCMWrapperModelCopyWith<$Res>? get hcmWrapperModel;
+  $CommonMastersWrapperModelCopyWith<$Res>? get commonMasters;
   $RowVersionWrapperModelCopyWith<$Res>? get rowVersions;
-  $SymptomsTypesSecondaryWrapperModelCopyWith<$Res>? get symptomsTypes;
-  $ReferralReasonsWrapperModelCopyWith<$Res>? get referralReasons;
 }
 
 /// @nodoc
@@ -715,41 +706,48 @@ class _$AppConfigPrimaryWrapperModelCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? appConfig = freezed,
+    Object? hcmWrapperModel = freezed,
+    Object? commonMasters = freezed,
     Object? rowVersions = freezed,
-    Object? symptomsTypes = freezed,
-    Object? referralReasons = freezed,
   }) {
     return _then(_value.copyWith(
-      appConfig: freezed == appConfig
-          ? _value.appConfig
-          : appConfig // ignore: cast_nullable_to_non_nullable
-              as AppConfigSecondaryWrapperModel?,
+      hcmWrapperModel: freezed == hcmWrapperModel
+          ? _value.hcmWrapperModel
+          : hcmWrapperModel // ignore: cast_nullable_to_non_nullable
+              as HCMWrapperModel?,
+      commonMasters: freezed == commonMasters
+          ? _value.commonMasters
+          : commonMasters // ignore: cast_nullable_to_non_nullable
+              as CommonMastersWrapperModel?,
       rowVersions: freezed == rowVersions
           ? _value.rowVersions
           : rowVersions // ignore: cast_nullable_to_non_nullable
               as RowVersionWrapperModel?,
-      symptomsTypes: freezed == symptomsTypes
-          ? _value.symptomsTypes
-          : symptomsTypes // ignore: cast_nullable_to_non_nullable
-              as SymptomsTypesSecondaryWrapperModel?,
-      referralReasons: freezed == referralReasons
-          ? _value.referralReasons
-          : referralReasons // ignore: cast_nullable_to_non_nullable
-              as ReferralReasonsWrapperModel?,
     ) as $Val);
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $AppConfigSecondaryWrapperModelCopyWith<$Res>? get appConfig {
-    if (_value.appConfig == null) {
+  $HCMWrapperModelCopyWith<$Res>? get hcmWrapperModel {
+    if (_value.hcmWrapperModel == null) {
       return null;
     }
 
-    return $AppConfigSecondaryWrapperModelCopyWith<$Res>(_value.appConfig!,
+    return $HCMWrapperModelCopyWith<$Res>(_value.hcmWrapperModel!, (value) {
+      return _then(_value.copyWith(hcmWrapperModel: value) as $Val);
+    });
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $CommonMastersWrapperModelCopyWith<$Res>? get commonMasters {
+    if (_value.commonMasters == null) {
+      return null;
+    }
+
+    return $CommonMastersWrapperModelCopyWith<$Res>(_value.commonMasters!,
         (value) {
-      return _then(_value.copyWith(appConfig: value) as $Val);
+      return _then(_value.copyWith(commonMasters: value) as $Val);
     });
   }
 
@@ -764,32 +762,6 @@ class _$AppConfigPrimaryWrapperModelCopyWithImpl<$Res,
       return _then(_value.copyWith(rowVersions: value) as $Val);
     });
   }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $SymptomsTypesSecondaryWrapperModelCopyWith<$Res>? get symptomsTypes {
-    if (_value.symptomsTypes == null) {
-      return null;
-    }
-
-    return $SymptomsTypesSecondaryWrapperModelCopyWith<$Res>(
-        _value.symptomsTypes!, (value) {
-      return _then(_value.copyWith(symptomsTypes: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $ReferralReasonsWrapperModelCopyWith<$Res>? get referralReasons {
-    if (_value.referralReasons == null) {
-      return null;
-    }
-
-    return $ReferralReasonsWrapperModelCopyWith<$Res>(_value.referralReasons!,
-        (value) {
-      return _then(_value.copyWith(referralReasons: value) as $Val);
-    });
-  }
 }
 
 /// @nodoc
@@ -802,22 +774,16 @@ abstract class _$$AppConfigPrimaryWrapperModelImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'HCM-FIELD-APP-CONFIG')
-      AppConfigSecondaryWrapperModel? appConfig,
-      @JsonKey(name: 'module-version') RowVersionWrapperModel? rowVersions,
-      @JsonKey(name: 'HCM-SYMPTOMS-TYPES')
-      SymptomsTypesSecondaryWrapperModel? symptomsTypes,
-      @JsonKey(name: 'HCM-REFERRAL-REASONS')
-      ReferralReasonsWrapperModel? referralReasons});
+      {@JsonKey(name: 'HCM') HCMWrapperModel? hcmWrapperModel,
+      @JsonKey(name: 'common-masters') CommonMastersWrapperModel? commonMasters,
+      @JsonKey(name: 'module-version') RowVersionWrapperModel? rowVersions});
 
   @override
-  $AppConfigSecondaryWrapperModelCopyWith<$Res>? get appConfig;
+  $HCMWrapperModelCopyWith<$Res>? get hcmWrapperModel;
+  @override
+  $CommonMastersWrapperModelCopyWith<$Res>? get commonMasters;
   @override
   $RowVersionWrapperModelCopyWith<$Res>? get rowVersions;
-  @override
-  $SymptomsTypesSecondaryWrapperModelCopyWith<$Res>? get symptomsTypes;
-  @override
-  $ReferralReasonsWrapperModelCopyWith<$Res>? get referralReasons;
 }
 
 /// @nodoc
@@ -833,28 +799,23 @@ class __$$AppConfigPrimaryWrapperModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? appConfig = freezed,
+    Object? hcmWrapperModel = freezed,
+    Object? commonMasters = freezed,
     Object? rowVersions = freezed,
-    Object? symptomsTypes = freezed,
-    Object? referralReasons = freezed,
   }) {
     return _then(_$AppConfigPrimaryWrapperModelImpl(
-      appConfig: freezed == appConfig
-          ? _value.appConfig
-          : appConfig // ignore: cast_nullable_to_non_nullable
-              as AppConfigSecondaryWrapperModel?,
+      hcmWrapperModel: freezed == hcmWrapperModel
+          ? _value.hcmWrapperModel
+          : hcmWrapperModel // ignore: cast_nullable_to_non_nullable
+              as HCMWrapperModel?,
+      commonMasters: freezed == commonMasters
+          ? _value.commonMasters
+          : commonMasters // ignore: cast_nullable_to_non_nullable
+              as CommonMastersWrapperModel?,
       rowVersions: freezed == rowVersions
           ? _value.rowVersions
           : rowVersions // ignore: cast_nullable_to_non_nullable
               as RowVersionWrapperModel?,
-      symptomsTypes: freezed == symptomsTypes
-          ? _value.symptomsTypes
-          : symptomsTypes // ignore: cast_nullable_to_non_nullable
-              as SymptomsTypesSecondaryWrapperModel?,
-      referralReasons: freezed == referralReasons
-          ? _value.referralReasons
-          : referralReasons // ignore: cast_nullable_to_non_nullable
-              as ReferralReasonsWrapperModel?,
     ));
   }
 }
@@ -864,31 +825,27 @@ class __$$AppConfigPrimaryWrapperModelImplCopyWithImpl<$Res>
 class _$AppConfigPrimaryWrapperModelImpl
     implements _AppConfigPrimaryWrapperModel {
   const _$AppConfigPrimaryWrapperModelImpl(
-      {@JsonKey(name: 'HCM-FIELD-APP-CONFIG') this.appConfig,
-      @JsonKey(name: 'module-version') this.rowVersions,
-      @JsonKey(name: 'HCM-SYMPTOMS-TYPES') this.symptomsTypes,
-      @JsonKey(name: 'HCM-REFERRAL-REASONS') this.referralReasons});
+      {@JsonKey(name: 'HCM') this.hcmWrapperModel,
+      @JsonKey(name: 'common-masters') this.commonMasters,
+      @JsonKey(name: 'module-version') this.rowVersions});
 
   factory _$AppConfigPrimaryWrapperModelImpl.fromJson(
           Map<String, dynamic> json) =>
       _$$AppConfigPrimaryWrapperModelImplFromJson(json);
 
   @override
-  @JsonKey(name: 'HCM-FIELD-APP-CONFIG')
-  final AppConfigSecondaryWrapperModel? appConfig;
+  @JsonKey(name: 'HCM')
+  final HCMWrapperModel? hcmWrapperModel;
+  @override
+  @JsonKey(name: 'common-masters')
+  final CommonMastersWrapperModel? commonMasters;
   @override
   @JsonKey(name: 'module-version')
   final RowVersionWrapperModel? rowVersions;
-  @override
-  @JsonKey(name: 'HCM-SYMPTOMS-TYPES')
-  final SymptomsTypesSecondaryWrapperModel? symptomsTypes;
-  @override
-  @JsonKey(name: 'HCM-REFERRAL-REASONS')
-  final ReferralReasonsWrapperModel? referralReasons;
 
   @override
   String toString() {
-    return 'AppConfigPrimaryWrapperModel(appConfig: $appConfig, rowVersions: $rowVersions, symptomsTypes: $symptomsTypes, referralReasons: $referralReasons)';
+    return 'AppConfigPrimaryWrapperModel(hcmWrapperModel: $hcmWrapperModel, commonMasters: $commonMasters, rowVersions: $rowVersions)';
   }
 
   @override
@@ -896,20 +853,18 @@ class _$AppConfigPrimaryWrapperModelImpl
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$AppConfigPrimaryWrapperModelImpl &&
-            (identical(other.appConfig, appConfig) ||
-                other.appConfig == appConfig) &&
+            (identical(other.hcmWrapperModel, hcmWrapperModel) ||
+                other.hcmWrapperModel == hcmWrapperModel) &&
+            (identical(other.commonMasters, commonMasters) ||
+                other.commonMasters == commonMasters) &&
             (identical(other.rowVersions, rowVersions) ||
-                other.rowVersions == rowVersions) &&
-            (identical(other.symptomsTypes, symptomsTypes) ||
-                other.symptomsTypes == symptomsTypes) &&
-            (identical(other.referralReasons, referralReasons) ||
-                other.referralReasons == referralReasons));
+                other.rowVersions == rowVersions));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, appConfig, rowVersions, symptomsTypes, referralReasons);
+  int get hashCode =>
+      Object.hash(runtimeType, hcmWrapperModel, commonMasters, rowVersions);
 
   @JsonKey(ignore: true)
   @override
@@ -930,36 +885,681 @@ class _$AppConfigPrimaryWrapperModelImpl
 abstract class _AppConfigPrimaryWrapperModel
     implements AppConfigPrimaryWrapperModel {
   const factory _AppConfigPrimaryWrapperModel(
-          {@JsonKey(name: 'HCM-FIELD-APP-CONFIG')
-          final AppConfigSecondaryWrapperModel? appConfig,
+          {@JsonKey(name: 'HCM') final HCMWrapperModel? hcmWrapperModel,
+          @JsonKey(name: 'common-masters')
+          final CommonMastersWrapperModel? commonMasters,
           @JsonKey(name: 'module-version')
-          final RowVersionWrapperModel? rowVersions,
-          @JsonKey(name: 'HCM-SYMPTOMS-TYPES')
-          final SymptomsTypesSecondaryWrapperModel? symptomsTypes,
-          @JsonKey(name: 'HCM-REFERRAL-REASONS')
-          final ReferralReasonsWrapperModel? referralReasons}) =
+          final RowVersionWrapperModel? rowVersions}) =
       _$AppConfigPrimaryWrapperModelImpl;
 
   factory _AppConfigPrimaryWrapperModel.fromJson(Map<String, dynamic> json) =
       _$AppConfigPrimaryWrapperModelImpl.fromJson;
 
   @override
-  @JsonKey(name: 'HCM-FIELD-APP-CONFIG')
-  AppConfigSecondaryWrapperModel? get appConfig;
+  @JsonKey(name: 'HCM')
+  HCMWrapperModel? get hcmWrapperModel;
+  @override
+  @JsonKey(name: 'common-masters')
+  CommonMastersWrapperModel? get commonMasters;
   @override
   @JsonKey(name: 'module-version')
   RowVersionWrapperModel? get rowVersions;
-  @override
-  @JsonKey(name: 'HCM-SYMPTOMS-TYPES')
-  SymptomsTypesSecondaryWrapperModel? get symptomsTypes;
-  @override
-  @JsonKey(name: 'HCM-REFERRAL-REASONS')
-  ReferralReasonsWrapperModel? get referralReasons;
   @override
   @JsonKey(ignore: true)
   _$$AppConfigPrimaryWrapperModelImplCopyWith<
           _$AppConfigPrimaryWrapperModelImpl>
       get copyWith => throw _privateConstructorUsedError;
+}
+
+HCMWrapperModel _$HCMWrapperModelFromJson(Map<String, dynamic> json) {
+  return _HCMWrapperModel.fromJson(json);
+}
+
+/// @nodoc
+mixin _$HCMWrapperModel {
+  @JsonKey(name: 'APP_CONFIG')
+  List<AppConfig> get appConfig => throw _privateConstructorUsedError;
+  @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')
+  List<BandWidthBatchSize> get bandWidthBatchSize =>
+      throw _privateConstructorUsedError;
+  @JsonKey(name: 'DOWNSYNC-BANDWIDTH_BATCH_SIZE')
+  List<BandWidthBatchSize> get downSyncBandWidthBatchSize =>
+      throw _privateConstructorUsedError;
+  @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
+  List<DeletionReasonOptions> get householdDeletionReasonOptions =>
+      throw _privateConstructorUsedError;
+  @JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS')
+  List<DeletionReasonOptions> get householdMemberDeletionReasonOptions =>
+      throw _privateConstructorUsedError;
+  @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')
+  List<BackgroundServiceConfig>? get backgroundServiceConfig =>
+      throw _privateConstructorUsedError;
+  @JsonKey(name: 'CHECKLIST_TYPES')
+  List<CheckListTypes> get checklistTypes => throw _privateConstructorUsedError;
+  @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
+  List<IdTypeOptions> get idTypeOptions => throw _privateConstructorUsedError;
+  @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
+  List<DeliveryCommentOptions> get deliveryCommentOptions =>
+      throw _privateConstructorUsedError;
+  @JsonKey(name: 'BACKEND_INTERFACE')
+  List<BackendInterface> get backendInterface =>
+      throw _privateConstructorUsedError;
+  @JsonKey(name: 'CALL_SUPPORT')
+  List<CallSupportList>? get callSupportOptions =>
+      throw _privateConstructorUsedError;
+  @JsonKey(name: 'TRANSPORT_TYPES')
+  List<TransportTypes> get transportTypes => throw _privateConstructorUsedError;
+  @JsonKey(name: 'SYMPTOM_TYPES')
+  List<SymptomsType>? get symptomsTypeList =>
+      throw _privateConstructorUsedError;
+  @JsonKey(name: 'REFERRAL_REASONS')
+  List<ReferralReasonType>? get referralReasonList =>
+      throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $HCMWrapperModelCopyWith<HCMWrapperModel> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $HCMWrapperModelCopyWith<$Res> {
+  factory $HCMWrapperModelCopyWith(
+          HCMWrapperModel value, $Res Function(HCMWrapperModel) then) =
+      _$HCMWrapperModelCopyWithImpl<$Res, HCMWrapperModel>;
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'APP_CONFIG') List<AppConfig> appConfig,
+      @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')
+      List<BandWidthBatchSize> bandWidthBatchSize,
+      @JsonKey(name: 'DOWNSYNC-BANDWIDTH_BATCH_SIZE')
+      List<BandWidthBatchSize> downSyncBandWidthBatchSize,
+      @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
+      List<DeletionReasonOptions> householdDeletionReasonOptions,
+      @JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS')
+      List<DeletionReasonOptions> householdMemberDeletionReasonOptions,
+      @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')
+      List<BackgroundServiceConfig>? backgroundServiceConfig,
+      @JsonKey(name: 'CHECKLIST_TYPES') List<CheckListTypes> checklistTypes,
+      @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
+      List<IdTypeOptions> idTypeOptions,
+      @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
+      List<DeliveryCommentOptions> deliveryCommentOptions,
+      @JsonKey(name: 'BACKEND_INTERFACE')
+      List<BackendInterface> backendInterface,
+      @JsonKey(name: 'CALL_SUPPORT') List<CallSupportList>? callSupportOptions,
+      @JsonKey(name: 'TRANSPORT_TYPES') List<TransportTypes> transportTypes,
+      @JsonKey(name: 'SYMPTOM_TYPES') List<SymptomsType>? symptomsTypeList,
+      @JsonKey(name: 'REFERRAL_REASONS')
+      List<ReferralReasonType>? referralReasonList});
+}
+
+/// @nodoc
+class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
+    implements $HCMWrapperModelCopyWith<$Res> {
+  _$HCMWrapperModelCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? appConfig = null,
+    Object? bandWidthBatchSize = null,
+    Object? downSyncBandWidthBatchSize = null,
+    Object? householdDeletionReasonOptions = null,
+    Object? householdMemberDeletionReasonOptions = null,
+    Object? backgroundServiceConfig = freezed,
+    Object? checklistTypes = null,
+    Object? idTypeOptions = null,
+    Object? deliveryCommentOptions = null,
+    Object? backendInterface = null,
+    Object? callSupportOptions = freezed,
+    Object? transportTypes = null,
+    Object? symptomsTypeList = freezed,
+    Object? referralReasonList = freezed,
+  }) {
+    return _then(_value.copyWith(
+      appConfig: null == appConfig
+          ? _value.appConfig
+          : appConfig // ignore: cast_nullable_to_non_nullable
+              as List<AppConfig>,
+      bandWidthBatchSize: null == bandWidthBatchSize
+          ? _value.bandWidthBatchSize
+          : bandWidthBatchSize // ignore: cast_nullable_to_non_nullable
+              as List<BandWidthBatchSize>,
+      downSyncBandWidthBatchSize: null == downSyncBandWidthBatchSize
+          ? _value.downSyncBandWidthBatchSize
+          : downSyncBandWidthBatchSize // ignore: cast_nullable_to_non_nullable
+              as List<BandWidthBatchSize>,
+      householdDeletionReasonOptions: null == householdDeletionReasonOptions
+          ? _value.householdDeletionReasonOptions
+          : householdDeletionReasonOptions // ignore: cast_nullable_to_non_nullable
+              as List<DeletionReasonOptions>,
+      householdMemberDeletionReasonOptions: null ==
+              householdMemberDeletionReasonOptions
+          ? _value.householdMemberDeletionReasonOptions
+          : householdMemberDeletionReasonOptions // ignore: cast_nullable_to_non_nullable
+              as List<DeletionReasonOptions>,
+      backgroundServiceConfig: freezed == backgroundServiceConfig
+          ? _value.backgroundServiceConfig
+          : backgroundServiceConfig // ignore: cast_nullable_to_non_nullable
+              as List<BackgroundServiceConfig>?,
+      checklistTypes: null == checklistTypes
+          ? _value.checklistTypes
+          : checklistTypes // ignore: cast_nullable_to_non_nullable
+              as List<CheckListTypes>,
+      idTypeOptions: null == idTypeOptions
+          ? _value.idTypeOptions
+          : idTypeOptions // ignore: cast_nullable_to_non_nullable
+              as List<IdTypeOptions>,
+      deliveryCommentOptions: null == deliveryCommentOptions
+          ? _value.deliveryCommentOptions
+          : deliveryCommentOptions // ignore: cast_nullable_to_non_nullable
+              as List<DeliveryCommentOptions>,
+      backendInterface: null == backendInterface
+          ? _value.backendInterface
+          : backendInterface // ignore: cast_nullable_to_non_nullable
+              as List<BackendInterface>,
+      callSupportOptions: freezed == callSupportOptions
+          ? _value.callSupportOptions
+          : callSupportOptions // ignore: cast_nullable_to_non_nullable
+              as List<CallSupportList>?,
+      transportTypes: null == transportTypes
+          ? _value.transportTypes
+          : transportTypes // ignore: cast_nullable_to_non_nullable
+              as List<TransportTypes>,
+      symptomsTypeList: freezed == symptomsTypeList
+          ? _value.symptomsTypeList
+          : symptomsTypeList // ignore: cast_nullable_to_non_nullable
+              as List<SymptomsType>?,
+      referralReasonList: freezed == referralReasonList
+          ? _value.referralReasonList
+          : referralReasonList // ignore: cast_nullable_to_non_nullable
+              as List<ReferralReasonType>?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$HCMWrapperModelImplCopyWith<$Res>
+    implements $HCMWrapperModelCopyWith<$Res> {
+  factory _$$HCMWrapperModelImplCopyWith(_$HCMWrapperModelImpl value,
+          $Res Function(_$HCMWrapperModelImpl) then) =
+      __$$HCMWrapperModelImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'APP_CONFIG') List<AppConfig> appConfig,
+      @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')
+      List<BandWidthBatchSize> bandWidthBatchSize,
+      @JsonKey(name: 'DOWNSYNC-BANDWIDTH_BATCH_SIZE')
+      List<BandWidthBatchSize> downSyncBandWidthBatchSize,
+      @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
+      List<DeletionReasonOptions> householdDeletionReasonOptions,
+      @JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS')
+      List<DeletionReasonOptions> householdMemberDeletionReasonOptions,
+      @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')
+      List<BackgroundServiceConfig>? backgroundServiceConfig,
+      @JsonKey(name: 'CHECKLIST_TYPES') List<CheckListTypes> checklistTypes,
+      @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
+      List<IdTypeOptions> idTypeOptions,
+      @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
+      List<DeliveryCommentOptions> deliveryCommentOptions,
+      @JsonKey(name: 'BACKEND_INTERFACE')
+      List<BackendInterface> backendInterface,
+      @JsonKey(name: 'CALL_SUPPORT') List<CallSupportList>? callSupportOptions,
+      @JsonKey(name: 'TRANSPORT_TYPES') List<TransportTypes> transportTypes,
+      @JsonKey(name: 'SYMPTOM_TYPES') List<SymptomsType>? symptomsTypeList,
+      @JsonKey(name: 'REFERRAL_REASONS')
+      List<ReferralReasonType>? referralReasonList});
+}
+
+/// @nodoc
+class __$$HCMWrapperModelImplCopyWithImpl<$Res>
+    extends _$HCMWrapperModelCopyWithImpl<$Res, _$HCMWrapperModelImpl>
+    implements _$$HCMWrapperModelImplCopyWith<$Res> {
+  __$$HCMWrapperModelImplCopyWithImpl(
+      _$HCMWrapperModelImpl _value, $Res Function(_$HCMWrapperModelImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? appConfig = null,
+    Object? bandWidthBatchSize = null,
+    Object? downSyncBandWidthBatchSize = null,
+    Object? householdDeletionReasonOptions = null,
+    Object? householdMemberDeletionReasonOptions = null,
+    Object? backgroundServiceConfig = freezed,
+    Object? checklistTypes = null,
+    Object? idTypeOptions = null,
+    Object? deliveryCommentOptions = null,
+    Object? backendInterface = null,
+    Object? callSupportOptions = freezed,
+    Object? transportTypes = null,
+    Object? symptomsTypeList = freezed,
+    Object? referralReasonList = freezed,
+  }) {
+    return _then(_$HCMWrapperModelImpl(
+      appConfig: null == appConfig
+          ? _value._appConfig
+          : appConfig // ignore: cast_nullable_to_non_nullable
+              as List<AppConfig>,
+      bandWidthBatchSize: null == bandWidthBatchSize
+          ? _value._bandWidthBatchSize
+          : bandWidthBatchSize // ignore: cast_nullable_to_non_nullable
+              as List<BandWidthBatchSize>,
+      downSyncBandWidthBatchSize: null == downSyncBandWidthBatchSize
+          ? _value._downSyncBandWidthBatchSize
+          : downSyncBandWidthBatchSize // ignore: cast_nullable_to_non_nullable
+              as List<BandWidthBatchSize>,
+      householdDeletionReasonOptions: null == householdDeletionReasonOptions
+          ? _value._householdDeletionReasonOptions
+          : householdDeletionReasonOptions // ignore: cast_nullable_to_non_nullable
+              as List<DeletionReasonOptions>,
+      householdMemberDeletionReasonOptions: null ==
+              householdMemberDeletionReasonOptions
+          ? _value._householdMemberDeletionReasonOptions
+          : householdMemberDeletionReasonOptions // ignore: cast_nullable_to_non_nullable
+              as List<DeletionReasonOptions>,
+      backgroundServiceConfig: freezed == backgroundServiceConfig
+          ? _value._backgroundServiceConfig
+          : backgroundServiceConfig // ignore: cast_nullable_to_non_nullable
+              as List<BackgroundServiceConfig>?,
+      checklistTypes: null == checklistTypes
+          ? _value._checklistTypes
+          : checklistTypes // ignore: cast_nullable_to_non_nullable
+              as List<CheckListTypes>,
+      idTypeOptions: null == idTypeOptions
+          ? _value._idTypeOptions
+          : idTypeOptions // ignore: cast_nullable_to_non_nullable
+              as List<IdTypeOptions>,
+      deliveryCommentOptions: null == deliveryCommentOptions
+          ? _value._deliveryCommentOptions
+          : deliveryCommentOptions // ignore: cast_nullable_to_non_nullable
+              as List<DeliveryCommentOptions>,
+      backendInterface: null == backendInterface
+          ? _value._backendInterface
+          : backendInterface // ignore: cast_nullable_to_non_nullable
+              as List<BackendInterface>,
+      callSupportOptions: freezed == callSupportOptions
+          ? _value._callSupportOptions
+          : callSupportOptions // ignore: cast_nullable_to_non_nullable
+              as List<CallSupportList>?,
+      transportTypes: null == transportTypes
+          ? _value._transportTypes
+          : transportTypes // ignore: cast_nullable_to_non_nullable
+              as List<TransportTypes>,
+      symptomsTypeList: freezed == symptomsTypeList
+          ? _value._symptomsTypeList
+          : symptomsTypeList // ignore: cast_nullable_to_non_nullable
+              as List<SymptomsType>?,
+      referralReasonList: freezed == referralReasonList
+          ? _value._referralReasonList
+          : referralReasonList // ignore: cast_nullable_to_non_nullable
+              as List<ReferralReasonType>?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$HCMWrapperModelImpl implements _HCMWrapperModel {
+  const _$HCMWrapperModelImpl(
+      {@JsonKey(name: 'APP_CONFIG') required final List<AppConfig> appConfig,
+      @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')
+      required final List<BandWidthBatchSize> bandWidthBatchSize,
+      @JsonKey(name: 'DOWNSYNC-BANDWIDTH_BATCH_SIZE')
+      required final List<BandWidthBatchSize> downSyncBandWidthBatchSize,
+      @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
+      required final List<DeletionReasonOptions> householdDeletionReasonOptions,
+      @JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS')
+      required final List<DeletionReasonOptions>
+          householdMemberDeletionReasonOptions,
+      @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')
+      final List<BackgroundServiceConfig>? backgroundServiceConfig,
+      @JsonKey(name: 'CHECKLIST_TYPES')
+      required final List<CheckListTypes> checklistTypes,
+      @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
+      required final List<IdTypeOptions> idTypeOptions,
+      @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
+      required final List<DeliveryCommentOptions> deliveryCommentOptions,
+      @JsonKey(name: 'BACKEND_INTERFACE')
+      required final List<BackendInterface> backendInterface,
+      @JsonKey(name: 'CALL_SUPPORT')
+      required final List<CallSupportList>? callSupportOptions,
+      @JsonKey(name: 'TRANSPORT_TYPES')
+      required final List<TransportTypes> transportTypes,
+      @JsonKey(name: 'SYMPTOM_TYPES')
+      final List<SymptomsType>? symptomsTypeList,
+      @JsonKey(name: 'REFERRAL_REASONS')
+      final List<ReferralReasonType>? referralReasonList})
+      : _appConfig = appConfig,
+        _bandWidthBatchSize = bandWidthBatchSize,
+        _downSyncBandWidthBatchSize = downSyncBandWidthBatchSize,
+        _householdDeletionReasonOptions = householdDeletionReasonOptions,
+        _householdMemberDeletionReasonOptions =
+            householdMemberDeletionReasonOptions,
+        _backgroundServiceConfig = backgroundServiceConfig,
+        _checklistTypes = checklistTypes,
+        _idTypeOptions = idTypeOptions,
+        _deliveryCommentOptions = deliveryCommentOptions,
+        _backendInterface = backendInterface,
+        _callSupportOptions = callSupportOptions,
+        _transportTypes = transportTypes,
+        _symptomsTypeList = symptomsTypeList,
+        _referralReasonList = referralReasonList;
+
+  factory _$HCMWrapperModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$HCMWrapperModelImplFromJson(json);
+
+  final List<AppConfig> _appConfig;
+  @override
+  @JsonKey(name: 'APP_CONFIG')
+  List<AppConfig> get appConfig {
+    if (_appConfig is EqualUnmodifiableListView) return _appConfig;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_appConfig);
+  }
+
+  final List<BandWidthBatchSize> _bandWidthBatchSize;
+  @override
+  @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')
+  List<BandWidthBatchSize> get bandWidthBatchSize {
+    if (_bandWidthBatchSize is EqualUnmodifiableListView)
+      return _bandWidthBatchSize;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_bandWidthBatchSize);
+  }
+
+  final List<BandWidthBatchSize> _downSyncBandWidthBatchSize;
+  @override
+  @JsonKey(name: 'DOWNSYNC-BANDWIDTH_BATCH_SIZE')
+  List<BandWidthBatchSize> get downSyncBandWidthBatchSize {
+    if (_downSyncBandWidthBatchSize is EqualUnmodifiableListView)
+      return _downSyncBandWidthBatchSize;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_downSyncBandWidthBatchSize);
+  }
+
+  final List<DeletionReasonOptions> _householdDeletionReasonOptions;
+  @override
+  @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
+  List<DeletionReasonOptions> get householdDeletionReasonOptions {
+    if (_householdDeletionReasonOptions is EqualUnmodifiableListView)
+      return _householdDeletionReasonOptions;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_householdDeletionReasonOptions);
+  }
+
+  final List<DeletionReasonOptions> _householdMemberDeletionReasonOptions;
+  @override
+  @JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS')
+  List<DeletionReasonOptions> get householdMemberDeletionReasonOptions {
+    if (_householdMemberDeletionReasonOptions is EqualUnmodifiableListView)
+      return _householdMemberDeletionReasonOptions;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_householdMemberDeletionReasonOptions);
+  }
+
+  final List<BackgroundServiceConfig>? _backgroundServiceConfig;
+  @override
+  @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')
+  List<BackgroundServiceConfig>? get backgroundServiceConfig {
+    final value = _backgroundServiceConfig;
+    if (value == null) return null;
+    if (_backgroundServiceConfig is EqualUnmodifiableListView)
+      return _backgroundServiceConfig;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  final List<CheckListTypes> _checklistTypes;
+  @override
+  @JsonKey(name: 'CHECKLIST_TYPES')
+  List<CheckListTypes> get checklistTypes {
+    if (_checklistTypes is EqualUnmodifiableListView) return _checklistTypes;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_checklistTypes);
+  }
+
+  final List<IdTypeOptions> _idTypeOptions;
+  @override
+  @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
+  List<IdTypeOptions> get idTypeOptions {
+    if (_idTypeOptions is EqualUnmodifiableListView) return _idTypeOptions;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_idTypeOptions);
+  }
+
+  final List<DeliveryCommentOptions> _deliveryCommentOptions;
+  @override
+  @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
+  List<DeliveryCommentOptions> get deliveryCommentOptions {
+    if (_deliveryCommentOptions is EqualUnmodifiableListView)
+      return _deliveryCommentOptions;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_deliveryCommentOptions);
+  }
+
+  final List<BackendInterface> _backendInterface;
+  @override
+  @JsonKey(name: 'BACKEND_INTERFACE')
+  List<BackendInterface> get backendInterface {
+    if (_backendInterface is EqualUnmodifiableListView)
+      return _backendInterface;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_backendInterface);
+  }
+
+  final List<CallSupportList>? _callSupportOptions;
+  @override
+  @JsonKey(name: 'CALL_SUPPORT')
+  List<CallSupportList>? get callSupportOptions {
+    final value = _callSupportOptions;
+    if (value == null) return null;
+    if (_callSupportOptions is EqualUnmodifiableListView)
+      return _callSupportOptions;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  final List<TransportTypes> _transportTypes;
+  @override
+  @JsonKey(name: 'TRANSPORT_TYPES')
+  List<TransportTypes> get transportTypes {
+    if (_transportTypes is EqualUnmodifiableListView) return _transportTypes;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_transportTypes);
+  }
+
+  final List<SymptomsType>? _symptomsTypeList;
+  @override
+  @JsonKey(name: 'SYMPTOM_TYPES')
+  List<SymptomsType>? get symptomsTypeList {
+    final value = _symptomsTypeList;
+    if (value == null) return null;
+    if (_symptomsTypeList is EqualUnmodifiableListView)
+      return _symptomsTypeList;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  final List<ReferralReasonType>? _referralReasonList;
+  @override
+  @JsonKey(name: 'REFERRAL_REASONS')
+  List<ReferralReasonType>? get referralReasonList {
+    final value = _referralReasonList;
+    if (value == null) return null;
+    if (_referralReasonList is EqualUnmodifiableListView)
+      return _referralReasonList;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  @override
+  String toString() {
+    return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, referralReasonList: $referralReasonList)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$HCMWrapperModelImpl &&
+            const DeepCollectionEquality()
+                .equals(other._appConfig, _appConfig) &&
+            const DeepCollectionEquality()
+                .equals(other._bandWidthBatchSize, _bandWidthBatchSize) &&
+            const DeepCollectionEquality().equals(
+                other._downSyncBandWidthBatchSize,
+                _downSyncBandWidthBatchSize) &&
+            const DeepCollectionEquality().equals(
+                other._householdDeletionReasonOptions,
+                _householdDeletionReasonOptions) &&
+            const DeepCollectionEquality().equals(
+                other._householdMemberDeletionReasonOptions,
+                _householdMemberDeletionReasonOptions) &&
+            const DeepCollectionEquality().equals(
+                other._backgroundServiceConfig, _backgroundServiceConfig) &&
+            const DeepCollectionEquality()
+                .equals(other._checklistTypes, _checklistTypes) &&
+            const DeepCollectionEquality()
+                .equals(other._idTypeOptions, _idTypeOptions) &&
+            const DeepCollectionEquality().equals(
+                other._deliveryCommentOptions, _deliveryCommentOptions) &&
+            const DeepCollectionEquality()
+                .equals(other._backendInterface, _backendInterface) &&
+            const DeepCollectionEquality()
+                .equals(other._callSupportOptions, _callSupportOptions) &&
+            const DeepCollectionEquality()
+                .equals(other._transportTypes, _transportTypes) &&
+            const DeepCollectionEquality()
+                .equals(other._symptomsTypeList, _symptomsTypeList) &&
+            const DeepCollectionEquality()
+                .equals(other._referralReasonList, _referralReasonList));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(_appConfig),
+      const DeepCollectionEquality().hash(_bandWidthBatchSize),
+      const DeepCollectionEquality().hash(_downSyncBandWidthBatchSize),
+      const DeepCollectionEquality().hash(_householdDeletionReasonOptions),
+      const DeepCollectionEquality()
+          .hash(_householdMemberDeletionReasonOptions),
+      const DeepCollectionEquality().hash(_backgroundServiceConfig),
+      const DeepCollectionEquality().hash(_checklistTypes),
+      const DeepCollectionEquality().hash(_idTypeOptions),
+      const DeepCollectionEquality().hash(_deliveryCommentOptions),
+      const DeepCollectionEquality().hash(_backendInterface),
+      const DeepCollectionEquality().hash(_callSupportOptions),
+      const DeepCollectionEquality().hash(_transportTypes),
+      const DeepCollectionEquality().hash(_symptomsTypeList),
+      const DeepCollectionEquality().hash(_referralReasonList));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$HCMWrapperModelImplCopyWith<_$HCMWrapperModelImpl> get copyWith =>
+      __$$HCMWrapperModelImplCopyWithImpl<_$HCMWrapperModelImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$HCMWrapperModelImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _HCMWrapperModel implements HCMWrapperModel {
+  const factory _HCMWrapperModel(
+      {@JsonKey(name: 'APP_CONFIG') required final List<AppConfig> appConfig,
+      @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')
+      required final List<BandWidthBatchSize> bandWidthBatchSize,
+      @JsonKey(name: 'DOWNSYNC-BANDWIDTH_BATCH_SIZE')
+      required final List<BandWidthBatchSize> downSyncBandWidthBatchSize,
+      @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
+      required final List<DeletionReasonOptions> householdDeletionReasonOptions,
+      @JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS')
+      required final List<DeletionReasonOptions>
+          householdMemberDeletionReasonOptions,
+      @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')
+      final List<BackgroundServiceConfig>? backgroundServiceConfig,
+      @JsonKey(name: 'CHECKLIST_TYPES')
+      required final List<CheckListTypes> checklistTypes,
+      @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
+      required final List<IdTypeOptions> idTypeOptions,
+      @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
+      required final List<DeliveryCommentOptions> deliveryCommentOptions,
+      @JsonKey(name: 'BACKEND_INTERFACE')
+      required final List<BackendInterface> backendInterface,
+      @JsonKey(name: 'CALL_SUPPORT')
+      required final List<CallSupportList>? callSupportOptions,
+      @JsonKey(name: 'TRANSPORT_TYPES')
+      required final List<TransportTypes> transportTypes,
+      @JsonKey(name: 'SYMPTOM_TYPES')
+      final List<SymptomsType>? symptomsTypeList,
+      @JsonKey(name: 'REFERRAL_REASONS')
+      final List<ReferralReasonType>?
+          referralReasonList}) = _$HCMWrapperModelImpl;
+
+  factory _HCMWrapperModel.fromJson(Map<String, dynamic> json) =
+      _$HCMWrapperModelImpl.fromJson;
+
+  @override
+  @JsonKey(name: 'APP_CONFIG')
+  List<AppConfig> get appConfig;
+  @override
+  @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')
+  List<BandWidthBatchSize> get bandWidthBatchSize;
+  @override
+  @JsonKey(name: 'DOWNSYNC-BANDWIDTH_BATCH_SIZE')
+  List<BandWidthBatchSize> get downSyncBandWidthBatchSize;
+  @override
+  @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
+  List<DeletionReasonOptions> get householdDeletionReasonOptions;
+  @override
+  @JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS')
+  List<DeletionReasonOptions> get householdMemberDeletionReasonOptions;
+  @override
+  @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')
+  List<BackgroundServiceConfig>? get backgroundServiceConfig;
+  @override
+  @JsonKey(name: 'CHECKLIST_TYPES')
+  List<CheckListTypes> get checklistTypes;
+  @override
+  @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
+  List<IdTypeOptions> get idTypeOptions;
+  @override
+  @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
+  List<DeliveryCommentOptions> get deliveryCommentOptions;
+  @override
+  @JsonKey(name: 'BACKEND_INTERFACE')
+  List<BackendInterface> get backendInterface;
+  @override
+  @JsonKey(name: 'CALL_SUPPORT')
+  List<CallSupportList>? get callSupportOptions;
+  @override
+  @JsonKey(name: 'TRANSPORT_TYPES')
+  List<TransportTypes> get transportTypes;
+  @override
+  @JsonKey(name: 'SYMPTOM_TYPES')
+  List<SymptomsType>? get symptomsTypeList;
+  @override
+  @JsonKey(name: 'REFERRAL_REASONS')
+  List<ReferralReasonType>? get referralReasonList;
+  @override
+  @JsonKey(ignore: true)
+  _$$HCMWrapperModelImplCopyWith<_$HCMWrapperModelImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 AppConfigSecondaryWrapperModel _$AppConfigSecondaryWrapperModelFromJson(
@@ -1125,6 +1725,609 @@ abstract class _AppConfigSecondaryWrapperModel
   _$$AppConfigSecondaryWrapperModelImplCopyWith<
           _$AppConfigSecondaryWrapperModelImpl>
       get copyWith => throw _privateConstructorUsedError;
+}
+
+CommonMastersWrapperModel _$CommonMastersWrapperModelFromJson(
+    Map<String, dynamic> json) {
+  return _CommonMastersWrapperModel.fromJson(json);
+}
+
+/// @nodoc
+mixin _$CommonMastersWrapperModel {
+  @JsonKey(name: 'GenderType')
+  List<CommonMasterModel> get genderType => throw _privateConstructorUsedError;
+  @JsonKey(name: 'StateInfo')
+  List<StateInfoModel> get stateInfo => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $CommonMastersWrapperModelCopyWith<CommonMastersWrapperModel> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $CommonMastersWrapperModelCopyWith<$Res> {
+  factory $CommonMastersWrapperModelCopyWith(CommonMastersWrapperModel value,
+          $Res Function(CommonMastersWrapperModel) then) =
+      _$CommonMastersWrapperModelCopyWithImpl<$Res, CommonMastersWrapperModel>;
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'GenderType') List<CommonMasterModel> genderType,
+      @JsonKey(name: 'StateInfo') List<StateInfoModel> stateInfo});
+}
+
+/// @nodoc
+class _$CommonMastersWrapperModelCopyWithImpl<$Res,
+        $Val extends CommonMastersWrapperModel>
+    implements $CommonMastersWrapperModelCopyWith<$Res> {
+  _$CommonMastersWrapperModelCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? genderType = null,
+    Object? stateInfo = null,
+  }) {
+    return _then(_value.copyWith(
+      genderType: null == genderType
+          ? _value.genderType
+          : genderType // ignore: cast_nullable_to_non_nullable
+              as List<CommonMasterModel>,
+      stateInfo: null == stateInfo
+          ? _value.stateInfo
+          : stateInfo // ignore: cast_nullable_to_non_nullable
+              as List<StateInfoModel>,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$CommonMastersWrapperModelImplCopyWith<$Res>
+    implements $CommonMastersWrapperModelCopyWith<$Res> {
+  factory _$$CommonMastersWrapperModelImplCopyWith(
+          _$CommonMastersWrapperModelImpl value,
+          $Res Function(_$CommonMastersWrapperModelImpl) then) =
+      __$$CommonMastersWrapperModelImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'GenderType') List<CommonMasterModel> genderType,
+      @JsonKey(name: 'StateInfo') List<StateInfoModel> stateInfo});
+}
+
+/// @nodoc
+class __$$CommonMastersWrapperModelImplCopyWithImpl<$Res>
+    extends _$CommonMastersWrapperModelCopyWithImpl<$Res,
+        _$CommonMastersWrapperModelImpl>
+    implements _$$CommonMastersWrapperModelImplCopyWith<$Res> {
+  __$$CommonMastersWrapperModelImplCopyWithImpl(
+      _$CommonMastersWrapperModelImpl _value,
+      $Res Function(_$CommonMastersWrapperModelImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? genderType = null,
+    Object? stateInfo = null,
+  }) {
+    return _then(_$CommonMastersWrapperModelImpl(
+      genderType: null == genderType
+          ? _value._genderType
+          : genderType // ignore: cast_nullable_to_non_nullable
+              as List<CommonMasterModel>,
+      stateInfo: null == stateInfo
+          ? _value._stateInfo
+          : stateInfo // ignore: cast_nullable_to_non_nullable
+              as List<StateInfoModel>,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$CommonMastersWrapperModelImpl implements _CommonMastersWrapperModel {
+  const _$CommonMastersWrapperModelImpl(
+      {@JsonKey(name: 'GenderType')
+      required final List<CommonMasterModel> genderType,
+      @JsonKey(name: 'StateInfo')
+      required final List<StateInfoModel> stateInfo})
+      : _genderType = genderType,
+        _stateInfo = stateInfo;
+
+  factory _$CommonMastersWrapperModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$CommonMastersWrapperModelImplFromJson(json);
+
+  final List<CommonMasterModel> _genderType;
+  @override
+  @JsonKey(name: 'GenderType')
+  List<CommonMasterModel> get genderType {
+    if (_genderType is EqualUnmodifiableListView) return _genderType;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_genderType);
+  }
+
+  final List<StateInfoModel> _stateInfo;
+  @override
+  @JsonKey(name: 'StateInfo')
+  List<StateInfoModel> get stateInfo {
+    if (_stateInfo is EqualUnmodifiableListView) return _stateInfo;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_stateInfo);
+  }
+
+  @override
+  String toString() {
+    return 'CommonMastersWrapperModel(genderType: $genderType, stateInfo: $stateInfo)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$CommonMastersWrapperModelImpl &&
+            const DeepCollectionEquality()
+                .equals(other._genderType, _genderType) &&
+            const DeepCollectionEquality()
+                .equals(other._stateInfo, _stateInfo));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(_genderType),
+      const DeepCollectionEquality().hash(_stateInfo));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$CommonMastersWrapperModelImplCopyWith<_$CommonMastersWrapperModelImpl>
+      get copyWith => __$$CommonMastersWrapperModelImplCopyWithImpl<
+          _$CommonMastersWrapperModelImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$CommonMastersWrapperModelImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _CommonMastersWrapperModel implements CommonMastersWrapperModel {
+  const factory _CommonMastersWrapperModel(
+          {@JsonKey(name: 'GenderType')
+          required final List<CommonMasterModel> genderType,
+          @JsonKey(name: 'StateInfo')
+          required final List<StateInfoModel> stateInfo}) =
+      _$CommonMastersWrapperModelImpl;
+
+  factory _CommonMastersWrapperModel.fromJson(Map<String, dynamic> json) =
+      _$CommonMastersWrapperModelImpl.fromJson;
+
+  @override
+  @JsonKey(name: 'GenderType')
+  List<CommonMasterModel> get genderType;
+  @override
+  @JsonKey(name: 'StateInfo')
+  List<StateInfoModel> get stateInfo;
+  @override
+  @JsonKey(ignore: true)
+  _$$CommonMastersWrapperModelImplCopyWith<_$CommonMastersWrapperModelImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+CommonMasterModel _$CommonMasterModelFromJson(Map<String, dynamic> json) {
+  return _CommonMasterModel.fromJson(json);
+}
+
+/// @nodoc
+mixin _$CommonMasterModel {
+  @JsonKey(name: 'code')
+  String get code => throw _privateConstructorUsedError;
+  @JsonKey(name: 'name')
+  String? get name => throw _privateConstructorUsedError;
+  @JsonKey(name: 'active')
+  bool get active => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $CommonMasterModelCopyWith<CommonMasterModel> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $CommonMasterModelCopyWith<$Res> {
+  factory $CommonMasterModelCopyWith(
+          CommonMasterModel value, $Res Function(CommonMasterModel) then) =
+      _$CommonMasterModelCopyWithImpl<$Res, CommonMasterModel>;
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'code') String code,
+      @JsonKey(name: 'name') String? name,
+      @JsonKey(name: 'active') bool active});
+}
+
+/// @nodoc
+class _$CommonMasterModelCopyWithImpl<$Res, $Val extends CommonMasterModel>
+    implements $CommonMasterModelCopyWith<$Res> {
+  _$CommonMasterModelCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? code = null,
+    Object? name = freezed,
+    Object? active = null,
+  }) {
+    return _then(_value.copyWith(
+      code: null == code
+          ? _value.code
+          : code // ignore: cast_nullable_to_non_nullable
+              as String,
+      name: freezed == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String?,
+      active: null == active
+          ? _value.active
+          : active // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$CommonMasterModelImplCopyWith<$Res>
+    implements $CommonMasterModelCopyWith<$Res> {
+  factory _$$CommonMasterModelImplCopyWith(_$CommonMasterModelImpl value,
+          $Res Function(_$CommonMasterModelImpl) then) =
+      __$$CommonMasterModelImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'code') String code,
+      @JsonKey(name: 'name') String? name,
+      @JsonKey(name: 'active') bool active});
+}
+
+/// @nodoc
+class __$$CommonMasterModelImplCopyWithImpl<$Res>
+    extends _$CommonMasterModelCopyWithImpl<$Res, _$CommonMasterModelImpl>
+    implements _$$CommonMasterModelImplCopyWith<$Res> {
+  __$$CommonMasterModelImplCopyWithImpl(_$CommonMasterModelImpl _value,
+      $Res Function(_$CommonMasterModelImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? code = null,
+    Object? name = freezed,
+    Object? active = null,
+  }) {
+    return _then(_$CommonMasterModelImpl(
+      code: null == code
+          ? _value.code
+          : code // ignore: cast_nullable_to_non_nullable
+              as String,
+      name: freezed == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String?,
+      active: null == active
+          ? _value.active
+          : active // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$CommonMasterModelImpl implements _CommonMasterModel {
+  const _$CommonMasterModelImpl(
+      {@JsonKey(name: 'code') required this.code,
+      @JsonKey(name: 'name') this.name,
+      @JsonKey(name: 'active') required this.active});
+
+  factory _$CommonMasterModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$CommonMasterModelImplFromJson(json);
+
+  @override
+  @JsonKey(name: 'code')
+  final String code;
+  @override
+  @JsonKey(name: 'name')
+  final String? name;
+  @override
+  @JsonKey(name: 'active')
+  final bool active;
+
+  @override
+  String toString() {
+    return 'CommonMasterModel(code: $code, name: $name, active: $active)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$CommonMasterModelImpl &&
+            (identical(other.code, code) || other.code == code) &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.active, active) || other.active == active));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, code, name, active);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$CommonMasterModelImplCopyWith<_$CommonMasterModelImpl> get copyWith =>
+      __$$CommonMasterModelImplCopyWithImpl<_$CommonMasterModelImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$CommonMasterModelImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _CommonMasterModel implements CommonMasterModel {
+  const factory _CommonMasterModel(
+          {@JsonKey(name: 'code') required final String code,
+          @JsonKey(name: 'name') final String? name,
+          @JsonKey(name: 'active') required final bool active}) =
+      _$CommonMasterModelImpl;
+
+  factory _CommonMasterModel.fromJson(Map<String, dynamic> json) =
+      _$CommonMasterModelImpl.fromJson;
+
+  @override
+  @JsonKey(name: 'code')
+  String get code;
+  @override
+  @JsonKey(name: 'name')
+  String? get name;
+  @override
+  @JsonKey(name: 'active')
+  bool get active;
+  @override
+  @JsonKey(ignore: true)
+  _$$CommonMasterModelImplCopyWith<_$CommonMasterModelImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+StateInfoModel _$StateInfoModelFromJson(Map<String, dynamic> json) {
+  return _StateInfoModel.fromJson(json);
+}
+
+/// @nodoc
+mixin _$StateInfoModel {
+  @JsonKey(name: 'code')
+  String get code => throw _privateConstructorUsedError;
+  @JsonKey(name: 'languages')
+  List<Languages> get languages => throw _privateConstructorUsedError;
+  @JsonKey(name: 'localizationModules')
+  List<Languages>? get localizationModules =>
+      throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $StateInfoModelCopyWith<StateInfoModel> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $StateInfoModelCopyWith<$Res> {
+  factory $StateInfoModelCopyWith(
+          StateInfoModel value, $Res Function(StateInfoModel) then) =
+      _$StateInfoModelCopyWithImpl<$Res, StateInfoModel>;
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'code') String code,
+      @JsonKey(name: 'languages') List<Languages> languages,
+      @JsonKey(name: 'localizationModules')
+      List<Languages>? localizationModules});
+}
+
+/// @nodoc
+class _$StateInfoModelCopyWithImpl<$Res, $Val extends StateInfoModel>
+    implements $StateInfoModelCopyWith<$Res> {
+  _$StateInfoModelCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? code = null,
+    Object? languages = null,
+    Object? localizationModules = freezed,
+  }) {
+    return _then(_value.copyWith(
+      code: null == code
+          ? _value.code
+          : code // ignore: cast_nullable_to_non_nullable
+              as String,
+      languages: null == languages
+          ? _value.languages
+          : languages // ignore: cast_nullable_to_non_nullable
+              as List<Languages>,
+      localizationModules: freezed == localizationModules
+          ? _value.localizationModules
+          : localizationModules // ignore: cast_nullable_to_non_nullable
+              as List<Languages>?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$StateInfoModelImplCopyWith<$Res>
+    implements $StateInfoModelCopyWith<$Res> {
+  factory _$$StateInfoModelImplCopyWith(_$StateInfoModelImpl value,
+          $Res Function(_$StateInfoModelImpl) then) =
+      __$$StateInfoModelImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'code') String code,
+      @JsonKey(name: 'languages') List<Languages> languages,
+      @JsonKey(name: 'localizationModules')
+      List<Languages>? localizationModules});
+}
+
+/// @nodoc
+class __$$StateInfoModelImplCopyWithImpl<$Res>
+    extends _$StateInfoModelCopyWithImpl<$Res, _$StateInfoModelImpl>
+    implements _$$StateInfoModelImplCopyWith<$Res> {
+  __$$StateInfoModelImplCopyWithImpl(
+      _$StateInfoModelImpl _value, $Res Function(_$StateInfoModelImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? code = null,
+    Object? languages = null,
+    Object? localizationModules = freezed,
+  }) {
+    return _then(_$StateInfoModelImpl(
+      code: null == code
+          ? _value.code
+          : code // ignore: cast_nullable_to_non_nullable
+              as String,
+      languages: null == languages
+          ? _value._languages
+          : languages // ignore: cast_nullable_to_non_nullable
+              as List<Languages>,
+      localizationModules: freezed == localizationModules
+          ? _value._localizationModules
+          : localizationModules // ignore: cast_nullable_to_non_nullable
+              as List<Languages>?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$StateInfoModelImpl implements _StateInfoModel {
+  const _$StateInfoModelImpl(
+      {@JsonKey(name: 'code') required this.code,
+      @JsonKey(name: 'languages') required final List<Languages> languages,
+      @JsonKey(name: 'localizationModules')
+      final List<Languages>? localizationModules})
+      : _languages = languages,
+        _localizationModules = localizationModules;
+
+  factory _$StateInfoModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$StateInfoModelImplFromJson(json);
+
+  @override
+  @JsonKey(name: 'code')
+  final String code;
+  final List<Languages> _languages;
+  @override
+  @JsonKey(name: 'languages')
+  List<Languages> get languages {
+    if (_languages is EqualUnmodifiableListView) return _languages;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_languages);
+  }
+
+  final List<Languages>? _localizationModules;
+  @override
+  @JsonKey(name: 'localizationModules')
+  List<Languages>? get localizationModules {
+    final value = _localizationModules;
+    if (value == null) return null;
+    if (_localizationModules is EqualUnmodifiableListView)
+      return _localizationModules;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  @override
+  String toString() {
+    return 'StateInfoModel(code: $code, languages: $languages, localizationModules: $localizationModules)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$StateInfoModelImpl &&
+            (identical(other.code, code) || other.code == code) &&
+            const DeepCollectionEquality()
+                .equals(other._languages, _languages) &&
+            const DeepCollectionEquality()
+                .equals(other._localizationModules, _localizationModules));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      code,
+      const DeepCollectionEquality().hash(_languages),
+      const DeepCollectionEquality().hash(_localizationModules));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$StateInfoModelImplCopyWith<_$StateInfoModelImpl> get copyWith =>
+      __$$StateInfoModelImplCopyWithImpl<_$StateInfoModelImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$StateInfoModelImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _StateInfoModel implements StateInfoModel {
+  const factory _StateInfoModel(
+      {@JsonKey(name: 'code') required final String code,
+      @JsonKey(name: 'languages') required final List<Languages> languages,
+      @JsonKey(name: 'localizationModules')
+      final List<Languages>? localizationModules}) = _$StateInfoModelImpl;
+
+  factory _StateInfoModel.fromJson(Map<String, dynamic> json) =
+      _$StateInfoModelImpl.fromJson;
+
+  @override
+  @JsonKey(name: 'code')
+  String get code;
+  @override
+  @JsonKey(name: 'languages')
+  List<Languages> get languages;
+  @override
+  @JsonKey(name: 'localizationModules')
+  List<Languages>? get localizationModules;
+  @override
+  @JsonKey(ignore: true)
+  _$$StateInfoModelImplCopyWith<_$StateInfoModelImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 RowVersionWrapperModel _$RowVersionWrapperModelFromJson(
@@ -1301,40 +2504,10 @@ mixin _$AppConfig {
   String get syncMethod => throw _privateConstructorUsedError;
   @JsonKey(name: 'SYNC_TRIGGER')
   String get syncTrigger => throw _privateConstructorUsedError;
-  @JsonKey(name: 'LANGUAGES')
-  List<Languages> get languages => throw _privateConstructorUsedError;
   @JsonKey(name: 'TENANT_ID')
   String? get tenantId => throw _privateConstructorUsedError;
   @JsonKey(name: 'PROXIMITY_SEARCH_RANGE')
   double? get maxRadius => throw _privateConstructorUsedError;
-  @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
-  List<DeletionReasonOptions> get householdDeletionReasonOptions =>
-      throw _privateConstructorUsedError;
-  @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')
-  List<BandWidthBatchSize> get bandWidthBatchSize =>
-      throw _privateConstructorUsedError;
-  @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')
-  BackgroundServiceConfig? get backgroundServiceConfig =>
-      throw _privateConstructorUsedError;
-  @JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS')
-  List<DeletionReasonOptions> get householdMemberDeletionReasonOptions =>
-      throw _privateConstructorUsedError;
-  @JsonKey(name: 'GENDER_OPTIONS_POPULATOR')
-  List<GenderOptions> get genderOptions => throw _privateConstructorUsedError;
-  @JsonKey(name: 'CHECKLIST_TYPES')
-  List<CheckListTypes> get checklistTypes => throw _privateConstructorUsedError;
-  @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
-  List<IdTypeOptions> get idTypeOptions => throw _privateConstructorUsedError;
-  @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
-  List<DeliveryCommentOptions> get deliveryCommentOptions =>
-      throw _privateConstructorUsedError;
-  @JsonKey(name: 'BACKEND_INTERFACE')
-  BackendInterface get backendInterface => throw _privateConstructorUsedError;
-  @JsonKey(name: 'CALL_SUPPORT')
-  List<CallSupportList>? get callSupportOptions =>
-      throw _privateConstructorUsedError;
-  @JsonKey(name: 'TRANSPORT_TYPES')
-  List<TransportTypes> get transportTypes => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -1352,30 +2525,8 @@ abstract class $AppConfigCopyWith<$Res> {
       @JsonKey(name: 'PERSISTENCE_MODE') String persistenceMode,
       @JsonKey(name: 'SYNC_METHOD') String syncMethod,
       @JsonKey(name: 'SYNC_TRIGGER') String syncTrigger,
-      @JsonKey(name: 'LANGUAGES') List<Languages> languages,
       @JsonKey(name: 'TENANT_ID') String? tenantId,
-      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') double? maxRadius,
-      @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
-      List<DeletionReasonOptions> householdDeletionReasonOptions,
-      @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')
-      List<BandWidthBatchSize> bandWidthBatchSize,
-      @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')
-      BackgroundServiceConfig? backgroundServiceConfig,
-      @JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS')
-      List<DeletionReasonOptions> householdMemberDeletionReasonOptions,
-      @JsonKey(name: 'GENDER_OPTIONS_POPULATOR')
-      List<GenderOptions> genderOptions,
-      @JsonKey(name: 'CHECKLIST_TYPES') List<CheckListTypes> checklistTypes,
-      @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
-      List<IdTypeOptions> idTypeOptions,
-      @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
-      List<DeliveryCommentOptions> deliveryCommentOptions,
-      @JsonKey(name: 'BACKEND_INTERFACE') BackendInterface backendInterface,
-      @JsonKey(name: 'CALL_SUPPORT') List<CallSupportList>? callSupportOptions,
-      @JsonKey(name: 'TRANSPORT_TYPES') List<TransportTypes> transportTypes});
-
-  $BackgroundServiceConfigCopyWith<$Res>? get backgroundServiceConfig;
-  $BackendInterfaceCopyWith<$Res> get backendInterface;
+      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') double? maxRadius});
 }
 
 /// @nodoc
@@ -1395,20 +2546,8 @@ class _$AppConfigCopyWithImpl<$Res, $Val extends AppConfig>
     Object? persistenceMode = null,
     Object? syncMethod = null,
     Object? syncTrigger = null,
-    Object? languages = null,
     Object? tenantId = freezed,
     Object? maxRadius = freezed,
-    Object? householdDeletionReasonOptions = null,
-    Object? bandWidthBatchSize = null,
-    Object? backgroundServiceConfig = freezed,
-    Object? householdMemberDeletionReasonOptions = null,
-    Object? genderOptions = null,
-    Object? checklistTypes = null,
-    Object? idTypeOptions = null,
-    Object? deliveryCommentOptions = null,
-    Object? backendInterface = null,
-    Object? callSupportOptions = freezed,
-    Object? transportTypes = null,
   }) {
     return _then(_value.copyWith(
       networkDetection: null == networkDetection
@@ -1427,10 +2566,6 @@ class _$AppConfigCopyWithImpl<$Res, $Val extends AppConfig>
           ? _value.syncTrigger
           : syncTrigger // ignore: cast_nullable_to_non_nullable
               as String,
-      languages: null == languages
-          ? _value.languages
-          : languages // ignore: cast_nullable_to_non_nullable
-              as List<Languages>,
       tenantId: freezed == tenantId
           ? _value.tenantId
           : tenantId // ignore: cast_nullable_to_non_nullable
@@ -1439,73 +2574,7 @@ class _$AppConfigCopyWithImpl<$Res, $Val extends AppConfig>
           ? _value.maxRadius
           : maxRadius // ignore: cast_nullable_to_non_nullable
               as double?,
-      householdDeletionReasonOptions: null == householdDeletionReasonOptions
-          ? _value.householdDeletionReasonOptions
-          : householdDeletionReasonOptions // ignore: cast_nullable_to_non_nullable
-              as List<DeletionReasonOptions>,
-      bandWidthBatchSize: null == bandWidthBatchSize
-          ? _value.bandWidthBatchSize
-          : bandWidthBatchSize // ignore: cast_nullable_to_non_nullable
-              as List<BandWidthBatchSize>,
-      backgroundServiceConfig: freezed == backgroundServiceConfig
-          ? _value.backgroundServiceConfig
-          : backgroundServiceConfig // ignore: cast_nullable_to_non_nullable
-              as BackgroundServiceConfig?,
-      householdMemberDeletionReasonOptions: null ==
-              householdMemberDeletionReasonOptions
-          ? _value.householdMemberDeletionReasonOptions
-          : householdMemberDeletionReasonOptions // ignore: cast_nullable_to_non_nullable
-              as List<DeletionReasonOptions>,
-      genderOptions: null == genderOptions
-          ? _value.genderOptions
-          : genderOptions // ignore: cast_nullable_to_non_nullable
-              as List<GenderOptions>,
-      checklistTypes: null == checklistTypes
-          ? _value.checklistTypes
-          : checklistTypes // ignore: cast_nullable_to_non_nullable
-              as List<CheckListTypes>,
-      idTypeOptions: null == idTypeOptions
-          ? _value.idTypeOptions
-          : idTypeOptions // ignore: cast_nullable_to_non_nullable
-              as List<IdTypeOptions>,
-      deliveryCommentOptions: null == deliveryCommentOptions
-          ? _value.deliveryCommentOptions
-          : deliveryCommentOptions // ignore: cast_nullable_to_non_nullable
-              as List<DeliveryCommentOptions>,
-      backendInterface: null == backendInterface
-          ? _value.backendInterface
-          : backendInterface // ignore: cast_nullable_to_non_nullable
-              as BackendInterface,
-      callSupportOptions: freezed == callSupportOptions
-          ? _value.callSupportOptions
-          : callSupportOptions // ignore: cast_nullable_to_non_nullable
-              as List<CallSupportList>?,
-      transportTypes: null == transportTypes
-          ? _value.transportTypes
-          : transportTypes // ignore: cast_nullable_to_non_nullable
-              as List<TransportTypes>,
     ) as $Val);
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $BackgroundServiceConfigCopyWith<$Res>? get backgroundServiceConfig {
-    if (_value.backgroundServiceConfig == null) {
-      return null;
-    }
-
-    return $BackgroundServiceConfigCopyWith<$Res>(
-        _value.backgroundServiceConfig!, (value) {
-      return _then(_value.copyWith(backgroundServiceConfig: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $BackendInterfaceCopyWith<$Res> get backendInterface {
-    return $BackendInterfaceCopyWith<$Res>(_value.backendInterface, (value) {
-      return _then(_value.copyWith(backendInterface: value) as $Val);
-    });
   }
 }
 
@@ -1522,32 +2591,8 @@ abstract class _$$AppConfigImplCopyWith<$Res>
       @JsonKey(name: 'PERSISTENCE_MODE') String persistenceMode,
       @JsonKey(name: 'SYNC_METHOD') String syncMethod,
       @JsonKey(name: 'SYNC_TRIGGER') String syncTrigger,
-      @JsonKey(name: 'LANGUAGES') List<Languages> languages,
       @JsonKey(name: 'TENANT_ID') String? tenantId,
-      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') double? maxRadius,
-      @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
-      List<DeletionReasonOptions> householdDeletionReasonOptions,
-      @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')
-      List<BandWidthBatchSize> bandWidthBatchSize,
-      @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')
-      BackgroundServiceConfig? backgroundServiceConfig,
-      @JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS')
-      List<DeletionReasonOptions> householdMemberDeletionReasonOptions,
-      @JsonKey(name: 'GENDER_OPTIONS_POPULATOR')
-      List<GenderOptions> genderOptions,
-      @JsonKey(name: 'CHECKLIST_TYPES') List<CheckListTypes> checklistTypes,
-      @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
-      List<IdTypeOptions> idTypeOptions,
-      @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
-      List<DeliveryCommentOptions> deliveryCommentOptions,
-      @JsonKey(name: 'BACKEND_INTERFACE') BackendInterface backendInterface,
-      @JsonKey(name: 'CALL_SUPPORT') List<CallSupportList>? callSupportOptions,
-      @JsonKey(name: 'TRANSPORT_TYPES') List<TransportTypes> transportTypes});
-
-  @override
-  $BackgroundServiceConfigCopyWith<$Res>? get backgroundServiceConfig;
-  @override
-  $BackendInterfaceCopyWith<$Res> get backendInterface;
+      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') double? maxRadius});
 }
 
 /// @nodoc
@@ -1565,20 +2610,8 @@ class __$$AppConfigImplCopyWithImpl<$Res>
     Object? persistenceMode = null,
     Object? syncMethod = null,
     Object? syncTrigger = null,
-    Object? languages = null,
     Object? tenantId = freezed,
     Object? maxRadius = freezed,
-    Object? householdDeletionReasonOptions = null,
-    Object? bandWidthBatchSize = null,
-    Object? backgroundServiceConfig = freezed,
-    Object? householdMemberDeletionReasonOptions = null,
-    Object? genderOptions = null,
-    Object? checklistTypes = null,
-    Object? idTypeOptions = null,
-    Object? deliveryCommentOptions = null,
-    Object? backendInterface = null,
-    Object? callSupportOptions = freezed,
-    Object? transportTypes = null,
   }) {
     return _then(_$AppConfigImpl(
       networkDetection: null == networkDetection
@@ -1597,10 +2630,6 @@ class __$$AppConfigImplCopyWithImpl<$Res>
           ? _value.syncTrigger
           : syncTrigger // ignore: cast_nullable_to_non_nullable
               as String,
-      languages: null == languages
-          ? _value._languages
-          : languages // ignore: cast_nullable_to_non_nullable
-              as List<Languages>,
       tenantId: freezed == tenantId
           ? _value.tenantId
           : tenantId // ignore: cast_nullable_to_non_nullable
@@ -1609,51 +2638,6 @@ class __$$AppConfigImplCopyWithImpl<$Res>
           ? _value.maxRadius
           : maxRadius // ignore: cast_nullable_to_non_nullable
               as double?,
-      householdDeletionReasonOptions: null == householdDeletionReasonOptions
-          ? _value._householdDeletionReasonOptions
-          : householdDeletionReasonOptions // ignore: cast_nullable_to_non_nullable
-              as List<DeletionReasonOptions>,
-      bandWidthBatchSize: null == bandWidthBatchSize
-          ? _value._bandWidthBatchSize
-          : bandWidthBatchSize // ignore: cast_nullable_to_non_nullable
-              as List<BandWidthBatchSize>,
-      backgroundServiceConfig: freezed == backgroundServiceConfig
-          ? _value.backgroundServiceConfig
-          : backgroundServiceConfig // ignore: cast_nullable_to_non_nullable
-              as BackgroundServiceConfig?,
-      householdMemberDeletionReasonOptions: null ==
-              householdMemberDeletionReasonOptions
-          ? _value._householdMemberDeletionReasonOptions
-          : householdMemberDeletionReasonOptions // ignore: cast_nullable_to_non_nullable
-              as List<DeletionReasonOptions>,
-      genderOptions: null == genderOptions
-          ? _value._genderOptions
-          : genderOptions // ignore: cast_nullable_to_non_nullable
-              as List<GenderOptions>,
-      checklistTypes: null == checklistTypes
-          ? _value._checklistTypes
-          : checklistTypes // ignore: cast_nullable_to_non_nullable
-              as List<CheckListTypes>,
-      idTypeOptions: null == idTypeOptions
-          ? _value._idTypeOptions
-          : idTypeOptions // ignore: cast_nullable_to_non_nullable
-              as List<IdTypeOptions>,
-      deliveryCommentOptions: null == deliveryCommentOptions
-          ? _value._deliveryCommentOptions
-          : deliveryCommentOptions // ignore: cast_nullable_to_non_nullable
-              as List<DeliveryCommentOptions>,
-      backendInterface: null == backendInterface
-          ? _value.backendInterface
-          : backendInterface // ignore: cast_nullable_to_non_nullable
-              as BackendInterface,
-      callSupportOptions: freezed == callSupportOptions
-          ? _value._callSupportOptions
-          : callSupportOptions // ignore: cast_nullable_to_non_nullable
-              as List<CallSupportList>?,
-      transportTypes: null == transportTypes
-          ? _value._transportTypes
-          : transportTypes // ignore: cast_nullable_to_non_nullable
-              as List<TransportTypes>,
     ));
   }
 }
@@ -1666,41 +2650,8 @@ class _$AppConfigImpl implements _AppConfig {
       @JsonKey(name: 'PERSISTENCE_MODE') required this.persistenceMode,
       @JsonKey(name: 'SYNC_METHOD') required this.syncMethod,
       @JsonKey(name: 'SYNC_TRIGGER') required this.syncTrigger,
-      @JsonKey(name: 'LANGUAGES') required final List<Languages> languages,
       @JsonKey(name: 'TENANT_ID') this.tenantId,
-      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') this.maxRadius,
-      @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
-      required final List<DeletionReasonOptions> householdDeletionReasonOptions,
-      @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')
-      required final List<BandWidthBatchSize> bandWidthBatchSize,
-      @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG') this.backgroundServiceConfig,
-      @JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS')
-      required final List<DeletionReasonOptions>
-          householdMemberDeletionReasonOptions,
-      @JsonKey(name: 'GENDER_OPTIONS_POPULATOR')
-      required final List<GenderOptions> genderOptions,
-      @JsonKey(name: 'CHECKLIST_TYPES')
-      required final List<CheckListTypes> checklistTypes,
-      @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
-      required final List<IdTypeOptions> idTypeOptions,
-      @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
-      required final List<DeliveryCommentOptions> deliveryCommentOptions,
-      @JsonKey(name: 'BACKEND_INTERFACE') required this.backendInterface,
-      @JsonKey(name: 'CALL_SUPPORT')
-      required final List<CallSupportList>? callSupportOptions,
-      @JsonKey(name: 'TRANSPORT_TYPES')
-      required final List<TransportTypes> transportTypes})
-      : _languages = languages,
-        _householdDeletionReasonOptions = householdDeletionReasonOptions,
-        _bandWidthBatchSize = bandWidthBatchSize,
-        _householdMemberDeletionReasonOptions =
-            householdMemberDeletionReasonOptions,
-        _genderOptions = genderOptions,
-        _checklistTypes = checklistTypes,
-        _idTypeOptions = idTypeOptions,
-        _deliveryCommentOptions = deliveryCommentOptions,
-        _callSupportOptions = callSupportOptions,
-        _transportTypes = transportTypes;
+      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') this.maxRadius});
 
   factory _$AppConfigImpl.fromJson(Map<String, dynamic> json) =>
       _$$AppConfigImplFromJson(json);
@@ -1717,118 +2668,16 @@ class _$AppConfigImpl implements _AppConfig {
   @override
   @JsonKey(name: 'SYNC_TRIGGER')
   final String syncTrigger;
-  final List<Languages> _languages;
-  @override
-  @JsonKey(name: 'LANGUAGES')
-  List<Languages> get languages {
-    if (_languages is EqualUnmodifiableListView) return _languages;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_languages);
-  }
-
   @override
   @JsonKey(name: 'TENANT_ID')
   final String? tenantId;
   @override
   @JsonKey(name: 'PROXIMITY_SEARCH_RANGE')
   final double? maxRadius;
-  final List<DeletionReasonOptions> _householdDeletionReasonOptions;
-  @override
-  @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
-  List<DeletionReasonOptions> get householdDeletionReasonOptions {
-    if (_householdDeletionReasonOptions is EqualUnmodifiableListView)
-      return _householdDeletionReasonOptions;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_householdDeletionReasonOptions);
-  }
-
-  final List<BandWidthBatchSize> _bandWidthBatchSize;
-  @override
-  @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')
-  List<BandWidthBatchSize> get bandWidthBatchSize {
-    if (_bandWidthBatchSize is EqualUnmodifiableListView)
-      return _bandWidthBatchSize;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_bandWidthBatchSize);
-  }
-
-  @override
-  @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')
-  final BackgroundServiceConfig? backgroundServiceConfig;
-  final List<DeletionReasonOptions> _householdMemberDeletionReasonOptions;
-  @override
-  @JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS')
-  List<DeletionReasonOptions> get householdMemberDeletionReasonOptions {
-    if (_householdMemberDeletionReasonOptions is EqualUnmodifiableListView)
-      return _householdMemberDeletionReasonOptions;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_householdMemberDeletionReasonOptions);
-  }
-
-  final List<GenderOptions> _genderOptions;
-  @override
-  @JsonKey(name: 'GENDER_OPTIONS_POPULATOR')
-  List<GenderOptions> get genderOptions {
-    if (_genderOptions is EqualUnmodifiableListView) return _genderOptions;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_genderOptions);
-  }
-
-  final List<CheckListTypes> _checklistTypes;
-  @override
-  @JsonKey(name: 'CHECKLIST_TYPES')
-  List<CheckListTypes> get checklistTypes {
-    if (_checklistTypes is EqualUnmodifiableListView) return _checklistTypes;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_checklistTypes);
-  }
-
-  final List<IdTypeOptions> _idTypeOptions;
-  @override
-  @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
-  List<IdTypeOptions> get idTypeOptions {
-    if (_idTypeOptions is EqualUnmodifiableListView) return _idTypeOptions;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_idTypeOptions);
-  }
-
-  final List<DeliveryCommentOptions> _deliveryCommentOptions;
-  @override
-  @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
-  List<DeliveryCommentOptions> get deliveryCommentOptions {
-    if (_deliveryCommentOptions is EqualUnmodifiableListView)
-      return _deliveryCommentOptions;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_deliveryCommentOptions);
-  }
-
-  @override
-  @JsonKey(name: 'BACKEND_INTERFACE')
-  final BackendInterface backendInterface;
-  final List<CallSupportList>? _callSupportOptions;
-  @override
-  @JsonKey(name: 'CALL_SUPPORT')
-  List<CallSupportList>? get callSupportOptions {
-    final value = _callSupportOptions;
-    if (value == null) return null;
-    if (_callSupportOptions is EqualUnmodifiableListView)
-      return _callSupportOptions;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
-  final List<TransportTypes> _transportTypes;
-  @override
-  @JsonKey(name: 'TRANSPORT_TYPES')
-  List<TransportTypes> get transportTypes {
-    if (_transportTypes is EqualUnmodifiableListView) return _transportTypes;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_transportTypes);
-  }
 
   @override
   String toString() {
-    return 'AppConfig(networkDetection: $networkDetection, persistenceMode: $persistenceMode, syncMethod: $syncMethod, syncTrigger: $syncTrigger, languages: $languages, tenantId: $tenantId, maxRadius: $maxRadius, householdDeletionReasonOptions: $householdDeletionReasonOptions, bandWidthBatchSize: $bandWidthBatchSize, backgroundServiceConfig: $backgroundServiceConfig, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, genderOptions: $genderOptions, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes)';
+    return 'AppConfig(networkDetection: $networkDetection, persistenceMode: $persistenceMode, syncMethod: $syncMethod, syncTrigger: $syncTrigger, tenantId: $tenantId, maxRadius: $maxRadius)';
   }
 
   @override
@@ -1844,62 +2693,16 @@ class _$AppConfigImpl implements _AppConfig {
                 other.syncMethod == syncMethod) &&
             (identical(other.syncTrigger, syncTrigger) ||
                 other.syncTrigger == syncTrigger) &&
-            const DeepCollectionEquality()
-                .equals(other._languages, _languages) &&
             (identical(other.tenantId, tenantId) ||
                 other.tenantId == tenantId) &&
             (identical(other.maxRadius, maxRadius) ||
-                other.maxRadius == maxRadius) &&
-            const DeepCollectionEquality().equals(
-                other._householdDeletionReasonOptions,
-                _householdDeletionReasonOptions) &&
-            const DeepCollectionEquality()
-                .equals(other._bandWidthBatchSize, _bandWidthBatchSize) &&
-            (identical(
-                    other.backgroundServiceConfig, backgroundServiceConfig) ||
-                other.backgroundServiceConfig == backgroundServiceConfig) &&
-            const DeepCollectionEquality().equals(
-                other._householdMemberDeletionReasonOptions,
-                _householdMemberDeletionReasonOptions) &&
-            const DeepCollectionEquality()
-                .equals(other._genderOptions, _genderOptions) &&
-            const DeepCollectionEquality()
-                .equals(other._checklistTypes, _checklistTypes) &&
-            const DeepCollectionEquality()
-                .equals(other._idTypeOptions, _idTypeOptions) &&
-            const DeepCollectionEquality().equals(
-                other._deliveryCommentOptions, _deliveryCommentOptions) &&
-            (identical(other.backendInterface, backendInterface) ||
-                other.backendInterface == backendInterface) &&
-            const DeepCollectionEquality()
-                .equals(other._callSupportOptions, _callSupportOptions) &&
-            const DeepCollectionEquality()
-                .equals(other._transportTypes, _transportTypes));
+                other.maxRadius == maxRadius));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      networkDetection,
-      persistenceMode,
-      syncMethod,
-      syncTrigger,
-      const DeepCollectionEquality().hash(_languages),
-      tenantId,
-      maxRadius,
-      const DeepCollectionEquality().hash(_householdDeletionReasonOptions),
-      const DeepCollectionEquality().hash(_bandWidthBatchSize),
-      backgroundServiceConfig,
-      const DeepCollectionEquality()
-          .hash(_householdMemberDeletionReasonOptions),
-      const DeepCollectionEquality().hash(_genderOptions),
-      const DeepCollectionEquality().hash(_checklistTypes),
-      const DeepCollectionEquality().hash(_idTypeOptions),
-      const DeepCollectionEquality().hash(_deliveryCommentOptions),
-      backendInterface,
-      const DeepCollectionEquality().hash(_callSupportOptions),
-      const DeepCollectionEquality().hash(_transportTypes));
+  int get hashCode => Object.hash(runtimeType, networkDetection,
+      persistenceMode, syncMethod, syncTrigger, tenantId, maxRadius);
 
   @JsonKey(ignore: true)
   @override
@@ -1922,32 +2725,9 @@ abstract class _AppConfig implements AppConfig {
       @JsonKey(name: 'PERSISTENCE_MODE') required final String persistenceMode,
       @JsonKey(name: 'SYNC_METHOD') required final String syncMethod,
       @JsonKey(name: 'SYNC_TRIGGER') required final String syncTrigger,
-      @JsonKey(name: 'LANGUAGES') required final List<Languages> languages,
       @JsonKey(name: 'TENANT_ID') final String? tenantId,
-      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') final double? maxRadius,
-      @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
-      required final List<DeletionReasonOptions> householdDeletionReasonOptions,
-      @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')
-      required final List<BandWidthBatchSize> bandWidthBatchSize,
-      @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')
-      final BackgroundServiceConfig? backgroundServiceConfig,
-      @JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS')
-      required final List<DeletionReasonOptions>
-          householdMemberDeletionReasonOptions,
-      @JsonKey(name: 'GENDER_OPTIONS_POPULATOR')
-      required final List<GenderOptions> genderOptions,
-      @JsonKey(name: 'CHECKLIST_TYPES')
-      required final List<CheckListTypes> checklistTypes,
-      @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
-      required final List<IdTypeOptions> idTypeOptions,
-      @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
-      required final List<DeliveryCommentOptions> deliveryCommentOptions,
-      @JsonKey(name: 'BACKEND_INTERFACE')
-      required final BackendInterface backendInterface,
-      @JsonKey(name: 'CALL_SUPPORT')
-      required final List<CallSupportList>? callSupportOptions,
-      @JsonKey(name: 'TRANSPORT_TYPES')
-      required final List<TransportTypes> transportTypes}) = _$AppConfigImpl;
+      @JsonKey(name: 'PROXIMITY_SEARCH_RANGE')
+      final double? maxRadius}) = _$AppConfigImpl;
 
   factory _AppConfig.fromJson(Map<String, dynamic> json) =
       _$AppConfigImpl.fromJson;
@@ -1965,47 +2745,11 @@ abstract class _AppConfig implements AppConfig {
   @JsonKey(name: 'SYNC_TRIGGER')
   String get syncTrigger;
   @override
-  @JsonKey(name: 'LANGUAGES')
-  List<Languages> get languages;
-  @override
   @JsonKey(name: 'TENANT_ID')
   String? get tenantId;
   @override
   @JsonKey(name: 'PROXIMITY_SEARCH_RANGE')
   double? get maxRadius;
-  @override
-  @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
-  List<DeletionReasonOptions> get householdDeletionReasonOptions;
-  @override
-  @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')
-  List<BandWidthBatchSize> get bandWidthBatchSize;
-  @override
-  @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')
-  BackgroundServiceConfig? get backgroundServiceConfig;
-  @override
-  @JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS')
-  List<DeletionReasonOptions> get householdMemberDeletionReasonOptions;
-  @override
-  @JsonKey(name: 'GENDER_OPTIONS_POPULATOR')
-  List<GenderOptions> get genderOptions;
-  @override
-  @JsonKey(name: 'CHECKLIST_TYPES')
-  List<CheckListTypes> get checklistTypes;
-  @override
-  @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
-  List<IdTypeOptions> get idTypeOptions;
-  @override
-  @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
-  List<DeliveryCommentOptions> get deliveryCommentOptions;
-  @override
-  @JsonKey(name: 'BACKEND_INTERFACE')
-  BackendInterface get backendInterface;
-  @override
-  @JsonKey(name: 'CALL_SUPPORT')
-  List<CallSupportList>? get callSupportOptions;
-  @override
-  @JsonKey(name: 'TRANSPORT_TYPES')
-  List<TransportTypes> get transportTypes;
   @override
   @JsonKey(ignore: true)
   _$$AppConfigImplCopyWith<_$AppConfigImpl> get copyWith =>

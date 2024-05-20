@@ -14,7 +14,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
-import 'package:inventory_management/utils/utils.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 import 'package:referral_reconciliation/utils/utils.dart';
@@ -705,20 +704,20 @@ void setPackagesSingleton(BuildContext context) {
           selectedProject: context.selectedProject,
           genderOptions: appConfiguration.genderOptions!.map((option) {
             return {
-              'label': option.name,
+              'label': option.code,
               'value': option.code,
             };
           }).toList(),
           idTypeOptions: appConfiguration.idTypeOptions!.map((option) {
             return {
-              'label': option.name,
+              'label': option.code,
               'value': option.code,
             };
           }).toList(),
           householdDeletionReasonOptions:
               appConfiguration.householdDeletionReasonOptions!.map((option) {
             return {
-              'label': option.name,
+              'label': option.code,
               'value': option.code,
             };
           }).toList(),
@@ -726,27 +725,27 @@ void setPackagesSingleton(BuildContext context) {
               .householdMemberDeletionReasonOptions!
               .map((option) {
             return {
-              'label': option.name,
+              'label': option.code,
               'value': option.code,
             };
           }).toList(),
           deliveryCommentOptions:
               appConfiguration.deliveryCommentOptions!.map((option) {
             return {
-              'label': option.name,
+              'label': option.code,
               'value': option.code,
             };
           }).toList(),
           symptomsTypes: appConfiguration.symptomsTypes!.map((option) {
             return {
-              'label': option.name,
+              'label': option.code,
               'value': option.code,
               'bool': option.active,
             };
           }).toList(),
           referralReasons: appConfiguration.referralReasons!.map((option) {
             return {
-              'label': option.name,
+              'label': option.code,
               'value': option.code,
               'bool': option.active,
             };
@@ -817,7 +816,7 @@ void setPackagesSingleton(BuildContext context) {
           loggedInUserUuid: context.loggedInUserUuid,
           transportTypes: appConfiguration.transportTypes
               ?.map((e) => InventoryTransportTypes()
-                ..name = e.name
+                ..name = e.code
                 ..code = e.code)
               .toList(),
         );

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/models/oplog/oplog_entry.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
@@ -45,7 +44,7 @@ class AppInitializationBloc
 
       final config = await _loadOfflineData(emit);
       emit(AppInitialized(
-        appConfiguration: config.appConfigs.firstOrNull!,
+        appConfiguration: config.appConfigs.first,
         serviceRegistryList: config.serviceRegistryList,
       ));
     } on AppInitializationException catch (_) {
@@ -78,27 +77,36 @@ class AppInitializationBloc
               tenantId: envConfig.variables.tenantId,
               moduleDetails: [
                 const MdmsModuleDetailModel(
-                  moduleName: 'HCM-FIELD-APP-CONFIG',
+                  moduleName: 'HCM',
                   masterDetails: [
-                    MdmsMasterDetailModel('appConfig'),
+                    MdmsMasterDetailModel('APP_CONFIG'),
+                    MdmsMasterDetailModel('SYMPTOM_TYPES'),
+                    MdmsMasterDetailModel('REFERRAL_REASONS'),
+                    MdmsMasterDetailModel('BANDWIDTH_BATCH_SIZE'),
+                    MdmsMasterDetailModel('DOWNSYNC-BANDWIDTH_BATCH_SIZE'),
+                    MdmsMasterDetailModel('HOUSEHOLD_DELETION_REASON_OPTIONS'),
+                    MdmsMasterDetailModel(
+                        'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS'),
+                    MdmsMasterDetailModel('BACKGROUND_SERVICE_CONFIG'),
+                    MdmsMasterDetailModel('CHECKLIST_TYPES'),
+                    MdmsMasterDetailModel('ID_TYPE_OPTIONS_POPULATOR'),
+                    MdmsMasterDetailModel('DELIVERY_COMMENT_OPTIONS_POPULATOR'),
+                    MdmsMasterDetailModel('BACKEND_INTERFACE'),
+                    MdmsMasterDetailModel('CALL_SUPPORT'),
+                    MdmsMasterDetailModel('TRANSPORT_TYPES'),
+                  ],
+                ),
+                const MdmsModuleDetailModel(
+                  moduleName: 'common-masters',
+                  masterDetails: [
+                    MdmsMasterDetailModel('StateInfo'),
+                    MdmsMasterDetailModel('GenderType'),
                   ],
                 ),
                 const MdmsModuleDetailModel(
                   moduleName: 'module-version',
                   masterDetails: [
                     MdmsMasterDetailModel('ROW_VERSIONS'),
-                  ],
-                ),
-                const MdmsModuleDetailModel(
-                  moduleName: 'HCM-SYMPTOMS-TYPES',
-                  masterDetails: [
-                    MdmsMasterDetailModel('symptomsTypes'),
-                  ],
-                ),
-                const MdmsModuleDetailModel(
-                  moduleName: 'HCM-REFERRAL-REASONS',
-                  masterDetails: [
-                    MdmsMasterDetailModel('referralReasons'),
                   ],
                 ),
               ],
