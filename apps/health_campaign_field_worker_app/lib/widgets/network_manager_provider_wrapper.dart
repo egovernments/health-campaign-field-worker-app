@@ -387,14 +387,6 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
             create: (_) =>
                 ProjectBeneficiaryRemoteRepository(dio, actionMap: actions),
           ),
-        if (value == DataModelType.projectType)
-          RepositoryProvider<
-              RemoteRepository<ProjectTypeModel, ProjectTypeSearchModel>>(
-            create: (_) => ProjectTypeRemoteRepository(
-              dio,
-              actionMap: actions,
-            ),
-          ),
         if (value == DataModelType.task)
           RepositoryProvider<RemoteRepository<TaskModel, TaskSearchModel>>(
             create: (_) => TaskRemoteRepository(

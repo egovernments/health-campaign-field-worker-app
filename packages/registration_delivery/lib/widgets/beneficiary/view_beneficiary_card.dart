@@ -2,8 +2,8 @@ import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_table_model.dart';
 import 'package:digit_components/utils/date_utils.dart';
-import 'package:flutter/material.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:flutter/material.dart';
 
 import '../../blocs/search_households/search_households.dart';
 import '../../models/entities/status.dart';
@@ -157,7 +157,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
         final isBeneficiaryRefused = checkIfBeneficiaryRefused(taskData);
         final isBeneficiaryReferred = checkIfBeneficiaryReferred(
           referralData,
-          currentCycle ?? const Cycle(),
+          currentCycle,
         );
 
 // TODO need to pass the current cycle

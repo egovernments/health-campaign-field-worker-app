@@ -117,12 +117,10 @@ class DeliverInterventionBloc
     DeliveryInterventionEmitter emit,
   ) async {
     // Calculate the current running cycle based on start and end dates
-    final currentRunningCycle = (event.projectType.cycles?.firstWhere(
+    final currentRunningCycle = (event.projectType?.cycles?.firstWhere(
           (e) =>
               (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
               (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
-          orElse: () =>
-              const Cycle(), // Return null when no matching cycle is found
         ))?.id ??
         0;
 
@@ -205,12 +203,12 @@ class DeliverInterventionBloc
 
     try {
       int currentDose = event.dose;
-      Cycle? currentCycle = event.cycle;
+      ProjectCycle? currentCycle = event.cycle;
 
       final deliveriesList = currentCycle.deliveries;
 
       if (deliveriesList != null) {
-        List<DeliveryModel> futureDeliveries = [];
+        List<ProjectCycleDelivery> futureDeliveries = [];
         // Iterate over deliveries starting from the current dose
         for (int index = currentDose; index < deliveriesList.length; index++) {
           var delivery = deliveriesList[index];
@@ -252,7 +250,7 @@ class DeliverInterventionEvent with _$DeliverInterventionEvent {
 
   const factory DeliverInterventionEvent.selectFutureCycleDose(
     int dose,
-    Cycle cycle,
+    ProjectCycle cycle,
     IndividualModel? individualModel,
   ) = DeliverInterventionCycleFutureDoseSelectionEvent;
 
@@ -260,7 +258,7 @@ class DeliverInterventionEvent with _$DeliverInterventionEvent {
     int lastDose,
     int lastCycle,
     IndividualModel? individualModel,
-    ProjectType projectType,
+    ProjectTypeModel projectType,
   ) = DeliverInterventionActiveCycleDoseSelectionEvent;
 }
 
@@ -271,11 +269,11 @@ class DeliverInterventionState with _$DeliverInterventionState {
     @Default(false) bool isEditing,
     @Default(1) int cycle,
     @Default(1) int dose,
-    List<Cycle>? pastCycles,
+    List<ProjectCycle>? pastCycles,
     @Default(true) bool hasCycleArrived,
     @Default(false) bool isLastDoseOfCycle,
     List<TaskModel>? tasks,
-    List<DeliveryModel>? futureDeliveries,
+    List<ProjectCycleDelivery>? futureDeliveries,
     List<TaskModel>? futureTask,
     TaskModel? oldTask,
   }) = _DeliverInterventionState;

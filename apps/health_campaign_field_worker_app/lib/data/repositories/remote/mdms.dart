@@ -296,21 +296,6 @@ class MdmsRepository {
     });
   }
 
-  Future<ProjectTypePrimaryWrapper> searchProjectType(
-    String apiEndPoint,
-    Map<String, dynamic> body,
-  ) async {
-    try {
-      final response = await _client.post(apiEndPoint, data: body);
-
-      return ProjectTypePrimaryWrapper.fromJson(
-        json.decode(response.toString())['MdmsRes'],
-      );
-    } catch (_) {
-      rethrow;
-    }
-  }
-
   Future<RoleActionsWrapperModel> searchRoleActions(
     String apiEndPoint,
     Map<String, dynamic> body,

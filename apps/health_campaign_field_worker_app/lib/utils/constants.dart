@@ -190,8 +190,6 @@ class Constants {
           ProjectBeneficiaryRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.task)
           TaskRemoteRepository(dio, actionMap: actions),
-        if (value == DataModelType.projectType)
-          ProjectTypeRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.householdMember)
           HouseholdMemberRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.sideEffect)

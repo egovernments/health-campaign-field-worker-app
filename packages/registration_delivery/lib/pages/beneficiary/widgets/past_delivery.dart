@@ -1,8 +1,8 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_table_model.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:registration_delivery/blocs/app_localization.dart';
-import 'package:digit_data_model/data_model.dart';
 
 import '../../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
@@ -38,7 +38,8 @@ Widget buildTableContent(
 
   // Calculate the height of the container based on the number of items in the table
 
-  final ProjectType projectType = RegistrationDeliverySingleton().projectType!;
+  final ProjectTypeModel projectType =
+      RegistrationDeliverySingleton().projectType!;
   final item =
       projectType.cycles![currentCycle - 1].deliveries![currentDose - 1];
   final productVariants =

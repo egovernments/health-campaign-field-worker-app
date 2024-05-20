@@ -11,20 +11,20 @@ extension ContextUtilityExtensions on BuildContext {
     return info.version;
   }
 
-  Cycle get selectedCycle {
+  ProjectCycle? get selectedCycle {
     final selectedCycle = RegistrationDeliverySingleton()
         .projectType
         ?.cycles
         ?.where(
           (e) =>
-              (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
-              (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
+              (e.startDate) < DateTime.now().millisecondsSinceEpoch &&
+              (e.endDate) > DateTime.now().millisecondsSinceEpoch,
           // Return null when no matching cycle is found
         )
         .firstOrNull;
 
     if (selectedCycle == null) {
-      return const Cycle();
+      return null;
     }
 
     return selectedCycle;

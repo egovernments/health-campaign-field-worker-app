@@ -1,12 +1,12 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:collection/collection.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:inventory_management/utils/extensions/extensions.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:digit_data_model/data_model.dart';
+import 'package:collection/collection.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../widgets/component_wrapper/facility_bloc_wrapper.dart';
