@@ -15,33 +15,6 @@ class HCMAttendanceBloc extends AttendanceListeners {
   });
 
   @override
-  Future<List<AttendanceRegisterModel>> getAttendanceRegisters(
-      {required int limit, required int offset}) async {
-    return [];
-  }
-
-  @override
-  Future<List<AttendanceRegisterModel>> loadMoreAttendanceRegisters(
-      {required int limit, required int offSet}) async {
-    return [];
-  }
-
-  @override
-  Future<List<AttendanceLogModel>> searchAttendanceLog(
-      {required String registerId,
-      required String tenantId,
-      required int entryTime,
-      required int exitTime,
-      required int currentDate}) async {
-    return [];
-  }
-
-  @override
-  Future<void> submitAttendanceDetails(
-    SubmitAttendanceDetails attendanceLogs,
-  ) async {}
-
-  @override
   void callSyncMethod() {
     context.read<SyncBloc>().add(SyncRefreshEvent(context.loggedInUserUuid));
   }

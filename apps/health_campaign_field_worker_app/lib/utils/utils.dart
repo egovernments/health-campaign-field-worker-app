@@ -658,11 +658,14 @@ getSelectedLanguage(AppInitialized state, int index) {
   return isSelected;
 }
 
-initializeAllMappers() {
-  initializeMappers();
-  digitDataModel.initializeMappers();
-  registration_delivery.initializeMappers();
-  inventory_management.initializeMappers();
-  attendance_mappers.initializeMappers();
-  referral_reconciliation_mappers.initializeMappers();
+initializeAllMappers() async {
+  List<Future> initializations = [
+    Future(() => initializeMappers()),
+    Future(() => digitDataModel.initializeMappers()),
+    Future(() => registration_delivery.initializeMappers()),
+    Future(() => inventory_management.initializeMappers()),
+    Future(() => attendance_mappers.initializeMappers()),
+    Future(() => referral_reconciliation_mappers.initializeMappers()),
+  ];
+  await Future.wait(initializations);
 }

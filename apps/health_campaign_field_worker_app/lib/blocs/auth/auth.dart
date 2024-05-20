@@ -51,12 +51,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final refreshToken = await localSecureStore.refreshToken;
       final userObject = await localSecureStore.userRequestModel;
       final actionsList = await localSecureStore.savedActions;
-
       final userIndividualId = await localSecureStore.userIndividualId;
       if (accessToken == null ||
           refreshToken == null ||
           userObject == null ||
-          actionsList == null) {
+          actionsList == null ||
+          userIndividualId == null) {
         emit(const AuthUnauthenticatedState());
       } else {
         emit(AuthAuthenticatedState(

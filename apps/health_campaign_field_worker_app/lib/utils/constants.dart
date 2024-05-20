@@ -30,7 +30,7 @@ class Constants {
     return _instance;
   }
   Future initialize(version) async {
-    initializeAllMappers();
+    await initializeAllMappers();
     setInitialDataOfPackages();
     await _initializeIsar(version);
   }
