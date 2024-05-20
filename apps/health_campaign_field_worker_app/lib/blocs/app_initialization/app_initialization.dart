@@ -11,7 +11,10 @@ import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/no_sql/schema/service_registry.dart';
 import '../../data/repositories/remote/mdms.dart';
 import '../../models/app_config/app_config_model.dart';
+import '../../models/entities/mdms_master_enums.dart';
+import '../../models/entities/mdms_module_enums.dart';
 import '../../utils/environment_config.dart';
+import '../../utils/utils.dart';
 import '../../widgets/network_manager_provider_wrapper.dart';
 
 part 'app_initialization.freezed.dart';
@@ -76,38 +79,36 @@ class AppInitializationBloc
             mdmsCriteria: MdmsCriteriaModel(
               tenantId: envConfig.variables.tenantId,
               moduleDetails: [
-                const MdmsModuleDetailModel(
-                  moduleName: 'HCM',
-                  masterDetails: [
-                    MdmsMasterDetailModel('APP_CONFIG'),
-                    MdmsMasterDetailModel('SYMPTOM_TYPES'),
-                    MdmsMasterDetailModel('REFERRAL_REASONS'),
-                    MdmsMasterDetailModel('BANDWIDTH_BATCH_SIZE'),
-                    MdmsMasterDetailModel('DOWNSYNC-BANDWIDTH_BATCH_SIZE'),
-                    MdmsMasterDetailModel('HOUSEHOLD_DELETION_REASON_OPTIONS'),
-                    MdmsMasterDetailModel(
-                        'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS'),
-                    MdmsMasterDetailModel('BACKGROUND_SERVICE_CONFIG'),
-                    MdmsMasterDetailModel('CHECKLIST_TYPES'),
-                    MdmsMasterDetailModel('ID_TYPE_OPTIONS_POPULATOR'),
-                    MdmsMasterDetailModel('DELIVERY_COMMENT_OPTIONS_POPULATOR'),
-                    MdmsMasterDetailModel('BACKEND_INTERFACE'),
-                    MdmsMasterDetailModel('CALL_SUPPORT'),
-                    MdmsMasterDetailModel('TRANSPORT_TYPES'),
-                  ],
+                MdmsModuleDetailModel(
+                  moduleName: ModuleEnums.hcm.toValue(),
+                  masterDetails: getMasterDetailsModel([
+                    MasterEnums.appConfig.toValue(),
+                    MasterEnums.symptomTypes.toValue(),
+                    MasterEnums.referralReasons.toValue(),
+                    MasterEnums.bandWidthBatchSize.toValue(),
+                    MasterEnums.downSyncBandwidthBatchSize.toValue(),
+                    MasterEnums.hhDelReasons.toValue(),
+                    MasterEnums.hhMemberDelReasons.toValue(),
+                    MasterEnums.backgroundServiceConfig.toValue(),
+                    MasterEnums.checklistTypes.toValue(),
+                    MasterEnums.idTypes.toValue(),
+                    MasterEnums.deliveryComments.toValue(),
+                    MasterEnums.backendInterface.toValue(),
+                    MasterEnums.callSupport.toValue(),
+                    MasterEnums.transportTypes.toValue(),
+                  ]),
                 ),
-                const MdmsModuleDetailModel(
-                  moduleName: 'common-masters',
-                  masterDetails: [
-                    MdmsMasterDetailModel('StateInfo'),
-                    MdmsMasterDetailModel('GenderType'),
-                  ],
+                MdmsModuleDetailModel(
+                  moduleName: ModuleEnums.commonMasters.toValue(),
+                  masterDetails: getMasterDetailsModel([
+                    MasterEnums.stateInfo.toValue(),
+                    MasterEnums.genderType.toValue()
+                  ]),
                 ),
-                const MdmsModuleDetailModel(
-                  moduleName: 'module-version',
-                  masterDetails: [
-                    MdmsMasterDetailModel('ROW_VERSIONS'),
-                  ],
+                MdmsModuleDetailModel(
+                  moduleName: ModuleEnums.moduleVersion.toValue(),
+                  masterDetails:
+                      getMasterDetailsModel([MasterEnums.rowVersion.toValue()]),
                 ),
               ],
             ),
@@ -121,10 +122,11 @@ class AppInitializationBloc
             mdmsCriteria: MdmsCriteriaModel(
               tenantId: envConfig.variables.tenantId,
               moduleDetails: [
-                const MdmsModuleDetailModel(
-                  moduleName: 'RAINMAKER-PGR',
+                MdmsModuleDetailModel(
+                  moduleName: ModuleEnums.rainmakerPgr.toValue(),
                   masterDetails: [
-                    MdmsMasterDetailModel('ServiceDefs'),
+                    MdmsMasterDetailModel(
+                        MasterEnums.serviceDefinitions.toValue()),
                   ],
                 ),
               ],
