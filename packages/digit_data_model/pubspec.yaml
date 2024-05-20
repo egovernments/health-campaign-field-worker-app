@@ -1,7 +1,7 @@
 name: digit_data_model
 description: "A new Flutter package project."
 version: 0.0.0-dev.1
-repository: https://github.com/egovernments/health-campaign-field-worker-app/tree/HLM-5575/packages/digit_data_model
+repository: https://github.com/egovernments/health-campaign-field-worker-app/tree/HLM-5572/packages/digit_data_model
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
