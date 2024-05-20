@@ -1,6 +1,6 @@
 name: inventory_management
 description: Provides features to manage inventory.
-version: 0.0.1
+version: 0.0.0-dev.1
 homepage:
 
 environment:

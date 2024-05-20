@@ -68,10 +68,10 @@ dependencies:
   camera: ^0.10.5+7
   attendance_management: ^0.0.0-dev.1
   digit_scanner: ^0.0.1+1
-  inventory_management: ^0.0.1
-  referral_reconciliation: ^0.0.1
-  digit_data_model: ^0.0.1
-  registration_delivery: ^0.0.1
+  inventory_management: ^0.0.0-dev.1
+  referral_reconciliation: ^0.0.0-dev.1
+  digit_data_model: ^0.0.0-dev.1
+  registration_delivery: ^0.0.0-dev.1
 
 dev_dependencies:
   flutter_test:

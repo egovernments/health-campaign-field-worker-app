@@ -23,22 +23,22 @@ dependencies:
   referral_reconciliation:
     git:
       url: https://github.com/egovernments/health-campaign-field-worker-app/
-      ref: HLM-5575
+      ref: HLM-5572
       path: ./packages/referral_reconciliation
   registration_delivery:
     git:
       url: https://github.com/egovernments/health-campaign-field-worker-app/
-      ref: HLM-5575
+      ref: HLM-5572
       path: ./packages/registration_delivery
   attendance_management:
     git:
       url: https://github.com/egovernments/health-campaign-field-worker-app/
-      ref: HLM-5575
+      ref: HLM-5572
       path: ./packages/attendance_management
   inventory_management:
     git:
       url: https://github.com/egovernments/health-campaign-field-worker-app/
-      ref: HLM-5575
+      ref: HLM-5572
       path: ./packages/inventory_management
   isar: ^3.0.5
   isar_flutter_libs: ^3.0.5
@@ -57,7 +57,6 @@ dev_dependencies:
   json_serializable: ^6.4.0
   drift_dev: ^2.14.1
   bloc_test: ^9.1.0
-  mocktail: ^1.0.2
   dart_mappable_builder: ^4.2.0
   isar_generator: ^3.0.5
 

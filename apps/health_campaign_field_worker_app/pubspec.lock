@@ -1090,7 +1090,7 @@ packages:
       path: "../../packages/inventory_management"
       relative: true
     source: path
-    version: "0.0.1"
+    version: "0.0.0-dev.1"
   io:
     dependency: transitive
     description:
@@ -1513,14 +1513,14 @@ packages:
       path: "../../packages/referral_reconciliation"
       relative: true
     source: path
-    version: "0.0.1+1"
+    version: "0.0.0-dev.1"
   registration_delivery:
     dependency: "direct main"
     description:
       path: "../../packages/registration_delivery"
       relative: true
     source: path
-    version: "0.0.1"
+    version: "0.0.0-dev.1"
   remove_emoji_input_formatter:
     dependency: transitive
     description:
