@@ -26,22 +26,4 @@ melos bootstrap
 
 cd tools || exit
 
-# for adding attendance imports and mappers in data_model.init.dart
-bash attendance_package_imports.sh
-
-# for adding inventory imports and mappers in data_model.init.dart
-bash inventory_package_imports.sh
-
-# for adding referral reconciliation imports and mappers in data_model.init.dart
-bash referral_reconciliation_imports.sh
-
-# for adding import as at.Address in sql_store.g.dart for resolving conflict with Address created inside sql_store.g.dart
-cd ../packages/digit_data_model/lib/data/local_store/sql_store/ || exit
-
-app_root="$PWD"
-
-sql_g_dart_file="$app_root/sql_store.g.dart"
-
-sed -i '0,/class \$AddressTable extends Address/s//class \$AddressTable extends at.Address/' sql_store.g.dart
-
 # To add localization and bloc skeleton and add repository imports to network_provider_wrapper file navigate to tools directory and run respective package_files.dart which ever you need

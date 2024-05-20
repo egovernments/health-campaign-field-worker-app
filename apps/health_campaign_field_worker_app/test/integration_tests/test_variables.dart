@@ -1,3 +1,4 @@
+import 'package:digit_components/widgets/atoms/digit_text_form_field.dart';
 import 'package:digit_components/widgets/digit_elevated_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -18,10 +19,10 @@ Map<String, dynamic> getTestData() {
 
 // if the names of the following buttons change in the app, you can change them here
 Map<String, Finder> getWidgets() {
-  final username = find.byKey(const Key('username'));
-  final password = find.byKey(const Key('password'));
+  final username = find.byType(DigitTextFormField).first;
+  final password = find.byType(DigitTextFormField).last;
   final continueButton = find.widgetWithText(DigitElevatedButton, 'Continue');
-  final login = find.byKey(const Key('login'));
+  final login = find.byType(DigitElevatedButton).last;
   final submit = find.widgetWithText(
     DigitElevatedButton,
     'Submit',
