@@ -4,13 +4,39 @@ A Scanner package used for scanning QR Codes and GS1 Barcodes.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+To use this package, add the following dependency to your `pubspec.yaml` file:
 
-A few resources to get you started if this is your first Flutter project:
+```yaml
+dependencies:
+  digit_scanner: ^0.0.1
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+```
+Initialize the DigitScannerBloc provider in your application
+```
+  BlocProvider(
+                create: (_) {
+                  return DigitScannerBloc(
+                    const DigitScannerState(),
+                  );
+                },
+              ),
+```
+Wrap the DigitScannerListener or DigitScannerBuilder in your widget tree wherever you need the Scanned codes.
+```
+BlocListener<DigitScannerBloc, DigitScannerState>(
+                  listener: (context, scannerState) {
+                   if (scannerState.qrCodes.isNotEmpty) {
+                   //
+                   }
+                  },
+                  child: BlocBuilder<DigitScannerBloc, DigitScannerState>(
+                  builder: (context, scannerState) {
+                  if(scannerState.qrCodes.isNotEmpty){
+                   return Text(scannerState.qrCodes.last); ///Get the scanned codes after scanning from the scanner State
+                   }
+                   else {
+                   return Container();}
+                  }
+                  ));
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.

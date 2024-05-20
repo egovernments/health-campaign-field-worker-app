@@ -121,6 +121,7 @@ class Scanner {
   String get flashOn => 'FLASH_ON';
   String get flashOff => 'FLASH_OFF';
   String get scannerLabel => 'SCANNER_LABEL';
+  String get barCodeScannerLabel => 'BARCODE_SCANNER';
   String get manualScan => 'MANUAL_SCAN';
   String get enterManualCode => 'ENTER_MANUAL_CODE';
   String get resourcesScanned => 'RESOURCE_SCANNED';

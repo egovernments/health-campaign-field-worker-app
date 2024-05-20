@@ -1,14 +1,14 @@
 import 'package:attendance_management/router/attendance_router.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter/material.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/router/digit_scanner_router.dart';
 import 'package:digit_scanner/router/digit_scanner_router.gm.dart';
+import 'package:flutter/material.dart';
 import 'package:inventory_management/router/inventory_router.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
-import 'package:digit_data_model/data_model.dart';
 import 'package:registration_delivery/router/registration_delivery_router.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 
@@ -39,8 +39,8 @@ import '../pages/profile.dart';
 import '../pages/project_facility_selection.dart';
 import '../pages/project_selection.dart';
 import '../pages/qr_details_page.dart';
-import '../pages/unauthenticated.dart';
 import '../pages/reports/beneficiary/beneficaries_report.dart';
+import '../pages/unauthenticated.dart';
 
 export 'package:auto_route/auto_route.dart';
 
@@ -80,6 +80,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: HomeRoute.page, path: 'home'),
         AutoRoute(page: ProfileRoute.page, path: 'profile'),
         AutoRoute(page: UserQRDetailsRoute.page, path: 'user-qr-code'),
+        AutoRoute(page: DigitScannerRoute.page, path: 'scanner'),
         AutoRoute(
           page: BeneficiariesReportRoute.page,
           path: 'beneficiary-downsync-report',
@@ -87,6 +88,7 @@ class AppRouter extends _$AppRouter {
 
         AutoRoute(
             page: SearchBeneficiaryRoute.page, path: 'search-beneficiary'),
+
         /// Beneficiary Registration
         AutoRoute(
           page: BeneficiaryRegistrationWrapperRoute.page,

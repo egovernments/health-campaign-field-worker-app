@@ -2,7 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
-import 'package:digit_scanner/pages/qr_scanner.dart';
+import 'package:digit_scanner/router/digit_scanner_router.gm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -291,17 +291,11 @@ class _SearchReferralReconciliationsPageState
                             context.read<DigitScannerBloc>().add(
                                   const DigitScannerEvent.handleScanner(),
                                 );
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => const DigitScannerPage(
-                                  quantity: 1,
-                                  isGS1code: false,
-                                  singleValue: true,
-                                ),
-                                settings:
-                                    const RouteSettings(name: '/qr-scanner'),
-                              ),
-                            );
+                            context.router.push(DigitScannerRoute(
+                              quantity: 1,
+                              isGS1code: false,
+                              singleValue: true,
+                            ));
                           },
                           icon: Icons.qr_code,
                           label: localizations.translate(
