@@ -2,12 +2,7 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/models/oplog/oplog_entry.dart';
 import 'package:drift/drift.dart';
-
-import '../../../models/entities/project_product_variant.dart';
-import '../../../models/entities/project_resource.dart';
-import '../../../utils/utils.dart';
 
 class ProjectResourceLocalRepository
     extends LocalRepository<ProjectResourceModel, ProjectResourceSearchModel> {

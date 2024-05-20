@@ -45,8 +45,6 @@ class ReferralReconSingleton {
     required ReferralReconListener referralReconListener,
     required String userName,
     required String userUUid,
-    required String boundaryName,
-    required String boundaryCode,
     required String projectId,
     required String projectName,
     required String roleCode,

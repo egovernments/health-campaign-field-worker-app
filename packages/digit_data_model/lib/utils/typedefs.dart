@@ -1,5 +1,6 @@
 // Importing necessary packages and files.
 import '../data/data_repository.dart';
+import '../models/entities/boundary.dart';
 import '../models/entities/facility.dart';
 import '../models/entities/individual.dart';
 import '../models/entities/product_variant.dart';
@@ -25,3 +26,7 @@ typedef ProjectResourceDataRepository
 /// `ProductVariantDataRepository` is a type alias for a `DataRepository` that works with `ProductVariantModel` and `ProductVariantSearchModel`.
 typedef ProductVariantDataRepository
     = DataRepository<ProductVariantModel, ProductVariantSearchModel>;
+
+/// `BoundaryDataRepository` is a type alias for a `DataRepository` that works with `BoundaryModel` and `BoundarySearchModel`.
+typedef BoundaryDataRepository
+    = DataRepository<BoundaryModel, BoundarySearchModel>;

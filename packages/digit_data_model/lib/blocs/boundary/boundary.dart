@@ -7,12 +7,14 @@ import 'package:digit_data_model/models/entities/boundary.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../utils/typedefs.dart';
+
 part 'boundary.freezed.dart';
 
 typedef BoundaryEmitter = Emitter<BoundaryState>;
 
 class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
-  final DataRepository<BoundaryModel, BoundarySearchModel> boundaryRepository;
+  final BoundaryDataRepository boundaryRepository;
 
   BoundaryBloc(
     super.initialState, {

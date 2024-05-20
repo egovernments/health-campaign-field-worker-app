@@ -1,4 +1,5 @@
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,7 +7,6 @@ import 'package:group_radio_button/group_radio_button.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../../blocs/auth/auth.dart';
-import '../../../blocs/boundary/boundary.dart';
 import '../../../blocs/complaints_registration/complaints_registration.dart';
 import '../../../models/complaints/complaints.dart';
 import '../../../router/app_router.dart';

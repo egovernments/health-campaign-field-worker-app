@@ -6,8 +6,6 @@ import 'package:drift/drift.dart';
 
 import '../../../utils/utils.dart';
 
-
-
 class FacilityLocalRepository
     extends LocalRepository<FacilityModel, FacilitySearchModel> {
   FacilityLocalRepository(super.sql, super.opLogManager);
@@ -84,7 +82,6 @@ class FacilityLocalRepository
     DataOperation dataOperation = DataOperation.create,
   }) async {
     final facilityCompanion = entity.companion;
-    final addressCompanion = entity.address?.companion;
 
     await sql.batch((batch) async {
       batch.insert(

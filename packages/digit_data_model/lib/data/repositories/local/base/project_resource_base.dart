@@ -8,6 +8,5 @@ abstract class ProjectResourceLocalBaseRepository
   @override
   DataModelType get type => DataModelType.projectResource;
 
-  @override
   TableInfo get table => sql.projectResource;
 }

@@ -9,6 +9,5 @@ abstract class IndividualLocalBaseRepository
   @override
   DataModelType get type => DataModelType.individual;
 
-  @override
   TableInfo get table => sql.individual;
 }

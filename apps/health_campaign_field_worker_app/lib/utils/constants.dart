@@ -78,7 +78,6 @@ class Constants {
       IndividualLocalRepository(sql, IndividualOpLogManager(isar)),
       HouseholdMemberLocalRepository(sql, HouseholdMemberOpLogManager(isar)),
       HouseholdLocalRepository(sql, HouseholdOpLogManager(isar)),
-      HFReferralLocalRepository(sql, HFReferralOpLogManager(isar)),
       StockLocalRepository(sql, StockOpLogManager(isar)),
       StockReconciliationLocalRepository(
         sql,

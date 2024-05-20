@@ -7,9 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:digit_data_model/data_model.dart';
 
 import '../blocs/auth/auth.dart';
-import '../blocs/boundary/boundary.dart';
 import '../blocs/project/project.dart';
-import '../models/data_model.dart';
 import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/header/back_navigation_help_header.dart';
@@ -143,16 +141,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                 final boundary = selectedProject.address?.boundary;
 
                 if (boundary != null) {
-                  context.read<BoundaryBloc>().add(
-                        BoundaryFindEvent(
-                          code: boundary,
-                        ),
-                      );
-
-                  context.router.replaceAll([
-                    HomeRoute(),
-                    BoundarySelectionRoute(),
-                  ]);
+                  navigateToBoundary(boundary);
                 } else {
                   DigitToast.show(
                     context,
@@ -233,5 +222,20 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
         ],
       ),
     );
+  }
+
+  void navigateToBoundary(String boundary) async {
+    BoundaryBloc boundaryBloc = context.read<BoundaryBloc>();
+    boundaryBloc.add(BoundaryFindEvent(code: boundary));
+    try {
+      await boundaryBloc.stream
+          .firstWhere((element) => element.boundaryList.isNotEmpty);
+      context.router.replaceAll([
+        HomeRoute(),
+        BoundarySelectionRoute(),
+      ]);
+    } catch (e) {
+      debugPrint('error $e');
+    }
   }
 }

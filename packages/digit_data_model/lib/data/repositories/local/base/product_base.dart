@@ -9,6 +9,5 @@ abstract class ProductLocalBaseRepository
   @override
   DataModelType get type => DataModelType.product;
 
-  @override
   TableInfo get table => sql.product;
 }

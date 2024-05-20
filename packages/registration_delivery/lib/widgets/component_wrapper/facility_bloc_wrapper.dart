@@ -39,7 +39,7 @@ class FacilityBlocWrapper extends StatelessWidget {
             ),
           child: BlocProvider(
             create: (_) => ProjectFacilityBloc(
-              const ProjectFacilityState.empty(),
+              const ProjectFacilityState.loading(),
               projectFacilityDataRepository:
                   context.read<ProjectFacilityDataRepository>(),
             )..add(

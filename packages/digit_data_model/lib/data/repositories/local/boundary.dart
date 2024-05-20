@@ -1,10 +1,7 @@
 import 'dart:async';
 
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/models/oplog/oplog_entry.dart';
 import 'package:drift/drift.dart';
-
-import '../../../utils/utils.dart';
 
 class BoundaryLocalRepository
     extends LocalRepository<BoundaryModel, BoundarySearchModel> {
@@ -12,10 +9,10 @@ class BoundaryLocalRepository
 
   @override
   FutureOr<void> create(
-      BoundaryModel entity, {
-        bool createOpLog = false,
-        DataOperation dataOperation = DataOperation.create,
-      }) async {
+    BoundaryModel entity, {
+    bool createOpLog = false,
+    DataOperation dataOperation = DataOperation.create,
+  }) async {
     final boundaryCompanion = entity.companion;
 
     await sql.batch((batch) async {
@@ -31,8 +28,8 @@ class BoundaryLocalRepository
 
   @override
   FutureOr<void> bulkCreate(
-      List<BoundaryModel> entities,
-      ) async {
+    List<BoundaryModel> entities,
+  ) async {
     final boundaryCompanions = entities.map((e) => e.companion).toList();
 
     await sql.batch((batch) async {
@@ -61,9 +58,9 @@ class BoundaryLocalRepository
 
     if (query.isSingle == true) {
       (selectQuery
-        ..where(buildAnd([
-          sql.boundary.boundaryNum.isSmallerOrEqualValue(r!),
-        ])))
+            ..where(buildAnd([
+              sql.boundary.boundaryNum.isSmallerOrEqualValue(r!),
+            ])))
           .limit(r);
     } else {
       (selectQuery
@@ -103,10 +100,11 @@ class BoundaryLocalRepository
 
   @override
   FutureOr<void> delete(BoundaryModel entity, {bool createOpLog = true}) async {
+    super.delete(entity, createOpLog: createOpLog);
     sql
         .delete(
-      sql.boundary,
-    )
+          sql.boundary,
+        )
         .go();
   }
 
