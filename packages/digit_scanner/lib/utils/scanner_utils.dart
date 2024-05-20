@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:camera/camera.dart';
 import 'package:digit_components/digit_components.dart';
@@ -273,38 +271,5 @@ class DigitScannerUtils {
 
     // Wait for 5 seconds before completing the function
     await Future.delayed(const Duration(seconds: 5));
-  }
-
-  Future<void> initializeCameras({
-    required List<CameraDescription> cameras,
-    required CameraLensDirection cameraLensDirection,
-    required Function(int) setCameraIndex,
-    required CameraController cameraController,
-  }) async {
-    if (cameras.isEmpty) {
-      cameras = await availableCameras();
-    }
-    int cameraIndex = -1; // Initialize camera index
-    for (var i = 0; i < cameras.length; i++) {
-      if (cameras[i].lensDirection == cameraLensDirection) {
-        cameraIndex = i; // Set the camera index
-        break;
-      }
-    }
-    if (cameraIndex != -1) {
-      // Check if camera index is valid
-      setCameraIndex(cameraIndex); // Set the camera index using the function
-      var camera =
-          cameras[cameraIndex]; // Retrieve the camera using the current index
-      cameraController = CameraController(
-        camera,
-        // Set to ResolutionPreset.high. Do NOT set it to ResolutionPreset.max because for some phones does NOT work.
-        ResolutionPreset.high,
-        enableAudio: false,
-        imageFormatGroup: Platform.isAndroid
-            ? ImageFormatGroup.nv21
-            : ImageFormatGroup.bgra8888,
-      );
-    }
   }
 }
