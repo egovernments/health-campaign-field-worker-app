@@ -27,9 +27,9 @@ class BoundarySearchModelMapper
   static String? _$tenantId(BoundarySearchModel v) => v.tenantId;
   static const Field<BoundarySearchModel, String> _f$tenantId =
       Field('tenantId', _$tenantId, opt: true);
-  static String? _$code(BoundarySearchModel v) => v.code;
-  static const Field<BoundarySearchModel, String> _f$code =
-      Field('code', _$code, opt: true);
+  static String? _$codes(BoundarySearchModel v) => v.codes;
+  static const Field<BoundarySearchModel, String> _f$codes =
+      Field('codes', _$codes, opt: true);
   static int? _$boundaryNum(BoundarySearchModel v) => v.boundaryNum;
   static const Field<BoundarySearchModel, int> _f$boundaryNum =
       Field('boundaryNum', _$boundaryNum, opt: true);
@@ -58,7 +58,7 @@ class BoundarySearchModelMapper
   final MappableFields<BoundarySearchModel> fields = const {
     #boundaryType: _f$boundaryType,
     #tenantId: _f$tenantId,
-    #code: _f$code,
+    #codes: _f$codes,
     #boundaryNum: _f$boundaryNum,
     #isSingle: _f$isSingle,
     #hierarchyType: _f$hierarchyType,
@@ -82,7 +82,7 @@ class BoundarySearchModelMapper
     return BoundarySearchModel.ignoreDeleted(
         boundaryType: data.dec(_f$boundaryType),
         tenantId: data.dec(_f$tenantId),
-        code: data.dec(_f$code),
+        codes: data.dec(_f$codes),
         boundaryNum: data.dec(_f$boundaryNum),
         isSingle: data.dec(_f$isSingle),
         hierarchyType: data.dec(_f$hierarchyType),
@@ -158,7 +158,7 @@ abstract class BoundarySearchModelCopyWith<$R, $In extends BoundarySearchModel,
   $R call(
       {String? boundaryType,
       String? tenantId,
-      String? code,
+      String? codes,
       int? boundaryNum,
       bool? isSingle,
       String? hierarchyType,
@@ -189,7 +189,7 @@ class _BoundarySearchModelCopyWithImpl<$R, $Out>
   $R call(
           {Object? boundaryType = $none,
           Object? tenantId = $none,
-          Object? code = $none,
+          Object? codes = $none,
           Object? boundaryNum = $none,
           Object? isSingle = $none,
           Object? hierarchyType = $none,
@@ -200,7 +200,7 @@ class _BoundarySearchModelCopyWithImpl<$R, $Out>
       $apply(FieldCopyWithData({
         if (boundaryType != $none) #boundaryType: boundaryType,
         if (tenantId != $none) #tenantId: tenantId,
-        if (code != $none) #code: code,
+        if (codes != $none) #codes: codes,
         if (boundaryNum != $none) #boundaryNum: boundaryNum,
         if (isSingle != $none) #isSingle: isSingle,
         if (hierarchyType != $none) #hierarchyType: hierarchyType,
@@ -214,7 +214,7 @@ class _BoundarySearchModelCopyWithImpl<$R, $Out>
       BoundarySearchModel.ignoreDeleted(
           boundaryType: data.get(#boundaryType, or: $value.boundaryType),
           tenantId: data.get(#tenantId, or: $value.tenantId),
-          code: data.get(#code, or: $value.code),
+          codes: data.get(#codes, or: $value.codes),
           boundaryNum: data.get(#boundaryNum, or: $value.boundaryNum),
           isSingle: data.get(#isSingle, or: $value.isSingle),
           hierarchyType: data.get(#hierarchyType, or: $value.hierarchyType),

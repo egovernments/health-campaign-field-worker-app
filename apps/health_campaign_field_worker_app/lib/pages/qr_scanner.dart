@@ -571,6 +571,7 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
     if (inputImage.metadata?.size != null &&
         inputImage.metadata?.rotation != null) {
       if (barcodes.isNotEmpty) {
+        // ignore: use_build_context_synchronously
         final bloc = context.read<ScannerBloc>();
         if (widget.isGS1code) {
           try {
@@ -601,6 +602,7 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
             await handleError(
               i18.deliverIntervention.resourceAlreadyScanned,
             );
+            
             return;
           } else {
             await storeCode(barcodes.first.displayValue.toString());

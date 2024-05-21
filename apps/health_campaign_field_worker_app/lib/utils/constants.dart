@@ -338,6 +338,12 @@ class EntityPlurals {
 const String noResultSvg = 'assets/icons/svg/no_result.svg';
 const String myChecklistSvg = 'assets/icons/svg/mychecklist.svg';
 
+
+
+const String age ="age";
+const String height = "height";
+const String gender = "gender";
+
 enum DigitProgressDialogType {
   inProgress,
   dataFound,

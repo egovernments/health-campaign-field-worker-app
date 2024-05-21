@@ -158,9 +158,9 @@ class _BeneficiaryDetailsPageState
                                                 projectState
                                                     .selectedProject
                                                     ?.additionalDetails
-                                                    ?.projectType!
-                                                    .cycles!
-                                                    .firstWhere((c) =>
+                                                    ?.projectType
+                                                    ?.cycles
+                                                    ?.firstWhereOrNull((c) =>
                                                         c.id ==
                                                         deliverState.cycle),
                                                 state.selectedIndividual,

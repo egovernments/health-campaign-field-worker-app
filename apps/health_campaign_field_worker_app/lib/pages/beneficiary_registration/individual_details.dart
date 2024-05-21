@@ -534,6 +534,7 @@ class _IndividualDetailsPageState
                                   return individualDetailsShowcaseData.gender
                                       .buildWith(
                                     child: DigitReactiveSearchDropdown<String>(
+                                      isRequired: true,
                                       label: localizations.translate(
                                         i18.individualDetails.genderLabelText,
                                       ),

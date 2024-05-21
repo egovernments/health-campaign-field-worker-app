@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
+import 'package:formula_parser/formula_parser.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:uuid/uuid.dart';
 
@@ -147,7 +148,7 @@ performBackgroundService({
       service.startService();
       if (context != null) {
         DigitToast.show(
-          context!,
+          context,
           options: DigitToastOptions(
             'Background Service Started',
             false,
@@ -305,16 +306,14 @@ bool checkEligibilityForAgeAndSideEffect(
   TaskModel? tasks,
   List<SideEffectModel>? sideEffects,
 ) {
-  int totalAgeMonths = age.years * 12 + age.months;
+  int totalAgeMonths = age.years * 12 + age.months+ 1;
   final currentCycle = projectType?.cycles?.firstWhereOrNull(
     (e) =>
-        (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
-        (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
+        (e.startDate) < DateTime.now().millisecondsSinceEpoch &&
+        (e.endDate) > DateTime.now().millisecondsSinceEpoch,
     // Return null when no matching cycle is found
   );
-  if (currentCycle != null &&
-      currentCycle.startDate != null &&
-      currentCycle.endDate != null) {
+  if (currentCycle != null) {
     bool recordedSideEffect = false;
     if ((tasks != null) && sideEffects != null && sideEffects.isNotEmpty) {
       final lastTaskTime =
@@ -322,8 +321,8 @@ bool checkEligibilityForAgeAndSideEffect(
               ? tasks.clientAuditDetails?.createdTime
               : null;
       recordedSideEffect = lastTaskTime != null &&
-          (lastTaskTime >= currentCycle.startDate! &&
-              lastTaskTime <= currentCycle.endDate!);
+          (lastTaskTime >= currentCycle.startDate &&
+              lastTaskTime <= currentCycle.endDate);
 
       return projectType?.validMinAge != null &&
               projectType?.validMaxAge != null
@@ -363,9 +362,9 @@ bool checkIfBeneficiaryReferred(
     final isBeneficiaryReferred = (referrals != null &&
         (referrals ?? []).isNotEmpty &&
         referrals.last.clientAuditDetails!.createdTime >=
-            currentCycle!.startDate! &&
+            currentCycle!.startDate &&
         referrals.last.clientAuditDetails!.createdTime <=
-            currentCycle.endDate!);
+            currentCycle.endDate);
 
     return isBeneficiaryReferred;
   } else {
@@ -388,8 +387,8 @@ bool checkStatus(
         final date = DateTime.fromMillisecondsSinceEpoch(lastTaskCreatedTime);
         final diff = DateTime.now().difference(date);
         final isLastCycleRunning =
-            lastTaskCreatedTime >= currentCycle.startDate! &&
-                lastTaskCreatedTime <= currentCycle.endDate!;
+            lastTaskCreatedTime >= currentCycle.startDate &&
+                lastTaskCreatedTime <= currentCycle.endDate;
 
         return isLastCycleRunning
             ? lastTask.status == Status.delivered.name
@@ -425,8 +424,8 @@ bool recordedSideEffect(
               : null;
 
       return lastTaskCreatedTime != null &&
-          lastTaskCreatedTime >= selectedCycle.startDate! &&
-          lastTaskCreatedTime <= selectedCycle.endDate!;
+          lastTaskCreatedTime >= selectedCycle.startDate &&
+          lastTaskCreatedTime <= selectedCycle.endDate;
     }
   }
 
@@ -492,16 +491,30 @@ DeliveryDoseCriteria? fetchProductVariant(
     );
     final individualAgeInMonths =
         individualAge.years * 12 + individualAge.months;
+
     final filteredCriteria = currentDelivery.doseCriteria?.where((criteria) {
+
       final condition = criteria.condition;
       if (condition != null) {
-        //{TODO: Expression package need to be parsed
-        final ageRange = condition.split("<=age<");
-        final minAge = int.parse(ageRange.first);
-        final maxAge = int.parse(ageRange.last);
+              final conditions = condition.split('and');
+              
+  List expressionParser = [];
+        for (var element in conditions) {
+          final expression = FormulaParser(
+            element,
+            {
+              'age': individualAgeInMonths,
+              'gender': individualModel.gender?.index,
+ 
+            },
+          );
+          expressionParser.add(!expression.error);
+        }
 
-        return individualAgeInMonths >= minAge &&
-            individualAgeInMonths <= maxAge;
+
+        return expressionParser.where((element) => element== true)
+                .length ==
+            expressionParser.length;
       }
 
       return false;

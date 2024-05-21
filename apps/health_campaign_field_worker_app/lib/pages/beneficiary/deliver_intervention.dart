@@ -117,7 +117,7 @@ class _DeliverInterventionPageState
                                       ?.projectType
                                       ?.resources
                                       ?.map((r) => DeliveryProductVariant(
-                                          productVariantId: r.productVariantId))
+                                          productVariantId: r.productVariantId,))
                                       .toList();
 
                           final int numberOfDoses = (projectState
@@ -614,7 +614,7 @@ class _DeliverInterventionPageState
                                                                   .map((e) {
                                                             return localizations
                                                                 .translate(
-                                                                    e.name);
+                                                                    e.name,);
                                                           }).toList(),
                                                           formControlName:
                                                               _deliveryCommentKey,

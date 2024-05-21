@@ -156,7 +156,7 @@ class _BoundarySelectionPageState
                                         context.read<BoundaryBloc>().add(
                                               BoundarySearchEvent(
                                                 boundaryNum:
-                                                    (value).boundaryNum! + 1,
+                                                    (value).boundaryNum!,
                                                 code: (value).code!,
                                               ),
                                             );

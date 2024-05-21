@@ -33,8 +33,6 @@ class BoundaryRemoteRepository
             ...query.toMap(),
             'includeChildren': true,
             'hierarchyType': envConfig.variables.hierarchyType,
-            'offset': 0,
-            'limit': 100,
             'tenantId': envConfig.variables.tenantId,
           },
           data: {},
@@ -92,7 +90,7 @@ class BoundaryRemoteRepository
     );
     boundaryModelList = _flattenBoundaryMap(
       boundaryModelList,
-      i: 0,
+      i: 1,
     );
 
     return boundaryModelList;
@@ -111,7 +109,7 @@ class BoundaryRemoteRepository
       final materializedPath = parent?.materializedPath?.split('.') ?? [];
       final boundary = e.copyWith(
         materializedPath: [...materializedPath, e.code ?? ''].join('.'),
-        boundaryNum: [...materializedPath, e.code ?? ''].length - 1,
+        boundaryNum: [...materializedPath, e.code ?? ''].length,
         label: e.boundaryType,
         name: e.code?.split('_').lastOrNull ?? e.code,
       );

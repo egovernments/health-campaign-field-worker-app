@@ -10,7 +10,7 @@ part 'boundary.mapper.dart';
 class BoundarySearchModel extends EntitySearchModel with BoundarySearchModelMappable {
   final String? boundaryType;
   final String? tenantId;
-  final String? code;
+  final String? codes;
   final int? boundaryNum;
   final bool? isSingle;
   final String? hierarchyType;
@@ -19,7 +19,7 @@ class BoundarySearchModel extends EntitySearchModel with BoundarySearchModelMapp
   BoundarySearchModel({
     this.boundaryType,
     this.tenantId,
-    this.code,
+    this.codes,
     this.boundaryNum,
     this.isSingle,
     this.hierarchyType,
@@ -32,7 +32,7 @@ class BoundarySearchModel extends EntitySearchModel with BoundarySearchModelMapp
   BoundarySearchModel.ignoreDeleted({
     this.boundaryType,
     this.tenantId,
-    this.code,
+    this.codes,
     this.boundaryNum,
     this.isSingle,
     this.hierarchyType,

@@ -79,20 +79,24 @@ Widget buildTableContent(
               fraction: 2.5,
               element: {
                 localizations.translate(
-                  i18.beneficiaryDetails.beneficiaryAge,
-                  //[TODO: Condition need to be handled in generic way,]
-                ): '${fetchProductVariant(item, individualModel)?.condition?.split('<=age<').first} - ${fetchProductVariant(item, individualModel)?.condition?.split('<=age<').last} ${localizations.translate(i18.memberCard.deliverDetailsMonthsText)}',
+                  i18.beneficiaryDetails.beneficiaryAge,    
+                ):
+                fetchProductVariant(item, individualModel)?.condition != null ? localizations.translate(fetchProductVariant(item, individualModel)!.condition!):  null,
+          
               },
             ),
             const Divider(
               thickness: 1.0,
             ),
             // Build the DigitTable with the data
-            DigitTable(
+         fetchProductVariant(item, individualModel)?.productVariants 
+         
+         != null  ?   DigitTable(
               headerList: headerListResource,
               tableData: [
-                ...fetchProductVariant(item, individualModel)!
-                    .productVariants!
+             
+                ...fetchProductVariant(item, individualModel)
+                    !.productVariants!
                     .map(
                   (e) {
                     // Retrieve the SKU value for the product variant.
@@ -132,7 +136,7 @@ Widget buildTableContent(
                           .length +
                       1) *
                   59.5,
-            ),
+            ): Text(localizations.translate(i18.common.productMappedWrongly)),
           ],
         );
       },
