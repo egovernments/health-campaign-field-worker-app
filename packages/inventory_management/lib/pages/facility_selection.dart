@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_ui_components/digit_components.dart' as components;
 import 'package:flutter/material.dart';
 import 'package:inventory_management/blocs/app_localization.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -20,6 +21,7 @@ class InventoryFacilitySelectionPage extends StatelessWidget {
 
   static const _facilityName = 'facilityKey';
   static const _selectedFacility = 'selectedFacilityKey';
+
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +60,7 @@ class InventoryFacilitySelectionPage extends StatelessWidget {
                         color: Colors.white,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: kPadding * 2),
+                              horizontal: kPadding * 2, vertical: kPadding*2),
                           child: Column(
                             children: [
                               Padding(
@@ -74,13 +76,15 @@ class InventoryFacilitySelectionPage extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              const DigitTextFormField(
-                                suffix: Padding(
-                                  padding: EdgeInsets.all(kPadding),
-                                  child: Icon(Icons.search),
-                                ),
-                                label: '',
-                                formControlName: _facilityName,
+                              components.ReactiveWrapperField(
+                                  formControlName: _facilityName,
+                                  builder: (field) {
+                                    return components.DigitSearchFormInput(
+                                      onChange: (value){
+                                        field.control.value = value;
+                                      },
+                                    );
+                                  }
                               ),
                             ],
                           ),
