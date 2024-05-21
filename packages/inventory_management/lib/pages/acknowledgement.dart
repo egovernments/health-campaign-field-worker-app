@@ -1,5 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_ui_components/digit_components.dart' as components;
+import 'package:digit_ui_components/enum/app_enums.dart';
 import 'package:flutter/material.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/localized.dart';
@@ -62,9 +64,11 @@ class _AcknowledgementPageState
             padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
             child: Column(
               children: [
-                DigitElevatedButton(
-                  child: Text(localizations
-                      .translate(i18.acknowledgementSuccess.goToHome)),
+                components.Button(
+                  size: ButtonSize.large,
+                  type: ButtonType.primary,
+                  label: localizations
+                .translate(i18.acknowledgementSuccess.goToHome),
                   onPressed: () {
                     context.router.popUntilRoot();
                   },
@@ -72,26 +76,14 @@ class _AcknowledgementPageState
                 const SizedBox(
                   height: 12,
                 ),
-                DigitOutLineButton(
+                components.Button(
+                  type: ButtonType.secondary,
+                  size: ButtonSize.large,
                   onPressed: () {
                     context.router.popUntilRoot();
                   },
                   label: localizations
                       .translate(i18.acknowledgementSuccess.downloadmoredata),
-                  buttonStyle: OutlinedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.zero,
-                    ),
-                    side: BorderSide(
-                      width: 1.0,
-                      color: theme.colorScheme.secondary,
-                    ),
-                    minimumSize: Size(
-                      MediaQuery.of(context).size.width,
-                      50,
-                    ),
-                  ),
                 ),
               ],
             ),
