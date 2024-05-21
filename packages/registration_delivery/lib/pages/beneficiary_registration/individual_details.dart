@@ -412,7 +412,7 @@ class _IndividualDetailsPageState
                                   .idTypeOptions!
                                   .map(
                                 (e) {
-                                  return localizations.translate(e['label']!);
+                                  return localizations.translate(e);
                                 },
                               ).toList(),
                               formControlName: _idTypeKey,
@@ -525,7 +525,7 @@ class _IndividualDetailsPageState
                               menuItems: RegistrationDeliverySingleton()
                                   .genderOptions!
                                   .map(
-                                    (e) => e['label']!,
+                                    (e) => e,
                                   )
                                   .toList(),
                               formControlName: _genderKey,
@@ -799,8 +799,8 @@ class _IndividualDetailsPageState
   getGenderOptions(IndividualModel? individual) {
     final options = RegistrationDeliverySingleton().genderOptions;
 
-    return options?.map((e) => e['code']).firstWhereOrNull(
-          (element) => element?.toLowerCase() == individual?.gender?.name,
+    return options?.map((e) => e).firstWhereOrNull(
+          (element) => element.toLowerCase() == individual?.gender?.name,
         );
   }
 }

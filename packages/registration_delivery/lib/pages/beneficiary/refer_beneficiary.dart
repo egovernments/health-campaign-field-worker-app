@@ -48,7 +48,7 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
   @override
   void initState() {
     reasons = (RegistrationDeliverySingleton().referralReasons ?? [])
-        .map((e) => KeyValue(e.code, e.code))
+        .map((e) => KeyValue(e, e))
         .toList();
     super.initState();
   }

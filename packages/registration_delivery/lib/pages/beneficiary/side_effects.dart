@@ -45,8 +45,10 @@ class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
   void initState() {
     super.initState();
     symptomTypesOptions = (RegistrationDeliverySingleton().symptomsTypes ?? [])
-        .map((e) => KeyValue(e.code, e.code))
+        .map((e) => KeyValue(e, e))
         .toList();
+
+    symptomsTypes = symptomTypesOptions.map((e) => e.key.toString()).toList();
 
     for (var _ in symptomTypesOptions) {
       symptomsValues.add(false);

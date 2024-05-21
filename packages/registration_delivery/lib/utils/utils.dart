@@ -287,13 +287,13 @@ class RegistrationDeliverySingleton {
   BoundaryModel? _boundaryModel;
   PersistenceConfiguration? _persistenceConfiguration = PersistenceConfiguration
       .offlineFirst; // Default to offline first persistence configuration
-  List<Map<String, String>>? _genderOptions;
-  List<Map<String, String>>? _idTypeOptions;
-  List<Map<String, String>>? _householdDeletionReasonOptions;
-  List<Map<String, String>>? _householdMemberDeletionReasonOptions;
-  List<Map<String, String>>? _deliveryCommentOptions;
-  Iterable<dynamic>? _symptomsTypes;
-  Iterable<dynamic>? _referralReasons;
+  List<String>? _genderOptions;
+  List<String>? _idTypeOptions;
+  List<String>? _householdDeletionReasonOptions;
+  List<String>? _householdMemberDeletionReasonOptions;
+  List<String>? _deliveryCommentOptions;
+  List<String>? _symptomsTypes;
+  List<String>? _referralReasons;
 
   void setBoundary({required BoundaryModel boundary}) {
     _boundaryModel = boundary;
@@ -316,13 +316,13 @@ class RegistrationDeliverySingleton {
       required BeneficiaryType selectedBeneficiaryType,
       required ProjectTypeModel? projectType,
       required ProjectModel selectedProject,
-      required List<Map<String, String>> genderOptions,
-      required List<Map<String, String>> idTypeOptions,
-      required List<Map<String, String>> householdDeletionReasonOptions,
-      required List<Map<String, String>> householdMemberDeletionReasonOptions,
-      required List<Map<String, String>> deliveryCommentOptions,
-      required Iterable<dynamic> symptomsTypes,
-      required Iterable<dynamic> referralReasons}) {
+      required List<String>? genderOptions,
+      required List<String>? idTypeOptions,
+      required List<String>? householdDeletionReasonOptions,
+      required List<String>? householdMemberDeletionReasonOptions,
+      required List<String>? deliveryCommentOptions,
+      required List<String>? symptomsTypes,
+      required List<String>? referralReasons}) {
     _loggedInUserUuid = loggedInUserUuid;
     _maxRadius = maxRadius;
     _projectId = projectId;
@@ -353,16 +353,15 @@ class RegistrationDeliverySingleton {
   BoundaryModel? get boundary => _boundaryModel;
   PersistenceConfiguration? get persistenceConfiguration =>
       _persistenceConfiguration;
-  List<Map<String, String>>? get genderOptions => _genderOptions;
-  List<Map<String, String>>? get idTypeOptions => _idTypeOptions;
-  List<Map<String, String>>? get householdDeletionReasonOptions =>
+  List<String>? get genderOptions => _genderOptions;
+  List<String>? get idTypeOptions => _idTypeOptions;
+  List<String>? get householdDeletionReasonOptions =>
       _householdDeletionReasonOptions;
-  List<Map<String, String>>? get householdMemberDeletionReasonOptions =>
+  List<String>? get householdMemberDeletionReasonOptions =>
       _householdMemberDeletionReasonOptions;
-  List<Map<String, String>>? get deliveryCommentOptions =>
-      _deliveryCommentOptions;
-  Iterable<dynamic>? get symptomsTypes => _symptomsTypes;
-  Iterable<dynamic>? get referralReasons => _referralReasons;
+  List<String>? get deliveryCommentOptions => _deliveryCommentOptions;
+  List<String>? get symptomsTypes => _symptomsTypes;
+  List<String>? get referralReasons => _referralReasons;
   RegistrationDeliveryListener? get registrationDeliveryListener =>
       _registrationDeliveryListener;
 
