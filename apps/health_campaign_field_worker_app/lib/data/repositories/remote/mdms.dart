@@ -53,10 +53,6 @@ class MdmsRepository {
 
         return newServiceRegistryAction;
       }).toList();
-      actions.add(Actions()
-        ..entityName = 'Boundary'
-        ..action = 'search'
-        ..path = '/boundary-service/boundary-relationships/_search?');
 
       newServiceRegistry.actions = actions;
       newServiceRegistryList.add(newServiceRegistry);
