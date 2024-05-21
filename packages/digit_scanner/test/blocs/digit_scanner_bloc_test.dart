@@ -2,10 +2,11 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
+
+import '../constants/digit_scanner_test_constants.dart';
 
 void main() {
-  // Grouping tests related to RecordStockBloc
+  // Grouping tests related to DigitScannerBloc
   group('DigitScannerBloc', () {
     // Declaring variables for mock and bloc
     late DigitScannerBloc digitScannerBloc;
@@ -32,11 +33,11 @@ void main() {
       'emits Scanned codes or barcodes state after scanning',
       build: () => DigitScannerBloc(const DigitScannerState()),
       // Test event for clearing the state of scanner bloc and return empty qrCodes list
-      act: (bloc) =>
-          bloc.add(const DigitScannerEvent.handleScanner(qrCode: ['123456'])),
-      // Expecting the bloc to emit a state with the saved warehouse details
+      act: (bloc) => bloc.add(DigitScannerEvent.handleScanner(
+          qrCode: [DigitScannerTestConstants().testQRCode])),
+      // Expecting the bloc to emit a state with the scanned qr code details
       expect: () => <DigitScannerState>[
-        const DigitScannerState(qrCodes: ['123456'])
+        DigitScannerState(qrCodes: [DigitScannerTestConstants().testQRCode])
       ],
     );
 
@@ -45,38 +46,11 @@ void main() {
       'emits Scanned codes or barcodes state after scanning',
       build: () => DigitScannerBloc(const DigitScannerState()),
       // Test event for clearing the state of scanner bloc and return empty qrCodes list
-      act: (bloc) => bloc.add(const DigitScannerEvent.handleScanner(barCode: [
-        GS1Barcode(
-          code: Code(
-            type: CodeType.GS1_128,
-            codeTitle: 'Barcode1',
-            fnc1: 'GS1',
-          ),
-          elements: {
-            "00": GS1ParsedElement(
-                aiCode: "00",
-                rawData: "089061260502294703",
-                data: 089061260502294703)
-          },
-        )
-      ])),
-      // Expecting the bloc to emit a state with the saved warehouse details
+      act: (bloc) => bloc.add(DigitScannerEvent.handleScanner(
+          barCode: DigitScannerTestConstants().testBarCode)),
+      // Expecting the bloc to emit the scanned barcodes in state
       expect: () => <DigitScannerState>[
-        const DigitScannerState(barCodes: [
-          GS1Barcode(
-            code: Code(
-              type: CodeType.GS1_128,
-              codeTitle: 'Barcode1',
-              fnc1: 'GS1',
-            ),
-            elements: {
-              "00": GS1ParsedElement(
-                  aiCode: "00",
-                  rawData: "089061260502294703",
-                  data: 089061260502294703)
-            },
-          )
-        ])
+        DigitScannerState(barCodes: DigitScannerTestConstants().testBarCode)
       ],
     );
   });
