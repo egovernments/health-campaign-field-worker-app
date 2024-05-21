@@ -601,8 +601,7 @@ class _DeliverInterventionPageState
                                                               .deliveryCommentOptions!
                                                               .map((e) {
                                                         return localizations
-                                                            .translate(
-                                                                e['label']!);
+                                                            .translate(e);
                                                       }).toList(),
                                                       formControlName:
                                                           _deliveryCommentKey,
