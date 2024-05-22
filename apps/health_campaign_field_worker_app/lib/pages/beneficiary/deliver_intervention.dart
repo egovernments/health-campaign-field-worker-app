@@ -454,7 +454,10 @@ class _DeliverInterventionPageState
                                                                 .deliverIntervention
                                                                 .currentCycle),
                                                       ),
-                                                    DigitStepper(
+                                   
+                                                  Offstage(
+                                                    offstage:  steps.length == 1,
+                                                    child:  DigitStepper(
                                                       activeStep:
                                                           deliveryInterventionstate
                                                                   .dose -
@@ -471,7 +474,7 @@ class _DeliverInterventionPageState
                                                                   steps.length -
                                                               50) /
                                                           (steps.length - 1),
-                                                    ),
+                                                    ),),
                                                     DigitDateFormPicker(
                                                       isEnabled: false,
                                                       formControlName:
@@ -614,7 +617,7 @@ class _DeliverInterventionPageState
                                                                   .map((e) {
                                                             return localizations
                                                                 .translate(
-                                                                    e.name,);
+                                                                    e.code,);
                                                           }).toList(),
                                                           formControlName:
                                                               _deliveryCommentKey,

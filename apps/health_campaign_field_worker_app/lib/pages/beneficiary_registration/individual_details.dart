@@ -541,7 +541,7 @@ class _IndividualDetailsPageState
                                       form: form,
                                       menuItems: genderOptions
                                           .map(
-                                            (e) => e.name,
+                                            (e) => e.code,
                                           )
                                           .toList(),
                                       formControlName: _genderKey,

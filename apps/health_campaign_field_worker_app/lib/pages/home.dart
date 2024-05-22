@@ -106,7 +106,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           state.maybeWhen(
             orElse: () {},
             pendingSync: (count) {
-              final debouncer = Debouncer(seconds: 5);
+              final debouncer = Debouncer(seconds: 10);
               debouncer.run(() async {
                 if (count != 0) {
                   await localSecureStore.setManualSyncTrigger(false);

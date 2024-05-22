@@ -19,11 +19,11 @@ class RecordDeliveryCycle extends LocalizedStatefulWidget {
   // ignore: prefer_typing_uninitialized_variables
 
   const RecordDeliveryCycle({
-    Key? key,
+    super.key,
     this.taskData,
     required this.projectCycles,
     required this.individualModel,
-  }) : super(key: key);
+  });
 
   @override
   State<RecordDeliveryCycle> createState() => _RecordDeliveryCycleState();

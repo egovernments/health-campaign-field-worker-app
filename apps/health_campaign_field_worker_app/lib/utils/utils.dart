@@ -147,6 +147,7 @@ performBackgroundService({
     if (!isRunning && isOnline) {
       service.startService();
       if (context != null) {
+        // ignore: use_build_context_synchronously
         DigitToast.show(
           context,
           options: DigitToastOptions(

@@ -70,7 +70,7 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
                 orElse: () => null,
                 initialized: (appConfiguration, serviceRegistryList) {
                   return appConfiguration.genderOptions!
-                      .map((e) => localizations.translate(e.name))
+                      .map((e) => e.code)
                       .firstWhereOrNull((element) => element == user?.gender);
                 },
               ),
@@ -172,14 +172,14 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
                                 if (user != null) {
                                   final updatedUser = user.copyWith(
                                     gender: formGroup.control(_genderKey).value
-                                        as String,
+                                        as String?,
                                     mobileNumber: formGroup
                                         .control(_mobileNumberKey)
                                         .value,
-                                    name: formGroup.control(_name).value
-                                        as String,
+                                    name: formGroup.control(_name).value 
+                                        as String?,
                                     emailId: formGroup.control(_emailId).value
-                                        as String,
+                                         as String?,
                                   );
 
                                   ctx.read<UserBloc>().add(
