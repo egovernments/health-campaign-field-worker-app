@@ -400,16 +400,8 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                           ): fetchProductVariant(            deliveryState
                                                 .futureDeliveries?.first,
                                             overViewBloc.selectedIndividual,)?.condition,
-
-                                          //  '${fetchProductVariant(
-                                
-                                          // )?.condition?.split('<=age<').first} - ${fetchProductVariant(
-                                          //   deliveryState
-                                          //       .futureDeliveries?.first,
-                                          //   overViewBloc.selectedIndividual,
-                                          // )?.condition?.split('<=age<').last} months',
                                         },
-                                        //[TODO:: Need to parse <=age< as an Expression
+
                                       ),
                                       const Divider(
                                         thickness: 2.0,
