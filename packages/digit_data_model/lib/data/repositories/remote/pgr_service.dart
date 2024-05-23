@@ -40,7 +40,9 @@ class PgrServiceRemoteRepository
 
   FutureOr<List<PgrServiceResponseModel>> searchWithoutClientReferenceId(
     PgrServiceSearchModel query,
-  ) async {
+      {int? offSet,
+    int? limit,
+  }) async {
     Response response;
 
     try {
@@ -49,8 +51,8 @@ class PgrServiceRemoteRepository
           return await dio.post(
             searchPath,
             queryParameters: {
-              'offset': 0,
-              'limit': 100,
+              'offset': offSet ?? 0,
+              'limit': limit ?? 100,
               'tenantId': DigitDataModelSingleton().tenantId,
             }..addAll(query.toMap()),
             data: query.toMap(),

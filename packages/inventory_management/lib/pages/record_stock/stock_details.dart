@@ -7,15 +7,13 @@ import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
+import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:inventory_management/utils/extensions/extensions.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:recase/recase.dart';
-import 'package:inventory_management/router/inventory_router.gm.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
 import '../../../widgets/localized.dart';
-import '../../blocs/inventory_listener.dart';
 import '../../blocs/product_variant.dart';
 import '../../blocs/record_stock.dart';
 import '../../models/entities/inventory_transport_type.dart';
@@ -62,7 +60,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
         Validators.min(0),
         Validators.max(10000),
       ]),
-      _transactionReasonKey: FormControl<TransactionReason>(),
+      _transactionReasonKey: FormControl<String>(),
       _waybillNumberKey: FormControl<String>(),
       _waybillQuantityKey: FormControl<String>(),
       _vehicleNumberKey: FormControl<String>(),
@@ -123,10 +121,10 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                 String transactionPartyLabel;
                 String quantityCountLabel;
                 String? transactionReasonLabel;
-                TransactionReason? transactionReason;
-                TransactionType transactionType;
+                String? transactionReason;
+                String transactionType;
 
-                List<TransactionReason>? reasons;
+                List<String>? reasons;
 
                 switch (entryType) {
                   case StockRecordEntryType.receipt:
@@ -134,14 +132,14 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                     transactionPartyLabel =
                         module.selectTransactingPartyReceived;
                     quantityCountLabel = module.quantityReceivedLabel;
-                    transactionType = TransactionType.received;
+                    transactionType = TransactionType.received.toValue();
 
                     break;
                   case StockRecordEntryType.dispatch:
                     pageTitle = module.issuedPageTitle;
                     transactionPartyLabel = module.selectTransactingPartyIssued;
                     quantityCountLabel = module.quantitySentLabel;
-                    transactionType = TransactionType.dispatched;
+                    transactionType = TransactionType.dispatched.toValue();
 
                     break;
                   case StockRecordEntryType.returned:
@@ -149,17 +147,17 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                     transactionPartyLabel =
                         module.selectTransactingPartyReturned;
                     quantityCountLabel = module.quantityReturnedLabel;
-                    transactionType = TransactionType.received;
+                    transactionType = TransactionType.received.toValue();
                     break;
                   case StockRecordEntryType.loss:
                     pageTitle = module.lostPageTitle;
                     quantityCountLabel = module.quantityLostLabel;
                     transactionReasonLabel = module.transactionReasonLost;
-                    transactionType = TransactionType.dispatched;
+                    transactionType = TransactionType.dispatched.toValue();
 
                     reasons = [
-                      TransactionReason.lostInStorage,
-                      TransactionReason.lostInTransit,
+                      TransactionReason.lostInStorage.toValue(),
+                      TransactionReason.lostInTransit.toValue(),
                     ];
                     break;
                   case StockRecordEntryType.damaged:
@@ -168,11 +166,11 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                         module.selectTransactingPartyReceivedFromDamaged;
                     quantityCountLabel = module.quantityDamagedLabel;
                     transactionReasonLabel = module.transactionReasonDamaged;
-                    transactionType = TransactionType.dispatched;
+                    transactionType = TransactionType.dispatched.toValue();
 
                     reasons = [
-                      TransactionReason.damagedInStorage,
-                      TransactionReason.damagedInTransit,
+                      TransactionReason.damagedInStorage.toValue(),
+                      TransactionReason.damagedInTransit.toValue(),
                     ];
                     break;
                 }
@@ -288,21 +286,23 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                         switch (entryType) {
                                           case StockRecordEntryType.receipt:
                                             transactionReason =
-                                                TransactionReason.received;
+                                                TransactionReason.received
+                                                    .toValue();
                                             break;
                                           case StockRecordEntryType.dispatch:
                                             transactionReason = null;
                                             break;
                                           case StockRecordEntryType.returned:
                                             transactionReason =
-                                                TransactionReason.returned;
+                                                TransactionReason.returned
+                                                    .toValue();
                                             break;
                                           default:
                                             transactionReason = form
                                                 .control(
                                                   _transactionReasonKey,
                                                 )
-                                                .value as TransactionReason?;
+                                                .value as String?;
                                             break;
                                         }
 
@@ -394,19 +394,19 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                           senderId: senderId,
                                           senderType: senderType,
                                           auditDetails: AuditDetails(
-                                            createdBy:
-                                                InventorySingleton().loggedInUserUuid,
+                                            createdBy: InventorySingleton()
+                                                .loggedInUserUuid,
                                             createdTime: context
                                                 .millisecondsSinceEpoch(),
                                           ),
                                           clientAuditDetails:
                                               ClientAuditDetails(
-                                            createdBy:
-                                                InventorySingleton().loggedInUserUuid,
+                                            createdBy: InventorySingleton()
+                                                .loggedInUserUuid,
                                             createdTime: context
                                                 .millisecondsSinceEpoch(),
-                                            lastModifiedBy:
-                                                InventorySingleton().loggedInUserUuid,
+                                            lastModifiedBy: InventorySingleton()
+                                                .loggedInUserUuid,
                                             lastModifiedTime: context
                                                 .millisecondsSinceEpoch(),
                                           ),
@@ -575,14 +575,13 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                   StockRecordEntryType.loss,
                                   StockRecordEntryType.damaged,
                                 ].contains(entryType))
-                                  DigitReactiveDropdown<TransactionReason>(
+                                  DigitReactiveDropdown<String>(
                                     label: localizations.translate(
                                       transactionReasonLabel ?? 'Reason',
                                     ),
                                     menuItems: reasons ?? [],
                                     formControlName: _transactionReasonKey,
-                                    valueMapper: (value) =>
-                                        value.name.titleCase,
+                                    valueMapper: (value) => value,
                                     isRequired: true,
                                   ),
                                 BlocBuilder<FacilityBloc, FacilityState>(

@@ -12,6 +12,7 @@ import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
 import '../blocs/scanner.dart';
 import '../widgets/vision_detector_views/painters/barcode_detector_painter.dart';
 import './i18_key_constants.dart' as i18;
+import 'constants.dart';
 
 class DigitScannerUtils {
   void buildDialog(
@@ -75,6 +76,7 @@ class DigitScannerUtils {
     required Function storeCode,
     required CameraLensDirection cameraLensDirection,
     required BarcodeScanner barcodeScanner,
+    required ScannerLocalization localizations,
   }) async {
     // Check if processing is allowed
     if (!canProcess) return;
@@ -147,9 +149,11 @@ class DigitScannerUtils {
       updateCustomPaint(CustomPaint(painter: painter));
     } else {
       // Display the number of barcodes found and their raw values
-      String text = 'Barcodes found: ${barcodes.length}\n\n';
+      String text =
+          '${localizations.translate(i18.scanner.barCodesFound)}: ${barcodes.length}\n\n';
       for (final barcode in barcodes) {
-        text += 'Barcode: ${barcode.rawValue}\n\n';
+        text +=
+            '${localizations.translate(i18.scanner.barCode)}: ${barcode.rawValue}\n\n';
       }
       setText(text);
 
@@ -170,7 +174,7 @@ class DigitScannerUtils {
     required ScannerLocalization localizations,
   }) async {
     // Play the buzzer sound to indicate an error
-    player.play(AssetSource("audio/buzzer.wav"));
+    player.play(AssetSource(DigitScannerConstants().audioFilePath));
 
     // Check if the player has completed playing or if the result list is empty
     if (player.state == PlayerState.completed || result.isEmpty) {
@@ -201,7 +205,7 @@ class DigitScannerUtils {
     required List<String> initialCodes,
   }) async {
     // Play the add sound to indicate a successful scan
-    player.play(AssetSource("audio/add.wav"));
+    player.play(AssetSource(DigitScannerConstants().audioFilePath));
 
     // Access the DigitScannerBloc from the context
     final bloc = context.read<DigitScannerBloc>();
@@ -244,7 +248,7 @@ class DigitScannerUtils {
     final bloc = context.read<DigitScannerBloc>();
 
     // Play the add sound to indicate a successful scan
-    player.play(AssetSource("audio/add.wav"));
+    player.play(AssetSource(DigitScannerConstants().audioFilePath));
 
     // Wait for 3 seconds before proceeding
     await Future.delayed(const Duration(seconds: 3));

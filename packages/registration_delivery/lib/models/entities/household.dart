@@ -1,13 +1,13 @@
 // Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:drift/drift.dart';
-
 import 'package:digit_data_model/data_model.dart';
+import 'package:drift/drift.dart';
 
 part 'household.mapper.dart';
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class HouseholdSearchModel extends EntitySearchModel with HouseholdSearchModelMappable {
+class HouseholdSearchModel extends EntitySearchModel
+    with HouseholdSearchModelMappable {
   final String? id;
   final int? memberCount;
   final double? latitude;
@@ -28,7 +28,7 @@ class HouseholdSearchModel extends EntitySearchModel with HouseholdSearchModelMa
     this.tenantId,
     super.boundaryCode,
     super.isDeleted,
-  }):  super();
+  }) : super();
 
   @MappableConstructor()
   HouseholdSearchModel.ignoreDeleted({
@@ -41,12 +41,11 @@ class HouseholdSearchModel extends EntitySearchModel with HouseholdSearchModelMa
     this.clientReferenceId,
     this.tenantId,
     super.boundaryCode,
-  }):  super(isDeleted: false);
+  }) : super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
 class HouseholdModel extends EntityModel with HouseholdModelMappable {
-
   static const schemaName = 'Household';
 
   final String? id;
@@ -71,9 +70,10 @@ class HouseholdModel extends EntityModel with HouseholdModelMappable {
     this.tenantId,
     this.rowVersion,
     this.address,
-    super.auditDetails,super.clientAuditDetails,
+    super.auditDetails,
+    super.clientAuditDetails,
     super.isDeleted = false,
-  }): super();
+  }) : super();
 
   HouseholdCompanion get companion {
     return HouseholdCompanion(
@@ -100,7 +100,8 @@ class HouseholdModel extends EntityModel with HouseholdModelMappable {
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class HouseholdAdditionalFields extends AdditionalFields with HouseholdAdditionalFieldsMappable {
+class HouseholdAdditionalFields extends AdditionalFields
+    with HouseholdAdditionalFieldsMappable {
   HouseholdAdditionalFields({
     super.schema = 'Household',
     required super.version,

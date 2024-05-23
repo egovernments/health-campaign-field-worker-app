@@ -62,15 +62,13 @@ class StockSearchModelMapper extends SubClassMapperBase<StockSearchModel> {
       v.clientReferenceId;
   static const Field<StockSearchModel, List<String>> _f$clientReferenceId =
       Field('clientReferenceId', _$clientReferenceId, opt: true);
-  static List<TransactionType>? _$transactionType(StockSearchModel v) =>
+  static List<String>? _$transactionType(StockSearchModel v) =>
       v.transactionType;
-  static const Field<StockSearchModel, List<TransactionType>>
-      _f$transactionType =
+  static const Field<StockSearchModel, List<String>> _f$transactionType =
       Field('transactionType', _$transactionType, opt: true);
-  static List<TransactionReason>? _$transactionReason(StockSearchModel v) =>
+  static List<String>? _$transactionReason(StockSearchModel v) =>
       v.transactionReason;
-  static const Field<StockSearchModel, List<TransactionReason>>
-      _f$transactionReason =
+  static const Field<StockSearchModel, List<String>> _f$transactionReason =
       Field('transactionReason', _$transactionReason, opt: true);
   static String? _$boundaryCode(StockSearchModel v) => v.boundaryCode;
   static const Field<StockSearchModel, String> _f$boundaryCode =
@@ -193,11 +191,9 @@ abstract class StockSearchModelCopyWith<$R, $In extends StockSearchModel, $Out>
     implements EntitySearchModelCopyWith<$R, $In, $Out> {
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get clientReferenceId;
-  ListCopyWith<$R, TransactionType,
-          ObjectCopyWith<$R, TransactionType, TransactionType>>?
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get transactionType;
-  ListCopyWith<$R, TransactionReason,
-          ObjectCopyWith<$R, TransactionReason, TransactionReason>>?
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get transactionReason;
   @override
   $R call(
@@ -214,8 +210,8 @@ abstract class StockSearchModelCopyWith<$R, $In extends StockSearchModel, $Out>
       String? senderId,
       String? senderType,
       List<String>? clientReferenceId,
-      List<TransactionType>? transactionType,
-      List<TransactionReason>? transactionReason,
+      List<String>? transactionType,
+      List<String>? transactionReason,
       String? boundaryCode});
   StockSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
@@ -238,8 +234,7 @@ class _StockSearchModelCopyWithImpl<$R, $Out>
               (v) => call(clientReferenceId: v))
           : null;
   @override
-  ListCopyWith<$R, TransactionType,
-          ObjectCopyWith<$R, TransactionType, TransactionType>>?
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get transactionType => $value.transactionType != null
           ? ListCopyWith(
               $value.transactionType!,
@@ -247,8 +242,7 @@ class _StockSearchModelCopyWithImpl<$R, $Out>
               (v) => call(transactionType: v))
           : null;
   @override
-  ListCopyWith<$R, TransactionReason,
-          ObjectCopyWith<$R, TransactionReason, TransactionReason>>?
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get transactionReason => $value.transactionReason != null
           ? ListCopyWith(
               $value.transactionReason!,
@@ -392,12 +386,11 @@ class StockModelMapper extends SubClassMapperBase<StockModel> {
   static int? _$rowVersion(StockModel v) => v.rowVersion;
   static const Field<StockModel, int> _f$rowVersion =
       Field('rowVersion', _$rowVersion, opt: true);
-  static TransactionType? _$transactionType(StockModel v) => v.transactionType;
-  static const Field<StockModel, TransactionType> _f$transactionType =
+  static String? _$transactionType(StockModel v) => v.transactionType;
+  static const Field<StockModel, String> _f$transactionType =
       Field('transactionType', _$transactionType, opt: true);
-  static TransactionReason? _$transactionReason(StockModel v) =>
-      v.transactionReason;
-  static const Field<StockModel, TransactionReason> _f$transactionReason =
+  static String? _$transactionReason(StockModel v) => v.transactionReason;
+  static const Field<StockModel, String> _f$transactionReason =
       Field('transactionReason', _$transactionReason, opt: true);
   static AuditDetails? _$auditDetails(StockModel v) => v.auditDetails;
   static const Field<StockModel, AuditDetails> _f$auditDetails =
@@ -554,8 +547,8 @@ abstract class StockModelCopyWith<$R, $In extends StockModel, $Out>
       bool? nonRecoverableError,
       String? clientReferenceId,
       int? rowVersion,
-      TransactionType? transactionType,
-      TransactionReason? transactionReason,
+      String? transactionType,
+      String? transactionReason,
       AuditDetails? auditDetails,
       ClientAuditDetails? clientAuditDetails,
       bool? isDeleted});

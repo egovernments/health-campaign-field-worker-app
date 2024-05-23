@@ -74,6 +74,7 @@ class _HomePageState extends LocalizedState<HomePage> {
         }
       }
     });
+    //// Function to set initial Data required for the packages to run
     setPackagesSingleton(context);
   }
 
@@ -691,6 +692,7 @@ class _HomePageState extends LocalizedState<HomePage> {
   }
 }
 
+// Function to set initial Data required for the packages to run
 void setPackagesSingleton(BuildContext context) {
   context.read<AppInitializationBloc>().state.maybeWhen(
       orElse: () {},

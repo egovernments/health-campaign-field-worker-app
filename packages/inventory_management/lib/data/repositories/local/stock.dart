@@ -6,8 +6,7 @@ import 'package:inventory_management/models/entities/stock.dart';
 
 class StockLocalRepository
     extends LocalRepository<StockModel, StockSearchModel> {
-  StockLocalRepository(
-      super.sql, super.opLogManager);
+  StockLocalRepository(super.sql, super.opLogManager);
 
   @override
   FutureOr<void> create(
@@ -35,21 +34,16 @@ class StockLocalRepository
   ]) async {
     var results = [];
     try {
-      final selectQuery = sql
-          .select(sql.stock)
-          .join([]);
+      final selectQuery = sql.select(sql.stock).join([]);
       results = await (selectQuery
             ..where(
               buildAnd(
                 [
-                  if (query.id != null)
-                    sql.stock.id.equals(query.id!),
+                  if (query.id != null) sql.stock.id.equals(query.id!),
                   if (query.receiverId != null)
-                    sql.stock.receiverId
-                        .equals(query.receiverId!),
+                    sql.stock.receiverId.equals(query.receiverId!),
                   if (query.senderId != null)
-                    sql.stock.senderId
-                        .equals(query.senderId!),
+                    sql.stock.senderId.equals(query.senderId!),
                   if (query.productVariantId != null)
                     sql.stock.productVariantId.equals(
                       query.productVariantId!,
@@ -64,11 +58,9 @@ class StockLocalRepository
                     ),
                   if (query.transactionReason != null)
                     query.transactionReason!.isEmpty
-                        ? sql.stock.transactionReason
-                            .isNull()
-                        : sql.stock.transactionReason
-                            .isIn(
-                            query.transactionReason!.map((e) => e.index),
+                        ? sql.stock.transactionReason.isNull()
+                        : sql.stock.transactionReason.isIn(
+                            query.transactionReason!,
                           ),
                 ],
               ),
