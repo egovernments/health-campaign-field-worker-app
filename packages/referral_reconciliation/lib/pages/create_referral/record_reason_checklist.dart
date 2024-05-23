@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:group_radio_button/group_radio_button.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
+import 'package:referral_reconciliation/utils/constants.dart';
 
 import '../../blocs/referral_recon_service.dart';
 import '../../blocs/referral_recon_service_definition.dart';
@@ -168,7 +169,7 @@ class _ReferralReasonChecklistPageState
                                             DateTime.now()
                                                 .toLocal()
                                                 .millisecondsSinceEpoch,
-                                            dateFormat: "dd/MM/yyyy hh:mm a",
+                                            dateFormat: defaultDateTimeFormat,
                                           ),
                                           tenantId: value
                                               .selectedServiceDefinition!

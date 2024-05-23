@@ -16,7 +16,6 @@ class HouseholdLocalRepository
     HouseholdSearchModel query, [
     String? userId,
   ]) async {
-    // sql.household.attachedDatabase = sql;
     final selectQuery = sql.select(sql.household).join(
       [
         leftOuterJoin(
