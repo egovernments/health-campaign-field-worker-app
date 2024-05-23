@@ -14,6 +14,7 @@ import 'package:registration_delivery/registration_delivery.dart';
 import '../blocs/app_initialization/app_initialization.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/no_sql/schema/localization.dart';
+import '../data/local_store/no_sql/schema/entity_mapper.dart';
 import '../data/local_store/no_sql/schema/project_types.dart';
 import '../data/local_store/no_sql/schema/row_versions.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
@@ -235,6 +236,7 @@ class Constants {
         syncDownRetryCount: envConfig.variables.syncDownRetryCount,
         retryTimeInterval: envConfig.variables.retryTimeInterval,
         tenantId: envConfig.variables.tenantId,
+        entityMapper: EntityMapper(),
         errorDumpApiPath: envConfig.variables.dumpErrorApiPath);
     RegistrationDeliverySingleton().setTenantId(envConfig.variables.tenantId);
     AttendanceSingleton().setTenantId(envConfig.variables.tenantId);

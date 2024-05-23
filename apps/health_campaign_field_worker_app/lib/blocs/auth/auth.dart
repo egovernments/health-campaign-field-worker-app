@@ -55,8 +55,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (accessToken == null ||
           refreshToken == null ||
           userObject == null ||
-          actionsList == null ||
-          userIndividualId == null) {
+          actionsList == null) {
         emit(const AuthUnauthenticatedState());
       } else {
         emit(AuthAuthenticatedState(
