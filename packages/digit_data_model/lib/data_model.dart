@@ -8,13 +8,7 @@
 library data_model;
 
 // Import statements for various packages and files used in this file.
-import 'package:attendance_management/models/entities/attendance_log.dart';
-import 'package:attendance_management/models/entities/attendance_register.dart';
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:registration_delivery/models/entities/downsync.dart';
-import 'package:registration_delivery/models/entities/household.dart';
-import 'package:registration_delivery/models/entities/task.dart';
-
 import 'data_model.dart';
 
 // Export statements for various files that are part of the data model.
@@ -125,13 +119,8 @@ abstract class DataModel {
 /// It is also annotated with `MappableClass` to generate mapping code.
 @MappableClass(includeSubClasses: [
   AddressModel,
-  AttendanceRegisterModel,
-  AttendanceLogModel,
   BoundaryModel,
   LocalityModel,
-  DownsyncModel,
-  HouseholdModel,
-  TaskModel,
 ])
 abstract class EntityModel extends DataModel with EntityModelMappable {
   final AuditDetails? auditDetails;
@@ -147,12 +136,7 @@ abstract class EntityModel extends DataModel with EntityModelMappable {
 /// It is also annotated with `MappableClass` to generate mapping code.
 @MappableClass(ignoreNull: true, includeSubClasses: [
   AddressSearchModel,
-  AttendanceRegisterSearchModel,
-  AttendanceLogSearchModel,
   LocalitySearchModel,
-  HouseholdSearchModel,
-  DownsyncSearchModel,
-  TaskSearchModel
 ])
 abstract class EntitySearchModel extends DataModel
     with EntitySearchModelMappable {
@@ -178,7 +162,6 @@ abstract class EntitySearchModel extends DataModel
 /// It is also annotated with `MappableClass` to generate mapping code.
 @MappableClass(
   includeSubClasses: [
-    DownsyncAdditionalFields,
     AddressAdditionalFields,
   ],
 )
