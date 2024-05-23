@@ -11,7 +11,7 @@ _$AuthModelImpl _$$AuthModelImplFromJson(Map<String, dynamic> json) =>
       accessToken: json['access_token'] as String,
       tokenType: json['token_type'] as String,
       refreshToken: json['refresh_token'] as String,
-      expiresIn: json['expires_in'] as int,
+      expiresIn: (json['expires_in'] as num).toInt(),
       userRequestModel: UserRequestModel.fromJson(
           json['UserRequest'] as Map<String, dynamic>),
     );
@@ -48,7 +48,7 @@ Map<String, dynamic> _$$LoginModelImplToJson(_$LoginModelImpl instance) =>
 _$UserRequestModelImpl _$$UserRequestModelImplFromJson(
         Map<String, dynamic> json) =>
     _$UserRequestModelImpl(
-      id: json['id'] as int?,
+      id: (json['id'] as num?)?.toInt(),
       uuid: json['uuid'] as String,
       userName: json['userName'] as String?,
       name: json['name'] as String?,

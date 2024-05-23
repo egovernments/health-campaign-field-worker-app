@@ -14,7 +14,7 @@ import 'package:flutter/material.dart' as _i10;
 import 'package:referral_reconciliation/blocs/app_localization.dart' as _i12;
 import 'package:referral_reconciliation/blocs/referral_reconciliation_listeners.dart'
     as _i14;
-import 'package:referral_reconciliation/models/entities/h_f_referral.dart'
+import 'package:referral_reconciliation/models/entities/hf_referral.dart'
     as _i11;
 import 'package:referral_reconciliation/pages/acknowledgement.dart' as _i6;
 import 'package:referral_reconciliation/pages/create_referral/create_hf_referral_wrapper.dart'

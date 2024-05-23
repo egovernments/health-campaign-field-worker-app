@@ -66,6 +66,7 @@ dependencies:
   disk_space: ^0.2.1
   google_mlkit_barcode_scanning: ^0.10.0
   camera: ^0.10.5+7
+  # TODO: Add pub dev version for below packages once published
   attendance_management: ^0.0.0-dev.1
   digit_scanner: ^0.0.1+1
   inventory_management: ^0.0.0-dev.1

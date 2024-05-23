@@ -2,7 +2,6 @@
 
 import 'package:drift/drift.dart';
 
-@DataClassName("HFReferral")
 class HFReferral extends Table {
   TextColumn get id => text().nullable()();
   TextColumn get tenantId => text().nullable()();

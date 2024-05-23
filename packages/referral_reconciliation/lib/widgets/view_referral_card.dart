@@ -1,10 +1,11 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:referral_reconciliation/models/entities/h_f_referral.dart';
+import 'package:referral_reconciliation/models/entities/hf_referral.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
 import '../models/entities/referral_recon_enums.dart';
+import '../utils/constants.dart';
 import 'beneficiary_card.dart';
 import 'localizaed.dart';
 
@@ -69,7 +70,7 @@ class _ViewReferralCardState extends LocalizedState<ViewReferralCard> {
                 child: ReferralBeneficiaryCard(
                   description: '',
                   subtitle:
-                      '${localizations.translate(i18.referralReconciliation.dateOfEvaluationLabel)}: ${dateOfEvaluation != null ? DigitDateUtils.getDateFromTimestamp(dateOfEvaluation, dateFormat: 'dd/MM/yyyy') : localizations.translate(i18.common.coreCommonNA)}',
+                      '${localizations.translate(i18.referralReconciliation.dateOfEvaluationLabel)}: ${dateOfEvaluation != null ? DigitDateUtils.getDateFromTimestamp(dateOfEvaluation, dateFormat: defaultDateFormat) : localizations.translate(i18.common.coreCommonNA)}',
                   title: hfReferralModel.name.toString(),
                 ),
               ),

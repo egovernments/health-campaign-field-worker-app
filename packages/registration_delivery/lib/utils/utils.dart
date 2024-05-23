@@ -9,6 +9,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import '../blocs/registraton_delivery_listener.dart';
 import '../models/entities/additional_fields_type.dart';
 import '../models/entities/referral.dart';
+import '../models/entities/reg_form_validations_type.dart';
 import '../models/entities/side_effect.dart';
 import '../models/entities/status.dart';
 import '../models/entities/task.dart';
@@ -32,55 +33,51 @@ class CustomValidator {
     AbstractControl<dynamic> control,
   ) {
     if (control.value == null || control.value.toString().isEmpty) {
-      return {'required': true};
+      return {RegFormValidations.required.toValue(): true};
     }
 
     var parsed = int.tryParse(control.value) ?? 0;
     if (parsed < 0) {
-      return {'min': true};
+      return {RegFormValidations.min.toValue(): true};
     } else if (parsed > 10000) {
-      return {'max': true};
+      return {RegFormValidations.max.toValue(): true};
     }
 
     return null;
   }
 }
 
-bool checkStatus(
-  List<TaskModel>? tasks,
-  ProjectCycle? currentCycle,
-) {
-  if (currentCycle != null &&
-      currentCycle.startDate != null &&
-      currentCycle.endDate != null) {
-    if (tasks != null && tasks.isNotEmpty) {
-      final lastTask = tasks.last;
-      final lastTaskCreatedTime = lastTask.clientAuditDetails?.createdTime;
-      // final lastDose = lastTask.additionalFields?.fields.where((e) => e.key = AdditionalFieldsType.doseIndex)
-      if (lastTaskCreatedTime != null) {
-        final date = DateTime.fromMillisecondsSinceEpoch(lastTaskCreatedTime);
-        final diff = DateTime.now().difference(date);
-        final isLastCycleRunning =
-            lastTaskCreatedTime >= currentCycle.startDate! &&
-                lastTaskCreatedTime <= currentCycle.endDate!;
-
-        return isLastCycleRunning
-            ? lastTask.status == Status.delivered.name
-                ? true
-                : diff.inHours >=
-                        24 //[TODO: Need to move gap between doses to config
-                    ? true
-                    : false
-            : true;
-      } else {
-        return false;
-      }
-    } else {
-      return true;
-    }
-  } else {
+bool checkStatus(List<TaskModel>? tasks, ProjectCycle? currentCycle) {
+  if (currentCycle == null ||
+      currentCycle.startDate == null ||
+      currentCycle.endDate == null) {
     return false;
   }
+
+  if (tasks == null || tasks.isEmpty) {
+    return true;
+  }
+
+  final lastTask = tasks.last;
+  final lastTaskCreatedTime = lastTask.clientAuditDetails?.createdTime;
+
+  if (lastTaskCreatedTime == null) {
+    return false;
+  }
+
+  final date = DateTime.fromMillisecondsSinceEpoch(lastTaskCreatedTime);
+  final diff = DateTime.now().difference(date);
+  final isLastCycleRunning = lastTaskCreatedTime >= currentCycle.startDate &&
+      lastTaskCreatedTime <= currentCycle.endDate;
+
+  if (isLastCycleRunning) {
+    if (lastTask.status == Status.delivered.name) {
+      return true;
+    }
+    return diff.inHours >= 24; // [TODO: Move gap between doses to config]
+  }
+
+  return true;
 }
 
 bool checkIfBeneficiaryRefused(

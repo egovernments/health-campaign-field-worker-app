@@ -214,7 +214,8 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                             DateTime.now()
                                                 .toLocal()
                                                 .millisecondsSinceEpoch,
-                                            dateFormat: "dd/MM/yyyy hh:mm a",
+                                            dateFormat: Constants
+                                                .checklistViewDateFormat,
                                           ),
                                           tenantId: value
                                               .selectedServiceDefinition!

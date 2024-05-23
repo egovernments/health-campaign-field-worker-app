@@ -18097,21 +18097,15 @@ class $StockTable extends Stock with TableInfo<$StockTable, StockData> {
   static const VerificationMeta _transactionTypeMeta =
       const VerificationMeta('transactionType');
   @override
-  late final GeneratedColumnWithTypeConverter<TransactionType?, int>
-      transactionType = GeneratedColumn<int>(
-              'transaction_type', aliasedName, true,
-              type: DriftSqlType.int, requiredDuringInsert: false)
-          .withConverter<TransactionType?>(
-              $StockTable.$convertertransactionTypen);
+  late final GeneratedColumn<String> transactionType = GeneratedColumn<String>(
+      'transaction_type', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _transactionReasonMeta =
       const VerificationMeta('transactionReason');
   @override
-  late final GeneratedColumnWithTypeConverter<TransactionReason?, int>
-      transactionReason = GeneratedColumn<int>(
-              'transaction_reason', aliasedName, true,
-              type: DriftSqlType.int, requiredDuringInsert: false)
-          .withConverter<TransactionReason?>(
-              $StockTable.$convertertransactionReasonn);
+  late final GeneratedColumn<String> transactionReason =
+      GeneratedColumn<String>('transaction_reason', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _additionalFieldsMeta =
       const VerificationMeta('additionalFields');
   @override
@@ -18307,8 +18301,18 @@ class $StockTable extends Stock with TableInfo<$StockTable, StockData> {
           rowVersion.isAcceptableOrUnknown(
               data['row_version']!, _rowVersionMeta));
     }
-    context.handle(_transactionTypeMeta, const VerificationResult.success());
-    context.handle(_transactionReasonMeta, const VerificationResult.success());
+    if (data.containsKey('transaction_type')) {
+      context.handle(
+          _transactionTypeMeta,
+          transactionType.isAcceptableOrUnknown(
+              data['transaction_type']!, _transactionTypeMeta));
+    }
+    if (data.containsKey('transaction_reason')) {
+      context.handle(
+          _transactionReasonMeta,
+          transactionReason.isAcceptableOrUnknown(
+              data['transaction_reason']!, _transactionReasonMeta));
+    }
     if (data.containsKey('additional_fields')) {
       context.handle(
           _additionalFieldsMeta,
@@ -18377,12 +18381,10 @@ class $StockTable extends Stock with TableInfo<$StockTable, StockData> {
           .read(DriftSqlType.bool, data['${effectivePrefix}is_deleted']),
       rowVersion: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}row_version']),
-      transactionType: $StockTable.$convertertransactionTypen.fromSql(
-          attachedDatabase.typeMapping.read(
-              DriftSqlType.int, data['${effectivePrefix}transaction_type'])),
-      transactionReason: $StockTable.$convertertransactionReasonn.fromSql(
-          attachedDatabase.typeMapping.read(
-              DriftSqlType.int, data['${effectivePrefix}transaction_reason'])),
+      transactionType: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}transaction_type']),
+      transactionReason: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}transaction_reason']),
       additionalFields: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}additional_fields']),
     );
@@ -18392,19 +18394,6 @@ class $StockTable extends Stock with TableInfo<$StockTable, StockData> {
   $StockTable createAlias(String alias) {
     return $StockTable(attachedDatabase, alias);
   }
-
-  static JsonTypeConverter2<TransactionType, int, int>
-      $convertertransactionType =
-      const EnumIndexConverter<TransactionType>(TransactionType.values);
-  static JsonTypeConverter2<TransactionType?, int?, int?>
-      $convertertransactionTypen =
-      JsonTypeConverter2.asNullable($convertertransactionType);
-  static JsonTypeConverter2<TransactionReason, int, int>
-      $convertertransactionReason =
-      const EnumIndexConverter<TransactionReason>(TransactionReason.values);
-  static JsonTypeConverter2<TransactionReason?, int?, int?>
-      $convertertransactionReasonn =
-      JsonTypeConverter2.asNullable($convertertransactionReason);
 }
 
 class StockData extends DataClass implements Insertable<StockData> {
@@ -18434,8 +18423,8 @@ class StockData extends DataClass implements Insertable<StockData> {
   final String clientReferenceId;
   final bool? isDeleted;
   final int? rowVersion;
-  final TransactionType? transactionType;
-  final TransactionReason? transactionReason;
+  final String? transactionType;
+  final String? transactionReason;
   final String? additionalFields;
   const StockData(
       {this.id,
@@ -18547,12 +18536,10 @@ class StockData extends DataClass implements Insertable<StockData> {
       map['row_version'] = Variable<int>(rowVersion);
     }
     if (!nullToAbsent || transactionType != null) {
-      map['transaction_type'] = Variable<int>(
-          $StockTable.$convertertransactionTypen.toSql(transactionType));
+      map['transaction_type'] = Variable<String>(transactionType);
     }
     if (!nullToAbsent || transactionReason != null) {
-      map['transaction_reason'] = Variable<int>(
-          $StockTable.$convertertransactionReasonn.toSql(transactionReason));
+      map['transaction_reason'] = Variable<String>(transactionReason);
     }
     if (!nullToAbsent || additionalFields != null) {
       map['additional_fields'] = Variable<String>(additionalFields);
@@ -18681,10 +18668,9 @@ class StockData extends DataClass implements Insertable<StockData> {
       clientReferenceId: serializer.fromJson<String>(json['clientReferenceId']),
       isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
       rowVersion: serializer.fromJson<int?>(json['rowVersion']),
-      transactionType: $StockTable.$convertertransactionTypen
-          .fromJson(serializer.fromJson<int?>(json['transactionType'])),
-      transactionReason: $StockTable.$convertertransactionReasonn
-          .fromJson(serializer.fromJson<int?>(json['transactionReason'])),
+      transactionType: serializer.fromJson<String?>(json['transactionType']),
+      transactionReason:
+          serializer.fromJson<String?>(json['transactionReason']),
       additionalFields: serializer.fromJson<String?>(json['additionalFields']),
     );
   }
@@ -18718,10 +18704,8 @@ class StockData extends DataClass implements Insertable<StockData> {
       'clientReferenceId': serializer.toJson<String>(clientReferenceId),
       'isDeleted': serializer.toJson<bool?>(isDeleted),
       'rowVersion': serializer.toJson<int?>(rowVersion),
-      'transactionType': serializer.toJson<int?>(
-          $StockTable.$convertertransactionTypen.toJson(transactionType)),
-      'transactionReason': serializer.toJson<int?>(
-          $StockTable.$convertertransactionReasonn.toJson(transactionReason)),
+      'transactionType': serializer.toJson<String?>(transactionType),
+      'transactionReason': serializer.toJson<String?>(transactionReason),
       'additionalFields': serializer.toJson<String?>(additionalFields),
     };
   }
@@ -18753,8 +18737,8 @@ class StockData extends DataClass implements Insertable<StockData> {
           String? clientReferenceId,
           Value<bool?> isDeleted = const Value.absent(),
           Value<int?> rowVersion = const Value.absent(),
-          Value<TransactionType?> transactionType = const Value.absent(),
-          Value<TransactionReason?> transactionReason = const Value.absent(),
+          Value<String?> transactionType = const Value.absent(),
+          Value<String?> transactionReason = const Value.absent(),
           Value<String?> additionalFields = const Value.absent()}) =>
       StockData(
         id: id.present ? id.value : this.id,
@@ -18950,8 +18934,8 @@ class StockCompanion extends UpdateCompanion<StockData> {
   final Value<String> clientReferenceId;
   final Value<bool?> isDeleted;
   final Value<int?> rowVersion;
-  final Value<TransactionType?> transactionType;
-  final Value<TransactionReason?> transactionReason;
+  final Value<String?> transactionType;
+  final Value<String?> transactionReason;
   final Value<String?> additionalFields;
   final Value<int> rowid;
   const StockCompanion({
@@ -19045,8 +19029,8 @@ class StockCompanion extends UpdateCompanion<StockData> {
     Expression<String>? clientReferenceId,
     Expression<bool>? isDeleted,
     Expression<int>? rowVersion,
-    Expression<int>? transactionType,
-    Expression<int>? transactionReason,
+    Expression<String>? transactionType,
+    Expression<String>? transactionReason,
     Expression<String>? additionalFields,
     Expression<int>? rowid,
   }) {
@@ -19115,8 +19099,8 @@ class StockCompanion extends UpdateCompanion<StockData> {
       Value<String>? clientReferenceId,
       Value<bool?>? isDeleted,
       Value<int?>? rowVersion,
-      Value<TransactionType?>? transactionType,
-      Value<TransactionReason?>? transactionReason,
+      Value<String?>? transactionType,
+      Value<String?>? transactionReason,
       Value<String?>? additionalFields,
       Value<int>? rowid}) {
     return StockCompanion(
@@ -19236,13 +19220,10 @@ class StockCompanion extends UpdateCompanion<StockData> {
       map['row_version'] = Variable<int>(rowVersion.value);
     }
     if (transactionType.present) {
-      map['transaction_type'] = Variable<int>(
-          $StockTable.$convertertransactionTypen.toSql(transactionType.value));
+      map['transaction_type'] = Variable<String>(transactionType.value);
     }
     if (transactionReason.present) {
-      map['transaction_reason'] = Variable<int>($StockTable
-          .$convertertransactionReasonn
-          .toSql(transactionReason.value));
+      map['transaction_reason'] = Variable<String>(transactionReason.value);
     }
     if (additionalFields.present) {
       map['additional_fields'] = Variable<String>(additionalFields.value);

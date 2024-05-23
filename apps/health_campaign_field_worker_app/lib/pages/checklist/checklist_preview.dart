@@ -7,7 +7,7 @@ import 'package:registration_delivery/blocs/service/service.dart';
 import 'package:registration_delivery/blocs/service_definition/service_definition.dart';
 
 import '../../router/app_router.dart';
-import '../../router/app_router.dart';
+import '../../utils/constants.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
@@ -75,8 +75,12 @@ class _ChecklistPreviewPageState extends LocalizedState<ChecklistPreviewPage> {
                                           Align(
                                             alignment: Alignment.centerLeft,
                                             child: Text(
-                                              DateFormat('dd MMMM yyyy').format(
-                                                DateFormat('dd/MM/yyyy').parse(
+                                              DateFormat(Constants
+                                                      .checklistPreviewDateFormat)
+                                                  .format(
+                                                DateFormat(Constants
+                                                        .defaultDateFormat)
+                                                    .parse(
                                                   e.createdAt.toString(),
                                                 ),
                                               ),

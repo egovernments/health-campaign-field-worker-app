@@ -216,157 +216,6 @@ class _DownsyncSearchModelCopyWithImpl<$R, $Out>
           _DownsyncSearchModelCopyWithImpl($value, $cast, t);
 }
 
-class DownsyncAdditionalFieldsMapper
-    extends SubClassMapperBase<DownsyncAdditionalFields> {
-  DownsyncAdditionalFieldsMapper._();
-
-  static DownsyncAdditionalFieldsMapper? _instance;
-  static DownsyncAdditionalFieldsMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals
-          .use(_instance = DownsyncAdditionalFieldsMapper._());
-    }
-    return _instance!;
-  }
-
-  @override
-  final String id = 'DownsyncAdditionalFields';
-
-  static String _$schema(DownsyncAdditionalFields v) => v.schema;
-  static const Field<DownsyncAdditionalFields, String> _f$schema =
-      Field('schema', _$schema, opt: true, def: 'Downsync');
-  static int _$version(DownsyncAdditionalFields v) => v.version;
-  static const Field<DownsyncAdditionalFields, int> _f$version =
-      Field('version', _$version);
-  static List<AdditionalField> _$fields(DownsyncAdditionalFields v) => v.fields;
-  static const Field<DownsyncAdditionalFields, List<AdditionalField>>
-      _f$fields = Field('fields', _$fields, opt: true, def: const []);
-
-  @override
-  final MappableFields<DownsyncAdditionalFields> fields = const {
-    #schema: _f$schema,
-    #version: _f$version,
-    #fields: _f$fields,
-  };
-  @override
-  final bool ignoreNull = true;
-
-  @override
-  final String discriminatorKey = 'type';
-  @override
-  final dynamic discriminatorValue = MappableClass.useAsDefault;
-  @override
-  late final ClassMapperBase superMapper =
-      AdditionalFieldsMapper.ensureInitialized();
-
-  static DownsyncAdditionalFields _instantiate(DecodingData data) {
-    return DownsyncAdditionalFields(
-        schema: data.dec(_f$schema),
-        version: data.dec(_f$version),
-        fields: data.dec(_f$fields));
-  }
-
-  @override
-  final Function instantiate = _instantiate;
-
-  static DownsyncAdditionalFields fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<DownsyncAdditionalFields>(map);
-  }
-
-  static DownsyncAdditionalFields fromJson(String json) {
-    return ensureInitialized().decodeJson<DownsyncAdditionalFields>(json);
-  }
-}
-
-mixin DownsyncAdditionalFieldsMappable {
-  String toJson() {
-    return DownsyncAdditionalFieldsMapper.ensureInitialized()
-        .encodeJson<DownsyncAdditionalFields>(this as DownsyncAdditionalFields);
-  }
-
-  Map<String, dynamic> toMap() {
-    return DownsyncAdditionalFieldsMapper.ensureInitialized()
-        .encodeMap<DownsyncAdditionalFields>(this as DownsyncAdditionalFields);
-  }
-
-  DownsyncAdditionalFieldsCopyWith<DownsyncAdditionalFields,
-          DownsyncAdditionalFields, DownsyncAdditionalFields>
-      get copyWith => _DownsyncAdditionalFieldsCopyWithImpl(
-          this as DownsyncAdditionalFields, $identity, $identity);
-  @override
-  String toString() {
-    return DownsyncAdditionalFieldsMapper.ensureInitialized()
-        .stringifyValue(this as DownsyncAdditionalFields);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            DownsyncAdditionalFieldsMapper.ensureInitialized()
-                .isValueEqual(this as DownsyncAdditionalFields, other));
-  }
-
-  @override
-  int get hashCode {
-    return DownsyncAdditionalFieldsMapper.ensureInitialized()
-        .hashValue(this as DownsyncAdditionalFields);
-  }
-}
-
-extension DownsyncAdditionalFieldsValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, DownsyncAdditionalFields, $Out> {
-  DownsyncAdditionalFieldsCopyWith<$R, DownsyncAdditionalFields, $Out>
-      get $asDownsyncAdditionalFields => $base
-          .as((v, t, t2) => _DownsyncAdditionalFieldsCopyWithImpl(v, t, t2));
-}
-
-abstract class DownsyncAdditionalFieldsCopyWith<
-    $R,
-    $In extends DownsyncAdditionalFields,
-    $Out> implements AdditionalFieldsCopyWith<$R, $In, $Out> {
-  @override
-  ListCopyWith<$R, AdditionalField,
-      AdditionalFieldCopyWith<$R, AdditionalField, AdditionalField>> get fields;
-  @override
-  $R call({String? schema, int? version, List<AdditionalField>? fields});
-  DownsyncAdditionalFieldsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
-      Then<$Out2, $R2> t);
-}
-
-class _DownsyncAdditionalFieldsCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, DownsyncAdditionalFields, $Out>
-    implements
-        DownsyncAdditionalFieldsCopyWith<$R, DownsyncAdditionalFields, $Out> {
-  _DownsyncAdditionalFieldsCopyWithImpl(super.value, super.then, super.then2);
-
-  @override
-  late final ClassMapperBase<DownsyncAdditionalFields> $mapper =
-      DownsyncAdditionalFieldsMapper.ensureInitialized();
-  @override
-  ListCopyWith<$R, AdditionalField,
-          AdditionalFieldCopyWith<$R, AdditionalField, AdditionalField>>
-      get fields => ListCopyWith($value.fields, (v, t) => v.copyWith.$chain(t),
-          (v) => call(fields: v));
-  @override
-  $R call({String? schema, int? version, List<AdditionalField>? fields}) =>
-      $apply(FieldCopyWithData({
-        if (schema != null) #schema: schema,
-        if (version != null) #version: version,
-        if (fields != null) #fields: fields
-      }));
-  @override
-  DownsyncAdditionalFields $make(CopyWithData data) => DownsyncAdditionalFields(
-      schema: data.get(#schema, or: $value.schema),
-      version: data.get(#version, or: $value.version),
-      fields: data.get(#fields, or: $value.fields));
-
-  @override
-  DownsyncAdditionalFieldsCopyWith<$R2, DownsyncAdditionalFields, $Out2>
-      $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-          _DownsyncAdditionalFieldsCopyWithImpl($value, $cast, t);
-}
-
 class DownsyncModelMapper extends SubClassMapperBase<DownsyncModel> {
   DownsyncModelMapper._();
 
@@ -633,4 +482,155 @@ class _DownsyncModelCopyWithImpl<$R, $Out>
   DownsyncModelCopyWith<$R2, DownsyncModel, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
       _DownsyncModelCopyWithImpl($value, $cast, t);
+}
+
+class DownsyncAdditionalFieldsMapper
+    extends SubClassMapperBase<DownsyncAdditionalFields> {
+  DownsyncAdditionalFieldsMapper._();
+
+  static DownsyncAdditionalFieldsMapper? _instance;
+  static DownsyncAdditionalFieldsMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals
+          .use(_instance = DownsyncAdditionalFieldsMapper._());
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'DownsyncAdditionalFields';
+
+  static String _$schema(DownsyncAdditionalFields v) => v.schema;
+  static const Field<DownsyncAdditionalFields, String> _f$schema =
+      Field('schema', _$schema, opt: true, def: 'Downsync');
+  static int _$version(DownsyncAdditionalFields v) => v.version;
+  static const Field<DownsyncAdditionalFields, int> _f$version =
+      Field('version', _$version);
+  static List<AdditionalField> _$fields(DownsyncAdditionalFields v) => v.fields;
+  static const Field<DownsyncAdditionalFields, List<AdditionalField>>
+      _f$fields = Field('fields', _$fields, opt: true, def: const []);
+
+  @override
+  final MappableFields<DownsyncAdditionalFields> fields = const {
+    #schema: _f$schema,
+    #version: _f$version,
+    #fields: _f$fields,
+  };
+  @override
+  final bool ignoreNull = true;
+
+  @override
+  final String discriminatorKey = 'type';
+  @override
+  final dynamic discriminatorValue = MappableClass.useAsDefault;
+  @override
+  late final ClassMapperBase superMapper =
+      AdditionalFieldsMapper.ensureInitialized();
+
+  static DownsyncAdditionalFields _instantiate(DecodingData data) {
+    return DownsyncAdditionalFields(
+        schema: data.dec(_f$schema),
+        version: data.dec(_f$version),
+        fields: data.dec(_f$fields));
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static DownsyncAdditionalFields fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<DownsyncAdditionalFields>(map);
+  }
+
+  static DownsyncAdditionalFields fromJson(String json) {
+    return ensureInitialized().decodeJson<DownsyncAdditionalFields>(json);
+  }
+}
+
+mixin DownsyncAdditionalFieldsMappable {
+  String toJson() {
+    return DownsyncAdditionalFieldsMapper.ensureInitialized()
+        .encodeJson<DownsyncAdditionalFields>(this as DownsyncAdditionalFields);
+  }
+
+  Map<String, dynamic> toMap() {
+    return DownsyncAdditionalFieldsMapper.ensureInitialized()
+        .encodeMap<DownsyncAdditionalFields>(this as DownsyncAdditionalFields);
+  }
+
+  DownsyncAdditionalFieldsCopyWith<DownsyncAdditionalFields,
+          DownsyncAdditionalFields, DownsyncAdditionalFields>
+      get copyWith => _DownsyncAdditionalFieldsCopyWithImpl(
+          this as DownsyncAdditionalFields, $identity, $identity);
+  @override
+  String toString() {
+    return DownsyncAdditionalFieldsMapper.ensureInitialized()
+        .stringifyValue(this as DownsyncAdditionalFields);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            DownsyncAdditionalFieldsMapper.ensureInitialized()
+                .isValueEqual(this as DownsyncAdditionalFields, other));
+  }
+
+  @override
+  int get hashCode {
+    return DownsyncAdditionalFieldsMapper.ensureInitialized()
+        .hashValue(this as DownsyncAdditionalFields);
+  }
+}
+
+extension DownsyncAdditionalFieldsValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, DownsyncAdditionalFields, $Out> {
+  DownsyncAdditionalFieldsCopyWith<$R, DownsyncAdditionalFields, $Out>
+      get $asDownsyncAdditionalFields => $base
+          .as((v, t, t2) => _DownsyncAdditionalFieldsCopyWithImpl(v, t, t2));
+}
+
+abstract class DownsyncAdditionalFieldsCopyWith<
+    $R,
+    $In extends DownsyncAdditionalFields,
+    $Out> implements AdditionalFieldsCopyWith<$R, $In, $Out> {
+  @override
+  ListCopyWith<$R, AdditionalField,
+      AdditionalFieldCopyWith<$R, AdditionalField, AdditionalField>> get fields;
+  @override
+  $R call({String? schema, int? version, List<AdditionalField>? fields});
+  DownsyncAdditionalFieldsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
+      Then<$Out2, $R2> t);
+}
+
+class _DownsyncAdditionalFieldsCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, DownsyncAdditionalFields, $Out>
+    implements
+        DownsyncAdditionalFieldsCopyWith<$R, DownsyncAdditionalFields, $Out> {
+  _DownsyncAdditionalFieldsCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<DownsyncAdditionalFields> $mapper =
+      DownsyncAdditionalFieldsMapper.ensureInitialized();
+  @override
+  ListCopyWith<$R, AdditionalField,
+          AdditionalFieldCopyWith<$R, AdditionalField, AdditionalField>>
+      get fields => ListCopyWith($value.fields, (v, t) => v.copyWith.$chain(t),
+          (v) => call(fields: v));
+  @override
+  $R call({String? schema, int? version, List<AdditionalField>? fields}) =>
+      $apply(FieldCopyWithData({
+        if (schema != null) #schema: schema,
+        if (version != null) #version: version,
+        if (fields != null) #fields: fields
+      }));
+  @override
+  DownsyncAdditionalFields $make(CopyWithData data) => DownsyncAdditionalFields(
+      schema: data.get(#schema, or: $value.schema),
+      version: data.get(#version, or: $value.version),
+      fields: data.get(#fields, or: $value.fields));
+
+  @override
+  DownsyncAdditionalFieldsCopyWith<$R2, DownsyncAdditionalFields, $Out2>
+      $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+          _DownsyncAdditionalFieldsCopyWithImpl($value, $cast, t);
 }

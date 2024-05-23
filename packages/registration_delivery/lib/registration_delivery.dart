@@ -4,7 +4,6 @@
 library registration_delivery;
 
 import 'package:dart_mappable/dart_mappable.dart';
-
 export 'blocs/beneficiary_registration/beneficiary_registration.dart';
 export 'blocs/delivery_intervention/deliver_intervention.dart';
 export 'blocs/household_details/household_details.dart';
@@ -19,11 +18,6 @@ export 'blocs/search_households/tag_by_search.dart';
 export 'blocs/service/service.dart';
 export 'blocs/service_definition/service_definition.dart';
 export 'blocs/side_effects/side_effects.dart';
-export 'data/local_store/tables/household.dart';
-export 'data/local_store/tables/household_member.dart';
-export 'data/local_store/tables/referral.dart';
-export 'data/local_store/tables/task.dart';
-export 'data/local_store/tables/task_resource.dart';
 export 'data/repositories/local/base/household_base.dart';
 export 'data/repositories/local/base/household_member_base.dart';
 export 'data/repositories/local/base/project_beneficiary_base.dart';

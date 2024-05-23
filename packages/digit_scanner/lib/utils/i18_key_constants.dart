@@ -133,4 +133,6 @@ class Scanner {
   String get scannerDialogPrimaryAction => 'SCANNER_DIALOG_PRIMARY_ACTION';
   String get scannerDialogSecondaryAction => 'SCANNER_DIALOG_SECONDARY_ACTION';
   String get scannedResourceCountMisMatch => 'SCANNED_RESOURCE_COUNT_MISMATCH';
+  String get barCodesFound => 'BARCODES_FOUND';
+  String get barCode => 'BARCODE';
 }

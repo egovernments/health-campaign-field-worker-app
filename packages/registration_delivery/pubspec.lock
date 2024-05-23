@@ -437,6 +437,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1+1"
+  digit_showcase:
+    dependency: "direct main"
+    description:
+      path: "../digit_showcase"
+      relative: true
+    source: path
+    version: "0.0.1"
   dio:
     dependency: transitive
     description:
@@ -531,7 +538,7 @@ packages:
     source: hosted
     version: "2.0.0"
   flutter_keyboard_visibility:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: flutter_keyboard_visibility
       sha256: "4983655c26ab5b959252ee204c2fffa4afeb4413cd030455194ec0caa3b8e7cb"
@@ -705,16 +712,8 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.1"
-  group_radio_button:
-    dependency: "direct main"
-    description:
-      name: group_radio_button
-      sha256: "204de8d16b224be7fc72dade0c3afd410ff5a34417d89f74f0fd8be7a8c2b4d6"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.3.0"
   gs1_barcode_parser:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: gs1_barcode_parser
       sha256: "9aaff47bdab7177deaf9248cc861ef41cf611d3f828498cb40b64bedcbf53391"
@@ -938,7 +937,7 @@ packages:
     source: hosted
     version: "2.1.0"
   package_info_plus:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: package_info_plus
       sha256: "88bc797f44a94814f2213db1c9bd5badebafdfb8290ca9f78d4b9ee2a3db4d79"

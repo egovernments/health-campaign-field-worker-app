@@ -11,7 +11,7 @@ import 'package:referral_reconciliation/utils/extensions/extensions.dart';
 
 import '../blocs/referral_recon_service.dart';
 import '../blocs/search_referral_reconciliations.dart';
-import '../models/entities/h_f_referral.dart';
+import '../models/entities/hf_referral.dart';
 import '../router/referral_reconciliation_router.gm.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';

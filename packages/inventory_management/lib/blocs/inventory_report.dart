@@ -46,39 +46,39 @@ class InventoryReportBloc
     }
     emit(const InventoryReportLoadingState());
 
-    List<TransactionReason>? transactionReason;
-    List<TransactionType>? transactionType;
+    List<String>? transactionReason;
+    List<String>? transactionType;
     String? senderId;
     String? receiverId;
 
     if (reportType == InventoryReportType.receipt) {
-      transactionType = [TransactionType.received];
-      transactionReason = [TransactionReason.received];
+      transactionType = [TransactionType.received.toValue()];
+      transactionReason = [TransactionReason.received.toValue()];
       receiverId = facilityId;
       senderId = null;
     } else if (reportType == InventoryReportType.dispatch) {
-      transactionType = [TransactionType.dispatched];
+      transactionType = [TransactionType.dispatched.toValue()];
       transactionReason = [];
       receiverId = null;
       senderId = facilityId;
     } else if (reportType == InventoryReportType.returned) {
-      transactionType = [TransactionType.received];
-      transactionReason = [TransactionReason.returned];
+      transactionType = [TransactionType.received.toValue()];
+      transactionReason = [TransactionReason.returned.toValue()];
       receiverId = null;
       senderId = facilityId;
     } else if (reportType == InventoryReportType.damage) {
-      transactionType = [TransactionType.dispatched];
+      transactionType = [TransactionType.dispatched.toValue()];
       transactionReason = [
-        TransactionReason.damagedInStorage,
-        TransactionReason.damagedInTransit,
+        TransactionReason.damagedInStorage.toValue(),
+        TransactionReason.damagedInTransit.toValue(),
       ];
       receiverId = facilityId;
       senderId = null;
     } else if (reportType == InventoryReportType.loss) {
-      transactionType = [TransactionType.dispatched];
+      transactionType = [TransactionType.dispatched.toValue()];
       transactionReason = [
-        TransactionReason.lostInStorage,
-        TransactionReason.lostInTransit,
+        TransactionReason.lostInStorage.toValue(),
+        TransactionReason.lostInTransit.toValue(),
       ];
       receiverId = facilityId;
       senderId = null;
@@ -104,7 +104,8 @@ class InventoryReportBloc
               ))
         .where((element) =>
             element.auditDetails != null &&
-            element.auditDetails?.createdBy == InventorySingleton().loggedInUserUuid);
+            element.auditDetails?.createdBy ==
+                InventorySingleton().loggedInUserUuid);
 
     final groupedData = data.groupListsBy(
       (element) => DateFormat('dd MMM yyyy').format(

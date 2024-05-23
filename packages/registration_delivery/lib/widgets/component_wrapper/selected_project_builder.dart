@@ -1,6 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:registration_delivery/utils/utils.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:flutter/material.dart';
+import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+import 'package:registration_delivery/utils/utils.dart';
+
+import '../../blocs/app_localization.dart';
 
 class SelectedProjectBuilder extends StatelessWidget {
   final Widget Function(
@@ -22,7 +25,8 @@ class SelectedProjectBuilder extends StatelessWidget {
           )
         : Center(
             child: Text(
-              'No project selected',
+              RegistrationDeliveryLocalization.of(context)
+                  .translate(i18.common.noProjectSelected),
               style: Theme.of(context).textTheme.headline6,
             ),
           );

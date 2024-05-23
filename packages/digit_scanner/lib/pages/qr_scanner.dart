@@ -494,6 +494,7 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
       storeCode: storeCodeWrapper,
       cameraLensDirection: _cameraLensDirection,
       barcodeScanner: _barcodeScanner,
+      localizations: localizations,
     );
   }
 
