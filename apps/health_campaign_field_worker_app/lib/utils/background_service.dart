@@ -263,11 +263,15 @@ getActionMap(List<ServiceRegistry> serviceRegistryList) {
 
 int getBatchSizeToBandwidth(
   double speed,
-  List<AppConfiguration> appConfiguration,
-) {
+  List<AppConfiguration> appConfiguration, {
+  bool isDownSync = false,
+}) {
   int batchSize = 1;
+  final bandwidthBatchSizeConfig = isDownSync
+      ? appConfiguration.first.downSyncBandwidthBatchSize
+      : appConfiguration.first.bandwidthBatchSize;
 
-  final batchResult = appConfiguration.first.bandwidthBatchSize
+  final batchResult = bandwidthBatchSizeConfig
       ?.where(
         (element) => speed >= element.minRange && speed <= element.maxRange,
       )
